@@ -2,8 +2,8 @@
 
 namespace App\Event;
 
-use App\Form\Model\SupportSearch;
-use App\Repository\SupportPersonRepository;
+use App\Form\Model\Support\SupportSearch;
+use App\Repository\Support\SupportPersonRepository;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class ExportDataEvent extends Event

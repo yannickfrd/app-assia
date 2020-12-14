@@ -1,0 +1,83 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Indicateurs paiements{% endblock %}
+
+{% block body %}
+
+    <section class="mt-0">
+
+        <div class="container">
+            {% include "model/_msgFlash.html.twig" %}
+            <div class="d-flex mb-3 align-items-center">
+                <h1 class="h2 mr-1">Indicateurs<span class="fas fa-angle-right fa-xs mx-1"></span>Paiements</h1>
+                <span class="text-secondary">(redevances, PF, caution...)</span>
+            </div>
+        </div>
+
+        {% include "app/support/contribution/_searchContribution.html.twig" %}
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered table-striped table-hover text-dark shadow">
+                            <thead>
+                                <tr>
+                                    <th scope="row" class="align-middle th-w-20"></th>
+                                    <th class="align-middle">Mois</th>
+                                    <th class="align-middle text-right">Nombre</th>
+                                    <th class="align-middle text-right">Montant total dû</th>
+                                    <th class="align-middle text-right">Moyenne Montant à régler</th>
+                                    <th class="align-middle text-right">Montant total réglé</th>
+                                    <th class="align-middle text-right">Moyenne montant réglé</th>
+                                    <th class="align-middle text-right">Montant restant dus</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% set query = app.request.query.get('service') %}
+                                {% for month in datas.months %}
+                                    <tr>
+                                        <td scope="row" class="align-middle text-center">
+                                            <a href="{{ path('contributions', {'type': form.vars.value.type, 
+                                                'service': {'referents': query.referents ?? '', 'services': query.services ?? '', 'devices': query.devices ?? ''}, 
+                                                'dateType': app.request.query.get('dateType'),
+                                                'date': {'start': month.date|date('Y-m-d'), 'end': month.date|date_modify("last day of this month")|date('Y-m-d')} }) }}" 
+                                                class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" 
+                                                title="Voir le détail des paiements du mois"><span class="fas fa-eye fa-sm"></span>
+                                            </a>
+                                        </td>
+                                        <td class="align-middle">{{ month.monthToString }}</td>
+                                        <td class="align-middle text-right">{{ month.nbContributions|number_format(0, ",", " ") }}</td>
+                                        <td class="align-middle text-right">{{ month.sumToPayAmt|format_currency("EUR") }}</td>
+                                        <td class="align-middle text-right">{{ month.nbContributions ? month.averageContributionAmt|format_currency("EUR") }}</td>
+                                        <td class="align-middle text-right">{{ month.sumPaidAmt|format_currency("EUR") }}</td>
+                                        <td class="align-middle text-right">{{ month.nbContributions ? month.averagePaidAmt|format_currency("EUR") }}</td>
+                                        <td class="align-middle text-right">{{ month.sumStillToPayAmt|format_currency("EUR") }}</td>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfooter>
+                                <tr class="font-weight-bold">
+                                    <td class="align-middle text-center" colspan="2">Total</td>
+                                    <td class="align-middle text-right">{{ datas.nbContributions|number_format(0, ",", " ") }}</td>
+                                    <td class="align-middle text-right">{{ datas.sumToPayAmt|format_currency("EUR") }}</td> 
+                                    <td class="align-middle text-right">{{ datas.nbContributions ? datas.averageContributionAmt|format_currency("EUR")}}</td>
+                                    <td class="align-middle text-right">{{ datas.sumPaidAmt|format_currency("EUR") }}</td>
+                                    <td class="align-middle text-right">{{ datas.nbContributions ? datas.averagePaidAmt|format_currency("EUR") }}</td>
+                                    <td class="align-middle text-right">{{ datas.sumStillToPayAmt|format_currency("EUR") }}</td>
+                                </tr>
+                            </tfooter>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </section>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags("search") }}
+{% endblock javascripts %}

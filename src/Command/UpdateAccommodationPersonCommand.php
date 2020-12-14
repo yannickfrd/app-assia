@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\Repository\AccommodationGroupRepository;
+use App\Repository\Support\AccommodationGroupRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

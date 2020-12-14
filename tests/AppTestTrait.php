@@ -2,7 +2,7 @@
 
 namespace App\Tests;
 
-use App\Entity\User;
+use App\Entity\Organization\User;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -17,7 +17,7 @@ trait AppTestTrait
      */
     protected function createLogin(User $user, bool $followRedirects = true): void
     {
-        /* @var KernelBrowser */
+        /** @var KernelBrowser */
         $this->client = static::createClient();
 
         $followRedirects ? $this->client->followRedirects() : null;

@@ -1,4 +1,4 @@
-App\Entity\Note:
+App\Entity\Support\Note:
   note1:
     title: Note 666
     content: Contenu de la note
@@ -21,7 +21,7 @@ App\Entity\Note:
     updatedBy: "@userRoleUser"
     supportGroup: "@supportGroup"
 
-App\Entity\User:
+App\Entity\Organization\User:
   userRoleUser:
     firstname: Role
     lastname: SUPER_ADMIN
@@ -31,13 +31,12 @@ App\Entity\User:
     roles: ["ROLE_SUPER_ADMIN"]
     plainPassword: Test123*
 
-
-App\Entity\PeopleGroup:
+App\Entity\People\PeopleGroup:
   peopleGroup:
     familyTypology: 2
     nbPeople: 1
 
-App\Entity\SupportGroup:
+App\Entity\Support\SupportGroup:
   supportGroup:
     startDate: <date_create("2019-04-03")>
     status: 2
@@ -49,8 +48,7 @@ App\Entity\SupportGroup:
     createdBy: "@userRoleUser"
     updatedBy: "@userRoleUser"
 
-
-App\Entity\SupportPerson:
+App\Entity\Support\SupportPerson:
   supportPerson:
     startDate: "@supportGroup->startDate"
     endDate: "@supportGroup->endDate"
@@ -62,24 +60,21 @@ App\Entity\SupportPerson:
     head: 1
     role: 5
 
-    
-App\Entity\Person:
-  person: 
+App\Entity\People\Person:
+  person:
     firstname: John
     lastname: Doe
     gender: 2
     birthdate: <date_create("1980-01-01")>
 
-
-App\Entity\Service:
+App\Entity\Organization\Service:
   service1:
     name: AVDL
     pole: "@pole"
     createdAt: <date_create()>
     updatedAt: <date_create()>
 
-
-App\Entity\Pole:
+App\Entity\Organization\Pole:
   pole:
     name: Habitat
     createdAt: <date_create()>

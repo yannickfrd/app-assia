@@ -2,9 +2,9 @@
 
 namespace App\Security\Voter;
 
-use App\Entity\Service;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use App\Entity\Organization\Service;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class ServiceVoter extends Voter
 {
@@ -16,7 +16,7 @@ class ServiceVoter extends Voter
     protected function supports($attribute, $subject)
     {
         return in_array($attribute, ['VIEW', 'EDIT', 'DISABLE'])
-            && $subject instanceof \App\Entity\Service;
+            && $subject instanceof \App\Entity\Organization\Service;
     }
 
     protected function voteOnAttribute($attribute, $service, TokenInterface $token)

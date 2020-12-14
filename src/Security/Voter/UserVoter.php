@@ -2,7 +2,7 @@
 
 namespace App\Security\Voter;
 
-use App\Entity\User;
+use App\Entity\Organization\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -15,12 +15,12 @@ class UserVoter extends Voter
     protected function supports($attribute, $subject)
     {
         return in_array($attribute, ['VIEW', 'EDIT', 'DISABLE'])
-            && $subject instanceof \App\Entity\User;
+            && $subject instanceof \App\Entity\Organization\User;
     }
 
     protected function voteOnAttribute($attribute, $user, TokenInterface $token)
     {
-        /**  @var User */
+        /** @var User */
         $this->user = $token->getUser();
         $this->userId = $this->user->getId();
 

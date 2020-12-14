@@ -2,10 +2,10 @@
 
 namespace App\EventListener;
 
-use App\Entity\User;
-use App\Entity\UserConnection;
+use App\Entity\Organization\User;
+use App\Entity\Organization\UserConnection;
 use App\Form\Utils\Choices;
-use App\Repository\UserConnectionRepository;
+use App\Repository\Organization\UserConnectionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Event\AuthenticationFailureEvent;

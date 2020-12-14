@@ -2,7 +2,7 @@
 
 namespace App\Service\Export;
 
-use App\Entity\Service;
+use App\Entity\Organization\Service;
 use App\Service\ExportExcel;
 
 class ServiceExport extends ExportExcel

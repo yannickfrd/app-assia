@@ -2,8 +2,8 @@
 
 namespace App\Form\Evaluation;
 
-use App\Entity\EvalHousingGroup;
-use App\Entity\InitEvalGroup;
+use App\Entity\Evaluation\EvalHousingGroup;
+use App\Entity\Evaluation\InitEvalGroup;
 use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;

@@ -1,11 +1,11 @@
-App\Entity\Service:
+App\Entity\Organization\Service:
   service{2..5}:
     name: <sentence(3, true)>
     city: <fr_FR:city()>
     phone1: <fr_FR:phoneNumber()>
     email: <fr_FR:email()>
     zipcode: <numberBetween(1, 95)>
-    address : <fr_FR:address()>
+    address: <fr_FR:address()>
     accommodation: true
     createdAt: <date_create()>
     updatedAt: <date_create()>
@@ -13,11 +13,11 @@ App\Entity\Service:
     createdBy: "@userSuperAdmin"
     updatedBy: "@userSuperAdmin"
 
-App\Entity\Device:
+App\Entity\Organization\Device:
   device1:
     name: AVDL
 
-App\Entity\SubService:
+App\Entity\Organization\SubService:
   subService1:
     service: "@service1"
     name: AVDL sous-service

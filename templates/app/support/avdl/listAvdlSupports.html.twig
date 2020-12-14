@@ -1,0 +1,107 @@
+{% extends "base.html.twig" %}
+
+{% set title = "Suivis AVDL" %}
+{% set form_head = form.vars.value.head == true %}          
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+
+    <section class="mt-0">
+
+        <div class="container-fluid pt-4">
+            {% include "model/_msgFlash.html.twig" %}
+            <h1 class="h2 mb-3">{{ title }}</h1>
+        </div>
+
+        {% include "app/support/avdl/_searchAvdlSupports.html.twig" %}
+
+        <div class="container-fluid mt-4">
+
+            <div class="row align-items-baseline">
+                <div class="col-md-4 count align-middle mb-2">
+                    <span class="align-middle">Résultat : {{ supports.getTotalItemCount|number_format(0,'', ' ') }} <!--
+                    -->{% if form_head %}ménage{% else %}personne{% endif %}{% if supports.getTotalItemCount > 1 %}s{% endif %}.</span>
+                </div>
+                <div class="col-md-8">
+                    <div class="navigation">{{ knp_pagination_render(supports) }}</div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover shadow-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="align-middle th-w-20"></th>
+                            <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, "Nom et prénom", "p.lastname") }}</th>
+                            <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, "Dispositif", "d.name") }}</th>
+                            <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, "Référent·e social·e", "u.lastname") }}</th>
+                            <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, "Statut", "sg.status") }}</th>
+                            <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, "Commune", "sg.city") }}</th>
+                            <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, "Date de manda-tement", "origin.orientationDate") }}</th>
+                            <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, "Début du diagnostic", "avdl.diagStartDate") }}</th>
+                            <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, "Fin du diagnostic", "avdl.diagEndDate") }}</th>
+                            <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, "Type de diagnostic", "avdl.diagType") }}</th>
+                            <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, "Accompa-gnement préconisé", "avdl.recommendationSupport") }}</th>
+                            <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, "Début de l'accompa-gnement", "avdl.supportStartDate") }}</th>
+                            <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, "Fin de l'accompa-gnement", "avdl.supportEndDate") }}</th>
+                            <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, "Type d'accompa-gnement", "avdl.supportType") }}</th>
+                            <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, "Motif fin accompa-gnement", "avdl.endSupportReason") }}</th>
+                            <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, "Modalités d'accès au logement", "avdl.accessHousingModality") }}</th>
+                            <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, "Date de la proposition", "avdl.propoHousingDate") }}</th>
+                            <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, "Résultat de la proposition", "avdl.propoResult") }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for support in supports %}
+                            {% set person = support.person %}
+                            {% set supportGroup = support.supportGroup %}
+                            <tr class="{% if form_head == false and support.head %}font-weight-bold{% endif %}">
+                                <td scope="row" class="align-middle text-center">
+                                    {% if is_granted("VIEW", supportGroup) %}
+                                        <a href="{{ path('support_view', {'id':supportGroup.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow my-1" 
+                                            data-toggle="tooltip" data-placement="bottom" title="Voir la fiche du suivi"><span class="fas fa-eye"></span>
+                                        </a>
+                                    {% endif %}
+                                </td>
+                                <td class="align-middle">{{ person.fullname ~ (person.usename ? " (" ~ person.usename ~ ")") }}</td>
+                                <td class="align-middle">{{ supportGroup.device ? supportGroup.device.name }}</td>
+                                <td class="align-middle">{{ supportGroup.referent ? supportGroup.referent.fullname }}</td>
+                                <td class="align-middle">{{ supportGroup.statusToString }}<br/>
+                                    <span class="text-secondary">{{ supportGroup.coefficient ? "(coeff. " ~ supportGroup.coefficient ~ ")" }}</span>
+                                </td>
+                                <td class="align-middle">{{ supportGroup.city }}</td>
+                                <td class="align-middle">{{ supportGroup.originRequest and supportGroup.originRequest.orientationDate ? supportGroup.originRequest.orientationDate|date("d/m/Y") }}</td>
+                                {% if supportGroup.avdl %}
+                                    {% set avdl = supportGroup.avdl %}
+                                    <td class="align-middle">{{ avdl.diagStartDate ? avdl.diagStartDate|date("d/m/Y") }}</td>
+                                    <td class="align-middle">{{ avdl.diagEndDate ? avdl.diagEndDate|date("d/m/Y") }}</td>
+                                    <td class="align-middle">{{ avdl.diagTypeToString }}</td>
+                                    <td class="align-middle">{{ avdl.recommendationSupportToString }}</td>
+                                    <td class="align-middle">{{ avdl.supportStartDate ? avdl.supportStartDate|date("d/m/Y") }}</td>
+                                    <td class="align-middle">{{ avdl.supportEndDate ? avdl.supportEndDate|date("d/m/Y") }}</td>
+                                    <td class="align-middle">{{ avdl.supportTypeToString }}</td>
+                                    <td class="align-middle">{{ avdl.endSupportReasonToString }}</td>
+                                    <td class="align-middle">{{ avdl.accessHousingModalityToString }}</td>
+                                    <td class="align-middle">{{ avdl.propoHousingDate ? avdl.propoHousingDate|date("d/m/Y") }}</td>
+                                    <td class="align-middle">{{ avdl.propoResultToString }}</td>
+                                {% else %}
+                                    <td class="align-middle" colspan="12"></td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="navigation">{{ knp_pagination_render(supports) }}</div>
+
+        </div>
+
+    </section>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags("search") }}
+{% endblock javascripts %}

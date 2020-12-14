@@ -1,0 +1,129 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Agenda{% endblock %}
+
+{% block stylesheets %}
+	{{ encore_entry_link_tags("calendar_css") }}
+{% endblock %}
+
+{% block body %}
+
+	<section class="my-0">
+		<div class="container pt-4" id="calendar-container">
+			{% if support is defined %}
+				{% set title = "Rendez-vous" %}
+				{% include "app/support/support/_navSuppport.html.twig" %}
+			{% endif %}
+			<div class="d-flex flex-row align-items-center justify-content-between ml-1 mb-2">
+				<div class="d-flex align-items-center">
+					<h2 class="h2 mr-3 mb-0 d-none d-sm-block">Agenda</h2>
+					<a class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-toggle="tooltip" data-placement="bottom" title="Passer en vue liste" 
+						href="{% if support is defined %}{{ path('support_rdvs', {'id': support.id}) }}{% else %}{{ path('rdvs') }}{% endif %}">
+						<span class="far fa-list-alt"></span>
+					</a>
+					<button id="js-new-rdv" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-toggle="tooltip" data-placement="bottom" 
+						title="Ajouter un rendez-vous"><span class="far fa-calendar-plus"></span>
+					</button>
+				</div>
+				<h3 class="h4 text-secondary">
+					<span class="d-none d-lg-inline">{{ calendar.getMonthToString|capitalize }}</span>
+					<span class="d-inline d-lg-none">{{ calendar.getMonthMinToString|capitalize }}</span>
+				</h3>
+				<div class="float-right">
+					<div class="d-none d-lg-inline-flex">
+						<div class="form-group  mr-2">
+							<div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} text-dark pl-0" 
+								title="Afficher le calendrier sur toute la largeur">
+								<div class="form-check">
+									<input type="checkbox" id="full-width" name="full-width" 
+										class="custom-control-input checkbox form-check-input">
+									<label class="custom-control-label form-check-label" for="full-width">Vue large</label>
+								</div>
+							</div>
+						</div>
+						<div class="form-group  mr-2">
+							<div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} text-dark pl-0" 
+								title="Afficher les week-end">
+								<div class="form-check">
+									<input type="checkbox" id="show-weekend" name="show-weekend" 
+										class="custom-control-input checkbox form-check-input">
+									<label class="custom-control-label form-check-label" for="show-weekend">WE</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<a href="{% if support is defined %}{{ path('support_calendar', {'id': support.id}) }}{% else %}{{ path('calendar') }}{% endif %}" 
+						class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-toggle="tooltip" data-placement="bottom" title="Mois actuel"><!--
+						--><span class="fas fa-calendar-day"></span><span class="d-none d-md-inline ml-2">Mois actuel</span></a>
+					<a href="{% if support is defined %}{{ path('support_calendar_show', 
+						{'id': support.id, 'year': calendar.previousMonth.year, 'month': calendar.previousMonth.month}) }}
+						{% else %}{{ path('calendar_show', {'year': calendar.previousMonth.year, 'month': calendar.previousMonth.month}) }}{% endif %}" 
+						class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" 
+						data-toggle="tooltip" data-placement="bottom" title="Mois précédent"><span class="fas fa-angle-left"></span>
+					</a>
+					<a href="{% if support is defined %}{{ path('support_calendar_show', 
+						{'id': support.id,'year': calendar.nextMonth.year, 'month': calendar.nextMonth.month}) }}
+						{% else %}{{ path('calendar_show', {'year': calendar.nextMonth.year, 'month': calendar.nextMonth.month}) }}{% endif %}" 
+						class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" 
+						data-toggle="tooltip" data-placement="bottom" title="Mois suivant"><span class="fas fa-angle-right"></span>
+					</a>
+				</div>
+			</div>
+
+			{% set start_day = calendar.firstMonday %}
+
+			<div class="calendar-table calendar-{{ calendar.weeks }}weeks">
+				<div class="calendar-header text-secondary">
+					<div class="calendar-week-number"></div>
+					{% for key, day in calendar.daysList %}
+						{% if key < 7 %}
+							<div class="calendar-header-col week-5days" {% if key >= 5 %}data-weekend="true"{% endif %}>{{ day }}</div>
+						{% endif %}
+					{% endfor %}
+				</div>
+				<div class="calendar-body">
+					{% set week_number = start_day|date("W") - 1 %}
+					{% for week in 0..(calendar.weeks - 1) %}
+						{% if week_number >52 %}
+							{% set week_number = 1 %}
+						{% else %}
+							{% set week_number = week_number + 1 %}
+						{% endif %}
+						<div class="calendar-week-row">
+							<div class="calendar-week-number text-secondary">
+								<div class="my-auto">{{ week_number }}</div>
+							</div>
+							{% for key, day in 0..6 %}
+								{% if key < 7 %}
+									{% set day = start_day|date_modify("+" ~ (day + week * 7) ~ " day") %}
+									<div class="calendar-day-block week-5days {{ calendar.withinMonth(day) == false ? 'calendar-other-month' }}
+										{{ calendar.isToday(day) ? 'calendar-today' }}" id="{{ day|date("Y-m-d") }}" 
+										title="Ajouter un rendez-vous" {% if key >= 5 %}data-weekend="true"{% endif %}>
+										<div class="text-dark calendar-day">{{ day|date("d") }}
+											{{ calendar.otherMonth(day) }}
+										</div>
+										{% if day|date("Y-m-d") in rdvs %}
+											{% for rdv in rdvs[day|date("Y-m-d")] %}
+												<a class="calendar-event bg-{{ theme_color }} text-light" id="rdv-{{ rdv.id }}" 
+													data-toggle="tooltip" data-placement="bottom" title="Voir le rendez-vous">
+													{{ rdv.start|date("H:i") }} {{ rdv.title }}
+												</a>
+											{% endfor %}
+										{% endif %}
+									</div>
+								{% endif %}
+							{% endfor %}
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+	</section>
+
+	{% include "app/support/rdv/_modalRdv.html.twig" %}
+
+{% endblock %}
+
+{% block javascripts %}
+	{{ encore_entry_script_tags("calendar") }}
+{% endblock javascripts %}

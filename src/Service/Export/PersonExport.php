@@ -2,7 +2,7 @@
 
 namespace App\Service\Export;
 
-use App\Entity\Person;
+use App\Entity\People\Person;
 use App\Service\ExportExcel;
 
 class PersonExport extends ExportExcel

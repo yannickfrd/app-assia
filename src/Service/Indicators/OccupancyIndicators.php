@@ -2,14 +2,14 @@
 
 namespace App\Service\Indicators;
 
-use App\Entity\Device;
-use App\Entity\Service;
-use App\Entity\SubService;
-use App\Repository\AccommodationPersonRepository;
-use App\Repository\AccommodationRepository;
-use App\Repository\DeviceRepository;
-use App\Repository\ServiceRepository;
-use App\Repository\SubServiceRepository;
+use App\Entity\Organization\Device;
+use App\Entity\Organization\Service;
+use App\Entity\Organization\SubService;
+use App\Repository\Organization\AccommodationRepository;
+use App\Repository\Organization\DeviceRepository;
+use App\Repository\Organization\ServiceRepository;
+use App\Repository\Organization\SubServiceRepository;
+use App\Repository\Support\AccommodationPersonRepository;
 use App\Security\CurrentUserService;
 
 class OccupancyIndicators

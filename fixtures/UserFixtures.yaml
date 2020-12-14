@@ -1,7 +1,7 @@
 # parameters:
 #     key: value
 
-App\Entity\User:
+App\Entity\Organization\User:
   userSuperAdmin:
     firstname: Romain
     lastname: Madelaine

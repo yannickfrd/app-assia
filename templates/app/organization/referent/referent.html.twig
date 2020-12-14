@@ -1,0 +1,91 @@
+{% extends "base.html.twig" %}
+
+{% set referent = form.vars.value %}
+{% if referent.id %}{% set EDIT_MODE = true %}{% else %}{% set EDIT_MODE = false %}{% endif %}
+
+{% if EDIT_MODE %}
+{% set title = "Référent | " ~ referent.name %}
+{% else %}
+{% set title = "Nouveau service social référent" %}
+{% endif %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+
+        {% if support %}
+            {% include "app/support/support/_navSuppport.html.twig" %}
+        {% else %}
+            {% include "app/people/peopleGroup/_navGroup.html.twig" %}
+            <hr>
+        {% endif %}
+        
+        {% if EDIT_MODE %}
+            <div class="small text-secondary">
+                <p> Créé le {{referent.createdAt|date("d/m/Y à H:i") }}
+                    {{ referent.createdBy ? " par " ~ referent.createdBy.fullname }}
+                    (modifié le {{ referent.updatedAt|date("d/m/Y à H:i") }}
+                    {{ referent.updatedBy ? " par " ~ referent.updatedBy.fullname }})
+                </p>
+            </div>
+        {% else %}
+            <div class="mb-4"></div>
+        {% endif %}
+
+        <hr>
+
+        <section>
+            {{ form_start(form) }}
+
+            <div class="form-group row">
+                <div class="col-md-6">{{ form_row(form.name) }}</div>
+                <div class="col-md-6">{{ form_row(form.type) }}</div>
+                <div class="col-md-6">{{ form_row(form.socialWorker) }}</div>
+                <div class="col-md-6">{{ form_row(form.socialWorker2) }}</div>
+                <div class="col-md-6">{{ form_row(form.email) }}</div>
+                <div class="col-md-6">{{ form_row(form.email2) }}</div>
+                <div class="col-md-6">{{ form_row(form.phone1) }}</div>
+                <div class="col-md-6">{{ form_row(form.phone2) }}</div>
+            </div>
+            <div class="form-group row" id="referent_location">
+                <div class="col-md-6">{{ form_row(form.location.search) }}</div>
+                <div class="col-md-6">{{ form_row(form.location.address) }}</div>
+                <div class="col-md-6">{{ form_row(form.location.city) }}</div>
+                <div class="col-md-6">{{ form_row(form.location.zipcode) }}</div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-12">{{ form_widget(form.comment) }}</div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-12">
+                    {% if EDIT_MODE %}
+                    <div class="float-left d-flex">
+                        <a id="modal-btn-delete" class="mr-3 btn btn-danger d-block"
+                            href="{{ path('referent_delete', {'id':referent.id}) }}"
+                            title="Supprimer le service social référent" data-toggle="tooltip" data-placement="bottom"
+                            onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer ce service social référent ?')){return true;}else{return false;}"><span
+                                class="fas fa-trash-alt mr-2"></span>Supprimer</a>
+                    </div>
+                    {% endif %}
+                    <div class="mb-4 float-right">
+                        <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"><span 
+                            class="fas fa-edit mr-2"></span>{% if EDIT_MODE %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+                    </div>
+                </div>
+            </div>
+
+            {{ form_row(form._token) }}
+            {{ form_end(form, {"render_rest": false}) }}
+
+        </section>
+
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags("referent") }}
+{% endblock javascripts %}

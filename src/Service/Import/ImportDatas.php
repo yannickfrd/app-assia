@@ -2,8 +2,8 @@
 
 namespace App\Service\Import;
 
-use App\Entity\Note;
-use App\Entity\SupportGroup;
+use App\Entity\Support\Note;
+use App\Entity\Support\SupportGroup;
 use App\Notification\MailNotification;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;

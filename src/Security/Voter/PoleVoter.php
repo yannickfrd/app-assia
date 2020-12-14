@@ -2,10 +2,10 @@
 
 namespace App\Security\Voter;
 
-use App\Entity\Pole;
-use App\Entity\User;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use App\Entity\Organization\Pole;
+use App\Entity\Organization\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class PoleVoter extends Voter
 {
@@ -18,15 +18,15 @@ class PoleVoter extends Voter
     protected function supports($attribute, $subject)
     {
         return in_array($attribute, ['VIEW', 'EDIT', 'DISABLE'])
-            && $subject instanceof \App\Entity\Pole;
+            && $subject instanceof \App\Entity\Organization\Pole;
     }
 
     protected function voteOnAttribute($attribute, $pole, TokenInterface $token)
     {
-        /**  @var User */
+        /** @var User */
         $this->user = $token->getUser();
         $this->userId = $this->user->getId();
-        /**  @var Pole */
+        /** @var Pole */
         $this->pole = $pole;
 
         if (!$this->user) {

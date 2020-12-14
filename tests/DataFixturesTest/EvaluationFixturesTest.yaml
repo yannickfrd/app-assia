@@ -1,4 +1,4 @@
-App\Entity\SupportGroup:
+App\Entity\Support\SupportGroup:
   supportGroupWithEval:
     startDate: <date_create("2020-03-04")>
     endDate: null
@@ -13,8 +13,7 @@ App\Entity\SupportGroup:
     createdBy: $referent
     updatedBy: $referent
 
-
-App\Entity\SupportPerson:
+App\Entity\Support\SupportPerson:
   supportPersonWithEval:
     startDate: "@supportGroup1->startDate"
     endDate: "@supportGroup1->endDate"
@@ -26,8 +25,7 @@ App\Entity\SupportPerson:
     head: "@rolePerson->head"
     role: "@rolePerson->role"
 
-
-App\Entity\EvaluationGroup:
+App\Entity\Evaluation\EvaluationGroup:
   evaluationGroup1:
     date: <date_create("2019-04-03")>
     title: "Evaluation initiale"
@@ -35,8 +33,7 @@ App\Entity\EvaluationGroup:
     updatedAt: <dateTimeBetween($createdAt, "now")>
     supportGroup: "@supportGroupWithEval"
 
-
-App\Entity\EvaluationPerson:
+App\Entity\Evaluation\EvaluationPerson:
   evaluationPerson1:
     evaluationGroup: "@evaluationGroup1"
     supportPerson: "@supportPersonWithEval"

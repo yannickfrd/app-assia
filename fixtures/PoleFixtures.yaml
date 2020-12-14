@@ -1,11 +1,11 @@
-App\Entity\Pole:
+App\Entity\Organization\Pole:
   pole1:
     name: Habitat
     phone1: <fr_FR:phoneNumber()>
     email: <fr_FR:email()>
     city: Pontoise
     zipcode: 95 000
-    address : <fr_FR:address()>  
+    address: <fr_FR:address()>
     color: brown
     createdAt: <date_create()>
     updatedAt: <date_create()>
@@ -18,7 +18,7 @@ App\Entity\Pole:
     email: <fr_FR:email()>
     city: <fr_FR:city()>
     zipcode: <numberBetween(1, 95)>
-    address : <fr_FR:address()>
+    address: <fr_FR:address()>
     color: brown
     createdAt: <date_create()>
     updatedAt: <date_create()>

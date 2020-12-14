@@ -2,10 +2,10 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\ServiceUser;
-use App\Entity\User;
-use App\Repository\ServiceRepository;
-use App\Repository\ServiceUserRepository;
+use App\Entity\Organization\ServiceUser;
+use App\Entity\Organization\User;
+use App\Repository\Organization\ServiceRepository;
+use App\Repository\Organization\ServiceUserRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;

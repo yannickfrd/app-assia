@@ -2,23 +2,22 @@
 
 namespace App\Controller;
 
-use App\Entity\Device;
-use App\Entity\Service;
-use App\Entity\SubService;
-use App\Entity\User;
-use App\Form\Model\OccupancySearch;
-use App\Form\Model\SupportsByUserSearch;
-use App\Form\OccupancySearchType;
-use App\Form\SupportsByUserSearchType;
+use App\Entity\Organization\Device;
+use App\Entity\Organization\Service;
+use App\Entity\Organization\SubService;
+use App\Form\Admin\OccupancySearchType;
+use App\Form\Model\Admin\OccupancySearch;
+use App\Form\Admin\SupportsByUserSearchType;
 use App\Service\Indicators\IndicatorsService;
-use App\Service\Indicators\OccupancyIndicators;
-use App\Service\Indicators\SupportsByUserIndicators;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Service\Indicators\OccupancyIndicators;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Form\Model\Support\SupportsByUserSearch;
+use App\Service\Indicators\SupportsByUserIndicators;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AppController extends AbstractController
 {
@@ -38,7 +37,7 @@ class AppController extends AbstractController
      */
     public function home(IndicatorsService $indicators): Response
     {
-        return $this->render('app/home/dashboard.html.twig', [
+        return $this->render('app/admin/home/dashboard.html.twig', [
             'indicators' => $this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getIndicators() : null,
             'servicesIndicators' => $indicators->getServicesIndicators($indicators->getUserServices($this->getUser())),
             'supports' => !$this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getUserSupports($this->getUser()) : null,
@@ -66,7 +65,7 @@ class AppController extends AbstractController
      */
     public function managing(): Response
     {
-        return $this->render('app/managing/managing.html.twig');
+        return $this->render('app/admin/managing/managing.html.twig');
     }
 
     /**
@@ -95,7 +94,7 @@ class AppController extends AbstractController
         $form = ($this->createForm(SupportsByUserSearchType::class, $search))
             ->handleRequest($request);
 
-        return $this->render('app/dashboard/supportsByUser.html.twig', [
+        return $this->render('app/admin/dashboard/supportsByUser.html.twig', [
             'form' => $form->createView(),
             'datas' => $form->isSubmitted() || false == $this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getSupportsbyDevice($search) : null,
         ]);
@@ -119,7 +118,7 @@ class AppController extends AbstractController
         $start = $search->getStart() ?? new \DateTime($today->format('Y').'-01-01');
         $end = $search->getEnd() ?? $today;
 
-        return $this->render('app/dashboard/occupancyByDevice.html.twig', [
+        return $this->render('app/admin/dashboard/occupancyByDevice.html.twig', [
             'service' => $service,
             'start' => $start,
             'end' => $end,
@@ -146,7 +145,7 @@ class AppController extends AbstractController
         $start = $search->getStart() ?? new \DateTime($today->format('Y').'-01-01');
         $end = $search->getEnd() ?? $today;
 
-        return $this->render('app/dashboard/occupancyByService.html.twig', [
+        return $this->render('app/admin/dashboard/occupancyByService.html.twig', [
             'device' => $device,
             'start' => $start,
             'end' => $end,
@@ -172,7 +171,7 @@ class AppController extends AbstractController
         $start = $search->getStart() ?? new \DateTime($today->format('Y').'-01-01');
         $end = $search->getEnd() ?? $today;
 
-        return $this->render('app/dashboard/occupancyBySubService.html.twig', [
+        return $this->render('app/admin/dashboard/occupancyBySubService.html.twig', [
             'service' => $service,
             'start' => $start,
             'end' => $end,
@@ -199,7 +198,7 @@ class AppController extends AbstractController
         $start = $search->getStart() ?? new \DateTime($today->format('Y').'-01-01');
         $end = $search->getEnd() ?? $today;
 
-        return $this->render('app/dashboard/occupancyByAccommodation.html.twig', [
+        return $this->render('app/admin/dashboard/occupancyByAccommodation.html.twig', [
             'service' => $service,
             'start' => $start,
             'end' => $end,
@@ -225,7 +224,7 @@ class AppController extends AbstractController
         $start = $search->getStart() ?? new \DateTime($today->format('Y').'-01-01');
         $end = $search->getEnd() ?? $today;
 
-        return $this->render('app/dashboard/occupancySubServiceByAccommodation.html.twig', [
+        return $this->render('app/admin/dashboard/occupancySubServiceByAccommodation.html.twig', [
             'subService' => $subService,
             'start' => $start,
             'end' => $end,

@@ -2,7 +2,7 @@
 
 namespace App\Entity\Traits;
 
-use App\Entity\EvalBudgetPerson;
+use App\Entity\Evaluation\EvalBudgetPerson;
 use App\Form\Utils\Choices;
 
 trait ResourcesEntityTrait

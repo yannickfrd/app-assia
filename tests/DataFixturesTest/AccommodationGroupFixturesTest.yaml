@@ -1,4 +1,4 @@
-App\Entity\AccommodationGroup:
+App\Entity\Support\AccommodationGroup:
   accomGroup1:
     startDate: <dateTimeBetween("-2 years", "now")>
     endDate: <dateTimeBetween($startDate, "now")>
@@ -23,8 +23,7 @@ App\Entity\AccommodationGroup:
     peopleGroup: "@peopleGroup*"
     supportGroup: "@supportGroup*"
 
-
-App\Entity\AccommodationPerson:
+App\Entity\Support\AccommodationPerson:
   accomPerson1:
     startDate: <dateTimeBetween("-2 years", "now")>
     endDate: <dateTimeBetween($startDate, "now")>
@@ -47,8 +46,7 @@ App\Entity\AccommodationPerson:
     accommodationGroup: "@accomGroup*"
     person: "@person*"
 
-
-App\Entity\Accommodation:
+App\Entity\Organization\Accommodation:
   accommodation1:
     name: Logement 666
     nbPlaces: 6
@@ -56,10 +54,10 @@ App\Entity\Accommodation:
     # endDate: <date_create("2020-01-01")>
     city: Houilles
     zipcode: <numberBetween(1, 95)>
-    address : <fr_FR:address()>
-    accommodationType:  <numberBetween(1, 13)>
-    configuration:  <numberBetween(1, 2)>
-    individualCollective:  <numberBetween(1, 2)>
+    address: <fr_FR:address()>
+    accommodationType: <numberBetween(1, 13)>
+    configuration: <numberBetween(1, 2)>
+    individualCollective: <numberBetween(1, 2)>
     createdAt: <dateTimeBetween("-10 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
     service: "@service1"
@@ -67,8 +65,7 @@ App\Entity\Accommodation:
     createdBy: "@userRoleUser"
     updatedBy: "@userRoleUser"
 
-
-App\Entity\SupportGroup:
+App\Entity\Support\SupportGroup:
   supportGroup1:
     startDate: <date_create("2019-04-03")>
     endDate: null
@@ -83,7 +80,6 @@ App\Entity\SupportGroup:
     createdBy: $referent
     updatedBy: $referent
 
-
   supportGroup{2..5}:
     startDate: <dateTimeBetween("-2 years", "now")>
     endDate: <dateTimeBetween($startDate, "now")>
@@ -97,8 +93,7 @@ App\Entity\SupportGroup:
     createdBy: $referent
     updatedBy: $referent
 
-
-App\Entity\SupportPerson:
+App\Entity\Support\SupportPerson:
   supportPerson1:
     startDate: "@supportGroup1->startDate"
     endDate: "@supportGroup1->endDate"
@@ -110,8 +105,7 @@ App\Entity\SupportPerson:
     head: "@rolePerson->head"
     role: "@rolePerson->role"
 
-    
-App\Entity\User:
+App\Entity\Organization\User:
   userRoleUser:
     firstname: Role
     lastname: SUPER_ADMIN
@@ -121,49 +115,42 @@ App\Entity\User:
     roles: ["ROLE_SUPER_ADMIN"]
     plainPassword: Test123*
 
-
-App\Entity\Person:
-  person: 
+App\Entity\People\Person:
+  person:
     firstname: John
     lastname: Doe
     gender: 2
     birthdate: <date_create("1980-01-01")>
 
-
-App\Entity\PeopleGroup:
+App\Entity\People\PeopleGroup:
   peopleGroup:
     familyTypology: 2
     nbPeople: 1
 
-
-App\Entity\RolePerson:
+App\Entity\People\RolePerson:
   rolePerson:
     head: 1
     role: 5
     person: "@person"
     peopleGroup: "@peopleGroup"
 
-
-App\Entity\Service:
+App\Entity\Organization\Service:
   service1:
     name: AVDL
     pole: "@pole"
     createdAt: <date_create()>
     updatedAt: <date_create()>
 
-
-App\Entity\Pole:
+App\Entity\Organization\Pole:
   pole:
     name: Habitat
     createdAt: <date_create()>
     updatedAt: <date_create()>
 
-
-App\Entity\Device:
+App\Entity\Organization\Device:
   device1:
     name: AVDL
-
-# App\Entity\ServiceDevice:
+# App\Entity\Organization\ServiceDevice:
 #   servDevice:
 #     device: "@device1"
 #     service: "@service1"

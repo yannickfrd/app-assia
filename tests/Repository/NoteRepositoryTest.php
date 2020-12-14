@@ -2,11 +2,11 @@
 
 namespace App\Tests\Repository;
 
-use App\Entity\Note;
-use App\Entity\SupportGroup;
-use App\Entity\User;
-use App\Form\Model\NoteSearch;
-use App\Form\Model\SupportNoteSearch;
+use App\Entity\Organization\User;
+use App\Entity\Support\Note;
+use App\Entity\Support\SupportGroup;
+use App\Form\Model\Support\NoteSearch;
+use App\Form\Model\Support\SupportNoteSearch;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

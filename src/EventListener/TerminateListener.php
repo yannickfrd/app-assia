@@ -2,11 +2,11 @@
 
 namespace App\EventListener;
 
-use App\Entity\Export;
-use App\Entity\SupportPerson;
-use App\Entity\User;
-use App\Form\Export\ExportSearchType;
-use App\Form\Model\ExportSearch;
+use App\Entity\Admin\Export;
+use App\Entity\Organization\User;
+use App\Entity\Support\SupportPerson;
+use App\Form\Admin\ExportSearchType;
+use App\Form\Model\Admin\ExportSearch;
 use App\Notification\MailNotification;
 use App\Service\Export\SupportPersonFullExport;
 use Symfony\Component\DependencyInjection\ContainerInterface;

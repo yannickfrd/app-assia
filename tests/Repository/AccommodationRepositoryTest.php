@@ -2,10 +2,10 @@
 
 namespace App\Tests\Repository;
 
-use App\Entity\Accommodation;
-use App\Entity\Pole;
-use App\Entity\Service;
-use App\Form\Model\AccommodationSearch;
+use App\Entity\Organization\Accommodation;
+use App\Entity\Organization\Pole;
+use App\Entity\Organization\Service;
+use App\Form\Model\Organization\AccommodationSearch;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

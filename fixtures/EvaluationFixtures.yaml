@@ -1,4 +1,4 @@
-App\Entity\EvaluationGroup:
+App\Entity\Evaluation\EvaluationGroup:
   evaluationGroup1:
     date: <date_create("2019-04-03")>
     title: "Evaluation initiale"
@@ -13,12 +13,11 @@ App\Entity\EvaluationGroup:
     date: $createdAt
     supportGroup: "@supportGroup2"
 
-
-App\Entity\EvaluationPerson:
+App\Entity\Evaluation\EvaluationPerson:
   evaluationPerson1:
     evaluationGroup: "@evaluationGroup1"
     supportPerson: "@supportPerson1"
-    
+
   evaluationPerson2:
     evaluationGroup: "@evaluationGroup2"
     supportPerson: "@supportPerson2"

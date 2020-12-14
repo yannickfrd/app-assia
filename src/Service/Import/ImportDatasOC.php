@@ -2,30 +2,30 @@
 
 namespace App\Service\Import;
 
-use App\Entity\Device;
-use App\Entity\EvalAdmPerson;
-use App\Entity\EvalBudgetGroup;
-use App\Entity\EvalBudgetPerson;
-use App\Entity\EvalFamilyPerson;
-use App\Entity\EvalHousingGroup;
-use App\Entity\EvalProfPerson;
-use App\Entity\EvalSocialPerson;
-use App\Entity\EvaluationGroup;
-use App\Entity\EvaluationPerson;
-use App\Entity\HotelSupport;
-use App\Entity\InitEvalGroup;
-use App\Entity\InitEvalPerson;
-use App\Entity\PeopleGroup;
-use App\Entity\Person;
-use App\Entity\RolePerson;
-use App\Entity\Service;
-use App\Entity\SupportGroup;
-use App\Entity\SupportPerson;
-use App\Entity\User;
+use App\Entity\Evaluation\EvalAdmPerson;
+use App\Entity\Evaluation\EvalBudgetGroup;
+use App\Entity\Evaluation\EvalBudgetPerson;
+use App\Entity\Evaluation\EvalFamilyPerson;
+use App\Entity\Evaluation\EvalHousingGroup;
+use App\Entity\Evaluation\EvalProfPerson;
+use App\Entity\Evaluation\EvalSocialPerson;
+use App\Entity\Evaluation\EvaluationGroup;
+use App\Entity\Evaluation\EvaluationPerson;
+use App\Entity\Evaluation\InitEvalGroup;
+use App\Entity\Evaluation\InitEvalPerson;
+use App\Entity\Organization\Device;
+use App\Entity\Organization\Service;
+use App\Entity\Organization\User;
+use App\Entity\People\PeopleGroup;
+use App\Entity\People\Person;
+use App\Entity\People\RolePerson;
+use App\Entity\Support\HotelSupport;
+use App\Entity\Support\SupportGroup;
+use App\Entity\Support\SupportPerson;
 use App\Form\Utils\Choices;
 use App\Notification\MailNotification;
-use App\Repository\DeviceRepository;
-use App\Repository\PersonRepository;
+use App\Repository\Organization\DeviceRepository;
+use App\Repository\People\PersonRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ImportDatasOC extends ImportDatas

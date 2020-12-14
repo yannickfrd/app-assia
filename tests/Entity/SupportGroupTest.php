@@ -2,7 +2,7 @@
 
 namespace App\Tests\Entity;
 
-use App\Entity\SupportGroup;
+use App\Entity\Support\SupportGroup;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

@@ -1,4 +1,4 @@
-App\Entity\SupportGroup:
+App\Entity\Support\SupportGroup:
   supportGroup1:
     startDate: <date_create("2019-04-03")>
     endDate: null
@@ -13,7 +13,6 @@ App\Entity\SupportGroup:
     createdBy: $referent
     updatedBy: $referent
 
-
   supportGroup{2..5}:
     startDate: <dateTimeBetween("-2 years", "now")>
     endDate: <dateTimeBetween($startDate, "now")>
@@ -27,8 +26,7 @@ App\Entity\SupportGroup:
     createdBy: $referent
     updatedBy: $referent
 
-
-App\Entity\SupportPerson:
+App\Entity\Support\SupportPerson:
   supportPerson1:
     startDate: "@supportGroup1->startDate"
     endDate: "@supportGroup1->endDate"
@@ -40,8 +38,7 @@ App\Entity\SupportPerson:
     head: "@rolePerson->head"
     role: "@rolePerson->role"
 
-    
-App\Entity\User:
+App\Entity\Organization\User:
   userRoleUser:
     firstname: Role
     lastname: SUPER_ADMIN
@@ -51,53 +48,48 @@ App\Entity\User:
     roles: ["ROLE_SUPER_ADMIN"]
     plainPassword: Test123*
 
-
-App\Entity\Person:
-  person: 
+App\Entity\People\Person:
+  person:
     firstname: John
     lastname: Doe
     gender: 2
     birthdate: <date_create("1980-01-01")>
 
-
-App\Entity\PeopleGroup:
+App\Entity\People\PeopleGroup:
   peopleGroup:
     familyTypology: 2
     nbPeople: 1
 
-
-App\Entity\RolePerson:
+App\Entity\People\RolePerson:
   rolePerson:
     head: 1
     role: 5
     person: "@person"
     peopleGroup: "@peopleGroup"
 
-
-App\Entity\Service:
+App\Entity\Organization\Service:
   service1:
     name: AVDL
     pole: "@pole"
     createdAt: <date_create()>
     updatedAt: <date_create()>
 
-
-App\Entity\Pole:
+App\Entity\Organization\Pole:
   pole:
     name: Habitat
     createdAt: <date_create()>
     updatedAt: <date_create()>
 
-App\Entity\Device:
+App\Entity\Organization\Device:
   device1:
     name: AVDL
 
-App\Entity\ServiceDevice:
+App\Entity\Organization\ServiceDevice:
   servcieDevice:
     device: "@device1"
     service: "@service1"
 
-App\Entity\Organization:
+App\Entity\Organization\Organization:
   organization1:
     name: ESPERER 95
     type: <numberBetween(1, 9)>

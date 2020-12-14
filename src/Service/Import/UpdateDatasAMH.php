@@ -2,7 +2,7 @@
 
 namespace App\Service\Import;
 
-use App\Repository\PersonRepository;
+use App\Repository\People\PersonRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class UpdateDatasAMH extends ImportDatas

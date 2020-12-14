@@ -2,7 +2,7 @@
 
 namespace App\Form\Evaluation;
 
-use App\Entity\EvalHotelLifeGroup;
+use App\Entity\Evaluation\EvalHotelLifeGroup;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;

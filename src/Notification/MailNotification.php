@@ -2,7 +2,7 @@
 
 namespace App\Notification;
 
-use App\Entity\User;
+use App\Entity\Organization\User;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;

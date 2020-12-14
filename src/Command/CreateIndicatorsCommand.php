@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\Repository\IndicatorRepository;
+use App\Repository\Admin\IndicatorRepository;
 use App\Service\Indicators\IndicatorsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;

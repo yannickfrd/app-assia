@@ -2,12 +2,12 @@
 
 namespace App\Tests\Repository;
 
-use App\Entity\Rdv;
-use App\Entity\SupportGroup;
-use App\Entity\User;
-use App\Form\Model\RdvSearch;
-use App\Form\Model\SupportRdvSearch;
-use App\Repository\RdvRepository;
+use App\Entity\Organization\User;
+use App\Entity\Support\Rdv;
+use App\Entity\Support\SupportGroup;
+use App\Form\Model\Support\RdvSearch;
+use App\Form\Model\Support\SupportRdvSearch;
+use App\Repository\Support\RdvRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;

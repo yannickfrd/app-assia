@@ -2,7 +2,7 @@
 
 namespace App\Security\Voter;
 
-use App\Entity\Contribution;
+use App\Entity\Support\Contribution;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -17,7 +17,7 @@ class ContributionVoter extends Voter
     protected function supports($attribute, $subject)
     {
         return in_array($attribute, ['VIEW', 'EDIT', 'DELETE'])
-            && $subject instanceof \App\Entity\Contribution;
+            && $subject instanceof \App\Entity\Support\Contribution;
     }
 
     protected function voteOnAttribute($attribute, $contribution, TokenInterface $token): bool

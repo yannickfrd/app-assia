@@ -2,14 +2,14 @@
 
 namespace App\Form\Type;
 
-use App\Entity\Device;
-use App\Entity\Service;
-use App\Entity\SubService;
-use App\Entity\User;
-use App\Repository\DeviceRepository;
-use App\Repository\ServiceRepository;
-use App\Repository\SubServiceRepository;
-use App\Repository\UserRepository;
+use App\Entity\Organization\Device;
+use App\Entity\Organization\Service;
+use App\Entity\Organization\SubService;
+use App\Entity\Organization\User;
+use App\Repository\Organization\DeviceRepository;
+use App\Repository\Organization\ServiceRepository;
+use App\Repository\Organization\SubServiceRepository;
+use App\Repository\Organization\UserRepository;
 use App\Security\CurrentUserService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;

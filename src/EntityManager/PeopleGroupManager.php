@@ -2,17 +2,17 @@
 
 namespace App\EntityManager;
 
-use App\Entity\Person;
+use App\Entity\Evaluation\EvaluationGroup;
+use App\Entity\People\PeopleGroup;
+use App\Entity\People\Person;
+use App\Entity\People\RolePerson;
+use App\Entity\Support\SupportGroup;
+use App\Repository\Organization\ReferentRepository;
+use App\Repository\People\RolePersonRepository;
+use App\Repository\Support\SupportGroupRepository;
 use App\Service\Grammar;
-use App\Entity\RolePerson;
-use App\Entity\PeopleGroup;
-use App\Entity\SupportGroup;
-use App\Entity\EvaluationGroup;
-use Psr\Cache\CacheItemInterface;
-use App\Repository\ReferentRepository;
-use App\Repository\RolePersonRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\SupportGroupRepository;
+use Psr\Cache\CacheItemInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 

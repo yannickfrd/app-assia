@@ -2,7 +2,7 @@
 
 namespace App\Service\Export;
 
-use App\Entity\Rdv;
+use App\Entity\Support\Rdv;
 use App\Service\ExportExcel;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 

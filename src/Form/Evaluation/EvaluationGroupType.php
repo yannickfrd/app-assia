@@ -2,8 +2,8 @@
 
 namespace App\Form\Evaluation;
 
-use App\Entity\EvaluationGroup;
-use App\Entity\Service;
+use App\Entity\Evaluation\EvaluationGroup;
+use App\Entity\Organization\Service;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;

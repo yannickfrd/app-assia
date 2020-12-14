@@ -1,4 +1,4 @@
-App\Entity\Device:
+App\Entity\Organization\Device:
   device1:
     name: AVDL
     coefficient: 1
@@ -15,7 +15,7 @@ App\Entity\Device:
     createdBy: "@user*"
     updatedBy: "@user*"
 
-App\Entity\ServiceDevice:
+App\Entity\Organization\ServiceDevice:
   servDevice1:
     device: "@device1"
     service: "@service1"

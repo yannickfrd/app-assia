@@ -2,10 +2,10 @@
 
 namespace App\Form\Evaluation;
 
-use App\Entity\EvalAdmPerson;
-use App\Entity\EvalProfPerson;
-use App\Entity\EvalSocialPerson;
-use App\Entity\InitEvalPerson;
+use App\Entity\Evaluation\EvalAdmPerson;
+use App\Entity\Evaluation\EvalProfPerson;
+use App\Entity\Evaluation\EvalSocialPerson;
+use App\Entity\Evaluation\InitEvalPerson;
 use App\Form\Type\ResourcesType;
 use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;

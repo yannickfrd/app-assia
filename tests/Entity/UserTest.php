@@ -2,7 +2,7 @@
 
 namespace App\Tests\Entity;
 
-use App\Entity\User;
+use App\Entity\Organization\User;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

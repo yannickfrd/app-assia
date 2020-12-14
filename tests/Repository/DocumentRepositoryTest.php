@@ -2,11 +2,11 @@
 
 namespace App\Tests\Repository;
 
-use App\Entity\Document;
-use App\Entity\SupportGroup;
-use App\Entity\User;
-use App\Form\Model\DocumentSearch;
-use App\Form\Model\SupportDocumentSearch;
+use App\Entity\Organization\User;
+use App\Entity\Support\Document;
+use App\Entity\Support\SupportGroup;
+use App\Form\Model\Support\DocumentSearch;
+use App\Form\Model\Support\SupportDocumentSearch;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

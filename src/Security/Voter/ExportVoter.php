@@ -2,9 +2,9 @@
 
 namespace App\Security\Voter;
 
-use App\Entity\Export;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use App\Entity\Admin\Export;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class ExportVoter extends Voter
 {
@@ -17,7 +17,7 @@ class ExportVoter extends Voter
     protected function supports($attribute, $subject)
     {
         return in_array($attribute, ['GET', 'VIEW', 'EDIT', 'DELETE'])
-            && $subject instanceof \App\Entity\Export;
+            && $subject instanceof \App\Entity\Admin\Export;
     }
 
     protected function voteOnAttribute($attribute, $export, TokenInterface $token)
@@ -25,7 +25,7 @@ class ExportVoter extends Voter
         /** @var User */
         $this->user = $token->getUser();
         $this->userId = $this->user->getId();
-        /**  @var Export */
+        /** @var Export */
         $this->export = $export;
 
         if (!$this->user) {

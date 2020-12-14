@@ -2,9 +2,8 @@
 
 namespace App\Security;
 
-use App\Entity\User;
+use App\Entity\Organization\User;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 class CurrentUserService
 {

@@ -2,9 +2,9 @@
 
 namespace App\Service\Export;
 
-use App\Entity\HotelSupport;
-use App\Entity\OriginRequest;
-use App\Entity\SupportPerson;
+use App\Entity\Support\HotelSupport;
+use App\Entity\Support\OriginRequest;
+use App\Entity\Support\SupportPerson;
 use App\Service\ExportExcel;
 
 class HotelSupportPersonExport extends ExportExcel

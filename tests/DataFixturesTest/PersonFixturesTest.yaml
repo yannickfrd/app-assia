@@ -1,5 +1,5 @@
-App\Entity\Person:
-  person1: 
+App\Entity\People\Person:
+  person1:
     firstname: John
     lastname: Doe
     gender: 2
@@ -10,7 +10,7 @@ App\Entity\Person:
     createdBy: "@userRoleUser"
     updatedBy: "@userRoleUser"
 
-  person{2..5}: 
+  person{2..5}:
     gender: <numberBetween(1, 2)>
     firstname: <fr_FR:firstName($gender, "fr_FR")>
     lastname: <lastName()>
@@ -22,22 +22,19 @@ App\Entity\Person:
     createdBy: "@userRoleUser"
     updatedBy: "@userRoleUser"
 
-
-App\Entity\PeopleGroup:
+App\Entity\People\PeopleGroup:
   peopleGroup1:
     familyTypology: 2
     nbPeople: 1
 
-
-App\Entity\RolePerson:
+App\Entity\People\RolePerson:
   rolePerson:
     head: 1
     role: 5
     person: "@person1"
     peopleGroup: "@peopleGroup1"
 
-
-App\Entity\User:
+App\Entity\Organization\User:
   userRoleUser:
     firstname: Role
     lastname: SUPER_ADMIN
@@ -47,22 +44,19 @@ App\Entity\User:
     roles: ["ROLE_SUPER_ADMIN"]
     plainPassword: Test123*
 
-
-App\Entity\Service:
+App\Entity\Organization\Service:
   service1:
     name: AVDL
     pole: "@pole"
     createdAt: <date_create()>
     updatedAt: <date_create()>
 
-
-App\Entity\Pole:
+App\Entity\Organization\Pole:
   pole:
     name: Habitat
     createdAt: <date_create()>
     updatedAt: <date_create()>
 
-
-App\Entity\Device:
+App\Entity\Organization\Device:
   device1:
     name: AVDL

@@ -2,10 +2,10 @@
 
 namespace App\Service\Import;
 
-use App\Entity\Accommodation;
-use App\Entity\Service;
-use App\Repository\AccommodationRepository;
-use App\Repository\SubServiceRepository;
+use App\Entity\Organization\Accommodation;
+use App\Entity\Organization\Service;
+use App\Repository\Organization\AccommodationRepository;
+use App\Repository\Organization\SubServiceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ImportDatasHotel extends ImportDatas

@@ -2,9 +2,9 @@
 
 namespace App\Tests\Repository;
 
-use App\Entity\Person;
-use App\Form\Model\PersonSearch;
-use App\Repository\PersonRepository;
+use App\Entity\People\Person;
+use App\Form\Model\People\PersonSearch;
+use App\Repository\People\PersonRepository;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

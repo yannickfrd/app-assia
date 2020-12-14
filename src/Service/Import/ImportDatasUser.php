@@ -2,11 +2,11 @@
 
 namespace App\Service\Import;
 
-use App\Entity\Service;
-use App\Entity\ServiceUser;
-use App\Entity\User;
+use App\Entity\Organization\Service;
+use App\Entity\Organization\ServiceUser;
+use App\Entity\Organization\User;
 use App\Notification\MailNotification;
-use App\Repository\UserRepository;
+use App\Repository\Organization\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;

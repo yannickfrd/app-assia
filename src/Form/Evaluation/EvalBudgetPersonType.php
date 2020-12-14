@@ -2,7 +2,7 @@
 
 namespace App\Form\Evaluation;
 
-use App\Entity\EvalBudgetPerson;
+use App\Entity\Evaluation\EvalBudgetPerson;
 use App\Form\Type\ResourcesType;
 use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;

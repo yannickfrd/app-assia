@@ -1,4 +1,4 @@
-App\Entity\Contribution:
+App\Entity\Support\Contribution:
   contribution{1..200}:
     monthContrib: <dateTimeBetween("-1 year", "now")>
     type: <numberBetween(1, 2)>

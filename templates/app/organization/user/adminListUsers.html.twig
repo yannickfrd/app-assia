@@ -1,0 +1,126 @@
+{% extends "base.html.twig" %}
+
+{% set is_granted_role_super_admin = is_granted('ROLE_SUPER_ADMIN') %}
+
+{% block title %}Admin | Utilisateurs{% endblock %}
+
+{% block body %}
+
+    <section class="mt-0">
+        <div class="container-fluid pt-4">
+            {% include "model/_msgFlash.html.twig" %}
+            <h1 class="h2 mb-3">Administration des utilisateurs</h1>
+        </div>
+
+        {% include "app/organization/user/_searchUsers.html.twig" %}
+
+        <div class="container-fluid mt-4">
+            <div class="row">
+                <div class="col-md-12">
+                    <p><a href="{{ path("security_registration") }}" class="btn btn-{{ theme_color }} btn-sm shadow">
+                         <span class="fas fa-plus-square mr-2"></span>Créer un nouvel utilisateur</a>
+                    </p>
+                </div>
+            </div>
+            <div class="row align-items-baseline">
+                <div class="col-md-4 count align-middle">
+                    <p class="align-middle">Total : {{ users.getTotalItemCount|number_format(0,'', ' ')}} utilisateurs.</p>
+                </div>
+                <div class="col-md-8">
+                    <div class="navigation">{{ knp_pagination_render(users) }}</div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="align-middle th-w-20"></th>
+                            <th scope="col" class="align-middle th-w-120">
+                                {{ knp_pagination_sortable(users, "Nom", "u.lastname") }}</th>
+                            <th scope="col" class="align-middle th-w-120">
+                                {{ knp_pagination_sortable(users, "Prénom", "u.firstname") }}</th>
+                            <th scope="col" class="align-middle th-w-120 d-none d-md-table-cell">
+                                {{ knp_pagination_sortable(users, "Fonction", "u.status") }}</th>
+                            <th scope="col" class="align-middle th-w-120 d-none d-md-table-cell">
+                                {{ knp_pagination_sortable(users, "Profil", "u.roles") }}</th>
+                            <th scope="col" class="align-middle th-w-120 d-none d-md-table-cell">Téléphone</th>
+                            <th scope="col" class="align-middle th-w-150 d-none d-md-table-cell">Email</th>
+                            <th scope="col" class="align-middle th-w-150 d-none d-md-table-cell">
+                                {{ knp_pagination_sortable(users, "Service", "s.name") }}</th>
+                            <th scope="col" class="align-middle th-w-150 d-none d-md-table-cell">
+                                {{ knp_pagination_sortable(users, "Pôle", "p.name") }}</th>
+                            {% if is_granted_role_super_admin %}
+                                <th scope="col" class="align-middle th-w-80">
+                                    {{ knp_pagination_sortable(users, "Dernière activité", "u.lastActivityAt") }}</th>
+                                <th scope="col" class="align-middle th-w-80">
+                                    {{ knp_pagination_sortable(users, "Nombre de connexions", "u.loginCount") }}</th>
+                            {% endif %}
+                            <th scope="col" class="align-middle th-w-60">
+                                {{ knp_pagination_sortable(users, "Désactivé", "u.disabledAt") }}
+                            </th>                        
+                            <th scope="col" class="align-middle th-w-80">
+                                {{ knp_pagination_sortable(users, "Date de création", "u.createdAt") }}</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for user in users %}
+                            <tr class="{% if user.disabled %}text-secondary{% endif %}">
+                                <td class="align-middle" scope="row">
+                                    <a href="{{ path('security_user', {'id': user.id}) }}"
+                                        class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" data-placement="bottom"
+                                        title="Voir la fiche"><span class="fas fa-eye"></span>
+                                    </a>
+                                </td>
+                                <td class="align-middle">{% if user.disabled %}<del>{{ user.lastname }}</del> (désactivé){% else %}{{ user.lastname }}{% endif %}</td>
+                                <td class="align-middle">{{ user.firstname }}</td>
+                                <td class="align-middle d-none d-md-table-cell">{{ user.statusToString }}</td>
+                                <td class="align-middle d-none d-md-table-cell">{{ user.rolesToString|last }}</td>
+                                <td class="align-middle d-none d-md-table-cell">{{ user.phone1 }}</td>
+                                <td class="align-middle d-none d-md-table-cell">{{ user.email }}</td>
+                                <td class="align-middle d-none d-md-table-cell">
+                                    {% for service in user.services|sort ((a, b) => a.name <=> b.name) %}
+                                        <a href="{{ path('service_edit', {'id': service.id}) }}" 
+                                            class="text-{{ theme_color }}">{{ service.name }}</a>{% if not loop.last %}, {% endif %}
+                                    {% endfor %}
+                                </td>
+                                {% set poles = [] %}
+                                <td class="align-middle d-none d-md-table-cell">
+                                    {% for service in user.services %}
+                                        {% if service.pole.id not in poles %}
+                                            {% set poles = poles|merge([service.pole.id]) %}
+                                            <a href="{{ path('pole_edit', {'id': service.pole.id}) }}" 
+                                                class="text-{{ theme_color }}">{{ service.pole.name }}</a><br/>
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+                                {% if is_granted_role_super_admin %}
+                                    <td class="align-middle">{{ user.lastActivityAt ? user.lastActivityAt|date("d/m/Y H:i") }}</td>
+                                    <td class="align-middle">{{ user.loginCount }}</td>
+                                {% endif %}
+                                <td class="align-middle">{{ user.disabledAt ? user.disabledAt|date("d/m/Y H:i") }}</td>
+                                <td class="align-middle">{{ user.createdAt|date("d/m/Y H:i") }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="navigation">{{ knp_pagination_render(users) }}</div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <p><a href="{{ path("security_registration") }}" class="btn btn-{{ theme_color }} btn-sm shadow">
+                         <span class="fas fa-plus-square mr-2"></span>Créer un nouvel utilisateur</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags("search") }}
+{% endblock javascripts %}

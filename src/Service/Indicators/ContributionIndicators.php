@@ -2,7 +2,7 @@
 
 namespace App\Service\Indicators;
 
-use App\Form\Model\ContributionSearch;
+use App\Form\Model\Support\ContributionSearch;
 use App\Service\Calendar;
 
 class ContributionIndicators

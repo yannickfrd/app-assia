@@ -1,4 +1,4 @@
-App\Entity\SupportGroup:
+App\Entity\Support\SupportGroup:
   supportGroup1:
     startDate: <date_create("2019-04-03")>
     endDate: null
@@ -27,8 +27,7 @@ App\Entity\SupportGroup:
     createdBy: $referent
     updatedBy: $referent
 
-
-App\Entity\SupportPerson:
+App\Entity\Support\SupportPerson:
   supportPerson1:
     startDate: "@supportGroup1->startDate"
     endDate: "@supportGroup1->endDate"
@@ -39,7 +38,7 @@ App\Entity\SupportPerson:
     person: "@person1"
     head: "@rolePerson1->head"
     role: "@rolePerson1->role"
-    
+
   supportPerson{2..150}:
     startDate: <dateTimeBetween("-2 years", "now")>
     endDate: <dateTimeBetween($startDate, "now")>

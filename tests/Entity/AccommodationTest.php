@@ -2,8 +2,8 @@
 
 namespace App\Tests\Entity;
 
-use App\Entity\Accommodation;
-use App\Entity\Service;
+use App\Entity\Organization\Accommodation;
+use App\Entity\Organization\Service;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

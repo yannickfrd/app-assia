@@ -1,4 +1,4 @@
-App\Entity\Organization:
+App\Entity\Organization\Organization:
   organization1:
     name: ESPERER 95
     type: <numberBetween(1, 9)>

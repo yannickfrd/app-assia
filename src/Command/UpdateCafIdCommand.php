@@ -2,10 +2,10 @@
 
 namespace App\Command;
 
-use App\Entity\EvaluationGroup;
-use App\Entity\EvaluationPerson;
-use App\Entity\RolePerson;
-use App\Repository\SupportGroupRepository;
+use App\Entity\Evaluation\EvaluationGroup;
+use App\Entity\Evaluation\EvaluationPerson;
+use App\Entity\People\RolePerson;
+use App\Repository\Support\SupportGroupRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

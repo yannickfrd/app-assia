@@ -2,7 +2,7 @@
 
 namespace App\Form\Evaluation;
 
-use App\Entity\EvalJusticePerson;
+use App\Entity\Evaluation\EvalJusticePerson;
 use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;

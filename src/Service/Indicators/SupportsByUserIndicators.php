@@ -2,10 +2,10 @@
 
 namespace App\Service\Indicators;
 
-use App\Form\Model\SupportsByUserSearch;
-use App\Repository\DeviceRepository;
-use App\Repository\SupportGroupRepository;
-use App\Repository\UserRepository;
+use App\Form\Model\Support\SupportsByUserSearch;
+use App\Repository\Organization\DeviceRepository;
+use App\Repository\Organization\UserRepository;
+use App\Repository\Support\SupportGroupRepository;
 use App\Security\CurrentUserService;
 
 class SupportsByUserIndicators

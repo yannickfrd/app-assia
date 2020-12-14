@@ -2,7 +2,7 @@
 
 namespace App\Security\Voter;
 
-use App\Entity\Document;
+use App\Entity\Support\Document;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -17,7 +17,7 @@ class DocumentVoter extends Voter
     protected function supports($attribute, $subject)
     {
         return in_array($attribute, ['VIEW', 'EDIT', 'DELETE'])
-            && $subject instanceof \App\Entity\Document;
+            && $subject instanceof \App\Entity\Support\Document;
     }
 
     protected function voteOnAttribute($attribute, $document, TokenInterface $token): bool

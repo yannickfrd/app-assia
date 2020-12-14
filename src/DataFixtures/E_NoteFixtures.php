@@ -2,8 +2,8 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Note;
-use App\Repository\SupportGroupRepository;
+use App\Entity\Support\Note;
+use App\Repository\Support\SupportGroupRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -23,9 +23,8 @@ class E_NoteFixtures extends Fixture
 
         foreach ($supports as $support) {
             for ($i = 0; $i < mt_rand(1, 3); ++$i) {
-                
                 $content = '<p>'.join($this->faker->paragraphs(mt_rand(10, 15)), '</p><p>').'</p>';
-                
+
                 $note = (new Note())
                     ->setTitle($this->faker->sentence($nbWords = mt_rand(5, 10), $variableNbWords = true))
                     ->setContent($content)

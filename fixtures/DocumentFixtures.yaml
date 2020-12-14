@@ -1,5 +1,5 @@
-App\Entity\Document:
-  document1: 
+App\Entity\Support\Document:
+  document1:
     name: Document 666
     type: 1
     content: Description du document

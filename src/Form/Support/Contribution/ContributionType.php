@@ -1,0 +1,99 @@
+<?php
+
+namespace App\Form\Support\Contribution;
+
+use App\Entity\Support\Contribution;
+use App\Form\Utils\Choices;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+class ContributionType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('monthContrib', DateType::class, [
+                'required' => true,
+                'years' => range((int) date('Y'), (int) date('Y') - 10),
+                'placeholder' => [
+                    'year' => 'Year', 'month' => 'Month', 'day' => 'Day',
+                ],
+            ])
+            ->add('type', ChoiceType::class, [
+                'label' => 'contribution.type',
+                'choices' => Choices::getchoices(Contribution::CONTRIBUTION_TYPE),
+                'placeholder' => 'placeholder.select',
+            ])
+            ->add('resourcesAmt', MoneyType::class, [
+                'attr' => ['class' => 'js-money text-right'],
+                'required' => false,
+            ])
+            ->add('aplAmt', MoneyType::class, [
+                'attr' => ['class' => 'js-money text-right'],
+                'required' => false,
+            ])
+            ->add('rentAmt', MoneyType::class, [
+                'attr' => ['class' => 'js-money text-right'],
+                'required' => false,
+            ])
+            ->add('toPayAmt', MoneyType::class, [
+                'attr' => ['class' => 'js-money text-right'],
+                'required' => false,
+            ])
+            ->add('paymentDate', DateType::class, [
+                'label' => 'Date de l\'opération',
+                'widget' => 'single_text',
+                'required' => false,
+            ])
+            ->add('paymentType', ChoiceType::class, [
+                'choices' => Choices::getchoices(Contribution::PAYMENT_TYPE),
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
+            ->add('paidAmt', MoneyType::class, [
+                'attr' => ['class' => 'js-money text-right'],
+                'required' => false,
+            ])
+            ->add('stillToPayAmt', MoneyType::class, [
+                'attr' => [
+                    'class' => 'text-right',
+                    'readonly' => true,
+                ],
+                'required' => false,
+            ])
+            ->add('returnAmt', MoneyType::class, [
+                'attr' => ['class' => 'js-money text-right'],
+                'required' => false,
+            ])
+            // ->add('action', ChoiceType::class, [
+            //     'choices' => [
+            //         'contribution.download.notice' => 1,
+            //         'contribution.send.notice' => 2,
+            //         'contribution.download.receipt' => 3,
+            //         'contribution.send.receipt' => 4,
+            //     ],
+            //     'placeholder' => 'placeholder.action',
+            //     'mapped' => false,
+            //     'required' => false,
+            // ])
+            ->add('comment', null, [
+                'attr' => [
+                    'rows' => 2,
+                    'placeholder' => 'placeholder.comment',
+                ],
+            ]);
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'data_class' => Contribution::class,
+            'allow_extra_fields' => true,
+            'translation_domain' => 'forms',
+        ]);
+    }
+}

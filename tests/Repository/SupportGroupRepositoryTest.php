@@ -2,10 +2,10 @@
 
 namespace App\Tests\Repository;
 
-use App\Entity\Service;
-use App\Entity\SupportGroup;
-use App\Entity\User;
-use App\Form\Model\SupportSearch;
+use App\Entity\Organization\Service;
+use App\Entity\Organization\User;
+use App\Entity\Support\SupportGroup;
+use App\Form\Model\Support\SupportSearch;
 use Doctrine\Common\Collections\ArrayCollection;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -82,7 +82,6 @@ class SupportGroupRepositoryTest extends WebTestCase
     {
         $this->assertNotNull($this->repo->findFullSupportById($this->supportGroup->getId()));
     }
-
 
     public function testFindAllSupportsFromUser()
     {

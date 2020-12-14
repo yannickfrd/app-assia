@@ -1,4 +1,4 @@
-App\Entity\Rdv:
+App\Entity\Support\Rdv:
   rdv1:
     title: RDV 666
     content: Contenu du RDV
@@ -12,7 +12,6 @@ App\Entity\Rdv:
     updatedBy: "@userRoleUser"
     supportGroup: "@supportGroup"
 
-
   rdv{2..5}:
     title: <sentence(10, true)>
     content: <paragraphs(6, true)>
@@ -25,21 +24,19 @@ App\Entity\Rdv:
     updatedBy: "@userRoleUser"
     supportGroup: "@supportGroup"
 
-App\Entity\Person:
-  person: 
+App\Entity\People\Person:
+  person:
     firstname: John
     lastname: Doe
     gender: 2
     birthdate: <date_create("1980-01-01")>
 
-
-App\Entity\PeopleGroup:
+App\Entity\People\PeopleGroup:
   peopleGroup:
     familyTypology: 2
     nbPeople: 1
 
-
-App\Entity\SupportGroup:
+App\Entity\Support\SupportGroup:
   supportGroup:
     startDate: <date_create("2019-04-03")>
     status: 2
@@ -51,8 +48,7 @@ App\Entity\SupportGroup:
     createdBy: "@userRoleUser"
     updatedBy: "@userRoleUser"
 
-
-App\Entity\SupportPerson:
+App\Entity\Support\SupportPerson:
   supportPerson:
     startDate: "@supportGroup->startDate"
     endDate: "@supportGroup->endDate"

@@ -1,4 +1,4 @@
-App\Entity\Organization:
+App\Entity\Organization\Organization:
   organization{1..10}:
     name: <sentence(3, true)>
     type: <numberBetween(1, 9)>

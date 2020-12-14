@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures\Processor;
 
-use App\Entity\User;
+use App\Entity\Organization\User;
 use Fidry\AliceDataFixtures\ProcessorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -30,7 +30,7 @@ class UserProcessor implements ProcessorInterface
             return;
         }
 
-        /* @var User $object */
+        /** @var User $object */
         $object->setPassword($this->passwordEncoder->encodePassword($object, $object->getPlainPassword()));
     }
 

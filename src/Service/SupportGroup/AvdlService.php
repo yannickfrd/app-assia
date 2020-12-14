@@ -2,9 +2,9 @@
 
 namespace App\Service\SupportGroup;
 
-use App\Entity\Avdl;
-use App\Entity\Device;
-use App\Entity\SupportGroup;
+use App\Entity\Organization\Device;
+use App\Entity\Support\Avdl;
+use App\Entity\Support\SupportGroup;
 
 class AvdlService
 {

@@ -2,13 +2,13 @@
 
 namespace App\Service\Indicators;
 
-use App\Entity\EvalBudgetPerson;
-use App\Entity\EvalProfPerson;
-use App\Entity\EvaluationPerson;
-use App\Entity\PeopleGroup;
-use App\Entity\Person;
-use App\Entity\RolePerson;
-use App\Entity\SupportPerson;
+use App\Entity\Evaluation\EvalBudgetPerson;
+use App\Entity\Evaluation\EvalProfPerson;
+use App\Entity\Evaluation\EvaluationPerson;
+use App\Entity\People\PeopleGroup;
+use App\Entity\People\Person;
+use App\Entity\People\RolePerson;
+use App\Entity\Support\SupportPerson;
 use App\Form\Utils\Choices;
 
 class SocialIndicators

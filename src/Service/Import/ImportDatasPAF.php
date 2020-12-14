@@ -2,11 +2,11 @@
 
 namespace App\Service\Import;
 
-use App\Entity\Contribution;
-use App\Entity\Service;
-use App\Entity\SupportGroup;
-use App\Entity\User;
-use App\Repository\HotelSupportRepository;
+use App\Entity\Organization\Service;
+use App\Entity\Organization\User;
+use App\Entity\Support\Contribution;
+use App\Entity\Support\SupportGroup;
+use App\Repository\Support\HotelSupportRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ImportDatasPAF extends ImportDatas

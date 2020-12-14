@@ -1,4 +1,4 @@
-App\Entity\Service:
+App\Entity\Organization\Service:
   service1:
     name: AVDL
     pole: "@pole1"
@@ -19,7 +19,7 @@ App\Entity\Service:
     phone1: <fr_FR:phoneNumber()>
     email: <fr_FR:email()>
     zipcode: <numberBetween(1, 95)>
-    address : <fr_FR:address()>
+    address: <fr_FR:address()>
     accommodation: true
     createdAt: <date_create()>
     updatedAt: <date_create()>
@@ -27,7 +27,7 @@ App\Entity\Service:
     createdBy: "@user*"
     updatedBy: "@user*"
 
-App\Entity\ServiceUser:
+App\Entity\Organization\ServiceUser:
   servUser1:
     service: "@service1"
     user: "@userSuperAdmin"

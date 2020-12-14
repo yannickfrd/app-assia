@@ -2,21 +2,21 @@
 
 namespace App\Service\Export;
 
-use App\Entity\EvalAdmPerson;
-use App\Entity\EvalBudgetGroup;
-use App\Entity\EvalBudgetPerson;
-use App\Entity\EvalFamilyGroup;
-use App\Entity\EvalFamilyPerson;
-use App\Entity\EvalHousingGroup;
-use App\Entity\EvalJusticePerson;
-use App\Entity\EvalProfPerson;
-use App\Entity\EvalSocialGroup;
-use App\Entity\EvalSocialPerson;
-use App\Entity\EvaluationGroup;
-use App\Entity\EvaluationPerson;
-use App\Entity\InitEvalGroup;
-use App\Entity\InitEvalPerson;
-use App\Entity\SupportPerson;
+use App\Entity\Evaluation\EvalAdmPerson;
+use App\Entity\Evaluation\EvalBudgetGroup;
+use App\Entity\Evaluation\EvalBudgetPerson;
+use App\Entity\Evaluation\EvalFamilyGroup;
+use App\Entity\Evaluation\EvalFamilyPerson;
+use App\Entity\Evaluation\EvalHousingGroup;
+use App\Entity\Evaluation\EvalJusticePerson;
+use App\Entity\Evaluation\EvalProfPerson;
+use App\Entity\Evaluation\EvalSocialGroup;
+use App\Entity\Evaluation\EvalSocialPerson;
+use App\Entity\Evaluation\EvaluationGroup;
+use App\Entity\Evaluation\EvaluationPerson;
+use App\Entity\Evaluation\InitEvalGroup;
+use App\Entity\Evaluation\InitEvalPerson;
+use App\Entity\Support\SupportPerson;
 use App\Service\ExportExcel;
 use App\Service\Normalisation;
 

@@ -2,10 +2,10 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\PeopleGroup;
-use App\Entity\Person;
-use App\Entity\RolePerson;
-use App\Repository\UserRepository;
+use App\Entity\People\PeopleGroup;
+use App\Entity\People\Person;
+use App\Entity\People\RolePerson;
+use App\Repository\Organization\UserRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;

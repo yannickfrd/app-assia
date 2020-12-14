@@ -2,8 +2,8 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Contribution;
-use App\Repository\SupportGroupRepository;
+use App\Entity\Support\Contribution;
+use App\Repository\Support\SupportGroupRepository;
 use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;

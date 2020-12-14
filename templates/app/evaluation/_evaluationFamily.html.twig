@@ -20,7 +20,7 @@
                         <div class="col-md-6" data-parent-field="{{ key }}_evalFamilyPerson_maritalStatus">{{ form_row(evalPerson.evalFamilyPerson.noConciliationOrder) }}</div>
                     </div>
                     <div class="form-group row">
-                        {% if evalPerson.vars.value.supportPerson.person.gender == constant("App\\Entity\\Person::GENDER_FEMALE") %}
+                        {% if evalPerson.vars.value.supportPerson.person.gender == constant("App\\Entity\\People\\Person::GENDER_FEMALE") %}
                         <div class="col-md-6">{{ form_row(evalPerson.evalFamilyPerson.unbornChild) }}</div>
                         <div class="col-md-6" data-parent-field="{{ key }}_evalFamilyPerson_unbornChild">{{ form_row(evalPerson.evalFamilyPerson.expDateChildbirth) }}</div>
                         <div class="col-md-6" data-parent-field="{{ key }}_evalFamilyPerson_unbornChild">{{ form_row(evalPerson.evalFamilyPerson.pregnancyType) }}</div>

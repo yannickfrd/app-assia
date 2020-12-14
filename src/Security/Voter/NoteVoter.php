@@ -2,7 +2,7 @@
 
 namespace App\Security\Voter;
 
-use App\Entity\Note;
+use App\Entity\Support\Note;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -18,7 +18,7 @@ class NoteVoter extends Voter
     protected function supports($attribute, $subject)
     {
         return in_array($attribute, ['VIEW', 'EDIT', 'DELETE'])
-            && $subject instanceof \App\Entity\Note;
+            && $subject instanceof \App\Entity\Support\Note;
     }
 
     protected function voteOnAttribute($attribute, $note, TokenInterface $token): bool
@@ -86,7 +86,7 @@ class NoteVoter extends Voter
         ) {
             return true;
         }
-        
+
         return false;
     }
 }

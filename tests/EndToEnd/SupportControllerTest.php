@@ -2,7 +2,7 @@
 
 namespace App\Tests\EndToEnd;
 
-use App\Entity\Person;
+use App\Entity\People\Person;
 use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Component\Panther\Client as PantherClient;

@@ -1,4 +1,4 @@
-App\Entity\AccommodationGroup:
+App\Entity\Support\AccommodationGroup:
   accomGroup{1..50}:
     startDate: <dateTimeBetween("-2 years", "now")>
     endDate: <dateTimeBetween($startDate, "now")>
@@ -11,7 +11,7 @@ App\Entity\AccommodationGroup:
     peopleGroup: "@peopleGroup*"
     supportGroup: "@supportGroup*"
 
-App\Entity\AccommodationPerson:
+App\Entity\Support\AccommodationPerson:
   accomPerson{1..100}:
     startDate: <dateTimeBetween("-2 years", "now")>
     endDate: <dateTimeBetween($startDate, "now")>

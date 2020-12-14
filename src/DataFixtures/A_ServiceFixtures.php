@@ -2,12 +2,12 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Accommodation;
-use App\Entity\Device;
-use App\Entity\Pole;
-use App\Entity\Service;
-use App\Entity\ServiceDevice;
-use App\Entity\ServiceUser;
+use App\Entity\Organization\Accommodation;
+use App\Entity\Organization\Device;
+use App\Entity\Organization\Pole;
+use App\Entity\Organization\Service;
+use App\Entity\Organization\ServiceDevice;
+use App\Entity\Organization\ServiceUser;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Persistence\ObjectManager;

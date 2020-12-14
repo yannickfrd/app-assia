@@ -1,0 +1,104 @@
+{% extends "base.html.twig" %}
+
+{% set title = app.request.get("_route") == "people" ? "Rechercher une personne" : (people_group is defined ? "Ajouter" : "Nouveau suivi : rechercher") ~ " une personne" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+
+    <section class="my-0">
+
+        <div class="container">
+            {% if people_group is defined %}
+                {% include "app/people/peopleGroup/_navGroup.html.twig" %}
+            {% else %}
+                <h1 class="h2 mb-3">{{ title }}</h1>
+            {% endif %}
+        </div>
+
+        {% include "app/people/person/_searchPeople.html.twig" %}
+
+        <div class="container">
+            <div class="row justify-content-center">
+                <p class="text-secondary fade-in js-helper-search">Veuillez saisir un nom, un prénom ou une date de naissance.</p>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-12 col-lg-8">
+                    <a href="{{ people_group is defined ? path('group_create_person', {'id':people_group.id}) : path('person_new') }}"
+                        class="btn btn-{{ theme_color }} btn-sm mb-3 float-right d-none js-create-person">
+                        <span class="fas fa-plus-square mr-2"></span>Créer une nouvelle personne</a>
+                </div>
+            </div>
+            {# <div class="row align-items-baseline">
+                <div class="col-md-4 count align-middle">
+                    <p class="align-middle">Résultat : <span id="count-result"></span></p>
+                </div>
+            </div> #}
+            <div class="row justify-content-center">
+                <div class="col-12 col-lg-8">
+                    <div class="table-responsive {% if app.request.get("_route") != "people" %}d-none{% endif %}">     
+                        <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="align-middle th-w-20"></th>
+                                    <th scope="col" class="align-middle th-w-150">Nom</th>
+                                    <th scope="col" class="align-middle th-w-120">Prénom</th>
+                                    <th scope="col" class="align-middle th-date">Date de naissance</th>
+                                    <th scope="col" class="align-middle th-w-80">Âge</th>
+                                    <th scope="col" class="align-middle th-w-80">Sexe</th>
+                                </tr>
+                            </thead>
+                            <tbody id="list-result-people" data-group-id="{{ people_group is defined ? people_group.id }}">
+                                {% for person in people %}
+                                    <tr>
+                                        <td scope="row" class="align-middle text-center">
+                                            {% if people_group is defined %}
+                                                <a href="{{ path('group_add_person', {'id':people_group.id, 'person_id': person.id}) }}"
+                                                    class="js-add-person shadow" data-toggle="modal" data-target="#modal-block"
+                                                    data-placement="bottom" title="Ajouter la personne au groupe">
+                                                    <span class="fas fa-plus-square text-{{ theme_color }} fa-2x"></span>
+                                                </a>
+                                            {% else %}
+                                                <a href="{{ path('person_show', {'id':person.id, 'slug':person.slug}) }}"
+                                                    class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
+                                                    title="Voir la fiche individuelle">
+                                                    <span class="fas fa-eye"></span>
+                                                </a>
+                                            {% endif %}
+                                        </td>
+                                        <td class="align-middle">
+                                            <a href="{{ path('person_show', {'id':person.id, 'slug':person.slug}) }}"
+                                                class="text-{{ theme_color }} text-uppercase font-weight-bold">
+                                                {{ person.lastname }}{{ person.usename ? " (" ~ person.usename ~ ")" }}
+                                            </a>
+                                        </td>
+                                        <td class="align-middle text-capitalize">{{ person.firstname }}</td>
+                                        <td>{{person.birthdate ? person.birthdate|date("d/m/Y") }}</td>
+                                        <td>{{ person.birthdate ? person.age ~ ' an' ~ (person.age > 1 ? 's') }}</td>
+                                        <td class="align-middle">
+                                            {% if person.gender == constant("GENDER_FEMALE", person) %}
+                                                <span class="fas fa-female fa-2x text-dark" data-placement="bottom" title="Femme"></span>
+                                            {% elseif person.gender == constant("GENDER_MALE", person) %}
+                                                <span class="fas fa-male fa-2x text-dark" data-placement="bottom" title="Homme"></span>
+                                            {% endif %} 
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {% if form_role_person is defined %}
+        {% include "app/people/peopleGroup/_addPerson.html.twig" %}
+    {% endif %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags("search") }}
+    {{ encore_entry_script_tags("listPeople") }}
+{% endblock javascripts %}

@@ -2,7 +2,7 @@
 
 namespace App\Security\Voter;
 
-use App\Entity\Service;
+use App\Entity\Organization\Service;
 
 trait VoterTrait
 {

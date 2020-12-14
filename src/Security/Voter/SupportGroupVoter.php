@@ -2,10 +2,9 @@
 
 namespace App\Security\Voter;
 
-use App\Entity\SupportGroup;
-use App\Security\Voter\VoterTrait;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use App\Entity\Support\SupportGroup;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class SupportGroupVoter extends Voter
 {
@@ -18,12 +17,12 @@ class SupportGroupVoter extends Voter
     protected function supports($attribute, $subject)
     {
         return in_array($attribute, ['VIEW', 'EDIT', 'DELETE'])
-            && $subject instanceof \App\Entity\SupportGroup;
+            && $subject instanceof \App\Entity\Support\SupportGroup;
     }
 
     protected function voteOnAttribute($attribute, $supportGroup, TokenInterface $token)
     {
-        /**  @var User */
+        /** @var User */
         $this->user = $token->getUser();
         $this->userId = $this->user->getId();
         /** @var SupportGroup */
@@ -67,7 +66,7 @@ class SupportGroupVoter extends Voter
 
     protected function canDelete()
     {
-        if ($this->isAdminOfService($this->supportGroup->getService()) 
+        if ($this->isAdminOfService($this->supportGroup->getService())
             || $this->isGranted('ROLE_SUPER_ADMIN')) {
             return true;
         }

@@ -1,4 +1,4 @@
-App\Entity\Note:
+App\Entity\Support\Note:
   note{1..200}:
     title: <sentence(10, true)>
     content: <paragraphs(6, true)>

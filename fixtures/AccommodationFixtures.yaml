@@ -1,4 +1,4 @@
-App\Entity\Accommodation:
+App\Entity\Organization\Accommodation:
   accommodation1:
     name: Logement 666
     nbPlaces: 6
@@ -6,10 +6,10 @@ App\Entity\Accommodation:
     endDate: <date_create("2020-01-01")>
     city: Houilles
     zipcode: <numberBetween(1, 95)>
-    address : <fr_FR:address()>
-    accommodationType:  <numberBetween(1, 13)>
-    configuration:  <numberBetween(1, 2)>
-    individualCollective:  <numberBetween(1, 2)>
+    address: <fr_FR:address()>
+    accommodationType: <numberBetween(1, 13)>
+    configuration: <numberBetween(1, 2)>
+    individualCollective: <numberBetween(1, 2)>
     createdAt: <dateTimeBetween("-10 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
     service: "@service1"
@@ -22,10 +22,10 @@ App\Entity\Accommodation:
     startDate: <datetimeBetween("-10 years", "now")>
     city: <fr_FR:city()>
     zipcode: <numberBetween(1, 95)>
-    address : <fr_FR:address()>
-    accommodationType:  <numberBetween(1, 13)>
-    configuration:  <numberBetween(1, 2)>
-    individualCollective:  <numberBetween(1, 2)>
+    address: <fr_FR:address()>
+    accommodationType: <numberBetween(1, 13)>
+    configuration: <numberBetween(1, 2)>
+    individualCollective: <numberBetween(1, 2)>
     createdAt: <dateTimeBetween("-10 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
     service: "@service<numberBetween(1, 10)>"

@@ -2,8 +2,8 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Organization;
-use App\Repository\UserRepository;
+use App\Entity\Organization\Organization;
+use App\Repository\Organization\UserRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;

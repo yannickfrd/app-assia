@@ -2,26 +2,26 @@
 
 namespace App\Service\Indicators;
 
-use App\Entity\Device;
-use App\Entity\Indicator;
-use App\Entity\Service;
-use App\Entity\SubService;
-use App\Entity\SupportGroup;
-use App\Entity\User;
+use App\Entity\Admin\Indicator;
+use App\Entity\Organization\Device;
+use App\Entity\Organization\Service;
+use App\Entity\Organization\SubService;
+use App\Entity\Organization\User;
+use App\Entity\Support\SupportGroup;
 use App\Form\Utils\Choices;
-use App\Repository\ContributionRepository;
-use App\Repository\DocumentRepository;
-use App\Repository\EvaluationGroupRepository;
-use App\Repository\IndicatorRepository;
-use App\Repository\NoteRepository;
-use App\Repository\PeopleGroupRepository;
-use App\Repository\PersonRepository;
-use App\Repository\RdvRepository;
-use App\Repository\ServiceRepository;
-use App\Repository\SupportGroupRepository;
-use App\Repository\SupportPersonRepository;
-use App\Repository\UserConnectionRepository;
-use App\Repository\UserRepository;
+use App\Repository\Admin\IndicatorRepository;
+use App\Repository\Evaluation\EvaluationGroupRepository;
+use App\Repository\Organization\ServiceRepository;
+use App\Repository\Organization\UserConnectionRepository;
+use App\Repository\Organization\UserRepository;
+use App\Repository\People\PeopleGroupRepository;
+use App\Repository\People\PersonRepository;
+use App\Repository\Support\ContributionRepository;
+use App\Repository\Support\DocumentRepository;
+use App\Repository\Support\NoteRepository;
+use App\Repository\Support\RdvRepository;
+use App\Repository\Support\SupportGroupRepository;
+use App\Repository\Support\SupportPersonRepository;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 

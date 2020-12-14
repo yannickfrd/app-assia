@@ -2,7 +2,7 @@
 
 namespace App\Entity\Traits;
 
-use App\Entity\User;
+use App\Entity\Organization\User;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -19,7 +19,7 @@ trait CreatedUpdatedEntityTrait
     /**
      * @var User
      * @Gedmo\Blameable(on="create")
-     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User")
      * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      */
     private $createdBy;
@@ -35,7 +35,7 @@ trait CreatedUpdatedEntityTrait
     /**
      * @var User
      * @Gedmo\Blameable(on="create", on="update")
-     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User")
      * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      */
     private $updatedBy;

@@ -2,8 +2,8 @@
 
 namespace App\Tests\Entity;
 
-use App\Entity\Pole;
-use App\Entity\Service;
+use App\Entity\Organization\Pole;
+use App\Entity\Organization\Service;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

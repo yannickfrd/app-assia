@@ -2,9 +2,9 @@
 
 namespace App\Security\Voter;
 
-use App\Entity\Accommodation;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use App\Entity\Organization\Accommodation;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class AccommodationVoter extends Voter
 {
@@ -17,7 +17,7 @@ class AccommodationVoter extends Voter
     protected function supports($attribute, $subject)
     {
         return in_array($attribute, ['VIEW', 'EDIT', 'DELETE', 'DISABLE'])
-            && $subject instanceof \App\Entity\Accommodation;
+            && $subject instanceof \App\Entity\Organization\Accommodation;
     }
 
     protected function voteOnAttribute($attribute, $accommodation, TokenInterface $token)
@@ -25,7 +25,7 @@ class AccommodationVoter extends Voter
         /** @var User */
         $this->user = $token->getUser();
         $this->userId = $this->user->getId();
-        /**  @var Accommodation */
+        /** @var Accommodation */
         $this->accommodation = $accommodation;
 
         if (!$this->user) {
@@ -61,13 +61,13 @@ class AccommodationVoter extends Voter
     }
 
     protected function canEdit()
-    { 
+    {
         if ($this->isAdminOfService($this->accommodation->getService())
-            || $this->security->isGranted('ROLE_SUPER_ADMIN') 
+            || $this->security->isGranted('ROLE_SUPER_ADMIN')
         ) {
             return true;
         }
-        
+
         return false;
     }
 
