@@ -3,7 +3,9 @@ import MessageFlash from '../utils/messageFlash'
 import Loader from '../utils/loader'
 import AutoSave from '../utils/autoSave'
 
-// Requête Ajax pour mettre à jour les informations individuelles
+/**
+ * Requête Ajax pour mettre à jour les informations individuelles.
+ */
 export default class UpdateEvaluation {
 
     constructor() {
@@ -47,6 +49,11 @@ export default class UpdateEvaluation {
      */
     response(response) {
         this.loader.off()
+
+        if (typeof response != 'object') {
+            return new MessageFlash('danger', 'Attention, une erreur s\'est produite. Vous êtes probablement déconnecté.')
+        }
+        
         new MessageFlash(response.alert, response.msg)
     }
 }

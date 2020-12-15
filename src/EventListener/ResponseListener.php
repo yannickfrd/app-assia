@@ -2,9 +2,9 @@
 
 namespace App\EventListener;
 
-use Twig\Environment;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Twig\Environment;
 
 class ResponseListener
 {
@@ -20,9 +20,9 @@ class ResponseListener
         $request = $event->getRequest();
         $response = $event->getResponse();
 
-        $serverName = $request->server->get('SERVER_NAME');
+        $server = $request->server;
 
-        if ($response->getContent() && ($request->server->get('APP_ENV') != 'prod' || $serverName == '127.0.0.1:8000')) {
+        if ($response->getContent() && ($server->get('APP_ENV') != 'prod' || $server->get('SERVER_NAME') === '127.0.0.1:8000')) {
             return $this->addBeta($response);
         }
     }

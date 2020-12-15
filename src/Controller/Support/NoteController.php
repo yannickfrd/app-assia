@@ -53,7 +53,7 @@ class NoteController extends AbstractController
     public function listNotes(Request $request, Pagination $pagination, CurrentUserService $currentUser): Response
     {
         $search = new NoteSearch();
-        if (User::STATUS_SOCIAL_WORKER == $this->getUser()->getStatus()) {
+        if (User::STATUS_SOCIAL_WORKER === $this->getUser()->getStatus()) {
             $usersCollection = new ArrayCollection();
             $usersCollection->add($this->getUser());
             $search->setReferents($usersCollection);

@@ -77,7 +77,7 @@ class ExportWord
             $objWriter->save('php://output');
         });
 
-        return $download == true ? $response : new Response();
+        return $download === true ? $response : new Response();
     }
 
     /**

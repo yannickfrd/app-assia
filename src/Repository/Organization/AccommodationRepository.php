@@ -209,7 +209,7 @@ class AccommodationRepository extends ServiceEntityRepository
 
         $supportDates = $search->getSupportDates();
 
-        if (1 == $supportDates) {
+        if (1 === $supportDates) {
             if ($search->getStart()) {
                 $query->andWhere('a.startDate >= :start')
                     ->setParameter('start', $search->getStart());
@@ -219,7 +219,7 @@ class AccommodationRepository extends ServiceEntityRepository
                     ->setParameter('end', $search->getEnd());
             }
         }
-        if (2 == $supportDates) {
+        if (2 === $supportDates) {
             if ($search->getStart()) {
                 if ($search->getStart()) {
                     $query->andWhere('a.endDate >= :start')
@@ -231,7 +231,7 @@ class AccommodationRepository extends ServiceEntityRepository
                 }
             }
         }
-        if (3 == $supportDates || !$supportDates) {
+        if (3 === $supportDates || !$supportDates) {
             if ($search->getStart()) {
                 $query->andWhere('a.endDate >= :start OR a.endDate IS NULL')
                     ->setParameter('start', $search->getStart());
@@ -247,9 +247,9 @@ class AccommodationRepository extends ServiceEntityRepository
                 ->setParameter('pole_id', $search->getPole());
         }
 
-        if (Choices::DISABLED == $search->getDisabled()) {
+        if (Choices::DISABLED === $search->getDisabled()) {
             $query->andWhere('a.disabledAt IS NOT NULL');
-        } elseif (Choices::ACTIVE == $search->getDisabled()) {
+        } elseif (Choices::ACTIVE === $search->getDisabled()) {
             $query->andWhere('a.disabledAt IS NULL');
         }
 

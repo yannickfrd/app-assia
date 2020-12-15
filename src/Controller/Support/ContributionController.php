@@ -56,7 +56,7 @@ class ContributionController extends AbstractController
     public function listContributions(Request $request, Pagination $pagination): Response
     {
         $search = new ContributionSearch();
-        if (User::STATUS_SOCIAL_WORKER == $this->getUser()->getStatus()) {
+        if (User::STATUS_SOCIAL_WORKER === $this->getUser()->getStatus()) {
             $usersCollection = new ArrayCollection();
             $usersCollection->add($this->getUser());
             $search->setReferents($usersCollection);
@@ -496,7 +496,7 @@ class ContributionController extends AbstractController
             ->setStart(new \DateTime($today->format('Y').'-01-01'))
             ->setEnd($today);
 
-        if (User::STATUS_SOCIAL_WORKER == $this->getUser()->getStatus()) {
+        if (User::STATUS_SOCIAL_WORKER === $this->getUser()->getStatus()) {
             $usersCollection = new ArrayCollection();
             $usersCollection->add($this->getUser());
             $search->setReferents($usersCollection);

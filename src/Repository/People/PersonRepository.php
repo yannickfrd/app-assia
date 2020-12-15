@@ -114,7 +114,7 @@ class PersonRepository extends ServiceEntityRepository
     }
 
     /**
-     * Compte le nombre de personnes
+     * Compte le nombre de personnes.
      */
     public function countPeople(array $criteria = null): int
     {
@@ -122,15 +122,15 @@ class PersonRepository extends ServiceEntityRepository
 
         if ($criteria) {
             foreach ($criteria as $key => $value) {
-                if ('startDate' == $key) {
+                if ('startDate' === $key) {
                     $query = $query->andWhere('p.createdAt >= :startDate')
                             ->setParameter('startDate', $value);
                 }
-                if ('endDate' == $key) {
+                if ('endDate' === $key) {
                     $query = $query->andWhere('p.createdAt <= :endDate')
                             ->setParameter('endDate', $value);
                 }
-                if ('createdBy' == $key) {
+                if ('createdBy' === $key) {
                     $query = $query->andWhere('p.createdBy = :createdBy')
                         ->setParameter('createdBy', $value);
                 }
@@ -162,5 +162,23 @@ class PersonRepository extends ServiceEntityRepository
 
             ->getQuery()
             ->getResult();
+    }
+
+    public function findOnePersonByFirstname(string $firstname = null, bool $genderIsNotNull = true): ?Person
+    {
+        $query = $this->createQueryBuilder('p')->select('p');
+
+        if ($firstname) {
+            $query->andWhere('p.firstname = :firstname')
+            ->setParameter('firstname', $firstname);
+        }
+        if ($genderIsNotNull) {
+            $query->andWhere('p.gender != :gender')
+            ->setParameter('gender', 99);
+        }
+
+        return $query->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 }

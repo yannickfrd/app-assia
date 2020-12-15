@@ -48,6 +48,7 @@ class SupportPersonRepository extends ServiceEntityRepository
 
     /**
      * Retourne toutes les suivis pour l'export.
+     *
      * @return SupportPerson[]|null
      */
     public function findSupportsToExport(?SupportSearch $search = null): ?array
@@ -68,6 +69,7 @@ class SupportPersonRepository extends ServiceEntityRepository
 
     /**
      * Retourne toutes les suivis d'un service pour l'export.
+     *
      * @return SupportPerson[]|null
      */
     public function findSupportsOfServiceToExport($search = null, int $serviceId): ?array
@@ -101,10 +103,10 @@ class SupportPersonRepository extends ServiceEntityRepository
 
         $query = $this->filters($query, $search);
 
-        if (AvdlSupportSearch::DIAG == $search->getDiagOrSupport()) {
+        if (AvdlSupportSearch::DIAG === $search->getDiagOrSupport()) {
             $query->andWhere('avdl.diagStartDate IS NOT NULL');
         }
-        if (AvdlSupportSearch::SUPPORT == $search->getDiagOrSupport()) {
+        if (AvdlSupportSearch::SUPPORT === $search->getDiagOrSupport()) {
             $query->andWhere('avdl.supportStartDate IS NOT NULL');
         }
         if ($search->getSupportType()) {
@@ -153,6 +155,7 @@ class SupportPersonRepository extends ServiceEntityRepository
 
     /**
      * Donne les suivis sociaux de la personne.
+     *
      * @return SupportPerson[]|null
      */
     public function findSupportsOfPerson(Person $person): ?array
@@ -174,6 +177,7 @@ class SupportPersonRepository extends ServiceEntityRepository
 
     /**
      * Donne tous les suivis pour l'export complet.
+     *
      * @return SupportPerson[]|null
      */
     public function findSupportsFullToExport($search = null): ?array
@@ -208,8 +212,7 @@ class SupportPersonRepository extends ServiceEntityRepository
     }
 
     /**
-     * Compte le nombre de suivis à exporter
-     *
+     * Compte le nombre de suivis à exporter.
      */
     public function countSupportsToExport($search = null): int
     {
@@ -326,7 +329,7 @@ class SupportPersonRepository extends ServiceEntityRepository
 
         $supportDates = $search->getSupportDates();
 
-        if (1 == $supportDates) {
+        if (1 === $supportDates) {
             if ($search->getStart()) {
                 $query->andWhere('sg.startDate >= :start')
                     ->setParameter('start', $search->getStart());
@@ -336,7 +339,7 @@ class SupportPersonRepository extends ServiceEntityRepository
                     ->setParameter('end', $search->getEnd());
             }
         }
-        if (2 == $supportDates) {
+        if (2 === $supportDates) {
             if ($search->getStart()) {
                 if ($search->getStart()) {
                     $query->andWhere('sg.endDate >= :start')
@@ -348,7 +351,7 @@ class SupportPersonRepository extends ServiceEntityRepository
                 }
             }
         }
-        if (3 == $supportDates || !$supportDates) {
+        if (3 === $supportDates || !$supportDates) {
             if ($search->getStart()) {
                 $query->andWhere('sg.endDate >= :start OR sg.endDate IS NULL')
                     ->setParameter('start', $search->getStart());
@@ -383,27 +386,27 @@ class SupportPersonRepository extends ServiceEntityRepository
 
         if ($criteria) {
             foreach ($criteria as $key => $value) {
-                if ('service' == $key) {
+                if ('service' === $key) {
                     $query->andWhere('sg.service = :service')
                         ->setParameter('service', $value);
                 }
-                if ('subService' == $key) {
+                if ('subService' === $key) {
                     $query->andWhere('sg.subService = :subService')
                         ->setParameter('subService', $value);
                 }
-                if ('device' == $key) {
+                if ('device' === $key) {
                     $query->andWhere('sg.device = :device')
                         ->setParameter('device', $value);
                 }
-                if ('status' == $key) {
+                if ('status' === $key) {
                     $query->andWhere('sg.status = :status')
                         ->setParameter('status', $value);
                 }
-                if ('startDate' == $key) {
+                if ('startDate' === $key) {
                     $query = $query->andWhere('sg.createdAt >= :startDate')
                             ->setParameter('startDate', $value);
                 }
-                if ('endDate' == $key) {
+                if ('endDate' === $key) {
                     $query = $query->andWhere('sg.createdAt <= :endDate')
                             ->setParameter('endDate', $value);
                 }

@@ -49,7 +49,7 @@ class LocationType extends AbstractType
                 ],
             ]);
 
-        if (isset($attr['geoLocation']) && true == $attr['geoLocation']) {
+        if (isset($attr['geoLocation']) && true === $attr['geoLocation']) {
             $builder
                 ->add('locationId', HiddenType::class, [
                     'attr' => [

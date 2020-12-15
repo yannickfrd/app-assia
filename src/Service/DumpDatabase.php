@@ -30,7 +30,7 @@ class DumpDatabase
         // $cmd = 'php bin/console doctrine:query:sql "OPTIMIZE TABLE `accommodation`, `accommodation_group`, `accommodation_person`, `avdl`, `contribution`, `database_backup`, `device`, `document`, `evaluation_group`, `evaluation_person`, `eval_adm_person`, `eval_budget_group`, `eval_budget_person`, `eval_family_group`, `eval_family_person`, `eval_housing_group`, `eval_justice_person`, `eval_prof_person`, `eval_social_group`, `eval_social_person`, `export`, `group_people`, `init_eval_group`, `init_eval_person`, `migration_versions`, `note`, `organization`, `origin_request`, `person`, `pole`, `rdv`, `referent`, `role_person`, `service`, `service_device`, `service_organization`, `service_user`, `support_group`, `support_person`, `user`, `user_connection`, `user_device`"';
         // exec($cmd);
 
-        if (null == $path) {
+        if (null === $path) {
             $path = \dirname(__DIR__).'/../public/backups/'.date('Y/m/d/');
         }
 

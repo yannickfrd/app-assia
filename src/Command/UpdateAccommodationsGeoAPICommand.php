@@ -2,17 +2,20 @@
 
 namespace App\Command;
 
-use App\Repository\Organization\AccommodationRepository;
+use App\Command\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use App\Repository\Organization\AccommodationRepository;
 
 /**
  * Commande pour mettre à jour l'adresse des groupes de places via l'API adresse.data.gouv.fr (TEMPORAIRE, A SUPPRIMER).
  */
 class UpdateAccommodationsGeoAPICommand extends Command
 {
+    use DoctrineTrait;
+
     protected static $defaultName = 'app:accommodation:update:geo_api';
 
     protected $repo;
@@ -22,6 +25,7 @@ class UpdateAccommodationsGeoAPICommand extends Command
     {
         $this->repo = $repo;
         $this->manager = $manager;
+        $this->disableListeners();
 
         parent::__construct();
     }
@@ -39,17 +43,10 @@ class UpdateAccommodationsGeoAPICommand extends Command
      */
     protected function updateLocationAccommodations()
     {
-        $listenersType = $this->manager->getEventManager()->getListeners();
-        foreach ($listenersType as $listenerType) {
-            foreach ($listenerType as $listener) {
-                $this->manager->getEventManager()->removeEventListener(['onFlush', 'onFlush'], $listener);
-            }
-        }
-
         $count = 0;
         $accommodations = $this->repo->findAll();
         foreach ($accommodations as $accommodation) {
-            if (null == $accommodation->getLocationId() && $count < 10) {
+            if (null === $accommodation->getLocationId() && $count < 10) {
                 $valueSearch = $accommodation->getAddress().'+'.$accommodation->getCity();
                 $valueSearch = $this->cleanString($valueSearch);
                 $geo = '&lat=49.04&lon=2.04';

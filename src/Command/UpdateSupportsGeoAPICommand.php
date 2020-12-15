@@ -13,6 +13,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class UpdateSupportsGeoAPICommand extends Command
 {
+    use DoctrineTrait;
+
     protected static $defaultName = 'app:support:update:geo_api';
 
     protected $repo;
@@ -22,6 +24,7 @@ class UpdateSupportsGeoAPICommand extends Command
     {
         $this->repo = $repo;
         $this->manager = $manager;
+        $this->disableListeners();
 
         parent::__construct();
     }
@@ -39,17 +42,10 @@ class UpdateSupportsGeoAPICommand extends Command
      */
     protected function updateLocationSupports()
     {
-        $listenersType = $this->manager->getEventManager()->getListeners();
-        foreach ($listenersType as $listenerType) {
-            foreach ($listenerType as $listener) {
-                $this->manager->getEventManager()->removeEventListener(['onFlush', 'onFlush'], $listener);
-            }
-        }
-
         $count = 0;
         $supports = $this->repo->findAll();
         foreach ($supports as $support) {
-            if (null == $support->getLocationId() && $count < 10) {
+            if (null === $support->getLocationId() && $count < 10) {
                 $valueSearch = $support->getAddress().'+'.$support->getCity();
                 $valueSearch = $this->cleanString($valueSearch);
                 $geo = '&lat=49.04&lon=2.04';

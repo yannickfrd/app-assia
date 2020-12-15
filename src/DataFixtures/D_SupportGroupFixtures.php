@@ -63,18 +63,18 @@ class D_SupportGroupFixtures extends Fixture
     {
         $this->supportGroup = new SupportGroup();
 
-        if ($this->nbSupports >= 2 && 1 == $k) {
+        if ($this->nbSupports >= 2 && 1 === $k) {
             $this->status = SupportGroup::STATUS_IN_PROGRESS;
             $this->startDate = AppFixtures::getDateTimeBeetwen($this->peopleGroup->getCreatedAt(), 'now');
             $this->endDate = AppFixtures::getDateTimeBeetwen(AppFixtures::getStartDate($this->startDate, 'now'));
-        } elseif ($this->nbSupports >= 2 && 2 == $k) {
+        } elseif ($this->nbSupports >= 2 && 2 === $k) {
             $this->status = SupportGroup::STATUS_IN_PROGRESS;
             $this->startDate = AppFixtures::getDateTimeBeetwen(AppFixtures::getStartDate($this->endDate, 'now'));
             $this->endDate = null;
         } else {
             $this->status = SupportGroup::STATUS_IN_PROGRESS;
             $this->startDate = AppFixtures::getDateTimeBeetwen($this->peopleGroup->getCreatedAt(), 'now');
-            if (4 == $this->status) {
+            if (4 === $this->status) {
                 $this->endDate = AppFixtures::getDateTimeBeetwen(AppFixtures::getStartDate($this->startDate, 'now'));
             } else {
                 $this->endDate = null;

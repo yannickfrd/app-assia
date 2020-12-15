@@ -23,7 +23,7 @@ class AccommodationExport extends ExportExcel
         $i = 0;
 
         foreach ($accommodations as $accommodation) {
-            if (0 == $i) {
+            if (0 === $i) {
                 $arrayData[] = array_keys($this->getDatas($accommodation));
             }
             $arrayData[] = $this->getDatas($accommodation);

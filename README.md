@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.13.2-4 - 15/12/2020
+2.13.2-8 - 15/12/2020
 
 # Développeur
 Romain MADELAINE
@@ -16,10 +16,14 @@ https://demo.esperer95.app
 
 # Mise à jour
 
-## Version 2.13.2-4 - 15/12/2020
+## Version 2.13.2-8 - 15/12/2020
 - Added and updated annotations for entities ansd repositories.
 - Fixed bug update 'nbPeople' in 'supportGroup'.
 - Add supports coefficient in homepage for the social workers.
+- Edit every PHP operator '==' by '==='.
+- Evaluation: if user is isconnected, send a message to user 'Warning, you are disconnected...'.
+- Updated Command classes.
+- Updated autoLogout.
 
 ## Version 2.13.1 - 14/12/2020
 - Réorganisation des fichiers avec création de sous-dossiers.

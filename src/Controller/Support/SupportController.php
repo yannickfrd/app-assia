@@ -96,8 +96,8 @@ class SupportController extends AbstractController
             if ($supportManager->create($peopleGroup, $supportGroup, $form->get('cloneSupport')->getViewData() != null)) {
                 $this->addFlash('success', 'Le suivi social est créé.');
 
-                if ($supportGroup->getStartDate() && Choices::YES == $supportGroup->getService()->getAccommodation()
-                    && Choices::YES == $supportGroup->getDevice()->getAccommodation()) {
+                if ($supportGroup->getStartDate() && Choices::YES === $supportGroup->getService()->getAccommodation()
+                    && Choices::YES === $supportGroup->getDevice()->getAccommodation()) {
                     return $this->redirectToRoute('support_accommodation_new', ['id' => $supportGroup->getId()]);
                 }
 
@@ -309,7 +309,7 @@ class SupportController extends AbstractController
     public function showSupportsWithContribution(int $year = null, int $month = null, Request $request, SupportGroupRepository $repoSupportGroup, ContributionRepository $repoContribution, Pagination $pagination): Response
     {
         $search = new SupportsInMonthSearch();
-        if (User::STATUS_SOCIAL_WORKER == $this->getUser()->getStatus()) {
+        if (User::STATUS_SOCIAL_WORKER === $this->getUser()->getStatus()) {
             $usersCollection = new ArrayCollection();
             $usersCollection->add($this->getUser());
             $search->setReferents($usersCollection);
@@ -318,7 +318,7 @@ class SupportController extends AbstractController
         $form = ($this->createForm(SupportsInMonthSearchType::class, $search))
             ->handleRequest($request);
 
-        // if ($month == null) {
+        // if ($month === null) {
         //     $month = (new \DateTime())->modify('-1 month')->format('n');
         // }
 

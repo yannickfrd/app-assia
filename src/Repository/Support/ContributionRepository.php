@@ -2,15 +2,15 @@
 
 namespace App\Repository\Support;
 
-use Doctrine\ORM\Query;
 use App\Entity\Support\Contribution;
 use App\Entity\Support\SupportGroup;
-use App\Security\CurrentUserService;
-use Doctrine\Persistence\ManagerRegistry;
 use App\Form\Model\Support\ContributionSearch;
 use App\Form\Model\Support\SupportContributionSearch;
+use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method Contribution|null find($id, $lockMode = null, $lockVersion = null)
@@ -92,6 +92,7 @@ class ContributionRepository extends ServiceEntityRepository
      * Donne toutes les participations financières à exporter.
      *
      * @param ContributionSearch|SupportContributionSearch $search
+     *
      * @return Contribution[]|null
      */
     public function findContributionsToExport($search, SupportGroup $supportGroup = null): ?array
@@ -264,31 +265,31 @@ class ContributionRepository extends ServiceEntityRepository
             $query = $query->leftJoin('c.supportGroup', 'sg');
 
             foreach ($criteria as $key => $value) {
-                if ('service' == $key) {
+                if ('service' === $key) {
                     $query = $query->andWhere('sg.service = :service')
                         ->setParameter('service', $value);
                 }
-                if ('subService' == $key) {
+                if ('subService' === $key) {
                     $query = $query->andWhere('sg.subService = :subService')
                         ->setParameter('subService', $value);
                 }
-                if ('device' == $key) {
+                if ('device' === $key) {
                     $query = $query->andWhere('sg.device = :device')
                         ->setParameter('device', $value);
                 }
-                if ('startDate' == $key) {
+                if ('startDate' === $key) {
                     $query = $query->andWhere('c.createdAt >= :startDate')
                             ->setParameter('startDate', $value);
                 }
-                if ('endDate' == $key) {
+                if ('endDate' === $key) {
                     $query = $query->andWhere('c.createdAt <= :endDate')
                             ->setParameter('endDate', $value);
                 }
-                if ('createdBy' == $key) {
+                if ('createdBy' === $key) {
                     $query = $query->andWhere('c.createdBy = :createdBy')
                         ->setParameter('createdBy', $value);
                 }
-                if ('status' == $key) {
+                if ('status' === $key) {
                     $query = $query->andWhere('sg.status = :status')
                         ->setParameter('status', $value);
                 }

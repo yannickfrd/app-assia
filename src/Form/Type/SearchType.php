@@ -31,7 +31,7 @@ class SearchType extends AbstractType
         $attrOptions = $attr['options'] ?? null;
         $serviceId = $attr['serviceId'] ?? null;
 
-        if (null == $attrOptions || in_array('services', $attrOptions)) {
+        if (null === $attrOptions || in_array('services', $attrOptions)) {
             $builder
                 ->add('services', EntityType::class, [
                     'class' => Service::class,
@@ -49,7 +49,7 @@ class SearchType extends AbstractType
                 ]);
         }
 
-        if (null == $attrOptions || in_array('subServices', $attrOptions)) {
+        if (null === $attrOptions || in_array('subServices', $attrOptions)) {
             $builder
                 ->add('subServices', EntityType::class, [
                     'class' => SubService::class,
@@ -67,7 +67,7 @@ class SearchType extends AbstractType
                 ]);
         }
 
-        if (null == $attrOptions || in_array('devices', $attrOptions)) {
+        if (null === $attrOptions || in_array('devices', $attrOptions)) {
             $builder
                 ->add('devices', EntityType::class, [
                     'class' => Device::class,
@@ -85,7 +85,7 @@ class SearchType extends AbstractType
                 ]);
         }
 
-        if (null == $attrOptions || in_array('referents', $attrOptions)) {
+        if (null === $attrOptions || in_array('referents', $attrOptions)) {
             $builder
                 ->add('referents', EntityType::class, [
                     'class' => User::class,

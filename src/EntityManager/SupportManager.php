@@ -527,10 +527,10 @@ class SupportManager
 
         foreach ($supportGroup->getSupportPeople() as $supportPerson) {
             // Si c'est une personne seule ou si la date de début de suivi est vide, copie la date de début de suivi.
-            if (1 == $nbPeople || null == $supportPerson->getStartDate()) {
+            if (1 === $nbPeople || null === $supportPerson->getStartDate()) {
                 $supportPerson->setStartDate($supportGroup->getStartDate());
             }
-            if (1 == $nbPeople || null == $supportPerson->getEndDate() || null == $supportPerson->getEndStatus()) {
+            if (1 === $nbPeople || null === $supportPerson->getEndDate() || null === $supportPerson->getEndStatus()) {
                 $supportPerson
                     ->setStatus($supportGroup->getStatus())
                     ->setEndDate($supportGroup->getEndDate())
@@ -650,7 +650,7 @@ class SupportManager
     protected function personIsInSupport(Person $person, SupportGroup $supportGroup): bool
     {
         foreach ($supportGroup->getSupportPeople() as $supportPerson) {
-            if ($person == $supportPerson->getPerson()) {
+            if ($person === $supportPerson->getPerson()) {
                 return true;
             }
         }

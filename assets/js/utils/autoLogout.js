@@ -21,6 +21,8 @@ export default class AutoLogout {
     init() {
         if (this.userNameElt) {
             this.intervalID = window.setInterval(this.count.bind(this), 1000)
+            document.addEventListener('click', this.clearTimer.bind(this))
+            document.addEventListener('keydown', this.clearTimer.bind(this))
         }
     }
 
@@ -31,9 +33,6 @@ export default class AutoLogout {
         this.time--
         if (this.time === this.timeAlert) {
             this.modalElt.show();
-            ['click', 'keydown'].forEach(eventType =>
-                document.addEventListener(eventType, this.clearTimer.bind(this))
-            );
         }
         if (this.time <= this.timeAlert) {
             this.timerElt.textContent = this.getFullTime()

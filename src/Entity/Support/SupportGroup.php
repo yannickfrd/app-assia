@@ -752,7 +752,7 @@ class SupportGroup
 
     public function setOriginRequest(?OriginRequest $originRequest): self
     {
-        if ($originRequest->getId() || false == $this->objectIsEmpty($originRequest)) {
+        if ($originRequest->getId() || false === $this->objectIsEmpty($originRequest)) {
             $this->originRequest = $originRequest;
         }
 

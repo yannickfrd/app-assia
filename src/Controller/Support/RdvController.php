@@ -48,7 +48,7 @@ class RdvController extends AbstractController
     public function viewListRdvs(Request $request, Pagination $pagination, CurrentUserService $currentUser): Response
     {
         $search = new RdvSearch();
-        if (User::STATUS_SOCIAL_WORKER == $this->getUser()->getStatus()) {
+        if (User::STATUS_SOCIAL_WORKER === $this->getUser()->getStatus()) {
             $usersCollection = new ArrayCollection();
             $usersCollection->add($this->getUser());
             $search->setReferents($usersCollection);

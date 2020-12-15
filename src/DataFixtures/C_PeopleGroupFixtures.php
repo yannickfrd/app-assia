@@ -73,9 +73,9 @@ class C_PeopleGroupFixtures extends Fixture
         $this->familyTypology = mt_rand(1, 6);
         if ($this->familyTypology <= 2) {
             $this->nbPeople = 1;
-        } elseif (3 == $this->familyTypology) {
+        } elseif (3 === $this->familyTypology) {
             $this->nbPeople = 2;
-        } elseif (6 == $this->familyTypology) {
+        } elseif (6 === $this->familyTypology) {
             $this->nbPeople = mt_rand(3, 6);
         } else {
             $this->nbPeople = mt_rand(2, 5);
@@ -105,34 +105,34 @@ class C_PeopleGroupFixtures extends Fixture
     // Détermine différentes infos sur la personne en fonction de la typologie familiale
     protected function familyTypology($l)
     {
-        if (1 == $this->familyTypology) {
+        if (1 === $this->familyTypology) {
             $this->setPerson('adult', 1, true, 5);
-        } elseif (2 == $this->familyTypology) {
+        } elseif (2 === $this->familyTypology) {
             $this->setPerson('adult', 2, true, 5);
-        } elseif (3 == $this->familyTypology || 6 == $this->familyTypology) {
-            if (1 == $l) {
+        } elseif (3 === $this->familyTypology || 6 === $this->familyTypology) {
+            if (1 === $l) {
                 $this->setPerson('adult', 1, true, 1);
-            } elseif (2 == $l) {
+            } elseif (2 === $l) {
                 $this->setPerson('adult', 2, false, 1);
             }
-        } elseif (4 == $this->familyTypology) {
-            if (1 == $l) {
+        } elseif (4 === $this->familyTypology) {
+            if (1 === $l) {
                 $this->setPerson('adult', 1, true, 4);
             }
-        } elseif (5 == $this->familyTypology) {
-            if (1 == $l) {
+        } elseif (5 === $this->familyTypology) {
+            if (1 === $l) {
                 $this->setPerson('adult', 2, true, 4);
             }
         }
 
-        if (($this->familyTypology >= 4 && $this->familyTypology <= 5 && $l >= 2) || (6 == $this->familyTypology && $l >= 3)) {
+        if (($this->familyTypology >= 4 && $this->familyTypology <= 5 && $l >= 2) || (6 === $this->familyTypology && $l >= 3)) {
             $this->setPerson('child', mt_rand(1, 2), false, 3);
         }
     }
 
     protected function setPerson($age, $sex, $head, $role)
     {
-        $this->firstname = $this->faker->firstName(1 == $sex ? 'female' : 'male');
+        $this->firstname = $this->faker->firstName(1 === $sex ? 'female' : 'male');
         $this->birthdate = $this->birthdate($age);
         $this->sex = $sex;
         $this->head = $head;
@@ -180,7 +180,7 @@ class C_PeopleGroupFixtures extends Fixture
     // Donne une date de naissanc en fonction du role de la personne
     protected function birthdate($role = 'adult')
     {
-        if ('adult' == $role) {
+        if ('adult' === $role) {
             $birthdate = $this->faker->dateTimeBetween($startDate = '-55 years', $endDate = '-18 years', $timezone = null);
         } else {
             $birthdate = $this->faker->dateTimeBetween($startDate = '-18 years', $endDate = 'now', $timezone = null);

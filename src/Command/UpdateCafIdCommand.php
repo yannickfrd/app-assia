@@ -2,8 +2,6 @@
 
 namespace App\Command;
 
-use App\Entity\Evaluation\EvaluationGroup;
-use App\Entity\Evaluation\EvaluationPerson;
 use App\Entity\People\RolePerson;
 use App\Repository\Support\SupportGroupRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -12,10 +10,12 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Commande pour mettre à jour le nombre de personnes par suivi (TEMPORAIRE, A SUPPRIMER).
+ * Commande pour mettre à jour le numéro CAF (TEMPORAIRE, A SUPPRIMER).
  */
 class UpdateCafIdCommand extends Command
 {
+    use DoctrineTrait;
+
     protected static $defaultName = 'app:evaluation:update:cafId';
 
     protected $repo;
@@ -25,6 +25,7 @@ class UpdateCafIdCommand extends Command
     {
         $this->repo = $repo;
         $this->manager = $manager;
+        $this->disableListeners();
 
         parent::__construct();
     }
@@ -47,15 +48,13 @@ class UpdateCafIdCommand extends Command
         $supports = $this->repo->findAll();
 
         foreach ($supports as $support) {
-            /** @var EvaluationGroup $evaluationGroup */
-            $evaluationGroup = $support->getEvaluationsGroup()->first();
+            $evaluationGroup = $support->getEvaluationsGroup()[0];
             if ($evaluationGroup) {
                 ++$nbEvaluations;
                 $cafId = $evaluationGroup->getEvalFamilyGroup() ? $evaluationGroup->getEvalFamilyGroup()->getCafId() : null;
                 if ($cafId) {
                     foreach ($support->getSupportPeople() as $supportPerson) {
-                        /** @var EvaluationPerson $evaluationPerson */
-                        $evaluationPerson = $supportPerson->getEvaluationsPerson()->first();
+                        $evaluationPerson = $supportPerson->getEvaluationsPerson()[0];
                         if (RolePerson::ROLE_CHILD != $evaluationPerson->getSupportPerson()->getRole()) {
                             if ($evaluationPerson->getEvalBudgetPerson()) {
                                 $evaluationPerson->getEvalBudgetPerson()->setCafId($cafId);

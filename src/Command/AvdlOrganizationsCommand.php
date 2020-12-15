@@ -7,6 +7,9 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Commande pour créer les liasons entre le service AVDL et les différents prescripteurs.
+ */
 class AvdlOrganizationsCommand extends Command
 {
     protected static $defaultName = 'app:service_organization:insert:avdl';
@@ -33,7 +36,7 @@ class AvdlOrganizationsCommand extends Command
         $outputExec = [];
         exec($cmd, $outputExec, $return);
 
-        if (0 == $return) {
+        if (0 === $return) {
             $message = '[OK] Insert is successfull !';
             $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
         } else {

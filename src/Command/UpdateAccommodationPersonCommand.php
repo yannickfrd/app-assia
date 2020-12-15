@@ -2,14 +2,20 @@
 
 namespace App\Command;
 
-use App\Repository\Support\AccommodationGroupRepository;
+use App\Command\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use App\Repository\Support\AccommodationGroupRepository;
 
+/**
+ * Commande pour mettre à jour les prises en charges individuelles.
+ */
 class UpdateAccommodationPersonCommand extends Command
 {
+    use DoctrineTrait;
+
     protected static $defaultName = 'app:accommodationPerson:update:supportPerson';
 
     protected $repo;
@@ -19,6 +25,7 @@ class UpdateAccommodationPersonCommand extends Command
     {
         $this->repo = $repo;
         $this->manager = $manager;
+        $this->disableListeners();
 
         parent::__construct();
     }
@@ -30,13 +37,6 @@ class UpdateAccommodationPersonCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $listenersType = $this->manager->getEventManager()->getListeners();
-        foreach ($listenersType as $listenerType) {
-            foreach ($listenerType as $listener) {
-                $this->manager->getEventManager()->removeEventListener(['onFlush', 'onFlush'], $listener);
-            }
-        }
-
         $this->manager->getFilters()->disable('softdeleteable');
 
         $nbAccommodationPeople = 0;
@@ -50,7 +50,7 @@ class UpdateAccommodationPersonCommand extends Command
             foreach ($accommodationGroup->getAccommodationPeople() as $accommodationPerson) {
                 ++$nbAccommodationPeople;
                 foreach ($supportGroup->getSupportPeople() as $supportPerson) {
-                    if (null == $accommodationPerson->getSupportPerson() && $accommodationPerson->getPerson()->getId() == $supportPerson->getPerson()->getId()) {
+                    if (null === $accommodationPerson->getSupportPerson() && $accommodationPerson->getPerson()->getId() === $supportPerson->getPerson()->getId()) {
                         $accommodationPerson->setSupportPerson($supportPerson);
                         ++$countUpdate;
                     }

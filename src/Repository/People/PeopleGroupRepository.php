@@ -49,15 +49,15 @@ class PeopleGroupRepository extends ServiceEntityRepository
 
         if ($criteria) {
             foreach ($criteria as $key => $value) {
-                if ('startDate' == $key) {
+                if ('startDate' === $key) {
                     $query = $query->andWhere('g.createdAt >= :startDate')
                             ->setParameter('startDate', $value);
                 }
-                if ('endDate' == $key) {
+                if ('endDate' === $key) {
                     $query = $query->andWhere('g.createdAt <= :endDate')
                             ->setParameter('endDate', $value);
                 }
-                if ('createdBy' == $key) {
+                if ('createdBy' === $key) {
                     $query = $query->andWhere('g.createdBy = :createdBy')
                         ->setParameter('createdBy', $value);
                 }

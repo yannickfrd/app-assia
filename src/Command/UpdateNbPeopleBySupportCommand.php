@@ -13,6 +13,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class UpdateNbPeopleBySupportCommand extends Command
 {
+    use DoctrineTrait;
+
     protected static $defaultName = 'app:support:update:nbPeople';
 
     protected $repo;
@@ -22,6 +24,7 @@ class UpdateNbPeopleBySupportCommand extends Command
     {
         $this->repo = $repo;
         $this->manager = $manager;
+        $this->disableListeners();
 
         parent::__construct();
     }
@@ -39,17 +42,10 @@ class UpdateNbPeopleBySupportCommand extends Command
      */
     protected function updateNbPeopleBySupport()
     {
-        $listenersType = $this->manager->getEventManager()->getListeners();
-        foreach ($listenersType as $listenerType) {
-            foreach ($listenerType as $listener) {
-                $this->manager->getEventManager()->removeEventListener(['onFlush', 'onFlush'], $listener);
-            }
-        }
-
         $count = 0;
         $supports = $this->repo->findAll();
         foreach ($supports as $support) {
-            if (null == $support->getNbPeople()) {
+            if ($support->getNbPeople() != $support->getSupportPeople()->count()) {
                 $support->setNbPeople($support->getSupportPeople()->count());
                 ++$count;
             }

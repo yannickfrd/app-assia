@@ -9,7 +9,7 @@ class Grammar
      */
     public static function gender($gender): string
     {
-        return 1 == $gender ? 'e' : '';
+        return 1 === $gender ? 'e' : '';
     }
 
     /**
@@ -17,6 +17,6 @@ class Grammar
      */
     public static function plural($plural): string
     {
-        return 1 == $plural ? 's' : '';
+        return 1 === $plural ? 's' : '';
     }
 }

@@ -13,6 +13,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class UpdateLocationSupportsCommand extends Command
 {
+    use DoctrineTrait;
+
     protected static $defaultName = 'app:support:update:location';
 
     protected $repo;
@@ -22,6 +24,7 @@ class UpdateLocationSupportsCommand extends Command
     {
         $this->repo = $repo;
         $this->manager = $manager;
+        $this->disableListeners();
 
         parent::__construct();
     }
@@ -39,18 +42,11 @@ class UpdateLocationSupportsCommand extends Command
      */
     protected function updateLocationSupports()
     {
-        $listenersType = $this->manager->getEventManager()->getListeners();
-        foreach ($listenersType as $listenerType) {
-            foreach ($listenerType as $listener) {
-                $this->manager->getEventManager()->removeEventListener(['onFlush', 'onFlush'], $listener);
-            }
-        }
-
         $count = 0;
         $supports = $this->repo->findAll();
 
         foreach ($supports as $support) {
-            if (null == $support->getLocationId()) {
+            if (null === $support->getLocationId()) {
                 /** @var AccommodationGroup */
                 $accommodationGroup = $support->getAccommodationGroups()[0];
 

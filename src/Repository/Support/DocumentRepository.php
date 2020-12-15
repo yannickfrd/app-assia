@@ -133,31 +133,31 @@ class DocumentRepository extends ServiceEntityRepository
             $query = $query->leftJoin('d.supportGroup', 'sg');
 
             foreach ($criteria as $key => $value) {
-                if ('service' == $key) {
+                if ('service' === $key) {
                     $query = $query->andWhere('sg.service = :service')
                         ->setParameter('service', $value);
                 }
-                if ('subService' == $key) {
+                if ('subService' === $key) {
                     $query = $query->andWhere('sg.subService = :subService')
                         ->setParameter('subService', $value);
                 }
-                if ('device' == $key) {
+                if ('device' === $key) {
                     $query = $query->andWhere('sg.device = :device')
                         ->setParameter('device', $value);
                 }
-                if ('startDate' == $key) {
+                if ('startDate' === $key) {
                     $query = $query->andWhere('d.createdAt >= :startDate')
                             ->setParameter('startDate', $value);
                 }
-                if ('endDate' == $key) {
+                if ('endDate' === $key) {
                     $query = $query->andWhere('d.createdAt <= :endDate')
                             ->setParameter('endDate', $value);
                 }
-                if ('createdBy' == $key) {
+                if ('createdBy' === $key) {
                     $query = $query->andWhere('d.createdBy = :createdBy')
                         ->setParameter('createdBy', $value);
                 }
-                if ('status' == $key) {
+                if ('status' === $key) {
                     $query = $query->andWhere('sg.status = :status')
                         ->setParameter('status', $value);
                 }

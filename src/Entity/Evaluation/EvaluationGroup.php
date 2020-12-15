@@ -191,7 +191,7 @@ class EvaluationGroup
 
     public function setEvalSocialGroup(EvalSocialGroup $evalSocialGroup): self
     {
-        if ($evalSocialGroup->getId() || false == $this->objectIsEmpty($evalSocialGroup)) {
+        if ($evalSocialGroup->getId() || false === $this->objectIsEmpty($evalSocialGroup)) {
             $this->evalSocialGroup = $evalSocialGroup;
         }
 
@@ -210,7 +210,7 @@ class EvaluationGroup
 
     public function setEvalFamilyGroup(EvalFamilyGroup $evalFamilyGroup): self
     {
-        if ($evalFamilyGroup->getId() || false == $this->objectIsEmpty($evalFamilyGroup)) {
+        if ($evalFamilyGroup->getId() || false === $this->objectIsEmpty($evalFamilyGroup)) {
             $this->evalFamilyGroup = $evalFamilyGroup;
         }
         // set the owning side of the relation if necessary
@@ -228,7 +228,7 @@ class EvaluationGroup
 
     public function setEvalHousingGroup(EvalHousingGroup $evalHousingGroup): self
     {
-        if ($evalHousingGroup->getId() || false == $this->objectIsEmpty($evalHousingGroup)) {
+        if ($evalHousingGroup->getId() || false === $this->objectIsEmpty($evalHousingGroup)) {
             $this->evalHousingGroup = $evalHousingGroup;
         }
         // set the owning side of the relation if necessary
@@ -306,7 +306,7 @@ class EvaluationGroup
 
     public function setEvalHotelLifeGroup(EvalHotelLifeGroup $evalHotelLifeGroup): self
     {
-        if ($evalHotelLifeGroup->getId() || false == $this->objectIsEmpty($evalHotelLifeGroup)) {
+        if ($evalHotelLifeGroup->getId() || false === $this->objectIsEmpty($evalHotelLifeGroup)) {
             $this->evalHotelLifeGroup = $evalHotelLifeGroup;
         }
         // set the owning side of the relation if necessary

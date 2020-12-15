@@ -17,9 +17,9 @@ export default class SpeedTest {
     start(object = null) {
         let totalTime = 0
 
-        for (let i = 0 i < this.nbLoops i++) {
+        for (let i = 0; i < this.nbLoops; i++) {
             let startTime = new Date()
-            for (let j = 0 j < 1 j++) {
+            for (let j = 0; j < 1; j++) {
                 this.validationForm.checkForm()
             }
             let time = new Date() - startTime

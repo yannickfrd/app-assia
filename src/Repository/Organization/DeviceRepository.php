@@ -52,9 +52,9 @@ class DeviceRepository extends ServiceEntityRepository
             $query->andWhere('s.pole = :pole')
                 ->setParameter('pole', $search->getPole());
         }
-        if (Choices::DISABLED == $search->getDisabled()) {
+        if (Choices::DISABLED === $search->getDisabled()) {
             $query->andWhere('d.disabledAt IS NOT NULL');
-        } elseif (Choices::ACTIVE == $search->getDisabled()) {
+        } elseif (Choices::ACTIVE === $search->getDisabled()) {
             $query->andWhere('d.disabledAt IS NULL');
         }
 

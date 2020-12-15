@@ -164,7 +164,7 @@ class A_ServiceFixtures extends Fixture
         $serviceDevice->setService($this->service);
 
         foreach ($this->devices as $device) {
-            if ($device->getName() == $this->service->getName()) {
+            if ($device->getName() === $this->service->getName()) {
                 $serviceDevice->setDevice($device);
 
                 $this->manager->persist($serviceDevice);

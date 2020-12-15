@@ -132,9 +132,9 @@ class UserRepository extends ServiceEntityRepository
                 ->setParameter('pole_id', $search->getPole());
         }
 
-        if (Choices::DISABLED == $search->getDisabled()) {
+        if (Choices::DISABLED === $search->getDisabled()) {
             $query->andWhere('u.disabledAt IS NOT NULL');
-        } elseif (Choices::ACTIVE == $search->getDisabled()) {
+        } elseif (Choices::ACTIVE === $search->getDisabled()) {
             $query->andWhere('u.disabledAt IS NULL');
         }
 
@@ -284,8 +284,7 @@ class UserRepository extends ServiceEntityRepository
 
     /**
      * Donne les utilisateurs selon différents critères.
-     * 
-     * 
+     *
      * @return User[]|null
      */
     public function findUsers(array $criteria = null): ?array
@@ -295,7 +294,7 @@ class UserRepository extends ServiceEntityRepository
 
         if ($criteria) {
             foreach ($criteria as $key => $value) {
-                if ('status' == $key) {
+                if ('status' === $key) {
                     $query = $query->andWhere('u.status = :status')
                         ->setParameter('status', $value);
                 }
@@ -319,11 +318,11 @@ class UserRepository extends ServiceEntityRepository
             $query = $query->leftJoin('u.serviceUser', 'su');
 
             foreach ($criteria as $key => $value) {
-                if ('service' == $key) {
+                if ('service' === $key) {
                     $query = $query->andWhere('su.service = :service')
                         ->setParameter('service', $value);
                 }
-                if ('status' == $key) {
+                if ('status' === $key) {
                     $query = $query->andWhere('u.status = :status')
                         ->setParameter('status', $value);
                 }

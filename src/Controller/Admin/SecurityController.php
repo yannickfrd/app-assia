@@ -102,7 +102,7 @@ class SecurityController extends AbstractController
     // {
     //     $this->addFlash('success', 'Bonjour '.$this->getUser()->getFirstname().' !');
 
-    //     if (1 == $this->getUser()->getLoginCount() && $this->getUser()->getTokenCreatedAt()) {
+    //     if (1 === $this->getUser()->getLoginCount() && $this->getUser()->getTokenCreatedAt()) {
     //         return $this->redirectToRoute('security_init_password');
     //     }
 
@@ -203,7 +203,7 @@ class SecurityController extends AbstractController
     {
         $this->denyAccessUnlessGranted('DISABLE', $user);
 
-        if ($user == $this->getUser()) {
+        if ($user === $this->getUser()) {
             $this->addFlash('danger', 'Vous ne pouvez pas vous-même désactiver votre compte utilisateur.');
 
             return $this->redirectToRoute('security_user', ['id' => $user->getId()]);

@@ -58,7 +58,7 @@ class AccommodationGroupController extends AbstractController
         // Vérifie si une prise en charge existe déjà pour le suivi
         if ($supportGroup->getAccommodationGroups()) {
             foreach ($supportGroup->getAccommodationGroups() as $accommodationGroup) {
-                if (null == $accommodationGroup->getEndDate()) {
+                if (null === $accommodationGroup->getEndDate()) {
                     $this->addFlash('warning', 'Attention, une autre prise en charge est déjà en cours pour ce suivi.');
                 }
             }
@@ -127,7 +127,7 @@ class AccommodationGroupController extends AbstractController
 
         if ($countAddPeople > 1) {
             $this->addFlash('success', $countAddPeople.' personnes sont ajoutées à la prise en charge.');
-        } elseif (1 == $countAddPeople) {
+        } elseif (1 === $countAddPeople) {
             $this->addFlash('success', $countAddPeople.' personne est ajoutée à la prise en charge.');
         } else {
             $this->addFlash('warning', 'Aucune personne n\'a été ajoutée.');
@@ -228,18 +228,18 @@ class AccommodationGroupController extends AbstractController
     {
         foreach ($accommodationGroup->getAccommodationPeople() as $accommodationPerson) {
             $person = $accommodationPerson->getPerson();
-            // if (null == $accommodationPerson->getEndDate()) {
+            // if (null === $accommodationPerson->getEndDate()) {
             $accommodationPerson->setStartDate($accommodationGroup->getStartDate());
             // }
             if ($accommodationPerson->getStartDate() < $person->getBirthdate()) {
                 $accommodationPerson->setStartDate($person->getBirthdate());
                 $this->addFlash('warning', 'La date de début d\'hébergement ne peut pas être antérieure à la date de naissance de la personne ('.$person->getFullname().').');
             }
-            if (null == $accommodationPerson->getEndDate()) {
+            if (null === $accommodationPerson->getEndDate()) {
                 $accommodationPerson->setEndDate($accommodationGroup->getEndDate());
             }
 
-            if (null == $accommodationPerson->getEndReason()) {
+            if (null === $accommodationPerson->getEndReason()) {
                 $accommodationPerson->setEndReason($accommodationGroup->getEndReason());
             }
         }
@@ -261,7 +261,7 @@ class AccommodationGroupController extends AbstractController
 
         foreach ($accommodationGroup->getSupportGroup()->getSupportPeople() as $supportPerson) {
             // Vérifie si la personne n'est pas déjà rattachée à la prise en charge
-            if (null == $supportPerson->getEndDate() && !in_array($supportPerson->getPerson()->getId(), $this->getPeopleInAccommodation($accommodationGroup))) {
+            if (null === $supportPerson->getEndDate() && !in_array($supportPerson->getPerson()->getId(), $this->getPeopleInAccommodation($accommodationGroup))) {
                 // Si elle n'est pas déjà pris en charge, on la créé
                 $accommodationPerson = (new AccommodationPerson())
                     ->setAccommodationGroup($accommodationGroup)

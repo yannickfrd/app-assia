@@ -115,11 +115,11 @@ class EvaluationGroupRepository extends ServiceEntityRepository
 
         if ($criteria) {
             foreach ($criteria as $key => $value) {
-                if ('startDate' == $key) {
+                if ('startDate' === $key) {
                     $query = $query->andWhere('e.createdAt >= :startDate')
                             ->setParameter('startDate', $value);
                 }
-                if ('endDate' == $key) {
+                if ('endDate' === $key) {
                     $query = $query->andWhere('e.createdAt <= :endDate')
                             ->setParameter('endDate', $value);
                 }

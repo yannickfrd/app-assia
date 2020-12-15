@@ -7,6 +7,9 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Commande pour créer une sauvegarde de la base de données.
+ */
 class DatabaseBackupCommand extends Command
 {
     protected static $defaultName = 'app:database:backup';

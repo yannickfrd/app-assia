@@ -450,7 +450,7 @@ class PersonController extends AbstractController
      */
     protected function canEdit(Person $person, array $supports, SessionInterface $session): bool
     {
-        if ($this->isGranted('ROLE_SUPER_ADMIN') || $person->getCreatedBy() == $this->getUser()) {
+        if ($this->isGranted('ROLE_SUPER_ADMIN') || $person->getCreatedBy() === $this->getUser()) {
             return true;
         }
 

@@ -162,7 +162,7 @@ class SupportGroupType extends AbstractType
                     'query_builder' => function (AccommodationRepository $repo) use ($serviceId, $subServiceId) {
                         return $repo->getAccommodationsQueryList($serviceId, $subServiceId);
                     },
-                    'label' => Service::SERVICE_PASH_ID == $serviceId ? 'hotelName' : 'accommodation.name',
+                    'label' => Service::SERVICE_PASH_ID === $serviceId ? 'hotelName' : 'accommodation.name',
                     'placeholder' => 'placeholder.select',
                     'mapped' => false,
                     'required' => false,
@@ -211,7 +211,7 @@ class SupportGroupType extends AbstractType
 
         $supportGroup = $form->getConfig()->getData();
 
-        if (0 == $supportGroup->getAccommodationGroups()->count()) {
+        if (0 === $supportGroup->getAccommodationGroups()->count()) {
             $this->addAccommodationGroup($supportGroup);
         }
 

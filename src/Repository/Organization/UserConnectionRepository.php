@@ -28,11 +28,11 @@ class UserConnectionRepository extends ServiceEntityRepository
 
         if ($criteria) {
             foreach ($criteria as $key => $value) {
-                if ('startDate' == $key) {
+                if ('startDate' === $key) {
                     $query = $query->andWhere('c.connectionAt >= :startDate')
                             ->setParameter('startDate', $value);
                 }
-                if ('endDate' == $key) {
+                if ('endDate' === $key) {
                     $query = $query->andWhere('c.connectionAt <= :endDate')
                             ->setParameter('endDate', $value);
                 }

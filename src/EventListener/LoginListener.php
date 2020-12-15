@@ -57,7 +57,7 @@ class LoginListener
         foreach ($user->getServiceUser() as $serviceUser) {
             $service = $serviceUser->getService();
             $userServices[$service->getId()] = $service->getName();
-            if ($service->getAccommodation() == Choices::YES) {
+            if ($service->getAccommodation() === Choices::YES) {
                 $haveServiceWithAccommodation = true;
             }
         }

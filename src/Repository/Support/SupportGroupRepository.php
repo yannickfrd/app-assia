@@ -57,14 +57,14 @@ class SupportGroupRepository extends ServiceEntityRepository
         ->leftJoin('origin.organization', 'orga')->addSelect('PARTIAL orga.{id, name}')
         ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name, logoPath}')
 
-        // if ($service->getId() == Service::SERVICE_AVDL_ID) {
+        // if ($service->getId() === Service::SERVICE_AVDL_ID) {
             ->leftJoin('sg.avdl', 'avdl')->addSelect('avdl')
         // }
-        // if ($service->getId() == Service::SERVICE_PASH_ID) {
+        // if ($service->getId() === Service::SERVICE_PASH_ID) {
             ->leftJoin('sg.hotelSupport', 'hs')->addSelect('hs')
         // }
 
-        // if ($supportGroup->getDevice()->getAccommodation() == Choices::YES) {
+        // if ($supportGroup->getDevice()->getAccommodation() === Choices::YES) {
             ->leftJoin('sg.accommodationGroups', 'ag')->addSelect('ag')
             ->leftJoin('ag.accommodation', 'a')->addSelect('PARTIAL a.{id, name, address, city, zipcode}')
             ->leftJoin('ag.accommodationPeople', 'ap')->addSelect('ap')
@@ -308,42 +308,42 @@ class SupportGroupRepository extends ServiceEntityRepository
             $dateFilter = $criteria['filterDateBy'] ?? 'createdAt';
 
             foreach ($criteria as $key => $value) {
-                if ('service' == $key) {
+                if ('service' === $key) {
                     $query = $query->andWhere('sg.service = :service')
                         ->setParameter('service', $value);
                 }
-                if ('subService' == $key) {
+                if ('subService' === $key) {
                     $query = $query->andWhere('sg.subService = :subService')
                         ->setParameter('subService', $value);
                 }
-                if ('device' == $key) {
+                if ('device' === $key) {
                     $query = $query->andWhere('sg.device = :device')
                         ->setParameter('device', $value);
                 }
-                if ('user' == $key) {
+                if ('user' === $key) {
                     $query = $query->andWhere('sg.referent = :user')
                         ->setParameter('user', $value);
                 }
-                if ('status' == $key) {
+                if ('status' === $key) {
                     $query = $query->andWhere('sg.status = :status')
                         ->setParameter('status', $value);
                 }
-                if ('startDate' == $key) {
+                if ('startDate' === $key) {
                     $query = $query->andWhere("sg.$dateFilter >= :startDate")
                             ->setParameter('startDate', $value);
                 }
-                if ('endDate' == $key) {
+                if ('endDate' === $key) {
                     $query = $query->andWhere("sg.$dateFilter <= :endDate")
                             ->setParameter('endDate', $value);
                 }
-                if ('siaoRequest' == $key) {
+                if ('siaoRequest' === $key) {
                     $query = $query->leftJoin('sg.evaluationsGroup', 'e')
                         ->leftJoin('e.evalHousingGroup', 'ehg')
 
                         ->andWhere('ehg.siaoRequest = :siaoRequest')
                         ->setParameter('siaoRequest', $value);
                 }
-                if ('socialHousingRequest' == $key) {
+                if ('socialHousingRequest' === $key) {
                     $query = $query->leftJoin('sg.evaluationsGroup', 'e')
                         ->leftJoin('e.evalHousingGroup', 'ehg')
 
@@ -366,19 +366,19 @@ class SupportGroupRepository extends ServiceEntityRepository
 
         if ($criteria) {
             foreach ($criteria as $key => $value) {
-                if ('service' == $key) {
+                if ('service' === $key) {
                     $query->andWhere('sg.service = :service')
                         ->setParameter('service', $value);
                 }
-                if ('subService' == $key) {
+                if ('subService' === $key) {
                     $query->andWhere('sg.subService = :subService')
                         ->setParameter('subService', $value);
                 }
-                if ('device' == $key) {
+                if ('device' === $key) {
                     $query->andWhere('sg.device = :device')
                         ->setParameter('device', $value);
                 }
-                if ('status' == $key) {
+                if ('status' === $key) {
                     $query->andWhere('sg.status = :status')
                         ->setParameter('status', $value);
                 }
@@ -409,19 +409,19 @@ class SupportGroupRepository extends ServiceEntityRepository
 
         if ($criteria) {
             foreach ($criteria as $key => $value) {
-                if ('service' == $key) {
+                if ('service' === $key) {
                     $query->andWhere('sg.service = :service')
                         ->setParameter('service', $value);
                 }
-                if ('subService' == $key) {
+                if ('subService' === $key) {
                     $query->andWhere('sg.subService = :subService')
                         ->setParameter('subService', $value);
                 }
-                if ('device' == $key) {
+                if ('device' === $key) {
                     $query->andWhere('sg.device = :device')
                         ->setParameter('device', $value);
                 }
-                if ('status' == $key) {
+                if ('status' === $key) {
                     $query->andWhere('sg.status = :status')
                         ->setParameter('status', $value);
                 }

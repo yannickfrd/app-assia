@@ -136,7 +136,7 @@ class Calendar
      */
     public function getFirstMonday(): \DateTime
     {
-        if ('1' == $this->getFirstDayOfTheMonth()->format('N')) {
+        if ('1' === $this->getFirstDayOfTheMonth()->format('N')) {
             return $this->getFirstDayOfTheMonth();
         }
 
@@ -159,7 +159,7 @@ class Calendar
         $startMonth = $this->getFirstDayOfTheMonth();
         $endMonth = (clone $startMonth)->modify('+1 month -1 day');
         $weeks = intval($endMonth->format('W')) - intval($startMonth->format('W')) + 1;
-        if (1 == intval($endMonth->format('W'))) {
+        if (1 === intval($endMonth->format('W'))) {
             $weeks = 53 - intval($startMonth->format('W')) + 1;
         }
         if ($weeks < 0) {

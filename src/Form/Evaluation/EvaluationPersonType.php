@@ -25,7 +25,7 @@ class EvaluationPersonType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $evaluationPerson = $event->getData();
             $service = $evaluationPerson->getEvaluationGroup()->getSupportGroup()->getService();
-            if (Choices::YES == $service->getJustice()) {
+            if (Choices::YES === $service->getJustice()) {
                 $event->getForm()->add('evalJusticePerson', EvalJusticePersonType::class);
             }
         });

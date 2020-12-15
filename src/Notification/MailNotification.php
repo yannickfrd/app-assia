@@ -6,7 +6,6 @@ use App\Entity\Organization\User;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
-use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 
 class MailNotification
@@ -35,15 +34,13 @@ class MailNotification
 
         $mail->isSMTP(); // Send using SMTP
 
-        $request = Request::createFromGlobals();
-
-        if ('127.0.0.1:8000' != $request->server->get('SERVER_NAME')) {
+        if ('localhost' === $this->host) {
+            $mail->SMTPAuth = false;
+            $mail->SMTPAutoTLS = false;
+        } else {
             $mail->SMTPAuth = true; // Enable SMTP authentication
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->SMTPDebug = SMTP::DEBUG_OFF;
-        } else {
-            $mail->SMTPAuth = false;
-            $mail->SMTPAutoTLS = false;
         }
 
         $mail->Host = $this->host;
@@ -77,6 +74,10 @@ class MailNotification
             $mail->Body = $htmlBody;
             $mail->AltBody = $txtBody ?? null;
 
+            if ('test' === $this->appVersion) {
+                return true;
+            }
+
             return $mail->send();
         } catch (Exception $e) {
             echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
@@ -109,7 +110,7 @@ class MailNotification
             'name' => $user->getFullname(),
         ];
 
-        $subject = 'Esperer95.app'.('test' == $this->appVersion ? ' version TEST' : null).' : Création de compte | '.$user->getFullname();
+        $subject = 'Esperer95.app'.('test' === $this->appVersion ? ' version TEST' : null).' : Création de compte | '.$user->getFullname();
 
         $context = [
             'user' => $user,

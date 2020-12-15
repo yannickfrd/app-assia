@@ -24,7 +24,7 @@ class SupportPersonExport extends ExportExcel
         $i = 0;
 
         foreach ($supports as $supportPerson) {
-            if (0 == $i) {
+            if (0 === $i) {
                 $arrayData[] = array_keys($this->getDatas($supportPerson));
             }
             $arrayData[] = $this->getDatas($supportPerson);
