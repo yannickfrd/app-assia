@@ -201,7 +201,7 @@ class Service
     }
 
     /**
-     * @return ServiceUser[]|null
+     * @return ServiceUser[]|Collection|null
      */
     public function getserviceUser()
     {
@@ -232,7 +232,7 @@ class Service
     }
 
     /**
-     * @return User[]|null
+     * @return User[]|Collection|null
      */
     public function getUsers()
     {
@@ -258,7 +258,7 @@ class Service
     }
 
     /**
-     * @return SupportGroup[]|null
+     * @return SupportGroup[]|Collection|null
      */
     public function getSupportGroup()
     {
@@ -443,7 +443,7 @@ class Service
     }
 
     /**
-     * @return ServiceDevice[]|null
+     * @return ServiceDevice[]|Collection|null
      */
     public function getServiceDevices()
     {
@@ -451,7 +451,7 @@ class Service
     }
 
     /**
-     * @return Device[]|null
+     * @return Device[]|Collection|null
      */
     public function getDevices()
     {
@@ -488,7 +488,7 @@ class Service
     }
 
     /**
-     * @return Accommodation[]|null
+     * @return Accommodation[]|Collection|null
      */
     public function getAccommodations()
     {
@@ -531,7 +531,7 @@ class Service
     }
 
     /**
-     * @return Organization[]|null
+     * @return Organization[]|Collection|null
      */
     public function getOrganizations()
     {
@@ -557,7 +557,7 @@ class Service
     }
 
     /**
-     * @return SubService[]|null
+     * @return SubService[]|Collection|null
      */
     public function getSubServices()
     {

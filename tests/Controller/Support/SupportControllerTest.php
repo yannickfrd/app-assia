@@ -7,6 +7,7 @@ use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -193,5 +194,8 @@ class SupportControllerTest extends WebTestCase
         parent::tearDown();
         $this->client = null;
         $this->dataFixtures = null;
+
+        $cache = new FilesystemAdapter();
+        $cache->clear();
     }
 }

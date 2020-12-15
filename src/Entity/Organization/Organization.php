@@ -111,7 +111,7 @@ class Organization
     }
 
     /**
-     * @return OriginRequest[]|null
+     * @return OriginRequest[]|Collection|null
      */
     public function getOriginRequests()
     {
@@ -142,7 +142,7 @@ class Organization
     }
 
     /**
-     * @return Service[]|null
+     * @return Service[]|Collection|null
      */
     public function getServices()
     {

@@ -254,7 +254,7 @@ class Device
     }
 
     /**
-     * @return ServiceDevice[]|null
+     * @return ServiceDevice[]|Collection|null
      */
     public function getServiceDevices()
     {
@@ -285,7 +285,7 @@ class Device
     }
 
     /**
-     * @return Accommodation[]|null
+     * @return Accommodation[]|Collection|null
      */
     public function getAccommodations()
     {
@@ -316,7 +316,7 @@ class Device
     }
 
     /**
-     * @return SupportGroup[]|null
+     * @return SupportGroup[]|Collection|null
      */
     public function getSupportGroup()
     {
@@ -347,7 +347,7 @@ class Device
     }
 
     /**
-     * @return UserDevice[]|null
+     * @return UserDevice[]|Collection|null
      */
     public function getUserDevices()
     {

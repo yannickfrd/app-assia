@@ -43,12 +43,17 @@ class SupportManager
 {
     use hydrateObjectWithArray;
 
+    private $manager;
     private $repoSupportGroup;
     private $flashbag;
     private $cache;
 
-    public function __construct(SupportGroupRepository $repoSupportGroup, FlashBagInterface $flashbag)
+    public function __construct(
+        EntityManagerInterface $manager,
+        SupportGroupRepository $repoSupportGroup,
+        FlashBagInterface $flashbag)
     {
+        $this->manager = $manager;
         $this->repoSupportGroup = $repoSupportGroup;
         $this->flashbag = $flashbag;
         $this->cache = new FilesystemAdapter();
@@ -73,7 +78,7 @@ class SupportManager
     /**
      * Créé un nouveau suivi.
      */
-    public function create(EntityManagerInterface $manager, PeopleGroup $peopleGroup, SupportGroup $supportGroup, bool $cloneSupport = false): bool
+    public function create(PeopleGroup $peopleGroup, SupportGroup $supportGroup, bool $cloneSupport = false): bool
     {
         if ($this->activeSupportExists($peopleGroup, $supportGroup)) {
             return false;
@@ -84,7 +89,7 @@ class SupportManager
 
         // Si l'utilisateur veut récupérer les informations du précédent suivi, alors clone l'évaluation sociale et les documents existants.
         if (true === $cloneSupport) {
-            $this->cloneSupport($supportGroup, $manager->getRepository(EvaluationGroup::class), $manager->getRepository(Note::class), $manager->getRepository(Document::class));
+            $this->cloneSupport($supportGroup, $this->manager->getRepository(EvaluationGroup::class), $this->manager->getRepository(Note::class), $this->manager->getRepository(Document::class));
         }
 
         $serviceId = $supportGroup->getService()->getId();
@@ -97,16 +102,18 @@ class SupportManager
             $supportGroup = (new HotelSupportService())->updateSupportGroup($supportGroup);
         }
 
-        $manager->persist($supportGroup);
+        $this->manager->persist($supportGroup);
 
         // Créé un suivi social individuel pour chaque personne du groupe
         foreach ($peopleGroup->getRolePeople() as $rolePerson) {
-            $supportGroup->addSupportPerson($this->createSupportPerson($manager, $rolePerson, $supportGroup));
+            $supportGroup->addSupportPerson($this->createSupportPerson($supportGroup, $rolePerson));
         }
+        // Met à jour le nombre de personnes du suivi.
+        $supportGroup->setNbPeople($supportGroup->getSupportPeople()->count());
 
         $this->checkValidHead($supportGroup);
 
-        $manager->flush();
+        $this->manager->flush();
 
         $this->discache($supportGroup);
 
@@ -116,7 +123,7 @@ class SupportManager
     /**
      * Crée un suivi individuel.
      */
-    protected function createSupportPerson(EntityManagerInterface $manager, RolePerson $rolePerson, SupportGroup $supportGroup): SupportPerson
+    protected function createSupportPerson(SupportGroup $supportGroup, RolePerson $rolePerson): SupportPerson
     {
         $supportPerson = (new SupportPerson())
             ->setSupportGroup($supportGroup)
@@ -136,9 +143,7 @@ class SupportManager
             $this->addFlash('warning', $supportPerson->getPerson()->getFullname().' : la date de début de suivi retenue est sa date de naissance.');
         }
 
-        $manager->persist($supportPerson);
-
-        $supportGroup->setNbPeople($supportGroup->getNbPeople() + 1);
+        $this->manager->persist($supportPerson);
 
         return $supportPerson;
     }
@@ -179,7 +184,7 @@ class SupportManager
     /**
      * Met à jour le suivi social du groupe.
      */
-    public function update(EntityManagerInterface $manager, SupportGroup $supportGroup): void
+    public function update(SupportGroup $supportGroup): void
     {
         $supportGroup->setUpdatedAt(new \DateTime());
         $serviceId = $supportGroup->getService()->getId();
@@ -196,7 +201,7 @@ class SupportManager
         $this->updateAccommodationGroup($supportGroup);
         $this->checkValidHead($supportGroup);
 
-        $manager->flush();
+        $this->manager->flush();
 
         $this->discache($supportGroup);
 
@@ -595,14 +600,15 @@ class SupportManager
     /**
      * Ajoute les personnes au suivi.
      */
-    public function addPeopleInSupport(EntityManagerInterface $manager, SupportGroup $supportGroup, EvaluationGroupRepository $repoEvaluation): bool
+    public function addPeopleInSupport(SupportGroup $supportGroup, EvaluationGroupRepository $repoEvaluation): bool
     {
         $addPeople = false;
 
         foreach ($supportGroup->getPeopleGroup()->getRolePeople() as $rolePerson) {
             if (!$this->personIsInSupport($rolePerson->getPerson(), $supportGroup)) {
-                $supportPerson = $this->createSupportPerson($manager, $rolePerson, $supportGroup);
+                $supportPerson = $this->createSupportPerson($supportGroup, $rolePerson);
 
+                $supportGroup->addSupportPerson($supportPerson);
                 $evaluationGroup = $repoEvaluation->findLastEvaluationOfSupport($supportGroup);
 
                 if ($evaluationGroup) {
@@ -610,7 +616,7 @@ class SupportManager
                         ->setEvaluationGroup($evaluationGroup)
                         ->setSupportPerson($supportPerson);
 
-                    $manager->persist($evaluationPerson);
+                    $this->manager->persist($evaluationPerson);
                 }
 
                 $this->addFlash('success', $rolePerson->getPerson()->getFullname().' est ajouté'.Grammar::gender($supportPerson->getPerson()->getGender()).' au suivi.');
@@ -618,8 +624,10 @@ class SupportManager
                 $addPeople = true;
             }
         }
+        // Met à jour le nombre de personnes du suivi.
+        $supportGroup->setNbPeople($supportGroup->getSupportPeople()->count());
 
-        $manager->flush();
+        $this->manager->flush();
 
         return $addPeople;
     }

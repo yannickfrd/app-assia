@@ -140,7 +140,7 @@ class Pole
     }
 
     /**
-     * @return Service[]|null
+     * @return Service[]|Collection|null
      */
     public function getServices()
     {

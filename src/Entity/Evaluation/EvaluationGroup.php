@@ -257,7 +257,7 @@ class EvaluationGroup
     }
 
     /**
-     * @return EvaluationPerson[]|null
+     * @return EvaluationPerson[]|Collection|null
      */
     public function getEvaluationPeople()
     {

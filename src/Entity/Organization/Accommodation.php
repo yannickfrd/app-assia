@@ -323,7 +323,7 @@ class Accommodation
     }
 
     /**
-     * @return AccommodationGroup[]|null
+     * @return AccommodationGroup[]|Collection|null
      */
     public function getAccommodationGroups()
     {

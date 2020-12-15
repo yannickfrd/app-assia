@@ -93,7 +93,7 @@ class SupportController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid() && $supportGroup->getAgreement()) {
             // Si pas de suivi en cours, en crée un nouveau, sinon ne fait rien
-            if ($supportManager->create($this->manager, $peopleGroup, $supportGroup, $form->get('cloneSupport')->getViewData() != null)) {
+            if ($supportManager->create($peopleGroup, $supportGroup, $form->get('cloneSupport')->getViewData() != null)) {
                 $this->addFlash('success', 'Le suivi social est créé.');
 
                 if ($supportGroup->getStartDate() && Choices::YES == $supportGroup->getService()->getAccommodation()
@@ -168,7 +168,7 @@ class SupportController extends AbstractController
         ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $supportManager->update($this->manager, $supportGroup);
+            $supportManager->update($supportGroup);
 
             return $this->redirectToRoute('support_view', ['id' => $supportGroup->getId()]);
         }
@@ -244,7 +244,7 @@ class SupportController extends AbstractController
      */
     public function addPeopleInSupport(SupportGroup $supportGroup, SupportManager $supportManager, EvaluationGroupRepository $repoEvaluationGroup): Response
     {
-        if (!$supportManager->addPeopleInSupport($this->manager, $supportGroup, $repoEvaluationGroup)) {
+        if (!$supportManager->addPeopleInSupport($supportGroup, $repoEvaluationGroup)) {
             $this->addFlash('warning', "Aucune personne n'a été ajoutée au suivi.");
         }
 
@@ -278,7 +278,7 @@ class SupportController extends AbstractController
 
             try {
                 $supportGroup->removeSupportPerson($supportPerson);
-                $supportGroup->setNbPeople($supportGroup->getNbPeople() - 1);
+                $supportGroup->setNbPeople($supportGroup->getSupportPeople()->count());
                 $this->manager->flush();
 
                 $this->discache($supportGroup);

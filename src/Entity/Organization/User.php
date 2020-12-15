@@ -424,7 +424,7 @@ class User implements UserInterface
     }
 
     /**
-     * @return SupportGroup[]|null
+     * @return SupportGroup[]|Collection|null
      */
     public function getSupports()
     {
@@ -455,7 +455,7 @@ class User implements UserInterface
     }
 
     /**
-     * @return ServiceUser[]|null
+     * @return ServiceUser[]|Collection|null
      */
     public function getServiceUser()
     {
@@ -486,7 +486,7 @@ class User implements UserInterface
     }
 
     /**
-     * @return Service[]|null
+     * @return Service[]|Collection|null
      */
     public function getServices()
     {
@@ -500,7 +500,7 @@ class User implements UserInterface
     }
 
     /**
-     * @return UserConnection[]|null
+     * @return UserConnection[]|Collection|null
      */
     public function getUserConnections()
     {
@@ -555,7 +555,7 @@ class User implements UserInterface
     }
 
     /**
-     * @return Referent[]|null
+     * @return Referent[]|Collection|null
      */
     public function getReferentSupport()
     {
@@ -586,7 +586,7 @@ class User implements UserInterface
     }
 
     /**
-     * @return SupportGroup[]|null
+     * @return SupportGroup[]|Collection|null
      */
     public function getReferent2Support()
     {
@@ -617,7 +617,7 @@ class User implements UserInterface
     }
 
     /**
-     * @return Note[]|null
+     * @return Note[]|Collection|null
      */
     public function getNotes()
     {
@@ -648,7 +648,7 @@ class User implements UserInterface
     }
 
     /**
-     * @return Rdv[]|null
+     * @return Rdv[]|Collection|null
      */
     public function getRdvs()
     {
@@ -679,7 +679,7 @@ class User implements UserInterface
     }
 
     /**
-     * @return Document[]|null
+     * @return Document[]|Collection|null
      */
     public function getDocuments()
     {
@@ -710,7 +710,7 @@ class User implements UserInterface
     }
 
     /**
-     * @return UserDevice[]|null
+     * @return UserDevice[]|Collection|null
      */
     public function getUserDevices()
     {

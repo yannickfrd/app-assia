@@ -203,7 +203,7 @@ class AccommodationGroup
     }
 
     /**
-     * @return AccommodationPerson[]|null
+     * @return AccommodationPerson[]|Collection|null
      */
     public function getAccommodationPeople()
     {

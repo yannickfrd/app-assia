@@ -282,7 +282,7 @@ class SupportPerson
     }
 
     /**
-     * @return Note[]|null
+     * @return Note[]|Collection|null
      */
     public function getNotes()
     {
@@ -313,7 +313,7 @@ class SupportPerson
     }
 
     /**
-     * @return EvaluationPerson[]|null
+     * @return EvaluationPerson[]|Collection|null
      */
     public function getEvaluationsPerson()
     {
@@ -361,7 +361,7 @@ class SupportPerson
     }
 
     /**
-     * @return AccommodationPerson[]|null
+     * @return AccommodationPerson[]|Collection|null
      */
     public function getAccommodationsPerson()
     {

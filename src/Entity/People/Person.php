@@ -285,7 +285,7 @@ class Person
     }
 
     /**
-     * @return RolePerson[]|null
+     * @return RolePerson[]|Collection|null
      */
     public function getRolesPerson()
     {
@@ -316,7 +316,7 @@ class Person
     }
 
     /**
-     * @return SupportPerson[]|null
+     * @return SupportPerson[]|Collection|null
      */
     public function getSupports()
     {
@@ -347,7 +347,7 @@ class Person
     }
 
     /**
-     * @return AccommodationPerson[]|null
+     * @return AccommodationPerson[]|Collection|null
      */
     public function getAccommodationPeople()
     {

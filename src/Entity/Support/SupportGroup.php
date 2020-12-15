@@ -507,7 +507,7 @@ class SupportGroup
     }
 
     /**
-     * @return SupportPerson[]|null
+     * @return SupportPerson[]|Collection|null
      */
     public function getSupportPeople()
     {
@@ -574,7 +574,7 @@ class SupportGroup
     }
 
     /**
-     * @return Note[]|null
+     * @return Note[]|Collection|null
      */
     public function getNotes()
     {
@@ -605,7 +605,7 @@ class SupportGroup
     }
 
     /**
-     * @return Rdv[]|null
+     * @return Rdv[]|Collection|null
      */
     public function getRdvs()
     {
@@ -636,7 +636,7 @@ class SupportGroup
     }
 
     /**
-     * @return Document[]|null
+     * @return Document[]|Collection|null
      */
     public function getDocuments()
     {
@@ -667,7 +667,7 @@ class SupportGroup
     }
 
     /**
-     * @return AccommodationGroup[]|null
+     * @return AccommodationGroup[]|Collection|null
      */
     public function getAccommodationGroups()
     {
@@ -698,7 +698,7 @@ class SupportGroup
     }
 
     /**
-     * @return EvaluationGroup[]|null
+     * @return EvaluationGroup[]|Collection|null
      */
     public function getEvaluationsGroup()
     {
@@ -776,7 +776,7 @@ class SupportGroup
     }
 
     /**
-     * @return Contribution[]|null
+     * @return Contribution[]|Collection|null
      */
     public function getContributions()
     {

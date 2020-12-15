@@ -100,7 +100,7 @@ class SubService
     }
 
     /**
-     * @return SupportGroup[]|null
+     * @return SupportGroup[]|Collection|null
      */
     public function getSupportGroup()
     {
@@ -155,7 +155,7 @@ class SubService
     }
 
     /**
-     * @return Accommodation[]|null
+     * @return Accommodation[]|Collection|null
      */
     public function getAccommodations()
     {

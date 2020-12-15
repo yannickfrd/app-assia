@@ -4,10 +4,18 @@
 
 {% block card_body %}
 
+    {% set sumCoeff = 0 %}
+    {% for support in supports %}
+        {% set sumCoeff = sumCoeff + support.coefficient %}
+    {% endfor %}
+
     <div>
         <div class="row">
             <div class="col-md-12">
-                <p class="float-left align-middle">{{ supports|length }} suivi{{ supports|length > 1 ? "s" }} en cours.</p>
+                {% set nbSupports = supports|length %}
+                <p class="float-left align-middle">{{ nbSupports }} suivi{{ nbSupports ? "s" }} en cours.
+                    {% if sumCoeff != nbSupports %}<span class="text-secondary"> (coeff. {{ sumCoeff }})</span>{% endif %}
+                </p>
                 <div class="float-right">
                     <a href="{{ path('new_support_search_person') }}" class="mb-3 btn btn-{{ theme_color }} btn-sm float-right">
                         <span class="fas fa-plus-square mr-2"></span>Créer un nouveau suivi</a>
@@ -46,8 +54,8 @@
                                         title="Le nombre de personnes rattachées au suivi ne correspond pas à la composition familiale."></span>
                                 {% endif %}
                             </td>
-                            <td class="align-middle">
-                                {{ support.service.name }}<br/>{% if support.device %}({{ support.device.name }}){% endif %}                    
+                            <td class="align-middle">{{ support.service.name }}<br/>
+                                {% if support.device %}({{ support.device.name }}){% endif %}                    
                             </td>
                             <td class="align-middle">{{ support.statusToString }}</td>
                             <td class="align-middle">{{ support.startDate ? support.startDate|date("d/m/Y") }}

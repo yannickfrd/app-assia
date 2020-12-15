@@ -175,7 +175,7 @@ class PeopleGroup
     }
 
     /**
-     * @return SupportGroup[]|null
+     * @return SupportGroup[]|Collection|null
      */
     public function getSupports()
     {
@@ -206,7 +206,7 @@ class PeopleGroup
     }
 
     /**
-     * @return RolePerson[]|null
+     * @return RolePerson[]|Collection|null
      */
     public function getRolePeople()
     {
@@ -237,7 +237,7 @@ class PeopleGroup
     }
 
     /**
-     * @return Referent[]|null
+     * @return Referent[]|Collection|null
      */
     public function getReferents()
     {
@@ -268,7 +268,7 @@ class PeopleGroup
     }
 
     /**
-     * @return Document[]|null
+     * @return Document[]|Collection|null
      */
     public function getDocuments()
     {
@@ -299,7 +299,7 @@ class PeopleGroup
     }
 
     /**
-     * @return AccommodationGroup[]|null
+     * @return AccommodationGroup[]|Collection|null
      */
     public function getAccommodationGroups()
     {
