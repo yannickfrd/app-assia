@@ -40,7 +40,7 @@ class NewSupportGroupType extends AbstractType
                 'class' => Service::class,
                 'choice_label' => 'name',
                 'query_builder' => function (ServiceRepository $repo) {
-                    return $repo->getServicesFromUserQueryList($this->currentUser);
+                    return $repo->getServicesOfUserQueryList($this->currentUser);
                 },
                 'placeholder' => 'placeholder.select',
             ])
@@ -85,7 +85,7 @@ class NewSupportGroupType extends AbstractType
                 'class' => Device::class,
                 'choice_label' => 'name',
                 'query_builder' => function (DeviceRepository $repo) use ($service) {
-                    return $repo->getDevicesFromUserQueryList($this->currentUser, $service->getId());
+                    return $repo->getDevicesOfUserQueryList($this->currentUser, $service->getId());
                 },
                 'placeholder' => 'placeholder.select',
             ])

@@ -7,7 +7,6 @@ use App\Entity\Support\SupportPerson;
 use App\Entity\Traits\ContactEntityTrait;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
@@ -286,9 +285,9 @@ class Person
     }
 
     /**
-     * @return Collection|RolePerson[]
+     * @return RolePerson[]|null
      */
-    public function getRolesPerson(): ?Collection
+    public function getRolesPerson()
     {
         return $this->rolesPerson;
     }
@@ -317,9 +316,9 @@ class Person
     }
 
     /**
-     * @return Collection|SupportPerson[]
+     * @return SupportPerson[]|null
      */
-    public function getSupports(): ?Collection
+    public function getSupports()
     {
         return $this->supports;
     }
@@ -348,9 +347,9 @@ class Person
     }
 
     /**
-     * @return Collection|AccommodationPerson[]
+     * @return AccommodationPerson[]|null
      */
-    public function getAccommodationPeople(): ?Collection
+    public function getAccommodationPeople()
     {
         return $this->accommodationPeople;
     }

@@ -413,7 +413,7 @@ class IndicatorsService
         return $this->cache->get(User::CACHE_USER_SUPPORTS_KEY.$user->getId(), function (CacheItemInterface $item) use ($user) {
             $item->expiresAfter(\DateInterval::createFromDateString('24 hours'));
 
-            return $this->repoSupportGroup->findAllSupportsFromUser($user);
+            return $this->repoSupportGroup->findSupportsOfUser($user);
         });
     }
 
@@ -425,7 +425,7 @@ class IndicatorsService
         return $this->cache->get(User::CACHE_USER_NOTES_KEY.$user->getId(), function (CacheItemInterface $item) use ($user) {
             $item->expiresAfter(\DateInterval::createFromDateString('24 hours'));
 
-            return $this->repoNote->findAllNotesFromUser($user, 10);
+            return $this->repoNote->findNotesOfUser($user, 10);
         });
     }
 
@@ -437,7 +437,7 @@ class IndicatorsService
         return $this->cache->get(User::CACHE_USER_RDVS_KEY.$user->getId(), function (CacheItemInterface $item) use ($user) {
             $item->expiresAfter(\DateInterval::createFromDateString('24 hours'));
 
-            return $this->repoRdv->findAllRdvsFromUser($user, 10);
+            return $this->repoRdv->findRdvsOfUser($user, 10);
         });
     }
 }

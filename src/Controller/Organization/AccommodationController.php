@@ -2,23 +2,23 @@
 
 namespace App\Controller\Organization;
 
-use App\Service\Pagination;
-use App\Entity\Organization\Service;
-use App\Security\CurrentUserService;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Organization\Accommodation;
+use App\Entity\Organization\Service;
+use App\Form\Model\Organization\AccommodationSearch;
+use App\Form\Organization\Accommodation\AccommodationSearchType;
+use App\Form\Organization\Accommodation\AccommodationType;
+use App\Repository\Organization\AccommodationRepository;
+use App\Repository\Support\AccommodationGroupRepository;
+use App\Security\CurrentUserService;
 use App\Service\Export\AccommodationExport;
+use App\Service\Pagination;
+use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Form\Model\Organization\AccommodationSearch;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use App\Repository\Organization\AccommodationRepository;
-use App\Repository\Support\AccommodationGroupRepository;
-use App\Form\Organization\Accommodation\AccommodationType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use App\Form\Organization\Accommodation\AccommodationSearchType;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AccommodationController extends AbstractController
 {
@@ -50,7 +50,7 @@ class AccommodationController extends AbstractController
         return $this->render('app/organization/accommodation/listAccommodations.html.twig', [
             'accommodationSearch' => $search,
             'form' => $form->createView(),
-            'accommodations' => $pagination->paginate($this->repo->findAllAccommodationsQuery($search, $currentUser), $request) ?? null,
+            'accommodations' => $pagination->paginate($this->repo->findAccommodationsQuery($search, $currentUser), $request) ?? null,
         ]);
     }
 
@@ -112,7 +112,7 @@ class AccommodationController extends AbstractController
 
         return $this->render('app/organization/accommodation/accommodation.html.twig', [
             'form' => $form->createView(),
-            'accommodations_group' => $repo->findAllFromAccommodation($accommodation),
+            'accommodations_group' => $repo->findAllAccommodation($accommodation),
         ]);
     }
 

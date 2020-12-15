@@ -44,7 +44,7 @@ class AccommodationType extends AbstractType
             'class' => Service::class,
             'choice_label' => 'name',
             'query_builder' => function (ServiceRepository $repo) {
-                return $repo->getServicesFromUserQueryList($this->currentUser);
+                return $repo->getServicesOfUserQueryList($this->currentUser);
             },
             'placeholder' => 'placeholder.select',
             ])
@@ -104,7 +104,7 @@ class AccommodationType extends AbstractType
                     'class' => SubService::class,
                     'choice_label' => 'name',
                     'query_builder' => function (SubServiceRepository $repo) {
-                        return $repo->getSubServicesFromUserQueryList($this->currentUser);
+                        return $repo->getSubServicesOfUserQueryList($this->currentUser);
                     },
                     'placeholder' => 'placeholder.select',
                     'required' => false,

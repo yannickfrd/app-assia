@@ -24,7 +24,7 @@ class EvaluationGroupRepository extends ServiceEntityRepository
     /**
      * Donne toute l'évaluation sociale du groupe.
      */
-    public function findLastEvaluationOfSupport(int $id): ?EvaluationGroup
+    public function findEvaluationOfSupport(int $id): ?EvaluationGroup
     {
         // $lastEvaluationId = $this->getLastEvaluationId($id);
         // if (0 === count($lastEvaluationId)) {
@@ -91,7 +91,7 @@ class EvaluationGroupRepository extends ServiceEntityRepository
     /**
      * Donne toute l'évaluation sociale du groupe.
      */
-    public function findLastEvaluationFromSupport(SupportGroup $supportGroup): ?EvaluationGroup
+    public function findLastEvaluationOfSupport(SupportGroup $supportGroup): ?EvaluationGroup
     {
         return $this->createQueryBuilder('eg')->select('eg')
 
@@ -108,10 +108,8 @@ class EvaluationGroupRepository extends ServiceEntityRepository
 
     /**
      * Compte le nombre d'évaluations.
-     *
-     * @return mixed
      */
-    public function countEvaluations(array $criteria = null)
+    public function countEvaluations(array $criteria = null): int
     {
         $query = $this->createQueryBuilder('e')->select('COUNT(e.id)');
 

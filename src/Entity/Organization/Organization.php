@@ -5,7 +5,6 @@ namespace App\Entity\Organization;
 use App\Entity\Support\OriginRequest;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -112,9 +111,9 @@ class Organization
     }
 
     /**
-     * @return Collection|OriginRequest[]
+     * @return OriginRequest[]|null
      */
-    public function getOriginRequests(): ?Collection
+    public function getOriginRequests()
     {
         return $this->originRequests;
     }
@@ -143,9 +142,9 @@ class Organization
     }
 
     /**
-     * @return Collection|Service[]
+     * @return Service[]|null
      */
-    public function getServices(): ?Collection
+    public function getServices()
     {
         return $this->services;
     }

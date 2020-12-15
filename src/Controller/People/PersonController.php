@@ -2,35 +2,35 @@
 
 namespace App\Controller\People;
 
-use App\Service\Grammar;
-use App\Service\Pagination;
+use App\Controller\Traits\ErrorMessageTrait;
+use App\Entity\Evaluation\EvaluationGroup;
+use App\Entity\People\PeopleGroup;
 use App\Entity\People\Person;
 use App\Entity\People\RolePerson;
-use Psr\Cache\CacheItemInterface;
-use App\Entity\People\PeopleGroup;
 use App\Entity\Support\SupportGroup;
-use App\Form\People\Person\PersonType;
 use App\Form\Model\People\PersonSearch;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\Evaluation\EvaluationGroup;
-use App\Repository\People\PersonRepository;
-use App\Controller\Traits\ErrorMessageTrait;
-use App\Form\People\Person\PersonSearchType;
-use Symfony\Component\HttpFoundation\Request;
-use App\Form\People\Person\PersonNewGroupType;
-use App\Form\People\RolePerson\RolePersonType;
-use Symfony\Component\HttpFoundation\Response;
-use App\Form\People\Person\RolePersonGroupType;
-use Symfony\Component\Routing\Annotation\Route;
 use App\Form\People\Person\DuplicatedPeopleType;
+use App\Form\People\Person\PersonNewGroupType;
 use App\Form\People\Person\PersonRolePersonType;
+use App\Form\People\Person\PersonSearchType;
+use App\Form\People\Person\PersonType;
+use App\Form\People\Person\RolePersonGroupType;
+use App\Form\People\RolePerson\RolePersonType;
 use App\Repository\People\PeopleGroupRepository;
+use App\Repository\People\PersonRepository;
 use App\Repository\Support\SupportPersonRepository;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use App\Service\Grammar;
+use App\Service\Pagination;
+use Doctrine\ORM\EntityManagerInterface;
+use Psr\Cache\CacheItemInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Routing\Annotation\Route;
 
 class PersonController extends AbstractController
 {
@@ -61,7 +61,7 @@ class PersonController extends AbstractController
         return $this->render('app/people/person/listPeople.html.twig', [
             'personSearch' => $search,
             'form' => $form->createView(),
-            'people' => $request->query->all() ? $pagination->paginate($this->repo->findAllPeopleQuery($search, $request->query->get('search-person'), 20), $request) : null,
+            'people' => $request->query->all() ? $pagination->paginate($this->repo->findPeopleQuery($search, $request->query->get('search-person'), 20), $request) : null,
         ]);
     }
 
@@ -79,7 +79,7 @@ class PersonController extends AbstractController
 
         $people = [];
 
-        foreach ($this->repo->findAllPeopleQuery($search, null, 20)->getResult() as $person) {
+        foreach ($this->repo->findPeopleQuery($search, null, 20)->getResult() as $person) {
             $people[] = [
                 'id' => $person->getId(),
                 'lastname' => $person->getLastname(),
@@ -118,7 +118,7 @@ class PersonController extends AbstractController
             'form_role_person' => $formRolePerson->createView() ?? null,
             'people_group' => $peopleGroup,
             'personSearch' => $search,
-            'people' => $request->query->all() ? $pagination->paginate($this->repo->findAllPeopleQuery($search), $request) : null,
+            'people' => $request->query->all() ? $pagination->paginate($this->repo->findPeopleQuery($search), $request) : null,
         ]);
     }
 

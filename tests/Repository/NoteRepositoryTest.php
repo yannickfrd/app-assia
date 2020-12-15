@@ -58,31 +58,31 @@ class NoteRepositoryTest extends WebTestCase
 
     public function testFindAllNotesQueryWithoutFilters()
     {
-        $query = $this->repo->findAllNotesQuery(new NoteSearch());
+        $query = $this->repo->findNotesQuery(new NoteSearch());
         $this->assertGreaterThanOrEqual(5, count($query->getResult()));
     }
 
-    public function testFindAllNotesFromSupportQueryWithoutFilters()
+    public function testFindAllNotesOfSupportQueryWithoutFilters()
     {
-        $query = $this->repo->findAllNotesFromSupportQuery($this->supportGroup->getId(), new SupportNoteSearch());
+        $query = $this->repo->findNotesOfSupportQuery($this->supportGroup->getId(), new SupportNoteSearch());
         $this->assertGreaterThanOrEqual(5, count($query->getResult()));
     }
 
-    public function testFindAllNotesFromSupportQueryWithFilters()
+    public function testFindAllNotesOfSupportQueryWithFilters()
     {
-        $query = $this->repo->findAllNotesFromSupportQuery($this->supportGroup->getId(), $this->search);
+        $query = $this->repo->findNotesOfSupportQuery($this->supportGroup->getId(), $this->search);
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 
-    public function testFindAllNotesFromSupportQueryWithFilterByTitle()
+    public function testFindAllNotesOfSupportQueryWithFilterByTitle()
     {
-        $query = $this->repo->findAllNotesFromSupportQuery($this->supportGroup->getId(), $this->search->setContent('Note 666'));
+        $query = $this->repo->findNotesOfSupportQuery($this->supportGroup->getId(), $this->search->setContent('Note 666'));
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 
-    public function testFindAllNotesFromUser()
+    public function testFindAllNotesOfUser()
     {
-        $this->assertGreaterThanOrEqual(1, count($this->repo->findAllNotesFromUser($this->user)));
+        $this->assertGreaterThanOrEqual(1, count($this->repo->findNotesOfUser($this->user)));
     }
 
     public function testCountAllNotesWithoutCriteria()

@@ -168,8 +168,8 @@ class SecurityController extends AbstractController
         return $this->render('app/organization/user/user.html.twig', [
             'form' => $form->createView(),
             'formPassword' => $formPassword->createView(),
-            'supports' => $repoSupport->findAllSupportsFromUser($this->getUser()),
-            'services' => $repoService->findAllServicesFromUser($this->getUser()),
+            'supports' => $repoSupport->findSupportsOfUser($this->getUser()),
+            'services' => $repoService->findServicesOfUser($this->getUser()),
         ]);
     }
 

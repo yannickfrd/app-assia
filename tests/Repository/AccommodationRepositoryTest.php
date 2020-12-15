@@ -64,13 +64,13 @@ class AccommodationRepositoryTest extends WebTestCase
 
     public function testFindAllAccommodationsQueryWithoutFilters()
     {
-        $query = $this->repo->findAllAccommodationsQuery(new AccommodationSearch());
+        $query = $this->repo->findAccommodationsQuery(new AccommodationSearch());
         $this->assertGreaterThanOrEqual(5, count($query->getResult()));
     }
 
     public function testFindAllAccommodationsQueryWithFilters()
     {
-        $query = $this->repo->findAllAccommodationsQuery($this->search);
+        $query = $this->repo->findAccommodationsQuery($this->search);
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 

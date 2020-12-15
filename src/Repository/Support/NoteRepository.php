@@ -27,7 +27,7 @@ class NoteRepository extends ServiceEntityRepository
     /**
      * Return all notes of group support.
      */
-    public function findAllNotesQuery(NoteSearch $search, ?CurrentUserService $currentUser = null): Query
+    public function findNotesQuery(NoteSearch $search, ?CurrentUserService $currentUser = null): Query
     {
         $query = $this->createQueryBuilder('n')->select('n')
             ->leftJoin('n.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
@@ -116,7 +116,7 @@ class NoteRepository extends ServiceEntityRepository
     /**
      * Return all notes of group support.
      */
-    public function findAllNotesFromSupportQuery(int $supportGroupId, SupportNoteSearch $search): Query
+    public function findNotesOfSupportQuery(int $supportGroupId, SupportNoteSearch $search): Query
     {
         $query = $this->createQueryBuilder('n')
             ->leftJoin('n.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
@@ -149,9 +149,9 @@ class NoteRepository extends ServiceEntityRepository
     /**
      *  Donne toutes les notes créées par l'utilisateur.
      *
-     * @return mixed
+     * @return Note[]|null
      */
-    public function findAllNotesFromUser(User $user, int $maxResults = 1000)
+    public function findNotesOfUser(User $user, int $maxResults = 1000): ?array
     {
         return $this->createQueryBuilder('n')
             ->addSelect('PARTIAL n.{id, title, status, createdAt, updatedAt}')
@@ -195,10 +195,8 @@ class NoteRepository extends ServiceEntityRepository
 
     /**
      * Compte le nombre de notes.
-     *
-     * @return mixed
      */
-    public function countNotes(array $criteria = null)
+    public function countNotes(array $criteria = null): int
     {
         $query = $this->createQueryBuilder('n')->select('COUNT(n.id)');
 

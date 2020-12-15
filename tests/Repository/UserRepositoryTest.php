@@ -5,6 +5,7 @@ namespace App\Tests\Repository;
 use App\Entity\Organization\Pole;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\User;
+use App\Form\Model\Organization\UserSearch;
 use App\Repository\Organization\UserRepository;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -30,7 +31,6 @@ class UserRepositoryTest extends WebTestCase
 
     protected function setUp()
     {
-        // $this->loadFixtures([A_ServiceFixtures::class, B_UserFixtures::class]);
         $dataFixtures = $this->loadFixtureFiles([
             dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
         ]);
@@ -106,9 +106,9 @@ class UserRepositoryTest extends WebTestCase
     //     $this->assertNotNull($this->repo->getUsersQueryList();
     // }
 
-    // public function testGetAllUsersFromServicesQueryList()
+    // public function testGetAllUsersOfServicesQueryList()
     // {
-    //     $this->assertNotNull($this->repo->getAllUsersFromServicesQueryList();
+    //     $this->assertNotNull($this->repo->getAllUsersOfServicesQueryList();
     // }
 
     public function testfindUsersOfService()

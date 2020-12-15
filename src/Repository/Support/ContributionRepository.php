@@ -2,14 +2,15 @@
 
 namespace App\Repository\Support;
 
+use Doctrine\ORM\Query;
 use App\Entity\Support\Contribution;
 use App\Entity\Support\SupportGroup;
+use App\Security\CurrentUserService;
+use Doctrine\Persistence\ManagerRegistry;
 use App\Form\Model\Support\ContributionSearch;
 use App\Form\Model\Support\SupportContributionSearch;
-use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Query;
-use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * @method Contribution|null find($id, $lockMode = null, $lockVersion = null)
@@ -28,7 +29,10 @@ class ContributionRepository extends ServiceEntityRepository
         $this->currentUser = $currentUser;
     }
 
-    public function findContribution(int $id)
+    /**
+     * Donne une contribution.
+     */
+    public function findContribution(int $id): ?Contribution
     {
         return $this->createQueryBuilder('c')->select('c')
             ->leftJoin('c.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, service, startDate, endDate, address, city}')
@@ -48,7 +52,7 @@ class ContributionRepository extends ServiceEntityRepository
     /**
      * Donne toutes les participations financières à afficher.
      */
-    public function findAllContributionsQuery(?ContributionSearch $search = null): Query
+    public function findContributionsQuery(?ContributionSearch $search = null): Query
     {
         $query = $this->getContributionQuery()
             ->andWhere('sp.head = TRUE');
@@ -64,9 +68,9 @@ class ContributionRepository extends ServiceEntityRepository
     /**
      * Trouve tous les RDV entre 2 dates.
      *
-     * @return mixed
+     * @return Contribution[]|null
      */
-    public function findContributionsBetween(\Datetime $start, \Datetime $end, array $supportsId)
+    public function findContributionsBetween(\Datetime $start, \Datetime $end, array $supportsId): ?array
     {
         $query = $this->createQueryBuilder('c')->select('c')
             ->leftJoin('c.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
@@ -88,6 +92,7 @@ class ContributionRepository extends ServiceEntityRepository
      * Donne toutes les participations financières à exporter.
      *
      * @param ContributionSearch|SupportContributionSearch $search
+     * @return Contribution[]|null
      */
     public function findContributionsToExport($search, SupportGroup $supportGroup = null): ?array
     {
@@ -106,7 +111,12 @@ class ContributionRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findAllContributionsForIndicators(ContributionSearch $search = null): ?array
+    /**
+     * Donne les contributions pour les indicateurs stats.
+     *
+     * @return Contribution[]|null
+     */
+    public function findContributionsForIndicators(ContributionSearch $search = null): ?array
     {
         $query = $this->createQueryBuilder('c')->select('c')
             ->leftJoin('c.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, service, device}')
@@ -125,7 +135,7 @@ class ContributionRepository extends ServiceEntityRepository
     /**
      * Donne la requête.
      */
-    protected function getContributionQuery()
+    protected function getContributionQuery(): QueryBuilder
     {
         return $this->createQueryBuilder('c')->select('c') // 'c', '(c.toPayAmt - c.paidAmt) AS stillToPayAmt'
         ->leftJoin('c.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, service, startDate, endDate}')
@@ -215,7 +225,7 @@ class ContributionRepository extends ServiceEntityRepository
     /**
      * Return all contributions of group support.
      */
-    public function findAllContributionsFromSupportQuery(int $supportGroupId, SupportContributionSearch $search): Query
+    public function findContributionsOfSupportQuery(int $supportGroupId, SupportContributionSearch $search): Query
     {
         $query = $this->createQueryBuilder('c')->select('c')
             ->andWhere('c.supportGroup = :supportGroup')
@@ -245,10 +255,8 @@ class ContributionRepository extends ServiceEntityRepository
 
     /**
      * Compte le nombre de contributions financières.
-     *
-     * @return mixed
      */
-    public function countContributions(array $criteria = null)
+    public function countContributions(array $criteria = null): int
     {
         $query = $this->createQueryBuilder('c')->select('COUNT(c.id)');
 
@@ -293,10 +301,8 @@ class ContributionRepository extends ServiceEntityRepository
 
     /**
      * Donne la somme des restants dus de participations.
-     *
-     * @return mixed
      */
-    public function sumStillToPayAmt($supportId)
+    public function sumStillToPayAmt($supportId): int
     {
         return $this->createQueryBuilder('c')->select('SUM(c.stillToPayAmt)')
             ->andWhere('c.supportGroup = :supportGroup')

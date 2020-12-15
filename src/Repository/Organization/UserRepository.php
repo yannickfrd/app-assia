@@ -2,15 +2,15 @@
 
 namespace App\Repository\Organization;
 
-use Doctrine\ORM\Query;
-use App\Form\Utils\Choices;
-use Doctrine\ORM\QueryBuilder;
-use App\Entity\Organization\User;
 use App\Entity\Organization\Service;
-use App\Security\CurrentUserService;
-use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\Organization\User;
 use App\Form\Model\Organization\UserSearch;
+use App\Form\Utils\Choices;
+use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -97,7 +97,7 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Donne le querybuilder des utilisateurs.
      */
-    protected function queryUsers()
+    protected function queryUsers(): QueryBuilder
     {
         return $this->createQueryBuilder('u')->select('u')
             // ->leftJoin('u.createdBy', 'creator')->addSelect('PARTIAL creator.{id, lastname, firstname}')
@@ -109,7 +109,7 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Filtre les utilisateurs.
      */
-    protected function filters($query, UserSearch $search, ?User $user = null)
+    protected function filters(QueryBuilder $query, UserSearch $search, ?User $user = null): QueryBuilder
     {
         if ($search->getFirstname()) {
             $query->andWhere('u.firstname LIKE :firstname')
@@ -159,9 +159,9 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Trouve les utilisateurs pour l'export des données.
      *
-     * @return mixed
+     * @return User[]|null
      */
-    public function findUsersToExport(UserSearch $search)
+    public function findUsersToExport(UserSearch $search): ?array
     {
         $query = $this->findUsersQuery($search);
 
@@ -186,7 +186,12 @@ class UserRepository extends ServiceEntityRepository
             ->orderBy('u.lastname', 'ASC');
     }
 
-    public function findAllUsersFromServices(CurrentUserService $currentUser)
+    /**
+     * Donne les utilisateurs des services de l'utilisateur actuel.
+     *
+     * @return User[]|null
+     */
+    public function findUsersOfServices(CurrentUserService $currentUser): ?array
     {
         $query = $this->createQueryBuilder('u')
             ->select('PARTIAL u.{id, firstname, lastname, disabledAt}')
@@ -206,7 +211,12 @@ class UserRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getUsersFromService(Service $service)
+    /**
+     * Donne les utilisateurs d'un service.
+     *
+     * @return User[]|null
+     */
+    public function getUsersOfService(Service $service): ?array
     {
         return $this->createQueryBuilder('u')->select('PARTIAL u.{id, firstname, lastname, disabledAt}')
             ->leftJoin('u.serviceUser', 'su')
@@ -229,7 +239,7 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Donne la liste des utilisateurs pour les listes déroulantes.
      */
-    public function getAllUsersFromServicesQueryList(CurrentUserService $currentUser, int $serviceId = null): QueryBuilder
+    public function getAllUsersOfServicesQueryList(CurrentUserService $currentUser, int $serviceId = null): QueryBuilder
     {
         $query = $this->createQueryBuilder('u')
             ->select('PARTIAL u.{id, firstname, lastname, disabledAt}')
@@ -254,9 +264,9 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Donne tous les utilisateurs du service.
      *
-     * @return mixed
+     * @return User[]|null
      */
-    public function findUsersOfService(Service $service)
+    public function findUsersOfService(Service $service): ?array
     {
         return $this->createQueryBuilder('u')
             ->select('PARTIAL u.{id, firstname, lastname, status, phone1, email, disabledAt}')
@@ -273,9 +283,12 @@ class UserRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return mixed
+     * Donne les utilisateurs selon différents critères.
+     * 
+     * 
+     * @return User[]|null
      */
-    public function findUsers(array $criteria = null)
+    public function findUsers(array $criteria = null): ?array
     {
         $query = $this->createQueryBuilder('u')
         ->andWhere('u.disabledAt IS NULL');
@@ -294,7 +307,10 @@ class UserRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function countUsers(array $criteria = null)
+    /**
+     * Compte le nombre d'utilissateurs.
+     */
+    public function countUsers(array $criteria = null): int
     {
         $query = $this->createQueryBuilder('u')->select('COUNT(u.id)')
             ->where('u.disabledAt IS NULL');
@@ -318,7 +334,10 @@ class UserRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    public function countActiveUsers()
+    /**
+     * Compte le nombre d'utilisateurs actifs.
+     */
+    public function countActiveUsers(): int
     {
         return $this->createQueryBuilder('u')->select('COUNT(u.id)')
             ->where('u.lastActivityAt >= :delay')

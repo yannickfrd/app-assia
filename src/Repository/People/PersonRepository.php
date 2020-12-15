@@ -43,7 +43,7 @@ class PersonRepository extends ServiceEntityRepository
     /**
      * Retourne toutes les personnes.
      */
-    public function findAllPeopleQuery(PersonSearch $personSearch, string $searchQuery = null, int $maxResult = 20): Query
+    public function findPeopleQuery(PersonSearch $personSearch, string $searchQuery = null, int $maxResult = 20): Query
     {
         $query = $this->createQueryBuilder('p')->select('p');
 
@@ -78,11 +78,11 @@ class PersonRepository extends ServiceEntityRepository
     /**
      * Trouve toutes les personnes à exporter.
      *
-     * @return mixed
+     * @return Person[]|null
      */
-    public function findPeopleToExport(PersonSearch $personSearch)
+    public function findPeopleToExport(PersonSearch $personSearch): ?array
     {
-        $query = $this->findAllPeopleQuery($personSearch);
+        $query = $this->findPeopleQuery($personSearch);
 
         return $query->getResult();
     }
@@ -90,9 +90,9 @@ class PersonRepository extends ServiceEntityRepository
     /**
      *  Recherche une personne par son nom, prénom ou date de naissance.
      *
-     * @return mixed
+     * @return Person[]|null
      */
-    public function findPeopleByResearch(string $search = null)
+    public function findPeopleByResearch(string $search = null): ?array
     {
         $query = $this->createQueryBuilder('p')->select('p');
 
@@ -113,7 +113,10 @@ class PersonRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function countPeople(array $criteria = null)
+    /**
+     * Compte le nombre de personnes
+     */
+    public function countPeople(array $criteria = null): int
     {
         $query = $this->createQueryBuilder('p')->select('COUNT(p.id)');
 
@@ -138,7 +141,10 @@ class PersonRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    public function findDuplicatedPeople(DuplicatedPeopleSearch $search)
+    /**
+     * @return Person[]|null
+     */
+    public function findDuplicatedPeople(DuplicatedPeopleSearch $search): ?array
     {
         $query = $this->createQueryBuilder('p')->select('p');
 

@@ -11,7 +11,6 @@ use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use App\Entity\Traits\DisableEntityTrait;
 use App\Service\Phone;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -425,9 +424,9 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|SupportGroup[]
+     * @return SupportGroup[]|null
      */
-    public function getSupports(): ?Collection
+    public function getSupports()
     {
         return $this->supports;
     }
@@ -456,9 +455,9 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|ServiceUser[]
+     * @return ServiceUser[]|null
      */
-    public function getServiceUser(): ?Collection
+    public function getServiceUser()
     {
         return $this->serviceUser;
     }
@@ -487,9 +486,9 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|Service[]
+     * @return Service[]|null
      */
-    public function getServices(): ?Collection
+    public function getServices()
     {
         $services = new ArrayCollection();
 
@@ -501,9 +500,9 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|UserConnection[]
+     * @return UserConnection[]|null
      */
-    public function getUserConnections(): ?Collection
+    public function getUserConnections()
     {
         return $this->userConnections;
     }
@@ -556,9 +555,9 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|Referent[]
+     * @return Referent[]|null
      */
-    public function getReferentSupport(): ?Collection
+    public function getReferentSupport()
     {
         return $this->referentSupport;
     }
@@ -587,9 +586,9 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|SupportGroup[]
+     * @return SupportGroup[]|null
      */
-    public function getReferent2Support(): ?Collection
+    public function getReferent2Support()
     {
         return $this->referent2Support;
     }
@@ -618,9 +617,9 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|Note[]
+     * @return Note[]|null
      */
-    public function getNotes(): ?Collection
+    public function getNotes()
     {
         return $this->notes;
     }
@@ -649,9 +648,9 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|Rdv[]
+     * @return Rdv[]|null
      */
-    public function getRdvs(): ?Collection
+    public function getRdvs()
     {
         return $this->rdvs;
     }
@@ -680,9 +679,9 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|Document[]
+     * @return Document[]|null
      */
-    public function getDocuments(): ?Collection
+    public function getDocuments()
     {
         return $this->documents;
     }
@@ -711,9 +710,9 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|UserDevice[]
+     * @return UserDevice[]|null
      */
-    public function getUserDevices(): ?Collection
+    public function getUserDevices()
     {
         return $this->userDevices;
     }

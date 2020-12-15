@@ -7,7 +7,6 @@ use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use App\Entity\Traits\DisableEntityTrait;
 use App\Entity\Traits\LocationEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -141,9 +140,9 @@ class Pole
     }
 
     /**
-     * @return Collection|Service[]
+     * @return Service[]|null
      */
-    public function getServices(): ?Collection
+    public function getServices()
     {
         return $this->services;
     }

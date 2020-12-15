@@ -2,16 +2,16 @@
 
 namespace App\Controller\Organization;
 
-use App\Service\Pagination;
 use App\Entity\Organization\Pole;
 use App\Form\Organization\Pole\PoleType;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use App\Repository\Organization\PoleRepository;
-use Symfony\Component\Routing\Annotation\Route;
+use App\Service\Pagination;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class PoleController extends AbstractController
 {
@@ -32,7 +32,7 @@ class PoleController extends AbstractController
     public function listPole(Request $request, Pagination $pagination): Response
     {
         return $this->render('app/organization/pole/listPoles.html.twig', [
-            'poles' => $pagination->paginate($this->repo->findAllPolesQuery(), $request) ?? null,
+            'poles' => $pagination->paginate($this->repo->findPolesQuery(), $request) ?? null,
         ]);
     }
 

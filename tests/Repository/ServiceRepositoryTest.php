@@ -65,13 +65,13 @@ class ServiceRepositoryTest extends WebTestCase
 
     public function testFindAllServicesQueryWithoutFilters()
     {
-        $query = $this->repo->findAllServicesQuery(new ServiceSearch());
+        $query = $this->repo->findServicesQuery(new ServiceSearch());
         $this->assertGreaterThanOrEqual(5, count($query->getResult()));
     }
 
     public function testFindAllServicesQueryWithFilters()
     {
-        $query = $this->repo->findAllServicesQuery($this->search);
+        $query = $this->repo->findServicesQuery($this->search);
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 
@@ -80,13 +80,13 @@ class ServiceRepositoryTest extends WebTestCase
         $this->assertGreaterThanOrEqual(1, count($this->repo->findServicesToExport($this->search)));
     }
 
-    // public function testGetServicesFromUserQueryList()
+    // public function testGetServicesOfUserQueryList()
     // {
     // }
 
-    public function testFindAllServicesFromUser()
+    public function testFindAllServicesOfUser()
     {
-        $this->assertGreaterThanOrEqual(1, count($this->repo->findAllServicesFromUser($this->user)));
+        $this->assertGreaterThanOrEqual(1, count($this->repo->findServicesOfUser($this->user)));
     }
 
     public function testGetFullService()

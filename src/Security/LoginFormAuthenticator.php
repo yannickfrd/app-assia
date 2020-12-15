@@ -100,7 +100,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 
             $this->manager->flush();
 
-            $this->getErrorMessage('invalid_password', ['count' => $countFails]);
+            $this->getErrorMessage();
         }
 
         return $isPasswordValid;

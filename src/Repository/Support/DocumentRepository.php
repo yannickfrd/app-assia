@@ -8,6 +8,7 @@ use App\Form\Model\Support\SupportDocumentSearch;
 use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -124,7 +125,7 @@ class DocumentRepository extends ServiceEntityRepository
         return $query->getQuery();
     }
 
-    public function countDocuments(array $criteria = null)
+    public function countDocuments(array $criteria = null): int
     {
         $query = $this->createQueryBuilder('d')->select('COUNT(d.id)');
 
@@ -167,7 +168,7 @@ class DocumentRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    public function sumSizeAllDocuments(array $criteria = null)
+    public function sumSizeAllDocuments(array $criteria = null): int
     {
         $query = $this->createQueryBuilder('d')->select('SUM(d.size)');
 
@@ -175,7 +176,7 @@ class DocumentRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    protected function filters($query, $search)
+    protected function filters($query, $search): QueryBuilder
     {
         if ($search->getName()) {
             $query->andWhere('d.name LIKE :name OR d.content LIKE :name')

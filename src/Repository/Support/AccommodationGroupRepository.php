@@ -51,9 +51,9 @@ class AccommodationGroupRepository extends ServiceEntityRepository
     /**
      * Donne les prises en charge sur le groupe de places.
      *
-     * @return mixed
+     * @return AccommodationGroup[]|null
      */
-    public function findAllFromAccommodation(Accommodation $accommodation, $maxResults = 10)
+    public function findAllAccommodation(Accommodation $accommodation, $maxResults = 10): Paginator
     {
         $query = $this->createQueryBuilder('ag')
             ->select('ag')

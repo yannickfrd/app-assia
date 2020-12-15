@@ -50,7 +50,7 @@ class SupportGroupType extends AbstractType
                 'class' => Service::class,
                 'choice_label' => 'name',
                 'query_builder' => function (ServiceRepository $repo) {
-                    return $repo->getServicesFromUserQueryList($this->currentUser);
+                    return $repo->getServicesOfUserQueryList($this->currentUser);
                 },
                 'placeholder' => 'placeholder.select',
             ])
@@ -141,7 +141,7 @@ class SupportGroupType extends AbstractType
                     'class' => SubService::class,
                     'choice_label' => 'name',
                     'query_builder' => function (SubServiceRepository $repo) use ($serviceId) {
-                        return $repo->getSubServicesFromUserQueryList($this->currentUser, $serviceId);
+                        return $repo->getSubServicesOfUserQueryList($this->currentUser, $serviceId);
                     },
                     'placeholder' => 'placeholder.select',
                     'required' => false,
@@ -150,7 +150,7 @@ class SupportGroupType extends AbstractType
                     'class' => Device::class,
                     'choice_label' => 'name',
                     'query_builder' => function (DeviceRepository $repo) use ($serviceId) {
-                        return $repo->getDevicesFromUserQueryList($this->currentUser, $serviceId);
+                        return $repo->getDevicesOfUserQueryList($this->currentUser, $serviceId);
                     },
                     'placeholder' => 'placeholder.select',
                 ])

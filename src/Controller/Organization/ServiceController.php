@@ -2,24 +2,24 @@
 
 namespace App\Controller\Organization;
 
-use App\Service\Pagination;
-use Psr\Cache\CacheItemInterface;
 use App\Entity\Organization\Service;
-use App\Service\Export\ServiceExport;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use App\Form\Model\Organization\ServiceSearch;
-use App\Form\Organization\Service\ServiceType;
-use Symfony\Component\HttpFoundation\Response;
-use App\Repository\Organization\UserRepository;
-use Symfony\Component\Routing\Annotation\Route;
-use App\Repository\Organization\ServiceRepository;
 use App\Form\Organization\Service\ServiceSearchType;
-use App\Repository\Organization\SubServiceRepository;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use App\Form\Organization\Service\ServiceType;
 use App\Repository\Organization\AccommodationRepository;
+use App\Repository\Organization\ServiceRepository;
+use App\Repository\Organization\SubServiceRepository;
+use App\Repository\Organization\UserRepository;
+use App\Service\Export\ServiceExport;
+use App\Service\Pagination;
+use Doctrine\ORM\EntityManagerInterface;
+use Psr\Cache\CacheItemInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class ServiceController extends AbstractController
 {
@@ -51,7 +51,7 @@ class ServiceController extends AbstractController
         return $this->render('app/organization/service/listServices.html.twig', [
             'serviceSearch' => $search,
             'form' => $form->createView(),
-            'services' => $pagination->paginate($this->repo->findAllServicesQuery($search, $this->getUser()), $request) ?? null,
+            'services' => $pagination->paginate($this->repo->findServicesQuery($search, $this->getUser()), $request) ?? null,
         ]);
     }
 

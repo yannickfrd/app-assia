@@ -74,7 +74,7 @@ class ContributionController extends AbstractController
 
         return $this->render('app/support/contribution/listContributions.html.twig', [
             'form' => $form->createView(),
-            'contributions' => $pagination->paginate($this->repoContribution->findAllContributionsQuery($search), $request, 20) ?? null,
+            'contributions' => $pagination->paginate($this->repoContribution->findContributionsQuery($search), $request, 20) ?? null,
         ]);
     }
 
@@ -110,7 +110,7 @@ class ContributionController extends AbstractController
         //     function (CacheItemInterface $item) use ($supportGroup, $pagination, $search, $request) {
         //         $item->expiresAfter(\DateInterval::createFromDateString('7 hours'));
 
-        //         return $pagination->paginate($this->repoContribution->findAllContributionsFromSupportQuery($supportGroup->getId(), $search), $request, 200);
+        //         return $pagination->paginate($this->repoContribution->findContributionsOfSupportQuery($supportGroup->getId(), $search), $request, 200);
         //     }
         // );
 
@@ -119,7 +119,7 @@ class ContributionController extends AbstractController
             'form_search' => $formSearch->createView(),
             'form' => $form->createView(),
             'nbTotalContributions' => $request->query->count() ? $this->repoContribution->count(['supportGroup' => $supportGroup]) : null,
-            'contributions' => $pagination->paginate($this->repoContribution->findAllContributionsFromSupportQuery($supportGroup->getId(), $search), $request, 200),
+            'contributions' => $pagination->paginate($this->repoContribution->findContributionsOfSupportQuery($supportGroup->getId(), $search), $request, 200),
         ]);
     }
 
@@ -392,7 +392,7 @@ class ContributionController extends AbstractController
         }
 
         $datas = $indicators->getIndicators(
-            $this->repoContribution->findAllContributionsForIndicators($search),
+            $this->repoContribution->findContributionsForIndicators($search),
             $search,
         );
 

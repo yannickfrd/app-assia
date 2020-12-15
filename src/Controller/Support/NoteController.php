@@ -2,35 +2,35 @@
 
 namespace App\Controller\Support;
 
-use Twig\Environment;
+use App\Controller\Traits\ErrorMessageTrait;
+use App\Entity\Organization\User;
+use App\Entity\Support\Note;
+use App\Entity\Support\SupportGroup;
+use App\EntityManager\SupportManager;
+use App\Form\Model\Support\NoteSearch;
+use App\Form\Model\Support\SupportNoteSearch;
+use App\Form\Support\Note\NoteSearchType;
+use App\Form\Support\Note\NoteType;
+use App\Form\Support\Note\SupportNoteSearchType;
+use App\Repository\Evaluation\EvaluationGroupRepository;
+use App\Repository\Organization\ReferentRepository;
+use App\Repository\Support\NoteRepository;
+use App\Repository\Support\RdvRepository;
+use App\Repository\Support\SupportGroupRepository;
+use App\Security\CurrentUserService;
 use App\Service\ExportPDF;
 use App\Service\ExportWord;
 use App\Service\Pagination;
-use App\Entity\Support\Note;
-use App\Entity\Organization\User;
-use Psr\Cache\CacheItemInterface;
-use App\Form\Support\Note\NoteType;
-use App\Entity\Support\SupportGroup;
-use App\Security\CurrentUserService;
-use App\EntityManager\SupportManager;
-use App\Form\Model\Support\NoteSearch;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Form\Support\Note\NoteSearchType;
-use App\Repository\Support\RdvRepository;
-use App\Repository\Support\NoteRepository;
-use App\Controller\Traits\ErrorMessageTrait;
-use App\Form\Model\Support\SupportNoteSearch;
+use Psr\Cache\CacheItemInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Form\Support\Note\SupportNoteSearchType;
-use Doctrine\Common\Collections\ArrayCollection;
-use App\Repository\Support\SupportGroupRepository;
-use App\Repository\Organization\ReferentRepository;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use App\Repository\Evaluation\EvaluationGroupRepository;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Twig\Environment;
 
 class NoteController extends AbstractController
 {
@@ -64,7 +64,7 @@ class NoteController extends AbstractController
 
         return $this->render('app/support/note/listNotes.html.twig', [
             'form' => $form->createView(),
-            'notes' => $pagination->paginate($this->repoNote->findAllNotesQuery($search, $currentUser),
+            'notes' => $pagination->paginate($this->repoNote->findNotesQuery($search, $currentUser),
                 $request,
                 10) ?? null,
         ]);
@@ -106,7 +106,7 @@ class NoteController extends AbstractController
     {
         // Si filtre ou tri utilisé, n'utilise pas le cache.
         if ($request->query->count() > 0 || $search->getNoteId()) {
-            return $pagination->paginate($this->repoNote->findAllNotesFromSupportQuery($supportGroup->getId(), $search), $request, 10);
+            return $pagination->paginate($this->repoNote->findNotesOfSupportQuery($supportGroup->getId(), $search), $request, 10);
         }
 
         // Sinon, récupère les notes en cache.
@@ -114,7 +114,7 @@ class NoteController extends AbstractController
             function (CacheItemInterface $item) use ($supportGroup, $pagination, $search, $request) {
                 $item->expiresAfter(\DateInterval::createFromDateString('7 days'));
 
-                return $pagination->paginate($this->repoNote->findAllNotesFromSupportQuery($supportGroup->getId(), $search), $request, 10);
+                return $pagination->paginate($this->repoNote->findNotesOfSupportQuery($supportGroup->getId(), $search), $request, 10);
             }
         );
     }

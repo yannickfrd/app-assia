@@ -218,7 +218,7 @@ class SupportManager
             return null;
         }
 
-        $lastEvaluation = $repoEvaluation->findLastEvaluationOfSupport($lastSupport->getId());
+        $lastEvaluation = $repoEvaluation->findEvaluationOfSupport($lastSupport->getId());
         $documents = $repoDocument->findBy(['supportGroup' => $lastSupport]);
         $lastNote = $repoNote->findOneBy(['supportGroup' => $lastSupport], ['updatedAt' => 'DESC']);
 
@@ -306,7 +306,7 @@ class SupportManager
         return $this->cache->get(EvaluationGroup::CACHE_EVALUATION_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup, $repoEvaluationGroup) {
             $item->expiresAfter(\DateInterval::createFromDateString('1 month'));
 
-            return $repoEvaluationGroup->findLastEvaluationOfSupport($supportGroup->getId());
+            return $repoEvaluationGroup->findEvaluationOfSupport($supportGroup->getId());
         });
     }
 
@@ -354,7 +354,7 @@ class SupportManager
         return $this->cache->get(SupportGroup::CACHE_SUPPORT_LAST_RDV_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup, $repoRdv) {
             $item->expiresAfter(\DateInterval::createFromDateString('12 hours'));
 
-            return $repoRdv->findLastRdvFromSupport($supportGroup->getId());
+            return $repoRdv->findLastRdvOfSupport($supportGroup->getId());
         });
     }
 
@@ -366,7 +366,7 @@ class SupportManager
         return $this->cache->get(SupportGroup::CACHE_SUPPORT_NEXT_RDV_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup, $repoRdv) {
             $item->expiresAfter(\DateInterval::createFromDateString('12 hours'));
 
-            return $repoRdv->findNextRdvFromSupport($supportGroup->getId());
+            return $repoRdv->findNextRdvOfSupport($supportGroup->getId());
         });
     }
 
@@ -603,7 +603,7 @@ class SupportManager
             if (!$this->personIsInSupport($rolePerson->getPerson(), $supportGroup)) {
                 $supportPerson = $this->createSupportPerson($manager, $rolePerson, $supportGroup);
 
-                $evaluationGroup = $repoEvaluation->findLastEvaluationFromSupport($supportGroup);
+                $evaluationGroup = $repoEvaluation->findLastEvaluationOfSupport($supportGroup);
 
                 if ($evaluationGroup) {
                     $evaluationPerson = (new EvaluationPerson())

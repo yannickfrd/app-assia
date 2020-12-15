@@ -29,7 +29,7 @@ class ServiceRepository extends ServiceEntityRepository
     /**
      * Retourne tous les services.
      */
-    public function findAllServicesQuery(ServiceSearch $search, User $user = null): Query
+    public function findServicesQuery(ServiceSearch $search, User $user = null): Query
     {
         $query = $this->createQueryBuilder('s')->select('s')
             ->leftJoin('s.pole', 'p')->addSelect('PARTIAL p.{id, name}');
@@ -66,13 +66,13 @@ class ServiceRepository extends ServiceEntityRepository
      */
     public function findServicesToExport(ServiceSearch $serviceSearch)
     {
-        return $this->findAllServicesQuery($serviceSearch)->getResult();
+        return $this->findServicesQuery($serviceSearch)->getResult();
     }
 
     /**
      * Donne la liste des services de l'utilisateur.
      */
-    public function getServicesFromUserQueryList(CurrentUserService $currentUser): QueryBuilder
+    public function getServicesOfUserQueryList(CurrentUserService $currentUser): QueryBuilder
     {
         $query = $this->createQueryBuilder('s')->select('PARTIAL s.{id, name, preAdmission}')
 
@@ -117,7 +117,7 @@ class ServiceRepository extends ServiceEntityRepository
      *
      * @return mixed
      */
-    public function findAllServicesFromUser(User $user)
+    public function findServicesOfUser(User $user)
     {
         return $this->createQueryBuilder('s')
             ->select('PARTIAL s.{id, name, email, phone1}')

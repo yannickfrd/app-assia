@@ -13,7 +13,6 @@ use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use App\Entity\Traits\GeoLocationEntityTrait;
 use App\Entity\Traits\LocationEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
@@ -508,9 +507,9 @@ class SupportGroup
     }
 
     /**
-     * @return Collection|SupportPeople[]
+     * @return SupportPerson[]|null
      */
-    public function getSupportPeople(): ?Collection
+    public function getSupportPeople()
     {
         return $this->supportPeople;
     }
@@ -575,9 +574,9 @@ class SupportGroup
     }
 
     /**
-     * @return Collection|Note[]
+     * @return Note[]|null
      */
-    public function getNotes(): ?Collection
+    public function getNotes()
     {
         return $this->notes;
     }
@@ -606,9 +605,9 @@ class SupportGroup
     }
 
     /**
-     * @return Collection|Rdv[]
+     * @return Rdv[]|null
      */
-    public function getRdvs(): ?Collection
+    public function getRdvs()
     {
         return $this->rdvs;
     }
@@ -637,9 +636,9 @@ class SupportGroup
     }
 
     /**
-     * @return Collection|Document[]
+     * @return Document[]|null
      */
-    public function getDocuments(): ?Collection
+    public function getDocuments()
     {
         return $this->documents;
     }
@@ -668,9 +667,9 @@ class SupportGroup
     }
 
     /**
-     * @return Collection|AccommodationGroup[]
+     * @return AccommodationGroup[]|null
      */
-    public function getAccommodationGroups(): ?Collection
+    public function getAccommodationGroups()
     {
         return $this->accommodationGroups;
     }
@@ -699,9 +698,9 @@ class SupportGroup
     }
 
     /**
-     * @return Collection|EvaluationGroup[]
+     * @return EvaluationGroup[]|null
      */
-    public function getEvaluationsGroup(): ?Collection
+    public function getEvaluationsGroup()
     {
         return $this->evaluationsGroup;
     }
@@ -777,9 +776,9 @@ class SupportGroup
     }
 
     /**
-     * @return Collection|Contribution[]
+     * @return Contribution[]|null
      */
-    public function getContributions(): ?Collection
+    public function getContributions()
     {
         return $this->contributions;
     }

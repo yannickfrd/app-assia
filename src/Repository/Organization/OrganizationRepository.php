@@ -24,7 +24,7 @@ class OrganizationRepository extends ServiceEntityRepository
     /**
      * Retourne tous les organismes prescripteurs.
      */
-    public function findAllOrganizationsQuery(): Query
+    public function findOrganizationsQuery(): Query
     {
         $query = $this->createQueryBuilder('o')->select('o');
 

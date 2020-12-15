@@ -63,7 +63,7 @@ class RdvController extends AbstractController
 
         return $this->render('app/support/rdv/listRdvs.html.twig', [
             'form' => $form->createView(),
-            'rdvs' => $pagination->paginate($this->repo->findAllRdvsQuery($search, $currentUser), $request, 10) ?? null,
+            'rdvs' => $pagination->paginate($this->repo->findRdvsQuery($search, $currentUser), $request, 10) ?? null,
         ]);
     }
 
@@ -279,7 +279,7 @@ class RdvController extends AbstractController
     {
         // Si filtre ou tri utilisé, n'utilise pas le cache.
         if ($request->query->count() > 0) {
-            return  $pagination->paginate($this->repo->findAllRdvsQueryFromSupport($supportGroup->getId(), $search), $request);
+            return  $pagination->paginate($this->repo->findRdvsQueryOfSupport($supportGroup->getId(), $search), $request);
         }
 
         // Sinon, récupère les rendez-vous en cache.
@@ -287,7 +287,7 @@ class RdvController extends AbstractController
             function (CacheItemInterface $item) use ($supportGroup, $pagination, $search, $request) {
                 $item->expiresAfter(\DateInterval::createFromDateString('7 days'));
 
-                return $pagination->paginate($this->repo->findAllRdvsQueryFromSupport($supportGroup->getId(), $search), $request);
+                return $pagination->paginate($this->repo->findRdvsQueryOfSupport($supportGroup->getId(), $search), $request);
             }
         );
     }

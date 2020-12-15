@@ -8,7 +8,6 @@ use App\Entity\Support\Document;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
@@ -176,9 +175,9 @@ class PeopleGroup
     }
 
     /**
-     * @return Collection|SupportGroup[]
+     * @return SupportGroup[]|null
      */
-    public function getSupports(): ?Collection
+    public function getSupports()
     {
         return $this->supports;
     }
@@ -207,9 +206,9 @@ class PeopleGroup
     }
 
     /**
-     * @return Collection|RolePerson[]
+     * @return RolePerson[]|null
      */
-    public function getRolePeople(): ?Collection
+    public function getRolePeople()
     {
         return $this->rolePeople;
     }
@@ -238,9 +237,9 @@ class PeopleGroup
     }
 
     /**
-     * @return Collection|Referent[]
+     * @return Referent[]|null
      */
-    public function getReferents(): ?Collection
+    public function getReferents()
     {
         return $this->referents;
     }
@@ -269,9 +268,9 @@ class PeopleGroup
     }
 
     /**
-     * @return Collection|Document[]
+     * @return Document[]|null
      */
-    public function getDocuments(): ?Collection
+    public function getDocuments()
     {
         return $this->documents;
     }
@@ -300,9 +299,9 @@ class PeopleGroup
     }
 
     /**
-     * @return Collection|AccommodationGroup[]
+     * @return AccommodationGroup[]|null
      */
-    public function getAccommodationGroups(): ?Collection
+    public function getAccommodationGroups()
     {
         return $this->accommodationGroups;
     }

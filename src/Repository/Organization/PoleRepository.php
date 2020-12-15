@@ -23,7 +23,7 @@ class PoleRepository extends ServiceEntityRepository
     /**
      * Retourne toutes les personnes.
      */
-    public function findAllPolesQuery(): Query
+    public function findPolesQuery(): Query
     {
         $query = $this->createQueryBuilder('p')
             ->select('p');

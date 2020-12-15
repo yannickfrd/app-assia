@@ -100,9 +100,9 @@ class SubService
     }
 
     /**
-     * @return Collection|SupportGroup[]
+     * @return SupportGroup[]|null
      */
-    public function getSupportGroup(): Collection
+    public function getSupportGroup()
     {
         return $this->supportGroup;
     }
@@ -155,9 +155,9 @@ class SubService
     }
 
     /**
-     * @return Collection|Accommodation[]
+     * @return Accommodation[]|null
      */
-    public function getAccommodations(): Collection
+    public function getAccommodations()
     {
         return $this->accommodations;
     }

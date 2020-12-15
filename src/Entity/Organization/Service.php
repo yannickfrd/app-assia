@@ -8,7 +8,6 @@ use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use App\Entity\Traits\DisableEntityTrait;
 use App\Entity\Traits\LocationEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -202,9 +201,9 @@ class Service
     }
 
     /**
-     * @return Collection|ServiceUser[]
+     * @return ServiceUser[]|null
      */
-    public function getserviceUser(): ?Collection
+    public function getserviceUser()
     {
         return $this->serviceUser;
     }
@@ -233,9 +232,9 @@ class Service
     }
 
     /**
-     * @return Collection|User[]
+     * @return User[]|null
      */
-    public function getUsers(): ?Collection
+    public function getUsers()
     {
         $users = new ArrayCollection();
 
@@ -259,9 +258,9 @@ class Service
     }
 
     /**
-     * @return Collection|SupportGroup[]
+     * @return SupportGroup[]|null
      */
-    public function getSupportGroup(): ?Collection
+    public function getSupportGroup()
     {
         return $this->supportGroup;
     }
@@ -444,17 +443,17 @@ class Service
     }
 
     /**
-     * @return Collection|ServiceDevice[]
+     * @return ServiceDevice[]|null
      */
-    public function getServiceDevices(): ?Collection
+    public function getServiceDevices()
     {
         return $this->serviceDevices;
     }
 
     /**
-     * @return Collection|Device[]
+     * @return Device[]|null
      */
-    public function getDevices(): ?Collection
+    public function getDevices()
     {
         $devices = new ArrayCollection();
 
@@ -489,9 +488,9 @@ class Service
     }
 
     /**
-     * @return Collection|Accommodation[]
+     * @return Accommodation[]|null
      */
-    public function getAccommodations(): ?Collection
+    public function getAccommodations()
     {
         return $this->accommodations;
     }
@@ -532,9 +531,9 @@ class Service
     }
 
     /**
-     * @return Collection|Organization[]
+     * @return Organization[]|null
      */
-    public function getOrganizations(): ?Collection
+    public function getOrganizations()
     {
         return $this->organizations;
     }
@@ -558,9 +557,9 @@ class Service
     }
 
     /**
-     * @return Collection|SubService[]
+     * @return SubService[]|null
      */
-    public function getSubServices(): ?Collection
+    public function getSubServices()
     {
         return $this->subServices;
     }

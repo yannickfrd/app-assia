@@ -40,7 +40,10 @@ class PeopleGroupRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function countGroups(array $criteria = null)
+    /**
+     * Compte le nombre de groupes de personnes.
+     */
+    public function countGroups(array $criteria = null): int
     {
         $query = $this->createQueryBuilder('g')->select('COUNT(g.id)');
 

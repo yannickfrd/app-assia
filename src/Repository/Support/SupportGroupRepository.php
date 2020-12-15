@@ -10,6 +10,7 @@ use App\Form\Model\Support\SupportsInMonthSearch;
 use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -81,7 +82,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    protected function getsupportQuery()
+    protected function getsupportQuery(): QueryBuilder
     {
         return $this->createQueryBuilder('sg')->select('sg')
             ->leftJoin('sg.createdBy', 'user')->addSelect('PARTIAL user.{id, firstname, lastname}')
@@ -100,8 +101,10 @@ class SupportGroupRepository extends ServiceEntityRepository
 
     /**
      * Donne tous les suivis sociaux de l'utilisateur.
+     *
+     * @return SupportGroup[]|null
      */
-    public function findAllSupportsFromUser(User $user, $maxResults = null)
+    public function findSupportsOfUser(User $user, $maxResults = null): ?array
     {
         return $this->createQueryBuilder('sg')->select('sg')
             ->leftJoin('sg.service', 'sv')->addSelect('PARTIAL sv.{id, name}')
@@ -125,10 +128,8 @@ class SupportGroupRepository extends ServiceEntityRepository
 
     /**
      * Trouve tous les suivis entre 2 dates.
-     *
-     * @return mixed
      */
-    public function findSupportsBetween(\Datetime $start, \Datetime $end, SupportsInMonthSearch $search = null)
+    public function findSupportsBetween(\Datetime $start, \Datetime $end, SupportsInMonthSearch $search = null): Query
     {
         $query = $this->createQueryBuilder('sg')->select('sg')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
@@ -175,7 +176,12 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
 
-    public function findSupportsForDashboard(SupportsByUserSearch $search)
+    /**
+     * Donne les suivis pour le tableau de bord.
+     *
+     * @return SupportGroup[]|null
+     */
+    public function findSupportsForDashboard(SupportsByUserSearch $search): ?array
     {
         $query = $this->createQueryBuilder('sg')->select('PARTIAL sg.{id, status, startDate, referent, service, device, coefficient}')
             ->leftJoin('sg.referent', 'u')->addSelect('PARTIAL u.{id}')
@@ -226,8 +232,10 @@ class SupportGroupRepository extends ServiceEntityRepository
 
     /**
      * Donne les suivis sociaux du ménage.
+     *
+     * @return SupportGroup[]|null
      */
-    public function findSupportsOfPeopleGroup(PeopleGroup $peopleGroup)
+    public function findSupportsOfPeopleGroup(PeopleGroup $peopleGroup): ?array
     {
         return $this->createQueryBuilder('sg')->select('sg')
             ->leftJoin('sg.referent', 'ref')->addSelect('PARTIAL ref.{id, firstname, lastname, email, phone1}')
@@ -349,7 +357,10 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    public function avgTimeSupport(array $criteria = null)
+    /**
+     * Donne la durée moyenne d'un suivi.
+     */
+    public function avgTimeSupport(array $criteria = null): ?float
     {
         $query = $this->createQueryBuilder('sg');
 
@@ -388,7 +399,10 @@ class SupportGroupRepository extends ServiceEntityRepository
         return round($result);
     }
 
-    public function avgSupportsByUser(array $criteria = null)
+    /**
+     * Donne le nombre moyen de suivis par utilisateur.
+     */
+    public function avgSupportsByUser(array $criteria = null): ?float
     {
         $query = $this->createQueryBuilder('sg')->select('count(sg.referent)')
             ->where('sg.referent IS NOT NULL');

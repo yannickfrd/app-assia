@@ -7,7 +7,6 @@ use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use App\Entity\Traits\DisableEntityTrait;
 use App\Form\Utils\Choices;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -255,9 +254,9 @@ class Device
     }
 
     /**
-     * @return Collection|ServiceDevice[]
+     * @return ServiceDevice[]|null
      */
-    public function getServiceDevices(): ?Collection
+    public function getServiceDevices()
     {
         return $this->serviceDevices;
     }
@@ -286,9 +285,9 @@ class Device
     }
 
     /**
-     * @return Collection|Accommodation[]
+     * @return Accommodation[]|null
      */
-    public function getAccommodations(): ?Collection
+    public function getAccommodations()
     {
         return $this->accommodations;
     }
@@ -317,9 +316,9 @@ class Device
     }
 
     /**
-     * @return Collection|SupportGroup[]
+     * @return SupportGroup[]|null
      */
-    public function getSupportGroup(): ?Collection
+    public function getSupportGroup()
     {
         return $this->supportGroup;
     }
@@ -348,9 +347,9 @@ class Device
     }
 
     /**
-     * @return Collection|UserDevice[]
+     * @return UserDevice[]|null
      */
-    public function getUserDevices(): ?Collection
+    public function getUserDevices()
     {
         return $this->userDevices;
     }

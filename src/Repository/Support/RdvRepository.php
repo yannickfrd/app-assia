@@ -10,6 +10,7 @@ use App\Form\Model\Support\SupportRdvSearch;
 use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -28,7 +29,7 @@ class RdvRepository extends ServiceEntityRepository
     /**
      * Return all rdvs of group support.
      */
-    public function findAllRdvsQuery(RdvSearch $search, ?CurrentUserService $currentUser = null): Query
+    public function findRdvsQuery(RdvSearch $search, ?CurrentUserService $currentUser = null): Query
     {
         $query = $this->getRdvsQuery();
 
@@ -78,7 +79,7 @@ class RdvRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    protected function getRdvsQuery()
+    protected function getRdvsQuery(): QueryBuilder
     {
         return $this->createQueryBuilder('r')->select('r')
             ->leftJoin('r.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
@@ -89,7 +90,7 @@ class RdvRepository extends ServiceEntityRepository
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}');
     }
 
-    protected function filter($query, RdvSearch $search, CurrentUserService $currentUser = null)
+    protected function filter($query, RdvSearch $search, CurrentUserService $currentUser = null): QueryBuilder
     {
         if ($currentUser && !$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             $query->where('r.createdBy IN (:user)')
@@ -164,7 +165,7 @@ class RdvRepository extends ServiceEntityRepository
     /**
      * Return all rdvs of group support.
      */
-    public function findAllRdvsQueryFromSupport(int $supportGroupId, SupportRdvSearch $search): Query
+    public function findRdvsQueryOfSupport(int $supportGroupId, SupportRdvSearch $search): Query
     {
         $query = $this->createQueryBuilder('r')->select('r')
             ->leftJoin('r.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
@@ -192,7 +193,7 @@ class RdvRepository extends ServiceEntityRepository
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
 
-    public function findLastRdvFromSupport(int $supportGroupId): ?Rdv
+    public function findLastRdvOfSupport(int $supportGroupId): ?Rdv
     {
         return $this->createQueryBuilder('r')->select('r')
 
@@ -208,7 +209,7 @@ class RdvRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function findNextRdvFromSupport(int $supportGroupId): ?Rdv
+    public function findNextRdvOfSupport(int $supportGroupId): ?Rdv
     {
         return $this->createQueryBuilder('r')->select('r')
 
@@ -227,9 +228,9 @@ class RdvRepository extends ServiceEntityRepository
     /**
      * Trouve tous les RDV entre 2 dates.
      *
-     * @return mixed
+     * @return Rdv[]|null
      */
-    public function findRdvsBetween(\Datetime $start, \Datetime $end, SupportGroup $supportGroup = null, User $user = null)
+    public function findRdvsBetween(\Datetime $start, \Datetime $end, SupportGroup $supportGroup = null, User $user = null): ?array
     {
         $query = $this->createQueryBuilder('r')->select('r')
             ->leftJoin('r.createdBy', 'u')->addSelect('u')
@@ -273,9 +274,9 @@ class RdvRepository extends ServiceEntityRepository
     /**
      * Donne tous les rdvs créés par l'utilisateur.
      *
-     * @return mixed
+     * @return Rdv[]|null
      */
-    public function findAllRdvsFromUser(User $user, int $maxResults = 1000)
+    public function findRdvsOfUser(User $user, int $maxResults = 1000): ?array
     {
         return $this->createQueryBuilder('rdv')->addSelect('rdv')
             ->leftJoin('rdv.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
@@ -296,7 +297,10 @@ class RdvRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function countRdvs(array $criteria = null)
+    /**
+     * Compte le nombre de RDV selon des critères.
+     */
+    public function countRdvs(array $criteria = null): int
     {
         $query = $this->createQueryBuilder('rdv')->select('COUNT(rdv.id)');
 

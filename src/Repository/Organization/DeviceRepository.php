@@ -4,8 +4,8 @@ namespace App\Repository\Organization;
 
 use App\Entity\Organization\Device;
 use App\Entity\Organization\Service;
-use App\Form\Model\Support\SupportsByUserSearch;
 use App\Form\Model\Organization\DeviceSearch;
+use App\Form\Model\Support\SupportsByUserSearch;
 use App\Form\Utils\Choices;
 use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -28,7 +28,7 @@ class DeviceRepository extends ServiceEntityRepository
     /**
      * Retourne tous les dispositifs.
      */
-    public function findAllDevicesQuery(CurrentUserService $currentUser, DeviceSearch $search): Query
+    public function findDevicesQuery(CurrentUserService $currentUser, DeviceSearch $search): Query
     {
         $query = $this->createQueryBuilder('d')->select('d')
             ->leftJoin('d.serviceDevices', 'sd')->addSelect('sd')
@@ -64,8 +64,10 @@ class DeviceRepository extends ServiceEntityRepository
 
     /**
      * Donne les dispositifs du service.
+     *
+     * @return Device[]|null
      */
-    public function getDevicesOfService(int $id)
+    public function getDevicesOfService(int $id): ?array
     {
         return $this->createQueryBuilder('d')->select('PARTIAL d.{id, name}')
             ->leftJoin('d.serviceDevices', 'sd')
@@ -98,7 +100,7 @@ class DeviceRepository extends ServiceEntityRepository
     /**
      * Donne la liste des dispositifs de l'utilisateur.
      */
-    public function getDevicesFromUserQueryList(CurrentUserService $currentUser, $serviceId = null, Device $device = null)
+    public function getDevicesOfUserQueryList(CurrentUserService $currentUser, $serviceId = null, Device $device = null)
     {
         $query = $this->createQueryBuilder('d')->select('PARTIAL d.{id, name, coefficient, accommodation, disabledAt}')
             ->leftJoin('d.serviceDevices', 'sd')->addSelect('sd');

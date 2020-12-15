@@ -5,7 +5,6 @@ namespace App\Entity\Evaluation;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -258,9 +257,9 @@ class EvaluationGroup
     }
 
     /**
-     * @return Collection|EvaluationPerson[]
+     * @return EvaluationPerson[]|null
      */
-    public function getEvaluationPeople(): ?Collection
+    public function getEvaluationPeople()
     {
         return $this->evaluationPeople;
     }

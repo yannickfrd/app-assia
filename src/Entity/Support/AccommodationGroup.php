@@ -6,7 +6,6 @@ use App\Entity\Organization\Accommodation;
 use App\Entity\People\PeopleGroup;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
@@ -204,9 +203,9 @@ class AccommodationGroup
     }
 
     /**
-     * @return Collection|AccommodationPerson[]
+     * @return AccommodationPerson[]|null
      */
-    public function getAccommodationPeople(): ?Collection
+    public function getAccommodationPeople()
     {
         return $this->accommodationPeople;
     }

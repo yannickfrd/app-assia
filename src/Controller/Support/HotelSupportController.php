@@ -55,7 +55,7 @@ class HotelSupportController extends AbstractController
     {
         set_time_limit(10 * 60);
 
-        $supports = $repo->findSupportsFromServiceToExport($search, $this->serviceId);
+        $supports = $repo->findSupportsOfServiceToExport($search, $this->serviceId);
 
         if (!$supports) {
             $this->addFlash('warning', 'Aucun résultat à exporter.');

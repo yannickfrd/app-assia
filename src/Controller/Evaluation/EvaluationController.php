@@ -48,7 +48,7 @@ class EvaluationController extends AbstractController
      */
     public function showEvaluation(int $id, Request $request): Response
     {
-        $evaluationGroup = $this->repoEvaluation->findLastEvaluationOfSupport($id);
+        $evaluationGroup = $this->repoEvaluation->findEvaluationOfSupport($id);
 
         if (null === $evaluationGroup) {
             return $this->createEvaluationGroup($this->repoSupportGroup->findSupportById($id));
@@ -78,7 +78,7 @@ class EvaluationController extends AbstractController
      */
     public function editEvaluation(int $id, Request $request, Normalisation $normalisation): Response
     {
-        $evaluationGroup = $this->repoEvaluation->findLastEvaluationOfSupport($id);
+        $evaluationGroup = $this->repoEvaluation->findEvaluationOfSupport($id);
 
         $supportGroup = $evaluationGroup->getSupportGroup();
 

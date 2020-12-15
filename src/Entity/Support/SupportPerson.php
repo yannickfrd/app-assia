@@ -9,7 +9,6 @@ use App\Entity\People\RolePerson;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use App\Form\Utils\Choices;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
@@ -283,9 +282,9 @@ class SupportPerson
     }
 
     /**
-     * @return Collection|Note[]
+     * @return Note[]|null
      */
-    public function getNotes(): ?Collection
+    public function getNotes()
     {
         return $this->notes;
     }
@@ -314,9 +313,9 @@ class SupportPerson
     }
 
     /**
-     * @return Collection|EvaluationPerson[]
+     * @return EvaluationPerson[]|null
      */
-    public function getEvaluationsPerson(): ?Collection
+    public function getEvaluationsPerson()
     {
         return $this->evaluationsPerson;
     }
@@ -362,9 +361,9 @@ class SupportPerson
     }
 
     /**
-     * @return Collection|AccommodationPerson[]
+     * @return AccommodationPerson[]|null
      */
-    public function getAccommodationsPerson(): ?Collection
+    public function getAccommodationsPerson()
     {
         return $this->accommodationsPerson;
     }

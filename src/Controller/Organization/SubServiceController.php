@@ -77,7 +77,7 @@ class SubServiceController extends AbstractController
             $this->addFlash('success', 'Les modifications sont enregistrées.');
         }
 
-        $accommodations = $repoAccommodation->findAccommodationsFromSubService($subService);
+        $accommodations = $repoAccommodation->findAccommodationsOfSubService($subService);
 
         $nbPlaces = 0;
         foreach ($accommodations as $accommodation) {

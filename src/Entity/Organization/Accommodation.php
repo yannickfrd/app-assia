@@ -8,7 +8,6 @@ use App\Entity\Traits\DisableEntityTrait;
 use App\Entity\Traits\GeoLocationEntityTrait;
 use App\Entity\Traits\LocationEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
@@ -324,9 +323,9 @@ class Accommodation
     }
 
     /**
-     * @return Collection|AccommodationGroup[]
+     * @return AccommodationGroup[]|null
      */
-    public function getAccommodationGroups(): ?Collection
+    public function getAccommodationGroups()
     {
         return $this->accommodationGroups;
     }

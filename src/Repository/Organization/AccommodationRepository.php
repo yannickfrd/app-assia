@@ -30,7 +30,7 @@ class AccommodationRepository extends ServiceEntityRepository
     /**
      * Retourne toutes les places.
      */
-    public function findAllAccommodationsQuery(AccommodationSearch $search = null, CurrentUserService $currentUser = null): Query
+    public function findAccommodationsQuery(AccommodationSearch $search = null, CurrentUserService $currentUser = null): Query
     {
         $query = $this->getAccommodations();
 
@@ -91,7 +91,7 @@ class AccommodationRepository extends ServiceEntityRepository
     /**
      * Donne toutes les places du service.
      *
-     * @return mixed
+     * @return Accommodation[]|null
      */
     public function findAccommodationsOfService(Service $service)
     {
@@ -113,7 +113,7 @@ class AccommodationRepository extends ServiceEntityRepository
      *
      * @return mixed
      */
-    public function findAccommodationsFromSubService(SubService $subService)
+    public function findAccommodationsOfSubService(SubService $subService)
     {
         return $this->createQueryBuilder('a')->select('a')
             ->innerJoin('a.device', 'd')->addSelect('PARTIAL d.{id,name}')

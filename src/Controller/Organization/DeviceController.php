@@ -4,9 +4,9 @@ namespace App\Controller\Organization;
 
 use App\Entity\Organization\Device;
 use App\Entity\Organization\Service;
+use App\Form\Model\Organization\DeviceSearch;
 use App\Form\Organization\Device\DeviceSearchType;
 use App\Form\Organization\Device\DeviceType;
-use App\Form\Model\Organization\DeviceSearch;
 use App\Repository\Organization\DeviceRepository;
 use App\Repository\Organization\SubServiceRepository;
 use App\Repository\Organization\UserRepository;
@@ -44,7 +44,7 @@ class DeviceController extends AbstractController
         return $this->render('app/organization/device/listDevices.html.twig', [
             'deviceSearch' => $search,
             'form' => $form->createView(),
-            'devices' => $pagination->paginate($this->repo->findAllDevicesQuery($currentUser, $search), $request) ?? null,
+            'devices' => $pagination->paginate($this->repo->findDevicesQuery($currentUser, $search), $request) ?? null,
         ]);
     }
 
@@ -107,7 +107,7 @@ class DeviceController extends AbstractController
     public function getDevicesOfService(Service $service, SubServiceRepository $repoSubService, DeviceRepository $repoDevice, UserRepository $repoUser)
     {
         $subServices = [];
-        foreach ($repoSubService->getSubServicesFromService($service) as $subService) {
+        foreach ($repoSubService->getSubServicesOfService($service) as $subService) {
             $subServices[$subService->getId()] = $subService->getName();
         }
 
@@ -117,7 +117,7 @@ class DeviceController extends AbstractController
         }
 
         $users = [];
-        foreach ($repoUser->getUsersFromService($service) as $user) {
+        foreach ($repoUser->getUsersOfService($service) as $user) {
             $users[$user->getId()] = $user->getFullname();
         }
 

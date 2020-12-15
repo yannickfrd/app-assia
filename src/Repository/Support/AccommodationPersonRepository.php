@@ -41,7 +41,12 @@ class AccommodationPersonRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function findAccommodationPeople(CurrentUserService $currentUser, \DateTime $start, \DateTime $end, Service $service = null, SubService $subService = null)
+    /**
+     * Donne les prises en charge des personnes
+     *
+     * @return AccommodationPerson[]|null
+     */
+    public function findAccommodationPeople(CurrentUserService $currentUser, \DateTime $start, \DateTime $end, Service $service = null, SubService $subService = null): ?array
     {
         $query = $this->createQueryBuilder('ap')->select('ap')
             ->leftJoin('ap.accommodationGroup', 'ag')->addSelect('PARTIAL ag.{id, accommodation}')

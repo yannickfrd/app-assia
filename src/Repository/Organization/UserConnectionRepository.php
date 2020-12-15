@@ -21,10 +21,8 @@ class UserConnectionRepository extends ServiceEntityRepository
 
     /**
      * Compte le nombre de connections.
-     *
-     * @return mixed
      */
-    public function countConnections(array $criteria = null)
+    public function countConnections(array $criteria = null): int
     {
         $query = $this->createQueryBuilder('c')->select('COUNT(c.id)');
 

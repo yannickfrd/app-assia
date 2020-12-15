@@ -2,19 +2,19 @@
 
 namespace App\Form\Organization\Device;
 
-use App\Form\Utils\Choices;
 use App\Entity\Organization\Pole;
 use App\Entity\Organization\Service;
+use App\Form\Model\Organization\DeviceSearch;
+use App\Form\Utils\Choices;
+use App\Repository\Organization\ServiceRepository;
 use App\Security\CurrentUserService;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\AbstractType;
-use App\Form\Model\Organization\DeviceSearch;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use App\Repository\Organization\ServiceRepository;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class DeviceSearchType extends AbstractType
 {
@@ -40,7 +40,7 @@ class DeviceSearchType extends AbstractType
                 'class' => Service::class,
                 'choice_label' => 'name',
                 'query_builder' => function (ServiceRepository $repo) {
-                    return $repo->getServicesFromUserQueryList($this->currentUser);
+                    return $repo->getServicesOfUserQueryList($this->currentUser);
                 },
                 'label_attr' => ['class' => 'sr-only'],
                 'placeholder' => 'placeholder.service',

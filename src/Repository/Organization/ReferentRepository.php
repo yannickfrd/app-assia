@@ -24,7 +24,7 @@ class ReferentRepository extends ServiceEntityRepository
     /**
      * Donne tous les groupes de personnes.
      */
-    public function findAllReferentsQuery($supportGroupId, $search): Query
+    public function findReferentsQuery($supportGroupId, $search): Query
     {
         $query = $this->createQueryBuilder('ref')
             ->andWhere('ref.supportGroup = :supportGroup')

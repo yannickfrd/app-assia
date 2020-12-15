@@ -38,7 +38,7 @@ class SearchType extends AbstractType
                     'choice_label' => 'name',
                     'multiple' => true,
                     'query_builder' => function (ServiceRepository $repo) {
-                        return $repo->getServicesFromUserQueryList($this->currentUser);
+                        return $repo->getServicesOfUserQueryList($this->currentUser);
                     },
                     'placeholder' => 'placeholder.service',
                     'attr' => [
@@ -56,7 +56,7 @@ class SearchType extends AbstractType
                     'choice_label' => 'name',
                     'multiple' => true,
                     'query_builder' => function (SubServiceRepository $repo) use ($serviceId) {
-                        return $repo->getSubServicesFromUserQueryList($this->currentUser, $serviceId);
+                        return $repo->getSubServicesOfUserQueryList($this->currentUser, $serviceId);
                     },
                     'placeholder' => 'placeholder.subService',
                     'attr' => [
@@ -74,7 +74,7 @@ class SearchType extends AbstractType
                     'choice_label' => 'name',
                     'multiple' => true,
                     'query_builder' => function (DeviceRepository $repo) use ($serviceId) {
-                        return $repo->getDevicesFromUserQueryList($this->currentUser, $serviceId);
+                        return $repo->getDevicesOfUserQueryList($this->currentUser, $serviceId);
                     },
                     'placeholder' => 'placeholder.device',
                     'attr' => [
@@ -92,7 +92,7 @@ class SearchType extends AbstractType
                     'choice_label' => 'fullname',
                     'multiple' => true,
                     'query_builder' => function (UserRepository $repo) use ($serviceId) {
-                        return $repo->getAllUsersFromServicesQueryList($this->currentUser, $serviceId);
+                        return $repo->getAllUsersOfServicesQueryList($this->currentUser, $serviceId);
                     },
                     'placeholder' => 'placeholder.referent',
                     'attr' => [

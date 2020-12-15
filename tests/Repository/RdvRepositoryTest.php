@@ -75,25 +75,25 @@ class RdvRepositoryTest extends WebTestCase
 
     public function testFindAllRdvsQueryWithoutFilters()
     {
-        $query = $this->repo->findAllRdvsQuery(new RdvSearch());
+        $query = $this->repo->findRdvsQuery(new RdvSearch());
         $this->assertGreaterThanOrEqual(5, count($query->getResult()));
     }
 
     public function testFindAllRdvsQueryWithFilters()
     {
-        $query = $this->repo->findAllRdvsQuery($this->search);
+        $query = $this->repo->findRdvsQuery($this->search);
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 
-    public function testFindAllRdvsQueryFromSupportWithoutFilters()
+    public function testFindAllRdvsQueryOfSupportWithoutFilters()
     {
-        $query = $this->repo->findAllRdvsQueryFromSupport($this->supportGroup->getId(), new SupportRdvSearch());
+        $query = $this->repo->findRdvsQueryOfSupport($this->supportGroup->getId(), new SupportRdvSearch());
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 
-    public function testFindAllRdvsQueryFromSupportWithFilters()
+    public function testFindAllRdvsQueryOfSupportWithFilters()
     {
-        $query = $this->repo->findAllRdvsQueryFromSupport($this->supportGroup->getId(), $this->supportRdvSearch);
+        $query = $this->repo->findRdvsQueryOfSupport($this->supportGroup->getId(), $this->supportRdvSearch);
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 
@@ -105,9 +105,9 @@ class RdvRepositoryTest extends WebTestCase
     // {
     // }
 
-    public function testFindAllRdvsFromUser()
+    public function testFindAllRdvsOfUser()
     {
-        $this->assertGreaterThanOrEqual(1, count($this->repo->findAllRdvsFromUser($this->user)));
+        $this->assertGreaterThanOrEqual(1, count($this->repo->findRdvsOfUser($this->user)));
     }
 
     public function testCountAllRdvsWithoutCriteria()

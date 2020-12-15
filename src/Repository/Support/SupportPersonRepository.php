@@ -10,6 +10,7 @@ use App\Form\Model\Support\SupportSearch;
 use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -47,8 +48,9 @@ class SupportPersonRepository extends ServiceEntityRepository
 
     /**
      * Retourne toutes les suivis pour l'export.
+     * @return SupportPerson[]|null
      */
-    public function findSupportsToExport(?SupportSearch $search = null)
+    public function findSupportsToExport(?SupportSearch $search = null): ?array
     {
         $query = $this->getSupportsQuery()
             ->leftJoin('sp.accommodationsPerson', 'ap')->addSelect('ap')
@@ -66,10 +68,11 @@ class SupportPersonRepository extends ServiceEntityRepository
 
     /**
      * Retourne toutes les suivis d'un service pour l'export.
+     * @return SupportPerson[]|null
      */
-    public function findSupportsFromServiceToExport($search = null, int $serviceId)
+    public function findSupportsOfServiceToExport($search = null, int $serviceId): ?array
     {
-        $query = $this->getSupportsFromServiceQuery()
+        $query = $this->getSupportsOfServiceQuery()
             ->leftJoin('sg.accommodationGroups', 'ag')->addSelect('PARTIAL ag.{id, accommodation}')
             ->leftJoin('ag.accommodation', 'a')->addSelect('PARTIAL a.{id, name}')
 
@@ -150,8 +153,9 @@ class SupportPersonRepository extends ServiceEntityRepository
 
     /**
      * Donne les suivis sociaux de la personne.
+     * @return SupportPerson[]|null
      */
-    public function findSupportsOfPerson(Person $person)
+    public function findSupportsOfPerson(Person $person): ?array
     {
         return $this->createQueryBuilder('sp')->select('sp')
             ->leftJoin('sp.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
@@ -170,8 +174,9 @@ class SupportPersonRepository extends ServiceEntityRepository
 
     /**
      * Donne tous les suivis pour l'export complet.
+     * @return SupportPerson[]|null
      */
-    public function findSupportsFullToExport($search = null)
+    public function findSupportsFullToExport($search = null): ?array
     {
         $query = $this->getSupportsQuery()
             ->leftJoin('sp.accommodationsPerson', 'ap')->addSelect('ap')
@@ -202,7 +207,11 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function countSupportsToExport($search = null)
+    /**
+     * Compte le nombre de suivis à exporter
+     *
+     */
+    public function countSupportsToExport($search = null): int
     {
         $query = $this->createQueryBuilder('sp')->select('sp')
             ->leftJoin('sp.supportGroup', 'sg')->addSelect('sg')
@@ -215,7 +224,10 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    protected function getSupportsQuery()
+    /**
+     * Donne le Querybuilder d'un suivi.
+     */
+    protected function getSupportsQuery(): QueryBuilder
     {
         return $this->createQueryBuilder('sp')->select('sp')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, birthdate, gender}')
@@ -230,7 +242,7 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->leftJoin('origin.organization', 'orga')->addSelect('PARTIAL orga.{id, name}');
     }
 
-    protected function getSupportsFromServiceQuery()
+    protected function getSupportsOfServiceQuery(): QueryBuilder
     {
         return $this->getSupportsQuery()
             ->leftJoin('sg.avdl', 'avdl')->addSelect('avdl')
@@ -240,7 +252,7 @@ class SupportPersonRepository extends ServiceEntityRepository
     /**
      * Filtre la recherche.
      */
-    protected function filters($query, $search)
+    protected function filters($query, $search): QueryBuilder
     {
         if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             $query->andWhere('s.id IN (:services)')

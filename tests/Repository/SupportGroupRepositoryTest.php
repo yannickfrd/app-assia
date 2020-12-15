@@ -83,9 +83,9 @@ class SupportGroupRepositoryTest extends WebTestCase
         $this->assertNotNull($this->repo->findFullSupportById($this->supportGroup->getId()));
     }
 
-    public function testFindAllSupportsFromUser()
+    public function testFindAllSupportsOfUser()
     {
-        $this->assertGreaterThanOrEqual(1, count($this->repo->findAllSupportsFromUser($this->user)));
+        $this->assertGreaterThanOrEqual(1, count($this->repo->findSupportsOfUser($this->user)));
     }
 
     public function testCountAllSupportsWithoutCriteria()
