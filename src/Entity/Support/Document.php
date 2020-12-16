@@ -149,6 +149,13 @@ class Document
         return $this;
     }
 
+    public function getExtension(): ?string
+    {
+        $array = explode('.', $this->internalFileName);
+
+        return $array[count($array) - 1];
+    }
+
     public function getPeopleGroup(): ?PeopleGroup
     {
         return $this->peopleGroup;
