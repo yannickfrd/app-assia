@@ -39,6 +39,11 @@ class EvaluationGroup
     private $backgroundPeople;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $conclusion;
+
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $comment;
@@ -156,6 +161,18 @@ class EvaluationGroup
     public function setBackgroundPeople(?string $backgroundPeople): self
     {
         $this->backgroundPeople = $backgroundPeople;
+
+        return $this;
+    }
+
+    public function getConclusion(): ?string
+    {
+        return $this->conclusion;
+    }
+
+    public function setConclusion(?string $conclusion): self
+    {
+        $this->conclusion = $conclusion;
 
         return $this;
     }

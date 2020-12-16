@@ -1,0 +1,72 @@
+{% import "macros/viewParagraph.html.twig" as view_p %}
+{% import "macros/viewTextArea.html.twig" as view_text %}
+{% import "macros/viewLi.html.twig" as view_li %}
+
+<hr/>
+<h2 style="{{ style_h2 }}">Situation au regard du logement</h2>
+{{ view_p.get(evalHousing.housingStatusToString, "Housing status", "evaluation") }}
+{% if evalHousing.siaoRequest %}
+    {{ view_p.get(evalHousing.siaoRequestToString, "Siao request", "evaluation") }}
+    <ul>
+        {{ view_li.get(evalHousing.siaoRequestDate ? evalHousing.siaoRequestDate|date("d/m/Y") 
+            ~ (evalHousing.siaoUpdatedRequestDate ? " (actualisation : " ~ evalHousing.siaoUpdatedRequestDate|date("d/m/Y") 
+            ~ ")"), "Siao request date", "evaluation") }}
+        {{ view_li.get(evalHousing.siaoRequestDept, "Siao request dept", "evaluation") }}
+        {{ view_li.get(evalHousing.siaoRecommendationToString, "Siao recommendation", "evaluation") }}
+    </ul>
+{% endif %}
+{% if evalHousing.socialHousingRequest %}
+    {{ view_p.get(evalHousing.socialHousingRequestToString, "Social housing request", "evaluation") }}
+    <ul>
+        {{ view_li.get(evalHousing.socialHousingRequestId, "NUR", "evaluation") }}
+        {{ view_li.get(evalHousing.socialHousingRequestDate ? evalHousing.socialHousingRequestDate|date("d/m/Y") 
+            ~ (evalHousing.socialHousingUpdatedRequestDate ? " (actualisation : " ~ evalHousing.socialHousingUpdatedRequestDate|date("d/m/Y") 
+            ~ ")"), "Date demande de logement social", "evaluation") }}
+        {{ view_li.get(evalHousing.housingWishes, "Housing wishes", "evaluation") }}
+        {{ view_li.get(evalHousing.citiesWishes, "Cities wishes", "evaluation") }}
+        {{ view_li.get(evalHousing.specificities, "Specificities", "evaluation") }}
+    </ul>
+{% endif %}
+{% if evalHousing.syplo in [YES, IN_PROGRESS] %}
+    {{ view_p.get(evalHousing.syploToString, "Syplo", "evaluation") }}
+    <ul>
+        {{ view_li.get(evalHousing.syploDate ? evalHousing.syploDate|date("d/m/Y"), "Syplo date", "evaluation") }}
+        {{ view_li.get(evalHousing.syploId, "Syplo id", "evaluation") }}
+    </ul>
+{% endif %}
+{% if evalHousing.daloAction in [YES, IN_PROGRESS] %}
+    {{ view_p.get(evalHousing.daloActionToString, "Dalo action", "evaluation") }}
+    <ul>
+        {{ view_li.get(evalHousing.daloTypeToString, "Dalo type", "evaluation") }}
+        {{ view_li.get(evalHousing.daloDecisionDate ? evalHousing.daloDecisionDate|date("d/m/Y"), "Dalo decision date", "evaluation") }}
+        {{ view_li.get(evalHousing.daloId, "Dalo id", "evaluation") }}
+        {{ view_li.get(evalHousing.daloRecordDate ? evalHousing.daloRecordDate|date("d/m/Y"), "Dalo record date", "evaluation") }}
+        {{ view_li.get(evalHousing.daloTribunalAction in [YES, IN_PROGRESS] ? evalHousing.daloTribunalActionToString ~ (evalHousing.daloTribunalActionDate ? 
+            " (le " ~ evalHousing.daloTribunalActionDate|date("d/m/Y") ~ ")"), "Dalo tribunal action", "evaluation") }}
+    </ul>
+{% endif %}
+{% if evalHousing.hsgActionEligibility in [YES, IN_PROGRESS] %}					
+    {{ view_p.get(evalHousing.hsgActionEligibilityToString, "Hsg action eligibility", "evaluation") }}
+    {{ view_p.get(evalHousing.hsgActionRecordToString ~ (evalHousing.hsgActionDate ? 
+        " (le " ~ evalHousing.hsgActionDate|date("d/m/Y") ~ ")"), "Hsg action record", "evaluation") }}
+    {{ view_p.get(evalHousing.hsgActionRecordId, "Hsg action record id", "evaluation") }}
+    {{ view_p.get(evalHousing.hsgActionDept, "Hsg action dept", "evaluation") }}
+{% endif %}
+{% if evalHousing.expulsionInProgress == YES %}
+    {{ view_p.get(evalHousing.expulsionInProgressToString, "Expulsion in progress", "evaluation") }}
+    {{ view_p.get(evalHousing.publicForceToString ~ (evalHousing.publicForceDate ? 
+        " (le " ~ evalHousing.publicForceDate|date("d/m/Y") ~ ")"), "Public force", "evaluation") }}
+    {{ view_p.get(evalHousing.expulsionComment) }}
+{% endif %}
+{# {% if evalHousing.housingExperience %} #}
+    {{ view_p.get(evalHousing.housingExperienceToString, "Housing experience", "evaluation") }}
+    {# {{ view_p.get(evalHousing.housingExpeComment) }}
+{% endif %} #}
+{# <ul>
+    {% for key, value in evalHousing.housingHelps %}
+        {% if attribute(evalHousing, key) %}
+            <li>{{ value }}</li>
+        {% endif %}
+    {% endfor %}
+</ul> #}
+{{ view_text.get(evalHousing.commentEvalHousing, null, null, type) }}

@@ -64,6 +64,11 @@ class EvalBudgetGroup
     private $contributionAmt;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $cafId;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $commentEvalBudget;
@@ -171,6 +176,18 @@ class EvalBudgetGroup
     public function setContributionAmt(?float $contributionAmt): self
     {
         $this->contributionAmt = $contributionAmt;
+
+        return $this;
+    }
+
+    public function getCafId(): ?string
+    {
+        return $this->cafId;
+    }
+
+    public function setCafId(?string $cafId): self
+    {
+        $this->cafId = $cafId;
 
         return $this;
     }

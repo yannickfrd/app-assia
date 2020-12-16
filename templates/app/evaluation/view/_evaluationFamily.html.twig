@@ -1,0 +1,81 @@
+{% import "macros/viewDiv.html.twig" as view_div %}
+
+<hr/>
+<section>
+    <div class="d-flex mb-3">
+        <h2 class="h4">Famille</h2>
+        <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
+            class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
+        </span>
+    </div>
+
+    {% set eval_adults_family = eval_adults|filter(e => e.evalFamilyPerson) %}
+    {% set nb_adults_family = eval_adults_family|length %}
+    {% for evalPerson in eval_adults_family %}
+        {% set evalFamily = evalPerson.evalFamilyPerson %}
+            {% if nb_adults_family > 1 %}
+            <div class="row mb-2">
+                <div class="col-md-12 font-weight-bold">{{ evalPerson.supportPerson.person.fullname }}</div>
+            </div>
+            {% endif %}
+        <div class="my-3">
+            <div class="row mb-2">
+                {{ view_div.get(evalFamily.maritalStatusToString, "Marital status", "evaluation") }}
+                {{ view_div.get(evalFamily.noConciliationOrderToString, "No conciliation order", "evaluation") }}
+                {{ view_div.get(evalFamily.protectiveMeasure == YES and evalFamily.protectiveMeasureType ? 
+                    evalFamily.protectiveMeasureTypeToString, "Protective measure", "evaluation") }}
+                {{ view_div.get(evalFamily.unbornChild == YES ? evalFamily.unbornChildToString ~ (evalFamily.expDateChildbirth ? " (" 
+                    ~ evalFamily.expDateChildbirth|date("d/m/Y") ~ ")"), "Unborn child", "evaluation") }}
+            </div>
+            <div class="row my-2">
+                <div class="col-md-12 justify">{{ evalFamily.commentEvalFamilyPerson|nl2br }}</div>
+            </div>
+        </div>
+    {% endfor %}
+
+    {% set eval_children_family = eval_children|filter(e => e.evalFamilyPerson) %}
+    {% if eval_children_family|length > 0 %}
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">Enfant(s)</th>
+                                <th>Garde ou scolarité</th>
+                                <th>Lieu de garde/scolarité</th>
+                                <th>Hébergement</th>
+                                <th>À charge</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for evalPerson in eval_children_family %}
+                                {% set evalFamilyPerson = evalPerson.evalFamilyPerson %}
+                                <tr>
+                                    <td scope="row">{{ evalPerson.supportPerson.person.fullname }}</td>
+                                    <td>{{ evalFamilyPerson.childcareSchoolToString }}</td>
+                                    <td>{{ evalFamilyPerson.childcareSchoolLocation }}</td>
+                                    <td>{{ evalFamilyPerson.childToHostToString }}</td>
+                                    <td>{{ evalFamilyPerson.childDependanceToString }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% set evalFamily = evaluation.evalFamilyGroup %}
+    {% if evalFamily %}
+        <div class="row mb-2">
+            {{ view_div.get(evalFamily.nbDependentChildren, "Nb dependent children", "evaluation") }}
+            {{ view_div.get(evalFamily.famlReunification == YES ? evalFamily.famlReunificationToString ~ (evalFamily.nbPeopleReunification ? " (" 
+                ~ evalFamily.nbPeopleReunification ~ " personne(s))"), "Faml reunification", "evaluation") }}
+        </div>
+        <div class="row my-3">
+            <div class="col-md-12 justify">{{ evaluation.evalFamilyGroup.commentEvalFamilyGroup|nl2br }}</div>
+        </div>
+    {% endif %}
+
+</section>

@@ -26,7 +26,6 @@ class EvalFamilyGroupType extends AbstractType
                 'required' => false,
             ])
             ->add('nbPeopleReunification')
-            ->add('cafId')
             ->add('commentEvalFamilyGroup', null, [
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [

@@ -349,11 +349,6 @@ class EvalBudgetPerson
     private $endRightsDate;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $cafId;
-
-    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $commentEvalBudget;
@@ -1155,18 +1150,6 @@ class EvalBudgetPerson
     public function setEndRightsDate(?\DateTimeInterface $endRightsDate): self
     {
         $this->endRightsDate = $endRightsDate;
-
-        return $this;
-    }
-
-    public function getCafId(): ?string
-    {
-        return $this->cafId;
-    }
-
-    public function setCafId(?string $cafId): self
-    {
-        $this->cafId = $cafId;
 
         return $this;
     }

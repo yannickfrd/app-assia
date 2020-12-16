@@ -352,7 +352,7 @@ class EvalHousingGroup
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $domiciliationComment;
+    private $domiciliationComment;  // aka domiciliationLocation
 
     /**
      * @ORM\Column(type="smallint", nullable=true)

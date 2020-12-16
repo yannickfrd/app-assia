@@ -65,7 +65,7 @@ class EvaluationController extends AbstractController
             $this->updateEvaluation($evaluationGroup);
         }
 
-        return $this->render('app/evaluation/evaluationEdit.html.twig', [
+        return $this->render('app/evaluation/edit/evaluationEdit.html.twig', [
             'support' => $supportGroup,
             'form' => $form->createView(),
         ]);
@@ -111,7 +111,8 @@ class EvaluationController extends AbstractController
         $logoPath = $supportGroup->getService()->getPole()->getLogoPath();
         $fullnameSupport = $supportManager->getHeadPersonSupport($supportGroup)->getFullname();
 
-        $content = $renderer->render('app/evaluation/evaluationExport.html.twig', [
+        return $this->render('app/evaluation/export/evaluationExport.html.twig', [
+        // $content = $renderer->render('app/evaluation/export/evaluationExport.html.twig', [
             'type' => $type,
             'support' => $supportGroup,
             'referents' => $supportManager->getReferents($supportGroup->getPeopleGroup(), $repoReferent),

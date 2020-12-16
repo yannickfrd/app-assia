@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\Entity\People\RolePerson;
+use App\Entity\Evaluation\EvalBudgetGroup;
 use App\Repository\Support\SupportGroupRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -39,7 +39,7 @@ class UpdateCafIdCommand extends Command
     }
 
     /**
-     * Met à jour le numéro de CAF dans le.
+     * Met à jour le numéro de CAF dans l'évaluaiton budgétaire du group.
      */
     protected function updateCafId()
     {
@@ -53,15 +53,14 @@ class UpdateCafIdCommand extends Command
                 ++$nbEvaluations;
                 $cafId = $evaluationGroup->getEvalFamilyGroup() ? $evaluationGroup->getEvalFamilyGroup()->getCafId() : null;
                 if ($cafId) {
-                    foreach ($support->getSupportPeople() as $supportPerson) {
-                        $evaluationPerson = $supportPerson->getEvaluationsPerson()[0];
-                        if (RolePerson::ROLE_CHILD != $evaluationPerson->getSupportPerson()->getRole()) {
-                            if ($evaluationPerson->getEvalBudgetPerson()) {
-                                $evaluationPerson->getEvalBudgetPerson()->setCafId($cafId);
-                            }
-                            ++$count;
-                        }
+                    if ($evaluationGroup->getEvalBudgetGroup()) {
+                        $evaluationGroup->getEvalBudgetGroup()->setCafId($cafId);
+                    } else {
+                        (new EvalBudgetGroup())
+                            ->setEvaluationGroup($evaluationGroup)
+                            ->setCafId($cafId);
                     }
+                    ++$count;
                 }
             }
         }

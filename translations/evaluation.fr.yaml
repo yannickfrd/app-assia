@@ -1,8 +1,10 @@
 Init eval: Initial
 placeholder.select: -- Sélectionner --
 initEvalPerson.comment: Écrire un commentaire relatif à la situation initiale de la personne
-backgroundPeople: Parcours de vie 
-backgroundPeople.comment: Présenter le parcours de vie / historique du ménage
+backgroundPeople: Parcours de vie
+backgroundPeople.placeholder: Présenter le parcours de vie / historique du ménage
+conclusion: Conclusion
+conclusion.placeholder: Synthèse et/ou conclusion de la situation (autonomie, axes de travail, objectifs...)
 
 initEvalGroup:
   housingStatus.help: Situation résidentielle avant le début du suivi.
@@ -16,7 +18,7 @@ Asylum status: Statut lié à l'asile
 Comment eval adm: Commentaire relatif à la situation administrative
 Country: Pays
 End valid permit date: Date de fin de validité du titre
-Nationality: Nationalité 
+Nationality: Nationalité
 Nb renewals: Nombre de renouvellements
 Paper type: Type de papier
 Paper: Papier d'identité
@@ -142,7 +144,7 @@ Youth guarantee: Garantie jeunes
 # Family
 Caf id: Numéro CAF
 Child dependance: A charge / Situation enfant
-Child to host : A héberger 
+Child to host: A héberger
 Childcare school location: Lieu de garde/scolarité
 Childcare school: Garde ou scolarité
 Children behind: Enfants restés au pays
@@ -152,7 +154,7 @@ Exp date childbirth: Date prév. de l'accouchement
 Family: Famille
 Faml reunification: Regroupement familial
 Marital status: Situation matrimoniale
-Nb dependent children : Nombre d'enfants à charge
+Nb dependent children: Nombre d'enfants à charge
 Nb people reunification: Nombre de pers. concernées par le regroupement
 No conciliation order: Ordonnance de non conciliation
 Pregnancy type: Type de grossesse
@@ -168,7 +170,7 @@ Contract end date: Date de fin du contrat
 Contract start date: Date de début du contrat
 Contract type: Type de contrat
 Employer name: Nom de l'employeur
-End rqth date : Date de fin de validité RQTH
+End rqth date: Date de fin de validité RQTH
 Job center id: Numéro Pôle Emploi
 Job type: Type d'emploi
 Nb working hours: Nombre d'heures de travail
@@ -177,8 +179,8 @@ Prof status: Statut professionnel
 Prof: Emploi
 Rqth: RQTH
 School level: Niveau scolaire
-Transport means type: Moyen(s) de transport 
-Transport means: Précision moyen(s) de transport 
+Transport means type: Moyen(s) de transport
+Transport means: Précision moyen(s) de transport
 Work place: Lieu de travail (commune)
 Working hours: Horaires de travail
 evalProfPerson.comment: Écrire un commentaire relatif à la situation professionnelle
@@ -201,10 +203,10 @@ Dalo record date: Date de dépôt du DALO/ DAHO
 Dalo type: Type de recours DALO/ DAHO
 Dalo tribunal action date: Date du recours Tribunal administratif
 Dalo tribunal action: DALO/ DAHO recours Tribunal administratif
+Domiciliation comment: Organisme ou personne domiciliataire
 Domiciliation address: Adresse de domiciliation
 Domiciliation city: Ville de domiciliation
 Domiciliation dept: Département de domiciliation
-Domiciliation comment: Complément adresse de domiciliation
 Domiciliation: Domiciliation
 End domiciliation date: Date de fin domiciliation
 Expulsion comment: Commentaire sur l'expulsion location
@@ -239,8 +241,8 @@ Siao recommendation: Préconisation d'orientation
 Social housing request date: Date de demande de logement social
 Social housing request id: Numéro unique régional (NUR)
 Social housing request: Demande de logement social
-Social housing updated request date: Date de renouvellement 
-Specificities: Spécificités à prendre en considération 
+Social housing updated request date: Date de renouvellement
+Specificities: Spécificités à prendre en considération
 Start domiciliation date: Date de début domiciliation
 Syplo date: Date du SYPLO
 Syplo id: Numéro SYPLO
@@ -271,12 +273,12 @@ Friendship breakdown: Rupture des liens amicaux
 Health problem: Problématique de santé
 Mental health problem: Problématique de santé mentale
 Physical health problem: Problématique de santé physique
-Reason request: Motif de la demande
+Reason request: Motif de la prise en charge
 Reduced mobility: Personne à mobilité réduite
 Right social benefit: Droit aux prestations sociales et familiales
 Right social security: Droits ouverts Sécurité sociale
-Social security: Sécurité sociale
-Social security office: Caisse/ Numéro de Sécurité sociale
+Social security: Type de protection sociale
+Social security office: Sécurité sociale
 Social: Social
 Violence victim: Personne victime de violence
 Wandering time: Durée d'errance

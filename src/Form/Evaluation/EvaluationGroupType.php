@@ -21,7 +21,15 @@ class EvaluationGroupType extends AbstractType
                 'attr' => [
                     'rows' => 5,
                     'class' => 'justify',
-                    'placeholder' => 'backgroundPeople.comment',
+                    'placeholder' => 'backgroundPeople.placeholder',
+                ],
+            ])
+            ->add('conclusion', null, [
+                'label_attr' => ['class' => 'sr-only'],
+                'attr' => [
+                    'rows' => 5,
+                    'class' => 'justify',
+                    'placeholder' => 'conclusion.placeholder',
                 ],
             ])
             ->add('initEvalGroup', InitEvalGroupType::class)

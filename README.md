@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.13.11 - 16/12/2020
+2.13.14 - 16/12/2020
 
 # Développeur
 Romain MADELAINE
@@ -22,6 +22,15 @@ https://demo.esperer95.app
 - Add extension file in the documents page;
 - Edit voter of Contribution (canEdit = canVIew);
 - Edit listConstributions page : possibility to search contribution by ID;
+- Edit Evaluation : 
+    - Create subfolders and subfiles for edit, view and export evaluation;
+    - Add some informations in view and export evaluation (endValidyDate, cafIf...);
+    - Add 'conclusion' field in evaluation;
+    - Add items in paperType (DCEM, acte de naissance);
+    - Edit 'CSC' item to 'CSS';
+    - Edit 'domiciliation comment' to 'organization of domiciliation';
+    - Move 'cafId' to evalBudgetGroup;
+    - Move 'reasonRequest' and 'wanderingTime' to initEval;
 
 ## Version 2.13.2-8 - 15/12/2020
 - Added and updated annotations for entities ansd repositories.

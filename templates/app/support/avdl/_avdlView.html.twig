@@ -7,23 +7,23 @@
             {{ support.service.name }}</a>
         <span>{{ support.device ? " (" ~ support.device.name ~ ")" }}</span>
     </div>
-    {{ view_div.get(support.statusToString ~ (support.endStatus ? " (" ~ support.endStatusToString ~ ")" : "" ), "Status") }}
+    {{ view_div.get(support.statusToString ~ (support.endStatus ? " (" ~ support.endStatusToString ~ ")" ), "Status") }}
     {{ view_div.get(support.startDate ? support.startDate|date("d/m/Y") 
-        ~ (support.endDate ? " - " ~ support.endDate|date("d/m/Y") : "") : "", "Date de suivi") }}
-    {{ view_div.get(support.referent ? support.referent.fullname ~ (support.referent2 ? " | " ~ support.referent2.fullname : "") : "", "Referent") }}
+        ~ (support.endDate ? " - " ~ support.endDate|date("d/m/Y")), "Date de suivi") }}
+    {{ view_div.get(support.referent ? support.referent.fullname ~ (support.referent2 ? " | " ~ support.referent2.fullname), "Referent") }}
 </div>
 
 {% set originRequest = support.originRequest %}
 {% if originRequest %}
     <div class="row my-2">
         {{ view_div.get(originRequest.organization ? originRequest.organization.name ~ (originRequest.organizationComment ? " (" 
-            ~ originRequest.organizationComment ~ ")" : "") : "", "Organization", "forms") }}
+            ~ originRequest.organizationComment ~ ")"), "Organization", "forms") }}
         {{ view_div.get(originRequest.orientationDate ? originRequest.orientationDate|date("d/m/Y"), "avdl.orientationDate", "forms") }}
     </div>
 {% endif %}
 
     <div class="row my-2">
-    {{ view_div.get(support.city or support.address ? support.address ~ ", " ~ support.zipcode ~ " " ~ support.city : "", "Adresse") }}
+    {{ view_div.get(support.city or support.address ? support.address ~ ", " ~ support.zipcode ~ " " ~ support.city, "Adresse") }}
 </div>
 
 {% set avdl = support.avdl %}
@@ -31,7 +31,7 @@
 {% if avdl and avdl.diagStartDate %}
     <div class="row my-2">
         {{ view_div.get(avdl.diagStartDate ? avdl.diagStartDate|date("d/m/Y") 
-            ~ (avdl.diagEndDate ? " - " ~ avdl.diagEndDate|date("d/m/Y") : "") : "", "avdl.diag") }}
+            ~ (avdl.diagEndDate ? " - " ~ avdl.diagEndDate|date("d/m/Y")), "avdl.diag") }}
         {{ view_div.get(avdl.diagTypeToString, "avdl.diagType") }}
         {{ view_div.get(avdl.recommendationSupportToString, "avdl.recommendationSupport") }}
         {{ view_div.get(avdl.diagComment, "Comment") }}
@@ -41,7 +41,7 @@
 {% if avdl and avdl.supportStartDate %}
     <div class="row my-2">
         {{ view_div.get(avdl.supportStartDate ? avdl.supportStartDate|date("d/m/Y") 
-            ~ (avdl.supportEndDate ? " - " ~ avdl.supportEndDate|date("d/m/Y") : "") : "", "avdl.support") }}
+            ~ (avdl.supportEndDate ? " - " ~ avdl.supportEndDate|date("d/m/Y")), "avdl.support") }}
         {{ view_div.get(avdl.supportTypeToString, "avdl.supportType") }}
         {{ view_div.get(avdl.supportComment, "Comment") }}
     </div>

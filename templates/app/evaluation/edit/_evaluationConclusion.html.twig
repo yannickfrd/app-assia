@@ -1,0 +1,12 @@
+{% extends "model/_collapseCard.html.twig" %}
+
+{% block card_title %}Synthèse - Conclusion{% endblock %}
+
+{% block card_body %}
+
+	<div class="form-group row">
+		<div class="col-md-12 sr-only">{{ form_label(form.conclusion) }}</div>
+		<div class="col-md-12">{{ form_widget(form.conclusion) }}</div>
+	</div>
+
+{% endblock %}

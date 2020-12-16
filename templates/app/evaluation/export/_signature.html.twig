@@ -1,0 +1,13 @@
+<p><br/></p>
+<p class="break-inside" style="text-align: right;">{#
+    #}{{ app.user.firstname }} {{ app.user.lastname }}<br/>{#
+    #}{{ support.service.name }}<br/>{#
+    #}Association ESPERER 95<br/>{#
+    #}{% set subService = support.subService %}{#
+    #}<i><a href="mailto:{{ app.user.email }}" style="color: {{ theme_color }};">{{ subService and subService.email ?  subService.email : 
+        (support.service.email ? support.service.email : app.user.email) }}</a></i><br/> 
+    <i>{{ app.user.phone1 }}</i><br/>
+    <a href="www.esperer-95.org" style="color: {{ theme_color }};">www.esperer-95.org</a>
+    {% if type != 'pdf' %}<br/>{LOGO_SIGNATURE}{% endif %}
+</p>
+{% if type == 'pdf' %}<p class="text-right"><img src="{{ logo_path }}" width="120"/></p>{% endif %}

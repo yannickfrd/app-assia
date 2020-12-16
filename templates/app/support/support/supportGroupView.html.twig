@@ -158,9 +158,9 @@
 					</div>
 				</div>
 			</div>	
-			{# {% cache "evaluation.view" ~ evaluation.id ~ evaluation.updatedAt.timestamp evaluation.updatedAt.timestamp %} #}
-			{% include "app/evaluation/_evaluationView.html.twig" %}
-			{# {% endcache %} #}
+
+			{% include "app/evaluation/view/_evaluationView.html.twig" %}
+			
 		{% endif %}
 
 	</div>

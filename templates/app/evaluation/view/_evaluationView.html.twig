@@ -1,0 +1,83 @@
+{# {% cache "evaluation.view" ~ evaluation.id ~ evaluation.updatedAt.timestamp evaluation.updatedAt.timestamp %} #}
+{% import "macros/viewDiv.html.twig" as view_div %}
+
+{% set ROLE_CHILD = constant("App\\Entity\\People\\RolePerson::ROLE_CHILD") %}
+{% set IN_PROGRESS = constant("App\\Form\\Utils\\Choices::IN_PROGRESS") %}
+
+{% set eval_people = evaluation.evaluationPeople %}
+{% set eval_adults = evaluation.evaluationPeople|filter(e => e.supportPerson.role != ROLE_CHILD) %}
+{% set eval_children = eval_people|filter(e => e.supportPerson.role == ROLE_CHILD) %}
+{% set people_over_18 = eval_people|filter(e => e.supportPerson.person.age >= 18) %}
+{% set nb_people = support.supportPeople|length %}
+
+{% apply spaceless %}
+
+    <div class="row mb-2">
+        {{ view_div.get(support.peopleGroup.familyTypologyToString ~ (nb_people > 1 ? ", " ~ nb_people ~ " personnes"), "Family typology") }}
+    </div>
+
+    <div class="row mb-2">
+        <div class="col-12 col-lg-10">
+            <div class="table-responsive">
+                <table class="table table-sm table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nom et prénom</th>
+                            <th>Date de naissance</th>
+                            <th class="d-none d-sm-table-cell">Âge</th>
+                            <th>Sexe</th>
+                            <th>Rôle</th>
+                            <th>Téléphone</th>
+                            <th class="d-none d-sm-table-cell">Adresse email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for supportPerson in support.supportPeople %}
+                            <tr>
+                                <td scope="row" class="align-middle">
+                                    {{ supportPerson.person.fullname }}
+                                    {{ supportPerson.person.usename ? " (" ~ supportPerson.person.usename ~ ")" }}
+                                </td>
+                                <td class="align-middle">{{ supportPerson.person.birthdate|date("d/m/Y") }}</td>
+                                <td class="align-middle d-none d-sm-table-cell">{{ supportPerson.person.age }} an<!--
+                                    -->{{ supportPerson.person.age > 1 ? "s" }}</td>
+                                <td class="align-middle">{{ supportPerson.person.genderToString }}</td>
+                                <td class="align-middle">{{ supportPerson.roleToString }}</td>
+                                <td class="align-middle">{{ supportPerson.person.phone1 }}</td>
+                                <td class="align-middle d-none d-sm-table-cell">{{ supportPerson.person.email }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {% if evaluation.backgroundPeople %}
+        {% include "app/evaluation/view/_evaluationBackground.html.twig" %}
+    {% endif %}
+    {% if support.service.justice == YES %}
+        {% include "app/evaluation/view/_evaluationJustice.html.twig" %}
+    {% endif %}
+    {% include "app/evaluation/view/_evaluationAdm.html.twig" %}
+    {% include "app/evaluation/view/_evaluationFamily.html.twig" %}
+    {% include "app/evaluation/view/_evaluationSocial.html.twig" %}
+    {% include "app/evaluation/view/_evaluationProf.html.twig" %}
+    {% set evalBudgetGroup = evaluation.evalBudgetGroup %}
+    {% if evalBudgetGroup %}
+    {% include "app/evaluation/view/_evaluationBudget.html.twig" %}
+    {% endif %}
+    {% set evalHousing = evaluation.evalHousingGroup %}
+    {% if evalHousing %}
+        {% include "app/evaluation/view/_evaluationHousing.html.twig" %}
+    {% endif %}
+    {% set evalHotelLife = evaluation.evalHotelLifeGroup %}
+    {% if evalHotelLife %}
+        {% include "app/evaluation/view/_evaluationHotelLife.html.twig" %}
+    {% endif %}
+    {% if evaluation.conclusion %}
+        {% include "app/evaluation/view/_evaluationConclusion.html.twig" %}
+    {% endif %}
+
+{% endapply %}
+{# {% endcache %} #}

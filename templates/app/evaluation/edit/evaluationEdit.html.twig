@@ -40,20 +40,21 @@
 				<span class="badge badge-pill badge-warning fade-out ml-2 small" data-toggle="tooltip" data-placement="bottom" 
 					title="Nombre d'informations importantes non-renseignées dans le bloc"></span>
 			{% endset %}
-			{% include "app/evaluation/_initEvaluation.html.twig" with {id: "init_eval"} %}
+			{% include "app/evaluation/edit/_initEvaluation.html.twig" with {id: "init_eval"} %}
+			{% include "app/evaluation/edit/_evaluationBackground.html.twig" with {id: "eval_background"} %}
 			{% if support.service.justice == YES %}
-				{% include "app/evaluation/_evaluationJustice.html.twig" with {id: "eval_adm"}  %}
+				{% include "app/evaluation/edit/_evaluationJustice.html.twig" with {id: "eval_adm"}  %}
 			{% endif %}
-			{% include "app/evaluation/_evaluationAdm.html.twig" with {id: "eval_justice"} %}
-			{% include "app/evaluation/_evaluationFamily.html.twig" with {id: "eval_family"} %}
-			{% include "app/evaluation/_evaluationBudget.html.twig" with {id: "eval_budget"} %}
-			{% include "app/evaluation/_evaluationProf.html.twig" with {id: "eval_prof"} %}
-			{% include "app/evaluation/_evaluationSocial.html.twig" with {id: "eval_social"} %}
-			{% include "app/evaluation/_evaluationHousing.html.twig" with {id: "eval_housing"} %}
-			{% include "app/evaluation/_backgroundPeople.html.twig" with {id: "eval_background"} %}
+			{% include "app/evaluation/edit/_evaluationAdm.html.twig" with {id: "eval_justice"} %}
+			{% include "app/evaluation/edit/_evaluationFamily.html.twig" with {id: "eval_family"} %}
+			{% include "app/evaluation/edit/_evaluationSocial.html.twig" with {id: "eval_social"} %}
+			{% include "app/evaluation/edit/_evaluationProf.html.twig" with {id: "eval_prof"} %}
+			{% include "app/evaluation/edit/_evaluationBudget.html.twig" with {id: "eval_budget"} %}
+			{% include "app/evaluation/edit/_evaluationHousing.html.twig" with {id: "eval_housing"} %}
 			{% if support.service.id == constant("App\\Entity\\Organization\\Service::SERVICE_PASH_ID") %}
-				{% include "app/evaluation/_evaluationHotelLife.html.twig" with {id: "eval_hotel_life"} %}
+				{% include "app/evaluation/edit/_evaluationHotelLife.html.twig" with {id: "eval_hotel_life"} %}
 			{% endif %}
+			{% include "app/evaluation/edit/_evaluationConclusion.html.twig" with {id: "eval_conclusion"} %}
 		</div>
 
 		<div class="form-group row">

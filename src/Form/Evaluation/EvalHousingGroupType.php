@@ -181,6 +181,7 @@ class EvalHousingGroupType extends AbstractType
                 'widget' => 'single_text',
                 'required' => false,
             ])
+            ->add('domiciliationComment') // aka domiciliationLocation
             ->add('domiciliationSearch', null, [
                 'label' => ' ',
                 'attr' => [
@@ -208,7 +209,6 @@ class EvalHousingGroupType extends AbstractType
                     'readonly' => true,
                 ],
             ])
-            ->add('domiciliationComment')
             ->add('housingAccessType', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
                 'placeholder' => 'placeholder.select',

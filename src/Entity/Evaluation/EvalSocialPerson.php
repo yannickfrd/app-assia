@@ -14,7 +14,7 @@ class EvalSocialPerson
     public const SOCIAL_SECURITY = [
         6 => 'ACS',
         5 => 'AME',
-        4 => 'CSC (ex-CMU-C)',
+        4 => 'CSS (ex-CMU-C)',
         3 => 'PUMA (ex-CMU)',
         1 => 'Régime général',
         2 => 'Régime général et mutuelle',

@@ -195,7 +195,7 @@ class NoteController extends AbstractController
 
         $note = (new Note())
                 ->setTitle($title.(new \DateTime())->format('d/m/Y'))
-                ->setContent($renderer->render('app/evaluation/evaluationExport.html.twig', [
+                ->setContent($renderer->render('app/evaluation/export/evaluationExport.html.twig', [
                     'type' => 'note',
                     'support' => $supportGroup,
                     'referents' => $supportManager->getReferents($supportGroup->getPeopleGroup(), $repoReferent),
