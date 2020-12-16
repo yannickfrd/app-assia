@@ -5,11 +5,12 @@ namespace App\Service;
 use Tinify\Tinify;
 
 /**
- * Une classe pour compresser et optimiser les images avec Tinify
+ * CLass to compress and optimize image files with Tinify API.
  */
 class OptimizeImage
 {
     protected $tinify;
+    protected $tinifyKey;
     protected $file;
     protected $fileName;
     protected $fileExtension;
@@ -20,14 +21,14 @@ class OptimizeImage
     public function __construct(Tinify $tinify, $tinifyKey)
     {
         $this->tinify = $tinify;
-        $this->tinify->setKey($tinifyKey);
+        $this->tinifyKey = $tinifyKey;
         $this->init();
     }
 
-    protected function init()
+    private function init()
     {
         try {
-            // Use the Tinify API client.
+            $this->tinify->setKey($this->tinifyKey);
         } catch (\Tinify\AccountException $e) {
             echo 'The error message is: '.$e->getMessage();
             // Verify your API key and account limit.
@@ -42,20 +43,32 @@ class OptimizeImage
         }
     }
 
-    // Compresse l'image
-    public function compressImage()
+    /**
+     * Compresse l'image.
+     *
+     * @return int|false
+     */
+    public function compressImage(string $file)
     {
-        move_uploaded_file($this->file['tmp_name'], $this->toFolder.$this->originalFile);
-        $source = \Tinify\fromFile($this->toFolder.$this->originalFile);
-        $this->optimizedFile = $this->fileName.'-optimized.'.$this->fileExtension;
-        $newfile = $source->toFile($this->toFolder.$this->optimizedFile);
+        try {
+            $source = \Tinify\fromFile($file);
+            $source->toFile($file);
+        } catch (\Exception $e) {
+            return false;
+        }
+        // move_uploaded_file($this->file['tmp_name'], $this->toFolder.$this->originalFile);
+        // $source = \Tinify\fromFile($this->toFolder.$this->originalFile);
+        // $this->optimizedFile = $this->fileName.'-optimized.'.$this->fileExtension;
+        // $newfile = $source->toFile($this->toFolder.$this->optimizedFile);
     }
 
-    // Redimmensionne l'image
-    public function resizeImage($method, $width, $height)
+    /**
+     * Resize the image.
+     */
+    public function resizeImage(string $file, string $method, int $width, int $height): string
     {
         if (!$this->optimizedFile) {
-            $this->compressImage();
+            $this->compressImage($file);
         }
         // Method : fit (ex 800x450), cover (ex: 800x450), thumb (ex: 150x150)
         $source = \Tinify\fromFile($this->toFolder.$this->optimizedFile);
@@ -69,11 +82,13 @@ class OptimizeImage
         return "L'image est redimesionnée avec la méthode \"".$method.'".';
     }
 
-    // Créé une icone
-    public function createIcon($toFolder)
+    /** 
+     * Create an icon.
+     */
+    public function createIcon($toFolder): string
     {
         if (!$this->optimizedFile) {
-            $this->compressImage();
+            $this->compressImage($this->toFolder.$this->optimizedFile);
         }
         $source = \Tinify\fromFile($this->toFolder.$this->optimizedFile);
         $resized = $source->resize([
@@ -86,11 +101,10 @@ class OptimizeImage
         return 'Le nouveau logo est enregistré.';
     }
 
-    // Récupère les métadonnées
-    public function preserveMetadata()
+    public function preserveMetadata(): string
     {
         if (!$this->optimizedFile) {
-            $this->compressImage();
+            $this->compressImage($this->toFolder.$this->optimizedFile);
         }
         $source = \Tinify\fromFile($this->toFolder.$this->optimizedFile);
         $copyrighted = $source->preserve('copyright', 'creation');
@@ -99,8 +113,10 @@ class OptimizeImage
         return 'Les métadonnées sont récupérées.';
     }
 
-    // Donne le nombre de compressions réalisées au cours du mois
-    public function compressionCount()
+    /**
+     * Give the number of compressions in this month.
+     */
+    public function compressionCount(): string
     {
         $compressionsThisMonth = \Tinify\compressionCount();
 

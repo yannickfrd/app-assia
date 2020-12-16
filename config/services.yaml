@@ -4,13 +4,13 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    documents_directory: '%kernel.project_dir%/public/uploads/documents'
-    admin_email: '%env(ADMIN_EMAIL)%'
+    documents_directory: "%kernel.project_dir%/public/uploads/documents"
+    admin_email: "%env(ADMIN_EMAIL)%"
 
 services:
     # default configuration for services in *this* file
     _defaults:
-        autowire: true      # Automatically injects dependencies in your services.
+        autowire: true # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
         # bind:
         #     $adminEmail: '%admin_email%'
@@ -18,27 +18,27 @@ services:
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:
-        resource: '../src/*'
-        exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+        resource: "../src/*"
+        exclude: "../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}"
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
     App\Controller\:
-        resource: '../src/Controller'
-        tags: ['controller.service_arguments']
+        resource: "../src/Controller"
+        tags: ["controller.service_arguments"]
 
     App\DataFixtures\Processor\UserProcessor:
+        tags: [{ name: fidry_alice_data_fixtures.processor }]
         arguments:
             - "@security.user_password_encoder.generic"
-        tags: [ { name: fidry_alice_data_fixtures.processor } ]
 
     App\EventListener\ExceptionListener:
-        arguments:
-            $exceptionListener: '%env(EXCEPTION_LISTENER)%'
-            $adminEmail: '%admin_email%'
         tags:
-            - { name: 'kernel.event_listener', event: 'kernel.exception' }
-            
+            - { name: "kernel.event_listener", event: "kernel.exception" }
+        arguments:
+            $exceptionListener: "%env(EXCEPTION_LISTENER)%"
+            $adminEmail: "%admin_email%"
+
     # App\EventSubscriber\ExceptionSubscriber:
     #     arguments:
     #         $exceptionListener: '%env(EXCEPTION_LISTENER)%'
@@ -46,46 +46,52 @@ services:
 
     App\EventListener\LoginListener:
         tags:
-            - { name: 'kernel.event_listener', event: 'security.interactive_login' }
+            - {
+                  name: "kernel.event_listener",
+                  event: "security.interactive_login",
+              }
 
     App\EventListener\MaintenanceListener:
-        arguments:
-            $maintenance: '%env(MAINTENANCE)%'
         tags:
-        - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest' }
-    
+            - {
+                  name: "kernel.event_listener",
+                  event: "kernel.request",
+                  method: "onKernelRequest",
+              }
+        arguments:
+            $maintenance: "%env(MAINTENANCE)%"
+
     # App\EventListener\ResponseListener:
     #     tags:
     #         - { name: 'kernel.event_listener', event: 'kernel.response', method: 'onKernelResponse' }
-            
+
     App\EventListener\TerminateListener:
         tags:
-            - { name: 'kernel.event_listener', event: 'kernel.terminate' }
+            - { name: "kernel.event_listener", event: "kernel.terminate" }
 
     App\Notification\MailNotification:
         arguments:
-            $appVersion: '%env(APP_VERSION)%'
-            $host: '%env(MAILER_HOST)%'
-            $username: '%env(MAILER_USERNAME)%'
-            $password: '%env(MAILER_PASSWORD)%'
-            $port: '%env(MAILER_PORT)%'
+            $appVersion: "%env(APP_VERSION)%"
+            $host: "%env(MAILER_HOST)%"
+            $username: "%env(MAILER_USERNAME)%"
+            $password: "%env(MAILER_PASSWORD)%"
+            $port: "%env(MAILER_PORT)%"
 
     App\Service\DumpDatabase:
         arguments:
-            $databaseName: '%env(DB_DATABASE_NAME)%'
-            $userName: '%env(DB_USERNAME)%'
-            $password: '%env(DB_PASSWORD)%'
-            $host: '%env(DB_HOST)%'
-            $pathMySqlDump: '%env(PATH_MYSQLDUMP)%'
+            $databaseName: "%env(DB_DATABASE_NAME)%"
+            $userName: "%env(DB_USERNAME)%"
+            $password: "%env(DB_PASSWORD)%"
+            $host: "%env(DB_HOST)%"
+            $pathMySqlDump: "%env(PATH_MYSQLDUMP)%"
 
     App\Service\FileUploader:
         arguments:
-            $targetDirectory: '%documents_directory%'
-            $tinifyKey: '%env(TINIFY_KEY)%'
+            $targetDirectory: "%documents_directory%"
 
     App\Service\OptimizeImage:
         arguments:
-            $tinifyKey: '%env(TINIFY_KEY)%'
+            $tinifyKey: "%env(TINIFY_KEY)%"
 
     App\Twig\AppExtension:
         lazy: true
@@ -98,8 +104,8 @@ services:
 
     Twig\CacheExtension\Extension:
         tags:
-        - { name: twig.extension }
-        
+            - { name: twig.extension }
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
     Tinify\Tinify: ~
