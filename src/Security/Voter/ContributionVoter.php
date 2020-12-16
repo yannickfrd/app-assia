@@ -62,6 +62,11 @@ class ContributionVoter extends Voter
 
     protected function canEdit(): bool
     {
+        return $this->canView();
+    }
+
+    protected function canDelete(): bool
+    {
         if ($this->isCreatorOrReferent()
             || $this->isAdminOfService($this->supportGroup->getService())
             || $this->isGranted('ROLE_SUPER_ADMIN')
@@ -70,11 +75,6 @@ class ContributionVoter extends Voter
         }
 
         return false;
-    }
-
-    protected function canDelete(): bool
-    {
-        return $this->canEdit();
     }
 
     protected function isCreatorOrReferent(): bool

@@ -160,6 +160,11 @@ class ContributionRepository extends ServiceEntityRepository
                 ->setParameter('services', $this->currentUser->getServices());
         }
 
+        if ($search->getId()) {
+            $query->andWhere('c.id = :id')
+                ->setParameter('id', $search->getId());
+        }
+
         if ($search->getType()) {
             $query->andWhere('c.type IN (:type)')
                 ->setParameter('type', $search->getType());

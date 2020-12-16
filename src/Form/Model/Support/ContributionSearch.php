@@ -2,9 +2,9 @@
 
 namespace App\Form\Model\Support;
 
-use App\Form\Model\Traits\DateSearchTrait;
-use App\Form\Model\Support\Traits\ContributionSearchTrait;
 use App\Form\Model\Organization\ReferentServiceDeviceSearchTrait;
+use App\Form\Model\Support\Traits\ContributionSearchTrait;
+use App\Form\Model\Traits\DateSearchTrait;
 
 class ContributionSearch
 {
@@ -21,9 +21,26 @@ class ContributionSearch
     public const DATE_TYPE_DEFAULT = 1;
 
     /**
+     * @var int
+     */
+    private $id;
+
+    /**
      * @var string|null
      */
     private $fullname;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function setId(?int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
 
     public function getFullname(): ?string
     {

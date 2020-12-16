@@ -75,7 +75,7 @@
                                 <td class="align-middle">
                                     {{ support.service ? support.service.name }}<br/>{{ support.device ? "(" ~ support.device.name ~ ")" }}
                                 </td>
-                                {% for contribution in contributions|filter(c => c.supportGroup == support and c.type == constant("App\\Entity\\Contribution::TYPE_CONTRIBUTION") ) %}
+                                {% for contribution in contributions|filter(c => c.supportGroup == support and c.type == constant("App\\Entity\\Support\\Contribution::TYPE_CONTRIBUTION") ) %}
                                     {% if loop.first %}
                                         <td class="align-middle text-right">{{ contribution.toPayAmt|format_currency("EUR") }}</td>
                                         <td class="align-middle text-right">{{ contribution.paidAmt|format_currency("EUR") }}</td>

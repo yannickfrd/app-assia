@@ -16,10 +16,12 @@ https://demo.esperer95.app
 
 # Mise à jour
 
-## Version 2.13.9-11 - 16/12/2020
-- Fix error 500 during the image upload when the Tinify count compression is over (> 500).
-- Edit the autoLogout.js (delete ajax request and create a direct redirection url).
-- Add extension file in the documents page.
+## Version 2.13.9-13 - 16/12/2020
+- Fix error 500 during the image upload when the Tinify count compression is over (> 500);
+- Edit the autoLogout.js (delete ajax request and create a direct redirection url);
+- Add extension file in the documents page;
+- Edit voter of Contribution (canEdit = canVIew);
+- Edit listConstributions page : possibility to search contribution by ID;
 
 ## Version 2.13.2-8 - 15/12/2020
 - Added and updated annotations for entities ansd repositories.
