@@ -1,4 +1,3 @@
-import Ajax from './ajax'
 import { Modal } from 'bootstrap'
 
 /**
@@ -7,7 +6,6 @@ import { Modal } from 'bootstrap'
 export default class AutoLogout {
 
     constructor(timeout = 30, timeAlert = 5) {
-        this.ajax = new Ajax()
         this.userNameElt = document.getElementById('user-name')
         this.modalElt = new Modal(document.getElementById('modal-autoLogout'))
         this.timerElt = document.getElementById('timer-logout')
@@ -32,6 +30,7 @@ export default class AutoLogout {
     count() {
         this.time--
         if (this.time === this.timeAlert) {
+            console.log('show modal')
             this.modalElt.show();
         }
         if (this.time <= this.timeAlert) {
@@ -64,13 +63,6 @@ export default class AutoLogout {
      */
     deconnection() {
         clearInterval(this.intervalID)
-        this.ajax.send('GET', '/deconnexion', this.reloadPage.bind(this))
-    }
-
-    /**
-     * Recharge la page.
-     */
-    reloadPage() {
-        document.location.assign('/login')
+        window.location.assign('/deconnexion')
     }
 }
