@@ -86,7 +86,7 @@ class PersonController extends AbstractController
                 'usename' => $person->getUsename(),
                 'firstname' => $person->getFirstname(),
                 'birthdate' => $person->getBirthdate()->format('d/m/Y'),
-                'age' => $person->getAge(),
+                'age' => (string) $person->getAge(),
                 'gender' => $person->getGender(),
             ];
         }

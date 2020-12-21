@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use phpDocumentor\Reflection\Types\Collection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -234,6 +235,20 @@ class PeopleGroup
         }
 
         return $this;
+    }
+
+    /**
+     * @return Person[]|Collection|null
+     */
+    public function getPeople()
+    {
+        $people = new ArrayCollection();
+
+        foreach ($this->getRolePeople() as $rolePerson) {
+            $people->add($rolePerson->getPerson());
+        }
+
+        return $people;
     }
 
     /**
