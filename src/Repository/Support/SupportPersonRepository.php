@@ -205,7 +205,7 @@ class SupportPersonRepository extends ServiceEntityRepository
 
         return $this->filters($query, $search)
 
-            ->setMaxResults(5000)
+            ->setMaxResults(9999)
             ->orderBy('sp.startDate', 'DESC')
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
@@ -225,6 +225,34 @@ class SupportPersonRepository extends ServiceEntityRepository
 
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    /**
+     * Trouve le dernier suivi social de la personne en fonction de l'utilisateur.
+     */
+    public function findLastSupport(SupportPerson $supportPerson): ?SupportPerson
+    {
+        $query = $this->createQueryBuilder('sp')->select('sp')
+            ->leftJoin('sp.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id}')
+
+            ->andWhere('sp.person = :person')
+            ->setParameter('person', $supportPerson->getPerson())
+            ->andWhere('sp.id != :supportPerson')
+            ->setParameter('supportPerson', $supportPerson);
+
+        if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+            $query->andWhere('sg.service IN (:services)')
+                ->setParameter('services', $this->currentUser->getServices());
+        }
+
+        return $query
+            ->orderBy('sp.updatedAt', 'DESC')
+            ->setMaxResults(1)
+
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getOneOrNullResult();
     }
 
     /**
@@ -255,7 +283,7 @@ class SupportPersonRepository extends ServiceEntityRepository
     /**
      * Filtre la recherche.
      */
-    protected function filters($query, $search): QueryBuilder
+    protected function filters(QueryBuilder $query, $search): QueryBuilder
     {
         if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             $query->andWhere('s.id IN (:services)')

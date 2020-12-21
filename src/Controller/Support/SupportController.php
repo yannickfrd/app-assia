@@ -13,6 +13,7 @@ use App\Entity\Support\Note;
 use App\Entity\Support\Rdv;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Support\SupportPerson;
+use App\EntityManager\SupportDuplicator;
 use App\EntityManager\SupportManager;
 use App\Form\Model\Support\SupportSearch;
 use App\Form\Model\Support\SupportsInMonthSearch;
@@ -26,8 +27,6 @@ use App\Repository\Evaluation\EvaluationGroupRepository;
 use App\Repository\Organization\ServiceRepository;
 use App\Repository\People\PeopleGroupRepository;
 use App\Repository\Support\ContributionRepository;
-use App\Repository\Support\DocumentRepository;
-use App\Repository\Support\NoteRepository;
 use App\Repository\Support\RdvRepository;
 use App\Repository\Support\SupportGroupRepository;
 use App\Repository\Support\SupportPersonRepository;
@@ -345,17 +344,14 @@ class SupportController extends AbstractController
      * @Route("/support/{id}/clone", name="support_clone", methods="GET")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
-    public function cloneSupport(
-        SupportGroup $supportGroup,
-        SupportManager $supportManager,
-        EvaluationGroupRepository $repoEvaluation,
-        NoteRepository $repoNote,
-        DocumentRepository $repoDocument): Response
+    public function cloneSupport(SupportGroup $supportGroup, SupportDuplicator $supportDuplicator): Response
     {
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        if ($supportManager->cloneSupport($supportGroup, $repoEvaluation, $repoNote, $repoDocument)) {
+        if ($supportDuplicator->duplicate($supportGroup)) {
             $this->manager->flush();
+
+            $this->discache($supportGroup);
 
             $this->addFlash('success', 'Les informations du précédent suivi ont été ajoutées (évaluation sociale, documents...)');
         } else {

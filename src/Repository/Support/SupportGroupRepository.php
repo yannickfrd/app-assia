@@ -279,7 +279,9 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id}')
 
             ->andWhere('sg.peopleGroup = :peopleGroup')
-            ->setParameter('peopleGroup', $supportGroup->getPeopleGroup());
+            ->setParameter('peopleGroup', $supportGroup->getPeopleGroup())
+            ->andWhere('sg.id != :supportGroup')
+            ->setParameter('supportGroup', $supportGroup);
 
         if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             $query->andWhere('sg.service IN (:services)')
