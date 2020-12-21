@@ -9,6 +9,7 @@ export default class AutoLogout {
         this.userNameElt = document.getElementById('user-name')
         this.modalElt = new Modal(document.getElementById('modal-autoLogout'))
         this.timerElt = document.getElementById('timer-logout')
+        this.sessiontTimerElt = document.getElementById('session-timer')
         this.time = timeout * 60
         this.timeAlert = timeAlert * 60
         this.initTime = this.time
@@ -29,8 +30,8 @@ export default class AutoLogout {
      */
     count() {
         this.time--
+        this.sessiontTimerElt.textContent = this.getFullTime()
         if (this.time === this.timeAlert) {
-            console.log('show modal')
             this.modalElt.show();
         }
         if (this.time <= this.timeAlert) {
@@ -45,8 +46,8 @@ export default class AutoLogout {
      * Donne le temps.
      */
     getFullTime() {
-        let minutes = Math.round((this.time / 60) - 0.5)
-        let seconds = this.time - (minutes * 60)
+        const minutes = Math.round((this.time / 60) - 0.5)
+        const seconds = this.time - (minutes * 60)
 
         return minutes.toString().padStart(2, '0') + 'mn ' + seconds.toString().padStart(2, '0') + 's'
     }

@@ -5,7 +5,7 @@ html {
 }
 
 body {
-    padding-top: 64px;
+    padding-top: 80px;
     background-color: #fafafafa;
 }
 
@@ -15,11 +15,15 @@ body {
 }
 
 .min-vh-100 {
-    min-height: calc(100vh - 202px) !important;
+    min-height: calc(100vh - 218px) !important;
 }
 
 .min-vh-80 {
-    min-height: calc(100vh - 245px);
+    min-height: calc(100vh - 260px);
+}
+
+nav {
+    min-height: 80px;
 }
 
 section {
@@ -202,6 +206,10 @@ th.required:after {
 
 .w-min-150 {
     min-width: 150px;
+}
+
+.w-min-160 {
+    min-width: 160px;
 }
 
 .w-min-180 {
@@ -518,10 +526,25 @@ button.btn-outline-secondary a:hover {
 @media (max-width: 992px) {}
 
 // Medium devices (tablets, 768px and up)
-@media (max-width: 768px) {}
+@media (max-width: 768px) {
+    nav {
+        min-height: 60px;
+    }
+
+    body {
+        padding-top: 60px;
+    }
+}
 
 // Small devices (landscape phones, 576px and up)
 @media (max-width: 576px) {
+    nav {
+        min-height: 50px;
+    }
+
+    body {
+        padding-top: 50px;
+    }
 
     .form-group,
     .form-control {

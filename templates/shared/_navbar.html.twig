@@ -1,5 +1,5 @@
-<nav class=" navbar fixed-top navbar-expand-xl navbar-light bg-{{ theme_color }} mb-0 shadow">
-    <a class="navbar-brand text-light" href="{{ path("home") }}">
+<nav class="navbar fixed-top navbar-expand-xl navbar-light bg-{{ theme_color }} mb-0 shadow">
+    <a class="navbar-brand py-0 text-light" href="{{ path("home") }}">
         {% if app.request.server.get('APP_VERSION') == "prod" %}
             <img id="logo-site" src="{{ asset("images/logo_e95_blanc.png") }}" alt="Esperer95.app">
         {% else %}
@@ -70,7 +70,7 @@
                     <span class="fas fa-search"><span class="sr-only">Rechercher</span></span>
                 </button>
             </form>
-            <div class="text-light">
+            <div class="text-light text-right w-min-160">
                 {% if app.user %}
                     <a id="user-name" class="text-light font-weight-bold" href="{{ path('my_profile') }}" data-toggle="popover"
                         data-trigger="hover" data-placement="bottom" data-html="true"
@@ -80,6 +80,8 @@
                     </a>
                     <br/>
                     <a class="text-light" href="{{ path("security_logout") }}">Se déconnecter</a>
+                    <p class="mb-0 text-light small" title="Après l'expiration de la session, vous serez automatiquement déconnecté." 
+                         data-toggle="tooltip" data-placement="bottom">Session expire dans <span id="session-timer">...</span></p>
                 {% else %}
                     <a class="text-light" href="{{ path("security_login") }}">Se connecter</a>
                 {% endif %}
