@@ -2,6 +2,7 @@
 
 namespace App\Service\Export;
 
+use App\Entity\People\RolePerson;
 use App\Entity\Support\OriginRequest;
 use App\Entity\Support\SupportPerson;
 use App\Service\ExportExcel;
@@ -17,8 +18,10 @@ class SupportPersonExport extends ExportExcel
 
     /**
      * Exporte les données.
+     *
+     * @param SupportPerson[] $supports
      */
-    public function exportData($supports)
+    public function exportData(array $supports)
     {
         $arrayData = [];
         $i = 0;
@@ -63,6 +66,20 @@ class SupportPersonExport extends ExportExcel
             $nameAccommodations[] = $accommodation->getName().' ';
         }
 
+        // $nbChildren = 0;
+        // $nbChildrenUnder3Years = 0;
+
+        // if ($supportGroup->getSupportPeople()) {
+        //     foreach ($supportGroup->getSupportPeople() as $supportPerson) {
+        //         if (RolePerson::ROLE_CHILD === $supportPerson->getRole()) {
+        //             ++$nbChildren;
+        //         }
+        //         if ($supportPerson->getPerson() && $supportPerson->getPerson()->getAge() < 3) {
+        //             ++$nbChildrenUnder3Years;
+        //         }
+        //     }
+        // }
+
         $datas = [
             'N° Groupe' => $peopleGroup->getId(),
             'N° Suivi groupe' => $supportGroup->getId(),
@@ -71,9 +88,11 @@ class SupportPersonExport extends ExportExcel
             'Nom' => $person->getLastname(),
             'Prénom' => $person->getFirstname(),
             'Date de naissance' => $this->formatDate($person->getBirthdate()),
-            'Âge' => $person->getAge(),
+            'Âge' => (string) $person->getAge(),
             'Typologie familiale' => $peopleGroup->getFamilyTypologyToString(),
             'Nb de personnes' => $peopleGroup->getNbPeople(),
+            // 'Nb d\'enfants' => $nbChildren,
+            // 'Nb enfants -3 ans' => $nbChildrenUnder3Years,
             'Rôle dans le groupe' => $supportPerson->getRoleToString(),
             'DP' => $supportPerson->getHeadToString(),
             'Statut suivi (personne)' => $supportPerson->getStatusToString(),
@@ -86,9 +105,9 @@ class SupportPersonExport extends ExportExcel
             'Pôle' => $supportGroup->getService()->getPole()->getName(),
             'Service' => $supportGroup->getService()->getName(),
             'Sous-service' => $supportGroup->getSubService() ? $supportGroup->getSubService()->getName() : null,
+            'Dispositif' => $supportGroup->getDevice() ? $supportGroup->getDevice()->getName() : '',
             'Référent social' => $supportGroup->getReferent() ? $supportGroup->getReferent()->getFullname() : null,
             'Référent social suppléant' => $supportGroup->getReferent2() ? $supportGroup->getReferent2()->getFullname() : null,
-            'Dispositif' => $supportGroup->getDevice() ? $supportGroup->getDevice()->getName() : '',
             'Date début hébergement' => join(', ', $startAccommodations),
             'Date fin hébergement' => join(', ', $endAccommodations),
             'Motif fin hébergement' => join(', ', $endReasonAccommodations),

@@ -19,10 +19,12 @@ use App\Entity\Evaluation\InitEvalPerson;
 use App\Entity\Support\SupportPerson;
 use App\Service\ExportExcel;
 use App\Service\Normalisation;
+use Psr\Log\LoggerInterface;
 
 class SupportPersonFullExport extends ExportExcel
 {
     protected $normalisation;
+    protected $logger;
     protected $datas;
 
     protected $initEvalGroup;
@@ -42,9 +44,10 @@ class SupportPersonFullExport extends ExportExcel
     protected $evalBudgetGroup;
     protected $evalHousingGroup;
 
-    public function __construct(Normalisation $normalisation)
+    public function __construct(Normalisation $normalisation, LoggerInterface $logger)
     {
         $this->normalisation = $normalisation;
+        $this->logger = $logger;
 
         $this->initEvalGroup = new InitEvalGroup();
         $this->initEvalPerson = new InitEvalPerson();
@@ -73,10 +76,12 @@ class SupportPersonFullExport extends ExportExcel
         $arrayData[] = $this->normalisation->getKeys(array_keys($this->getDatas($supports[0])), 'evaluation');
 
         $i = 0;
+        $nbSupports = count($supports);
         foreach ($supports as $supportPerson) {
             $arrayData[] = $this->getDatas($supportPerson);
             if ($i > 100) {
                 sleep(5);
+                $this->logger->info(count($arrayData).' / '.$nbSupports);
                 $i = 1;
             }
             ++$i;
@@ -93,28 +98,27 @@ class SupportPersonFullExport extends ExportExcel
     protected function getDatas(SupportPerson $supportPerson): array
     {
         $this->datas = (new SupportPersonExport())->getDatas($supportPerson);
-
         $evaluations = $supportPerson->getEvaluationsPerson();
-        $this->evaluationPerson = $evaluations[$evaluations->count() - 1] ?? new EvaluationPerson();
-        $this->evaluationGroup = $this->evaluationPerson->getEvaluationGroup() ?? new EvaluationGroup();
+        $evaluationPerson = $evaluations[$evaluations->count() - 1] ?? $this->evaluationPerson;
+        $evaluationGroup = $evaluationPerson->getEvaluationGroup() ?? $this->evaluationGroup;
 
         $this->datas = array_merge($this->datas, [
-                'ID évaluation groupe' => $this->evaluationGroup->getId(),
-                'ID évaluation personne' => $this->evaluationPerson->getId(),
+                'ID évaluation groupe' => $evaluationGroup->getId(),
+                'ID évaluation personne' => $evaluationPerson->getId(),
             ]);
 
-        $this->add($this->evaluationGroup->getInitEvalGroup() ?? $this->initEvalGroup, 'initEval');
-        $this->add($this->evaluationPerson->getInitEvalPerson() ?? $this->initEvalPerson, 'initEval');
-        $this->add($this->evaluationPerson->getEvalJusticePerson() ?? $this->evalJusticePerson, 'justice');
-        $this->add($this->evaluationGroup->getEvalSocialGroup() ?? $this->evalSocialGroup, 'social');
-        $this->add($this->evaluationPerson->getEvalSocialPerson() ?? $this->evalSocialPerson, 'social');
-        $this->add($this->evaluationPerson->getEvalAdmPerson() ?? $this->evalAdmPerson, 'adm');
-        $this->add($this->evaluationGroup->getEvalFamilyGroup() ?? $this->evalFamilyGroup, 'family');
-        $this->add($this->evaluationPerson->getEvalFamilyPerson() ?? $this->evalFamilyPerson, 'family');
-        $this->add($this->evaluationPerson->getEvalProfPerson() ?? $this->evalProfPerson, 'prof');
-        $this->add($this->evaluationGroup->getEvalBudgetGroup() ?? $this->evalBudgetGroup, 'budget');
-        $this->add($this->evaluationPerson->getEvalBudgetPerson() ?? $this->evalBudgetPerson, 'budget');
-        $this->add($this->evaluationGroup->getEvalHousingGroup() ?? $this->evalHousingGroup, 'housing');
+        $this->add($evaluationGroup->getInitEvalGroup() ?? $this->initEvalGroup, 'initEval');
+        $this->add($evaluationPerson->getInitEvalPerson() ?? $this->initEvalPerson, 'initEval');
+        $this->add($evaluationPerson->getEvalJusticePerson() ?? $this->evalJusticePerson, 'justice');
+        $this->add($evaluationGroup->getEvalSocialGroup() ?? $this->evalSocialGroup, 'social');
+        $this->add($evaluationPerson->getEvalSocialPerson() ?? $this->evalSocialPerson, 'social');
+        $this->add($evaluationPerson->getEvalAdmPerson() ?? $this->evalAdmPerson, 'adm');
+        $this->add($evaluationGroup->getEvalFamilyGroup() ?? $this->evalFamilyGroup, 'family');
+        $this->add($evaluationPerson->getEvalFamilyPerson() ?? $this->evalFamilyPerson, 'family');
+        $this->add($evaluationPerson->getEvalProfPerson() ?? $this->evalProfPerson, 'prof');
+        $this->add($evaluationGroup->getEvalBudgetGroup() ?? $this->evalBudgetGroup, 'budget');
+        $this->add($evaluationPerson->getEvalBudgetPerson() ?? $this->evalBudgetPerson, 'budget');
+        $this->add($evaluationGroup->getEvalHousingGroup() ?? $this->evalHousingGroup, 'housing');
 
         return $this->datas;
     }

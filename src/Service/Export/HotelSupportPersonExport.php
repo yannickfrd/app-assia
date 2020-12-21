@@ -58,7 +58,7 @@ class HotelSupportPersonExport extends ExportExcel
             'Nom' => $person->getLastname(),
             'Prénom' => $person->getFirstname(),
             'Date de naissance' => $this->formatDate($person->getBirthdate()),
-            'Âge' => $person->getAge(),
+            'Âge' => (string) $person->getAge(),
             'Typologie familiale' => $peopleGroup->getFamilyTypologyToString(),
             'Nb de personnes' => $peopleGroup->getNbPeople(),
             'Rôle dans le groupe' => $supportPerson->getRoleToString(),

@@ -37,9 +37,7 @@ class ExportExcel
 
     protected $datas;
 
-    /**
-     * @var Normalisation
-     */
+    /** @var Normalisation */
     protected $normalisation;
 
     /**
