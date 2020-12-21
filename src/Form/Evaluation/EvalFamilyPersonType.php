@@ -50,12 +50,19 @@ class EvalFamilyPersonType extends AbstractType
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
-            ->add('childcareSchool', ChoiceType::class, [
+            ->add('childcareOrSchool', ChoiceType::class, [
+                'choices' => Choices::getChoices(Choices::YES_NO),
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
+            ->add('childcareSchoolType', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalFamilyPerson::CHILDCARE_SCHOOL),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
-            ->add('childcareSchoolLocation')
+            ->add('childcareSchoolLocation', null, [
+                'help' => 'childcareSchoolLocation.help',
+            ])
             ->add('childToHost', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalFamilyPerson::CHILD_TO_HOST),
                 'placeholder' => 'placeholder.select',

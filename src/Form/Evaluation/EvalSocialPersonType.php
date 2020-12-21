@@ -74,12 +74,17 @@ class EvalSocialPersonType extends AbstractType
             ->add('physicalHealthProblem')
             ->add('mentalHealthProblem')
             ->add('addictionProblem')
-            ->add('careSupport', ChoiceType::class, [
+            ->add('medicalFollowUp', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
-            ->add('careSupportType', ChoiceType::class, [
+            ->add('homeCareSupport', ChoiceType::class, [
+                'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
+            ->add('homeCareSupportType', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalSocialPerson::CARE_SUPPORT),
                 'placeholder' => 'placeholder.select',
                 'required' => false,

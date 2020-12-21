@@ -17,7 +17,7 @@
     </div>
 
     <div class="row mb-2">
-        <div class="col-12 col-lg-10">
+        <div class="col-md-12">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered table-hover">
                     <thead>
@@ -33,18 +33,16 @@
                     </thead>
                     <tbody>
                         {% for supportPerson in support.supportPeople %}
+                            {% set person = supportPerson.person %}
                             <tr>
-                                <td scope="row" class="align-middle">
-                                    {{ supportPerson.person.fullname }}
-                                    {{ supportPerson.person.usename ? " (" ~ supportPerson.person.usename ~ ")" }}
-                                </td>
-                                <td class="align-middle">{{ supportPerson.person.birthdate|date("d/m/Y") }}</td>
-                                <td class="align-middle d-none d-sm-table-cell">{{ supportPerson.person.age }} an<!--
-                                    -->{{ supportPerson.person.age > 1 ? "s" }}</td>
-                                <td class="align-middle">{{ supportPerson.person.genderToString }}</td>
+                                <td scope="row" class="align-middle">{{ person.fullname }}
+                                    {{ person.usename ? " (" ~ person.usename ~ ")" }}</td>
+                                <td class="align-middle">{{ person.birthdate|date("d/m/Y") }}</td>
+                                <td class="align-middle d-none d-sm-table-cell">{{ person.age }} an{{ person.age > 1 ? "s" }}</td>
+                                <td class="align-middle">{{ person.genderToString }}</td>
                                 <td class="align-middle">{{ supportPerson.roleToString }}</td>
-                                <td class="align-middle">{{ supportPerson.person.phone1 }}</td>
-                                <td class="align-middle d-none d-sm-table-cell">{{ supportPerson.person.email }}</td>
+                                <td class="align-middle">{{ person.phone1 }}</td>
+                                <td class="align-middle d-none d-sm-table-cell">{{ person.email }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>

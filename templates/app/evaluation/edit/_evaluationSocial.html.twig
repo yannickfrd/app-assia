@@ -2,7 +2,7 @@
 
 {% import "macros/loopSupportPeople.html.twig" as utils %}
 
-{% block card_title %}Social{{ badgeTitle }}{% endblock %}
+{% block card_title %}Social - Santé{{ badgeTitle }}{% endblock %}
 
 {% block card_body %}
 
@@ -63,14 +63,16 @@
                             </div>
                         </div>
                     </div>
-
-                    {% if evalPerson.vars.value.supportPerson.role != ROLE_CHILD %} 
-                        <div class="form-group row">
-                            <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_healthProblem">
-                                {{ form_row(evalPerson.evalSocialPerson.careSupport) }}</div>
-                            <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_careSupport">
-                                {{ form_row(evalPerson.evalSocialPerson.careSupportType) }}</div>
-                        </div>
+                    <div class="form-group row">
+                        <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_healthProblem">
+                            {{ form_row(evalPerson.evalSocialPerson.medicalFollowUp) }}</div>
+                        <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_medicalFollowUp">
+                            {{ form_row(evalPerson.evalSocialPerson.homeCareSupport) }}</div>
+                        <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_homeCareSupport">
+                            {{ form_row(evalPerson.evalSocialPerson.homeCareSupportType) }}</div>
+                    </div>
+                    {% if evalPerson.vars.value.supportPerson.role != ROLE_CHILD %}
+                        <hr/>
                         <div class="form-group row">
                             <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.childWelfareBackground) }}</div>
                             <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_childWelfareBackground">{{ form_widget(evalPerson.evalSocialPerson.aseComment) }}</div>

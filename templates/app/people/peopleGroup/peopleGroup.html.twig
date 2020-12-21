@@ -77,7 +77,7 @@
                                     <td class="px-1">{{ form_widget(form_person.person.firstname) }}</td>
                                     {% set age = person.age %}
                                     <td class="px-1">{{ form_widget(form_person.person.birthdate) }}</td>
-                                    <td class="text-center px-1 align-middle">{{ age }} {% if age > 1 %}ans{% elseif age %} an{% endif %}</td>
+                                    <td class="text-center px-1 align-middle">{{ age }} an{{ age > 1 ? "s" }}</td>
                                     <td class="px-1">{{ form_widget(form_person.person.gender) }}</td>
                                     <td class="px-1">{{ form_widget(form_person.role) }}</td>
                                     <td class="px-1 align-middle">

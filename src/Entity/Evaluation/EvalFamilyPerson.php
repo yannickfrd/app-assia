@@ -45,12 +45,12 @@ class EvalFamilyPerson
     ];
 
     public const CHILDCARE_SCHOOL = [
-        0 => 'Aucune',
+        0 => 'Aucune', // A supprimer
         4 => 'Assistante maternelle',
         1 => 'Crèche',
         2 => 'École',
         3 => 'Famille',
-        5 => 'Nourrice',
+        5 => 'Nourrice', // A supprimer
         97 => 'Autre',
         99 => 'Non renseigné',
     ];
@@ -115,7 +115,12 @@ class EvalFamilyPerson
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $childcareSchool;
+    private $childcareOrSchool;
+
+    /**
+     * @ORM\Column(name="childcare_school", type="smallint", nullable=true)
+     */
+    private $childcareSchoolType;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -247,22 +252,42 @@ class EvalFamilyPerson
         return $this;
     }
 
-    public function getChildcareSchool(): ?int
+    public function getChildcareOrSchool(): ?int
     {
-        return $this->childcareSchool;
+        return $this->childcareOrSchool;
     }
 
     /**
      * @Groups("export")
      */
-    public function getChildcareSchoolToString(): ?string
+    public function getChildcareOrSchoolToString(): ?string
     {
-        return $this->childcareSchool ? self::CHILDCARE_SCHOOL[$this->childcareSchool] : null;
+        return $this->childcareOrSchool ? Choices::YES_NO[$this->childcareOrSchool] : null;
     }
 
-    public function setChildcareSchool(?int $childcareSchool): self
+    public function setChildcareOrSchool(?int $childcareOrSchool): self
     {
-        $this->childcareSchool = $childcareSchool;
+        $this->childcareOrSchool = $childcareOrSchool;
+
+        return $this;
+    }
+
+    public function getChildcareSchoolType(): ?int
+    {
+        return $this->childcareSchoolType;
+    }
+
+    /**
+     * @Groups("export")
+     */
+    public function getChildcareSchoolTypeToString(): ?string
+    {
+        return $this->childcareSchoolType ? self::CHILDCARE_SCHOOL[$this->childcareSchoolType] : null;
+    }
+
+    public function setChildcareSchoolType(?int $childcareSchoolType): self
+    {
+        $this->childcareSchoolType = $childcareSchoolType;
 
         return $this;
     }

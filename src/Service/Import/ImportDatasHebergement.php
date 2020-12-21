@@ -827,8 +827,8 @@ class ImportDatasHebergement extends ImportDatas
         ->setHealthProblem(Choices::YES === $this->field['Problématique santé mentale'] || Choices::YES === $this->field['Problématique santé - Addiction'] ? Choices::YES : null)
         ->setMentalHealthProblem($this->findInArray($this->field['Problématique santé mentale'], self::YES_NO_BOOLEAN) ?? null)
         ->setAddictionProblem($this->findInArray($this->field['Problématique santé - Addiction'], self::YES_NO_BOOLEAN) ?? null)
-        ->setCareSupport($this->findInArray($this->field['Service soin ou acc. à domicile'], self::CARE_SUPPORT) ?? null)
-        ->setCareSupportType($this->findInArray($this->field['Service soin ou acc. à domicile'], self::CARE_SUPPORT_TYPE) ?? null)
+        ->setHomeCareSupport($this->findInArray($this->field['Service soin ou acc. à domicile'], self::CARE_SUPPORT) ?? null)
+        ->setHomeCareSupportType($this->findInArray($this->field['Service soin ou acc. à domicile'], self::CARE_SUPPORT_TYPE) ?? null)
         ->setCommentEvalSocialPerson($this->field['Spécificités autres'])
         ->setEvaluationPerson($evaluationPerson);
 
@@ -842,7 +842,7 @@ class ImportDatasHebergement extends ImportDatas
         $evalFamilyPerson = (new EvalFamilyPerson())
             ->setEvaluationPerson($evaluationPerson)
             ->setUnbornChild($this->findInArray($this->field['Grossesse'], self::YES_NO) ?? null)
-            ->setChildcareSchool($this->findInArray($this->field['Mode garde'], self::CHILDCARE_SCHOOL) ?? null)
+            ->setChildcareSchoolType($this->findInArray($this->field['Mode garde'], self::CHILDCARE_SCHOOL) ?? null)
             ->setProtectiveMeasure($this->findInArray($this->field['Mesure de protection'], self::PROTECTIVE_MEASURE) ?? null)
             ->setProtectiveMeasureType($this->findInArray($this->field['Mesure de protection'], self::PROTECTIVE_MEASURE_TYPE) ?? null);
 

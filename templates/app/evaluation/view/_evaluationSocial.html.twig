@@ -3,7 +3,7 @@
 <hr/>
 <section>
     <div class="d-flex mb-3">
-        <h2 class="h4">Social</h2>
+        <h2 class="h4">Social - Santé</h2>
         <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
             class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
         </span>
@@ -50,8 +50,9 @@
                     </div>
                 {% endif %}
                 <div class="row mb-2">
-                    {{ view_div.get(evalSocial.careSupport == YES ? evalSocial.careSupportToString ~ (evalSocial.careSupportType ? " - " 
-                        ~ evalSocial.careSupportTypeToString), "Care support", "evaluation") }}
+                    {{ view_div.get(evalSocial.medicalFollowUp == YES ? evalSocial.medicalFollowUpToString, "Medical follow up", "evaluation") }}
+                    {{ view_div.get(evalSocial.homeCareSupport == YES ? evalSocial.homeCareSupportToString ~ (evalSocial.homeCareSupportType ? " - " 
+                        ~ evalSocial.homeCareSupportTypeToString), "Home care support", "evaluation") }}
                     {{ view_div.get(evalSocial.violenceVictim == YES ? evalSocial.violenceVictimToString ~ (evalSocial.domViolenceVictim == YES ? 
                         " (Violence conjugale)"), "Violence victim", "evaluation") }}
                 </div>

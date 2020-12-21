@@ -111,8 +111,8 @@ class EvaluationController extends AbstractController
         $logoPath = $supportGroup->getService()->getPole()->getLogoPath();
         $fullnameSupport = $supportManager->getHeadPersonSupport($supportGroup)->getFullname();
 
-        return $this->render('app/evaluation/export/evaluationExport.html.twig', [
-        // $content = $renderer->render('app/evaluation/export/evaluationExport.html.twig', [
+        // return $this->render('app/evaluation/export/evaluationExport.html.twig', [
+        $content = $renderer->render('app/evaluation/export/evaluationExport.html.twig', [
             'type' => $type,
             'support' => $supportGroup,
             'referents' => $supportManager->getReferents($supportGroup->getPeopleGroup(), $repoReferent),

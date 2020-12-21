@@ -161,7 +161,7 @@ export default class evaluation {
             new DisplayFields(prefix, i + "_evalFamilyPerson_maritalStatus", [6])
             new DisplayFields(prefix, i + "_evalFamilyPerson_unbornChild", [1])
             new DisplayFields(prefix, i + "_evalFamilyPerson_protectiveMeasure", [1, 3])
-
+            new DisplayFields(prefix, i + "_evalFamilyPerson_childcareOrSchool", [1])
         })
     }
 
@@ -227,7 +227,8 @@ export default class evaluation {
             const i = personElt.getAttribute("data-key")
             new DisplayFields(prefix, i + "_evalSocialPerson_rightSocialSecurity", [1, 3])
             new DisplayFields(prefix, i + "_evalSocialPerson_healthProblem", [1])
-            new DisplayFields(prefix, i + "_evalSocialPerson_careSupport", [1])
+            new DisplayFields(prefix, i + "_evalSocialPerson_medicalFollowUp", [1])
+            new DisplayFields(prefix, i + "_evalSocialPerson_homeCareSupport", [1])
             new DisplayFields(prefix, i + "_evalSocialPerson_childWelfareBackground", [1])
             new DisplayFields(prefix, i + "_evalSocialPerson_violenceVictim", [1])
             this.editElt(i, "_evalSocialPerson_healthProblemType", "d-table-row")

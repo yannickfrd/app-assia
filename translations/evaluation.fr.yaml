@@ -143,10 +143,12 @@ Youth guarantee: Garantie jeunes
 
 # Family
 Caf id: Numéro CAF
-Child dependance: A charge / Situation enfant
-Child to host: A héberger
-Childcare school location: Lieu de garde/scolarité
-Childcare school: Garde ou scolarité
+Child dependance: À charge
+Child to host: À héberger
+childcareSchoolLocation.help: Ville, nom de l'école, classe...
+Childcare school location: Lieu de garde/école
+Childcare or school: Garde/école
+Childcare school type: Type de garde ou école
 Children behind: Enfants restés au pays
 Comment eval family group: Commentaire relatif à la situation familiale du groupe
 Comment eval family person: Commentaire relatif à la situation sociale de la personne
@@ -261,8 +263,9 @@ evalSocialPerson:
 Addiction problem: Problématique d'addiction
 Animal type: Type d'animal
 Animal: Présence d'un animal
-Care support: Service de soins ou d'acc. à domicile
-Care support type: Type de service soins ou d'acc. à domicile
+Medical follow up: Suivi médical
+Home care support: Service de soins ou d'acc. à domicile
+Home care support type: Type de service soins ou d'acc. à domicile
 Child welfare background: Parcours institutionnel enfance (ASE)
 Ase comment: Commentaire concernant le parcours ASE
 Comment eval social: Commentaire relatif à la situation sociale

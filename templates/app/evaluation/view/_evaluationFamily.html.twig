@@ -9,9 +9,9 @@
         </span>
     </div>
 
-    {% set eval_adults_family = eval_adults|filter(e => e.evalFamilyPerson) %}
-    {% set nb_adults_family = eval_adults_family|length %}
-    {% for evalPerson in eval_adults_family %}
+    {% set eval_people_family = eval_people|filter(e => e.evalFamilyPerson) %}
+    {% set nb_adults_family = eval_people_family|length %}
+    {% for evalPerson in eval_people_family %}
         {% set evalFamily = evalPerson.evalFamilyPerson %}
             {% if nb_adults_family > 1 %}
             <div class="row mb-2">
@@ -19,21 +19,32 @@
             </div>
             {% endif %}
         <div class="my-3">
-            <div class="row mb-2">
-                {{ view_div.get(evalFamily.maritalStatusToString, "Marital status", "evaluation") }}
-                {{ view_div.get(evalFamily.noConciliationOrderToString, "No conciliation order", "evaluation") }}
-                {{ view_div.get(evalFamily.protectiveMeasure == YES and evalFamily.protectiveMeasureType ? 
-                    evalFamily.protectiveMeasureTypeToString, "Protective measure", "evaluation") }}
-                {{ view_div.get(evalFamily.unbornChild == YES ? evalFamily.unbornChildToString ~ (evalFamily.expDateChildbirth ? " (" 
-                    ~ evalFamily.expDateChildbirth|date("d/m/Y") ~ ")"), "Unborn child", "evaluation") }}
-            </div>
+            {% if evalPerson.supportPerson.role != ROLE_CHILD %}
+                <div class="row">
+                    {{ view_div.get(evalFamily.maritalStatusToString, "Marital status", "evaluation") }}
+                    {{ view_div.get(evalFamily.noConciliationOrderToString, "No conciliation order", "evaluation") }}
+                    {{ view_div.get(evalFamily.protectiveMeasure == YES and evalFamily.protectiveMeasureType ? 
+                        evalFamily.protectiveMeasureTypeToString, "Protective measure", "evaluation") }}
+                    {{ view_div.get(evalFamily.unbornChild == YES ? evalFamily.unbornChildToString ~ (evalFamily.expDateChildbirth ? " (" 
+                        ~ evalFamily.expDateChildbirth|date("d/m/Y") ~ ")"), "Unborn child", "evaluation") }}
+                </div>
+            {% endif %}
+            {% if evalPerson.supportPerson.role == ROLE_CHILD %}
+                <div class="row">
+                    {{ view_div.get((evalFamily.childcareOrSchool == YES ? evalFamily.childcareSchoolTypeToString : 
+                        evalFamily.childcareOrSchoolToString) ~ (evalFamily.childcareSchoolLocation ? " (" 
+                        ~ evalFamily.childcareSchoolLocation ~ ")"), "Childcare or school", "evaluation") }}
+                    {{ view_div.get(evalFamily.childToHostToString, "Child to host", "evaluation") }}
+                    {{ view_div.get(evalFamily.childDependanceToString, "Child dependance", "evaluation") }}
+                </div>
+            {% endif %}
             <div class="row my-2">
                 <div class="col-md-12 justify">{{ evalFamily.commentEvalFamilyPerson|nl2br }}</div>
             </div>
         </div>
     {% endfor %}
 
-    {% set eval_children_family = eval_children|filter(e => e.evalFamilyPerson) %}
+    {# {% set eval_children_family = eval_children|filter(e => e.evalFamilyPerson) %}
     {% if eval_children_family|length > 0 %}
         <div class="row mt-4">
             <div class="col-md-12">
@@ -64,7 +75,7 @@
                 </div>
             </div>
         </div>
-    {% endif %}
+    {% endif %} #}
 
     {% set evalFamily = evaluation.evalFamilyGroup %}
     {% if evalFamily %}

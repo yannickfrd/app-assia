@@ -119,12 +119,17 @@ class EvalSocialPerson
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $careSupport;
+    private $medicalFollowUp;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="care_support", type="smallint", nullable=true)
      */
-    private $careSupportType;
+    private $homeCareSupport;
+
+    /**
+     * @ORM\Column(name="care_support_type", type="smallint", nullable=true)
+     */
+    private $homeCareSupportType;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -333,42 +338,62 @@ class EvalSocialPerson
         return $this;
     }
 
-    public function getCareSupport(): ?int
+    public function getMedicalFollowUp(): ?int
     {
-        return $this->careSupport;
+        return $this->medicalFollowUp;
     }
 
     /**
      * @Groups("export")
      */
-    public function getCareSupportToString(): ?string
+    public function getMedicalFollowUpToString(): ?string
     {
-        return $this->careSupport ? Choices::YES_NO_IN_PROGRESS[$this->careSupport] : null;
+        return $this->medicalFollowUp ? Choices::YES_NO_IN_PROGRESS[$this->medicalFollowUp] : null;
     }
 
-    public function setCareSupport(?int $careSupport): self
+    public function setMedicalFollowUp(?int $medicalFollowUp): self
     {
-        $this->careSupport = $careSupport;
+        $this->medicalFollowUp = $medicalFollowUp;
 
         return $this;
     }
 
-    public function getCareSupportType(): ?int
+    public function getHomeCareSupport(): ?int
     {
-        return $this->careSupportType;
+        return $this->homeCareSupport;
     }
 
     /**
      * @Groups("export")
      */
-    public function getCareSupportTypeToString(): ?string
+    public function getHomeCareSupportToString(): ?string
     {
-        return $this->careSupportType ? self::CARE_SUPPORT[$this->careSupportType] : null;
+        return $this->homeCareSupport ? Choices::YES_NO_IN_PROGRESS[$this->homeCareSupport] : null;
     }
 
-    public function setCareSupportType(?int $careSupportType): self
+    public function setHomeCareSupport(?int $homeCareSupport): self
     {
-        $this->careSupportType = $careSupportType;
+        $this->homeCareSupport = $homeCareSupport;
+
+        return $this;
+    }
+
+    public function getHomeCareSupportType(): ?int
+    {
+        return $this->homeCareSupportType;
+    }
+
+    /**
+     * @Groups("export")
+     */
+    public function getHomeCareSupportTypeToString(): ?string
+    {
+        return $this->homeCareSupportType ? self::CARE_SUPPORT[$this->homeCareSupportType] : null;
+    }
+
+    public function setHomeCareSupportType(?int $homeCareSupportType): self
+    {
+        $this->homeCareSupportType = $homeCareSupportType;
 
         return $this;
     }

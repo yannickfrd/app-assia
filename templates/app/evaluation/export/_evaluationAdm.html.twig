@@ -23,7 +23,8 @@
     {{ view_text.get(evalAdm.commentEvalAdmPerson, null, null, type) }}
 {% endfor %}
 
-{% if eval_children|filter(e => e.evalAdmPerson)|length > 0 %} {# si typologie familiale avec enfants #}
+{% if eval_children|filter(e => e.evalAdmPerson)|length > 0 %}
+    {% set nb_asylum_children = eval_children|filter(e => e.evalAdmPerson and e.evalAdmPerson.asylumBackground == YES)|length %}
     <p>&nbsp;</p>
     <table class="table-bordered mb-2" style="width: 100%; {{ style_table }}">
         <thead>
@@ -31,6 +32,10 @@
                 <th>Enfants</th>
                 <th>Nationalité</th>
                 <th>Papier</th>
+                {% if nb_asylum_children > 0 %}
+                    <th>Asile</th>
+                {% endif %}
+                <th>Commentaire</th>
             </tr>
         </thead>
         <tbody>
@@ -38,9 +43,13 @@
                 {% set evalAdm = evalPerson.evalAdmPerson %}
                 {% if evalAdm %}
                     <tr>
-                        <td>{{ evalPerson.supportPerson.person.fullname }}</td>
-                        <td>{{ evalAdm.nationalityToString }}</td>
-                        <td>{{ evalAdm.paperType ? evalAdm.paperTypeToString : evalAdm.paperToString }}</td>
+                        <td scope="row">{{ evalPerson.supportPerson.person.fullname }}</td>
+                        <td>{{ evalAdm.nationalityToString ~ (evalAdm.country ? ' (' ~ evalAdm.country ~ ')') }}</td>
+                        <td>{{ evalAdm.paper == YES ? evalAdm.paperType ? evalAdm.paperTypeToString ~ (evalAdm.endValidPermitDate ? " (fin de validité : " ~ evalAdm.endValidPermitDate|date("d/m/Y") ~ ")") : evalAdm.paperToString }}</td>
+                        {% if nb_asylum_children > 0 %}
+                            <td>{{ evalAdm.asylumBackground == YES ? evalAdm.asylumStatus ? evalAdm.asylumStatusToString : evalAdm.asylumBackgroundToString }}</td>
+                        {% endif %}
+                        <td>{{ evalAdm.commentEvalAdmPerson }}</td>
                     </tr>
                 {% endif %}
             {% endfor %}

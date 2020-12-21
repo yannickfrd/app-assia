@@ -2,7 +2,7 @@
 {% import "macros/viewTextArea.html.twig" as view_text %}
 
 <hr/>
-<h2 style="{{ style_h2 }}">Situation sociale</h2>
+<h2 style="{{ style_h2 }}">Situation sociale et de santé</h2>
 
 {% set eval_people_social = eval_people|filter(e => e.evalSocialPerson) %}
 {% set nb_people_social = eval_people_social|length %}
@@ -30,8 +30,9 @@
                 {% endfor %}									 
             </ul>
         {% endif %}
-        {{ view_p.get(evalSocial.careSupport == YES ? evalSocial.careSupportToString ~ (evalSocial.careSupportType ? " - " 
-            ~ evalSocial.careSupportTypeToString), "Care support", "evaluation") }}
+        {{ view_p.get(evalSocial.medicalFollowUp == YES ? evalSocial.medicalFollowUpToString, "Medical follow up", "evaluation") }}
+        {{ view_p.get(evalSocial.homeCareSupport == YES ? evalSocial.homeCareSupportToString ~ (evalSocial.homeCareSupportType ? " - " 
+            ~ evalSocial.homeCareSupportTypeToString), "Home care support", "evaluation") }}
         {{ view_p.get(evalSocial.violenceVictim == YES ? evalSocial.violenceVictimToString ~ (evalSocial.domViolenceVictim == YES ? 
             " (Violence conjugale)"), "Violence victim", "evaluation") }}
         {{ view_text.get(evalSocial.commentEvalSocialPerson, null, null, type) }}

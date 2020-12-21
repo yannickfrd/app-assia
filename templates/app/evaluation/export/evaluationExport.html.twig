@@ -89,13 +89,14 @@
                 </thead>
                 <tbody>
                     {% for supportPerson in support.supportPeople %}
-                    <tr>
-                        <td>{{ supportPerson.person.fullname }}</td>
-                        <td>{{ supportPerson.person.birthdate|date("d/m/Y") }}</td>
-                        <td>{{ supportPerson.person.age }} an{{ supportPerson.person.age > 1 ? "s" }}</td>
-                        <td>{{ supportPerson.person.genderToString }}</td>
-                        <td>{{ supportPerson.roleToString }}</td>
-                    </tr>
+                        {% set person = supportPerson.person %}
+                        <tr>
+                            <td>{{ person.fullname }}{{ person.usename ? " (" ~ person.usename ~ ")" }}</td>
+                            <td>{{ person.birthdate|date("d/m/Y") }}</td>
+                            <td>{{ person.age }} an{{ person.age > 1 ? "s" }}</td>
+                            <td>{{ person.genderToString }}</td>
+                            <td>{{ supportPerson.roleToString }}</td>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>

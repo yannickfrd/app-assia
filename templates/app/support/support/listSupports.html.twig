@@ -52,7 +52,7 @@
                             <tr class="{% if form_head == false and support.head %}font-weight-bold{% endif %}">
                                 <td scope="row" class="align-middle text-center">
                                     {% if is_granted("VIEW", supportGroup) %}
-                                        <a href="{{ path('support_view', {'id':supportGroup.id}) }}"class="btn btn-{{ theme_color }} btn-sm  my-1 shadow" 
+                                        <a href="{{ path('support_view', {'id': supportGroup.id}) }}" class="btn btn-{{ theme_color }} btn-sm my-1 shadow" 
                                             data-toggle="tooltip" data-placement="bottom" title="Voir la fiche du suivi"><span class="fas fa-eye"></span>
                                         </a>
                                     {% endif %}
