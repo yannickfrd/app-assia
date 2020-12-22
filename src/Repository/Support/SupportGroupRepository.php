@@ -144,6 +144,11 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->setParameter('end', $end)
             ->andWhere('sp.head = TRUE');
 
+        if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+            $query = $query->andWhere('s.id IN (:services)')
+                ->setParameter('services', $this->currentUser->getServices());
+        }
+
         if ($search->getReferents() && $search->getReferents()->count() > 0) {
             $expr = $query->expr();
             $orX = $expr->orX();

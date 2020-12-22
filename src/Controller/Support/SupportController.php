@@ -334,7 +334,11 @@ class SupportController extends AbstractController
             'calendar' => $calendar,
             'form' => $form->createView(),
             'supports' => $supports,
-            'contributions' => $repoContribution->findContributionsBetween($calendar->getFirstDayOfTheMonth(), $calendar->getLastDayOfTheMonth(), $supportsId),
+            'contributions' => $repoContribution->findContributionsBetween(
+                $calendar->getFirstDayOfTheMonth(),
+                $calendar->getLastDayOfTheMonth(),
+                $supportsId
+            ),
         ]);
     }
 
