@@ -4,18 +4,18 @@
 
 {% block body %}
 
+	{% set title = "Évaluation sociale" %}
 	{% set evaluationGroup = form.vars.value %}
 	{% set EDIT_MODE = form.vars.value.evalBudgetGroup != null %}
 	{% set ROLE_CHILD = constant("App\\Entity\\People\\RolePerson::ROLE_CHILD") %}
+	{% set GENDER_FEMALE = constant("App\\Entity\\People\\Person::GENDER_FEMALE") %}
 	{% set people_over_16 = form.evaluationPeople|filter(e => e.vars.value.supportPerson.person.age >= 16) %}
 	{% set people_adults = form.evaluationPeople|filter(e => e.vars.value.supportPerson.role != ROLE_CHILD) %}
+	{% set nb_people = form.evaluationPeople|length %}
+	{% set typo = support.peopleGroup.familyTypology %}
 
     {# {% cache "evaluation.edit" ~ evaluationGroup.id ~ evaluationGroup.updatedAt.timestamp evaluationGroup.updatedAt.timestamp %} #}
 	<div class="container">
-	
-		{% set typo = support.peopleGroup.familyTypology %}
-
-		{% set title = "Évaluation sociale" %}
 		{% include "app/support/support/_navSuppport.html.twig" %}
 
 		{{ form_start(form) }}

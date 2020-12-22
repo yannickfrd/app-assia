@@ -9,6 +9,19 @@
         </span>
     </div>
 
+    {% set evalFamily = evaluation.evalFamilyGroup %}
+    {% if evalFamily %}
+        <div class="row mb-2">
+            {{ view_div.get(evalFamily.pmiFollowUp == YES ? (evalFamily.pmiName ? evalFamily.pmiName), "Pmi follow up", "evaluation") }}
+            {{ view_div.get(evalFamily.nbDependentChildren, "Nb dependent children", "evaluation") }}
+            {{ view_div.get(evalFamily.famlReunification == YES ? evalFamily.famlReunificationToString ~ (evalFamily.nbPeopleReunification ? " (" 
+                ~ evalFamily.nbPeopleReunification ~ " personne(s))"), "Faml reunification", "evaluation") }}
+        </div>
+        <div class="row my-3">
+            <div class="col-md-12 justify">{{ evaluation.evalFamilyGroup.commentEvalFamilyGroup|nl2br }}</div>
+        </div>
+    {% endif %}
+
     {% set eval_people_family = eval_people|filter(e => e.evalFamilyPerson) %}
     {% set nb_adults_family = eval_people_family|length %}
     {% for evalPerson in eval_people_family %}
@@ -76,17 +89,4 @@
             </div>
         </div>
     {% endif %} #}
-
-    {% set evalFamily = evaluation.evalFamilyGroup %}
-    {% if evalFamily %}
-        <div class="row mb-2">
-            {{ view_div.get(evalFamily.nbDependentChildren, "Nb dependent children", "evaluation") }}
-            {{ view_div.get(evalFamily.famlReunification == YES ? evalFamily.famlReunificationToString ~ (evalFamily.nbPeopleReunification ? " (" 
-                ~ evalFamily.nbPeopleReunification ~ " personne(s))"), "Faml reunification", "evaluation") }}
-        </div>
-        <div class="row my-3">
-            <div class="col-md-12 justify">{{ evaluation.evalFamilyGroup.commentEvalFamilyGroup|nl2br }}</div>
-        </div>
-    {% endif %}
-
 </section>

@@ -159,6 +159,9 @@ Marital status: Situation matrimoniale
 Nb dependent children: Nombre d'enfants à charge
 Nb people reunification: Nombre de pers. concernées par le regroupement
 No conciliation order: Ordonnance de non conciliation
+Pmi follow up: Suivi PMI
+pmiFollowUp.help: Centre de protection maternelle et infantile
+Pmi name: Nom de la PMI (Ville)
 Pregnancy type: Type de grossesse
 Protective measure type: Type de mesure de protection
 Protective measure: Mesure de protection
@@ -258,7 +261,7 @@ evalJusticePerson.comment: Écrire un commentaire relatif à la situation judici
 
 # Social person
 evalSocialPerson:
-  childWelfareBackground.help: Aide sociale à l'enfance, PJJ…
+  aseFollowUp.help: Aide sociale à l'enfance, PJJ…
   comment: Écrire un commentaire relatif à la situation sociale de la personne
 Addiction problem: Problématique d'addiction
 Animal type: Type d'animal
@@ -266,7 +269,7 @@ Animal: Présence d'un animal
 Medical follow up: Suivi médical
 Home care support: Service de soins ou d'acc. à domicile
 Home care support type: Type de service soins ou d'acc. à domicile
-Child welfare background: Parcours institutionnel enfance (ASE)
+Ase follow up: Suivi ou parcours ASE
 Ase comment: Commentaire concernant le parcours ASE
 Comment eval social: Commentaire relatif à la situation sociale
 Dom violence victim: Femme victime de violence conjugale

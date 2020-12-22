@@ -4,6 +4,16 @@
 <hr/>
 <h2 style="{{ style_h2 }}">Situation familiale</h2>
 
+{% set evalFamily = evaluation.evalFamilyGroup %}
+{% if evalFamily %}
+    {{ view_p.get(evalFamily.pmiFollowUp == YES ? (evalFamily.pmiName ? evalFamily.pmiName), "Pmi follow up", "evaluation") }}
+    {{ view_p.get(evalFamily.nbDependentChildren, "Nb dependent children", "evaluation") }}
+    {{ view_p.get(evalFamily.famlReunification == YES ? evalFamily.famlReunificationToString ~ (evalFamily.nbPeopleReunification ? " (" 
+        ~ evalFamily.nbPeopleReunification ~ " personne(s))"), "Faml reunification", "evaluation") }}
+    {{ view_text.get(evaluation.evalFamilyGroup.commentEvalFamilyGroup, null, null, type) }}
+    <p>&nbsp;</p>
+{% endif %}
+
 {% set eval_people_family = eval_people|filter(e => e.evalFamilyPerson) %}
 {% set nb_adults_family = eval_people_family|length %}
 {% for evalPerson in eval_people_family %}
@@ -28,12 +38,3 @@
     {% endif %}
     {{ view_text.get(evalFamily.commentEvalFamilyPerson, null, null, type) }}
 {% endfor %}
-
-{% set evalFamily = evaluation.evalFamilyGroup %}
-{% if evalFamily %}
-    <p>&nbsp;</p>
-    {{ view_p.get(evalFamily.nbDependentChildren, "Nb dependent children", "evaluation") }}
-    {{ view_p.get(evalFamily.famlReunification == YES ? evalFamily.famlReunificationToString ~ (evalFamily.nbPeopleReunification ? " (" 
-        ~ evalFamily.nbPeopleReunification ~ " personne(s))"), "Faml reunification", "evaluation") }}
-    {{ view_text.get(evaluation.evalFamilyGroup.commentEvalFamilyGroup, null, null, type) }}
-{% endif %}

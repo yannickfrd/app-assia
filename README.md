@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.13.20 - 21/12/2020
+2.13.21 - 22/12/2020
 
 # Développeur
 Romain MADELAINE
@@ -15,6 +15,9 @@ https://demo.esperer95.app
 
 
 # Mise à jour
+## Version 2.13.21 - 22/12/2020
+- Edit Evaluation : add 'pmi', 'pmiName', 'AseFollowUp' fields;
+
 ## Version 2.13.15-20 - 21/12/2020
 - Edit Evaluation : 
     - evalFamily : delete table for children and create a normal block,

@@ -38,11 +38,11 @@ class EvalSocialPersonType extends AbstractType
                 'widget' => 'single_text',
                 'required' => false,
             ])
-            ->add('childWelfareBackground', ChoiceType::class, [
+            ->add('aseFollowUp', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
-                'help' => 'evalSocialPerson.childWelfareBackground.help',
+                'help' => 'evalSocialPerson.aseFollowUp.help',
             ])
             ->add('aseComment', null, [
                 'label' => false,

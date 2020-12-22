@@ -67,9 +67,9 @@ class EvalSocialPerson
     private $endRightsSocialSecurityDate;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="child_welfare_background" ,type="smallint", nullable=true)
      */
-    private $childWelfareBackground;
+    private $aseFollowUp;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -221,14 +221,22 @@ class EvalSocialPerson
         return $this;
     }
 
-    public function getChildWelfareBackground(): ?int
+    public function getAseFollowUp(): ?int
     {
-        return $this->childWelfareBackground;
+        return $this->aseFollowUp;
     }
 
-    public function setChildWelfareBackground(?int $childWelfareBackground): self
+    /**
+     * @Groups("export")
+     */
+    public function getAseFollowUpToString(): ?string
     {
-        $this->childWelfareBackground = $childWelfareBackground;
+        return $this->aseFollowUp ? Choices::YES_NO[$this->aseFollowUp] : null;
+    }
+
+    public function setAseFollowUp(?int $aseFollowUp): self
+    {
+        $this->aseFollowUp = $aseFollowUp;
 
         return $this;
     }
@@ -243,14 +251,6 @@ class EvalSocialPerson
         $this->aseComment = $aseComment;
 
         return $this;
-    }
-
-    /**
-     * @Groups("export")
-     */
-    public function getChildWelfareBackgroundToString(): ?string
-    {
-        return $this->childWelfareBackground ? Choices::YES_NO[$this->childWelfareBackground] : null;
     }
 
     public function getHealthProblem(): ?int

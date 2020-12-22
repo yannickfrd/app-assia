@@ -100,6 +100,7 @@ export default class evaluation {
      * Evaluation familiale du groupe.
      */
     evalFamilyGroup() {
+        new DisplayFields(this.prefix + "evalFamilyGroup_", "pmiFollowUp", [1])
         new DisplayFields(this.prefix + "evalFamilyGroup_", "famlReunification", [1, 3, 4, 5])
     }
 
@@ -229,7 +230,7 @@ export default class evaluation {
             new DisplayFields(prefix, i + "_evalSocialPerson_healthProblem", [1])
             new DisplayFields(prefix, i + "_evalSocialPerson_medicalFollowUp", [1])
             new DisplayFields(prefix, i + "_evalSocialPerson_homeCareSupport", [1])
-            new DisplayFields(prefix, i + "_evalSocialPerson_childWelfareBackground", [1])
+            new DisplayFields(prefix, i + "_evalSocialPerson_aseFollowUp", [1])
             new DisplayFields(prefix, i + "_evalSocialPerson_violenceVictim", [1])
             this.editElt(i, "_evalSocialPerson_healthProblemType", "d-table-row")
             this.selectTrElts("eval_social", "evalSocialPerson", i, "healthProblemType")

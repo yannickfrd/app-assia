@@ -13,7 +13,7 @@
     {% set nb_people_social = eval_people_social|length %}
     {% for evalPerson in eval_people_social %}
         {% set evalSocial = evalPerson.evalSocialPerson %}
-        {% if evalSocial.rightSocialSecurity or evalSocial.healthProblem == YES or evalSocial.commentEvalSocialPerson  %}
+        {% if evalSocial.rightSocialSecurity or evalSocial.healthProblem == YES or evalSocial.aseFollowUp == YES or evalSocial.commentEvalSocialPerson  %}
             <div class="my-3">
                 {% if nb_people_social > 1 %}
                     <div class="row mb-2">
@@ -27,7 +27,7 @@
                     {{ view_div.get(evalSocial.socialSecurityOffice, "Social security office", "evaluation") }}
                 </div>
                 <div class="row mb-2">
-                    {{ view_div.get(evalSocial.childWelfareBackground == YES ? evalSocial.childWelfareBackgroundToString, "Child welfare background", "evaluation") }}
+                    {{ view_div.get(evalSocial.aseFollowUp == YES ? (evalSocial.aseComment ? evalSocial.aseComment : evalSocial.aseFollowUpToString), "Ase follow up", "evaluation") }}
                 </div>
                 {% if evalSocial.familyBreakdown == YES or evalSocial.friendshipBreakdown == YES %}
                     <div class="row mb-2">

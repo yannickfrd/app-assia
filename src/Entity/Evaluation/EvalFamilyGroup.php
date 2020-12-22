@@ -55,6 +55,16 @@ class EvalFamilyGroup
     private $cafId;
 
     /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $pmiFollowUp;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $pmiName;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $commentEvalFamilyGroup;
@@ -154,6 +164,38 @@ class EvalFamilyGroup
     public function setCommentEvalFamilyGroup(?string $commentEvalFamilyGroup): self
     {
         $this->commentEvalFamilyGroup = $commentEvalFamilyGroup;
+
+        return $this;
+    }
+
+    public function getPmiFollowUp(): ?int
+    {
+        return $this->pmiFollowUp;
+    }
+
+    /**
+     * @Groups("export")
+     */
+    public function getPmiFollowUpToString(): ?string
+    {
+        return $this->pmiFollowUp ? Choices::YES_NO_IN_PROGRESS[$this->pmiFollowUp] : null;
+    }
+
+    public function setPmiFollowUp(?int $pmiFollowUp): self
+    {
+        $this->pmiFollowUp = $pmiFollowUp;
+
+        return $this;
+    }
+
+    public function getPmiName(): ?string
+    {
+        return $this->pmiName;
+    }
+
+    public function setPmiName(?string $pmiName): self
+    {
+        $this->pmiName = $pmiName;
 
         return $this;
     }

@@ -43,11 +43,11 @@
                 <table class="table table-sm table-bordered table-hover">
                     <thead>
                         <tr>
-                            <th scope="col">Enfants</th>
-                            <th>Nationalité</th>
-                            <th>Papier</th>
+                            <th class="w-min-150" scope="col" >Enfants</th>
+                            <th class="w-min-150">Nationalité</th>
+                            <th class="w-min-120">Papier</th>
                             {% if nb_asylum_children > 0 %}
-                                <th>Asile</th>
+                                <th class="w-min-120">Asile</th>
                             {% endif %}
                             <th>Commentaire</th>
                         </tr>
@@ -57,13 +57,13 @@
                             {% set evalAdm = evalPerson.evalAdmPerson %}
                             {% if evalAdm %}
                                 <tr>
-                                    <td scope="row">{{ evalPerson.supportPerson.person.fullname }}</td>
-                                    <td>{{ evalAdm.nationalityToString ~ (evalAdm.country ? ' (' ~ evalAdm.country ~ ')') }}</td>
-                                    <td>{{ evalAdm.paper == YES ? evalAdm.paperType ? evalAdm.paperTypeToString ~ (evalAdm.endValidPermitDate ? " (fin de validité : " ~ evalAdm.endValidPermitDate|date("d/m/Y") ~ ")") : evalAdm.paperToString }}</td>
+                                    <td class="align-middle" scope="row">{{ evalPerson.supportPerson.person.fullname }}</td>
+                                    <td class="align-middle">{{ evalAdm.nationalityToString ~ (evalAdm.country ? ' (' ~ evalAdm.country ~ ')') }}</td>
+                                    <td class="align-middle">{{ evalAdm.paper == YES ? evalAdm.paperType ? evalAdm.paperTypeToString ~ (evalAdm.endValidPermitDate ? " (fin de validité : " ~ evalAdm.endValidPermitDate|date("d/m/Y") ~ ")") : evalAdm.paperToString }}</td>
                                     {% if nb_asylum_children > 0 %}
                                         <td>{{ evalAdm.asylumBackground == YES ? evalAdm.asylumStatus ? evalAdm.asylumStatusToString : evalAdm.asylumBackgroundToString }}</td>
                                     {% endif %}
-                                    <td>{{ evalAdm.commentEvalAdmPerson }}</td>
+                                    <td class="align-middle">{{ evalAdm.commentEvalAdmPerson }}</td>
                                 </tr>
                             {% endif %}
                         {% endfor %}
