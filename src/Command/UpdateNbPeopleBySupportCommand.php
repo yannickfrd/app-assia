@@ -45,8 +45,9 @@ class UpdateNbPeopleBySupportCommand extends Command
         $count = 0;
         $supports = $this->repo->findAll();
         foreach ($supports as $support) {
-            if ($support->getNbPeople() != $support->getSupportPeople()->count()) {
-                $support->setNbPeople($support->getSupportPeople()->count());
+            $nbSupportPeople = $support->getSupportPeople()->count();
+            if ($support->getNbPeople() != $nbSupportPeople) {
+                $support->setNbPeople($nbSupportPeople);
                 ++$count;
             }
         }

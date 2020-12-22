@@ -151,7 +151,7 @@ class SupportManager
     /**
      * Vérifie la validité du demandeur principal.
      */
-    protected function checkValidHead(SupportGroup $supportGroup): void
+    public function checkValidHead(SupportGroup $supportGroup): void
     {
         $nbHeads = 0;
         $maxAge = 0;

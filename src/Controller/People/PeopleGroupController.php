@@ -42,6 +42,12 @@ class PeopleGroupController extends AbstractController
     {
         $peopleGroup = $this->repo->findPeopleGroupById($id);
 
+        if (null === $peopleGroup) {
+            $this->addFlash('danger', 'Ce groupe n\'existe pas.');
+
+            return $this->redirectToRoute('home');
+        }
+
         $form = $this->createForm(PeopleGroupType::class, $peopleGroup)
             ->handleRequest($request);
 

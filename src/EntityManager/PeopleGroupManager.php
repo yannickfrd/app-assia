@@ -131,7 +131,7 @@ class PeopleGroupManager
     /**
      * Vérifie la validité du demandeur principal.
      */
-    protected function checkValidHead(PeopleGroup $peopleGroup): void
+    public function checkValidHead(PeopleGroup $peopleGroup): void
     {
         $nbHeads = 0;
         $maxAge = 0;
