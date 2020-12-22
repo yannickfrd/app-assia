@@ -52,7 +52,7 @@
         {{ view_div.get(avdl.accessHousingModalityToString, "avdl.accessHousingModality") }}
         {{ view_div.get(avdl.propoHousingDate ? avdl.propoHousingDate|date("d/m/Y") ~
             (avdl.propoResult ? " | Resultat : " ~ avdl.propoResultToString ), "avdl.propoHousingDate") }}
-        {{ view_div.get(avdl.endSupportComment|nl2br, "Comment") }}
+        {{ view_div.get(avdl.endSupportComment, "Comment") }}
     </div>
 {% endif %}
 
