@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.13.23 - 22/12/2020
+2.13.24 - 22/12/2020
 
 # Développeur
 Romain MADELAINE
@@ -15,11 +15,13 @@ https://demo.esperer95.app
 
 
 # Mise à jour
-## Version 2.13.21-23 - 22/12/2020
+## Version 2.13.21-26 - 22/12/2020
 - Edit Evaluation : add 'pmi', 'pmiName', 'AseFollowUp' fields;
 - Edit searchPerson and validationPerson;
-- Create Commands to check the head in gorups and supports;
-
+- Create Commands to check the head in groups and supports;
+- Fix security access in SupportsWithContribution page;
+- Fix bug view for comment in supportView;
+- Fix problem AccommodationVoter;
 
 ## Version 2.13.15-20 - 21/12/2020
 - Edit Evaluation : 

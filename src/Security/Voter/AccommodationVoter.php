@@ -62,7 +62,7 @@ class AccommodationVoter extends Voter
 
     protected function canEdit()
     {
-        if ($this->isUserOfService($this->accommodation->getService())
+        if ($this->isAdminOfService($this->accommodation->getService())
             || $this->isGranted('ROLE_SUPER_ADMIN')
         ) {
             return true;

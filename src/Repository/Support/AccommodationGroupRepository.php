@@ -55,8 +55,7 @@ class AccommodationGroupRepository extends ServiceEntityRepository
      */
     public function findAllAccommodation(Accommodation $accommodation, $maxResults = 10): Paginator
     {
-        $query = $this->createQueryBuilder('ag')
-            ->select('ag')
+        $query = $this->createQueryBuilder('ag')->select('ag')
             ->leftJoin('ag.accommodationPeople', 'ap')->addSelect('PARTIAL ap.{id}')
             ->leftJoin('ag.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, startDate, endDate}')
             ->leftJoin('ag.peopleGroup', 'gp')->addSelect('PARTIAL gp.{id, familyTypology}')
@@ -65,9 +64,9 @@ class AccommodationGroupRepository extends ServiceEntityRepository
 
             ->andWhere('ag.accommodation = :accommodation')
             ->setParameter('accommodation', $accommodation)
-            ->andWhere('sp.head = TRUE')
 
-            ->orderBy('ag.startDate', 'DESC')
+            ->addOrderBy('ag.startDate', 'DESC')
+            ->addOrderBy('sp.head', 'DESC')
 
             ->setMaxResults($maxResults)
 
