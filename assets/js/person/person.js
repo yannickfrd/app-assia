@@ -7,12 +7,13 @@ import '../utils/maskPhone'
 
 document.addEventListener('DOMContentLoaded', () => {
     const editMode = document.getElementById('person').dataset.editMode
+    console.log(editMode)
     if (editMode === 'true') {
         new UpdatePerson()
         new CheckChange('person') // form name
     } else {
         new NewPeopleGroup()
-        // new CheckChange('role_person_group') // form name
+        new CheckChange('role_person_group') // form name
     }
     if (document.getElementById('js-people')) {
         new NewForm('btn-new-support', 'container-form-new-support', 'modal-new-support') // Formulaire pour la création d'un nouveau suivi

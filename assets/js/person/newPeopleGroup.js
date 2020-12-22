@@ -12,8 +12,8 @@ export default class NewPeopleGroup {
 
         this.form = document.querySelector('#person>form').name // role_person_group
 
-        this.typoInputElt = document.getElementById('role_person_people_groupGroup_familyTypology')
-        this.nbPeopleInputElt = document.getElementById('role_person_people_groupGroup_nbPeople')
+        this.typoInputElt = document.getElementById('role_person_group_peopleGroup_familyTypology')
+        this.nbPeopleInputElt = document.getElementById('role_person_group_peopleGroup_nbPeople')
         this.roleInputElt = document.getElementById('role_person_role')
 
         if (this.typoInputElt) {
@@ -36,10 +36,8 @@ export default class NewPeopleGroup {
             this.typoInputElt.addEventListener('input', this.editTypo.bind(this))
             this.nbPeopleInputElt.addEventListener('input', this.editNbPeople.bind(this))
         }
-        // this.phone1InputElt.addEventListener('input', this.phone.bind(this))
 
-
-        let validationPerson = new ValidationPerson(
+        const validationPerson = new ValidationPerson(
             this.form + '_person_lastname',
             this.form + '_person_firstname',
             this.form + '_person_birthdate',
@@ -61,21 +59,17 @@ export default class NewPeopleGroup {
     }
 
     getparametersValues() {
-        let firstname = this.parametersUrl.get('firstname')
+        const firstname = this.parametersUrl.get('firstname')
         if (firstname) {
             this.firstnameInputElt.value = decodeURI(firstname)
         }
-        let lastname = this.parametersUrl.get('lastname')
+        const lastname = this.parametersUrl.get('lastname')
         if (lastname) {
             this.lastnameInputElt.value = decodeURI(lastname)
         }
-        let birthdate = this.parametersUrl.get('birthdate')
+        const birthdate = this.parametersUrl.get('birthdate')
         if (birthdate) {
             this.birthdateInputElt.value = birthdate
-        }
-        let gender = this.parametersUrl.get('gender')
-        if (gender) {
-            this.selectType.setOption(this.genderInputElt, parseInt(gender))
         }
     }
 

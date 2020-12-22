@@ -20,7 +20,7 @@ export default class SearchPerson {
         this.listResultElt = document.getElementById('list-result-people')
         this.groupId = this.listResultElt.getAttribute('data-group-id')
         this.helperSearchElt = document.querySelector('.js-helper-search')
-        this.anchorCreatePersonElt = document.querySelector('.js-create-person')
+        this.createPersonBtnElt = document.querySelector('.js-create-person')
         this.themeColor = document.getElementById('header').getAttribute('data-color')
         this.lengthSearch = lengthSearch
         this.time = time
@@ -39,6 +39,7 @@ export default class SearchPerson {
 
         this.birthdateInputElt.addEventListener('change', () => this.checkDate(this.birthdateInputElt))
         this.searchBtnElt.addEventListener('click', e => this.onClickBtnElt(e))
+        this.createPersonBtnElt.addEventListener('click', () => this.setParams())
     }
 
     /**
@@ -120,7 +121,7 @@ export default class SearchPerson {
         } else {
             this.noResults()
         }
-        this.displayCreateNewPerson()
+        this.createPersonBtnElt.classList.remove('d-none')
         this.loader.off()
     }
 
@@ -166,7 +167,7 @@ export default class SearchPerson {
                 title="${person.gender == 1 ? 'Femme' : 'Homme'}"></span>
             </td>`
          
-        trElt.querySelector('td').innerHTML = this.addAnchorElt(person)
+        trElt.querySelector('td').innerHTML = this.addBtnElt(person)
 
         if (this.groupId) {
             const aElt = trElt.querySelector('a')
@@ -183,7 +184,7 @@ export default class SearchPerson {
      * Ajoute l'élément <Bouton>.
      * @param {Object} person 
      */
-    addAnchorElt(person) {
+    addBtnElt(person) {
         if (this.groupId) {
             return `<a href="/group/${this.groupId}/add/person/${person.id}" class="js-add-person shadow" 
                         data-toggle="modal" data-target="#modal-block" data-placement="bottom" title="Ajouter la personne au groupe">
@@ -196,24 +197,13 @@ export default class SearchPerson {
     }
 
     /**
-     * Affiche le lien de création d'une nouvelle personne.
-     */
-    displayCreateNewPerson() {
-        this.anchorCreatePersonElt.addEventListener('click', this.setParams.bind(this))
-        this.anchorCreatePersonElt.classList.remove('d-none')
-    }
-
-    /**
      * Crée les paramètres en GET dans l'URL.
      */
     setParams() {
         let params = ''
-        document.querySelectorAll('input').forEach(input => {
-            if (input.id != 'search') {
-                const key = input.id
-                params += key + '=' + input.value + '&'
-            }
+        this.formElt.querySelectorAll('input').forEach(input => {
+            params += `${input.id}=${input.value}&`
         })
-        this.anchorCreatePersonElt.href = this.anchorCreatePersonElt.href + '?' + params
+        this.createPersonBtnElt.href += '?' + params
     }
 }
