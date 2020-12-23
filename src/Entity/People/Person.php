@@ -144,6 +144,16 @@ class Person
 
     private $slugger;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $soundexFirstname;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $soundexLastname;
+
     public function __construct()
     {
         $this->rolesPerson = new ArrayCollection();
@@ -385,6 +395,30 @@ class Person
     public function setSiSiaoId(?int $siSiaoId): self
     {
         $this->siSiaoId = $siSiaoId;
+
+        return $this;
+    }
+
+    public function getSoundexFirstname(): ?string
+    {
+        return $this->soundexFirstname;
+    }
+
+    public function setSoundexFirstname(?string $soundexFirstname): self
+    {
+        $this->soundexFirstname = $soundexFirstname;
+
+        return $this;
+    }
+
+    public function getSoundexLastname(): ?string
+    {
+        return $this->soundexLastname;
+    }
+
+    public function setSoundexLastname(?string $soundexLastname): self
+    {
+        $this->soundexLastname = $soundexLastname;
 
         return $this;
     }
