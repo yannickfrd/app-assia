@@ -67,7 +67,12 @@ class EvalSocialPerson
     private $endRightsSocialSecurityDate;
 
     /**
-     * @ORM\Column(name="child_welfare_background" ,type="smallint", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $childWelfareBackground;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $aseFollowUp;
 
@@ -217,6 +222,26 @@ class EvalSocialPerson
     public function setEndRightsSocialSecurityDate(?\DateTimeInterface $endRightsSocialSecurityDate): self
     {
         $this->endRightsSocialSecurityDate = $endRightsSocialSecurityDate;
+
+        return $this;
+    }
+
+    public function getChildWelfareBackground(): ?int
+    {
+        return $this->childWelfareBackground;
+    }
+
+    /**
+     * @Groups("export")
+     */
+    public function getChildWelfareBackgroundToString(): ?string
+    {
+        return $this->childWelfareBackground ? Choices::YES_NO[$this->childWelfareBackground] : null;
+    }
+
+    public function setChildWelfareBackground(?int $childWelfareBackground): self
+    {
+        $this->childWelfareBackground = $childWelfareBackground;
 
         return $this;
     }
