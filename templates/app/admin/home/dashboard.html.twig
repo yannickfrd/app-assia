@@ -19,18 +19,18 @@
     <div class="my-5">
       {% include "app/admin/managing/_managingServices.html.twig" %}
           {% if isSocialWorker or supports|length > 0 %}
-            {% include "app/admin/home/_listSupports.html.twig" with {id: "listSupports"} %}
+            {% include "app/admin/home/_listSupports.html.twig" with {accordion_id: "listSupports"} %}
           {% endif %}
           {% if isSocialWorker or notes|length > 0 %}
-            {% include "app/admin/home/_listNotes.html.twig" with {id: "listNotes"} %}
+            {% include "app/admin/home/_listNotes.html.twig" with {accordion_id: "listNotes"} %}
           {% endif %}
           {% if isSocialWorker or rdvs|length > 0 %}
-            {% include "app/admin/home/_listRdvs.html.twig" with {id: "listRdvs"}  %}
+            {% include "app/admin/home/_listRdvs.html.twig" with {accordion_id: "listRdvs"}  %}
           {% endif %}
           {% if is_granted("ROLE_SUPER_ADMIN") %}
-            {% include "app/admin/home/_indicators.html.twig" with {id: "indicators"} %}
+            {% include "app/admin/home/_indicators.html.twig" with {accordion_id: "indicators"} %}
           {% endif %}
-        {% include "app/admin/home/_servicesIndicators.html.twig" with {id: "listservices"} %}
+        {% include "app/admin/home/_servicesIndicators.html.twig" with {accordion_id: "listservices"} %}
     </div>
 
   </div>

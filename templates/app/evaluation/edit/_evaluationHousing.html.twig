@@ -1,6 +1,6 @@
-{% extends "model/_collapseCard.html.twig" %}
+{% extends "app/evaluation/edit/model/_evaluationAccordion.html.twig" %}
 
-{% block card_title %}Logement - Hébergement{{ badgeTitle }}{% endblock %}
+{% block card_title %}Logement - Hébergement{{ parent() }}{% endblock %}
 
 {% block card_body %}
 
@@ -153,5 +153,6 @@
 			</div>
 		</div>
 	</div>
-
+	{{ parent() }}
+	
 {% endblock %}

@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.13.24 - 22/12/2020
+2.14.04 - 24/12/2020
 
 # Développeur
 Romain MADELAINE
@@ -13,6 +13,15 @@ https://github.com/RomMad/esperer95.app
 # Connection à la base démo
 https://demo.esperer95.app
 
+## Version 2.14.1-2 - 24/12/2020
+- Edited ImportUser and MailNotification;
+- Edit Commands;
+
+## Version 2.14.1-4 - 24/12/2020
+- Created 'SoundexFr' class and soundex fields for 'Person' entity;
+- Edited Commands;
+- Edited ContributionVoter ('canDelete' method) and SupportManager('checkHead' method);
+- Created buttons to reduce and save in every accordion card;
 
 # Mise à jour
 ## Version 2.13.21-26 - 22/12/2020

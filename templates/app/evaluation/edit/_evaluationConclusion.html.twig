@@ -1,4 +1,4 @@
-{% extends "model/_collapseCard.html.twig" %}
+{% extends "app/evaluation/edit/model/_evaluationAccordion.html.twig" %}
 
 {% block card_title %}Synthèse - Conclusion{% endblock %}
 
@@ -8,5 +8,6 @@
 		<div class="col-md-12 sr-only">{{ form_label(form.conclusion) }}</div>
 		<div class="col-md-12">{{ form_widget(form.conclusion) }}</div>
 	</div>
-
+	{{ parent() }}
+	
 {% endblock %}

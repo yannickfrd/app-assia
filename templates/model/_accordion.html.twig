@@ -1,0 +1,15 @@
+<section class="accordion my-0" id="accordion-parent-{{ accordion_id }}">
+	<div id="card-{{ accordion_id }}" class="card mb-0 border-bottom">
+		<div role="button" class="card-header py-2 collapsed cursor-pointer" id="heading-{{ accordion_id }}" data-toggle="collapse" 
+			data-target="#collapse-{{ accordion_id }}" aria-expanded="true" aria-controls="collapse-{{ accordion_id }}">
+			<h2 class="h5 my-2">{% block card_title %}{% endblock %}
+				<span class="float-right"><span class="fa fa-chevron-right"></span></span>
+			</h2>
+		</div>
+		<div id="collapse-{{ accordion_id }}" class="collapse" aria-labelledby="heading-{{ accordion_id }}" data-parent="#accordion-parent-{{ accordion_id }}">
+			<div class="card-body bg-light">
+				{% block card_body %}{% endblock %}
+			</div>
+		</div>
+	</div>
+</section>

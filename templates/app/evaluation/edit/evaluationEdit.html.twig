@@ -24,37 +24,27 @@
 		<div id="js-msg-flash-content"></div>
 
 		<div class="row my-3 align-items-center">
-			<div class="col-md-8 my-1 small text-secondary">Évaluation créée le {{ evaluationGroup.createdAt|date("d/m/Y") }}
+			<div class="col-md-12 my-1 small text-secondary">Évaluation créée le {{ evaluationGroup.createdAt|date("d/m/Y") }}
 				{% if evaluationGroup.updatedAt %} (modifiée le {{ evaluationGroup.updatedAt|date("d/m/Y à H:i") }}){% endif %}
-			</div>
-			<div class="col-md-4 my-1">
-				<div class="float-right">
-					<button type="submit" name="send2" data-url="{{ path('support_evaluation_edit', {'id':support.id}) }}" 
-						class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>{% if EDIT_MODE %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
-				</div>
 			</div>
 		</div>
 
 		<div class="mb-4" data-edit-mode="{% if EDIT_MODE %}true{% else %}false{% endif %}">
-			{% set badgeTitle %}
-				<span class="badge badge-pill badge-warning fade-out ml-2 small" data-toggle="tooltip" data-placement="bottom" 
-					title="Nombre d'informations importantes non-renseignées dans le bloc"></span>
-			{% endset %}
-			{% include "app/evaluation/edit/_initEvaluation.html.twig" with {id: "init_eval"} %}
-			{% include "app/evaluation/edit/_evaluationBackground.html.twig" with {id: "eval_background"} %}
+			{% include "app/evaluation/edit/_initEvaluation.html.twig" with {accordion_id: "init_eval"} %}
+			{% include "app/evaluation/edit/_evaluationBackground.html.twig" with {accordion_id: "eval_background"} %}
 			{% if support.service.justice == YES %}
-				{% include "app/evaluation/edit/_evaluationJustice.html.twig" with {id: "eval_adm"}  %}
+				{% include "app/evaluation/edit/_evaluationJustice.html.twig" with {accordion_id: "eval_adm"}  %}
 			{% endif %}
-			{% include "app/evaluation/edit/_evaluationAdm.html.twig" with {id: "eval_justice"} %}
-			{% include "app/evaluation/edit/_evaluationFamily.html.twig" with {id: "eval_family"} %}
-			{% include "app/evaluation/edit/_evaluationSocial.html.twig" with {id: "eval_social"} %}
-			{% include "app/evaluation/edit/_evaluationProf.html.twig" with {id: "eval_prof"} %}
-			{% include "app/evaluation/edit/_evaluationBudget.html.twig" with {id: "eval_budget"} %}
-			{% include "app/evaluation/edit/_evaluationHousing.html.twig" with {id: "eval_housing"} %}
+			{% include "app/evaluation/edit/_evaluationAdm.html.twig" with {accordion_id: "eval_justice"} %}
+			{% include "app/evaluation/edit/_evaluationFamily.html.twig" with {accordion_id: "eval_family"} %}
+			{% include "app/evaluation/edit/_evaluationSocial.html.twig" with {accordion_id: "eval_social"} %}
+			{% include "app/evaluation/edit/_evaluationProf.html.twig" with {accordion_id: "eval_prof"} %}
+			{% include "app/evaluation/edit/_evaluationBudget.html.twig" with {accordion_id: "eval_budget"} %}
+			{% include "app/evaluation/edit/_evaluationHousing.html.twig" with {accordion_id: "eval_housing"} %}
 			{% if support.service.id == constant("App\\Entity\\Organization\\Service::SERVICE_PASH_ID") %}
-				{% include "app/evaluation/edit/_evaluationHotelLife.html.twig" with {id: "eval_hotel_life"} %}
+				{% include "app/evaluation/edit/_evaluationHotelLife.html.twig" with {accordion_id: "eval_hotel_life"} %}
 			{% endif %}
-			{% include "app/evaluation/edit/_evaluationConclusion.html.twig" with {id: "eval_conclusion"} %}
+			{% include "app/evaluation/edit/_evaluationConclusion.html.twig" with {accordion_id: "eval_conclusion"} %}
 		</div>
 
 		<div class="form-group row">
@@ -65,7 +55,6 @@
 				</div>
 			</div>
 		</div>
-
 		{{ form_row(form._token) }}
 		{{ form_end(form, {"render_rest": false}) }}
 	</div>

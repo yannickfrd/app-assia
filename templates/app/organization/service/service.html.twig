@@ -99,22 +99,22 @@
             {% endif %}
         </section>
 
-        {% include "app/organization/service/_serviceDevices.html.twig" with {id: "devices"} %}
+        {% include "app/organization/service/_serviceDevices.html.twig" with {accordion_id: "devices"} %}
 
         {{ form_row(form._token) }}
         {{ form_end(form, {"render_rest": false}) }}
 
         {% if EDIT_MODE == true %}
-			{% include "app/organization/service/_serviceSubServices.html.twig" with {id: "sub_services"} %}
+			{% include "app/organization/service/_serviceSubServices.html.twig" with {accordion_id: "sub_services"} %}
         {% endif %}
         {% if is_granted_edit_service %}
             {% if form.organizations is defined and is_granted("ROLE_SUPER_ADMIN") %}
-        		{% include "app/organization/service/_serviceOrganizations.html.twig" with {id: "organizations"} %}
+        		{% include "app/organization/service/_serviceOrganizations.html.twig" with {accordion_id: "organizations"} %}
             {% endif %}
         {% endif %}
         {% if EDIT_MODE %}
-        	{% include "app/organization/service/_serviceAccommodations.html.twig" with {id: "accommodations"} %}
-        	{% include "app/organization/service/_serviceUsers.html.twig" with {id: "users"} %}
+        	{% include "app/organization/service/_serviceAccommodations.html.twig" with {accordion_id: "accommodations"} %}
+        	{% include "app/organization/service/_serviceUsers.html.twig" with {accordion_id: "users"} %}
         {% endif %}
     </div>
 

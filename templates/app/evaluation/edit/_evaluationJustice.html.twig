@@ -1,8 +1,8 @@
-{% extends "model/_collapseCard.html.twig" %}
+{% extends "app/evaluation/edit/model/_evaluationAccordion.html.twig" %}
 
 {% import "macros/loopSupportPeople.html.twig" as utils %}
 
-{% block card_title %}Justice{{ badgeTitle }}{% endblock %}
+{% block card_title %}Justice{{ parent() }}{% endblock %}
 
 {% block card_body %}
 
@@ -23,5 +23,6 @@
 			{% endfor %}
 		</div>
 	</div>
-
+	{{ parent() }}
+	
 {% endblock %}
