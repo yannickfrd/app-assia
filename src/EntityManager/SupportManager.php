@@ -158,10 +158,16 @@ class SupportManager
         $minorHead = false;
 
         foreach ($supportGroup->getSupportPeople() as $supportPerson) {
+            if (null === $supportPerson->getPerson()) {
+                continue;
+            }
+
             $age = $supportPerson->getPerson()->getAge();
+
             if ($age > $maxAge) {
                 $maxAge = $age;
             }
+
             if (true === $supportPerson->getHead()) {
                 ++$nbHeads;
                 if ($age < 18) {
@@ -173,7 +179,12 @@ class SupportManager
 
         if (1 != $nbHeads || true === $minorHead) {
             foreach ($supportGroup->getSupportPeople() as $supportPerson) {
+                if (null === $supportPerson->getPerson()) {
+                    continue;
+                }
+
                 $supportPerson->setHead(false);
+
                 if ($supportPerson->getPerson()->getAge() === $maxAge) {
                     $supportPerson->setHead(true);
                 }

@@ -10,7 +10,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Commande pour vérifier le demandeur principal dans chaque groupe et suivi.
+ * Commande pour vérifier le demandeur principal dans chaque suivi.
  */
 class CheckHeadInSupportsCommand extends Command
 {
