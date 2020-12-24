@@ -6,9 +6,15 @@
 
 {% block body %}
 
-    Un compte utilisateur a été créé pour vous sur l'application {% if app_version != "prod" %}de TEST {% endif %} : 
+    Un compte utilisateur a été créé pour vous sur l'application {% if app_version != "prod" %}DEMO {% endif %} : 
     {{ app.request.server.get('SYMFONY_DEFAULT_ROUTE_URL') }}</b><br/>
     <br/>
+    {% if app_version != "prod" %}
+        Attention, il s'agit de la version test de l'application. 
+        Les données enregistrées ici ne le seront pas dans la base de données réelle.<br/>
+    {% endif %}
+    <br/>
+
     Votre login : {{ user.username }}<br/>
     Votre email : {{ user.email }}<br/>
     <br/>

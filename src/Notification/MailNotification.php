@@ -52,7 +52,7 @@ class MailNotification
         $mail->isHTML(true); // Set email format to HTML
 
         try {
-            $mail->setFrom('noreply@romain-mad.fr', 'Esperer95.app');
+            $mail->setFrom('noreply@esperer95.app', 'Esperer95.app');
             $mail->addAddress($to['email'], $to['name']); // Add a recipient
             if ($cc) { // Copie
                 $mail->addCC($cc);
@@ -110,7 +110,7 @@ class MailNotification
             'name' => $user->getFullname(),
         ];
 
-        $subject = 'Esperer95.app'.('test' === $this->appVersion ? ' version TEST' : null).' : Création de compte | '.$user->getFullname();
+        $subject = 'Esperer95.app'.('prod' != $this->appVersion ? ' version DEMO' : null).' : Création de compte | '.$user->getFullname();
 
         $context = [
             'user' => $user,

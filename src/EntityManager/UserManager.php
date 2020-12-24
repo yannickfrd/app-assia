@@ -2,13 +2,13 @@
 
 namespace App\EntityManager;
 
-use App\Entity\Organization\User;
 use App\Entity\Organization\Service;
-use App\Notification\MailNotification;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Organization\User;
 use App\Form\Model\Security\UserChangeInfo;
 use App\Form\Model\Security\UserResetPassword;
+use App\Notification\MailNotification;
 use App\Repository\Organization\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -128,7 +128,7 @@ class UserManager
      */
     public function updatePasswordWithToken(User $user, UserPasswordEncoderInterface $encoder, UserResetPassword $userResetPassword)
     {
-        if ($this->isValidTokenDate($user, 5 * 60)) { // 5 minutes
+        if ($this->isValidTokenDate($user, 10 * 60)) { // 10 minutes
             // Met à jour le nouveau mot de passe et supprime le token
             $this->setPassword($user, $encoder, $userResetPassword->getPassword());
 

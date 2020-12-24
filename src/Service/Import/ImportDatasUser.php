@@ -115,7 +115,7 @@ class ImportDatasUser extends ImportDatas
             $username = $username.substr($value, 0, 1);
         }
 
-        return strtolower($this->slugger->slug($$username.'.'.$lastname));
+        return strtolower($this->slugger->slug($username).'.'.$this->slugger->slug($lastname));
     }
 
     /**

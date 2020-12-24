@@ -120,7 +120,7 @@ class ImportController extends AbstractController
      */
     protected function import(Request $request, object $importDatas, string $filename): Response
     {
-        $file = \dirname(__DIR__).'/../public/import/datas/'.$filename;
+        $file = \dirname(__DIR__).'/../../public/import/datas/'.$filename;
 
         $datas = $importDatas->getDatas($file);
 
