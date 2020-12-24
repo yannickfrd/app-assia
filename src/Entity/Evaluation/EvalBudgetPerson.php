@@ -43,6 +43,27 @@ class EvalBudgetPerson
         'ressourceOther' => 'Autre ressource',
     ];
 
+    public const RESOURCES_MIN_TYPE = [
+        'salary' => 'Salaire',
+        'unemplBenefit' => 'ARE',
+        'minimumIncome' => 'RSA',
+        'familyAllowance' => 'AF',
+        'disAdultAllowance' => 'AAH',
+        'disChildAllowance' => 'AEEH',
+        'asf' => 'ASF',
+        'solidarityAllowance' => 'ASS',
+        'asylumAllowance' => 'ADA',
+        'tempWaitingAllowance' => 'ATA',
+        'paidTraining' => 'Formation',
+        'youthGuarantee' => 'Garantie jeunes',
+        'maintenance' => 'Pension alimentaire',
+        'disabilityPension' => 'Pension d\'invalidité',
+        'paje' => 'PAJE',
+        'activityBonus' => 'Prime d\'activité',
+        'pensionBenefit' => 'Retraite',
+        'ressourceOther' => 'Autre',
+    ];
+
     public const CHARGES_TYPE = [
         'insurance' => 'Assurance(s)',
         'canteen' => 'Cantine',

@@ -103,9 +103,9 @@ class SupportPersonFullExport extends ExportExcel
         $evaluationGroup = $evaluationPerson->getEvaluationGroup() ?? $this->evaluationGroup;
 
         $this->datas = array_merge($this->datas, [
-                'ID évaluation groupe' => $evaluationGroup->getId(),
-                'ID évaluation personne' => $evaluationPerson->getId(),
-            ]);
+            'ID évaluation groupe' => $evaluationGroup->getId(),
+            'ID évaluation personne' => $evaluationPerson->getId(),
+        ]);
 
         $this->add($evaluationGroup->getInitEvalGroup() ?? $this->initEvalGroup, 'initEval');
         $this->add($evaluationPerson->getInitEvalPerson() ?? $this->initEvalPerson, 'initEval');

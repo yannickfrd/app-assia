@@ -10,7 +10,7 @@ class ContributionFullExport extends ExportExcel
 {
     protected $router;
 
-    public function __construct(UrlGeneratorInterface $router = null)
+    public function __construct(?UrlGeneratorInterface $router)
     {
         $this->router = $router;
     }
@@ -57,16 +57,16 @@ class ContributionFullExport extends ExportExcel
             'Pôle' => $supportGroup->getService()->getPole()->getName(),
             'Type d\'opération' => $contribution->getTypeToString(),
             'PF - Mois concerné (Date)' => $this->formatDate($contribution->getMonthContrib()),
-            'PF - Montant salaire (€)' => $contribution->getSalaryAmt(),
-            'PF - Montant ressources (€)' => $contribution->getResourcesAmt(),
-            'Montant loyer (€)' => $contribution->getRentAmt(),
-            'Montant APL (€)' => $contribution->getAplAmt(),
-            'Montant à régler (€)' => $contribution->getToPayAmt(),
-            'Montant réglé (€)' => $contribution->getPaidAmt(),
-            'Restant dû (€)' => $contribution->getStillToPayAmt(),
+            'PF - Montant salaire' => $contribution->getSalaryAmt(),
+            'PF - Montant ressources' => $contribution->getResourcesAmt(),
+            'Montant loyer' => $contribution->getRentAmt(),
+            'Montant APL' => $contribution->getAplAmt(),
+            'Montant à régler' => $contribution->getToPayAmt(),
+            'Montant réglé' => $contribution->getPaidAmt(),
+            'Montant restant dû' => $contribution->getStillToPayAmt(),
             'Date de l\'opération' => $this->formatDate($contribution->getPaymentDate()),
             'Mode de règlement' => $contribution->getPaymentType() ? $contribution->getPaymentTypeToString() : null,
-            'Caution - Montant restitué (€)' => $contribution->getReturnAmt(),
+            'Caution - Montant restitué' => $contribution->getReturnAmt(),
             'Commentaire' => $contribution->getComment(),
             'Date de création' => $this->formatDate($contribution->getCreatedAt()),
             'Créé par' => $contribution->getCreatedBy()->getFullname(),

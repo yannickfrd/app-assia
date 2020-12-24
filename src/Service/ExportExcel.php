@@ -111,7 +111,7 @@ class ExportExcel
         $this->sheet->insertNewRowBefore(1, 1);
         $this->sheet->getCell('A1')->setValue('Total :');
         $this->sheet->getCell('B1')->setValue('=SUBTOTAL(3,A3:A'.($this->nbRows + 1).')');
-        foreach ($this->getColumnsWithType('€') as $col) {
+        foreach ($this->getColumnsWithType('Montant') as $col) {
             $this->sheet->getCell($col.'1')->setValue('=SUBTOTAL(9,'.$col.'3:'.$col.($this->nbRows + 1).')');
             $this->sheet->getStyle($col.'1')->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_CURRENCY_EUR_SIMPLE);
         }
@@ -202,7 +202,7 @@ class ExportExcel
     protected function formatMoneyColumns(): void
     {
         // Format les colonnes de date
-        foreach ($this->getColumnsWithType('€') as  $col) {
+        foreach ($this->getColumnsWithType('Montant') as  $col) {
             for ($i = 2; $i <= $this->nbRows; ++$i) {
                 $this->sheet->getStyle($col.$i)
                     ->getNumberFormat()

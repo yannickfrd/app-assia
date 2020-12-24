@@ -33,112 +33,112 @@ evalAdmPerson:
 evalBudgetPerson:
   endRightsDate.help: Date de fin des prestations ou des allocations
   comment: Écrire un commentaire relatif à la situation budgétaire
-Activity bonus amt: Montant Prime d'activité (€)
+Activity bonus amt: Montant Prime d'activité
 Activity bonus: Prime d'activité
-Alimony amt: Montant Pension alimentaire (€)
+Alimony amt: Montant Pension alimentaire
 Alimony: Pension alimentaire
 Asf amt: Montant ASF
 Asf: ASF
-Asylum allowance amt: Montant ADA (€)
+Asylum allowance amt: Montant ADA
 Asylum allowance: ADA
 Budget balance amt: Reste à vivre
 Budget: Budget
 Charge comment: Commentaire sur les charges
-Charge other amt: Montant autre charge (€)
+Charge other amt: Montant autre charge
 Charge other precision: Précision Autre charge
 Charge other: Autre charge
-Charges amt: Montant total des charges (€)
-Charges group amt: Charges totales du groupe (€)
+Charges amt: Montant total des charges
+Charges group amt: Charges totales du groupe
 Charges: Charges
-Childcare amt: Montant garde enfant(s) (€)
+Childcare amt: Montant garde enfant(s)
 Childcare: Garde d'enfant(s)
 Contribution amt: Montant de la participation financière
-Debt amt: Montant total des dettes (€)
-Debt bank old amt: Montant découverts bancaires (€)
+Debt amt: Montant total des dettes
+Debt bank old amt: Montant découverts bancaires
 Debt bank overdrafts: Découverts bancaires
 Debt comment: Commentaire sur les dettes
-Debt consr credit amt: Montant dette de crédits à la consommation (€)
+Debt consr credit amt: Montant dette de crédits à la consommation
 Debt consr credit: Dette de crédits à la consommation
-Debt fines amt: Montant amendes (€)
+Debt fines amt: Montant amendes
 Debt fines: Amendes
-Debt mortgage amt: Montant dettes de crédits immobiliers (€)
+Debt mortgage amt: Montant dettes de crédits immobiliers
 Debt mortgage: Dettes de crédits immobiliers
-Debt other amt: Montant des autres dettes (€)
+Debt other amt: Montant des autres dettes
 Debt other precision: Précision autres dettes
 Debt other: Autres dettes
-Debt rental amt: Montant des dettes locatives (€)
+Debt rental amt: Montant des dettes locatives
 Debt rental: Dettes locatives
-Debt tax delays amt: Montant retards d'impôts (€)
+Debt tax delays amt: Montant retards d'impôts
 Debt tax delays: Retards d'impôts
-Debt unpaid maint amt: Montant pension alimentaire non réglée (€)
+Debt unpaid maint amt: Montant pension alimentaire non réglée
 Debt unpaid maint: Pension alimentaire non réglée
-Debts amt: Montant des dettes (€)
+Debts amt: Montant des dettes
 Debts group amt: Dettes totales du groupe
 Debts: Dettes
-Dis adult allowance amt: Montant AAH (€)
+Dis adult allowance amt: Montant AAH
 Dis adult allowance: AAH
-Dis child allowance amt: Montant AAEH (€)
+Dis child allowance amt: Montant AAEH
 Dis child allowance: AEEH
 Disability pension amt: Montant Pension d'invalidité
 Disability pension: Pension d'invalidité
-Electricity gas amt: Montant électricité / Gaz (€)
+Electricity gas amt: Montant électricité / Gaz
 Electricity gas: Electricité / Gaz
 End rights date: Date de fin de droits
-Family allowance amt: Montant allocations familiales (€)
+Family allowance amt: Montant allocations familiales
 Family allowance: Allocations familiales
 Income tax: Impôt sur le revenu (n-1 ou n-2)
 Income n1 amt: Revenu fiscal n-1
 Income n2 amt: Revenu fiscal n-2
 Incomen1amt: Revenu fiscal n-1
 Incomen2amt: Revenu fiscal n-2
-Insurance amt: Montant assurance(s) (€)
+Insurance amt: Montant assurance(s)
 Insurance: Assurance(s)
-Maintenance amt: Montant pension alimentaire (€)
+Maintenance amt: Montant pension alimentaire
 Maintenance: Pension alimentaire
-Minimum income amt: Montant RSA (€)
+Minimum income amt: Montant RSA
 Minimum income: RSA
 Monthly repayment amt: Montant du remboursement mensuel
 Moratorium: Moratoire
-Mutual amt: Montant mutuelle(s) (€)
+Mutual amt: Montant mutuelle(s)
 Mutual: Mutuelle(s)
 Other charge(s)...: Autre(s) charge(s)...
 Other debt(s)...: Autre(s) dette(s)...
 Other ressource(s)...: Autre(s) ressource(s)
 Over indebt record date: Date de dépôt du dossier
 Over indebt record: Dossier de surendettement
-Paid training amt: Montant formation rémunérée (€)
+Paid training amt: Montant formation rémunérée
 Paid training: Formation rémunérée
 Paje amt: Montant PAJE
 Paje: PAJE
-Pension benefit amt: Montant retraire (€)
+Pension benefit amt: Montant retraire
 Pension benefit: Retraite
-Phone amt: Montant téléphone (€)
+Phone amt: Montant téléphone
 Phone: Téléphone
-Rent amt: Montant loyer (€)
+Rent amt: Montant loyer
 Rent: Loyer
-Resources amt: Montant total des ressources (€)
+Resources amt: Montant total des ressources
 Resources comment: Commentaire sur les ressources
-Resources group amt: Ressources totales du groupe (€)
+Resources group amt: Ressources totales du groupe
 Resources: Ressources
-Ressource other amt: Montant autre ressource (€)
+Ressource other amt: Montant autre ressource
 Ressource other precision: Précision autres revenus
 Ressource other: Autre ressource
-Salary amt: Montant salaire (€)
+Salary amt: Montant salaire
 Salary: Salaire
 Settlement plan: Plan d'apurement
-Solidarity allowance amt: Montant ASS (€)
+Solidarity allowance amt: Montant ASS
 Solidarity allowance: ASS
-Taxes amt: Montant impôts (€)
+Taxes amt: Montant impôts
 Taxes: Impôts
-Temp waiting allowance amt: Montant ATA (€)
+Temp waiting allowance amt: Montant ATA
 Temp waiting allowance: ATA
-Transport amt: Montant transport (€)
+Transport amt: Montant transport
 Transport: Transport
-Unempl benefit amt: Montant ARE (€)
+Unempl benefit amt: Montant ARE
 Unempl benefit: ARE
-Water amt: Montant Eau (€)
+Water amt: Montant Eau
 Water: Eau
-Youth guarantee amt: Montant Garantie jeunes (€)
+Youth guarantee amt: Montant Garantie jeunes
 Youth guarantee: Garantie jeunes
 
 # Family
