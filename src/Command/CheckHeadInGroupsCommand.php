@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Commande pour vérifier le demandeur principal dans chaque groupe et suivi.
  */
-class CheckHeadsInGroupsCommand extends Command
+class CheckHeadInGroupsCommand extends Command
 {
     use DoctrineTrait;
 

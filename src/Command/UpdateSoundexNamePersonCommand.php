@@ -34,13 +34,13 @@ class UpdateSoundexNamePersonCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $message = $this->updateSoundexName();
+        $message = $this->updateSoundexNames();
         $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
 
         return 0;
     }
 
-    protected function updateSoundexName()
+    protected function updateSoundexNames()
     {
         $count = 0;
         $people = $this->repo->findAll();

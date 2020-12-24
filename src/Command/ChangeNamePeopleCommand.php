@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
- * Commande pour réinitialiser les mot de passe des utilisateurs (uniquement en mode développement).
+ * Commande pour changer le nom des personnes et des utilisateurs (uniquement en mode développement).
  */
 class ChangeNamePeopleCommand extends Command
 {
