@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.15.01 - 24/12/2020
+2.15.05 - 08/01/2021
 
 # Développeur
 Romain MADELAINE
@@ -13,13 +13,22 @@ https://github.com/RomMad/esperer95.app
 # Connection à la base démo
 https://demo.esperer95.app
 
+## Version 2.15.3-5 - 08/01/2021
+- Fixed some validation problems in fields Person (birthdate);
+- Edited validation fied in Support;
+- Fixed error typo message flash; 
+- Added cache prefix;
+
+## Version 2.15.2 - 05/01/2021
+- Edited view listUsers (is_granted) and filter disabled users in UserRepository; 
+
 ## Version 2.15.1 - 24/12/2020
 - Added a new export Supports with evaluation;
 - Edited format Export Excel;
 
 ## Version 2.14.4-5 - 24/12/2020
 - Edited ImportUser and MailNotification;
-- Edit Commands;
+- Edited Commands;
 
 ## Version 2.14.1-3 - 24/12/2020
 - Created 'SoundexFr' class and soundex fields for 'Person' entity;
@@ -29,23 +38,23 @@ https://demo.esperer95.app
 
 # Mise à jour
 ## Version 2.13.21-26 - 22/12/2020
-- Edit Evaluation : add 'pmi', 'pmiName', 'AseFollowUp' fields;
-- Edit searchPerson and validationPerson;
+- Edited Evaluation : add 'pmi', 'pmiName', 'AseFollowUp' fields;
+- Edited searchPerson and validationPerson;
 - Create Commands to check the head in groups and supports;
-- Fix security access in SupportsWithContribution page;
-- Fix bug view for comment in supportView;
-- Fix problem AccommodationVoter;
+- Fixed security access in SupportsWithContribution page;
+- Fixed bug view for comment in supportView;
+- Fixed problem AccommodationVoter;
 
 ## Version 2.13.15-20 - 21/12/2020
-- Edit Evaluation : 
+- Edited Evaluation : 
     - evalFamily : delete table for children and create a normal block,
     - evalSocial : create field 'medicalFollowUp',
     - evalAdm : edit table for children (add asylum and comment information),
-- Edit logout : fix bug and create a sessionTimer in the navbar;
-- Edit Export Classes (age = 0);
-- Create SupportDuplicator class;
-- Create a ChanNamePeopleCommand in dev environnement;
-- Fix error 500 in AccommodationVoter.
+- Edited logout : fix bug and create a sessionTimer in the navbar;
+- Edited Export Classes (age = 0);
+- Created SupportDuplicator class;
+- Created a ChanNamePeopleCommand in dev environnement;
+- Fixed error 500 in AccommodationVoter.
 
 ## Version 2.13.9-14 - 16/12/2020
 - Fix error 500 during the image upload when the Tinify count compression is over (> 500);
