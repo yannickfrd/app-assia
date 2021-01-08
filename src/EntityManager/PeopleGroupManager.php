@@ -26,7 +26,7 @@ class PeopleGroupManager
     {
         $this->manager = $manager;
         $this->flashbag = $flashbag;
-        $this->cache = new FilesystemAdapter();
+        $this->cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
     }
 
     /**

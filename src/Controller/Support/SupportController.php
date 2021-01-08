@@ -231,7 +231,7 @@ class SupportController extends AbstractController
 
         $peopleGroup = $supportGroup->getPeopleGroup();
 
-        (new FilesystemAdapter())->deleteItem(PeopleGroup::CACHE_GROUP_SUPPORTS_KEY.$peopleGroup->getId());
+        (new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']))->deleteItem(PeopleGroup::CACHE_GROUP_SUPPORTS_KEY.$peopleGroup->getId());
 
         return $this->redirectToRoute('people_group_show', ['id' => $peopleGroup->getId()]);
     }
@@ -372,7 +372,7 @@ class SupportController extends AbstractController
      */
     public function discache(SupportGroup $supportGroup): bool
     {
-        $cache = new FilesystemAdapter();
+        $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
         $id = $supportGroup->getId();
 
         if ($supportGroup->getReferent()) {

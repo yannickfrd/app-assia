@@ -179,7 +179,7 @@ class AccommodationController extends AbstractController
      */
     protected function discache(Service $service): bool
     {
-        $cache = new FilesystemAdapter();
+        $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
 
         return $cache->deleteItem(Service::CACHE_SERVICE_ACCOMMODATIONS_KEY.$service->getId());
     }

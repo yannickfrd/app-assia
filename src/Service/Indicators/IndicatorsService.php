@@ -72,7 +72,7 @@ class IndicatorsService
         $this->repoContribution = $repoContribution;
         $this->repoConnection = $repoConnection;
 
-        $this->cache = new FilesystemAdapter();
+        $this->cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
     }
 
     /**

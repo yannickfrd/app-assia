@@ -110,7 +110,7 @@ class NoteController extends AbstractController
         }
 
         // Sinon, récupère les notes en cache.
-        return (new FilesystemAdapter())->get(SupportGroup::CACHE_SUPPORT_NOTES_KEY.$supportGroup->getId(),
+        return (new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']))->get(SupportGroup::CACHE_SUPPORT_NOTES_KEY.$supportGroup->getId(),
             function (CacheItemInterface $item) use ($supportGroup, $pagination, $search, $request) {
                 $item->expiresAfter(\DateInterval::createFromDateString('7 days'));
 
@@ -303,7 +303,7 @@ class NoteController extends AbstractController
      */
     protected function discache(SupportGroup $supportGroup, $isUpdate = false): bool
     {
-        $cache = new FilesystemAdapter();
+        $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
 
         if (false === $isUpdate) {
             $cache->deleteItem(SupportGroup::CACHE_SUPPORT_NB_NOTES_KEY.$supportGroup->getId());

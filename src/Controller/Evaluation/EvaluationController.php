@@ -272,6 +272,6 @@ class EvaluationController extends AbstractController
 
     protected function discache(EvaluationGroup $evaluationGroup)
     {
-        return (new FilesystemAdapter())->deleteItem(EvaluationGroup::CACHE_EVALUATION_KEY.$evaluationGroup->getSupportGroup()->getId());
+        return (new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']))->deleteItem(EvaluationGroup::CACHE_EVALUATION_KEY.$evaluationGroup->getSupportGroup()->getId());
     }
 }

@@ -6,18 +6,18 @@ use App\Entity\Organization\Device;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\SubService;
 use App\Form\Admin\OccupancySearchType;
-use App\Form\Model\Admin\OccupancySearch;
 use App\Form\Admin\SupportsByUserSearchType;
-use App\Service\Indicators\IndicatorsService;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use App\Service\Indicators\OccupancyIndicators;
-use Symfony\Component\Routing\Annotation\Route;
+use App\Form\Model\Admin\OccupancySearch;
 use App\Form\Model\Support\SupportsByUserSearch;
+use App\Service\Indicators\IndicatorsService;
+use App\Service\Indicators\OccupancyIndicators;
 use App\Service\Indicators\SupportsByUserIndicators;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class AppController extends AbstractController
 {
@@ -25,7 +25,7 @@ class AppController extends AbstractController
 
     public function __construct()
     {
-        $this->cache = new FilesystemAdapter();
+        $this->cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
     }
 
     /**

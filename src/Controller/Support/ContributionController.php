@@ -106,7 +106,7 @@ class ContributionController extends AbstractController
         $form = $this->createForm(ContributionType::class, $contribution);
 
         // Récupère les contributions en cache.
-        // $contributions = (new FilesystemAdapter())->get(SupportGroup::CACHE_SUPPORT_CONTRIBUTIONS_KEY.$supportGroup->getId(),
+        // $contributions = (new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']))->get(SupportGroup::CACHE_SUPPORT_CONTRIBUTIONS_KEY.$supportGroup->getId(),
         //     function (CacheItemInterface $item) use ($supportGroup, $pagination, $search, $request) {
         //         $item->expiresAfter(\DateInterval::createFromDateString('7 hours'));
 
@@ -510,7 +510,7 @@ class ContributionController extends AbstractController
      */
     protected function discache(SupportGroup $supportGroup, $isUpdate = false): bool
     {
-        $cache = new FilesystemAdapter();
+        $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
 
         if (false === $isUpdate) {
             $cache->deleteItem(SupportGroup::CACHE_SUPPORT_NB_CONTRIBUTIONS_KEY.$supportGroup->getId());

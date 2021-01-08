@@ -94,7 +94,7 @@ class DocumentController extends AbstractController
         }
 
         // Sinon, récupère les documents en cache.
-        return (new FilesystemAdapter())->get(SupportGroup::CACHE_SUPPORT_DOCUMENTS_KEY.$supportGroup->getId(),
+        return (new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']))->get(SupportGroup::CACHE_SUPPORT_DOCUMENTS_KEY.$supportGroup->getId(),
             function (CacheItemInterface $item) use ($supportGroup, $pagination, $search, $request) {
                 $item->expiresAfter(\DateInterval::createFromDateString('7 days'));
 
@@ -262,7 +262,7 @@ class DocumentController extends AbstractController
      */
     protected function discache(SupportGroup $supportGroup, $isUpdate = false): bool
     {
-        $cache = new FilesystemAdapter();
+        $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
 
         if (false === $isUpdate) {
             $cache->deleteItem(SupportGroup::CACHE_SUPPORT_NB_DOCUMENTS_KEY.$supportGroup->getId());

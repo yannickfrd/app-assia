@@ -56,7 +56,7 @@ class SupportManager
         $this->manager = $manager;
         $this->repoSupportGroup = $repoSupportGroup;
         $this->flashbag = $flashbag;
-        $this->cache = new FilesystemAdapter();
+        $this->cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
     }
 
     /**

@@ -283,7 +283,7 @@ class RdvController extends AbstractController
         }
 
         // Sinon, récupère les rendez-vous en cache.
-        return (new FilesystemAdapter())->get(SupportGroup::CACHE_SUPPORT_RDVS_KEY.$supportGroup->getId(),
+        return (new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']))->get(SupportGroup::CACHE_SUPPORT_RDVS_KEY.$supportGroup->getId(),
             function (CacheItemInterface $item) use ($supportGroup, $pagination, $search, $request) {
                 $item->expiresAfter(\DateInterval::createFromDateString('7 days'));
 
@@ -379,7 +379,7 @@ class RdvController extends AbstractController
      */
     protected function discache(?SupportGroup $supportGroup = null, $isUpdate = false): bool
     {
-        $cache = new FilesystemAdapter();
+        $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
 
         if ($supportGroup) {
             $cache->deleteItems([

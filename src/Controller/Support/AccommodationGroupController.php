@@ -302,6 +302,6 @@ class AccommodationGroupController extends AbstractController
      */
     public function discacheSupport(SupportGroup $supportGroup): bool
     {
-        return (new FilesystemAdapter())->deleteItem(SupportGroup::CACHE_FULLSUPPORT_KEY.$supportGroup->getId());
+        return (new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']))->deleteItem(SupportGroup::CACHE_FULLSUPPORT_KEY.$supportGroup->getId());
     }
 }

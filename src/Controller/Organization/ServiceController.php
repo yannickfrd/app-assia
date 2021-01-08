@@ -106,7 +106,7 @@ class ServiceController extends AbstractController
             $this->addFlash('success', 'Les modifications sont enregistrées.');
         }
 
-        $cache = new FilesystemAdapter();
+        $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
 
         $accommodations = $this->getAccommodations($service, $repoAccommodation, $cache);
 

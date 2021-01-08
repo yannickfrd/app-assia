@@ -195,7 +195,7 @@ class SupportControllerTest extends WebTestCase
         $this->client = null;
         $this->dataFixtures = null;
 
-        $cache = new FilesystemAdapter();
+        $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
         $cache->clear();
     }
 }

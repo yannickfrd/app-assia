@@ -132,6 +132,6 @@ class ReferentController extends AbstractController
      */
     protected function discache(PeopleGroup $peopleGroup): bool
     {
-        return (new FilesystemAdapter())->deleteItem(PeopleGroup::CACHE_GROUP_REFERENTS_KEY.$peopleGroup->getId());
+        return (new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']))->deleteItem(PeopleGroup::CACHE_GROUP_REFERENTS_KEY.$peopleGroup->getId());
     }
 }

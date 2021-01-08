@@ -17,7 +17,7 @@ https://demo.esperer95.app
 - Fixed some validation problems in fields Person (birthdate);
 - Edited validation fied in Support;
 - Fixed error typo message flash; 
-- Added cache prefix;
+- Added namespaced in every FilesystemAdapter;
 
 ## Version 2.15.2 - 05/01/2021
 - Edited view listUsers (is_granted) and filter disabled users in UserRepository; 

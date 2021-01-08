@@ -184,7 +184,7 @@ class UserManager
      */
     public function discache(User $user): bool
     {
-        $cache = new FilesystemAdapter();
+        $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
 
         foreach ($user->getServices() as $service) {
             $cache->deleteItem(Service::CACHE_SERVICE_USERS_KEY.$service->getId());
