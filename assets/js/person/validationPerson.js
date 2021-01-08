@@ -78,8 +78,9 @@ export default class ValidationPerson {
 
     checkBirthdate() {
         const validationDate = new ValidationDate(this.birthdateInputElt, this.validationForm)
-
-        if ((this.selectType.getOption(this.roleInputElt) != 3 && (validationDate.getIntervalWithNow() / 365) < 16)) {
+        const role = this.selectType.getOption(this.roleInputElt)
+        
+        if ((!isNaN(role) && role != 3 && (validationDate.getIntervalWithNow() / 365) < 16)) {
             return this.validationForm.invalidField(this.birthdateInputElt, 'Date invalide.')
         }
 

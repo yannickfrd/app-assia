@@ -3,6 +3,7 @@
 {% set person = form.vars.value %}
 {% set EDIT_MODE = person.id != null %}
 {% set title = EDIT_MODE ? person.fullname ~ (person.usename ? " (" ~ person.usename ~ ")") : 'Création d\'une personne' %}
+{% if EDIT_MODE %} {% set form_person = form %} {% else %} {% set form_person = form.person %} {% endif %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -38,10 +39,7 @@
 
         <div id="person" data-edit-mode="{{ EDIT_MODE ? 'true' : 'false' }}">
 
-
             {{ form_start(form) }}
-
-            {% if EDIT_MODE %} {% set form_person = form %} {% else %} {% set form_person = form.person %} {% endif %}
 
             <div class="form-group row">
                 <div class="col-md-6">{{ form_row(form_person.lastname) }}</div>
@@ -55,17 +53,16 @@
             </div>
 
             {% if EDIT_MODE == false %}
-            <div class="form-group row">
-                {% if people_group is not defined %}
-                <div class="col-md-6">{{ form_row(form.peopleGroup.familyTypology) }}</div>
-                <div class="col-md-6">{{ form_row(form.peopleGroup.nbPeople) }}</div>
-                {% endif %}
-                <div class="col-md-6">{{ form_row(form.role) }}</div>
-            </div>
+                <div class="form-group row">
+                    {% if people_group is not defined %}
+                    <div class="col-md-6">{{ form_row(form.peopleGroup.familyTypology) }}</div>
+                    <div class="col-md-6">{{ form_row(form.peopleGroup.nbPeople) }}</div>
+                    {% endif %}
+                    <div class="col-md-6">{{ form_row(form.role) }}</div>
+                </div>
             {% endif %}
 
             {% if EDIT_MODE == false or canEdit %}
-
                 <div class="form-group row">
                     <div class="col-md-6">{{ form_row(form_person.phone1) }}</div>
                     <div class="col-md-6">{{ form_row(form_person.phone2) }}</div>
@@ -83,14 +80,14 @@
                             <a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('person_delete', {'id':person.id}) }}"
                                 data-toggle="tooltip" title="Supprimer le suivi social" data-placement="bottom"
                                 onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer cette personne ?')){return true;}else{return false;}"><span
-                                class="fas fa-trash-alt mr-2"></span><span class="">Supprimer</span></a>
+                                class="fas fa-trash-alt mr-2"></span>Supprimer</a>
                         </div>
                         {% endif %}
                         <div class="mb-4 float-right">
                             {% if EDIT_MODE == true %}
                                 <button type="submit" id="updatePerson" name="updatePerson"
                                     class="btn btn-{{ theme_color }} shadow"
-                                    data-url="{{ path('person_edit_ajax', {'id':person.id}) }}"><span class="fas fa-save mr-2"></span>Mettre à jour</button>
+                                    data-url="{{ path('person_edit_ajax', {'id': person.id}) }}"><span class="fas fa-save mr-2"></span>Mettre à jour</button>
                             {% else %}
                                 <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>Enregistrer</button>
                             {% endif %}
@@ -113,57 +110,55 @@
 
             <h2 class="h4 my-4">Groupes d'appartenance</h2>
             {% if person.rolesPerson %}
-            <div class="table-responsive">
-                <table class="table table-striped table-hover text-dark">
-                    <thead class="">
-                        <tr>
-                            <th scope="col" class="align-middle th-w-20"></th>
-                            <th scope="col" class="align-middle th-w-80 d-none d-sm-table-cell" data-toggle="tooltip" 
-                                data-placement="bottom" title="N° d'identification du groupe">ID groupe</th>
-                            <th scope="col" class="align-middle th-w-140">Typologie familiale</th>
-                            <th scope="col" class="align-middle th-w-100 d-none d-sm-table-cell">Nb de
-                                personnes</th>
-                            <th scope="col" class="align-middle th-w-150">Rôle dans le groupe</th>
-                            <th scope="col" class="align-middle th-w-100 d-none d-sm-table-cell">Date de
-                                création</th>
-                            <th scope="col" class="align-middle th-w-100 d-none d-sm-table-cell">Date de
-                                modification
-                            </th>
-                        </tr>
-                    </thead>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover text-dark">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="align-middle th-w-20"></th>
+                                <th scope="col" class="align-middle th-w-80 d-none d-sm-table-cell" data-toggle="tooltip" 
+                                    data-placement="bottom" title="N° d'identification du groupe">ID groupe</th>
+                                <th scope="col" class="align-middle th-w-140">Typologie familiale</th>
+                                <th scope="col" class="align-middle th-w-100 d-none d-sm-table-cell">Nb de
+                                    personnes</th>
+                                <th scope="col" class="align-middle th-w-150">Rôle dans le groupe</th>
+                                <th scope="col" class="align-middle th-w-100 d-none d-sm-table-cell">Date de
+                                    création</th>
+                                <th scope="col" class="align-middle th-w-100 d-none d-sm-table-cell">Date de
+                                    modification
+                                </th>
+                            </tr>
+                        </thead>
 
-                    <tbody>
-                        {% for role in person.rolesPerson %}
-                        <tr>
-                            <th scope="row">
-                                <a href="{{ path('people_group_show', {'id':role.peopleGroup.id}) }}"
-                                    class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" 
-                                    data-placement="bottom" title="Voir la fiche du groupe">
-                                    <span class="fas fa-eye"></span>
-                                </a>
-                            </th>
-                            <td class="d-none d-sm-table-cell" data-toggle="tooltip" 
-                                data-placement="bottom" title="N° d'identification du groupe">
-                                {{ role.peopleGroup.id }}</td>
-                            <td class="d-table-row d-sm-table-cell">
-                                {{ role.peopleGroup.familyTypologyToString }}
-                            </td>
-                            <td class="d-table-row d-sm-table-cell">{{ role.peopleGroup.nbPeople }}</td>
-                            <td>{{ role.roleToString }} {% if role.head %} (DP){% endif %}</td>
-                            <td class="d-none d-sm-table-cell">
-                                {{ role.peopleGroup.createdAt|date("d/m/Y H:i") }}</td>
-                            <td class="d-none d-sm-table-cell">
-                                {{ role.peopleGroup.updatedAt|date("d/m/Y H:i") }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                        <tbody>
+                            {% for role in person.rolesPerson %}
+                                <tr>
+                                    <td scope="row">
+                                        <a href="{{ path('people_group_show', {'id': role.peopleGroup.id}) }}"
+                                            class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" 
+                                            data-placement="bottom" title="Voir la fiche du groupe">
+                                            <span class="fas fa-eye"></span>
+                                        </a>
+                                    </td>
+                                    <td class="d-none d-sm-table-cell" data-toggle="tooltip" 
+                                        data-placement="bottom" title="N° d'identification du groupe">
+                                        {{ role.peopleGroup.id }}</td>
+                                    <td class="d-table-row d-sm-table-cell">
+                                        {{ role.peopleGroup.familyTypologyToString }}
+                                    </td>
+                                    <td class="d-table-row d-sm-table-cell">{{ role.peopleGroup.nbPeople }}</td>
+                                    <td>{{ role.roleToString }} {% if role.head %} (DP){% endif %}</td>
+                                    <td class="d-none d-sm-table-cell">
+                                        {{ role.peopleGroup.createdAt|date("d/m/Y H:i") }}</td>
+                                    <td class="d-none d-sm-table-cell">
+                                        {{ role.peopleGroup.updatedAt|date("d/m/Y H:i") }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             {% endif %}
-            
             <button id="btn-new-group" class="m-2 btn btn-{{ theme_color }} btn-sm" data-toggle="modal" data-target="#modal-new-group"><span
                 class="fas fa-plus-square pr-2"></span>Créer un nouveau groupe</button>
-
         </section>
 
         <hr>
