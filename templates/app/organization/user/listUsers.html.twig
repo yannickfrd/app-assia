@@ -1,6 +1,9 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Utilisateurs{% endblock %}
+{% set title = "Utilisateurs" %}
+{% set is_granted_admin = is_granted("ROLE_ADMIN") %}
+
+{% block title %}{{ title }}{% endblock %}
 
 {% block body %}
 
@@ -8,7 +11,7 @@
 
         <div class="container">
             {% include "model/_msgFlash.html.twig" %}
-            <h1 class="h2 mb-3">Utilisateurs</h1>
+            <h1 class="h2 mb-3">{{ title }}</h1>
         </div>
 
         {% include "app/organization/user/_searchUsers.html.twig" %}
@@ -28,7 +31,7 @@
 
             <div class="row align-items-baseline">
                 <div class="col-md-4 count align-middle">
-                    <p class="align-middle">Total : {{ users.getTotalItemCount|number_format(0,'', ' ')}} <!--
+                    <p class="align-middle mb-0">Total : {{ users.getTotalItemCount|number_format(0,'', ' ')}} <!--
                     -->utilisateur{% if users.getTotalItemCount > 1 %}s{% endif %}.</p>
                 </div>
                 <div class="col-md-8">
@@ -59,13 +62,15 @@
                         {% for user in users %}
                         <tr>
                             <td scope="row" class="align-middle text-center">
-                                {% if is_granted("EDIT", user) %}
-                                    <a href="{{ path('security_user', {'id':user.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow" 
-                                        data-toggle="tooltip" data-placement="bottom" title="Voir la fiche"><span class="fas fa-eye"></span>
-                                    </a>
-                                {% else %}
-                                    <span class="btn btn-secondary btn-sm shadow cursor-default" data-toggle="tooltip" data-placement="bottom" 
-                                        title="Vous n'avez pas les droits pour accéder à la fiche"><span class="fas fa-ban"></span></span>                           
+                                {% if is_granted_admin %}              
+                                    {% if is_granted("EDIT", user) %}
+                                        <a href="{{ path('security_user', {'id': user.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow" 
+                                            data-toggle="tooltip" data-placement="bottom" title="Voir la fiche"><span class="fas fa-eye"></span>
+                                        </a>
+                                    {% else %}
+                                        <span class="btn btn-secondary btn-sm shadow cursor-default" data-toggle="tooltip" data-placement="bottom" 
+                                            title="Vous n'avez pas les droits pour accéder à la fiche"><span class="fas fa-ban"></span></span>                           
+                                    {% endif %}
                                 {% endif %}
                             </td>
                             <td class="align-middle text-uppercase">{{ user.lastname }}</td>

@@ -131,10 +131,9 @@ class UserRepository extends ServiceEntityRepository
             $query->andWhere('p.id = :pole_id')
                 ->setParameter('pole_id', $search->getPole());
         }
-
-        if (Choices::DISABLED === $search->getDisabled()) {
+        if (Choices::ACTIVE === $search->getDisabled()) {
             $query->andWhere('u.disabledAt IS NOT NULL');
-        } elseif (Choices::ACTIVE === $search->getDisabled()) {
+        } elseif (Choices::DISABLED === $search->getDisabled() || null === $search->getDisabled()) {
             $query->andWhere('u.disabledAt IS NULL');
         }
 
