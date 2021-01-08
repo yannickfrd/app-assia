@@ -500,8 +500,7 @@ class SupportManager
 
         if ($nbSupportPeople != $nbPeople && $nbActiveSupportPeople != $nbPeople) {
             $this->addFlash('warning', 'Attention, le nombre de personnes actuellement suivies 
-                ne correspond pas à la composition familiale du groupe ('.$nbPeople.' personnes).<br/> 
-                Cliquez sur le buton <b>Modifier</b> pour ajouter les personnes au suivi.');
+                ne correspond pas à la composition familiale du groupe ('.$nbPeople.' personnes).');
         }
 
         if ($supportGroup->getDevice() && Choices::YES === $supportGroup->getDevice()->getAccommodation()) {

@@ -129,9 +129,9 @@ export default class ValidationSupport {
         if (intervalWithNow < 0) {
             return this.validationForm.invalidField(this.endDateInputElt, 'La date ne peut pas être postérieure à la date du jour.')
         }
-        if (!this.endDateInputElt.value && this.statusSelectElt && this.selectType.getOption(this.statusSelectElt) === 4) { // Statut = Terminé
-            return this.validationForm.invalidField(this.endDateInputElt, 'La date de fin ne peut pas être vide si le suivi est terminé.')
-        }
+        // if (!this.endDateInputElt.value && this.statusSelectElt && this.selectType.getOption(this.statusSelectElt) === 4) { // Statut = Terminé
+        //     return this.validationForm.invalidField(this.endDateInputElt, 'La date de fin ne peut pas être vide si le suivi est terminé.')
+        // }
         if (this.endDateInputElt.value && this.statusSelectElt) { // Statut = Terminé
             this.selectType.setOption(this.statusSelectElt, 4)
         }
