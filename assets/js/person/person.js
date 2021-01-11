@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
         new CheckChange('person') // form name
     } else {
         new NewPeopleGroup()
-        new CheckChange('person_role_person') // form name
+        new CheckChange(document.querySelector('#person>form').name) // form name
     }
     if (document.getElementById('js-people')) {
         new NewForm('btn-new-support', 'container-form-new-support', 'modal-new-support') // Formulaire pour la création d'un nouveau suivi

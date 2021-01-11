@@ -68,10 +68,12 @@ export default class SearchPerson {
     onClickBtnElt(e) {
         e.preventDefault()
         if (this.checkParamsInForm() === false) {
-            return this.noParams()
+            this.noParams()
         }
         if (!this.loader.isActive()) {
             this.sendRequest()
+        } else {
+            setTimeout(() => this.loader.off(), 1000)
         }
     }
 
