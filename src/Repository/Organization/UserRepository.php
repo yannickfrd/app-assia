@@ -192,17 +192,21 @@ class UserRepository extends ServiceEntityRepository
      */
     public function findUsersOfServices(CurrentUserService $currentUser): ?array
     {
-        $query = $this->createQueryBuilder('u')
-            ->select('PARTIAL u.{id, firstname, lastname, disabledAt}')
+        $query = $this->createQueryBuilder('u')->select('PARTIAL u.{id, firstname, lastname, disabledAt}')
             ->leftJoin('u.userDevices', 'ud')->addSelect('ud')
             ->leftJoin('ud.device', 'd')->addSelect('PARTIAL d.{id, name}')
 
             ->where('u.disabledAt IS NULL');
 
         if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
-            $query = $query->leftJoin('u.serviceUser', 'r')
-                ->andWhere('r.service IN (:services)')
-                ->setParameter('services', $currentUser->getServices());
+            if ($currentUser->hasRole('ROLE_ADMIN')) {
+                $query = $query->leftJoin('u.serviceUser', 'r')
+                    ->andWhere('r.service IN (:services)')
+                    ->setParameter('services', $currentUser->getServices());
+            } else {
+                $query->andWhere('u.id = :user')
+                ->setParameter('user', $currentUser->getUser());
+            }
         }
 
         return $query->orderBy('u.lastname', 'ASC')

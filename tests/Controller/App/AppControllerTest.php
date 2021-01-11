@@ -80,7 +80,8 @@ class AppControllerTest extends WebTestCase
 
         $this->client->request('GET', $this->generateUri('supports_by_user'));
 
-        $this->assertSame(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', 'Répartition des suivis en cours');
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
 
     public function testPageServiceDashboardInRoleAdmin()

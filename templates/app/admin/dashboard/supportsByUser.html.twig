@@ -87,35 +87,37 @@
                                 {% endif %}
                             {% endfor %}
                         </tbody>
-                        <tfoot>
-                            <tr class="font-weight-bold">
-                                <td scope="row" colspan="2" class="align-middle text-right">Total</td>
-                                <td class="align-middle text-right">{{ nbSupports }}
-                                    {% if nbSupports != sumCoeffSupports %}
-                                        <br/><span class="text-{{ theme_color }}"> ({{ sumCoeffSupports }})</span>
-                                    {% endif %}
-                                    {% for device in devices %}
-                                        <td class="align-middle text-right">{{ device.nbSupports }}
-                                    {% if device.nbTheoreticalSupports > 0 %}
-                                        <span class="small"> /{{ device.nbTheoreticalSupports }}</span>
-                                    {% endif %}
-                                        {% if device.nbSupports != device.sumCoeff %}
-                                            <br/><span class="text-{{ theme_color }}"> ({{ device.sumCoeff }})</span>
-                                        {% endif %}
-                                        </td>
-                                    {% endfor %}
-                            </tr>
-                            {% if datasUsers|length > 0 %} 
+                        {% if is_granted("ROLE_ADMIN") %}
+                            <tfoot>
                                 <tr class="font-weight-bold">
-                                    <td scope="row" colspan="2" class="align-middle text-right">Moyenne</td>
-                                    <td class="align-middle text-right">{{ (nbSupports / datasUsers|length)|round(1, "common") }}
+                                    <td scope="row" colspan="2" class="align-middle text-right">Total</td>
+                                    <td class="align-middle text-right">{{ nbSupports }}
                                         {% if nbSupports != sumCoeffSupports %}
-                                            <br/><span class="text-{{ theme_color }}"> ({{ (sumCoeffSupports / datasUsers|length)|round(1, "common") }})</span>
+                                            <br/><span class="text-{{ theme_color }}"> ({{ sumCoeffSupports }})</span>
                                         {% endif %}
-                                    </td>
+                                        {% for device in devices %}
+                                            <td class="align-middle text-right">{{ device.nbSupports }}
+                                        {% if device.nbTheoreticalSupports > 0 %}
+                                            <span class="small"> /{{ device.nbTheoreticalSupports }}</span>
+                                        {% endif %}
+                                            {% if device.nbSupports != device.sumCoeff %}
+                                                <br/><span class="text-{{ theme_color }}"> ({{ device.sumCoeff }})</span>
+                                            {% endif %}
+                                            </td>
+                                        {% endfor %}
                                 </tr>
-                            {% endif %}
-                        </tfoot>
+                                {% if datasUsers|length > 0 %} 
+                                    <tr class="font-weight-bold">
+                                        <td scope="row" colspan="2" class="align-middle text-right">Moyenne</td>
+                                        <td class="align-middle text-right">{{ (nbSupports / datasUsers|length)|round(1, "common") }}
+                                            {% if nbSupports != sumCoeffSupports %}
+                                                <br/><span class="text-{{ theme_color }}"> ({{ (sumCoeffSupports / datasUsers|length)|round(1, "common") }})</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            </tfoot>
+                        {% endif %}
                     </table>
                 </div>
             </div>
