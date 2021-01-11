@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.15.05 - 08/01/2021
+2.15.11 - 11/01/2021
 
 # Développeur
 Romain MADELAINE
@@ -13,48 +13,56 @@ https://github.com/RomMad/esperer95.app
 # Connection à la base démo
 https://demo.esperer95.app
 
+## Version 2.15.6-11 - 11/01/2021
+- Edit view size document 'Ko' to 'Mo';
+- Edit redirect to homePage after login success;
+- Fix bug update budgetBalance in evaluation.js;
+- Edit searchPerson;
+- Edit find Users if disabled or not;
+- Add logo pole 'Hébergement social';
+
 ## Version 2.15.3-5 - 08/01/2021
-- Fixed some validation problems in fields Person (birthdate);
-- Edited validation fied in Support;
-- Fixed error typo message flash; 
-- Added namespaced in every FilesystemAdapter;
+- Fix some validation problems in fields Person (birthdate);
+- Edit validation fied in Support;
+- Fix error typo message flash; 
+- Add namespaced in every FilesystemAdapter;
 
 ## Version 2.15.2 - 05/01/2021
-- Edited view listUsers (is_granted) and filter disabled users in UserRepository; 
+- Edit view listUsers (is_granted) and filter disabled users in UserRepository; 
 
 ## Version 2.15.1 - 24/12/2020
-- Added a new export Supports with evaluation;
-- Edited format Export Excel;
+- Add a new export Supports with evaluation;
+- Edit format Export Excel;
 
 ## Version 2.14.4-5 - 24/12/2020
-- Edited ImportUser and MailNotification;
-- Edited Commands;
+- Edit ImportUser and MailNotification;
+- Edit Commands;
 
 ## Version 2.14.1-3 - 24/12/2020
-- Created 'SoundexFr' class and soundex fields for 'Person' entity;
-- Edited Commands;
-- Edited ContributionVoter ('canDelete' method) and SupportManager('checkHead' method);
-- Created buttons to reduce and save in every accordion card;
+- Create 'SoundexFr' class and soundex fields for 'Person' entity;
+- Edit Commands;
+- Edit ContributionVoter ('canDelete' method) and SupportManager('checkHead' method);
+- Create buttons to reduce and save in every accordion card;
 
 # Mise à jour
 ## Version 2.13.21-26 - 22/12/2020
-- Edited Evaluation : add 'pmi', 'pmiName', 'AseFollowUp' fields;
-- Edited searchPerson and validationPerson;
+- Edit Evaluation : add 'pmi', 'pmiName', 'AseFollowUp' fields;
+- Edit searchPerson and validationPerson;
 - Create Commands to check the head in groups and supports;
-- Fixed security access in SupportsWithContribution page;
-- Fixed bug view for comment in supportView;
-- Fixed problem AccommodationVoter;
+- Fix security access in SupportsWithContribution page;
+- Fix bug view for comment in supportView;
+- Fix problem AccommodationVoter;
 
 ## Version 2.13.15-20 - 21/12/2020
-- Edited Evaluation : 
+- Edit Evaluation : 
     - evalFamily : delete table for children and create a normal block,
     - evalSocial : create field 'medicalFollowUp',
     - evalAdm : edit table for children (add asylum and comment information),
-- Edited logout : fix bug and create a sessionTimer in the navbar;
-- Edited Export Classes (age = 0);
-- Created SupportDuplicator class;
-- Created a ChanNamePeopleCommand in dev environnement;
-- Fixed error 500 in AccommodationVoter.
+- Edit logout : fix bug and create a sessionTimer in the navbar;
+- Edit Export Classes (age = 0);
+- Create SupportDuplicator class;
+- Create a ChanNamePeopleCommand in dev environnement;
+- Fix error 500 in AccommodationVoter.
 
 ## Version 2.13.9-14 - 16/12/2020
 - Fix error 500 during the image upload when the Tinify count compression is over (> 500);
@@ -73,8 +81,8 @@ https://demo.esperer95.app
     - Move 'reasonRequest' and 'wanderingTime' to initEval;
 
 ## Version 2.13.2-8 - 15/12/2020
-- Added and updated annotations for entities ansd repositories.
-- Fixed bug update 'nbPeople' in 'supportGroup'.
+- Add and updated annotations for entities ansd repositories.
+- Fix bug update 'nbPeople' in 'supportGroup'.
 - Add supports coefficient in homepage for the social workers.
 - Edit every PHP operator '==' by '==='.
 - Evaluation: if user is isconnected, send a message to user 'Warning, you are disconnected...'.
