@@ -19,7 +19,7 @@
                 </thead>
                 <tbody>
                     {% for rdv in rdvs %}                           
-                        {% set person = rdv.supportGroup ? (rdv.supportGroup.supportPeople|first).person %}
+                        {% set person = rdv.supportGroup ? (rdv.supportGroup.supportPeople|filter(s => s.head == true)|first).person %}
                         <tr id="rdv-{{ rdv.id }}">
                             <td scope="row" class="align-middle text-center">
                                 <a href="{{ path('calendar_show', {'year':rdv.start|date('Y'),'month':rdv.start|date('m')}) }}" 

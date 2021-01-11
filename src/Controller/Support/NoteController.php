@@ -309,6 +309,9 @@ class NoteController extends AbstractController
             $cache->deleteItem(SupportGroup::CACHE_SUPPORT_NB_NOTES_KEY.$supportGroup->getId());
         }
 
-        return $cache->deleteItem(SupportGroup::CACHE_SUPPORT_NOTES_KEY.$supportGroup->getId());
+        return $cache->deleteItems([
+            SupportGroup::CACHE_SUPPORT_NOTES_KEY.$supportGroup->getId(),
+            User::CACHE_USER_NOTES_KEY.$this->getUser()->getId(),
+        ]);
     }
 }

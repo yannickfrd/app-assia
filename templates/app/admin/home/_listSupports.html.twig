@@ -14,7 +14,7 @@
             <div class="col-md-12">
                 {% set nbSupports = supports|length %}
                 <p class="float-left align-middle">{{ nbSupports }} suivi{{ nbSupports ? "s" }} en cours.
-                    {% if sumCoeff != nbSupports %}<span class="text-secondary"> (coeff. {{ sumCoeff }})</span>{% endif %}
+                    {% if sumCoeff != nbSupports %}<span class="text-secondary"> (coeff. {{ sumCoeff|number_format(1, ',') }})</span>{% endif %}
                 </p>
                 <div class="float-right">
                     <a href="{{ path('new_support_search_person') }}" class="mb-3 btn btn-{{ theme_color }} btn-sm float-right">

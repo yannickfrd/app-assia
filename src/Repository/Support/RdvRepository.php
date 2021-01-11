@@ -287,7 +287,7 @@ class RdvRepository extends ServiceEntityRepository
             ->setParameter('createdBy', $user)
             ->andWhere('rdv.start >= :start')
             ->setParameter('start', (new \DateTime())->modify('-1 hour'))
-            ->andWhere('sp.head = TRUE')
+            // ->andWhere('sp.head = TRUE')
 
             ->orderBy('rdv.start', 'DESC')
 
