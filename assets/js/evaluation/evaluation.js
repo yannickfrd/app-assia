@@ -541,7 +541,7 @@ export default class evaluation {
      * Met à jour le reste à vivre du groupe.
      */
     updateBudgetBalanceAmt() {
-        this.budgetBalanceGroupAmtElt.textContent = parseFloat(this.resourcesGroupAmtElt.textContent - this.chargesGroupAmtElt.textContent - this.contributionAmtElt.value - this.repaymentGroupAmtElt.textContent)
+        this.budgetBalanceGroupAmtElt.textContent = parseFloat(this.resourcesGroupAmtElt.textContent - this.chargesGroupAmtElt.textContent - this.repaymentGroupAmtElt.textContent)
     }
 
     /**
