@@ -57,8 +57,10 @@ class Choices
     public const DISABLE = [
         1 => 'Actif',
         2 => 'Désactivé',
+        0 => 'Tous',
     ];
 
+    public const ALL = 0;
     public const ACTIVE = 1;
     public const DISABLED = 2;
 

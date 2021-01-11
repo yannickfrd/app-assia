@@ -61,7 +61,7 @@ class UserControllerTest extends WebTestCase
         $this->assertSelectorTextContains('table tbody tr td:nth-child(2)', 'SUPER_ADMIN');
     }
 
-    public function testExportPeopleIsSuccessful()
+    public function testExportUsersIsSuccessful()
     {
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('users'));
