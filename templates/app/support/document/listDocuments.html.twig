@@ -37,7 +37,7 @@
 							<th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(documents, "Service", "s.name") }}</th>
 							<th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(documents, "Type", "d.type") }}</th>
 							<th scope="col" class="align-middle th-w-150">{{ knp_pagination_sortable(documents, "Description", "d.content") }}</th>
-							<th scope="col" class="align-middle w-min-70 th-w-100">{{ knp_pagination_sortable(documents, "Taille", "d.size") }}</th>
+							<th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(documents, "Taille", "d.size") }}</th>
 							<th scope="col" class="align-middle th-w-60">Ext.</th>
 							<th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(documents, "Créé le", "d.createdAt") }}</th>
 							<th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(documents, "Créé par", "d.createdBy") }}</th>
@@ -61,7 +61,7 @@
                             	<td class="align-middle">{{ support ? support.service.name }}</td>
 								<td class="align-middle js-document-type" data-value="{{ document.type }}">{{ document.typeToString }}</td>
 								<td class="align-middle js-document-content">{{ document.content }}</td>
-								<td class="align-middle js-document-size text-right">{{ (document.size / 1000)|round(0, "floor")|number_format(0, ",", " ") }} Ko</td>
+								<td class="align-middle js-document-size text-right">{{ (document.size / 1000000)|round(2, "floor")|number_format(2, ",", " ") }} Mo</td>
 								<td class="align-middle js-document-extension">{{ document.extension }}</td>
 								<td class="align-middle js-document-createdAt">{{ document.createdAt|date("d/m/Y H:i") }}</td>
 								<td class="align-middle js-document-createdAt">{{ document.createdBy ? document.createdBy.fullname }}</td>

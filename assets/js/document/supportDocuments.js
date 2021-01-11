@@ -262,7 +262,7 @@ export default class SupportDocuments {
     }
 
     getPrototypeDocument(data) {
-        const size = Math.floor(data.size / 1000) + ' Ko'
+        const size = Math.floor(data.size / 100000) / 100 + ' Mo'
 
         return `<td scope='row' class='align-middle text-center'>
                     <a href='/document/${data.documentId}/read' class='btn btn-${this.themeColor} btn-sm shadow my-1' 
