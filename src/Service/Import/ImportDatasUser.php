@@ -8,12 +8,15 @@ use App\Entity\Organization\User;
 use App\Notification\MailNotification;
 use App\Repository\Organization\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 class ImportDatasUser extends ImportDatas
 {
     protected $manager;
+    /** @var Request */
+    protected $request;
     protected $notification;
     protected $slugger;
 
@@ -40,10 +43,10 @@ class ImportDatasUser extends ImportDatas
         $this->slugger = $slugger;
     }
 
-    public function importInDatabase(string $fileName, Service $service): int
+    public function importInDatabase(string $fileName, Service $service, ?Request $request = null): int
     {
         $this->fields = $this->getDatas($fileName);
-
+        $this->request = $request;
         $i = 0;
 
         foreach ($this->fields as $field) {
@@ -115,7 +118,10 @@ class ImportDatasUser extends ImportDatas
             $username = $username.substr($value, 0, 1);
         }
 
-        return strtolower($this->slugger->slug($username).'.'.$this->slugger->slug($lastname));
+        $appEnv = $this->request->server->get('APP_ENV');
+        $postfix = $appEnv && $appEnv != 'prod' ? '_test' : '';
+
+        return strtolower($this->slugger->slug($username).'.'.$this->slugger->slug($lastname).$postfix);
     }
 
     /**
