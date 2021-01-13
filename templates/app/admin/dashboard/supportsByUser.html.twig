@@ -46,7 +46,7 @@
                                 {% if datasUser.nbSupports > 0 %}
                                     <tr>
                                         <td scope="row" class="align-middle text-center">
-                                            <a href="{{ path('supports', {'status':[2], 'service':{'referents':[datasUser.user.id]} }) }}" 
+                                            <a href="{{ path('supports', {'status':[2], 'service':{'referents':[datasUser.user.id]}, 'head': true}) }}" 
                                                 class="btn btn-{{ theme_color }} btn-sm shadow" 
                                                 data-placement="bottom" title="Voir les suivis du travailleur social"><!--
                                                 --><span class="fas fa-eye fa-sm"></span>

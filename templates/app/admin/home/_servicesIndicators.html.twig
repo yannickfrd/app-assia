@@ -35,7 +35,7 @@
                             {% set sumActiveSupportsPeople = sumActiveSupportsPeople + service["activeSupportsPeople"] %}
                             <tr>
                                 <td scope="row" class="align-middle text-center">
-                                    <a href="{{ path('supports', {'status':[2], 'service':{'services':[service_id]} }) }}" 
+                                    <a href="{{ path('supports', {'status': [2], 'service': {'services': [service_id]}, 'head': true}) }}" 
                                         class="btn btn-{{ theme_color }} shadow" data-placement="bottom" 
                                         title="Voir les suivis en cours"><span class="fas fa-eye fa-sm"></span>
                                     </a>
@@ -64,7 +64,7 @@
                                 {% set activeSupports = sub_service["activeSupportsGroups"] %}
                                 <tr>
                                     <td scope="row" class="align-middle text-center">
-                                        <a href="{{ path('supports', {'status':[2], 'service':{'services':[service_id], 'subServices':[sub_service_id]} }) }}" 
+                                        <a href="{{ path('supports', {'status': [2], 'service': {'services': [service_id], 'subServices': [sub_service_id]}, 'head': true}) }}" 
                                             class="btn btn-secondary btn-sm shadow" data-placement="bottom" 
                                             title="Voir les suivis en cours"><span class="fas fa-eye fa-sm"></span>
                                         </a>
@@ -94,7 +94,7 @@
                                 {% set activeSupports = device["activeSupportsGroups"] %}
                                 <tr class="text-secondary">
                                     <td scope="row" class="align-middle text-center">
-                                        <a href="{{ path('supports', {'status':[2], 'service':{'services':[service_id], 'devices':[device_id]} }) }}" 
+                                        <a href="{{ path('supports', {'status': [2], 'service': {'services': [service_id], 'devices': [device_id]}, 'head': true}) }}" 
                                             class="btn btn-secondary btn-sm shadow" data-placement="bottom" 
                                             title="Voir les suivis en cours"><span class="fas fa-eye fa-sm"></span>
                                         </a>
