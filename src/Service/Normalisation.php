@@ -39,7 +39,7 @@ class Normalisation
     /**
      * Donne la clé.
      */
-    public function getKeys(array $array, string $translationFile = 'forms'): array
+    public function getKeys(array $array, array $translationFile = ['forms']): array
     {
         $arrayKeys = [];
         foreach ($array as $value) {
@@ -60,10 +60,15 @@ class Normalisation
     /**
      * Inverse l'écriture en camelCase.
      */
-    public function unCamelCase(string $content, string $separator = ' ', string $translationFile = 'forms'): string
+    public function unCamelCase(string $content, string $separator = ' ', array $translationFiles = ['forms']): string
     {
         $content = preg_replace('#(?<=[a-zA-Z])([A-Z])(?=[a-zA-Z])#', $separator.'$1', $content);
+        $content = ucfirst(strtolower($content));
 
-        return $this->translator->trans(ucfirst(strtolower($content)), [], $translationFile);
+        foreach ($translationFiles as $file) {
+            $content = $this->translator->trans($content, [], $file);
+        }
+
+        return $content;
     }
 }

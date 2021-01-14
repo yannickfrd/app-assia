@@ -4,6 +4,7 @@ namespace App\Entity\Support;
 
 use App\Repository\Support\AvdlRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=AvdlRepository::class)
@@ -74,11 +75,13 @@ class Avdl
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups("export")
      */
     private $diagStartDate;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups("export")
      */
     private $diagEndDate;
 
@@ -94,11 +97,13 @@ class Avdl
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups("export")
      */
     private $supportStartDate;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups("export")
      */
     private $supportEndDate;
 
@@ -124,6 +129,7 @@ class Avdl
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups("export")
      */
     private $propoHousingDate;
 
@@ -134,6 +140,7 @@ class Avdl
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups("export")
      */
     private $accessHousingDate;
     /**
@@ -157,6 +164,9 @@ class Avdl
         return $this->diagType;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getDiagTypeToString(): ?string
     {
         return $this->getDiagType() ? self::DIAG_TYPE[$this->getDiagType()] : null;
@@ -198,6 +208,9 @@ class Avdl
         return $this->recommendationSupport;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getRecommendationSupportToString(): ?string
     {
         return $this->getRecommendationSupport() ? self::RECOMMENDATION_SUPPORT[$this->getRecommendationSupport()] : null;
@@ -251,6 +264,9 @@ class Avdl
         return $this->supportType;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getSupportTypeToString(): ?string
     {
         return $this->getSupportType() ? self::SUPPORT_TYPE[$this->getSupportType()] : null;
@@ -280,6 +296,9 @@ class Avdl
         return $this->endSupportReason;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getEndSupportReasonToString(): ?string
     {
         return $this->getEndSupportReason() ? self::END_SUPPORT_REASON[$this->getEndSupportReason()] : null;
@@ -297,6 +316,9 @@ class Avdl
         return $this->accessHousingModality;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getAccessHousingModalityToString(): ?string
     {
         return $this->getAccessHousingModality() ? self::ACCESS_HOUSING_MODALITY[$this->getAccessHousingModality()] : null;
@@ -326,6 +348,9 @@ class Avdl
         return $this->propoResult;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getPropoResultToString(): ?string
     {
         return $this->getPropoResult() ? self::PROPO_RESULT[$this->getPropoResult()] : null;

@@ -6,6 +6,7 @@ use App\Entity\Evaluation\EvalHousingGroup;
 use App\Form\Utils\Choices;
 use App\Repository\Support\HotelSupportRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=HotelSupportRepository::class)
@@ -52,11 +53,13 @@ class HotelSupport
 
     /**
      * @ORM\Column(type="string", nullable=true)
+     * @Groups("export")
      */
     private $ssd;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups("export")
      */
     private $evaluationDate;
 
@@ -72,6 +75,7 @@ class HotelSupport
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups("export")
      */
     private $agreementDate;
 
@@ -181,6 +185,9 @@ class HotelSupport
         return $this->levelSupport;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getLevelSupportToString(): ?string
     {
         return $this->getLevelSupport() ? self::LEVEL_SUPPORT[$this->getLevelSupport()] : null;
@@ -198,6 +205,9 @@ class HotelSupport
         return $this->recommendation;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getRecommendationToString(): ?string
     {
         return $this->getRecommendation() ? EvalHousingGroup::SIAO_RECOMMENDATION[$this->getRecommendation()] : null;
@@ -227,6 +237,9 @@ class HotelSupport
         return $this->departmentAnchor;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getDepartmentAnchorToString(): ?string
     {
         return $this->getDepartmentAnchor() ? Choices::DEPARTMENTS[$this->getDepartmentAnchor()] : null;
@@ -244,6 +257,9 @@ class HotelSupport
         return $this->endSupportReason;
     }
 
+    /**
+     * @Groups("export")
+     */
     public function getEndSupportReasonToString(): ?string
     {
         return $this->getEndSupportReason() ? self::END_SUPPORT_REASON[$this->getEndSupportReason()] : null;

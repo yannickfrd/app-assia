@@ -16,6 +16,8 @@ use App\Entity\Evaluation\EvaluationGroup;
 use App\Entity\Evaluation\EvaluationPerson;
 use App\Entity\Evaluation\InitEvalGroup;
 use App\Entity\Evaluation\InitEvalPerson;
+use App\Entity\Support\Avdl;
+use App\Entity\Support\HotelSupport;
 use App\Entity\Support\SupportPerson;
 use App\Service\ExportExcel;
 use App\Service\Normalisation;
@@ -26,6 +28,9 @@ class SupportPersonFullExport extends ExportExcel
     protected $normalisation;
     protected $logger;
     protected $datas;
+
+    protected $avdl;
+    protected $hotelSupport;
 
     protected $initEvalGroup;
     protected $initEvalPerson;
@@ -48,6 +53,9 @@ class SupportPersonFullExport extends ExportExcel
     {
         $this->normalisation = $normalisation;
         $this->logger = $logger;
+
+        $this->avdl = new Avdl();
+        $this->hotelSupport = new HotelSupport();
 
         $this->initEvalGroup = new InitEvalGroup();
         $this->initEvalPerson = new InitEvalPerson();
@@ -73,7 +81,7 @@ class SupportPersonFullExport extends ExportExcel
     public function exportData($supports)
     {
         $arrayData = [];
-        $arrayData[] = $this->normalisation->getKeys(array_keys($this->getDatas($supports[0])), 'evaluation');
+        $arrayData[] = $this->normalisation->getKeys(array_keys($this->getDatas($supports[0])), ['forms', 'evaluation']);
 
         $i = 0;
         $nbSupports = count($supports);
@@ -99,6 +107,7 @@ class SupportPersonFullExport extends ExportExcel
     {
         $this->datas = (new SupportPersonExport())->getDatas($supportPerson);
         $evaluations = $supportPerson->getEvaluationsPerson();
+        $supportGroup = $supportPerson->getSupportGroup();
         $evaluationPerson = $evaluations[$evaluations->count() - 1] ?? $this->evaluationPerson;
         $evaluationGroup = $evaluationPerson->getEvaluationGroup() ?? $this->evaluationGroup;
 
@@ -107,6 +116,7 @@ class SupportPersonFullExport extends ExportExcel
             'ID évaluation personne' => $evaluationPerson->getId(),
         ]);
 
+        $this->add($evaluationGroup->getInitEvalGroup() ?? $this->initEvalGroup, 'initEval');
         $this->add($evaluationGroup->getInitEvalGroup() ?? $this->initEvalGroup, 'initEval');
         $this->add($evaluationPerson->getInitEvalPerson() ?? $this->initEvalPerson, 'initEval');
         $this->add($evaluationPerson->getEvalJusticePerson() ?? $this->evalJusticePerson, 'justice');
@@ -119,6 +129,9 @@ class SupportPersonFullExport extends ExportExcel
         $this->add($evaluationGroup->getEvalBudgetGroup() ?? $this->evalBudgetGroup, 'budget');
         $this->add($evaluationPerson->getEvalBudgetPerson() ?? $this->evalBudgetPerson, 'budget');
         $this->add($evaluationGroup->getEvalHousingGroup() ?? $this->evalHousingGroup, 'housing');
+
+        $this->add($supportGroup->getAvdl() ?? $this->avdl, 'avdl');
+        $this->add($supportGroup->getHotelSupport() ?? $this->hotelSupport, 'pash');
 
         return $this->datas;
     }

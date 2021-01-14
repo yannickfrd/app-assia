@@ -2,7 +2,7 @@ accommodation:
   name: Hébergement ou logement
   name.placeholder: Nom du groupe de places
   name.help: Ce nom doit vous permettre de retrouver facilement ce logement ou cet hébergement (numéro, couleur...).
-  location.placeholder : Adresse du groupe de places
+  location.placeholder: Adresse du groupe de places
   configuration.help: Diffus ou regroupé
   type.help: Chambre, T1, T2, T3...
 accommodationGroup:
@@ -11,7 +11,7 @@ Address: Adresse
 Birthdate: Date de naissance
 City: Ville
 Coefficient: Coefficient du suivi
-Color: Couleur 
+Color: Couleur
 Comment location: Complément adresse
 commentLocation.help: Bâtiment, étage, N° de porte...
 Confirm password: Confirmation du mot de passe
@@ -181,9 +181,10 @@ Contribution type: Type de participation financière
 Contribution rate: Taux de participation financière
 Justice activity: Activité Justice
 service:
+  coefficient: Coefficient
+  coefficient.placeholder: Suivis avec coefficient (pondération)
   comment.placeholder: Écrire une information complémentaire...
   name: Nom du service
-
 Accommodation type: Type de logement ou d'hébergement
 Configuration: Configuration
 Individual collective: Individuel ou collectif
@@ -206,7 +207,7 @@ contribution:
   send:
     notice: Envoyer l'avis d'échéance par email
     receipt: Envoyer le reçu de paiement par email
-  download: 
+  download:
     notice: Télécharger l'avis d'échéance
     receipt: Télécharger le reçu de paiement
   comment.placeholder: Écrire un commentaire
@@ -216,7 +217,7 @@ contribution:
 
 ### RDV
 rdv:
-  placeholder: 
+  placeholder:
     location: Ajouter un lieu
     content: Ajouter une note
     title: Ajouter un titre
@@ -226,9 +227,9 @@ rdv:
 ### Adresse
 location:
   address_auto: Adresse (auto.)
-  city_auto:  Ville (auto.)
+  city_auto: Ville (auto.)
   zipcode_auto: Code postal (auto.)
-  search :
+  search:
     placeholder: Saisir une adresse ou une ville...
     help: Adresse du logement, hébergement, domiciliation...
 
@@ -268,11 +269,11 @@ avdl:
 Department anchor: Département d'ancrage
 Agreement date: Date de signature de la convention
 Entry hotel date: Date de stabilisation ou d'entrée à l'hôtel
-Evaluation date : Date de l'évaluation / diagnostic
+Evaluation date: Date de l'évaluation / diagnostic
 Gip id: Identifiant GIP
 Level support: Niveau d'intervention
 Origin dept: Département d'origine
-Recommendation : Préconisation
+Recommendation: Préconisation
 hotelSupport:
   startDate: Date d'arrivée
   evaluation: Date de l'évaluation / diagnostic
@@ -281,7 +282,7 @@ hotelSupport:
   endSupportReason: Motif de fin d'accompagnement
   recommendation: Préconisation
   orientationDate: Date d'orientation
-  subService.help: Secteur géographique 
+  subService.help: Secteur géographique
   support: Suivi
   levelSupport: Niveau d'intervention
   search:

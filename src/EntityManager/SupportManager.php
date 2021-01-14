@@ -259,7 +259,7 @@ class SupportManager
     /**
      * Donne le demandeur principal du suivi.
      */
-    public function getHeadPersonSupport(?SupportGroup $supportGroup): ?Person
+    public function getHeadPersonSupport(?SupportGroup $supportGroup): Person
     {
         foreach ($supportGroup->getSupportPeople() as $supportPerson) {
             if (true === $supportPerson->getHead()) {
@@ -267,7 +267,7 @@ class SupportManager
             }
         }
 
-        return null;
+        return $supportGroup->getSupportPeople()->first()->getPerson();
     }
 
     /**

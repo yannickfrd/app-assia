@@ -26,8 +26,8 @@ class PeopleGroupRepository extends ServiceEntityRepository
     public function findPeopleGroupById(int $id): ?PeopleGroup
     {
         return $this->createQueryBuilder('g')->select('g')
-            ->leftJoin('g.createdBy', 'createdBy')->addSelect('PARTIAL createdBy.{id, firstname, lastname}')
-            ->leftJoin('g.updatedBy', 'updatedBy')->addSelect('PARTIAL updatedBy.{id, firstname, lastname}')
+            ->leftJoin('g.createdBy', 'createdBy')->addSelect('PARTIAL createdBy.{id, firstname, lastname, email, phone1}')
+            ->leftJoin('g.updatedBy', 'updatedBy')->addSelect('PARTIAL updatedBy.{id, firstname, lastname, email, phone1}')
             ->leftJoin('g.rolePeople', 'r')->addSelect('PARTIAL r.{id, role, head}')
             ->leftJoin('r.person', 'p')->addSelect('p')
 

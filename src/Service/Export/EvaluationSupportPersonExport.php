@@ -79,7 +79,7 @@ class EvaluationSupportPersonExport extends ExportExcel
         $this->stopwatch->start('create_datas_array');
 
         $arrayData = [];
-        $arrayData[] = $this->normalisation->getKeys(array_keys($this->getDatas($supports[0])), 'evaluation');
+        $arrayData[] = $this->normalisation->getKeys(array_keys($this->getDatas($supports[0])), ['evaluation']);
 
         $i = 0;
         $nbSupports = count($supports);

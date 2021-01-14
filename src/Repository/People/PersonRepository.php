@@ -28,8 +28,8 @@ class PersonRepository extends ServiceEntityRepository
     public function findPersonById(int $id): ?Person
     {
         return $this->createQueryBuilder('p')->select('p')
-            ->leftJoin('p.createdBy', 'createdBy')->addSelect('PARTIAL createdBy.{id, firstname, lastname}')
-            ->leftJoin('p.updatedBy', 'updatedBy')->addSelect('PARTIAL updatedBy.{id, firstname, lastname}')
+            ->leftJoin('p.createdBy', 'createdBy')->addSelect('PARTIAL createdBy.{id, firstname, lastname, email, phone1}')
+            ->leftJoin('p.updatedBy', 'updatedBy')->addSelect('PARTIAL updatedBy.{id, firstname, lastname, email, phone1}')
             ->leftJoin('p.rolesPerson', 'r')->addSelect('PARTIAL r.{id, role, head}')
             ->leftJoin('r.peopleGroup', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople, createdAt, updatedAt}')
 
