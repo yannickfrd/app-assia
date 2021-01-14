@@ -33,7 +33,7 @@ class ExportPDF
      */
     public function createDocument(string $content, ?string $title, ?string $logoPath = null, string $infoAdd = ''): void
     {
-        $this->title = $title ?? 'Document';
+        $this->title = $title ?? 'Note';
         $this->logoPath = $logoPath;
         $this->infoAdd = $infoAdd;
 
@@ -110,8 +110,9 @@ class ExportPDF
     /**
      * Format the HTML content.
      */
-    public function formatContent(string $content, Environment $renderer, string $title, string $logoPath = null, string $infoAdd): string
+    public function formatContent(string $content, Environment $renderer, ?string $title, string $logoPath = null, string $infoAdd): string
     {
+        $title = $title ?? 'Note';
         $style = $renderer->render('pdf/style/_pdf.css.twig');
 
         $logoPath = $this->getPathImage($logoPath);

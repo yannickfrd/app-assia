@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.15.20 - 14/01/2021
+2.15.21 - 14/01/2021
 
 # Développeur
 Romain MADELAINE
@@ -13,13 +13,13 @@ https://github.com/RomMad/esperer95.app
 # Connection à la base démo
 https://demo.esperer95.app
 
-## Version 2.15.16-20 - 14/01/2021
+## Version 2.15.16-21 - 14/01/2021
 - Edit importDatasUser (add 'roles' and 'status' fields);
 - Add 'coefficient' field option in Service; 
 - Edit AccommodationsGroup for hotelSupport ('PEC hotel');
 - Update tests EndToEnd;
 - Edit supports Export;
-
+- Fix error 500 if export a note to PDF without title;
 ## Version 2.15.14-15 - 13/01/2021
 - Edit importUsers (create username with postfix '_test' if env is not prod);
 - Edit views 'supportsByUser' and 'servicesIndicators' (add 'head' == true in paths);

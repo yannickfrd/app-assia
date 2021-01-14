@@ -38,7 +38,7 @@ class ExportWord
      */
     public function createDocument(string $content, ?string $title, ?string $logoPath = null, string $infoAdd = ''): void
     {
-        $this->title = $title ?? 'Document';
+        $this->title = $title ?? 'Note';
         $this->logoPath = $logoPath;
         $this->infoAdd = $infoAdd;
 
