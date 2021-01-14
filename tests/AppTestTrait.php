@@ -17,7 +17,7 @@ trait AppTestTrait
      */
     protected function createLogin(User $user, bool $followRedirects = true): void
     {
-        /** @var KernelBrowser */
+        /* @var KernelBrowser */
         $this->client = static::createClient();
 
         $followRedirects ? $this->client->followRedirects() : null;
@@ -39,7 +39,7 @@ trait AppTestTrait
 
     protected function createPantherLogin($followRedirects = true)
     {
-        $this->client = static::createPantherClient();
+        $this->client = static::createPantherClient(['browser' => 'firefox']);
 
         $followRedirects ? $this->client->followRedirects() : null;
 
@@ -48,7 +48,7 @@ trait AppTestTrait
         $this->debug('try to login');
 
         $form = $crawler->selectButton('send')->form([
-            '_username' => 'r.super_admin',
+            '_username' => 'r.admin',
             '_password' => 'Test123*',
         ]);
 

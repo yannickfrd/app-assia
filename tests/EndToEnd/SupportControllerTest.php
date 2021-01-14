@@ -89,10 +89,10 @@ class SupportControllerTest extends PantherTestCase
 
         $this->debug('go to the evaluation page');
 
-        $link = $crawler->filter('a#scroll-top')->click();
+        // $link = $crawler->filter('a#scroll-top')->click();
         sleep(1);
 
-        $link = $crawler->filter('a[title="Évaluation sociale"]')->link();
+        $link = $crawler->filter('a#support-evaluation')->link();
 
         $crawler = $this->client->click($link);
 
@@ -124,7 +124,7 @@ class SupportControllerTest extends PantherTestCase
 
         $this->debug('go to the note page');
 
-        $link = $crawler->filter('a[title="Notes sociales"]')->link();
+        $link = $crawler->filter('a[data-original-title="Notes sociales"]')->link();
 
         /** @var Crawler */
         $crawler = $this->client->click($link);
@@ -142,7 +142,6 @@ class SupportControllerTest extends PantherTestCase
         $form = $crawler->selectButton('js-btn-save')->form([
             'note[title]' => $faker->sentence(mt_rand(5, 10), true),
         ]);
-        // $this->client->executeScript('document.getElementById("editor").innerHTML="<p>contenu de la note</p>"');
 
         /** @var Crawler */
         $crawler = $this->client->submit($form);
@@ -154,7 +153,9 @@ class SupportControllerTest extends PantherTestCase
         sleep(1);
 
         $this->debug('success to create a new note');
-
+        $this->client->executeScript('document.getElementById("editor").click()');
+        // $this->client->executeScript('navigator.clipboard.writeText("This text is now in the clipboard");');
+        // $this->client->executeScript('document.execCommand("paste")');
         $form = $crawler->selectButton('js-btn-save')->form([
             'note[title]' => $faker->sentence(mt_rand(5, 10), true),
             'note[editor]' => join('. ', $faker->paragraphs(mt_rand(1, 2))),
@@ -164,9 +165,10 @@ class SupportControllerTest extends PantherTestCase
         $crawler = $this->client->submit($form);
 
         $this->client->waitFor('#js-msg-flash');
-        $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
+        $this->assertSelectorExists('#js-msg-flash.alert.alert-danger');
 
         $crawler->selectButton('btn-close-msg')->click();
+        $crawler->selectButton('js-btn-cancel')->click();
         sleep(2);
 
         $this->debug('get an old note');
@@ -188,6 +190,8 @@ class SupportControllerTest extends PantherTestCase
         $this->client->waitFor('#js-msg-flash');
         $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
         $crawler->selectButton('btn-close-msg')->click();
+        $crawler->selectButton('js-btn-cancel')->click();
+
         // sleep(1);
 
         //
@@ -198,11 +202,11 @@ class SupportControllerTest extends PantherTestCase
         // Test de la page des rendez-vous
 
         $this->debug('go to calendar page');
-
+        sleep(1);
         $link = $crawler->filter('a#scroll-top')->click();
         sleep(1);
 
-        $link = $crawler->filter('a[title="Rendez-vous"]')->link();
+        $link = $crawler->filter('a[data-original-title="Rendez-vous"]')->link();
 
         /** @var Crawler */
         $crawler = $this->client->click($link);
@@ -238,7 +242,7 @@ class SupportControllerTest extends PantherTestCase
         $this->debug('get an old rdv');
 
         $link = $crawler->filter('a.calendar-event')->eq(0)->click();
-        sleep(1); //pop-up effect
+        sleep(2); //pop-up effect
 
         $this->debug('success to edit an old rdv');
 
@@ -267,7 +271,7 @@ class SupportControllerTest extends PantherTestCase
         $link = $crawler->filter('a#scroll-top')->click();
         sleep(1);
 
-        $link = $crawler->filter('a[title="Documents administratifs"]')->link();
+        $link = $crawler->filter('a[data-original-title="Documents administratifs"]')->link();
 
         /** @var Crawler */
         $crawler = $this->client->click($link);

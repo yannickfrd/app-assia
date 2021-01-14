@@ -26,10 +26,11 @@ class PersonControllerTest extends PantherTestCase
     protected function setUp()
     {
         $this->dataFixtures = $this->loadFixtureFiles([
-            dirname(__DIR__).'/DataFixturesTest/PersonFixturesTest.yaml',
+            // dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
+            // dirname(__DIR__).'/DataFixturesTest/PersonFixturesTest.yaml',
         ]);
 
-        $this->person = $this->dataFixtures['person1'];
+        // $this->person = $this->dataFixtures['person1'];
     }
 
     public function testPantherEditPersonInGroupWithAjax()
@@ -46,27 +47,25 @@ class PersonControllerTest extends PantherTestCase
             'lastname' => 'DOE',
         ]);
 
-        /** @var Crawler */
-        $crawler = $this->client->submit($form);
+        $this->client->waitFor('a.btn[title="Voir la fiche de la personne"]');
+        // sleep(1);
 
-        $this->client->waitFor('table');
-
-        $link = $crawler->selectLink('DOE')->link();
+        $link = $crawler->filter('a.btn[title="Voir la fiche de la personne"]')->link();
 
         $this->debug('go to person page');
 
         /** @var Crawler */
         $crawler = $this->client->click($link);
 
-        $this->client->waitFor('#updatePerson');
-
+        // $this->client->waitFor('#updatePerson');
         $this->debug('update information from the person');
+        // sleep(1);
+        $crawler->selectButton('updatePerson')->click();
 
-        $form = $crawler->selectButton('updatePerson')->form([]);
-
-        $this->client->submit($form);
+        $this->debug('close message-flash');
 
         $this->client->waitFor('#js-msg-flash');
+        // sleep(1);
         $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
 
         // testPantherEditPersonWithAjax
@@ -75,9 +74,11 @@ class PersonControllerTest extends PantherTestCase
         $this->debug('create a new group for the person');
 
         // testPantherSuccessToAddNewGroupToPerson
-        $this->client->waitFor('#btn-new-group');
+        $this->debug('select btn-new-group');
         $crawler->selectButton('btn-new-group')->click();
         sleep(1); // $this->client->waitFor("#js-btn-confirm");
+
+        $this->debug('sign form');
 
         $form = $crawler->selectButton('js-btn-confirm')->form([
             'person_new_group[peopleGroup][familyTypology]' => 1,
