@@ -26,7 +26,7 @@ class ImportDatasUser extends ImportDatas
     protected $repoUser;
     protected $passwordEncoder;
 
-    protected $items = [];
+    protected $users = [];
     protected $existUsers = [];
 
     public function __construct(
@@ -53,17 +53,19 @@ class ImportDatasUser extends ImportDatas
             $this->field = $field;
             if ($i > 0) {
                 $user = $this->createUser($service);
-                // Envoie l'email
-                $this->notification->createUserAccount($user);
             }
             ++$i;
         }
 
-        // dump($this->existUsers);
-        // dd($this->items);
         $this->manager->flush();
 
-        return count($this->items);
+        // Envoie des emails.
+        foreach ($this->users as $user) {
+            $this->notification->createUserAccount($user);
+        }
+
+        // dd($this->users);
+        return count($this->users);
     }
 
     /**
@@ -75,16 +77,20 @@ class ImportDatasUser extends ImportDatas
 
         $firstname = $this->field['Prénom'];
         $lastname = $this->field['Nom'];
+        $status = isset($this->field['Statut']) ? (int) $this->field['Statut'] : 1;
+        $role = isset($this->field['Rôle']) ? [$this->field['Rôle']] : [];
 
         $user
             ->setFirstName($firstname)
             ->setLastName($lastname)
             ->setUsername($this->getUsername($firstname, $lastname))
             ->setPassword($this->passwordEncoder->encodePassword($user, bin2hex(random_bytes(8))))
-            ->setStatus(1)
+            ->setStatus($status)
+            ->setRoles($role)
             ->setEmail($this->field['Email'])
             ->setphone1($this->field['Téléphone'])
-            ->setToken(bin2hex(random_bytes(32)));
+            ->setToken(bin2hex(random_bytes(32)))
+            ->setTokenCreatedAt(new \DateTime());
 
         $userExists = $this->userExists($user);
 
@@ -102,7 +108,7 @@ class ImportDatasUser extends ImportDatas
 
         $this->manager->persist($serviceUser);
 
-        $this->items[] = $user;
+        $this->users[] = $user;
 
         return $user;
     }

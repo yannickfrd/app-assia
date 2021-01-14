@@ -49,8 +49,9 @@ class User implements UserInterface
         3 => 'Chef·fe de service',
         2 => 'Coordinatrice/teur',
         4 => 'Directrice/teur',
-        7 => 'Stagiaire',
+        9 => 'Psychologue',
         8 => 'Responsable informatique',
+        7 => 'Stagiaire',
         97 => 'Autre',
     ];
 
