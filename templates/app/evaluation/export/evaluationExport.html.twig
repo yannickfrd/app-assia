@@ -104,6 +104,7 @@
             {# Rendez-vous #}
             {% if lastRdv or nextRdv %}
                 <hr/>
+                <p>&nbsp;</p>
                 {{ view_p.get(lastRdv ? lastRdv.start|date("d/m/Y"), "rdv.last") }}
                 {{ view_p.get(nextRdv ? nextRdv.start|date("d/m/Y"), "rdv.next") }}
             {% endif %}

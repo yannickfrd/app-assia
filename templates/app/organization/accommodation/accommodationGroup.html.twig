@@ -1,14 +1,15 @@
 {% extends "base.html.twig" %}
 
 {% set EDIT_MODE = form.vars.value.id != null %}
+{% set SERVICE_PASH_ID = constant("App\\Entity\\Organization\\Service::SERVICE_PASH_ID") %}
+{% set title = support.service.id == SERVICE_PASH_ID ? "Prise en charge hôtelière" : "Logement/hébergement" %}
 
-{% block title %}Logement/hébergement{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block body %}
-
+	
 	<div class="container">
 
-		{% set title = "Logement/hébergement" %}
 		{% include "app/support/support/_navSuppport.html.twig" %}
 
 		{{ form_start(form) }}
