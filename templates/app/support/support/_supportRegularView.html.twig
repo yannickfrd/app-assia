@@ -34,9 +34,11 @@
     {% endfor %}
     {{ view_div.get(support.city or support.address ? support.address ~ ", " ~ support.zipcode ~ " " ~ support.city, "Adresse") }}
 </div>
-<div class="row">
-    {{ view_div.get(support.coefficient ? support.coefficient, "Coefficient") }}
-</div>
+{% if support.service.coefficient == YES %}
+    <div class="row">
+        {{ view_div.get(support.coefficient, "Coefficient") }}
+    </div>
+{% endif %}
 <div class="row">
     {{ view_div.get(support.comment) }}
 </div>

@@ -21,7 +21,7 @@
 		{% include "model/_msgFlash.html.twig" %}
 		<div id="js-msg-flash-content"></div>
 
-		{% if formCoeff is defined and is_granted("ROLE_ADMIN")  %}
+		{% if support.service.coefficient == YES and formCoeff is defined and is_granted("ROLE_ADMIN")  %}
 			<section>
 				<h2 class="h5 my-4">Coefficient du suivi</h2>
 				{{ form_start(formCoeff) }}

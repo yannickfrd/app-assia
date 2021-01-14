@@ -7,6 +7,7 @@ use App\Entity\Traits\ContactEntityTrait;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use App\Entity\Traits\DisableEntityTrait;
 use App\Entity\Traits\LocationEntityTrait;
+use App\Form\Utils\Choices;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -107,6 +108,11 @@ class Service
      * @ORM\Column(type="float", nullable=true)
      */
     private $contributionRate = 0.1;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $coefficient;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -366,6 +372,23 @@ class Service
     public function setContributionRate(?float $contributionRate): self
     {
         $this->contributionRate = $contributionRate;
+
+        return $this;
+    }
+
+    public function getCoefficient(): ?int
+    {
+        return $this->coefficient;
+    }
+
+    public function getCoefficientToString(): ?int
+    {
+        return $this->contributionType ? Choices::YES_NO[$this->contributionType] : null;
+    }
+
+    public function setCoefficient(?int $coefficient): self
+    {
+        $this->coefficient = $coefficient;
 
         return $this;
     }

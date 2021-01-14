@@ -122,15 +122,17 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                {% apply spaceless %}
-                    <p class="small text-secondary justify"><span class="font-weight-bold">Note de lecture : </span>
-                    le nombre entre parenthèses correspond à la valeur attribuée à la somme des suivis après application du coefficient.
-                    Exemple : 10 (15) = 10 suivis réels, soit 15 suivis après pondération (coefficient de 1,5 par suivi).</p>
-                {% endapply %}
+        {% if nbSupports != sumCoeffSupports %}
+            <div class="row">
+                <div class="col-md-12">
+                    {% apply spaceless %}
+                        <p class="small text-secondary justify"><span class="font-weight-bold">Note de lecture : </span>
+                        le nombre entre parenthèses correspond à la valeur attribuée à la somme des suivis après application du coefficient.
+                        Exemple : 10 (15) = 10 suivis réels, soit 15 suivis après pondération (coefficient de 1,5 par suivi).</p>
+                    {% endapply %}
+                </div>
             </div>
-        </div>
+        {% endif %}
     {% else %}
         <p>Veuillez effectuer une recherche pour afficher les résultats.</p>
     {% endif %}

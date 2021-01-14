@@ -110,6 +110,13 @@ class ServiceType extends AbstractType
                     'placeholder' => 'service.comment.placeholder',
                 ],
             ])
+            ->add('coefficient', ChoiceType::class, [
+                'label' => 'service.coefficient',
+                'choices' => Choices::getChoices(Choices::YES_NO),
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+                'help' => 'service.coefficient.placeholder',
+            ])
             ->add('serviceDevices', CollectionType::class, [
                 'entry_type' => ServiceDeviceType::class,
                 'allow_add' => true,

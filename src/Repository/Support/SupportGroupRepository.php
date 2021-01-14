@@ -88,7 +88,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin('sg.createdBy', 'user')->addSelect('PARTIAL user.{id, firstname, lastname}')
             ->leftJoin('sg.referent', 'ref')->addSelect('PARTIAL ref.{id, firstname, lastname}')
             ->leftJoin('sg.referent2', 'ref2')->addSelect('PARTIAL ref2.{id, firstname, lastname}')
-            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, email, preAdmission, justice}')
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, email, preAdmission, justice, coefficient}')
             ->leftJoin('sg.subService ', 'ss')->addSelect('PARTIAL ss.{id, name, email}')
             ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name, coefficient, accommodation, contribution, contributionType, contributionRate}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
