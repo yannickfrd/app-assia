@@ -10,8 +10,6 @@ use App\Entity\People\PeopleGroup;
 use App\Entity\People\Person;
 use App\Entity\People\RolePerson;
 use App\Entity\Support\AccommodationGroup;
-use App\Entity\Support\Document;
-use App\Entity\Support\Note;
 use App\Entity\Support\Rdv;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Support\SupportPerson;
@@ -78,19 +76,14 @@ class SupportManager
     /**
      * Créé un nouveau suivi.
      */
-    public function create(PeopleGroup $peopleGroup, SupportGroup $supportGroup, bool $cloneSupport = false): bool
+    public function create(PeopleGroup $peopleGroup, SupportGroup $supportGroup): bool
     {
         if ($this->activeSupportExists($peopleGroup, $supportGroup)) {
             return false;
         }
 
         $supportGroup->setPeopleGroup($peopleGroup)
-            ->setCoefficient($supportGroup->getDevice()->getCoefficient());
-
-        // Si l'utilisateur veut récupérer les informations du précédent suivi, alors clone l'évaluation sociale et les documents existants.
-        if (true === $cloneSupport) {
-            $this->cloneSupport($supportGroup, $this->manager->getRepository(EvaluationGroup::class), $this->manager->getRepository(Note::class), $this->manager->getRepository(Document::class));
-        }
+        ->setCoefficient($supportGroup->getDevice()->getCoefficient());
 
         $serviceId = $supportGroup->getService()->getId();
 
@@ -108,9 +101,8 @@ class SupportManager
         foreach ($peopleGroup->getRolePeople() as $rolePerson) {
             $supportGroup->addSupportPerson($this->createSupportPerson($supportGroup, $rolePerson));
         }
-        // Met à jour le nombre de personnes du suivi.
-        $supportGroup->setNbPeople($supportGroup->getSupportPeople()->count());
 
+        $this->updateNbPeople($supportGroup);
         $this->checkValidHead($supportGroup);
 
         $this->manager->flush();
@@ -210,6 +202,7 @@ class SupportManager
 
         $this->updateSupportPeople($supportGroup);
         $this->updateAccommodationGroup($supportGroup);
+        $this->updateNbPeople($supportGroup);
         $this->checkValidHead($supportGroup);
 
         $this->manager->flush();
@@ -217,43 +210,6 @@ class SupportManager
         $this->discache($supportGroup);
 
         $this->addFlash('success', 'Le suivi social est mis à jour.');
-    }
-
-    /**
-     * Crée une copie d'un suivi social.
-     */
-    public function cloneSupport(
-        SupportGroup $supportGroup,
-        EvaluationGroupRepository $repoEvaluation,
-        NoteRepository $repoNote,
-        DocumentRepository $repoDocument): ?SupportGroup
-    {
-        $lastSupport = $this->repoSupportGroup->findLastSupport($supportGroup);
-
-        if (null === $lastSupport) {
-            return null;
-        }
-
-        $lastEvaluation = $repoEvaluation->findEvaluationOfSupport($lastSupport->getId());
-        $documents = $repoDocument->findBy(['supportGroup' => $lastSupport]);
-        $lastNote = $repoNote->findOneBy(['supportGroup' => $lastSupport], ['updatedAt' => 'DESC']);
-
-        if ($lastEvaluation && 0 === $supportGroup->getEvaluationsGroup()->count()) {
-            $evaluationGroup = (clone $lastEvaluation)->setSupportGroup($supportGroup);
-            $supportGroup->getEvaluationsGroup()->add($evaluationGroup);
-        }
-
-        foreach ($documents as $document) {
-            $newDocument = (clone $document)->setSupportGroup($supportGroup);
-            $supportGroup->getDocuments()->add($newDocument);
-        }
-
-        if ($lastNote) {
-            $note = (clone $lastNote)->setSupportGroup($supportGroup);
-            $supportGroup->getNotes()->add($note);
-        }
-
-        return $supportGroup;
     }
 
     /**
@@ -426,6 +382,7 @@ class SupportManager
         return $this->cache->deleteItems([
             PeopleGroup::CACHE_GROUP_SUPPORTS_KEY.$supportGroup->getPeopleGroup()->getId(),
             SupportGroup::CACHE_FULLSUPPORT_KEY.$supportGroup->getId(),
+            EvaluationGroup::CACHE_EVALUATION_KEY.$supportGroup->getId(),
             Service::CACHE_INDICATORS_KEY.$supportGroup->getService()->getId(),
         ]);
     }
@@ -499,7 +456,7 @@ class SupportManager
         }
 
         if ($nbSupportPeople != $nbPeople && $nbActiveSupportPeople != $nbPeople) {
-            $this->addFlash('warning', 'Attention, le nombre de personnes actuellement suivies 
+            $this->addFlash('warning', 'Attention, le nombre de personnes suivies 
                 ne correspond pas à la composition familiale du groupe ('.$nbPeople.' personnes).');
         }
 
@@ -520,7 +477,7 @@ class SupportManager
                     }
                 }
                 if (!$supportGroup->getEndDate() && $nbActiveSupportPeople != $nbAccommodationPeople) {
-                    $this->addFlash('warning', 'Attention, le nombre de personnes actuellement suivies ('.$nbActiveSupportPeople.') 
+                    $this->addFlash('warning', 'Attention, le nombre de personnes suivies ('.$nbActiveSupportPeople.') 
                     ne correspond pas au nombre de personnes hébergées ('.$nbAccommodationPeople.').<br/> 
                     Allez dans l\'onglet <b>Hébergement</b> pour ajouter les personnes à l\'hébergement.');
                 }
@@ -568,6 +525,22 @@ class SupportManager
                 // $this->addFlash('light', $supportPerson->getPerson()->getFullname().' : la date de début de suivi retenue est sa date de naissance.');
             }
         }
+    }
+
+    /**
+     * Met à jour le nombre de personnes du suivi.
+     */
+    protected function updateNbPeople(SupportGroup $supportGroup): void
+    {
+        $nbPeople = 0;
+
+        foreach ($supportGroup->getSupportPeople() as $supportPerson) {
+            if ($supportPerson->getEndDate() === $supportGroup->getEndDate()) {
+                ++$nbPeople;
+            }
+        }
+
+        $supportGroup->setNbPeople($nbPeople);
     }
 
     /**
@@ -634,8 +607,8 @@ class SupportManager
                 $addPeople = true;
             }
         }
-        // Met à jour le nombre de personnes du suivi.
-        $supportGroup->setNbPeople($supportGroup->getSupportPeople()->count());
+
+        $this->updateNbPeople($supportGroup);
 
         $this->manager->flush();
 

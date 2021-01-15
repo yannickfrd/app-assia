@@ -31,14 +31,14 @@ class EvaluationGroupRepository extends ServiceEntityRepository
         //     return null;
         // }
         return $this->createQueryBuilder('eg')->select('eg')
-            ->join('eg.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
+            ->join('eg.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, status}')
             ->join('sg.peopleGroup', 'gp')->addSelect('PARTIAL gp.{id, familyTypology, nbPeople}')
 
             ->join('sg.service', 's')->addSelect('PARTIAL s.{id, name, email, preAdmission, justice}')
             ->join('sg.device', 'd')->addSelect('PARTIAL d.{id, name, coefficient, accommodation, contribution, contributionType, contributionRate}')
 
             ->leftJoin('eg.evaluationPeople', 'ep')->addSelect('ep')
-            ->join('ep.supportPerson', 'sp')->addSelect('PARTIAL sp.{id, person, head, role}')
+            ->join('ep.supportPerson', 'sp')->addSelect('PARTIAL sp.{id, person, head, role, status}')
             ->join('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, birthdate, gender}')
 
             ->leftJoin('eg.initEvalGroup', 'initEvalGroup')->addSelect('initEvalGroup')
@@ -62,6 +62,7 @@ class EvaluationGroupRepository extends ServiceEntityRepository
             // ->andWhere('eg.id = :id')
             // ->setParameter('id', $lastEvaluationId)
 
+            ->addOrderBy('sp.status', 'ASC')
             ->addOrderBy('sp.head', 'DESC')
             ->addOrderBy('p.birthdate', 'ASC')
 

@@ -258,25 +258,6 @@ class SupportGroupRepository extends ServiceEntityRepository
     }
 
     /**
-     * Donne le dernier suivi social auquel l'utilisateur peut avoir accès.
-     */
-    public function countSupportOfPeopleGroup(PeopleGroup $peopleGroup): int
-    {
-        $query = $this->createQueryBuilder('sg')->select('count(sg.id)')
-
-            ->where('sg.peopleGroup = :peopleGroup')
-            ->setParameter('peopleGroup', $peopleGroup);
-
-        if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
-            $query = $query->andWhere('sg.service IN (:services)')
-                ->setParameter('services', $this->currentUser->getServices());
-        }
-
-        return $query->getQuery()
-            ->getSingleScalarResult();
-    }
-
-    /**
      * Trouve le dernier suivi social en fonction de l'utilisateur.
      */
     public function findLastSupport(SupportGroup $supportGroup): ?SupportGroup

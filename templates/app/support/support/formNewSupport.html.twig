@@ -7,12 +7,12 @@
     <div data-parent-field="service">
         <div id="sub-service-block">{{ form_row(form.subService) }}</div>
         {{ form_row(form.device) }}
-        </div>
         {% if nbSupports > 0 %}
             <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
                 {{ form_row(form.cloneSupport) }}
             </div>
         {% endif %}
+    </div>
     {{ form_row(form.referent) }}
     {{ form_row(form.status) }}
 </div>

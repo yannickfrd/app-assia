@@ -14,6 +14,7 @@ export default class NewForm {
         this.modalElt = new Modal(document.getElementById(modalId))
         this.btnElt = document.getElementById(btnId)
         this.containerElt = document.getElementById(containerId)
+        this.isLoaded = false
         this.init()
     }
 
@@ -21,8 +22,11 @@ export default class NewForm {
         if (this.btnElt) {
             this.btnElt.addEventListener('click', e => {
                 e.preventDefault()
+                if (this.isLoaded) {
+                   return this.showForm() 
+                }
                 if (this.loader.isActive() === false) {
-                    this.sendRequest(this.btnElt)
+                    return this.sendRequest(this.btnElt)
                 }
             })
         }
@@ -45,8 +49,16 @@ export default class NewForm {
      */
     response(data) {
         this.containerElt.innerHTML = data.data.form.content
+        this.showForm()
+    }
+
+    /**
+     * Affiche le formulaire.
+     */
+    showForm() {
         this.modalElt.show()
         this.loader.off()
+        this.isLoaded = true
         new SwitchServiceSupport()
     }
 }

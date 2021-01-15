@@ -81,10 +81,9 @@ class SupportController extends AbstractController
      *
      * @Route("/group/{id}/support/new", name="support_new", methods="GET|POST")
      */
-    public function newSupportGroup(int $id, PeopleGroupRepository $repoPeopleGroup, Request $request, SupportManager $supportManager, ServiceRepository $repoService): Response
+    public function newSupportGroup(int $id, PeopleGroupRepository $repoPeopleGroup, Request $request, SupportManager $supportManager, ServiceRepository $repoService, SupportDuplicator $supportDuplicator): Response
     {
         $peopleGroup = $repoPeopleGroup->findPeopleGroupById($id);
-
         $supportGroup = $supportManager->getNewSupportGroup($peopleGroup, $request, $repoService);
 
         $form = ($this->createForm(SupportGroupType::class, $supportGroup))
@@ -92,8 +91,13 @@ class SupportController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid() && $supportGroup->getAgreement()) {
             // Si pas de suivi en cours, en crée un nouveau, sinon ne fait rien
-            if ($supportManager->create($peopleGroup, $supportGroup, $form->get('cloneSupport')->getViewData() != null)) {
+            if ($supportManager->create($peopleGroup, $supportGroup)) {
                 $this->addFlash('success', 'Le suivi social est créé.');
+
+                if ($form->get('cloneSupport')->getViewData() != null) {
+                    $supportDuplicator->duplicate($supportGroup);
+                    $this->manager->flush();
+                }
 
                 if ($supportGroup->getStartDate() && Choices::YES === $supportGroup->getService()->getAccommodation()
                     && Choices::YES === $supportGroup->getDevice()->getAccommodation()) {
@@ -116,11 +120,11 @@ class SupportController extends AbstractController
      *
      * @Route("/group/{id}/new_support", name="people_group_new_support", methods="GET")
      */
-    public function newSupportGroupAjax(PeopleGroup $peopleGroup, SupportGroupRepository $repoSupportGroup)
+    public function newSupportGroupAjax(PeopleGroup $peopleGroup, SupportPersonRepository $repoSupportPerson)
     {
         $supportGroup = (new SupportGroup())->setReferent($this->getUser());
 
-        $nbSupports = $repoSupportGroup->countSupportOfPeopleGroup($peopleGroup);
+        $nbSupports = $repoSupportPerson->countSupportsOfPeople($peopleGroup);
 
         $form = $this->createForm(NewSupportGroupType::class, $supportGroup, [
             'action' => $this->generateUrl('support_new', ['id' => $peopleGroup->getId()]),
@@ -134,7 +138,7 @@ class SupportController extends AbstractController
                     'nbSupports' => $nbSupports,
                 ]),
             ],
-        ], 200);
+        ]);
     }
 
     /**

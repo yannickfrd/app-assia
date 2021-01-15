@@ -2,6 +2,7 @@
 
 namespace App\Repository\Support;
 
+use App\Entity\People\PeopleGroup;
 use App\Entity\People\Person;
 use App\Entity\Support\SupportPerson;
 use App\Form\Model\Support\AvdlSupportSearch;
@@ -408,6 +409,31 @@ class SupportPersonRepository extends ServiceEntityRepository
         }
 
         return $query;
+    }
+
+    /**
+     * Donne le nombre de suivis des personnes du groupe.
+     */
+    public function countSupportsOfPeople(PeopleGroup $peopleGroup): int
+    {
+        $query = $this->createQueryBuilder('sp')->select('count(sp.id)')
+            ->leftJoin('sp.supportGroup', 'sg')
+            ->leftJoin('sp.person', 'p');
+
+        $expr = $query->expr();
+        $orX = $expr->orX();
+        foreach ($peopleGroup->getPeople() as $person) {
+            $orX->add($expr->eq('p.id', $person->getId()));
+        }
+        $query->andWhere($orX);
+
+        if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+            $query = $query->andWhere('sg.service IN (:services)')
+                ->setParameter('services', $this->currentUser->getServices());
+        }
+
+        return $query->getQuery()
+            ->getSingleScalarResult();
     }
 
     public function countSupportPeople(array $criteria = null): int

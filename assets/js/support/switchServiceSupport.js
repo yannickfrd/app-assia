@@ -21,7 +21,6 @@ export default class SwitchServiceSupport {
     }
 
     init() {
-        this.service = this.selectType.getOption(this.serviceSelectElt)
         this.serviceSelectElt.addEventListener('change', () => {
             this.visibleElt(document.querySelector('div[data-parent-field="service"'), false)
             this.changeService()
@@ -35,8 +34,7 @@ export default class SwitchServiceSupport {
             })
         }
 
-        this.visibleElt(document.querySelector(`div[data-parent-field='service'`), this.serviceSelectElt.querySelector('option[selected]').value != null)
-        this.visibleElt(this.subServiceBlockElt, this.subServiceSelectElt.querySelectorAll('option').length > 1 ? true : false)
+        this.updateVisibilityFields()
         this.changeService()
     }
     /**
@@ -95,8 +93,7 @@ export default class SwitchServiceSupport {
     updateField(selectElt, newElt) {
         const previousOption = this.selectType.getOption(selectElt)
 
-        this.visibleElt(document.querySelector(`div[data-parent-field='service'`), this.selectType.getOption(this.serviceSelectElt) ? true : false)
-        this.visibleElt(this.subServiceBlockElt, this.subServiceSelectElt.querySelectorAll('option').length > 1 ? true : false)
+        this.updateVisibilityFields()
 
         selectElt.innerHTML = newElt.innerHTML
 
@@ -110,6 +107,14 @@ export default class SwitchServiceSupport {
                 }
             })
         }
+    }
+
+    /**
+     * Vérifie la visibilté des champs Sous-service et Dispositif.
+     */
+    updateVisibilityFields() {
+        this.visibleElt(document.querySelector(`div[data-parent-field='service'`), this.selectType.getOption(this.serviceSelectElt) >= 1)
+        this.visibleElt(this.subServiceBlockElt, this.subServiceSelectElt.querySelectorAll('option').length > 1)
     }
 
     /**

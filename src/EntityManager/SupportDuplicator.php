@@ -84,29 +84,44 @@ class SupportDuplicator
             return null;
         }
 
+        $this->duplicateEvaluation($supportGroup, $lastSupportGroup);
+        $this->duplicateDocuments($supportGroup, $lastSupportGroup);
+        $this->duplicateNote($supportGroup, $lastSupportGroup);
+
+        return $supportGroup;
+    }
+
+    private function duplicateEvaluation(SupportGroup $supportGroup, SupportGroup $lastSupportGroup): void
+    {
         $lastEvaluation = $this->repoEvaluationGroup->findEvaluationOfSupport($lastSupportGroup->getId());
-        $documents = $this->repoDocument->findBy(['supportGroup' => $lastSupportGroup]);
-        $lastNote = $this->repoNote->findOneBy(['supportGroup' => $lastSupportGroup], ['updatedAt' => 'DESC']);
 
         if ($lastEvaluation && 0 === $supportGroup->getEvaluationsGroup()->count()) {
             $evaluationGroup = (clone $lastEvaluation)->setSupportGroup($supportGroup);
             $supportGroup->getEvaluationsGroup()->add($evaluationGroup);
         }
+    }
+
+    private function duplicateDocuments(SupportGroup $supportGroup, SupportGroup $lastSupportGroup): void
+    {
+        $documents = $this->repoDocument->findBy(['supportGroup' => $lastSupportGroup]);
 
         foreach ($documents as $document) {
             $newDocument = (clone $document)->setSupportGroup($supportGroup);
             $supportGroup->getDocuments()->add($newDocument);
         }
+    }
+
+    private function duplicateNote(SupportGroup $supportGroup, SupportGroup $lastSupportGroup): void
+    {
+        $lastNote = $this->repoNote->findOneBy(['supportGroup' => $lastSupportGroup], ['updatedAt' => 'DESC']);
 
         if ($lastNote) {
             $note = (clone $lastNote)->setSupportGroup($supportGroup);
             $supportGroup->getNotes()->add($note);
         }
-
-        return $supportGroup;
     }
 
-    private function duplicateSupportPeople(SupportGroup $supportGroup)
+    private function duplicateSupportPeople(SupportGroup $supportGroup): SupportGroup
     {
         foreach ($supportGroup->getSupportPeople() as $supportPerson) {
             $lastSupportPerson = $this->repoSupportPerson->findLastSupport($supportPerson);
@@ -128,11 +143,11 @@ class SupportDuplicator
                 $supportPerson->getEvaluationsPerson()->add($evaluationPerson);
                 $evaluationPerson->setEvaluationGroup($this->evaluationGroup);
 
-                if ($lastEvaluationPerson->getInitEvalPerson()) {
-                    $intiEvalPerson = clone $lastEvaluationPerson->getInitEvalPerson();
-                    $intiEvalPerson->setSupportPerson($supportPerson);
-                    $evaluationPerson->setInitEvalPerson($intiEvalPerson);
-                }
+                // if ($lastEvaluationPerson->getInitEvalPerson()) {
+                //     $intiEvalPerson = clone $lastEvaluationPerson->getInitEvalPerson();
+                //     $intiEvalPerson->setSupportPerson($supportPerson);
+                //     $evaluationPerson->setInitEvalPerson($intiEvalPerson);
+                // }
             }
         }
 
@@ -154,9 +169,9 @@ class SupportDuplicator
         $newEvaluationGroup->setDate(new \DateTime())
             ->setInitEvalGroup(new InitEvalGroup());
 
-        if ($evaluationGroup->getInitEvalGroup()) {
-            $newEvaluationGroup->setInitEvalGroup(clone $evaluationGroup->getInitEvalGroup());
-        }
+        // if ($evaluationGroup->getInitEvalGroup()) {
+        //     $newEvaluationGroup->setInitEvalGroup(clone $evaluationGroup->getInitEvalGroup());
+        // }
         if ($evaluationGroup->getEvalBudgetGroup()) {
             $newEvaluationGroup->setEvalBudgetGroup(clone $evaluationGroup->getEvalBudgetGroup());
         }
