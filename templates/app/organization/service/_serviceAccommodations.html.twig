@@ -57,7 +57,7 @@
                                         title="Vous n'avez pas les droits pour accéder à la fiche"><span class="fas fa-ban"></span></span>                           
                                 {% endif %}
 							</td>
-							<td class="align-middle">{% if accommodation.disabled %}<del>{{ accommodation.name }}</del> (désactivé){% else %}{{ accommodation.name }}{% endif %}</td>
+                            <td class="align-middle {% if accommodation.disabled %}delete{% endif %}">{{ accommodation.name }}{% if accommodation.disabled %} (désactivé){% endif %}</td>
 							<td class="align-middle">{{ accommodation.device ? accommodation.device.name }}</td>
 							<td class="align-middle">{{ accommodation.nbPlaces }}</td>
 							<td class="align-middle">{{ accommodation.startDate ? accommodation.startDate|date("d/m/Y") }}</td>

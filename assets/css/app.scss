@@ -45,6 +45,15 @@ section {
     cursor: pointer;
 }
 
+.delete {
+    text-decoration: line-through;
+}
+
+.text-underline {
+    border-bottom: solid 1px;
+    padding-bottom: 1px;
+}
+
 .bg-light-gray {
     background-color: $light-gray;
 }

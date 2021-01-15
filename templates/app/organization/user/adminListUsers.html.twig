@@ -73,7 +73,7 @@
                                         title="Voir la fiche"><span class="fas fa-eye"></span>
                                     </a>
                                 </td>
-                                <td class="align-middle">{% if user.disabled %}<del>{{ user.lastname }}</del> (désactivé){% else %}{{ user.lastname }}{% endif %}</td>
+                                <td class="align-middle {% if user.disabled %}delete{% endif %}">{{ user.lastname }}{% if user.disabled %} (désactivé){% endif %}</td>
                                 <td class="align-middle">{{ user.firstname }}</td>
                                 <td class="align-middle d-none d-md-table-cell">{{ user.statusToString }}</td>
                                 <td class="align-middle d-none d-md-table-cell">{{ user.rolesToString|last }}</td>

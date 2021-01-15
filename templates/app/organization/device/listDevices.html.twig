@@ -68,7 +68,7 @@
                                     <span class="fas fa-eye"></span>
                                 </a>
                             </td>
-                            <td class="align-middle">{% if device.disabled %}<del>{{ device.name }}</del> (désactivé){% else %}{{ device.name }}{% endif %}</td>
+                            <td class="align-middle {% if device.disabled %}delete{% endif %}">{{ device.name }}{% if device.disabled %} (désactivé){% endif %}</td>
                             <td class="align-middle">{{ device.coefficient }}</td>
                             <td class="align-middle">{{ device.accommodationToString }}</td>
                             <td class="align-middle">{{ device.comment }}</td>

@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.15.21 - 14/01/2021
+2.16.2 - 15/01/2021
 
 # Développeur
 Romain MADELAINE
@@ -12,6 +12,11 @@ https://github.com/RomMad/esperer95.app
 
 # Connection à la base démo
 https://demo.esperer95.app
+
+## Version 2.16.2 - 15/01/2021
+- Edit support and evaluation view when one person left (end supportPerson) + edit style (label bold);
+- Edit support dupplicator system;
+- Edit views (create '.delete' class css);
 
 ## Version 2.15.16-21 - 14/01/2021
 - Edit importDatasUser (add 'roles' and 'status' fields);
@@ -36,7 +41,7 @@ https://demo.esperer95.app
 
 ## Version 2.15.3-5 - 08/01/2021
 - Fix some validation problems in fields Person (birthdate);
-- Edit validation fied in Support;
+- Edit validation field in Support;
 - Fix error typo message flash; 
 - Add namespaced in every FilesystemAdapter;
 
@@ -81,11 +86,11 @@ https://demo.esperer95.app
 - Fix error 500 during the image upload when the Tinify count compression is over (> 500);
 - Edit the autoLogout.js (delete ajax request and create a direct redirection url);
 - Add extension file in the documents page;
-- Edit voter of Contribution (canEdit = canVIew);
+- Edit voter of Contribution (canEdit = canView);
 - Edit listConstributions page : possibility to search contribution by ID;
 - Edit Evaluation : 
     - Create subfolders and subfiles for edit, view and export evaluation;
-    - Add some informations in view and export evaluation (endValidyDate, cafIf...);
+    - Add some informations in view and export evaluation (endValidyDate, cafId...);
     - Add 'conclusion' field in evaluation;
     - Add items in paperType (DCEM, acte de naissance);
     - Edit 'CSC' item to 'CSS';

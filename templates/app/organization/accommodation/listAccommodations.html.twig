@@ -76,7 +76,7 @@
                                         title="Voir le groupe de places"><span class="fas fa-eye"></span>
                                     </a>
                                 </td>
-                                <td class="align-middle">{% if accommodation.disabled %}<del>{{ accommodation.name }}</del> (désactivé){% else %}{{ accommodation.name }}{% endif %}</td>
+                                <td class="align-middle {% if accommodation.disabled %}delete{% endif %}">{{ accommodation.name }}{% if accommodation.disabled %} (désactivé){% endif %}</td> 
                                 <td class="align-middle"><a href="{{ path('service_edit', {'id': accommodation.service.id }) }}" class="text-{{ theme_color }}">{{ accommodation.service.name }}</a></td>
                                 <td class="align-middle">{{ accommodation.device ? accommodation.device.name }}</td>
                                 <td class="align-middle">{{ accommodation.nbPlaces }}</td>

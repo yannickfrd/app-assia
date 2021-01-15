@@ -10,7 +10,7 @@
         aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    {% if is_granted("ROLE_USER") %}
+    {% if app.user %}
         <div class="collapse navbar-collapse" id="navbar">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
@@ -71,20 +71,16 @@
                 </button>
             </form>
             <div class="text-light text-right w-min-160">
-                {% if app.user %}
-                    <a id="user-name" class="text-light font-weight-bold" href="{{ path('my_profile') }}" data-toggle="popover"
-                        data-trigger="hover" data-placement="bottom" data-html="true"
-                        title="{{ app.user.firstname }} {{ app.user.lastname }}" data-content="Dernière connexion : {{ app.user.lastLogin|date(" d/m/Y H:i") }}
-                        <br/>Fonction : {{ app.user.statusToString }}<br/>Services rattachés :<br/>- {{ app.session.get("userServices")|join("<br/>- ") }}">
-                        <span class="fas fa-user mr-2"></span>{{ app.user.firstname }} {{ app.user.lastname|first }}.
-                    </a>
-                    <br/>
-                    <a class="text-light" href="{{ path("security_logout") }}">Se déconnecter</a>
-                    <p class="mb-0 text-light small" title="Après l'expiration de la session, vous serez automatiquement déconnecté." 
-                         data-toggle="tooltip" data-placement="bottom">Session expire dans <span id="session-timer">...</span></p>
-                {% else %}
-                    <a class="text-light" href="{{ path("security_login") }}">Se connecter</a>
-                {% endif %}
+                <a id="user-name" class="text-light font-weight-bold" href="{{ path('my_profile') }}" data-toggle="popover"
+                    data-trigger="hover" data-placement="bottom" data-html="true"
+                    title="{{ app.user.firstname }} {{ app.user.lastname }}" data-content="Dernière connexion : {{ app.user.lastLogin|date(" d/m/Y H:i") }}
+                    <br/>Fonction : {{ app.user.statusToString }}<br/>Services rattachés :<br/>- {{ app.session.get("userServices")|join("<br/>- ") }}">
+                    <span class="fas fa-user mr-2"></span>{{ app.user.firstname }} {{ app.user.lastname|first }}.
+                </a>
+                <br/>
+                <a class="text-light" href="{{ path("security_logout") }}">Se déconnecter</a>
+                <p class="mb-0 text-light small" title="Après l'expiration de la session, vous serez automatiquement déconnecté." 
+                    data-toggle="tooltip" data-placement="bottom">Session expire dans <span id="session-timer">...</span></p>
             </div>
         </div>
     {% endif %}

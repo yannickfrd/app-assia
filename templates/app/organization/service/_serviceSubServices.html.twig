@@ -30,7 +30,7 @@
                                         title="Vous n'avez pas les droits pour accéder à la fiche"><span class="fas fa-ban"></span></span>                           
                                 {% endif %}
 							</td>
-							<td class="align-middle">{% if subService.disabled %}<del>{{ subService.name  }}</del> (désactivé){% else %}{{ subService.name }}{% endif %}</td>
+                            <td class="align-middle {% if subService.disabled %}delete{% endif %}">{{ subService.name }}{% if subService.disabled %} (désactivé){% endif %}</td>
 							<td class="align-middle">{{ subService.chief ? subService.chief.fullname }}</td>
 							<td class="align-middle">{{ subService.phone1}}</td>
 							<td class="align-middle">{{ subService.email }}</td>
