@@ -19,6 +19,15 @@ class InitEvalPersonType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('paper', ChoiceType::class, [
+                'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
+                'attr' => [
+                    'class' => 'js-initEval important',
+                ],
+                'placeholder' => 'placeholder.select',
+                'help' => 'evalAdmPerson.paper.help',
+                'required' => false,
+            ])
             ->add('paperType', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalAdmPerson::PAPER_TYPE),
                 'attr' => [

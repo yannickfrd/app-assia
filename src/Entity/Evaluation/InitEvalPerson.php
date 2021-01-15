@@ -26,6 +26,11 @@ class InitEvalPerson
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
+    private $paper;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
     private $paperType;
 
     /**
@@ -82,6 +87,26 @@ class InitEvalPerson
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getPaper(): ?int
+    {
+        return $this->paper;
+    }
+
+    /**
+     * @Groups("export")
+     */
+    public function getPaperToString(): ?string
+    {
+        return $this->paper ? Choices::YES_NO_IN_PROGRESS[$this->paper] : null;
+    }
+
+    public function setPaper(?int $paper): self
+    {
+        $this->paper = $paper;
+
+        return $this;
     }
 
     public function getPaperType(): ?int

@@ -45,12 +45,10 @@ class EvalFamilyPerson
     ];
 
     public const CHILDCARE_SCHOOL = [
-        0 => 'Aucune', // A supprimer
         4 => 'Assistante maternelle',
         1 => 'Crèche',
         2 => 'École',
         3 => 'Famille',
-        5 => 'Nourrice', // A supprimer
         97 => 'Autre',
         99 => 'Non renseigné',
     ];

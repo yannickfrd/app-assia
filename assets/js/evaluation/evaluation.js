@@ -141,6 +141,7 @@ export default class evaluation {
     initEvalPerson(prefix) {
         document.getElementById("accordion-init_eval").querySelectorAll("button.js-person").forEach(personElt => {
             const i = personElt.getAttribute("data-key")
+            new DisplayFields(prefix, i + "_initEvalPerson_paper", [1, 3])
             new DisplayFields(prefix, i + "_initEvalPerson_rightSocialSecurity", [1, 3])
             new DisplayFields(prefix, i + "_initEvalPerson_profStatus", [3, 5, 8])
             new DisplayFields(prefix, i + "_initEvalPerson_resources_resources", [1, 3])
