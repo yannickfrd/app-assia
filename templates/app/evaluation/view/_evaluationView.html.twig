@@ -4,8 +4,8 @@
 {% set ROLE_CHILD = constant("App\\Entity\\People\\RolePerson::ROLE_CHILD") %}
 {% set IN_PROGRESS = constant("App\\Form\\Utils\\Choices::IN_PROGRESS") %}
 
-{% set eval_people = evaluation.evaluationPeople %}
-{% set eval_adults = evaluation.evaluationPeople|filter(e => e.supportPerson.role != ROLE_CHILD) %}
+{% set eval_people = evaluation.evaluationPeople|filter(e => e.supportPerson.status == support.status) %}
+{% set eval_adults = eval_people|filter(e => e.supportPerson.role != ROLE_CHILD) %}
 {% set eval_children = eval_people|filter(e => e.supportPerson.role == ROLE_CHILD) %}
 {% set people_over_18 = eval_people|filter(e => e.supportPerson.person.age >= 18) %}
 {% set nb_people = support.supportPeople|length %}
@@ -22,7 +22,8 @@
                 <table class="table table-sm table-bordered table-hover">
                     <thead>
                         <tr>
-                            <th scope="col">Nom et prénom</th>
+                            <th scope="col"></th>
+                            <th>Nom et prénom</th>
                             <th>Date de naissance</th>
                             <th class="d-none d-sm-table-cell">Âge</th>
                             <th>Sexe</th>
@@ -32,10 +33,16 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for supportPerson in support.supportPeople %}
+                        {% for supportPerson in supportPeople %}
                             {% set person = supportPerson.person %}
                             <tr>
-                                <td scope="row" class="align-middle">{{ person.fullname }}
+                                <td class="align-middle text-center" scope="row">
+                                    <a href="{{ path('group_person_show', {'id': people_group.id, 'person_id': person.id, 'slug': person.slug}) }}"
+                                        class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" data-placement="bottom"
+                                        title="Voir la fiche individuelle"><span class="fas fa-eye"></span>
+                                    </a>
+                                </td>
+                                <td class="align-middle">{{ person.fullname }}
                                     {{ person.usename ? " (" ~ person.usename ~ ")" }}</td>
                                 <td class="align-middle">{{ person.birthdate|date("d/m/Y") }}</td>
                                 <td class="align-middle d-none d-sm-table-cell">{{ person.age }} an{{ person.age > 1 ? "s" }}</td>

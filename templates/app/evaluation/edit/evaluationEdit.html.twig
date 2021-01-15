@@ -9,13 +9,15 @@
 	{% set EDIT_MODE = form.vars.value.evalBudgetGroup != null %}
 	{% set ROLE_CHILD = constant("App\\Entity\\People\\RolePerson::ROLE_CHILD") %}
 	{% set GENDER_FEMALE = constant("App\\Entity\\People\\Person::GENDER_FEMALE") %}
-	{% set people_over_16 = form.evaluationPeople|filter(e => e.vars.value.supportPerson.person.age >= 16) %}
-	{% set people_adults = form.evaluationPeople|filter(e => e.vars.value.supportPerson.role != ROLE_CHILD) %}
-	{% set nb_people = form.evaluationPeople|length %}
+	{% set evaluationPeople = form.evaluationPeople %}
+	{% set people_over_16 = evaluationPeople|filter(e => e.vars.value.supportPerson.person.age >= 16) %}
+	{% set people_adults = evaluationPeople|filter(e => e.vars.value.supportPerson.role != ROLE_CHILD) %}
+	{% set nb_people = evaluationPeople|length %}
 	{% set typo = support.peopleGroup.familyTypology %}
 
     {# {% cache "evaluation.edit" ~ evaluationGroup.id ~ evaluationGroup.updatedAt.timestamp evaluationGroup.updatedAt.timestamp %} #}
 	<div class="container">
+
 		{% include "app/support/support/_navSuppport.html.twig" %}
 
 		{{ form_start(form) }}
@@ -33,9 +35,9 @@
 			{% include "app/evaluation/edit/_initEvaluation.html.twig" with {accordion_id: "init_eval"} %}
 			{% include "app/evaluation/edit/_evaluationBackground.html.twig" with {accordion_id: "eval_background"} %}
 			{% if support.service.justice == YES %}
-				{% include "app/evaluation/edit/_evaluationJustice.html.twig" with {accordion_id: "eval_adm"}  %}
+				{% include "app/evaluation/edit/_evaluationJustice.html.twig" with {accordion_id: "eval_justice"}  %}
 			{% endif %}
-			{% include "app/evaluation/edit/_evaluationAdm.html.twig" with {accordion_id: "eval_justice"} %}
+			{% include "app/evaluation/edit/_evaluationAdm.html.twig" with {accordion_id: "eval_adm"} %}
 			{% include "app/evaluation/edit/_evaluationFamily.html.twig" with {accordion_id: "eval_family"} %}
 			{% include "app/evaluation/edit/_evaluationSocial.html.twig" with {accordion_id: "eval_social"} %}
 			{% include "app/evaluation/edit/_evaluationProf.html.twig" with {accordion_id: "eval_prof"} %}

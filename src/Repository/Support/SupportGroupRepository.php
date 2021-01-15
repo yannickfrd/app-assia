@@ -74,6 +74,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->andWhere('sg.id = :id')
             ->setParameter('id', $id)
 
+            ->addOrderBy('sp.status', 'ASC')
             ->addOrderBy('sp.head', 'DESC')
             ->addOrderBy('p.birthdate', 'ASC')
 
@@ -257,7 +258,7 @@ class SupportGroupRepository extends ServiceEntityRepository
     }
 
     /**
-     * Donne le dernier suivi social auquel l'utilisateur peur avoir accès.
+     * Donne le dernier suivi social auquel l'utilisateur peut avoir accès.
      */
     public function countSupportOfPeopleGroup(PeopleGroup $peopleGroup): int
     {

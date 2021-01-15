@@ -10,31 +10,31 @@
     </div>
     {% if evalHotelLife.food %}
         <div class="row mb-3">
-            <div class="col-md-12 text-secondary">{{ "Food"|trans({}, "evaluation") }}</div>
+            <div class="col-md-12 font-weight-bold">{{ "Food"|trans({}, "evaluation") }} :</div>
             <div class="col-md-12 justify">{{ evalHotelLife.food|nl2br }}</div>
         </div>
     {% endif %}
     {% if evalHotelLife.clothing %}
         <div class="row mb-3">
-            <div class="col-md-12 text-secondary">{{ "Clothing"|trans({}, "evaluation") }}</div>
+            <div class="col-md-12 font-weight-bold">{{ "Clothing"|trans({}, "evaluation") }} :</div>
             <div class="col-md-12 justify">{{ evalHotelLife.clothing|nl2br }}</div>
         </div>
     {% endif %}
     {% if evalHotelLife.roomMaintenance %}
         <div class="row mb-3">
-            <div class="col-md-12 text-secondary">{{ "Room maintenance"|trans({}, "evaluation") }}</div>
+            <div class="col-md-12 font-weight-bold">{{ "Room maintenance"|trans({}, "evaluation") }} :</div>
             <div class="col-md-12 justify">{{ evalHotelLife.roomMaintenance|nl2br }}</div>
         </div>
     {% endif %}
     {% if evalHotelLife.otherHotelLife %}
         <div class="row mb-3">
-            <div class="col-md-12 text-secondary">{{ "Other hotel life"|trans({}, "evaluation") }}</div>
+            <div class="col-md-12 font-weight-bold">{{ "Other hotel life"|trans({}, "evaluation") }} :</div>
             <div class="col-md-12 justify">{{ evalHotelLife.otherHotelLife|nl2br }}</div>
         </div>
     {% endif %}
     {% if evalHotelLife.commentHotelLife %}
         <div class="row mb-3">
-            <div class="col-md-12 text-secondary">{{ "Comment hotel life"|trans({}, "evaluation") }}</div>
+            <div class="col-md-12 font-weight-bold">{{ "Comment hotel life"|trans({}, "evaluation") }} :</div>
             <div class="col-md-12 justify">{{ evalHotelLife.commentHotelLife|nl2br }}</div>
         </div>
     {% endif %}

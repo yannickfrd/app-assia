@@ -34,7 +34,8 @@ class PeopleGroupRepository extends ServiceEntityRepository
             ->andWhere('g.id = :id')
             ->setParameter('id', $id)
 
-            ->orderBy('p.birthdate', 'ASC')
+            ->addOrderBy('r.head', 'DESC')
+            ->addOrderBy('p.birthdate', 'ASC')
 
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
@@ -51,11 +52,11 @@ class PeopleGroupRepository extends ServiceEntityRepository
             foreach ($criteria as $key => $value) {
                 if ('startDate' === $key) {
                     $query = $query->andWhere('g.createdAt >= :startDate')
-                            ->setParameter('startDate', $value);
+                        ->setParameter('startDate', $value);
                 }
                 if ('endDate' === $key) {
                     $query = $query->andWhere('g.createdAt <= :endDate')
-                            ->setParameter('endDate', $value);
+                        ->setParameter('endDate', $value);
                 }
                 if ('createdBy' === $key) {
                     $query = $query->andWhere('g.createdBy = :createdBy')

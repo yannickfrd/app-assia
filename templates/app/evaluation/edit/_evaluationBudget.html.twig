@@ -85,7 +85,7 @@
 
 	<div class="row">
 		<div class="col-md-12 accordion" id="accordion-eval_budget">
-			{{ utils.loopSupportPeople(accordion_id, people_over_16, theme_color) }}
+			{{ utils.loopSupportPeople(accordion_id, people_over_16, support, theme_color) }}
 
 			{% for key, evalPerson in people_over_16 %}
 				{% set evalBudgetPerson = evalPerson.evalBudgetPerson %}

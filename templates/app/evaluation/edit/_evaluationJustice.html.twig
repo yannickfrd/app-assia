@@ -8,7 +8,7 @@
 
 	<div class="row">
 		<div class="col-md-12">
-			{% for evalPerson in form.evaluationPeople|filter(a => a.vars.value.supportPerson.head) %}
+			{% for evalPerson in evaluationPeople|filter(a => a.vars.value.supportPerson.head) %}
 				<button type="button" class="btn btn-outline-{{ theme_color }} active mb-4">{{ evalPerson.vars.value.supportPerson.person.fullname}}</button>
 				<div class="form-group row">
 					<div class="col-md-6">{{ form_row(evalPerson.evalJusticePerson.justiceStatus) }}</div>

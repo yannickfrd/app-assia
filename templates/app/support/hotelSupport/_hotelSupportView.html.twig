@@ -2,7 +2,7 @@
 
 <div class="row">
     <div class="col-md-6 mb-1 py-2">
-        <span class="py-2 text-secondary">Service (dispositif) : </span>
+        <span class="py-2 font-weight-bold">Service (dispositif) : </span>
         <a href="{{ path('service_edit', {'id': support.service.id }) }}" class="text-{{ theme_color }}">
             {{ support.service.name }}</a>
             <span>{{ support.subService ? " | " ~ support.subService.name }}</span>

@@ -5,6 +5,7 @@
 {% set ROLE_CHILD = constant("App\\Entity\\People\\RolePerson::ROLE_CHILD") %}
 {% set SERVICE_AVDL_ID = constant("App\\Entity\\Organization\\Service::SERVICE_AVDL_ID") %}
 {% set SERVICE_PASH_ID = constant("App\\Entity\\Organization\\Service::SERVICE_PASH_ID") %}
+{% set supportPeople = support.supportPeople|filter(s => s.status == support.status) %}
 
 {% block title %}Suivi social{% endblock %}
 
@@ -43,9 +44,9 @@
 				<li class="breadcrumb-item active" aria-current="page">Suivi social (Accueil)</li>
 			</ol>
 		</nav>
-		{% for person in support.supportPeople %}
-			<a href="{{ path("group_person_show", {"id":people_group.id, "person_id":person.person.id, "slug":person.person.slug}) }}" 
-				class="btn btn-outline-secondary btn-sm rounded-pill mb-2">{{ person.person.fullname }}</a>
+		{% for supportPerson in supportPeople %}
+			<a href="{{ path("group_person_show", {"id": people_group.id, "person_id": supportPerson.person.id, "slug": supportPerson.person.slug}) }}" 
+				class="btn btn-outline-secondary btn-sm rounded-pill mb-2">{{ supportPerson.person.fullname }}</a>
 		{% endfor %}
 
 		<hr>

@@ -1,11 +1,13 @@
 {# Boucle sur les personnes dans le suivis afin d'afficher #}
-{% macro loopSupportPeople(entity_name, people, theme_color = "dark") %}
+{% macro loopSupportPeople(entity_name, people, support, theme_color = "dark") %}
     <div class="mb-4">
         {% for key, eval_person in people %}
-            {% set person = eval_person.vars.value.supportPerson.person %}
-            <button type="button" id="heading-{{ entity_name }}-{{ key }}" class="btn btn-outline-{{ theme_color }} {{ loop.first ? 'active' }} mb-2 js-person"
-                data-toggle="collapse" data-target="#collapse-{{ entity_name }}-{{ key }}" aria-expanded="false"
-                aria-controls="collapse-{{ entity_name }}-{{ key }}" data-key="{{ key }}">{{ person.fullname }}
+            {% set supportPerson = eval_person.vars.value.supportPerson %}
+            {% set active = supportPerson.status == support.status %}
+            <button type="button" id="heading-{{ entity_name }}-{{ key }}" class="btn 
+                btn-outline-{{ active ? theme_color : 'secondary' }} {{ active == false ? 'delete' }} {{ loop.first ? 'active' }} 
+                mb-2 js-person" data-toggle="collapse" data-target="#collapse-{{ entity_name }}-{{ key }}"  aria-expanded="false" 
+                aria-controls="collapse-{{ entity_name }}-{{ key }}" data-key="{{ key }}">{{ supportPerson.person.fullname }}
             </button>
         {% endfor %}
     </div>

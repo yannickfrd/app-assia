@@ -8,9 +8,9 @@
 
     <div class="row mb-3">
         <div class="col-md-12 accordion" id="accordion-eval_family">
-            {{ utils.loopSupportPeople(accordion_id, form.evaluationPeople, theme_color) }}
+            {{ utils.loopSupportPeople(accordion_id, evaluationPeople, support, theme_color) }}
 
-            {% for key, evalPerson in form.evaluationPeople %}
+            {% for key, evalPerson in evaluationPeople %}
                 {% set supportPerson = evalPerson.vars.value.supportPerson %}
                 <div id="collapse-eval_family-{{ key }}" class="collapse {% if loop.first %}show{% endif %} my-3"
                     aria-labelledby="heading-eval_family-{{ key }}" data-parent="#accordion-eval_family" 
