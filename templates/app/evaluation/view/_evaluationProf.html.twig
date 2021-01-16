@@ -20,8 +20,6 @@
                 </div>
             {% endif %}
             <div class="row mb-2">
-                {{ view_div.get(evalProf.schoolLevelToString, "School level", "evaluation") }}
-                {{ view_div.get(evalProf.profExperienceToString, "Prof experience", "evaluation") }}
                 {{ view_div.get(evalProf.profStatus ? evalProf.profStatusToString ~ (evalProf.contractType ? " (" 
                     ~ evalProf.contractTypeToString ~ ")"), "Prof status", "evaluation") }}
                 {{ view_div.get(evalProf.jobCenterId, "Job center id", "evaluation") }}
@@ -35,6 +33,8 @@
                     ~ evalProf.transportMeans ~ ")"), "Transport means type", "evaluation") }}
                 {{ view_div.get(evalProf.rqth in [YES, IN_PROGRESS] ? evalProf.rqthToString ~ (evalProf.endRqthDate ? " (fin de validité : " 
                     ~ evalProf.endRqthDate|date("d/m/Y") ~ ")"), "Rqth", "evaluation") }}
+                {{ view_div.get(evalProf.schoolLevelToString, "School level", "evaluation") }}
+                {{ view_div.get(evalProf.profExperienceToString, "Prof experience", "evaluation") }}
             </div>
             <div class="row my-2">
                 <div class="col-md-12 justify">{{ evalProf.commentEvalProf|nl2br }}</div>

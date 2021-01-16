@@ -49,7 +49,7 @@ class HotelSupport
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    private $gipId;
+    private $gipId; // A SUPPRIMER ??
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -99,16 +99,6 @@ class HotelSupport
      * @ORM\JoinColumn(nullable=false)
      */
     private $supportGroup;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $accessId;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $amhId;
 
     public function getId(): ?int
     {
@@ -292,30 +282,6 @@ class HotelSupport
     public function setSupportGroup(SupportGroup $supportGroup): self
     {
         $this->supportGroup = $supportGroup;
-
-        return $this;
-    }
-
-    public function getAccessId(): ?int
-    {
-        return $this->accessId;
-    }
-
-    public function setAccessId(?int $accessId): self
-    {
-        $this->accessId = $accessId;
-
-        return $this;
-    }
-
-    public function getAmhId(): ?int
-    {
-        return $this->amhId;
-    }
-
-    public function setAmhId(?int $amhId): self
-    {
-        $this->amhId = $amhId;
 
         return $this;
     }

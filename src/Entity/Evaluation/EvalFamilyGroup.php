@@ -52,7 +52,7 @@ class EvalFamilyGroup
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $cafId;
+    private $cafId; // A SUPPRIMER
 
     /**
      * @ORM\Column(type="smallint", nullable=true)

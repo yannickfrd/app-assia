@@ -23,6 +23,7 @@ class InitEvalPersonType extends AbstractType
                 'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
                 'attr' => [
                     'class' => 'js-initEval important',
+                    'data-id' => 'paper',
                 ],
                 'placeholder' => 'placeholder.select',
                 'help' => 'evalAdmPerson.paper.help',
