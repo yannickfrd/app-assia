@@ -25,7 +25,7 @@ export default class AddCollectionWidget {
      */
     addElt(btnElt) {
         this.list = document.querySelector(btnElt.getAttribute('data-list-selector'))
-        this.counter = this.list.getAttribute('data-widget-counter') || this.list.children().length // Try to find the counter of the list or use the length of the list
+        this.counter = parseInt(this.list.getAttribute('data-widget-counter') || this.list.children().length) // Try to find the counter of the list or use the length of the list
         // grab the prototype template
         let newWidget = this.list.getAttribute('data-prototype')
         // replace the '__name__' used in the id and name of the prototype with a number that's unique to your emails

@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const addCollectionWidget = new AddCollectionWidget()
 
-    if (parseInt(addCollectionWidget.counter) === 0) {
+    if (parseInt(document.querySelectorAll('#serviceUser-fields-list>tr').length) === 0) {
         addCollectionWidget.addElt(document.querySelector('.add-another-collection-widget'))
     }
 })
