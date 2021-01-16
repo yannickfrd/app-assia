@@ -64,8 +64,8 @@
             <p>N° de dossier : {{ support.id }}</p>
             <p>N° de {{ title|lower }} : {{ contribution.createdAt|date("Ymd_") }}{{ contribution.id }}</p>
             <p>Service : {{ service.name }}</p>
-            <p>{{ service.phone1 ? "Téléphone : " ~ subService and subService.email ? subService.phone1 : service.phone1 }}</p>
-            <p>{{ service.email ? "Email : " ~ subService and subService.email ? subService.email : service.email }}</p>
+            <p>{{ service.phone1 ? "Téléphone : " ~ (subService and subService.email ? subService.phone1 : service.phone1) }}</p>
+            <p>{{ service.email ? "Email : " ~ (subService and subService.email ? subService.email : service.email) }}</p>
 
             <br/>
             <p><b>Objet :

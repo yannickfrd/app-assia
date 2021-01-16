@@ -168,8 +168,10 @@ export default class SupportContributions {
             
         this.mailBtnElt.addEventListener('click', e => {
             e.preventDefault();
-            const url = this.mailBtnElt.getAttribute('data-url').replace('__id__', this.contributionId);
-            this.ajax.send('GET', url, this.responseAjax.bind(this));
+            if (window.confirm('Confirmer l\'envoi du reçu par email au suivi ?')) {
+                const url = this.mailBtnElt.getAttribute('data-url').replace('__id__', this.contributionId);
+                this.ajax.send('GET', url, this.responseAjax.bind(this));
+            }
         })
     }
 
@@ -527,8 +529,8 @@ export default class SupportContributions {
      * @param {String} url 
      */
     deleteContribution(url) {
-        this.loader.on()
-        if (window.confirm('Voulez-vous vraiment supprimer cette enregistrement ?')) {
+        if (window.confirm('Confirmer la suppression cet enregistrement ?')) {
+            this.loader.on()
             this.ajax.send('GET', url, this.responseAjax.bind(this))
         }
     }
