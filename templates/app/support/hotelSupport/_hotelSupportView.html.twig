@@ -8,7 +8,9 @@
             <span>{{ support.subService ? " | " ~ support.subService.name }}</span>
         <span>{{ support.device ? " (" ~ support.device.name ~ ")" }}</span>
     </div>
-    {{ view_div.get(support.statusToString ~ (support.endStatus ? " (" ~ support.endStatusToString ~ ")" ), "Status") }}
+    {{ view_div.get(support.statusToString 
+        ~ (support.service.coefficient == YES and support.status == STATUS_IN_PROGRESS ? " (coeff. " ~ support.coefficient ~ ")" )
+        ~ (support.endStatus ? " (" ~ support.endStatusToString ~ ")" ), "Status") }}
     {{ view_div.get(support.startDate ? support.startDate|date("d/m/Y") 
         ~ (support.endDate ? " - " ~ support.endDate|date("d/m/Y")), "Date de suivi") }}
     {{ view_div.get(support.referent ? support.referent.fullname ~ (support.referent2 ? " | " ~ support.referent2.fullname), "Referent") }}
@@ -60,7 +62,3 @@
         </div>
     </div>
 {% endif %}
-
-<div class="row">
-    {{ view_div.get(support.coefficient ? support.coefficient, "Coefficient") }}
-</div>

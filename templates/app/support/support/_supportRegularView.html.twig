@@ -7,7 +7,9 @@
             {{ support.service.name }}</a>
         <span>{{ support.device ? " (" ~ support.device.name ~ ")" }}</span>
     </div>
-    {{ view_div.get(support.statusToString ~ (support.endStatus ? " (" ~ support.endStatusToString ~ ")" ), "Status") }}
+    {{ view_div.get(support.statusToString 
+        ~ (support.service.coefficient == YES and support.status == STATUS_IN_PROGRESS ? " (coeff. " ~ support.coefficient ~ ")" )
+        ~ (support.endStatus ? " (" ~ support.endStatusToString ~ ")" ), "Status") }}
     {% set originRequest = support.originRequest %}
     {% if originRequest %}
     {{ view_div.get(originRequest.organization ? originRequest.organization.name ~ (originRequest.organizationComment ? " (" 
@@ -34,11 +36,6 @@
     {% endfor %}
     {{ view_div.get(support.city or support.address ? support.address ~ ", " ~ support.zipcode ~ " " ~ support.city, "Adresse") }}
 </div>
-{% if support.service.coefficient == YES %}
-    <div class="row">
-        {{ view_div.get(support.coefficient, "Coefficient") }}
-    </div>
-{% endif %}
 <div class="row">
     {{ view_div.get(support.comment) }}
 </div>

@@ -3,6 +3,7 @@
 {% import "macros/viewDiv.html.twig" as view_div %}
 
 {% set ROLE_CHILD = constant("App\\Entity\\People\\RolePerson::ROLE_CHILD") %}
+{% set STATUS_IN_PROGRESS = constant("App\\Entity\\Support\\SupportGroup::STATUS_IN_PROGRESS") %}
 {% set SERVICE_AVDL_ID = constant("App\\Entity\\Organization\\Service::SERVICE_AVDL_ID") %}
 {% set SERVICE_PASH_ID = constant("App\\Entity\\Organization\\Service::SERVICE_PASH_ID") %}
 {% set supportPeople = support.supportPeople|filter(s => s.status == support.status) %}
@@ -46,7 +47,7 @@
 		</nav>
 		{% for supportPerson in supportPeople %}
 			<a href="{{ path("group_person_show", {"id": people_group.id, "person_id": supportPerson.person.id, "slug": supportPerson.person.slug}) }}" 
-				class="btn btn-outline-secondary btn-sm rounded-pill mb-2">{{ supportPerson.person.fullname }}</a>
+				class="btn btn-outline-{{ theme_color }} btn-sm rounded-pill mb-2">{{ supportPerson.person.fullname }}</a>
 		{% endfor %}
 
 		<hr>
