@@ -385,9 +385,9 @@ class RdvController extends AbstractController
             $cache->deleteItems([
                 SupportGroup::CACHE_SUPPORT_LAST_RDV_KEY.$supportGroup->getId(),
                 SupportGroup::CACHE_SUPPORT_NEXT_RDV_KEY.$supportGroup->getId(),
-                SupportGroup::CACHE_SUPPORT_NOTES_KEY.$supportGroup->getId(),
+                SupportGroup::CACHE_SUPPORT_RDVS_KEY.$supportGroup->getId(),
             ]);
-            if ($isUpdate) {
+            if (false === $isUpdate) {
                 $cache->deleteItem(SupportGroup::CACHE_SUPPORT_NB_RDVS_KEY.$supportGroup->getId());
             }
         }
