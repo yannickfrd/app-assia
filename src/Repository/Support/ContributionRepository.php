@@ -160,10 +160,10 @@ class ContributionRepository extends ServiceEntityRepository
                 ->setParameter('services', $this->currentUser->getServices());
         }
 
-        if ($search->getId()) {
-            $query->andWhere('c.id = :id')
-                ->setParameter('id', $search->getId());
-        }
+        // if ($search->getId()) {
+        //     $query->andWhere('c.id = :id')
+        //         ->setParameter('id', $search->getId());
+        // }
 
         if ($search->getType()) {
             $query->andWhere('c.type IN (:type)')
@@ -237,10 +237,6 @@ class ContributionRepository extends ServiceEntityRepository
             ->andWhere('c.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroupId);
 
-        // if ($search->getContributionId()) {
-        //     $query->andWhere('c.id = :id')
-        //         ->setParameter('id', $search->getContributionId());
-        // }
         if ($search->getType()) {
             $query->andWhere('c.type IN (:type)')
                 ->setParameter('type', $search->getType());

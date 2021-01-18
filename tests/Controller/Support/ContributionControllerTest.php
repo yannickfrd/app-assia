@@ -30,6 +30,7 @@ class ContributionControllerTest extends WebTestCase
     protected function setUp()
     {
         $this->dataFixtures = $this->loadFixtureFiles([
+            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/ContributionFixturesTest.yaml',
         ]);
 
@@ -39,7 +40,7 @@ class ContributionControllerTest extends WebTestCase
         $this->contribution = $this->dataFixtures['contribution1'];
     }
 
-    public function testviewListContributionsIsUp()
+    public function test_view_list_contributions_is_up()
     {
         $this->client->request('GET', $this->generateUri('contributions'));
 
@@ -47,7 +48,7 @@ class ContributionControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Paiements');
     }
 
-    public function testSearchContributionsIsSuccessful()
+    public function test_search_contributions_is_successful()
     {
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('contributions'));
@@ -63,7 +64,7 @@ class ContributionControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Paiements');
     }
 
-    public function testExportContributions()
+    public function test_export_contributions()
     {
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('contributions'));
@@ -75,7 +76,7 @@ class ContributionControllerTest extends WebTestCase
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testViewSupportListContributionsIsUp()
+    public function test_view_support_list_contributions_is_up()
     {
         $this->client->request('GET', $this->generateUri('support_contributions', [
             'id' => $this->supportGroup->getId(),
@@ -85,11 +86,25 @@ class ContributionControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Paiements');
     }
 
-    public function testGetResources()
+    public function test_get_resources()
     {
         $this->client->request('GET', $this->generateUri('support_resources', [
             'id' => $this->supportGroup->getId(),
         ]));
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function test_export_support_contributions()
+    {
+        /** @var Crawler */
+        $crawler = $this->client->request('GET', $this->generateUri('support_contributions', [
+            'id' => $this->supportGroup->getId(),
+        ]));
+
+        $form = $crawler->selectButton('export')->form([]);
+
+        $this->client->submit($form);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
@@ -103,7 +118,7 @@ class ContributionControllerTest extends WebTestCase
     //     $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     // }
 
-    public function testGetContribution()
+    public function test_get_contribution()
     {
         $this->client->request('GET', $this->generateUri('contribution_get', [
             'id' => $this->contribution->getId(),
@@ -121,7 +136,7 @@ class ContributionControllerTest extends WebTestCase
     //     $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     // }
 
-    public function testDeleteContribution()
+    public function test_delete_contribution()
     {
         $this->client->request('GET', $this->generateUri('contribution_delete', [
             'id' => $this->contribution->getId(),

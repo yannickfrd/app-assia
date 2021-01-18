@@ -29,28 +29,6 @@ App\Entity\Support\Contribution:
     updatedBy: "@user*"
     supportGroup: "@supportGroup*"
 
-App\Entity\Organization\User:
-  userRoleUser:
-    firstname: Role
-    lastname: SUPER_ADMIN
-    username: r.super_admin
-    email: r.super_admin@esperer-95.org
-    status: 1
-    roles: ["ROLE_SUPER_ADMIN"]
-    plainPassword: Test123*
-
-App\Entity\People\Person:
-  person:
-    firstname: John
-    lastname: Doe
-    gender: 2
-    birthdate: <date_create("1980-01-01")>
-
-App\Entity\People\PeopleGroup:
-  peopleGroup:
-    familyTypology: 2
-    nbPeople: 1
-
 App\Entity\Support\SupportGroup:
   supportGroup:
     startDate: <date_create("2019-04-03")>
@@ -75,15 +53,14 @@ App\Entity\Support\SupportPerson:
     head: 1
     role: 5
 
-App\Entity\Organization\Service:
-  service1:
-    name: AVDL
-    pole: "@pole"
-    createdAt: <date_create()>
-    updatedAt: <date_create()>
+App\Entity\People\Person:
+  person:
+    firstname: John
+    lastname: Doe
+    gender: 2
+    birthdate: <date_create("1980-01-01")>
 
-App\Entity\Organization\Pole:
-  pole:
-    name: Habitat
-    createdAt: <date_create()>
-    updatedAt: <date_create()>
+App\Entity\People\PeopleGroup:
+  peopleGroup:
+    familyTypology: 2
+    nbPeople: 1
