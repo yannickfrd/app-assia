@@ -231,10 +231,11 @@ class DocumentController extends AbstractController
                 'peopleGroupId' => $peopleGroup->getId(),
                 'type' => $document->getTypeToString(),
                 'size' => $size,
+                'extension' => $document->getExtension(),
                 'createdBy' => $this->getUser()->getFullname(),
                 'createdAt' => $document->getCreatedAt()->format('d/m/Y H:i'),
             ],
-        ], 200);
+        ]);
     }
 
     /**

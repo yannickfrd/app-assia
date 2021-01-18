@@ -262,7 +262,7 @@ export default class SupportDocuments {
     }
 
     getPrototypeDocument(data) {
-        const size = Math.floor(data.size / 100000) / 100 + ' Mo'
+        const size = Math.floor(data.size / 10000) / 100 + ' Mo'
 
         return `<td scope='row' class='align-middle text-center'>
                     <a href='/document/${data.documentId}/read' class='btn btn-${this.themeColor} btn-sm shadow my-1' 
@@ -274,6 +274,7 @@ export default class SupportDocuments {
                         data-value='${this.selectType.getOption(this.documentTypeInput)}'>${data.type}</td>
                     <td class='align-middle js-document-content'>${this.documentContentInput.value}</td>
                     <td class='align-middle js-document-size text-right'>${size}</td>
+                    <td class="align-middle js-document-extension">${data.extension}</td>
                     <td class='align-middle js-document-createdAt'>${data.createdAt}</td>
                     <td class='align-middle js-document-createdBy'>${data.createdBy}</td>
                     <td class='align-middle text-center'>
