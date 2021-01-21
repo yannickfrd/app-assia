@@ -660,7 +660,7 @@ class ImportDatasHebergement extends ImportDatas
 
     protected function getSubService(): ?SubService
     {
-        if (!isset($this->field['Sous-service']) && !$this->field['Sous-service']) {
+        if (!isset($this->field['Sous-service']) || !$this->field['Sous-service']) {
             return null;
         }
 
@@ -980,7 +980,7 @@ class ImportDatasHebergement extends ImportDatas
 
     protected function createEvalFamilyPerson(EvaluationPerson $evaluationPerson): ?EvalFamilyPerson
     {
-        if (!$this->field['Grossesse'] && !$this->field['Mode garde'] && !$this->field['MMesure de protection']) {
+        if (!$this->field['Grossesse'] && !$this->field['Mode garde'] && !$this->field['Mesure de protection']) {
             return null;
         }
 
@@ -1159,8 +1159,8 @@ class ImportDatasHebergement extends ImportDatas
 
     protected function createAccommodation(Service $service, Device $device): Accommodation
     {
-        $accommodation = (new Accommodation())
-            ->setConfiguration(isset($this->field['Configuration']) && $this->findInArray($this->field['Configuration'], self::CONFIGURATION))
+        $accommodation = new Accommodation();
+        $accommodation->setConfiguration(isset($this->field['Configuration']) && $this->findInArray($this->field['Configuration'], self::CONFIGURATION))
             ->setIndividualCollective(isset($this->field['Individuel ou collectif']) && $this->findInArray($this->field['Individuel ou collectif'], self::INDIVIDUAL_COLLECTIVE))
             ->setName($this->field['Nom place'])
             ->setAddress($this->field['Adresse logement'])
@@ -1172,6 +1172,12 @@ class ImportDatasHebergement extends ImportDatas
             ->setSubService($this->getSubService())
             ->setCreatedBy($this->user)
             ->setUpdatedBy($this->user);
+
+        if (2 === $accommodation->getConfiguration()) {
+            $accommodation->setAddress($service->getAddress())
+                ->setCity($service->getCity())
+                ->setZipcode($service->getZipcode());
+        }
 
         $this->manager->persist($accommodation);
 
