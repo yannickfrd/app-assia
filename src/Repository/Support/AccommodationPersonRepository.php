@@ -5,6 +5,7 @@ namespace App\Repository\Support;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\SubService;
 use App\Entity\Support\AccommodationPerson;
+use App\Form\Model\Admin\OccupancySearch;
 use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
@@ -42,11 +43,11 @@ class AccommodationPersonRepository extends ServiceEntityRepository
     }
 
     /**
-     * Donne les prises en charge des personnes
+     * Donne les prises en charge des personnes.
      *
      * @return AccommodationPerson[]|null
      */
-    public function findAccommodationPeople(CurrentUserService $currentUser, \DateTime $start, \DateTime $end, Service $service = null, SubService $subService = null): ?array
+    public function findAccommodationPeople(OccupancySearch $search, CurrentUserService $currentUser, Service $service = null, SubService $subService = null): ?array
     {
         $query = $this->createQueryBuilder('ap')->select('ap')
             ->leftJoin('ap.accommodationGroup', 'ag')->addSelect('PARTIAL ag.{id, accommodation}')
@@ -54,8 +55,8 @@ class AccommodationPersonRepository extends ServiceEntityRepository
             ->leftJoin('a.service', 's')->addSelect('PARTIAL s.{id}')
             ->leftJoin('a.subService', 'ss')->addSelect('PARTIAL ss.{id}')
 
-            ->andWhere('ap.endDate > :start OR ap.endDate IS NULL')->setParameter('start', $start)
-            ->andWhere('ap.startDate < :end')->setParameter('end', $end);
+            ->andWhere('ap.endDate > :start OR ap.endDate IS NULL')->setParameter('start', $search->getStart())
+            ->andWhere('ap.startDate < :end')->setParameter('end', $search->getEnd());
 
         if ($service) {
             $query = $query->andWhere('a.service = :service')

@@ -5,6 +5,7 @@ namespace App\Repository\Organization;
 use App\Entity\Organization\Device;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\User;
+use App\Form\Model\Admin\OccupancySearch;
 use App\Form\Model\Organization\ServiceSearch;
 use App\Form\Utils\Choices;
 use App\Security\CurrentUserService;
@@ -86,7 +87,7 @@ class ServiceRepository extends ServiceEntityRepository
         return $query->orderBy('s.name', 'ASC');
     }
 
-    public function findServicesWithAccommodation(CurrentUserService $currentUser, \DateTime $start, \DateTime $end, Device $device = null)
+    public function findServicesWithAccommodation(OccupancySearch $search, CurrentUserService $currentUser, Device $device = null)
     {
         $query = $this->createQueryBuilder('s')->select('s')
             ->leftJoin('s.subServices', 'ss')->addSelect('PARTIAL ss.{id, name}')
@@ -94,8 +95,13 @@ class ServiceRepository extends ServiceEntityRepository
             ->leftJoin('s.serviceDevices', 'sd')->addSelect('sd')
 
             ->andWhere('s.accommodation = TRUE')
-            ->andWhere('a.endDate > :start OR a.endDate IS NULL')->setParameter('start', $start)
-            ->andWhere('a.startDate < :end')->setParameter('end', $end);
+            ->andWhere('a.endDate > :start OR a.endDate IS NULL')->setParameter('start', $search->getStart())
+            ->andWhere('a.startDate < :end')->setParameter('end', $search->getEnd());
+
+        if ($search->getPole()) {
+            $query = $query->andWhere('s.pole = :pole')
+                ->setParameter('pole', $search->getPole());
+        }
 
         if ($device) {
             $query = $query->andWhere('sd.device = :device')

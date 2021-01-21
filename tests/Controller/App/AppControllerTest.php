@@ -94,39 +94,6 @@ class AppControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Répartition des suivis en cours');
     }
 
-    public function testPageOccupancyByDeviceIsUp()
-    {
-        $this->createLogin($this->dataFixtures['userRoleUser']);
-
-        $this->client->request('GET', $this->generateUri('occupancy_devices'));
-
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'Dispositifs');
-    }
-
-    public function testPageOccupancyByServiceIsUp()
-    {
-        $this->dataFixtures = $this->loadFixtureFiles([
-            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
-        ]);
-        $this->createLogin($this->dataFixtures['userRoleUser']);
-
-        $this->client->request('GET', $this->generateUri('occupancy_services'));
-
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'Services');
-    }
-
-    public function testPageOccupancyByAccommodationsIsUp()
-    {
-        $this->createLogin($this->dataFixtures['userRoleUser']);
-
-        $this->client->request('GET', $this->generateUri('occupancy_accommodations'));
-
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'Groupes de places');
-    }
-
     public function testPageAdminIsUp()
     {
         $this->createLogin($this->dataFixtures['userRoleAdmin']);

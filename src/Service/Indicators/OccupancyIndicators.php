@@ -4,13 +4,15 @@ namespace App\Service\Indicators;
 
 use App\Entity\Organization\Device;
 use App\Entity\Organization\Service;
+use App\Security\CurrentUserService;
 use App\Entity\Organization\SubService;
-use App\Repository\Organization\AccommodationRepository;
+use App\Form\Admin\OccupancySearchType;
+use App\Form\Model\Admin\OccupancySearch;
 use App\Repository\Organization\DeviceRepository;
 use App\Repository\Organization\ServiceRepository;
 use App\Repository\Organization\SubServiceRepository;
+use App\Repository\Organization\AccommodationRepository;
 use App\Repository\Support\AccommodationPersonRepository;
-use App\Security\CurrentUserService;
 
 class OccupancyIndicators
 {
@@ -47,11 +49,11 @@ class OccupancyIndicators
     /**
      * Donne tous les dispositifs avec leur taux d'occupation.
      */
-    public function getOccupancyRateByDevice(\DateTimeInterface $start, \DateTimeInterface $end, Service $service = null): array
+    public function getOccupancyRateByDevice(OccupancySearch $search, Service $service = null): array
     {
-        $devices = $this->repoDevice->findDevicesWithAccommodation($this->currentUser, $start, $end, $service);
-        $accommodationPeople = $this->repoAccommodatioPerson->findAccommodationPeople($this->currentUser, $start, $end, $service);
-        $interval = date_diff($start, $end);
+        $devices = $this->repoDevice->findDevicesWithAccommodation($search, $this->currentUser, $service);
+        $accommodationPeople = $this->repoAccommodatioPerson->findAccommodationPeople($search, $this->currentUser, $service);
+        $interval = date_diff($search->getStart(), $search->getEnd());
 
         foreach ($devices as $device) {
             $nbPlaces = 0;
@@ -61,7 +63,7 @@ class OccupancyIndicators
             $occupancyDays = 0;
 
             foreach ($device->getAccommodations() as $accommodation) {
-                $dateInterval = $this->getDateInterval($accommodation->getStartDate(), $accommodation->getEndDate(), $start, $end);
+                $dateInterval = $this->getDateInterval($accommodation->getStartDate(), $accommodation->getEndDate(), $search->getStart(), $search->getEnd());
                 $capacityDays += $dateInterval->format('%a') * $accommodation->getNbPlaces();
                 $nbPlaces += $accommodation->getNbPlaces();
                 ++$nbAccommodations;
@@ -69,7 +71,7 @@ class OccupancyIndicators
 
             foreach ($accommodationPeople as $accommodationPerson) {
                 if ($accommodationPerson->getAccommodationGroup()->getAccommodation()->getDevice() == $device) {
-                    $dateInterval = $this->getDateInterval($accommodationPerson->getStartDate(), $accommodationPerson->getEndDate(), $start, $end);
+                    $dateInterval = $this->getDateInterval($accommodationPerson->getStartDate(), $accommodationPerson->getEndDate(), $search->getStart(), $search->getEnd());
                     $occupancyDays += $dateInterval->format('%a');
                     ++$nbAccommodationsPeople;
                 }
@@ -107,11 +109,11 @@ class OccupancyIndicators
     /**
      * Donne tous les services avec leur taux d'occupation.
      */
-    public function getOccupancyRateByService(\DateTimeInterface $start, \DateTimeInterface $end, Device $device = null): array
+    public function getOccupancyRateByService(OccupancySearch $search, Device $device = null): array
     {
-        $services = $this->repoService->findServicesWithAccommodation($this->currentUser, $start, $end, $device);
-        $accommodationPeople = $this->repoAccommodatioPerson->findAccommodationPeople($this->currentUser, $start, $end);
-        $interval = date_diff($start, $end);
+        $services = $this->repoService->findServicesWithAccommodation($search, $this->currentUser, $device);
+        $accommodationPeople = $this->repoAccommodatioPerson->findAccommodationPeople($search, $this->currentUser);
+        $interval = date_diff($search->getStart(), $search->getEnd());
 
         foreach ($services as $service) {
             $nbPlaces = 0;
@@ -121,7 +123,7 @@ class OccupancyIndicators
             $occupancyDays = 0;
 
             foreach ($service->getAccommodations() as $accommodation) {
-                $dateInterval = $this->getDateInterval($accommodation->getStartDate(), $accommodation->getEndDate(), $start, $end);
+                $dateInterval = $this->getDateInterval($accommodation->getStartDate(), $accommodation->getEndDate(), $search->getStart(), $search->getEnd());
                 $capacityDays += $dateInterval->format('%a') * $accommodation->getNbPlaces();
                 $nbPlaces += $accommodation->getNbPlaces();
                 ++$nbAccommodations;
@@ -129,7 +131,7 @@ class OccupancyIndicators
 
             foreach ($accommodationPeople as $accommodationPerson) {
                 if ($accommodationPerson->getAccommodationGroup()->getAccommodation()->getService() == $service) {
-                    $dateInterval = $this->getDateInterval($accommodationPerson->getStartDate(), $accommodationPerson->getEndDate(), $start, $end);
+                    $dateInterval = $this->getDateInterval($accommodationPerson->getStartDate(), $accommodationPerson->getEndDate(), $search->getStart(), $search->getEnd());
                     $occupancyDays += $dateInterval->format('%a');
                     ++$nbAccommodationsPeople;
                 }
@@ -168,11 +170,11 @@ class OccupancyIndicators
     /**
      * Donne tous les sous-services du service avec leur taux d'occupation.
      */
-    public function getOccupancyRateBySubService(\DateTimeInterface $start, \DateTimeInterface $end, Service $service): array
+    public function getOccupancyRateBySubService(OccupancySearch $search, Service $service): array
     {
-        $subServices = $this->repoSubService->findSubServicesWithAccommodation($this->currentUser, $start, $end, $service);
-        $accommodationPeople = $this->repoAccommodatioPerson->findAccommodationPeople($this->currentUser, $start, $end);
-        $interval = date_diff($start, $end);
+        $subServices = $this->repoSubService->findSubServicesWithAccommodation($search, $this->currentUser, $service);
+        $accommodationPeople = $this->repoAccommodatioPerson->findAccommodationPeople($search, $this->currentUser);
+        $interval = date_diff($search->getStart(), $search->getEnd());
 
         foreach ($subServices as $subService) {
             $nbPlaces = 0;
@@ -182,7 +184,7 @@ class OccupancyIndicators
             $occupancyDays = 0;
 
             foreach ($subService->getAccommodations() as $accommodation) {
-                $dateInterval = $this->getDateInterval($accommodation->getStartDate(), $accommodation->getEndDate(), $start, $end);
+                $dateInterval = $this->getDateInterval($accommodation->getStartDate(), $accommodation->getEndDate(), $search->getStart(), $search->getEnd());
                 $capacityDays += $dateInterval->format('%a') * $accommodation->getNbPlaces();
                 $nbPlaces += $accommodation->getNbPlaces();
                 ++$nbAccommodations;
@@ -190,7 +192,7 @@ class OccupancyIndicators
 
             foreach ($accommodationPeople as $accommodationPerson) {
                 if ($accommodationPerson->getAccommodationGroup()->getAccommodation()->getSubService() == $subService) {
-                    $dateInterval = $this->getDateInterval($accommodationPerson->getStartDate(), $accommodationPerson->getEndDate(), $start, $end);
+                    $dateInterval = $this->getDateInterval($accommodationPerson->getStartDate(), $accommodationPerson->getEndDate(), $search->getStart(), $search->getEnd());
                     $occupancyDays += $dateInterval->format('%a');
                     ++$nbAccommodationsPeople;
                 }
@@ -228,23 +230,23 @@ class OccupancyIndicators
     /**
      * Donne tous les groupes de places d'un service avec leur taux d'occupation.
      */
-    public function getOccupancyRateByAccommodation(\DateTimeInterface $start, \DateTimeInterface $end, Service $service = null, SubService $subService = null): array
+    public function getOccupancyRateByAccommodation(OccupancySearch $search, Service $service = null, SubService $subService = null): array
     {
-        $accommodations = $this->repoAccommodation->findAccommodationsForOccupancy($this->currentUser, $service, $subService);
-        $accommodationPeople = $this->repoAccommodatioPerson->findAccommodationPeople($this->currentUser, $start, $end, $service, $subService);
-        $interval = date_diff($start, $end);
+        $accommodations = $this->repoAccommodation->findAccommodationsForOccupancy($search, $this->currentUser, $service, $subService);
+        $accommodationPeople = $this->repoAccommodatioPerson->findAccommodationPeople($search, $this->currentUser, $service, $subService);
+        $interval = date_diff($search->getStart(), $search->getEnd());
 
         foreach ($accommodations as $accommodation) {
             $capacityDays = 0;
             $nbAccommodationsPeople = 0;
             $occupancyDays = 0;
 
-            $dateInterval = $this->getDateInterval($accommodation->getStartDate(), $accommodation->getEndDate(), $start, $end);
+            $dateInterval = $this->getDateInterval($accommodation->getStartDate(), $accommodation->getEndDate(), $search->getStart(), $search->getEnd());
             $capacityDays += $dateInterval->format('%a') * $accommodation->getNbPlaces();
 
             foreach ($accommodationPeople as $accommodationPerson) {
                 if ($accommodationPerson->getAccommodationGroup()->getAccommodation() == $accommodation) {
-                    $dateInterval = $this->getDateInterval($accommodationPerson->getStartDate(), $accommodationPerson->getEndDate(), $start, $end);
+                    $dateInterval = $this->getDateInterval($accommodationPerson->getStartDate(), $accommodationPerson->getEndDate(), $search->getStart(), $search->getEnd());
                     $occupancyDays += $dateInterval->format('%a');
                     ++$nbAccommodationsPeople;
                 }

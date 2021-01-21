@@ -10,18 +10,18 @@
         <h1 class="h2 mb-3">Taux d'occupation<span class="fas fa-angle-right fa-xs mx-1"></span>Services</h1>
     </div>
 
-    {% include "app/admin/dashboard/_searchOccupancy.html.twig" %}
+    {% include "app/occupancy/_searchOccupancy.html.twig" %}
 
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <p><a href="{{ path('occupancy_devices') }}" class="text-{{ theme_color }}"><!--
+                <p><a href="{{ path('occupancy_devices', {'date': {'start': search.start|date('Y-m-d'), 'end': search.end|date('Y-m-d')}}) }}" class="text-{{ theme_color }}"><!--
                     --><span class="fas fa-undo mr-2"></span>{% if device %}Retour{% else %}Accès<!--
                     -->{% endif %} aux taux d'ocupation par dispositif.</a>
                 </p>
-                {% set interval = date(start).diff(date(end)) %}
-                <p>Période du {{ start|date("d/m/Y") }} au {{ end|date("d/m/Y") }},<!--
-                --> soit {{ interval.days }} jour{{ interval.days > 1 ? "s" }}.</p>
+                {% set interval = date(search.start).diff(date(search.end)) %}
+                <p>Période du {{ search.start|date("d/m/Y") }} au {{ search.end|date("d/m/Y") }},<!--
+                --> soit {{ interval.days }} nuit{{ interval.days > 1 ? "s" }}.</p>
             </div>
         </div>
         <div class="row">
@@ -36,37 +36,37 @@
                                 <th class="align-middle th-w-100 text-right">Nombre de places</th>
                                 <th class="align-middle th-w-100 text-right">Nb de nuitées théoriques</th>
                                 <th class="align-middle th-w-100 text-right">Nb de nuitées réalisées</th>
-                                <th class="align-middle th-w-100 text-right">Nb moyen de places/jour</th>
-                                <th class="align-middle th-w-100 text-right">Nb moyen de personnes/jour</th>
+                                <th class="align-middle th-w-100 text-right">Nb moyen de places/nuit</th>
+                                <th class="align-middle th-w-100 text-right">Nb moyen de personnes/nuit</th>
                                 <th class="align-middle th-w-100 text-right">Taux d'occupation</th>
                             </tr>
                         </thead>
                         <tbody>
                         {% set example = "" %}
-                            {% for service_id, service in datas.services %}
+                            {% for service_id, service in datas.services|filter(a => a.capacityDays > 0) %}
                                 {% set ocupancyRate = ((service.occupancyDays / service.capacityDays) * 100)|round(1, "common") %}
                                 {% if loop.first %}
-                                {% set example %}
-                                    {% apply spaceless %}
-                                        Le service {{ service.name }} dispose de {{ service.nbAccommodations }} groupes de places
-                                        (soit {{ service.nbPlaces }} places). Sur la période sélectionnée ({{ interval.days }} jours), 
-                                        sa capacité d'accueil maximale représente {{ service.capacityDays|number_format(0, ",", " ") }} 
-                                        nuitées (soit une moyenne de {{ service.averageCapacity|round(1, "common") }} places par jour).
-                                        Sur ces places, {{ service.occupancyDays|number_format(0, ",", " ") }} nuitées ont été réalisées, 
-                                        soit une occupation moyenne de {{ service.averageOccupancy|round(1, "common") }} personnes par jour. 
-                                        Le rapport occupation/capacité nous donne un taux d'occupation moyen de {{ ocupancyRate }} %.
-                                    {% endapply %}
-                                {% endset %}
-                            {% endif %}
+                                    {% set example %}
+                                        {% apply spaceless %}
+                                            Le service {{ service.name }} dispose de {{ service.nbAccommodations }} groupes de places
+                                            (soit {{ service.nbPlaces }} places). Sur la période sélectionnée ({{ interval.days }} nuits), 
+                                            sa capacité d'accueil maximale représente {{ service.capacityDays|number_format(0, ",", " ") }} 
+                                            nuitées (soit une moyenne de {{ service.averageCapacity|round(1, "common") }} places par nuit).
+                                            Sur ces places, {{ service.occupancyDays|number_format(0, ",", " ") }} nuitées ont été réalisées, 
+                                            soit une occupation moyenne de {{ service.averageOccupancy|round(1, "common") }} personnes par nuit. 
+                                            Le rapport occupation/capacité nous donne un taux d'occupation moyen de {{ ocupancyRate }} %.
+                                        {% endapply %}
+                                    {% endset %}
+                                {% endif %}
                                 <tr>
-                                    <td scope="row" class="align-middle text-center">
+                                    <td class="align-middle text-center" scope="row">
                                         {% if service.nbSubServices > 1 %}
-                                            <a href="{{ path('occupancy_sub_services', {'id': service_id, 'start': start|date('Y-m-d'), 'end': end|date('Y-m-d')}) }}" 
+                                            <a href="{{ path('occupancy_sub_services', {'id': service_id, 'start': search.start|date('Y-m-d'), 'end': search.end|date('Y-m-d')}) }}" 
                                                 class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" 
                                                 title="Voir le détail par sous-service"><span class="fas fa-eye fa-sm"></span>
                                             </a>
                                         {% else %}
-                                            <a href="{{ path('occupancy_service_accommodations', {'id': service_id, 'start': start|date('Y-m-d'), 'end': end|date('Y-m-d')}) }}" 
+                                            <a href="{{ path('occupancy_service_accommodations', {'id': service_id, 'start': search.start|date('Y-m-d'), 'end': search.end|date('Y-m-d')}) }}" 
                                                 class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" 
                                                 title="Voir le détail par groupe de places du service"><span class="fas fa-eye fa-sm"></span>
                                             </a>
@@ -80,7 +80,7 @@
                                     <td class="align-middle text-right">{{ service.averageCapacity|round(1, "common") }}</td>
                                     <td class="align-middle text-right">{{ service.averageOccupancy|round(1, "common") }}</td>
                                     <td class="align-middle {{ utils.alert_color(ocupancyRate) }} text-right">
-                                    <span class="font-weight-bold font-italic">{{ ocupancyRate }} %</span>
+                                        <span class="font-weight-bold font-italic">{{ ocupancyRate }} %</span>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -115,4 +115,5 @@
 
 {% block javascripts %}
     {{ encore_entry_script_tags("search") }}
+    {# {{ encore_entry_script_tags("occupancy") }} #}
 {% endblock javascripts %}

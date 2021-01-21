@@ -6,8 +6,10 @@ use App\Entity\Organization\Pole;
 use App\Form\Model\Admin\OccupancySearch;
 use App\Form\Model\Support\RdvSearch;
 use App\Form\Type\DateSearchType;
+use App\Form\Utils\Choices;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -16,6 +18,10 @@ class OccupancySearchType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('year', ChoiceType::class, [
+                'choices' => Choices::getchoices(range((int) date('Y'), (int) date('Y') - 5)),
+                'required' => false,
+            ])
             ->add('pole', EntityType::class, [
                 'class' => Pole::class,
                 'choice_label' => 'name',

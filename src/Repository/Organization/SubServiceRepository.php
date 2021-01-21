@@ -4,6 +4,7 @@ namespace App\Repository\Organization;
 
 use App\Entity\Organization\Service;
 use App\Entity\Organization\SubService;
+use App\Form\Model\Admin\OccupancySearch;
 use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
@@ -97,16 +98,21 @@ class SubServiceRepository extends ServiceEntityRepository
         return $query->orderBy('ss.name', 'ASC');
     }
 
-    public function findSubServicesWithAccommodation(CurrentUserService $currentUser, \DateTime $start, \DateTime $end, ?Service $service = null)
+    public function findSubServicesWithAccommodation(OccupancySearch $search, CurrentUserService $currentUser, ?Service $service = null)
     {
         $query = $this->createQueryBuilder('ss')->select('ss')
             ->leftJoin('ss.service', 's')->addSelect('s')
             ->leftJoin('ss.accommodations', 'a')->addSelect('PARTIAL a.{id, name, startDate, endDate, nbPlaces}')
 
             ->andWhere('s.accommodation = TRUE')
-            ->andWhere('a.endDate > :start OR a.endDate IS NULL')->setParameter('start', $start)
-            ->andWhere('a.startDate < :end')->setParameter('end', $end);
+            ->andWhere('a.endDate > :start OR a.endDate IS NULL')->setParameter('start', $search->getStart())
+            ->andWhere('a.startDate < :end')->setParameter('end', $search->getEnd());
 
+        if ($search->getPole()) {
+            $query = $query->andWhere('s.pole = :pole')
+                ->setParameter('pole', $search->getPole());
+        }
+        
         if ($service) {
             $query = $query->andWhere('ss.service = :service')
                 ->setParameter('service', $service);

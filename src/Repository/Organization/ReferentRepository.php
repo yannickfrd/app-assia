@@ -47,7 +47,7 @@ class ReferentRepository extends ServiceEntityRepository
         return $query->getQuery();
     }
 
-    public function findReferentsOfPeopleGroup(PeopleGroup $peopleGroup)
+    public function findReferentsOfPeopleGroup(PeopleGroup $peopleGroup): ?array
     {
         return $this->createQueryBuilder('r')->select('r')
             ->where('r.peopleGroup = :peopleGroup')

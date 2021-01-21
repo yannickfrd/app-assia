@@ -10,6 +10,11 @@ class OccupancySearch
     use DateSearchTrait;
 
     /**
+     * @var int
+     */
+    private $year;
+
+    /**
      * @var Pole|null
      */
     private $pole;
@@ -18,6 +23,18 @@ class OccupancySearch
      * @var bool
      */
     private $export;
+
+    public function getYear(): ?int
+    {
+        return $this->year;
+    }
+
+    public function setYear(int $year): self
+    {
+        $this->year = $year;
+
+        return $this;
+    }
 
     public function getPole(): ?Pole
     {

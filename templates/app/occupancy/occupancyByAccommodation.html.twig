@@ -11,18 +11,18 @@
         -->{{ service ? service.name : " Groupes de places" }}</h1>
     </div>
 
-    {% include "app/admin/dashboard/_searchOccupancy.html.twig" %}
+    {% include "app/occupancy/_searchOccupancy.html.twig" %}
 
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <p><a href="{{ path('occupancy_services') }}" class="text-{{ theme_color }}"><!--
+                <p><a href="{{ path('occupancy_services', {'date': {'start': search.start|date('Y-m-d'), 'end': search.end|date('Y-m-d')}}) }}" class="text-{{ theme_color }}"><!--
                 --><span class="fas fa-undo mr-2"></span>{% if service %}Retour {% else %}<!--
                 -->Accès{% endif %} aux taux d'ocupation par service.</a>
                 </p>
-                {% set interval = date(start).diff(date(end)) %}
-                <p>Période du {{ start|date("d/m/Y") }} au {{ end|date("d/m/Y") }},<!--
-                --> soit {{ interval.days }} jour{{ interval.days > 1 ? "s" }}.</p>
+                {% set interval = date(search.start).diff(date(search.end)) %}
+                <p>Période du {{ search.start|date("d/m/Y") }} au {{ search.end|date("d/m/Y") }},<!--
+                --> soit {{ interval.days }} nuit{{ interval.days > 1 ? "s" }}.</p>
             </div>
         </div>
         <div class="row">
@@ -38,8 +38,8 @@
                                 <th class="align-middle th-w-100 text-right">Nombre de places</th>
                                 <th class="align-middle th-w-100 text-right">Nb de nuitées théoriques</th>
                                 <th class="align-middle th-w-100 text-right">Nb de nuitées réalisées</th>
-                                <th class="align-middle th-w-100 text-right">Nb moyen de places/jour</th>
-                                <th class="align-middle th-w-100 text-right">Nb moyen de personnes/jour</th>
+                                <th class="align-middle th-w-100 text-right">Nb moyen de places/nuit</th>
+                                <th class="align-middle th-w-100 text-right">Nb moyen de personnes/nuit</th>
                                 <th class="align-middle th-w-100 text-right">Taux d'occupation</th>
                             </tr>
                         </thead>

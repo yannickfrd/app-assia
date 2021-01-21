@@ -2,17 +2,18 @@
 
 namespace App\Repository\Organization;
 
-use App\Entity\Organization\Accommodation;
-use App\Entity\Organization\Service;
-use App\Entity\Organization\SubService;
-use App\Entity\Support\SupportGroup;
-use App\Form\Model\Organization\AccommodationSearch;
-use App\Form\Utils\Choices;
-use App\Security\CurrentUserService;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
+use App\Form\Utils\Choices;
 use Doctrine\ORM\QueryBuilder;
+use App\Entity\Organization\Service;
+use App\Entity\Support\SupportGroup;
+use App\Security\CurrentUserService;
+use App\Entity\Organization\SubService;
+use App\Form\Model\Admin\OccupancySearch;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\Organization\Accommodation;
+use App\Form\Model\Organization\AccommodationSearch;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Accommodation|null find($id, $lockMode = null, $lockVersion = null)
@@ -132,7 +133,7 @@ class AccommodationRepository extends ServiceEntityRepository
      *
      * @return mixed
      */
-    public function findAccommodationsForOccupancy($currentUser, Service $service = null, SubService $subService = null)
+    public function findAccommodationsForOccupancy(OccupancySearch $search, $currentUser, Service $service = null, SubService $subService = null)
     {
         $query = $this->createQueryBuilder('a')->select('a')
             ->innerJoin('a.service', 's')->addSelect('PARTIAL s.{id, name}')
@@ -141,6 +142,11 @@ class AccommodationRepository extends ServiceEntityRepository
 
             ->where('a.startDate IS NOT NULL');
 
+        if ($search->getPole()) {
+            $query = $query->andWhere('s.pole = :pole')
+                ->setParameter('pole', $search->getPole());
+        }
+        
         if ($service) {
             $query->andWhere('a.service = :service')
                 ->setParameter('service', $service);
