@@ -220,9 +220,7 @@ class SupportPersonRepository extends ServiceEntityRepository
      */
     public function countSupportsToExport($search = null): int
     {
-        $query = $this->createQueryBuilder('sp')->select('sp')
-            ->leftJoin('sp.supportGroup', 'sg')->addSelect('sg')
-            ->leftJoin('sg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
+        $query = $this->getSupportsQuery()
             ->select('COUNT(sp.id)');
 
         return $this->filters($query, $search)
