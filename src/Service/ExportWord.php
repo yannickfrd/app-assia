@@ -191,6 +191,7 @@ class ExportWord
             $content
         );
         $content = \str_replace('&amp;', 'et', $content); // &amp; provoque une erreur à l'ouverture du fichier Word.
+        $content = \str_replace(' & ', ' et ', $content); // & provoque une erreur à l'ouverture du fichier Word.
 
         if (\strstr($content, '<br/>{LOGO_SIGNATURE}')) {
             $content = \str_replace('<br/>{LOGO_SIGNATURE}', '', $content);
