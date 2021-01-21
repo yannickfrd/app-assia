@@ -26,6 +26,7 @@ use App\Entity\People\Person;
 use App\Entity\People\RolePerson;
 use App\Entity\Support\AccommodationGroup;
 use App\Entity\Support\AccommodationPerson;
+use App\Entity\Support\OriginRequest;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Support\SupportPerson;
 use App\Form\Utils\Choices;
@@ -638,8 +639,8 @@ class ImportDatasHebergement extends ImportDatas
         $this->subService = $this->getSubService();
 
         // $userReferent = $this->getUserReferent();
-        $supportGroup = (new SupportGroup())
-                    ->setStatus($this->getStatus())
+        $supportGroup = new SupportGroup();
+        $supportGroup->setStatus($this->getStatus())
                     ->setStartDate($this->getStartDate())
                     ->setEndDate($this->getEndDate())
                     ->setEndStatus($this->findInArray($this->field['Type sortie'], self::END_STATUS))
@@ -655,7 +656,29 @@ class ImportDatasHebergement extends ImportDatas
 
         $this->manager->persist($supportGroup);
 
+        $this->createOriginRequest($supportGroup);
+
         return $supportGroup;
+    }
+
+    protected function createOriginRequest(SupportGroup $supportGroup): ?OriginRequest
+    {
+        if (!$this->field['Service prescripteur'] && !$this->field['Date entretien pré-admission'] && !$this->field['Date entretien pré-admission']) {
+            return null;
+        }
+
+        $originRequest = new OriginRequest();
+        $originRequest->setInfoToSiaoDate($this->field['Date entretien pré-admission'] ? new \Datetime($this->field['Date remise à dispo SIAO']) : null)
+            ->setOrientationDate($this->field['Date entretien pré-admission'] ? new \Datetime($this->field['Date remise à dispo SIAO']) : null)
+            ->setOrganizationComment($this->field['Service prescripteur'])
+            ->setPreAdmissionDate($this->field['Date entretien pré-admission'] ? new \Datetime($this->field['Date entretien pré-admission']) : null)
+            ->setResulPreAdmission($this->findInArray($this->field['Résultat entretien pré-admission'], self::RESULT_PRE_ADMISSION))
+            ->setComment($this->field['Commentaire pré-admission'])
+            ->setSupportGroup($supportGroup);
+
+        $this->manager->persist($originRequest);
+
+        return $originRequest;
     }
 
     protected function getSubService(): ?SubService
