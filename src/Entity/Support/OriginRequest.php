@@ -33,6 +33,12 @@ class OriginRequest
      * @ORM\Column(type="date", nullable=true)
      * @Groups("export")
      */
+    private $infoToSiaoDate;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     * @Groups("export")
+     */
     private $orientationDate;
 
     /**
@@ -84,6 +90,18 @@ class OriginRequest
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getInfoToSiaoDate(): ?\DateTimeInterface
+    {
+        return $this->infoToSiaoDate;
+    }
+
+    public function setInfoToSiaoDate(?\DateTimeInterface $infoToSiaoDate): self
+    {
+        $this->infoToSiaoDate = $infoToSiaoDate;
+
+        return $this;
     }
 
     public function getOrientationDate(): ?\DateTimeInterface

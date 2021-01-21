@@ -23,6 +23,10 @@ class OriginRequestType extends AbstractType
         $required = Service::SERVICE_AVDL_ID === $serviceId ? true : false;
 
         $builder
+            ->add('infoToSiaoDate', DateType::class, [
+                'widget' => 'single_text',
+                'required' => false,
+            ])
             ->add('organization', EntityType::class, [
                 'class' => Organization::class,
                 'choice_label' => 'name',
