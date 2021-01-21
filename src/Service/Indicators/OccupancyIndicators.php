@@ -4,15 +4,14 @@ namespace App\Service\Indicators;
 
 use App\Entity\Organization\Device;
 use App\Entity\Organization\Service;
-use App\Security\CurrentUserService;
 use App\Entity\Organization\SubService;
-use App\Form\Admin\OccupancySearchType;
 use App\Form\Model\Admin\OccupancySearch;
+use App\Repository\Organization\AccommodationRepository;
 use App\Repository\Organization\DeviceRepository;
 use App\Repository\Organization\ServiceRepository;
 use App\Repository\Organization\SubServiceRepository;
-use App\Repository\Organization\AccommodationRepository;
 use App\Repository\Support\AccommodationPersonRepository;
+use App\Security\CurrentUserService;
 
 class OccupancyIndicators
 {
@@ -144,8 +143,8 @@ class OccupancyIndicators
                 'nbPlaces' => $nbPlaces,
                 'capacityDays' => $capacityDays,
                 'occupancyDays' => $occupancyDays,
-                'averageCapacity' => $nbAccommodations ? ($capacityDays / $interval->format('%a')) : null,
-                'averageOccupancy' => $nbAccommodationsPeople ? ($occupancyDays / $interval->format('%a')) : null,
+                'averageCapacity' => $nbAccommodations && $interval->format('%a') ? ($capacityDays / $interval->format('%a')) : null,
+                'averageOccupancy' => $nbAccommodationsPeople && $interval->format('%a') ? ($occupancyDays / $interval->format('%a')) : null,
             ];
 
             $this->nbAccommodations += $nbAccommodations;
@@ -162,8 +161,8 @@ class OccupancyIndicators
             'nbPlaces' => $this->nbPlaces,
             'capacityDays' => $this->capacityDays,
             'occupancyDays' => $this->occupancyDays,
-            'averageCapacity' => $this->nbAccommodations ? ($this->capacityDays / $interval->format('%a')) : null,
-            'averageOccupancy' => $this->nbAccommodationsPeople ? ($this->occupancyDays / $interval->format('%a')) : null,
+            'averageCapacity' => $this->nbAccommodations && $interval->format('%a') ? ($this->capacityDays / $interval->format('%a')) : null,
+            'averageOccupancy' => $this->nbAccommodationsPeople && $interval->format('%a') ? ($this->occupancyDays / $interval->format('%a')) : null,
         ];
     }
 

@@ -16,11 +16,11 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <p><a href="{{ path('occupancy_sub_services', {'id':subService.service.id}) }}" class="text-{{ theme_color }}"><!--
+                <p><a href="{{ path('occupancy_sub_services', {'id':subService.service.id, 'date': {'start': search.start|date('Y-m-d'), 'end': search.end|date('Y-m-d')} }) }}" class="text-{{ theme_color }}"><!--
                 --><span class="fas fa-undo mr-2"></span>Retour aux taux d'ocupation du service.</a>
                 </p>
-                {% set interval = date(start).diff(date(end)) %}
-                <p>Période du {{ start|date("d/m/Y") }} au {{ end|date("d/m/Y") }},<!--
+                {% set interval = date(search.start).diff(date(search.end)) %}
+                <p>Période du {{ search.start|date("d/m/Y") }} au {{ search.end|date("d/m/Y") }},<!--
                 --> soit {{ interval.days }} nuit{{ interval.days > 1 ? "s" }}.</p>
             </div>
         </div>
