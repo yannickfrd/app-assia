@@ -54,8 +54,8 @@
                                         title="Le nombre de personnes rattachées au suivi ne correspond pas à la composition familiale."></span>
                                 {% endif %}
                             </td>
-                            <td class="align-middle">{{ support.service.name }}<br/>
-                                {% if support.device %}({{ support.device.name }}){% endif %}                    
+                            <td class="align-middle">{{ support.service.name }}<!--
+                                -->{% if support.device %}<br/>({{ support.device.name }}){% endif %}
                             </td>
                             <td class="align-middle">{{ support.statusToString }}</td>
                             <td class="align-middle">{{ support.startDate ? support.startDate|date("d/m/Y") }}

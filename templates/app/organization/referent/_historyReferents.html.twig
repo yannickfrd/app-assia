@@ -20,7 +20,7 @@
                 <tbody>
                     {% for referent in referents|reverse %}
                         <tr>
-                            <td class="align-middle" scope="row">
+                            <td class="align-middle text-center" scope="row">
                                 <a href="{{ support is defined ? path('support_referent_edit', {'support_id': support.id, 'id': referent.id}) : 
                                     path('group_referent_edit', {'id': referent.id}) }}"
                                     class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-toggle="tooltip" data-placement="bottom"

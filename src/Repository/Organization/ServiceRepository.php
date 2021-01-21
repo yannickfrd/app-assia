@@ -75,7 +75,7 @@ class ServiceRepository extends ServiceEntityRepository
      */
     public function getServicesOfUserQueryList(CurrentUserService $currentUser): QueryBuilder
     {
-        $query = $this->createQueryBuilder('s')->select('PARTIAL s.{id, name, preAdmission}')
+        $query = $this->createQueryBuilder('s')->select('PARTIAL s.{id, name, preAdmission, coefficient}')
 
         ->where('s.disabledAt IS NULL');
 

@@ -71,8 +71,10 @@
                                     <span class="text-secondary">{{ supportGroup.device ? "(" ~ supportGroup.device.name ~ ")" }}</span>
                                 </td>
                                 <td class="align-middle">{{ supportGroup.referent ? supportGroup.referent.fullname }}</td>
-                                <td class="align-middle">{{ supportGroup.statusToString }}<br/>
-                                    <span class="text-secondary">{{ supportGroup.coefficient ? "(coeff. " ~ supportGroup.coefficient ~ ")" }}</span>
+                                <td class="align-middle">{{ supportGroup.statusToString }}<!--
+                                    -->{% if supportGroup.service.coefficient == YES %}<!--
+                                        --><br/><span class="text-secondary">{{ supportGroup.coefficient ? "(coeff. " ~ supportGroup.coefficient ~ ")" }}</span><!--
+                                    -->{% endif %}
                                 </td>
                                 <td class="align-middle">{{ supportGroup.startDate ? supportGroup.startDate|date("d/m/Y") }}</td>
                                 <td class="align-middle">{{ supportGroup.endDate ? supportGroup.endDate|date("d/m/Y") }}

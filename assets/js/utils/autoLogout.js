@@ -63,7 +63,10 @@ export default class AutoLogout {
      * Déconnection via requête Ajax.
      */
     deconnection() {
+        console.log('deconnexion')
         clearInterval(this.intervalID)
+        this.clearTimer()
+        this.modalElt.hide();
         window.location.assign('/deconnexion')
     }
 }

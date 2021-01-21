@@ -267,7 +267,7 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->leftJoin('sp.supportGroup', 'sg')->addSelect('sg')
             ->leftJoin('sg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
             ->leftJoin('sg.referent', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
-            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, coefficient}')
             ->leftJoin('sg.subService', 'ss')->addSelect('PARTIAL ss.{id, name}')
             ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
             ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')
