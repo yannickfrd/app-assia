@@ -7,6 +7,7 @@ class Choices
     public const YES = 1;
     public const NO = 2;
     public const IN_PROGRESS = 3;
+    public const NO_INFORMATION = 99;
 
     public const YES_NO = [
         1 => 'Oui',

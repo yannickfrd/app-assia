@@ -14,6 +14,7 @@ use App\Service\Import\ImportDatasUser;
 use App\Service\Import\UpdateDatasAMH;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -130,6 +131,8 @@ class ImportController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $nbItems = $importDatas->importInDatabase($file, $this->import->getService(), $request);
             if ($nbItems > 0) {
+                (new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']))->clear();
+
                 $this->addFlash('success', $nbItems.' entrées ont été importées !');
 
                 return $this->redirectToRoute('home');

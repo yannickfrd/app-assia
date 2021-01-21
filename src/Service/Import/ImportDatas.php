@@ -60,7 +60,7 @@ class ImportDatas
             }
         }
 
-        return false;
+        return null;
     }
 
     protected function createNote(SupportGroup $supportGroup, string $title, string $content): Note
