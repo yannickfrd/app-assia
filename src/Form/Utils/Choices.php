@@ -74,4 +74,17 @@ class Choices
 
         return $output;
     }
+
+    public static function getYears($number = 10): array
+    {
+        $years = [];
+        $date = date('Y');
+
+        for ($i = 0; $i < $number; ++$i) {
+            $years[$date] = $date;
+            --$date;
+        }
+
+        return $years;
+    }
 }

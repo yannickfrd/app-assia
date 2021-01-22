@@ -19,7 +19,9 @@ class OccupancySearchType extends AbstractType
     {
         $builder
             ->add('year', ChoiceType::class, [
-                'choices' => Choices::getchoices(range((int) date('Y'), (int) date('Y') - 5)),
+                'label_attr' => ['class' => 'pr-1'],
+                'choices' => Choices::getYears(5),
+                'placeholder' => 'Year',
                 'required' => false,
             ])
             ->add('pole', EntityType::class, [

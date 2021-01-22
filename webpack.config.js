@@ -39,6 +39,7 @@ Encore
     .addEntry('login', './assets/js/security/login.js')
     .addEntry('multiSelect', './assets/js/multiSelect.js')
     .addEntry('note', './assets/js/note/note.js')
+    .addEntry('occupancy', './assets/js/app/occupancy.js')
     .addEntry('person', './assets/js/person/person.js')
     .addEntry('place', './assets/js/accommodation/accommodation.js')
     .addEntry('rdvs', './assets/js/rdv/rdvsIndex.js')

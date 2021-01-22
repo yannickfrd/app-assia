@@ -16,9 +16,9 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <p><a href="{{ path('occupancy_services', {'date': {'start': search.start|date('Y-m-d'), 'end': search.end|date('Y-m-d')}}) }}" class="text-{{ theme_color }}"><!--
-                --><span class="fas fa-undo mr-2"></span>{% if service %}Retour {% else %}<!--
-                -->Accès{% endif %} aux taux d'ocupation par service.</a>
+                <p><a href="{{ path('occupancy_services', {'date': {'start': search.start|date('Y-m-d'), 'end': search.end|date('Y-m-d')}}) }}" 
+                    class="text-{{ theme_color }}"><span class="fas fa-undo mr-2"></span>{% if service %}Retour {% else %}<!--
+                    -->Accès{% endif %} aux taux d'ocupation par service.</a>
                 </p>
                 {% set interval = date(search.start).diff(date(search.end)) %}
                 <p>Période du {{ search.start|date("d/m/Y") }} au {{ search.end|date("d/m/Y") }},<!--
@@ -69,7 +69,7 @@
                         </tbody>
                         <tfoot>
                             <tr class="font-weight-bold">
-                                <td scope="row" colspan="4" class="align-middle text-center">Total</td>
+                                <td scope="row" colspan="4" class="align-middle text-center py-2">Total</td>
                                 <td class="align-middle text-right">{{ datas.nbPlaces|number_format(0, ",", " ") }}</td>
                                 <td class="align-middle text-right">{{ datas.capacityDays|number_format(0, ",", " ") }}</td>
                                 <td class="align-middle text-right">{{ datas.occupancyDays|number_format(0, ",", " ") }}</td>
@@ -91,4 +91,5 @@
 
 {% block javascripts %}
     {{ encore_entry_script_tags("search") }}
+    {{ encore_entry_script_tags("occupancy") }}
 {% endblock javascripts %}

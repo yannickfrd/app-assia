@@ -16,8 +16,8 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <p><a href="{{ path('occupancy_services', {'date': {'start': search.start|date('Y-m-d'), 'end': search.end|date('Y-m-d')}}) }}" class="text-{{ theme_color }}"><!--
-                    --><span class="fas fa-undo mr-2"></span>Accès aux taux d'ocupation par service.</a>
+                <p><a href="{{ path('occupancy_services', {'date': {'start': search.start|date('Y-m-d'), 'end': search.end|date('Y-m-d')}}) }}" 
+                    class="text-{{ theme_color }}"><span class="fas fa-undo mr-2"></span>Accès aux taux d'ocupation par service.</a>
                 </p>
                 {% set interval = date(search.start).diff(date(search.end)) %}
                 <p>Période du {{ search.start|date("d/m/Y") }} au {{ search.end|date("d/m/Y") }},<!--
@@ -60,7 +60,8 @@
                             {% endif %}
                                 <tr>
                                     <td scope="row" class="align-middle text-center">
-                                        <a href="{{ path('occupancy_sub_service_accommodations', {'id': subServiceId, 'start': search.start|date('Y-m-d'), 'end': search.end|date('Y-m-d')}) }}" 
+                                        <a href="{{ path('occupancy_sub_service_accommodations', {'id': subServiceId, 
+                                            'date': {'start': search.start|date('Y-m-d'), 'end': search.end|date('Y-m-d')} }) }}" 
                                             class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" 
                                             title="Voir le détail des groupes de places du subService"><span class="fas fa-eye fa-sm"></span>
                                         </a>
@@ -80,7 +81,7 @@
                         </tbody>
                         <tfoot>
                             <tr class="font-weight-bold">
-                                <td scope="row" colspan="2" class="align-middle text-center">Total</td>
+                                <td scope="row" colspan="2" class="align-middle text-center py-2">Total</td>
                                 <td class="align-middle text-right">{{ datas.nbAccommodations|number_format(0, ",", " ") }}</td>
                                 <td class="align-middle text-right">{{ datas.nbPlaces|number_format(0, ",", " ") }}</td>
                                 <td class="align-middle text-right">{{ datas.capacityDays|number_format(0, ",", " ") }}</td>
@@ -108,4 +109,5 @@
 
 {% block javascripts %}
     {{ encore_entry_script_tags("search") }}
+    {{ encore_entry_script_tags("occupancy") }}
 {% endblock javascripts %}

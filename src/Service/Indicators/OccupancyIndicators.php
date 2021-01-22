@@ -112,6 +112,7 @@ class OccupancyIndicators
     {
         $services = $this->repoService->findServicesWithAccommodation($search, $this->currentUser, $device);
         $accommodationPeople = $this->repoAccommodatioPerson->findAccommodationPeople($search, $this->currentUser);
+        // dd($search);
         $interval = date_diff($search->getStart(), $search->getEnd());
 
         foreach ($services as $service) {

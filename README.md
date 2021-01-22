@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.16.19 - 21/01/2021
+2.16.20 - 22/01/2021
 
 # Développeur
 Romain MADELAINE
@@ -12,6 +12,9 @@ https://github.com/RomMad/esperer95.app
 
 # Connection à la base démo
 https://demo.esperer95.app
+
+## Version 2.16.20 - 22/01/2021
+- Edit OccupancyRate f(fix bugs and add dateSelect);
 
 ## Version 2.16.11-19 - 21/01/2021
 - Edit OccupancyRate pages (reorganization, factorisation and keep filters between pages);
