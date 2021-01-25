@@ -2,18 +2,18 @@
 
 namespace App\Repository\Organization;
 
-use Doctrine\ORM\Query;
-use App\Form\Utils\Choices;
-use Doctrine\ORM\QueryBuilder;
-use App\Entity\Organization\Service;
-use App\Entity\Support\SupportGroup;
-use App\Security\CurrentUserService;
-use App\Entity\Organization\SubService;
-use App\Form\Model\Admin\OccupancySearch;
-use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Organization\Accommodation;
+use App\Entity\Organization\Service;
+use App\Entity\Organization\SubService;
+use App\Entity\Support\SupportGroup;
+use App\Form\Model\Admin\OccupancySearch;
 use App\Form\Model\Organization\AccommodationSearch;
+use App\Form\Utils\Choices;
+use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method Accommodation|null find($id, $lockMode = null, $lockVersion = null)
@@ -146,7 +146,7 @@ class AccommodationRepository extends ServiceEntityRepository
             $query = $query->andWhere('s.pole = :pole')
                 ->setParameter('pole', $search->getPole());
         }
-        
+
         if ($service) {
             $query->andWhere('a.service = :service')
                 ->setParameter('service', $service);
@@ -257,6 +257,15 @@ class AccommodationRepository extends ServiceEntityRepository
             $query->andWhere('a.disabledAt IS NOT NULL');
         } elseif (Choices::ACTIVE === $search->getDisabled()) {
             $query->andWhere('a.disabledAt IS NULL');
+        }
+
+        if ($search->getPoles() && count($search->getPoles())) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($search->getPoles() as $pole) {
+                $orX->add($expr->eq('s.pole', $pole));
+            }
+            $query->andWhere($orX);
         }
 
         if ($search->getServices()->count()) {

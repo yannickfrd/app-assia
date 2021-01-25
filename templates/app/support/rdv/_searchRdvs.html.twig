@@ -3,6 +3,9 @@
 {% block search_form %}
 
 <div class="form-group col-auto my-1 px-1">{{ form_widget(form.title) }}</div>
+{% if is_granted("ROLE_SUPER_ADMIN") %}
+    <div class="form-group col-auto my-1 px-1">{{ form_widget(form.service.poles) }}</div>
+{% endif %}
 {% if form.service.services.vars.choices|length > 1 %}
     <div class="form-group col-auto my-1 px-1">{{ form_widget(form.service.services) }}</div>
 {% endif %}
@@ -20,6 +23,7 @@
 <div class="form-group col-auto my-1 px-1 d-inline-flex" data-toggle="tooltip" data-placement="bottom"
     title="Date de fin"><span class="my-2 pr-1">et</span>{{ form_widget(form.date.end) }}
 </div>
+<div class="form-group col-auto my-1 px-1">{{ form_widget(form.status) }}</div>
 {% if is_granted("ROLE_SUPER_ADMIN") %}
     <div class="form-group col-auto my-1 px-1">{{ form_widget(form.id) }}</div>
 {% endif %}

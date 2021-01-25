@@ -9,10 +9,11 @@ import 'select2'
 const select2Array = {
     'typology': 'Typologie familiale',
     'status': 'Statut',
-    'referents': 'Référents',
+    'poles': 'Pôles',
     'services': 'Services',
     'sub-services': 'Sous-services',
     'devices': 'Dispositifs',
+    'referents': 'Référents',
     'hotels': 'Hôtel',
     'contribution-type': 'Type',
     'support-type': 'Type d\'acc.',

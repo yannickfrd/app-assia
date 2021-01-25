@@ -63,7 +63,7 @@ class SupportPersonRepository extends ServiceEntityRepository
             $query = $this->filters($query, $search);
         }
 
-        return $query->orderBy('sg.startDate', 'DESC')
+        return $query->orderBy('sp.startDate', 'DESC')
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
@@ -86,7 +86,7 @@ class SupportPersonRepository extends ServiceEntityRepository
             $query = $this->filters($query, $search);
         }
 
-        return $query->orderBy('sg.startDate', 'DESC')
+        return $query->orderBy('sp.startDate', 'DESC')
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
@@ -312,6 +312,15 @@ class SupportPersonRepository extends ServiceEntityRepository
             }
         }
 
+        if ($search->getPoles() && $search->getPoles()->count()) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($search->getPoles() as $pole) {
+                $orX->add($expr->eq('s.pole', $pole));
+            }
+            $query->andWhere($orX);
+        }
+
         if ($search->getServices() && $search->getServices()->count()) {
             $expr = $query->expr();
             $orX = $expr->orX();
@@ -361,33 +370,33 @@ class SupportPersonRepository extends ServiceEntityRepository
 
         if (1 === $supportDates) {
             if ($search->getStart()) {
-                $query->andWhere('sg.startDate >= :start')
+                $query->andWhere('sp.startDate >= :start')
                     ->setParameter('start', $search->getStart());
             }
             if ($search->getEnd()) {
-                $query->andWhere('sg.startDate <= :end')
+                $query->andWhere('sp.startDate <= :end')
                     ->setParameter('end', $search->getEnd());
             }
         }
         if (2 === $supportDates) {
             if ($search->getStart()) {
                 if ($search->getStart()) {
-                    $query->andWhere('sg.endDate >= :start')
+                    $query->andWhere('sp.endDate >= :start')
                         ->setParameter('start', $search->getStart());
                 }
                 if ($search->getEnd()) {
-                    $query->andWhere('sg.endDate <= :end')
+                    $query->andWhere('sp.endDate <= :end')
                         ->setParameter('end', $search->getEnd());
                 }
             }
         }
         if (3 === $supportDates || !$supportDates) {
             if ($search->getStart()) {
-                $query->andWhere('sg.endDate >= :start OR sg.endDate IS NULL')
+                $query->andWhere('sp.endDate >= :start OR sp.endDate IS NULL')
                     ->setParameter('start', $search->getStart());
             }
             if ($search->getEnd()) {
-                $query->andWhere('sg.startDate <= :end')
+                $query->andWhere('sp.startDate <= :end')
                     ->setParameter('end', $search->getEnd());
             }
         }
@@ -454,15 +463,15 @@ class SupportPersonRepository extends ServiceEntityRepository
                         ->setParameter('device', $value);
                 }
                 if ('status' === $key) {
-                    $query->andWhere('sg.status = :status')
+                    $query->andWhere('sp.status = :status')
                         ->setParameter('status', $value);
                 }
                 if ('startDate' === $key) {
-                    $query = $query->andWhere('sg.createdAt >= :startDate')
+                    $query = $query->andWhere('sp.createdAt >= :startDate')
                             ->setParameter('startDate', $value);
                 }
                 if ('endDate' === $key) {
-                    $query = $query->andWhere('sg.createdAt <= :endDate')
+                    $query = $query->andWhere('sp.createdAt <= :endDate')
                             ->setParameter('endDate', $value);
                 }
             }

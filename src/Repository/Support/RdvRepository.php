@@ -68,7 +68,6 @@ class RdvRepository extends ServiceEntityRepository
     public function findRdvsToExport(RdvSearch $search): ?array
     {
         $query = $this->getRdvsQuery()
-            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, pole}')
             ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
             ->leftJoin('r.updatedBy', 'u2')->addSelect('PARTIAL u2.{id, firstname, lastname}');
 
@@ -123,11 +122,11 @@ class RdvRepository extends ServiceEntityRepository
                 ->setParameter('end', $search->getEnd());
         }
 
-        if ($search->getReferents() && count($search->getReferents())) {
+        if ($search->getPoles() && count($search->getPoles())) {
             $expr = $query->expr();
             $orX = $expr->orX();
-            foreach ($search->getReferents() as $referent) {
-                $orX->add($expr->eq('sg.referent', $referent));
+            foreach ($search->getPoles() as $pole) {
+                $orX->add($expr->eq('s.pole', $pole));
             }
             $query->andWhere($orX);
         }
@@ -155,6 +154,15 @@ class RdvRepository extends ServiceEntityRepository
             $orX = $expr->orX();
             foreach ($search->getDevices() as $device) {
                 $orX->add($expr->eq('sg.device', $device));
+            }
+            $query->andWhere($orX);
+        }
+
+        if ($search->getReferents() && count($search->getReferents())) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($search->getReferents() as $referent) {
+                $orX->add($expr->eq('sg.referent', $referent));
             }
             $query->andWhere($orX);
         }

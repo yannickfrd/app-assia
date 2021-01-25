@@ -86,6 +86,11 @@ class Pole
         $this->services = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return strval($this->id);
+    }
+
     public function getId(): ?int
     {
         return $this->id;

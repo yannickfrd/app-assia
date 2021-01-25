@@ -3,10 +3,12 @@
 namespace App\Form\Type;
 
 use App\Entity\Organization\Device;
+use App\Entity\Organization\Pole;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\SubService;
 use App\Entity\Organization\User;
 use App\Repository\Organization\DeviceRepository;
+use App\Repository\Organization\PoleRepository;
 use App\Repository\Organization\ServiceRepository;
 use App\Repository\Organization\SubServiceRepository;
 use App\Repository\Organization\UserRepository;
@@ -30,6 +32,24 @@ class SearchType extends AbstractType
         $attr = $builder->getOption('attr');
         $attrOptions = $attr['options'] ?? null;
         $serviceId = $attr['serviceId'] ?? null;
+
+        if ($this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+            $builder
+                ->add('poles', EntityType::class, [
+                    'class' => Pole::class,
+                    'choice_label' => 'name',
+                    'multiple' => true,
+                    'query_builder' => function (PoleRepository $repo) {
+                        return $repo->getPoleQueryList();
+                    },
+                    'placeholder' => 'placeholder.pole',
+                    'attr' => [
+                        'class' => 'multi-select w-min-150 w-max-200',
+                        'data-select2-id' => 'poles',
+                    ],
+                    'required' => false,
+                ]);
+        }
 
         if (null === $attrOptions || in_array('services', $attrOptions)) {
             $builder

@@ -206,6 +206,15 @@ class ContributionRepository extends ServiceEntityRepository
                 $query->andWhere($orX);
             }
 
+            if ($search->getPoles() && count($search->getPoles())) {
+                $expr = $query->expr();
+                $orX = $expr->orX();
+                foreach ($search->getPoles() as $pole) {
+                    $orX->add($expr->eq('s.pole', $pole));
+                }
+                $query->andWhere($orX);
+            }
+
             if ($search->getServices() && $search->getServices()->count()) {
                 $expr = $query->expr();
                 $orX = $expr->orX();

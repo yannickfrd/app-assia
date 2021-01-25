@@ -9,7 +9,7 @@ trait ReferentServiceDeviceSearchTrait
     /**
      * @var ArrayCollection
      */
-    private $referents;
+    private $poles;
 
     /**
      * @var ArrayCollection
@@ -26,33 +26,39 @@ trait ReferentServiceDeviceSearchTrait
      */
     private $devices;
 
+    /**
+     * @var ArrayCollection
+     */
+    private $referents;
+
     public function __construct()
     {
-        $this->referents = new ArrayCollection();
+        $this->poles = new ArrayCollection();
         $this->services = new ArrayCollection();
         $this->subServices = new ArrayCollection();
         $this->devices = new ArrayCollection();
+        $this->referents = new ArrayCollection();
     }
 
-    public function getReferents(): ?ArrayCollection
+    public function getPoles(): ?ArrayCollection
     {
-        return $this->referents;
+        return $this->poles;
     }
 
-    public function getReferentsToString(): array
+    public function getPolesToString(): array
     {
-        $referents = [];
+        $poles = [];
 
-        foreach ($this->referents as $referent) {
-            $referents[] = $referent->getFullname();
+        foreach ($this->poles as $pole) {
+            $poles[] = $pole->getName();
         }
 
-        return $referents;
+        return $poles;
     }
 
-    public function setReferents(?ArrayCollection $referents): self
+    public function setPoles(?ArrayCollection $poles): self
     {
-        $this->referents = $referents;
+        $this->poles = $poles;
 
         return $this;
     }
@@ -122,6 +128,29 @@ trait ReferentServiceDeviceSearchTrait
     public function setDevices(?ArrayCollection $devices): self
     {
         $this->devices = $devices;
+
+        return $this;
+    }
+
+    public function getReferents(): ?ArrayCollection
+    {
+        return $this->referents;
+    }
+
+    public function getReferentsToString(): array
+    {
+        $referents = [];
+
+        foreach ($this->referents as $referent) {
+            $referents[] = $referent->getFullname();
+        }
+
+        return $referents;
+    }
+
+    public function setReferents(?ArrayCollection $referents): self
+    {
+        $this->referents = $referents;
 
         return $this;
     }

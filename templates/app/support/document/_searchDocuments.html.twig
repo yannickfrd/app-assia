@@ -4,6 +4,9 @@
 
 <div class="form-group col-auto my-1 px-1">{{ form_widget(form.name) }}</div>
 <div class="form-group col-auto my-1 px-1">{{ form_widget(form.type) }}</div>
+    {% if is_granted("ROLE_SUPER_ADMIN") %}
+        <div class="form-group col-auto my-1 px-1">{{ form_widget(form.service.poles) }}</div>
+    {% endif %}
 {% if form.service.services.vars.choices|length > 1 %}
     <div class="form-group col-auto my-1 px-1">{{ form_widget(form.service.services) }}</div>
 {% endif %}

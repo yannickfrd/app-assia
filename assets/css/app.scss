@@ -540,7 +540,7 @@ button.btn-outline-secondary a:hover {
 
 // Medium devices (tablets, 768px and up)
 @media (max-width: 768px) {
-    nav {
+    nav.fixed-top {
         min-height: 60px;
     }
 
@@ -551,7 +551,7 @@ button.btn-outline-secondary a:hover {
 
 // Small devices (landscape phones, 576px and up)
 @media (max-width: 576px) {
-    nav {
+    nav.fixed-top {
         min-height: 50px;
     }
 

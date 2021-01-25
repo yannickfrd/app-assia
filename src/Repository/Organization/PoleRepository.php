@@ -5,6 +5,7 @@ namespace App\Repository\Organization;
 use App\Entity\Organization\Pole;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -21,14 +22,23 @@ class PoleRepository extends ServiceEntityRepository
     }
 
     /**
-     * Retourne toutes les personnes.
+     * Retourne toutes les pôles.
      */
     public function findPolesQuery(): Query
     {
-        $query = $this->createQueryBuilder('p')
-            ->select('p');
+        $query = $this->createQueryBuilder('p')->select('p');
 
         return $query->orderBy('p.name', 'ASC')
             ->getQuery();
+    }
+
+    /**
+     * Donne la liste des pôles.
+     */
+    public function getPoleQueryList(): QueryBuilder
+    {
+        return $this->createQueryBuilder('p')->select('PARTIAL p.{id, name}')
+            ->where('p.disabledAt IS NULL')
+            ->orderBy('p.name', 'ASC');
     }
 }
