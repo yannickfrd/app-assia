@@ -134,15 +134,16 @@ class ExportPDF
      */
     public function getPathImage(string $path = null): ?string
     {
-        $path = $path ?? $this->defaultLogo;
-
-        if (\file_exists($path)) {
-            $extension = pathinfo($path, PATHINFO_EXTENSION);
-            $data = file_get_contents($path);
-
-            return 'data:image/'.$extension.';base64,'.base64_encode($data);
+        if (null === $path || false === \file_exists($path)) {
+            if (null === $this->defaultLogo || false === \file_exists($this->defaultLogo)) {
+                return null;
+            }
+            $path = $this->defaultLogo;
         }
 
-        return null;
+        $extension = pathinfo($path, PATHINFO_EXTENSION);
+        $data = file_get_contents($path);
+
+        return 'data:image/'.$extension.';base64,'.base64_encode($data);
     }
 }

@@ -206,14 +206,19 @@ class ExportWord
      *
      * @param Section|Header|Footer $element
      */
-    protected function addLogo($element, string $logoPath = null, int $height = 60, string $align = 'left'): void
+    protected function addLogo($element, string $logoPath = null, int $height = 60, string $align = 'left')
     {
-        if (\file_exists($logoPath) || \file_exists($this->defaultLogo)) {
-            $element->addImage($logoPath ?? $this->defaultLogo, [
+        if (null === $logoPath || false === \file_exists($logoPath)) {
+            if (null === $this->defaultLogo || false === \file_exists($this->defaultLogo)) {
+                return null;
+            }
+            $logoPath = $this->defaultLogo;
+        }
+
+        $element->addImage($logoPath, [
                 'height' => $height,
                 'align' => $align,
             ]);
-        }
     }
 
     /**
