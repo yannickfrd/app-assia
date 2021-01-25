@@ -40,7 +40,7 @@ class RdvControllerTest extends WebTestCase
         $this->rdv = $this->dataFixtures['rdv1'];
     }
 
-    public function testviewListRdvsIsUp()
+    public function test_view_list_rdvs_is_up()
     {
         $this->client->request('GET', $this->generateUri('rdvs'));
 
@@ -48,7 +48,7 @@ class RdvControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Rendez-vous');
     }
 
-    public function testSearchRdvsIsSuccessful()
+    public function test_search_rdvs_is_successful()
     {
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('rdvs'));
@@ -63,6 +63,18 @@ class RdvControllerTest extends WebTestCase
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Rendez-vous');
+    }
+
+    public function test_export_rdvs_is_successful()
+    {
+        /** @var Crawler */
+        $crawler = $this->client->request('GET', $this->generateUri('rdvs'));
+
+        $form = $crawler->selectButton('export')->form([]);
+
+        $this->client->submit($form);
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
 
     public function testViewSupportListRdvsIsUp()

@@ -35,6 +35,7 @@
                             <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(rdvs, "Rendez-vous", "r.title") }}</th>
                             <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(rdvs, "Date", "r.start") }}</th>
                             <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(rdvs, "Lieu", "r.location") }}</th>
+                            <th scope="col" class="align-middle th-w-60">{{ knp_pagination_sortable(rdvs, "Statut", "r.status") }}</th>
                             <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(rdvs, "Référent·e", "ref.lastname") }}</th>
                             <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(rdvs, "Suivi", "p.lastname") }}</th>
                             <th scope="col" class="align-middle th-w-20"></th>
@@ -58,6 +59,7 @@
                                 </td>                        
                                 <td class="align-middle">{{ rdv.start|date("d/m/Y") }}<br/>{{ rdv.start|date("H:i") }} – {{ rdv.end|date("H:i") }}</td>
                                 <td class="align-middle">{{ rdv.location }}</td>
+                                <td class="align-middle">{{ rdv.statusToString }}</td>
                                 <td class="align-middle">{{ support and support.referent ? support.referent.fullname : rdv.createdBy.fullname }}</td>
                                 <td class="align-middle">{{ support ? support.supportPeople|filter(s => s.head == true)|first.person.fullname }}</td>
                                 <td class="align-middle text-center">
