@@ -7,6 +7,7 @@ use App\Entity\Organization\Service;
 use App\Entity\Organization\User;
 use App\Form\Model\Organization\UserSearch;
 use App\Repository\Organization\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -51,12 +52,15 @@ class UserRepositoryTest extends WebTestCase
 
     protected function getUserSearch(Pole $pole)
     {
+        $poles = new ArrayCollection();
+        $poles->add($pole);
+
         return (new UserSearch())
             ->setFirstname('Role')
             ->setLastname('ADMIN')
             ->setPhone('01 00 00 00 00')
             ->setStatus(6)
-            ->setPole($pole);
+            ->setPoles($poles);
     }
 
     public function testCount()
