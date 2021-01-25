@@ -2,17 +2,15 @@
 
 namespace App\Form\Organization\User;
 
-use App\Form\Utils\Choices;
-use App\Form\Type\SearchType;
-use App\Entity\Organization\Pole;
-use App\Entity\Organization\User;
 use App\Entity\Organization\ServiceUser;
-use Symfony\Component\Form\AbstractType;
+use App\Entity\Organization\User;
 use App\Form\Model\Organization\UserSearch;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use App\Form\Type\SearchType;
+use App\Form\Utils\Choices;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class UserSearchType extends AbstractType
 {
@@ -68,19 +66,9 @@ class UserSearchType extends AbstractType
             ])
             ->add('service', SearchType::class, [
                 'attr' => [
-                    'options' => ['services'],
+                    'options' => ['poles', 'services'],
                 ],
             ])
-            ->add('pole', EntityType::class, [
-                'class' => Pole::class,
-                'choice_label' => 'name',
-                // "multiple" => true,
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
-                'placeholder' => 'placeholder.pole',
-                'required' => false,
-                ])
             ->add('disabled', ChoiceType::class, [
                 'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getChoices(Choices::DISABLE),

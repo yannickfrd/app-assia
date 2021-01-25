@@ -2,7 +2,6 @@
 
 namespace App\Form\Model\Organization;
 
-use App\Entity\Organization\Pole;
 use App\Form\Utils\Choices;
 use App\Service\Phone;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -50,9 +49,9 @@ class UserSearch
     private $services;
 
     /**
-     * @var Pole|null
+     * @var ArrayCollection
      */
-    private $pole;
+    private $poles;
 
     /**
      * @var int|null
@@ -66,6 +65,7 @@ class UserSearch
 
     public function __construct()
     {
+        $this->poles = new ArrayCollection();
         $this->services = new ArrayCollection();
     }
 
@@ -165,14 +165,14 @@ class UserSearch
         return $this;
     }
 
-    public function getPole(): ?Pole
+    public function getPoles(): ?ArrayCollection
     {
-        return $this->pole;
+        return $this->poles;
     }
 
-    public function setPole(?Pole $pole): self
+    public function setPoles(?ArrayCollection $poles): self
     {
-        $this->pole = $pole;
+        $this->poles = $poles;
 
         return $this;
     }
