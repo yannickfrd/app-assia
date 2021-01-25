@@ -2,8 +2,13 @@
 
 namespace App\Command;
 
+use Doctrine\ORM\EntityManagerInterface;
+
 trait DoctrineTrait
 {
+    /**
+     * @var EntityManagerInterface
+     */
     protected $manager;
 
     public function disableListeners()
@@ -14,5 +19,6 @@ trait DoctrineTrait
                 $this->manager->getEventManager()->removeEventListener(['onFlush', 'onFlush'], $listener);
             }
         }
+        $this->manager->getFilters()->disable('softdeleteable');
     }
 }

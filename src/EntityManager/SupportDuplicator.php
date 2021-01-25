@@ -52,7 +52,6 @@ class SupportDuplicator
     public function duplicate(SupportGroup $supportGroup)
     {
         $this->supportGroup = $supportGroup;
-
         if ($this->duplicateSupportGroup($supportGroup)) {
             return $supportGroup;
         }
@@ -91,13 +90,21 @@ class SupportDuplicator
         return $supportGroup;
     }
 
-    private function duplicateEvaluation(SupportGroup $supportGroup, SupportGroup $lastSupportGroup): void
+    private function duplicateEvaluation(SupportGroup $newSupportGroup, SupportGroup $lastSupportGroup): void
     {
         $lastEvaluation = $this->repoEvaluationGroup->findEvaluationOfSupport($lastSupportGroup->getId());
 
-        if ($lastEvaluation && 0 === $supportGroup->getEvaluationsGroup()->count()) {
-            $evaluationGroup = (clone $lastEvaluation)->setSupportGroup($supportGroup);
-            $supportGroup->getEvaluationsGroup()->add($evaluationGroup);
+        if ($lastEvaluation && 0 === $newSupportGroup->getEvaluationsGroup()->count()) {
+            $evaluationGroup = (clone $lastEvaluation)->setSupportGroup($newSupportGroup);
+            $newSupportGroup->getEvaluationsGroup()->add($evaluationGroup);
+            // Change the supportPerson in every evaluationPerson
+            foreach ($evaluationGroup->getEvaluationPeople() as $evaluationPerson) {
+                foreach ($newSupportGroup->getSupportPeople() as $newSupportPerson) {
+                    if ($evaluationPerson->getSupportPerson()->getPerson()->getId() === $newSupportPerson->getPerson()->getId()) {
+                        $evaluationPerson->setSupportPerson($newSupportPerson);
+                    }
+                }
+            }
         }
     }
 
