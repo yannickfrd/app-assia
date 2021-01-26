@@ -30,21 +30,23 @@ class UserControllerTest extends WebTestCase
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
         ]);
 
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
-
         $this->user = $this->dataFixtures['userRoleUser'];
     }
 
-    public function testListUsersPageIsUp()
+    public function test_list_users_page_is_up()
     {
+        $this->createLogin($this->dataFixtures['userRoleUser']);
+
         $this->client->request('GET', $this->generateUri('users'));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Utilisateurs');
     }
 
-    public function testSearchUsersPageIsSuccessful()
+    public function test_search_users_page_is_successful()
     {
+        $this->createLogin($this->dataFixtures['userRoleUser']);
+
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('users'));
 
@@ -61,8 +63,10 @@ class UserControllerTest extends WebTestCase
         $this->assertSelectorTextContains('table tbody tr td:nth-child(2)', 'SUPER_ADMIN');
     }
 
-    public function testExportUsersIsSuccessful()
+    public function test_export_users_is_successful()
     {
+        $this->createLogin($this->dataFixtures['userRoleUser']);
+
         /** @var Crawler */
         $crawler = $this->client->request('GET', $this->generateUri('users'));
 
@@ -73,24 +77,30 @@ class UserControllerTest extends WebTestCase
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testAdminListUsersIsUp()
+    public function test_admin_list_users_is_up()
     {
+        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+
         $this->client->request('GET', $this->generateUri('admin_users'));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Administration des utilisateurs');
     }
 
-    public function testUsernameExistsIsTrue()
+    public function test_username_exists_is_true()
     {
+        $this->createLogin($this->dataFixtures['userRoleUser']);
+
         $this->client->request('GET', '/user/username_exists/r.super_admin');
 
         $result = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertTrue($result['response']);
     }
 
-    public function testUsernameExistsIsFalse()
+    public function test_username_exists_is_false()
     {
+        $this->createLogin($this->dataFixtures['userRoleUser']);
+
         $this->client->request('GET', $this->generateUri('username_exists', [
             'value' => 'xxx',
         ]));
