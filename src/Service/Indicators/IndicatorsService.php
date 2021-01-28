@@ -242,19 +242,21 @@ class IndicatorsService
             ],
             'Nb. de suivis mis à jour' => [
                 'all' => $allSupports,
-                'yesterday' => $yesterdayIndicator->getNbUpdatedNotes(),
+                'yesterday' => $yesterdayIndicator->getNbUpdatedSupportsGroup(),
                 'today' => $this->repoSupportGroup->countSupports($criteriaByUpdate),
             ],
-            'Nb. de suivis en cours' => $this->repoSupportGroup->count([
-                'status' => SupportGroup::STATUS_IN_PROGRESS,
-            ]),
+            'Nb. de suivis en cours' => [
+                'all' => $this->repoSupportGroup->count(['status' => SupportGroup::STATUS_IN_PROGRESS]),
+                'yesterday' => '',
+                'today' => '',
+            ],
             'Nb. de notes créées' => [
-                'all' => $allNotes = $this->repoNote->count([]),
+                'all' => $this->repoNote->count([]),
                 'yesterday' => $yesterdayIndicator->getNbCreatedNotes(),
                 'today' => $this->repoNote->countNotes($criteriaByCreation),
             ],
             'Nb. de notes mises à jour' => [
-                'all' => $allNotes,
+                'all' => '',
                 'yesterday' => $yesterdayIndicator->getNbUpdatedNotes(),
                 'today' => $this->repoNote->countNotes($criteriaByUpdate),
             ],
