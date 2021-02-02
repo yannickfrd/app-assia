@@ -66,7 +66,7 @@ class AccommodationExport extends ExportExcel
             'Code postal' => $accommodation->getZipcode(),
             'Type' => $accommodation->getAccommodationType() ? $accommodation->getAccommodationTypeToString() : null,
             'Configuration (Diffus ou regroupé)' => $accommodation->getConfiguration() ? $accommodation->getConfigurationToString() : null,
-            'Individuel ou collectif' => $accommodation->getIndividualCollective() ? $accommodation->getIndividualCollectiveToString() : null,
+            'Individuel ou partagé' => $accommodation->getIndividualCollective() ? $accommodation->getIndividualCollectiveToString() : null,
             'Commentaire' => $accommodation->getComment(),
             'Occupation actuelle (Nb de personnes)' => $numberPeople,
         ];

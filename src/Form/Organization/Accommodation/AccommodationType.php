@@ -16,6 +16,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -35,9 +36,7 @@ class AccommodationType extends AbstractType
     {
         $builder
         ->add('name', null, [
-            'attr' => [
-                'placeholder' => 'accommodation.name.placeholder',
-            ],
+            'attr' => ['placeholder' => 'accommodation.name.placeholder'],
             'help' => 'accommodation.name.help',
         ])
         ->add('service', EntityType::class, [
@@ -76,6 +75,11 @@ class AccommodationType extends AbstractType
             'placeholder' => 'placeholder.select',
             'required' => false,
         ])
+        ->add('area', IntegerType::class, [
+            'help' => 'accommodation.area.help',
+            'required' => false,
+        ])
+        ->add('lessor')
         ->add('rentAmt', MoneyType::class, [
             'attr' => [
                 'class' => 'js-money text-right',

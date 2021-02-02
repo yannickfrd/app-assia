@@ -45,6 +45,7 @@ class Accommodation
         11 => 'Logement T7',
         12 => 'Logement T8',
         13 => 'Logement T9',
+        14 => 'Pavillon',
         97 => 'Autre',
         99 => 'Non renseigné',
     ];
@@ -133,6 +134,21 @@ class Accommodation
      * @ORM\OneToMany(targetEntity="App\Entity\Support\AccommodationGroup", mappedBy="accommodation", orphanRemoval=true)
      */
     private $accommodationGroups;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $area;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $lessor;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $analyticId;
 
     public function __construct()
     {
@@ -349,6 +365,43 @@ class Accommodation
                 $accommodationGroup->setAccommodation(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getArea(): ?float
+    {
+        return $this->area;
+    }
+
+    public function setArea(?float $area): self
+    {
+        $this->area = $area;
+
+        return $this;
+    }
+    
+    public function getLessor(): ?string
+    {
+        return $this->lessor;
+    }
+
+    public function setLessor(?string $lessor): self
+    {
+        $this->lessor = $lessor;
+
+        return $this;
+    }
+
+
+    public function getAnalyticId(): ?string
+    {
+        return $this->analyticId;
+    }
+
+    public function setAnalyticId(?string $analyticId): self
+    {
+        $this->analyticId = $analyticId;
 
         return $this;
     }

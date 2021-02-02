@@ -1,4 +1,5 @@
 accommodation:
+  area.help: Superficie en m²
   name: Hébergement ou logement
   name.placeholder: Nom du groupe de places
   name.help: Ce nom doit vous permettre de retrouver facilement ce logement ou cet hébergement (numéro, couleur...).
@@ -8,6 +9,7 @@ accommodation:
 accommodationGroup:
   startDate: Date d'entrée
 Address: Adresse
+Area: Superficie
 Birthdate: Date de naissance
 City: Ville
 Coefficient: Coefficient du suivi
@@ -46,6 +48,7 @@ Hotel: Hôtel
 Info to siao date: Date remise à dispo au SIAO
 hotelName: Nom de l'hôtel
 Lastname: Nom
+Lessor: Bailleur/Propriétaire
 Location: Lieu
 Month: Mois
 Name: Nom
@@ -188,7 +191,7 @@ service:
   name: Nom du service
 Accommodation type: Type de logement ou d'hébergement
 Configuration: Configuration
-Individual collective: Individuel ou collectif
+Individual collective: Individuel ou partagé
 Contribution amt: Montant de la participation financière
 
 ### Contribution

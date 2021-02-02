@@ -33,6 +33,7 @@
 						<th scope="col" class="align-middle th-w-150">Nom du groupe de places</th>
 						<th scope="col" class="align-middle th-w-100">Dispositif</th>
 						<th scope="col" class="align-middle th-w-80">Nombre de places</th>
+						<th scope="col" class="align-middle th-w-80">Type</th>
 						<th scope="col" class="align-middle th-date">Date d'ouverture</th>
 						<th scope="col" class="align-middle th-date">Date de fermeture</th>
 						<th scope="col" class="align-middle th-w-100">Ville</th>
@@ -60,6 +61,7 @@
                             <td class="align-middle {% if accommodation.disabled %}delete{% endif %}">{{ accommodation.name }}{% if accommodation.disabled %} (désactivé){% endif %}</td>
 							<td class="align-middle">{{ accommodation.device ? accommodation.device.name }}</td>
 							<td class="align-middle">{{ accommodation.nbPlaces }}</td>
+							<td class="align-middle">{{ accommodation.accommodationTypeToString }}</td>
 							<td class="align-middle">{{ accommodation.startDate ? accommodation.startDate|date("d/m/Y") }}</td>
 							<td class="align-middle">{{ accommodation.endDate ? accommodation.endDate|date("d/m/Y") }}</td>
 							<td class="align-middle">{{ accommodation.city|capitalize }}</td>
