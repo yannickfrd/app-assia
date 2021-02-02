@@ -53,6 +53,7 @@ class OccupancyIndicators
         $devices = $this->repoDevice->findDevicesWithAccommodation($search, $this->currentUser, $service);
         $accommodationPeople = $this->repoAccommodatioPerson->findAccommodationPeople($search, $this->currentUser, $service);
         $interval = date_diff($search->getStart(), $search->getEnd());
+        $nbDays = $interval->format('%a');
 
         foreach ($devices as $device) {
             $nbPlaces = 0;
@@ -82,8 +83,8 @@ class OccupancyIndicators
                 'nbPlaces' => $nbPlaces,
                 'capacityDays' => $capacityDays,
                 'occupancyDays' => $occupancyDays,
-                'averageCapacity' => $nbAccommodations ? ($capacityDays / $interval->format('%a')) : null,
-                'averageOccupancy' => $nbAccommodationsPeople ? ($occupancyDays / $interval->format('%a')) : null,
+                'averageCapacity' => $nbDays && $nbAccommodations ? ($capacityDays / $nbDays) : null,
+                'averageOccupancy' => $nbDays && $nbAccommodationsPeople ? ($occupancyDays / $nbDays) : null,
             ];
 
             $this->nbAccommodations += $nbAccommodations;
@@ -95,13 +96,13 @@ class OccupancyIndicators
 
         return [
             'devices' => $this->datas,
-            'interval' => $interval->format('%a'),
+            'interval' => $nbDays,
             'nbAccommodations' => $this->nbAccommodations,
             'nbPlaces' => $this->nbPlaces,
             'capacityDays' => $this->capacityDays,
             'occupancyDays' => $this->occupancyDays,
-            'averageCapacity' => $this->nbAccommodations ? ($this->capacityDays / $interval->format('%a')) : null,
-            'averageOccupancy' => $this->nbAccommodationsPeople ? ($this->occupancyDays / $interval->format('%a')) : null,
+            'averageCapacity' => $nbDays && $this->nbAccommodations ? ($this->capacityDays / $nbDays) : null,
+            'averageOccupancy' => $nbDays && $this->nbAccommodationsPeople ? ($this->occupancyDays / $nbDays) : null,
         ];
     }
 
@@ -112,8 +113,8 @@ class OccupancyIndicators
     {
         $services = $this->repoService->findServicesWithAccommodation($search, $this->currentUser, $device);
         $accommodationPeople = $this->repoAccommodatioPerson->findAccommodationPeople($search, $this->currentUser);
-        // dd($search);
         $interval = date_diff($search->getStart(), $search->getEnd());
+        $nbDays = $interval->format('%a');
 
         foreach ($services as $service) {
             $nbPlaces = 0;
@@ -144,8 +145,8 @@ class OccupancyIndicators
                 'nbPlaces' => $nbPlaces,
                 'capacityDays' => $capacityDays,
                 'occupancyDays' => $occupancyDays,
-                'averageCapacity' => $nbAccommodations && $interval->format('%a') ? ($capacityDays / $interval->format('%a')) : null,
-                'averageOccupancy' => $nbAccommodationsPeople && $interval->format('%a') ? ($occupancyDays / $interval->format('%a')) : null,
+                'averageCapacity' => $nbAccommodations && $nbDays ? ($capacityDays / $nbDays) : null,
+                'averageOccupancy' => $nbAccommodationsPeople && $nbDays ? ($occupancyDays / $nbDays) : null,
             ];
 
             $this->nbAccommodations += $nbAccommodations;
@@ -157,13 +158,13 @@ class OccupancyIndicators
 
         return [
             'services' => $this->datas,
-            'interval' => $interval->format('%a'),
+            'interval' => $nbDays,
             'nbAccommodations' => $this->nbAccommodations,
             'nbPlaces' => $this->nbPlaces,
             'capacityDays' => $this->capacityDays,
             'occupancyDays' => $this->occupancyDays,
-            'averageCapacity' => $this->nbAccommodations && $interval->format('%a') ? ($this->capacityDays / $interval->format('%a')) : null,
-            'averageOccupancy' => $this->nbAccommodationsPeople && $interval->format('%a') ? ($this->occupancyDays / $interval->format('%a')) : null,
+            'averageCapacity' => $this->nbAccommodations && $nbDays ? ($this->capacityDays / $nbDays) : null,
+            'averageOccupancy' => $this->nbAccommodationsPeople && $nbDays ? ($this->occupancyDays / $nbDays) : null,
         ];
     }
 
@@ -175,6 +176,7 @@ class OccupancyIndicators
         $subServices = $this->repoSubService->findSubServicesWithAccommodation($search, $this->currentUser, $service);
         $accommodationPeople = $this->repoAccommodatioPerson->findAccommodationPeople($search, $this->currentUser);
         $interval = date_diff($search->getStart(), $search->getEnd());
+        $nbDays = $interval->format('%a');
 
         foreach ($subServices as $subService) {
             $nbPlaces = 0;
@@ -204,8 +206,8 @@ class OccupancyIndicators
                 'nbPlaces' => $nbPlaces,
                 'capacityDays' => $capacityDays,
                 'occupancyDays' => $occupancyDays,
-                'averageCapacity' => $nbAccommodations ? ($capacityDays / $interval->format('%a')) : null,
-                'averageOccupancy' => $nbAccommodationsPeople ? ($occupancyDays / $interval->format('%a')) : null,
+                'averageCapacity' => $nbAccommodations ? ($capacityDays / $nbDays) : null,
+                'averageOccupancy' => $nbAccommodationsPeople ? ($occupancyDays / $nbDays) : null,
             ];
 
             $this->nbAccommodations += $nbAccommodations;
@@ -217,13 +219,13 @@ class OccupancyIndicators
 
         return [
             'subServices' => $this->datas,
-            'interval' => $interval->format('%a'),
+            'interval' => $nbDays,
             'nbAccommodations' => $this->nbAccommodations,
             'nbPlaces' => $this->nbPlaces,
             'capacityDays' => $this->capacityDays,
             'occupancyDays' => $this->occupancyDays,
-            'averageCapacity' => $this->nbAccommodations ? ($this->capacityDays / $interval->format('%a')) : null,
-            'averageOccupancy' => $this->nbAccommodationsPeople ? ($this->occupancyDays / $interval->format('%a')) : null,
+            'averageCapacity' => $nbDays && $this->nbAccommodations ? ($this->capacityDays / $nbDays) : null,
+            'averageOccupancy' => $nbDays && $this->nbAccommodationsPeople ? ($this->occupancyDays / $nbDays) : null,
         ];
     }
 
@@ -235,6 +237,7 @@ class OccupancyIndicators
         $accommodations = $this->repoAccommodation->findAccommodationsForOccupancy($search, $this->currentUser, $service, $subService);
         $accommodationPeople = $this->repoAccommodatioPerson->findAccommodationPeople($search, $this->currentUser, $service, $subService);
         $interval = date_diff($search->getStart(), $search->getEnd());
+        $nbDays = $interval->format('%a');
 
         foreach ($accommodations as $accommodation) {
             $capacityDays = 0;
@@ -257,8 +260,8 @@ class OccupancyIndicators
                 'nbPlaces' => $accommodation->getNbPlaces(),
                 'capacityDays' => $capacityDays,
                 'occupancyDays' => $occupancyDays,
-                'averageCapacity' => $capacityDays / $interval->format('%a'),
-                'averageOccupancy' => $nbAccommodationsPeople ? ($occupancyDays / $interval->format('%a')) : null,
+                'averageCapacity' => $nbDays ? $capacityDays / $nbDays : null,
+                'averageOccupancy' => $nbDays && $nbAccommodationsPeople ? ($occupancyDays / $nbDays) : null,
             ];
 
             ++$this->nbAccommodations;
@@ -270,13 +273,13 @@ class OccupancyIndicators
 
         return [
             'accommodations' => $this->datas,
-            'interval' => $interval->format('%a'),
+            'interval' => $nbDays,
             'nbAccommodations' => $this->nbAccommodations,
             'nbPlaces' => $this->nbPlaces,
             'capacityDays' => $this->capacityDays,
             'occupancyDays' => $this->occupancyDays,
-            'averageCapacity' => $this->nbAccommodations ? ($this->capacityDays / $interval->format('%a')) : null,
-            'averageOccupancy' => $this->nbAccommodationsPeople ? ($this->occupancyDays / $interval->format('%a')) : null,
+            'averageCapacity' => $nbDays && $this->nbAccommodations ? ($this->capacityDays / $nbDays) : null,
+            'averageOccupancy' => $nbDays && $this->nbAccommodationsPeople ? ($this->occupancyDays / $nbDays) : null,
         ];
     }
 

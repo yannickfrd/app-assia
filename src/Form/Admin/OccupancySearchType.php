@@ -35,8 +35,8 @@ class OccupancySearchType extends AbstractType
             ])
             ->add('date', DateSearchType::class, [
                 'data_class' => RdvSearch::class,
-            ])
-            ->add('export');
+            ]);
+        // ->add('export');
     }
 
     public function configureOptions(OptionsResolver $resolver)

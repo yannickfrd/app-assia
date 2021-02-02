@@ -207,7 +207,7 @@ class RdvRepository extends ServiceEntityRepository
 
             ->andWhere('r.supportGroup= :supportGroup')
             ->setParameter('supportGroup', $supportGroupId)
-            ->andWhere('r.start <=  :now')
+            ->andWhere('r.start <= :now')
             ->setParameter('now', new \DateTime())
 
             ->setMaxResults(1)

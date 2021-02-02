@@ -60,7 +60,7 @@
                                     <td class="align-middle text-right">{{ accommodation.occupancyDays|number_format(0, ",", " ") }}</td>
                                     <td class="align-middle text-right">{{ accommodation.averageCapacity|round(1, "common") }}</td>
                                     <td class="align-middle text-right">{{ accommodation.averageOccupancy|round(1, "common") }}</td>
-                                    {% set ocupancyRate =  (accommodation.capacityDays ? ((accommodation.occupancyDays / accommodation.capacityDays) * 100))|round(1, "common") %}
+                                    {% set ocupancyRate = accommodation.capacityDays ? ((accommodation.occupancyDays / accommodation.capacityDays) * 100)|round(1, "common") %}
                                     <td class="align-middle {{ utils.alert_color(ocupancyRate) }} text-right">
                                     <span class="font-weight-bold font-italic">{{ ocupancyRate }} %</span>
                                     </td>
@@ -75,7 +75,7 @@
                                 <td class="align-middle text-right">{{ datas.occupancyDays|number_format(0, ",", " ") }}</td>
                                 <td class="align-middle text-right">{{ datas.averageCapacity|round(1, "common") }}</td>
                                 <td class="align-middle text-right">{{ datas.averageOccupancy|round(1, "common") }}</td>
-                                {% set ocupancyRate = datas.capacityDays ? ((datas.occupancyDays / datas.capacityDays) * 100)|round(1, "common") : null %}
+                                {% set ocupancyRate = datas.capacityDays ? ((datas.occupancyDays / datas.capacityDays) * 100)|round(1, "common") %}
                                 <td class="align-middle {{ utils.alert_color( ocupancyRate) }} text-right">
                                 <span class="font-weight-bold font-italic">{{ ocupancyRate }} %</span>
                                 </td>

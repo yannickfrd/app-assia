@@ -2,7 +2,7 @@
 
 {% set pole = form.vars.value %}
 {% set EDIT_MODE = pole.id != null %}
-{% set title =  EDIT_MODE ? pole.name : 'Nouveau pôle' %}
+{% set title = EDIT_MODE ? pole.name : 'Nouveau pôle' %}
 {% block title %}{{ title }}{% endblock %}
 
 {% block body %}
