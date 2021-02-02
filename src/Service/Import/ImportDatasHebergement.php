@@ -410,6 +410,15 @@ class ImportDatasHebergement extends ImportDatas
         'Chambre collective' => 2,
         "Chambre d'hôtel" => 3,
         'Dortoir' => 4,
+        'Logement F1' => 5,
+        'Logement F2' => 6,
+        'Logement F3' => 7,
+        'Logement F4' => 8,
+        'Logement F5' => 9,
+        'Logement F6' => 10,
+        'Logement F7' => 11,
+        'Logement F8' => 12,
+        'Logement F9' => 13,
         'Logement T1' => 5,
         'Logement T2' => 6,
         'Logement T3' => 7,
@@ -419,6 +428,7 @@ class ImportDatasHebergement extends ImportDatas
         'Logement T7' => 11,
         'Logement T8' => 12,
         'Logement T9' => 13,
+        'Pavillon' => 14,
         'Autre' => 97,
         'Non renseigné' => 99,
     ];
@@ -492,6 +502,8 @@ class ImportDatasHebergement extends ImportDatas
         $this->service = $service;
         $this->subServices = $this->repoSubService->findBy(['service' => $service]);
         $this->devices = $this->repoDevice->getDevicesOfService($service->getId());
+        // $this->accommodations = $this->repoAccommodation->findBy(['service' => $service]);
+
         // $this->users = $this->getUsers();
 
         $i = 0;
@@ -692,6 +704,8 @@ class ImportDatasHebergement extends ImportDatas
                 return $subService;
             }
         }
+
+        return null;
     }
 
     protected function getDevice(): Device
@@ -1099,14 +1113,14 @@ class ImportDatasHebergement extends ImportDatas
             }
             if (in_array($typology, [1, 2])) {
                 $this->role = 5;
-            } elseif (in_array($typology, [4, 6])) {
+            } elseif (in_array($typology, [4, 5])) {
                 $this->role = 4;
             } elseif (in_array($typology, [3, 6, 7, 8])) {
                 $this->role = 1;
             }
         } elseif ('Enfant' === $this->field['Rôle']) {
             $this->role = RolePerson::ROLE_CHILD;
-        } elseif ('Concubin(e)' === $this->field['Rôle']) {
+        } elseif ('Conjoint·e' === $this->field['Rôle']) {
             $this->role = 1;
         }
     }
@@ -1183,13 +1197,15 @@ class ImportDatasHebergement extends ImportDatas
     protected function createAccommodation(Service $service, Device $device): Accommodation
     {
         $accommodation = new Accommodation();
-        $accommodation->setConfiguration(isset($this->field['Configuration']) && $this->findInArray($this->field['Configuration'], self::CONFIGURATION))
-            ->setIndividualCollective(isset($this->field['Individuel ou collectif']) && $this->findInArray($this->field['Individuel ou collectif'], self::INDIVIDUAL_COLLECTIVE))
+        $accommodation->setConfiguration($this->findInArray($this->field['Configuration'], self::CONFIGURATION))
+            ->setIndividualCollective($this->findInArray($this->field['Individuel ou partagé'], self::INDIVIDUAL_COLLECTIVE))
             ->setName($this->field['Nom place'])
-            ->setAddress($this->field['Adresse logement'])
-            ->setNbPlaces((int) $this->field['Nb personnes'])
+            ->setAddress(isset($this->field['Adresse place']) ? $this->field['Adresse place'] : $this->field['Adresse logement'])
+            ->setNbPlaces(isset($this->field['Nb places']) ? (int) $this->field['Nb places'] : (int) $this->field['Nb personnes'])
             ->setStartDate(isset($this->field['Date ouverture']) ? new \Datetime($this->field['Date ouverture']) : new \Datetime('2020-01-01'))
-            ->setAccommodationType(isset($this->field['Type place']) && $this->findInArray($this->field['Type place'], self::ACCOMMODATION_TYPE))
+            ->setAccommodationType($this->findInArray($this->field['Type place'], self::ACCOMMODATION_TYPE))
+            ->setArea(isset($this->field['Superficie']) ? (float) $this->field['Superficie'] : null)
+            ->setLessor(isset($this->field['Bailleur']) ? $this->field['Bailleur'] : null)
             ->setDevice($device)
             ->setService($service)
             ->setSubService($this->getSubService())

@@ -54,6 +54,10 @@ class ImportDatas
 
     protected function findInArray($needle, array $haystack): ?int
     {
+        if (!isset($needle)) {
+            return null;
+        }
+
         foreach ($haystack as $key => $value) {
             if ($key === $needle) {
                 return $value;
