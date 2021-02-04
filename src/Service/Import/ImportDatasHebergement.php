@@ -786,7 +786,7 @@ class ImportDatasHebergement extends ImportDatas
         }
 
         $evalFamilyGroup = (new EvalFamilyGroup())
-                ->setChildrenBehind((int) $this->field['Enfants au pays'])
+                ->setChildrenBehind((int) $this->field['Enfants au pays'] > 0 ? Choices::YES : Choices::NO)
                 ->setCommentEvalFamilyGroup($this->field['Commentaire situation familiale'])
                 ->setEvaluationGroup($evaluationGroup);
 
@@ -922,10 +922,12 @@ class ImportDatasHebergement extends ImportDatas
                     ->setStatus($this->getStatus())
                     ->setStartDate($this->getStartDate())
                     ->setEndDate($this->getEndDate())
-                    ->setSupportGroup($supportGroup)
-                    ->setPerson($this->person)
+                    ->setEndStatus($this->findInArray($this->field['Type sortie'], self::END_STATUS))
+                    ->setEndStatusComment($this->field['Commentaire sur la sortie'])
                     ->setHead($rolePerson->getHead() ?? false)
                     ->setRole($rolePerson->getRole() ?? Choices::NO_INFORMATION)
+                    ->setSupportGroup($supportGroup)
+                    ->setPerson($this->person)
                     ->setCreatedBy($this->user)
                     ->setUpdatedBy($this->user);
 
