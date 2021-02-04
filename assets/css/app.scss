@@ -295,12 +295,8 @@ th.required:after {
     transition: all 0.3s ease;
 }
 
-.position-fixed {
+.z-index-9999 {
     z-index: 9999;
-}
-
-.z-index-1000 {
-    z-index: 1000;
 }
 
 .msg-content {

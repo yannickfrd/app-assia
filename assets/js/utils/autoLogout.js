@@ -32,7 +32,7 @@ export default class AutoLogout {
         this.time--
         this.sessiontTimerElt.textContent = this.getFullTime()
         if (this.time === this.timeAlert) {
-            console.log('alert before disconnection')
+            console.log('autologout : alert before disconnection')
             this.modalElt.show();
         }
         if (this.time <= this.timeAlert) {
@@ -64,7 +64,7 @@ export default class AutoLogout {
      * Déconnection via requête Ajax.
      */
     deconnection() {
-        console.log('deconnexion')
+        console.log('autologout : deconnexion')
         clearInterval(this.intervalID)
         this.clearTimer()
         this.modalElt.hide();

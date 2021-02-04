@@ -43,7 +43,7 @@ export default class SearchLocation {
     createResultsListElt() {
         const resultsListElt = document.createElement('div')
         resultsListElt.id = 'results_list_location'
-        resultsListElt.className = 'w-100 list-group d-block fade-in position-absolute z-index-1000'
+        resultsListElt.className = 'w-100 list-group d-block fade-in position-absolute z-index-999'
         if (this.cityElt) {
             this.searchElt.parentNode.appendChild(resultsListElt)
         } else {
