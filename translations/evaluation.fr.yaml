@@ -41,14 +41,14 @@ Asf amt: Montant ASF
 Asf: ASF
 Asylum allowance amt: Montant ADA
 Asylum allowance: ADA
-Budget balance amt: Reste à vivre
+Budget balance amt: Montant reste à vivre
 Budget: Budget
 Charge comment: Commentaire sur les charges
 Charge other amt: Montant autre charge
 Charge other precision: Précision Autre charge
 Charge other: Autre charge
 Charges amt: Montant total des charges
-Charges group amt: Charges totales du groupe
+Charges group amt: Montant total charges du groupe
 Charges: Charges
 Childcare amt: Montant garde enfant(s)
 Childcare: Garde d'enfant(s)
@@ -73,7 +73,7 @@ Debt tax delays: Retards d'impôts
 Debt unpaid maint amt: Montant pension alimentaire non réglée
 Debt unpaid maint: Pension alimentaire non réglée
 Debts amt: Montant des dettes
-Debts group amt: Dettes totales du groupe
+Debts group amt: Montant total dettes du groupe
 Debts: Dettes
 Dis adult allowance amt: Montant AAH
 Dis adult allowance: AAH
@@ -118,7 +118,7 @@ Rent amt: Montant loyer
 Rent: Loyer
 Resources amt: Montant total des ressources
 Resources comment: Commentaire sur les ressources
-Resources group amt: Ressources totales du groupe
+Resources group amt: Montant total ressources du groupe
 Resources: Ressources
 Ressource other amt: Montant autre ressource
 Ressource other precision: Précision autres revenus

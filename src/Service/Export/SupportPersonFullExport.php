@@ -78,7 +78,7 @@ class SupportPersonFullExport extends ExportExcel
     /**
      * Exporte les données.
      */
-    public function exportData($supports)
+    public function exportData($supports, bool $asynch = true)
     {
         $arrayData = [];
         $arrayData[] = $this->normalisation->getKeys(array_keys($this->getDatas($supports[0])), ['forms', 'evaluation']);
@@ -97,7 +97,7 @@ class SupportPersonFullExport extends ExportExcel
 
         $this->createSheet('export_suivis', 'xlsx', $arrayData, 15);
 
-        return $this->exportFile(true);
+        return $this->exportFile($asynch);
     }
 
     /**

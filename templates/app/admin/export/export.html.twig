@@ -17,6 +17,9 @@
             <div id="form-search">
                 {{ form_start(form) }}
                 <div class="form-group row">
+                    {% if is_granted("ROLE_SUPER_ADMIN") %}
+                        <div class="col-md-6">{{ form_row(form.service.poles) }}</div>
+                    {% endif %}
                     <div class="col-md-6">{{ form_row(form.service.services) }}</div>
                     <div class="col-md-6">{{ form_row(form.service.subServices) }}</div>
                     <div class="col-md-6">{{ form_row(form.service.devices) }}</div>

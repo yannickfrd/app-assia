@@ -27,6 +27,8 @@ class Normalisation
         foreach ($array as $key => $value) {
             if ($value && stristr($key, 'Date')) {
                 $array[$key] = Date::stringToExcel(substr($value, 0, 10));
+            } elseif (stristr($key, 'Amt')) {
+                $array[$key] = (string) $value;
             }
             $newKey = $key.'#'.$name;
             $array[$newKey] = $array[$key];
