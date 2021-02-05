@@ -28,5 +28,5 @@ window.onload = () => {
     // Recherche instannée d'une personne via Ajax
     new SearchPerson() // lengthSearch, time
     // Déconnexion automatique de l'utilisateur
-    new autoLogout(60, 15) // minutes
+    new autoLogout(60, 45) // minutes
 }

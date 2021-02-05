@@ -68,6 +68,6 @@ export default class AutoLogout {
         clearInterval(this.intervalID)
         this.clearTimer()
         this.modalElt.hide();
-        // window.location.assign('/deconnexion')
+        window.location.assign('/deconnexion')
     }
 }
