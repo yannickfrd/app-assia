@@ -99,7 +99,7 @@ class TerminateListener
                 ->setFileName($file)
                 ->setSize(filesize($file))
                 ->setNbResults(count($supports))
-                ->setComment(join(' <br/> ', $comment));
+                ->setComment(substr(join(' <br/> ', $comment), 0, 255));
 
             $manager->persist($export);
             $manager->flush();

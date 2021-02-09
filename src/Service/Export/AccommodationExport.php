@@ -53,10 +53,12 @@ class AccommodationExport extends ExportExcel
                 }
             }
         }
+        $service = $accommodation->getService();
 
         return [
             'Nom du groupe de places' => $accommodation->getName(),
-            'Service' => $accommodation->getService() ? $accommodation->getService()->getName() : null,
+            'Pôle' => $service ? $service->getPole()->getName() : null,
+            'Service' => $service ? $service->getName() : null,
             'Dispositif' => $accommodation->getDevice() ? $accommodation->getDevice()->getName() : null,
             'Nombre de places' => $accommodation->getNbPlaces(),
             "Date d'ouverture" => $this->formatDate($accommodation->getStartDate()),
