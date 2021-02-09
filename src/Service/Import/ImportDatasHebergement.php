@@ -36,6 +36,7 @@ use App\Repository\Organization\DeviceRepository;
 use App\Repository\Organization\SubServiceRepository;
 use App\Repository\People\PersonRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 
 class ImportDatasHebergement extends ImportDatas
 {
@@ -271,7 +272,7 @@ class ImportDatasHebergement extends ImportDatas
         'Crèche' => 1,
         'Ecole' => 2,
         'Parent' => 3,
-        'Nourrice' => 5,
+        'Nourrice' => 4,
         'Autre' => 97,
         'NR' => Choices::NO_INFORMATION,
     ];
@@ -528,8 +529,10 @@ class ImportDatasHebergement extends ImportDatas
                 $evaluationGroup = $support['evaluation'];
 
                 $supportPerson = $this->createSupportPerson($supportGroup);
-                $this->createAccommodationPerson($this->person, $accommodationGroup, $supportPerson);
-                $this->createEvaluationPerson($evaluationGroup, $supportPerson);
+                if ($supportPerson->getStartDate()) {
+                    $this->createAccommodationPerson($this->person, $accommodationGroup, $supportPerson);
+                    $this->createEvaluationPerson($evaluationGroup, $supportPerson);
+                }
             }
             ++$i;
         }
@@ -575,9 +578,11 @@ class ImportDatasHebergement extends ImportDatas
             }
 
             $supportGroup = $this->createSupportGroup($peopleGroup);
-            $accommodationGroup = $this->createAccommodationGroup($peopleGroup, $supportGroup);
-            $this->createReferent($peopleGroup);
-            $evaluationGroup = $this->createEvaluationGroup($supportGroup);
+            if ($supportGroup->getStartDate()) {
+                $accommodationGroup = $this->createAccommodationGroup($peopleGroup, $supportGroup);
+                $this->createReferent($peopleGroup);
+                $evaluationGroup = $this->createEvaluationGroup($supportGroup);
+            }
 
             // On ajoute le groupe et le suivi dans le tableau associatif.
             $this->items[(int) $this->field['N° ménage']] = [
@@ -585,8 +590,8 @@ class ImportDatasHebergement extends ImportDatas
                 'supports' => [
                     (int) $this->field['N° ménage'] => [
                         'support' => $supportGroup,
-                        'accommodationGroup' => $accommodationGroup,
-                        'evaluation' => $evaluationGroup,
+                        'accommodationGroup' => $accommodationGroup ?? null,
+                        'evaluation' => $evaluationGroup ?? null,
                     ],
                 ],
             ];
@@ -716,7 +721,9 @@ class ImportDatasHebergement extends ImportDatas
             }
         }
 
-        dd('Dispositif inconnu !');
+        throw new Exception('Dispositif inconnu : '.$this->field['Dispositif']);
+
+        return null;
     }
 
     protected function getUserReferent(): ?User
@@ -1250,6 +1257,7 @@ class ImportDatasHebergement extends ImportDatas
             ->setEndReason($supportPerson->getEndDate() ? Choices::YES : null)
             ->setAccommodationGroup($accommodationGroup)
             ->setPerson($person)
+            ->setSupportPerson($supportPerson)
             ->setCreatedBy($this->user)
             ->setUpdatedBy($this->user);
 
