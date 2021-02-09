@@ -37,8 +37,6 @@ class UpdateAccommodationPersonCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->manager->getFilters()->disable('softdeleteable');
-
         $nbAccommodationPeople = 0;
         $countUpdate = 0;
 
