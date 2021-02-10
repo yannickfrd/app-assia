@@ -271,19 +271,20 @@ export default class SupportContributions {
     calculateAmountToPay() {
         const rateDays = this.getRateDays()
         let calculationMethod = ''
-        // Si redevance ou PF à payer
+        // Si redevance/PF est fixé dans l'évaluation
         if (this.contributionAmt > 0) {
             this.toPayAmtInput.value = this.contributionAmt - this.aplAmtInput.value
             calculationMethod = 'Montant fixé dans l\'évalution sociale (' + this.contributionAmt + ' €)' +
                 (this.aplAmtInput.value > 0 ? ' - Montant APL (' + this.aplAmtInput.value + ' €)' : '') + '.'
-            // Si loyer fixe à payer
+            // Sinon si loyer fixe à payer
         } else if (this.rentAmtInput.value > 0) {
-            this.toPayAmtInput.value = (Math.round((this.rentAmtInput.value * rateDays) * 100) / 100) - this.aplAmtInput.value
+            this.toPayAmtInput.value = (Math.round(this.rentAmtInput.value * rateDays * 100) / 100) - this.aplAmtInput.value
             calculationMethod = 'Montant du loyer (' + this.rentAmtInput.value + ' €)' +
                 (rateDays < 1 ? ' x Prorata présence sur le mois (' + (Math.round(rateDays * 10000) / 100) + ' %)' : '') +
                 (this.aplAmtInput.value > 0 ? ' - Montant APL (' + this.aplAmtInput.value + ' €).' : '.')
+        // Sinon détermine le montant en fonction des ressources saisies
         } else if (!isNaN(this.resourcesAmtInput.value) && !isNaN(this.contributionRate)) {
-            this.toPayAmtInput.value = Math.round((this.resourcesAmtInput.value * this.contributionRate) * rateDays * 100) / 100
+            this.toPayAmtInput.value = Math.round(this.resourcesAmtInput.value * this.contributionRate * rateDays)
             calculationMethod = 'Montant des ressources (' + this.resourcesAmtInput.value +
                 ' €) x Taux de participation (' + (this.contributionRate * 100) + ' %)' + (rateDays < 1 ? ' x Prorata présence sur le mois (' +
                     (Math.round(rateDays * 10000) / 100) + ' %).' : '.')
