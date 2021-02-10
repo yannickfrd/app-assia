@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use App\Repository\Organization\UserRepository;
@@ -27,7 +28,7 @@ class ReinitPasswordUserCommand extends Command
         $this->manager = $manager;
         $this->repo = $repo;
         $this->encoder = $encoder;
-        $this->disableListeners();
+        $this->disableListeners($this->manager);
 
         parent::__construct();
     }

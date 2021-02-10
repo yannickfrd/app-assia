@@ -2,10 +2,11 @@
 
 namespace App\Command;
 
+use App\Service\DoctrineTrait;
 use App\EntityManager\SupportManager;
-use App\Repository\Support\SupportGroupRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
+use App\Repository\Support\SupportGroupRepository;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -27,7 +28,7 @@ class CheckHeadInSupportsCommand extends Command
         $this->repo = $repo;
         $this->manager = $manager;
         $this->supportManager = $supportManager;
-        $this->disableListeners();
+        $this->disableListeners($this->manager);
 
         parent::__construct();
     }

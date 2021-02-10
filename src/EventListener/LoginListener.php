@@ -6,6 +6,7 @@ use App\Entity\Organization\User;
 use App\Entity\Organization\UserConnection;
 use App\Form\Utils\Choices;
 use App\Repository\Organization\UserConnectionRepository;
+use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Event\AuthenticationFailureEvent;
@@ -13,6 +14,8 @@ use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 class LoginListener
 {
+    use DoctrineTrait;
+
     private $manager;
     private $session;
     private $repo;
@@ -22,6 +25,7 @@ class LoginListener
         $this->session = $session;
         $this->repo = $repo;
         $this->manager = $manager;
+        $this->disableListeners($this->manager);
     }
 
     public function onSecurityInteractiveLogin(InteractiveLoginEvent $event)

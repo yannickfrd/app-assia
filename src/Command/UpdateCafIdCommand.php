@@ -2,10 +2,11 @@
 
 namespace App\Command;
 
-use App\Entity\Evaluation\EvalBudgetGroup;
-use App\Repository\Support\SupportGroupRepository;
+use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Evaluation\EvalBudgetGroup;
 use Symfony\Component\Console\Command\Command;
+use App\Repository\Support\SupportGroupRepository;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -25,7 +26,7 @@ class UpdateCafIdCommand extends Command
     {
         $this->repo = $repo;
         $this->manager = $manager;
-        $this->disableListeners();
+        $this->disableListeners($this->manager);
 
         parent::__construct();
     }

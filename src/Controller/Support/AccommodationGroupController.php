@@ -190,7 +190,7 @@ class AccommodationGroupController extends AbstractController
 
         $this->manager->persist($accommodationGroup);
 
-        $this->createAccommodationPeople($accommodationGroup);
+        $this->createAccommodationPeople($supportGroup, $accommodationGroup);
 
         $this->updateLocationSupportGroup($supportGroup, $accommodationGroup->getAccommodation());
 
@@ -254,20 +254,22 @@ class AccommodationGroupController extends AbstractController
     /**
      * Crée les prises en charge individuelles.
      */
-    protected function createAccommodationPeople(AccommodationGroup $accommodationGroup): int
+    protected function createAccommodationPeople(SupportGroup $supportGroup, AccommodationGroup $accommodationGroup): int
     {
         $countAddPeople = 0;
-
         foreach ($accommodationGroup->getSupportGroup()->getSupportPeople() as $supportPerson) {
             // Vérifie si la personne n'est pas déjà rattachée à la prise en charge
-            if (null === $supportPerson->getEndDate() && !in_array($supportPerson->getPerson()->getId(), $this->getPeopleInAccommodation($accommodationGroup))) {
+            if ((null === $supportPerson->getEndDate() || 0 === $supportGroup->getAccommodationGroups()->count())
+                && !in_array($supportPerson->getPerson()->getId(), $this->getPeopleInAccommodation($accommodationGroup))) {
                 // Si elle n'est pas déjà pris en charge, on la créé
                 $accommodationPerson = (new AccommodationPerson())
+                    ->setStartDate($accommodationGroup->getStartDate())
+                    ->setEndDate($accommodationGroup->getEndDate())
+                    ->setEndReason($accommodationGroup->getEndReason())
+                    ->setCommentEndReason($accommodationGroup->getCommentEndReason())
                     ->setAccommodationGroup($accommodationGroup)
                     ->setSupportPerson($supportPerson)
-                    ->setPerson($supportPerson->getPerson())
-                    ->setStartDate($accommodationGroup->getStartDate())
-                    ->setEndDate($accommodationGroup->getEndDate());
+                    ->setPerson($supportPerson->getPerson());
 
                 // Vérifie si la date de prise enn charge n'est pas antérieure à la date de naissance
                 $person = $supportPerson->getPerson();

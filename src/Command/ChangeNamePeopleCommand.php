@@ -2,13 +2,14 @@
 
 namespace App\Command;
 
+use App\Service\DoctrineTrait;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Stopwatch\Stopwatch;
+use Symfony\Component\Console\Command\Command;
 use App\Repository\Organization\UserRepository;
 use App\Repository\People\PeopleGroupRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * Commande pour changer le nom des personnes et des utilisateurs (uniquement en mode développement).
@@ -32,7 +33,7 @@ class ChangeNamePeopleCommand extends Command
         $this->repoPeopleGroup = $repoPeopleGroup;
         $this->faker = \Faker\Factory::create('fr_FR');
         $this->stopwatch = $stopwatch;
-        $this->disableListeners();
+        $this->disableListeners($this->manager);
 
         parent::__construct();
     }

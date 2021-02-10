@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\Command\DoctrineTrait;
+use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -25,7 +25,7 @@ class UpdateAccommodationPersonCommand extends Command
     {
         $this->repo = $repo;
         $this->manager = $manager;
-        $this->disableListeners();
+        $this->disableListeners($this->manager);
 
         parent::__construct();
     }

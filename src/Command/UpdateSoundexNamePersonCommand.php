@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Repository\People\PersonRepository;
+use App\Service\DoctrineTrait;
 use App\Service\SoundexFr;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -27,7 +28,7 @@ class UpdateSoundexNamePersonCommand extends Command
         $this->manager = $manager;
         $this->repo = $repo;
         $this->soundexFr = $soundexFr;
-        $this->disableListeners();
+        $this->disableListeners($this->manager);
 
         parent::__construct();
     }

@@ -2,8 +2,9 @@
 
 namespace App\Command;
 
-use App\Repository\People\PersonRepository;
+use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\People\PersonRepository;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -24,7 +25,7 @@ class UpdateGenderPersonCommand extends Command
     {
         $this->manager = $manager;
         $this->repo = $repo;
-        $this->disableListeners();
+        $this->disableListeners($this->manager);
 
         parent::__construct();
     }

@@ -2,10 +2,11 @@
 
 namespace App\Command;
 
-use App\EntityManager\PeopleGroupManager;
-use App\Repository\People\PeopleGroupRepository;
+use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
+use App\EntityManager\PeopleGroupManager;
 use Symfony\Component\Console\Command\Command;
+use App\Repository\People\PeopleGroupRepository;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -27,7 +28,7 @@ class CheckHeadInGroupsCommand extends Command
         $this->repo = $repo;
         $this->manager = $manager;
         $this->peopleGroupManager = $peopleGroupManager;
-        $this->disableListeners();
+        $this->disableListeners($this->manager);
 
         parent::__construct();
     }

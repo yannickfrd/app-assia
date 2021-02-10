@@ -2,11 +2,12 @@
 
 namespace App\Command;
 
-use App\Repository\Evaluation\EvaluationPersonRepository;
+use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use App\Repository\Evaluation\EvaluationPersonRepository;
 
 /**
  * Corrige le support_person_id de evaluation_person des évaluations duppliquées (TEMPORAIRE, A SUPPRIMER).
@@ -24,7 +25,8 @@ class UpdateDupplicatedEvaluationsCommand extends Command
     {
         $this->repo = $repo;
         $this->manager = $manager;
-        $this->disableListeners();
+        $this->disableListeners($this->manager);
+        $this->manager->getFilters()->disable('softdeleteable');
 
         parent::__construct();
     }
