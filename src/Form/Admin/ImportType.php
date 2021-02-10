@@ -19,8 +19,7 @@ class ImportType extends AbstractType
                 'class' => Service::class,
                 'choice_label' => 'name',
                 'query_builder' => function (ServiceRepository $repo) {
-                    return $repo->createQueryBuilder('s')->select('PARTIAL s.{id, name}')
-                    ->orderBy('s.name', 'ASC');
+                    return $repo->createQueryBuilder('s')->orderBy('s.name', 'ASC');
                 },
                 'placeholder' => 'placeholder.select',
                 'required' => true,

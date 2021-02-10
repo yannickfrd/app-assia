@@ -603,7 +603,6 @@ class ImportDatasHebergement extends ImportDatas
         $groupExists = false;
         // Vérifie si le groupe de la personne existe déjà.
         foreach ($this->items as $key => $value) {
-            // dd($key);
             // Si déjà créé, on vérifie le suivi social.
             if ($key === (int) $this->field['N° ménage']) {
                 $groupExists = true;
@@ -991,6 +990,8 @@ class ImportDatasHebergement extends ImportDatas
             ->setComment($this->field['Commentaire situation à l\'entrée'])
             ->setSupportPerson($supportPerson);
 
+        $initEvalPerson = $this->updateResourceType($initEvalPerson, $this->field['Autres ressources (entrée)']);
+
         $this->manager->persist($initEvalPerson);
 
         return $initEvalPerson;
@@ -1101,9 +1102,36 @@ class ImportDatasHebergement extends ImportDatas
             ->setRessourceOtherAmt($this->field['Autres ressources'] && 'Oui' != $this->field['Salaire'] && 'Oui' != $this->field['RSA'] && 'Oui' != $this->field['ARE'] && 'Oui' != $this->field['AF'] ? (float) $this->field['Montant ressources'] : null)
             ->setEvaluationPerson($evaluationPerson);
 
+        $evalBudgetPerson = $this->updateResourceType($evalBudgetPerson, $this->field['Autres ressources']);
+
         $this->manager->persist($evalBudgetPerson);
 
         return $evalBudgetPerson;
+    }
+
+    /**
+     * @param EvalBudgetPerson|InitEvalPerson $evalBudgetPerson
+     */
+    protected function updateResourceType(object $evalBudgetPerson, string $resourceType): object
+    {
+        return $evalBudgetPerson
+            ->setDisAdultAllowance(strstr($resourceType, 'AAH') ? Choices::YES : 0)
+            ->setDisChildAllowance(strstr($resourceType, 'AAEH') ? Choices::YES : 0)
+            ->setAsylumAllowance(strstr($resourceType, 'ADA') ? Choices::YES : 0)
+            ->setUnemplBenefit(strstr($resourceType, 'ARE') ? Choices::YES : 0)
+            ->setTempWaitingAllowance(strstr($resourceType, 'ATA') ? Choices::YES : 0)
+            ->setMinimumIncome(strstr($resourceType, 'RSA') ? Choices::YES : 0)
+            ->setFamilyAllowance(strstr($resourceType, 'AF') ? Choices::YES : 0)
+            ->setPensionBenefit(strstr($resourceType, 'Pension de retraite') ? Choices::YES : 0)
+            ->setSalary(strstr($resourceType, 'Salaire') ? Choices::YES : 0)
+            ->setMaintenance(strstr($resourceType, 'Pension alimentaire') ? Choices::YES : 0)
+            ->setAsf(strstr($resourceType, 'ASF') ? Choices::YES : 0)
+            ->setSolidarityAllowance(strstr($resourceType, 'ASS') ? Choices::YES : 0)
+            ->setPaidTraining(strstr($resourceType, 'Formation') ? Choices::YES : 0)
+            ->setYouthGuarantee(strstr($resourceType, 'Garantie jeunes') ? Choices::YES : 0)
+            ->setDisabilityPension(strstr($resourceType, 'Pension d\'invalidité') ? Choices::YES : 0)
+            ->setPaje(strstr($resourceType, 'PAJE') ? Choices::YES : 0)
+            ->setActivityBonus(strstr($resourceType, 'Prime d\'activité') ? Choices::YES : 0);
     }
 
     protected function getRoleAndGender(int $typology)
@@ -1184,7 +1212,7 @@ class ImportDatasHebergement extends ImportDatas
         return Choices::NO_INFORMATION;
     }
 
-    protected function getAccommodation(Service $service): Accommodation
+    protected function getAccommodation(): Accommodation
     {
         $accommodationExists = false;
 
@@ -1196,35 +1224,35 @@ class ImportDatasHebergement extends ImportDatas
 
         if (!$accommodationExists) {
             $this->accommodations[(string) $this->field['Nom place']] = [
-                $this->createAccommodation($service, $this->device),
+                $this->createAccommodation($this->device),
             ];
         }
 
         return $this->accommodations[$this->field['Nom place']][0];
     }
 
-    protected function createAccommodation(Service $service, Device $device): Accommodation
+    protected function createAccommodation(Device $device): Accommodation
     {
         $accommodation = new Accommodation();
         $accommodation->setConfiguration($this->findInArray($this->field['Configuration'], self::CONFIGURATION))
             ->setIndividualCollective($this->findInArray($this->field['Individuel ou partagé'], self::INDIVIDUAL_COLLECTIVE))
             ->setName($this->field['Nom place'])
-            ->setAddress(isset($this->field['Adresse place']) ? $this->field['Adresse place'] : $this->field['Adresse logement'])
+            ->setAddress(isset($this->field['Adresse place']) ? (string) $this->field['Adresse place'] : (string) $this->field['Adresse logement'])
             ->setNbPlaces(isset($this->field['Nb places']) ? (int) $this->field['Nb places'] : (int) $this->field['Nb personnes'])
             ->setStartDate(isset($this->field['Date ouverture']) ? new \Datetime($this->field['Date ouverture']) : new \Datetime('2020-01-01'))
             ->setAccommodationType($this->findInArray($this->field['Type place'], self::ACCOMMODATION_TYPE))
             ->setArea(isset($this->field['Superficie']) ? (float) $this->field['Superficie'] : null)
             ->setLessor(isset($this->field['Bailleur']) ? $this->field['Bailleur'] : null)
             ->setDevice($device)
-            ->setService($service)
+            ->setService($this->service)
             ->setSubService($this->getSubService())
             ->setCreatedBy($this->user)
             ->setUpdatedBy($this->user);
 
         if (2 === $accommodation->getConfiguration()) {
-            $accommodation->setAddress($service->getAddress())
-                ->setCity($service->getCity())
-                ->setZipcode($service->getZipcode());
+            $accommodation->setAddress($this->service->getAddress())
+                ->setCity($this->service->getCity())
+                ->setZipcode($this->service->getZipcode());
         }
 
         $this->manager->persist($accommodation);

@@ -49,6 +49,7 @@ class User implements UserInterface
         3 => 'Chef·fe de service',
         2 => 'Coordinatrice/teur',
         4 => 'Directrice/teur',
+        10 => 'Directrice/teur adjoint·e',
         9 => 'Psychologue',
         8 => 'Responsable informatique',
         7 => 'Stagiaire',
@@ -59,6 +60,7 @@ class User implements UserInterface
         'ROLE_USER' => 'Utilisateur',
         'ROLE_ADMIN' => 'Administrateur',
         'ROLE_SUPER_ADMIN' => 'Administrateur général',
+        // 'ROLE_INDICATOR' => 'Indicateur',
     ];
 
     /**
