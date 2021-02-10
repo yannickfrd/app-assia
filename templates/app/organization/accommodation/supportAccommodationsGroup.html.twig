@@ -35,7 +35,7 @@
 					</thead>
 
 					<tbody id="container-accommodationGroups" data-support="{{ support.id }}">
-						{% for accommodationGroup in support_group_accommodations %}
+						{% for accommodationGroup in support_group_accommodations|sort ((a, b) => b.startDate <=> a.startDate) %}
 							<tr id="accommodationGroup-{{ accommodationGroup.id }}">
 								<td scope="row" class="align-middle text-center">
 									<a href="{{ path('support_accommodation_edit', {'id': accommodationGroup.id}) }}" 
