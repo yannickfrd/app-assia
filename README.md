@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.16.43 10/02/2021
+2.16.46 10/02/2021
 
 # Développeur
 Romain MADELAINE
@@ -13,14 +13,16 @@ https://github.com/RomMad/esperer95.app
 # Connection à la base démo
 https://demo.esperer95.app
 
-## Version 2.16.38-43 - 10/02/2021
+## Version 2.16.38-46 - 10/02/2021
 - Fix round problem with contribution;
 - Fix problem city name in pdf contribution;
 - Fix problem scroll position when error validation;
 - Edit ImportDatasHebergement (for other resources) and add one status to User;
 - Edit visibilty of history supports (hidden when pre-admission is failed);
 - Edit supportGroupEdit (required 'subService' field when the service have subservices);
-
+- Move and edit DoctrineTrait and edit commands;
+- Fix problems in ImportDataHebergement and SupportPersonExport;
+- Add 'gender' field in SupportPersonExport;
 
 ## Version 2.16.35-37 - 09/02/2021
 - Edit SupportPersonExport (when multi accommodation date) and AccommodationExport (add 'Pole' field);

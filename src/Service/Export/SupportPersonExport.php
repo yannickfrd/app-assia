@@ -89,6 +89,7 @@ class SupportPersonExport extends ExportExcel
             'Prénom' => $person->getFirstname(),
             'Date de naissance' => $this->formatDate($person->getBirthdate()),
             'Âge' => (string) $person->getAge(),
+            'Sexe' => $person->getGenderToString(),
             'Typologie familiale' => $peopleGroup->getFamilyTypologyToString(),
             'Nb de personnes' => $supportGroup->getNbPeople(),
             // 'Nb d\'enfants' => $nbChildren,
