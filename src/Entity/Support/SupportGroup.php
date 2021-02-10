@@ -45,6 +45,7 @@ class SupportGroup
     public const CACHE_SUPPORT_NEXT_RDV_KEY = 'support.next_rdv';
 
     public const STATUS_PRE_ADD_IN_PROGRESS = 1;
+    public const STATUS_PRE_ADD_FAILED = 5;
     public const STATUS_IN_PROGRESS = 2;
     public const STATUS_SUSPENDED = 3;
     public const STATUS_ENDED = 4;
