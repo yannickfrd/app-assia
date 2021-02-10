@@ -56,7 +56,7 @@ export default class ValidationForm {
      */
     scrollToFirstInvalidElt() {
         var rectElt = this.containerElt.querySelector('.is-invalid').getBoundingClientRect()
-        window.scrollTo(0, window.scrollY + rectElt.top - 70)
+        window.scrollTo(0, window.scrollY + rectElt.top - 90)
     }
 
     /**
