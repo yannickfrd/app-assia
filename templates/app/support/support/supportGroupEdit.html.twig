@@ -44,7 +44,7 @@
 		<div class="form-group">
 			<div class="row">
 				<div class="col-md-6">{{ form_row(form.service) }}</div>
-				<div class="col-md-6">{{ form_row(form.subService) }}</div>
+				<div class="col-md-6">{{ form_row(form.subService, {'required': form.subService.vars.choices|length > 0}) }}</div>
 			</div>
 			<div class="row" data-parent-field="service">
 				<div class="col-md-6">{{ form_row(form.device) }}</div>

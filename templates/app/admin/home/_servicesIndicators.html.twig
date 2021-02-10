@@ -49,7 +49,7 @@
                                 <td class="align-middle text-right">{{ activeSupports|number_format(0, ",", " ") }}</td>
                                 <td class="align-middle text-right">{{ service["activeSupportsPeople"]|number_format(0, ",", " ") }}</td>
                                 <td class="align-middle text-right">{{ service["avgSupportsByUser"] }}</td>
-                                <td class="align-middle text-right">{{ service["avgTimeSupport"] }} jours</td>
+                                <td class="align-middle text-right">{{ service["avgTimeSupport"]|number_format(0, ",", " ") }} jours</td>
                                 <td class="align-middle text-right">{{ service["siaoRequest"]|number_format(0, ",", " ") }}<br/>
                                     <span class="text-secondary font-italic">{{ activeSupports ? 
                                         ((service["siaoRequest"] / activeSupports) * 100)|round(1, "common") ~ "%" }}
@@ -79,7 +79,7 @@
                                     <td class="align-middle text-right">{{ activeSupports }}</td>
                                     <td class="align-middle text-right">{{ sub_service["activeSupportsPeople"] }}</td>
                                     <td class="align-middle text-right">{{ sub_service["avgSupportsByUser"] }}</td>
-                                    <td class="align-middle text-right">{{ sub_service["avgTimeSupport"] }} jours</td>
+                                    <td class="align-middle text-right">{{ sub_service["avgTimeSupport"]|number_format(0, ",", " ") }} jours</td>
                                     <td class="align-middle text-right">{{ sub_service["siaoRequest"] }}<br/>
                                         <span class="text-secondary font-italic">{{ activeSupports ? 
                                             ((sub_service["siaoRequest"] / activeSupports) * 100)|round(1, "common") ~ "%" }}
@@ -109,7 +109,7 @@
                                     <td class="align-middle text-right">{{ activeSupports }}</td>
                                     <td class="align-middle text-right">{{ device["activeSupportsPeople"] }}</td>
                                     <td class="align-middle text-right">{{ device["avgSupportsByUser"] }}</td>
-                                    <td class="align-middle text-right">{{ device["avgTimeSupport"] }} jours</td>
+                                    <td class="align-middle text-right">{{ device["avgTimeSupport"]|number_format(0, ",", " ") }} jours</td>
                                     <td class="align-middle text-right">{{ device["siaoRequest"] }}<br/>
                                         <span class="text-secondary font-italic">{{ activeSupports ? 
                                             ((device["siaoRequest"] / activeSupports) * 100)|round(1, "common") ~ "%" }}
