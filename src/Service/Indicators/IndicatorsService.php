@@ -300,7 +300,7 @@ class IndicatorsService
             'activeSupportsGroups' => $nbActiveSupportsGroups,
             'activeSupportsPeople' => $this->repoSupportPerson->countSupportPeople($criteria),
             'avgTimeSupport' => $this->repoSupportGroup->avgTimeSupport($criteria),
-            'avgSupportsByUser' => $this->repoSupportGroup->avgSupportsByUser($criteria),
+            // 'avgSupportsByUser' => $this->repoSupportGroup->avgSupportsByUser($criteria),
             'siaoRequest' => $this->repoSupportGroup->countSupports([
                 'service' => $service,
                 'status' => SupportGroup::STATUS_IN_PROGRESS,
@@ -330,7 +330,7 @@ class IndicatorsService
             'activeSupportsGroups' => $nbActiveSupportsGroups,
             'activeSupportsPeople' => $this->repoSupportPerson->countSupportPeople($criteria),
             'avgTimeSupport' => $this->repoSupportGroup->avgTimeSupport($criteria),
-            'avgSupportsByUser' => $this->repoSupportGroup->avgSupportsByUser($criteria),
+            // 'avgSupportsByUser' => $this->repoSupportGroup->avgSupportsByUser($criteria),
             'siaoRequest' => $this->repoSupportGroup->countSupports([
                 'subService' => $subService,
                 'status' => SupportGroup::STATUS_IN_PROGRESS,
@@ -358,7 +358,7 @@ class IndicatorsService
             'activeSupportsGroups' => $nbActiveSupportsGroups,
             'activeSupportsPeople' => $this->repoSupportPerson->countSupportPeople($criteria),
             'avgTimeSupport' => $this->repoSupportGroup->avgTimeSupport($criteria),
-            'avgSupportsByUser' => $this->repoSupportGroup->avgSupportsByUser($criteria),
+            // 'avgSupportsByUser' => $this->repoSupportGroup->avgSupportsByUser($criteria),
             'siaoRequest' => $this->repoSupportGroup->countSupports([
                 'device' => $device,
                 'status' => SupportGroup::STATUS_IN_PROGRESS,

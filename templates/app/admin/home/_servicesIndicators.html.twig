@@ -13,8 +13,7 @@
                         <th class="align-middle th-w-140">Service</th>
                         {% set items = [
                             "Nb de suivis en cours",
-                            "Nb de personnes",
-                            "Moyenne suivis par TS",
+                            "Soit en nb de personnes",
                             "Durée moyenne accompagnement",
                             "Nb de demandes SIAO",
                             "Nb de DLS",
@@ -48,7 +47,7 @@
                                 </td>
                                 <td class="align-middle text-right">{{ activeSupports|number_format(0, ",", " ") }}</td>
                                 <td class="align-middle text-right">{{ service["activeSupportsPeople"]|number_format(0, ",", " ") }}</td>
-                                <td class="align-middle text-right">{{ service["avgSupportsByUser"] }}</td>
+                                {# <td class="align-middle text-right">{{ service["avgSupportsByUser"] }}</td> #}
                                 <td class="align-middle text-right">{{ service["avgTimeSupport"]|number_format(0, ",", " ") }} jours</td>
                                 <td class="align-middle text-right">{{ service["siaoRequest"]|number_format(0, ",", " ") }}<br/>
                                     <span class="text-secondary font-italic">{{ activeSupports ? 
@@ -78,7 +77,7 @@
                                     <td class="align-middle">{{ service["name"] }}<span class="fa fa-chevron-right mx-1"></span>{{ sub_service["name"] }}</td>
                                     <td class="align-middle text-right">{{ activeSupports }}</td>
                                     <td class="align-middle text-right">{{ sub_service["activeSupportsPeople"] }}</td>
-                                    <td class="align-middle text-right">{{ sub_service["avgSupportsByUser"] }}</td>
+                                    {# <td class="align-middle text-right">{{ sub_service["avgSupportsByUser"] }}</td> #}
                                     <td class="align-middle text-right">{{ sub_service["avgTimeSupport"]|number_format(0, ",", " ") }} jours</td>
                                     <td class="align-middle text-right">{{ sub_service["siaoRequest"] }}<br/>
                                         <span class="text-secondary font-italic">{{ activeSupports ? 
@@ -108,7 +107,7 @@
                                     <td class="align-middle">{{ service["name"] }}<span class="fa fa-chevron-right mx-1"></span>{{ device["name"] }}</td>
                                     <td class="align-middle text-right">{{ activeSupports }}</td>
                                     <td class="align-middle text-right">{{ device["activeSupportsPeople"] }}</td>
-                                    <td class="align-middle text-right">{{ device["avgSupportsByUser"] }}</td>
+                                    {# <td class="align-middle text-right">{{ device["avgSupportsByUser"] }}</td> #}
                                     <td class="align-middle text-right">{{ device["avgTimeSupport"]|number_format(0, ",", " ") }} jours</td>
                                     <td class="align-middle text-right">{{ device["siaoRequest"] }}<br/>
                                         <span class="text-secondary font-italic">{{ activeSupports ? 
