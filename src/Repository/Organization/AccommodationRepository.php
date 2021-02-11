@@ -140,7 +140,8 @@ class AccommodationRepository extends ServiceEntityRepository
             ->leftJoin('a.subService', 'ss')->addSelect('PARTIAL ss.{id, name}')
             ->innerJoin('a.device', 'd')->addSelect('PARTIAL d.{id, name}')
 
-            ->where('a.startDate IS NOT NULL');
+            ->andWhere('a.endDate > :start OR a.endDate IS NULL')->setParameter('start', $search->getStart())
+            ->andWhere('a.startDate < :end')->setParameter('end', $search->getEnd());
 
         if ($search->getPole()) {
             $query = $query->andWhere('s.pole = :pole')
