@@ -2,10 +2,10 @@
 
 namespace App\Command;
 
+use App\Repository\Support\SupportGroupRepository;
 use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
-use App\Repository\Support\SupportGroupRepository;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -44,7 +44,7 @@ class UpdateLocationSupportsCommand extends Command
     protected function updateLocationSupports()
     {
         $count = 0;
-        $supports = $this->repo->findAll();
+        $supports = $this->repo->findBy([], ['updatedAt' => 'DESC'], 1000);
 
         foreach ($supports as $support) {
             if (null === $support->getLocationId()) {

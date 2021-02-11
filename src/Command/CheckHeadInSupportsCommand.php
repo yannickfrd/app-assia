@@ -2,11 +2,11 @@
 
 namespace App\Command;
 
-use App\Service\DoctrineTrait;
 use App\EntityManager\SupportManager;
+use App\Repository\Support\SupportGroupRepository;
+use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
-use App\Repository\Support\SupportGroupRepository;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -46,8 +46,9 @@ class CheckHeadInSupportsCommand extends Command
      */
     protected function checkHeadInSupports()
     {
+        $supports = $this->repo->findBy([], ['updatedAt' => 'DESC'], 1000);
         $count = 0;
-        $supports = $this->repo->findAll();
+
         foreach ($supports as $support) {
             $countHeads = 0;
             foreach ($support->getSupportPeople() as $supportPerson) {

@@ -40,7 +40,7 @@ class UpdateAccommodationPersonCommand extends Command
         $nbAccommodationPeople = 0;
         $countUpdate = 0;
 
-        $accommodationGroups = $this->repo->findAll();
+        $accommodationGroups = $this->repo->findBy([], ['updatedAt' => 'DESC'], 1000);
 
         foreach ($accommodationGroups as $accommodationGroup) {
             $supportGroup = $accommodationGroup->getSupportGroup();

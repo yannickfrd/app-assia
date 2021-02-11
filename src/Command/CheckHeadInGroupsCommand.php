@@ -2,11 +2,11 @@
 
 namespace App\Command;
 
+use App\EntityManager\PeopleGroupManager;
+use App\Repository\People\PeopleGroupRepository;
 use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
-use App\EntityManager\PeopleGroupManager;
 use Symfony\Component\Console\Command\Command;
-use App\Repository\People\PeopleGroupRepository;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -46,8 +46,9 @@ class CheckHeadInGroupsCommand extends Command
      */
     protected function checkHeadInGroups()
     {
+        $peopleGroups = $this->repo->findBy([], ['updatedAt' => 'DESC'], 1000);
         $count = 0;
-        $peopleGroups = $this->repo->findAll();
+
         foreach ($peopleGroups as $peopleGroup) {
             $countHeads = 0;
             foreach ($peopleGroup->getRolePeople() as $rolePerson) {

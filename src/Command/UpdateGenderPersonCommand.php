@@ -43,8 +43,8 @@ class UpdateGenderPersonCommand extends Command
      */
     protected function updateGender()
     {
-        $count = 0;
         $people = $this->repo->findBy(['gender' => 99]);
+        $count = 0;
 
         foreach ($people as $person) {
             $otherPerson = $this->repo->findOnePersonByFirstname($person->getFirstname());

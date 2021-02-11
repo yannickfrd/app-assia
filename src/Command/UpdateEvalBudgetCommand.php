@@ -2,15 +2,15 @@
 
 namespace App\Command;
 
+use App\Entity\Evaluation\EvalBudgetPerson;
+use App\Entity\Evaluation\InitEvalPerson;
 use App\Form\Utils\Choices;
+use App\Repository\Evaluation\EvaluationGroupRepository;
 use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\Evaluation\InitEvalPerson;
-use App\Entity\Evaluation\EvalBudgetPerson;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use App\Repository\Evaluation\EvaluationGroupRepository;
 
 /**
  * Corrige les incorrences dans la situation budgétaire de l'évaluation.
@@ -44,7 +44,7 @@ class UpdateEvalBudgetCommand extends Command
 
     protected function updateEvaluations()
     {
-        $evaluations = $this->repo->findAll();
+        $evaluations = $this->repo->findBy([], ['updatedAt' => 'DESC'], 1000);
 
         foreach ($evaluations as $evaluation) {
             $resourcesGroupAmt = 0;

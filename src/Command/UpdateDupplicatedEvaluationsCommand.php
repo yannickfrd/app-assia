@@ -41,8 +41,9 @@ class UpdateDupplicatedEvaluationsCommand extends Command
 
     protected function updateEvaluations()
     {
-        $evaluationPeople = $this->repo->findAll();
+        $evaluationPeople = $this->repo->findBy([], ['updatedAt' => 'DESC'], 1000);
         $count = 0;
+        
         foreach ($this->repo->findAll() as $evaluationPerson) {
             foreach ($evaluationPerson->getEvaluationGroup()->getSupportGroup()->getSupportPeople() as $supportPerson) {
                 if ($supportPerson->getPerson()->getId() === $evaluationPerson->getSupportPerson()->getPerson()->getId()
