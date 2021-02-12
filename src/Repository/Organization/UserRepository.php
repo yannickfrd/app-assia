@@ -227,17 +227,9 @@ class UserRepository extends ServiceEntityRepository
      */
     public function getUsersOfService(Service $service): ?array
     {
-        return $this->createQueryBuilder('u')->select('PARTIAL u.{id, firstname, lastname, disabledAt}')
-            ->leftJoin('u.serviceUser', 'su')
+        $query = $this->getReferentsQueryBuilder();
 
-            ->where('u.disabledAt IS NULL')
-            ->where('u.status IN (:status)')
-            ->setParameter('status', [
-                User::STATUS_SOCIAL_WORKER,
-                User::STATUS_COORDO,
-                User::STATUS_CHIEF,
-            ])
-            ->andWhere('su.service = :service')
+        return $query->andWhere('su.service = :service')
             ->setParameter('service', $service)
 
             ->orderBy('u.lastname', 'ASC')
@@ -248,17 +240,13 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Donne la liste des utilisateurs pour les listes déroulantes.
      */
-    public function getAllUsersOfServicesQueryList(CurrentUserService $currentUser, int $serviceId = null): QueryBuilder
+    public function getReferentsOfServicesQueryList(CurrentUserService $currentUser, int $serviceId = null): QueryBuilder
     {
-        $query = $this->createQueryBuilder('u')
-            ->select('PARTIAL u.{id, firstname, lastname, disabledAt}')
-            ->leftJoin('u.serviceUser', 'su')
-
-            ->where('u.disabledAt IS NULL');
+        $query = $this->getReferentsQueryBuilder();
 
         if ($serviceId) {
             $query = $query->andWhere('su.service = :service')
-                    ->setParameter('service', $serviceId);
+                ->setParameter('service', $serviceId);
         }
 
         if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
@@ -268,6 +256,17 @@ class UserRepository extends ServiceEntityRepository
         }
 
         return $query->orderBy('u.lastname', 'ASC');
+    }
+
+    private function getReferentsQueryBuilder(): QueryBuilder
+    {
+        return $this->createQueryBuilder('u')
+            ->select('PARTIAL u.{id, firstname, lastname, disabledAt}')
+            ->leftJoin('u.serviceUser', 'su')
+
+            ->andWhere('u.disabledAt IS NULL')
+            ->andWhere('u.status IN (:status)')
+            ->setParameter('status', User::REFERENTS_STATUS);
     }
 
     /**

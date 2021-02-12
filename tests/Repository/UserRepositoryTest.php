@@ -112,7 +112,7 @@ class UserRepositoryTest extends WebTestCase
 
     // public function testGetAllUsersOfServicesQueryList()
     // {
-    //     $this->assertNotNull($this->repo->getAllUsersOfServicesQueryList();
+    //     $this->assertNotNull($this->repo->getReferentsOfServicesQueryList();
     // }
 
     public function testfindUsersOfService()

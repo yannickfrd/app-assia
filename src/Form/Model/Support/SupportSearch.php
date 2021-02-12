@@ -3,9 +3,9 @@
 namespace App\Form\Model\Support;
 
 use App\Entity\Support\SupportGroup;
+use App\Form\Model\Organization\ReferentServiceDeviceSearchTrait;
 use App\Form\Model\Traits\DateSearchTrait;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Form\Model\Organization\ReferentServiceDeviceSearchTrait;
 
 class SupportSearch
 {
@@ -18,46 +18,22 @@ class SupportSearch
         3 => 'Période de suivi',
     ];
 
-    /**
-     * @var string|null
-     */
+    /** @var string|null */
     private $fullname;
 
-    /**
-     * @var \DateTimeInterface|null
-     * @Assert\Date(message="Date de naissance invalide.")
-     */
-    private $birthdate;
-
-    /**
-     * @var array
-     */
+    /** @var array */
     private $familyTypologies;
 
-    /**
-     * @var array
-     */
-    private $status;
+    /** @var array */
+    private $status = [SupportGroup::STATUS_IN_PROGRESS];
 
-    /**
-     * @var int|null
-     * @Assert\Range(min = 1, max = 9)
-     */
-    private $nbPeople;
-
-    /**
-     * @var int|null
-     */
+    /** @var int|null */
     private $supportDates;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $head = true;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $export;
 
     public function __construct()
@@ -72,18 +48,6 @@ class SupportSearch
     public function setFullname(string $fullname): self
     {
         $this->fullname = $fullname;
-
-        return $this;
-    }
-
-    public function getBirthdate(): ?\DateTimeInterface
-    {
-        return $this->birthdate;
-    }
-
-    public function setBirthdate(?\DateTimeInterface $birthdate): self
-    {
-        $this->birthdate = $birthdate;
 
         return $this;
     }
@@ -121,18 +85,6 @@ class SupportSearch
         }
 
         return $status;
-    }
-
-    public function getNbPeople(): ?int
-    {
-        return $this->nbPeople;
-    }
-
-    public function setNbPeople(int $nbPeople): self
-    {
-        $this->nbPeople = $nbPeople;
-
-        return $this;
     }
 
     public function getSupportDates(): ?int

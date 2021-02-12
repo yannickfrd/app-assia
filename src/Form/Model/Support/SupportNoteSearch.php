@@ -8,9 +8,7 @@ class SupportNoteSearch
 {
     use NoteSearchTrait;
 
-    /**
-     * @var int|null
-     */
+    /** @var int|null */
     private $noteId;
 
     public function getNoteId(): ?int

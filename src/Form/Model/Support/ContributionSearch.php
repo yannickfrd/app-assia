@@ -20,14 +20,10 @@ class ContributionSearch
 
     public const DATE_TYPE_DEFAULT = 1;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $id;
 
-    /**
-     * @var string|null
-     */
+    /** @var string|null */
     private $fullname;
 
     public function getId(): ?int

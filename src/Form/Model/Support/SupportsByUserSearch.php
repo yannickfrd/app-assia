@@ -8,9 +8,7 @@ class SupportsByUserSearch
 {
     use ReferentServiceDeviceSearchTrait;
 
-    /**
-     * @var bool|null
-     */
+    /** @var bool|null */
     protected $send = true;
 
     public function getSend(): ?bool

@@ -46,9 +46,7 @@ class DocumentController extends AbstractController
      */
     public function viewListDocuments(Request $request, Pagination $pagination, CurrentUserService $currentUser): Response
     {
-        $search = new DocumentSearch();
-
-        $form = ($this->createForm(DocumentSearchType::class, $search))
+        $form = ($this->createForm(DocumentSearchType::class, $search = new DocumentSearch()))
             ->handleRequest($request);
 
         return $this->render('app/support/document/listDocuments.html.twig', [

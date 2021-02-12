@@ -33,9 +33,7 @@ class AvdlController extends AbstractController
      */
     public function viewListAvdlSupports(Request $request, Pagination $pagination, SupportPersonRepository $repo): Response
     {
-        $search = (new AvdlSupportSearch())->setStatus([SupportGroup::STATUS_IN_PROGRESS]);
-
-        $form = ($this->createForm(AvdlSupportSearchType::class, $search))
+        $form = ($this->createForm(AvdlSupportSearchType::class, $search = new AvdlSupportSearch()))
             ->handleRequest($request);
 
         if ($search->getExport()) {

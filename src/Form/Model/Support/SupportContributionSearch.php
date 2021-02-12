@@ -10,9 +10,7 @@ class SupportContributionSearch
     use ContributionSearchTrait;
     use DateSearchTrait;
 
-    /**
-     * @var int|null
-     */
+    /** @var int|null */
     private $contributionId;
 
     public function getContributionId(): ?int

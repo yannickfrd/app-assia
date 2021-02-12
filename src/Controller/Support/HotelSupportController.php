@@ -3,7 +3,6 @@
 namespace App\Controller\Support;
 
 use App\Entity\Organization\Service;
-use App\Entity\Support\SupportGroup;
 use App\Form\Model\Support\HotelSupportSearch;
 use App\Form\Support\HotelSupport\HotelSupportSearchType;
 use App\Repository\Support\SupportPersonRepository;
@@ -30,9 +29,7 @@ class HotelSupportController extends AbstractController
      */
     public function viewListHotelSupports(Request $request, Pagination $pagination, SupportPersonRepository $repo): Response
     {
-        $search = (new HotelSupportSearch())->setStatus([SupportGroup::STATUS_IN_PROGRESS]);
-
-        $form = ($this->createForm(HotelSupportSearchType::class, $search))
+        $form = ($this->createForm(HotelSupportSearchType::class, $search = new HotelSupportSearch()))
             ->handleRequest($request);
 
         if ($search->getExport()) {

@@ -410,11 +410,6 @@ class SupportPersonRepository extends ServiceEntityRepository
             $query->andWhere($orX);
         }
 
-        if ($search->getNbPeople()) {
-            $query->andWhere('sg.nbPeople = :nbPeople')
-                ->setParameter('nbPeople', $search->getNbPeople());
-        }
-
         return $query;
     }
 

@@ -61,9 +61,7 @@ class SupportController extends AbstractController
      */
     public function viewListSupports(Request $request, SupportManager $supportManager, SupportPersonRepository $repo, Pagination $pagination): Response
     {
-        $search = (new SupportSearch())->setStatus([SupportGroup::STATUS_IN_PROGRESS]);
-
-        $form = ($this->createForm(SupportSearchType::class, $search))
+        $form = ($this->createForm(SupportSearchType::class, $search = new SupportSearch()))
             ->handleRequest($request);
 
         if ($search->getExport()) {

@@ -41,6 +41,7 @@ class User implements UserInterface
     public const STATUS_CHIEF = 3;
     public const STATUS_DIRECTOR = 4;
     public const STATUS_ADMINISTRATIVE = 5;
+    public const STATUS_PSYCHO = 9;
 
     public const STATUS = [
         1 => 'Travailleur social',
@@ -54,6 +55,13 @@ class User implements UserInterface
         8 => 'Responsable informatique',
         7 => 'Stagiaire',
         97 => 'Autre',
+    ];
+
+    public const REFERENTS_STATUS = [
+        self::STATUS_SOCIAL_WORKER,
+        self::STATUS_COORDO,
+        self::STATUS_CHIEF,
+        self::STATUS_PSYCHO,
     ];
 
     public const ROLES = [

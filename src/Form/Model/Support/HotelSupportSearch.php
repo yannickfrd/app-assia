@@ -6,24 +6,16 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class HotelSupportSearch extends SupportSearch
 {
-    /**
-     * @var array
-     */
+    /** @var array */
     private $levelSupport;
 
-    /**
-     * @var int|null
-     */
+    /** @var int|null */
     private $departmentAnchor;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $endSupportReasons;
 
-    /**
-     * @var ArrayCollection
-     */
+    /** @var ArrayCollection */
     private $hotels;
 
     public function __construct()

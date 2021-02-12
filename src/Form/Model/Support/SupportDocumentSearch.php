@@ -6,14 +6,10 @@ use App\Entity\Support\Document;
 
 class SupportDocumentSearch
 {
-    /**
-     * @var string|null
-     */
+    /** @var string|null */
     private $name;
 
-    /**
-     * @var int|null
-     */
+    /** @var int|null */
     private $type;
 
     public function getName(): ?string

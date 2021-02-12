@@ -12,14 +12,10 @@ class NoteSearch
     use DateSearchTrait;
     use ReferentServiceDeviceSearchTrait;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $id;
 
-    /**
-     * @var string|null
-     */
+    /** @var string|null */
     private $fullname;
 
     public function getId(): ?int

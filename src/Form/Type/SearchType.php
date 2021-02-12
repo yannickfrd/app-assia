@@ -112,7 +112,7 @@ class SearchType extends AbstractType
                     'choice_label' => 'fullname',
                     'multiple' => true,
                     'query_builder' => function (UserRepository $repo) use ($serviceId) {
-                        return $repo->getAllUsersOfServicesQueryList($this->currentUser, $serviceId);
+                        return $repo->getReferentsOfServicesQueryList($this->currentUser, $serviceId);
                     },
                     'placeholder' => 'placeholder.referent',
                     'attr' => [

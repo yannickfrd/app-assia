@@ -11,19 +11,13 @@ class DocumentSearch
     use ReferentServiceDeviceSearchTrait;
     use DateSearchTrait;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $id;
 
-    /**
-     * @var string|null
-     */
+    /** @var string|null */
     private $name;
 
-    /**
-     * @var int|null
-     */
+    /** @var int|null */
     private $type;
 
     public function getId(): ?int

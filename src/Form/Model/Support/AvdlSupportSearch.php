@@ -12,14 +12,10 @@ class AvdlSupportSearch extends SupportSearch
         2 => 'Accompagnement',
     ];
 
-    /**
-     * @var int|null
-     */
+    /** @var int|null */
     private $diagOrSupport;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $supportType;
 
     public function getDiagOrSupport(): ?int

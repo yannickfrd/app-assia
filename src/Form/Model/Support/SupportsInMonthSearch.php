@@ -13,9 +13,7 @@ class SupportsInMonthSearch
      */
     private $date;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $export;
 
     public function __construct()

@@ -12,19 +12,13 @@ class RdvSearch
     use ReferentServiceDeviceSearchTrait;
     use DateSearchTrait;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $id;
 
-    /**
-     * @var string|null
-     */
+    /** @var string|null */
     private $fullname;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $export;
 
     public function getId(): ?int
