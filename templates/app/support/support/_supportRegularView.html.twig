@@ -26,12 +26,12 @@
     {{ view_div.get(support.theoreticalEndDate ? support.theoreticalEndDate|date("d/m/Y"), "Theoretical end date") }}
 </div>
 <div class="row">
-    {% for accommodationGroup in support.accommodationGroups %}
+    {% for placeGroup in support.placeGroups %}
         {% if loop.last %}
-                {{ view_div.get(accommodationGroup.startDate ? accommodationGroup.startDate|date("d/m/Y") 
-                    ~ (accommodationGroup.endDate ? " - " ~ accommodationGroup.endDate|date("d/m/Y")), "Date d'hébergement") }}
-                {# {{ view_div.get(accommodationGroup.accommodation ? accommodationGroup.accommodation.name, "Nom du groupe de places") }} #}
-                {{ view_div.get(accommodationGroup.endReasonToString, "Motif de fin d'hébergement") }}
+                {{ view_div.get(placeGroup.startDate ? placeGroup.startDate|date("d/m/Y") 
+                    ~ (placeGroup.endDate ? " - " ~ placeGroup.endDate|date("d/m/Y")), "Date d'hébergement") }}
+                {# {{ view_div.get(placeGroup.place ? placeGroup.place.name, "Nom du groupe de places") }} #}
+                {{ view_div.get(placeGroup.endReasonToString, "Motif de fin d'hébergement") }}
         {% endif %}	
     {% endfor %}
     {{ view_div.get(support.city or support.address ? support.address ~ ", " ~ support.zipcode ~ " " ~ support.city, "Adresse") }}

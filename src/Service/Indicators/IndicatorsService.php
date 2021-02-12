@@ -81,7 +81,7 @@ class IndicatorsService
     public function getIndicators()
     {
         return $this->cache->get(Indicator::CACHE_KEY, function (CacheItemInterface $item) {
-            $item->expiresAfter(\DateInterval::createFromDateString('1 hour'));
+            $item->expiresAfter(\DateInterval::createFromDateString('30 minutes'));
 
             return $this->getDatasIndicators();
         });
@@ -96,7 +96,7 @@ class IndicatorsService
 
         foreach ($services as $service) {
             $datasServices[$service->getId()] = $this->cache->get(Service::CACHE_INDICATORS_KEY.$service->getId(), function (CacheItemInterface $item) use ($service) {
-                $item->expiresAfter(\DateInterval::createFromDateString('1 hour'));
+                $item->expiresAfter(\DateInterval::createFromDateString('30 minutes'));
 
                 return $this->getServiceDatas($service);
             });
@@ -164,7 +164,7 @@ class IndicatorsService
     public function getUsersIndicators(): array
     {
         return $this->cache->get(User::CACHE_INDICATORS_KEY, function (CacheItemInterface $item) {
-            $item->expiresAfter(\DateInterval::createFromDateString('1 hour'));
+            $item->expiresAfter(\DateInterval::createFromDateString('30 minutes'));
 
             $users = [];
 

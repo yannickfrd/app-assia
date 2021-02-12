@@ -6,40 +6,40 @@ use App\Entity\Organization\Device;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\SubService;
 use App\Form\Model\Admin\OccupancySearch;
-use App\Repository\Organization\AccommodationRepository;
 use App\Repository\Organization\DeviceRepository;
+use App\Repository\Organization\PlaceRepository;
 use App\Repository\Organization\ServiceRepository;
 use App\Repository\Organization\SubServiceRepository;
-use App\Repository\Support\AccommodationPersonRepository;
+use App\Repository\Support\PlacePersonRepository;
 use App\Security\CurrentUserService;
 
 class OccupancyIndicators
 {
     protected $currentUser;
-    protected $repoAccommodation;
-    protected $repoAccommodatioPerson;
+    protected $repoPlace;
+    protected $repoPlacePerson;
     protected $repoService;
     protected $repoSubService;
     protected $repoDevice;
 
     protected $datas = [];
+    protected $sumPlaces = 0;
     protected $nbPlaces = 0;
-    protected $nbAccommodations = 0;
     protected $capacityDays = 0;
-    protected $nbAccommodationsPeople = 0;
+    protected $nbPlacesPeople = 0;
     protected $occupancyDays = 0;
 
     public function __construct(
         CurrentUserService $currentUser,
-        AccommodationRepository $repoAccommodation,
-        AccommodationPersonRepository $repoAccommodatioPerson,
+        PlaceRepository $repoPlace,
+        PlacePersonRepository $repoPlacePerson,
         ServiceRepository $repoService,
         SubServiceRepository $repoSubService,
         DeviceRepository $repoDevice)
     {
         $this->currentUser = $currentUser;
-        $this->repoAccommodation = $repoAccommodation;
-        $this->repoAccommodatioPerson = $repoAccommodatioPerson;
+        $this->repoPlace = $repoPlace;
+        $this->repoPlacePerson = $repoPlacePerson;
         $this->repoService = $repoService;
         $this->repoSubService = $repoSubService;
         $this->repoDevice = $repoDevice;
@@ -50,59 +50,59 @@ class OccupancyIndicators
      */
     public function getOccupancyRateByDevice(OccupancySearch $search, Service $service = null): array
     {
-        $devices = $this->repoDevice->findDevicesWithAccommodation($search, $this->currentUser, $service);
-        $accommodationPeople = $this->repoAccommodatioPerson->findAccommodationPeople($search, $this->currentUser, $service);
+        $devices = $this->repoDevice->findDevicesWithPlace($search, $this->currentUser, $service);
+        $placePeople = $this->repoPlacePerson->findPlacePeople($search, $this->currentUser, $service);
         $interval = date_diff($search->getStart(), $search->getEnd());
         $nbDays = $interval->format('%a');
 
         foreach ($devices as $device) {
             $nbPlaces = 0;
-            $nbAccommodations = 0;
+            $sumPlaces = 0;
             $capacityDays = 0;
-            $nbAccommodationsPeople = 0;
+            $nbPlacesPeople = 0;
             $occupancyDays = 0;
 
-            foreach ($device->getAccommodations() as $accommodation) {
-                $dateInterval = $this->getDateInterval($accommodation->getStartDate(), $accommodation->getEndDate(), $search->getStart(), $search->getEnd());
-                $capacityDays += $dateInterval->format('%a') * $accommodation->getNbPlaces();
-                $nbPlaces += $accommodation->getNbPlaces();
-                ++$nbAccommodations;
+            foreach ($device->getPlaces() as $place) {
+                $dateInterval = $this->getDateInterval($place->getStartDate(), $place->getEndDate(), $search->getStart(), $search->getEnd());
+                $capacityDays += $dateInterval->format('%a') * $place->getNbPlaces();
+                $sumPlaces += $place->getNbPlaces();
+                ++$nbPlaces;
             }
 
-            foreach ($accommodationPeople as $accommodationPerson) {
-                if ($accommodationPerson->getAccommodationGroup()->getAccommodation()->getDevice() == $device) {
-                    $dateInterval = $this->getDateInterval($accommodationPerson->getStartDate(), $accommodationPerson->getEndDate(), $search->getStart(), $search->getEnd());
+            foreach ($placePeople as $placePerson) {
+                if ($placePerson->getPlaceGroup()->getPlace()->getDevice() == $device) {
+                    $dateInterval = $this->getDateInterval($placePerson->getStartDate(), $placePerson->getEndDate(), $search->getStart(), $search->getEnd());
                     $occupancyDays += $dateInterval->format('%a');
-                    ++$nbAccommodationsPeople;
+                    ++$nbPlacesPeople;
                 }
             }
 
             $this->datas[$device->getId()] = [
                 'name' => $device->getName(),
-                'nbAccommodations' => $nbAccommodations,
                 'nbPlaces' => $nbPlaces,
+                'sumPlaces' => $sumPlaces,
                 'capacityDays' => $capacityDays,
                 'occupancyDays' => $occupancyDays,
-                'averageCapacity' => $nbDays && $nbAccommodations ? ($capacityDays / $nbDays) : null,
-                'averageOccupancy' => $nbDays && $nbAccommodationsPeople ? ($occupancyDays / $nbDays) : null,
+                'averageCapacity' => $nbDays && $nbPlaces ? ($capacityDays / $nbDays) : null,
+                'averageOccupancy' => $nbDays && $nbPlacesPeople ? ($occupancyDays / $nbDays) : null,
             ];
 
-            $this->nbAccommodations += $nbAccommodations;
             $this->nbPlaces += $nbPlaces;
+            $this->sumPlaces += $sumPlaces;
             $this->capacityDays += $capacityDays;
             $this->occupancyDays += $occupancyDays;
-            $this->nbAccommodationsPeople += $nbAccommodationsPeople;
+            $this->nbPlacesPeople += $nbPlacesPeople;
         }
 
         return [
             'devices' => $this->datas,
             'interval' => $nbDays,
-            'nbAccommodations' => $this->nbAccommodations,
             'nbPlaces' => $this->nbPlaces,
+            'sumPlaces' => $this->sumPlaces,
             'capacityDays' => $this->capacityDays,
             'occupancyDays' => $this->occupancyDays,
-            'averageCapacity' => $nbDays && $this->nbAccommodations ? ($this->capacityDays / $nbDays) : null,
-            'averageOccupancy' => $nbDays && $this->nbAccommodationsPeople ? ($this->occupancyDays / $nbDays) : null,
+            'averageCapacity' => $nbDays && $this->nbPlaces ? ($this->capacityDays / $nbDays) : null,
+            'averageOccupancy' => $nbDays && $this->nbPlacesPeople ? ($this->occupancyDays / $nbDays) : null,
         ];
     }
 
@@ -111,60 +111,60 @@ class OccupancyIndicators
      */
     public function getOccupancyRateByService(OccupancySearch $search, Device $device = null): array
     {
-        $services = $this->repoService->findServicesWithAccommodation($search, $this->currentUser, $device);
-        $accommodationPeople = $this->repoAccommodatioPerson->findAccommodationPeople($search, $this->currentUser);
+        $services = $this->repoService->findServicesWithPlace($search, $this->currentUser, $device);
+        $placePeople = $this->repoPlacePerson->findPlacePeople($search, $this->currentUser);
         $interval = date_diff($search->getStart(), $search->getEnd());
         $nbDays = $interval->format('%a');
 
         foreach ($services as $service) {
             $nbPlaces = 0;
-            $nbAccommodations = 0;
+            $sumPlaces = 0;
             $capacityDays = 0;
-            $nbAccommodationsPeople = 0;
+            $nbPlacesPeople = 0;
             $occupancyDays = 0;
 
-            foreach ($service->getAccommodations() as $accommodation) {
-                $dateInterval = $this->getDateInterval($accommodation->getStartDate(), $accommodation->getEndDate(), $search->getStart(), $search->getEnd());
-                $capacityDays += $dateInterval->format('%a') * $accommodation->getNbPlaces();
-                $nbPlaces += $accommodation->getNbPlaces();
-                ++$nbAccommodations;
+            foreach ($service->getPlaces() as $place) {
+                $dateInterval = $this->getDateInterval($place->getStartDate(), $place->getEndDate(), $search->getStart(), $search->getEnd());
+                $capacityDays += $dateInterval->format('%a') * $place->getNbPlaces();
+                $sumPlaces += $place->getNbPlaces();
+                ++$nbPlaces;
             }
 
-            foreach ($accommodationPeople as $accommodationPerson) {
-                if ($accommodationPerson->getAccommodationGroup()->getAccommodation()->getService() == $service) {
-                    $dateInterval = $this->getDateInterval($accommodationPerson->getStartDate(), $accommodationPerson->getEndDate(), $search->getStart(), $search->getEnd());
+            foreach ($placePeople as $placePerson) {
+                if ($placePerson->getPlaceGroup()->getPlace()->getService() == $service) {
+                    $dateInterval = $this->getDateInterval($placePerson->getStartDate(), $placePerson->getEndDate(), $search->getStart(), $search->getEnd());
                     $occupancyDays += $dateInterval->format('%a');
-                    ++$nbAccommodationsPeople;
+                    ++$nbPlacesPeople;
                 }
             }
 
             $this->datas[$service->getId()] = [
                 'name' => $service->getName(),
                 'nbSubServices' => $service->getSubServices()->count(),
-                'nbAccommodations' => $nbAccommodations,
                 'nbPlaces' => $nbPlaces,
+                'sumPlaces' => $sumPlaces,
                 'capacityDays' => $capacityDays,
                 'occupancyDays' => $occupancyDays,
-                'averageCapacity' => $nbAccommodations && $nbDays ? ($capacityDays / $nbDays) : null,
-                'averageOccupancy' => $nbAccommodationsPeople && $nbDays ? ($occupancyDays / $nbDays) : null,
+                'averageCapacity' => $nbPlaces && $nbDays ? ($capacityDays / $nbDays) : null,
+                'averageOccupancy' => $nbPlacesPeople && $nbDays ? ($occupancyDays / $nbDays) : null,
             ];
 
-            $this->nbAccommodations += $nbAccommodations;
             $this->nbPlaces += $nbPlaces;
+            $this->sumPlaces += $sumPlaces;
             $this->capacityDays += $capacityDays;
             $this->occupancyDays += $occupancyDays;
-            $this->nbAccommodationsPeople += $nbAccommodationsPeople;
+            $this->nbPlacesPeople += $nbPlacesPeople;
         }
 
         return [
             'services' => $this->datas,
             'interval' => $nbDays,
-            'nbAccommodations' => $this->nbAccommodations,
             'nbPlaces' => $this->nbPlaces,
+            'sumPlaces' => $this->sumPlaces,
             'capacityDays' => $this->capacityDays,
             'occupancyDays' => $this->occupancyDays,
-            'averageCapacity' => $this->nbAccommodations && $nbDays ? ($this->capacityDays / $nbDays) : null,
-            'averageOccupancy' => $this->nbAccommodationsPeople && $nbDays ? ($this->occupancyDays / $nbDays) : null,
+            'averageCapacity' => $this->nbPlaces && $nbDays ? ($this->capacityDays / $nbDays) : null,
+            'averageOccupancy' => $this->nbPlacesPeople && $nbDays ? ($this->occupancyDays / $nbDays) : null,
         ];
     }
 
@@ -173,113 +173,113 @@ class OccupancyIndicators
      */
     public function getOccupancyRateBySubService(OccupancySearch $search, Service $service): array
     {
-        $subServices = $this->repoSubService->findSubServicesWithAccommodation($search, $this->currentUser, $service);
-        $accommodationPeople = $this->repoAccommodatioPerson->findAccommodationPeople($search, $this->currentUser);
+        $subServices = $this->repoSubService->findSubServicesWithPlace($search, $this->currentUser, $service);
+        $placePeople = $this->repoPlacePerson->findPlacePeople($search, $this->currentUser);
         $interval = date_diff($search->getStart(), $search->getEnd());
         $nbDays = $interval->format('%a');
 
         foreach ($subServices as $subService) {
             $nbPlaces = 0;
-            $nbAccommodations = 0;
+            $sumPlaces = 0;
             $capacityDays = 0;
-            $nbAccommodationsPeople = 0;
+            $nbPlacesPeople = 0;
             $occupancyDays = 0;
 
-            foreach ($subService->getAccommodations() as $accommodation) {
-                $dateInterval = $this->getDateInterval($accommodation->getStartDate(), $accommodation->getEndDate(), $search->getStart(), $search->getEnd());
-                $capacityDays += $dateInterval->format('%a') * $accommodation->getNbPlaces();
-                $nbPlaces += $accommodation->getNbPlaces();
-                ++$nbAccommodations;
+            foreach ($subService->getPlaces() as $place) {
+                $dateInterval = $this->getDateInterval($place->getStartDate(), $place->getEndDate(), $search->getStart(), $search->getEnd());
+                $capacityDays += $dateInterval->format('%a') * $place->getNbPlaces();
+                $sumPlaces += $place->getNbPlaces();
+                ++$nbPlaces;
             }
 
-            foreach ($accommodationPeople as $accommodationPerson) {
-                if ($accommodationPerson->getAccommodationGroup()->getAccommodation()->getSubService() == $subService) {
-                    $dateInterval = $this->getDateInterval($accommodationPerson->getStartDate(), $accommodationPerson->getEndDate(), $search->getStart(), $search->getEnd());
+            foreach ($placePeople as $placePerson) {
+                if ($placePerson->getPlaceGroup()->getPlace()->getSubService() == $subService) {
+                    $dateInterval = $this->getDateInterval($placePerson->getStartDate(), $placePerson->getEndDate(), $search->getStart(), $search->getEnd());
                     $occupancyDays += $dateInterval->format('%a');
-                    ++$nbAccommodationsPeople;
+                    ++$nbPlacesPeople;
                 }
             }
 
             $this->datas[$subService->getId()] = [
                 'name' => $subService->getName(),
-                'nbAccommodations' => $nbAccommodations,
                 'nbPlaces' => $nbPlaces,
+                'sumPlaces' => $sumPlaces,
                 'capacityDays' => $capacityDays,
                 'occupancyDays' => $occupancyDays,
-                'averageCapacity' => $nbAccommodations ? ($capacityDays / $nbDays) : null,
-                'averageOccupancy' => $nbAccommodationsPeople ? ($occupancyDays / $nbDays) : null,
+                'averageCapacity' => $nbPlaces ? ($capacityDays / $nbDays) : null,
+                'averageOccupancy' => $nbPlacesPeople ? ($occupancyDays / $nbDays) : null,
             ];
 
-            $this->nbAccommodations += $nbAccommodations;
             $this->nbPlaces += $nbPlaces;
+            $this->sumPlaces += $sumPlaces;
             $this->capacityDays += $capacityDays;
             $this->occupancyDays += $occupancyDays;
-            $this->nbAccommodationsPeople += $nbAccommodationsPeople;
+            $this->nbPlacesPeople += $nbPlacesPeople;
         }
 
         return [
             'subServices' => $this->datas,
             'interval' => $nbDays,
-            'nbAccommodations' => $this->nbAccommodations,
             'nbPlaces' => $this->nbPlaces,
+            'sumPlaces' => $this->sumPlaces,
             'capacityDays' => $this->capacityDays,
             'occupancyDays' => $this->occupancyDays,
-            'averageCapacity' => $nbDays && $this->nbAccommodations ? ($this->capacityDays / $nbDays) : null,
-            'averageOccupancy' => $nbDays && $this->nbAccommodationsPeople ? ($this->occupancyDays / $nbDays) : null,
+            'averageCapacity' => $nbDays && $this->nbPlaces ? ($this->capacityDays / $nbDays) : null,
+            'averageOccupancy' => $nbDays && $this->nbPlacesPeople ? ($this->occupancyDays / $nbDays) : null,
         ];
     }
 
     /**
      * Donne tous les groupes de places d'un service avec leur taux d'occupation.
      */
-    public function getOccupancyRateByAccommodation(OccupancySearch $search, Service $service = null, SubService $subService = null): array
+    public function getOccupancyRateByPlace(OccupancySearch $search, Service $service = null, SubService $subService = null): array
     {
-        $accommodations = $this->repoAccommodation->findAccommodationsForOccupancy($search, $this->currentUser, $service, $subService);
-        $accommodationPeople = $this->repoAccommodatioPerson->findAccommodationPeople($search, $this->currentUser, $service, $subService);
+        $places = $this->repoPlace->findPlacesForOccupancy($search, $this->currentUser, $service, $subService);
+        $placePeople = $this->repoPlacePerson->findPlacePeople($search, $this->currentUser, $service, $subService);
         $interval = date_diff($search->getStart(), $search->getEnd());
         $nbDays = $interval->format('%a');
 
-        foreach ($accommodations as $accommodation) {
+        foreach ($places as $place) {
             $capacityDays = 0;
-            $nbAccommodationsPeople = 0;
+            $nbPlacesPeople = 0;
             $occupancyDays = 0;
 
-            $dateInterval = $this->getDateInterval($accommodation->getStartDate(), $accommodation->getEndDate(), $search->getStart(), $search->getEnd());
-            $capacityDays += $dateInterval->format('%a') * $accommodation->getNbPlaces();
+            $dateInterval = $this->getDateInterval($place->getStartDate(), $place->getEndDate(), $search->getStart(), $search->getEnd());
+            $capacityDays += $dateInterval->format('%a') * $place->getNbPlaces();
 
-            foreach ($accommodationPeople as $accommodationPerson) {
-                if ($accommodationPerson->getAccommodationGroup()->getAccommodation() == $accommodation) {
-                    $dateInterval = $this->getDateInterval($accommodationPerson->getStartDate(), $accommodationPerson->getEndDate(), $search->getStart(), $search->getEnd());
+            foreach ($placePeople as $placePerson) {
+                if ($placePerson->getPlaceGroup()->getPlace() == $place) {
+                    $dateInterval = $this->getDateInterval($placePerson->getStartDate(), $placePerson->getEndDate(), $search->getStart(), $search->getEnd());
                     $occupancyDays += $dateInterval->format('%a');
-                    ++$nbAccommodationsPeople;
+                    ++$nbPlacesPeople;
                 }
             }
 
-            $this->datas[$accommodation->getId()] = [
-                'accommodation' => $accommodation,
-                'nbPlaces' => $accommodation->getNbPlaces(),
+            $this->datas[$place->getId()] = [
+                'place' => $place,
+                'sumPlaces' => $place->getNbPlaces(),
                 'capacityDays' => $capacityDays,
                 'occupancyDays' => $occupancyDays,
                 'averageCapacity' => $nbDays ? $capacityDays / $nbDays : null,
-                'averageOccupancy' => $nbDays && $nbAccommodationsPeople ? ($occupancyDays / $nbDays) : null,
+                'averageOccupancy' => $nbDays && $nbPlacesPeople ? ($occupancyDays / $nbDays) : null,
             ];
 
-            ++$this->nbAccommodations;
-            $this->nbPlaces += $accommodation->getNbPlaces();
+            ++$this->nbPlaces;
+            $this->sumPlaces += $place->getNbPlaces();
             $this->capacityDays += $capacityDays;
             $this->occupancyDays += $occupancyDays;
-            $this->nbAccommodationsPeople += $nbAccommodationsPeople;
+            $this->nbPlacesPeople += $nbPlacesPeople;
         }
 
         return [
-            'accommodations' => $this->datas,
+            'places' => $this->datas,
             'interval' => $nbDays,
-            'nbAccommodations' => $this->nbAccommodations,
             'nbPlaces' => $this->nbPlaces,
+            'sumPlaces' => $this->sumPlaces,
             'capacityDays' => $this->capacityDays,
             'occupancyDays' => $this->occupancyDays,
-            'averageCapacity' => $nbDays && $this->nbAccommodations ? ($this->capacityDays / $nbDays) : null,
-            'averageOccupancy' => $nbDays && $this->nbAccommodationsPeople ? ($this->occupancyDays / $nbDays) : null,
+            'averageCapacity' => $nbDays && $this->nbPlaces ? ($this->capacityDays / $nbDays) : null,
+            'averageOccupancy' => $nbDays && $this->nbPlacesPeople ? ($this->occupancyDays / $nbDays) : null,
         ];
     }
 

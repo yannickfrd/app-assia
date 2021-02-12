@@ -48,18 +48,18 @@ class UpdateLocationSupportsCommand extends Command
 
         foreach ($supports as $support) {
             if (null === $support->getLocationId()) {
-                /** @var AccommodationGroup */
-                $accommodationGroup = $support->getAccommodationGroups()[0];
+                /** @var PlaceGroup */
+                $placeGroup = $support->getPlaceGroups()[0];
 
-                if ($accommodationGroup && $accommodationGroup->getAccommodation()) {
-                    $accommodation = $accommodationGroup->getAccommodation();
+                if ($placeGroup && $placeGroup->getPlace()) {
+                    $place = $placeGroup->getPlace();
                     $support
-                    ->setCity($accommodation->getCity())
-                    ->setAddress($accommodation->getAddress())
-                    ->setZipcode($accommodation->getZipcode())
-                    ->setLat($accommodation->getLat())
-                    ->setLon($accommodation->getLon())
-                    ->setLocationId($accommodation->getLocationId());
+                    ->setCity($place->getCity())
+                    ->setAddress($place->getAddress())
+                    ->setZipcode($place->getZipcode())
+                    ->setLat($place->getLat())
+                    ->setLon($place->getLon())
+                    ->setLocationId($place->getLocationId());
                 } else {
                     /** @var EvaluationGroup */
                     $evaluation = $support->getEvaluationsGroup()->last();

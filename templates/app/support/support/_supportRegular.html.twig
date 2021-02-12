@@ -9,7 +9,7 @@
     <div class="col-md-6" data-parent-field="orientationDate">{{ form_row(form.originRequest.decisionDate) }}</div>
     <div class="col-md-12" data-parent-field="orientationDate">{{ form_label(form.originRequest.comment) }}{{ form_widget(form.originRequest.comment) }}</div>
 </section>
-<section class="{% if support.device and support.device.accommodation == YES %}d-none{% endif %}">
+<section class="{% if support.device and support.device.place == YES %}d-none{% endif %}">
 <hr>
     <div class="form-group row" id="support_location">
         <div class="col-md-12"><h2 class="h5 mb-3">Adresse du suivi</h2></div>
@@ -30,10 +30,10 @@
         <div class="col-md-6">{{ form_row(form.status) }}</div>
         <div class="col-md-6">{{ form_row(form.startDate) }}</div>
     </div>
-    {# {% if form.vars.value.accommodationGroups.count > 0 and form.accommodationGroups is defined %}
-        <div class="row {% if support.device and support.device.accommodation != YES %}d-none{% endif %}">
-            <div class="col-md-6">{{ form_row(form.accommodationGroups[0].accommodation) }}</div>
-            <div class="col-md-6">{{ form_row(form.accommodationGroups[0].startDate) }}</div>
+    {# {% if form.vars.value.placeGroups.count > 0 and form.placeGroups is defined %}
+        <div class="row {% if support.device and support.device.place != YES %}d-none{% endif %}">
+            <div class="col-md-6">{{ form_row(form.placeGroups[0].place) }}</div>
+            <div class="col-md-6">{{ form_row(form.placeGroups[0].startDate) }}</div>
         </div>
     {% endif %} #}
     <div class="row">
@@ -43,10 +43,10 @@
     <div class="row">
         <div class="col-md-6" data-parent-field="startDate">{{ form_row(form.endStatus) }}</div>
         <div class="col-md-6" data-parent-field="endStatus">{{ form_row(form.endStatusComment) }}</div>
-        {% if support.id and support.device and support.device.accommodation == YES %}
+        {% if support.id and support.device and support.device.place == YES %}
             <div class="col-md-6">
                 <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
-                    {{ form_row(form.endAccommodation) }}
+                    {{ form_row(form.endPlace) }}
                 </div>
             </div>
         {% endif %}

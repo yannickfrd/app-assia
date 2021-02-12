@@ -9,7 +9,7 @@ use App\Entity\Organization\User;
 use App\Entity\People\PeopleGroup;
 use App\Entity\People\Person;
 use App\Entity\People\RolePerson;
-use App\Entity\Support\AccommodationGroup;
+use App\Entity\Support\PlaceGroup;
 use App\Entity\Support\Rdv;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Support\SupportPerson;
@@ -201,7 +201,7 @@ class SupportManager
         }
 
         $this->updateSupportPeople($supportGroup);
-        $this->updateAccommodationGroup($supportGroup);
+        $this->updatePlaceGroup($supportGroup);
         $this->updateNbPeople($supportGroup);
         $this->checkValidHead($supportGroup);
 
@@ -359,7 +359,7 @@ class SupportManager
      */
     public function getNbContributions(SupportGroup $supportGroup, ContributionRepository $repoContribution): ?int
     {
-        if (!$supportGroup->getAccommodationGroups()) {
+        if (!$supportGroup->getPlaceGroups()) {
             return  null;
         }
 
@@ -460,25 +460,25 @@ class SupportManager
                 ne correspond pas à la composition familiale du groupe ('.$nbPeople.' personnes).');
         }
 
-        if ($supportGroup->getDevice() && Choices::YES === $supportGroup->getDevice()->getAccommodation()) {
+        if ($supportGroup->getDevice() && Choices::YES === $supportGroup->getDevice()->getPlace()) {
             // Vérifie qu'il y a un hébergement créé
-            if (0 === $supportGroup->getAccommodationGroups()->count()) {
+            if (0 === $supportGroup->getPlaceGroups()->count()) {
                 $this->addFlash('warning', 'Attention, aucun hébergement n\'est enregistré pour ce suivi.');
             } else {
                 // Vérifie que le nombre de personnes suivies correspond au nombre de personnes hébergées
-                $nbAccommodationPeople = 0;
-                foreach ($supportGroup->getAccommodationGroups() as $accommodationGroup) {
-                    if (null === $accommodationGroup->getEndDate()) {
-                        foreach ($accommodationGroup->getAccommodationPeople() as $accommodationPerson) {
-                            if (null === $accommodationPerson->getEndDate()) {
-                                ++$nbAccommodationPeople;
+                $nbPlacePeople = 0;
+                foreach ($supportGroup->getPlaceGroups() as $placeGroup) {
+                    if (null === $placeGroup->getEndDate()) {
+                        foreach ($placeGroup->getPlacePeople() as $placePerson) {
+                            if (null === $placePerson->getEndDate()) {
+                                ++$nbPlacePeople;
                             }
                         }
                     }
                 }
-                if (!$supportGroup->getEndDate() && $nbActiveSupportPeople != $nbAccommodationPeople) {
+                if (!$supportGroup->getEndDate() && $nbActiveSupportPeople != $nbPlacePeople) {
                     $this->addFlash('warning', 'Attention, le nombre de personnes suivies ('.$nbActiveSupportPeople.') 
-                    ne correspond pas au nombre de personnes hébergées ('.$nbAccommodationPeople.').<br/> 
+                    ne correspond pas au nombre de personnes hébergées ('.$nbPlacePeople.').<br/> 
                     Allez dans l\'onglet <b>Hébergement</b> pour ajouter les personnes à l\'hébergement.');
                 }
             }
@@ -546,16 +546,16 @@ class SupportManager
     /**
      * Met à jour la prise en charge du groupe.
      */
-    protected function updateAccommodationGroup(SupportGroup $supportGroup): void
+    protected function updatePlaceGroup(SupportGroup $supportGroup): void
     {
         // Si le statut du suivi est égal à terminé et si  "Fin d'hébergement" coché, alors met à jour la prise en charge
-        if (4 === $supportGroup->getStatus() && $supportGroup->getEndAccommodation()) {
-            foreach ($supportGroup->getAccommodationGroups() as $accommodationGroup) {
-                if (!$accommodationGroup->getEndDate()) {
-                    null === $accommodationGroup->getEndDate() ? $accommodationGroup->setEndDate($supportGroup->getEndDate()) : null;
-                    null === $accommodationGroup->getEndReason() ? $accommodationGroup->setEndReason(1) : null;
+        if (4 === $supportGroup->getStatus() && $supportGroup->getEndPlace()) {
+            foreach ($supportGroup->getPlaceGroups() as $placeGroup) {
+                if (!$placeGroup->getEndDate()) {
+                    null === $placeGroup->getEndDate() ? $placeGroup->setEndDate($supportGroup->getEndDate()) : null;
+                    null === $placeGroup->getEndReason() ? $placeGroup->setEndReason(1) : null;
 
-                    $this->updateAccommodationPeople($accommodationGroup);
+                    $this->updatePlacePeople($placeGroup);
                 }
             }
         }
@@ -564,18 +564,18 @@ class SupportManager
     /**
      * Met à jour la prise en charge des personnes du groupe.
      */
-    protected function updateAccommodationPeople(AccommodationGroup $accommodationGroup): void
+    protected function updatePlacePeople(PlaceGroup $placeGroup): void
     {
-        foreach ($accommodationGroup->getAccommodationPeople() as $accommodationPerson) {
-            $supportPerson = $accommodationPerson->getSupportPerson();
+        foreach ($placeGroup->getPlacePeople() as $placePerson) {
+            $supportPerson = $placePerson->getSupportPerson();
             $person = $supportPerson->getPerson();
 
-            null === $accommodationPerson->getEndDate() ? $accommodationPerson->setEndDate($supportPerson->getEndDate()) : null;
-            null === $accommodationPerson->getEndReason() ? $accommodationPerson->setEndReason(1) : null;
+            null === $placePerson->getEndDate() ? $placePerson->setEndDate($supportPerson->getEndDate()) : null;
+            null === $placePerson->getEndReason() ? $placePerson->setEndReason(1) : null;
 
             if ($supportPerson->getStartDate() && $supportPerson->getStartDate() < $person->getBirthdate()) {
                 $supportPerson->setStartDate($person->getBirthdate());
-                $this->addFlash('warning', 'La date de début d\'hébergement ne peut pas être antérieure à la date de naissance de la personne ('.$accommodationPerson->getPerson()->getFullname().').');
+                $this->addFlash('warning', 'La date de début d\'hébergement ne peut pas être antérieure à la date de naissance de la personne ('.$placePerson->getPerson()->getFullname().').');
             }
         }
     }

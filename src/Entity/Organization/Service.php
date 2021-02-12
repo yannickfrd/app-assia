@@ -29,7 +29,7 @@ class Service
     use DisableEntityTrait;
 
     public const CACHE_INDICATORS_KEY = 'stats.service';
-    public const CACHE_SERVICE_ACCOMMODATIONS_KEY = 'service.accommodations';
+    public const CACHE_SERVICE_PLACES_KEY = 'service.places';
     public const CACHE_SERVICE_SUBSERVICES_KEY = 'service.sub_services';
     public const CACHE_SERVICE_USERS_KEY = 'service.users';
 
@@ -92,7 +92,7 @@ class Service
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $accommodation;
+    private $place;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -150,9 +150,9 @@ class Service
     private $serviceDevices;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Organization\Accommodation", mappedBy="service")
+     * @ORM\OneToMany(targetEntity="App\Entity\Organization\Place", mappedBy="service")
      */
-    private $accommodations;
+    private $places;
 
     // /**
     //  * @ORM\ManyToMany(targetEntity="App\Entity\Organization\Organization", mappedBy="service")
@@ -179,7 +179,7 @@ class Service
         $this->serviceUser = new ArrayCollection();
         $this->supportGroup = new ArrayCollection();
         $this->serviceDevices = new ArrayCollection();
-        $this->accommodations = new ArrayCollection();
+        $this->places = new ArrayCollection();
         $this->organizations = new ArrayCollection();
         $this->subServices = new ArrayCollection();
     }
@@ -323,14 +323,14 @@ class Service
         return $this;
     }
 
-    public function getAccommodation(): ?int
+    public function getPlace(): ?int
     {
-        return $this->accommodation;
+        return $this->place;
     }
 
-    public function setAccommodation(?int $accommodation): self
+    public function setPlace(?int $place): self
     {
-        $this->accommodation = $accommodation;
+        $this->place = $place;
 
         return $this;
     }
@@ -511,30 +511,30 @@ class Service
     }
 
     /**
-     * @return Accommodation[]|Collection|null
+     * @return Place[]|Collection|null
      */
-    public function getAccommodations()
+    public function getPlaces()
     {
-        return $this->accommodations;
+        return $this->places;
     }
 
-    public function addAccommodation(Accommodation $accommodation): self
+    public function addPlace(Place $place): self
     {
-        if (!$this->accommodations->contains($accommodation)) {
-            $this->accommodations[] = $accommodation;
-            $accommodation->setService($this);
+        if (!$this->places->contains($place)) {
+            $this->places[] = $place;
+            $place->setService($this);
         }
 
         return $this;
     }
 
-    public function removeAccommodation(Accommodation $accommodation): self
+    public function removePlace(Place $place): self
     {
-        if ($this->accommodations->contains($accommodation)) {
-            $this->accommodations->removeElement($accommodation);
+        if ($this->places->contains($place)) {
+            $this->places->removeElement($place);
             // set the owning side to null (unless already changed)
-            if ($accommodation->getService() === $this) {
-                $accommodation->setService(null);
+            if ($place->getService() === $this) {
+                $place->setService(null);
             }
         }
 

@@ -55,9 +55,9 @@ class SupportPersonRepository extends ServiceEntityRepository
     public function findSupportsToExport(?SupportSearch $search = null): ?array
     {
         $query = $this->getSupportsQuery()
-            ->leftJoin('sp.accommodationsPerson', 'ap')->addSelect('ap')
-            ->leftJoin('ap.accommodationGroup', 'ag')->addSelect('ag')
-            ->leftJoin('ag.accommodation', 'a')->addSelect('a');
+            ->leftJoin('sp.placesPerson', 'pp')->addSelect('pp')
+            ->leftJoin('pp.placeGroup', 'pg')->addSelect('pg')
+            ->leftJoin('pg.place', 'pl')->addSelect('pl');
 
         if ($search) {
             $query = $this->filters($query, $search);
@@ -76,8 +76,8 @@ class SupportPersonRepository extends ServiceEntityRepository
     public function findSupportsOfServiceToExport($search = null, int $serviceId): ?array
     {
         $query = $this->getSupportsOfServiceQuery()
-            ->leftJoin('sg.accommodationGroups', 'ag')->addSelect('PARTIAL ag.{id, accommodation}')
-            ->leftJoin('ag.accommodation', 'a')->addSelect('PARTIAL a.{id, name}')
+            ->leftJoin('sg.placeGroups', 'pg')->addSelect('PARTIAL pg.{id, place}')
+            ->leftJoin('pg.place', 'pl')->addSelect('PARTIAL pl.{id, name}')
 
             ->where('sg.service = :service')
             ->setParameter('service', $serviceId);
@@ -127,8 +127,8 @@ class SupportPersonRepository extends ServiceEntityRepository
     {
         $query = $this->getSupportsQuery()
             ->leftJoin('sg.hotelSupport', 'hs')->addSelect('hs')
-            ->leftJoin('sg.accommodationGroups', 'ag')->addSelect('PARTIAL ag.{id, accommodation}')
-            ->leftJoin('ag.accommodation', 'a')->addSelect('PARTIAL a.{id, name}')
+            ->leftJoin('sg.placeGroups', 'pg')->addSelect('PARTIAL pg.{id, place}')
+            ->leftJoin('pg.place', 'pl')->addSelect('PARTIAL pl.{id, name}')
 
             ->where('sg.service = :service')
             ->setParameter('service', $serviceId);
@@ -139,7 +139,7 @@ class SupportPersonRepository extends ServiceEntityRepository
             $expr = $query->expr();
             $orX = $expr->orX();
             foreach ($search->getHotels() as $hotel) {
-                $orX->add($expr->eq('ag.accommodation', $hotel));
+                $orX->add($expr->eq('pg.place', $hotel));
             }
             $query->andWhere($orX);
         }
@@ -184,9 +184,9 @@ class SupportPersonRepository extends ServiceEntityRepository
     public function findSupportsFullToExport($search = null): ?array
     {
         $query = $this->getSupportsQuery()
-            ->leftJoin('sp.accommodationsPerson', 'ap')->addSelect('ap')
-            ->leftJoin('ap.accommodationGroup', 'ag')->addSelect('ag')
-            ->leftJoin('ag.accommodation', 'a')->addSelect('a')
+            ->leftJoin('sp.placesPerson', 'pp')->addSelect('pp')
+            ->leftJoin('pp.placeGroup', 'pg')->addSelect('pg')
+            ->leftJoin('pg.place', 'pl')->addSelect('pl')
 
             ->leftJoin('sg.hotelSupport', 'hs')->addSelect('hs')
             ->leftJoin('sg.avdl', 'avdl')->addSelect('avdl')

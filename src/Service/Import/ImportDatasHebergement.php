@@ -15,8 +15,8 @@ use App\Entity\Evaluation\EvaluationGroup;
 use App\Entity\Evaluation\EvaluationPerson;
 use App\Entity\Evaluation\InitEvalGroup;
 use App\Entity\Evaluation\InitEvalPerson;
-use App\Entity\Organization\Accommodation;
 use App\Entity\Organization\Device;
+use App\Entity\Organization\Place;
 use App\Entity\Organization\Referent;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\SubService;
@@ -24,15 +24,15 @@ use App\Entity\Organization\User;
 use App\Entity\People\PeopleGroup;
 use App\Entity\People\Person;
 use App\Entity\People\RolePerson;
-use App\Entity\Support\AccommodationGroup;
-use App\Entity\Support\AccommodationPerson;
 use App\Entity\Support\OriginRequest;
+use App\Entity\Support\PlaceGroup;
+use App\Entity\Support\PlacePerson;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Support\SupportPerson;
 use App\Form\Utils\Choices;
 use App\Notification\MailNotification;
-use App\Repository\Organization\AccommodationRepository;
 use App\Repository\Organization\DeviceRepository;
+use App\Repository\Organization\PlaceRepository;
 use App\Repository\Organization\SubServiceRepository;
 use App\Repository\People\PersonRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -180,7 +180,7 @@ class ImportDatasHebergement extends ImportDatas
         'NR' => Choices::NO_INFORMATION,
     ];
 
-    public const ACCOMMODATION_HOUSING_STATUS = [
+    public const PLACE_HOUSING_STATUS = [
         'HU' => 102,
         'Stabilisation' => 103,
         'Insertion' => 104,
@@ -406,7 +406,7 @@ class ImportDatasHebergement extends ImportDatas
         'NR' => Choices::NO_INFORMATION,
     ];
 
-    public const ACCOMMODATION_TYPE = [
+    public const PLACE_TYPE = [
         'Chambre individuelle' => 1,
         'Chambre collective' => 2,
         "Chambre d'hôtel" => 3,
@@ -450,7 +450,7 @@ class ImportDatasHebergement extends ImportDatas
 
     protected $repoSubService;
     protected $repoDevice;
-    protected $repoAccommodation;
+    protected $repoPlace;
     protected $repoPerson;
 
     protected $datas;
@@ -462,10 +462,10 @@ class ImportDatasHebergement extends ImportDatas
     protected $service;
     /** @var SubService */
     protected $subService;
-    protected $accommodation;
+    protected $place;
 
     protected $devices = [];
-    protected $accommodations = [];
+    protected $places = [];
     protected $subServices = [];
 
     protected $person;
@@ -486,14 +486,14 @@ class ImportDatasHebergement extends ImportDatas
         MailNotification $notification,
         SubServiceRepository $repoSubService,
         DeviceRepository $repoDevice,
-        AccommodationRepository $repoAccommodation,
+        PlaceRepository $repoPlace,
         PersonRepository $repoPerson)
     {
         $this->manager = $manager;
         $this->notification = $notification;
         $this->repoSubService = $repoSubService;
         $this->repoDevice = $repoDevice;
-        $this->repoAccommodation = $repoAccommodation;
+        $this->repoPlace = $repoPlace;
         $this->repoPerson = $repoPerson;
     }
 
@@ -503,7 +503,7 @@ class ImportDatasHebergement extends ImportDatas
         $this->service = $service;
         $this->subServices = $this->repoSubService->findBy(['service' => $service]);
         $this->devices = $this->repoDevice->getDevicesOfService($service->getId());
-        // $this->accommodations = $this->repoAccommodation->findBy(['service' => $service]);
+        // $this->places = $this->repoPlace->findBy(['service' => $service]);
 
         // $this->users = $this->getUsers();
 
@@ -513,7 +513,7 @@ class ImportDatasHebergement extends ImportDatas
             if ($i > 0) {
                 $typology = $this->findInArray($this->field['Typologie familiale'], self::FAMILY_TYPOLOGY) ?? 9;
                 $this->device = $this->getDevice();
-                $this->accommodation = $this->getAccommodation($service);
+                $this->place = $this->getPlace($service);
 
                 $this->getRoleAndGender($typology);
                 $this->person = $this->getPerson();
@@ -525,12 +525,12 @@ class ImportDatasHebergement extends ImportDatas
 
                 $support = $this->items[$this->field['N° ménage']]['supports'][$this->field['N° ménage']];
                 $supportGroup = $support['support'];
-                $accommodationGroup = $support['accommodationGroup'];
+                $placeGroup = $support['placeGroup'];
                 $evaluationGroup = $support['evaluation'];
 
                 $supportPerson = $this->createSupportPerson($supportGroup);
                 if ($supportPerson->getStartDate()) {
-                    $this->createAccommodationPerson($this->person, $accommodationGroup, $supportPerson);
+                    $this->createPlacePerson($this->person, $placeGroup, $supportPerson);
                     $this->createEvaluationPerson($evaluationGroup, $supportPerson);
                 }
             }
@@ -579,7 +579,7 @@ class ImportDatasHebergement extends ImportDatas
 
             $supportGroup = $this->createSupportGroup($peopleGroup);
             if ($supportGroup->getStartDate()) {
-                $accommodationGroup = $this->createAccommodationGroup($peopleGroup, $supportGroup);
+                $placeGroup = $this->createPlaceGroup($peopleGroup, $supportGroup);
                 $this->createReferent($peopleGroup);
                 $evaluationGroup = $this->createEvaluationGroup($supportGroup);
             }
@@ -590,7 +590,7 @@ class ImportDatasHebergement extends ImportDatas
                 'supports' => [
                     (int) $this->field['N° ménage'] => [
                         'support' => $supportGroup,
-                        'accommodationGroup' => $accommodationGroup ?? null,
+                        'placeGroup' => $placeGroup ?? null,
                         'evaluation' => $evaluationGroup ?? null,
                     ],
                 ],
@@ -857,7 +857,7 @@ class ImportDatasHebergement extends ImportDatas
     protected function createEvalHousingGroup(EvaluationGroup $evaluationGroup): EvalHousingGroup
     {
         $evalHousingGroup = (new EvalHousingGroup())
-        ->setHousingStatus($this->findInArray($this->field['Dispositif'], self::ACCOMMODATION_HOUSING_STATUS))
+        ->setHousingStatus($this->findInArray($this->field['Dispositif'], self::PLACE_HOUSING_STATUS))
         ->setSiaoRequest($this->findInArray($this->field['Demande SIAO active'], self::YES_NO))
         ->setSiaoRequestDate($this->field['Date demande initiale SIAO'] ? new \Datetime($this->field['Date demande initiale SIAO']) : null)
         ->setSiaoUpdatedRequestDate($this->field['Date dernière actualisation SIAO'] ? new \Datetime($this->field['Date dernière actualisation SIAO']) : null)
@@ -1208,35 +1208,35 @@ class ImportDatasHebergement extends ImportDatas
         return Choices::NO_INFORMATION;
     }
 
-    protected function getAccommodation(): Accommodation
+    protected function getPlace(): Place
     {
-        $accommodationExists = false;
+        $placeExists = false;
 
-        foreach ($this->accommodations as $key => $value) {
+        foreach ($this->places as $key => $value) {
             if ((string) $key === $this->field['Nom place']) {
-                $accommodationExists = true;
+                $placeExists = true;
             }
         }
 
-        if (!$accommodationExists) {
-            $this->accommodations[(string) $this->field['Nom place']] = [
-                $this->createAccommodation($this->device),
+        if (!$placeExists) {
+            $this->places[(string) $this->field['Nom place']] = [
+                $this->createPlace($this->device),
             ];
         }
 
-        return $this->accommodations[$this->field['Nom place']][0];
+        return $this->places[$this->field['Nom place']][0];
     }
 
-    protected function createAccommodation(Device $device): Accommodation
+    protected function createPlace(Device $device): Place
     {
-        $accommodation = new Accommodation();
-        $accommodation->setConfiguration($this->findInArray($this->field['Configuration'], self::CONFIGURATION))
+        $place = new Place();
+        $place->setConfiguration($this->findInArray($this->field['Configuration'], self::CONFIGURATION))
             ->setIndividualCollective($this->findInArray($this->field['Individuel ou partagé'], self::INDIVIDUAL_COLLECTIVE))
             ->setName($this->field['Nom place'])
             ->setAddress(isset($this->field['Adresse place']) ? (string) $this->field['Adresse place'] : (string) $this->field['Adresse logement'])
             ->setNbPlaces(isset($this->field['Nb places']) ? (int) $this->field['Nb places'] : (int) $this->field['Nb personnes'])
             ->setStartDate(isset($this->field['Date ouverture']) ? new \Datetime($this->field['Date ouverture']) : new \Datetime('2020-01-01'))
-            ->setAccommodationType($this->findInArray($this->field['Type place'], self::ACCOMMODATION_TYPE))
+            ->setPlaceType($this->findInArray($this->field['Type place'], self::PLACE_TYPE))
             ->setArea(isset($this->field['Superficie']) ? (float) $this->field['Superficie'] : null)
             ->setLessor(isset($this->field['Bailleur']) ? $this->field['Bailleur'] : null)
             ->setDevice($device)
@@ -1245,49 +1245,49 @@ class ImportDatasHebergement extends ImportDatas
             ->setCreatedBy($this->user)
             ->setUpdatedBy($this->user);
 
-        if (2 === $accommodation->getConfiguration()) {
-            $accommodation->setAddress($this->service->getAddress())
+        if (2 === $place->getConfiguration()) {
+            $place->setAddress($this->service->getAddress())
                 ->setCity($this->service->getCity())
                 ->setZipcode($this->service->getZipcode());
         }
 
-        $this->manager->persist($accommodation);
+        $this->manager->persist($place);
 
-        return $accommodation;
+        return $place;
     }
 
-    protected function createAccommodationGroup(PeopleGroup $peopleGroup, SupportGroup $supportGroup): ?AccommodatioNGroup
+    protected function createPlaceGroup(PeopleGroup $peopleGroup, SupportGroup $supportGroup): ?AccommodatioNGroup
     {
-        $accommodationGroup = (new AccommodationGroup())
+        $placeGroup = (new PlaceGroup())
             ->setStartDate($supportGroup->getStartDate() ? $supportGroup->getStartDate() : null)
             ->setEndDate($supportGroup->getEndDate() ? $supportGroup->getEndDate() : null)
             ->setEndReason($supportGroup->getEndDate() ? Choices::YES : null)
             ->setPeopleGroup($peopleGroup)
             ->setSupportGroup($supportGroup)
-            ->setAccommodation($this->accommodation)
+            ->setPlace($this->place)
             ->setCreatedBy($this->user)
             ->setUpdatedBy($this->user);
 
-        $this->manager->persist($accommodationGroup);
+        $this->manager->persist($placeGroup);
 
-        return $accommodationGroup;
+        return $placeGroup;
     }
 
-    protected function createAccommodationPerson(Person $person, AccommodationGroup $accommodationGroup, SupportPerson $supportPerson): AccommodationPerson
+    protected function createPlacePerson(Person $person, PlaceGroup $placeGroup, SupportPerson $supportPerson): PlacePerson
     {
-        $accommodationPerson = (new AccommodationPerson())
+        $placePerson = (new PlacePerson())
             ->setStartDate($supportPerson->getStartDate() ? $supportPerson->getStartDate() : null)
             ->setEndDate($supportPerson->getEndDate() ? $supportPerson->getEndDate() : null)
             ->setEndReason($supportPerson->getEndDate() ? Choices::YES : null)
-            ->setAccommodationGroup($accommodationGroup)
+            ->setPlaceGroup($placeGroup)
             ->setPerson($person)
             ->setSupportPerson($supportPerson)
             ->setCreatedBy($this->user)
             ->setUpdatedBy($this->user);
 
-        $this->manager->persist($accommodationPerson);
+        $this->manager->persist($placePerson);
 
-        return $accommodationPerson;
+        return $placePerson;
     }
 
     protected function getUsers(): array

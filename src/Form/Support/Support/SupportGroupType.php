@@ -2,21 +2,21 @@
 
 namespace App\Form\Support\Support;
 
-use App\Entity\Organization\Accommodation;
 use App\Entity\Organization\Device;
+use App\Entity\Organization\Place;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\SubService;
 use App\Entity\Organization\User;
-use App\Entity\Support\AccommodationGroup;
+use App\Entity\Support\PlaceGroup;
 use App\Entity\Support\SupportGroup;
-use App\Form\Organization\Accommodation\AccommodationGroupHotelType;
+use App\Form\Organization\Place\PlaceGroupHotelType;
 use App\Form\Support\Avdl\AvdlType;
 use App\Form\Support\HotelSupport\HotelSupportType;
 use App\Form\Support\OriginRequest\OriginRequestType;
 use App\Form\Type\LocationType;
 use App\Form\Utils\Choices;
-use App\Repository\Organization\AccommodationRepository;
 use App\Repository\Organization\DeviceRepository;
+use App\Repository\Organization\PlaceRepository;
 use App\Repository\Organization\ServiceRepository;
 use App\Repository\Organization\SubServiceRepository;
 use App\Repository\Organization\UserRepository;
@@ -76,11 +76,11 @@ class SupportGroupType extends AbstractType
                 'required' => false,
             ])
             ->add('endStatusComment')
-            ->add('endAccommodation', CheckboxType::class, [
+            ->add('endPlace', CheckboxType::class, [
                 'label_attr' => ['class' => 'custom-control-label'],
                 'attr' => ['class' => 'custom-control-input checkbox'],
                 'required' => false,
-                'help' => 'endAccommodation.help',
+                'help' => 'endPlace.help',
             ])
             ->add('agreement', CheckboxType::class, [
                 'required' => true,
@@ -156,19 +156,19 @@ class SupportGroupType extends AbstractType
                 ])
                 ->add('referent', EntityType::class, $optionsReferent)
                 ->add('referent2', EntityType::class, $optionsReferent)
-                ->add('accommodation', EntityType::class, [
-                    'class' => Accommodation::class,
+                ->add('place', EntityType::class, [
+                    'class' => Place::class,
                     'choice_label' => 'name',
-                    'query_builder' => function (AccommodationRepository $repo) use ($serviceId, $subServiceId) {
-                        return $repo->getAccommodationsQueryList($serviceId, $subServiceId);
+                    'query_builder' => function (PlaceRepository $repo) use ($serviceId, $subServiceId) {
+                        return $repo->getPlacesQueryList($serviceId, $subServiceId);
                     },
-                    'label' => Service::SERVICE_PASH_ID === $serviceId ? 'hotelName' : 'accommodation.name',
+                    'label' => Service::SERVICE_PASH_ID === $serviceId ? 'hotelName' : 'place.name',
                     'placeholder' => 'placeholder.select',
                     'mapped' => false,
                     'required' => false,
                 ])
-                // ->add('accommodationGroups', CollectionType::class, [
-                //     'entry_type' => AccommodationGroupHotelType::class,
+                // ->add('placeGroups', CollectionType::class, [
+                //     'entry_type' => PlaceGroupHotelType::class,
                 //     'label' => null,
                 //     'allow_add' => false,
                 //     'allow_delete' => false,
@@ -211,12 +211,12 @@ class SupportGroupType extends AbstractType
 
         $supportGroup = $form->getConfig()->getData();
 
-        if (0 === $supportGroup->getAccommodationGroups()->count()) {
-            $this->addAccommodationGroup($supportGroup);
+        if (0 === $supportGroup->getPlaceGroups()->count()) {
+            $this->addPlaceGroup($supportGroup);
         }
 
-        $form->add('accommodationGroups', CollectionType::class, [
-                'entry_type' => AccommodationGroupHotelType::class,
+        $form->add('placeGroups', CollectionType::class, [
+                'entry_type' => PlaceGroupHotelType::class,
                 'label' => null,
                 'allow_add' => false,
                 'allow_delete' => false,
@@ -228,10 +228,10 @@ class SupportGroupType extends AbstractType
             ]);
     }
 
-    protected function addAccommodationGroup(SupportGroup $supportGroup)
+    protected function addPlaceGroup(SupportGroup $supportGroup)
     {
-        $accommodationGroup = (new AccommodationGroup())->setPeopleGroup($supportGroup->getPeopleGroup());
-        $supportGroup->addAccommodationGroup($accommodationGroup);
+        $placeGroup = (new PlaceGroup())->setPeopleGroup($supportGroup->getPeopleGroup());
+        $supportGroup->addPlaceGroup($placeGroup);
 
         return $supportGroup;
     }

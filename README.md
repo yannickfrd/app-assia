@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.16.46 10/02/2021
+2.16.50 12/02/2021
 
 # Développeur
 Romain MADELAINE
@@ -12,6 +12,15 @@ https://github.com/RomMad/esperer95.app
 
 # Connection à la base démo
 https://demo.esperer95.app
+
+
+## Version 2.16.50 - 12/02/2021
+- Rename entities 'Accommodation' => 'Place', 'AccommodationPerson' => 'PlacePerson', 'AccommodationGroup' => 'PlaceGroup' and update the files with that;
+
+## Version 2.16.47-49 - 11/02/2021
+- Edit indicators in dashboard (delete 'supportsByUser', update header filters);
+- Update CommandsClass (add order and criteria to limit the request in db);
+- Edit findPlacesForOccupancy in repository;
 
 ## Version 2.16.38-46 - 10/02/2021
 - Fix round problem with contribution;

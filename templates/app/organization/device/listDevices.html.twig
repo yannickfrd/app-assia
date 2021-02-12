@@ -35,7 +35,7 @@
                                 {{ knp_pagination_sortable(devices, "Coefficient", "d.coefficient") }}
                             </th>
                             <th scope="col" class="align-middle th-w-120">
-                                {{ knp_pagination_sortable(devices, "Hébergement", "d.accommodation") }}
+                                {{ knp_pagination_sortable(devices, "Hébergement", "d.place") }}
                             </th>
                             <th scope="col" class="align-middle th-w-150">
                                 {{ knp_pagination_sortable(devices, "Description", "d.comment") }}  
@@ -70,7 +70,7 @@
                             </td>
                             <td class="align-middle {% if device.disabled %}delete{% endif %}">{{ device.name }}{% if device.disabled %} (désactivé){% endif %}</td>
                             <td class="align-middle">{{ device.coefficient }}</td>
-                            <td class="align-middle">{{ device.accommodationToString }}</td>
+                            <td class="align-middle">{{ device.placeToString }}</td>
                             <td class="align-middle">{{ device.comment }}</td>
                             <td class="align-middle">{{ device.createdAt|date("d/m/Y H:i") }}</td>
                             <td class="align-middle">{{ device.createdBy ? device.createdBy.fullname }}</td>

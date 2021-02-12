@@ -139,7 +139,7 @@ class SupportGroup
     private $endDate;
 
     /** @var bool */
-    private $endAccommodation = true;
+    private $endPlace = true;
 
     /**
      * @ORM\Column(type="integer")
@@ -263,10 +263,10 @@ class SupportGroup
     private $documents;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Support\AccommodationGroup", mappedBy="supportGroup", orphanRemoval=true, cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Support\PlaceGroup", mappedBy="supportGroup", orphanRemoval=true, cascade={"persist", "remove"})
      * @MaxDepth(1)
      */
-    private $accommodationGroups;
+    private $placeGroups;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Evaluation\EvaluationGroup", mappedBy="supportGroup", cascade={"persist", "remove"})
@@ -312,7 +312,7 @@ class SupportGroup
         $this->notes = new ArrayCollection();
         $this->rdvs = new ArrayCollection();
         $this->documents = new ArrayCollection();
-        $this->accommodationGroups = new ArrayCollection();
+        $this->placeGroups = new ArrayCollection();
         $this->evaluationsGroup = new ArrayCollection();
         $this->contributions = new ArrayCollection();
     }
@@ -365,14 +365,14 @@ class SupportGroup
         return $this;
     }
 
-    public function getEndAccommodation(): ?bool
+    public function getEndPlace(): ?bool
     {
-        return $this->endAccommodation;
+        return $this->endPlace;
     }
 
-    public function setEndAccommodation(?bool $endAccommodation): self
+    public function setEndPlace(?bool $endPlace): self
     {
-        $this->endAccommodation = $endAccommodation;
+        $this->endPlace = $endPlace;
 
         return $this;
     }
@@ -668,30 +668,30 @@ class SupportGroup
     }
 
     /**
-     * @return AccommodationGroup[]|Collection|null
+     * @return PlaceGroup[]|Collection|null
      */
-    public function getAccommodationGroups()
+    public function getPlaceGroups()
     {
-        return $this->accommodationGroups;
+        return $this->placeGroups;
     }
 
-    public function addAccommodationGroup(AccommodationGroup $accommodationGroup): self
+    public function addPlaceGroup(PlaceGroup $placeGroup): self
     {
-        if (!$this->accommodationGroups->contains($accommodationGroup)) {
-            $this->accommodationGroups[] = $accommodationGroup;
-            $accommodationGroup->setSupportGroup($this);
+        if (!$this->placeGroups->contains($placeGroup)) {
+            $this->placeGroups[] = $placeGroup;
+            $placeGroup->setSupportGroup($this);
         }
 
         return $this;
     }
 
-    public function removeAccommodationGroup(AccommodationGroup $accommodationGroup): self
+    public function removePlaceGroup(PlaceGroup $placeGroup): self
     {
-        if ($this->accommodationGroups->contains($accommodationGroup)) {
-            $this->accommodationGroups->removeElement($accommodationGroup);
+        if ($this->placeGroups->contains($placeGroup)) {
+            $this->placeGroups->removeElement($placeGroup);
             // set the owning side to null (unless already changed)
-            if ($accommodationGroup->getSupportGroup() === $this) {
-                $accommodationGroup->setSupportGroup(null);
+            if ($placeGroup->getSupportGroup() === $this) {
+                $placeGroup->setSupportGroup(null);
             }
         }
 

@@ -2,8 +2,8 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Organization\Accommodation;
 use App\Entity\Organization\Device;
+use App\Entity\Organization\Place;
 use App\Entity\Organization\Pole;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\ServiceDevice;
@@ -146,7 +146,7 @@ class A_ServiceFixtures extends Fixture
         $this->service = new Service();
 
         $this->service->setName($service)
-            ->setAccommodation(true)
+            ->setPlace(true)
             ->setPole($this->pole)
             ->setCreatedAt(new \DateTime());
 
@@ -169,15 +169,15 @@ class A_ServiceFixtures extends Fixture
 
                 $this->manager->persist($serviceDevice);
 
-                $this->addAccommodations($device); // Fixtures
+                $this->addPlaces($device); // Fixtures
             }
         }
     }
 
-    protected function addAccommodations($device)
+    protected function addPlaces($device)
     {
         for ($i = 0; $i < mt_rand(5, 10); ++$i) {
-            $place = new Accommodation();
+            $place = new Place();
 
             $place->setService($this->service)
                 ->setDevice($device)

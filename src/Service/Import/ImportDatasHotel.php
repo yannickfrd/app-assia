@@ -2,9 +2,9 @@
 
 namespace App\Service\Import;
 
-use App\Entity\Organization\Accommodation;
+use App\Entity\Organization\Place;
 use App\Entity\Organization\Service;
-use App\Repository\Organization\AccommodationRepository;
+use App\Repository\Organization\PlaceRepository;
 use App\Repository\Organization\SubServiceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -16,17 +16,17 @@ class ImportDatasHotel extends ImportDatas
     protected $field;
 
     protected $items = [];
-    protected $repoAccommodation;
+    protected $repoPlace;
     protected $repoSubService;
     protected $localities;
 
     public function __construct(
         EntityManagerInterface $manager,
-        AccommodationRepository $repoAccommodation,
+        PlaceRepository $repoPlace,
         SubServiceRepository $repoSubService)
     {
         $this->manager = $manager;
-        $this->repoAccommodation = $repoAccommodation;
+        $this->repoPlace = $repoPlace;
         $this->repoSubService = $repoSubService;
         $this->localities = $this->getLocalities();
     }
@@ -39,7 +39,7 @@ class ImportDatasHotel extends ImportDatas
         foreach ($this->fields as $field) {
             $this->field = $field;
             if ($i > 0) {
-                $this->items[] = $this->createAccommodation($service);
+                $this->items[] = $this->createPlace($service);
             }
             ++$i;
         }
@@ -49,21 +49,21 @@ class ImportDatasHotel extends ImportDatas
         return count($this->items);
     }
 
-    protected function createAccommodation(Service $service): ?Accommodation
+    protected function createPlace(Service $service): ?Place
     {
-        $accommodationExists = $this->repoAccommodation->findOneBy([
+        $placeExists = $this->repoPlace->findOneBy([
             'name' => $this->field['Nom'],
         ]);
 
-        if ('Non' === $this->field['Nom'] || $accommodationExists) {
+        if ('Non' === $this->field['Nom'] || $placeExists) {
             return null;
         }
 
-        $accommodation = (new Accommodation())
+        $place = (new Place())
             ->setService($service)
             ->setSubService($this->field['Secteur'] ? $this->localities[$this->field['Secteur']] : null)
             ->setName(str_replace('HOTEL - ', '', $this->field['Nom']))
-            ->setAccommodationType(3)
+            ->setPlaceType(3)
             ->setConfiguration(2)
             ->setIndividualCollective(1)
             ->setAddress($this->field['Adresse'])
@@ -71,11 +71,11 @@ class ImportDatasHotel extends ImportDatas
             ->setCreatedBy($this->user)
             ->setUpdatedBy($this->user);
 
-        $this->updateLocation($accommodation);
+        $this->updateLocation($place);
 
-        $this->manager->persist($accommodation);
+        $this->manager->persist($place);
 
-        return $accommodation;
+        return $place;
     }
 
     protected function cleanString(string $string)
@@ -93,9 +93,9 @@ class ImportDatasHotel extends ImportDatas
         return $string;
     }
 
-    protected function updateLocation(Accommodation $accommodation)
+    protected function updateLocation(Place $place)
     {
-        $valueSearch = $accommodation->getAddress().'+'.$accommodation->getCity();
+        $valueSearch = $place->getAddress().'+'.$place->getCity();
         $valueSearch = $this->cleanString($valueSearch);
         $geo = '&lat=49.04&lon=2.04';
         $url = 'https://api-adresse.data.gouv.fr/search/?q='.$valueSearch.$geo.'&limit=1';
@@ -105,7 +105,7 @@ class ImportDatasHotel extends ImportDatas
         if (count($json->features)) {
             $feature = $json->features[0];
             if ($feature->properties->score > 0.4) {
-                $accommodation
+                $place
                     ->setCity($feature->properties->city)
                     ->setAddress($feature->properties->name)
                     ->setZipcode($feature->properties->postcode)

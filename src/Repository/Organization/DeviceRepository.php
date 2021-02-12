@@ -103,7 +103,7 @@ class DeviceRepository extends ServiceEntityRepository
      */
     public function getDevicesOfUserQueryList(CurrentUserService $currentUser, $serviceId = null, Device $device = null)
     {
-        $query = $this->createQueryBuilder('d')->select('PARTIAL d.{id, name, coefficient, accommodation, disabledAt}')
+        $query = $this->createQueryBuilder('d')->select('PARTIAL d.{id, name, coefficient, place, disabledAt}')
             ->leftJoin('d.serviceDevices', 'sd')->addSelect('sd');
 
         if ($serviceId) {
@@ -126,14 +126,14 @@ class DeviceRepository extends ServiceEntityRepository
         return $query->orderBy('d.name', 'ASC');
     }
 
-    public function findDevicesWithAccommodation(OccupancySearch $search, CurrentUserService $currentUser, Service $service = null)
+    public function findDevicesWithPlace(OccupancySearch $search, CurrentUserService $currentUser, Service $service = null)
     {
         $query = $this->createQueryBuilder('d')->select('d')
-            ->leftJoin('d.accommodations', 'a')->addSelect('PARTIAL a.{id, name, startDate, endDate, nbPlaces, service}')
+            ->leftJoin('d.places', 'pl')->addSelect('PARTIAL pl.{id, name, startDate, endDate, nbPlaces, service}')
 
             ->where('d.disabledAt IS NULL')
-            ->andWhere('a.endDate > :start OR a.endDate IS NULL')->setParameter('start', $search->getStart())
-            ->andWhere('a.startDate < :end')->setParameter('end', $search->getEnd());
+            ->andWhere('pl.endDate > :start OR pl.endDate IS NULL')->setParameter('start', $search->getStart())
+            ->andWhere('pl.startDate < :end')->setParameter('end', $search->getEnd());
 
         // if ($search->getPole()) {
         //     $query = $query->andWhere('s.pole = :pole')
@@ -141,11 +141,11 @@ class DeviceRepository extends ServiceEntityRepository
         // }
 
         if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
-            $query = $query->andWhere('a.service IN (:services)')
+            $query = $query->andWhere('pl.service IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
         }
         if ($service) {
-            $query = $query->andWhere('a.service = :service')
+            $query = $query->andWhere('pl.service = :service')
                 ->setParameter('service', $service);
         }
 

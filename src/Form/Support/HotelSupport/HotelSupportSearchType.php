@@ -2,12 +2,12 @@
 
 namespace App\Form\Support\HotelSupport;
 
-use App\Entity\Organization\Accommodation;
+use App\Entity\Organization\Place;
 use App\Entity\Support\HotelSupport;
 use App\Form\Model\Support\HotelSupportSearch;
 use App\Form\Support\Support\SupportSearchType;
 use App\Form\Utils\Choices;
-use App\Repository\Organization\AccommodationRepository;
+use App\Repository\Organization\PlaceRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -20,10 +20,10 @@ class HotelSupportSearchType extends AbstractType
     {
         $builder
             ->add('hotels', EntityType::class, [
-                'class' => Accommodation::class,
+                'class' => Place::class,
                 'choice_label' => 'name',
                 'multiple' => true,
-                'query_builder' => function (AccommodationRepository $repo) {
+                'query_builder' => function (PlaceRepository $repo) {
                     return $repo->createQueryBuilder('a')
                         ->select('PARTIAL a.{id, name}')
                         ->where('a.service = :service')

@@ -6,7 +6,7 @@ App\Entity\Organization\Service:
     email: <fr_FR:email()>
     zipcode: <numberBetween(1, 95)>
     address: <fr_FR:address()>
-    accommodation: true
+    place: true
     createdAt: <date_create()>
     updatedAt: <date_create()>
     pole: "@pole"

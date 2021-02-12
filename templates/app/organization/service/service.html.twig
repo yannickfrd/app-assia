@@ -72,7 +72,7 @@
                 <div class="col-md-6">{{ form_row(form.justice) }}</div>
             </div>
             <div class="form-group row">
-                <div class="col-md-6">{{ form_row(form.accommodation) }}</div>
+                <div class="col-md-6">{{ form_row(form.place) }}</div>
                 <div class="col-md-6">{{ form_row(form.contribution) }}</div>
                 <div class="col-md-6" data-parent-field="contribution">{{ form_row(form.contributionType) }}</div>
                 <div class="col-md-6" data-parent-field="contributionType">{{ form_row(form.contributionRate) }}</div>
@@ -116,7 +116,7 @@
             {% endif %}
         {% endif %}
         {% if EDIT_MODE %}
-        	{% include "app/organization/service/_serviceAccommodations.html.twig" with {accordion_id: "accommodations"} %}
+        	{% include "app/organization/service/_servicePlaces.html.twig" with {accordion_id: "places"} %}
         	{% include "app/organization/service/_serviceUsers.html.twig" with {accordion_id: "users"} %}
         {% endif %}
     </div>

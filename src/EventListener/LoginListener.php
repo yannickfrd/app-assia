@@ -57,16 +57,16 @@ class LoginListener
 
         // Récupère en session les services rattachés à l'utilisateur
         $userServices = [];
-        $haveServiceWithAccommodation = false;
+        $haveServiceWithPlace = false;
         foreach ($user->getServiceUser() as $serviceUser) {
             $service = $serviceUser->getService();
             $userServices[$service->getId()] = $service->getName();
-            if ($service->getAccommodation() === Choices::YES) {
-                $haveServiceWithAccommodation = true;
+            if ($service->getPlace() === Choices::YES) {
+                $haveServiceWithPlace = true;
             }
         }
         $this->session->set('userServices', $userServices);
-        $this->session->set('haveServiceWithAccommodation', $haveServiceWithAccommodation);
+        $this->session->set('haveServiceWithPlace', $haveServiceWithPlace);
     }
 
     // public function onSecurityAuthentificationFailure(AuthenticationFailureEvent $event)

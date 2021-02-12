@@ -58,8 +58,8 @@
             {% if hotelSupport %}
                 <p>&nbsp;</p>
                 {{ view_p.get(hotelSupport.entryHotelDate ? hotelSupport.entryHotelDate|date("d/m/Y"), "Entry hotel date") }}
-                {% set accommodation = support.accommodationGroups|length > 0 ? support.accommodationGroups[support.accommodationGroups|length - 1].accommodation %}
-                {{ view_p.get(accommodation ? accommodation.name ~ (accommodation.city ? " (" ~ accommodation.address ~ " - " ~ accommodation.zipcode ~ " " ~ accommodation.city ~ ")"), "Hotel") }}
+                {% set place = support.placeGroups|length > 0 ? support.placeGroups[support.placeGroups|length - 1].place %}
+                {{ view_p.get(place ? place.name ~ (place.city ? " (" ~ place.address ~ " - " ~ place.zipcode ~ " " ~ place.city ~ ")"), "Hotel") }}
                 {{ view_p.get(hotelSupport.originDept, "Origin dept") }}
             {% endif %}
 

@@ -7,7 +7,7 @@ App\Entity\Organization\Service:
     address: Pontoise
     city: Pontoise
     zipcode: 95 000
-    accommodation: true
+    place: true
     createdAt: <date_create()>
     updatedAt: <date_create()>
     createdBy: "@user*"
@@ -20,7 +20,7 @@ App\Entity\Organization\Service:
     email: <fr_FR:email()>
     zipcode: <numberBetween(1, 95)>
     address: <fr_FR:address()>
-    accommodation: true
+    place: true
     createdAt: <date_create()>
     updatedAt: <date_create()>
     pole: "@pole*"

@@ -5,7 +5,7 @@ namespace App\Controller\Organization;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\SubService;
 use App\Form\Organization\SubService\SubServiceType;
-use App\Repository\Organization\AccommodationRepository;
+use App\Repository\Organization\PlaceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
@@ -60,7 +60,7 @@ class SubServiceController extends AbstractController
      *
      * @Route("/sub-service/{id}", name="sub_service_edit", methods="GET|POST")
      */
-    public function editSubService(SubService $subService, AccommodationRepository $repoAccommodation, Request $request): Response
+    public function editSubService(SubService $subService, PlaceRepository $repoPlace, Request $request): Response
     {
         $this->denyAccessUnlessGranted('EDIT', $subService->getService());
 
@@ -77,18 +77,18 @@ class SubServiceController extends AbstractController
             $this->addFlash('success', 'Les modifications sont enregistrées.');
         }
 
-        $accommodations = $repoAccommodation->findAccommodationsOfSubService($subService);
+        $places = $repoPlace->findPlacesOfSubService($subService);
 
         $nbPlaces = 0;
-        foreach ($accommodations as $accommodation) {
-            $nbPlaces += $accommodation->getNbPlaces();
+        foreach ($places as $place) {
+            $nbPlaces += $place->getNbPlaces();
         }
 
         return $this->render('app/organization/subService/subServiceEdit.html.twig', [
             'service' => $subService->getService(),
             'form' => $form->createView(),
             // 'users' => $repoUser->findUsersFromSubService($subService),
-            'accommodations' => $accommodations,
+            'places' => $places,
             'nbPlaces' => $nbPlaces,
         ]);
     }

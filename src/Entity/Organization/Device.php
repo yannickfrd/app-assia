@@ -70,7 +70,7 @@ class Device
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $accommodation;
+    private $place;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -103,9 +103,9 @@ class Device
     private $serviceDevices;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Organization\Accommodation", mappedBy="device")
+     * @ORM\OneToMany(targetEntity="App\Entity\Organization\Place", mappedBy="device")
      */
-    private $accommodations;
+    private $places;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Support\SupportGroup", mappedBy="device")
@@ -120,7 +120,7 @@ class Device
     public function __construct()
     {
         $this->serviceDevices = new ArrayCollection();
-        $this->accommodations = new ArrayCollection();
+        $this->places = new ArrayCollection();
         $this->supportGroup = new ArrayCollection();
         $this->userDevices = new ArrayCollection();
     }
@@ -171,19 +171,19 @@ class Device
         return $this;
     }
 
-    public function getAccommodation(): ?int
+    public function getPlace(): ?int
     {
-        return $this->accommodation;
+        return $this->place;
     }
 
-    public function getAccommodationToString(): ?string
+    public function getPlaceToString(): ?string
     {
-        return $this->accommodation ? Choices::YES_NO[$this->accommodation] : null;
+        return $this->place ? Choices::YES_NO[$this->place] : null;
     }
 
-    public function setAccommodation(?int $accommodation): self
+    public function setPlace(?int $place): self
     {
-        $this->accommodation = $accommodation;
+        $this->place = $place;
 
         return $this;
     }
@@ -285,30 +285,30 @@ class Device
     }
 
     /**
-     * @return Accommodation[]|Collection|null
+     * @return Place[]|Collection|null
      */
-    public function getAccommodations()
+    public function getPlaces()
     {
-        return $this->accommodations;
+        return $this->places;
     }
 
-    public function addAccommodation(Accommodation $accommodation): self
+    public function addPlace(Place $place): self
     {
-        if (!$this->accommodations->contains($accommodation)) {
-            $this->accommodations[] = $accommodation;
-            $accommodation->setDevice($this);
+        if (!$this->places->contains($place)) {
+            $this->places[] = $place;
+            $place->setDevice($this);
         }
 
         return $this;
     }
 
-    public function removeAccommodation(Accommodation $accommodation): self
+    public function removePlace(Place $place): self
     {
-        if ($this->accommodations->contains($accommodation)) {
-            $this->accommodations->removeElement($accommodation);
+        if ($this->places->contains($place)) {
+            $this->places->removeElement($place);
             // set the owning side to null (unless already changed)
-            if ($accommodation->getDevice() === $this) {
-                $accommodation->setDevice(null);
+            if ($place->getDevice() === $this) {
+                $place->setDevice(null);
             }
         }
 

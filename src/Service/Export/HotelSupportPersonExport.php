@@ -51,7 +51,7 @@ class HotelSupportPersonExport extends ExportExcel
         $peopleGroup = $supportGroup->getPeopleGroup();
         $originRequest = $supportGroup->getOriginRequest() ?? new OriginRequest();
         $hotelSupport = $supportGroup->getHotelSupport() ?? new HotelSupport();
-        $accommodationGroup = $supportGroup->getAccommodationGroups()[0];
+        $placeGroup = $supportGroup->getPlaceGroups()[0];
         $datas = [
             'N° Suivi' => $supportGroup->getId(),
             'ID personne' => $person->getId(),
@@ -78,7 +78,7 @@ class HotelSupportPersonExport extends ExportExcel
             'Date entrée à l\'hôtel' => $this->formatDate($hotelSupport->getEntryHotelDate()),
             'Département d\'origine' => $hotelSupport->getOriginDeptToString(),
             'Identifiant GIP' => $hotelSupport->getGipId(),
-            'Hôtel' => $accommodationGroup && $accommodationGroup->getAccommodation() ? $accommodationGroup->getAccommodation()->getName() : null,
+            'Hôtel' => $placeGroup && $placeGroup->getPlace() ? $placeGroup->getPlace()->getName() : null,
             'Adresse' => $supportGroup->getAddress(),
             'Commune' => $supportGroup->getCity(),
             'Commentaire sur la demande' => $originRequest->getOrganizationComment(),

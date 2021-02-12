@@ -99,9 +99,9 @@ class SupportController extends AbstractController
                     $this->manager->flush();
                 }
 
-                if ($supportGroup->getStartDate() && Choices::YES === $supportGroup->getService()->getAccommodation()
-                    && Choices::YES === $supportGroup->getDevice()->getAccommodation()) {
-                    return $this->redirectToRoute('support_accommodation_new', ['id' => $supportGroup->getId()]);
+                if ($supportGroup->getStartDate() && Choices::YES === $supportGroup->getService()->getPlace()
+                    && Choices::YES === $supportGroup->getDevice()->getPlace()) {
+                    return $this->redirectToRoute('support_place_new', ['id' => $supportGroup->getId()]);
                 }
 
                 return $this->redirectToRoute('support_view', ['id' => $supportGroup->getId()]);

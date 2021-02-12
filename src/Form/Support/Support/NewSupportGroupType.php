@@ -2,14 +2,14 @@
 
 namespace App\Form\Support\Support;
 
-use App\Entity\Organization\Accommodation;
 use App\Entity\Organization\Device;
+use App\Entity\Organization\Place;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\SubService;
 use App\Entity\Organization\User;
 use App\Entity\Support\SupportGroup;
-use App\Repository\Organization\AccommodationRepository;
 use App\Repository\Organization\DeviceRepository;
+use App\Repository\Organization\PlaceRepository;
 use App\Repository\Organization\ServiceRepository;
 use App\Repository\Organization\UserRepository;
 use App\Security\CurrentUserService;
@@ -63,7 +63,7 @@ class NewSupportGroupType extends AbstractType
 
             $builder = $this->getSubServiceBuilder($form->getParent(), $service);
             $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) use ($service) {
-                $this->addAccommodationField($event->getForm(), $service);
+                $this->addPlaceField($event->getForm(), $service);
             });
 
             $form->getParent()->add($builder->getForm());
@@ -93,16 +93,16 @@ class NewSupportGroupType extends AbstractType
             ->add('referent2', EntityType::class, $optionsReferent);
     }
 
-    protected function addAccommodationField(FormInterface $form, Service $service)
+    protected function addPlaceField(FormInterface $form, Service $service)
     {
         $subService = $form->getData();
 
         $form->getParent()
-            ->add('accommodation', EntityType::class, [
-                'class' => Accommodation::class,
+            ->add('place', EntityType::class, [
+                'class' => Place::class,
                 'choice_label' => 'name',
-                'query_builder' => function (AccommodationRepository $repo) use ($service, $subService) {
-                    return $repo->getAccommodationsQueryList($service->getId(), $subService ? $subService->getId() : null);
+                'query_builder' => function (PlaceRepository $repo) use ($service, $subService) {
+                    return $repo->getPlacesQueryList($service->getId(), $subService ? $subService->getId() : null);
                 },
                 'placeholder' => 'placeholder.select',
                 'mapped' => false,

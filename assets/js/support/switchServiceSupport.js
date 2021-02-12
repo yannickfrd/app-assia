@@ -68,14 +68,14 @@ export default class SwitchServiceSupport {
      */
     responseAjax(data) {
         const html = new DOMParser().parseFromString(data, "text/xml")
-        const fields = ['subService', 'device', 'referent', 'referent2', 'originRequest_organization', 'accommodation']
+        const fields = ['subService', 'device', 'referent', 'referent2', 'originRequest_organization', 'place']
 
         fields.forEach(field => {
             let selectElt = document.querySelector('#support_' + field)
             let newElt = html.querySelector('#support_' + field)
 
-            if (field === 'accommodation') {
-                selectElt = document.querySelector('#support_accommodationGroups_0_accommodation')
+            if (field === 'place') {
+                selectElt = document.querySelector('#support_placeGroups_0_place')
             }
 
             if (selectElt && newElt) {

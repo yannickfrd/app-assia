@@ -9,7 +9,7 @@
                             <a class="text-dark" href="{{ path('supports_by_user') }}">Répartition des suivis en cours</a>
                         </li>
                     {# {% endif %} #}
-                    {% if is_granted("ROLE_SUPER_ADMIN") or app.session.get("haveServiceWithAccommodation") %}
+                    {% if is_granted("ROLE_SUPER_ADMIN") or app.session.get("haveServiceWithPlace") %}
                         <li class="mb-2 text-{{ theme_color }}">
                             <a class="text-dark" href="{{ path('occupancy_services') }}">Taux d'occupation</a>
                         </li>

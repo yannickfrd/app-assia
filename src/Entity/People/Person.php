@@ -2,7 +2,7 @@
 
 namespace App\Entity\People;
 
-use App\Entity\Support\AccommodationPerson;
+use App\Entity\Support\PlacePerson;
 use App\Entity\Support\SupportPerson;
 use App\Entity\Traits\ContactEntityTrait;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
@@ -133,9 +133,9 @@ class Person
     private $supports;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Support\AccommodationPerson", mappedBy="person", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Support\PlacePerson", mappedBy="person", orphanRemoval=true)
      */
-    private $accommodationPeople;
+    private $placePeople;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -158,7 +158,7 @@ class Person
     {
         $this->rolesPerson = new ArrayCollection();
         $this->supports = new ArrayCollection();
-        $this->accommodationPeople = new ArrayCollection();
+        $this->placePeople = new ArrayCollection();
     }
 
     public function __toString()
@@ -357,30 +357,30 @@ class Person
     }
 
     /**
-     * @return AccommodationPerson[]|Collection|null
+     * @return PlacePerson[]|Collection|null
      */
-    public function getAccommodationPeople()
+    public function getPlacePeople()
     {
-        return $this->accommodationPeople;
+        return $this->placePeople;
     }
 
-    public function addAccommodationPerson(AccommodationPerson $accommodationPerson): self
+    public function addPlacePerson(PlacePerson $placePerson): self
     {
-        if (!$this->accommodationPeople->contains($accommodationPerson)) {
-            $this->accommodationPeople[] = $accommodationPerson;
-            $accommodationPerson->setPerson($this);
+        if (!$this->placePeople->contains($placePerson)) {
+            $this->placePeople[] = $placePerson;
+            $placePerson->setPerson($this);
         }
 
         return $this;
     }
 
-    public function removeAccommodationPerson(AccommodationPerson $accommodationPerson): self
+    public function removePlacePerson(PlacePerson $placePerson): self
     {
-        if ($this->accommodationPeople->contains($accommodationPerson)) {
-            $this->accommodationPeople->removeElement($accommodationPerson);
+        if ($this->placePeople->contains($placePerson)) {
+            $this->placePeople->removeElement($placePerson);
             // set the owning side to null (unless already changed)
-            if ($accommodationPerson->getPerson() === $this) {
-                $accommodationPerson->setPerson(null);
+            if ($placePerson->getPerson() === $this) {
+                $placePerson->setPerson(null);
             }
         }
 

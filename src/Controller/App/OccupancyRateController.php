@@ -86,10 +86,10 @@ class OccupancyRateController extends AbstractController
     /**
      * Taux d'occupation des groupes de place.
      *
-     * @Route("/occupancy/service/{id}/accommodations", name="occupancy_service_accommodations", methods="GET|POST")
-     * @Route("/occupancy/accommodations", name="occupancy_accommodations", methods="GET|POST")
+     * @Route("/occupancy/service/{id}/places", name="occupancy_service_places", methods="GET|POST")
+     * @Route("/occupancy/places", name="occupancy_places", methods="GET|POST")
      */
-    public function showOccupancyServiceByAccommodation(Service $service = null, Request $request, OccupancyIndicators $occupancyIndicators): Response
+    public function showOccupancyServiceByPlace(Service $service = null, Request $request, OccupancyIndicators $occupancyIndicators): Response
     {
         $search = new OccupancySearch();
 
@@ -98,20 +98,20 @@ class OccupancyRateController extends AbstractController
 
         $search = $this->updateOccupancySearch($search);
 
-        return $this->render('app/occupancy/occupancyByAccommodation.html.twig', [
+        return $this->render('app/occupancy/occupancyByPlace.html.twig', [
             'service' => $service,
             'search' => $search,
             'form' => $form->createView(),
-            'datas' => $occupancyIndicators->getOccupancyRateByAccommodation($search, $service),
+            'datas' => $occupancyIndicators->getOccupancyRateByPlace($search, $service),
         ]);
     }
 
     /**
      * Taux d'occupation des groupes de place.
      *
-     * @Route("/occupancy/sub_services/{id}/accommodations", name="occupancy_sub_service_accommodations", methods="GET|POST")
+     * @Route("/occupancy/sub_services/{id}/places", name="occupancy_sub_service_places", methods="GET|POST")
      */
-    public function showOccupancySubServiceByAccommodation(SubService $subService, Request $request, OccupancyIndicators $occupancyIndicators): Response
+    public function showOccupancySubServiceByPlace(SubService $subService, Request $request, OccupancyIndicators $occupancyIndicators): Response
     {
         $search = new OccupancySearch();
 
@@ -120,11 +120,11 @@ class OccupancyRateController extends AbstractController
 
         $search = $this->updateOccupancySearch($search);
 
-        return $this->render('app/occupancy/occupancySubServiceByAccommodation.html.twig', [
+        return $this->render('app/occupancy/occupancySubServiceByPlace.html.twig', [
             'subService' => $subService,
             'search' => $search,
             'form' => $form->createView(),
-            'datas' => $occupancyIndicators->getOccupancyRateByAccommodation($search, null, $subService),
+            'datas' => $occupancyIndicators->getOccupancyRateByPlace($search, null, $subService),
         ]);
     }
 

@@ -48,11 +48,11 @@ class OccupancyRateControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Services');
     }
 
-    public function test_page_occupancy_by_accommodation_is_up()
+    public function test_page_occupancy_by_place_is_up()
     {
         $this->createLogin($this->dataFixtures['userRoleUser']);
 
-        $this->client->request('GET', $this->generateUri('occupancy_accommodations'));
+        $this->client->request('GET', $this->generateUri('occupancy_places'));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Groupes de places');

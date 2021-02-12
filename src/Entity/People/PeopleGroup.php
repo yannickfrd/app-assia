@@ -3,8 +3,8 @@
 namespace App\Entity\People;
 
 use App\Entity\Organization\Referent;
-use App\Entity\Support\AccommodationGroup;
 use App\Entity\Support\Document;
+use App\Entity\Support\PlaceGroup;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -103,9 +103,9 @@ class PeopleGroup
     private $documents;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Support\AccommodationGroup", mappedBy="peopleGroup", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Support\PlaceGroup", mappedBy="peopleGroup", orphanRemoval=true)
      */
-    private $accommodationGroups;
+    private $placeGroups;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -118,7 +118,7 @@ class PeopleGroup
         $this->rolePeople = new ArrayCollection();
         $this->referents = new ArrayCollection();
         $this->documents = new ArrayCollection();
-        $this->accommodationGroups = new ArrayCollection();
+        $this->placeGroups = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -314,30 +314,30 @@ class PeopleGroup
     }
 
     /**
-     * @return AccommodationGroup[]|Collection|null
+     * @return PlaceGroup[]|Collection|null
      */
-    public function getAccommodationGroups()
+    public function getPlaceGroups()
     {
-        return $this->accommodationGroups;
+        return $this->placeGroups;
     }
 
-    public function addAccommodationGroup(AccommodationGroup $accommodationGroup): self
+    public function addPlaceGroup(PlaceGroup $placeGroup): self
     {
-        if (!$this->accommodationGroups->contains($accommodationGroup)) {
-            $this->accommodationGroups[] = $accommodationGroup;
-            $accommodationGroup->setPeopleGroup($this);
+        if (!$this->placeGroups->contains($placeGroup)) {
+            $this->placeGroups[] = $placeGroup;
+            $placeGroup->setPeopleGroup($this);
         }
 
         return $this;
     }
 
-    public function removeAccommodationGroup(AccommodationGroup $accommodationGroup): self
+    public function removePlaceGroup(PlaceGroup $placeGroup): self
     {
-        if ($this->accommodationGroups->contains($accommodationGroup)) {
-            $this->accommodationGroups->removeElement($accommodationGroup);
+        if ($this->placeGroups->contains($placeGroup)) {
+            $this->placeGroups->removeElement($placeGroup);
             // set the owning side to null (unless already changed)
-            if ($accommodationGroup->getPeopleGroup() === $this) {
-                $accommodationGroup->setPeopleGroup(null);
+            if ($placeGroup->getPeopleGroup() === $this) {
+                $placeGroup->setPeopleGroup(null);
             }
         }
 

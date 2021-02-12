@@ -69,8 +69,8 @@
                                 <td class="align-middle">{{ supportGroup.statusToString }}<br/>
                                     <span class="text-secondary">{{ supportGroup.coefficient ? "(coeff. " ~ supportGroup.coefficient ~ ")" }}</span>
                                 </td>
-                                {% set accommodation = supportGroup.accommodationGroups|length ? supportGroup.accommodationGroups[0].accommodation %}
-                                <td class="align-middle">{{ accommodation ? accommodation.name }}<br/>
+                                {% set place = supportGroup.placeGroups|length ? supportGroup.placeGroups[0].place %}
+                                <td class="align-middle">{{ place ? place.name }}<br/>
                                     <span class="text-secondary">{{ supportGroup.city ? "(" ~ supportGroup.city ~ ")" }}</span>
                                 </td>
                                 {% if supportGroup.hotelSupport %}

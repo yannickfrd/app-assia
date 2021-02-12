@@ -21,7 +21,7 @@ class HotelSupportService
             $supportGroup->setCoefficient($this->getCoeffSupport($hotelSupport));
         }
 
-        if ($supportGroup->getAccommodationGroups()->count() > 0) {
+        if ($supportGroup->getPlaceGroups()->count() > 0) {
             $this->updateLocation($supportGroup);
         }
 
@@ -50,20 +50,20 @@ class HotelSupportService
      */
     protected function updateLocation(SupportGroup $supportGroup)
     {
-        $accommodation = $supportGroup->getAccommodationGroups()->first()->getAccommodation();
+        $place = $supportGroup->getPlaceGroups()->first()->getPlace();
 
-        if (null === $accommodation) {
+        if (null === $place) {
             return false;
         }
 
         $supportGroup
-            ->setAddress($accommodation->getAddress())
-            ->setCity($accommodation->getCity())
-            ->setZipcode($accommodation->getZipcode())
-            ->setCommentLocation($accommodation->getCommentLocation())
-            ->setLocationId($accommodation->getLocationId())
-            ->setLat($accommodation->getLat())
-            ->setLon($accommodation->getLon());
+            ->setAddress($place->getAddress())
+            ->setCity($place->getCity())
+            ->setZipcode($place->getZipcode())
+            ->setCommentLocation($place->getCommentLocation())
+            ->setLocationId($place->getLocationId())
+            ->setLat($place->getLat())
+            ->setLon($place->getLon());
     }
 
     /**

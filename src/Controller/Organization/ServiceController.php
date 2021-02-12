@@ -6,7 +6,7 @@ use App\Entity\Organization\Service;
 use App\Form\Model\Organization\ServiceSearch;
 use App\Form\Organization\Service\ServiceSearchType;
 use App\Form\Organization\Service\ServiceType;
-use App\Repository\Organization\AccommodationRepository;
+use App\Repository\Organization\PlaceRepository;
 use App\Repository\Organization\ServiceRepository;
 use App\Repository\Organization\SubServiceRepository;
 use App\Repository\Organization\UserRepository;
@@ -89,7 +89,7 @@ class ServiceController extends AbstractController
      *
      * @param int $id from Service
      */
-    public function editService(int $id, SubServiceRepository $repoSubService, UserRepository $repoUser, AccommodationRepository $repoAccommodation, Request $request): Response
+    public function editService(int $id, SubServiceRepository $repoSubService, UserRepository $repoUser, PlaceRepository $repoPlace, Request $request): Response
     {
         $service = $this->repo->getFullService($id);
 
@@ -108,18 +108,18 @@ class ServiceController extends AbstractController
 
         $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
 
-        $accommodations = $this->getAccommodations($service, $repoAccommodation, $cache);
+        $places = $this->getPlaces($service, $repoPlace, $cache);
 
         $nbPlaces = 0;
-        foreach ($accommodations as $accommodation) {
-            $nbPlaces += $accommodation->getNbPlaces();
+        foreach ($places as $place) {
+            $nbPlaces += $place->getNbPlaces();
         }
 
         return $this->render('app/organization/service/service.html.twig', [
             'form' => $form->createView(),
             'subServices' => $this->getSubServices($service, $repoSubService, $cache),
             'users' => $this->getUsers($service, $repoUser, $cache),
-            'accommodations' => $accommodations,
+            'places' => $places,
             'nbPlaces' => $nbPlaces,
         ]);
     }
@@ -167,14 +167,14 @@ class ServiceController extends AbstractController
         });
     }
 
-    protected function getAccommodations(Service $service, AccommodationRepository $repoAccommodation, FilesystemAdapter $cache)
+    protected function getPlaces(Service $service, PlaceRepository $repoPlace, FilesystemAdapter $cache)
     {
-        return $repoAccommodation->findAccommodationsOfService($service);
+        return $repoPlace->findPlacesOfService($service);
 
-        return $cache->get(Service::CACHE_SERVICE_ACCOMMODATIONS_KEY.$service->getId(), function (CacheItemInterface $item) use ($service, $repoAccommodation) {
+        return $cache->get(Service::CACHE_SERVICE_PLACES_KEY.$service->getId(), function (CacheItemInterface $item) use ($service, $repoPlace) {
             $item->expiresAfter(\DateInterval::createFromDateString('1 month'));
 
-            return $repoAccommodation->findAccommodationsOfService($service);
+            return $repoPlace->findPlacesOfService($service);
         });
     }
 

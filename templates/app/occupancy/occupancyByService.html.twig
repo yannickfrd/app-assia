@@ -48,8 +48,8 @@
                                 {% if loop.first %}
                                     {% set example %}
                                         {% apply spaceless %}
-                                            Le service {{ service.name }} dispose de {{ service.nbAccommodations }} groupes de places
-                                            (soit {{ service.nbPlaces }} places). Sur la période sélectionnée ({{ interval.days }} nuits), 
+                                            Le service {{ service.name }} dispose de {{ service.nbPlaces }} groupes de places
+                                            (soit {{ service.sumPlaces }} places). Sur la période sélectionnée ({{ interval.days }} nuits), 
                                             sa capacité d'accueil maximale représente {{ service.capacityDays|number_format(0, ",", " ") }} 
                                             nuitées (soit une moyenne de {{ service.averageCapacity|round(1, "common") }} places par nuit).
                                             Sur ces places, {{ service.occupancyDays|number_format(0, ",", " ") }} nuitées ont été réalisées, 
@@ -67,7 +67,7 @@
                                                 title="Voir le détail par sous-service"><span class="fas fa-eye fa-sm"></span>
                                             </a>
                                         {% else %}
-                                            <a href="{{ path('occupancy_service_accommodations', {'id': service_id, 
+                                            <a href="{{ path('occupancy_service_places', {'id': service_id, 
                                                 'date': {'start': search.start|date('Y-m-d'), 'end': search.end|date('Y-m-d')}} ) }}" 
                                                 class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" 
                                                 title="Voir le détail par groupe de places du service"><span class="fas fa-eye fa-sm"></span>
@@ -75,8 +75,8 @@
                                         {% endif %}
                                     </td>
                                     <td class="align-middle">{{ service.name }}</td>
-                                    <td class="align-middle text-right">{{ service.nbAccommodations }}</td>
                                     <td class="align-middle text-right">{{ service.nbPlaces }}</td>
+                                    <td class="align-middle text-right">{{ service.sumPlaces }}</td>
                                     <td class="align-middle text-right">{{ service.capacityDays|number_format(0, ",", " ") }}</td>
                                     <td class="align-middle text-right">{{ service.occupancyDays|number_format(0, ",", " ") }}</td>
                                     <td class="align-middle text-right">{{ service.averageCapacity|round(1, "common") }}</td>
@@ -89,8 +89,8 @@
                         </tbody>
                             <tr class="font-weight-bold">
                                 <td scope="row" colspan="2" class="align-middle text-center py-2">Total</td>
-                                <td class="align-middle text-right">{{ datas.nbAccommodations|number_format(0, ",", " ") }}</td>
                                 <td class="align-middle text-right">{{ datas.nbPlaces|number_format(0, ",", " ") }}</td>
+                                <td class="align-middle text-right">{{ datas.sumPlaces|number_format(0, ",", " ") }}</td>
                                 <td class="align-middle text-right">{{ datas.capacityDays|number_format(0, ",", " ") }}</td>
                                 <td class="align-middle text-right">{{ datas.occupancyDays|number_format(0, ",", " ") }}</td>
                                 <td class="align-middle text-right">{{ datas.averageCapacity|round(1, "common") }}</td>

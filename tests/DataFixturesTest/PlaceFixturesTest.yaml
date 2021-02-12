@@ -1,0 +1,58 @@
+App\Entity\Organization\Place:
+  place1:
+    name: Logement 666
+    nbPlaces: 6
+    startDate: <date_create("2010-01-01")>
+    endDate: <date_create("2020-01-01")>
+    city: Houilles
+    zipcode: <numberBetween(1, 95)>
+    address: <fr_FR:address()>
+    placeType: <numberBetween(1, 13)>
+    configuration: <numberBetween(1, 2)>
+    individualCollective: <numberBetween(1, 2)>
+    createdAt: <dateTimeBetween("-10 years", "now")>
+    updatedAt: <dateTimeBetween($createdAt, "now")>
+    service: "@service1"
+    device: "@device1"
+    createdBy: "@userRoleAdmin"
+    updatedBy: "@userRoleAdmin"
+
+  place{2..5}:
+    name: <word()> <numberBetween(1, 1000)>
+    nbPlaces: <numberBetween(1, 10)>
+    startDate: <datetimeBetween("-10 years", "now")>
+    city: <fr_FR:city()>
+    zipcode: <numberBetween(1, 95)>
+    address: <fr_FR:address()>
+    placeType: <numberBetween(1, 13)>
+    configuration: <numberBetween(1, 2)>
+    individualCollective: <numberBetween(1, 2)>
+    createdAt: <dateTimeBetween("-10 years", "now")>
+    updatedAt: <dateTimeBetween($createdAt, "now")>
+    service: "@service1"
+    device: "@device1"
+    createdBy: "@userRoleAdmin"
+    updatedBy: "@userRoleAdmin"
+
+App\Entity\People\Person:
+  person:
+    firstname: John
+    lastname: Doe
+    gender: 2
+    birthdate: <date_create("1980-01-01")>
+
+App\Entity\People\PeopleGroup:
+  peopleGroup:
+    familyTypology: 2
+    nbPeople: 1
+
+App\Entity\People\RolePerson:
+  rolePerson:
+    head: 1
+    role: 5
+    person: "@person"
+    peopleGroup: "@peopleGroup"
+
+App\Entity\Organization\Device:
+  device1:
+    name: AVDL

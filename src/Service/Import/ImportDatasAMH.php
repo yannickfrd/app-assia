@@ -15,22 +15,22 @@ use App\Entity\Evaluation\EvaluationGroup;
 use App\Entity\Evaluation\EvaluationPerson;
 use App\Entity\Evaluation\InitEvalGroup;
 use App\Entity\Evaluation\InitEvalPerson;
-use App\Entity\Organization\Accommodation;
 use App\Entity\Organization\Device;
+use App\Entity\Organization\Place;
 use App\Entity\Organization\Referent;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\User;
 use App\Entity\People\PeopleGroup;
 use App\Entity\People\Person;
 use App\Entity\People\RolePerson;
-use App\Entity\Support\AccommodationGroup;
 use App\Entity\Support\HotelSupport;
+use App\Entity\Support\PlaceGroup;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Support\SupportPerson;
 use App\Form\Utils\Choices;
 use App\Notification\MailNotification;
-use App\Repository\Organization\AccommodationRepository;
 use App\Repository\Organization\DeviceRepository;
+use App\Repository\Organization\PlaceRepository;
 use App\Repository\Organization\SubServiceRepository;
 use App\Repository\People\PersonRepository;
 use App\Service\Phone;
@@ -517,7 +517,7 @@ class ImportDatasAMH extends ImportDatas
 
     protected $repoSubService;
     protected $repoDevice;
-    protected $repoAccommodation;
+    protected $repoPlace;
     protected $repoPerson;
 
     protected $datas;
@@ -555,14 +555,14 @@ class ImportDatasAMH extends ImportDatas
         MailNotification $notification,
         SubServiceRepository $repoSubService,
         DeviceRepository $repoDevice,
-        AccommodationRepository $repoAccommodation,
+        PlaceRepository $repoPlace,
         PersonRepository $repoPerson)
     {
         $this->manager = $manager;
         $this->notification = $notification;
         $this->repoSubService = $repoSubService;
         $this->repoDevice = $repoDevice;
-        $this->repoAccommodation = $repoAccommodation;
+        $this->repoPlace = $repoPlace;
         $this->repoPerson = $repoPerson;
     }
 
@@ -654,7 +654,7 @@ class ImportDatasAMH extends ImportDatas
             }
 
             $supportGroup = $this->createSupportGroup($peopleGroup);
-            $this->createAccommodationGroup($peopleGroup, $supportGroup);
+            $this->createPlaceGroup($peopleGroup, $supportGroup);
             $this->createReferent($peopleGroup);
             $evaluationGroup = $this->createEvaluationGroup($supportGroup);
 
@@ -1364,7 +1364,7 @@ class ImportDatasAMH extends ImportDatas
         ];
     }
 
-    protected function createAccommodationGroup(PeopleGroup $peopleGroup, SupportGroup $supportGroup): ?AccommodatioNGroup
+    protected function createPlaceGroup(PeopleGroup $peopleGroup, SupportGroup $supportGroup): ?AccommodatioNGroup
     {
         $hotelName = str_replace('HOTEL - ', '', ($this->field['Nom hôtel'] ?? $this->field['Précision lieu hébgt']));
 
@@ -1374,29 +1374,29 @@ class ImportDatasAMH extends ImportDatas
 
         $hotel = $this->getHotel($hotelName);
 
-        $accommodationGroup = (new AccommodationGroup())
-            ->setAccommodation($hotel)
+        $placeGroup = (new PlaceGroup())
+            ->setPlace($hotel)
             ->setComment(null === $hotel ? $hotelName : null)
             ->setSupportGroup($supportGroup)
             ->setPeopleGroup($peopleGroup);
 
-        $this->manager->persist($accommodationGroup);
+        $this->manager->persist($placeGroup);
 
-        return $accommodationGroup;
+        return $placeGroup;
     }
 
     protected function getHotels(): array
     {
         $hotels = [];
 
-        foreach ($this->repoAccommodation->findBy(['service' => $this->service]) as $accommodation) {
-            $hotels[$accommodation->getName()] = $accommodation;
+        foreach ($this->repoPlace->findBy(['service' => $this->service]) as $place) {
+            $hotels[$place->getName()] = $place;
         }
 
         return $hotels;
     }
 
-    protected function getHotel(string $hotelName): ?Accommodation
+    protected function getHotel(string $hotelName): ?Place
     {
         foreach ($this->hotels as $key => $hotel) {
             if ($hotelName === $key) {

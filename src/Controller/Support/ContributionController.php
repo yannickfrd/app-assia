@@ -14,7 +14,7 @@ use App\Form\Support\Contribution\ContributionType;
 use App\Form\Support\Contribution\SupportContributionSearchType;
 use App\Notification\MailNotification;
 use App\Repository\Evaluation\EvaluationGroupRepository;
-use App\Repository\Organization\AccommodationRepository;
+use App\Repository\Organization\PlaceRepository;
 use App\Repository\Support\ContributionRepository;
 use App\Service\Calendar;
 use App\Service\Export\ContributionFullExport;
@@ -130,7 +130,7 @@ class ContributionController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function getResources(int $id, SupportManager $supportManager, AccommodationRepository $repoAccommodation, EvaluationGroupRepository $repoEvaluation)
+    public function getResources(int $id, SupportManager $supportManager, PlaceRepository $repoPlace, EvaluationGroupRepository $repoEvaluation)
     {
         $supportGroup = $supportManager->getSupportGroup($id);
 
@@ -138,7 +138,7 @@ class ContributionController extends AbstractController
 
         $evaluation = $repoEvaluation->findEvaluationResourceById($id);
 
-        $accommodation = $repoAccommodation->findCurrentAccommodationOfSupport($supportGroup);
+        $place = $repoPlace->findCurrentPlaceOfSupport($supportGroup);
 
         $salaryAmt = 0;
         $resourcesAmt = 0;
@@ -163,7 +163,7 @@ class ContributionController extends AbstractController
                 'resourcesAmt' => $resourcesAmt,
                 'toPayAmt' => $toPayAmt ?? null,
                 'contributionAmt' => $evaluation && $evaluation->getEvalBudgetGroup() ? $evaluation->getEvalBudgetGroup()->getContributionAmt() : null,
-                'rentAmt' => $accommodation ? $accommodation->getRentAmt() : null,
+                'rentAmt' => $place ? $place->getRentAmt() : null,
             ],
         ], 200);
     }

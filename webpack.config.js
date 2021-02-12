@@ -24,7 +24,7 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     .addEntry('app', './assets/js/app.js')
-    .addEntry('accommodation', './assets/js/accommodation/accommodation.js')
+    .addEntry('place', './assets/js/place/place.js')
     .addEntry('calendar_css', './assets/css/calendar.scss')
     .addEntry('calendar', './assets/js/rdv/calendarIndex.js')
     .addEntry('contribution', './assets/js/contribution/contribution.js')
@@ -41,7 +41,7 @@ Encore
     .addEntry('note', './assets/js/note/note.js')
     .addEntry('occupancy', './assets/js/app/occupancy.js')
     .addEntry('person', './assets/js/person/person.js')
-    .addEntry('place', './assets/js/accommodation/accommodation.js')
+    .addEntry('place', './assets/js/place/place.js')
     .addEntry('rdvs', './assets/js/rdv/rdvsIndex.js')
     .addEntry('referent', './assets/js/referent/referent.js')
     .addEntry('search', './assets/js/search.js')

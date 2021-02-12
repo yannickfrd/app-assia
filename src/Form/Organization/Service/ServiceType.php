@@ -78,7 +78,7 @@ class ServiceType extends AbstractType
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
-            ->add('accommodation', ChoiceType::class, [
+            ->add('place', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
                 'placeholder' => 'placeholder.select',
                 'required' => false,

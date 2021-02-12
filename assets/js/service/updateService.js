@@ -3,7 +3,7 @@ import DisplayFields from '../utils/displayFields'
 export default class UpdateService {
 
     constructor() {
-        this.accommodationSelect = document.getElementById('service_accommodation')
+        this.placeSelect = document.getElementById('service_place')
         this.contributionSelect = document.getElementById('service_contribution')
         this.contributionTypeSelect = document.getElementById('service_contribution_type')
         this.contributionRateSelect = document.getElementById('service_contribution_rate')
@@ -12,7 +12,7 @@ export default class UpdateService {
     }
 
     init() {
-        new DisplayFields(this.prefix, 'accommodation', [1])
+        new DisplayFields(this.prefix, 'place', [1])
         new DisplayFields(this.prefix, 'contribution', [1])
         new DisplayFields(this.prefix, 'contributionType', [1, 3])
     }

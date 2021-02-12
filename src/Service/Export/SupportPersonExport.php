@@ -53,17 +53,17 @@ class SupportPersonExport extends ExportExcel
         $peopleGroup = $supportGroup->getPeopleGroup();
         $originRequest = $supportGroup->getOriginRequest() ?? new OriginRequest();
 
-        $startAccommodations = [];
-        $endAccommodations = [];
-        $endReasonAccommodations = [];
-        $nameAccommodations = [];
+        $startPlaces = [];
+        $endPlaces = [];
+        $endReasonPlaces = [];
+        $namePlaces = [];
 
-        foreach ($supportPerson->getAccommodationsPerson() as $accommodationPerson) {
-            $startAccommodations[] = $accommodationPerson->getStartDate() ?? null;
-            $endAccommodations[] = $accommodationPerson->getEndDate() ?? null;
-            $accommodationPerson->getEndReason() ? $endReasonAccommodations[] = $accommodationPerson->getEndReasonToString() : null;
-            $accommodation = $accommodationPerson->getAccommodationGroup()->getAccommodation();
-            $nameAccommodations[] = $accommodation->getName().' ';
+        foreach ($supportPerson->getPlacesPerson() as $placePerson) {
+            $startPlaces[] = $placePerson->getStartDate() ?? null;
+            $endPlaces[] = $placePerson->getEndDate() ?? null;
+            $placePerson->getEndReason() ? $endReasonPlaces[] = $placePerson->getEndReasonToString() : null;
+            $place = $placePerson->getPlaceGroup()->getPlace();
+            $namePlaces[] = $place->getName().' ';
         }
 
         // $nbChildren = 0;
@@ -109,10 +109,10 @@ class SupportPersonExport extends ExportExcel
             'Dispositif' => $supportGroup->getDevice() ? $supportGroup->getDevice()->getName() : '',
             'Référent social' => $supportGroup->getReferent() ? $supportGroup->getReferent()->getFullname() : null,
             'Référent social suppléant' => $supportGroup->getReferent2() ? $supportGroup->getReferent2()->getFullname() : null,
-            'Date début hébergement' => $startAccommodations ? $this->formatDate(min($startAccommodations)) : null,
-            'Date fin hébergement' => $endAccommodations ? $this->formatDate(max($endAccommodations)) : null,
-            'Motif fin hébergement' => join(', ', $endReasonAccommodations),
-            'Nom du logement/ hébergement' => (string) join(', ', $nameAccommodations),
+            'Date début hébergement' => $startPlaces ? $this->formatDate(min($startPlaces)) : null,
+            'Date fin hébergement' => $endPlaces ? $this->formatDate(max($endPlaces)) : null,
+            'Motif fin hébergement' => join(', ', $endReasonPlaces),
+            'Nom du logement/ hébergement' => (string) join(', ', $namePlaces),
             'Adresse' => $supportGroup->getAddress(),
             'Ville' => $supportGroup->getCity(),
             'Code postal' => (string) $supportGroup->getZipcode(),

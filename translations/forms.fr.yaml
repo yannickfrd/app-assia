@@ -1,4 +1,4 @@
-accommodation:
+place:
   area.help: Superficie en m²
   name: Hébergement ou logement
   name.placeholder: Nom du groupe de places
@@ -6,7 +6,7 @@ accommodation:
   location.placeholder: Adresse du groupe de places
   configuration.help: Diffus ou regroupé
   type.help: Chambre, T1, T2, T3...
-accommodationGroup:
+placeGroup:
   startDate: Date d'entrée
 Address: Adresse
 Area: Superficie
@@ -26,14 +26,14 @@ Devices: Dispositifs
 device:
   name: Nom du dispositif
   coefficient.help: Coefficient entre 0 et 10. Les décimales sont prises en compte.
-  accommodation.help: Ce dispositif a t-il une activité d'hébergement ?
+  place.help: Ce dispositif a t-il une activité d'hébergement ?
   comment.placeholder: Description...
 Email: Adresse email
 Email1: Adresse email 1
 Email2: Adresse email 2
 End: Fin
-End accommodation: Mettre fin également à l'hébergement
-endAccommodation.help: Si cette case est cochée, l'hébergement associé au suivi aura automatiquement les mêmes dates de fin de prise en charge.
+End place: Mettre fin également à l'hébergement
+endPlace.help: Si cette case est cochée, l'hébergement associé au suivi aura automatiquement les mêmes dates de fin de prise en charge.
 End date: Date de fin
 End status: Situation résidentielle à l'issue
 End status comment: Précision sur la situation à l'issue
@@ -122,7 +122,7 @@ Zipcode: Code postal
 End reason: Motif de fin
 Comment: Commentaire
 Comment end reason: Commentaire sur le motif de fin
-Accommodation: Hébergement
+Place: Hébergement
 Places number: Nb de places
 Disabled: Désactivé
 Enabled: Actif
@@ -189,7 +189,7 @@ service:
   coefficient.placeholder: Suivis avec coefficient (pondération)
   comment.placeholder: Écrire une information complémentaire...
   name: Nom du service
-Accommodation type: Type de logement ou d'hébergement
+Place type: Type de logement ou d'hébergement
 Configuration: Configuration
 Individual collective: Individuel ou partagé
 Contribution amt: Montant de la participation financière

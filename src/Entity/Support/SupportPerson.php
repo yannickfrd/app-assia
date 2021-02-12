@@ -125,15 +125,15 @@ class SupportPerson
     private $initEvalPerson;
 
     /**
-     * @ORM\OneToMany(targetEntity=AccommodationPerson::class, mappedBy="supportPerson")
+     * @ORM\OneToMany(targetEntity=PlacePerson::class, mappedBy="supportPerson")
      */
-    private $accommodationsPerson;
+    private $placesPerson;
 
     public function __construct()
     {
         $this->notes = new ArrayCollection();
         $this->evaluationsPerson = new ArrayCollection();
-        $this->accommodationsPerson = new ArrayCollection();
+        $this->placesPerson = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -361,30 +361,30 @@ class SupportPerson
     }
 
     /**
-     * @return AccommodationPerson[]|Collection|null
+     * @return PlacePerson[]|Collection|null
      */
-    public function getAccommodationsPerson()
+    public function getPlacesPerson()
     {
-        return $this->accommodationsPerson;
+        return $this->placesPerson;
     }
 
-    public function addAccommodationsPerson(AccommodationPerson $accommodationsPerson): self
+    public function addPlacesPerson(PlacePerson $placesPerson): self
     {
-        if (!$this->accommodationsPerson->contains($accommodationsPerson)) {
-            $this->accommodationsPerson[] = $accommodationsPerson;
-            $accommodationsPerson->setSupportPerson($this);
+        if (!$this->placesPerson->contains($placesPerson)) {
+            $this->placesPerson[] = $placesPerson;
+            $placesPerson->setSupportPerson($this);
         }
 
         return $this;
     }
 
-    public function removeAccommodationsPerson(AccommodationPerson $accommodationsPerson): self
+    public function removePlacesPerson(PlacePerson $placesPerson): self
     {
-        if ($this->accommodationsPerson->contains($accommodationsPerson)) {
-            $this->accommodationsPerson->removeElement($accommodationsPerson);
+        if ($this->placesPerson->contains($placesPerson)) {
+            $this->placesPerson->removeElement($placesPerson);
             // set the owning side to null (unless already changed)
-            if ($accommodationsPerson->getSupportPerson() === $this) {
-                $accommodationsPerson->setSupportPerson(null);
+            if ($placesPerson->getSupportPerson() === $this) {
+                $placesPerson->setSupportPerson(null);
             }
         }
 

@@ -64,11 +64,11 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin('sg.hotelSupport', 'hs')->addSelect('hs')
         // }
 
-        // if ($supportGroup->getDevice()->getAccommodation() === Choices::YES) {
-            ->leftJoin('sg.accommodationGroups', 'ag')->addSelect('ag')
-            ->leftJoin('ag.accommodation', 'a')->addSelect('PARTIAL a.{id, name, address, city, zipcode}')
-            ->leftJoin('ag.accommodationPeople', 'ap')->addSelect('ap')
-            ->leftJoin('ap.supportPerson', 'sp2')->addSelect('sp2')
+        // if ($supportGroup->getDevice()->getPlace() === Choices::YES) {
+            ->leftJoin('sg.placeGroups', 'pg')->addSelect('pg')
+            ->leftJoin('pg.place', 'pl')->addSelect('PARTIAL pl.{id, name, address, city, zipcode}')
+            ->leftJoin('pg.placePeople', 'pp')->addSelect('pp')
+            ->leftJoin('pp.supportPerson', 'sp2')->addSelect('sp2')
         // }
 
             ->andWhere('sg.id = :id')
@@ -91,7 +91,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin('sg.referent2', 'ref2')->addSelect('PARTIAL ref2.{id, firstname, lastname}')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, email, preAdmission, justice, coefficient}')
             ->leftJoin('sg.subService ', 'ss')->addSelect('PARTIAL ss.{id, name, email}')
-            ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name, coefficient, accommodation, contribution, contributionType, contributionRate}')
+            ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name, coefficient, place, contribution, contributionType, contributionRate}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, usename, birthdate, gender, phone1, email}')
             ->leftJoin('sg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')

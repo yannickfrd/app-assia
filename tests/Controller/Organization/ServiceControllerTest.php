@@ -86,7 +86,7 @@ class ServiceControllerTest extends WebTestCase
     public function testEditServiceisUpInSuperAdmin()
     {
         $dataFixtures = $this->loadFixtureFiles(array_merge($this->getFixtureFiles(), [
-            dirname(__DIR__).'/../DataFixturesTest/AccommodationFixturesTest.yaml',
+            dirname(__DIR__).'/../DataFixturesTest/PlaceFixturesTest.yaml',
         ]));
 
         $service = $dataFixtures['service1'];
@@ -104,7 +104,7 @@ class ServiceControllerTest extends WebTestCase
     public function testEditServiceisUpInRoleAdmin()
     {
         $dataFixtures = $this->loadFixtureFiles(array_merge($this->getFixtureFiles(), [
-            dirname(__DIR__).'/../DataFixturesTest/AccommodationFixturesTest.yaml',
+            dirname(__DIR__).'/../DataFixturesTest/PlaceFixturesTest.yaml',
         ]));
 
         $service = $dataFixtures['service1'];
@@ -122,7 +122,7 @@ class ServiceControllerTest extends WebTestCase
     public function testEditServiceisSuccessful()
     {
         $dataFixtures = $this->loadFixtureFiles(array_merge($this->getFixtureFiles(), [
-            dirname(__DIR__).'/../DataFixturesTest/AccommodationFixturesTest.yaml',
+            dirname(__DIR__).'/../DataFixturesTest/PlaceFixturesTest.yaml',
         ]));
 
         $this->createLogin($dataFixtures['userRoleAdmin']);

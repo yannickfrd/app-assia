@@ -87,16 +87,16 @@ class ServiceRepository extends ServiceEntityRepository
         return $query->orderBy('s.name', 'ASC');
     }
 
-    public function findServicesWithAccommodation(OccupancySearch $search, CurrentUserService $currentUser, Device $device = null)
+    public function findServicesWithPlace(OccupancySearch $search, CurrentUserService $currentUser, Device $device = null)
     {
         $query = $this->createQueryBuilder('s')->select('s')
             ->leftJoin('s.subServices', 'ss')->addSelect('PARTIAL ss.{id, name}')
-            ->leftJoin('s.accommodations', 'a')->addSelect('PARTIAL a.{id, name, startDate, endDate, nbPlaces}')
+            ->leftJoin('s.places', 'pl')->addSelect('PARTIAL pl.{id, name, startDate, endDate, nbPlaces}')
             ->leftJoin('s.serviceDevices', 'sd')->addSelect('sd')
 
-            ->andWhere('s.accommodation = TRUE')
-            ->andWhere('a.endDate > :start OR a.endDate IS NULL')->setParameter('start', $search->getStart())
-            ->andWhere('a.startDate < :end')->setParameter('end', $search->getEnd());
+            ->andWhere('s.place = TRUE')
+            ->andWhere('pl.endDate > :start OR pl.endDate IS NULL')->setParameter('start', $search->getStart())
+            ->andWhere('pl.startDate < :end')->setParameter('end', $search->getEnd());
 
         if ($search->getPole()) {
             $query = $query->andWhere('s.pole = :pole')

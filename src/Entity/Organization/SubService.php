@@ -55,14 +55,14 @@ class SubService
     private $comment;
 
     /**
-     * @ORM\OneToMany(targetEntity=Accommodation::class, mappedBy="subService")
+     * @ORM\OneToMany(targetEntity=Place::class, mappedBy="subService")
      */
-    private $accommodations;
+    private $places;
 
     public function __construct()
     {
         $this->supportGroup = new ArrayCollection();
-        $this->accommodations = new ArrayCollection();
+        $this->places = new ArrayCollection();
     }
 
     public function __toString()
@@ -155,30 +155,30 @@ class SubService
     }
 
     /**
-     * @return Accommodation[]|Collection|null
+     * @return Place[]|Collection|null
      */
-    public function getAccommodations()
+    public function getPlaces()
     {
-        return $this->accommodations;
+        return $this->places;
     }
 
-    public function addAccommodation(Accommodation $accommodation): self
+    public function addPlace(Place $place): self
     {
-        if (!$this->accommodations->contains($accommodation)) {
-            $this->accommodations[] = $accommodation;
-            $accommodation->setSubService($this);
+        if (!$this->places->contains($place)) {
+            $this->places[] = $place;
+            $place->setSubService($this);
         }
 
         return $this;
     }
 
-    public function removeAccommodation(Accommodation $accommodation): self
+    public function removePlace(Place $place): self
     {
-        if ($this->accommodations->contains($accommodation)) {
-            $this->accommodations->removeElement($accommodation);
+        if ($this->places->contains($place)) {
+            $this->places->removeElement($place);
             // set the owning side to null (unless already changed)
-            if ($accommodation->getSubService() === $this) {
-                $accommodation->setSubService(null);
+            if ($place->getSubService() === $this) {
+                $place->setSubService(null);
             }
         }
 
