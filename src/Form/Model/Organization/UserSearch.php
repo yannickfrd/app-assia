@@ -5,62 +5,39 @@ namespace App\Form\Model\Organization;
 use App\Form\Utils\Choices;
 use App\Service\Phone;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Validator\Constraints as Assert;
 
 class UserSearch
 {
-    /**
-     * @var string|null
-     */
+    /** @var string|null */
     private $firstname;
 
-    /**
-     * @var string|null
-     */
+    /** @var string|null */
     private $lastname;
 
     private $username;
 
-    /**
-     * @var int|null
-     */
+    /** @var array */
     private $status;
 
-    /**
-     * @var int|null
-     */
+    /** @var int|null */
     private $serviceUser;
 
-    /**
-     * @var string|null
-     * @Assert\Regex(pattern="^0[1-9]([-._/ ]?[0-9]{2}){4}$^", match=true, message="Le numéro de téléphone est incorrect.")
-     */
+    /** @var string|null */
     private $phone;
 
-    /**
-     * @var string|null
-     * @Assert\Email(message="Email invalide.")
-     */
+    /** @var string|null */
     private $email;
 
-    /**
-     * @var ArrayCollection
-     */
+    /** @var ArrayCollection */
     private $services;
 
-    /**
-     * @var ArrayCollection
-     */
+    /** @var ArrayCollection */
     private $poles;
 
-    /**
-     * @var int|null
-     */
+    /** @var int|null */
     private $disabled = Choices::ACTIVE;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $export;
 
     public function __construct()
@@ -105,12 +82,12 @@ class UserSearch
         return $this;
     }
 
-    public function getStatus(): ?int
+    public function getStatus(): ?array
     {
         return $this->status;
     }
 
-    public function setStatus(?int $status): self
+    public function setStatus(?array $status): self
     {
         $this->status = $status;
 

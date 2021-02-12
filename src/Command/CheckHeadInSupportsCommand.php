@@ -35,16 +35,13 @@ class CheckHeadInSupportsCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $message = $this->checkHeadInSupports();
+        $message = $this->update();
         $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
 
         return 0;
     }
 
-    /**
-     * Mettre à jour le nb de personnes.
-     */
-    protected function checkHeadInSupports()
+    protected function update()
     {
         $supports = $this->repo->findBy([], ['updatedAt' => 'DESC'], 1000);
         $count = 0;

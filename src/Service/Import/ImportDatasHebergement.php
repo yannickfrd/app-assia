@@ -1256,7 +1256,7 @@ class ImportDatasHebergement extends ImportDatas
         return $place;
     }
 
-    protected function createPlaceGroup(PeopleGroup $peopleGroup, SupportGroup $supportGroup): ?AccommodatioNGroup
+    protected function createPlaceGroup(PeopleGroup $peopleGroup, SupportGroup $supportGroup): ?PlaceGroup
     {
         $placeGroup = (new PlaceGroup())
             ->setStartDate($supportGroup->getStartDate() ? $supportGroup->getStartDate() : null)

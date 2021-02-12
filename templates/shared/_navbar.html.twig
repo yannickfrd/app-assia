@@ -74,7 +74,7 @@
                 <a id="user-name" class="text-light font-weight-bold" href="{{ path('my_profile') }}" data-toggle="popover"
                     data-trigger="hover" data-placement="bottom" data-html="true"
                     title="{{ app.user.firstname }} {{ app.user.lastname }}" data-content="Dernière connexion : {{ app.user.lastLogin|date(" d/m/Y H:i") }}
-                    <br/>Fonction : {{ app.user.statusToString }}<br/>Services rattachés :<br/>- {{ app.session.get("userServices")|join("<br/>- ") }}">
+                    <br/>Statut : {{ app.user.statusToString }}<br/>Services rattachés :<br/>- {{ app.session.get("userServices")|join("<br/>- ") }}">
                     <span class="fas fa-user mr-2"></span>{{ app.user.firstname }} {{ app.user.lastname|first }}.
                 </a>
                 <br/>

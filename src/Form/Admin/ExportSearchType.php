@@ -33,14 +33,14 @@ class ExportSearchType extends AbstractType
                 ],
                 'placeholder' => 'placeholder.familtyTypology',
                 'required' => false,
-            ])
-            ->add('nbPeople', null, [
-                'attr' => [
-                    'class' => 'w-max-100',
-                    'placeholder' => 'NbPeople',
-                    'autocomplete' => 'off',
-                ],
             ]);
+        // ->add('nbPeople', null, [
+            //     'attr' => [
+            //         'class' => 'w-max-100',
+            //         'placeholder' => 'NbPeople',
+            //         'autocomplete' => 'off',
+            //     ],
+            // ])
         // ->add('evalSocial', CheckBoxType::class, [
             //     'required' => false,
             //     'label_attr' => [

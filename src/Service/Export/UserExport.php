@@ -42,7 +42,7 @@ class UserExport extends ExportExcel
             'N° Utilisateur' => $user->getId(),
             'Nom' => $user->getLastname(),
             'Prénom' => $user->getFirstname(),
-            'Fonction' => $user->getStatusToString(),
+            'Statut' => $user->getStatusToString(),
             'Email' => $user->getEmail(),
             'Téléphone' => $user->getPhone1(),
             'Service' => join(', ', $services),

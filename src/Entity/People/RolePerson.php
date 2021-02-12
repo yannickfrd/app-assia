@@ -55,7 +55,6 @@ class RolePerson
     /**
      * @ORM\Column(type="smallint")
      * @Assert\NotNull(message="Le rôle ne doit pas être vide.")
-     * @Assert\Range(min = 1, max = 7, minMessage="Ne doit pas être vide.",  maxMessage="Le rôle ne doit pas être vide.")
      */
     private $role;
 

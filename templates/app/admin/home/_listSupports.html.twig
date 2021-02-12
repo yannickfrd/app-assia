@@ -30,9 +30,7 @@
                         <th scope="col" class="align-middle th-w-150">Nom et prénom</th>
                         <th scope="col" class="align-middle th-w-100">Typologie familiale</th>
                         <th scope="col" class="align-middle th-w-100">Service (Dispositif)</th>
-                        <th scope="col" class="align-middle th-w-100">Statut</th>
                         <th scope="col" class="align-middle th-date">Date de début</th>
-                        <th scope="col" class="align-middle th-date">Date de fin</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -57,10 +55,11 @@
                             <td class="align-middle">{{ support.service.name }}<!--
                                 -->{% if support.device %}<br/>({{ support.device.name }}){% endif %}
                             </td>
-                            <td class="align-middle">{{ support.statusToString }}</td>
                             <td class="align-middle">{{ support.startDate ? support.startDate|date("d/m/Y") }}
-                            <td class="align-middle">{{ support.endDate ? support.endDate|date("d/m/Y") }}
-                                {% if support.endDate == null and support.theoreticalEndDate %}{{ support.theoreticalEndDate|date("d/m/Y") }}<br/>(Fin théorique){% endif %}
+                                {% if support.status == constant("STATUS_IN_PROGRESS", support) and null == support.startDate %}
+                                    <span class="fas fa-exclamation-triangle text-warning" 
+                                        title="Attention, la date de début d'accompagnement n'est pas renseignée."></span>
+                                {% endif %}
                             </td>
                         </tr>
                     {# {% endcache %} #}

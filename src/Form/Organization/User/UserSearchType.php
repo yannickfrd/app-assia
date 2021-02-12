@@ -18,18 +18,14 @@ class UserSearchType extends AbstractType
     {
         $builder
             ->add('lastname', null, [
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
+                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'class' => 'w-max-140 text-uppercase',
                     'placeholder' => 'Lastname',
                 ],
             ])
             ->add('firstname', null, [
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
+                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'class' => 'w-max-140 text-capitalize',
                     'placeholder' => 'Firstname',
@@ -37,27 +33,23 @@ class UserSearchType extends AbstractType
             ])
             ->add('status', ChoiceType::class, [
                 'choices' => Choices::getChoices(User::STATUS),
-                'label_attr' => [
-                    'class' => 'sr-only',
+                'multiple' => true,
+                'label_attr' => ['class' => 'sr-only'],
+                'attr' => [
+                    'class' => 'multi-select',
+                    'data-select2-id' => 'status',
                 ],
-                'placeholder' => '-- Fonction --',
                 'required' => false,
             ])
             ->add('serviceUser', ChoiceType::class, [
                 'choices' => Choices::getChoices(ServiceUser::ROLE),
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
-                'attr' => [
-                    'class' => 'w-max-120',
-                ],
+                'label_attr' => ['class' => 'sr-only'],
+                'attr' => ['class' => 'w-max-120'],
                 'placeholder' => '-- Rôle --',
                 'required' => false,
             ])
             ->add('phone', null, [
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
+                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'placeholder' => 'Phone',
                     'class' => 'js-phone w-max-140',

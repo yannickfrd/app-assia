@@ -123,15 +123,20 @@ class UserRepository extends ServiceEntityRepository
             $query->andWhere('u.phone1 = :phone')
                 ->setParameter('phone', $search->getPhone());
         }
-        if ($search->getStatus()) {
-            $query->andWhere('u.status = :status')
-                ->setParameter('status', $search->getStatus());
-        }
 
         if (Choices::DISABLED === $search->getDisabled()) {
             $query->andWhere('u.disabledAt IS NOT NULL');
         } elseif (Choices::ACTIVE === $search->getDisabled() || null === $search->getDisabled()) {
             $query->andWhere('u.disabledAt IS NULL');
+        }
+
+        if ($search->getStatus()) {
+            $expr = $query->expr();
+            $orX = $expr->orX();
+            foreach ($search->getStatus() as $status) {
+                $orX->add($expr->eq('u.status', $status));
+            }
+            $query->andWhere($orX);
         }
 
         if ($search->getPoles()->count()) {

@@ -103,7 +103,7 @@ Support dates: Dates de suivi
 Theoretical end date: Date de fin théorique
 Title: Titre
 user:
-  status: Fonction
+  status: Statut
   roles: Rôle
   username.help: Remplissage auto. en fonction du nom et prénom.
   password.help: 8 caractères minimum dont 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial (? ! * { } [ ]- + = & < > $)
