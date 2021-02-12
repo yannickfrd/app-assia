@@ -460,6 +460,10 @@ class SupportManager
                 ne correspond pas à la composition familiale du groupe ('.$nbPeople.' personnes).');
         }
 
+        if (SupportGroup::STATUS_IN_PROGRESS === $supportGroup->getStatus() && null === $supportGroup->getStartDate()) {
+            $this->addFlash('warning', "Attention, la date de début d'accompagnement n'est pas renseignée.");
+        }
+
         if ($supportGroup->getDevice() && Choices::YES === $supportGroup->getDevice()->getPlace()) {
             // Vérifie qu'il y a un hébergement créé
             if (0 === $supportGroup->getPlaceGroups()->count()) {
