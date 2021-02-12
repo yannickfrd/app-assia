@@ -6,7 +6,7 @@
             {% set active = supportPerson.status == support.status %}
             <button type="button" id="heading-{{ entity_name }}-{{ key }}" 
                 class="btn btn-outline-{{ active ? theme_color : 'secondary' }} {{ active == false ? 'delete' }} {{ loop.first ? 'active' }} 
-                mb-2 js-person" title="{{ supportPerson.person.age }} an(s)" 
+                mb-2 js-person" title="{{ supportPerson.roleToString }} - {{ supportPerson.person.age }} an(s)" 
                 data-toggle="collapse" data-target="#collapse-{{ entity_name }}-{{ key }}" aria-expanded="false" 
                 aria-controls="collapse-{{ entity_name }}-{{ key }}" data-key="{{ key }}">{{ supportPerson.person.fullname }}
             </button>
