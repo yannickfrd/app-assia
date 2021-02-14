@@ -3,101 +3,66 @@
 namespace App\Notification;
 
 use App\Entity\Organization\User;
-use PHPMailer\PHPMailer\Exception;
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
-use Twig\Environment;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email;
 
 class MailNotification
 {
-    protected $renderer;
-    protected $appVersion;
-    protected $host;
-    protected $username;
-    protected $password;
-    protected $port;
+    protected $mailer;
 
-    public function __construct(Environment $renderer, $appVersion = 'prod',
-        $host = 'localhost', $username = null, $password = null, $port = 25)
+    public function __construct(MailerInterface $mailer, $appVersion = 'prod')
     {
-        $this->renderer = $renderer;
+        $this->mailer = $mailer;
         $this->appVersion = $appVersion;
-        $this->host = $host;
-        $this->username = $username;
-        $this->password = $password;
-        $this->port = $port;
     }
 
-    public function send(array $to, string $subject, string $htmlBody, string $txtBody = null, string $cc = null, string $bcc = null, string $replyTo = null, array $attachments = []): bool
-    {
-        $mail = new PHPMailer(true);
+    public function send(
+        string $to,
+        string $subject,
+        string $htmlTemplate,
+        array $context = [],
+        string $textTemplate = null,
+        string $cc = null,
+        string $bcc = null,
+        string $replyTo = null,
+        string $priority = Email::PRIORITY_NORMAL,
+        array $attachments = []
+    ): bool {
+        $email = (new TemplatedEmail())
+            ->from(new Address('noreply@esperer95.app', 'Esperer95.app'))
+            ->to($to)
+            ->priority($priority)
+            ->subject($subject)
+            ->htmlTemplate($htmlTemplate)
+            ->textTemplate($textTemplate)
+            ->context($context);
 
-        $mail->isSMTP(); // Send using SMTP
-
-        if ('localhost' === $this->host) {
-            $mail->SMTPAuth = false;
-            $mail->SMTPAutoTLS = false;
-        } else {
-            $mail->SMTPAuth = true; // Enable SMTP authentication
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->SMTPDebug = SMTP::DEBUG_OFF;
+        if ($cc) {
+            $email->cc($cc);
+        }
+        if ($bcc) {
+            $email->bcc($bcc);
+        }
+        if ($replyTo) {
+            $email->replyTo($replyTo);
+        }
+ 
+        foreach ($attachments as $path) {
+            $email->attachFromPath($path);
         }
 
-        $mail->Host = $this->host;
-        $mail->Username = $this->username;
-        $mail->Password = $this->password;
-        $mail->Port = $this->port;
-
-        $mail->CharSet = 'UTF-8';
-        $mail->isHTML(true); // Set email format to HTML
-
         try {
-            $mail->setFrom('noreply@esperer95.app', 'Esperer95.app');
-            $mail->addAddress($to['email'], $to['name']); // Add a recipient
-            if ($cc) { // Copie
-                $mail->addCC($cc);
-            }
-            if ($bcc) { // Copie cachée
-                $mail->addBCC($bcc);
-            }
-            if ($replyTo) { // Copie cachée
-                $mail->addReplyTo($replyTo, 'Information');
-            }
-
-            // Attachments
-            foreach ($attachments as $path) {
-                $mail->addAttachment($path);
-            }
-
-            // Content
-            $mail->Subject = $subject;
-            $mail->Body = $htmlBody;
-            $mail->AltBody = $txtBody ?? null;
-
-            if ('test' === $this->appVersion) {
-                return true;
-            }
-
-            return $mail->send();
-        } catch (Exception $e) {
-            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+            $this->mailer->send($email);
+        } catch (TransportExceptionInterface $e) {
+            throw $e;
 
             return false;
         }
-    }
 
-    public function altSend($to, $subject, $htmlBody)
-    {
-        $headers = [
-            'MIME-Version' => '1.0',
-            'Content-type' => 'text/html;charset=UTF-8',
-            'From' => 'Esperer95.app <noreply@esperer95-app.fr>',
-            // "CC" => $cc,
-            // "Bcc" => $bcc,
-            // "Reply-To" => "Esperer95.app <romain.madelaine@esperer-95.org>",
-            'X-Mailer' => 'PHP/'.phpversion(),
-        ];
-        mail($to, $subject, $htmlBody, $headers);
+        return true;
     }
 
     /**
@@ -105,28 +70,15 @@ class MailNotification
      */
     public function createUserAccount(User $user): bool
     {
-        $to = [
-            'email' => $user->getEmail(),
-            'name' => $user->getFullname(),
-        ];
-
-        $subject = 'Esperer95.app'.('prod' != $this->appVersion ? ' version DEMO' : null).' : Création de compte | '.$user->getFullname();
-
-        $context = [
-            'user' => $user,
-            'app_version' => $this->appVersion,
-        ];
-
-        $htmlBody = $this->renderer->render(
+        return $this->send(
+            $user->getEmail(),
+            'Esperer95.app'.('prod' != $this->appVersion ? ' version DEMO' : null).' : Création de compte | '.$user->getFullname(),
             'emails/createUserAccountEmail.html.twig',
-            $context,
+            [
+                'user' => $user,
+                'app_version' => $this->appVersion,
+            ]
         );
-        $txtBody = $this->renderer->render(
-            'emails/createUserAccountEmail.txt.twig',
-            $context,
-        );
-
-        return $this->send($to, $subject, $htmlBody, $txtBody);
     }
 
     /**
@@ -134,23 +86,12 @@ class MailNotification
      */
     public function reinitPassword(User $user)
     {
-        $to = [
-            'email' => $user->getEmail(),
-            'name' => $user->getFullname(),
-        ];
-
-        $subject = 'Esperer95.app : Réinitialisation du mot de passe';
-
-        $htmlBody = $this->renderer->render(
+        $send = $this->send(
+            $user->getEmail(),
+            'Esperer95.app : Réinitialisation du mot de passe',
             'emails/reinitPasswordEmail.html.twig',
             ['user' => $user]
         );
-        $txtBody = $this->renderer->render(
-            'emails/reinitPasswordEmail.txt.twig',
-            ['user' => $user]
-        );
-
-        $send = $this->send($to, $subject, $htmlBody, $txtBody);
 
         if ($send) {
             return [
