@@ -6,7 +6,7 @@ use App\Entity\Organization\Service;
 use App\Entity\Organization\User;
 use App\Form\Model\Security\UserChangeInfo;
 use App\Form\Model\Security\UserResetPassword;
-use App\Notification\MailNotification;
+use App\Notification\UserNotification;
 use App\Repository\Organization\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
@@ -27,7 +27,7 @@ class UserManager
     /**
      * Crée un utilisateur.
      */
-    public function createUser(User $user, MailNotification $notification): void
+    public function createUser(User $user, UserNotification $userNotification): void
     {
         $user->setToken(bin2hex(random_bytes(32)))
             ->setTokenCreatedAt(new \DateTime());
@@ -37,7 +37,15 @@ class UserManager
 
         $this->discache($user);
 
-        $notification->createUserAccount($user);
+        $userNotification->send(
+            $user->getEmail(),
+            'Esperer95.app'.('prod' != $this->appVersion ? ' version DEMO' : null).' : Création de compte | '.$user->getFullname(),
+            'emails/newUserEmail.html.twig',
+            [
+                'user' => $user,
+                'app_version' => $this->appVersion,
+            ]
+        );
 
         $this->addFlash('success', 'Le compte de '.$user->getFirstname().' est créé. Un e-mail lui a été envoyé.');
     }
@@ -45,14 +53,14 @@ class UserManager
     /**
      * Génère un nouveau token à l'utilisateur et lui envoie un email.
      */
-    public function generateNewToken(User $user, MailNotification $notification): void
+    public function generateNewToken(User $user, UserNotification $userNotification): void
     {
         $user->setToken(bin2hex(random_bytes(32)))
             ->setTokenCreatedAt(new \DateTime());
 
         $this->manager->flush();
 
-        if ($notification->createUserAccount($user)) {
+        if ($userNotification->newUser($user)) {
             $this->addFlash('success', 'Un e-mail a été envoyé à l\'utilisateur. Le lien est valide durant 24 heures.');
         } else {
             $this->addFlash('danger', 'L\'email n\'a pu être envoyé.');
@@ -145,14 +153,14 @@ class UserManager
     /**
      * Envoie l'email de réinitialisation du mot de passe.
      */
-    public function sendEmailToReinitPassword(User $user, MailNotification $notification)
+    public function sendEmailToReinitPassword(User $user, UserNotification $userNotification)
     {
         $user->setToken(bin2hex(random_bytes(32))) // Enregistre le token dans la base
             ->setTokenCreatedAt(new \DateTime());
 
         $this->manager->flush();
 
-        $message = $notification->reinitPassword($user); // Envoie l'email
+        $message = $userNotification->reinitPassword($user); // Envoie l'email
 
         $this->addFlash($message['type'], $message['content']);
 

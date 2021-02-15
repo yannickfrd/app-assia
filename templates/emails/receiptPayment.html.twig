@@ -3,7 +3,6 @@
 {% block greeting %}
     <p class="mb-4">Bonjour {{ person.gender == 1 ? "Madame" : (person.gender == 2 ? "Monsieur") }} {{ person.fullname }}, </p>
 {% endblock %}
-
 {% block body %}
     <p>Je vous prie de trouver en pièce-jointe <b>le reçu du paiement</b> concernant 
         {% if contribution.type == 1 %}
@@ -21,19 +20,16 @@
             (soit {{ contribution.nbDays }} jours){#
         #}{% endif %}.
     </p>
-    
     <br/>
-
     <p>Cordialement,<br/>
-    --<br/>
+{% endblock %}
+{% block footer %}
+        <br/>
         {{ app.user.firstname }} {{ app.user.lastname }}<br/>
         Service {{ support.service.name }}<br/>
         Association ESPERER 95<br/>
         <i>{{ support.subService ? support.subService.phone1 : support.service.phone1 }}</i><br/>
-        <i>{{ support.subService ? support.subService.email : support.service.email }}</a></i>
-        <img class="d-block mb-2" src="{{ email.image('@images/logo_e95_mail.png') }}" alt="Esperer 95">
+        <i>{{ support.subService ? support.subService.email : support.service.email }}</i><br/><br/>
+        <img class="mb-2" src="{{ email.image('@images/logo_e95_mail.png') }}" alt="Esperer 95">
     </p>
-{% endblock %}
-
-{% block footer %}
 {% endblock %}

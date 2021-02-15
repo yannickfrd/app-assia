@@ -7,13 +7,13 @@
           "Helvetica Neue",
           "Noto Sans",
           sans-serif;
-      font-size: .9rem;
+      font-size: 95%;
       line-height: 1.5;
       color: rgb(33, 37, 41);
   }
 
   p {
-      margin-bottom: 1rem;
+      margin-bottom: 10px;
   }
 
   a {
@@ -22,8 +22,8 @@
   }
 
   hr {
-      margin-top: 1rem;
-      margin-bottom: 1rem;
+      margin-top: 10px;
+      margin-bottom: 10px;
       border: 0;
       border-top: 1px solid rgba(0, 0, 0, .1);
       box-sizing: content-box;
@@ -31,12 +31,16 @@
       overflow: visible;
   }
 
+  .font-weight-bold {
+      font-weight: 700;
+  }
+
   .text-secondary {
       color: rgb(108, 117, 125);
   }
 
   .small {
-      font-size: .7rem;
+      font-size: 80%;
   }
 
   .text-center {
@@ -52,17 +56,29 @@
   }
 
   .mb-2 {
-      margin-bottom: .5rem !important;
+      margin-bottom: 5px;
   }
 
   .mb-4 {
-      margin-bottom: 1.5rem !important;
+      margin-bottom: 20px;
   }
 
   .p-2 {
-      margin: .5rem !important;
+      padding: 5px;
   }
 
   .p-4 {
-      margin: 1.5rem !important;
+      padding: 20px;
+  }
+
+  .alert-danger {
+      color: #721c24;
+      background-color: #f8d7da;
+      border-color: #f5c6cb;
+  }
+
+  .alert-warning {
+      color: #856404;
+      background-color: #fff3cd;
+      border-color: #ffeeba;
   }

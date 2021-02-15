@@ -12,7 +12,7 @@ use App\Form\Model\Support\SupportContributionSearch;
 use App\Form\Support\Contribution\ContributionSearchType;
 use App\Form\Support\Contribution\ContributionType;
 use App\Form\Support\Contribution\SupportContributionSearchType;
-use App\Notification\MailNotification;
+use App\Notification\ContributionNotification;
 use App\Repository\Evaluation\EvaluationGroupRepository;
 use App\Repository\Organization\PlaceRepository;
 use App\Repository\Support\ContributionRepository;
@@ -30,6 +30,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -297,7 +298,7 @@ class ContributionController extends AbstractController
      *
      * @Route("contribution/{id}/send/pdf", name="contribution_send_pdf", methods="GET")
      */
-    public function sendPaymentByEmail(int $id, SupportManager $supportManager, ExportPDF $exportPDF, Environment $renderer, MailNotification $notification): Response
+    public function sendPaymentByEmail(int $id, SupportManager $supportManager, ExportPDF $exportPDF, Environment $renderer, ContributionNotification $contributionNotification): Response
     {
         /** @var Contribution */
         $contribution = $this->repoContribution->findContribution($id);
@@ -310,7 +311,6 @@ class ContributionController extends AbstractController
         $logoPath = $supportGroup->getService()->getPole()->getLogoPath();
         $person = $supportManager->getHeadPersonSupport($supportGroup);
         $fullnameSupport = $person->getFullname();
-        $email = $person->getEmail();
 
         $content = $renderer->render('app/support/contribution/contributionExport.html.twig', [
             'title' => $title,
@@ -349,19 +349,7 @@ class ContributionController extends AbstractController
         ];
 
         $date = $contribution->getMonthContrib() ? Calendar::MONTHS[(int) $contribution->getMonthContrib()->format('m')].$contribution->getMonthContrib()->format(' Y') : '';
-        $notification->send(
-            [
-                'email' => $email,
-                'name' => $fullnameSupport,
-            ],
-            'ESPERER 95 | '.$title.' '.$date.' | '.$fullnameSupport,
-            $renderer->render('emails/receiptPayment.html.twig', $context),
-            null,
-            null,
-            $this->getUser()->getEmail(),
-            $this->getUser()->getEmail(),
-            [$path],
-        );
+        $contributionNotification->sendContribution($person->getEmail(), 'ESPERER 95 | '.$title.' '.$date.' | '.$fullnameSupport, $context, $path);
 
         $contribution->setMailSentAt(new \Datetime());
 

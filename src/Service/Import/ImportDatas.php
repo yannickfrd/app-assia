@@ -4,7 +4,7 @@ namespace App\Service\Import;
 
 use App\Entity\Support\Note;
 use App\Entity\Support\SupportGroup;
-use App\Notification\MailNotification;
+use App\Notification\ImportNotification;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
 
@@ -12,18 +12,18 @@ class ImportDatas
 {
     protected $manager;
     protected $user;
-    protected $notification;
+    protected $importNotification;
 
     protected $datas;
 
     public function __construct(
         EntityManagerInterface $manager,
         Security $security,
-        MailNotification $notification)
+        ImportNotification $importNotification)
     {
         $this->manager = $manager;
         $this->user = $security->getUser();
-        $this->notification = $notification;
+        $this->importNotification = $importNotification;
     }
 
     public function getDatas(string $fileName)
@@ -91,13 +91,6 @@ class ImportDatas
             $content = $content.$person->getLastname()."\t".$person->getFirstname()."\t".$person->getBirthdate()->format('d/m/Y').'<br/>';
         }
 
-        $this->notification->send(
-            [
-                'email' => 'romain.madelaine@esperer-95.org',
-                'name' => 'Romain',
-            ],
-            'Doublons personnes',
-            $content,
-        );
+        $this->importNotification->sendNotif($content, $x);
     }
 }

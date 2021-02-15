@@ -5,7 +5,7 @@ namespace App\Service\Import;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\ServiceUser;
 use App\Entity\Organization\User;
-use App\Notification\MailNotification;
+use App\Notification\UserNotification;
 use App\Repository\Organization\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,7 +17,7 @@ class ImportDatasUser extends ImportDatas
     protected $manager;
     /** @var Request */
     protected $request;
-    protected $notification;
+    protected $userNotification;
     protected $slugger;
 
     protected $fields;
@@ -31,13 +31,13 @@ class ImportDatasUser extends ImportDatas
 
     public function __construct(
         EntityManagerInterface $manager,
-        MailNotification $notification,
+        UserNotification $userNotification,
         UserRepository $repoUser,
         UserPasswordEncoderInterface $passwordEncoder,
         SluggerInterface $slugger)
     {
         $this->manager = $manager;
-        $this->notification = $notification;
+        $this->userNotification = $userNotification;
         $this->repoUser = $repoUser;
         $this->passwordEncoder = $passwordEncoder;
         $this->slugger = $slugger;
@@ -61,7 +61,7 @@ class ImportDatasUser extends ImportDatas
 
         // Envoie des emails.
         foreach ($this->users as $user) {
-            $this->notification->createUserAccount($user);
+            $this->userNotification->newUser($user);
         }
 
         // dd($this->users);

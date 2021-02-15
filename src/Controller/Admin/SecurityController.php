@@ -15,7 +15,7 @@ use App\Form\Model\Security\UserChangePassword;
 use App\Form\Model\Security\UserInitPassword;
 use App\Form\Model\Security\UserResetPassword;
 use App\Form\Organization\User\UserChangeInfoType;
-use App\Notification\MailNotification;
+use App\Notification\UserNotification;
 use App\Repository\Organization\ServiceRepository;
 use App\Repository\Organization\UserRepository;
 use App\Repository\Support\SupportGroupRepository;
@@ -39,7 +39,7 @@ class SecurityController extends AbstractController
     /**
      * @Route("/admin/registration", name="security_registration", methods="GET|POST")
      */
-    public function registration(Request $request, UserPasswordEncoderInterface $encoder, MailNotification $notification): Response
+    public function registration(Request $request, UserPasswordEncoderInterface $encoder, UserNotification $userNotification): Response
     {
         $user = new User();
         $user->setPassword($encoder->encodePassword($user, bin2hex(random_bytes(8))));
@@ -49,7 +49,7 @@ class SecurityController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             if ($user->getServiceUser()->count() > 0) {
-                $this->userManager->createUser($user, $notification);
+                $this->userManager->createUser($user, $userNotification);
 
                 return $this->redirectToRoute('security_user', ['id' => $user->getId()]);
             }
@@ -66,9 +66,9 @@ class SecurityController extends AbstractController
      *
      * @Route("/admin/user/{id}/send_new_email", name="security_user_send_new_email", methods="GET")
      */
-    public function sendNewEmailToUser(User $user, MailNotification $notification): Response
+    public function sendNewEmailToUser(User $user, UserNotification $userNotification): Response
     {
-        $this->userManager->generateNewToken($user, $notification);
+        $this->userManager->generateNewToken($user, $userNotification);
 
         return $this->redirectToRoute('security_user', ['id' => $user->getId()]);
     }
@@ -233,7 +233,7 @@ class SecurityController extends AbstractController
      *
      * @Route("/login/forgot_password", name="security_forgot_password", methods="GET|POST")
      */
-    public function forgotPassword(Request $request, UserRepository $repoUser, MailNotification $notification): Response
+    public function forgotPassword(Request $request, UserRepository $repoUser, UserNotification $userNotification): Response
     {
         // Redirection vers la page d'accueil si l'utilisateur est déjà connecté
         if ($this->getUser()) {
@@ -250,7 +250,7 @@ class SecurityController extends AbstractController
             $user = $this->userManager->userExists($repoUser, $userResetPassword);
 
             if ($user) {
-                $message = $this->userManager->sendEmailToReinitPassword($user, $notification);
+                $message = $this->userManager->sendEmailToReinitPassword($user, $userNotification);
 
                 if ($message) {
                     return $this->redirectToRoute('security_login');

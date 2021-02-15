@@ -2,25 +2,19 @@
 
 namespace App\EventSubscriber;
 
-use App\Event\ExportDataEvent;
-use App\Notification\MailNotification;
+use App\Notification\ExceptionNotification;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Twig\Environment;
 
 class ExceptionSubscriber implements EventSubscriberInterface
 {
-    private $renderer;
-    private $notification;
-    private $adminEmail;
-    private $exceptionListener;
+    // private $exceptionNotification;
+    // private $exceptionListener;
 
-    // public function __construct(Environment $renderer, MailNotification $notification, string $adminEmail, bool $exceptionListener)
+    // public function __construct(ExceptionNotification $exceptionNotification, bool $exceptionListener)
     // {
-    //     $this->renderer = $renderer;
-    //     $this->notification = $notification;
-    //     $this->adminEmail = $adminEmail;
+    //     $this->exceptionNotification = $exceptionNotification;
     //     $this->exceptionListener = $exceptionListener;
     // }
 
@@ -50,25 +44,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $exception = $event->getThrowable();
-        $statusCodeMethod = 'getStatusCode';
-
-        $message = sprintf(
-            'Exception throwed : %s with code : %s',
-            $exception->getMessage(),
-            method_exists($exception, $statusCodeMethod) ? $exception->$statusCodeMethod() : $exception->getCode(),
-        );
-
-        $htmlBody = $this->renderer->render(
-            'emails/exceptionEmail.html.twig',
-            ['exception' => $exception]
-        );
-
-        $this->notification->send(
-            ['email' => $this->adminEmail, 'name' => 'Adminitrateur'],
-            'Esperer95.app : '.$message,
-            $htmlBody
-        );
+        $this->exceptionNotification->sendException($event->getThrowable());
     }
 
     public function logException(ExceptionEvent $event)

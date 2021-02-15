@@ -30,7 +30,7 @@ use App\Entity\Support\PlacePerson;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Support\SupportPerson;
 use App\Form\Utils\Choices;
-use App\Notification\MailNotification;
+use App\Notification\ImportNotification;
 use App\Repository\Organization\DeviceRepository;
 use App\Repository\Organization\PlaceRepository;
 use App\Repository\Organization\SubServiceRepository;
@@ -446,7 +446,7 @@ class ImportDatasHebergement extends ImportDatas
     ];
 
     protected $manager;
-    protected $notification;
+    protected $importNotification;
 
     protected $repoSubService;
     protected $repoDevice;
@@ -483,14 +483,14 @@ class ImportDatasHebergement extends ImportDatas
 
     public function __construct(
         EntityManagerInterface $manager,
-        MailNotification $notification,
+        ImportNotification $importNotification,
         SubServiceRepository $repoSubService,
         DeviceRepository $repoDevice,
         PlaceRepository $repoPlace,
         PersonRepository $repoPerson)
     {
         $this->manager = $manager;
-        $this->notification = $notification;
+        $this->importNotification = $importNotification;
         $this->repoSubService = $repoSubService;
         $this->repoDevice = $repoDevice;
         $this->repoPlace = $repoPlace;

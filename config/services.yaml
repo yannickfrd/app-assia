@@ -12,8 +12,8 @@ services:
     _defaults:
         autowire: true # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
-        # bind:
-        #     $adminEmail: '%admin_email%'
+        bind:
+            $adminEmail: "%admin_email%"
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -37,12 +37,10 @@ services:
             - { name: "kernel.event_listener", event: "kernel.exception" }
         arguments:
             $exceptionListener: "%env(EXCEPTION_LISTENER)%"
-            $adminEmail: "%admin_email%"
 
     # App\EventSubscriber\ExceptionSubscriber:
     #     arguments:
     #         $exceptionListener: '%env(EXCEPTION_LISTENER)%'
-    #         $adminEmail: '%admin_email%'
 
     App\EventListener\LoginListener:
         tags:
@@ -69,7 +67,7 @@ services:
         tags:
             - { name: "kernel.event_listener", event: "kernel.terminate" }
 
-    App\Notification\MailNotification:
+    App\Notification\MailNotifier:
         arguments:
             $appVersion: "%env(APP_VERSION)%"
 

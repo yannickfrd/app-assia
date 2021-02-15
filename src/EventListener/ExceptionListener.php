@@ -2,25 +2,20 @@
 
 namespace App\EventListener;
 
-use App\Notification\MailNotification;
+use App\Notification\ExceptionNotification;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\Security\Core\Security;
-use Twig\Environment;
 
 class ExceptionListener
 {
     private $security;
-    private $renderer;
-    private $notification;
-    private $adminEmail;
+    private $exceptionNotification;
     private $exceptionListener;
 
-    public function __construct(Security $security, Environment $renderer, MailNotification $notification, string $adminEmail, bool $exceptionListener)
+    public function __construct(Security $security, ExceptionNotification $exceptionNotification, bool $exceptionListener)
     {
         $this->security = $security;
-        $this->renderer = $renderer;
-        $this->notification = $notification;
-        $this->adminEmail = $adminEmail;
+        $this->exceptionNotification = $exceptionNotification;
         $this->exceptionListener = $exceptionListener;
     }
 
@@ -30,24 +25,6 @@ class ExceptionListener
             return;
         }
 
-        $exception = $event->getThrowable();
-        $statusCodeMethod = 'getStatusCode';
-
-        $message = sprintf(
-            'Exception throwed : %s with code : %s',
-            $exception->getMessage(),
-            method_exists($exception, $statusCodeMethod) ? $exception->$statusCodeMethod() : $exception->getCode(),
-        );
-
-        $htmlBody = $this->renderer->render(
-            'emails/exceptionEmail.html.twig',
-            ['exception' => $exception]
-        );
-
-        $this->notification->send(
-            ['email' => $this->adminEmail, 'name' => 'Adminitrateur'],
-            'Esperer95.app : '.$message,
-            $htmlBody
-        );
+        $this->exceptionNotification->sendException($event->getThrowable());
     }
 }
