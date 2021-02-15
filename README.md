@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.16.58 15/02/2021
+2.16.59 15/02/2021
 
 # Développeur
 Romain MADELAINE
@@ -13,10 +13,10 @@ https://github.com/RomMad/esperer95.app
 # Connection à la base démo
 https://demo.esperer95.app
 
-## Version 2.16.57-58 - 15/02/2021
+## Version 2.16.57-59 - 15/02/2021
 - Set up MailerInterface, create differents classes MailNotification, updated emails templates and css;
 - Create custom Twig Extension (filters);
-
+- Create custom Twig functions;
 ## Version 2.16.50-56 - 12/02/2021
 - Rename entities 'Accommodation' => 'Place', 'AccommodationPerson' => 'PlacePerson', 'AccommodationGroup' => 'PlaceGroup';
 - Edit filter referents query and factorisation of searchs;

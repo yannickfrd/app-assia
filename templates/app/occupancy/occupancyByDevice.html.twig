@@ -1,5 +1,4 @@
 {% extends "base.html.twig" %}
-{% import "macros/alertColor.html.twig" as utils %}
 
 {% block title %}Taux d'occupation{% endblock %}
 
@@ -57,8 +56,8 @@
                                     <td class="align-middle text-right">{{ device.occupancyDays|number }}</td>
                                     <td class="align-middle text-right">{{ device.averageCapacity|round(2) }}</td>
                                     <td class="align-middle text-right">{{ device.averageOccupancy|round(2) }}</td>
-                                    {% set ocupancyRate = device.capacityDays ? ((device.occupancyDays / device.capacityDays) * 100) %}
-                                    <td class="align-middle {{ utils.alert_color(ocupancyRate) }} text-right">
+                                    {% set ocupancyRate = ratio(device.occupancyDays, device.capacityDays) %}
+                                    <td class="align-middle {{ alert_color(ocupancyRate) }} text-right">
                                     <span class="font-weight-bold font-italic">{{ ocupancyRate|percent }}</span>
                                     </td>
                                 </tr>
@@ -73,8 +72,8 @@
                                 <td class="align-middle text-right">{{ datas.occupancyDays|number }}</td>
                                 <td class="align-middle text-right">{{ datas.averageCapacity|round(2) }}</td>
                                 <td class="align-middle text-right">{{ datas.averageOccupancy|round(2) }}</td>
-                                {% set ocupancyRate = datas.capacityDays ? ((datas.occupancyDays / datas.capacityDays) * 100) %}
-                                <td class="align-middle {{ utils.alert_color( ocupancyRate) }} text-right">
+                                {% set ocupancyRate = ratio(datas.occupancyDays, datas.capacityDays) %}
+                                <td class="align-middle {{ alert_color( ocupancyRate) }} text-right">
                                 <span class="font-weight-bold font-italic">{{ ocupancyRate|percent }}</span>
                                 </td>
                             </tr>

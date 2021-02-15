@@ -1,5 +1,4 @@
 {% extends "base.html.twig" %}
-{% import "macros/alertColor.html.twig" as utils %}
 
 {% block title %}Taux d'occupation{% endblock %}
 
@@ -44,7 +43,7 @@
                         <tbody>
                         {% set example = "" %}
                             {% for service_id, service in datas.services|filter(a => a.capacityDays > 0) %}
-                                {% set ocupancyRate = ((service.occupancyDays / service.capacityDays) * 100) %}
+                                {% set ocupancyRate = ratio(service.occupancyDays, service.capacityDays) %}
                                 {% if loop.first %}
                                     {% set example %}
                                         {% apply spaceless %}
@@ -81,7 +80,7 @@
                                     <td class="align-middle text-right">{{ service.occupancyDays|number }}</td>
                                     <td class="align-middle text-right">{{ service.averageCapacity|round(2) }}</td>
                                     <td class="align-middle text-right">{{ service.averageOccupancy|round(2) }}</td>
-                                    <td class="align-middle {{ utils.alert_color(ocupancyRate) }} text-right">
+                                    <td class="align-middle {{ alert_color(ocupancyRate) }} text-right">
                                         <span class="font-weight-bold font-italic">{{ ocupancyRate|percent }}</span>
                                     </td>
                                 </tr>
@@ -95,8 +94,8 @@
                                 <td class="align-middle text-right">{{ datas.occupancyDays|number }}</td>
                                 <td class="align-middle text-right">{{ datas.averageCapacity|round(2) }}</td>
                                 <td class="align-middle text-right">{{ datas.averageOccupancy|round(2) }}</td>
-                                {% set ocupancyRate = datas.capacityDays ? ((datas.occupancyDays / datas.capacityDays) * 100) %}
-                                <td class="align-middle {{ utils.alert_color( ocupancyRate) }} text-right">
+                                {% set ocupancyRate = ratio(datas.occupancyDays, datas.capacityDays) %}
+                                <td class="align-middle {{ alert_color( ocupancyRate) }} text-right">
                                     <span class="font-weight-bold font-italic">{{ ocupancyRate|percent }}</span>
                                 </td>
                             </tr>
