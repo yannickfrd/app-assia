@@ -55,8 +55,10 @@ class PlacePersonRepository extends ServiceEntityRepository
             ->leftJoin('pl.service', 's')->addSelect('PARTIAL s.{id}')
             ->leftJoin('pl.subService', 'ss')->addSelect('PARTIAL ss.{id}')
 
-            ->andWhere('pg.endDate > :start OR pg.endDate IS NULL')->setParameter('start', $search->getStart())
-            ->andWhere('pg.startDate < :end')->setParameter('end', $search->getEnd());
+            ->andWhere('pp.endDate > :start OR pp.endDate IS NULL')
+            ->setParameter('start', $search->getStart())
+            ->andWhere('pp.startDate < :end')
+            ->setParameter('end', $search->getEnd());
 
         if ($service) {
             $query = $query->andWhere('pl.service = :service')
