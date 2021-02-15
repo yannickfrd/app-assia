@@ -24,36 +24,36 @@
                     <tbody>
                         <tr>
                             <td scope="row">Ressources</td>
-                            <td class="text-right">{{ evalBudgetGroup.resourcesGroupAmt|format_currency("EUR") }}</td>
+                            <td class="text-right">{{ evalBudgetGroup.resourcesGroupAmt|price }}</td>
                         </tr>
                         {% if evalBudgetGroup.chargesGroupAmt %}
                             <tr>
                                 <td scope="row">Charges</td>
-                                <td class="text-right">{{ evalBudgetGroup.chargesGroupAmt|format_currency("EUR") }}</td>
+                                <td class="text-right">{{ evalBudgetGroup.chargesGroupAmt|price }}</td>
                             </tr>
                         {% endif %}
                         {% if evalBudgetGroup.contributionAmt %}
                             <tr>
                                 <td scope="row">Participation financière</td>
-                                <td class="text-right">{{ evalBudgetGroup.contributionAmt|format_currency("EUR") }}</td>
+                                <td class="text-right">{{ evalBudgetGroup.contributionAmt|price }}</td>
                             </tr>
                         {% endif %}
                         {% if evalBudgetGroup.debtsGroupAmt and evalBudgetGroup.monthlyRepaymentAmt > 0 %}
                             <tr>
                                 <td scope="row">Remboursement mensuel des dettes</td>
-                                <td class="text-right">{{ evalBudgetGroup.monthlyRepaymentAmt|format_currency("EUR") }}</td>
+                                <td class="text-right">{{ evalBudgetGroup.monthlyRepaymentAmt|price }}</td>
                             </tr>
                         {% endif %}
                     </tbody>
                     <tfoot>
                         <tr class="font-weight-bold">
                             <td scope="row">Reste à vivre</td>
-                            <td class="text-right">{{ evalBudgetGroup.budgetBalanceAmt|format_currency("EUR") }}</td>
+                            <td class="text-right">{{ evalBudgetGroup.budgetBalanceAmt|price }}</td>
                         </tr>
                         {% if evalBudgetGroup.debtsGroupAmt %}
                             <tr>
                                 <td scope="row">Montant total des dettes</td>
-                                <td class="text-right">{{ evalBudgetGroup.debtsGroupAmt|format_currency("EUR") }}</td>
+                                <td class="text-right">{{ evalBudgetGroup.debtsGroupAmt|price }}</td>
                             </tr>
                         {% endif %}
                     </tfoot>
@@ -97,7 +97,7 @@
                                             {{ attribute(evalBudget, key ~ 'Precision') ? attribute(evalBudget, key ~ 'Precision') : 
                                                 "Autre(s) ressource(s)" }}{% endif %}</td>
                                             {% set amt = attribute(evalBudget, key ~ 'Amt') %}
-                                        <td class="text-right">{{ amt > 0 ? amt|format_currency("EUR") }}</td>
+                                        <td class="text-right">{{ amt > 0 ? amt|price }}</td>
                                     </tr>
                                     {% endif %}
                                 {% endfor %}
@@ -105,18 +105,18 @@
                             <tfoot>
                                 <tr class="font-weight-bold">
                                     <td scope="row">Total des ressources</td>
-                                    <td class="text-right">{{ evalBudget.resourcesAmt|format_currency("EUR") }}</td>
+                                    <td class="text-right">{{ evalBudget.resourcesAmt|price }}</td>
                                 </tr>
                                 {% if evalBudget.incomeN1Amt %}
                                 <tr>
                                     <td scope="row">Impôts sur le revenu n-1</td>
-                                    <td class="text-right">{{ evalBudget.incomeN1Amt|format_currency("EUR") }}</td>
+                                    <td class="text-right">{{ evalBudget.incomeN1Amt|price }}</td>
                                 </tr>							
                                 {% endif %}
                                 {% if evalBudget.incomeN2Amt %}
                                 <tr>
                                     <td scope="row">Impôts sur le revenu n-2</td>
-                                    <td class="text-right">{{ evalBudget.incomeN2Amt|format_currency("EUR") }}</td>
+                                    <td class="text-right">{{ evalBudget.incomeN2Amt|price }}</td>
                                 </tr>
                                 {% endif %}
                             </tfoot>
@@ -140,7 +140,7 @@
                                         <td scope="row">{% if not loop.last %}{{ value }}{% else %}
                                             {{ attribute(evalBudget, key ~ 'Precision') ? attribute(evalBudget, key ~ 'Precision') : 
                                                 "Autre(s) charge(s)" }}{% endif %}</td>
-                                        <td class="text-right">{{ attribute(evalBudget, key ~ 'Amt')|format_currency("EUR") }}</td>
+                                        <td class="text-right">{{ attribute(evalBudget, key ~ 'Amt')|price }}</td>
                                     </tr>
                                     {% endif %}
                                 {% endfor %}
@@ -148,7 +148,7 @@
                             <tfoot>
                                 <tr class="font-weight-bold">
                                     <td scope="row">Total des charges</td>
-                                    <td class="text-right">{{ evalBudget.chargesAmt|format_currency("EUR") }}</td>
+                                    <td class="text-right">{{ evalBudget.chargesAmt|price }}</td>
                                 </tr>
                             </tfoot>
                         </table>

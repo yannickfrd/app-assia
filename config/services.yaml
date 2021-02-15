@@ -87,8 +87,8 @@ services:
         arguments:
             $tinifyKey: "%env(TINIFY_KEY)%"
 
-    App\Twig\AppExtension:
-        lazy: true
+    # App\Twig\AppExtension:
+    #     lazy: true
 
     Twig\CacheExtension\CacheProviderInterface:
         class: Twig\CacheExtension\CacheProvider\PsrCacheAdapter

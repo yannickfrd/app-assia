@@ -19,7 +19,7 @@
 						<div class="col-8 col-md-12">Total des resources</div>
 						<div class="col-4 col-md-12">
 							<span id="resourcesGroupAmt">{% if evalBudgetGroup.resourcesGroupAmt is defined %}
-							{{ evalBudgetGroup.resourcesGroupAmt|number_format(0, ',', ' ') }}{% else %}0{% endif %}</span> €
+							{{ evalBudgetGroup.resourcesGroupAmt|number }}{% else %}0{% endif %}</span> €
 						</div>
 					</div>
 				</div>
@@ -28,7 +28,7 @@
 						<div class="col-8 col-md-12">Total des charges</div>
 						<div class="col-4 col-md-12">
 							<span id="chargesGroupAmt">{% if evalBudgetGroup.chargesGroupAmt is defined %}
-								{{ evalBudgetGroup.chargesGroupAmt|number_format(0, ',', ' ') }}{% else %}0{% endif %}</span> €
+								{{ evalBudgetGroup.chargesGroupAmt|number }}{% else %}0{% endif %}</span> €
 						</div>
 					</div>
 				</div>
@@ -37,7 +37,7 @@
 						<div class="col-8 col-md-12">Remboursemt mensuel</div>
 						<div class="col-4 col-md-12">
 							<span id="repaymentGroupAmt">{% if evalBudgetGroup.monthlyRepaymentAmt is defined %}
-								{{ evalBudgetGroup.monthlyRepaymentAmt|number_format(0, ',', ' ') }}{% else %}0{% endif %}</span> €
+								{{ evalBudgetGroup.monthlyRepaymentAmt|number }}{% else %}0{% endif %}</span> €
 						</div>
 					</div>
 				</div>
@@ -46,7 +46,7 @@
 						<div class="col-8 col-md-12">Reste à vivre</div>
 						<div class="col-4 col-md-12">
 						<span id="budgetBalanceGroupAmt">{% if evalBudgetGroup.budgetBalanceAmt is defined %}
-							{{ evalBudgetGroup.budgetBalanceAmt|number_format(0, ',', ' ') }}{% else %}0{% endif %}</span> €
+							{{ evalBudgetGroup.budgetBalanceAmt|number }}{% else %}0{% endif %}</span> €
 						</div>
 					</div>
 				</div>
@@ -55,7 +55,7 @@
 						<div class="col-8 col-md-12">Total des dettes</div>
 						<div class="col-4 col-md-12">
 							<span id="debtsGroupAmt">{% if evalBudgetGroup.debtsGroupAmt is defined %}
-								{{ evalBudgetGroup.debtsGroupAmt|number_format(0, ',', ' ') }}{% else %}0{% endif %}</span> €
+								{{ evalBudgetGroup.debtsGroupAmt|number }}{% else %}0{% endif %}</span> €
 						</div>
 					</div>
 				</div>

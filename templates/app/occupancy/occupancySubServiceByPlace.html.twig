@@ -56,13 +56,13 @@
                                     <td class="align-middle">{{ place.place.subService.name }} ({{ place.place.device.name }})</td>
                                     <td class="align-middle">{{ place.place.address }}, {{ place.place.city }}</td>
                                     <td class="align-middle text-right">{{ place.sumPlaces }}</td>
-                                    <td class="align-middle text-right">{{ place.capacityDays|number_format(0, ",", " ") }}</td>
-                                    <td class="align-middle text-right">{{ place.occupancyDays|number_format(0, ",", " ") }}</td>
-                                    <td class="align-middle text-right">{{ place.averageCapacity|round(1, "common") }}</td>
-                                    <td class="align-middle text-right">{{ place.averageOccupancy|round(1, "common") }}</td>
-                                    {% set ocupancyRate = ((place.occupancyDays / place.capacityDays) * 100)|round(1, "common") %}
+                                    <td class="align-middle text-right">{{ place.capacityDays|number }}</td>
+                                    <td class="align-middle text-right">{{ place.occupancyDays|number }}</td>
+                                    <td class="align-middle text-right">{{ place.averageCapacity|round(2) }}</td>
+                                    <td class="align-middle text-right">{{ place.averageOccupancy|round(2) }}</td>
+                                    {% set ocupancyRate = ((place.occupancyDays / place.capacityDays) * 100) %}
                                     <td class="align-middle {{ utils.alert_color(ocupancyRate) }} text-right">
-                                    <span class="font-weight-bold font-italic">{{ ocupancyRate }} %</span>
+                                    <span class="font-weight-bold font-italic">{{ ocupancyRate|percent }}</span>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -70,14 +70,14 @@
                         <tfoot>
                             <tr class="font-weight-bold">
                                 <td scope="row" colspan="4" class="align-middle text-center py-2">Total</td>
-                                <td class="align-middle text-right">{{ datas.sumPlaces|number_format(0, ",", " ") }}</td>
-                                <td class="align-middle text-right">{{ datas.capacityDays|number_format(0, ",", " ") }}</td>
-                                <td class="align-middle text-right">{{ datas.occupancyDays|number_format(0, ",", " ") }}</td>
-                                <td class="align-middle text-right">{{ datas.averageCapacity|round(1, "common") }}</td>
-                                <td class="align-middle text-right">{{ datas.averageOccupancy|round(1, "common") }}</td>
-                                {% set ocupancyRate = datas.capacityDays ? ((datas.occupancyDays / datas.capacityDays) * 100)|round(1, "common") %}
+                                <td class="align-middle text-right">{{ datas.sumPlaces|number }}</td>
+                                <td class="align-middle text-right">{{ datas.capacityDays|number }}</td>
+                                <td class="align-middle text-right">{{ datas.occupancyDays|number }}</td>
+                                <td class="align-middle text-right">{{ datas.averageCapacity|round(2) }}</td>
+                                <td class="align-middle text-right">{{ datas.averageOccupancy|round(2) }}</td>
+                                {% set ocupancyRate = datas.capacityDays ? ((datas.occupancyDays / datas.capacityDays) * 100) %}
                                 <td class="align-middle {{ utils.alert_color( ocupancyRate) }} text-right">
-                                <span class="font-weight-bold font-italic">{{ ocupancyRate }} %</span>
+                                <span class="font-weight-bold font-italic">{{ ocupancyRate|percent }}</span>
                                 </td>
                             </tr>
                         </tfoot>

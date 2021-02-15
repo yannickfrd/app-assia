@@ -77,12 +77,12 @@
             <p class="text-justify">
                 {% if  contribution.toPayAmt > 0 and contribution.paymentDate == null %}
                     Nous vous informons que dans le cadre de votre prise en charge, vous devez vous acquitter d'un montant de 
-                    <b>{{ contribution.toPayAmt|format_currency("EUROS") }}</b>
+                    <b>{{ contribution.toPayAmt|price }}</b>
                 {% else %}
-                    Nous vous confirmons la réception de votre règlement de <b>{{ contribution.paidAmt|format_currency("EUROS") }} 
+                    Nous vous confirmons la réception de votre règlement de <b>{{ contribution.paidAmt|price }} 
                     ({{ paidAmtToString }} euro{{ contribution.paidAmt > 1 ? "s" }})</b>,
                     {% if  contribution.toPayAmt and contribution.toPayAmt != contribution.paidAmt %}
-                        pour un montant dû de {{ contribution.toPayAmt|format_currency("EUROS") }}, 
+                        pour un montant dû de {{ contribution.toPayAmt|price }}, 
                     {% endif %}
                 {% endif %}
                 relatif {{ contribution_type }}{# 
@@ -97,25 +97,25 @@
             <br/>
 
             {% if contribution.type in [1, 2] %}
-                <p class="text-justify">Le montant de {{ contribution.toPayAmt|format_currency("EUROS") }} correspond à 
+                <p class="text-justify">Le montant de {{ contribution.toPayAmt|price }} correspond à 
                     {% if service.contributionType == 1 %}
                         un pourcentage des ressources en référence au règlement de fonctionnement du service et en conformité avec les dispositions réglementaires en vigueur.
                     {% elseif service.contributionType == 2 %}
-                        {{ contribution.nbDays }} jours à {{ (contribution.toPayAmt / contribution.nbDays)|format_currency("EUROS") }} en référence à un barème forfaire.</p>
+                        {{ contribution.nbDays }} jours à {{ (contribution.toPayAmt / contribution.nbDays)|price }} en référence à un barème forfaire.</p>
                     {% endif %}
                 </p>
                 <br/>
             {% endif %}
 
             {% if contribution.paymentDate %}
-                <p>Montant réglé : {{ contribution.paidAmt|format_currency("EUROS") }}</p>
+                <p>Montant réglé : {{ contribution.paidAmt|price }}</p>
                 <p>Date de règlement : {{ contribution.paymentDate ? contribution.paymentDate|date("d/m/Y") }}</p>
                 <p>Mode de règlement : {{ contribution.paymentTypeToString }}</p>
                 {% if contribution.stillToPayAmt > 0 %}  
-                    <p>Montant restant à payer : {{ contribution.stillToPayAmt|format_currency("EUROS") }}</p>
+                    <p>Montant restant à payer : {{ contribution.stillToPayAmt|price }}</p>
                 {% endif %}
             {% else %}
-                <p>Montant à payer : {{ contribution.toPayAmt|format_currency("EUROS") }}</p>
+                <p>Montant à payer : {{ contribution.toPayAmt|price }}</p>
             {% endif %}
 
             <br/>

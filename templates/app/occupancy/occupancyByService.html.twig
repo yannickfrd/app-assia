@@ -15,7 +15,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <p><a href="{{ path('occupancy_devices', {'date': {'start': search.start|date('Y-m-d'), 'end': search.end|date('Y-m-d')}}) }}" class="text-{{ theme_color }}"><!--
+                <p><a href="{{ path('occupancy_devices', {'date': {'start': search.start|date('Y-m-d'), 'end': search.end|date('Y-m-d') }}) }}" class="text-{{ theme_color }}"><!--
                     --><span class="fas fa-undo mr-2"></span>{% if device %}Retour{% else %}Accès<!--
                     -->{% endif %} aux taux d'ocupation par dispositif.</a>
                 </p>
@@ -44,17 +44,17 @@
                         <tbody>
                         {% set example = "" %}
                             {% for service_id, service in datas.services|filter(a => a.capacityDays > 0) %}
-                                {% set ocupancyRate = ((service.occupancyDays / service.capacityDays) * 100)|round(1, "common") %}
+                                {% set ocupancyRate = ((service.occupancyDays / service.capacityDays) * 100) %}
                                 {% if loop.first %}
                                     {% set example %}
                                         {% apply spaceless %}
                                             Le service {{ service.name }} dispose de {{ service.nbPlaces }} groupes de places
                                             (soit {{ service.sumPlaces }} places). Sur la période sélectionnée ({{ interval.days }} nuits), 
-                                            sa capacité d'accueil maximale représente {{ service.capacityDays|number_format(0, ",", " ") }} 
-                                            nuitées (soit une moyenne de {{ service.averageCapacity|round(1, "common") }} places par nuit).
-                                            Sur ces places, {{ service.occupancyDays|number_format(0, ",", " ") }} nuitées ont été réalisées, 
-                                            soit une occupation moyenne de {{ service.averageOccupancy|round(1, "common") }} personnes par nuit. 
-                                            Le rapport occupation/capacité nous donne un taux d'occupation moyen de {{ ocupancyRate }} %.
+                                            sa capacité d'accueil maximale représente {{ service.capacityDays|number }} 
+                                            nuitées (soit une moyenne de {{ service.averageCapacity|round(2) }} places par nuit).
+                                            Sur ces places, {{ service.occupancyDays|number }} nuitées ont été réalisées, 
+                                            soit une occupation moyenne de {{ service.averageOccupancy|round(2) }} personnes par nuit. 
+                                            Le rapport occupation/capacité nous donne un taux d'occupation moyen de {{ ocupancyRate|percent }}.
                                         {% endapply %}
                                     {% endset %}
                                 {% endif %}
@@ -62,13 +62,13 @@
                                     <td class="align-middle text-center" scope="row">
                                         {% if service.nbSubServices > 1 %}
                                             <a href="{{ path('occupancy_sub_services', {'id': service_id, 
-                                                'date': {'start': search.start|date('Y-m-d'), 'end': search.end|date('Y-m-d')}} ) }}" 
+                                                'date': {'start': search.start|date('Y-m-d'), 'end': search.end|date('Y-m-d') }} ) }}" 
                                                 class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" 
                                                 title="Voir le détail par sous-service"><span class="fas fa-eye fa-sm"></span>
                                             </a>
                                         {% else %}
                                             <a href="{{ path('occupancy_service_places', {'id': service_id, 
-                                                'date': {'start': search.start|date('Y-m-d'), 'end': search.end|date('Y-m-d')}} ) }}" 
+                                                'date': {'start': search.start|date('Y-m-d'), 'end': search.end|date('Y-m-d') }} ) }}" 
                                                 class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" 
                                                 title="Voir le détail par groupe de places du service"><span class="fas fa-eye fa-sm"></span>
                                             </a>
@@ -77,27 +77,27 @@
                                     <td class="align-middle">{{ service.name }}</td>
                                     <td class="align-middle text-right">{{ service.nbPlaces }}</td>
                                     <td class="align-middle text-right">{{ service.sumPlaces }}</td>
-                                    <td class="align-middle text-right">{{ service.capacityDays|number_format(0, ",", " ") }}</td>
-                                    <td class="align-middle text-right">{{ service.occupancyDays|number_format(0, ",", " ") }}</td>
-                                    <td class="align-middle text-right">{{ service.averageCapacity|round(1, "common") }}</td>
-                                    <td class="align-middle text-right">{{ service.averageOccupancy|round(1, "common") }}</td>
+                                    <td class="align-middle text-right">{{ service.capacityDays|number }}</td>
+                                    <td class="align-middle text-right">{{ service.occupancyDays|number }}</td>
+                                    <td class="align-middle text-right">{{ service.averageCapacity|round(2) }}</td>
+                                    <td class="align-middle text-right">{{ service.averageOccupancy|round(2) }}</td>
                                     <td class="align-middle {{ utils.alert_color(ocupancyRate) }} text-right">
-                                        <span class="font-weight-bold font-italic">{{ ocupancyRate }} %</span>
+                                        <span class="font-weight-bold font-italic">{{ ocupancyRate|percent }}</span>
                                     </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
                             <tr class="font-weight-bold">
                                 <td scope="row" colspan="2" class="align-middle text-center py-2">Total</td>
-                                <td class="align-middle text-right">{{ datas.nbPlaces|number_format(0, ",", " ") }}</td>
-                                <td class="align-middle text-right">{{ datas.sumPlaces|number_format(0, ",", " ") }}</td>
-                                <td class="align-middle text-right">{{ datas.capacityDays|number_format(0, ",", " ") }}</td>
-                                <td class="align-middle text-right">{{ datas.occupancyDays|number_format(0, ",", " ") }}</td>
-                                <td class="align-middle text-right">{{ datas.averageCapacity|round(1, "common") }}</td>
-                                <td class="align-middle text-right">{{ datas.averageOccupancy|round(1, "common") }}</td>
-                                {% set ocupancyRate = datas.capacityDays ? ((datas.occupancyDays / datas.capacityDays) * 100)|round(1, "common") %}
+                                <td class="align-middle text-right">{{ datas.nbPlaces|number }}</td>
+                                <td class="align-middle text-right">{{ datas.sumPlaces|number }}</td>
+                                <td class="align-middle text-right">{{ datas.capacityDays|number }}</td>
+                                <td class="align-middle text-right">{{ datas.occupancyDays|number }}</td>
+                                <td class="align-middle text-right">{{ datas.averageCapacity|round(2) }}</td>
+                                <td class="align-middle text-right">{{ datas.averageOccupancy|round(2) }}</td>
+                                {% set ocupancyRate = datas.capacityDays ? ((datas.occupancyDays / datas.capacityDays) * 100) %}
                                 <td class="align-middle {{ utils.alert_color( ocupancyRate) }} text-right">
-                                    <span class="font-weight-bold font-italic">{{ ocupancyRate }} %</span>
+                                    <span class="font-weight-bold font-italic">{{ ocupancyRate|percent }}</span>
                                 </td>
                             </tr>
                         </tfoot>

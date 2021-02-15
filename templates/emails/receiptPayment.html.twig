@@ -14,7 +14,7 @@
         {% elseif contribution.type in [30, 31, 32] %}
             le remboursement de dette
         {% endif %}
-        d'un montant de <b>{{ contribution.paidAmt|format_currency("EUROS") }}</b>{#
+        d'un montant de <b>{{ contribution.paidAmt|price }}</b>{#
         #}{% if contribution.type in [1, 2] %}{#
             #}, pour la période du <b>{{ contribution.startDate|date("d/m/Y") }}</b> au <b>{{ contribution.endDate|date("d/m/Y") }}</b> 
             (soit {{ contribution.nbDays }} jours){#

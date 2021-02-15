@@ -25,7 +25,7 @@
                         <tr>
                             <td class="align-middle">{{ key }}</td>
                             {% for item in items %}
-                                <td class="align-middle text-right">{{ item > 0 ? item|number_format(0, ",", " ") : '-' }}</td>
+                                <td class="align-middle text-right">{{ item > 0 ? item|number : '-' }}</td>
                             {% endfor %}
                         </tr>
                     {% endfor %}

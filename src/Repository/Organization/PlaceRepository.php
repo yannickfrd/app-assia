@@ -112,7 +112,7 @@ class PlaceRepository extends ServiceEntityRepository
     /**
      * Donne toutes les places du sous-service.
      *
-     * @return mixed
+     * @return Place[]|null
      */
     public function findPlacesOfSubService(SubService $subService)
     {
@@ -131,9 +131,9 @@ class PlaceRepository extends ServiceEntityRepository
     /**
      * Donne toutes les groupes de places pour les taux d'occupation.
      *
-     * @return mixed
+     * @return Place[]|null
      */
-    public function findPlacesForOccupancy(OccupancySearch $search, $currentUser, Service $service = null, SubService $subService = null)
+    public function findPlacesForOccupancy(OccupancySearch $search, $currentUser, Service $service = null, SubService $subService = null): array
     {
         $query = $this->createQueryBuilder('pl')->select('pl')
             ->innerJoin('pl.service', 's')->addSelect('PARTIAL s.{id, name}')

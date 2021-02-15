@@ -47,12 +47,12 @@
                                             </a>
                                         </td>
                                         <td class="align-middle">{{ month.monthToString }}</td>
-                                        <td class="align-middle text-right">{{ month.nbContributions|number_format(0, ",", " ") }}</td>
-                                        <td class="align-middle text-right">{{ month.sumToPayAmt|format_currency("EUR") }}</td>
-                                        <td class="align-middle text-right">{{ month.nbContributions ? month.averageContributionAmt|format_currency("EUR") }}</td>
-                                        <td class="align-middle text-right">{{ month.sumPaidAmt|format_currency("EUR") }}</td>
-                                        <td class="align-middle text-right">{{ month.nbContributions ? month.averagePaidAmt|format_currency("EUR") }}</td>
-                                        <td class="align-middle text-right">{{ month.sumStillToPayAmt|format_currency("EUR") }}</td>
+                                        <td class="align-middle text-right">{{ month.nbContributions|number }}</td>
+                                        <td class="align-middle text-right">{{ month.sumToPayAmt|price }}</td>
+                                        <td class="align-middle text-right">{{ month.nbContributions ? month.averageContributionAmt|price }}</td>
+                                        <td class="align-middle text-right">{{ month.sumPaidAmt|price }}</td>
+                                        <td class="align-middle text-right">{{ month.nbContributions ? month.averagePaidAmt|price }}</td>
+                                        <td class="align-middle text-right">{{ month.sumStillToPayAmt|price }}</td>
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -60,12 +60,12 @@
                             <tfooter>
                                 <tr class="font-weight-bold">
                                     <td class="align-middle text-center" colspan="2">Total</td>
-                                    <td class="align-middle text-right">{{ datas.nbContributions|number_format(0, ",", " ") }}</td>
-                                    <td class="align-middle text-right">{{ datas.sumToPayAmt|format_currency("EUR") }}</td> 
-                                    <td class="align-middle text-right">{{ datas.nbContributions ? datas.averageContributionAmt|format_currency("EUR")}}</td>
-                                    <td class="align-middle text-right">{{ datas.sumPaidAmt|format_currency("EUR") }}</td>
-                                    <td class="align-middle text-right">{{ datas.nbContributions ? datas.averagePaidAmt|format_currency("EUR") }}</td>
-                                    <td class="align-middle text-right">{{ datas.sumStillToPayAmt|format_currency("EUR") }}</td>
+                                    <td class="align-middle text-right">{{ datas.nbContributions|number }}</td>
+                                    <td class="align-middle text-right">{{ datas.sumToPayAmt|price }}</td> 
+                                    <td class="align-middle text-right">{{ datas.nbContributions ? datas.averageContributionAmt|price}}</td>
+                                    <td class="align-middle text-right">{{ datas.sumPaidAmt|price }}</td>
+                                    <td class="align-middle text-right">{{ datas.nbContributions ? datas.averagePaidAmt|price }}</td>
+                                    <td class="align-middle text-right">{{ datas.sumStillToPayAmt|price }}</td>
                                 </tr>
                             </tfooter>
                         </table>

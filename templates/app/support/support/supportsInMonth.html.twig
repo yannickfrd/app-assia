@@ -31,7 +31,7 @@
 
             <div class="row align-items-baseline">
                 <div class="col-md-4 count align-middle mb-2">
-                    <span class="align-middle">Résultat : {{ supports.getTotalItemCount|number_format(0,'', ' ') }} <!--
+                    <span class="align-middle">Résultat : {{ supports.getTotalItemCount|number }} <!--
                     -->suivi{% if supports.getTotalItemCount > 1 %}s{% endif %}.</span>
                 </div>
                 <div class="col-md-8">
@@ -77,8 +77,8 @@
                                 </td>
                                 {% for contribution in contributions|filter(c => c.supportGroup == support and c.type == constant("App\\Entity\\Support\\Contribution::TYPE_CONTRIBUTION") ) %}
                                     {% if loop.first %}
-                                        <td class="align-middle text-right">{{ contribution.toPayAmt|format_currency("EUR") }}</td>
-                                        <td class="align-middle text-right">{{ contribution.paidAmt|format_currency("EUR") }}</td>
+                                        <td class="align-middle text-right">{{ contribution.toPayAmt|price }}</td>
+                                        <td class="align-middle text-right">{{ contribution.paidAmt|price }}</td>
                                         <td class="align-middle">{{ contribution.paymentDate|date("d/m/Y") }}</td>
                                         <td class="align-middle">{{ contribution.paymentTypeToString }}</td>
                                         <td class="align-middle">{{ contribution.comment }}</td>

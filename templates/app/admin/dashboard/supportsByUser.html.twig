@@ -109,9 +109,9 @@
                                 {% if datasUsers|length > 0 %} 
                                     <tr class="font-weight-bold">
                                         <td scope="row" colspan="2" class="align-middle text-right">Moyenne</td>
-                                        <td class="align-middle text-right">{{ (nbSupports / datasUsers|length)|round(1, "common") }}
+                                        <td class="align-middle text-right">{{ (nbSupports / datasUsers|length)|round(1) }}
                                             {% if nbSupports != sumCoeffSupports %}
-                                                <br/><span class="text-{{ theme_color }}"> ({{ (sumCoeffSupports / datasUsers|length)|round(1, "common") }})</span>
+                                                <br/><span class="text-{{ theme_color }}"> ({{ (sumCoeffSupports / datasUsers|length)|round(1) }})</span>
                                             {% endif %}
                                         </td>
                                     </tr>

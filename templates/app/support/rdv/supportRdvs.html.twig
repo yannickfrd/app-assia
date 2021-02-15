@@ -17,7 +17,7 @@
                     data-toggle="tooltip" data-placement="bottom" title="Ajouter un rdv">
                     <span class="fas fa-plus-square mr-2"></span>Nouveau RDV</a>
                 <div class="d-inline align-middle">Total :
-                    <span id="count-rdvs">{{ rdvs.getTotalItemCount|number_format(0, '', ' ') }}</span>
+                    <span id="count-rdvs">{{ rdvs.getTotalItemCount|number }}</span>
                     rdv{% if rdvs.getTotalItemCount > 1 %}s{% endif %}.
                 </div>
             </div>

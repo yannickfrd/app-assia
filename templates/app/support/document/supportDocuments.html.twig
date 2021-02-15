@@ -14,7 +14,7 @@
 				<button id="js-new-document" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" 
 					data-toggle="tooltip" data-placement="bottom" title="Ajouter un nouveau document"><span class="fas fa-plus-square mr-2"></span>Nouveau document</button>
 				<div class="d-inline align-middle">Total :
-					<span id="count-documents">{{ documents.getTotalItemCount|number_format(0,'', ' ')}}</span>
+					<span id="count-documents">{{ documents.getTotalItemCount|number }}</span>
 				</div>
 			</div>
 			<div class="col-md-6">
@@ -51,7 +51,7 @@
 							<td class="align-middle js-document-name">{{ document.name }}</td>
 							<td class="align-middle js-document-type" data-value="{{ document.type }}">{{ document.typeToString }}</td>
 							<td class="align-middle js-document-content">{{ document.content }}</td>
-							<td class="align-middle js-document-size text-right">{{ (document.size / 1000000)|round(2, "floor")|number_format(2, ",", " ") }} Mo</td>
+							<td class="align-middle js-document-size text-right">{{ (document.size / 1000000)|round(2) }} Mo</td>
 							<td class="align-middle js-document-extension">{{ document.extension }}</td>
 							<td class="align-middle js-document-createdAt">{{ document.createdAt|date("d/m/Y H:i") }}</td>
 							<td class="align-middle js-document-createdBy">{{ document.createdby ? document.createdby.fullname }}</td>

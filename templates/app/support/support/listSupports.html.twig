@@ -21,7 +21,7 @@
 
             <div class="row align-items-baseline">
                 <div class="col-md-4 count align-middle mb-2">
-                    <span class="align-middle">Résultat : {{ supports.getTotalItemCount|number_format(0,'', ' ') }} <!--
+                    <span class="align-middle">Résultat : {{ supports.getTotalItemCount|number }} <!--
                     -->{% if form_head %}ménage{% else %}personne{% endif %}{% if supports.getTotalItemCount > 1 %}s{% endif %}.</span>
                 </div>
                 <div class="col-md-8">

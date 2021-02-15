@@ -31,7 +31,7 @@
 
             <div class="row align-items-baseline">
                 <div class="col-md-4 count align-middle">
-                    <p class="align-middle mb-0">Total : {{ users.getTotalItemCount|number_format(0,'', ' ')}} <!--
+                    <p class="align-middle mb-0">Total : {{ users.getTotalItemCount|number }} <!--
                     -->utilisateur{% if users.getTotalItemCount > 1 %}s{% endif %}.</p>
                 </div>
                 <div class="col-md-8">

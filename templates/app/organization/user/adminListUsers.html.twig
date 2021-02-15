@@ -24,7 +24,7 @@
             </div>
             <div class="row align-items-baseline">
                 <div class="col-md-4 count align-middle">
-                    <p class="align-middle">Total : {{ users.getTotalItemCount|number_format(0,'', ' ')}} utilisateurs.</p>
+                    <p class="align-middle">Total : {{ users.getTotalItemCount|number }} utilisateurs.</p>
                 </div>
                 <div class="col-md-8">
                     <div class="navigation">{{ knp_pagination_render(users) }}</div>

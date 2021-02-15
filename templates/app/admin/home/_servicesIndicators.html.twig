@@ -45,25 +45,25 @@
                                 <td class="align-middle"><span class="font-weight-bold">{{ service["name"] }}</span>
                                     {% if nbTrCollapsed %}<span class="badge badge-pill badge-secondary">{{ nbTrCollapsed }}</span>{% endif %}
                                 </td>
-                                <td class="align-middle text-right">{{ activeSupports|number_format(0, ",", " ") }}</td>
-                                <td class="align-middle text-right">{{ service["activeSupportsPeople"]|number_format(0, ",", " ") }}</td>
+                                <td class="align-middle text-right">{{ activeSupports|number }}</td>
+                                <td class="align-middle text-right">{{ service["activeSupportsPeople"]|number }}</td>
                                 {# <td class="align-middle text-right">{{ service["avgSupportsByUser"] }}</td> #}
-                                <td class="align-middle text-right">{{ service["avgTimeSupport"]|number_format(0, ",", " ") }} jours</td>
-                                <td class="align-middle text-right">{{ service["siaoRequest"]|number_format(0, ",", " ") }}<br/>
+                                <td class="align-middle text-right">{{ service["avgTimeSupport"]|number }} jours</td>
+                                <td class="align-middle text-right">{{ service["siaoRequest"]|number }}<br/>
                                     <span class="text-secondary font-italic">{{ activeSupports ? 
-                                        ((service["siaoRequest"] / activeSupports) * 100)|round(1, "common") ~ "%" }}
+                                        ((service["siaoRequest"] / activeSupports) * 100)|percent(0) }}
                                     </span>
                                 </td>
                                 <td class="align-middle text-right">{{ service["socialHousingRequest"] }}<br/>
                                     <span class="text-secondary font-italic">{{ activeSupports ? 
-                                        ((service["socialHousingRequest"] / activeSupports) * 100)|round(1, "common") ~ "%" }}
+                                        ((service["socialHousingRequest"] / activeSupports) * 100)|percent(0) }}
                                     </span>
                                 </td>
                                 <td></td>
-                                {# <td class="align-middle text-right">{{ service["notes"]|number_format(0, ",", " ") }}</td>
-                                <td class="align-middle text-right">{{ service["rdvs"]|number_format(0, ",", " ") }}</td>
-                                <td class="align-middle text-right">{{ service["documents"]|number_format(0, ",", " ") }}</td>
-                                <td class="align-middle text-right">{{ service["contributions"]|number_format(0, ",", " ") }}</td> #}
+                                {# <td class="align-middle text-right">{{ service["notes"]|number }}</td>
+                                <td class="align-middle text-right">{{ service["rdvs"]|number }}</td>
+                                <td class="align-middle text-right">{{ service["documents"]|number }}</td>
+                                <td class="align-middle text-right">{{ service["contributions"]|number }}</td> #}
                             </tr>
                             {% for sub_service_id, sub_service in service.subServices %}
                                 {% set activeSupports = sub_service["activeSupportsGroups"] %}
@@ -78,21 +78,21 @@
                                     <td class="align-middle text-right">{{ activeSupports }}</td>
                                     <td class="align-middle text-right">{{ sub_service["activeSupportsPeople"] }}</td>
                                     {# <td class="align-middle text-right">{{ sub_service["avgSupportsByUser"] }}</td> #}
-                                    <td class="align-middle text-right">{{ sub_service["avgTimeSupport"]|number_format(0, ",", " ") }} jours</td>
+                                    <td class="align-middle text-right">{{ sub_service["avgTimeSupport"]|number }} jours</td>
                                     <td class="align-middle text-right">{{ sub_service["siaoRequest"] }}<br/>
                                         <span class="text-secondary font-italic">{{ activeSupports ? 
-                                            ((sub_service["siaoRequest"] / activeSupports) * 100)|round(1, "common") ~ "%" }}
+                                            ((sub_service["siaoRequest"] / activeSupports) * 100)|percent(0) }}
                                         </span>
                                     </td>
                                     <td class="align-middle text-right">{{ sub_service["socialHousingRequest"] }}<br/>
                                         <span class="text-secondary font-italic">{{ activeSupports ? 
-                                            ((sub_service["socialHousingRequest"] / activeSupports) * 100)|round(1, "common") ~ "%" }}
+                                            ((sub_service["socialHousingRequest"] / activeSupports) * 100)|percent(0) }}
                                         </span>
                                     </td>
-                                    {# <td class="align-middle text-right">{{ sub_service["notes"]|number_format(0, ",", " ") }}</td>
-                                    <td class="align-middle text-right">{{ sub_service["rdvs"]|number_format(0, ",", " ") }}</td>
-                                    <td class="align-middle text-right">{{ sub_service["documents"]|number_format(0, ",", " ") }}</td>
-                                    <td class="align-middle text-right">{{ sub_service["contributions"]|number_format(0, ",", " ") }}</td> #}
+                                    {# <td class="align-middle text-right">{{ sub_service["notes"]|number }}</td>
+                                    <td class="align-middle text-right">{{ sub_service["rdvs"]|number }}</td>
+                                    <td class="align-middle text-right">{{ sub_service["documents"]|number }}</td>
+                                    <td class="align-middle text-right">{{ sub_service["contributions"]|number }}</td> #}
                                 </tr>
                             {% endfor %}
                             {% for device_id, device in service.devices %}
@@ -108,21 +108,21 @@
                                     <td class="align-middle text-right">{{ activeSupports }}</td>
                                     <td class="align-middle text-right">{{ device["activeSupportsPeople"] }}</td>
                                     {# <td class="align-middle text-right">{{ device["avgSupportsByUser"] }}</td> #}
-                                    <td class="align-middle text-right">{{ device["avgTimeSupport"]|number_format(0, ",", " ") }} jours</td>
+                                    <td class="align-middle text-right">{{ device["avgTimeSupport"]|number }} jours</td>
                                     <td class="align-middle text-right">{{ device["siaoRequest"] }}<br/>
                                         <span class="text-secondary font-italic">{{ activeSupports ? 
-                                            ((device["siaoRequest"] / activeSupports) * 100)|round(1, "common") ~ "%" }}
+                                            ((device["siaoRequest"] / activeSupports) * 100)|percent(0) }}
                                         </span>
                                     </td>
                                     <td class="align-middle text-right">{{ device["socialHousingRequest"] }}<br/>
                                         <span class="text-secondary font-italic">{{ activeSupports ? 
-                                            ((device["socialHousingRequest"] / activeSupports) * 100)|round(1, "common") ~ "%" }}
+                                            ((device["socialHousingRequest"] / activeSupports) * 100)|percent(0) }}
                                         </span>
                                     </td>
-                                    {# <td class="align-middle text-right">{{ device["notes"]|number_format(0, ",", " ") }}</td>
-                                    <td class="align-middle text-right">{{ device["rdvs"]|number_format(0, ",", " ") }}</td>
-                                    <td class="align-middle text-right">{{ device["documents"]|number_format(0, ",", " ") }}</td>
-                                    <td class="align-middle text-right">{{ device["contributions"]|number_format(0, ",", " ") }}</td> #}
+                                    {# <td class="align-middle text-right">{{ device["notes"]|number }}</td>
+                                    <td class="align-middle text-right">{{ device["rdvs"]|number }}</td>
+                                    <td class="align-middle text-right">{{ device["documents"]|number }}</td>
+                                    <td class="align-middle text-right">{{ device["contributions"]|number }}</td> #}
                                 </tr>
                             {% endfor %}
                         {% endif %}
@@ -131,8 +131,8 @@
                 <tfooter>
                     <tr class="font-weight-bold">
                         <td class="align-middle text-center" colspan="2">Total</td>
-                        <td class="align-middle text-right">{{ sumActiveSupports|number_format(0, ",", " ") }}</td>
-                        <td class="align-middle text-right">{{ sumActiveSupportsPeople|number_format(0, ",", " ") }}</td>
+                        <td class="align-middle text-right">{{ sumActiveSupports|number }}</td>
+                        <td class="align-middle text-right">{{ sumActiveSupportsPeople|number }}</td>
                         <td colspan="5"></td>
                     </tr>
                 </tfooter>
