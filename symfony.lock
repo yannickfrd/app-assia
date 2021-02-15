@@ -764,11 +764,17 @@
             "ref": "fe5a50faf580eb58f08ada2abe8afbd2d4941e05"
         }
     },
+    "tijsverkoyen/css-to-inline-styles": {
+        "version": "2.2.3"
+    },
     "tinify/tinify": {
         "version": "1.5.2"
     },
     "twig/cache-extension": {
         "version": "1.4-dev"
+    },
+    "twig/cssinliner-extra": {
+        "version": "v3.3.0"
     },
     "twig/extra-bundle": {
         "version": "v3.0.1"

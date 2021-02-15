@@ -47,7 +47,8 @@
         "symfony/yaml": "5.2.*",
         "tinify/tinify": "^1.5",
         "twig/cache-extension": "^1.4@dev",
-        "twig/extra-bundle": "^3.0",
+        "twig/cssinliner-extra": "^3.3",
+        "twig/extra-bundle": "^3.3",
         "twig/intl-extra": "^3.0",
         "twig/twig": "2.12"
     },

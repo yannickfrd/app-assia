@@ -32,7 +32,6 @@ class MailNotification
         array $attachments = []
     ): bool {
         $email = (new TemplatedEmail())
-            ->from(new Address('noreply@esperer95.app', 'Esperer95.app'))
             ->to($to)
             ->priority($priority)
             ->subject($subject)
