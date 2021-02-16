@@ -3,25 +3,22 @@
 namespace App\EventListener;
 
 use App\Entity\Organization\User;
-use App\EntityManager\ExportManager;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use App\Service\DoctrineTrait;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\Security\Core\Security;
 
 class TerminateListener
 {
-    private $security;
-    private $container;
-    private $exportManager;
+    use DoctrineTrait;
 
-    public function __construct(
-        Security $security,
-        ContainerInterface $container,
-        ExportManager $exportManager
-    ) {
+    private $security;
+    private $manager;
+
+    public function __construct(Security $security, EntityManagerInterface $manager)
+    {
         $this->security = $security;
-        $this->container = $container;
-        $this->exportManager = $exportManager;
+        $this->manager = $manager;
     }
 
     public function onKernelTerminate(TerminateEvent $event)
@@ -30,16 +27,7 @@ class TerminateListener
             return;
         }
 
-        $request = $event->getRequest();
-        $route = $request->attributes->get('_route');
-
         $this->updateLastActivity();
-
-        switch ($route) {
-            case 'export':
-                $this->exportManager->export($request);
-                break;
-        }
     }
 
     /**
@@ -49,9 +37,11 @@ class TerminateListener
     {
         /** @var User */
         $user = $this->security->getUser();
+
         if ($user && !$user->isActiveNow()) {
             $user->setLastActivityAt(new \DateTime());
-            $this->container->get('doctrine')->getManager()->flush();
+            $this->disableListeners($this->manager);
+            $this->manager->flush();
         }
     }
 }

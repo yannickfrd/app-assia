@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Admin\Export;
+use App\Event\SupportPersonExportEvent;
 use App\Form\Admin\ExportSearchType;
 use App\Form\Model\Admin\ExportSearch;
 use App\Repository\Admin\ExportRepository;
@@ -13,6 +14,7 @@ use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,12 +23,10 @@ class ExportController extends AbstractController
 {
     use ErrorMessageTrait;
 
-    protected $manager;
-    protected $repo;
+    private $repo;
 
-    public function __construct(EntityManagerInterface $manager, ExportRepository $repo)
+    public function __construct(ExportRepository $repo)
     {
-        $this->manager = $manager;
         $this->repo = $repo;
     }
 
@@ -36,15 +36,14 @@ class ExportController extends AbstractController
      * @Route("export", name="export", methods="GET|POST")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function export(Request $request, Pagination $pagination): Response
+    public function export(Request $request, Pagination $pagination, EventDispatcherInterface $dispatcher): Response
     {
-        set_time_limit(60 * 60);
-
-        $search = new ExportSearch();
-        $form = ($this->createForm(ExportSearchType::class, $search))
+        $form = ($this->createForm(ExportSearchType::class, $search = new ExportSearch()))
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $dispatcher->dispatch(new SupportPersonExportEvent($search), 'support_person.full_export');
+
             return $this->json([
                 'code' => 200,
                 'alert' => 'success',
@@ -55,7 +54,7 @@ class ExportController extends AbstractController
 
         return $this->render('app/admin/export/export.html.twig', [
             'form' => $form->createView(),
-            'exports' => $pagination->paginate($this->repo->findExportsQuery(), $request, 10) ?? null,
+            'exports' => $pagination->paginate($this->repo->findExportsQuery(), $request, 10),
         ]);
     }
 
@@ -66,19 +65,15 @@ class ExportController extends AbstractController
      */
     public function countNbResults(Request $request, SupportPersonRepository $repo): Response
     {
-        $search = new ExportSearch();
-
-        $form = ($this->createForm(ExportSearchType::class, $search))
+        $form = ($this->createForm(ExportSearchType::class, $search = new ExportSearch()))
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $count = $repo->countSupportsToExport($search);
-
             return $this->json([
                     'code' => 200,
                     'alert' => 'success',
                     'type' => 'count',
-                    'count' => $count,
+                    'count' => $count = $repo->countSupportsToExport($search),
                     'msg' => 'Nombre de résultats : '.number_format($count, 0, '', ' '),
                 ]);
         }
@@ -109,14 +104,14 @@ class ExportController extends AbstractController
      *
      * @Route("export/{id}/delete", name="export_delete", methods="GET")
      */
-    public function deleteExport(Export $export): Response
+    public function deleteExport(Export $export, EntityManagerInterface $manager): Response
     {
         if (file_exists($export->getFileName())) {
             unlink($export->getFileName());
         }
 
-        $this->manager->remove($export);
-        $this->manager->flush();
+        $manager->remove($export);
+        $manager->flush();
 
         $this->addFlash('warning', 'Le fichier d\'export est supprimé.');
 
