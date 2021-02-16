@@ -1,5 +1,5 @@
 framework:
-    secret: '%env(APP_SECRET)%'
+    secret: "%env(APP_SECRET)%"
     #csrf_protection: true
     #http_method_override: true
 
@@ -10,9 +10,10 @@ framework:
         handler_id: session.handler.native_file
         cookie_secure: auto
         cookie_samesite: lax
+        gc_maxlifetime: 3600
 
     validation: { enable_annotations: true }
-    
+
     #esi: true
     #fragments: true
     php_errors:
