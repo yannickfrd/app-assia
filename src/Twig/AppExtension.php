@@ -35,9 +35,9 @@ class AppExtension extends AbstractExtension
     {
         $value = round($value, $decimals);
 
-        if ((string) (int) $value === (string) $value) {
-            $decimals = 0;
-        }
+        // if ((string) (int) $value === (string) $value) {
+        //     $decimals = 0;
+        // }
 
         return number_format($value, $decimals, ',', ' ').'%';
     }

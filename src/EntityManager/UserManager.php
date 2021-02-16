@@ -37,15 +37,7 @@ class UserManager
 
         $this->discache($user);
 
-        $userNotification->send(
-            $user->getEmail(),
-            'Esperer95.app'.('prod' != $this->appVersion ? ' version DEMO' : null).' : Création de compte | '.$user->getFullname(),
-            'emails/newUserEmail.html.twig',
-            [
-                'user' => $user,
-                'app_version' => $this->appVersion,
-            ]
-        );
+        $userNotification->newUser($user);
 
         $this->addFlash('success', 'Le compte de '.$user->getFirstname().' est créé. Un e-mail lui a été envoyé.');
     }

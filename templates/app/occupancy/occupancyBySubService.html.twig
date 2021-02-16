@@ -47,7 +47,7 @@
                                 {% if loop.first %}
                                 {% set example %}
                                     {% apply spaceless %}
-                                        Le subService {{ subService.name }} dispose de {{ subService.nbPlaces }} groupes de places
+                                        Le sous-service {{ subService.name }} dispose de {{ subService.nbPlaces }} groupes de places
                                         (soit {{ subService.nbPlaces }} places). Sur la période sélectionnée ({{ interval.days }} nuits), 
                                         sa capacité d'accueil maximale représente {{ subService.capacityDays|number }} 
                                         nuitées (soit une moyenne de {{ subService.averageCapacity|round(2) }} places par nuit).

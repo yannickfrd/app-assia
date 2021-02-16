@@ -8,8 +8,8 @@ use App\Form\Utils\Choices;
 use App\Repository\Organization\UserConnectionRepository;
 use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Security\Core\Event\AuthenticationFailureEvent;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 class LoginListener
@@ -17,6 +17,7 @@ class LoginListener
     use DoctrineTrait;
 
     private $manager;
+    /** @var Session */
     private $session;
     private $repo;
 
@@ -33,6 +34,14 @@ class LoginListener
         /** @var User */
         $user = $event->getAuthenticationToken()->getUser();
 
+        $this->addLastConnection($user);
+        $this->addColorServiceInSession($user);
+        $this->addUserServicesInSession($user);
+        $this->addFlashMessages($user);
+    }
+
+    private function addLastConnection(User $user): void
+    {
         $lastConnection = $this->repo->findOneBy(
             ['user' => $user],
             ['connectionAt' => 'DESC']
@@ -49,15 +58,26 @@ class LoginListener
 
         $this->manager->persist($connection);
         $this->manager->flush();
+    }
 
-        // Récupère en session le code couleur du 1er service
+    /**
+     * Récupère en session le code couleur du 1er service.
+     */
+    private function addColorServiceInSession(User $user): void
+    {
         if (count($user->getServiceUser()) > 0) {
             $this->session->set('theme_color', $user->getServiceUser()[0]->getService()->getPole()->getColor());
         }
+    }
 
-        // Récupère en session les services rattachés à l'utilisateur
+    /**
+     * Récupère en session les services rattachés à l'utilisateur.
+     */
+    private function addUserServicesInSession(User $user): void
+    {
         $userServices = [];
         $haveServiceWithPlace = false;
+
         foreach ($user->getServiceUser() as $serviceUser) {
             $service = $serviceUser->getService();
             $userServices[$service->getId()] = $service->getName();
@@ -65,17 +85,19 @@ class LoginListener
                 $haveServiceWithPlace = true;
             }
         }
+
         $this->session->set('userServices', $userServices);
         $this->session->set('haveServiceWithPlace', $haveServiceWithPlace);
     }
 
-    // public function onSecurityAuthentificationFailure(AuthenticationFailureEvent $event)
-    // {
-    //     /** @var User */
-    //     $user = $event->getAuthenticationToken()->getUser();
+    private function addFlashMessages(User $user): void
+    {
+        $flashBag = $this->session->getFlashBag();
 
-    //     $user->setFailureLogincount($user->getFailureLogincount() + 1);
+        $flashBag->add('success', "Bonjour {$user->getFirstname()} !");
 
-    //     $this->manager->flush();
-    // }
+        if (!$user->getPhone1()) {
+            $flashBag->add('warning', "Attention, votre numéro de téléphone n'est pas renseigné. Cliquez sur votre prénom en haut à droite pour l'ajouter.");
+        }
+    }
 }
