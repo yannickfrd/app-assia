@@ -167,19 +167,19 @@ export default class evaluation {
         })
     }
 
-    /**
-     * Evaluation administrative individuelle.
-     * @param {String} prefix 
-     */
-    evalAdmPerson(prefix) {
-        document.getElementById("accordion-eval_adm").querySelectorAll("button.js-person").forEach(personElt => {
-            const i = personElt.getAttribute("data-key")
-            new DisplayFields(prefix, i + "_evalAdmPerson_nationality", [2, 3, 4])
-            new DisplayFields(prefix, i + "_evalAdmPerson_paper", [1, 3])
-            new DisplayFields(prefix, i + "_evalAdmPerson_paperType", [20, 21, 22, 30, 31, 97])
-            new DisplayFields(prefix, i + "_evalAdmPerson_asylumBackground", [1])
-        })
-    }
+    // /**
+    //  * Evaluation administrative individuelle.
+    //  * @param {String} prefix 
+    //  */
+    // evalAdmPerson(prefix) {
+    //     document.getElementById("accordion-eval_adm").querySelectorAll("button.js-person").forEach(personElt => {
+    //         const i = personElt.getAttribute("data-key")
+    //         // new DisplayFields(prefix, i + "_evalAdmPerson_nationality", [2, 3, 4])
+    //         // new DisplayFields(prefix, i + "_evalAdmPerson_paper", [1, 3])
+    //         // new DisplayFields(prefix, i + "_evalAdmPerson_paperType")
+    //         // new DisplayFields(prefix, i + "_evalAdmPerson_asylumBackground", [1])
+    //     })
+    // }
 
     /**
      * Evaluation budgétaire individuelle.
