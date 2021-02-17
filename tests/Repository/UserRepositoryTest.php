@@ -59,7 +59,7 @@ class UserRepositoryTest extends WebTestCase
             ->setFirstname('Role')
             ->setLastname('ADMIN')
             ->setPhone('01 00 00 00 00')
-            ->setStatus(6)
+            ->setStatus([6])
             ->setPoles($poles);
     }
 
@@ -105,14 +105,14 @@ class UserRepositoryTest extends WebTestCase
      * Méthodes non testatables.
      */
 
-    // public function testGetUsersQueryList()
+    // public function testGetUsersQueryBuilder()
     // {
-    //     $this->assertNotNull($this->repo->getUsersQueryList();
+    //     $this->assertNotNull($this->repo->getUsersQueryBuilder();
     // }
 
-    // public function testGetAllUsersOfServicesQueryList()
+    // public function testGetAllUsersOfServicesQueryBuilder()
     // {
-    //     $this->assertNotNull($this->repo->getReferentsOfServicesQueryList();
+    //     $this->assertNotNull($this->repo->getReferentsOfServicesQueryBuilder();
     // }
 
     public function testfindUsersOfService()
