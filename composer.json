@@ -99,14 +99,33 @@
     "scripts": {
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
+            "cache:warmup": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd",
             "requirements-checker": "script"
         },
+        "database-setup": [
+            "php bin/console make:migration --env=dev",
+            "php bin/console doctrine:migrations:migrate --env=dev --no-interaction"
+        ],
+        "phpunit-tests": [
+            "php bin/console cache:clear --env=test",
+            "php bin/console d:d:drop -e test --force",
+            "php bin/console d:d:create -e test",
+            "php bin/console d:schema:update -e test --force",
+            "php bin/console hautelook:f:l -e test -n",
+            "php bin/phpunit tests/Entity",
+            "php bin/phpunit tests/Repository",
+            "php bin/phpunit tests/Controller --stop-on-error"
+        ],
         "post-install-cmd": [
-            "@auto-scripts"
+            "@auto-scripts",
+            "@database-setup",
+            "@phpunit-tests"
         ],
         "post-update-cmd": [
-            "@auto-scripts"
+            "@auto-scripts",
+            "@database-setup",
+            "@phpunit-tests"
         ]
     },
     "conflict": {
