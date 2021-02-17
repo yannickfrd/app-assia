@@ -141,7 +141,7 @@ class SupportDuplicator
 
             if (0 === $supportGroup->getEvaluationsGroup()->count() && null === $this->evaluationGroup) {
                 $this->evaluationGroup = $this->cloneEvaluationGroup($lastEvaluationPerson->getEvaluationGroup());
-            } else {
+            } elseif ($supportGroup->getEvaluationsGroup()->count()) {
                 $this->evaluationGroup = $supportGroup->getEvaluationsGroup()->last();
             }
 

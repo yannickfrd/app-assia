@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.17. 17/02/2021
+2.17.8 17/02/2021
 
 # Développeur
 Romain MADELAINE
@@ -13,13 +13,13 @@ https://github.com/RomMad/esperer95.app
 # Connection à la base démo
 https://demo.esperer95.app
 
-## Version 2.17.3-7 - 17/02/2021
+## Version 2.17.3-8 - 17/02/2021
 - Add scripts in composer.json;
 - Update scripts in composer.json;
 - Update evaluationAdmin (conditionalities);
 - Update UserRepository tests;
 - Add 'user' var in Rdv and rename somes methods in repositories;
-
+- Fix error in SupportDuplicator (evaluationGroup);
 ## Version 2.17.1-2 - 16/02/2021
 - Create an EventDispatcher for SupportPersonFullExport;
 - Edit session.maxlifetime to 3600;
