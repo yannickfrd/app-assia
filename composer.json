@@ -104,10 +104,10 @@
             "requirements-checker": "script"
         },
         "database-setup": [
-            "php bin/console make:migration --env=dev",
-            "php bin/console doctrine:migrations:migrate --env=dev --no-interaction"
+            "/usr/bin/php7.4-cli bin/console make:migration --env=dev",
+            "/usr/bin/php7.4-cli bin/console doctrine:migrations:migrate --env=dev --no-interaction"
         ],
-        "phpunit-tests": [
+        "phpunit-tests-dev": [
             "php bin/console cache:clear --env=test",
             "php bin/console d:d:drop -e test --force",
             "php bin/console d:d:create -e test",
@@ -117,15 +117,25 @@
             "php bin/phpunit tests/Repository",
             "php bin/phpunit tests/Controller --stop-on-error"
         ],
+        "phpunit-tests-prod": [
+            "/usr/bin/php7.4-cli bin/console cache:clear --env=test",
+            "/usr/bin/php7.4-cli bin/console d:d:drop -e test --force",
+            "/usr/bin/php7.4-cli bin/console d:d:create -e test",
+            "/usr/bin/php7.4-cli bin/console d:schema:update -e test --force",
+            "/usr/bin/php7.4-cli bin/console hautelook:f:l -e test -n",
+            "/usr/bin/php7.4-cli bin/phpunit tests/Entity",
+            "/usr/bin/php7.4-cli bin/phpunit tests/Repository",
+            "/usr/bin/php7.4-cli bin/phpunit tests/Controller/Admin",
+            "/usr/bin/php7.4-cli bin/phpunit tests/Controller/App",
+            "/usr/bin/php7.4-cli bin/phpunit tests/Controller/Organization",
+            "/usr/bin/php7.4-cli bin/phpunit tests/Controller/People",
+            "/usr/bin/php7.4-cli bin/phpunit tests/Controller/Support"
+        ],
         "post-install-cmd": [
-            "@auto-scripts",
-            "@database-setup",
-            "@phpunit-tests"
+            "@auto-scripts"
         ],
         "post-update-cmd": [
-            "@auto-scripts",
-            "@database-setup",
-            "@phpunit-tests"
+            "@auto-scripts"
         ]
     },
     "conflict": {
