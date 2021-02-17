@@ -38,7 +38,7 @@ class PlaceGroupHotelType extends AbstractType
                     'class' => Place::class,
                     'choice_label' => 'name',
                     'query_builder' => function (PlaceRepository $repo) use ($serviceId) {
-                        return $repo->getPlacesQueryList($serviceId);
+                        return $repo->getPlacesQueryBuilder($serviceId);
                     },
                     'label' => Service::SERVICE_PASH_ID === $serviceId ? 'hotelName' : 'place.name',
                     'placeholder' => 'placeholder.select',

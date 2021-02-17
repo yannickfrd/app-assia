@@ -11,6 +11,7 @@ use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use App\Entity\Traits\DisableEntityTrait;
 use App\Service\Phone;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -222,6 +223,11 @@ class User implements UserInterface
      */
     private $userDevices;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Rdv::class, mappedBy="user")
+     */
+    private $rdvs2;
+
     public function __construct()
     {
         $this->supports = new ArrayCollection();
@@ -233,6 +239,7 @@ class User implements UserInterface
         $this->rdvs = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->userDevices = new ArrayCollection();
+        $this->rdvs2 = new ArrayCollection();
     }
 
     public function __toString()
@@ -745,6 +752,36 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($userDevice->getUser() === $this) {
                 $userDevice->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Rdv[]
+     */
+    public function getRdvs2(): Collection
+    {
+        return $this->rdvs2;
+    }
+
+    public function addRdvs2(Rdv $rdvs2): self
+    {
+        if (!$this->rdvs2->contains($rdvs2)) {
+            $this->rdvs2[] = $rdvs2;
+            $rdvs2->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRdvs2(Rdv $rdvs2): self
+    {
+        if ($this->rdvs2->removeElement($rdvs2)) {
+            // set the owning side to null (unless already changed)
+            if ($rdvs2->getUser() === $this) {
+                $rdvs2->setUser(null);
             }
         }
 

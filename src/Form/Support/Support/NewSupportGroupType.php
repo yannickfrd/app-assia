@@ -40,7 +40,7 @@ class NewSupportGroupType extends AbstractType
                 'class' => Service::class,
                 'choice_label' => 'name',
                 'query_builder' => function (ServiceRepository $repo) {
-                    return $repo->getServicesOfUserQueryList($this->currentUser);
+                    return $repo->getServicesOfUserQueryBuilder($this->currentUser);
                 },
                 'placeholder' => 'placeholder.select',
             ])
@@ -85,7 +85,7 @@ class NewSupportGroupType extends AbstractType
                 'class' => Device::class,
                 'choice_label' => 'name',
                 'query_builder' => function (DeviceRepository $repo) use ($service) {
-                    return $repo->getDevicesOfUserQueryList($this->currentUser, $service->getId());
+                    return $repo->getDevicesOfUserQueryBuilder($this->currentUser, $service->getId());
                 },
                 'placeholder' => 'placeholder.select',
             ])
@@ -102,7 +102,7 @@ class NewSupportGroupType extends AbstractType
                 'class' => Place::class,
                 'choice_label' => 'name',
                 'query_builder' => function (PlaceRepository $repo) use ($service, $subService) {
-                    return $repo->getPlacesQueryList($service->getId(), $subService ? $subService->getId() : null);
+                    return $repo->getPlacesQueryBuilder($service->getId(), $subService ? $subService->getId() : null);
                 },
                 'placeholder' => 'placeholder.select',
                 'mapped' => false,
@@ -134,7 +134,7 @@ class NewSupportGroupType extends AbstractType
             'class' => User::class,
             'choice_label' => 'fullname',
             'query_builder' => function (UserRepository $repo) use ($serviceId) {
-                return $repo->getUsersQueryList($serviceId, $this->currentUser->getUser());
+                return $repo->getUsersQueryBuilder($serviceId, $this->currentUser->getUser());
             },
             'placeholder' => 'placeholder.select',
             'required' => false,

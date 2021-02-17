@@ -35,7 +35,7 @@ class OrganizationRepository extends ServiceEntityRepository
     /**
      * Retourne les organismes prescripteurs rattachés au service.
      */
-    public function getOrganizationsQueryList(int $serviceId = null): QueryBuilder
+    public function getOrganizationsQueryBuilder(int $serviceId = null): QueryBuilder
     {
         $query = $this->createQueryBuilder('o')->select('PARTIAL o.{id, name}');
 

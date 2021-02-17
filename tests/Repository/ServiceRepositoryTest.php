@@ -80,7 +80,7 @@ class ServiceRepositoryTest extends WebTestCase
         $this->assertGreaterThanOrEqual(1, count($this->repo->findServicesToExport($this->search)));
     }
 
-    // public function testGetServicesOfUserQueryList()
+    // public function testGetServicesOfUserQueryBuilder()
     // {
     // }
 

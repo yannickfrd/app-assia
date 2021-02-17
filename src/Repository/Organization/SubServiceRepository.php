@@ -53,7 +53,7 @@ class SubServiceRepository extends ServiceEntityRepository
      */
     public function getSubServicesOfService(Service $service)
     {
-        return $this->getSubServicesOfServiceQueryList($service)
+        return $this->getSubServicesOfServiceQueryBuilder($service)
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
@@ -61,7 +61,7 @@ class SubServiceRepository extends ServiceEntityRepository
     /**
      * Donne la liste des sous-services du service.
      */
-    public function getSubServicesOfServiceQueryList(Service $service): QueryBuilder
+    public function getSubServicesOfServiceQueryBuilder(Service $service): QueryBuilder
     {
         return $this->createQueryBuilder('ss')->select('PARTIAL ss.{id, name, disabledAt}')
             ->leftJoin('ss.service', 's')->addSelect('PARTIAL s.{id, name}')
@@ -77,7 +77,7 @@ class SubServiceRepository extends ServiceEntityRepository
     /**
      * Donne la liste des sous-services de l'utilisateur.
      */
-    public function getSubServicesOfUserQueryList(CurrentUserService $currentUser, int $serviceId = null): QueryBuilder
+    public function getSubServicesOfUserQueryBuilder(CurrentUserService $currentUser, int $serviceId = null): QueryBuilder
     {
         $query = $this->createQueryBuilder('ss')->select('PARTIAL ss.{id, name}')
             ->leftJoin('ss.service', 's')->addSelect('PARTIAL s.{id, name}')

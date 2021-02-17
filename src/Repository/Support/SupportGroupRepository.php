@@ -128,6 +128,27 @@ class SupportGroupRepository extends ServiceEntityRepository
     }
 
     /**
+     * Donne tous les suivis sociaux de l'utilisateur.
+     */
+    public function getSupportsOfUserQueryBuilder(User $user): array
+    {
+        return $this->createQueryBuilder('sg')->select('sg')
+            ->leftJoin('sg.service', 'sv')->addSelect('PARTIAL sv.{id, name}')
+            ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, head}')
+            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
+
+            ->andWhere('sg.referent = :referent')
+            ->setParameter('referent', $user)
+            ->andWhere('sg.status = :status')
+            ->setParameter('status', SupportGroup::STATUS_IN_PROGRESS)
+            ->andWhere('sp.head = TRUE')
+
+            ->orderBy('p.lastname', 'ASC')
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
+    }
+
+    /**
      * Trouve tous les suivis entre 2 dates.
      */
     public function findSupportsBetween(\Datetime $start, \Datetime $end, SupportsInMonthSearch $search = null): Query

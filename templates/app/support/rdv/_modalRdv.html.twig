@@ -55,10 +55,11 @@
                             <input type="time" id="end" name="end" required="required" class="form-control">
                         </div>
                     </div>
+                    <div class="form-group col-auto my-1 pr-1 pl-0 d-inline-flex">{{ form_widget(form.status) }}</div>
                 </div>
                 <div class="form-group row">
-                    <div class="col-12 col-lg-6 d-none">{{ form_row(form.start) }}</div>
-                    <div class="col-12 col-lg-6 d-none">{{ form_row(form.end) }}</div>
+                    <div class="col-12 col-lg-6 d-none">{{ form_widget(form.start) }}</div>
+                    <div class="col-12 col-lg-6 d-none">{{ form_widget(form.end) }}</div>
                     <div class="col-12">
                         <div class="input-group" id="rdv_search_location">
                             <div class="input-group-prepend">
@@ -71,15 +72,15 @@
                     </div>
                     <div class="col-12 col-lg-6"></div>
                 </div>
-                <div class="form-group row">
-                    <div class="col-12 col-lg-6">{{ form_widget(form.status) }}</div>
-                </div>
+                {# <div class="form-group row">
+                    <div class="col-12 col-lg-6">{{ form_widget(form.user) }}</div>
+                    <div class="col-12 col-lg-6">{{ form_widget(form.supportGroup) }}</div>
+                </div> #}
                 <div class="form-group row">
                     <div class="col-md-12">{{ form_widget(form.content) }}</div>
                 </div>
                 {{ form_row(form._token) }}
             </div>
-
             <div class="modal-footer d-flex justify-content-between">
                 <div class="float-left">
                     <button id="modal-btn-delete" class="mr-3 btn btn-danger" data-placement="bottom"

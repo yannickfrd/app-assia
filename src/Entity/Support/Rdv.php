@@ -2,6 +2,7 @@
 
 namespace App\Entity\Support;
 
+use App\Entity\Organization\User;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -70,6 +71,11 @@ class Rdv
      * @ORM\ManyToOne(targetEntity="App\Entity\Support\SupportGroup", inversedBy="rdvs", fetch="EXTRA_LAZY")
      */
     private $supportGroup;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="rdvs2")
+     */
+    private $user;
 
     public function getId(): ?int
     {
@@ -161,6 +167,18 @@ class Rdv
     public function setSupportGroup(?SupportGroup $supportGroup): self
     {
         $this->supportGroup = $supportGroup;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

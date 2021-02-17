@@ -86,7 +86,7 @@ class DeviceRepository extends ServiceEntityRepository
     /**
      * Donne la liste des dispositifs du service.
      */
-    public function getDevicesOfServiceQueryList(Service $service)
+    public function getDevicesOfServiceQueryBuilder(Service $service)
     {
         return $this->createQueryBuilder('d')->select('PARTIAL d.{id, name}')
             ->leftJoin('d.serviceDevices', 'sd')
@@ -101,7 +101,7 @@ class DeviceRepository extends ServiceEntityRepository
     /**
      * Donne la liste des dispositifs de l'utilisateur.
      */
-    public function getDevicesOfUserQueryList(CurrentUserService $currentUser, $serviceId = null, Device $device = null)
+    public function getDevicesOfUserQueryBuilder(CurrentUserService $currentUser, $serviceId = null, Device $device = null)
     {
         $query = $this->createQueryBuilder('d')->select('PARTIAL d.{id, name, coefficient, place, disabledAt}')
             ->leftJoin('d.serviceDevices', 'sd')->addSelect('sd');

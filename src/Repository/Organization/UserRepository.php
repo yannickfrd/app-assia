@@ -181,7 +181,7 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Donne la liste des utilisateurs.
      */
-    public function getUsersQueryList(int $serviceId = null, User $user = null): QueryBuilder
+    public function getUsersQueryBuilder(int $serviceId = null, User $user = null): QueryBuilder
     {
         return $this->createQueryBuilder('u')->select('PARTIAL u.{id, firstname, lastname}')
             ->leftJoin('u.serviceUser', 'r')
@@ -190,6 +190,23 @@ class UserRepository extends ServiceEntityRepository
             ->setParameter('status', [1, 2, 3])
             ->andWhere('r.service = :services')
             ->setParameter('services', $serviceId)
+            ->orWhere('u.id = :user')
+            ->setParameter('user', $user)
+
+            ->orderBy('u.lastname', 'ASC');
+    }
+
+    /**
+     * Donne la liste des utilisateurs.
+     */
+    public function getUsersForCalendarQueryBuilder(User $user): QueryBuilder
+    {
+        $query = $this->createQueryBuilder('u')->select('PARTIAL u.{id, firstname, lastname}')
+            ->leftJoin('u.serviceUser', 'r');
+
+        return $query->andWhere('r.service IN (:services)')
+            ->setParameter('services', $user->getServices())
+
             ->orWhere('u.id = :user')
             ->setParameter('user', $user)
 
@@ -245,7 +262,7 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Donne la liste des utilisateurs pour les listes déroulantes.
      */
-    public function getReferentsOfServicesQueryList(CurrentUserService $currentUser, int $serviceId = null): QueryBuilder
+    public function getReferentsOfServicesQueryBuilder(CurrentUserService $currentUser, int $serviceId = null): QueryBuilder
     {
         $query = $this->getReferentsQueryBuilder();
 

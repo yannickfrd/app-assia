@@ -73,7 +73,7 @@ class ServiceRepository extends ServiceEntityRepository
     /**
      * Donne la liste des services de l'utilisateur.
      */
-    public function getServicesOfUserQueryList(CurrentUserService $currentUser): QueryBuilder
+    public function getServicesOfUserQueryBuilder(CurrentUserService $currentUser): QueryBuilder
     {
         $query = $this->createQueryBuilder('s')->select('PARTIAL s.{id, name, preAdmission, coefficient}')
 

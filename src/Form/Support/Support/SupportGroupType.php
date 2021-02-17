@@ -50,7 +50,7 @@ class SupportGroupType extends AbstractType
                 'class' => Service::class,
                 'choice_label' => 'name',
                 'query_builder' => function (ServiceRepository $repo) {
-                    return $repo->getServicesOfUserQueryList($this->currentUser);
+                    return $repo->getServicesOfUserQueryBuilder($this->currentUser);
                 },
                 'placeholder' => 'placeholder.select',
             ])
@@ -141,7 +141,7 @@ class SupportGroupType extends AbstractType
                     'class' => SubService::class,
                     'choice_label' => 'name',
                     'query_builder' => function (SubServiceRepository $repo) use ($serviceId) {
-                        return $repo->getSubServicesOfUserQueryList($this->currentUser, $serviceId);
+                        return $repo->getSubServicesOfUserQueryBuilder($this->currentUser, $serviceId);
                     },
                     'placeholder' => 'placeholder.select',
                     'required' => false,
@@ -150,7 +150,7 @@ class SupportGroupType extends AbstractType
                     'class' => Device::class,
                     'choice_label' => 'name',
                     'query_builder' => function (DeviceRepository $repo) use ($serviceId) {
-                        return $repo->getDevicesOfUserQueryList($this->currentUser, $serviceId);
+                        return $repo->getDevicesOfUserQueryBuilder($this->currentUser, $serviceId);
                     },
                     'placeholder' => 'placeholder.select',
                 ])
@@ -160,7 +160,7 @@ class SupportGroupType extends AbstractType
                     'class' => Place::class,
                     'choice_label' => 'name',
                     'query_builder' => function (PlaceRepository $repo) use ($serviceId, $subServiceId) {
-                        return $repo->getPlacesQueryList($serviceId, $subServiceId);
+                        return $repo->getPlacesQueryBuilder($serviceId, $subServiceId);
                     },
                     'label' => Service::SERVICE_PASH_ID === $serviceId ? 'hotelName' : 'place.name',
                     'placeholder' => 'placeholder.select',
@@ -245,7 +245,7 @@ class SupportGroupType extends AbstractType
             'class' => User::class,
             'choice_label' => 'fullname',
             'query_builder' => function (UserRepository $repo) use ($serviceId) {
-                return $repo->getUsersQueryList($serviceId, $this->currentUser->getUser());
+                return $repo->getUsersQueryBuilder($serviceId, $this->currentUser->getUser());
             },
             'placeholder' => 'placeholder.select',
             'required' => false,

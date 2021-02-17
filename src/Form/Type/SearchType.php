@@ -40,7 +40,7 @@ class SearchType extends AbstractType
                     'choice_label' => 'name',
                     'multiple' => true,
                     'query_builder' => function (PoleRepository $repo) {
-                        return $repo->getPoleQueryList();
+                        return $repo->getPoleQueryBuilder();
                     },
                     'placeholder' => 'placeholder.pole',
                     'attr' => [
@@ -58,7 +58,7 @@ class SearchType extends AbstractType
                     'choice_label' => 'name',
                     'multiple' => true,
                     'query_builder' => function (ServiceRepository $repo) {
-                        return $repo->getServicesOfUserQueryList($this->currentUser);
+                        return $repo->getServicesOfUserQueryBuilder($this->currentUser);
                     },
                     'placeholder' => 'placeholder.service',
                     'attr' => [
@@ -76,7 +76,7 @@ class SearchType extends AbstractType
                     'choice_label' => 'name',
                     'multiple' => true,
                     'query_builder' => function (SubServiceRepository $repo) use ($serviceId) {
-                        return $repo->getSubServicesOfUserQueryList($this->currentUser, $serviceId);
+                        return $repo->getSubServicesOfUserQueryBuilder($this->currentUser, $serviceId);
                     },
                     'placeholder' => 'placeholder.subService',
                     'attr' => [
@@ -94,7 +94,7 @@ class SearchType extends AbstractType
                     'choice_label' => 'name',
                     'multiple' => true,
                     'query_builder' => function (DeviceRepository $repo) use ($serviceId) {
-                        return $repo->getDevicesOfUserQueryList($this->currentUser, $serviceId);
+                        return $repo->getDevicesOfUserQueryBuilder($this->currentUser, $serviceId);
                     },
                     'placeholder' => 'placeholder.device',
                     'attr' => [
@@ -112,7 +112,7 @@ class SearchType extends AbstractType
                     'choice_label' => 'fullname',
                     'multiple' => true,
                     'query_builder' => function (UserRepository $repo) use ($serviceId) {
-                        return $repo->getReferentsOfServicesQueryList($this->currentUser, $serviceId);
+                        return $repo->getReferentsOfServicesQueryBuilder($this->currentUser, $serviceId);
                     },
                     'placeholder' => 'placeholder.referent',
                     'attr' => [

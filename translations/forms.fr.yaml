@@ -72,7 +72,9 @@ placeholder:
   subService: -- Sous-service --
   service: -- Service --
   status: -- Statut --
+  support: -- Suivi --
   type: -- Type --
+  user: -- Utilisateur --
 Password: Mot de passe
 Phone: Téléphone
 Phone1: Téléphone 1

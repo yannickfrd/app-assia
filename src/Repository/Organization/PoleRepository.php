@@ -35,7 +35,7 @@ class PoleRepository extends ServiceEntityRepository
     /**
      * Donne la liste des pôles.
      */
-    public function getPoleQueryList(): QueryBuilder
+    public function getPoleQueryBuilder(): QueryBuilder
     {
         return $this->createQueryBuilder('p')->select('PARTIAL p.{id, name}')
             ->where('p.disabledAt IS NULL')

@@ -27,7 +27,7 @@ class ServiceUserType extends AbstractType
                 'class' => Service::class,
                 'choice_label' => 'name',
                 'query_builder' => function (ServiceRepository $repo) {
-                    return $repo->getServicesOfUserQueryList($this->currentUser);
+                    return $repo->getServicesOfUserQueryBuilder($this->currentUser);
                 },
                 'placeholder' => 'placeholder.select',
                 'attr' => [

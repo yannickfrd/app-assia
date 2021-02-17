@@ -27,7 +27,7 @@ class UserDeviceType extends AbstractType
                 'class' => Device::class,
                 'choice_label' => 'name',
                 'query_builder' => function (DeviceRepository $repo) {
-                    return $repo->getDevicesOfUserQueryList($this->currentUser);
+                    return $repo->getDevicesOfUserQueryBuilder($this->currentUser);
                 },
                 'placeholder' => 'placeholder.device',
                 'attr' => [

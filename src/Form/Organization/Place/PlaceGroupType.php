@@ -55,7 +55,7 @@ class PlaceGroupType extends AbstractType
                 'class' => Place::class,
                 'choice_label' => 'name',
                 'query_builder' => function (PlaceRepository $repo) use ($serviceId) {
-                    return $repo->getPlacesQueryList($serviceId);
+                    return $repo->getPlacesQueryBuilder($serviceId);
                 },
                 'placeholder' => 'placeholder.select',
             ]);

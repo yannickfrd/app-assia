@@ -79,9 +79,9 @@ class PlaceRepositoryTest extends WebTestCase
         $this->assertGreaterThanOrEqual(1, $this->repo->findPlacesToExport($this->search));
     }
 
-    public function testGetPlacesQueryList()
+    public function testGetPlacesQueryBuilder()
     {
-        $query = $this->repo->getPlacesQueryList($this->service->getId());
+        $query = $this->repo->getPlacesQueryBuilder($this->service->getId());
         $this->assertGreaterThanOrEqual(1, count($query->getQuery()->getResult()));
     }
 

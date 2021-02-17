@@ -43,7 +43,7 @@ class PlaceType extends AbstractType
             'class' => Service::class,
             'choice_label' => 'name',
             'query_builder' => function (ServiceRepository $repo) {
-                return $repo->getServicesOfUserQueryList($this->currentUser);
+                return $repo->getServicesOfUserQueryBuilder($this->currentUser);
             },
             'placeholder' => 'placeholder.select',
             ])
@@ -108,7 +108,7 @@ class PlaceType extends AbstractType
                     'class' => SubService::class,
                     'choice_label' => 'name',
                     'query_builder' => function (SubServiceRepository $repo) {
-                        return $repo->getSubServicesOfUserQueryList($this->currentUser);
+                        return $repo->getSubServicesOfUserQueryBuilder($this->currentUser);
                     },
                     'placeholder' => 'placeholder.select',
                     'required' => false,
@@ -117,7 +117,7 @@ class PlaceType extends AbstractType
                 'class' => Device::class,
                 'choice_label' => 'name',
                 'query_builder' => function (DeviceRepository $repo) use ($place) {
-                    return $repo->getDevicesOfServiceQueryList($place->getService());
+                    return $repo->getDevicesOfServiceQueryBuilder($place->getService());
                 },
                 'placeholder' => 'placeholder.select',
                 'required' => false,

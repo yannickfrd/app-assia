@@ -31,7 +31,7 @@ class OriginRequestType extends AbstractType
                 'class' => Organization::class,
                 'choice_label' => 'name',
                 'query_builder' => function (OrganizationRepository $repo) use ($serviceId) {
-                    return $repo->getOrganizationsQueryList($serviceId);
+                    return $repo->getOrganizationsQueryBuilder($serviceId);
                 },
                 'placeholder' => 'placeholder.select',
                 'required' => $required,

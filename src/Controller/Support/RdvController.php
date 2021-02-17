@@ -103,12 +103,10 @@ class RdvController extends AbstractController
      */
     public function showCalendar(int $year = null, int $month = null): Response
     {
-        $calendar = new Calendar($year, $month);
-
-        $form = $this->createForm(RdvType::class, new Rdv());
+        $form = $this->createForm(RdvType::class, (new Rdv())->setUser($this->getUser()));
 
         return $this->render('app/support/rdv/calendar.html.twig', [
-            'calendar' => $calendar,
+            'calendar' => $calendar = new Calendar($year, $month),
             'form' => $form->createView(),
             'rdvs' => $this->repo->findRdvsBetweenByDay(
                 $calendar->getFirstMonday(),
@@ -136,13 +134,11 @@ class RdvController extends AbstractController
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
-        $calendar = new Calendar($year, $month);
-
-        $form = $this->createForm(RdvType::class, new Rdv());
+        $form = $this->createForm(RdvType::class, (new Rdv())->setUser($this->getUser()));
 
         return $this->render('app/support/rdv/calendar.html.twig', [
             'support' => $supportGroup,
-            'calendar' => $calendar,
+            'calendar' => $calendar = new Calendar($year, $month),
             'form' => $form->createView(),
             'rdvs' => $this->repo->findRdvsBetweenByDay(
                 $calendar->getFirstMonday(),
@@ -186,9 +182,7 @@ class RdvController extends AbstractController
             $this->denyAccessUnlessGranted('EDIT', $supportGroup);
         }
 
-        $rdv = new Rdv();
-
-        $form = ($this->createForm(RdvType::class, $rdv))
+        $form = ($this->createForm(RdvType::class, $rdv = new Rdv()))
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -258,15 +252,13 @@ class RdvController extends AbstractController
      */
     public function deleteRdv(Rdv $rdv): Response
     {
-        $id = $rdv->getId();
-
         $this->manager->remove($rdv);
         $this->manager->flush();
 
         return $this->json([
             'code' => 200,
             'action' => 'delete',
-            'rdv' => ['id' => $id],
+            'rdv' => ['id' => $rdv->getId()],
             'alert' => 'warning',
             'msg' => 'Le RDV est supprimé.',
         ], 200);
