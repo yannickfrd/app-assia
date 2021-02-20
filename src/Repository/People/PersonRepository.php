@@ -5,6 +5,7 @@ namespace App\Repository\People;
 use App\Entity\People\Person;
 use App\Form\Model\People\DuplicatedPeopleSearch;
 use App\Form\Model\People\PersonSearch;
+use App\Service\SoundexFr;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
@@ -47,18 +48,30 @@ class PersonRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('p')->select('p');
 
-        if ($searchQuery) {
-            $query->Where("CONCAT(p.lastname,' ' , p.firstname) LIKE :search")
-                ->setParameter('search', '%'.$searchQuery.'%');
+        if ($personSearch->getPhonetic()) {
+            $soundexFr = new SoundexFr();
+            if ($personSearch->getFirstname()) {
+                $query->andWhere('p.soundexFirstname = :firstname')
+                    ->setParameter('firstname', $soundexFr->get($personSearch->getFirstname()));
+            }
+            if ($personSearch->getLastname()) {
+                $query->andWhere('p.soundexLastname = :lastname')
+                    ->setParameter('lastname', $soundexFr->get($personSearch->getLastname()));
+            }
+        } else {
+            if ($personSearch->getFirstname()) {
+                $query->andWhere('p.firstname LIKE :firstname')
+                ->setParameter('firstname', $personSearch->getFirstname().'%');
+            }
+            if ($personSearch->getLastname()) {
+                $query->andWhere('p.lastname LIKE :lastname')
+                ->setParameter('lastname', $personSearch->getLastname().'%');
+            }
         }
 
-        if ($personSearch->getFirstname()) {
-            $query->andWhere('p.firstname LIKE :firstname')
-                ->setParameter('firstname', $personSearch->getFirstname().'%');
-        }
-        if ($personSearch->getLastname()) {
-            $query->andWhere('p.lastname LIKE :lastname')
-                ->setParameter('lastname', $personSearch->getLastname().'%');
+        if ($searchQuery) {
+            $query->andWhere("CONCAT(p.lastname,' ' , p.firstname) LIKE :search")
+                ->setParameter('search', '%'.$searchQuery.'%');
         }
 
         if ($personSearch->getBirthdate()) {

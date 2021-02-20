@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class PersonSearchType extends AbstractType
 {
@@ -37,6 +38,15 @@ class PersonSearchType extends AbstractType
                 'attr' => [
                     'class' => 'w-max-180',
                     'autocomplete' => 'off',
+                ],
+                'required' => false,
+                ])
+            ->add('phonetic', CheckBoxType::class, [
+                'label_attr' => [
+                    'class' => 'custom-control-label',
+                ],
+                'attr' => [
+                    'class' => 'custom-control-input checkbox',
                 ],
                 'required' => false,
             ]);

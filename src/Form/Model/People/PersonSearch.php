@@ -15,6 +15,11 @@ class PersonSearch
     private $firstname;
 
     /**
+     * @var bool
+     */
+    private $phonetic;
+
+    /**
      * @var \DateTimeInterface|null
      */
     private $birthdate;
@@ -55,6 +60,18 @@ class PersonSearch
     public function setBirthdate(?\DateTimeInterface $birthdate): self
     {
         $this->birthdate = $birthdate;
+
+        return $this;
+    }
+
+    public function getPhonetic(): bool
+    {
+        return $this->phonetic;
+    }
+
+    public function setPhonetic(bool $phonetic): self
+    {
+        $this->phonetic = $phonetic;
 
         return $this;
     }

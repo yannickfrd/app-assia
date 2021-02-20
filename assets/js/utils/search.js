@@ -26,8 +26,8 @@ export default class Search {
             this.btnSearchElt.addEventListener('click', e => {
             this.loader.inLoading = false
             if (this.loader.isActive()) {
-                    e.preventDefault()
-                }
+                e.preventDefault()
+            }
             this.loader.on(); 
         })   
         }

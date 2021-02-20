@@ -46,8 +46,8 @@ class UpdateSoundexNamePersonCommand extends Command
         $people = $this->repo->findAll();
 
         foreach ($people as $person) {
-            $person->setSoundexFirstname($this->soundexFr->get2($person->getFirstname()));
-            $person->setSoundexLastname($this->soundexFr->get2($person->getLastname()));
+            $person->setSoundexFirstname($this->soundexFr->get($person->getFirstname()));
+            $person->setSoundexLastname($this->soundexFr->get($person->getLastname()));
             ++$count;
         }
 

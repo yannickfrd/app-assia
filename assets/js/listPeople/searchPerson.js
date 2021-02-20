@@ -105,11 +105,11 @@ export default class SearchPerson {
     sendRequest() {
         const formData = new FormData(this.formElt)
         const paramsToString = new URLSearchParams(formData).toString()
-        if (paramsToString != this.paramsToString) {
+        // if (paramsToString != this.paramsToString) {
             this.ajax.send('POST', '/people/search', this.response.bind(this), new FormData(this.formElt))
             this.loader.on()
             this.paramsToString = paramsToString
-        }
+        // }
     }
 
     /**
