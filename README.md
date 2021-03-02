@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.17.8 17/02/2021
+2.17.12 02/03/2021
 
 # Développeur
 Romain MADELAINE
@@ -12,6 +12,12 @@ https://github.com/RomMad/esperer95.app
 
 # Connection à la base démo
 https://demo.esperer95.app
+
+## Version 2.17.9-12 - 02/03/2021
+- Fix error in evaluation.js (evalAdmPerson);
+- Edit time session : 3 600s => 14 400 s;
+- Add item 'Fin de prise en charge 115' in END_SUPPORT_REASON;
+- Update EvaluationSupportPersonExport;
 
 ## Version 2.17.3-8 - 17/02/2021
 - Add scripts in composer.json;
