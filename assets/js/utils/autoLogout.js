@@ -36,7 +36,7 @@ export default class AutoLogout {
             this.modalElt.show();
         }
         if (this.time <= this.timeAlert) {
-            this.timerElt.textContent = this.getFullTime()
+            this.updateModalTimer()
         }
         if (this.time <= 0) {
             this.deconnection()
@@ -54,10 +54,22 @@ export default class AutoLogout {
     }
 
     /**
+     * Met à jour le timer de la modal
+     */
+    updateModalTimer() {
+        this.timerElt.textContent = this.getFullTime()
+    }
+
+    /**
      * Remet à zéro le timer.
      */
     clearTimer() {
         this.time = this.initTime
+
+        if (null != this.timerElt.offsetParent) {
+            this.modalElt.hide();
+            this.updateModalTimer()
+        }
     }
 
     /**
