@@ -34,11 +34,17 @@ class DatabaseBackupCommand extends Command
     {
         $path = 'backups/esperer95.app/'.date('Y/m/');
 
-        $this->dumpDatabase->dump($path);
+        $dump = $this->dumpDatabase->dump($path);
 
-        $message = '[OK] Backup of database is successfull !';
-        $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
+        if (0 === $dump['return']) {
+            $message = "\n[OK] Backup of database is successfull !\n";
+            $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
 
-        return 0;
+            return 0;
+        }
+        $message = "\n[Error] Backup of database is failed !\n";
+        $output->writeln("\e[30m\e[41m\n ".$message."\e[0m\n");
+
+        return 1;
     }
 }

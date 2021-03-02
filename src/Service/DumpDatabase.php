@@ -40,10 +40,10 @@ class DumpDatabase
             mkdir($path, 0777, true);
         }
 
-        $cmd = "mysqldump -h{$this->host} -u{$this->userName} -p{$this->password} {$this->databaseName} > {$path}{$fileName}";
+        $cmd = "mysqldump --no-tablespaces -h{$this->host} -u{$this->userName} -p{$this->password} {$this->databaseName} > {$path}{$fileName}";
 
         if ('localhost' === $this->host) {
-            $cmd = "{$this->pathMySqlDump}/mysqldump --host={$this->host} --user={$this->userName} {$this->databaseName} > {$path}{$fileName}";
+            $cmd = "{$this->pathMySqlDump}/mysqldump --no-tablespaces --host={$this->host} --user={$this->userName} {$this->databaseName} > {$path}{$fileName}";
         }
 
         $output = [];
