@@ -19,7 +19,7 @@
 	<div id="js-people">
 		{% for rolePerson in people_group.rolePeople %}
 			<a href="{{ path("group_person_show", {"id":people_group.id, "person_id":rolePerson.person.id, "slug":rolePerson.person.slug}) }}" 
-				class="btn btn-outline-secondary btn-sm rounded-pill smal mb-2">{{ rolePerson.person.fullname }}</a>
+				class="btn btn-{% if person.id != rolePerson.person.id %}outline-{% endif %}secondary btn-sm rounded-pill mb-2">{{ rolePerson.person.fullname }}</a>
 		{% endfor %}
 	</div>
 </section>

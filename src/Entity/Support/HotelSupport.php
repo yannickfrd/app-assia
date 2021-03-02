@@ -22,8 +22,9 @@ class HotelSupport
 
     public const END_SUPPORT_REASON = [
         1 => 'Accès à une solution d\'hébgt/logt',
-        2 => 'Non respect de la convention d\'acc.',
+        5 => 'Fin de prise en charge 115',
         3 => 'Fin de prise en charge ASE',
+        2 => 'Non respect de la convention d\'acc.',
         4 => 'Départ vers un autre département',
         97 => 'Autre',
         99 => 'Non renseigné',
