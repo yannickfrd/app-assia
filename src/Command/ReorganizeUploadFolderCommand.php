@@ -22,6 +22,7 @@ class ReorganizeUploadFolderCommand extends Command
     protected $repo;
     protected $manager;
     protected $fileUploader;
+    protected $output;
 
     public function __construct(DocumentRepository $repo, EntityManagerInterface $manager, FileUploader $fileUploader)
     {
@@ -35,6 +36,7 @@ class ReorganizeUploadFolderCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->output = $output;
         $message = $this->update();
         $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
 
@@ -58,12 +60,12 @@ class ReorganizeUploadFolderCommand extends Command
                 if (copy($file, $newFile)) {
                     unlink($file);
                     ++$count;
+                    $this->output->writeln($document->getId().' => OK');
                 }
             }
         }
-
         $this->manager->flush();
 
-        return "[OK] The documents are update ! \n ".$count.' / '.count($documents);
+        return "\n[OK] The documents are update ! \n ".$count.' / '.count($documents)."\n";
     }
 }
