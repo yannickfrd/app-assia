@@ -52,7 +52,7 @@ class FileUploader
         $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $slug = $this->slugger->slug($filename);
 
-        return $slug.'-'.uniqid().'.'.$file->guessExtension();
+        return $slug.'.'.$file->guessExtension();
 
         // $filename = str_replace([' ', '/'], '-', $filename);
         // $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_-] remove; Lower()', $filename);

@@ -65,19 +65,19 @@ class DocumentRepositoryTest extends WebTestCase
 
     public function testFindSupportDocumentsQueryWithoutFilters()
     {
-        $query = $this->repo->findSupportDocumentsQuery($this->supportGroup->getId(), new SupportDocumentSearch());
+        $query = $this->repo->findSupportDocumentsQuery($this->supportGroup, new SupportDocumentSearch());
         $this->assertGreaterThanOrEqual(5, count($query->getResult()));
     }
 
     public function testFindSupportDocumentsQueryWithFilters()
     {
-        $query = $this->repo->findSupportDocumentsQuery($this->supportGroup->getId(), $this->search);
+        $query = $this->repo->findSupportDocumentsQuery($this->supportGroup, $this->search);
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 
     public function testFindSupportsDocumentsQueryWithFilterByContent()
     {
-        $query = $this->repo->findSupportDocumentsQuery($this->supportGroup->getId(), $this->search->setName('Description'));
+        $query = $this->repo->findSupportDocumentsQuery($this->supportGroup, $this->search->setName('Description'));
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 

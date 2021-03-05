@@ -3,6 +3,7 @@
 namespace App\Repository\Support;
 
 use App\Entity\Support\Document;
+use App\Entity\Support\SupportGroup;
 use App\Form\Model\Support\DocumentSearch;
 use App\Form\Model\Support\SupportDocumentSearch;
 use App\Security\CurrentUserService;
@@ -113,13 +114,19 @@ class DocumentRepository extends ServiceEntityRepository
     /**
      * Return all documents of group support.
      */
-    public function findSupportDocumentsQuery(int $supportGroupId, SupportDocumentSearch $search): Query
+    public function findSupportDocumentsQuery(SupportGroup $supportGroup, SupportDocumentSearch $search): Query
     {
         $query = $this->createQueryBuilder('d')->select('d')
+            // ->leftJoin('d.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, service}')
             ->leftJoin('d.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
 
-            ->andWhere('d.supportGroup = :supportGroup')
-            ->setParameter('supportGroup', $supportGroupId);
+            ->where('d.supportGroup = :supportGroup')
+            ->setParameter('supportGroup', $supportGroup);
+
+        // if ($user && !in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
+        //     $query->andWhere('sg.service IN (:services)')
+        //         ->setParameter('services', $user->getServices());
+        // }
 
         if ($search->getName()) {
             $query->andWhere('d.name LIKE :name OR d.content LIKE :name')
@@ -131,7 +138,7 @@ class DocumentRepository extends ServiceEntityRepository
         }
         $query = $query->orderBy('d.createdAt', 'DESC');
 
-        return $query->getQuery();
+        return $query->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
 
     public function countDocuments(array $criteria = null): int

@@ -62,13 +62,9 @@ class DocumentController extends AbstractController
      */
     public function listSupportDocuments(int $id, SupportManager $supportManager, Request $request, Pagination $pagination): Response
     {
-        $supportGroup = $supportManager->getSupportGroup($id);
+        $this->denyAccessUnlessGranted('VIEW', $supportGroup = $supportManager->getSupportGroup($id));
 
-        $this->denyAccessUnlessGranted('VIEW', $supportGroup);
-
-        $search = new SupportDocumentSearch();
-
-        $formSearch = $this->createForm(SupportDocumentSearchType::class, $search);
+        $formSearch = $this->createForm(SupportDocumentSearchType::class, $search = new SupportDocumentSearch());
         $formSearch->handleRequest($request);
 
         $form = $this->createForm(DocumentType::class, new Document());
@@ -77,29 +73,29 @@ class DocumentController extends AbstractController
             'support' => $supportGroup,
             'form_search' => $formSearch->createView(),
             'form' => $form->createView(),
-            'documents' => $this->getDocuments($supportGroup, $request, $search, $pagination),
+            'documents' => $pagination->paginate($this->repo->findSupportDocumentsQuery($supportGroup, $search), $request),
         ]);
     }
 
-    /**
-     * Donne les documents du suivi.
-     */
-    protected function getDocuments(SupportGroup $supportGroup, Request $request, SupportDocumentSearch $search, Pagination $pagination)
-    {
-        // Si filtre ou tri utilisé, n'utilise pas le cache.
-        if ($request->query->count() > 0) {
-            return  $pagination->paginate($this->repo->findSupportDocumentsQuery($supportGroup->getId(), $search), $request);
-        }
+    // /**
+    //  * Donne les documents du suivi.
+    //  */
+    // protected function getDocuments(SupportGroup $supportGroup, Request $request, SupportDocumentSearch $search, Pagination $pagination)
+    // {
+    //     // Si filtre ou tri utilisé, n'utilise pas le cache.
+    //     if ($request->query->count() > 0) {
+    //         return  $pagination->paginate($this->repo->findSupportDocumentsQuery($supportGroup, $search), $request);
+    //     }
 
-        // Sinon, récupère les documents en cache.
-        return (new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']))->get(SupportGroup::CACHE_SUPPORT_DOCUMENTS_KEY.$supportGroup->getId(),
-            function (CacheItemInterface $item) use ($supportGroup, $pagination, $search, $request) {
-                $item->expiresAfter(\DateInterval::createFromDateString('7 days'));
+    //     // Sinon, récupère les documents en cache.
+    //     return (new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']))->get(SupportGroup::CACHE_SUPPORT_DOCUMENTS_KEY.$supportGroup->getId(),
+    //         function (CacheItemInterface $item) use ($supportGroup, $pagination, $search, $request) {
+    //             $item->expiresAfter(\DateInterval::createFromDateString('7 days'));
 
-                return $pagination->paginate($this->repo->findSupportDocumentsQuery($supportGroup->getId(), $search), $request);
-            }
-        );
-    }
+    //             return $pagination->paginate($this->repo->findSupportDocumentsQuery($supportGroup, $search), $request);
+    //         }
+    //     );
+    // }
 
     /**
      * Nouveau document.
@@ -109,9 +105,7 @@ class DocumentController extends AbstractController
      */
     public function newDocument(SupportGroup $supportGroup, Request $request, FileUploader $fileUploader): Response
     {
-        $document = new Document();
-
-        $form = ($this->createForm(DocumentType::class, $document))
+        $form = ($this->createForm(DocumentType::class, $document = new Document()))
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -129,7 +123,7 @@ class DocumentController extends AbstractController
      */
     public function readDocument(Document $document, Download $download): Response
     {
-        $file = 'uploads/documents/'.$document->getPeopleGroup()->getId().'/'.$document->getCreatedAt()->format('Y/m').'/'.$document->getInternalFileName();
+        $file = 'uploads/documents/'.$document->getCreatedAt()->format('Y/m/d/').$document->getPeopleGroup()->getId().'/'.$document->getInternalFileName();
 
         if (file_exists($file)) {
             return $download->send($file);
@@ -201,7 +195,7 @@ class DocumentController extends AbstractController
 
         $peopleGroup = $supportGroup->getPeopleGroup();
 
-        $path = '/'.$peopleGroup->getId().'/'.(new \DateTime())->format('Y/m');
+        $path = '/'.(new \DateTime())->format('Y/m/d/').$peopleGroup->getId().'/';
 
         $fileName = $fileUploader->upload($file, $path);
 
