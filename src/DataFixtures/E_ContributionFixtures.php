@@ -28,14 +28,12 @@ class E_ContributionFixtures extends Fixture
 
                 $date = new DateTime($createdAt->format('Y-m').'-01');
 
-                $salaryAmt = mt_rand(0, 2) > 0 ? mt_rand(0, 1500) : 0;
-                $resourcesAmt = $salaryAmt + mt_rand(0, 500);
+                $resourcesAmt = mt_rand(0, 1500);
                 $paidAmt = $resourcesAmt * 0.1;
 
                 $contribution = (new Contribution())
                     ->setType(1)
                     ->setMonthContrib($date)
-                    ->setSalaryAmt($salaryAmt)
                     ->setResourcesAmt($resourcesAmt)
                     ->setToPayAmt($resourcesAmt * 0.1)
                     ->setPaidAmt($paidAmt)

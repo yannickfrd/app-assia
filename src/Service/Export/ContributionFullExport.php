@@ -56,8 +56,8 @@ class ContributionFullExport extends ExportExcel
             'Service' => $supportGroup->getService()->getName(),
             'Pôle' => $supportGroup->getService()->getPole()->getName(),
             'Type d\'opération' => $contribution->getTypeToString(),
-            'PF - Mois concerné (Date)' => $this->formatDate($contribution->getMonthContrib()),
-            'PF - Montant salaire' => $contribution->getSalaryAmt(),
+            'PF - Date début de la période' => $this->formatDate($contribution->getStartDate()),
+            'PF - Date fin de la période' => $this->formatDate($contribution->getEndDate()),
             'PF - Montant ressources' => $contribution->getResourcesAmt(),
             'Montant loyer' => $contribution->getRentAmt(),
             'Montant APL' => $contribution->getAplAmt(),
@@ -72,10 +72,6 @@ class ContributionFullExport extends ExportExcel
             'Créé par' => $contribution->getCreatedBy()->getFullname(),
             'Date de modification' => $this->formatDate($contribution->getUpdatedAt()),
             'Modifié par' => $contribution->getUpdatedBy()->getFullname(),
-            // 'Url' => $this->router ? $this->router->generate('support_contributions', [
-            //     'id' => $supportGroup->getId(),
-            //     'contributionId' => $contribution->getId(),
-            // ], UrlGeneratorInterface::ABSOLUTE_URL) : null,
         ];
     }
 }

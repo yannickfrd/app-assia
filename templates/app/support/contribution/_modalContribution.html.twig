@@ -14,13 +14,10 @@
             <div class="modal-body form-group pb-0">
                 <div class="row">
                     <div class="col-lg-6">{{ form_row(form.type) }}</div>
-                    <div class="col-lg-6 js-contrib js-contribution d-none">
-                        <div class="form-group row">{{ form_label(form.monthContrib) }}
-                            <div class="col-4 d-none">{{ form_widget(form.monthContrib.day) }}</div>
-                            <div class="col-4">{{ form_widget(form.monthContrib.month) }}</div>
-                            <div class="col-4">{{ form_widget(form.monthContrib.year) }}</div>
-                        </div>
-                    </div>
+                </div>
+                <div class="row js-contrib js-contribution d-none">
+                    <div class="col-lg-6">{{ form_row(form.startDate) }}</div>
+                    <div class="col-lg-6">{{ form_row(form.endDate) }}</div>
                 </div>
                 <hr class="mt-0">
                 <div class="row js-contrib js-contribution d-none">

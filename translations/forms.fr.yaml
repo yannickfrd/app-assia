@@ -151,7 +151,7 @@ Organization: Organisme prescripteur ou orienteur
 Organization comment: Précision concernant l'organisme
 Orientation date: Date d'orientation
 Pre admission date: Date d'entretien de pré-admission
-Resul pre admission: Résultat de la pré-admission
+Resul pre admission: Résultat de l'orientation ou pré-admission
 originRequest.comment: Écrire un commentaire relatif à l'origine de la demande ou à la pré-admission
 
 ### Document
@@ -196,10 +196,11 @@ Configuration: Configuration
 Individual collective: Individuel ou partagé
 Contribution amt: Montant de la participation financière
 
-### Contribution
+### Paiement/Contribution
 Apl amt: Montant APL
 Credential: Justificatif de ressources
-Month contrib: Mois concerné
+Contrib start date: Date de début de la période
+Contrib end date: Date de fin de la période
 Paid amt: Montant réglé
 Payment date: Date de l\'opération
 Payment type: Mode de règlement
@@ -210,14 +211,9 @@ Salary amt: Montant salaire(s)
 Still to pay amt: Montant restant dû
 To pay amt: Montant à régler
 contribution:
-  send:
-    notice: Envoyer l'avis d'échéance par email
-    receipt: Envoyer le reçu de paiement par email
-  download:
-    notice: Télécharger l'avis d'échéance
-    receipt: Télécharger le reçu de paiement
+  startDate: Début de la période
+  endDate: Fin de la période
   comment.placeholder: Écrire un commentaire
-  monthContrib: Mois de la redevance
   type: Type d'opération
   rate.help: Nombre entre 0 et 1.
 

@@ -50,6 +50,7 @@
                             <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, "Référent·e social·e", "u.lastname") }}</th>
                             <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, "Service (Dispositif)", "s.name") }}</th>
                             {# {% if contributions|length > 0 %} #}
+                            <th scope="col" class="align-middle th-w-100">Redevance -<br/>Période</th>
                             <th scope="col" class="align-middle th-w-100">Redevance -<br/>Montant à régler</th>
                             <th scope="col" class="align-middle th-w-100">Redevance -<br/>Montant réglé</th>
                             <th scope="col" class="align-middle th-w-100">Redevance -<br/>Date de l'opération</th>
@@ -77,6 +78,11 @@
                                 </td>
                                 {% for contribution in contributions|filter(c => c.supportGroup == support and c.type == constant("App\\Entity\\Support\\Contribution::TYPE_CONTRIBUTION") ) %}
                                     {% if loop.first %}
+                                        <td class="align-middle text-center">
+                                            {% if contribution.startDate %}
+                                                {{ contribution.startDate|date("d/m/Y") }} - {{ contribution.endDate|date("d/m/Y") }}
+                                            {% endif %}
+                                        </td>
                                         <td class="align-middle text-right">{{ contribution.toPayAmt|price }}</td>
                                         <td class="align-middle text-right">{{ contribution.paidAmt|price }}</td>
                                         <td class="align-middle">{{ contribution.paymentDate|date("d/m/Y") }}</td>
@@ -84,7 +90,7 @@
                                         <td class="align-middle">{{ contribution.comment }}</td>
                                     {% endif %}
                                 {% else %}
-                                    <td colspan="5"></td>
+                                    <td colspan="6"></td>
                                 {% endfor %}
                             </tr>
                         {% endfor %}

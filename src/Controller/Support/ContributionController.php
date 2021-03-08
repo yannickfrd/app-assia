@@ -141,13 +141,11 @@ class ContributionController extends AbstractController
 
         $place = $repoPlace->findCurrentPlaceOfSupport($supportGroup);
 
-        $salaryAmt = 0;
         $resourcesAmt = 0;
 
         if ($evaluation) {
             foreach ($evaluation->getEvaluationPeople() as $evaluationPerson) {
                 if ($evaluationPerson->getEvalBudgetPerson()) {
-                    $salaryAmt += $evaluationPerson->getEvalBudgetPerson()->getSalaryAmt();
                     $resourcesAmt += $evaluationPerson->getEvalBudgetPerson()->getResourcesAmt();
                 }
             }
@@ -160,7 +158,6 @@ class ContributionController extends AbstractController
             'code' => 200,
             'action' => 'get_resources',
             'data' => [
-                'salaryAmt' => $salaryAmt,
                 'resourcesAmt' => $resourcesAmt,
                 'toPayAmt' => $toPayAmt ?? null,
                 'contributionAmt' => $evaluation && $evaluation->getEvalBudgetGroup() ? $evaluation->getEvalBudgetGroup()->getContributionAmt() : null,

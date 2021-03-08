@@ -12,12 +12,12 @@ export default class SupportContributions {
         this.loader = new Loader()
         this.ajax = new Ajax(this.loader)
         this.selectType = new SelectType()
+        // this.validationDate = new ValidationDate()
         this.validationForm = new ValidationForm()
         this.parametersUrl = new ParametersUrl()
         this.modalElt = new Modal(document.getElementById('modal-contribution'))
 
         this.resourcesChecked = false // Ressources vérifiées dans la base de données
-        this.salaryAmt = null
         this.resourcesAmt = null
         this.contributionAmt = null
         this.toPayAmt = null
@@ -45,9 +45,8 @@ export default class SupportContributions {
         this.modalContributionElt = document.getElementById('modal-contribution')
         this.formContributionElt = this.modalContributionElt.querySelector('form[name=contribution]')
         this.typeSelect = document.getElementById('contribution_type')
-        this.monthContribYearSelect = document.getElementById('contribution_monthContrib_year')
-        this.monthContribMonthSelect = document.getElementById('contribution_monthContrib_month')
-        this.monthContribDaySelect = document.getElementById('contribution_monthContrib_day')
+        this.startDateInput = document.getElementById('contribution_startDate')
+        this.endDateInput = document.getElementById('contribution_endDate')
         this.resourcesAmtInput = document.getElementById('contribution_resourcesAmt')
         this.rentAmtInput = document.getElementById('contribution_rentAmt')
         this.aplAmtInput = document.getElementById('contribution_aplAmt')
@@ -188,7 +187,6 @@ export default class SupportContributions {
 
         // Si PF / Redevance et Loyer.
         if ([1, 2].includes(option)) {
-            this.selectType.setOption(this.monthContribDaySelect, '1')
             this.formContributionElt.querySelectorAll('.js-contribution').forEach(elt => {
                 elt.classList.remove('d-none')
             })
@@ -245,22 +243,22 @@ export default class SupportContributions {
      * Donne le ratio de jours de présence dans le mois.
      */
     getRateDays() {
-        const date = new Date(this.selectType.getOption(this.monthContribYearSelect) + '-' + this.selectType.getOption(this.monthContribMonthSelect) + '-01')
-        const nextMonth = (new Date(date)).setMonth(date.getMonth() + 1)
-        const nbDaysInMonth = Math.round((nextMonth - date) / (1000 * 60 * 60 * 24))
+        const startDate = new Date(this.startDateInput.value)
+        const endDate = new Date(this.startDateInput.value)
+        // const nbDaysInPeriod = Math.round((endDate - startDate + 1) / (1000 * 60 * 60 * 24))
         let rateDays = 1
 
-        if (this.supportStartDate > date) {
-            rateDays = 1 - ((this.supportStartDate - date) / (1000 * 60 * 60 * 24) / nbDaysInMonth)
-        }
+        // if (this.supportStartDate > startDate) {
+        //     rateDays = 1 - ((this.supportStartDate - startDate) / (1000 * 60 * 60 * 24) / nbDaysInPeriod)
+        // }
 
-        if (this.supportEndDate < nextMonth) {
-            rateDays = 1 - ((nextMonth - this.supportEndDate) / (1000 * 60 * 60 * 24) / nbDaysInMonth)
-        }
+        // if (this.supportEndDate < endDate) {
+        //     rateDays = 1 - ((endDate - this.supportEndDate + 1) / (1000 * 60 * 60 * 24) / nbDaysInPeriod)
+        // }
 
-        if (rateDays > 1 || rateDays < 0) {
-            rateDays = 0
-        }
+        // if (rateDays > 1 || rateDays < 0) {
+        //     rateDays = 0
+        // }
 
         return rateDays
     }
@@ -339,22 +337,21 @@ export default class SupportContributions {
      */
     checkContributionDate(option) {
         if ([1, 2].includes(option)) { // PF et Loyer
-            if (!this.selectType.getOption(this.monthContribMonthSelect)) {
+            if (!this.startDateInput.value) {
                 this.error = true
-                this.validationForm.invalidField(this.monthContribMonthSelect, 'Saisie obligatoire.')
+                this.validationForm.invalidField(this.startDateInput, 'Saisie obligatoire.')
             } else {
-                this.validationForm.validField(this.monthContribMonthSelect)
+                this.validationForm.validField(this.startDateInput)
             }
-            if (!this.selectType.getOption(this.monthContribYearSelect)) {
+            if (!this.endDateInput.value) {
                 this.error = true
-                this.validationForm.invalidField(this.monthContribYearSelect, 'Saisie obligatoire.')
+                this.validationForm.invalidField(this.endDateInput, 'Saisie obligatoire.')
             } else {
-                this.validationForm.validField(this.monthContribYearSelect)
+                this.validationForm.validField(this.endDateInput)
             }
         } else {
-            this.selectType.setOption(this.monthContribYearSelect, '')
-            this.selectType.setOption(this.monthContribMonthSelect, '')
-            this.selectType.setOption(this.monthContribDaySelect, '')
+            this.startDateInput.value = ''
+            this.endDateInput.value = ''
         }
     }
 
@@ -449,10 +446,6 @@ export default class SupportContributions {
         this.selectType.setOption(this.typeSelect, '')
         this.initForm()
         this.checkType()
-        if (!this.contributionId) {
-            this.selectType.setOption(this.monthContribMonthSelect, this.now.getMonth() + 1)
-            this.selectType.setOption(this.monthContribYearSelect, this.now.getFullYear())
-        }
         this.modalContributionElt.querySelector('form').action = '/support/' + this.supportId + '/contribution/new'
         this.deleteBtnElt.classList.replace('d-block', 'd-none')
         this.saveBtnElt.textContent = 'Enregistrer'
@@ -581,7 +574,6 @@ export default class SupportContributions {
      */
     getResources(data = null) {
         if (this.resourcesChecked === false) {
-            this.salaryAmt = data.salaryAmt
             this.resourcesAmt = data.resourcesAmt
             this.contributionAmt = data.contributionAmt
             this.toPayAmt = data.toPayAmt
@@ -590,7 +582,6 @@ export default class SupportContributions {
         }
 
         this.resourcesAmtInput.value === '' ? this.resourcesAmtInput.value = this.resourcesAmt : null
-        // this.salaryAmtInput.value === '' ? this.salaryAmtInput.value = this.salaryAmt : null
         // this.contributionAmt = this.contributionAmt
         this.toPayAmtInput.value = this.toPayAmt
         this.rentAmtInput.value = this.rentAmt
@@ -607,11 +598,8 @@ export default class SupportContributions {
         const contribution = data.contribution
         this.modalElt.show()
         this.selectOption(this.typeSelect, contribution.type)
-        if (contribution.monthContrib) {
-            this.selectOption(this.monthContribYearSelect, parseInt(contribution.monthContrib.substring(0, 4)))
-            this.selectOption(this.monthContribMonthSelect, parseInt(contribution.monthContrib.substring(5, 7)))
-        }
-        // this.salaryAmtInput.value = contribution.salaryAmt
+        this.startDateInput.value = contribution.startDate ? contribution.startDate.substring(0, 10) : null
+        this.endDateInput.value = contribution.endDate ? contribution.endDate.substring(0, 10) : null
         this.resourcesAmtInput.value = contribution.resourcesAmt
         this.rentAmtInput.value = contribution.rentAmt
         this.toPayAmtInput.value = contribution.toPayAmt
@@ -683,7 +671,7 @@ export default class SupportContributions {
      */
     updateContribution(contribution) {
         this.trElt.querySelector('td.js-type').textContent = contribution.typeToString + (contribution.type == 11 ? ' (' + this.formatMoney(contribution.returnAmt) + ')' : '')
-        this.trElt.querySelector('td.js-monthContrib').textContent = this.formatDatetime(contribution.monthContrib, 'd/m')
+        this.trElt.querySelector('td.js-startDate').textContent = this.formatDatetime(contribution.startDate, 'date') + ' - ' + this.formatDatetime(contribution.endDate, 'date')
         this.trElt.querySelector('td.js-toPayAmt').textContent = this.formatMoney(contribution.toPayAmt)
         this.trElt.querySelector('td.js-paidAmt').textContent = this.formatMoney(contribution.paidAmt)
         this.trElt.querySelector('td.js-stillToPayAmt').textContent = this.formatMoney(this.roundMoney(contribution.stillToPayAmt))
@@ -710,7 +698,7 @@ export default class SupportContributions {
             <td class='align-middle js-type'>${contribution.typeToString}<br/>
                 <span class='text-secondary'>${contribution.type == 11 ? ' (' + this.formatMoney(contribution.returnAmt) + ')' : '' }</span>
             </td>
-            <td class='align-middle js-monthContrib'>${this.formatDatetime(contribution.monthContrib, 'd/m')}</td>
+            <td class='align-middle js-startDate'>${this.formatDatetime(contribution.startDate, 'date') + ' - ' + this.formatDatetime(contribution.endDate, 'date')}</td>
             <td class='align-middle text-right js-toPayAmt'>${this.formatMoney(contribution.toPayAmt)}</td>
             <td class='align-middle text-right js-paidAmt'>${this.formatMoney(contribution.paidAmt)}</td>
             <td class='align-middle text-right js-stillToPayAmt'>${this.formatMoney(this.roundMoney(contribution.stillToPayAmt))}</td>

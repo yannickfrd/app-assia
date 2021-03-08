@@ -16,12 +16,13 @@ class ContributionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('monthContrib', DateType::class, [
-                'required' => true,
-                'years' => range((int) date('Y'), (int) date('Y') - 10),
-                'placeholder' => [
-                    'year' => 'Year', 'month' => 'Month', 'day' => 'Day',
-                ],
+            ->add('startDate', DateType::class, [
+                'label' => 'contribution.startDate',
+                'widget' => 'single_text',
+                ])
+                ->add('endDate', DateType::class, [
+                'label' => 'contribution.endDate',
+                'widget' => 'single_text',
             ])
             ->add('type', ChoiceType::class, [
                 'label' => 'contribution.type',
@@ -69,17 +70,6 @@ class ContributionType extends AbstractType
                 'attr' => ['class' => 'js-money text-right'],
                 'required' => false,
             ])
-            // ->add('action', ChoiceType::class, [
-            //     'choices' => [
-            //         'contribution.download.notice' => 1,
-            //         'contribution.send.notice' => 2,
-            //         'contribution.download.receipt' => 3,
-            //         'contribution.send.receipt' => 4,
-            //     ],
-            //     'placeholder' => 'placeholder.action',
-            //     'mapped' => false,
-            //     'required' => false,
-            // ])
             ->add('comment', null, [
                 'attr' => [
                     'rows' => 2,

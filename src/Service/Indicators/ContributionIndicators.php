@@ -20,10 +20,10 @@ class ContributionIndicators
     {
         switch ($search->getDateType()) {
             case 1:
-                $date = 'getMonthContrib';
+                $date = 'getPaymentDate';
                 break;
             case 2:
-                $date = 'getPaymentDate';
+                $date = 'getStartDate';
                 break;
             default:
                 $date = 'getCreatedAt';

@@ -61,7 +61,7 @@ class ContributionRepository extends ServiceEntityRepository
             $query = $this->filter($query, $search);
         }
 
-        return  $query->orderBy('c.monthContrib', 'DESC')
+        return  $query->orderBy('c.startDate', 'DESC')
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
 
@@ -78,9 +78,9 @@ class ContributionRepository extends ServiceEntityRepository
             ->andWhere('c.supportGroup IN (:supportsId)')
             ->setParameter('supportsId', $supportsId)
 
-            ->andWhere('c.monthContrib >= :start')
+            ->andWhere('c.startDate >= :start')
             ->setParameter('start', $start)
-            ->andWhere('c.monthContrib <= :end')
+            ->andWhere('c.startDate <= :end')
             ->setParameter('end', $end);
 
         return $query->getQuery()
@@ -107,7 +107,7 @@ class ContributionRepository extends ServiceEntityRepository
 
         $query = $this->filter($query, $search);
 
-        return  $query->orderBy('c.monthContrib', 'DESC')
+        return  $query->orderBy('c.startDate', 'DESC')
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
@@ -170,25 +170,29 @@ class ContributionRepository extends ServiceEntityRepository
                 ->setParameter('type', $search->getType());
         }
 
-        switch ($search->getDateType()) {
-            case 1:
+        if (in_array($search->getDateType(), [1, 3], true)) {
+            if (1 === $search->getDateType()) {
                 $dateType = 'paymentDate';
-                break;
-            case 2:
-                $dateType = 'monthContrib';
-                break;
-            default:
+            } else {
                 $dateType = 'createdAt';
-                break;
-        }
-
-        if ($search->getStart()) {
-            $query->andWhere('c.'.$dateType.' >= :start')
+            }
+            if ($search->getStart()) {
+                $query->andWhere('c.'.$dateType.' >= :start')
                 ->setParameter('start', $search->getStart());
-        }
-        if ($search->getEnd()) {
-            $query->andWhere('c.'.$dateType.' <= :end')
+            }
+            if ($search->getEnd()) {
+                $query->andWhere('c.'.$dateType.' <= :end')
                 ->setParameter('end', $search->getEnd());
+            }
+        } elseif (2 === $search->getDateType()) {
+            if ($search->getStart()) {
+                $query->andWhere('c.endDate >= :start')
+                    ->setParameter('start', $search->getStart());
+            }
+            if ($search->getEnd()) {
+                $query->andWhere('c.startDate <= :end')
+                    ->setParameter('end', $search->getEnd());
+            }
         }
 
         if ($search instanceof ContributionSearch) {
@@ -251,11 +255,11 @@ class ContributionRepository extends ServiceEntityRepository
                 ->setParameter('type', $search->getType());
         }
         if ($search->getStart()) {
-            $query->andWhere('c.monthContrib >= :start')
+            $query->andWhere('c.startDate >= :start')
                 ->setParameter('start', $search->getStart());
         }
         if ($search->getEnd()) {
-            $query->andWhere('c.monthContrib <= :end')
+            $query->andWhere('c.startDate <= :end')
                 ->setParameter('end', $search->getEnd());
         }
 

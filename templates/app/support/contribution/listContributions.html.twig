@@ -44,7 +44,7 @@
                             <th scope="col" class="align-middle th-w-20"></th>
                             <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Suivi", "p.lastname") }}</th>
                             <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "contribution.type"|trans({}, "forms"), "c.type") }}</th>
-                            <th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(contributions, "contribution.monthContrib"|trans({}, "forms"), "c.monthContrib") }}</th>
+                            <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(contributions, "Période de la PF", "c.startDate") }}</th>
                             <th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(contributions, "Montant à régler", "c.toPayAmt") }}</th>
                             <th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(contributions, "Montant réglé", "c.paidAmt") }}</th>
                             <th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(contributions, "Restant dû (différenciel)", "c.stillToPayAmt") }}</th>
@@ -72,10 +72,14 @@
                                 <td class="align-middle">{{ contribution.typeToString }}
                                     <span class="text-secondary">
                                         {{ contribution.type == constant("TYPE_RENT", contribution) ? "(" ~ contribution.rentAmt|price }}<br/>
-                                        {{ contribution.type == constant("TYPE_RETURN_BAIL", contribution) ? "(" ~ contribution.returnAmt|price }}
+                                    {{ contribution.type == constant("TYPE_RETURN_BAIL", contribution) ? "(" ~ contribution.returnAmt|price ~ ")" }}
                                     </span>
                                 </td>
-                                <td class="align-middle">{{ contribution.monthContrib ? contribution.monthContrib|date("m/Y") }}</td>
+                                <td class="align-middle text-center">
+                                    {% if contribution.startDate %}
+                                        {{ contribution.startDate|date("d/m/Y") }} - {{ contribution.endDate|date("d/m/Y") }}
+                                    {% endif %}
+                                </td>
                                 <td class="align-middle text-right">{{ contribution.toPayAmt >= 0 ? contribution.toPayAmt|price }}</td>
                                 <td class="align-middle text-right">{{ contribution.paidAmt ? contribution.paidAmt|price }}</td>
                                 <td class="align-middle text-right">{{ contribution.stillToPayAmt ? contribution.stillToPayAmt|price }}</td>

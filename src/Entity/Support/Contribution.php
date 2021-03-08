@@ -4,7 +4,6 @@ namespace App\Entity\Support;
 
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use App\Repository\Support\ContributionRepository;
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -70,16 +69,22 @@ class Contribution
     private $monthContrib;
 
     /**
-     * @ORM\Column(type="float", nullable=true)
-     * @Groups({"get", "export"})
+     * @ORM\Column(type="date", nullable=true)
+     * @Groups("get")
      */
-    private $resourcesAmt;
+    private $startDate;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     * @Groups("get")
+     */
+    private $endDate;
 
     /**
      * @ORM\Column(type="float", nullable=true)
      * @Groups({"get", "export"})
      */
-    private $salaryAmt;
+    private $resourcesAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
@@ -201,6 +206,35 @@ class Contribution
         return $this;
     }
 
+    public function getStartDate(): ?\DateTimeInterface
+    {
+        return $this->startDate;
+    }
+
+    public function setStartDate(?\DateTimeInterface $startDate): self
+    {
+        $this->startDate = $startDate;
+
+        return $this;
+    }
+
+    public function getEndDate(): ?\DateTimeInterface
+    {
+        return $this->endDate;
+    }
+
+    public function setEndDate(?\DateTimeInterface $endDate): self
+    {
+        $this->endDate = $endDate;
+
+        return $this;
+    }
+
+    public function getNbDays(): ?int
+    {
+        return $this->monthContrib ? $this->getStartDate()->diff($this->getEndDate())->days + 1 : null;
+    }
+
     public function getResourcesAmt(): ?float
     {
         return $this->resourcesAmt;
@@ -209,18 +243,6 @@ class Contribution
     public function setResourcesAmt(?float $resourcesAmt): self
     {
         $this->resourcesAmt = $resourcesAmt;
-
-        return $this;
-    }
-
-    public function getSalaryAmt(): ?float
-    {
-        return $this->salaryAmt;
-    }
-
-    public function setSalaryAmt(?float $salaryAmt): self
-    {
-        $this->salaryAmt = $salaryAmt;
 
         return $this;
     }
@@ -336,27 +358,6 @@ class Contribution
         $this->returnAmt = $returnAmt;
 
         return $this;
-    }
-
-    public function getStartDate(): ?DateTime
-    {
-        return max($this->monthContrib, $this->supportGroup->getStartDate());
-    }
-
-    public function getEndDate(): ?DateTime
-    {
-        if ($this->monthContrib) {
-            $lastDay = (clone $this->monthContrib)->modify('last day of this month');
-
-            return min($lastDay, $this->supportGroup->getEndDate() ?? $lastDay);
-        }
-
-        return null;
-    }
-
-    public function getNbDays(): ?int
-    {
-        return $this->monthContrib ? $this->getStartDate()->diff($this->getEndDate())->days + 1 : null;
     }
 
     public function getComment(): ?string
