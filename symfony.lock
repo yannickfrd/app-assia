@@ -147,6 +147,9 @@
     "evenement/evenement": {
         "version": "v3.0.1"
     },
+    "ezyang/htmlpurifier": {
+        "version": "v4.13.0"
+    },
     "friendsofphp/php-cs-fixer": {
         "version": "2.2",
         "recipe": {
@@ -158,6 +161,9 @@
         "files": [
             "./.php_cs.dist"
         ]
+    },
+    "friendsofphp/proxy-manager-lts": {
+        "version": "v1.0.3"
     },
     "fzaninotto/faker": {
         "version": "v1.8.0"
@@ -781,6 +787,9 @@
     },
     "twig/intl-extra": {
         "version": "v3.0.0"
+    },
+    "twig/string-extra": {
+        "version": "v3.3.0"
     },
     "twig/twig": {
         "version": "v2.11.3"

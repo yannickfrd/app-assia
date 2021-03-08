@@ -54,8 +54,7 @@
                             </th>
                             <td class="align-middle justify"><span class="font-weight-bold">
                                 {{ note.title }}{% if note.title %} : {% endif %}</span>
-                                <span class="">{{ note.content|slice(0,200)|striptags|raw }}</span>
-                                {% if note.content|length > 200 %}<span class="font-italic"> [...]</span>{% endif %}
+                                {{ note.content|u.truncate(200, " [...]", false)|striptags|raw }}
                             </td>
                             <td class="align-middle">{{ note.supportGroup.supportPeople|filter(s => s.head == true)|first.person.fullname }}</td>
                             <td class="align-middle">{{ note.typeToString }}</td>

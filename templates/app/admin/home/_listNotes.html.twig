@@ -28,10 +28,9 @@
                                         title="Voir la note sociale"><span class="fas fa-eye"></span>
                                     </a>
                                 </td>
-                                <td class="align-middle justify"><span class="font-weight-bold">
-                                    {{ note.title }}{% if note.title %} : {% endif %}</span>
-                                    {{ note.content|slice(0,190)|striptags|raw }} 
-                                    {% if note.content|length > 190 %}<span class="font-italic"> [...]</span>{% endif %}
+                                <td class="align-middle justify">
+                                    <span class="font-weight-bold">{{ note.title ? note.title ~ " : " }}</span>
+                                    {{ note.content|u.truncate(200, " [...]", false)|striptags|raw }}
                                 </td>
                                 <td class="align-middle">{{ person ? person.fullname }}</td>
                                 <td class="align-middle">{{ note.statusToString }}</td>
