@@ -34,11 +34,12 @@ security:
                 path: security_logout
                 target: security_login
 
-            remember_me:
-                secret: "%kernel.secret%"
-                lifetime: 604800
-                path: /
-                always_remember_me: true
+            # remember_me:
+            #     secret: "%kernel.secret%"
+            #     lifetime: 604800
+            #     path: /
+            #     always_remember_me: true
+
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
             # https://symfony.com/doc/current/security/impersonating_user.html
