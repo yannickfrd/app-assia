@@ -6,6 +6,7 @@ use PhpOffice\PhpWord\Element\Header;
 use PhpOffice\PhpWord\Element\Section;
 use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\Settings;
 use PhpOffice\PhpWord\Shared\Html;
 use PhpOffice\PhpWord\Style\Language;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,6 +31,7 @@ class ExportWord
         $this->slugger = new AsciiSlugger();
         $this->fullHTML = $fullHTML;
         $this->phpWord->getSettings()->setThemeFontLang(new Language(Language::FR_FR));
+        Settings::setOutputEscapingEnabled(true);
         $this->defaultLogo = 'images/logo_esperer95.png';
     }
 
@@ -190,8 +192,6 @@ class ExportWord
             ['<th>&nbsp;', '&nbsp;</th>', '<td>&nbsp;', '&nbsp;</td>'],
             $content
         );
-        $content = \str_replace('&amp;', 'et', $content); // &amp; provoque une erreur à l'ouverture du fichier Word.
-        $content = \str_replace(' & ', ' et ', $content); // & provoque une erreur à l'ouverture du fichier Word.
 
         if (\strstr($content, '<br/>{LOGO_SIGNATURE}')) {
             $content = \str_replace('<br/>{LOGO_SIGNATURE}', '', $content);
