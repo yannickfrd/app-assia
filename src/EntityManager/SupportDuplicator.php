@@ -6,6 +6,7 @@ use App\Entity\Evaluation\EvaluationGroup;
 use App\Entity\Evaluation\EvaluationPerson;
 use App\Entity\Evaluation\InitEvalGroup;
 use App\Entity\Organization\Service;
+use App\Entity\Support\Document;
 use App\Entity\Support\SupportGroup;
 use App\Repository\Evaluation\EvaluationGroupRepository;
 use App\Repository\Evaluation\EvaluationPersonRepository;
@@ -65,6 +66,7 @@ class SupportDuplicator
                     $this->manager->persist($evaluationPerson);
                 }
             }
+            $this->manager->flush();
 
             return $this->evaluationGroup;
         }
@@ -86,6 +88,8 @@ class SupportDuplicator
         $this->duplicateEvaluation($supportGroup, $lastSupportGroup);
         $this->duplicateDocuments($supportGroup, $lastSupportGroup);
         $this->duplicateNote($supportGroup, $lastSupportGroup);
+
+        $this->manager->flush();
 
         return $supportGroup;
     }
@@ -110,12 +114,31 @@ class SupportDuplicator
 
     private function duplicateDocuments(SupportGroup $supportGroup, SupportGroup $lastSupportGroup): void
     {
-        $documents = $this->repoDocument->findBy(['supportGroup' => $lastSupportGroup]);
+        $documentsOfSupport = $this->repoDocument->findBy(['supportGroup' => $supportGroup]);
+        $documentsOfLastSupport = $this->repoDocument->findBy(['supportGroup' => $lastSupportGroup]);
 
-        foreach ($documents as $document) {
+        foreach ($documentsOfLastSupport as $document) {
             $newDocument = (clone $document)->setSupportGroup($supportGroup);
-            $supportGroup->getDocuments()->add($newDocument);
+            if (!$this->documentExists($newDocument, $documentsOfSupport)) {
+                $supportGroup->getDocuments()->add($newDocument);
+            }
         }
+    }
+
+    /**
+     * Check if the new document exists already in the support.
+     *
+     * @param Document[]|Collection|null $documents
+     */
+    private function documentExists(Document $newDocument, $documents)
+    {
+        foreach ($documents as $document) {
+            if ($newDocument->getInternalFileName() === $document->getInternalFileName()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function duplicateNote(SupportGroup $supportGroup, SupportGroup $lastSupportGroup): void

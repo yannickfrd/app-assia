@@ -4,17 +4,14 @@ namespace App\Controller\Support;
 
 use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Evaluation\EvaluationGroup;
-use App\Entity\Organization\Referent;
 use App\Entity\Organization\User;
 use App\Entity\People\PeopleGroup;
-use App\Entity\Support\Contribution;
-use App\Entity\Support\Document;
-use App\Entity\Support\Note;
-use App\Entity\Support\Rdv;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Support\SupportPerson;
+use App\EntityManager\SupportCollections;
 use App\EntityManager\SupportDuplicator;
 use App\EntityManager\SupportManager;
+use App\Event\Support\SupportGroupEvent;
 use App\Form\Model\Support\SupportSearch;
 use App\Form\Model\Support\SupportsInMonthSearch;
 use App\Form\Support\Support\NewSupportGroupType;
@@ -27,7 +24,6 @@ use App\Repository\Evaluation\EvaluationGroupRepository;
 use App\Repository\Organization\ServiceRepository;
 use App\Repository\People\PeopleGroupRepository;
 use App\Repository\Support\ContributionRepository;
-use App\Repository\Support\RdvRepository;
 use App\Repository\Support\SupportGroupRepository;
 use App\Repository\Support\SupportPersonRepository;
 use App\Service\Calendar;
@@ -39,6 +35,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -79,8 +76,14 @@ class SupportController extends AbstractController
      *
      * @Route("/group/{id}/support/new", name="support_new", methods="GET|POST")
      */
-    public function newSupportGroup(int $id, PeopleGroupRepository $repoPeopleGroup, Request $request, SupportManager $supportManager, ServiceRepository $repoService, SupportDuplicator $supportDuplicator): Response
-    {
+    public function newSupportGroup(
+        int $id,
+        PeopleGroupRepository $repoPeopleGroup,
+        Request $request,
+        SupportManager $supportManager,
+        ServiceRepository $repoService,
+        EventDispatcherInterface $dispatcher
+    ): Response {
         $peopleGroup = $repoPeopleGroup->findPeopleGroupById($id);
         $supportGroup = $supportManager->getNewSupportGroup($peopleGroup, $request, $repoService);
 
@@ -93,8 +96,7 @@ class SupportController extends AbstractController
                 $this->addFlash('success', 'Le suivi social est créé.');
 
                 if ($form->get('cloneSupport')->getViewData() != null) {
-                    $supportDuplicator->duplicate($supportGroup);
-                    $this->manager->flush();
+                    $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support_group.duplicator');
                 }
 
                 if ($supportGroup->getStartDate() && Choices::YES === $supportGroup->getService()->getPlace()
@@ -104,7 +106,8 @@ class SupportController extends AbstractController
 
                 return $this->redirectToRoute('support_view', ['id' => $supportGroup->getId()]);
             }
-            $this->addFlash('danger', 'Attention, un suivi social est déjà en cours pour ce groupe.');
+            $this->addFlash('danger', 'Attention, un suivi social est déjà en cours pour '.(
+                count($peopleGroup->getPeople()) > 1 ? 'ce ménage.' : 'cette personne.'));
         }
 
         return $this->render('app/support/support/supportGroupEdit.html.twig', [
@@ -196,24 +199,24 @@ class SupportController extends AbstractController
      *
      * @Route("/support/{id}/view", name="support_view", methods="GET")
      */
-    public function viewSupportGroup(int $id, SupportManager $supportManager, RdvRepository $repoRdv): Response
+    public function viewSupportGroup(int $id, SupportManager $supportManager, SupportCollections $supportCollections, EventDispatcherInterface $dispatcher): Response
     {
         $supportGroup = $supportManager->getFullSupportGroup($id);
 
-        $this->denyAccessUnlessGranted('VIEW', $supportGroup);
+        $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support_group.check');
 
-        $repoRdv = $this->manager->getRepository(Rdv::class);
+        $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
         return $this->render('app/support/support/supportGroupView.html.twig', [
             'support' => $supportGroup,
-            'referents' => $supportManager->getReferents($supportGroup->getPeopleGroup(), $this->manager->getRepository(Referent::class)),
-            'nbNotes' => $supportManager->getNbNotes($supportGroup, $this->manager->getRepository(Note::class)),
-            'nbRdvs' => $nbRdvs = $supportManager->getNbRdvs($supportGroup, $repoRdv),
-            'nbDocuments' => $supportManager->getNbDocuments($supportGroup, $this->manager->getRepository(Document::class)),
-            'nbContributions' => $supportManager->getNbContributions($supportGroup, $this->manager->getRepository(Contribution::class)),
-            'lastRdv' => $nbRdvs ? $supportManager->getLastRdvs($supportGroup, $repoRdv) : null,
-            'nextRdv' => $nbRdvs ? $supportManager->getNextRdvs($supportGroup, $repoRdv) : null,
-            'evaluation' => $supportManager->getEvaluation($supportGroup, $this->manager->getRepository(EvaluationGroup::class)),
+            'referents' => $supportCollections->getReferents($supportGroup),
+            'nbNotes' => $supportCollections->getNbNotes($supportGroup),
+            'nbRdvs' => $nbRdvs = $supportCollections->getNbRdvs($supportGroup),
+            'nbDocuments' => $supportCollections->getNbDocuments($supportGroup),
+            'nbContributions' => $supportCollections->getNbContributions($supportGroup),
+            'lastRdv' => $nbRdvs ? $supportCollections->getLastRdvs($supportGroup) : null,
+            'nextRdv' => $nbRdvs ? $supportCollections->getNextRdvs($supportGroup) : null,
+            'evaluation' => $supportCollections->getEvaluation($supportGroup),
         ]);
     }
 
@@ -332,7 +335,7 @@ class SupportController extends AbstractController
             $supportsId[] = $support->getId();
         }
 
-        return $this->render('app/support/support/supportsInMonth.html.twig', [
+        return $this->render('app/support/support/supportsInMonthWithContributions.html.twig', [
             'calendar' => $calendar,
             'form' => $form->createView(),
             'supports' => $supports,

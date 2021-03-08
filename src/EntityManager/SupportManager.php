@@ -10,18 +10,11 @@ use App\Entity\People\PeopleGroup;
 use App\Entity\People\Person;
 use App\Entity\People\RolePerson;
 use App\Entity\Support\PlaceGroup;
-use App\Entity\Support\Rdv;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Support\SupportPerson;
 use App\Form\Model\Support\SupportSearch;
-use App\Form\Utils\Choices;
 use App\Repository\Evaluation\EvaluationGroupRepository;
-use App\Repository\Organization\ReferentRepository;
 use App\Repository\Organization\ServiceRepository;
-use App\Repository\Support\ContributionRepository;
-use App\Repository\Support\DocumentRepository;
-use App\Repository\Support\NoteRepository;
-use App\Repository\Support\RdvRepository;
 use App\Repository\Support\SupportGroupRepository;
 use App\Repository\Support\SupportPersonRepository;
 use App\Service\Export\SupportPersonExport;
@@ -253,8 +246,6 @@ class SupportManager
             return $this->repoSupportGroup->findFullSupportById($id);
         });
 
-        $this->checkSupportGroup($supportGroup);
-
         return $supportGroup;
     }
 
@@ -267,106 +258,6 @@ class SupportManager
             $item->expiresAfter(\DateInterval::createFromDateString('1 month'));
 
             return $this->repoSupportGroup->findSupportById($id);
-        });
-    }
-
-    /**
-     * Donne l'évaluation sociale complète.
-     */
-    public function getEvaluation(SupportGroup $supportGroup, EvaluationGroupRepository $repoEvaluationGroup): ?EvaluationGroup
-    {
-        return $this->cache->get(EvaluationGroup::CACHE_EVALUATION_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup, $repoEvaluationGroup) {
-            $item->expiresAfter(\DateInterval::createFromDateString('1 month'));
-
-            return $repoEvaluationGroup->findEvaluationOfSupport($supportGroup->getId());
-        });
-    }
-
-    /**
-     * Donne les référents du suivi.
-     */
-    public function getReferents(PeopleGroup $peopleGroup, ReferentRepository $repoReferent)
-    {
-        return $this->cache->get(PeopleGroup::CACHE_GROUP_REFERENTS_KEY.$peopleGroup->getId(), function (CacheItemInterface $item) use ($peopleGroup, $repoReferent) {
-            $item->expiresAfter(\DateInterval::createFromDateString('1 month'));
-
-            return $repoReferent->findReferentsOfPeopleGroup($peopleGroup);
-        });
-    }
-
-    /**
-     * Donne le nombre de notes du suivi social.
-     */
-    public function getNbNotes(SupportGroup $supportGroup, NoteRepository $repoNote): int
-    {
-        return $this->cache->get(SupportGroup::CACHE_SUPPORT_NB_NOTES_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup, $repoNote) {
-            $item->expiresAfter(\DateInterval::createFromDateString('1 month'));
-
-            return $repoNote->count(['supportGroup' => $supportGroup->getId()]);
-        });
-    }
-
-    /**
-     * Donne le nombre de RDVs du suivi social.
-     */
-    public function getNbRdvs(SupportGroup $supportGroup, RdvRepository $repoRdv): int
-    {
-        return $this->cache->get(SupportGroup::CACHE_SUPPORT_NB_RDVS_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup, $repoRdv) {
-            $item->expiresAfter(\DateInterval::createFromDateString('1 month'));
-
-            return $repoRdv->count(['supportGroup' => $supportGroup->getId()]);
-        });
-    }
-
-    /**
-     * Donne le dernier RDV du suivi social.
-     */
-    public function getLastRdvs(SupportGroup $supportGroup, RdvRepository $repoRdv): ?Rdv
-    {
-        return $this->cache->get(SupportGroup::CACHE_SUPPORT_LAST_RDV_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup, $repoRdv) {
-            $item->expiresAfter(\DateInterval::createFromDateString('12 hours'));
-
-            return $repoRdv->findLastRdvOfSupport($supportGroup->getId());
-        });
-    }
-
-    /**
-     * Donne le RDV suivant du suivi social.
-     */
-    public function getNextRdvs(SupportGroup $supportGroup, RdvRepository $repoRdv): ?Rdv
-    {
-        return $this->cache->get(SupportGroup::CACHE_SUPPORT_NEXT_RDV_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup, $repoRdv) {
-            $item->expiresAfter(\DateInterval::createFromDateString('12 hours'));
-
-            return $repoRdv->findNextRdvOfSupport($supportGroup->getId());
-        });
-    }
-
-    /**
-     * Donne le nombre de documents du suivi social.
-     */
-    public function getNbDocuments(SupportGroup $supportGroup, DocumentRepository $repoDocument): int
-    {
-        return $this->cache->get(SupportGroup::CACHE_SUPPORT_NB_DOCUMENTS_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup, $repoDocument) {
-            $item->expiresAfter(\DateInterval::createFromDateString('1 month'));
-
-            return $repoDocument->count(['supportGroup' => $supportGroup->getId()]);
-        });
-    }
-
-    /**
-     * Donne le nombre de contributions du suivi social.
-     */
-    public function getNbContributions(SupportGroup $supportGroup, ContributionRepository $repoContribution): ?int
-    {
-        if (!$supportGroup->getPlaceGroups()) {
-            return  null;
-        }
-
-        return $this->cache->get(SupportGroup::CACHE_SUPPORT_NB_CONTRIBUTIONS_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup, $repoContribution) {
-            $item->expiresAfter(\DateInterval::createFromDateString('1 month'));
-
-            return $repoContribution->count(['supportGroup' => $supportGroup->getId()]);
         });
     }
 
@@ -437,54 +328,6 @@ class SupportManager
                     AbstractNormalizer::IGNORED_ATTRIBUTES => ['id', 'evaluationPerson'],
                 ]);
                 $this->hydrateObjectWithArray($initEvalPerson, $arrayEvalBudgetPerson);
-            }
-        }
-    }
-
-    /**
-     * Vérifie la cohérence des données du suivi social.
-     */
-    protected function checkSupportGroup(SupportGroup $supportGroup): void
-    {
-        // Vérifie que le nombre de personnes suivies correspond à la composition familiale du groupe
-        $nbPeople = $supportGroup->getPeopleGroup()->getNbPeople();
-        $nbSupportPeople = $supportGroup->getSupportPeople()->count();
-        $nbActiveSupportPeople = 0;
-
-        foreach ($supportGroup->getSupportPeople() as $supportPerson) {
-            null === $supportPerson->getEndDate() ? ++$nbActiveSupportPeople : null;
-        }
-
-        if ($nbSupportPeople != $nbPeople && $nbActiveSupportPeople != $nbPeople) {
-            $this->addFlash('warning', 'Attention, le nombre de personnes suivies 
-                ne correspond pas à la composition familiale du groupe ('.$nbPeople.' personnes).');
-        }
-
-        if (SupportGroup::STATUS_IN_PROGRESS === $supportGroup->getStatus() && null === $supportGroup->getStartDate()) {
-            $this->addFlash('warning', "Attention, la date de début d'accompagnement n'est pas renseignée.");
-        }
-
-        if ($supportGroup->getDevice() && Choices::YES === $supportGroup->getDevice()->getPlace()) {
-            // Vérifie qu'il y a un hébergement créé
-            if (0 === $supportGroup->getPlaceGroups()->count()) {
-                $this->addFlash('warning', 'Attention, aucun hébergement n\'est enregistré pour ce suivi.');
-            } else {
-                // Vérifie que le nombre de personnes suivies correspond au nombre de personnes hébergées
-                $nbPlacePeople = 0;
-                foreach ($supportGroup->getPlaceGroups() as $placeGroup) {
-                    if (null === $placeGroup->getEndDate()) {
-                        foreach ($placeGroup->getPlacePeople() as $placePerson) {
-                            if (null === $placePerson->getEndDate()) {
-                                ++$nbPlacePeople;
-                            }
-                        }
-                    }
-                }
-                if (!$supportGroup->getEndDate() && $nbActiveSupportPeople != $nbPlacePeople) {
-                    $this->addFlash('warning', 'Attention, le nombre de personnes suivies ('.$nbActiveSupportPeople.') 
-                    ne correspond pas au nombre de personnes hébergées ('.$nbPlacePeople.').<br/> 
-                    Allez dans l\'onglet <b>Hébergement</b> pour ajouter les personnes à l\'hébergement.');
-                }
             }
         }
     }

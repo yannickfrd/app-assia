@@ -37,7 +37,7 @@ class DatabaseBackupCommand extends Command
         $dump = $this->dumpDatabase->dump($path);
 
         if (0 === $dump['return']) {
-            $message = "\n[OK] Backup of database is successfull !\n";
+            $message = "\n[OK] Backup of database is successful !\n";
             $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
 
             return 0;

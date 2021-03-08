@@ -6,16 +6,14 @@ use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Organization\User;
 use App\Entity\Support\Note;
 use App\Entity\Support\SupportGroup;
+use App\EntityManager\SupportCollections;
 use App\EntityManager\SupportManager;
 use App\Form\Model\Support\NoteSearch;
 use App\Form\Model\Support\SupportNoteSearch;
 use App\Form\Support\Note\NoteSearchType;
 use App\Form\Support\Note\NoteType;
 use App\Form\Support\Note\SupportNoteSearchType;
-use App\Repository\Evaluation\EvaluationGroupRepository;
-use App\Repository\Organization\ReferentRepository;
 use App\Repository\Support\NoteRepository;
-use App\Repository\Support\RdvRepository;
 use App\Repository\Support\SupportGroupRepository;
 use App\Security\CurrentUserService;
 use App\Service\ExportPDF;
@@ -77,15 +75,13 @@ class NoteController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function listSupportNotes(int $id, SupportManager $supportManager, Request $request, Pagination $pagination): Response
+    public function listSupportNotes(int $id, SupportManager $supportManager, SupportCollections $supportCollections, Request $request, Pagination $pagination): Response
     {
         $supportGroup = $supportManager->getSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
-        $search = new SupportNoteSearch();
-
-        $formSearch = $this->createForm(SupportNoteSearchType::class, $search)
+        $formSearch = $this->createForm(SupportNoteSearchType::class, $search = new SupportNoteSearch())
             ->handleRequest($request);
 
         $form = $this->createForm(NoteType::class, new Note());
@@ -94,7 +90,7 @@ class NoteController extends AbstractController
             'support' => $supportGroup,
             'form_search' => $formSearch->createView(),
             'form' => $form->createView(),
-            'nbTotalNotes' => $supportManager->getNbNotes($supportGroup, $this->repoNote),
+            'nbTotalNotes' => $supportCollections->getNbNotes($supportGroup),
             'notes' => $this->getNotes($supportGroup, $request, $search, $pagination),
         ]);
     }
@@ -185,28 +181,28 @@ class NoteController extends AbstractController
      *
      * @Route("support/{id}/note/new_evaluation", name="support_note_new_evaluation", methods="GET")
      */
-    public function generateNoteEvaluation(int $id, SupportManager $supportManager, SupportGroupRepository $repoSupport, ReferentRepository $repoReferent, EvaluationGroupRepository $repoEvaluation, RdvRepository $repoRdv, Environment $renderer): Response
+    public function generateNoteEvaluation(int $id, SupportGroupRepository $supportGroupRepository, SupportCollections $supportCollections, Environment $renderer): Response
     {
-        $supportGroup = $repoSupport->findFullSupportById($id);
+        $supportGroup = $supportGroupRepository->findFullSupportById($id);
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
         $title = 'Grille d\'évaluation sociale ';
 
         $note = (new Note())
-                ->setTitle($title.(new \DateTime())->format('d/m/Y'))
-                ->setContent($renderer->render('app/evaluation/export/evaluationExport.html.twig', [
-                    'type' => 'note',
-                    'support' => $supportGroup,
-                    'referents' => $supportManager->getReferents($supportGroup->getPeopleGroup(), $repoReferent),
-                    'evaluation' => $supportManager->getEvaluation($supportGroup, $repoEvaluation),
-                    'lastRdv' => $supportManager->getLastRdvs($supportGroup, $repoRdv),
-                    'nextRdv' => $supportManager->getNextRdvs($supportGroup, $repoRdv),
-                    'title' => $title,
-                ]))
-                ->setType(2)
-                ->setSupportGroup($supportGroup)
-                ->setCreatedBy($this->getUser());
+            ->setTitle($title.(new \DateTime())->format('d/m/Y'))
+            ->setContent($renderer->render('app/evaluation/export/evaluationExport.html.twig', [
+                'type' => 'note',
+                'support' => $supportGroup,
+                'referents' => $supportCollections->getReferents($supportGroup),
+                'evaluation' => $supportCollections->getEvaluation($supportGroup),
+                'lastRdv' => $supportCollections->getLastRdvs($supportGroup),
+                'nextRdv' => $supportCollections->getNextRdvs($supportGroup),
+                'title' => $title,
+            ]))
+            ->setType(2)
+            ->setSupportGroup($supportGroup)
+            ->setCreatedBy($this->getUser());
 
         $this->manager->persist($note);
         $this->manager->flush();

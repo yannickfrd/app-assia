@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Event;
+namespace App\Event\Support;
 
 use App\Form\Model\Admin\ExportSearch;
 use App\Form\Model\Support\SupportSearch;

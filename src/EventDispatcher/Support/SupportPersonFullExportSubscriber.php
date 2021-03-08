@@ -1,12 +1,12 @@
 <?php
 
-namespace App\EventDispatcher;
+namespace App\EventDispatcher\Support;
 
 use App\EntityManager\ExportManager;
-use App\Event\SupportPersonExportEvent;
 use App\Form\Model\Admin\ExportSearch;
-use App\Repository\Support\SupportPersonRepository;
+use App\Event\Support\SupportPersonExportEvent;
 use App\Service\Export\SupportPersonFullExport;
+use App\Repository\Support\SupportPersonRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class SupportPersonFullExportSubscriber implements EventSubscriberInterface
