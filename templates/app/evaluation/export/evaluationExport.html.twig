@@ -60,7 +60,7 @@
                 {{ view_p.get(hotelSupport.entryHotelDate ? hotelSupport.entryHotelDate|date("d/m/Y"), "Entry hotel date") }}
                 {% set place = support.placeGroups|length > 0 ? support.placeGroups[support.placeGroups|length - 1].place %}
                 {{ view_p.get(place ? place.name ~ (place.city ? " (" ~ place.address ~ " - " ~ place.zipcode ~ " " ~ place.city ~ ")"), "Hotel") }}
-                {{ view_p.get(hotelSupport.originDept, "Origin dept") }}
+                {# {{ view_p.get(hotelSupport.originDept, "Origin dept") }} #}
             {% endif %}
 
             {{ view_p.get(support.startDate ? support.startDate|date("d/m/Y"), "support.startDate") }}

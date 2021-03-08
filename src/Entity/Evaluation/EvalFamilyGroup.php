@@ -50,11 +50,6 @@ class EvalFamilyGroup
     private $nbPeopleReunification;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $cafId; // A SUPPRIMER
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $pmiFollowUp;
@@ -140,18 +135,6 @@ class EvalFamilyGroup
     public function setNbPeopleReunification(?int $nbPeopleReunification): self
     {
         $this->nbPeopleReunification = $nbPeopleReunification;
-
-        return $this;
-    }
-
-    public function getCafId(): ?string
-    {
-        return $this->cafId;
-    }
-
-    public function setCafId(?string $cafId): self
-    {
-        $this->cafId = $cafId;
 
         return $this;
     }

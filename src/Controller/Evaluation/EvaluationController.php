@@ -9,10 +9,10 @@ use App\Entity\Evaluation\InitEvalGroup;
 use App\Entity\Evaluation\InitEvalPerson;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Support\SupportPerson;
+use App\EntityManager\SupportCollections;
 use App\EntityManager\SupportManager;
 use App\Form\Evaluation\EvaluationGroupType;
 use App\Repository\Evaluation\EvaluationGroupRepository;
-use App\Repository\Organization\ReferentRepository;
 use App\Repository\Support\RdvRepository;
 use App\Repository\Support\SupportGroupRepository;
 use App\Service\ExportPDF;
@@ -99,8 +99,13 @@ class EvaluationController extends AbstractController
      *
      * @Route("support/{id}/evaluation/export/{type}", name="evaluation_export", methods="GET")
      */
-    public function exportEvaluation(int $id, string $type, Request $request, SupportManager $supportManager, ReferentRepository $repoReferent, EvaluationGroupRepository $repoEvaluation, RdvRepository $repoRdv, Environment $renderer): Response
-    {
+    public function exportEvaluation(int $id, string $type, Request $request,
+        SupportManager $supportManager,
+        SupportCollections $supportCollections,
+        EvaluationGroupRepository $repoEvaluation,
+        RdvRepository $repoRdv,
+        Environment $renderer
+    ): Response {
         $export = $type === 'word' ? new ExportWord(true) : new ExportPDF();
 
         $supportGroup = $supportManager->getFullSupportGroup($id);
@@ -115,10 +120,10 @@ class EvaluationController extends AbstractController
         $content = $renderer->render('app/evaluation/export/evaluationExport.html.twig', [
             'type' => $type,
             'support' => $supportGroup,
-            'referents' => $supportManager->getReferents($supportGroup->getPeopleGroup(), $repoReferent),
-            'evaluation' => $supportManager->getEvaluation($supportGroup, $repoEvaluation),
-            'lastRdv' => $supportManager->getLastRdvs($supportGroup, $repoRdv),
-            'nextRdv' => $supportManager->getNextRdvs($supportGroup, $repoRdv),
+            'referents' => $supportCollections->getReferents($supportGroup),
+            'evaluation' => $supportCollections->getEvaluation($supportGroup),
+            'lastRdv' => $supportCollections->getLastRdvs($supportGroup),
+            'nextRdv' => $supportCollections->getNextRdvs($supportGroup),
             'title' => $title,
             'logo_path' => $type === 'pdf' ? $export->getPathImage($logoPath) : null,
             'header_info' => 'ESPERER 95 | '.$title.' | '.$fullnameSupport,

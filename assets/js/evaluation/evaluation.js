@@ -108,6 +108,7 @@ export default class evaluation {
      * Evaluation budgétaire.
      */
     evalBudgetGroup() {
+        new DisplayFields(this.prefix + "evalBudgetGroup_", "cafId")
         this.editAmtPers("resources")
         this.editAmtPers("charges")
         this.editAmtPers("debts")

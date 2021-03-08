@@ -69,6 +69,11 @@ class EvalBudgetGroup
     private $cafId;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $cafAttachment;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $commentEvalBudget;
@@ -188,6 +193,18 @@ class EvalBudgetGroup
     public function setCafId(?string $cafId): self
     {
         $this->cafId = $cafId;
+
+        return $this;
+    }
+
+    public function getCafAttachment(): ?string
+    {
+        return $this->cafAttachment;
+    }
+
+    public function setCafAttachment(?string $cafAttachment): self
+    {
+        $this->cafAttachment = $cafAttachment;
 
         return $this;
     }

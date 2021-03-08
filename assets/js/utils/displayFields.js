@@ -7,36 +7,41 @@ export default class DisplayFields {
 
     /**
      * @param {String} prefix 
-     * @param {String} inputId 
+     * @param {String} fieldId 
      * @param {Array} optionValues 
      */
-    constructor(prefix, inputId, optionValues = []) {
+    constructor(prefix, fieldId, optionValues = []) {
         this.selectType = new SelectType()
-        this.inputElt = document.getElementById(prefix + inputId)
-        this.childrenElts = document.querySelectorAll(`div[data-parent-field='${inputId}'], td[data-parent-field='${inputId}']`)
+        this.fieldId = fieldId
+        this.fieldElt = document.getElementById(prefix + fieldId)
+        this.childrenElts = document.querySelectorAll(`div[data-parent-field='${fieldId}'], td[data-parent-field='${fieldId}']`)
         this.optionValues = optionValues
         this.init()
     }
 
     init() {
-        if (this.inputElt === null) {
+        if (null === this.fieldElt) {
             return null
         }
 
-        switch (this.inputElt.type) {
+        switch (this.fieldElt.type) {
             case 'select-one':
                 this.checkSelect();
                 ['change', 'click'].forEach(eventType => {
-                    this.inputElt.addEventListener(eventType, this.checkSelect.bind(this)) // au click sur ordinateur ou au changement sur mobile
+                    this.fieldElt.addEventListener(eventType, this.checkSelect.bind(this)) // au click sur ordinateur ou au changement sur mobile
                 })
                 break
             case 'date':
                 this.checkInput()
-                this.inputElt.addEventListener('change', this.checkInput.bind(this)) // au changement sur mobile
+                this.fieldElt.addEventListener('change', this.checkInput.bind(this)) // au changement sur mobile
+                break
+            case 'text':
+                this.checkInput()
+                this.fieldElt.addEventListener('input', this.checkInput.bind(this)) // au changement sur mobile
                 break
             case 'checkbox':
                 this.checkbox()
-                this.inputElt.addEventListener('change', this.checkbox.bind(this)) // au changement sur mobile
+                this.fieldElt.addEventListener('change', this.checkbox.bind(this)) // au changement sur mobile
                 break
         }
     }
@@ -45,7 +50,7 @@ export default class DisplayFields {
      * Vérifie le champ de type input.
      */
     checkInput() {
-        if (this.inputElt.value) {
+        if (this.fieldElt.value) {
             this.editChildrenElts(true)
         } else {
             this.editChildrenElts(false)
@@ -56,7 +61,7 @@ export default class DisplayFields {
      * Vérifie le champ de type Select.
      */
     checkSelect() {
-        const selectedOption = this.selectType.getOption(this.inputElt)
+        const selectedOption = this.selectType.getOption(this.fieldElt)
         let isVisible = false
 
         if (this.optionValues.length > 0) {
@@ -115,7 +120,7 @@ export default class DisplayFields {
      */
     checkbox() {
         let isVisible = false
-        if (this.inputElt.checked === true) {
+        if (this.fieldElt.checked === true) {
             isVisible = true
         }
         this.editChildrenElts(isVisible)

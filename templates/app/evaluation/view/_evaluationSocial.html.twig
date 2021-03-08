@@ -27,7 +27,8 @@
                     {{ view_div.get(evalSocial.socialSecurityOffice, "Social security office", "evaluation") }}
                 </div>
                 <div class="row mb-2">
-                    {{ view_div.get(evalSocial.aseFollowUp == YES ? (evalSocial.aseComment ? evalSocial.aseComment : evalSocial.aseFollowUpToString), "Ase follow up", "evaluation") }}
+                    {{ view_div.get(evalSocial.aseFollowUp == YES ? evalSocial.aseFollowUpToString ~ (evalSocial.aseMeasureType ? ' (Mesure ' ~ evalSocial.aseMeasureTypeToString ~ ")"), "Ase follow up", "evaluation") }}
+                    {{ view_div.get(evalSocial.aseComment) }}
                 </div>
                 {% if evalSocial.familyBreakdown == YES or evalSocial.friendshipBreakdown == YES %}
                     <div class="row mb-2">

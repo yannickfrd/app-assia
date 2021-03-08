@@ -173,6 +173,12 @@ class EvalHousingGroupType extends AbstractType
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
+            ->add('domiciliationType', ChoiceType::class, [
+                'choices' => Choices::getChoices(EvalHousingGroup::DOMICILIATION_TYPE),
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
+            ->add('domiciliationComment') // aka domiciliationLocation
             ->add('startDomiciliationDate', DateType::class, [
                 'widget' => 'single_text',
                 'required' => false,
@@ -181,7 +187,6 @@ class EvalHousingGroupType extends AbstractType
                 'widget' => 'single_text',
                 'required' => false,
             ])
-            ->add('domiciliationComment') // aka domiciliationLocation
             ->add('domiciliationSearch', null, [
                 'label' => ' ',
                 'attr' => [

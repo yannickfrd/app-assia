@@ -44,6 +44,11 @@ class EvalSocialPersonType extends AbstractType
                 'required' => false,
                 'help' => 'evalSocialPerson.aseFollowUp.help',
             ])
+            ->add('aseMeasureType', ChoiceType::class, [
+                'choices' => Choices::getChoices(EvalSocialPerson::ASE_MEASURE_TYPE),
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
             ->add('aseComment', null, [
                 'label' => false,
                 'attr' => ['placeholder' => 'Ase comment'],

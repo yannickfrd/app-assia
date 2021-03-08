@@ -62,9 +62,8 @@
         </div>
     {% endif %}
     <div class="row mb-3">
-        {{ view_div.get(evalBudgetGroup.cafId, "Caf id", "evaluation") }}
+        {{ view_div.get(evalBudgetGroup.cafId ~ (evalBudgetGroup.cafAttachment ? " (CAF de rattachement : " ~ evalBudgetGroup.cafAttachment ~ ")"), "Caf id", "evaluation") }}
     </div>
-
     {% for evalPerson in eval_people_budget %}
         {% set evalBudget = evalPerson.evalBudgetPerson %}
         <div class="my-3">

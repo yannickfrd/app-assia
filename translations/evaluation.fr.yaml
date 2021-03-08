@@ -26,13 +26,14 @@ Renewal permit date: Date d'obtention du titre
 Resid permit request: Demande de titre de séjour
 Work right: Autorisation de travail
 evalAdmPerson:
-  comment: Écrire un commentaire relatif à la situation administrative
+  comment: Écrire un commentaire relatif à la situation administrative de la personne (démarches en cours, évolution de la situation, papier d'identité secondaire...).
   paper.help: Carte d'identité, passport, titre de séjour, récépissé...
+  paperType.help: Si plusieurs papiers, sélectionner ici le titre principal et préciser le secondaire en commentaire ci-dessous.
 
 # Budget
 evalBudgetPerson:
   endRightsDate.help: Date de fin des prestations ou des allocations
-  comment: Écrire un commentaire relatif à la situation budgétaire
+  comment: Écrire un commentaire relatif à la situation budgétaire (démarches en cours, évolution de la situation...)
 Activity bonus amt: Montant Prime d'activité
 Activity bonus: Prime d'activité
 Alimony amt: Montant Pension alimentaire
@@ -143,9 +144,10 @@ Youth guarantee: Garantie jeunes
 
 # Family
 Caf id: Numéro CAF
+Caf attachment: CAF de rattachement
 Child dependance: À charge
 Child to host: À héberger
-childcareSchoolLocation.help: Ville, nom de l'école, classe...
+childcareSchoolLocation.help: Ville, nom de l'école, classe... Préciser en commentaire ci-dessous la date de début de scolarité.
 Childcare school location: Lieu de garde/école
 Childcare or school: Garde/école
 Childcare school type: Type de garde ou école
@@ -174,10 +176,10 @@ Comment eval prof: Commentaire relatif la situation professionnelle
 Contract end date: Date de fin du contrat
 Contract start date: Date de début du contrat
 Contract type: Type de contrat
-Employer name: Nom de l'employeur
+Employer name: Nom employeur(s)
 End rqth date: Date de fin de validité RQTH
 Job center id: Numéro Pôle Emploi
-Job type: Type d'emploi
+Job type: Type d'emploi(s)
 Nb working hours: Nombre d'heures de travail
 Prof experience: Expérience professionnelle
 Prof status: Statut professionnel
@@ -188,13 +190,13 @@ Transport means type: Moyen(s) de transport
 Transport means: Précision moyen(s) de transport
 Work place: Lieu de travail (commune)
 Working hours: Horaires de travail
-evalProfPerson.comment: Écrire un commentaire relatif à la situation professionnelle
+evalProfPerson.comment: Écrire un commentaire relatif à la situation professionnelle (démarches en cours, évolution de la situation...)
 
 # Housing
 evalHousingGroup:
   housingWishes.help: T1, T2, T3, T4, T5...
 
-  comment: Écrire un commentaire relatif à la situation liée au logement et à l'hébergement
+  comment: Écrire un commentaire relatif à la situation liée au logement et à l'hébergement (démarches en cours, évolution de la situation...)
 
 Caf eligibility: Eligibilité CAF
 Cities wishes: Communes ou départements souhaités
@@ -208,11 +210,12 @@ Dalo record date: Date de dépôt du DALO/ DAHO
 Dalo type: Type de recours DALO/ DAHO
 Dalo tribunal action date: Date du recours Tribunal administratif
 Dalo tribunal action: DALO/ DAHO recours Tribunal administratif
+Domiciliation: Domiciliation
+Domiciliation type: Type d'organisme domiciliataire
 Domiciliation comment: Organisme ou personne domiciliataire
 Domiciliation address: Adresse de domiciliation
 Domiciliation city: Ville de domiciliation
 Domiciliation dept: Département de domiciliation
-Domiciliation: Domiciliation
 End domiciliation date: Date de fin domiciliation
 Expulsion comment: Commentaire sur l'expulsion location
 Expulsion in progress: Procédure d'expulsion en cours
@@ -249,7 +252,7 @@ Social housing request: Demande de logement social
 Social housing updated request date: Date de renouvellement
 Specificities: Spécificités à prendre en considération
 Start domiciliation date: Date de début domiciliation
-Syplo date: Date du SYPLO
+Syplo date: Date de labellisation SYPLO
 Syplo id: Numéro SYPLO
 Syplo: SYPLO
 
@@ -262,7 +265,7 @@ evalJusticePerson.comment: Écrire un commentaire relatif à la situation judici
 # Social person
 evalSocialPerson:
   aseFollowUp.help: Aide sociale à l'enfance, PJJ…
-  comment: Écrire un commentaire relatif à la situation sociale de la personne
+  comment: Écrire un commentaire relatif à la situation sociale de la personne (évolution de la situation...)
 Addiction problem: Problématique d'addiction
 Animal type: Type d'animal
 Animal: Présence d'un animal
@@ -270,9 +273,10 @@ Medical follow up: Suivi médical
 Home care support: Service de soins ou d'acc. à domicile
 Home care support type: Type de service soins ou d'acc. à domicile
 Ase follow up: Suivi ou parcours ASE
+Ase measure type: Type de mesure ASE
 Ase comment: Commentaire concernant le parcours ASE
 Comment eval social: Commentaire relatif à la situation sociale
-Dom violence victim: Femme victime de violence conjugale
+Dom violence victim: Victime de violence conjugale
 End rights social security date: Date de fin de droits à la Sécurité sociale
 Family breakdown: Rupture des liens familiaux
 Friendship breakdown: Rupture des liens amicaux

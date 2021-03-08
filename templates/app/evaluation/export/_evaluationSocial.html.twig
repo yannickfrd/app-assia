@@ -15,7 +15,8 @@
         {{ view_p.get(evalSocial.rightSocialSecurity in [1, 3] ? evalSocial.rightSocialSecurityToString ~ " - " 
             ~ evalSocial.socialSecurityToString ~ (evalSocial.endRightsSocialSecurityDate ? " (fin de validité : " 
         ~ evalSocial.endRightsSocialSecurityDate|date("d/m/Y") ~ ")") : evalSocial.rightSocialSecurityToString , "Right social security", "evaluation") }}
-        {{ view_p.get(evalSocial.aseFollowUp == YES ? (evalSocial.aseComment ? evalSocial.aseComment : evalSocial.aseFollowUpToString), "Ase follow up", "evaluation") }}
+        {{ view_p.get(evalSocial.aseFollowUp == YES ? evalSocial.aseFollowUpToString ~ (evalSocial.aseMeasureType ? ' (Mesure ' ~ evalSocial.aseMeasureTypeToString ~ ")"), "Ase follow up", "evaluation") }}
+        {{ view_p.get(evalSocial.aseComment) }}
         {% if evalSocial.familyBreakdown == YES or evalSocial.friendshipBreakdown == YES %}
             {{ view_p.get(evalSocial.familyBreakdownToString, "Family breakdown", "evaluation") }}
             {{ view_p.get(evalSocial.friendshipBreakdownToString, "Friendship breakdown", "evaluation") }}

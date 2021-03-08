@@ -17,6 +17,7 @@
 				<div class="col-md-6" data-parent-field="expulsionInProgress">{{ form_row(form.evalHousingGroup.expulsionComment) }}</div>
 			</div>
 		</div>
+		<hr/>
 		<div class="form-group row">
 			<div class="col-md-6">{{ form_row(form.evalHousingGroup.siaoRequest) }}</div>
 			<div class="col-md-6" data-parent-field="siaoRequest">{{ form_row(form.evalHousingGroup.siaoRequestDate) }}</div>
@@ -24,6 +25,7 @@
 			<div class="col-md-6" data-parent-field="siaoRequest">{{ form_row(form.evalHousingGroup.siaoRequestDept) }}</div>
 			<div class="col-md-6" data-parent-field="siaoRequest">{{ form_row(form.evalHousingGroup.siaoRecommendation) }}</div>
 		</div>
+		<hr/>
 		<div class="form-group row">
 			<div class="col-md-6">{{ form_row(form.evalHousingGroup.socialHousingRequest) }}</div>
 			<div class="col-md-6" data-parent-field="socialHousingRequest">{{ form_row(form.evalHousingGroup.socialHousingRequestId) }}</div>
@@ -32,10 +34,16 @@
 			<div class="col-md-6" data-parent-field="socialHousingRequest">{{ form_row(form.evalHousingGroup.housingWishes) }}</div>
 			<div class="col-md-6" data-parent-field="socialHousingRequest">{{ form_row(form.evalHousingGroup.citiesWishes) }}</div>
 			<div class="col-md-6" data-parent-field="socialHousingRequest">{{ form_row(form.evalHousingGroup.specificities) }}</div>
-			<div class="col-md-6" data-parent-field="socialHousingRequest">{{ form_row(form.evalHousingGroup.syplo) }}</div>
-			<div class="col-md-6" data-parent-field="syplo">{{ form_row(form.evalHousingGroup.syploId) }}</div>
-			<div class="col-md-6" data-parent-field="syplo">{{ form_row(form.evalHousingGroup.syploDate) }}</div>
 		</div>
+		<div data-parent-field="socialHousingRequest">
+			<hr/> 
+			<div class="form-group row">
+				<div class="col-md-6">{{ form_row(form.evalHousingGroup.syplo) }}</div>
+				<div class="col-md-6" data-parent-field="syplo">{{ form_row(form.evalHousingGroup.syploId) }}</div>
+				<div class="col-md-6" data-parent-field="syplo">{{ form_row(form.evalHousingGroup.syploDate) }}</div>
+			</div>
+		</div>
+		<hr/>
 		<div class="form-group row">
 			<div class="col-md-6">{{ form_row(form.evalHousingGroup.daloAction) }}</div>
 			<div class="col-md-6" data-parent-field="daloAction">{{ form_row(form.evalHousingGroup.daloType) }}</div>
@@ -49,6 +57,7 @@
 			<div class="col-md-6">{{ form_row(form.evalHousingGroup.collectiveAgreementHousing) }}</div>
 			<div class="col-md-6" data-parent-field="collectiveAgreementHousing">{{ form_row(form.evalHousingGroup.collectiveAgreementHousingDate) }}</div>
 		</div> #}
+		<hr/>
 		<div class="form-group row">
 			<div class="col-md-6">{{ form_row(form.evalHousingGroup.hsgActionEligibility) }}</div>
 			<div class="col-md-6" data-parent-field="hsgActionEligibility">{{ form_row(form.evalHousingGroup.hsgActionRecord) }}</div>
@@ -56,6 +65,7 @@
 			<div class="col-md-6" data-parent-field="hsgActionEligibility">{{ form_row(form.evalHousingGroup.hsgActionDept) }}</div>
 			<div class="col-md-6" data-parent-field="hsgActionEligibility">{{ form_row(form.evalHousingGroup.hsgActionRecordId) }}</div>
 		</div>
+		<hr/>
 		<div class="form-group row">
 			<div class="col-md-6">{{ form_row(form.evalHousingGroup.housingExperience) }}</div>
 			<div class="col-md-6" data-parent-field="housingExperience">{{ form_row(form.evalHousingGroup.housingExpeComment) }}</div>
@@ -130,10 +140,13 @@
 				</div>
 			</div>
 		</div>
-
+		<hr/>
 		<div class="form-group">
 			<div class="row">
 				<div class="col-md-6">{{ form_row(form.evalHousingGroup.domiciliation) }}</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6" data-parent-field="domiciliation">{{ form_row(form.evalHousingGroup.domiciliationType) }}</div>
 				<div class="col-md-6" data-parent-field="domiciliation">{{ form_row(form.evalHousingGroup.domiciliationComment) }}</div>
 			</div>
 			<div class="row" data-parent-field="domiciliation">

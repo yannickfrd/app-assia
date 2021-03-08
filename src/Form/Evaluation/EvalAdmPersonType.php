@@ -42,6 +42,7 @@ class EvalAdmPersonType extends AbstractType
                     'data-id' => 'paperType',
                 ],
                 'placeholder' => 'placeholder.select',
+                'help' => 'evalAdmPerson.paperType.help',
                 'required' => false,
             ])
             ->add('asylumBackground', ChoiceType::class, [

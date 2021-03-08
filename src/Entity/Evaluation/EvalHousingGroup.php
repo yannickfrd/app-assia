@@ -50,8 +50,14 @@ class EvalHousingGroup
 
     public const SIAO_RECOMMENDATION = [
         10 => 'Hébergement',
-        20 => 'Logement adapté/accompagné',
-        30 => 'Logement de droit commun',
+        102 => 'CHU',
+        104 => 'CHRS',
+        208 => 'ALTHO',
+        20 => 'Logement adapté/accompagné (hors Solibail)',
+        206 => 'Solibail',
+        30 => 'Logement de droit commun (social ou privé)',
+        400 => 'CADA - dispositif asile',
+        602 => 'Structure de soin ou médical',
         99 => 'Non renseignée',
     ];
 
@@ -67,6 +73,13 @@ class EvalHousingGroup
         'fslEligibility' => 'Eligibilité aide à l\'installation FSL',
         'cafEligibility' => 'Eligibilité CAF',
         'otherHelps' => 'Autre(s) aide(s)',
+    ];
+
+    public const DOMICILIATION_TYPE = [
+        1 => 'CCAS',
+        2 => 'Organisme agréé (association)',
+        3 => 'Chez un tiers ou famille',
+        99 => 'Non renseigné',
     ];
 
     /**
@@ -321,6 +334,11 @@ class EvalHousingGroup
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $domiciliation;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $domiciliationType;
 
     /**
      * @ORM\Column(type="date", nullable=true)
@@ -1099,9 +1117,37 @@ class EvalHousingGroup
         return $this->domiciliation;
     }
 
+    /**
+     * @Groups("export")
+     */
+    public function getDomiciliationToString(): ?string
+    {
+        return $this->domiciliation ? Choices::YES_NO_IN_PROGRESS[$this->domiciliation] : null;
+    }
+
     public function setDomiciliation(?int $domiciliation): self
     {
         $this->domiciliation = $domiciliation;
+
+        return $this;
+    }
+
+    public function getDomiciliationType(): ?int
+    {
+        return $this->domiciliationType;
+    }
+
+    /**
+     * @Groups("export")
+     */
+    public function getDomiciliationTypeToString(): ?string
+    {
+        return $this->domiciliationType ? self::DOMICILIATION_TYPE[$this->domiciliationType] : null;
+    }
+
+    public function setDomiciliationType(?int $domiciliationType): self
+    {
+        $this->domiciliationType = $domiciliationType;
 
         return $this;
     }
@@ -1121,14 +1167,6 @@ class EvalHousingGroup
     public function getEndDomiciliationDate(): ?\DateTimeInterface
     {
         return $this->endDomiciliationDate;
-    }
-
-    /**
-     * @Groups("export")
-     */
-    public function getDomiciliationToString(): ?string
-    {
-        return $this->domiciliation ? Choices::YES_NO_IN_PROGRESS[$this->domiciliation] : null;
     }
 
     public function setEndDomiciliationDate(?\DateTimeInterface $endDomiciliationDate): self

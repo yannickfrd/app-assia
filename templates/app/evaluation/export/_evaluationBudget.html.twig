@@ -6,7 +6,6 @@
 
 <hr/>
 <h2 style="{{ style_h2 }}">Situation financière</h2>
-{{ view_p.get(evalBudgetGroup.cafId, "Caf id", "evaluation") }}
 {% if nb_people_budget > 1 %}
     <table class="table-bordered mb-2" style="width: 50%; {{ style_table }}">
         <thead>
@@ -56,6 +55,8 @@
     </table>
     <p>&nbsp;</p>
 {% endif %}
+
+{{ view_p.get(evalBudgetGroup.cafId ~ (evalBudgetGroup.cafAttachment ? " (CAF de rattachement : " ~ evalBudgetGroup.cafAttachment ~ ")"), "Caf id", "evaluation") }}
 
 {% for evalPerson in eval_people_budget %}
     {% set evalBudget = evalPerson.evalBudgetPerson %}

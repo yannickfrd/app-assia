@@ -39,6 +39,19 @@ class EvalSocialPerson
         'wheelchair' => 'Personne en fauteuil roulant',
     ];
 
+    public const ASE_MEASURE_TYPE = [
+        1 => 'AED', //Action éducative à domicile
+        2 => 'AGBF', // Aide à la gestion du budget familial
+        3 => 'AEMO', // Action éducative en milieu ouvert
+        4 => 'AESF', // Accommpagnbement en économie sociale et familiale
+        5 => 'MJIE', // Mesure judiciaire d'investigation éducative
+        6 => 'Placement', // Placement administratif
+        7 => 'TISF', // Technicien d'intervention sociale et familiale
+        8 => 'UEMO', // Unité éducative en milieu ouvert
+        97 => 'Autre',
+        99 => 'Non renseignée',
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -75,6 +88,11 @@ class EvalSocialPerson
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $aseFollowUp;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $aseMeasureType;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -262,6 +280,26 @@ class EvalSocialPerson
     public function setAseFollowUp(?int $aseFollowUp): self
     {
         $this->aseFollowUp = $aseFollowUp;
+
+        return $this;
+    }
+
+    public function getAseMeasureType(): ?int
+    {
+        return $this->aseMeasureType;
+    }
+
+    /**
+     * @Groups("export")
+     */
+    public function getAseMeasureTypeToString(): ?string
+    {
+        return $this->aseMeasureType ? self::ASE_MEASURE_TYPE[$this->aseMeasureType] : null;
+    }
+
+    public function setAseMeasureType(?int $aseMeasureType): self
+    {
+        $this->aseMeasureType = $aseMeasureType;
 
         return $this;
     }

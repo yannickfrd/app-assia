@@ -14,6 +14,7 @@ class EvalBudgetGroupType extends AbstractType
     {
         $builder
         ->add('cafId')
+        ->add('cafAttachment')
         ->add('contributionAmt', MoneyType::class, [
             'attr' => ['class' => 'js-money text-right'],
             'required' => false,
