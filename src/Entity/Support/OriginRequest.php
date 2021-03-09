@@ -17,6 +17,7 @@ class OriginRequest
         3 => 'Refus du service',
         4 => 'Refus de la personne',
         5 => 'Refus autre',
+        6 => 'Personne injoignable',
         97 => 'Autre',
         98 => 'Non concerné',
         99 => 'Non renseigné',

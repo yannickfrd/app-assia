@@ -15,7 +15,7 @@ class HotelSupportService
     {
         $hotelSupport = $supportGroup->getHotelSupport();
 
-        $supportGroup->setStatus($supportGroup->getEndDate() ? SupportGroup::STATUS_ENDED : SupportGroup::STATUS_IN_PROGRESS);
+        $supportGroup->setStatus($this->getStatus($supportGroup));
 
         if ($hotelSupport && Device::HOTEL_SUPPORT === $supportGroup->getDevice()->getId()) {
             $supportGroup->setCoefficient($this->getCoeffSupport($hotelSupport));
@@ -28,6 +28,19 @@ class HotelSupportService
         $this->updateSupportPeople($supportGroup);
 
         return $supportGroup;
+    }
+
+    protected function getStatus(SupportGroup $supportGroup)
+    {
+        if ($supportGroup->getEndDate()) {
+            return SupportGroup::STATUS_ENDED;
+        }
+
+        if ($supportGroup->getStartDate()) {
+            return SupportGroup::STATUS_IN_PROGRESS;
+        }
+
+        return $supportGroup->getStatus();
     }
 
     /**

@@ -1160,7 +1160,7 @@ class ImportDatasHebergement extends ImportDatas
 
     protected function getStatus(): int
     {
-        return $this->field['Date sortie'] ? SupportGroup::STATUS_ENDED : ($this->field['Date entrée'] ? SupportGroup::STATUS_IN_PROGRESS : SupportGroup::STATUS_PRE_ADD_ENDED);
+        return $this->field['Date sortie'] ? SupportGroup::STATUS_ENDED : ($this->field['Date entrée'] ? SupportGroup::STATUS_IN_PROGRESS : SupportGroup::STATUS_PRE_ADD_FAILED);
     }
 
     protected function getStartDate(): ?\DateTime

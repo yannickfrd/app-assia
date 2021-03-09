@@ -78,7 +78,7 @@ export default class ValidationSupport {
     }
 
     checkDate(dateInputElt) {
-        let validationDate = new ValidationDate(dateInputElt, this.validationForm)
+        const validationDate = new ValidationDate(dateInputElt, this.validationForm)
 
         if (validationDate.isValid() === false) {
             return
@@ -90,8 +90,8 @@ export default class ValidationSupport {
      * Vérifie la date de début.
      */
     checkStartDate() {
-        let intervalWithNow = (this.now - new Date(this.startDateInputElt.value)) / (24 * 3600 * 1000)
-        let status = this.statusSelectElt ? this.selectType.getOption(this.statusSelectElt) : null
+        const intervalWithNow = (this.now - new Date(this.startDateInputElt.value)) / (24 * 3600 * 1000)
+        const status = this.statusSelectElt ? this.selectType.getOption(this.statusSelectElt) : null
 
         if ((this.startDateInputElt.value && !intervalWithNow) || intervalWithNow > (365 * 19)) {
             return this.validationForm.invalidField(this.startDateInputElt, 'Date invalide.')
@@ -115,10 +115,10 @@ export default class ValidationSupport {
      * Vérifie la date de fin.
      */
     checkEndDate() {
-        let startDate = new Date(this.startDateInputElt.value)
-        let endDate = new Date(this.endDateInputElt.value)
-        let intervalWithStart = (endDate - startDate) / (24 * 3600 * 1000)
-        let intervalWithNow = (this.now - endDate) / (24 * 3600 * 1000)
+        const startDate = new Date(this.startDateInputElt.value)
+        const endDate = new Date(this.endDateInputElt.value)
+        const intervalWithStart = (endDate - startDate) / (24 * 3600 * 1000)
+        const intervalWithNow = (this.now - endDate) / (24 * 3600 * 1000)
 
         if ((this.endDateInputElt.value && !intervalWithNow) || intervalWithNow > (365 * 9)) {
             return this.validationForm.invalidField(this.endDateInputElt, 'Date invalide.')

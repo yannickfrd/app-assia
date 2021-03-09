@@ -56,7 +56,7 @@
     <p>&nbsp;</p>
 {% endif %}
 
-{{ view_p.get(evalBudgetGroup.cafId ~ (evalBudgetGroup.cafAttachment ? " (CAF de rattachement : " ~ evalBudgetGroup.cafAttachment ~ ")"), "Caf id", "evaluation") }}
+{# {{ view_p.get(evalBudgetGroup.cafId ~ (evalBudgetGroup.cafAttachment ? " (CAF de rattachement : " ~ evalBudgetGroup.cafAttachment ~ ")"), "Caf id", "evaluation") }} #}
 
 {% for evalPerson in eval_people_budget %}
     {% set evalBudget = evalPerson.evalBudgetPerson %}

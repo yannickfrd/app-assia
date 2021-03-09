@@ -204,6 +204,16 @@ class SupportPerson
         return $this->status;
     }
 
+    public function getStatusToString(): ?string
+    {
+        return $this->status ? SupportGroup::STATUS[$this->status] : null;
+    }
+
+    public function getStatusHotelToString(): ?string
+    {
+        return $this->status ? HotelSupport::STATUS[$this->status] : null;
+    }
+
     public function setStatus(?int $status): self
     {
         $this->status = $status;
@@ -250,11 +260,6 @@ class SupportPerson
         $this->comment = $comment;
 
         return $this;
-    }
-
-    public function getStatusToString(): ?string
-    {
-        return $this->status ? SupportGroup::STATUS[$this->status] : null;
     }
 
     public function getPerson(): ?Person

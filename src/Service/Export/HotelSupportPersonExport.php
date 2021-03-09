@@ -52,6 +52,7 @@ class HotelSupportPersonExport extends ExportExcel
         $originRequest = $supportGroup->getOriginRequest() ?? new OriginRequest();
         $hotelSupport = $supportGroup->getHotelSupport() ?? new HotelSupport();
         $placeGroup = $supportGroup->getPlaceGroups()[0];
+
         $datas = [
             'N° Suivi' => $supportGroup->getId(),
             'ID personne' => $person->getId(),
@@ -63,9 +64,10 @@ class HotelSupportPersonExport extends ExportExcel
             'Nb de personnes' => $peopleGroup->getNbPeople(),
             'Rôle dans le groupe' => $supportPerson->getRoleToString(),
             'DP' => $supportPerson->getHeadToString(),
-            'Date début suivi' => $this->formatDate($supportGroup->getStartDate()),
-            'Date fin suivi' => $this->formatDate($supportGroup->getEndDate()),
-            'Statut suivi' => $supportGroup->getStatusToString(),
+            'Date début suivi' => $this->formatDate($supportPerson->getStartDate()),
+            'Date fin suivi' => $this->formatDate($supportPerson->getEndDate()),
+            'Statut suivi' => $supportPerson->getStatusHotelToString(),
+            'Motif de la non inclusion' => $hotelSupport->getReasonNoInclusionToString(),
             'Coefficient' => $supportGroup->getCoefficient(),
             'Secteur' => $supportGroup->getSubService() ? $supportGroup->getSubService()->getName() : '',
             'Dispositif' => $supportGroup->getDevice() ? $supportGroup->getDevice()->getName() : '',
@@ -76,23 +78,24 @@ class HotelSupportPersonExport extends ExportExcel
             'Précision prescripteur/ orienteur' => $originRequest->getOrganizationComment(),
             'Date de la demande' => $this->formatDate($originRequest->getOrientationDate()),
             'Date entrée à l\'hôtel' => $this->formatDate($hotelSupport->getEntryHotelDate()),
-            'Département d\'origine' => $hotelSupport->getOriginDeptToString(),
-            'Identifiant GIP' => $hotelSupport->getGipId(),
+            'Motif de l\'intervention d\'urgence' => $hotelSupport->getEmergencyActionRequestToString(),
             'Hôtel' => $placeGroup && $placeGroup->getPlace() ? $placeGroup->getPlace()->getName() : null,
             'Adresse' => $supportGroup->getAddress(),
             'Commune' => $supportGroup->getCity(),
             'Commentaire sur la demande' => $originRequest->getOrganizationComment(),
-            'Date de début de l\'accompagnement' => $this->formatDate($supportGroup->getStartDate()),
+            'Date de début de l\'accompagnement' => $this->formatDate($supportPerson->getStartDate()),
             'Date de l\'évaluation' => $this->formatDate($hotelSupport->getEvaluationDate()),
+            'Niveau d\'intervention' => $hotelSupport->getLevelSupportToString(),
             'Date de signature convention' => $this->formatDate($hotelSupport->getAgreementDate()),
+            'Type d\'intervention d\'urgence réalisé' => $hotelSupport->getEmergencyActionDoneToString(),
+            'Précision sur l\'intervention d\'urgence réalisée' => $hotelSupport->getEmergencyActionPrecision(),
             'Département d\'ancrage' => $hotelSupport->getDepartmentAnchorToString(),
             'Préconisation d\'accompagnement' => $hotelSupport->getRecommendationToString(),
-            'Date de fin de l\'accompagnement' => $this->formatDate($supportGroup->getEndDate()),
-            'Niveau d\'intervention' => $hotelSupport->getLevelSupportToString(),
+            'Date de fin de l\'accompagnement' => $this->formatDate($supportPerson->getEndDate()),
             'Motif de fin d\'accompagnement' => $hotelSupport->getEndSupportReasonToString(),
-            'Situation à la fin' => $supportGroup->getEndStatusToString(),
-            'Commentaire situation à la fin' => $supportGroup->getEndStatusComment(),
-            'Commentaire sur l\'accompagnement' => $supportGroup->getComment(),
+            'Situation à la fin' => $supportPerson->getEndStatusToString(),
+            'Commentaire situation à la fin' => $supportPerson->getEndStatusComment(),
+            'Commentaire sur l\'accompagnement' => $supportPerson->getComment(),
         ];
 
         return $datas;

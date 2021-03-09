@@ -4,7 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Admin\Export;
-use App\Event\SupportPersonExportEvent;
+use App\Event\Support\SupportPersonExportEvent;
 use App\Form\Admin\ExportSearchType;
 use App\Form\Model\Admin\ExportSearch;
 use App\Repository\Admin\ExportRepository;

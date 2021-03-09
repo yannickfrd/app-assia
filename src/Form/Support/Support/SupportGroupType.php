@@ -7,6 +7,7 @@ use App\Entity\Organization\Place;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\SubService;
 use App\Entity\Organization\User;
+use App\Entity\Support\HotelSupport;
 use App\Entity\Support\PlaceGroup;
 use App\Entity\Support\SupportGroup;
 use App\Form\Organization\Place\PlaceGroupHotelType;
@@ -207,6 +208,11 @@ class SupportGroupType extends AbstractType
     {
         $form
             ->remove('location')
+            ->add('status', ChoiceType::class, [
+                'choices' => Choices::getChoices(HotelSupport::STATUS),
+                'placeholder' => 'placeholder.select',
+                'required' => true,
+            ])
             ->add('hotelSupport', HotelSupportType::class);
 
         $supportGroup = $form->getConfig()->getData();
@@ -216,16 +222,17 @@ class SupportGroupType extends AbstractType
         }
 
         $form->add('placeGroups', CollectionType::class, [
-                'entry_type' => PlaceGroupHotelType::class,
-                'label' => null,
-                'allow_add' => false,
-                'allow_delete' => false,
-                'delete_empty' => true,
-                'attr' => [
-                    'serviceId' => $supportGroup->getService() ? $supportGroup->getService()->getId() : null,
-                    'subServiceId' => $supportGroup->getSubService() ? $supportGroup->getSubService()->getId() : null,
-                ],
-            ]);
+            'entry_type' => PlaceGroupHotelType::class,
+            'label' => null,
+            'allow_add' => false,
+            'allow_delete' => false,
+            'delete_empty' => true,
+            'attr' => [
+                'serviceId' => $supportGroup->getService() ? $supportGroup->getService()->getId() : null,
+                'subServiceId' => $supportGroup->getSubService() ? $supportGroup->getSubService()->getId() : null,
+            ],
+            'required' => true,
+        ]);
     }
 
     protected function addPlaceGroup(SupportGroup $supportGroup)

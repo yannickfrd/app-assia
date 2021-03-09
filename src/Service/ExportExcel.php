@@ -9,6 +9,7 @@ use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
 use PhpOffice\PhpSpreadsheet\Writer\Ods;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -23,6 +24,7 @@ class ExportExcel
     protected $columnsWidth;
 
     protected $spreadsheet;
+    /** @var Worksheet */
     protected $sheet;
 
     protected $nbColumns;
@@ -52,6 +54,7 @@ class ExportExcel
         $this->now = new \DateTime();
 
         $this->spreadsheet = new Spreadsheet();
+
         $this->sheet = $this->spreadsheet->getActiveSheet();
 
         $this->sheet->fromArray(
@@ -172,7 +175,6 @@ class ExportExcel
         } else {
             $method = 'setAutoSize';
             $value = true;
-            $this->sheet->getColumnDimension($columnLetter)->setWidth($this->columnsWidth);
         }
 
         for ($i = 0; $i < $this->nbColumns; ++$i) {

@@ -16,16 +16,26 @@ class HotelSupportType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('reasonNoInclusion', ChoiceType::class, [
+                'choices' => Choices::getChoices(HotelSupport::REASON_NO_INCLUSION),
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
+            ->add('emergencyActionRequest', ChoiceType::class, [
+                'choices' => Choices::getChoices(HotelSupport::EMERGENCY_ACTION_REQUEST),
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
+            ->add('emergencyActionDone', ChoiceType::class, [
+                'choices' => Choices::getChoices(HotelSupport::EMERGENCY_ACTION_DONE),
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+                ])
+            ->add('emergencyActionPrecision')
             ->add('entryHotelDate', DateType::class, [
                 'widget' => 'single_text',
                 'required' => false,
             ])
-            ->add('originDept', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::DEPARTMENTS),
-                'placeholder' => 'placeholder.select',
-                'required' => false,
-            ])
-            ->add('gipId')
             ->add('searchSsd', null, [
                 'label' => 'hotelSupport.ssd.search',
                 'attr' => [
@@ -60,7 +70,7 @@ class HotelSupportType extends AbstractType
                 'choices' => Choices::getChoices(Choices::DEPARTMENTS),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
-                ])
+            ])
             ->add('recommendation', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalHousingGroup::SIAO_RECOMMENDATION),
                 'placeholder' => 'placeholder.select',

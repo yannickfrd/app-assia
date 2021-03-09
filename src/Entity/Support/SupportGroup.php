@@ -44,22 +44,21 @@ class SupportGroup
     public const CACHE_SUPPORT_LAST_RDV_KEY = 'support.last_rdv';
     public const CACHE_SUPPORT_NEXT_RDV_KEY = 'support.next_rdv';
 
+    public const STATUS_IN_PROGRESS = 2;
+    public const STATUS_ENDED = 4;
     public const STATUS_PRE_ADD_IN_PROGRESS = 1;
     public const STATUS_PRE_ADD_FAILED = 5;
-    public const STATUS_IN_PROGRESS = 2;
-    public const STATUS_SUSPENDED = 3;
-    public const STATUS_ENDED = 4;
-    public const STATUS_PRE_ADD_ENDED = 5;
     public const STATUS_WAITING_LIST = 6;
+    public const STATUS_SUSPENDED = 3;
     public const STATUS_OTHER = 97;
 
     public const STATUS = [
         2 => 'En cours',
-        3 => 'Suspendu',
         4 => 'Terminé',
         1 => 'Pré-admission en cours',
         5 => 'Pré-admission non aboutie',
         6 => 'Liste d\'attente',
+        3 => 'Suspendu',
         97 => 'Autre',
     ];
 
@@ -67,13 +66,12 @@ class SupportGroup
         001 => 'A la rue - abri de fortune',
         303 => 'Accès à la propriété',
         208 => 'ALTHO',
-        400 => 'CADA',
+        400 => 'CADA - dispositif asile',
         304 => 'Colocation',
         900 => 'Décès',
         700 => 'Départ volontaire de la personne',
         500 => 'Détention',
         105 => 'Dispositif hivernal',
-        602 => 'Dispositif de soin ou médical (LAM, autre)',
         502 => 'DLSAP',
         701 => 'Exclusion de la structure',
         702 => 'Fin du contrat de séjour',
@@ -103,6 +101,7 @@ class SupportGroup
         704 => "Retour dans le pays d'origine",
         302 => 'Sous-location',
         002 => 'Squat',
+        602 => 'Structure de soin ou médical (LAM, autre)',
         97 => 'Autre',
         99 => 'Non renseignée',
     ];
@@ -385,6 +384,11 @@ class SupportGroup
     public function getStatusToString(): ?string
     {
         return $this->status ? self::STATUS[$this->status] : null;
+    }
+
+    public function getStatusHotelToString(): ?string
+    {
+        return $this->status ? HotelSupport::STATUS[$this->status] : null;
     }
 
     public function setStatus(?int $status): self

@@ -46,6 +46,9 @@ export default class Search {
                 } else {
                     new MessageFlash('success', 'L\'export est en cours de préparation. Merci de patienter...', 10);
                     this.loader.inLoading = true
+                    setTimeout(() => {
+                        this.loader.inLoading = false
+                    }, 15 * 1000)
                 }
             })
         }

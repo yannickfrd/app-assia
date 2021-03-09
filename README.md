@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.17.12 02/03/2021
+2.20.0 09/03/2021
 
 # Développeur
 Romain MADELAINE
@@ -12,6 +12,25 @@ https://github.com/RomMad/esperer95.app
 
 # Connection à la base démo
 https://demo.esperer95.app
+
+
+## Version 2.20.0 - 09/03/2021
+- Update hotelSupport : add fields ('reasonNoInclusion', 'emergencyActionRequest', 'emergencyActionDone', 'emergencyActionPrecision'), remove fields ('originDept', 'gipId', 'placeGroup.startDate', add required fields ('orientationDate', 'organization', 'hotel'...), update view page, edit page and exports;
+
+## Version 2.19.0 - 08/03/2021
+- Update evaluation : add fields ('ASE measure type', 'caf attachment', 'domiciliation type'), add helps and comments (school date, paper type...) and rename label (violence victime, jobs);
+- Add a new twig filter '|u.truncate' and fix error in '_navGroup';
+- Create events and subscribers for SupportGroup + factorisation;
+- Edit ExportWord ('escapingEnabled') : fix problem with special caracters;
+- Edit time to alert logout (20mn);
+- Add auto-refresh in login page;
+- Remove remember_me for login;
+
+## Version 2.18.0 - 08/03/2021
+- Create 'startDate' and 'endDate' in Contribution ; Remove 'contribMonth ; Create a command to update all contribution dates;
+
+## Version 2.17.13 - 05/03/2021
+- Create a command to reorganize the folder of uploaded documents;
 
 ## Version 2.17.9-12 - 02/03/2021
 - Fix error in evaluation.js (evalAdmPerson);

@@ -20,7 +20,10 @@ class OriginRequestType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $serviceId = $builder->getOption('attr')['serviceId'] ?? null;
-        $required = Service::SERVICE_AVDL_ID === $serviceId ? true : false;
+        $required = in_array($serviceId, [
+            Service::SERVICE_AVDL_ID,
+            Service::SERVICE_PASH_ID,
+        ]);
 
         $builder
             ->add('infoToSiaoDate', DateType::class, [

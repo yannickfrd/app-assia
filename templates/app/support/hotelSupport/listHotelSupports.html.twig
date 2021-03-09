@@ -54,6 +54,7 @@
                         {% for support in supports %}
                             {% set person = support.person %}
                             {% set supportGroup = support.supportGroup %}
+                            {% set hotelSupport = supportGroup.hotelSupport %}
                             <tr class="{% if form_head == false and support.head %}font-weight-bold{% endif %}">
                                 <td scope="row" class="align-middle text-center">
                                     {% if is_granted("VIEW", supportGroup) %}
@@ -66,15 +67,20 @@
                                 <td class="align-middle">{{ supportGroup.subService ? supportGroup.subService.name }}</td>
                                 <td class="align-middle">{{ supportGroup.device ? supportGroup.device.name }}</td>
                                 <td class="align-middle">{{ supportGroup.referent ? supportGroup.referent.fullname }}</td>
-                                <td class="align-middle">{{ supportGroup.statusToString }}<br/>
-                                    <span class="text-secondary">{{ supportGroup.coefficient ? "(coeff. " ~ supportGroup.coefficient ~ ")" }}</span>
+                                <td class="align-middle">
+                                    {% if hotelSupport %}
+                                        {{ hotelSupport.statusToString }}<br/> 
+                                        <span class="text-secondary">
+                                            {{ hotelSupport.reasonNoInclusion ? " (" ~ hotelSupport.reasonNoInclusionToString ~ ")" }}
+                                            {{ supportGroup.status in [2, 4] and supportGroup.coefficient ? "(coeff. " ~ supportGroup.coefficient ~ ")" }}
+                                        </span>
+                                    {% endif %}
                                 </td>
                                 {% set place = supportGroup.placeGroups|length ? supportGroup.placeGroups[0].place %}
                                 <td class="align-middle">{{ place ? place.name }}<br/>
                                     <span class="text-secondary">{{ supportGroup.city ? "(" ~ supportGroup.city ~ ")" }}</span>
                                 </td>
-                                {% if supportGroup.hotelSupport %}
-                                    {% set hotelSupport = supportGroup.hotelSupport %}
+                                {% if hotelSupport %}
                                     <td class="align-middle">{{ supportGroup.originRequest and supportGroup.originRequest.orientationDate ? 
                                         supportGroup.originRequest.orientationDate|date("d/m/Y") }}</td>
                                     <td class="align-middle">{{ supportGroup.originRequest and supportGroup.originRequest.organization and 

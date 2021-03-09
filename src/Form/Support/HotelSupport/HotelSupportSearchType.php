@@ -19,6 +19,16 @@ class HotelSupportSearchType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('status', ChoiceType::class, [
+                'multiple' => true,
+                'choices' => Choices::getChoices(HotelSupport::STATUS),
+                'attr' => [
+                    'class' => 'multi-select',
+                    'data-select2-id' => 'status',
+                ],
+                'placeholder' => 'placeholder.status',
+                'required' => false,
+            ])
             ->add('hotels', EntityType::class, [
                 'class' => Place::class,
                 'choice_label' => 'name',

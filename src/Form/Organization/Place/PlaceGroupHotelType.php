@@ -42,12 +42,7 @@ class PlaceGroupHotelType extends AbstractType
                     },
                     'label' => Service::SERVICE_PASH_ID === $serviceId ? 'hotelName' : 'place.name',
                     'placeholder' => 'placeholder.select',
-                    'required' => false,
-                ])
-                ->add('startDate', DateType::class, [
-                    'label' => Service::SERVICE_PASH_ID === $serviceId ? 'hotelSupport.startDate' : 'placeGroup.startDate',
-                    'widget' => 'single_text',
-                    'required' => false,
+                    'required' => true,
                 ])
                 ->add('comment');
         });

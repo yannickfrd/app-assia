@@ -268,6 +268,10 @@ avdl:
   endSupportComment.placeholder: Écrire un commentaire concernant la fin d'accompagnement ou la proposition logement
 
 ### Suivi hôtel
+Emergency action request: Motif de l'intervention d'urgence
+Reason no inclusion: Motif de la non inclusion
+Emergency action done: Type d'intervention d'urgence réalisé
+Emergency action precision: Précision sur l'intervention d'urgence réalisée
 Department anchor: Département d'ancrage
 Agreement date: Date de signature de la convention
 Entry hotel date: Date de stabilisation ou d'entrée à l'hôtel
