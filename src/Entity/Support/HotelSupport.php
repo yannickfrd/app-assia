@@ -43,7 +43,7 @@ class HotelSupport
     public const EMERGENCY_ACTION_DONE = [
         1 => 'Signalement',
         2 => 'Décohabitation',
-        3 => 'Colis alimentaire ',
+        3 => 'Colis alimentaire',
         4 => 'Orientation partenaire',
         97 => 'Autre',
     ];

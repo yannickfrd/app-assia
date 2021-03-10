@@ -162,7 +162,7 @@ class SupportDuplicator
 
             $lastEvaluationPerson = $this->repoEvaluationPerson->findEvaluationOfSupportPerson($lastSupportPerson->getId());
 
-            if (0 === $supportGroup->getEvaluationsGroup()->count() && null === $this->evaluationGroup) {
+            if ($lastEvaluationPerson && 0 === $supportGroup->getEvaluationsGroup()->count() && null === $this->evaluationGroup) {
                 $this->evaluationGroup = $this->cloneEvaluationGroup($lastEvaluationPerson->getEvaluationGroup());
             } elseif ($supportGroup->getEvaluationsGroup()->count()) {
                 $this->evaluationGroup = $supportGroup->getEvaluationsGroup()->last();

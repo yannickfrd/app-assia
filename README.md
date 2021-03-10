@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.20.0 09/03/2021
+2.20.1 10/03/2021
 
 # Développeur
 Romain MADELAINE
@@ -13,6 +13,8 @@ https://github.com/RomMad/esperer95.app
 # Connection à la base démo
 https://demo.esperer95.app
 
+## Version 2.20.1 - 10/03/2021
+- Fix error in SupportDuplicator when 'lastEvaluationPerson' is null;
 
 ## Version 2.20.0 - 09/03/2021
 - Update hotelSupport : add fields ('reasonNoInclusion', 'emergencyActionRequest', 'emergencyActionDone', 'emergencyActionPrecision'), remove fields ('originDept', 'gipId', 'placeGroup.startDate', add required fields ('orientationDate', 'organization', 'hotel'...), update view page, edit page and exports;
