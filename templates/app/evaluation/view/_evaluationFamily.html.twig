@@ -44,9 +44,11 @@
             {% endif %}
             {% if evalPerson.supportPerson.role == ROLE_CHILD %}
                 <div class="row">
+                    {% set schoolAddress = evalFamily.schoolCity != evalFamily.schoolAddress ? 
+                        evalFamily.schoolAddress ~ ", " ~ evalFamily.schoolCity : evalFamily.schoolCity %}
                     {{ view_div.get((evalFamily.childcareOrSchool == YES ? evalFamily.childcareSchoolTypeToString : 
-                        evalFamily.childcareOrSchoolToString) ~ (evalFamily.childcareSchoolLocation ? " (" 
-                        ~ evalFamily.childcareSchoolLocation ~ ")"), "Childcare or school", "evaluation") }}
+                        evalFamily.childcareOrSchoolToString) ~ (schoolAddress or evalFamily.schoolChildCarePrecision ? " (" ~ schoolAddress 
+                        ~ ( evalFamily.schoolChildCarePrecision ? " - " ~ evalFamily.schoolChildCarePrecision) ~ ")"), "Childcare or school", "evaluation") }}
                     {{ view_div.get(evalFamily.childToHostToString, "Child to host", "evaluation") }}
                     {{ view_div.get(evalFamily.childDependanceToString, "Child dependance", "evaluation") }}
                 </div>
@@ -56,37 +58,4 @@
             </div>
         </div>
     {% endfor %}
-
-    {# {% set eval_children_family = eval_children|filter(e => e.evalFamilyPerson) %}
-    {% if eval_children_family|length > 0 %}
-        <div class="row mt-4">
-            <div class="col-md-12">
-                <div class="table-responsive">
-                    <table class="table table-sm table-bordered table-hover">
-                        <thead>
-                            <tr>
-                                <th scope="col">Enfant(s)</th>
-                                <th>Garde ou scolarité</th>
-                                <th>Lieu de garde/scolarité</th>
-                                <th>Hébergement</th>
-                                <th>À charge</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for evalPerson in eval_children_family %}
-                                {% set evalFamilyPerson = evalPerson.evalFamilyPerson %}
-                                <tr>
-                                    <td scope="row">{{ evalPerson.supportPerson.person.fullname }}</td>
-                                    <td>{{ evalFamilyPerson.childcareSchoolToString }}</td>
-                                    <td>{{ evalFamilyPerson.childcareSchoolLocation }}</td>
-                                    <td>{{ evalFamilyPerson.childToHostToString }}</td>
-                                    <td>{{ evalFamilyPerson.childDependanceToString }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    {% endif %} #}
 </section>

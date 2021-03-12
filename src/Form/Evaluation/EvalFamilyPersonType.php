@@ -60,8 +60,38 @@ class EvalFamilyPersonType extends AbstractType
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
-            ->add('childcareSchoolLocation', null, [
-                'help' => 'childcareSchoolLocation.help',
+            ->add('schoolChildCarePrecision', null, [
+                'help' => 'schoolChildCarePrecision.help',
+            ])
+            ->add('schoolSearch', null, [
+                'label' => ' ',
+                'attr' => [
+                    'class' => 'js-search',
+                    'placeholder' => 'location.search.placeholder',
+                    'autocomplete' => 'off',
+                ],
+                'mapped' => false,
+            ])
+            ->add('schoolAddress', null, [
+                'label' => 'school.address',
+                'attr' => [
+                    'class' => 'js-address',
+                    'readonly' => true,
+                ],
+            ])
+            ->add('schoolCity', null, [
+                'label' => 'school.city',
+                'attr' => [
+                    'class' => 'js-city',
+                    'readonly' => true,
+                ],
+            ])
+            ->add('schoolZipcode', null, [
+                'label' => 'school.zipcode',
+                'attr' => [
+                    'class' => 'js-zipcode',
+                    'readonly' => true,
+                ],
             ])
             ->add('childToHost', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalFamilyPerson::CHILD_TO_HOST),

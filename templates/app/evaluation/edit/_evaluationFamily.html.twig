@@ -37,10 +37,16 @@
                     </div>
                     {% endif %}
                     {% if supportPerson.role == ROLE_CHILD %}
-                        <div class="form-group row">
+                        <div class="row">
                             <div class="col-md-6">{{ form_row(evalPerson.evalFamilyPerson.childcareOrSchool) }}</div>
                             <div class="col-md-6" data-parent-field="{{ key }}_evalFamilyPerson_childcareOrSchool">{{ form_row(evalPerson.evalFamilyPerson.childcareSchoolType) }}</div>
-                            <div class="col-md-6" data-parent-field="{{ key }}_evalFamilyPerson_childcareOrSchool">{{ form_row(evalPerson.evalFamilyPerson.childcareSchoolLocation) }}</div>
+                        </div>
+                        <div class="form-group row" id="school_location_{{ key }}" data-parent-field="{{ key }}_evalFamilyPerson_childcareOrSchool">
+                            <div class="col-md-6">{{ form_row(evalPerson.evalFamilyPerson.schoolSearch) }}</div>
+                            <div class="col-md-6">{{ form_row(evalPerson.evalFamilyPerson.schoolAddress) }}</div>
+                            <div class="col-md-6">{{ form_row(evalPerson.evalFamilyPerson.schoolCity) }}</div>
+                            <div class="col-md-6 d-none">{{ form_row(evalPerson.evalFamilyPerson.schoolZipcode) }}</div>
+                            <div class="col-md-6">{{ form_row(evalPerson.evalFamilyPerson.schoolChildCarePrecision) }}</div>
                         </div>
                         <div class="form-group row">
                             <div class="col-md-6">{{ form_row(evalPerson.evalFamilyPerson.childToHost) }}</div>

@@ -89,15 +89,24 @@ class EvalFamilyPerson
      */
     private $maritalStatus;
 
+    /** @Groups("export") */
+    private $maritalStatusToString;
+
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $noConciliationOrder;
 
+    /** @Groups("export") */
+    private $noConciliationOrderToString;
+
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $unbornChild;
+
+    /** @Groups("export") */
+    private $unbornChildToString;
 
     /**
      * @ORM\Column(type="date", nullable=true)
@@ -115,35 +124,70 @@ class EvalFamilyPerson
      */
     private $childcareOrSchool;
 
+    /** @Groups("export") */
+    private $childcareOrSchoolToString;
+
     /**
      * @ORM\Column(name="childcare_school", type="smallint", nullable=true)
      */
     private $childcareSchoolType;
 
+    /** @Groups("export") */
+    private $childcareSchoolTypeToString;
+
+    /**
+     * @ORM\Column(name="childcare_school_location", type="string", length=255, nullable=true)
+     */
+    private $schoolChildCarePrecision;
+
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $childcareSchoolLocation;
+    private $schoolAddress;
+
+    /**
+     * @ORM\Column(type="string", length=100, nullable=true)
+     * @Groups("export")
+     */
+    private $schoolCity;
+
+    /**
+     * @ORM\Column(type="string", length=10, nullable=true)
+     * @Groups("export")
+     */
+    private $schoolZipcode;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $childToHost;
 
+    /** @Groups("export") */
+    private $childToHostToString;
+
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $childDependance;
+
+    /** @Groups("export") */
+    private $childDependanceToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $protectiveMeasure;
 
+    /** @Groups("export") */
+    private $protectiveMeasureToString;
+
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $protectiveMeasureType;
+
+    /** @Groups("export") */
+    private $protectiveMeasureTypeToString;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -166,9 +210,6 @@ class EvalFamilyPerson
         return $this->maritalStatus;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getMaritalStatusToString(): ?string
     {
         return $this->maritalStatus ? self::MARITAL_STATUS[$this->maritalStatus] : null;
@@ -186,9 +227,6 @@ class EvalFamilyPerson
         return $this->noConciliationOrder;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getNoConciliationOrderToString(): ?string
     {
         return $this->noConciliationOrder ? Choices::YES_NO[$this->noConciliationOrder] : null;
@@ -206,9 +244,6 @@ class EvalFamilyPerson
         return $this->unbornChild;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getUnbornChildToString(): ?string
     {
         return $this->unbornChild ? Choices::YES_NO[$this->unbornChild] : null;
@@ -255,9 +290,6 @@ class EvalFamilyPerson
         return $this->childcareOrSchool;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getChildcareOrSchoolToString(): ?string
     {
         return $this->childcareOrSchool ? Choices::YES_NO[$this->childcareOrSchool] : null;
@@ -275,9 +307,6 @@ class EvalFamilyPerson
         return $this->childcareSchoolType;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getChildcareSchoolTypeToString(): ?string
     {
         return $this->childcareSchoolType ? self::CHILDCARE_SCHOOL[$this->childcareSchoolType] : null;
@@ -290,14 +319,50 @@ class EvalFamilyPerson
         return $this;
     }
 
-    public function getChildcareSchoolLocation(): ?string
+    public function getSchoolAddress(): ?string
     {
-        return $this->childcareSchoolLocation;
+        return $this->schoolAddress;
     }
 
-    public function setChildcareSchoolLocation(?string $childcareSchoolLocation): self
+    public function setSchoolAddress(?string $schoolAddress): self
     {
-        $this->childcareSchoolLocation = $childcareSchoolLocation;
+        $this->schoolAddress = $schoolAddress;
+
+        return $this;
+    }
+
+    public function getSchoolCity(): ?string
+    {
+        return $this->schoolCity;
+    }
+
+    public function setSchoolCity(?string $schoolCity): self
+    {
+        $this->schoolCity = $schoolCity;
+
+        return $this;
+    }
+
+    public function getSchoolZipcode(): ?string
+    {
+        return $this->schoolZipcode;
+    }
+
+    public function setSchoolZipcode(?string $schoolZipcode): self
+    {
+        $this->schoolZipcode = $schoolZipcode;
+
+        return $this;
+    }
+
+    public function getSchoolChildCarePrecision(): ?string
+    {
+        return $this->schoolChildCarePrecision;
+    }
+
+    public function setSchoolChildCarePrecision(?string $schoolChildCarePrecision): self
+    {
+        $this->schoolChildCarePrecision = $schoolChildCarePrecision;
 
         return $this;
     }
@@ -307,9 +372,6 @@ class EvalFamilyPerson
         return $this->childToHost;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getChildToHostToString(): ?string
     {
         return $this->childToHost ? self::CHILD_TO_HOST[$this->childToHost] : null;
@@ -327,9 +389,6 @@ class EvalFamilyPerson
         return $this->childDependance;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getChildDependanceToString(): ?string
     {
         return $this->childDependance ? self::CHILD_DEPENDANCE[$this->childDependance] : null;
@@ -347,9 +406,6 @@ class EvalFamilyPerson
         return $this->protectiveMeasure;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getProtectiveMeasureToString(): ?string
     {
         return $this->protectiveMeasure ? Choices::YES_NO_IN_PROGRESS[$this->protectiveMeasure] : null;
@@ -367,9 +423,6 @@ class EvalFamilyPerson
         return $this->protectiveMeasureType;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getProtectiveMeasureTypeToString(): ?string
     {
         return $this->protectiveMeasureType ? self::PROTECTIVE_MEASURE_TYPE[$this->protectiveMeasureType] : null;

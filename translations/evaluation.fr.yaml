@@ -147,9 +147,13 @@ Caf id: Numéro CAF
 Caf attachment: CAF de rattachement
 Child dependance: À charge
 Child to host: À héberger
-childcareSchoolLocation.help: Ville, nom de l'école, classe... Préciser en commentaire ci-dessous la date de début de scolarité.
-Childcare school location: Lieu de garde/école
-Childcare or school: Garde/école
+schoolChildCarePrecision.help: Nom de l'école, classe, date de début de scolarité...
+school:
+  address: Adresse école ou garde (auto)
+  city: Ville école ou garde (auto)
+  zipcode: Code postal école ou garde (auto)
+School child care precision: Précision sur l'école ou la garde
+Childcare or school: École/garde
 Childcare school type: Type de garde ou école
 Children behind: Enfants restés au pays
 Comment eval family group: Commentaire relatif à la situation familiale du groupe
@@ -167,6 +171,9 @@ Pmi name: Nom de la PMI (Ville)
 Pregnancy type: Type de grossesse
 Protective measure type: Type de mesure de protection
 Protective measure: Mesure de protection
+School address: Adresse école/garde
+School city: Ville école/garde
+School zipcode: Code postal école/garde
 Unborn child: Enfant à naître
 evalFamilyGroup.comment: Écrire un commentaire relatif à la situation familiale du groupe
 evalFamilyPerson.comment: Écrire un commentaire relatif à la situation familiale de la personne
@@ -195,9 +202,7 @@ evalProfPerson.comment: Écrire un commentaire relatif à la situation professio
 # Housing
 evalHousingGroup:
   housingWishes.help: T1, T2, T3, T4, T5...
-
   comment: Écrire un commentaire relatif à la situation liée au logement et à l'hébergement (démarches en cours, évolution de la situation...)
-
 Caf eligibility: Eligibilité CAF
 Cities wishes: Communes ou départements souhaités
 Collective agreement housing date: Date de labellisation Accord Collectif
@@ -215,14 +220,14 @@ Domiciliation type: Type d'organisme domiciliataire
 Domiciliation comment: Organisme ou personne domiciliataire
 Domiciliation address: Adresse de domiciliation
 Domiciliation city: Ville de domiciliation
-Domiciliation dept: Département de domiciliation
+Domiciliation zipcode: Code postal de domiciliation
 End domiciliation date: Date de fin domiciliation
 Expulsion comment: Commentaire sur l'expulsion location
 Expulsion in progress: Procédure d'expulsion en cours
 Fsl eligibility: Eligibilité aide à l'installation FSL
 Fsl: FSL
 Heps precision: Précision sur les aides et accès au logement
-Housing access type: d'accès au logement
+Housing access type: Type d'accès au logement
 Housing address: Adresse du logement ou hébergement
 Housing arrival date: Date d'entrée dans le logement
 Housing city: Ville
@@ -272,6 +277,7 @@ Animal: Présence d'un animal
 Medical follow up: Suivi médical
 Home care support: Service de soins ou d'acc. à domicile
 Home care support type: Type de service soins ou d'acc. à domicile
+Child welfare background: Parcours institutionnel enfance
 Ase follow up: Suivi ou parcours ASE
 Ase measure type: Type de mesure ASE
 Ase comment: Commentaire concernant le parcours ASE
