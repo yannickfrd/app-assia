@@ -12,13 +12,15 @@ class MailNotifier
 {
     protected $mailer;
     protected $security;
+    protected $appEnv;
     protected $appVersion;
     protected $adminEmail;
 
-    public function __construct(MailerInterface $mailer, Security $security, string $appVersion = 'prod', string $adminEmail)
+    public function __construct(MailerInterface $mailer, Security $security, string $appEnv, string $appVersion = 'prod', string $adminEmail)
     {
         $this->security = $security;
         $this->mailer = $mailer;
+        $this->appEnv = $appEnv;
         $this->appVersion = $appVersion;
         $this->adminEmail = $adminEmail;
     }
@@ -28,7 +30,9 @@ class MailNotifier
         try {
             $this->mailer->send($email);
         } catch (TransportExceptionInterface $e) {
-            throw $e;
+            if ($this->appEnv === 'prod') {
+                throw $e;
+            }
 
             return false;
         }
