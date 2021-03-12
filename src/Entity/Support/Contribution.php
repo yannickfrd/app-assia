@@ -230,9 +230,13 @@ class Contribution
         return $this;
     }
 
-    public function getNbDays(): ?int
+    public function getNbDays(): int
     {
-        return $this->monthContrib ? $this->getStartDate()->diff($this->getEndDate())->days + 1 : null;
+        if ($this->monthContrib && $this->getStartDate()) {
+            return $this->getStartDate()->diff($this->getEndDate())->days + 1;
+        }
+
+        return 0;
     }
 
     public function getResourcesAmt(): ?float

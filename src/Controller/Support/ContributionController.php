@@ -263,12 +263,6 @@ class ContributionController extends AbstractController
 
         $this->denyAccessUnlessGranted('VIEW', $contribution);
 
-        if (!$contribution->getToPayAmt()) {
-            $this->addFlash('danger', 'Le montant à payer est égal à 0.');
-
-            return $this->redirectToRoute('support_contributions', ['id' => $supportGroup->getId()]);
-        }
-
         $title = $contribution->getPaymentDate() ? 'Reçu de paiement' : 'Avis d\'échéance';
         $logoPath = $supportGroup->getService()->getPole()->getLogoPath();
         $fullnameSupport = $supportManager->getHeadPersonSupport($supportGroup)->getFullname();
