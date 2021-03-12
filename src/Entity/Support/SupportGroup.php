@@ -305,6 +305,11 @@ class SupportGroup
      */
     private $siSiaoId;
 
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $nbChildrenUnder3years;
+
     public function __construct()
     {
         $this->supportPeople = new ArrayCollection();
@@ -853,6 +858,18 @@ class SupportGroup
     public function setSiSiaoId(?int $siSiaoId): self
     {
         $this->siSiaoId = $siSiaoId;
+
+        return $this;
+    }
+
+    public function getNbChildrenUnder3years(): ?int
+    {
+        return $this->nbChildrenUnder3years;
+    }
+
+    public function setNbChildrenUnder3years(?int $nbChildrenUnder3years): self
+    {
+        $this->nbChildrenUnder3years = $nbChildrenUnder3years;
 
         return $this;
     }

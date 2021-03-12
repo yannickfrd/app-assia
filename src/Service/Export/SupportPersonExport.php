@@ -67,15 +67,11 @@ class SupportPersonExport extends ExportExcel
         }
 
         // $nbChildren = 0;
-        // $nbChildrenUnder3Years = 0;
 
         // if ($supportGroup->getSupportPeople()) {
         //     foreach ($supportGroup->getSupportPeople() as $supportPerson) {
         //         if (RolePerson::ROLE_CHILD === $supportPerson->getRole()) {
         //             ++$nbChildren;
-        //         }
-        //         if ($supportPerson->getPerson() && $supportPerson->getPerson()->getAge() < 3) {
-        //             ++$nbChildrenUnder3Years;
         //         }
         //     }
         // }
@@ -91,9 +87,9 @@ class SupportPersonExport extends ExportExcel
             'Âge' => (string) $person->getAge(),
             'Sexe' => $person->getGenderToString(),
             'Typologie familiale' => $peopleGroup->getFamilyTypologyToString(),
-            'Nb de personnes' => $supportGroup->getNbPeople(),
+            'Nb de personnes' => (string) $supportGroup->getNbPeople(),
             // 'Nb d\'enfants' => $nbChildren,
-            // 'Nb enfants -3 ans' => $nbChildrenUnder3Years,
+            'Nb enfants -3 ans' => (string) $supportGroup->getNbChildrenUnder3years(),
             'Rôle dans le groupe' => $supportPerson->getRoleToString(),
             'DP' => $supportPerson->getHeadToString(),
             'Statut suivi' => $supportPerson->getStatusToString(),
