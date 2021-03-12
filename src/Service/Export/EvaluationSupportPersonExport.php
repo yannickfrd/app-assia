@@ -170,10 +170,10 @@ class EvaluationSupportPersonExport extends ExportExcel
             // 'Montant RSA' => $evalBudgetPerson->getMinimumIncomeAmt(),
             // 'Montant dettes' => $evalBudgetPerson->getDebtsAmt(),
             'Montant total ressources ménage' => $evalBudgetGroup->getResourcesGroupAmt(),
-            'Type ressources' => join(', ', $this->getResources($evalBudgetPerson)),
+            'Type ressources' => join(', ', $evalBudgetPerson->getResourcesType()),
             'Montant total charges ménage' => $evalBudgetGroup->getChargesGroupAmt(),
             'Montant total dettes ménage' => $evalBudgetGroup->getDebtsGroupAmt(),
-            'Type dettes' => join(', ', $this->getDebts($evalBudgetPerson)),
+            'Type dettes' => join(', ', $evalBudgetPerson->getDebtsType()),
             // 'Montant participation financière' => $evalBudgetGroup->getContributionAmt(),
 
             // Prof
@@ -190,7 +190,8 @@ class EvaluationSupportPersonExport extends ExportExcel
             // 'Service soin ou acc. à domicile' => Choices::YES === $evalSocialPerson->getHomeCareSupport() ?
             //    $evalSocialPerson->getHomeCareSupportTypeToString() : $evalSocialPerson->getHomeCareSupportToString(),
             // 'Mesure de protection' => $evalFamilyPerson->getProtectiveMeasureToString(),
-            'PVV' => $evalSocialPerson->getViolenceVictimToString().(Choices::YES === $evalSocialPerson->getDomViolenceVictim() ? ' (FVVC)' : ''),
+            'PVV' => $evalSocialPerson->getViolenceVictimToString().
+                (Choices::YES === $evalSocialPerson->getDomViolenceVictim() ? ' (FVVC)' : ''),
 
             // Logement
             'Demande de logement social' => $evalHousingGroup->getSocialHousingRequestToString(),
@@ -202,40 +203,5 @@ class EvaluationSupportPersonExport extends ExportExcel
         ]);
 
         return $this->datas;
-    }
-
-    /**
-     * @param EvalBudgetPerson|InitEvalPerson $evalObject
-     */
-    protected function getResources(object $evalObject): array
-    {
-        $otherResources = [];
-        foreach (EvalBudgetPerson::RESOURCES_MIN_TYPE as $keyResource => $valueResource) {
-            $method = 'get'.ucfirst($keyResource);
-            if (Choices::YES === $evalObject->$method()) {
-                $otherResources[] = $valueResource;
-            }
-        }
-        if ($evalObject->getRessourceOtherPrecision()) {
-            $otherResources[] = $evalObject->getRessourceOtherPrecision();
-        }
-
-        return $otherResources;
-    }
-
-    protected function getDebts(EvalBudgetPerson $evalBudgetPerson): array
-    {
-        $otherDebts = [];
-        foreach (EvalBudgetPerson::DEBTS_TYPE as $keyDebt => $valueDebt) {
-            $method = 'get'.ucfirst($keyDebt);
-            if (Choices::YES === $evalBudgetPerson->$method()) {
-                $otherDebts[] = $valueDebt;
-            }
-        }
-        if ($evalBudgetPerson->getDebtOtherPrecision()) {
-            $otherDebts[] = $evalBudgetPerson->getDebtOtherPrecision();
-        }
-
-        return $otherDebts;
     }
 }

@@ -77,7 +77,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for key, value in evalBudget.resourcesType %}
+                    {% for key, value in constant("RESOURCES_TYPE", evalBudget) %}
                         {% if attribute(evalBudget, key) %}
                         <tr>
                             <td>{{ not loop.last ? value : (attribute(evalBudget, key ~ 'Precision') ? 
@@ -121,7 +121,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for key, value in evalBudget.chargesType %}
+                    {% for key, value in constant("CHARGES_TYPE", evalBudget) %}
                         {% if attribute(evalBudget, key) %}
                         <tr>
                             <td>{{ not loop.last ? value : (attribute(evalBudget, key ~ 'Precision') ? 
@@ -145,16 +145,8 @@
         {% endif %}
 
         {% if evalBudget.debts %}
-            {{ view_p.get(evalBudget.debtsToString, "Debts", "evaluation") }}
-            {% if evalBudget.debts == YES %}
-                <ul>
-                    {% for key, value in evalBudget.debtsType %}
-                        {% if attribute(evalBudget, key) %}
-                            <li>{{ value }}</li>
-                        {% endif %}
-                    {% endfor %}
-                </ul>
-            {% endif %}
+            {{ view_p.get(evalBudget.debtsToString ~ (evalBudget.debtsType ? 
+                " (" ~ evalBudget.debtsType|join(", ")|lower ~ ")"), "Debts", "evaluation") }}
             {{ view_p.get(evalBudget.debtComment, "Debt comment", "evaluation") }}
             {{ view_p.get(evalBudget.overIndebtRecord ? evalBudget.overIndebtRecordToString ~ (evalBudget.overIndebtRecordDate ? 
                 " (date de dépôt : " ~ evalBudget.overIndebtRecordDate|date("d/m/Y") ~ ")"), "Over indebt record", "evaluation") }}

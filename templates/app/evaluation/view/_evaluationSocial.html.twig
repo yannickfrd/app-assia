@@ -23,11 +23,13 @@
                 <div class="row mb-2">
                     {{ view_div.get(evalSocial.rightSocialSecurity in [1, 3] ? evalSocial.rightSocialSecurityToString ~ " - " 
                         ~ evalSocial.socialSecurityToString ~ (evalSocial.endRightsSocialSecurityDate ? " (fin de validité : " 
-                    ~ evalSocial.endRightsSocialSecurityDate|date("d/m/Y") ~ ")") : evalSocial.rightSocialSecurityToString , "Right social security", "evaluation") }}
+                        ~ evalSocial.endRightsSocialSecurityDate|date("d/m/Y") ~ ")") 
+                        : evalSocial.rightSocialSecurityToString , "Right social security", "evaluation") }}
                     {{ view_div.get(evalSocial.socialSecurityOffice, "Social security office", "evaluation") }}
                 </div>
                 <div class="row mb-2">
-                    {{ view_div.get(evalSocial.aseFollowUp == YES ? evalSocial.aseFollowUpToString ~ (evalSocial.aseMeasureType ? ' (Mesure ' ~ evalSocial.aseMeasureTypeToString ~ ")"), "Ase follow up", "evaluation") }}
+                    {{ view_div.get(evalSocial.aseFollowUp == YES ? evalSocial.aseFollowUpToString 
+                        ~ (evalSocial.aseMeasureType ? ' (Mesure ' ~ evalSocial.aseMeasureTypeToString ~ ")"), "Ase follow up", "evaluation") }}
                     {{ view_div.get(evalSocial.aseComment) }}
                 </div>
                 {% if evalSocial.familyBreakdown == YES or evalSocial.friendshipBreakdown == YES %}
@@ -38,16 +40,8 @@
                 {% endif %}
                 {% if evalSocial.healthProblem == YES %}
                     <div class="row mb-2">
-                        {{ view_div.get(evalSocial.healthProblemToString, "Health problem", "evaluation") }}
-                        <div class="col-md-6">
-                            <ul class="mb-0">
-                                {% for key, value in evalSocial.healthProblemsType %}
-                                    {% if attribute(evalSocial, key) %}
-                                        <li>{{ value }}</li>
-                                    {% endif %}
-                                {% endfor %}									 
-                            </ul>
-                        </div>
+                        {{ view_div.get(evalSocial.healthProblemToString ~ (evalSocial.healthProblemsType ? 
+                            " (" ~ evalSocial.healthProblemsType|join(", ") ~ ")"), "Health problem", "evaluation") }}
                     </div>
                 {% endif %}
                 <div class="row mb-2">
@@ -71,7 +65,8 @@
         <div class="row mb-2">
             {{ view_div.get(evalSocial.reasonRequestToString, "Reason request", "evaluation") }}
             {{ view_div.get(evalSocial.wanderingTimeToString, "Wandering time", "evaluation") }}
-            {{ view_div.get(evalSocial.animal == YES ? evalSocial.animalToString ~ (evalSocial.animalType ? " (" ~ evalSocial.animalType ~ ")" ), "Animal", "evaluation") }}
+            {{ view_div.get(evalSocial.animal == YES ? evalSocial.animalToString 
+                ~ (evalSocial.animalType ? " (" ~ evalSocial.animalType ~ ")" ), "Animal", "evaluation") }}
         </div>
         <div class="row mb-2">
             <div class="col-md-12 justify">{{ evaluation.evalSocialGroup.commentEvalSocialGroup|nl2br }}</div>

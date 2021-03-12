@@ -21,16 +21,8 @@
             {{ view_p.get(evalSocial.familyBreakdownToString, "Family breakdown", "evaluation") }}
             {{ view_p.get(evalSocial.friendshipBreakdownToString, "Friendship breakdown", "evaluation") }}
         {% endif %}
-        {% if evalSocial.healthProblem == YES %}
-            {{ view_p.get(evalSocial.healthProblemToString, "Health problem", "evaluation") }}
-            <ul>
-                {% for key, value in evalSocial.healthProblemsType %}
-                    {% if attribute(evalSocial, key) %}
-                        <li>{{ value }}</li>
-                    {% endif %}
-                {% endfor %}									 
-            </ul>
-        {% endif %}
+        {{ view_p.get(evalSocial.healthProblemToString ~ (evalSocial.healthProblemsType ? 
+            " (" ~ evalSocial.healthProblemsType|join(", ") ~ ")"), "Health problem", "evaluation") }}        
         {{ view_p.get(evalSocial.medicalFollowUp == YES ? evalSocial.medicalFollowUpToString, "Medical follow up", "evaluation") }}
         {{ view_p.get(evalSocial.homeCareSupport == YES ? evalSocial.homeCareSupportToString ~ (evalSocial.homeCareSupportType ? " - " 
             ~ evalSocial.homeCareSupportTypeToString), "Home care support", "evaluation") }}

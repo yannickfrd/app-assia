@@ -178,7 +178,7 @@ class EvalHousingGroupType extends AbstractType
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
-            ->add('domiciliationComment') // aka domiciliationLocation
+            ->add('domiciliationComment')
             ->add('startDomiciliationDate', DateType::class, [
                 'widget' => 'single_text',
                 'required' => false,
@@ -208,7 +208,7 @@ class EvalHousingGroupType extends AbstractType
                     'readonly' => true,
                 ],
             ])
-            ->add('domiciliationDept', null, [
+            ->add('domiciliationZipcode', null, [
                 'attr' => [
                     'class' => 'js-zipcode',
                     'readonly' => true,

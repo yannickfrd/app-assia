@@ -73,7 +73,7 @@
                 </div>
             {% endif %}
             <div class="row">
-                    {{ evalBudget.resources == YES and evalBudget.resourcesAmt > 0 ? '' : 
+                    {{ evalBudget.resources == YES and evalBudget.resourcesAmt > 0 ? "" : 
                         view_div.get(evalBudget.resourcesToString, "Resources", "evaluation") }}
                     {# {{ evalBudget.charges == YES and evalBudget.chargesAmt > 0 ? '' : 
                         view_div.get(evalBudget.chargesToString, "Charges", "evaluation") }} #}
@@ -89,15 +89,15 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for key, value in evalBudget.resourcesType %}
+                                {% for key, value in constant("RESOURCES_TYPE", evalBudget) %}
                                     {% if attribute(evalBudget, key) %}
-                                    <tr>
-                                        <td scope="row">{% if not loop.last %}{{ value }}{% else %}
-                                            {{ attribute(evalBudget, key ~ 'Precision') ? attribute(evalBudget, key ~ 'Precision') : 
-                                                "Autre(s) ressource(s)" }}{% endif %}</td>
-                                            {% set amt = attribute(evalBudget, key ~ 'Amt') %}
-                                        <td class="text-right">{{ amt > 0 ? amt|price }}</td>
-                                    </tr>
+                                        <tr>
+                                            <td scope="row">{% if not loop.last %}{{ value }}{% else %}
+                                                {{ attribute(evalBudget, key ~ 'Precision') ? attribute(evalBudget, key ~ 'Precision') : 
+                                                    "Autre(s) ressource(s)" }}{% endif %}</td>
+                                                {% set amt = attribute(evalBudget, key ~ 'Amt') %}
+                                            <td class="text-right">{{ amt > 0 ? amt|price }}</td>
+                                        </tr>
                                     {% endif %}
                                 {% endfor %}
                             </tbody>
@@ -133,14 +133,14 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for key, value in evalBudget.chargesType %}
+                                {% for key, value in constant("CHARGES_TYPE", evalBudget) %}
                                     {% if attribute(evalBudget, key) %}
-                                    <tr>
-                                        <td scope="row">{% if not loop.last %}{{ value }}{% else %}
-                                            {{ attribute(evalBudget, key ~ 'Precision') ? attribute(evalBudget, key ~ 'Precision') : 
-                                                "Autre(s) charge(s)" }}{% endif %}</td>
-                                        <td class="text-right">{{ attribute(evalBudget, key ~ 'Amt')|price }}</td>
-                                    </tr>
+                                        <tr>
+                                            <td scope="row">{% if not loop.last %}{{ value }}{% else %}
+                                                {{ attribute(evalBudget, key ~ 'Precision') ? attribute(evalBudget, key ~ 'Precision') : 
+                                                    "Autre(s) charge(s)" }}{% endif %}</td>
+                                            <td class="text-right">{{ attribute(evalBudget, key ~ 'Amt')|price }}</td>
+                                        </tr>
                                     {% endif %}
                                 {% endfor %}
                             </tbody>
@@ -166,18 +166,8 @@
             </div>
             {% if evalBudget.debts %}
                 <div class="row mb-2">
-                    {{ view_div.get(evalBudget.debtsToString, "Debts", "evaluation") }}
-                    {% if evalBudget.debts == YES %}
-                        <div class="col-md-6">
-                            <ul class="mb-0">
-                                {% for key, value in evalBudget.debtsType %}
-                                    {% if attribute(evalBudget, key) %}
-                                        <li>{{ value }}</li>
-                                    {% endif %}
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    {% endif %}
+                    {{ view_div.get(evalBudget.debtsToString ~ (evalBudget.debtsType ? 
+                        " (" ~ evalBudget.debtsType|join(", ")|lower ~ ")"), "Debts", "evaluation") }}
                 </div>
                 <div class="row mb-2">
                     {{ view_div.get(evalBudget.debtComment, "Debt comment", "evaluation") }}

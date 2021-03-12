@@ -1,6 +1,7 @@
 import DisplayFields from "../utils/displayFields"
 import ValidationForm from "../utils/validationForm"
 import SelectType from '../utils/selectType'
+import SearchLocation from '../utils/searchLocation'
 
 /**
  * Evaluation sociale.
@@ -133,6 +134,7 @@ export default class evaluation {
         new DisplayFields(prefix, "domiciliation", [1])
         this.editElt("", "_evalHousingGroup_hsgHelps", "d-table-row")
         this.selectTrElts("eval_housing", "evalHousingGroup", "", "hsgHelps")
+        new SearchLocation('domiciliation_location')
     }
 
     /**
@@ -165,6 +167,8 @@ export default class evaluation {
             new DisplayFields(prefix, i + "_evalFamilyPerson_unbornChild", [1])
             new DisplayFields(prefix, i + "_evalFamilyPerson_protectiveMeasure", [1, 3])
             new DisplayFields(prefix, i + "_evalFamilyPerson_childcareOrSchool", [1])
+            
+            new SearchLocation("school_location_" + i)
         })
     }
 

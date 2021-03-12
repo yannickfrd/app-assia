@@ -4,6 +4,7 @@ namespace App\Entity\Evaluation;
 
 use App\Form\Utils\Choices;
 use Doctrine\ORM\Mapping as ORM;
+use SebastianBergmann\CodeCoverage\Report\Xml\Method;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
@@ -32,9 +33,9 @@ class EvalSocialPerson
     ];
 
     public const HEALTH_PROBLEMS_TYPE = [
-        'physicalHealthProblem' => 'Problématique de santé physique',
-        'mentalHealthProblem' => 'Problématique de santé mentale',
-        'addictionProblem' => 'Problématique d\'addiction',
+        'physicalHealthProblem' => 'Santé physique',
+        'mentalHealthProblem' => 'Santé mentale',
+        'addictionProblem' => 'Addiction(s)',
         'reducedMobility' => 'Personne à mobilité réduite',
         'wheelchair' => 'Personne en fauteuil roulant',
     ];
@@ -338,7 +339,16 @@ class EvalSocialPerson
 
     public function getHealthProblemsType(): array
     {
-        return self::HEALTH_PROBLEMS_TYPE;
+        $array = [];
+
+        foreach (self::HEALTH_PROBLEMS_TYPE as $key => $value) {
+            $method = 'get'.ucfirst($key);
+            if (Choices::YES === $this->$method()) {
+                $array[] = $value;
+            }
+        }
+
+        return $array;
     }
 
     public function getPhysicalHealthProblem(): ?int

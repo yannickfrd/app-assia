@@ -77,17 +77,15 @@ class EvalProfPerson
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $schoolLevel;
-
-    /**
-     * @ORM\Column(type="smallint", nullable=true)
-     */
-    private $profExperience;
-
-    /**
-     * @ORM\Column(type="smallint", nullable=true)
-     */
     private $profStatus;
+
+    /** @Groups("export") */
+    private $profStatusToString;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $jobCenterId;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -99,6 +97,9 @@ class EvalProfPerson
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $contractType;
+
+    /** @Groups("export") */
+    private $contractTypeToString;
 
     /**
      * @ORM\Column(type="date", nullable=true)
@@ -112,7 +113,6 @@ class EvalProfPerson
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
-     * @Groups("export")
      */
     private $nbWorkingHours;
 
@@ -136,6 +136,9 @@ class EvalProfPerson
      */
     private $transportMeansType;
 
+    /** @Groups("export") */
+    private $transportMeansTypeToString;
+
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
@@ -146,20 +149,34 @@ class EvalProfPerson
      */
     private $rqth;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $commentEvalProf;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $jobCenterId;
+    /** @Groups("export") */
+    private $rqthToString;
 
     /**
      * @ORM\Column(type="date", nullable=true)
      */
     private $endRqthDate;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $schoolLevel;
+
+    /** @Groups("export") */
+    private $schoolLevelToString;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $profExperience;
+
+    /** @Groups("export") */
+    private $profExperienceToString;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $commentEvalProf;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvaluationPerson", inversedBy="evalProfPerson", cascade={"persist", "remove"})
@@ -172,54 +189,11 @@ class EvalProfPerson
         return $this->id;
     }
 
-    public function getSchoolLevel(): ?int
-    {
-        return $this->schoolLevel;
-    }
-
-    /**
-     * @Groups("export")
-     */
-    public function getSchoolLevelToString(): ?string
-    {
-        return $this->schoolLevel ? self::SCHOOL_LEVEL[$this->schoolLevel] : null;
-    }
-
-    public function setSchoolLevel(?int $schoolLevel): self
-    {
-        $this->schoolLevel = $schoolLevel;
-
-        return $this;
-    }
-
-    public function getProfExperience(): ?int
-    {
-        return $this->profExperience;
-    }
-
-    /**
-     * @Groups("export")
-     */
-    public function getProfExperienceToString(): ?string
-    {
-        return $this->profExperience ? self::PROF_EXPERIENCE[$this->profExperience] : null;
-    }
-
-    public function setProfExperience(?int $profExperience): self
-    {
-        $this->profExperience = $profExperience;
-
-        return $this;
-    }
-
     public function getProfStatus(): ?int
     {
         return $this->profStatus;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getProfStatusToString(): ?string
     {
         return $this->profStatus ? self::PROF_STATUS[$this->profStatus] : null;
@@ -244,14 +218,23 @@ class EvalProfPerson
         return $this;
     }
 
+    public function getJobCenterId(): ?string
+    {
+        return $this->jobCenterId;
+    }
+
+    public function setJobCenterId(?string $jobCenterId): self
+    {
+        $this->jobCenterId = $jobCenterId;
+
+        return $this;
+    }
+
     public function getContractType(): ?int
     {
         return $this->contractType;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getContractTypeToString(): ?string
     {
         return $this->contractType ? self::CONTRACT_TYPE[$this->contractType] : null;
@@ -341,9 +324,6 @@ class EvalProfPerson
         return $this->transportMeansType;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getTransportMeansTypeToString(): ?string
     {
         return $this->transportMeansType ? self::TRANSFORT_MEANS[$this->transportMeansType] : null;
@@ -373,9 +353,6 @@ class EvalProfPerson
         return $this->rqth;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getRqthToString(): ?string
     {
         return $this->rqth ? Choices::YES_NO_IN_PROGRESS[$this->rqth] : null;
@@ -388,30 +365,6 @@ class EvalProfPerson
         return $this;
     }
 
-    public function getCommentEvalProf(): ?string
-    {
-        return $this->commentEvalProf;
-    }
-
-    public function setCommentEvalProf(?string $commentEvalProf): self
-    {
-        $this->commentEvalProf = $commentEvalProf;
-
-        return $this;
-    }
-
-    public function getJobCenterId(): ?string
-    {
-        return $this->jobCenterId;
-    }
-
-    public function setJobCenterId(?string $jobCenterId): self
-    {
-        $this->jobCenterId = $jobCenterId;
-
-        return $this;
-    }
-
     public function getEndRqthDate(): ?\DateTimeInterface
     {
         return $this->endRqthDate;
@@ -420,6 +373,52 @@ class EvalProfPerson
     public function setEndRqthDate(?\DateTimeInterface $endRqthDate): self
     {
         $this->endRqthDate = $endRqthDate;
+
+        return $this;
+    }
+
+    public function getSchoolLevel(): ?int
+    {
+        return $this->schoolLevel;
+    }
+
+    public function getSchoolLevelToString(): ?string
+    {
+        return $this->schoolLevel ? self::SCHOOL_LEVEL[$this->schoolLevel] : null;
+    }
+
+    public function setSchoolLevel(?int $schoolLevel): self
+    {
+        $this->schoolLevel = $schoolLevel;
+
+        return $this;
+    }
+
+    public function getProfExperience(): ?int
+    {
+        return $this->profExperience;
+    }
+
+    public function getProfExperienceToString(): ?string
+    {
+        return $this->profExperience ? self::PROF_EXPERIENCE[$this->profExperience] : null;
+    }
+
+    public function setProfExperience(?int $profExperience): self
+    {
+        $this->profExperience = $profExperience;
+
+        return $this;
+    }
+
+    public function getCommentEvalProf(): ?string
+    {
+        return $this->commentEvalProf;
+    }
+
+    public function setCommentEvalProf(?string $commentEvalProf): self
+    {
+        $this->commentEvalProf = $commentEvalProf;
 
         return $this;
     }

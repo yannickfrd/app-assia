@@ -15,16 +15,6 @@ class EvalProfPersonType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('schoolLevel', ChoiceType::class, [
-                'choices' => Choices::getChoices(EvalProfPerson::SCHOOL_LEVEL),
-                'placeholder' => 'placeholder.select',
-                'required' => false,
-            ])
-            ->add('profExperience', ChoiceType::class, [
-                'choices' => Choices::getChoices(EvalProfPerson::PROF_EXPERIENCE),
-                'placeholder' => 'placeholder.select',
-                'required' => false,
-            ])
             ->add('profStatus', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalProfPerson::PROF_STATUS),
                 'attr' => [
@@ -70,6 +60,16 @@ class EvalProfPersonType extends AbstractType
             ])
             ->add('endRqthDate', DateType::class, [
                 'widget' => 'single_text',
+                'required' => false,
+            ])
+            ->add('schoolLevel', ChoiceType::class, [
+                'choices' => Choices::getChoices(EvalProfPerson::SCHOOL_LEVEL),
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
+            ->add('profExperience', ChoiceType::class, [
+                'choices' => Choices::getChoices(EvalProfPerson::PROF_EXPERIENCE),
+                'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('commentEvalProf', null, [

@@ -385,11 +385,6 @@ class EvalBudgetPerson
         return $this->id;
     }
 
-    public function getResourcesType(): array
-    {
-        return self::RESOURCES_TYPE;
-    }
-
     public function getIncomeTax(): ?int
     {
         return $this->incomeTax;
@@ -453,7 +448,20 @@ class EvalBudgetPerson
 
     public function getChargesType(): array
     {
-        return self::CHARGES_TYPE;
+        $array = [];
+
+        foreach (EvalBudgetPerson::CHARGES_TYPE as $key => $value) {
+                $method = 'get'.ucfirst($key);
+            if (Choices::YES === $this->$method()) {
+                $array[] = $value;
+            }
+        }
+        
+        if ($this->getChargeOtherPrecision()) {
+            $array[] = $this->getChargeOtherPrecision();
+        }
+
+        return $array;
     }
 
     /**
@@ -893,7 +901,20 @@ class EvalBudgetPerson
 
     public function getDebtsType(): array
     {
-        return self::DEBTS_TYPE;
+        $array = [];
+
+        foreach (EvalBudgetPerson::DEBTS_TYPE as $key => $value) {
+            $method = 'get'.ucfirst($key);
+            if (Choices::YES === $this->$method()) {
+                $array[] = $value;
+            }
+        }
+        
+        if ($this->getDebtOtherPrecision()) {
+            $array[] = $this->getDebtOtherPrecision();
+        }
+
+        return $array;
     }
 
     /**

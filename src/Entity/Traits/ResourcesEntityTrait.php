@@ -841,4 +841,22 @@ trait ResourcesEntityTrait
 
         return $this;
     }
+
+    public function getResourcesType(): array
+    {
+        $array = [];
+
+        foreach (EvalBudgetPerson::RESOURCES_TYPE as $key => $value) {
+                $method = 'get'.ucfirst($key);
+            if (Choices::YES === $this->$method()) {
+                $array[] = $value;
+            }
+        }
+        
+        if ($this->getRessourceOtherPrecision()) {
+            $array[] = $this->getRessourceOtherPrecision();
+        }
+
+        return $array;
+    }
 }

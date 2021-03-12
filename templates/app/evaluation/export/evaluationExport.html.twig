@@ -50,7 +50,7 @@
 
             {% if evalHousing and evalHousing.domiciliation == YES and support.address != evalHousing.domiciliationAddress %}
                 {{ view_p.get((evalHousing.domiciliationComment ? evalHousing.domiciliationComment ~ " - ")  ~ evalHousing.domiciliationAddress ~ (evalHousing.domiciliationCity ? " - " ~ 
-                    evalHousing.domiciliationDept ~ " " ~ evalHousing.domiciliationCity), "Domiciliation address", "evaluation") }}
+                    evalHousing.domiciliationZipcode ~ " " ~ evalHousing.domiciliationCity), "Domiciliation address", "evaluation") }}
                 {{ view_p.get(evalHousing.endDomiciliationDate ? evalHousing.endDomiciliationDate|date("d/m/Y"), "End domiciliation date", "evaluation") }}
             {% endif %}
 
