@@ -21,6 +21,8 @@ class PlaceGroup
     use CreatedUpdatedEntityTrait;
     use SoftDeleteableEntity;
 
+    public const END_REASON_SUPPORT_ENDED = 1;
+
     public const END_REASON = [
         1 => 'Fin du suivi',
         2 => 'Changement de logement/hébergement',

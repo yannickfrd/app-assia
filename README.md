@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.20.1 10/03/2021
+2.21.0 12/03/2021
 
 # Développeur
 Romain MADELAINE
@@ -12,6 +12,14 @@ https://github.com/RomMad/esperer95.app
 
 # Connection à la base démo
 https://demo.esperer95.app
+
+## Version 2.21.0 - 12/03/2021
+- Add fields 'schoolAddress', 'schoolCity' and 'schoolZipcode' in EvalFamilyPerson;
+- Add var 'nbChildrenUnder3years' in SupportGroup + create command to update this var;
+- Factorisation evaluation;
+- Fix error with mailer in test env;
+- Fix error 'NbDays' method in Contribution + fix problem to export PDF when resources = 0; 
+- Factorisation SupportController and create new subscribers;
 
 ## Version 2.20.1 - 10/03/2021
 - Fix error in SupportDuplicator when 'lastEvaluationPerson' is null;

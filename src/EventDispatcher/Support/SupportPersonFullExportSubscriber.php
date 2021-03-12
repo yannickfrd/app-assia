@@ -19,7 +19,7 @@ class SupportPersonFullExportSubscriber implements EventSubscriberInterface
         SupportPersonRepository $repoSupportPerson,
         SupportPersonFullExport $supportPersonFullExport,
         ExportManager $exportManager
-        ) {
+    ) {
         $this->repoSupportPerson = $repoSupportPerson;
         $this->supportPersonFullExport = $supportPersonFullExport;
         $this->exportManager = $exportManager;

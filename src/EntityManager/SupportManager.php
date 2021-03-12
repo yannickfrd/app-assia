@@ -5,11 +5,9 @@ namespace App\EntityManager;
 use App\Entity\Evaluation\EvaluationGroup;
 use App\Entity\Evaluation\EvaluationPerson;
 use App\Entity\Organization\Service;
-use App\Entity\Organization\User;
 use App\Entity\People\PeopleGroup;
 use App\Entity\People\Person;
 use App\Entity\People\RolePerson;
-use App\Entity\Support\PlaceGroup;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Support\SupportPerson;
 use App\Form\Model\Support\SupportSearch;
@@ -95,13 +93,6 @@ class SupportManager
             $supportGroup->addSupportPerson($this->createSupportPerson($supportGroup, $rolePerson));
         }
 
-        $this->updateNbPeople($supportGroup);
-        $this->checkValidHead($supportGroup);
-
-        $this->manager->flush();
-
-        $this->discache($supportGroup);
-
         return true;
     }
 
@@ -131,78 +122,6 @@ class SupportManager
         $this->manager->persist($supportPerson);
 
         return $supportPerson;
-    }
-
-    /**
-     * Vérifie la validité du demandeur principal.
-     */
-    public function checkValidHead(SupportGroup $supportGroup): void
-    {
-        $nbHeads = 0;
-        $maxAge = 0;
-        $minorHead = false;
-
-        foreach ($supportGroup->getSupportPeople() as $supportPerson) {
-            if (null === $supportPerson->getPerson()) {
-                continue;
-            }
-
-            $age = $supportPerson->getPerson()->getAge();
-
-            if ($age > $maxAge) {
-                $maxAge = $age;
-            }
-
-            if (true === $supportPerson->getHead()) {
-                ++$nbHeads;
-                if ($age < 18) {
-                    $minorHead = true;
-                    $this->addFlash('warning', 'Le demandeur principal a été automatiquement modifié, car il ne peut pas être mineur.');
-                }
-            }
-        }
-
-        if (1 != $nbHeads || true === $minorHead) {
-            foreach ($supportGroup->getSupportPeople() as $supportPerson) {
-                if (null === $supportPerson->getPerson()) {
-                    continue;
-                }
-
-                $supportPerson->setHead(false);
-
-                if ($supportPerson->getPerson()->getAge() === $maxAge) {
-                    $supportPerson->setHead(true);
-                }
-            }
-        }
-    }
-
-    /**
-     * Met à jour le suivi social du groupe.
-     */
-    public function update(SupportGroup $supportGroup): void
-    {
-        $supportGroup->setUpdatedAt(new \DateTime());
-        $serviceId = $supportGroup->getService()->getId();
-
-        // Vérifie le service du suivi
-        if (Service::SERVICE_AVDL_ID === $serviceId) {
-            $supportGroup = (new AvdlService())->updateSupportGroup($supportGroup);
-        }
-        if (Service::SERVICE_PASH_ID === $serviceId) {
-            $supportGroup = (new HotelSupportService())->updateSupportGroup($supportGroup);
-        }
-
-        $this->updateSupportPeople($supportGroup);
-        $this->updatePlaceGroup($supportGroup);
-        $this->updateNbPeople($supportGroup);
-        $this->checkValidHead($supportGroup);
-
-        $this->manager->flush();
-
-        $this->discache($supportGroup);
-
-        $this->addFlash('success', 'Le suivi social est mis à jour.');
     }
 
     /**
@@ -262,23 +181,6 @@ class SupportManager
     }
 
     /**
-     * Vide le cache du suivi social et des indicateurs du service.
-     */
-    public function discache(SupportGroup $supportGroup): bool
-    {
-        if ($supportGroup->getReferent()) {
-            $this->cache->deleteItem(User::CACHE_USER_SUPPORTS_KEY.$supportGroup->getReferent()->getId());
-        }
-
-        return $this->cache->deleteItems([
-            PeopleGroup::CACHE_GROUP_SUPPORTS_KEY.$supportGroup->getPeopleGroup()->getId(),
-            SupportGroup::CACHE_FULLSUPPORT_KEY.$supportGroup->getId(),
-            EvaluationGroup::CACHE_EVALUATION_KEY.$supportGroup->getId(),
-            Service::CACHE_INDICATORS_KEY.$supportGroup->getService()->getId(),
-        ]);
-    }
-
-    /**
      * Initialise l'évaluation sociale.
      */
     protected function initEvaluation(EvaluationGroup $evaluationGroup, NormalizerInterface $normalizer): void
@@ -333,101 +235,6 @@ class SupportManager
     }
 
     /**
-     * Met à jour les suivis sociales individuelles des personnes.
-     */
-    protected function updateSupportPeople(SupportGroup $supportGroup): void
-    {
-        $nbPeople = $supportGroup->getSupportPeople()->count();
-
-        foreach ($supportGroup->getSupportPeople() as $supportPerson) {
-            // Si c'est une personne seule ou si la date de début de suivi est vide, copie la date de début de suivi.
-            if (1 === $nbPeople || null === $supportPerson->getStartDate()) {
-                $supportPerson->setStartDate($supportGroup->getStartDate());
-            }
-            if (1 === $nbPeople || null === $supportPerson->getEndDate() || null === $supportPerson->getEndStatus()) {
-                $supportPerson
-                    ->setStatus($supportGroup->getStatus())
-                    ->setEndDate($supportGroup->getEndDate())
-                    ->setEndStatus($supportGroup->getEndStatus())
-                    ->setEndStatusComment($supportGroup->getEndStatusComment());
-            }
-            if ($supportPerson->getEndDate()) {
-                $supportPerson->setStatus(SupportGroup::STATUS_ENDED);
-            }
-            if (null === $supportPerson->getStatus() && $supportPerson->getEndDate()) {
-                $supportPerson->setStatus($supportGroup->getStatus());
-            }
-            if (null === $supportPerson->getEndStatus() && $supportPerson->getEndDate()) {
-                $supportPerson->setEndStatus($supportGroup->getEndStatus());
-            }
-            if (null === $supportPerson->getEndStatusComment() && $supportPerson->getEndDate()) {
-                $supportPerson->setEndStatusComment($supportGroup->getEndStatusComment());
-            }
-
-            // Vérifie si la date de suivi n'est pas antérieure à la date de naissance.
-            $person = $supportPerson->getPerson();
-            if ($supportPerson->getStartDate() && $person && $supportPerson->getStartDate() < $person->getBirthdate()) {
-                // Si c'est le cas, on prend en compte la date de naissance
-                $supportPerson->setStartDate($person->getBirthdate());
-                // $this->addFlash('light', $supportPerson->getPerson()->getFullname().' : la date de début de suivi retenue est sa date de naissance.');
-            }
-        }
-    }
-
-    /**
-     * Met à jour le nombre de personnes du suivi.
-     */
-    protected function updateNbPeople(SupportGroup $supportGroup): void
-    {
-        $nbPeople = 0;
-
-        foreach ($supportGroup->getSupportPeople() as $supportPerson) {
-            if ($supportPerson->getEndDate() === $supportGroup->getEndDate()) {
-                ++$nbPeople;
-            }
-        }
-
-        $supportGroup->setNbPeople($nbPeople);
-    }
-
-    /**
-     * Met à jour la prise en charge du groupe.
-     */
-    protected function updatePlaceGroup(SupportGroup $supportGroup): void
-    {
-        // Si le statut du suivi est égal à terminé et si  "Fin d'hébergement" coché, alors met à jour la prise en charge
-        if (4 === $supportGroup->getStatus() && $supportGroup->getEndPlace()) {
-            foreach ($supportGroup->getPlaceGroups() as $placeGroup) {
-                if (!$placeGroup->getEndDate()) {
-                    null === $placeGroup->getEndDate() ? $placeGroup->setEndDate($supportGroup->getEndDate()) : null;
-                    null === $placeGroup->getEndReason() ? $placeGroup->setEndReason(1) : null;
-
-                    $this->updatePlacePeople($placeGroup);
-                }
-            }
-        }
-    }
-
-    /**
-     * Met à jour la prise en charge des personnes du groupe.
-     */
-    protected function updatePlacePeople(PlaceGroup $placeGroup): void
-    {
-        foreach ($placeGroup->getPlacePeople() as $placePerson) {
-            $supportPerson = $placePerson->getSupportPerson();
-            $person = $supportPerson->getPerson();
-
-            null === $placePerson->getEndDate() ? $placePerson->setEndDate($supportPerson->getEndDate()) : null;
-            null === $placePerson->getEndReason() ? $placePerson->setEndReason(1) : null;
-
-            if ($supportPerson->getStartDate() && $supportPerson->getStartDate() < $person->getBirthdate()) {
-                $supportPerson->setStartDate($person->getBirthdate());
-                $this->addFlash('warning', 'La date de début d\'hébergement ne peut pas être antérieure à la date de naissance de la personne ('.$placePerson->getPerson()->getFullname().').');
-            }
-        }
-    }
-
-    /**
      * Ajoute les personnes au suivi.
      */
     public function addPeopleInSupport(SupportGroup $supportGroup, EvaluationGroupRepository $repoEvaluation): bool
@@ -454,10 +261,6 @@ class SupportManager
                 $addPeople = true;
             }
         }
-
-        $this->updateNbPeople($supportGroup);
-
-        $this->manager->flush();
 
         return $addPeople;
     }

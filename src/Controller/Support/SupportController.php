@@ -3,13 +3,11 @@
 namespace App\Controller\Support;
 
 use App\Controller\Traits\ErrorMessageTrait;
-use App\Entity\Evaluation\EvaluationGroup;
 use App\Entity\Organization\User;
 use App\Entity\People\PeopleGroup;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Support\SupportPerson;
 use App\EntityManager\SupportCollections;
-use App\EntityManager\SupportDuplicator;
 use App\EntityManager\SupportManager;
 use App\Event\Support\SupportGroupEvent;
 use App\Form\Model\Support\SupportSearch;
@@ -93,9 +91,15 @@ class SupportController extends AbstractController
         if ($form->isSubmitted() && $form->isValid() && $supportGroup->getAgreement()) {
             // Si pas de suivi en cours, en crée un nouveau, sinon ne fait rien
             if ($supportManager->create($peopleGroup, $supportGroup)) {
+                $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support_group.before_create');
+
+                $this->manager->flush();
+
                 $this->addFlash('success', 'Le suivi social est créé.');
 
-                if ($form->get('cloneSupport')->getViewData() != null) {
+                $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support_group.after_create');
+
+                if (null != $form->get('cloneSupport')->getViewData()) {
                     $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support_group.duplicator');
                 }
 
@@ -162,19 +166,23 @@ class SupportController extends AbstractController
      *
      * @Route("/support/{id}/edit", name="support_edit", methods="GET|POST")
      */
-    public function editSupportGroup(int $id, Request $request, SupportGroupRepository $repoSupportGroup, SupportManager $supportManager): Response
+    public function editSupportGroup(int $id, Request $request, SupportGroupRepository $repoSupportGroup, EventDispatcherInterface $dispatcher): Response
     {
         $supportGroup = $repoSupportGroup->findFullSupportById($id);
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
         $form = ($this->createForm(SupportGroupType::class, $supportGroup))
-        ->handleRequest($request);
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $supportManager->update($supportGroup);
+            $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support_group.before_update');
 
-            return $this->redirectToRoute('support_view', ['id' => $supportGroup->getId()]);
+            $this->manager->flush();
+
+            $this->addFlash('success', 'Le suivi social est mis à jour.');
+
+            $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support_group.after_update');
         }
 
         $formCoeff = ($this->createForm(SupportCoefficientType::class, $supportGroup))
@@ -203,7 +211,7 @@ class SupportController extends AbstractController
     {
         $supportGroup = $supportManager->getFullSupportGroup($id);
 
-        $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support_group.check');
+        $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support_group.view');
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
@@ -242,17 +250,25 @@ class SupportController extends AbstractController
     }
 
     /**
-     * Ajout de personnes au suivi.
+     * Ajout de nouvelles personnes au suivi.
      *
      * @Route("/support/{id}/add_people", name="support_add_people", methods="GET")
      */
-    public function addPeopleInSupport(SupportGroup $supportGroup, SupportManager $supportManager, EvaluationGroupRepository $repoEvaluationGroup): Response
-    {
+    public function addPeopleInSupport(
+        SupportGroup $supportGroup,
+        SupportManager $supportManager,
+        EvaluationGroupRepository $repoEvaluationGroup,
+        EventDispatcherInterface $dispatcher
+    ): Response {
         if (!$supportManager->addPeopleInSupport($supportGroup, $repoEvaluationGroup)) {
             $this->addFlash('warning', "Aucune personne n'a été ajoutée au suivi.");
         }
 
-        $this->discache($supportGroup);
+        $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support_group.before_update');
+
+        $this->manager->flush();
+
+        $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support_group.after_update');
 
         return $this->redirectToRoute('support_edit', [
             'id' => $supportGroup->getId(),
@@ -265,40 +281,48 @@ class SupportController extends AbstractController
      * @Route("/supportGroup/{id}/remove-{support_pers_id}/{_token}", name="remove_support_pers", methods="GET")
      * @ParamConverter("supportPerson", options={"id" = "support_pers_id"})
      */
-    public function removeSupportPerson(SupportGroup $supportGroup, string $_token, SupportPerson $supportPerson): Response
+    public function removeSupportPerson(SupportGroup $supportGroup, string $_token, SupportPerson $supportPerson, EventDispatcherInterface $dispatcher): Response
     {
         // Vérifie si le token est valide avant de retirer la personne du suivi social
-        if ($this->isCsrfTokenValid('remove'.$supportPerson->getId(), $_token)) {
-            // Vérifie si la personne est le demandeur principal
-            if ($supportPerson->getHead()) {
-                return $this->json([
-                    'code' => 200,
-                    'action' => null,
-                    'alert' => 'danger',
-                    'msg' => 'Le demandeur principal ne peut pas être retiré du suivi.',
-                    'data' => null,
-                ], 200);
-            }
+        if (!$this->isCsrfTokenValid('remove'.$supportPerson->getId(), $_token)) {
+            return $this->getErrorMessage();
+        }
+        // Vérifie si la personne est le demandeur principal
+        if ($supportPerson->getHead()) {
+            return $this->json([
+                'code' => 200,
+                'action' => null,
+                'alert' => 'danger',
+                'msg' => 'Le demandeur principal ne peut pas être retiré du suivi.',
+                'data' => null,
+            ], 200);
+        }
 
-            try {
-                $supportGroup->removeSupportPerson($supportPerson);
-                $supportGroup->setNbPeople($supportGroup->getSupportPeople()->count());
-                $this->manager->flush();
+        try {
+            $supportGroup->removeSupportPerson($supportPerson);
 
-                $this->discache($supportGroup);
+            $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support_group.before_update');
 
-                return $this->json([
+            $this->manager->flush();
+
+            $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support_group.after_update');
+
+            return $this->json([
                 'code' => 200,
                 'action' => 'delete',
                 'alert' => 'warning',
                 'msg' => $supportPerson->getPerson()->getFullname().' est retiré'.Grammar::gender($supportPerson->getPerson()->getGender()).' du suivi social.',
                 'data' => null,
-            ], 200);
-            } catch (\Throwable $th) {
-            }
+            ]);
+        } catch (\Exception $e) {
+            return $this->json([
+                'code' => 200,
+                'action' => 'delete',
+                'alert' => 'warning',
+                'msg' => $supportPerson->getPerson()->getFullname().' est retiré'.Grammar::gender($supportPerson->getPerson()->getGender()).' du suivi social.',
+                'data' => null,
+            ]);
         }
-
-        return $this->getErrorMessage();
     }
 
     /**
@@ -353,41 +377,18 @@ class SupportController extends AbstractController
      * @Route("/support/{id}/clone", name="support_clone", methods="GET")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
-    public function cloneSupport(SupportGroup $supportGroup, SupportDuplicator $supportDuplicator): Response
+    public function cloneSupport(SupportGroup $supportGroup, EventDispatcherInterface $dispatcher): Response
     {
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        if ($supportDuplicator->duplicate($supportGroup)) {
-            $this->manager->flush();
+        $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support_group.duplicator');
 
-            $this->discache($supportGroup);
+        $this->manager->flush();
 
-            $this->addFlash('success', 'Les informations du précédent suivi ont été ajoutées (évaluation sociale, documents...)');
-        } else {
-            $this->addFlash('warning', 'Aucun autre suivi n\'a été trouvé.');
-        }
+        $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support_group.after_update');
 
         return $this->redirectToRoute('support_view', [
             'id' => $supportGroup->getId(),
-        ]);
-    }
-
-    /**
-     * Supprime le cache du suivi social et de l'évaluation sociale.
-     */
-    public function discache(SupportGroup $supportGroup): bool
-    {
-        $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
-        $id = $supportGroup->getId();
-
-        if ($supportGroup->getReferent()) {
-            $cache->deleteItem(User::CACHE_USER_SUPPORTS_KEY.$supportGroup->getReferent()->getId());
-        }
-
-        return $cache->deleteItems([
-            SupportGroup::CACHE_SUPPORT_KEY.$id,
-            SupportGroup::CACHE_FULLSUPPORT_KEY.$id,
-            EvaluationGroup::CACHE_EVALUATION_KEY.$id,
         ]);
     }
 }

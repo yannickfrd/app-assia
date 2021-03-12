@@ -20,7 +20,7 @@ class CheckSupportGroupSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            'support_group.check' => 'checkSupportGroup',
+            'support_group.view' => 'checkSupportGroup',
         ];
     }
 
