@@ -83,6 +83,37 @@ class SupportGroupType extends AbstractType
                 'required' => false,
                 'help' => 'endPlace.help',
             ])
+            ->add('endLocationSearch', null, [
+                'label' => ' ',
+                'attr' => [
+                    'class' => 'js-search',
+                    'placeholder' => 'location.search.address.placeholder',
+                    'autocomplete' => 'off',
+                ],
+                'help' => $attr['searchHelp'] ?? null,
+                'mapped' => false,
+            ])
+            ->add('endLocationAddress', null, [
+                'label' => 'location.address_auto',
+                'attr' => [
+                    'class' => 'js-address',
+                    'readonly' => true,
+                ],
+            ])
+            ->add('endLocationCity', null, [
+                'label' => 'location.city_auto',
+                'attr' => [
+                    'class' => 'js-city',
+                    'readonly' => true,
+                ],
+            ])
+            ->add('endLocationZipcode', null, [
+                'label' => 'location.zipcode_auto',
+                'attr' => [
+                    'class' => 'js-zipcode',
+                    'readonly' => true,
+                ],
+            ])
             ->add('agreement', CheckboxType::class, [
                 'required' => true,
                 'label_attr' => ['class' => 'custom-control-label'],
@@ -168,15 +199,6 @@ class SupportGroupType extends AbstractType
                     'mapped' => false,
                     'required' => false,
                 ])
-                // ->add('placeGroups', CollectionType::class, [
-                //     'entry_type' => PlaceGroupHotelType::class,
-                //     'label' => null,
-                //     'allow_add' => false,
-                //     'allow_delete' => false,
-                //     'delete_empty' => true,
-                //     'attr' => ['serviceId' => $serviceId],
-                //     // 'by_reference' => true,
-                // ])
                 ->add('originRequest', OriginRequestType::class, [
                     'attr' => ['serviceId' => $serviceId],
                 ]);
