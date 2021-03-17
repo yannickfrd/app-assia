@@ -56,8 +56,10 @@ class LoginListener
             ->setConnectionAt(new \DateTime())
             ->setUser($user);
 
-        $this->manager->persist($connection);
-        $this->manager->flush();
+        if ($this->manager->isOpen()) {
+            $this->manager->persist($connection);
+            $this->manager->flush();
+        }
     }
 
     /**
@@ -65,8 +67,8 @@ class LoginListener
      */
     private function addColorServiceInSession(User $user): void
     {
-        if (count($user->getServiceUser()) > 0) {
-            $this->session->set('theme_color', $user->getServiceUser()[0]->getService()->getPole()->getColor());
+        if ($user->getServiceUser()->count() > 0) {
+            $this->session->set('theme_color', $user->getServiceUser()->first()->getService()->getPole()->getColor());
         }
     }
 
@@ -81,7 +83,7 @@ class LoginListener
         foreach ($user->getServiceUser() as $serviceUser) {
             $service = $serviceUser->getService();
             $userServices[$service->getId()] = $service->getName();
-            if ($service->getPlace() === Choices::YES) {
+            if (Choices::YES === $service->getPlace()) {
                 $haveServiceWithPlace = true;
             }
         }
