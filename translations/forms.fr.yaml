@@ -232,7 +232,8 @@ location:
   city_auto: Ville (auto.)
   zipcode_auto: Code postal (auto.)
   search:
-    placeholder: Saisir une adresse ou une ville...
+    address.placeholder: Saisir une adresse ou une ville...
+    city.placeholder: Saisir une ville...
     help: Adresse du logement, hébergement, domiciliation...
 
 ### AVDL
@@ -295,5 +296,4 @@ hotelSupport:
     departmentAnchor: -- Département d'ancrage --
   ssd:
     search: Recherche du SSD orienteur
-    search.placeholder: Saisir une ville
     city: SSD orienteur (auto.)

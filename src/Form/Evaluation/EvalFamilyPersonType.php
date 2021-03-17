@@ -67,17 +67,10 @@ class EvalFamilyPersonType extends AbstractType
                 'label' => ' ',
                 'attr' => [
                     'class' => 'js-search',
-                    'placeholder' => 'location.search.placeholder',
+                    'placeholder' => 'location.search.city.placeholder',
                     'autocomplete' => 'off',
                 ],
                 'mapped' => false,
-            ])
-            ->add('schoolAddress', null, [
-                'label' => 'school.address',
-                'attr' => [
-                    'class' => 'js-address',
-                    'readonly' => true,
-                ],
             ])
             ->add('schoolCity', null, [
                 'label' => 'school.city',

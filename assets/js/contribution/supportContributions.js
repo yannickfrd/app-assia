@@ -779,22 +779,22 @@ export default class SupportContributions {
 
     /**
      * Donne la somme des montants.
-     * @param {*} elts 
+     * @param {HTMLElement} elts 
      */
     getSumAmts(elts) {
-        const array = []
+        // const amounts = []
+        let sumAmts = 0
         elts.forEach(elt => {
-            let value = elt.textContent
-            if (value) {
-                value = value.replace(' ', '').replace(',', '.')
-                array.push(parseFloat(value))
+            let amount = elt.textContent
+            if (amount) {
+                amount = value.replace(' ', '').replace(',', '.')
+                // amounts.push(parseFloat(value))
+                sumAmts += amount
             }
         })
-
-        const sum = array.reduce((a, b) => a + b, 0)
-
-        if (!isNaN(sum)) {
-            return sum
+        // const sumAmts = amounts.reduce((a, b) => a + b, 0)
+        if (!isNaN(sumAmts)) {
+            return sumAmts
         }
         return 'Err.'
     }

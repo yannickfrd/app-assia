@@ -2,11 +2,12 @@ import Ajax from '../utils/ajax'
 import Loader from './loader'
 
 /**
- * Gère la recherche d'une adresse avec l'API adresse.data.gouv.fr
+ * Gère la recherche d'une adresse ou d'une ville avec l'API adresse.data.gouv.fr.
+ * Par défault, la recherche est par adresse complète (locationType = 'address'). Pour recercher seulement une ville : locationType = 'city'
  */
 export default class SearchLocation {
 
-    constructor(containerId, locationType = 'address', codeDepartement = '95', lengthSearch = 3, time = 500, limit = 5, lat = 49.04, lon = 2.04) {
+    constructor(containerId, locationType = 'address', codeDepartement = null, lengthSearch = 3, time = 500, limit = 5, lat = 49.04, lon = 2.04) {
         this.containerElt = document.getElementById(containerId)
         if (this.containerElt) {
             this.loader = new Loader()
@@ -65,20 +66,30 @@ export default class SearchLocation {
      * Compte le nombre de caractères saisis et lance la requête Ajax.
      */
     count() {
-        let valueSearch = this.searchElt.value
-        if (valueSearch.length >= this.lengthSearch) {
+        if (this.searchElt.value.length >= this.lengthSearch) {
             this.loader.on()
-            let valueSearch = this.searchElt.value.replace(' ', '+')
-            const geo = `&lat=${this.lat}&lon=${this.lon}` // Donne une priorité géographique
-
-            let url = 'https://api-adresse.data.gouv.fr/search/?q=' + valueSearch + geo + '&limit=' + this.limit
-
-            if (this.locationType === 'city') {
-                url = 'https://geo.api.gouv.fr/communes?nom=' + valueSearch + '&codeDepartement=' + this.codeDepartement + '&limit=' + this.limit
-            }
-
-            this.ajax.send('GET', url, this.responseAjax.bind(this))
+            this.ajax.send('GET', this.getUrl(), this.responseAjax.bind(this))
         }
+    }
+
+    /**
+     * Donne l'url.
+     * @returns {String}
+     */
+    getUrl() {
+        const valueSearch = this.searchElt.value.replace(' ', '+')
+        const geo = `&lat=${this.lat}&lon=${this.lon}` // Donne une priorité géographique
+        let url = 'https://api-adresse.data.gouv.fr/search/?q='
+       
+        if (this.codeDepartement) {
+            return 'https://geo.api.gouv.fr/communes?nom=' + valueSearch + '&codeDepartement=' + this.codeDepartement + '&limit=' + this.limit
+        }
+        
+        if (this.locationType === 'city') {
+            url = url + valueSearch + '&type=municipality' + '&autocomplete=1' + '&limit=' + this.limit
+        }
+
+        return url + valueSearch + geo + '&limit=' + this.limit
     }
 
     /**
@@ -86,12 +97,10 @@ export default class SearchLocation {
      * @param {Object} data 
      */
     responseAjax(data) {
-
-        if (this.locationType === 'address') {
-            this.results = data.features
-        }
-        if (this.locationType === 'city') {
+        if (this.codeDepartement) {
             this.results = data
+        } else {
+            this.results = data.features
         }
 
         this.resultsSearchElt.innerHTML = ''
@@ -147,15 +156,15 @@ export default class SearchLocation {
      * @param {Array} result 
      */
     getLabel(result) {
-        if (this.locationType === 'city') {
-            return result.nom + ' (' + result.codesPostaux[0] + ')'
+        if (this.codeDepartement) {
+            return `${result.nom} (${result.codesPostaux[0]})`
         }
 
-        let label = result.properties.label
-        if (result.properties.type === 'municipality') {
-            label = label + ' (' + result.properties.context + ')'
+        if (this.locationType === 'city') {
+            return `${result.properties.city} (${result.properties.postcode})`
         }
-        return label
+
+        return `${result.properties.label} (${result.properties.context})`
     }
 
     /**
@@ -167,31 +176,34 @@ export default class SearchLocation {
         this.resultsSearchElt.style.top = styleSeachElt.height
     }
 
-    // Met à jour les champs du formulaire.
+    /**
+     * Met à jour les champs du formulaire.
+     * @param {Number} i 
+     */
     updateLocation(i) {
         const result = this.results[i]
 
-        if (this.locationType === 'city') {
-            this.cityElt.value = result.nom
+        if (this.codeDepartement) {
+            return this.cityElt.value = result.nom
         }
+        this.searchElt.value = result.properties.label
+        this.cityElt.value = result.properties.city
 
-        if (this.locationType === 'address') {
-            this.searchElt.value = result.properties.label
-            if (this.addressElt) {
-                this.cityElt.value = result.properties.city
-                this.addressElt.value = result.properties.name
-                this.zipcodeElt.value = result.properties.postcode
-            }
-            if (this.locationIdElt) {
-                this.locationIdElt.value = result.properties.id
-                this.lonElt.value = result.geometry.coordinates[0]
-                this.latElt.value = result.geometry.coordinates[1]
-            }
+        if (this.zipcodeElt) {
+            this.zipcodeElt.value = result.properties.postcode
+        }
+        if (this.addressElt) {
+            this.addressElt.value = result.properties.name
+        }
+        if (this.locationIdElt) {
+            this.locationIdElt.value = result.properties.id
+            this.lonElt.value = result.geometry.coordinates[0]
+            this.latElt.value = result.geometry.coordinates[1]
         }
     }
 
     /**
-     * Affiche 'Aucun résultat.'
+     * Affiche 'Aucun résultat.'.
      */
     displayNoResult() {
         const spanElt = document.createElement('p')

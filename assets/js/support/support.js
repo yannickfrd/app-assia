@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     new ValidationSupport()
 
     new SearchLocation('support_location')
-    new SearchLocation('ssd_location', 'city')
+    new SearchLocation('ssd_location', 'city', '95')
     new CheckChange('support') // form name
     new AutoSize('textarea')
 })

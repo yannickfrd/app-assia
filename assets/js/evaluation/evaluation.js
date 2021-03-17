@@ -168,7 +168,7 @@ export default class evaluation {
             new DisplayFields(prefix, i + "_evalFamilyPerson_protectiveMeasure", [1, 3])
             new DisplayFields(prefix, i + "_evalFamilyPerson_childcareOrSchool", [1])
             
-            new SearchLocation("school_location_" + i)
+            new SearchLocation("school_location_" + i, 'city')
         })
     }
 
@@ -489,15 +489,16 @@ export default class evaluation {
      * @param {Array} inputElts 
      */
     getSumAmts(inputElts) {
-        const array = []
+        // const amounts = []
+        let sumAmts = 0;
         inputElts.forEach(inputElt => {
             if (inputElt.value) {
-                array.push(parseFloat(inputElt.value))
+                // amounts.push(parseFloat(inputElt.value))
+                sumAmts += parseFloat(inputElt.value)
+
             }
         })
-
-        const sumAmts = array.reduce((a, b) => a + b, 0)
-
+        // const sumAmts = amounts.reduce((a, b) => a + b, 0)
         if (!isNaN(sumAmts)) {
             return sumAmts
         }
@@ -532,14 +533,18 @@ export default class evaluation {
      * @param {String} type 
      */
     updateAmtGroup(type) {
-        const array = []
+        // const amounts = []
+        let sumAmts = 0
         this.amtElts(type).forEach(amountElt => {
             if (amountElt.value) {
-                array.push(parseFloat(amountElt.value))
+                // amounts.push(parseFloat(amountElt.value))
+                sumAmts += parseFloat(amountElt.value)
+
             }
         })
 
-        this.groupAmtElt(type).textContent = array.reduce((a, b) => a + b, 0)
+        // this.groupAmtElt(type).textContent = amounts.reduce((a, b) => a + b, 0)
+        this.groupAmtElt(type).textContent = sumAmts
         this.updateBudgetBalanceAmt()
     }
 

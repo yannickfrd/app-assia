@@ -40,7 +40,7 @@ class HotelSupportType extends AbstractType
                 'label' => 'hotelSupport.ssd.search',
                 'attr' => [
                     'class' => 'js-search',
-                    'placeholder' => 'hotelSupport.ssd.search.placeholder',
+                    'placeholder' => 'location.search.city.placeholder',
                     'autocomplete' => 'off',
                 ],
                 'help' => null,

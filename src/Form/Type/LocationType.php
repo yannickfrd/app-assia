@@ -18,7 +18,7 @@ class LocationType extends AbstractType
                 'label' => $attr['seachLabel'] ?? '',
                 'attr' => [
                     'class' => 'js-search',
-                    'placeholder' => 'location.search.placeholder',
+                    'placeholder' => 'location.search.address.placeholder',
                     'autocomplete' => 'off',
                 ],
                 'help' => $attr['searchHelp'] ?? null,

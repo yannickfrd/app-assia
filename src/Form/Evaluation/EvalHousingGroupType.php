@@ -191,7 +191,7 @@ class EvalHousingGroupType extends AbstractType
                 'label' => ' ',
                 'attr' => [
                     'class' => 'js-search',
-                    'placeholder' => 'location.search.placeholder',
+                    'placeholder' => 'location.search.address.placeholder',
                     'autocomplete' => 'off',
                 ],
                 'mapped' => false,

@@ -302,7 +302,9 @@ Wheelchair: Personne en fauteuil roulant
 evalSocialGroup.comment: Écrire un commentaire relatif à la situation sociale du groupe
 
 location:
-  search.placeholder: Saisir une adresse ou une ville...
+  search:
+    address.placeholder: Saisir une adresse ou une ville...
+    city.placeholder: Saisir une ville...
   department.help: Département ou code postal
 
 ## Vie à l'hôtel

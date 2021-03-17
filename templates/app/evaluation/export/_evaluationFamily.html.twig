@@ -30,10 +30,8 @@
             ~ evalFamily.expDateChildbirth|date("d/m/Y") ~ ")"), "Unborn child", "evaluation") }}
     {% endif %}
     {% if evalPerson.supportPerson.role == ROLE_CHILD %}
-        {% set schoolAddress = evalFamily.schoolCity != evalFamily.schoolAddress ? 
-            evalFamily.schoolAddress ~ ", " ~ evalFamily.schoolCity : evalFamily.schoolCity %}
         {{ view_p.get((evalFamily.childcareOrSchool == YES ? evalFamily.childcareSchoolTypeToString : 
-            evalFamily.childcareOrSchoolToString) ~ (schoolAddress or evalFamily.schoolChildCarePrecision ? " (" ~ schoolAddress 
+            evalFamily.childcareOrSchoolToString) ~ (evalFamily.schoolCity or evalFamily.schoolChildCarePrecision ? " (" ~ evalFamily.schoolCity 
             ~ ( evalFamily.schoolChildCarePrecision ? " - " ~ evalFamily.schoolChildCarePrecision) ~ ")"), "Childcare or school", "evaluation") }}
         {{ view_p.get(evalFamily.childToHostToString, "Child to host", "evaluation") }}
         {{ view_p.get(evalFamily.childDependanceToString, "Child dependance", "evaluation") }}
