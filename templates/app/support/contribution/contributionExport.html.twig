@@ -10,7 +10,7 @@
     {% elseif contribution.type == 2 %}
         au loyer
     {% elseif contribution.type == 10 %}
-        à la  caution
+        à la caution
     {% elseif contribution.type in [30, 31, 32] %}
         à une dette
     {% endif %}
@@ -43,7 +43,7 @@
                 .text-center {text-align: center;}
                 .text-right {text-align: right;}
                 .text-justify {text-align: justify;}
-            </style>        
+            </style>
         {% endblock %}
     </head>
 
@@ -57,7 +57,7 @@
 
             <br/>
 
-            <p class="text-right">À l'intention  de <b>{{ person.gender == 1 ? "Madame" : (person.gender == 2 ? "Monsieur") }} {{ person.fullname }}</b></p>
+            <p class="text-right">À l'intention de <b>{{ person.gender == 1 ? "Madame" : (person.gender == 2 ? "Monsieur") }} {{ person.fullname }}</b></p>
 
             <br/>
 
@@ -69,21 +69,21 @@
 
             <br/>
             <p><b>Objet :
-                {% if contribution.paidAmt > 0 %}Paiement{% elseif contribution.toPayAmt > 0 %}Avis d'échéance{% endif %}  relatif {{ contribution_type }}
+                {% if contribution.paymentDate %}Paiement{% else %}Avis d'échéance{% endif %} relatif {{ contribution_type }}
             </b></p>
 
             <br/>
 
             <p class="text-justify">
-                {% if  contribution.toPayAmt > 0 and contribution.paymentDate == null %}
-                    Nous vous informons que dans le cadre de votre prise en charge, vous devez vous acquitter d'un montant de 
-                    <b>{{ contribution.toPayAmt|price }}</b>
-                {% else %}
+                {% if contribution.paymentDate and contribution.paidAmt > 0 %}
                     Nous vous confirmons la réception de votre règlement de <b>{{ contribution.paidAmt|price }} 
                     ({{ paidAmtToString }} euro{{ contribution.paidAmt > 1 ? "s" }})</b>,
-                    {% if  contribution.toPayAmt and contribution.toPayAmt != contribution.paidAmt %}
+                    {% if contribution.toPayAmt and contribution.toPayAmt != contribution.paidAmt %}
                         pour un montant dû de {{ contribution.toPayAmt|price }}, 
                     {% endif %}
+                {% else %}
+                    Nous vous informons que dans le cadre de votre prise en charge, vous devez vous acquitter d'un montant de 
+                    <b>{{ contribution.toPayAmt|price }}</b>
                 {% endif %}
                 relatif {{ contribution_type }}{# 
                 #}{% if support.city and contribution.type in [1, 2, 10] %}
@@ -111,7 +111,7 @@
                 <p>Montant réglé : {{ contribution.paidAmt|price }}</p>
                 <p>Date de règlement : {{ contribution.paymentDate ? contribution.paymentDate|date("d/m/Y") }}</p>
                 <p>Mode de règlement : {{ contribution.paymentTypeToString }}</p>
-                {% if contribution.stillToPayAmt > 0 %}  
+                {% if contribution.stillToPayAmt > 0 %}
                     <p>Montant restant à payer : {{ contribution.stillToPayAmt|price }}</p>
                 {% endif %}
             {% else %}
