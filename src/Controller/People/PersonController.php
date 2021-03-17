@@ -335,7 +335,7 @@ class PersonController extends AbstractController
 
         return $this->render('app/people/person/listDuplicatedPeople.html.twig', [
             'form' => $form->createView(),
-            'people' => dd($this->repo->findDuplicatedPeople($search)),
+            'people' => $this->repo->findDuplicatedPeople($search),
         ]);
     }
 

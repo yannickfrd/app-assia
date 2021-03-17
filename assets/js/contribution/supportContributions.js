@@ -787,9 +787,8 @@ export default class SupportContributions {
         elts.forEach(elt => {
             let amount = elt.textContent
             if (amount) {
-                amount = value.replace(' ', '').replace(',', '.')
-                // amounts.push(parseFloat(value))
-                sumAmts += amount
+                // amounts.push(parseFloat(amount))
+                sumAmts += parseFloat(amount.replace(' ', '').replace(',', '.'))
             }
         })
         // const sumAmts = amounts.reduce((a, b) => a + b, 0)

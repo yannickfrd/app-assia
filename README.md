@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.21.0 12/03/2021
+2.22.8 17/03/2021
 
 # Développeur
 Romain MADELAINE
@@ -13,9 +13,16 @@ https://github.com/RomMad/esperer95.app
 # Connection à la base démo
 https://demo.esperer95.app
 
-## Version 2.21.0 - 12/03/2021
-
-
+## Version 2.22.8 - 17/03/2021
+- Try to fix error 'The EntityManager is closed' : Add condition 'if EntityManager is open' in LoginListener;
+- Edit contributionExport PDF;
+- Update searchLocation feature + fix problem fix redure method;
+- Add enLocation fields in support (address, city, zipcode);
+- Update exports (add endLocation informations);
+- Fix error var in supportContribution;
+- Update filters in repositories;
+- Create file for footer;
+- Fix error with sql request duplicatedPeople (ONLY_FULL_GROUP_BY);
 
 ## Version 2.21.0 - 12/03/2021
 - Add fields 'schoolAddress', 'schoolCity' and 'schoolZipcode' in EvalFamilyPerson;

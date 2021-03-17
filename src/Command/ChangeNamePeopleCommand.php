@@ -2,14 +2,14 @@
 
 namespace App\Command;
 
-use App\Service\DoctrineTrait;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Stopwatch\Stopwatch;
-use Symfony\Component\Console\Command\Command;
 use App\Repository\Organization\UserRepository;
 use App\Repository\People\PeopleGroupRepository;
+use App\Service\DoctrineTrait;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * Commande pour changer le nom des personnes et des utilisateurs (uniquement en mode développement).
@@ -45,7 +45,7 @@ class ChangeNamePeopleCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        if ($_SERVER['APP_ENV'] != 'dev' || $_SERVER['DB_HOST'] != 'localhost') {
+        if ('dev' != $_SERVER['APP_ENV'] || 'localhost' != $_SERVER['DB_HOST']) {
             $output->writeln("\e[97m\e[41m\n Environnement invalid \e[0m\n");
 
             return 1;
@@ -76,7 +76,7 @@ class ChangeNamePeopleCommand extends Command
 
         $this->stopwatch->stop('change_name');
 
-        $message = "[OK] Change name of people is successfull !\n  ".$nbPeople." personnes modifiées.\n  ".$this->stopwatch->getEvent('change_name')->getDuration().' ms';
+        $message = "[OK] Change name of people is successfull !\n  ".$nbPeople." people modified.\n  ".$this->stopwatch->getEvent('change_name')->getDuration().' ms';
         $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
 
         return 0;

@@ -99,6 +99,8 @@ class SupportPersonExport extends ExportExcel
             'Date fin suivi' => $this->formatDate($supportPerson->getEndDate()),
             'Situation à la fin' => $supportPerson->getEndStatusToString(),
             'Commentaire situation à la fin' => $supportPerson->getEndStatusComment(),
+            'Fin - Ville' => $supportGroup->getEndLocationCity(),
+            'Fin - Code postal' => (string) $supportGroup->getEndLocationZipcode(),
             'Pôle' => $supportGroup->getService()->getPole()->getName(),
             'Service' => $supportGroup->getService()->getName(),
             'Sous-service' => $supportGroup->getSubService() ? $supportGroup->getSubService()->getName() : null,

@@ -41,11 +41,11 @@ class ServiceRepository extends ServiceEntityRepository
 
         if ($search->getName()) {
             $query->andWhere('s.name LIKE :name')
-                ->setParameter('name', $search->getName().'%');
+                ->setParameter('name', '%'.$search->getName().'%');
         }
         if ($search->getPhone()) {
-            $query->andWhere('s.phone1 = :phone')
-                ->setParameter('phone', $search->getPhone());
+            $query->andWhere('s.phone1 LIKE :phone')
+                    ->setParameter('phone', '%'.$search->getPhone().'%');
         }
         if ($search->getPole()) {
             $query = $query->andWhere('p.id = :pole')
