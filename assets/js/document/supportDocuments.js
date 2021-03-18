@@ -3,6 +3,8 @@ import Loader from '../utils/loader'
 import SelectType from '../utils/selectType'
 import { Modal } from 'bootstrap'
 import Ajax from '../utils/ajax'
+import Dropzone from '../utils/file/dropzone'
+import CheckboxSelector from '../utils/checkboxSelector'
 
 /**
  * Classe de gestion des documents.
@@ -12,11 +14,17 @@ export default class SupportDocuments {
     constructor() {
         this.loader = new Loader()
         this.ajax = new Ajax(this.loader, 60)
-        this.modalElt = new Modal(document.getElementById('modal-document'))
-        this.modalDeleteElt = new Modal(document.getElementById('modal-block'))
         this.selectType = new SelectType()
+        this.checkboxSelector = new CheckboxSelector()
 
-        this.modalDocumentElt = document.getElementById('modal-document')
+        this.dropzoneFormElt = document.querySelector('form[name="dropzone_document"]')
+        this.dropzoneModalElt = new Modal(document.getElementById('dropzone-modal'))
+        this.dropzone = new Dropzone(this.dropzoneFormElt, this.uploadFile.bind(this))
+        
+        this.documentModalElt = new Modal(document.getElementById('document-modal'))
+        this.modalDeleteElt = new Modal(document.getElementById('modal-block'))
+
+        this.modalDocumentElt = document.getElementById('document-modal')
         this.formDocumentElt = this.modalDocumentElt.querySelector('form[name=document]')
         this.documentNameInput = this.modalDocumentElt.querySelector('#document_name')
         this.documentTypeInput = this.modalDocumentElt.querySelector('#document_type')
@@ -24,7 +32,6 @@ export default class SupportDocuments {
         this.documentBlockFile = this.modalDocumentElt.querySelector('.js-document-block-file')
         this.documentFileInput = this.modalDocumentElt.querySelector('#document_file')
         this.documentFileLabelElt = this.modalDocumentElt.querySelector('.custom-file-label')
-        this.filePlaceholder = this.documentBlockFile.getAttribute('data-placeholder')
         this.btnSaveElt = this.modalDocumentElt.querySelector('#js-btn-save')
         this.btnDeleteElt = this.modalDocumentElt.querySelector('#modal-btn-delete')
         this.modalConfirmElt = document.getElementById('modal-confirm')
@@ -33,27 +40,23 @@ export default class SupportDocuments {
         this.countDocumentsElt = document.getElementById('count-documents')
         this.supportId = document.getElementById('container-documents').getAttribute('data-support')
 
+
         this.init()
     }
 
     init() {
-        document.getElementById('js-new-document').addEventListener('click', this.newDocument.bind(this))
-
-        this.documentFileInput.addEventListener('input', this.checkFile.bind(this))
+        document.querySelector('main').addEventListener('dragenter', () => this.dropzoneModalElt.show())
+        document.getElementById('btn-new-files').addEventListener('click', () => this.dropzoneModalElt.show())
 
         document.querySelectorAll('.js-document').forEach(documentElt => {
             documentElt.addEventListener('click', e => this.getDocument(e, documentElt))
-            const btnDeleteElt = documentElt.querySelector('button.js-delete')
+            const btnDeleteElt = documentElt.querySelector('button[data-action="delete"]')
             btnDeleteElt.addEventListener('click', () => {
                 this.modalDeleteElt.show()
                 this.documentId = Number(btnDeleteElt.parentElement.parentElement.id.replace('document-', ''))
                 this.modalConfirmElt.setAttribute('data-url', btnDeleteElt.getAttribute('data-url'))
             })
         })
-
-        this.btnSaveElt.addEventListener('click', e => this.saveDocument(e))
-
-        document.getElementById('js-btn-cancel').addEventListener('click', e => e.preventDefault())
 
         this.btnDeleteElt.addEventListener('click', e => this.deleteDocument(e, this.btnDeleteElt.href))
 
@@ -62,26 +65,6 @@ export default class SupportDocuments {
             this.ajax.send('GET', this.modalConfirmElt.getAttribute('data-url'), this.responseAjax.bind(this))
         })
     }
-
-    /**
-     * Affiche un formulaire modal vierge.
-     */
-    newDocument() {
-        this.modalDocumentElt.querySelector('form').action = '/support/' + this.supportId + '/document/new'
-        this.documentNameInput.value = ''
-        this.selectType.setOption(this.documentTypeInput, null)
-        this.documentContentInput.value = ''
-        this.documentBlockFile.classList.remove('d-none')
-        this.documentFileInput.value = null
-        this.documentFileLabelElt.textContent = this.filePlaceholder
-        this.documentFileLabelElt.classList.remove('small')
-        this.btnDeleteElt.classList.replace('d-block', 'd-none')
-        this.btnSaveElt.setAttribute('data-action', 'new')
-        this.btnSaveElt.textContent = 'Enregistrer'
-        this.modalElt.show()
-    }
-
-
 
     /**
      * Donne le document sélectionné dans le formulaire modal.
@@ -115,78 +98,19 @@ export default class SupportDocuments {
 
         this.btnSaveElt.setAttribute('data-action', 'edit')
         this.btnSaveElt.textContent = 'Mettre à jour'
-        this.modalElt.show()
+        this.documentModalElt.show()
     }
 
     /**
-     * Vérifie le fichier choisi.
+     * @param {File} file
      */
-    checkFile() {
-        let error = false
-        const validExtensions = ['csv', 'doc', 'docx', 'jpg', 'odp', 'ods', 'odt', 'pdf', 'png', 'rar', 'txt', 'xls', 'xlsx', 'zip']
-        const extensionFile = this.documentFileInput.value.split('.').pop().toLowerCase()
-        // Vérifie si l'extension du fichier est valide
-        if (!validExtensions.includes(extensionFile)) {
-            error = true
-            new MessageFlash('danger', `Le format du fichier n'est pas valide (${extensionFile}).\n Formats acceptés : ${validExtensions.join(', ')}.`)
+    uploadFile(file) {
+        if (file) {
+            const formData = new FormData(this.formDocumentElt)
+            formData.append('file', file)
+            const url = this.dropzoneFormElt.action
+            this.ajax.send('POST', url, this.responseAjax.bind(this), formData)
         }
-
-        const sizeFile = Math.round((this.documentFileInput.files[0].size / 1024 / 1024) * 10) / 10
-        // Vérifie si le fichier est supérieur à 5 Mo
-        if (sizeFile > 5) {
-            error = true
-            new MessageFlash('danger', `Le fichier est trop volumineux (${sizeFile} Mo). Maximum : 5 Mo.`)
-        }
-        // Si le fichier est valide, affiche le nom
-        if (error === false) {
-            const fileName = this.documentFileInput.value.split('\\').pop()
-            this.documentFileLabelElt.textContent = fileName
-            this.documentFileLabelElt.classList.add('small')
-            if (!this.documentNameInput.value) {
-                this.documentNameInput.value = fileName.split('.').slice(0, -1).join('.')
-            }
-            // Sinon, retire le fichier de l'input
-        } else {
-            this.documentFileInput.value = null
-            this.documentFileLabelElt.textContent = this.filePlaceholder
-            this.documentFileLabelElt.classList.remove('small')
-        }
-    }
-
-    /**
-     * Enregistre le document.
-     * @param {Event} e
-     */
-    saveDocument(e) {
-        e.preventDefault()
-
-        if (!this.documentNameInput.value) {
-            return  new MessageFlash('danger', 'Le nom du document est vide.')
-        }
-
-        if (!this.selectType.getOption((this.documentTypeInput))) {
-            return new MessageFlash('danger', 'Le type de document n\'est pas renseigné.')
-        }
-
-        if (this.btnSaveElt.getAttribute('data-action') === 'new' && !this.documentFileInput.value) {
-            return new MessageFlash('danger', 'Il n\'y a pas de fichier choisi.')
-        }
-        
-        if (!this.loader.isActive()) {
-            this.loader.on()
-            this.uploadFiles(this.formDocumentElt.getAttribute('action'))
-        }
-    }
-
-    /**
-     * 
-     * @param {String} url 
-     */
-    uploadFiles(url) {
-        const formData = new FormData(this.formDocumentElt)
-        formData.append('file', this.documentFileInput.files)
-        
-        this.ajax.send('POST', url, this.responseAjax.bind(this), formData)
     }
 
     /**
@@ -221,7 +145,7 @@ export default class SupportDocuments {
                     break
                 }
             }
-            this.modalElt.hide()
+            this.documentModalElt.hide()
             new MessageFlash(response.alert, response.msg)
             this.loader.off()
     }

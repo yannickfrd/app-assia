@@ -247,25 +247,35 @@ th.required:after {
     border-radius: 4px;
 }
 
-.custom-checkbox-dark .custom-control-input:checked~.custom-control-label::after {
+.custom-checkbox .custom-control-input:checked~.custom-control-label::before,
+.custom-checkbox .custom-control-label::before,
+.custom-control-label::after,
+.custom-checkbox .custom-control-input:checked~.custom-control-label::after {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.custom-control-label {
+    padding-left: 0.5rem;
+}
+
+.custom-checkbox-dark .custom-control-input:checked~.custom-control-label::before,
+.custom-checkbox-dark .custom-control-input:checked~.custom-control-label::after,
+.custom-radio-dark .custom-control-input:checked~.custom-control-label::before,
+.custom-radio-dark .custom-control-input:checked~.custom-control-label::after {
     background-color: var(--dark);
 }
 
-.custom-checkbox-brown .custom-control-input:checked~.custom-control-label::after {
+.custom-checkbox-brown .custom-control-input:checked~.custom-control-label::before,
+.custom-checkbox-brown .custom-control-input:checked~.custom-control-label::after,
+.custom-radio-brown .custom-control-input:checked~.custom-control-label::before,
+.custom-radio-brown .custom-control-input:checked~.custom-control-label::after {
     background-color: var(--brown);
 }
 
 // Bouton radio
 .custom-radio .custom-control-input:checked~.custom-control-label::after {
     border-radius: 8px;
-}
-
-.custom-radio-brown .custom-control-input:checked~.custom-control-label::after {
-    background-color: var(--brown);
-}
-
-.custom-radio-brown .custom-control-input:checked~.custom-control-label::after {
-    background-color: var(--brown);
 }
 
 .justify {
@@ -425,6 +435,12 @@ th.required:after {
     height: 40%;
     width: 100%;
     background: linear-gradient(rgba(255, 255, 255, 0), white);
+}
+
+.dropzone-dragover {
+    border: 2px dashed var(--secondary);
+    opacity: 0.5;
+    transition: all 0.2s ease-in-out;
 }
 
 // Modification des couleurs des liens de tri de Paginator

@@ -8,8 +8,10 @@ use App\Entity\Support\SupportGroup;
 use App\EntityManager\SupportManager;
 use App\Form\Model\Support\DocumentSearch;
 use App\Form\Model\Support\SupportDocumentSearch;
+use App\Form\Support\Document\ActionType;
 use App\Form\Support\Document\DocumentSearchType;
 use App\Form\Support\Document\DocumentType;
+use App\Form\Support\Document\DropzoneDocumentType;
 use App\Form\Support\Document\SupportDocumentSearchType;
 use App\Repository\Support\DocumentRepository;
 use App\Security\CurrentUserService;
@@ -21,6 +23,7 @@ use Psr\Cache\CacheItemInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -64,15 +67,21 @@ class DocumentController extends AbstractController
     {
         $this->denyAccessUnlessGranted('VIEW', $supportGroup = $supportManager->getSupportGroup($id));
 
-        $formSearch = $this->createForm(SupportDocumentSearchType::class, $search = new SupportDocumentSearch());
-        $formSearch->handleRequest($request);
+        $formSearch = ($this->createForm(SupportDocumentSearchType::class, $search = new SupportDocumentSearch()))
+            ->handleRequest($request);
 
-        $form = $this->createForm(DocumentType::class, new Document());
+        $documentForm = $this->createForm(DocumentType::class, new Document());
+        $dropzoneForm = $this->createForm(DropzoneDocumentType::class, null, [
+            'action' => $this->generateUrl('document_new', ['id' => $supportGroup->getId()]),
+        ]);
+        $actionForm = $this->createForm(ActionType::class);
 
         return $this->render('app/support/document/supportDocuments.html.twig', [
             'support' => $supportGroup,
             'form_search' => $formSearch->createView(),
-            'form' => $form->createView(),
+            'documentForm' => $documentForm->createView(),
+            'dropzoneForm' => $dropzoneForm->createView(),
+            'actionForm' => $actionForm->createView(),
             'documents' => $pagination->paginate($this->repo->findSupportDocumentsQuery($supportGroup, $search), $request),
         ]);
     }
@@ -105,12 +114,12 @@ class DocumentController extends AbstractController
      */
     public function newDocument(SupportGroup $supportGroup, Request $request, FileUploader $fileUploader): Response
     {
-        $form = ($this->createForm(DocumentType::class, $document = new Document()))
+        $form = ($this->createForm(DropzoneDocumentType::class))
             ->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            return $this->createDocument($supportGroup, $form, $fileUploader, $document);
-        }
+        // if ($form->isSubmitted() && $form->isValid()) {
+        return $this->createDocument($supportGroup, $form, $fileUploader, $request);
+        // }
 
         return $this->getErrorMessage($form);
     }
@@ -189,27 +198,61 @@ class DocumentController extends AbstractController
     /**
      * Crée un document une fois le formulaire soumis et validé.
      */
-    protected function createDocument(SupportGroup $supportGroup, $form, FileUploader $fileUploader, Document $document): Response
+    protected function createDocument(SupportGroup $supportGroup, $form, FileUploader $fileUploader, Request $request): Response
     {
-        $file = $form['file']->getData();
+        // dump($request->files);
+        // sleep(5);
 
+        /** @var UploadedFile[] */
+        $files = $request->files->all();
+        $now = new \DateTime();
         $peopleGroup = $supportGroup->getPeopleGroup();
+        // $file = $form['file']->getData();
 
-        $path = '/'.(new \DateTime())->format('Y/m/d/').$peopleGroup->getId().'/';
+        /** @var Documents[] */
+        $documents = [];
+        foreach ($files as $file) {
+            if (!$file instanceof UploadedFile) {
+                continue;
+            }
 
-        $fileName = $fileUploader->upload($file, $path);
+            $path = '/'.$now->format('Y/m/d/').$peopleGroup->getId().'/';
 
-        $size = \filesize($fileUploader->getTargetDirectory().$path.'/'.$fileName);
+            $fileName = $fileUploader->upload($file, $path);
 
-        $document->setInternalFileName($fileName)
-            ->setSize($size)
-            ->setPeopleGroup($peopleGroup)
-            ->setSupportGroup($supportGroup);
+            $size = \filesize($fileUploader->getTargetDirectory().$path.'/'.$fileName);
 
-        $supportGroup->setUpdatedAt(new \DateTime());
+            $document = (new Document())
+                ->setName(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))
+                ->setInternalFileName($fileName)
+                ->setSize($size)
+                ->setPeopleGroup($peopleGroup)
+                ->setSupportGroup($supportGroup);
 
-        $this->manager->persist($document);
+            $supportGroup->setUpdatedAt($now);
+
+            $this->manager->persist($document);
+
+            $documents[] = $document;
+        }
+
         $this->manager->flush();
+
+        $data = [];
+        foreach ($documents as $document) {
+            $data[] = [
+                'documentId' => $document->getId(),
+                'name' => $document->getName(),
+                'peopleGroupId' => $peopleGroup->getId(),
+                'type' => $document->getTypeToString(),
+                'size' => $size,
+                'extension' => $document->getExtension(),
+                'createdBy' => $this->getUser()->getFullname(),
+                'createdAt' => $document->getCreatedAt()->format('d/m/Y H:i'),
+            ];
+        }
+
+        dump($data);
 
         $this->discache($supportGroup);
 
@@ -217,16 +260,8 @@ class DocumentController extends AbstractController
             'code' => 200,
             'action' => 'create',
             'alert' => 'success',
-            'msg' => 'Le document "'.$document->getName().'" est enregistré.',
-            'data' => [
-                'documentId' => $document->getId(),
-                'peopleGroupId' => $peopleGroup->getId(),
-                'type' => $document->getTypeToString(),
-                'size' => $size,
-                'extension' => $document->getExtension(),
-                'createdBy' => $this->getUser()->getFullname(),
-                'createdAt' => $document->getCreatedAt()->format('d/m/Y H:i'),
-            ],
+            'msg' => 'Le fichier "'.$document->getName().'" a été enregistré.',
+            'data' => $data,
         ]);
     }
 

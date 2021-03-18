@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     new SearchLocation('support_location')
     new SearchLocation('ssd_location', 'city', '95')
+    new SearchLocation('support_end_location')
     new CheckChange('support') // form name
     new AutoSize('textarea')
 })

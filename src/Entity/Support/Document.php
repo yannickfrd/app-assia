@@ -43,7 +43,6 @@ class Document
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
-     * @Assert\NotNull();
      */
     private $type;
 
@@ -103,7 +102,7 @@ class Document
 
     public function getTypeToString(): ?string
     {
-        return self::TYPE[$this->type];
+        return $this->type ? self::TYPE[$this->type] : '';
     }
 
     public function setType(?int $type): self

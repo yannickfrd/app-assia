@@ -190,6 +190,21 @@ class SupportGroup
     private $endStatusComment;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $endLocationAddress;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $endLocationCity;
+
+    /**
+     * @ORM\Column(type="string", length=10, nullable=true)
+     */
+    private $endLocationZipcode;
+
+    /**
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $agreement;
@@ -476,6 +491,42 @@ class SupportGroup
     public function setEndStatusComment(?string $endStatusComment): self
     {
         $this->endStatusComment = $endStatusComment;
+
+        return $this;
+    }
+
+    public function getEndLocationAddress(): ?string
+    {
+        return $this->endLocationAddress;
+    }
+
+    public function setEndLocationAddress(?string $endLocationAddress): self
+    {
+        $this->endLocationAddress = $endLocationAddress;
+
+        return $this;
+    }
+
+    public function getEndLocationCity(): ?string
+    {
+        return $this->endLocationCity;
+    }
+
+    public function setEndLocationCity(?string $endLocationCity): self
+    {
+        $this->endLocationCity = $endLocationCity;
+
+        return $this;
+    }
+
+    public function getEndLocationZipcode(): ?string
+    {
+        return $this->endLocationZipcode;
+    }
+
+    public function setEndLocationZipcode(?string $endLocationZipcode): self
+    {
+        $this->endLocationZipcode = $endLocationZipcode;
 
         return $this;
     }

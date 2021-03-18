@@ -281,7 +281,7 @@ class SupportControllerTest extends PantherTestCase
 
         $this->debug('select a new document');
 
-        $crawler->selectButton('js-new-document')->click();
+        $crawler->selectButton('btn-new-files')->click();
         sleep(1); //pop-up effect
 
         $this->debug('success to create a new document');
