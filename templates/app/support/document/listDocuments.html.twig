@@ -47,8 +47,8 @@
 					<tbody id="container-documents">
 						{% for document in documents %}
 						{% set support = document.supportGroup %}
-							<tr id="document-{{ document.id }}" class="js-document">
-								<th scope="row" class="align-middle text-center ">
+							<tr>
+								<th scope="row" class="align-middle text-center">
 								{% if support %}
 										<a href="{{ path('support_documents', {'id':document.supportGroup.id, 'documentId':document.id}) }}"
 											class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" data-placement="bottom"
@@ -56,15 +56,15 @@
 										</a>
 								{% endif %}
 								</th>
-								<td class="align-middle js-document-name">{{ document.name }}</td>
+								<td class="align-middle">{{ document.name }}</td>
                             	<td class="align-middle">{{ support ? support.supportPeople|filter(s => s.head == true)|first.person.fullname }}</td>
                             	<td class="align-middle">{{ support ? support.service.name }}</td>
-								<td class="align-middle js-document-type" data-value="{{ document.type }}">{{ document.typeToString }}</td>
-								<td class="align-middle js-document-content">{{ document.content }}</td>
-								<td class="align-middle js-document-size text-right">{{ (document.size / 1000000)|round(2) }} Mo</td>
-								<td class="align-middle js-document-extension">{{ document.extension }}</td>
-								<td class="align-middle js-document-createdAt">{{ document.createdAt|date("d/m/Y H:i") }}</td>
-								<td class="align-middle js-document-createdAt">{{ document.createdBy ? document.createdBy.fullname }}</td>
+								<td class="align-middle" data-value="{{ document.type }}">{{ document.typeToString }}</td>
+								<td class="align-middle">{{ document.content }}</td>
+								<td class="align-middle text-right">{{ (document.size / 1000000)|round(2) }} Mo</td>
+								<td class="align-middle">{{ document.extension }}</td>
+								<td class="align-middle">{{ document.createdAt|date("d/m/Y H:i") }}</td>
+								<td class="align-middle">{{ document.createdBy ? document.createdBy.fullname }}</td>
 								<td scope="row" class="align-middle text-center">
 									<a href="{{ path('document_read', {'id': document.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow my-1" 
 										data-toggle="tooltip" data-placement="bottom" title="Télécharger le document"><span class="fas fa-file-download"></span>

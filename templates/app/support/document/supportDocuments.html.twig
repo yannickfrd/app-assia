@@ -61,7 +61,7 @@
 
 				<tbody id="container-documents" data-support="{{ support.id }}">
 					{% for document in documents %}
-						<tr id="document-{{ document.id }}" class="js-document">
+						<tr data-document-id="{{ document.id }}">
 							<td scope="row" class="align-middle text-center">
 								<div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} text-dark pl-0" 
 									title="Sélectionner le document">
@@ -85,7 +85,7 @@
 							<td class="align-middle" data-document="createdAt">{{ document.createdAt|date("d/m/Y H:i") }}</td>
 							<td class="align-middle" data-document="createdBy">{{ document.createdby ? document.createdby.fullname }}</td>
 							<td class="align-middle text-center">
-								<button data-url="{{ path('document_delete', {'id':document.id}) }}" class="btn btn-danger btn-sm shadow my-1" 
+								<button data-url="{{ path('document_delete', {'id': document.id}) }}" class="btn btn-danger btn-sm shadow my-1" 
 									data-action="delete" data-placement="bottom" title="Supprimer le document"><span class="fas fa-trash-alt"></span>
 								</button>
 							</td>

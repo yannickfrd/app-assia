@@ -1,19 +1,19 @@
 
 export default class CheckboxSelector {
     constructor() {
-        this.checkboxAllFilesInputElt = document.querySelector('input[data-checkbox-all="true"]')
-        this.checkboxAllFilesLabelElt = document.querySelector('label[data-checkbox-all="true"]')
+        this.checkboxAllInputElt = document.querySelector('input[data-checkbox-all="true"]')
+        this.checkboxAllLabelElt = document.querySelector('label[data-checkbox-all="true"]')
         this.init()
     }
 
     init() {
-        this.checkboxAllFilesLabelElt.addEventListener('click', () => this.onSelectAll())
+        this.checkboxAllLabelElt.addEventListener('click', () => this.onSelectAll())
     }
 
     onSelectAll() {
         let checked = true;
         setTimeout(() => {
-            if (this.checkboxAllFilesInputElt.checked != true) {
+            if (this.checkboxAllInputElt.checked != true) {
                 checked = false
             }
             this.updateCheckboxes(checked)
@@ -30,12 +30,10 @@ export default class CheckboxSelector {
         })
     }
 
-    getSelectedChecboxes() {
+    getSelectedCheckboxes() {
         const array = []
-        document.querySelectorAll('[data-checkbox]').forEach(checkboxElt => {
-            if (checkboxElt.checked === true) {
-                array.push(checkboxElt.getAttribute('data-checkbox'))
-            }
+        document.querySelectorAll('input[data-checkbox]:checked').forEach(checkboxElt => {
+            array.push(checkboxElt.getAttribute('data-checkbox'))
         })
         return array
     }

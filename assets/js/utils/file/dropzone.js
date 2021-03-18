@@ -82,7 +82,7 @@ export default class Dropzone {
             const file = files[i]
 
             if (this.filesInCollection(file)) {
-                new MessageFlash('danger', 'Ce fichier a déjà été ajouté.')
+                new MessageFlash('danger', 'Le fichier "' + file.name + '" a déjà été ajouté.')
             } else {
                 if (this.fileChecker.isValid(file)) {
                     this.addFile(file)

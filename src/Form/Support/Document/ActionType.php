@@ -13,7 +13,7 @@ class ActionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('action', ChoiceType::class, [
+            ->add('type', ChoiceType::class, [
                 // 'label' => 'document.action',
                 'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getchoices([

@@ -306,9 +306,9 @@ class SupportControllerTest extends PantherTestCase
 
         $this->debug('get a document');
 
-        $this->client->waitFor('td.js-document-name');
+        $this->client->waitFor('td.[data-document="name"]');
 
-        $crawler->filter('td.js-document-name')->eq(0)->click();
+        $crawler->filter('td.[data-document="name"]')->eq(0)->click();
         sleep(1); //pop-up effect
 
         $this->debug('edit an old document');

@@ -74,7 +74,7 @@ class DocumentController extends AbstractController
         $dropzoneForm = $this->createForm(DropzoneDocumentType::class, null, [
             'action' => $this->generateUrl('document_new', ['id' => $supportGroup->getId()]),
         ]);
-        $actionForm = $this->createForm(ActionType::class);
+        $actionForm = $this->createForm(ActionType::class, null, ['action' => $this->generateUrl('document_action')]);
 
         return $this->render('app/support/document/supportDocuments.html.twig', [
             'support' => $supportGroup,
@@ -162,6 +162,24 @@ class DocumentController extends AbstractController
     }
 
     /**
+     * Modification d'un document.
+     *
+     * @Route("document/action", name="document_action", methods="POST")
+     */
+    public function actionDocument(Request $request): Response
+    {
+        $form = ($this->createForm(ActionType::class, null))
+            ->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            dump($request);
+            dd('ACTION !');
+        }
+
+        return $this->getErrorMessage($form);
+    }
+
+    /**
      * Supprime un document.
      *
      * @Route("document/{id}/delete", name="document_delete", methods="GET")
@@ -191,7 +209,7 @@ class DocumentController extends AbstractController
             'code' => 200,
             'action' => 'delete',
             'alert' => 'warning',
-            'msg' => "Le document $documentName est supprimé.",
+            'msg' => "Le document \"$documentName\" est supprimé.",
         ], 200);
     }
 
@@ -200,9 +218,6 @@ class DocumentController extends AbstractController
      */
     protected function createDocument(SupportGroup $supportGroup, $form, FileUploader $fileUploader, Request $request): Response
     {
-        // dump($request->files);
-        // sleep(5);
-
         /** @var UploadedFile[] */
         $files = $request->files->all();
         $now = new \DateTime();
@@ -241,7 +256,7 @@ class DocumentController extends AbstractController
         $data = [];
         foreach ($documents as $document) {
             $data[] = [
-                'documentId' => $document->getId(),
+                'id' => $document->getId(),
                 'name' => $document->getName(),
                 'peopleGroupId' => $peopleGroup->getId(),
                 'type' => $document->getTypeToString(),
@@ -251,8 +266,6 @@ class DocumentController extends AbstractController
                 'createdAt' => $document->getCreatedAt()->format('d/m/Y H:i'),
             ];
         }
-
-        dump($data);
 
         $this->discache($supportGroup);
 
