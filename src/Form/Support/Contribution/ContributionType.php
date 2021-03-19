@@ -30,19 +30,31 @@ class ContributionType extends AbstractType
                 'placeholder' => 'placeholder.select',
             ])
             ->add('resourcesAmt', MoneyType::class, [
-                'attr' => ['class' => 'js-money text-right'],
+                'attr' => [
+                    'class' => 'js-money text-right',
+                    'placeholder' => 'Amount',
+                ],
                 'required' => false,
             ])
             ->add('aplAmt', MoneyType::class, [
-                'attr' => ['class' => 'js-money text-right'],
+                'attr' => [
+                    'class' => 'js-money text-right',
+                    'placeholder' => 'Amount',
+                ],
                 'required' => false,
             ])
             ->add('rentAmt', MoneyType::class, [
-                'attr' => ['class' => 'js-money text-right'],
+                'attr' => [
+                    'class' => 'js-money text-right',
+                    'placeholder' => 'Amount',
+                ],
                 'required' => false,
             ])
             ->add('toPayAmt', MoneyType::class, [
-                'attr' => ['class' => 'js-money text-right'],
+                'attr' => [
+                    'class' => 'js-money text-right',
+                    'placeholder' => 'Amount',
+                ],
                 'required' => false,
             ])
             ->add('paymentDate', DateType::class, [
@@ -56,18 +68,25 @@ class ContributionType extends AbstractType
                 'required' => false,
             ])
             ->add('paidAmt', MoneyType::class, [
-                'attr' => ['class' => 'js-money text-right'],
+                'attr' => [
+                    'class' => 'js-money text-right',
+                    'placeholder' => 'Amount',
+                ],
                 'required' => false,
             ])
             ->add('stillToPayAmt', MoneyType::class, [
                 'attr' => [
                     'class' => 'text-right',
+                    'placeholder' => 'Amount',
                     'readonly' => true,
                 ],
                 'required' => false,
             ])
             ->add('returnAmt', MoneyType::class, [
-                'attr' => ['class' => 'js-money text-right'],
+                'attr' => [
+                    'class' => 'js-money text-right',
+                    'placeholder' => 'Amount',
+                ],
                 'required' => false,
             ])
             ->add('comment', null, [
