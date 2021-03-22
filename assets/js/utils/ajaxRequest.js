@@ -54,7 +54,7 @@
 //             // Appelle la fonction callback en lui passant la réponse de la requête
 //             return callback(this.parseResponse(this.xhr.responseText))
 //         }
-//         console.error('Statut: ' + this.xhr.status + ' ' + this.xhr.statusText + ' ' + url)
+//         throw new Error (`Statut: ${this.xhr.status} ${this.xhr.statusText} ${url}`)
 //         this.loader.off()
 
 //         if (this.xhr.status === 403) {
@@ -80,6 +80,6 @@
 //      * @param {String} url 
 //      */
 //     error(url) {
-//         console.error(`Status: ${this.xhr.status} : Server with the URL ${url}`)
+//        throw new Error(`Status: ${this.xhr.status} : Server with the URL ${url}`)
 //     }
 // }

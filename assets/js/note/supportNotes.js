@@ -96,7 +96,7 @@ export default class SupportNotes {
                 toolbarContainer.appendChild(editor.ui.view.toolbar.element)
             })
             .catch(error => {
-                console.error(error)
+                throw new Error(error)
             })
     }
 
