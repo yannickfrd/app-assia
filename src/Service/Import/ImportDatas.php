@@ -91,6 +91,6 @@ class ImportDatas
             $content = $content.$person->getLastname()."\t".$person->getFirstname()."\t".$person->getBirthdate()->format('d/m/Y').'<br/>';
         }
 
-        $this->importNotification->sendNotif($content, $x);
+        $this->importNotification->sendNotif($content);
     }
 }
