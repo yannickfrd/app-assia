@@ -695,7 +695,7 @@ export default class SupportContributions {
         this.trElt.querySelector('td.js-stillToPayAmt').textContent = this.formatMoney(this.roundMoney(contribution.stillToPayAmt))
         this.trElt.querySelector('td.js-paymentDate').textContent = this.formatDatetime(contribution.paymentDate, 'date')
         this.trElt.querySelector('td.js-paymentType').textContent = contribution.paymentTypeToString
-        this.trElt.querySelector('td.js-comment').textContent = this.sliceComment(contribution.comment + "\n" + contribution.commentExport)
+        this.trElt.querySelector('td.js-comment').textContent = this.sliceComment((contribution.comment ?? '')  + " \n" + (contribution.commentExport ?? ''))
         this.calculateSumAmts()
         this.loader.off()
     }
@@ -721,7 +721,7 @@ export default class SupportContributions {
             <td class='align-middle text-right js-stillToPayAmt'>${this.formatMoney(this.roundMoney(contribution.stillToPayAmt))}</td>
             <td class='align-middle text-center js-paymentDate'>${this.formatDatetime(contribution.paymentDate, 'date')}</td>
             <td class='align-middle js-paymentType'>${contribution.paymentType ? contribution.paymentTypeToString : ''}</td>
-            <td class='align-middle js-comment'>${this.sliceComment(contribution.comment + "\n" + contribution.commentExport)}</td>
+            <td class='align-middle js-comment'>${this.sliceComment((contribution.comment ?? '')  + " \n" + (contribution.commentExport ?? ''))}</td>
             <td class='align-middle js-createdAt'>${this.formatDatetime(this.now, 'date')}</td>
             <td class="align-middle text-center js-pdfGenerate">
                 <span><i class="fas fa-file-pdf text-secondary fa-lg"></i></span>
@@ -752,10 +752,15 @@ export default class SupportContributions {
      * @param {Number} limit 
      */
     sliceComment(comment, limit = 65) {
-        if (comment === null) {
+        if (' ' === comment) {
             return ''
         }
-        return comment.length > limit ? comment.slice(0, limit) + '...' : comment
+
+        if ( comment.length > limit) {
+            return comment.slice(0, limit) + '...'
+        }
+
+        return comment
     }
 
     /**

@@ -43,7 +43,7 @@ export default class SupportNotes {
 
     init() {
         this.noteElts.forEach(noteElt => {
-            noteElt.addEventListener('click', this.getNote.bind(this, noteElt))
+            noteElt.addEventListener('click', () => this.showNote(noteElt))
         })
         this.newNoteBtn.addEventListener('click', () => this.showNewNote())
         this.btnSaveElt.addEventListener('click', e => this.requestToSave(e))
