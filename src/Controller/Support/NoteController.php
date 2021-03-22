@@ -221,7 +221,7 @@ class NoteController extends AbstractController
      * @Route("note/{id}/export/word", name="note_export_word", methods="GET")
      * @Route("note/{id}/export/pdf", name="note_export_pdf", methods="GET")
      */
-    public function export(int $id, Request $request, SupportManager $supportManager, Environment $renderer): Response
+    public function export(int $id, Request $request, Environment $renderer): Response
     {
         $note = $this->repoNote->findNote($id);
         $supportGroup = $note->getSupportGroup();
@@ -232,7 +232,7 @@ class NoteController extends AbstractController
 
         $content = $note->getContent();
         $logoPath = $supportGroup->getService()->getPole()->getLogoPath();
-        $fullnameSupport = $supportManager->getHeadPersonSupport($supportGroup)->getFullname();
+        $fullnameSupport = $supportGroup->getHeader()->getFullname();
 
         if ($export instanceof ExportPDF) {
             $content = $export->formatContent($content, $renderer, $note->getTitle(), $logoPath, $fullnameSupport);

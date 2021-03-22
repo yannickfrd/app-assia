@@ -41,6 +41,13 @@ class Person
         99 => 'Non renseigné',
     ];
 
+    public const CIVILITY = [
+        1 => 'Madame',
+        2 => 'Monsieur',
+        97 => '',
+        99 => '',
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -267,7 +274,12 @@ class Person
 
     public function getGenderToString(): ?string
     {
-        return self::GENDER[$this->gender];
+        return self::GENDER[$this->gender] ?? null;
+    }
+
+    public function getCivilityToString(): ?string
+    {
+        return self::CIVILITY[$this->gender] ?? null;
     }
 
     public function getContactOtherPerson(): ?string

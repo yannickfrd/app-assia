@@ -106,7 +106,7 @@ class EvaluationController extends AbstractController
         RdvRepository $repoRdv,
         Environment $renderer
     ): Response {
-        $export = $type === 'word' ? new ExportWord(true) : new ExportPDF();
+        $export = 'word' === $type ? new ExportWord(true) : new ExportPDF();
 
         $supportGroup = $supportManager->getFullSupportGroup($id);
 
@@ -114,7 +114,7 @@ class EvaluationController extends AbstractController
 
         $title = 'Grille d\'évaluation sociale';
         $logoPath = $supportGroup->getService()->getPole()->getLogoPath();
-        $fullnameSupport = $supportManager->getHeadPersonSupport($supportGroup)->getFullname();
+        $fullnameSupport = $supportGroup->getHeader()->getFullname();
 
         // return $this->render('app/evaluation/export/evaluationExport.html.twig', [
         $content = $renderer->render('app/evaluation/export/evaluationExport.html.twig', [
@@ -125,13 +125,13 @@ class EvaluationController extends AbstractController
             'lastRdv' => $supportCollections->getLastRdvs($supportGroup),
             'nextRdv' => $supportCollections->getNextRdvs($supportGroup),
             'title' => $title,
-            'logo_path' => $type === 'pdf' ? $export->getPathImage($logoPath) : null,
+            'logo_path' => 'pdf' === $type ? $export->getPathImage($logoPath) : null,
             'header_info' => 'ESPERER 95 | '.$title.' | '.$fullnameSupport,
         ]);
 
         $export->createDocument($content, $title, $logoPath, $fullnameSupport);
 
-        return $export->download($request->server->get('HTTP_USER_AGENT') != 'Symfony BrowserKit');
+        return $export->download('Symfony BrowserKit' != $request->server->get('HTTP_USER_AGENT'));
     }
 
     /**

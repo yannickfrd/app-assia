@@ -92,8 +92,16 @@ class ContributionType extends AbstractType
             ->add('comment', null, [
                 'attr' => [
                     'rows' => 2,
-                    'placeholder' => 'placeholder.comment',
+                    'placeholder' => 'contribution.comment.placeholder',
                 ],
+                'help' => 'contribution.comment.help',
+            ])
+            ->add('commentExport', null, [
+                'attr' => [
+                    'rows' => 2,
+                    'placeholder' => 'contribution.commentExport.placeholder',
+                ],
+                'help' => 'contribution.commentExport.help',
             ]);
     }
 

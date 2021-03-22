@@ -152,6 +152,12 @@ class Contribution
     private $comment;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     * @Groups("get")
+     */
+    private $commentExport;
+
+    /**
      * @ORM\ManyToOne(targetEntity=SupportGroup::class, inversedBy="contributions")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -299,6 +305,11 @@ class Contribution
         return $this;
     }
 
+    public function getToPayAmtToString()
+    {
+        return (new \NumberFormatter('fr-FR', \NumberFormatter::SPELLOUT))->format($this->getToPayAmt());
+    }
+
     public function getPaymentDate(): ?\DateTimeInterface
     {
         return $this->paymentDate;
@@ -340,6 +351,11 @@ class Contribution
         return $this;
     }
 
+    public function getPaidAmtToString()
+    {
+        return (new \NumberFormatter('fr-FR', \NumberFormatter::SPELLOUT))->format($this->getPaidAmt());
+    }
+
     public function getStillToPayAmt(): ?float
     {
         return $this->getToPayAmt() - $this->getPaidAmt();
@@ -372,6 +388,18 @@ class Contribution
     public function setComment(?string $comment): self
     {
         $this->comment = $comment;
+
+        return $this;
+    }
+
+    public function getCommentExport(): ?string
+    {
+        return $this->commentExport;
+    }
+
+    public function setCommentExport(?string $commentExport): self
+    {
+        $this->commentExport = $commentExport;
 
         return $this;
     }

@@ -214,7 +214,12 @@ To pay amt: Montant à régler
 contribution:
   startDate: Début de la période
   endDate: Fin de la période
-  comment.placeholder: Écrire un commentaire
+  comment:
+    placeholder: Ajouter un commentaire destiné à l'interne (service)...
+    help: Ce commentaire est destiné à l'interne (service).
+  commentExport:
+    placeholder: Ajouter un commentaire visible dans le PDF...
+    help: Ce commentaire s'afichera dans le document PDF.
   type: Type d'opération
   rate.help: Nombre entre 0 et 1.
 
