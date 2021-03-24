@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\File;
 
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -8,12 +8,14 @@ class Download
 {
     /**
      * Envoie le fichier à télécharger à l'utilisateur.
-     *
-     * @return void
      */
     public function send(string $file): StreamedResponse
     {
-        if (file_exists($file)) {
+        if (!file_exists($file)) {
+            throw new \Exception('This file doesn\'t exist.');
+        }
+
+        try {
             $response = new StreamedResponse();
 
             $response->headers->set('Content-Description', 'File Transfer');
@@ -30,8 +32,8 @@ class Download
             });
 
             return $response->send();
+        } catch (\Exception $e) {
+            throw $e;
         }
-
-        return null;
     }
 }

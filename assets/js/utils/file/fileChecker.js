@@ -6,8 +6,8 @@ import MessageFlash from '../messageFlash'
 export default class FileChecker {
 
     constructor(maxSize = 5, validExtensions = null) {
-        this.validExtensions = validExtensions ? validExtensions : ['csv', 'doc', 'docx', 'jpg', 'jpeg', 'odp', 'ods', 'odt', 'pdf', 'png', 'rar', 'txt', 'xls', 'xlsx', 'zip']
-        this.maxSize = maxSize
+        this.VALID_EXTENSIONS = validExtensions ? validExtensions : ['csv', 'doc', 'docx', 'jpg', 'jpeg', 'odp', 'ods', 'odt', 'pdf', 'png', 'rar', 'txt', 'xls', 'xlsx', 'zip']
+        this.MAX_SIZE = maxSize
     }
 
     /**
@@ -20,12 +20,12 @@ export default class FileChecker {
         const sizeFile = this.getSize(file)
 
         if (!this.isValidExtension(extensionFile)) {
-            new MessageFlash('danger', `Le format du fichier "${fileName}" n'est pas valide (${extensionFile}).\n Formats acceptés : ${this.validExtensions.join(', ')}.`)
+            new MessageFlash('danger', `Le format du fichier "${fileName}" n'est pas valide (${extensionFile}).\n Formats acceptés : ${this.VALID_EXTENSIONS.join(', ')}.`)
             return false
         }
 
         if (!this.isValidSize(sizeFile)) {
-            new MessageFlash('danger', `Le fichier "${fileName}" est trop volumineux (${sizeFile} Mo). Maximum : ${this.maxSize} Mo.`)
+            new MessageFlash('danger', `Le fichier "${fileName}" est trop volumineux (${sizeFile.toLocaleString('fr')} Mo). Maximum : ${this.MAX_SIZE} Mo.`)
             return false
         }
 
@@ -37,14 +37,14 @@ export default class FileChecker {
      * @returns {Boolean}
      */
     isValidExtension(extensionFile) {
-        return this.validExtensions.includes(extensionFile)
+        return this.VALID_EXTENSIONS.includes(extensionFile)
     }
     /**
      * @param {String} extensionFile 
      * @returns {Boolean}
      */
     isValidSize(sizeFile) {
-        return sizeFile <= this.maxSize
+        return sizeFile <= this.MAX_SIZE
     }
 
     /**

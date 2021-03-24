@@ -141,6 +141,26 @@ class DocumentRepository extends ServiceEntityRepository
         return $query->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
 
+    /**
+     * Return all selected documents by id.
+     *
+     * @return Documents[]
+     */
+    public function findDocumentsById(array $ids, SupportGroup $supportGroup): array
+    {
+        return $this->createQueryBuilder('d')->select('d')
+            ->join('d.peopleGroup', 'pg')->addSelect('PARTIAL pg.{id}')
+            ->join('d.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
+
+            ->andWhere('d.supportGroup = :supportGroup')
+            ->setParameter('supportGroup', $supportGroup)
+            ->andWhere('d.id IN (:ids)')
+            ->setParameter('ids', $ids)
+
+            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
+    }
+
     public function countDocuments(array $criteria = null): int
     {
         $query = $this->createQueryBuilder('d')->select('COUNT(d.id)');

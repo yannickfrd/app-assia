@@ -9,7 +9,7 @@ use App\Form\Admin\ExportSearchType;
 use App\Form\Model\Admin\ExportSearch;
 use App\Repository\Admin\ExportRepository;
 use App\Repository\Support\SupportPersonRepository;
-use App\Service\Download;
+use App\Service\File\Download;
 use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;

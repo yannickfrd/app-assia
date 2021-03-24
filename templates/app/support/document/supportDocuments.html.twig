@@ -10,7 +10,7 @@
 		{% include "app/support/support/_navSuppport.html.twig" %}
 
 		<div class="row">
-			<div class="col-md-6 my-2">
+			<div class="col-lg-4 my-2">
 				<button id="btn-new-files" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" 
 					data-toggle="tooltip" data-placement="bottom" title="Ajouter des documents">
 					<span class="fas fa-plus-square mr-2"></span>Ajouter des documents</button>
@@ -18,16 +18,16 @@
 					<span id="count-documents">{{ documents.getTotalItemCount|number }}</span>
 				</div>
 			</div>
-			<div class="col-md-6">
+			<div class="col-lg-8">
 				{% include "app/support/document/_searchSupportDocuments.html.twig" %}
 			</div>
 		</div>
 
 		<div class="row">
-			<div class="col-md-4">
+			<div class="col-md-5">
 				{% include "app/support/document/_actionForm.html.twig" %}
 			</div>
-			<div class="col-md-8">
+			<div class="col-md-7">
 				<div class="navigation">{{ knp_pagination_render(documents) }}</div>
 			</div>
 		</div>
@@ -78,12 +78,12 @@
 								</a>
 							</td>
 							<td class="align-middle" data-document="name">{{ document.name }}</td>
-							<td class="align-middle" data-document="type" data-value="{{ document.type }}">{{ document.typeToString }}</td>
+							<td class="align-middle" data-document="type" data-type-value="{{ document.type }}">{{ document.typeToString }}</td>
 							<td class="align-middle" data-document="content">{{ document.content }}</td>
-							<td class="align-middle text-right" data-document="size">{{ (document.size / 1000000)|round(2) }} Mo</td>
-							<td class="align-middle" data-document="extension">{{ document.extension }}</td>
-							<td class="align-middle" data-document="createdAt">{{ document.createdAt|date("d/m/Y H:i") }}</td>
-							<td class="align-middle" data-document="createdBy">{{ document.createdby ? document.createdby.fullname }}</td>
+							<td class="align-middle text-right">{{ (document.size / 1000000)|round(2) }} Mo</td>
+							<td class="align-middle">{{ document.fileType }}</td>
+							<td class="align-middle">{{ document.createdAt|date("d/m/Y H:i") }}</td>
+							<td class="align-middle">{{ document.createdby ? document.createdby.fullname }}</td>
 							<td class="align-middle text-center">
 								<button data-url="{{ path('document_delete', {'id': document.id}) }}" class="btn btn-danger btn-sm shadow my-1" 
 									data-action="delete" data-placement="bottom" title="Supprimer le document"><span class="fas fa-trash-alt"></span>

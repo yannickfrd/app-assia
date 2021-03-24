@@ -10,25 +10,23 @@
             <div class="modal-body pb-0">
                 <div class="form-group row">
                     <div class="col-md-12">
-                        {% set dropzone_content %}
-                            <div class='row' style='min-height: 200px;'>
+                        {% set dropzone_content %}{% apply spaceless %}
+                            <div class='row' style='min-height: 300px;'>
                                 <div class='col-md-12 m-auto'>
                                     <p class='align-middle text-center text-secondary'>{{ 'document.file.placeholder'|trans({}, 'forms') }}</p>                            
                                 </div>
                             </div>
-                        {% endset %}
+                        {% endapply %}{% endset %}
                         <div class="dropzone card p-2 cursor-pointer" id="dropzone" data-placeholder="{{ dropzone_content }}"></div>
                     </div>
-                    <div class="col-sm-12 sr-only">{{ form_widget(dropzoneForm.file) }}</div>
-                    <div class="col-sm-12">{{ form_help(dropzoneForm.file) }}</div>
+                    <div class="col-sm-12 d-none">{{ form_widget(dropzoneForm.files) }}</div>
+                    <div class="col-sm-12">{{ form_help(dropzoneForm.files) }}</div>
                 </div>
             </div>
             <div class="modal-footer">
                 <div class="float-right">
                     <button type="button" name="close" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
                     <button type="button" name="clear" class="btn btn-secondary" data-dismiss="modal">Effacer</button>
-                    {# <button type="submit" id="js-btn-send" class="btn btn-{{ theme_color }} shadow" 
-                        data-action="send"><span class="fas fa-cloud-upload-alt mr-2"></span>Envoyer</button> #}
                 </div>
             </div>
             {{ form_row(dropzoneForm._token) }}

@@ -35,7 +35,7 @@
 							<th scope="col" class="align-middle th-w-150">{{ knp_pagination_sortable(documents, "Nom du document", "d.name") }}</th>
 							<th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(documents, "Nom du suivi", "p.lastname") }}</th>
 							<th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(documents, "Service", "s.name") }}</th>
-							<th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(documents, "Type", "d.type") }}</th>
+							<th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(documents, "Type document", "d.type") }}</th>
 							<th scope="col" class="align-middle th-w-150">{{ knp_pagination_sortable(documents, "Description", "d.content") }}</th>
 							<th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(documents, "Taille", "d.size") }}</th>
 							<th scope="col" class="align-middle th-w-60">Ext.</th>
@@ -62,7 +62,7 @@
 								<td class="align-middle" data-value="{{ document.type }}">{{ document.typeToString }}</td>
 								<td class="align-middle">{{ document.content }}</td>
 								<td class="align-middle text-right">{{ (document.size / 1000000)|round(2) }} Mo</td>
-								<td class="align-middle">{{ document.extension }}</td>
+								<td class="align-middle">{{ document.fileType }}</td>
 								<td class="align-middle">{{ document.createdAt|date("d/m/Y H:i") }}</td>
 								<td class="align-middle">{{ document.createdBy ? document.createdBy.fullname }}</td>
 								<td scope="row" class="align-middle text-center">

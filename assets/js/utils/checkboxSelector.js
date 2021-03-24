@@ -1,4 +1,6 @@
-
+/**
+ * Tool to multi-select checboxes.
+ */
 export default class CheckboxSelector {
     constructor() {
         this.checkboxAllInputElt = document.querySelector('input[data-checkbox-all="true"]')
@@ -7,21 +9,27 @@ export default class CheckboxSelector {
     }
 
     init() {
-        this.checkboxAllLabelElt.addEventListener('click', () => this.onSelectAll())
+        this.checkboxAllLabelElt.addEventListener('click', () => this.toggle())
     }
 
-    onSelectAll() {
+    /**
+     * Toggle to select all items or nothing.
+     */
+    toggle() {
         let checked = true;
         setTimeout(() => {
             if (this.checkboxAllInputElt.checked != true) {
                 checked = false
             }
-            this.updateCheckboxes(checked)
+            this.updateItems(checked)
         }, 50)
     }
 
-    updateCheckboxes(checked) {
-        document.querySelectorAll('[data-checkbox]').forEach(checkboxElt => {
+    /**
+     * Update all items.
+     */
+    updateItems(checked) {
+        document.querySelectorAll('input[data-checkbox]').forEach(checkboxElt => {
             if (checked) {
                 checkboxElt.checked = true
                 return
@@ -30,11 +38,15 @@ export default class CheckboxSelector {
         })
     }
 
-    getSelectedCheckboxes() {
-        const array = []
+    /**
+     * Return all checked items.
+     * @returns {Array}
+     */
+    getItems() {
+        const items = []
         document.querySelectorAll('input[data-checkbox]:checked').forEach(checkboxElt => {
-            array.push(checkboxElt.getAttribute('data-checkbox'))
+            items.push(checkboxElt.getAttribute('data-checkbox'))
         })
-        return array
+        return items
     }
 }

@@ -2,7 +2,7 @@ import FileChecker from './fileChecker'
 import MessageFlash from '../messageFlash'
 
 /**
- * 
+ * Dropzone for files.
  */
 export default class Dropzone {
 
@@ -16,7 +16,7 @@ export default class Dropzone {
         this.uploadCallback = uploadCallback
 
         this.dropzoneElt = formElt.querySelector('#dropzone')
-        this.fileDocumentInput = formElt.querySelector('#dropzone_document_file')
+        this.filesDocumentInput = formElt.querySelector('#dropzone_document_files')
 
         this.fileChecker = new FileChecker()
 
@@ -29,16 +29,14 @@ export default class Dropzone {
     init() {
         this.clearDropzoneContent()
 
-        this.dropzoneElt.addEventListener('click', () => this.fileDocumentInput.click())
-        this.fileDocumentInput.addEventListener('input', e => this.onDrop(e))
+        this.dropzoneElt.addEventListener('click', () => this.filesDocumentInput.click())
+        this.filesDocumentInput.addEventListener('input', e => this.drop(e))
         this.dropzoneElt.addEventListener('dragenter', e => {
-            // console.log('dragenter')
             e.stopPropagation()
             e.preventDefault()
             this.dropzoneElt.classList.add('dropzone-dragover')
         })
-        this.dropzoneElt.addEventListener('dragleave', e => {
-            // console.log('dragleave')
+        this.dropzoneElt.addEventListener('dragleave', () => {
             this.dropzoneElt.classList.remove('dropzone-dragover')
         })
         this.dropzoneElt.addEventListener('dragover', e => {
@@ -46,8 +44,8 @@ export default class Dropzone {
             e.preventDefault()
             this.dropzoneElt.classList.add('dropzone-dragover')
         })
-        this.dropzoneElt.addEventListener('drop', e => this.onDrop(e))  
-        document.addEventListener('drop', e => this.onDrop(e))
+        this.dropzoneElt.addEventListener('drop', e => this.drop(e))  
+        document.addEventListener('drop', e => this.drop(e))
         this.formElt.querySelector('button[name="clear"]').addEventListener('click', e => {
             e.stopPropagation()
             e.preventDefault()
@@ -58,7 +56,7 @@ export default class Dropzone {
     /**
      * @param {Event} e 
      */
-    onDrop(e) {
+    drop(e) {
         e.stopPropagation()
         e.preventDefault()
 
@@ -68,9 +66,9 @@ export default class Dropzone {
             this.checkFiles(e.dataTransfer.files)
         }
 
-        if (this.fileDocumentInput.files) {
-            this.checkFiles(this.fileDocumentInput.files)
-            this.fileDocumentInput.value = null
+        if (this.filesDocumentInput.files) {
+            this.checkFiles(this.filesDocumentInput.files)
+            this.filesDocumentInput.value = null
         }
     }
 
@@ -82,19 +80,18 @@ export default class Dropzone {
             const file = files[i]
 
             if (this.filesInCollection(file)) {
-                new MessageFlash('danger', 'Le fichier "' + file.name + '" a déjà été ajouté.')
-            } else {
-                if (this.fileChecker.isValid(file)) {
-                    this.addFile(file)
-                }
+                return new MessageFlash('danger', 'Le fichier "' + file.name + '" a déjà été ajouté.')
             }
+
+            this.addFile(file, this.fileChecker.isValid(file))
         }
     }
 
     /**
      * @param {File} file 
+     * @param {Boolean} isValid 
      */
-    addFile(file) {
+    addFile(file, isValid) {
         if (0 === this.filesCollection.length) {
             this.createDropzoneContent()
         }
@@ -104,7 +101,11 @@ export default class Dropzone {
         this.addItemInCollection(filename)
         this.updateDropzoneContent(filename)
 
-        return this.uploadCallback(file)
+        if (!isValid) {
+            return this.updateItemInList(file, 'danger')
+        }
+        
+        this.uploadCallback(file)
     }
 
     /**
@@ -141,7 +142,6 @@ export default class Dropzone {
         pElt.innerHTML = `<b>${nbFiles}</b> fichier${nbFiles > 1 ? 's' : ''} :`
     }
 
-
     /**
      * @param {String} filename 
      * @returns {HTMLLIElement}
@@ -166,11 +166,11 @@ export default class Dropzone {
      * @returns {Boolean}
      */
     updateItemInList(file, status = 'success') {
-        const fullFilename = (file.name + '.' + file.extension).toLowerCase()
+        const fullFilename = (file.name + (file.extension ? '.' + file.extension : '')).toLowerCase()
         this.filesCollection.forEach(fileItem => {
             if (fileItem.filename === fullFilename) {
                 const liElt = this.dropzoneElt.querySelector(`[data-file-name="${fullFilename}"]`)
-                const classname = (status ? 'far fa-check-circle' : 'fas fa-exclamation-triangle') + ' ml-2'
+                const classname = (status === 'success' ? 'far fa-check-circle' : 'fas fa-exclamation-triangle') + ' ml-2'
                 if (liElt) {
                     liElt.classList.add('text-' + status)
                     liElt.querySelector('span.fas.fa-sync-alt').className = classname

@@ -160,9 +160,9 @@ document:
   content.placeholder: Ajouter une description
   type.placeholder: -- Type --
   file:
-    mimeMessage: Merci de télécharger un fichier au format valide (doc, docx, jpg, pdf, png, rar, xls, xlsx, zip)
-    help: "5Mo maximum. Formats acceptés : doc, docx, jpg, pdf, png, rar, xls, xlsx, zip."
-    placeholder: Choisir un fichier...
+    help: "5 Mo maximum. Formats acceptés : doc, docx, jpg, jpeg, odp, ods, odt, pdf, png, rar, xls, xlsx, zip."
+    mimeMessage: Merci de télécharger un fichier au format valide (doc, docx, jpg, jpeg, pdf, png, rar, xls, xlsx, zip).
+    placeholder: Glisser-déposer ici les fichiers ou cliquer pour en choisir...
 Agreement: Consentement de la personne
 
 ### Referent

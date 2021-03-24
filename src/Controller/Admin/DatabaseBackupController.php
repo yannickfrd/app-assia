@@ -7,7 +7,7 @@ use App\Entity\Admin\DatabaseBackup;
 use App\Form\Admin\BackupSearchType;
 use App\Form\Model\Admin\BackupSearch;
 use App\Repository\Admin\DatabaseBackupRepository;
-use App\Service\Download;
+use App\Service\File\Download;
 use App\Service\DumpDatabase;
 use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;

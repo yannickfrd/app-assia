@@ -4,7 +4,6 @@ namespace App\Command;
 
 use App\Repository\Support\DocumentRepository;
 use App\Service\DoctrineTrait;
-use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -21,15 +20,13 @@ class ReorganizeUploadFolderCommand extends Command
 
     protected $repo;
     protected $manager;
-    protected $fileUploader;
     protected $output;
 
-    public function __construct(DocumentRepository $repo, EntityManagerInterface $manager, FileUploader $fileUploader)
+    public function __construct(DocumentRepository $repo, EntityManagerInterface $manager)
     {
         $this->repo = $repo;
         $this->manager = $manager;
         $this->disableListeners($this->manager);
-        $this->fileUploader = $fileUploader;
 
         parent::__construct();
     }
@@ -66,6 +63,6 @@ class ReorganizeUploadFolderCommand extends Command
         }
         $this->manager->flush();
 
-        return "\n[OK] The documents are update ! \n ".$count.' / '.count($documents)."\n";
+        return "\n[OK] The document paths are update ! \n ".$count.' / '.count($documents)."\n";
     }
 }
