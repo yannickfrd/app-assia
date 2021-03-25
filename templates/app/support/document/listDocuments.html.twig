@@ -66,7 +66,7 @@
 								<td class="align-middle">{{ document.createdAt|date("d/m/Y H:i") }}</td>
 								<td class="align-middle">{{ document.createdBy ? document.createdBy.fullname }}</td>
 								<td scope="row" class="align-middle text-center">
-									<a href="{{ path('document_read', {'id': document.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow my-1" 
+									<a href="{{ path('document_download', {'id': document.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow my-1" 
 										data-toggle="tooltip" data-placement="bottom" title="Télécharger le document"><span class="fas fa-file-download"></span>
 									</a>
 								</td>

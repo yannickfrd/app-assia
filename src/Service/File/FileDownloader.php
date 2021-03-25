@@ -5,22 +5,20 @@ namespace App\Service\File;
 use App\Entity\Support\SupportGroup;
 use App\Repository\Support\DocumentRepository;
 
-class FileDownloader
+class FileDownloader extends Downloader
 {
     private $repoDocument;
-    private $download;
     private $downloadsDirectory;
     private $documentsDirectory;
 
-    public function __construct(DocumentRepository $repoDocument, Download $download, string $downloadsDirectory, string $documentsDirectory)
+    public function __construct(DocumentRepository $repoDocument, string $downloadsDirectory, string $documentsDirectory)
     {
         $this->repoDocument = $repoDocument;
-        $this->download = $download;
         $this->downloadsDirectory = $downloadsDirectory;
         $this->documentsDirectory = $documentsDirectory;
     }
 
-    public function send(array $idDocuments, SupportGroup $supportGroup)
+    public function sendDocuments(array $idDocuments, SupportGroup $supportGroup)
     {
         $now = new \DateTime();
 
@@ -32,7 +30,7 @@ class FileDownloader
         }
 
         $zip = new \ZipArchive();
-        $zipFile = $path.$now->format('Y_m_d_').'documents_'.uniqid().'.zip';
+        $zipFile = $path.$now->format('Y_m_d_').'documents_'.$supportGroup->getId().$now->format('_His').'.zip';
 
         if (!$zip->open($zipFile, \ZipArchive::CREATE)) {
             throw new \Exception('The zip file could not opened.');
@@ -46,7 +44,7 @@ class FileDownloader
         }
         $zip->close();
 
-        return $this->download->send($zipFile);
+        return $this->send($zipFile);
     }
 
     public function getDownloadDirectory()

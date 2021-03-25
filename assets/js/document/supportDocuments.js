@@ -169,9 +169,6 @@ export default class SupportDocuments {
      * @param {Object} response 
      */
     responseAjax(response) {
-        if (response instanceof Blob) {
-            return this.getFile(response)
-        }
         switch (response.action) {
             case 'create':
                 this.createDocumentTr(response.data)
@@ -182,21 +179,11 @@ export default class SupportDocuments {
             case 'delete':
                 this.deleteDocumentTr(response.data)
                 break
+            case 'download':
+                return this.getFile(response.data)
+                break
         }
         new MessageFlash(response.alert, response.msg)
-        this.loader.off()
-    }
-
-    /**
-     * 
-     * @param {Blob} blob 
-     * @returns 
-     */
-    getFile(blob) {
-        this.loader.on()
-        const fullnamePerson = document.querySelector('#js-support-people>a').textContent.replace(' ', '_')
-        const filename = new DateFormater().getDateNow('_') + '_Documents_' + fullnamePerson + '.zip'
-        this.ajax.showFile(blob, filename)
         this.loader.off()
     }
 
@@ -257,6 +244,15 @@ export default class SupportDocuments {
 
     /**
      * @param {Object} data 
+     */
+    getFile(data) {
+        this.loader.on()
+        this.ajax.showFile(data.file, data.filename)
+        this.loader.off()
+    }
+
+    /**
+     * @param {Object} data 
      */ 
     getDocumentTrPrototype(data) {
         const documentTrElt = document.createElement('tr')
@@ -273,7 +269,7 @@ export default class SupportDocuments {
                 </div>
             </td>
             <td class="align-middle text-center">
-                <a href="/document/${data.id}/read" class="btn btn-${this.themeColor} btn-sm shadow my-1" 
+                <a href="/document/${data.id}/download" class="btn btn-${this.themeColor} btn-sm shadow my-1" 
                     title="Télécharger le document"><span class="fas fa-file-download"></span>
                 </a>
             </td>

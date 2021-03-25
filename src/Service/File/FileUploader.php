@@ -67,12 +67,13 @@ class FileUploader
                 ->setPeopleGroup($peopleGroup)
                 ->setSupportGroup($supportGroup);
 
+            $supportGroup->setUpdatedAt($now);
+
             $this->manager->persist($document);
+            $this->manager->flush();
 
             $documents[] = $document;
         }
-
-        $supportGroup->setUpdatedAt($now);
 
         $data = [];
         $names = [];

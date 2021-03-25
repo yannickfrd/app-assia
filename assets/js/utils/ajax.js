@@ -7,8 +7,8 @@ import Loader from './loader'
 export default class Ajax {
 
     /**
-     * @param {Object} loader 
-     * @param {Numer} delayError in seconds 
+     * @param {Loader} loader 
+     * @param {Number} delayError in seconds 
      */
     constructor(loader = null, delayError = 20) {
         this.loader = loader ?? new Loader()
@@ -31,11 +31,80 @@ export default class Ajax {
         this.loading = true
         this.loader.on()
         this.timer()
+
         await fetch(url, {
             method: method, 
             body: data
         }).then(response => this.getResponse(response, callback) 
         ).catch(error => this.getError(error))
+    }
+
+    /**
+     * Donne la réponse.
+     * @param {Response} response 
+     * @param {CallableFunction} callback 
+     */
+    async getResponse(response, callback) {
+        const reader = response.body.getReader()
+        const contentLength = +response.headers.get('Content-Length')
+        let receivedLength = 0
+        const chunks = []
+
+        while(true) {
+            const {done, value} = await reader.read()
+
+            if (done) {
+                break
+            }
+
+            chunks.push(value)
+            receivedLength += value.length
+            let msg = Math.round((receivedLength / contentLength) * 100) + ' %'
+            console.log('Download...' + msg)
+            this.loader.updateInfo(msg)
+        }
+
+        const chunksAll = new Uint8Array(receivedLength)
+        let position = 0
+        for(let chunk of chunks) {
+            chunksAll.set(chunk, position)
+            position += chunk.length
+        }
+
+        const result = new TextDecoder("utf-8").decode(chunksAll)
+
+        this.loading = false
+        this.loader.off()
+
+        clearInterval(this.countdownID)
+
+        if (response.status === 403) {
+            throw new Error('403 Forbidden access')
+        }
+
+        const contentType = response.headers.get('content-type')
+
+        if (contentType && contentType.includes('application/json')) {
+            return callback(JSON.parse(result))
+        }
+
+        if (contentType && contentType.includes('application')) {
+            return callback({
+                    'action': 'download',
+                    'alert': 'success',
+                    'msg': 'Le fichier est téléchargé.',
+                    'data': {
+                        'filename': response.headers.get('Content-Name'),
+                        'file': new Blob(chunks, {
+                            type: contentType,
+                            name: 'document_name'
+                        }),
+                    }
+                }
+            )
+        }
+
+        return callback(result)
     }
 
     /**
@@ -49,63 +118,25 @@ export default class Ajax {
         }, this.delayError * 1000)
     }
 
-    /**
-     * Donne la réponse.
-     * @param {Response} response 
-     * @param {CallableFunction} callback 
-     */
-    getResponse(response, callback) {
-        this.loading = false
-        this.loader.off()
-        clearInterval(this.countdownID)
-        if (response.status === 403) {
-            throw new Error('403 Forbidden access')
-        }
-
-        const contentType = response.headers.get('content-type');
-        
-        if (contentType && contentType.includes('application/json')) {
-            return response.json().then((json) => {
-                return callback(json);
-            });
-        }
-
-        if (contentType && contentType.includes('application/pdf')) {
-            return response.blob().then((blob) => {
-                return callback(blob);
-            });
-        }
-
-        if (contentType && contentType.includes('application/octet-stream')) {
-            return response.blob().then((blob) => {
-                return callback(blob);
-            });
-        }
-
-        return response.text().then((text) => {
-            return callback(text);
-        });
-    }
-
-    /**
-     * 
+    /** 
      * @param {Blob} blob 
      */
     showFile(blob, filename = 'document.pdf', target = '_blank') {
         const file = new File([blob], filename, {
-            type: blob.type
+            type: blob.type,
         })
-        const data = window.URL.createObjectURL(file);
-        const link = document.createElement('a');
 
-        link.href = data;
-        link.target = target;
-        link.download = filename;
-        link.click(); // window.location.assign(data)
+        const data = window.URL.createObjectURL(file)
+        const link = document.createElement('a')
+
+        link.href = data
+        link.target = target
+        link.download = filename
+        link.click() // window.location.assign(data)
 
         setTimeout(function(){
-            window.URL.revokeObjectURL(data);
-        }, 100);
+            window.URL.revokeObjectURL(data)
+        }, 100)
     }
 
     /**

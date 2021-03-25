@@ -1,11 +1,12 @@
 /**
- * Animmation du loader spinner.
+ * Animation du loader spinner.
  */
 export default class Loader {
 
     constructor() {
         this.inLoading = false
         this.loaderElt = document.getElementById('loader')
+        this.infoElt = this.loaderElt.querySelector('span.sr-only')
     }
 
     /**
@@ -22,6 +23,18 @@ export default class Loader {
     off() {
         this.inLoading = false
         this.loaderElt.classList.add('d-none')
+        this.infoElt.classList.add('sr-only')
+        this.infoElt.textContent = ''   
+    }
+
+    /**
+     * @param {String} info 
+     */
+    updateInfo(info) {
+        if (info != this.infoElt.textContent) {
+            this.infoElt.classList.remove('sr-only')
+            this.infoElt.textContent = info
+        }
     }
 
     /** 

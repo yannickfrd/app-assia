@@ -4,7 +4,7 @@ namespace App\Service\File;
 
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class Download
+class Downloader
 {
     /**
      * Envoie le fichier à télécharger à l'utilisateur.
@@ -19,8 +19,9 @@ class Download
             $response = new StreamedResponse();
 
             $response->headers->set('Content-Description', 'File Transfer');
-            $response->headers->set('Content-Type', 'application/octet-stream');
+            $response->headers->set('Content-Type', mime_content_type($file) ?? 'application/octet-stream');
             $response->headers->set('Content-Disposition', 'attachment; filename="'.basename($file).'"');
+            $response->headers->set('Content-Name', basename($file));
             $response->headers->set('Expires', 0);
             $response->headers->set('Pragma', 'public');
             $response->headers->set('Content-Length', filesize($file));
