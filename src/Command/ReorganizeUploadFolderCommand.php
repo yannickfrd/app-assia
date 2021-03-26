@@ -46,10 +46,10 @@ class ReorganizeUploadFolderCommand extends Command
         $count = 0;
 
         foreach ($documents as $document) {
-            $file = __DIR__.'/../../public/uploads/documents/'.$document->getPeopleGroup()->getId().'/'.$document->getCreatedAt()->format('Y/m').'/'.$document->getInternalFileName();
+            $file = \dirname(__DIR__).'/../public/uploads/documents/'.$document->getPeopleGroup()->getId().'/'.$document->getCreatedAt()->format('Y/m').'/'.$document->getInternalFileName();
 
             if (file_exists($file)) {
-                $newPath = __DIR__.'/../../public/uploads/documents/'.$document->getCreatedAt()->format('Y/m/d/').$document->getPeopleGroup()->getId().'/';
+                $newPath = \dirname(__DIR__).'/../public/uploads/documents/'.$document->getCreatedAt()->format('Y/m/d/').$document->getPeopleGroup()->getId().'/';
                 $newFile = $newPath.$document->getInternalFileName();
                 if (!file_exists($newPath)) {
                     mkdir($newPath, 0700, true);

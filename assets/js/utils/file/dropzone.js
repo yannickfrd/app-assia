@@ -30,7 +30,7 @@ export default class Dropzone {
         this.clearDropzoneContent()
 
         this.dropzoneElt.addEventListener('click', () => this.filesDocumentInput.click())
-        this.filesDocumentInput.addEventListener('input', e => this.drop(e))
+        this.filesDocumentInput.addEventListener('input', () => this.inputFiles())
         this.dropzoneElt.addEventListener('dragenter', e => {
             e.stopPropagation()
             e.preventDefault()
@@ -59,39 +59,44 @@ export default class Dropzone {
     drop(e) {
         e.stopPropagation()
         e.preventDefault()
-
         this.dropzoneElt.classList.remove('dropzone-dragover')
         
         if (e.dataTransfer) {
-            this.checkFiles(e.dataTransfer.files)
-        }
-
-        if (this.filesDocumentInput.files) {
-            this.checkFiles(this.filesDocumentInput.files)
-            this.filesDocumentInput.value = null
+            const files = e.dataTransfer.files
+            for (let i = 0; i < files.length; i++) {
+                if (this.checkFile(files[i])) {
+                    this.uploadCallback(files[i])
+                }
+            }         
         }
     }
 
-    /**
-     * @param {FileList} files
-     */
-    checkFiles(files) {
+    inputFiles() {       
+        const files = this.filesDocumentInput.files
+        let errors = 0
         for (let i = 0; i < files.length; i++) {
-            const file = files[i]
-
-            if (this.filesInCollection(file)) {
-                return new MessageFlash('danger', 'Le fichier "' + file.name + '" a déjà été ajouté.')
+            if (!this.checkFile(files[i])) {
+                ++errors
             }
-
-            this.addFile(file, this.fileChecker.isValid(file))
         }
+
+        if (0 === errors) {
+            this.uploadCallback()
+        }
+
+        this.filesDocumentInput.value = null
     }
 
     /**
      * @param {File} file 
-     * @param {Boolean} isValid 
+     * @returns {Boolean}
      */
-    addFile(file, isValid) {
+    checkFile(file) {
+        if (this.filesInCollection(file)) {
+            new MessageFlash('danger', 'Le fichier "' + file.name + '" a déjà été ajouté.')
+            return false
+        }
+
         if (0 === this.filesCollection.length) {
             this.createDropzoneContent()
         }
@@ -101,11 +106,12 @@ export default class Dropzone {
         this.addItemInCollection(filename)
         this.updateDropzoneContent(filename)
 
-        if (!isValid) {
-            return this.updateItemInList(file, 'danger')
+        if (!this.fileChecker.isValid(file)) {
+            this.updateItemInList(file, 'danger')
+            return false
         }
-        
-        this.uploadCallback(file)
+
+        return true
     }
 
     /**
@@ -128,10 +134,10 @@ export default class Dropzone {
 
     createDropzoneContent() {
         this.dropzoneElt.innerHTML = `
-        <div class='row' style='min-height: 200px;'>
+        <div class='row p-2' style='min-height: 200px;'>
             <div class="col-md-12">
                 <p class="mb-2"></p>
-                <ul class="mb-0 pl-4"></ul>
+                <ul class="list-group mb-0 pl-0"></ul>
             </div>
         </div>`
     }
@@ -148,7 +154,7 @@ export default class Dropzone {
      */
     createLiElt(filename) {
         const liElt = document.createElement('li')
-        liElt.className = 'mb-2 fade-in'
+        liElt.className = 'list-group-item d-flex justify-content-between align-items-center list-group-item-light fade-in'
         liElt.setAttribute('data-file-name', filename.toLowerCase())
         liElt.innerHTML = `${filename}<span class="fas fa-sync-alt ml-2 text-secondary"></span>`
         return liElt
@@ -172,8 +178,12 @@ export default class Dropzone {
                 const liElt = this.dropzoneElt.querySelector(`[data-file-name="${fullFilename}"]`)
                 const classname = (status === 'success' ? 'far fa-check-circle' : 'fas fa-exclamation-triangle') + ' ml-2'
                 if (liElt) {
-                    liElt.classList.add('text-' + status)
-                    liElt.querySelector('span.fas.fa-sync-alt').className = classname
+                    liElt.classList.replace('list-group-item-light', 'list-group-item-' + status)
+                    liElt.title = (status === 'success' ? 'Succès : Le fichier est enregistré.' : 'Échec : Le fichier est invalide.')
+                    const spanElt = liElt.querySelector('span.fas.fa-sync-alt')
+                    if (spanElt) {
+                        spanElt.className = classname
+                    }   
                 }
                 fileItem.status = status
             }

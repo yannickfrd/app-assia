@@ -6,6 +6,7 @@ use App\Entity\Support\Document;
 use App\Entity\Support\SupportGroup;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -55,7 +56,6 @@ class FileUploader
             if (!$file instanceof UploadedFile) {
                 continue;
             }
-
             $path = $now->format('Y/m/d/').$peopleGroup->getId().'/';
             $fileName = $this->upload($file, $path);
             $size = \filesize($this->getTargetDirectory().$path.'/'.$fileName);

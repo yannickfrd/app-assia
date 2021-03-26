@@ -1,9 +1,9 @@
 App\Entity\Support\Document:
   document1:
-    name: Document 666
+    name: Document
     type: 1
     content: Description du document
-    internalFileName: <slug()>
+    internalFileName: doc.docx
     size: <numberBetween(200000, 4000000)>
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>

@@ -48,7 +48,7 @@
 							</div>
 						</th>
 						<th scope="col" class="align-middle th-w-20"></th>
-						<th scope="col" class="align-middle th-w-150">{{ knp_pagination_sortable(documents, "Nom du document", "d.name") }}</th>
+						<th scope="col" class="align-middle th-w-150">{{ knp_pagination_sortable(documents, "Nom", "d.name") }}</th>
 						<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(documents, "Type", "d.type") }}</th>
 						<th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(documents, "Description", "d.content") }}</th>
 						<th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(documents, "Taille", "d.size") }}</th>
@@ -77,9 +77,9 @@
 									data-toggle="tooltip" data-placement="bottom" title="Télécharger le document"><span class="fas fa-file-download"></span>
 								</a>
 							</td>
-							<td class="align-middle" data-document="name">{{ document.name }}</td>
-							<td class="align-middle" data-document="type" data-type-value="{{ document.type }}">{{ document.typeToString }}</td>
-							<td class="align-middle" data-document="content">{{ document.content }}</td>
+							<td class="align-middle cursor-pointer" data-document="name">{{ document.name }}</td>
+							<td class="align-middle cursor-pointer" data-document="type" data-type-value="{{ document.type }}">{{ document.typeToString }}</td>
+							<td class="align-middle cursor-pointer" data-document="content">{{ document.content }}</td>
 							<td class="align-middle text-right">{{ (document.size / 1000000)|round(2) }} Mo</td>
 							<td class="align-middle">{{ document.fileType }}</td>
 							<td class="align-middle">{{ document.createdAt|date("d/m/Y H:i") }}</td>

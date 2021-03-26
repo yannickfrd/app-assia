@@ -2,31 +2,31 @@
 
 namespace App\Controller\Support;
 
-use App\Service\Pagination;
-use App\Entity\Support\Document;
-use App\Service\File\Downloader;
-use App\Service\File\FileUploader;
-use App\Entity\Support\SupportGroup;
-use App\Security\CurrentUserService;
-use App\Service\File\FileDownloader;
-use App\EntityManager\SupportManager;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Form\Support\Document\ActionType;
-use App\Form\Model\Support\DocumentSearch;
-use App\Form\Support\Document\DocumentType;
 use App\Controller\Traits\ErrorMessageTrait;
-use Symfony\Component\HttpFoundation\Request;
+use App\Entity\Support\Document;
+use App\Entity\Support\SupportGroup;
+use App\EntityManager\SupportManager;
+use App\Form\Model\Support\DocumentSearch;
+use App\Form\Model\Support\SupportDocumentSearch;
+use App\Form\Support\Document\ActionType;
+use App\Form\Support\Document\DocumentSearchType;
+use App\Form\Support\Document\DocumentType;
+use App\Form\Support\Document\DropzoneDocumentType;
+use App\Form\Support\Document\SupportDocumentSearchType;
 use App\Repository\Support\DocumentRepository;
+use App\Security\CurrentUserService;
+use App\Service\File\Downloader;
+use App\Service\File\FileDownloader;
+use App\Service\File\FileUploader;
+use App\Service\Pagination;
+use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Form\Model\Support\SupportDocumentSearch;
-use App\Form\Support\Document\DocumentSearchType;
-use App\Form\Support\Document\DropzoneDocumentType;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use App\Form\Support\Document\SupportDocumentSearchType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class DocumentController extends AbstractController
 {
@@ -98,17 +98,19 @@ class DocumentController extends AbstractController
      */
     public function newDocument(SupportGroup $supportGroup, Request $request, FileUploader $fileUploader): Response
     {
+        $dropzoneDocument = $request->files->get('dropzone_document');
         $files = $request->files->get('files');
-
-        if (!$request->files->get('dropzone_document')['files'] && $files) {
+        if ($dropzoneDocument && !$dropzoneDocument['files'] && $files) {
             $request->files->set('dropzone_document', ['files' => [$files]]);
         }
 
         $form = ($this->createForm(DropzoneDocumentType::class))
             ->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $fileUploader->createDocuments($supportGroup, $request->files->all());
+        $files = $form->get('files')->getData();
+
+        if ($form->isSubmitted() && $form->isValid() && count($files) > 0) {
+            $data = $fileUploader->createDocuments($supportGroup, $files);
 
             $this->discache($supportGroup);
 
@@ -119,7 +121,7 @@ class DocumentController extends AbstractController
     }
 
     /**
-     * Lit le document.
+     * Télécharge un fichier.
      *
      * @Route("document/{id}/download", name="document_download", methods="GET")
      * @IsGranted("VIEW", subject="document")
@@ -135,6 +137,27 @@ class DocumentController extends AbstractController
         $this->addFlash('danger', 'Ce fichier n\'existe pas.');
 
         return $this->redirectToRoute('support_documents', ['id' => $document->getSupportGroup()->getId()]);
+    }
+
+    /**
+     * Modification d'un document.
+     *
+     * @Route("support/{id}/documents/download", name="documents_download", methods="GET|POST")
+     */
+    public function downloadDocuments(int $id, Request $request, SupportManager $supportManager, FileDownloader $downloader): Response
+    {
+        $this->denyAccessUnlessGranted('VIEW', $supportGroup = $supportManager->getSupportGroup($id));
+
+        $form = ($this->createForm(ActionType::class, null))
+            ->handleRequest($request);
+
+        $items = json_decode($request->request->get('items'));
+
+        if ($form->isSubmitted() && $form->isValid() && $items && count($items) > 0) {
+            return $this->json($downloader->sendDocuments($items, $supportGroup));
+        }
+
+        return $this->getErrorMessage($form);
     }
 
     /**
@@ -159,27 +182,6 @@ class DocumentController extends AbstractController
                 'msg' => 'Les informations du document "'.$document->getName().'" sont mises à jour.',
                 'data' => $normalizer->normalize($document, null, ['groups' => ['get', 'view']]),
             ]);
-        }
-
-        return $this->getErrorMessage($form);
-    }
-
-    /**
-     * Modification d'un document.
-     *
-     * @Route("support/{id}/documents/download", name="documents_download", methods="GET|POST")
-     */
-    public function downloadDocuments(int $id, Request $request, SupportManager $supportManager, FileDownloader $downloader): Response
-    {
-        $this->denyAccessUnlessGranted('VIEW', $supportGroup = $supportManager->getSupportGroup($id));
-
-        $form = ($this->createForm(ActionType::class, null))
-            ->handleRequest($request);
-
-        $items = json_decode($request->request->get('items'));
-
-        if ($form->isSubmitted() && $form->isValid() && count($items) > 0) {
-            return $this->json($downloader->sendDocuments($items, $supportGroup));
         }
 
         return $this->getErrorMessage($form);

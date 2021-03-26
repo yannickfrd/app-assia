@@ -94,7 +94,7 @@ export default class Ajax {
                     'alert': 'success',
                     'msg': 'Le fichier est téléchargé.',
                     'data': {
-                        'filename': response.headers.get('Content-Name'),
+                        'filename': response.headers.get('content-name'),
                         'file': new Blob(chunks, {
                             type: contentType,
                             name: 'document_name'

@@ -8,6 +8,7 @@ use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
 
 class DocumentControllerTest extends WebTestCase
@@ -36,6 +37,7 @@ class DocumentControllerTest extends WebTestCase
 
         $this->supportGroup = $this->dataFixtures['supportGroup'];
         $this->document = $this->dataFixtures['document1'];
+        $this->documentsDirectory = dirname(__DIR__).'/../../public/uploads/documents/';
     }
 
     public function testPageDocumentsIsUp()
@@ -60,7 +62,7 @@ class DocumentControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Documents');
     }
 
-    public function testSearchDocument()
+    public function tesSearchDocumentIsSuccessful()
     {
         $this->createLogin($this->dataFixtures['userRoleUser']);
 
@@ -70,18 +72,17 @@ class DocumentControllerTest extends WebTestCase
         ]));
 
         $form = $crawler->selectButton('search')->form([
-            'search[name]' => 'Document 666',
+            'search[name]' => 'Document',
             'search[type]' => 1,
         ]);
 
         $this->client->submit($form);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-
-        $this->assertSelectorTextContains('table tbody tr td:nth-child(2)', 'Document 666');
+        $this->assertSelectorTextContains('table tbody tr td[data-document="name"]', 'Document');
     }
 
-    public function testFailToCreateNewDocument()
+    public function testCreateNewDocumentIsFailed()
     {
         $this->createLogin($this->dataFixtures['userRoleUser']);
 
@@ -89,60 +90,165 @@ class DocumentControllerTest extends WebTestCase
             'id' => $this->supportGroup->getId(),
         ]));
 
+        $contentResponse = json_decode($this->client->getResponse()->getContent(), true);
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSame('danger', $contentResponse['alert']);
+    }
+
+    public function testCreateNewDocumentIsSuccessful()
+    {
+        $this->createLogin($this->dataFixtures['userRoleUser']);
+
+        $this->uploadFile();
+        $contentResponse = json_decode($this->client->getResponse()->getContent(), true);
+
+        $this->assertSame('success', $contentResponse['alert']);
+
+        $repo = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository(Document::class);
+        $document = $repo->find($contentResponse['data'][0]['id']);
+        $file = $this->documentsDirectory.$document->getCreatedAt()->format('Y/m/d/').$document->getPeopleGroup()->getId().'/'.$document->getInternalFileName();
+        if (file_exists($file)) {
+            unlink($file);
+        }
+    }
+
+    public function testDownloadDocumentIsFailed()
+    {
+        $this->createLogin($this->dataFixtures['userRoleUser']);
+
+        $this->client->request('GET', "document/{$this->document->getId()}/download");
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorExists('div.alert.alert-danger');
+    }
+
+    public function testDownloadDocumentIsSuccessful()
+    {
+        $this->createLogin($this->dataFixtures['userRoleUser']);
+
+        $newFile = $this->moveFile();
+
+        $this->client->request('GET', "document/{$this->document->getId()}/download");
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseHasHeader('content-name', $this->document->getInternalFileName());
+
+        if (file_exists($newFile)) {
+            unlink($newFile);
+        }
+    }
+
+    public function testDownloadDocumentsIsSuccessful()
+    {
+        $this->createLogin($this->dataFixtures['userRoleUser']);
+
+        $newFile = $this->moveFile();
+
+        $crawler = $this->client->request('GET', "support/{$this->supportGroup->getId()}/documents");
+
+        $_POST['items'] = '['.$this->document->getId().']';
+
+        $form = $crawler->selectButton('action-validate')->form([
+            'action[type]' => 1,
+        ]);
+
+        $this->client->submit($form);
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseHasHeader('Content-Type', 'application/zip');
+
+        if (file_exists($newFile)) {
+            unlink($newFile);
+        }
+    }
+
+    public function testEditDocumentIsFailed()
+    {
+        $this->createLogin($this->dataFixtures['userRoleUser']);
+
+        $this->client->request('POST', "document/{$this->document->getId()}/edit");
+
         $data = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertSame('danger', $data['alert']);
     }
 
-    public function testFailToEditDocument()
+    public function testEditDocumentIsSuccessful()
     {
         $this->createLogin($this->dataFixtures['userRoleUser']);
 
-        $this->client->request('POST', $this->generateUri('document_edit', [
-            'id' => $this->document->getId(),
-        ]));
+        $crawler = $this->client->request('GET', "support/{$this->supportGroup->getId()}/documents");
 
-        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $content = $this->client->getResponse()->getContent();
+        $content = str_replace('action="/document/__id__/edit"', 'action="/document/'.$this->document->getId().'/edit"', $content);
+        $this->client->getResponse()->setContent($content);
 
-        $this->assertSame('danger', $data['alert']);
+        $crawler->clear();
+        $crawler->addContent($this->client->getResponse()->getContent());
+
+        // $csrfToken = $this->client->getContainer()->get('security.csrf.token_manager')->getToken('document');
+        $form = $crawler->selectButton('document_update')->form([
+            'document[name]' => 'Document',
+            'document[type]' => 1,
+            // '_token' => $csrfToken,
+        ]);
+
+        $this->client->submit($form);
+
+        $contentResponse = json_decode($this->client->getResponse()->getContent(), true);
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSame('update', $contentResponse['action']);
     }
 
-    // public function testEditDocument()
-    // {
-    //     $crawler = $this->client->request('GET', $this->generateUri('support_documents', [
-    //         'id' => $this->supportGroup->getId(),
-    //     ]));
-
-    //     $form = $crawler->selectButton('js-btn-save')->form([]);
-
-    //     $this->client->request('POST', $this->generateUri('document_edit', [
-    //         'id' => $this->document->getId(),
-    //     ]), [
-    //        'document' => [
-    //             'name' => 'Rerum quis temporibus eligendi.',
-    //             'type' => 1,
-    //             'content' => 'Ut ipsum dolorem rem vel quis rem occaecati.',
-    //             '_token' => $form->getValues('_token')['document[_token]'],
-    //        ],
-    //        'file' => 'undefined',
-    //     ]);
-
-    //     $data = json_decode($this->client->getResponse()->getContent(), true);
-
-    //     $this->assertSame('success', $data['alert']);
-    // }
-
-    public function testDeleteDocument()
+    public function testDeleteDocumentIsSuccessful()
     {
         $this->createLogin($this->dataFixtures['userRoleUser']);
 
-        $this->client->request('GET', $this->generateUri('document_delete', [
-            'id' => $this->document->getId(),
-        ]));
+        $this->client->request('GET', "document/{$this->document->getId()}/delete");
 
-        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $contentResponse = json_decode($this->client->getResponse()->getContent(), true);
 
-        $this->assertSame('delete', $data['action']);
+        $this->assertSame('delete', $contentResponse['action']);
+    }
+
+    private function uploadFile(): Response
+    {
+        $crawler = $this->client->request('GET', "/support/{$this->supportGroup->getId()}/documents");
+
+        $uploadedFile = new UploadedFile(
+            dirname(__DIR__).'/../DataFixturesTest/files/doc.docx',
+            'doc.docx', null, null, true
+        );
+
+        $form = $crawler->selectButton('send')->form([
+            'dropzone_document[files]' => [$uploadedFile],
+        ]);
+
+        $this->client->submit($form);
+
+        return $this->client->getResponse();
+    }
+
+    private function moveFile(): ?string
+    {
+        $file = dirname(__DIR__).'/../DataFixturesTest/files/doc.docx';
+        if (!file_exists($file)) {
+            return null;
+        }
+
+        $newPath = $this->documentsDirectory.$this->document->getCreatedAt()->format('Y/m/d/').$this->document->getPeopleGroup()->getId().'/';
+        $newFile = $newPath.$this->document->getInternalFileName();
+
+        if (!file_exists($newPath)) {
+            mkdir($newPath, 0700, true);
+        }
+        if (!file_exists($newFile)) {
+            copy($file, $newFile);
+        }
+
+        return $newFile;
     }
 
     protected function tearDown(): void

@@ -109,13 +109,15 @@ export default class SupportDocuments {
     /**
      * @param {File} file
      */
-    uploadFile(file) {
+    uploadFile(file = null) {
+        const url = this.dropzoneFormElt.getAttribute('action')
+        const formData = new FormData(this.dropzoneFormElt)
+
         if (file) {
-            const formData = new FormData(this.dropzoneFormElt)
-            const url = this.dropzoneFormElt.getAttribute('action')
             formData.append('files', file)
-            this.ajax.send('POST', url, this.responseAjax.bind(this), formData)
         }
+
+        this.ajax.send('POST', url, this.responseAjax.bind(this), formData)
     }
 
     /**
@@ -124,14 +126,14 @@ export default class SupportDocuments {
      * @param {HTMLTableRowElement} documentTrElt 
      */
     showDocument(e, documentTrElt) {
-        if (e.target.localName != 'td') {
+        if (!e.target.className.includes('cursor-pointer')) {
             return null
         }
 
         const id = documentTrElt.getAttribute('data-document-id')
         const typeValue = documentTrElt.querySelector('td[data-document="type"]').getAttribute('data-type-value')
 
-        this.documentFormElt.action = this.documentFormElt.getAttribute('data-url-document-edit').replace('__id__', id)
+        // this.documentFormElt.action = this.documentFormElt.getAttribute('data-url-document-edit').replace('__id__', id)
         this.documentFormElt.querySelector('#document_name').value = documentTrElt.querySelector('td[data-document="name"]').textContent
         this.documentFormElt.querySelector('#document_content').value = documentTrElt.querySelector('td[data-document="content"]').textContent
         this.selectType.setOption(this.documentFormElt.querySelector('#document_type'), typeValue)
