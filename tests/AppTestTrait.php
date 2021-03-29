@@ -5,6 +5,7 @@ namespace App\Tests;
 use App\Entity\Organization\User;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\Panther\Client;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 trait AppTestTrait
@@ -39,7 +40,8 @@ trait AppTestTrait
 
     protected function createPantherLogin($followRedirects = true)
     {
-        $this->client = static::createPantherClient(['browser' => 'firefox']);
+        $this->client = Client::createChromeClient(__DIR__.'/../drivers/chromedriver');
+        // $this->client = Client::createFirefoxClient(__DIR__.'/../drivers/geckodriver');
 
         $followRedirects ? $this->client->followRedirects() : null;
 

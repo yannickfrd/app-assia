@@ -133,7 +133,7 @@ export default class SupportDocuments {
         const id = documentTrElt.getAttribute('data-document-id')
         const typeValue = documentTrElt.querySelector('td[data-document="type"]').getAttribute('data-type-value')
 
-        // this.documentFormElt.action = this.documentFormElt.getAttribute('data-url-document-edit').replace('__id__', id)
+        this.documentFormElt.action = this.documentFormElt.getAttribute('data-url').replace('__id__', id)
         this.documentFormElt.querySelector('#document_name').value = documentTrElt.querySelector('td[data-document="name"]').textContent
         this.documentFormElt.querySelector('#document_content').value = documentTrElt.querySelector('td[data-document="content"]').textContent
         this.selectType.setOption(this.documentFormElt.querySelector('#document_type'), typeValue)
@@ -275,9 +275,9 @@ export default class SupportDocuments {
                     title="Télécharger le document"><span class="fas fa-file-download"></span>
                 </a>
             </td>
-            <td class="align-middle" data-document="name">${data.name}</td>
-            <td class="align-middle" data-document="type" data-type-value="${data.type}">${data.typeToString ?? ''}</td>
-            <td class="align-middle" data-document="content">${data.content ?? ''}</td>
+            <td class="align-middle cursor-pointer" data-document="name">${data.name}</td>
+            <td class="align-middle cursor-pointer" data-document="type" data-type-value="${data.type}">${data.typeToString ?? ''}</td>
+            <td class="align-middle cursor-pointer" data-document="content">${data.content ?? ''}</td>
             <td class="align-middle text-right">${((Math.floor(data.size / 10000) / 100).toLocaleString('fr') + ' Mo')}</td>
             <td class="align-middle" data-document="extension">${data.fileType}</td>
             <td class="align-middle">${new DateFormater().getDate(data.createdAt)}</td>

@@ -4,7 +4,8 @@
     <div class="modal-dialog modal-md modal-dialog-centered" role="document">
         <div class="modal-content">
             {{ form_start(documentForm, {
-                'action': path('document_edit', {'id': '__id__'}) 
+                'action': path('document_edit', {'id': '__id__'}), 
+                'attr': {'data-url': path('document_edit', {'id': '__id__'})} 
             }) }}
             <div class="modal-body pb-0">
                 {{ form_row(documentForm.name) }}
