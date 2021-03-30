@@ -276,9 +276,6 @@ export default class SupportNotes {
         this.containerNotesElt.querySelector(`div[data-note-id="${this.cardId}"]`).remove()
         this.updateCounts(-1)
         this.noteModalElt.hide()
-        setTimeout(() => {
-            document.querySelector('.modal-backdrop.fade.show').remove()
-        }, 500);
     }
 
     /**

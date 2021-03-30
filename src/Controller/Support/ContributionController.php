@@ -278,12 +278,13 @@ class ContributionController extends AbstractController
 
         $emails = [];
         foreach ($supportGroup->getSupportPeople() as $supportPerson) {
-            if (RolePerson::ROLE_CHILD != $supportPerson->getRole()) {
-                $emails[] = $supportPerson->getPerson()->getEmail();
+            $email = $supportPerson->getPerson()->getEmail();
+            if ($email && RolePerson::ROLE_CHILD != $supportPerson->getRole()) {
+                $emails[] = $email;
             }
         }
 
-        if (!$emails) {
+        if (0 === count($emails)) {
             return $this->json([
                 'action' => 'error',
                 'alert' => 'danger',

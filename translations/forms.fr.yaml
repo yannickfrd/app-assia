@@ -212,8 +212,8 @@ Salary amt: Montant salaire(s)
 Still to pay amt: Montant restant dû
 To pay amt: Montant à régler
 contribution:
-  startDate: Début de la période
-  endDate: Fin de la période
+  startDate: Début de période
+  endDate: Fin de période
   comment:
     placeholder: Ajouter un commentaire destiné à l'interne (service)...
     help: Ce commentaire est destiné à l'interne (service).
