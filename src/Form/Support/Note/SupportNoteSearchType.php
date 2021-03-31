@@ -2,13 +2,13 @@
 
 namespace App\Form\Support\Note;
 
-use App\Form\Utils\Choices;
 use App\Entity\Support\Note;
-use Symfony\Component\Form\AbstractType;
 use App\Form\Model\Support\SupportNoteSearch;
+use App\Form\Utils\Choices;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class SupportNoteSearchType extends AbstractType
 {
@@ -45,7 +45,8 @@ class SupportNoteSearchType extends AbstractType
                 ],
                 'placeholder' => 'placeholder.status',
                 'required' => false,
-            ]);
+            ])
+            ->add('export');
     }
 
     public function configureOptions(OptionsResolver $resolver)

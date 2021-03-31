@@ -1,7 +1,6 @@
 {% extends "model/_supportSearch.html.twig" %}
 
 {% block search_form %}
-
     {% if notes.getTotalItemCount %}
         <div class="form-group col-auto my-1 px-1">
             <span class="btn btn-outline-secondary btn-sm m-1 px-2 shadow-sm">
@@ -15,9 +14,14 @@
             </span>
         </div>
     {% endif %}
-
     <div class="form-group col-auto my-1 px-1">{{ form_row(form_search.content) }}</div>
     <div class="form-group col-auto my-1 px-1">{{ form_row(form_search.status) }}</div>
     <div class="form-group col-auto my-1 px-1">{{ form_row(form_search.type) }}</div>
+{% endblock %}
 
+{% block form_search_export %}
+    <button id="js-btn-export" name="export" value="true" class="btn btn-primary ml-2 shadow"
+        data-toggle="tooltip" data-placement="bottom" title=" Exporter les notes dans un document Word"><span
+        class="fas fa-file-word"></span><span class="sr-only">Exporter</span>
+    </button>
 {% endblock %}

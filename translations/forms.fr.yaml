@@ -223,6 +223,9 @@ contribution:
   type: Type d'opération
   rate.help: Nombre entre 0 et 1.
 
+### Note
+notes.export.title: Exporter toutes les notes sur un document Word
+
 ### RDV
 rdv:
   placeholder:

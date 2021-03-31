@@ -41,7 +41,7 @@ class NoteControllerTest extends WebTestCase
 
     public function testListNotesIsUp()
     {
-        $this->client->request('GET', $this->generateUri('notes'));
+        $this->client->request('GET', '/notes');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Notes');
@@ -50,7 +50,7 @@ class NoteControllerTest extends WebTestCase
     public function testSearchNotesIsSuccessful()
     {
         /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('notes'));
+        $crawler = $this->client->request('GET', '/notes');
 
         $form = $crawler->selectButton('search')->form([
             'content' => 'Note 666',
@@ -65,9 +65,7 @@ class NoteControllerTest extends WebTestCase
 
     public function testSupportListNotesIsUp()
     {
-        $this->client->request('GET', $this->generateUri('support_notes', [
-            'id' => $this->supportGroup->getId(),
-        ]));
+        $this->client->request('GET', "support/{$this->supportGroup->getId()}/notes");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Notes sociales');
@@ -76,9 +74,7 @@ class NoteControllerTest extends WebTestCase
     public function testSearchSupportNotesIsSuccessful()
     {
         /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('support_notes', [
-            'id' => $this->supportGroup->getId(),
-        ]));
+        $crawler = $this->client->request('GET', "support/{$this->supportGroup->getId()}/notes");
 
         $form = $crawler->selectButton('search')->form([
             'content' => 'Note 666',
@@ -90,6 +86,19 @@ class NoteControllerTest extends WebTestCase
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Notes sociales');
+    }
+
+    public function testExportNotesOfSupportIsSuccessful()
+    {
+        /** @var Crawler */
+        $crawler = $this->client->request('GET', "support/{$this->supportGroup->getId()}/notes");
+
+        $form = $crawler->selectButton('export')->form();
+
+        $this->client->submit($form);
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSame('application/vnd.ms-word', $this->client->getResponse()->headers->get('content-type'));
     }
 
     public function testFailToCreateNewNote()

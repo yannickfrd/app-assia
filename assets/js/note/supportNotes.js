@@ -28,7 +28,8 @@ export default class SupportNotes {
         this.btnExportWordElt = this.modalNoteElt.querySelector('#export-note-word')
         this.btnExportPdfElt = this.modalNoteElt.querySelector('#export-note-pdf')
         this.btnDeleteElt = this.modalNoteElt.querySelector('#modal-btn-delete')
-
+        
+        this.searchSupportNotesElt = document.getElementById('js-search-support-notes')
         this.themeColor = document.getElementById('header').getAttribute('data-color')
         this.autoSaveElt = document.getElementById('js-auto-save')
         this.countNotesElt = document.getElementById('count-notes')
@@ -287,5 +288,9 @@ export default class SupportNotes {
         if (this.nbTotalNotesElt) {
             this.nbTotalNotesElt.textContent = parseInt(this.nbTotalNotesElt.textContent) + nb
         }
+        if (parseInt(this.countNotesElt.textContent) > 0) {
+            return this.searchSupportNotesElt.classList.remove('d-none')
+        }
+        return this.searchSupportNotesElt.classList.add('d-none')
     }
 }
