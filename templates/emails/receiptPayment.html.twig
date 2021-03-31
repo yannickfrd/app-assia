@@ -1,7 +1,13 @@
 {% extends "emails/baseEmail.html.twig" %}
 
+{% set ROLE_CHILD = constant("App\\Entity\\People\\RolePerson::ROLE_CHILD") %}
+
 {% block greeting %}
-    <p class="mb-4">Bonjour {{ person.gender == 1 ? "Madame" : (person.gender == 2 ? "Monsieur") }} {{ person.fullname }}, </p>
+    <p class="mb-4">
+        {% for supportPerson in support.supportPeople|filter(s => s.role != ROLE_CHILD)|sort ((a, b) => b.head <=> a.head) %}
+            <b>{{ supportPerson.person.civilityToString }} {{ supportPerson.person.fullname }}</b>, <br/>
+        {% endfor %}
+        Bonjour, 
 {% endblock %}
 {% block body %}
     <p>Je vous prie de trouver en pièce-jointe <b>le reçu du paiement</b> concernant 
@@ -17,7 +23,7 @@
         d'un montant de <b>{{ contribution.paidAmt|price }}</b>{#
         #}{% if contribution.type in [1, 2] %}{#
             #} pour la période du <b>{{ contribution.startDate|date("d/m/Y") }}</b> au <b>{{ contribution.endDate|date("d/m/Y") }}</b> 
-            (soit {{ contribution.nbDays }} jours){#
+            (soit {{ contribution.nbDays }} jour{{ contribution.nbDays > 1 ? "s" }}){#
         #}{% endif %}.
     </p>
     <br/>

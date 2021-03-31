@@ -1,7 +1,7 @@
 {% import "macros/viewParagraph.html.twig" as view_p %}
 
 {% set theme_color = app.request.hasPreviousSession and app.session.get("theme_color") ? app.session.get("theme_color") : "#555c64;" %}
-{% set person = (support.supportPeople|filter(s => s.head == true)|first).person %}
+{% set ROLE_CHILD = constant("App\\Entity\\People\\RolePerson::ROLE_CHILD") %}
 {% set service = support.service %}
 {% set subService = support.subService %}
 {% set contribution_type %}{% apply spaceless %}
@@ -18,7 +18,7 @@
 
 <html lang="fr">
     <head>
-        <title>{{ title }} | {{ person.fullname }}</title>
+        <title>{{ title }} | {{ support.header }}</title>
         <meta charset="utf-8" />
         {% block stylesheets %}
             <style type="text/css">
@@ -57,7 +57,11 @@
 
             <br/>
 
-            <p class="text-right">À l'intention de <b>{{ person.gender == 1 ? "Madame" : (person.gender == 2 ? "Monsieur") }} {{ person.fullname }}</b></p>
+            <p class="text-right">À l'intention de 
+                {% for supportPerson in support.supportPeople|filter(s => s.role != ROLE_CHILD)|sort ((a, b) => b.head <=> a.head) %}
+                    <b>{{ supportPerson.person.civilityToString }} {{ supportPerson.person.fullname }}</b>, <br/>
+                {% endfor %}
+            </p>
 
             <br/>
 
@@ -77,13 +81,14 @@
             <p class="text-justify">
                 {% if contribution.paymentDate and contribution.paidAmt > 0 %}
                     Nous vous confirmons la réception de votre règlement de <b>{{ contribution.paidAmt|price }} 
-                    ({{ paidAmtToString }} euro{{ contribution.paidAmt > 1 ? "s" }})</b>,
+                    ({{ contribution.paidAmtToString }} euro{{ contribution.paidAmt > 1 ? "s" }})</b>,
                     {% if contribution.toPayAmt and contribution.toPayAmt != contribution.paidAmt %}
                         pour un montant dû de {{ contribution.toPayAmt|price }}, 
                     {% endif %}
                 {% else %}
                     Nous vous informons que dans le cadre de votre prise en charge, vous devez vous acquitter d'un montant de 
-                    <b>{{ contribution.toPayAmt|price }}</b>
+                    <b>{{ contribution.toPayAmt|price }}
+                    ({{ contribution.toPayAmtToString }} euro{{ contribution.toPayAmt > 1 ? "s" }})</b>,
                 {% endif %}
                 relatif {{ contribution_type }}{# 
                 #}{% if support.city and contribution.type in [1, 2, 10] %}
@@ -95,6 +100,11 @@
                 #}{% endif %}{# 
              #}.</p>
             <br/>
+
+            {% if contribution.commentExport %}
+                <p>{{ contribution.commentExport }}</p>
+                <br/>
+            {% endif %}
 
             {% if contribution.type in [1, 2] %}
                 <p class="text-justify">Le montant de {{ contribution.toPayAmt|price }} correspond à 

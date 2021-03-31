@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.21.0 12/03/2021
+2.23.3 30/03/2021
 
 # Développeur
 Romain MADELAINE
@@ -12,6 +12,35 @@ https://github.com/RomMad/esperer95.app
 
 # Connection à la base démo
 https://demo.esperer95.app
+
+## Version 2.23.3 - 30/03/2021
+- Fix error when send email with no emails;
+- Edit contribution form view;
+
+## Version 2.23.2 - 29/03/2021
+- Add condition in TerminateListener (if manager is open);
+
+## Version 2.23.1 - 22/03/2021
+- Add 'commentExport' field in Contribution;
+- Add all adults names in receiptPayment;
+- Send receiptPayment to all emails address in peopleGroup;
+- Create Event and Subscriber to export and send receiptPayment;
+- Add placeholder 'Amount' for all amount fields in forms;
+- Edit view listSupports : show dates and status of supportPerson (and not supportGroup);
+- Add 'throw new error' in JS code;
+- Factorisation supportNotes.js;
+- Fix bugs in supportNotes and supportsContributions;
+
+## Version 2.22.8 - 17/03/2021
+- Try to fix error 'The EntityManager is closed' : Add condition 'if EntityManager is open' in LoginListener;
+- Edit contributionExport PDF;
+- Update searchLocation feature + fix problem fix redure method;
+- Add enLocation fields in support (address, city, zipcode);
+- Update exports (add endLocation informations);
+- Fix error var in supportContribution;
+- Update filters in repositories;
+- Create file for footer;
+- Fix error with sql request duplicatedPeople (ONLY_FULL_GROUP_BY);
 
 ## Version 2.21.0 - 12/03/2021
 

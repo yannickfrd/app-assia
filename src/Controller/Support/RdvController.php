@@ -197,7 +197,7 @@ class RdvController extends AbstractController
      *
      * @Route("rdv/{id}/get", name="rdv_get", methods="GET")
      */
-    public function getRdv(int $id, SupportManager $supportManager): Response
+    public function getRdv(int $id): Response
     {
         $rdv = $this->repo->findRdv($id);
 
@@ -210,7 +210,7 @@ class RdvController extends AbstractController
             'action' => 'show',
             'rdv' => [
                 'title' => $rdv->getTitle(),
-                'fullnameSupport' => $supportGroup ? $supportManager->getHeadPersonSupport($supportGroup)->getFullname() : null,
+                'fullnameSupport' => $supportGroup ? $supportGroup->getHeader()->getFullname() : null,
                 'start' => $rdv->getStart()->format("Y-m-d\TH:i"),
                 'end' => $rdv->getEnd()->format("Y-m-d\TH:i"),
                 'location' => $rdv->getLocation(),

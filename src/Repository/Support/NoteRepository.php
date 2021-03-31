@@ -119,8 +119,17 @@ class NoteRepository extends ServiceEntityRepository
                 ->setParameter('end', $search->getEnd());
         }
 
-        return  $query->orderBy('n.updatedAt', 'DESC')
+        return $query->orderBy('n.updatedAt', 'DESC')
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+    }
+
+    /**
+     * @return Note[]
+     */
+    public function findNotesOfSupport(int $supportGroupId, SupportNoteSearch $search): array
+    {
+        return $this->findNotesOfSupportQuery($supportGroupId, $search)
+            ->getResult();
     }
 
     /**

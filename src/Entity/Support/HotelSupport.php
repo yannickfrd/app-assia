@@ -60,7 +60,7 @@ class HotelSupport
         6 => 'Fin d\'intervention d\'urgence',
         5 => 'Fin de prise en charge 115',
         3 => 'Fin de prise en charge ASE',
-        2 => 'Non respect de la convention d\'acc.',
+        2 => 'Non adhésion à l\'accompagnement',
         4 => 'Départ vers un autre département',
         97 => 'Autre',
         99 => 'Non renseigné',

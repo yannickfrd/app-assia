@@ -9,6 +9,7 @@ use App\Entity\Organization\Service;
 use App\Entity\Organization\SubService;
 use App\Entity\Organization\User;
 use App\Entity\People\PeopleGroup;
+use App\Entity\People\Person;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use App\Entity\Traits\GeoLocationEntityTrait;
 use App\Entity\Traits\LocationEntityTrait;
@@ -923,5 +924,19 @@ class SupportGroup
         $this->nbChildrenUnder3years = $nbChildrenUnder3years;
 
         return $this;
+    }
+
+    /**
+     * Donne le demandeur principal du suivi.
+     */
+    public function getHeader(): Person
+    {
+        foreach ($this->getSupportPeople() as $supportPerson) {
+            if (true === $supportPerson->getHead()) {
+                return $supportPerson->getPerson();
+            }
+        }
+
+        return $this->getSupportPeople()->first()->getPerson();
     }
 }

@@ -69,10 +69,10 @@
                                 <td class="align-middle">{{ supportGroup.referent ? supportGroup.referent.fullname }}</td>
                                 <td class="align-middle">
                                     {% if hotelSupport %}
-                                        {{ hotelSupport.statusToString }}<br/> 
+                                        {{ support.statusToString }}<br/> 
                                         <span class="text-secondary">
                                             {{ hotelSupport.reasonNoInclusion ? " (" ~ hotelSupport.reasonNoInclusionToString ~ ")" }}
-                                            {{ supportGroup.status in [2, 4] and supportGroup.coefficient ? "(coeff. " ~ supportGroup.coefficient ~ ")" }}
+                                            {{ support.status in [2, 4] and supportGroup.coefficient ? "(coeff. " ~ supportGroup.coefficient ~ ")" }}
                                         </span>
                                     {% endif %}
                                 </td>
@@ -86,12 +86,12 @@
                                     <td class="align-middle">{{ supportGroup.originRequest and supportGroup.originRequest.organization and 
                                         supportGroup.originRequest.organization ? supportGroup.originRequest.organization.name ~ 
                                         (hotelSupport.ssd ? " (" ~  hotelSupport.ssd ~ ")") }}</td>
-                                    <td class="align-middle">{{ supportGroup.startDate ? supportGroup.startDate|date("d/m/Y") }}</td>
+                                    <td class="align-middle">{{ support.startDate ? support.startDate|date("d/m/Y") }}</td>
                                     <td class="align-middle">{{ hotelSupport.evaluationDate ? hotelSupport.evaluationDate|date("d/m/Y") }}</td>
                                     <td class="align-middle">{{ hotelSupport.levelSupportToString }}</td>
                                     <td class="align-middle">{{ hotelSupport.agreementDate ? hotelSupport.agreementDate|date("d/m/Y") }}</td>
                                     <td class="align-middle">{{ hotelSupport.departmentAnchorToString }}</td>
-                                    <td class="align-middle">{{ supportGroup.endDate ? supportGroup.endDate|date("d/m/Y") }}</td>
+                                    <td class="align-middle">{{ support.endDate ? support.endDate|date("d/m/Y") }}</td>
                                     <td class="align-middle">{{ hotelSupport.endSupportReasonToString }}</td>
                                 {% else %}
                                     <td class="align-middle" colspan="10"></td>

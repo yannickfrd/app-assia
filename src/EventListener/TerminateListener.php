@@ -38,7 +38,7 @@ class TerminateListener
         /** @var User */
         $user = $this->security->getUser();
 
-        if ($user && !$user->isActiveNow()) {
+        if ($this->manager->isOpen() && $user && !$user->isActiveNow()) {
             $user->setLastActivityAt(new \DateTime());
             $this->disableListeners($this->manager);
             $this->manager->flush();

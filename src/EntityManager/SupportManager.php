@@ -125,20 +125,6 @@ class SupportManager
     }
 
     /**
-     * Donne le demandeur principal du suivi.
-     */
-    public function getHeadPersonSupport(?SupportGroup $supportGroup): Person
-    {
-        foreach ($supportGroup->getSupportPeople() as $supportPerson) {
-            if (true === $supportPerson->getHead()) {
-                return $supportPerson->getPerson();
-            }
-        }
-
-        return $supportGroup->getSupportPeople()->first()->getPerson();
-    }
-
-    /**
      * Exporte les données.
      */
     public function exportData(SupportSearch $search, SupportPersonRepository $repoSupportPerson)

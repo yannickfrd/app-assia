@@ -43,7 +43,7 @@ class DeviceRepository extends ServiceEntityRepository
 
         if ($search->getName()) {
             $query->andWhere('d.name LIKE :name')
-                ->setParameter('name', $search->getName().'%');
+                ->setParameter('name', '%'.$search->getName().'%');
         }
         if ($search->getService()) {
             $query->andWhere('sd.service = :service')

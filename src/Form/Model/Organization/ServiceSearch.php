@@ -4,7 +4,6 @@ namespace App\Form\Model\Organization;
 
 use App\Entity\Organization\Pole;
 use App\Service\Phone;
-use Symfony\Component\Validator\Constraints as Assert;
 
 class ServiceSearch
 {
@@ -15,13 +14,11 @@ class ServiceSearch
 
     /**
      * @var string|null
-     * @Assert\Email(message="Email invalide.")
      */
     private $email;
 
     /**
      * @var string|null
-     * @Assert\Regex(pattern="^0[1-9]([-._/ ]?[0-9]{2}){4}$^", match=true, message="Le numéro de téléphone est incorrect.")
      */
     private $phone;
 

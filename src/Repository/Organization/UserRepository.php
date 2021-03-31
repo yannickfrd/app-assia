@@ -113,15 +113,15 @@ class UserRepository extends ServiceEntityRepository
     {
         if ($search->getFirstname()) {
             $query->andWhere('u.firstname LIKE :firstname')
-                ->setParameter('firstname', $search->getFirstname().'%');
+                ->setParameter('firstname', '%'.$search->getFirstname().'%');
         }
         if ($search->getLastname()) {
             $query->andWhere('u.lastname LIKE :lastname')
-                ->setParameter('lastname', $search->getLastname().'%');
+                ->setParameter('lastname', '%'.$search->getLastname().'%');
         }
         if ($search->getPhone()) {
-            $query->andWhere('u.phone1 = :phone')
-                ->setParameter('phone', $search->getPhone());
+            $query->andWhere('u.phone1 LIKE :phone')
+                ->setParameter('phone', '%'.$search->getPhone().'%');
         }
 
         if (Choices::DISABLED === $search->getDisabled()) {

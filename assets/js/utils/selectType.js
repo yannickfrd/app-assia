@@ -10,7 +10,7 @@ export default class SelectType {
      */
     getOption(selectElt) {
         if (selectElt === null) {
-            return console.error('selectElt is null !')
+            throw new Error('selectElt is null !')
         }
         
         let value = false
@@ -45,7 +45,7 @@ export default class SelectType {
      */
     setOption(selectElt, value) {
         if (selectElt === null) {
-            return console.error('selectElt is null !')
+            throw new Error('selectElt is null !')
         }
 
         selectElt.querySelectorAll('option').forEach(optionElt => {

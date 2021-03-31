@@ -27,6 +27,8 @@ class PeopleGroup
     public const CACHE_GROUP_SUPPORTS_KEY = 'people_group.supports';
     public const CACHE_GROUP_REFERENTS_KEY = 'people_group.referents';
 
+
+    
     public const FAMILY_TYPOLOGY = [
         1 => 'Femme isolée',
         2 => 'Homme isolé',

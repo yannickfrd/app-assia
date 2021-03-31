@@ -24,11 +24,17 @@ class EvalBudgetPersonType extends AbstractType
                 'required' => false,
             ])
             ->add('incomeN1Amt', MoneyType::class, [
-                'attr' => ['class' => 'js-money text-right'],
+                'attr' => [
+                    'class' => 'js-money text-right',
+                    'placeholder' => 'Amount',
+                ],
                 'required' => false,
             ])
             ->add('incomeN2Amt', MoneyType::class, [
-                'attr' => ['class' => 'js-money text-right'],
+                'attr' => [
+                    'class' => 'js-money text-right',
+                    'placeholder' => 'Amount',
+                ],
                 'required' => false,
             ])
             ->add('resourcesComment')
@@ -38,7 +44,10 @@ class EvalBudgetPersonType extends AbstractType
                 'required' => false,
             ])
             ->add('chargesAmt', MoneyType::class, [
-                'attr' => ['class' => 'js-chargesAmt text-right'],
+                'attr' => [
+                    'class' => 'js-chargesAmt text-right',
+                    'placeholder' => 'Amount',
+                ],
                 'required' => false,
             ]);
 
@@ -46,7 +55,10 @@ class EvalBudgetPersonType extends AbstractType
             $builder
             ->add($key)
             ->add($key.'Amt', MoneyType::class, [
-                'attr' => ['class' => 'js-money js-charges text-right'],
+                'attr' => [
+                    'class' => 'js-money js-charges text-right',
+                    'placeholder' => 'Amount',
+                ],
                 'required' => false,
             ]);
         }
@@ -66,6 +78,7 @@ class EvalBudgetPersonType extends AbstractType
             ->add('debtsAmt', MoneyType::class, [
                 'attr' => [
                     'class' => 'js-money js-debtsAmt js-initEval text-right',
+                    'placeholder' => 'Amount',
                     'data-id' => 'debtsAmt',
                 ],
                 'required' => false,
@@ -79,7 +92,10 @@ class EvalBudgetPersonType extends AbstractType
             ->add('debtOtherPrecision', null, ['attr' => ['placeholder' => 'Other debt(s)...']])
             ->add('debtComment')
             ->add('monthlyRepaymentAmt', MoneyType::class, [
-                'attr' => ['class' => 'js-money js-repaymentAmt text-right'],
+                'attr' => [
+                    'class' => 'js-money js-repaymentAmt text-right',
+                    'placeholder' => 'Amount',
+                ],
                 'required' => false,
             ])
             ->add('overIndebtRecord', ChoiceType::class, [

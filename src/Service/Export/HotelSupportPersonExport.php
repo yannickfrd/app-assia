@@ -95,6 +95,8 @@ class HotelSupportPersonExport extends ExportExcel
             'Motif de fin d\'accompagnement' => $hotelSupport->getEndSupportReasonToString(),
             'Situation à la fin' => $supportPerson->getEndStatusToString(),
             'Commentaire situation à la fin' => $supportPerson->getEndStatusComment(),
+            'Fin - Ville' => $supportGroup->getEndLocationCity(),
+            'Fin - Code postal' => (string) $supportGroup->getEndLocationZipcode(),
             'Commentaire sur l\'accompagnement' => $supportPerson->getComment(),
         ];
 

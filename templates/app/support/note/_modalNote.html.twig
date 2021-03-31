@@ -1,4 +1,4 @@
-<div id="modal-note" class="modal modal-fullscreen fade" tabindex="-1" role="dialog" aria-labelledby="modalNoteLabel" aria-hidden="true">
+<div id="note-modal" class="modal modal-fullscreen fade" tabindex="-1" role="dialog" aria-labelledby="modalNoteLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-fullscreen modal-xl " role="document">   
         <div class="modal-content">
 
@@ -41,8 +41,8 @@
                     </div>
                 </div>
                 <div class="float-right">
-                    <button type="button" id="js-btn-cancel" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                    <button type="submit" id="js-btn-save" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>Enregistrer</button>
+                    <button type="button" data-action="cancel" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <button type="submit" data-action="save" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>Enregistrer</button>
                 </div>
             </div>
 

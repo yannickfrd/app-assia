@@ -28,6 +28,7 @@ class ResourcesType extends AbstractType
         ->add('resourcesAmt', MoneyType::class, [
             'attr' => [
                 'class' => 'js-money js-resourcesAmt js-initEval important text-right',
+                'placeholder' => 'Amount',
                 'data-id' => 'resourcesAmt',
             ],
             'required' => false,
@@ -51,6 +52,7 @@ class ResourcesType extends AbstractType
             ->add($key.'Amt', MoneyType::class, [
                 'attr' => [
                     'class' => 'js-money js-resources js-initEval text-right',
+                    'placeholder' => 'Amount',
                     'data-id' => $key.'Amt',
                 ],
                 'required' => false,

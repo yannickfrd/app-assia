@@ -15,7 +15,7 @@ export default class SupportContributions {
         // this.validationDate = new ValidationDate()
         this.validationForm = new ValidationForm()
         this.parametersUrl = new ParametersUrl()
-        this.modalElt = new Modal(document.getElementById('modal-contribution'))
+        this.modalElt = new Modal(document.getElementById('contribution-modal'))
 
         this.resourcesChecked = false // Ressources vérifiées dans la base de données
         this.resourcesAmt = null
@@ -25,8 +25,8 @@ export default class SupportContributions {
 
         this.btnNewElt = document.getElementById('js-new-contribution')
         this.contributionRate = parseFloat(this.btnNewElt.getAttribute('data-contribution-rate'))
-        this.supportStartDate = new Date(this.btnNewElt.getAttribute('data-support-start-date'))
-        this.supportEndDate = new Date(this.btnNewElt.getAttribute('data-support-end-date'))
+        // this.supportStartDate = new Date(this.btnNewElt.getAttribute('data-support-start-date'))
+        // this.supportEndDate = new Date(this.btnNewElt.getAttribute('data-support-end-date'))
         this.trElt = null
 
         this.modalConfirmElt = document.getElementById('modal-confirm')
@@ -42,7 +42,7 @@ export default class SupportContributions {
         this.contributionId = null
 
         // Formulaire modal
-        this.modalContributionElt = document.getElementById('modal-contribution')
+        this.modalContributionElt = document.getElementById('contribution-modal')
         this.formContributionElt = this.modalContributionElt.querySelector('form[name=contribution]')
         this.typeSelect = document.getElementById('contribution_type')
         this.startDateInput = document.getElementById('contribution_startDate')
@@ -58,6 +58,7 @@ export default class SupportContributions {
         this.stillToPayAmtInput = document.getElementById('contribution_stillToPayAmt')
         this.returnAmtInput = document.getElementById('contribution_returnAmt')
         this.commentInput = document.getElementById('contribution_comment')
+        this.commentExportInput = document.getElementById('contribution_commentExport')
         this.infoContribElt = document.getElementById('js-info-contrib')
 
         this.blockExportElt = document.getElementById('js-block-export')
@@ -118,6 +119,8 @@ export default class SupportContributions {
             this.initForm()
             this.checkType()
         })
+
+        this.endDateInput.addEventListener('focusout', () => this.checkEndDateContribution())
 
         this.modalContributionElt.querySelectorAll('.js-money').forEach(elt => {
             elt.addEventListener('input', () => {
@@ -243,24 +246,33 @@ export default class SupportContributions {
      * Donne le ratio de jours de présence dans le mois.
      */
     getRateDays() {
-        const startDate = new Date(this.startDateInput.value)
-        const endDate = new Date(this.startDateInput.value)
-        // const nbDaysInPeriod = Math.round((endDate - startDate + 1) / (1000 * 60 * 60 * 24))
-        let rateDays = 1
+        return 1
+        // const startDate = new Date(this.startDateInput.value)
+        // const endDate = new Date(this.endDateInput.value)
 
-        // if (this.supportStartDate > startDate) {
-        //     rateDays = 1 - ((this.supportStartDate - startDate) / (1000 * 60 * 60 * 24) / nbDaysInPeriod)
-        // }
-
-        // if (this.supportEndDate < endDate) {
-        //     rateDays = 1 - ((endDate - this.supportEndDate + 1) / (1000 * 60 * 60 * 24) / nbDaysInPeriod)
-        // }
-
+        // const startMonthDate = new Date(startDate)
+        // startMonthDate.setDate(1)
+        // const endMonthDate = new Date(startDate)
+        // endMonthDate.setMonth(startDate.getMonth() + 1)
+        
+        // const nbDaysInPeriod = this.getDiffDays(startDate, endDate)
+        // const nbDaysInMonth = this.getDiffDays(startMonthDate, endMonthDate)
+        // return nbDaysInPeriod / nbDaysInMonth
         // if (rateDays > 1 || rateDays < 0) {
         //     rateDays = 0
         // }
+        // return rateDays
+    }
 
-        return rateDays
+    /**
+     * 
+     * @param {Date} date1 
+     * @param {Date} date2 
+     * @returns {Number}
+     */
+    getDiffDays(date1, date2) {
+        const diffTime = Math.abs(date2 - date1)
+        return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     }
 
     /**
@@ -349,9 +361,18 @@ export default class SupportContributions {
             } else {
                 this.validationForm.validField(this.endDateInput)
             }
+            this.checkEndDateContribution()
         } else {
             this.startDateInput.value = ''
             this.endDateInput.value = ''
+        }
+    }
+
+    checkEndDateContribution() {
+        if (this.endDateInput.value && new Date(this.endDateInput.value) <= new Date(this.startDateInput.value)) {
+            this.validationForm.invalidField(this.endDateInput, 'Date antérieure au début de la période.')
+        } else {
+            this.validationForm.validField(this.endDateInput)
         }
     }
 
@@ -483,8 +504,8 @@ export default class SupportContributions {
             }
         })
         this.selectType.setOption(this.paymentTypeSelect, '')
-        // this.selectType.setOption(this.actionSelect, '')
         this.commentInput.value = ''
+        this.commentExportInput.value = ''
         this.infoContribElt.innerHTML = ''
 
         this.blockExportElt.classList.replace('d-block', 'd-none')
@@ -534,36 +555,33 @@ export default class SupportContributions {
      * @param {Object} response 
      */
     responseAjax(response) {
-        if (response.code === 200) {
-            switch (response.action) {
-                case 'get_resources':
-                    this.getResources(response.data)
-                    break
-                case 'show':
-                    this.showContribution(response.data)
-                    break
-                case 'create':
-                    this.createContribution(response.data.contribution)
-                    new MessageFlash(response.alert, response.msg)
-                    break
-                case 'update':
-                    this.updateContribution(response.data.contribution)
-                    new MessageFlash(response.alert, response.msg)
-                    break
-                case 'delete':
-                    this.trElt.remove()
-                    this.updateCounts(-1)
-                    this.loader.off()
-                    this.modalElt.hide()
-                    new MessageFlash(response.alert, response.msg)
-                    break
-                default:
-                    this.loader.off()
-                    new MessageFlash(response.alert, response.msg)
-                    break
-            }
+        switch (response.action) {
+            case 'get_resources':
+                this.getResources(response.data)
+                break
+            case 'show':
+                this.showContribution(response.data)
+                break
+            case 'create':
+                this.createContribution(response.data.contribution)
+                new MessageFlash(response.alert, response.msg)
+                break
+            case 'update':
+                this.updateContribution(response.data.contribution)
+                new MessageFlash(response.alert, response.msg)
+                break
+            case 'delete':
+                this.trElt.remove()
+                this.updateCounts(-1)
+                this.loader.off()
+                this.modalElt.hide()
+                new MessageFlash(response.alert, response.msg)
+                break
+            default:
+                this.loader.off()
+                new MessageFlash(response.alert, response.msg)
+                break
         }
-        // this.selectType.setOption(this.actionBlockElt, '')
         this.loading = false
         this.calculateSumAmts()
     }
@@ -609,6 +627,7 @@ export default class SupportContributions {
         this.stillToPayAmtInput.value = Math.round(contribution.stillToPayAmt * 100) / 100
         this.returnAmtInput.value = contribution.returnAmt
         this.commentInput.value = contribution.comment
+        this.commentExportInput.value = contribution.commentExport
 
         this.infoContribElt.innerHTML = this.getInfoContribElt(data)
 
@@ -662,7 +681,6 @@ export default class SupportContributions {
             this.modalConfirmElt.setAttribute('data-url', btnDeleteElt.getAttribute('data-url'))
         })
         this.loader.off()
-        this.modalElt.hide()
     }
 
     /**
@@ -677,10 +695,9 @@ export default class SupportContributions {
         this.trElt.querySelector('td.js-stillToPayAmt').textContent = this.formatMoney(this.roundMoney(contribution.stillToPayAmt))
         this.trElt.querySelector('td.js-paymentDate').textContent = this.formatDatetime(contribution.paymentDate, 'date')
         this.trElt.querySelector('td.js-paymentType').textContent = contribution.paymentTypeToString
-        this.trElt.querySelector('td.js-comment').textContent = this.sliceComment(contribution.comment)
+        this.trElt.querySelector('td.js-comment').textContent = this.sliceComment((contribution.comment ?? '')  + " \n" + (contribution.commentExport ?? ''))
         this.calculateSumAmts()
         this.loader.off()
-        this.modalElt.hide()
     }
 
     /**
@@ -704,7 +721,7 @@ export default class SupportContributions {
             <td class='align-middle text-right js-stillToPayAmt'>${this.formatMoney(this.roundMoney(contribution.stillToPayAmt))}</td>
             <td class='align-middle text-center js-paymentDate'>${this.formatDatetime(contribution.paymentDate, 'date')}</td>
             <td class='align-middle js-paymentType'>${contribution.paymentType ? contribution.paymentTypeToString : ''}</td>
-            <td class='align-middle js-comment'>${this.sliceComment(contribution.comment)}</td>
+            <td class='align-middle js-comment'>${this.sliceComment((contribution.comment ?? '')  + " \n" + (contribution.commentExport ?? ''))}</td>
             <td class='align-middle js-createdAt'>${this.formatDatetime(this.now, 'date')}</td>
             <td class="align-middle text-center js-pdfGenerate">
                 <span><i class="fas fa-file-pdf text-secondary fa-lg"></i></span>
@@ -735,10 +752,15 @@ export default class SupportContributions {
      * @param {Number} limit 
      */
     sliceComment(comment, limit = 65) {
-        if (comment === null) {
+        if (' ' === comment) {
             return ''
         }
-        return comment.length > limit ? comment.slice(0, limit) + '...' : comment
+
+        if ( comment.length > limit) {
+            return comment.slice(0, limit) + '...'
+        }
+
+        return comment
     }
 
     /**
@@ -787,9 +809,8 @@ export default class SupportContributions {
         elts.forEach(elt => {
             let amount = elt.textContent
             if (amount) {
-                amount = value.replace(' ', '').replace(',', '.')
-                // amounts.push(parseFloat(value))
-                sumAmts += amount
+                // amounts.push(parseFloat(amount))
+                sumAmts += parseFloat(amount.replace(' ', '').replace(',', '.'))
             }
         })
         // const sumAmts = amounts.reduce((a, b) => a + b, 0)

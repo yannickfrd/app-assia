@@ -12,8 +12,13 @@
 		{% set title = "Notes sociales" %}
 		{% include "app/support/support/_navSuppport.html.twig" %}
 
+		<div class="row mb-2">
+			<div id="js-search-support-notes" class="col-md-12 {{ notes|length == 0 ? 'd-none' }}">
+				{% include "app/support/note/_searchSupportNotes.html.twig" %}
+			</div>
+		</div>
 		<div class="row">
-			<div class="col-md-6 mb-1">
+			<div class="col-md-6 mb-2">
 				<button id="js-new-note" class="btn btn-{{ theme_color }} btn-sm shadow mr-2"
 					data-toggle="tooltip" data-placement="bottom" title="Créer une nouvelle note">
 					<span class="fas fa-plus-square mr-2"></span>Nouvelle note</button>
@@ -28,23 +33,20 @@
 			</div>
 		</div>
 
-		{% include "app/support/note/_searchSupportNotes.html.twig" %}
-
 		<div id="container-notes" class="row" data-support="{{ support.id }}">
 			{% for note in notes %}
-				<div id="note-{{ note.id }}" class="col-sm-12 col-lg-6 mb-4 js-note reveal">
+				<div class="col-sm-12 col-lg-6 mb-4 reveal" data-note-id="{{ note.id }}">
 					<div class="card h-100 shadow">
 						<div class="card-header">
 							<h3 class="card-title h5 text-{{ theme_color }} cursor-pointer" 
 								data-placement="bottom" title="Voir la note">{{ note.title }}</h3>
-							<span class="js-note-type" data-value={{ note.type }}>
+							<span data-note-type={{ note.type }}>
 								{{ note.typeToString }}
 							</span>
-							<span class="js-note-status" data-value={{ note.status }}>
-								({{ note.statusToString }})</span>
-							<span class="small text-secondary js-note-created">| Créé le {{note.createdAt|date("d/m/Y à H:i") }} par {{ note.createdBy.fullname }}
+							<span data-note-status={{ note.status }}>({{ note.statusToString }})</span>
+							<span class="small text-secondary" data-note-created="true">| Créé le {{note.createdAt|date("d/m/Y à H:i") }} par {{ note.createdBy.fullname }}
 							</span>
-							<span class="small text-secondary js-note-updated">
+							<span class="small text-secondary" data-note-updated="true">
 								{% if note.updatedAt != note.createdAt %} (modifié le {{ note.updatedAt|date("d/m/Y à H:i") }} par {{ note.updatedBy.fullname }}){% endif %}
 							</span>
 						</div>

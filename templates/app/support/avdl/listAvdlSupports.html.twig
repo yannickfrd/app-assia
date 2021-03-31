@@ -67,7 +67,7 @@
                                 <td class="align-middle">{{ person.fullname ~ (person.usename ? " (" ~ person.usename ~ ")") }}</td>
                                 <td class="align-middle">{{ supportGroup.device ? supportGroup.device.name }}</td>
                                 <td class="align-middle">{{ supportGroup.referent ? supportGroup.referent.fullname }}</td>
-                                <td class="align-middle">{{ supportGroup.statusToString }}<br/>
+                                <td class="align-middle">{{ support.statusToString }}<br/>
                                     <span class="text-secondary">{{ supportGroup.coefficient ? "(coeff. " ~ supportGroup.coefficient ~ ")" }}</span>
                                 </td>
                                 <td class="align-middle">{{ supportGroup.city }}</td>
@@ -78,8 +78,8 @@
                                     <td class="align-middle">{{ avdl.diagEndDate ? avdl.diagEndDate|date("d/m/Y") }}</td>
                                     <td class="align-middle">{{ avdl.diagTypeToString }}</td>
                                     <td class="align-middle">{{ avdl.recommendationSupportToString }}</td>
-                                    <td class="align-middle">{{ avdl.supportStartDate ? avdl.supportStartDate|date("d/m/Y") }}</td>
-                                    <td class="align-middle">{{ avdl.supportEndDate ? avdl.supportEndDate|date("d/m/Y") }}</td>
+                                    <td class="align-middle">{{ support.startDate ? support.startDate|date("d/m/Y") }}</td>
+                                    <td class="align-middle">{{ support.endDate ? support.endDate|date("d/m/Y") }}</td>
                                     <td class="align-middle">{{ avdl.supportTypeToString }}</td>
                                     <td class="align-middle">{{ avdl.endSupportReasonToString }}</td>
                                     <td class="align-middle">{{ avdl.accessHousingModalityToString }}</td>
