@@ -18,9 +18,11 @@ use App\Repository\Support\SupportGroupRepository;
 use App\Security\CurrentUserService;
 use App\Service\ExportPDF;
 use App\Service\ExportWord;
+use App\Service\Note\ExportNotes;
 use App\Service\Pagination;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Bundle\PaginatorBundle\Pagination\SlidingPagination;
 use Psr\Cache\CacheItemInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -75,9 +77,15 @@ class NoteController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function listSupportNotes(int $id, SupportManager $supportManager, SupportCollections $supportCollections, Request $request, Pagination $pagination): Response
-    {
-        $supportGroup = $supportManager->getSupportGroup($id);
+    public function listSupportNotes(
+        int $id,
+        SupportManager $supportManager,
+        SupportCollections $supportCollections,
+        Request $request,
+        Pagination $pagination,
+        ExportNotes $exportNotes
+    ): Response {
+        $supportGroup = $supportManager->getFullSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
@@ -85,6 +93,10 @@ class NoteController extends AbstractController
             ->handleRequest($request);
 
         $form = $this->createForm(NoteType::class, new Note());
+
+        if ($search->getExport()) {
+            return $exportNotes->send($supportGroup, $search);
+        }
 
         return $this->render('app/support/note/supportNotes.html.twig', [
             'support' => $supportGroup,
@@ -98,7 +110,7 @@ class NoteController extends AbstractController
     /**
      * Donne les notes du suivi.
      */
-    protected function getNotes(SupportGroup $supportGroup, Request $request, SupportNoteSearch $search, Pagination $pagination)
+    protected function getNotes(SupportGroup $supportGroup, Request $request, SupportNoteSearch $search, Pagination $pagination): SlidingPagination
     {
         // Si filtre ou tri utilisé, n'utilise pas le cache.
         if ($request->query->count() > 0 || $search->getNoteId()) {
@@ -228,7 +240,7 @@ class NoteController extends AbstractController
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        $export = $request->attributes->get('_route') === 'note_export_word' ? new ExportWord() : new ExportPDF();
+        $export = 'note_export_word' === $request->attributes->get('_route') ? new ExportWord() : new ExportPDF();
 
         $content = $note->getContent();
         $logoPath = $supportGroup->getService()->getPole()->getLogoPath();
@@ -240,7 +252,7 @@ class NoteController extends AbstractController
 
         $export->createDocument($content, $note->getTitle(), $logoPath, $fullnameSupport);
 
-        return $export->download($request->server->get('HTTP_USER_AGENT') != 'Symfony BrowserKit');
+        return $export->download('Symfony BrowserKit' != $request->server->get('HTTP_USER_AGENT'));
     }
 
     /**

@@ -38,7 +38,7 @@ class ExportWord
     /**
      * Create Word document.
      */
-    public function createDocument(string $content, ?string $title, ?string $logoPath = null, string $infoAdd = ''): void
+    public function createDocument(string $content, ?string $title = '', ?string $logoPath = null, string $infoAdd = ''): void
     {
         $this->title = $title ?? 'Note';
         $this->logoPath = $logoPath;
@@ -79,7 +79,7 @@ class ExportWord
             $objWriter->save('php://output');
         });
 
-        return $download === true ? $response : new Response();
+        return true === $download ? $response : new Response();
     }
 
     /**
@@ -226,7 +226,7 @@ class ExportWord
      */
     protected function getFontStyleFooter(): array
     {
-        return  [
+        return [
             'name' => 'Calibri',
             'size' => 10,
             'italic' => true,
