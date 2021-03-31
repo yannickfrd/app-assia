@@ -2,19 +2,23 @@
 
 namespace App\Entity\Support;
 
-use App\Entity\People\PeopleGroup;
-use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\People\PeopleGroup;
+use Gedmo\Mapping\Annotation as Gedmo;
+use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Support\DocumentRepository")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class Document
 {
     use CreatedUpdatedEntityTrait;
+    use SoftDeleteableEntity;
 
     public const TYPE = [
         2 => 'Administratif',

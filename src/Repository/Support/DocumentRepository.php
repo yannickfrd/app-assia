@@ -161,6 +161,18 @@ class DocumentRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * @return Document[]
+     */
+    public function findSoftDeletedDocuments(\DateTime $date): array
+    {
+        return $this->createQueryBuilder('d')->select('d')
+            ->where('d.deletedAt  <= :date')
+            ->setParameter('date', $date)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function countDocuments(array $criteria = null): int
     {
         $query = $this->createQueryBuilder('d')->select('COUNT(d.id)');

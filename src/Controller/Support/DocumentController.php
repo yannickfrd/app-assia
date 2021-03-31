@@ -191,13 +191,15 @@ class DocumentController extends AbstractController
      * Supprime un document.
      *
      * @Route("document/{id}/delete", name="document_delete", methods="GET")
-     * @IsGranted("DELETE", subject="document", message="Vous n'avez pas les droits pour effectuer cette action.")
      */
     public function deleteDocument(Document $document): Response
     {
-        $file = $this->getFilePath($document);
+        $this->manager->remove($document);
+        $this->manager->flush();
 
-        $data = [
+        $this->discache($document->getSupportGroup());
+
+        return $this->json([
             'action' => 'delete',
             'alert' => 'warning',
             'msg' => "Le document \"{$document->getName()}\" est supprimé.",
@@ -205,23 +207,7 @@ class DocumentController extends AbstractController
                 'id' => $document->getId(),
                 'name' => $document->getName(),
             ],
-        ];
-
-        $this->manager->remove($document);
-        $this->manager->flush();
-
-        $count = $this->repo->count([
-            'peopleGroup' => $document->getSupportGroup()->getPeopleGroup(),
-            'internalFileName' => $document->getInternalFileName(),
         ]);
-
-        if (1 === $count && \file_exists($file)) {
-            \unlink($file);
-        }
-
-        $this->discache($document->getSupportGroup());
-
-        return $this->json($data);
     }
 
     /**
