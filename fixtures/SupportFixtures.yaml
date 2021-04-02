@@ -4,7 +4,7 @@ App\Entity\Support\SupportGroup:
     endDate: null
     status: 2
     agreement: true
-    referent: "@userRoleAdmin"
+    referent: "@userRoleUser"
     service: "@service1"
     device: "@device1"
     peopleGroup: "@peopleGroup1"
