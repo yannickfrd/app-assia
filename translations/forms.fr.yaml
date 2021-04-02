@@ -158,7 +158,7 @@ originRequest.comment: Écrire un commentaire relatif à l'origine de la demande
 document:
   name.placeholder: Nom du fichier
   content.placeholder: Ajouter une description
-  type.placeholder: -- Type --
+  category.placeholder: -- Catégorie --
   file:
     help: "5 Mo maximum. Formats acceptés : doc, docx, jpg, jpeg, odp, ods, odt, pdf, png, rar, xls, xlsx, zip."
     mimeMessage: Merci de télécharger un fichier au format valide (doc, docx, jpg, jpeg, pdf, png, rar, xls, xlsx, zip).

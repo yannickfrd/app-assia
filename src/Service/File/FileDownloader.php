@@ -40,7 +40,9 @@ class FileDownloader extends Downloader
             $path = $this->documentsDirectory.$document->getCreatedAt()->format('Y/m/d/').$document->getPeopleGroup()->getId().'/';
             $filename = $document->getInternalFileName();
             $file = $path.$filename;
-            $zip->addFile($file, $filename);
+            if (file_exists($file)) {
+                $zip->addFile($file, $filename);
+            }
         }
         $zip->close();
 

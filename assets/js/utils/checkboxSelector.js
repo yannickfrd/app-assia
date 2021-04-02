@@ -4,12 +4,11 @@
 export default class CheckboxSelector {
     constructor() {
         this.checkboxAllInputElt = document.querySelector('input[data-checkbox-all="true"]')
-        this.checkboxAllLabelElt = document.querySelector('label[data-checkbox-all="true"]')
         this.init()
     }
 
     init() {
-        this.checkboxAllLabelElt.addEventListener('click', () => this.toggle())
+        this.checkboxAllInputElt.addEventListener('click', () => this.toggle())
     }
 
     /**

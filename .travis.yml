@@ -20,13 +20,13 @@ script:
   - composer install
   - npm install
   - npm run build
-  - php bin/console doctrine:database:create --env=test   
-  - php bin/console doctrine:schema:update --env=test --force   
+  - php bin/console doctrine:database:create --env=test
+  - php bin/console doctrine:schema:update --env=test --force
   - php bin/console hautelook:fixtures:load --env=test --no-interaction
-  - php bin/console doctrine:database:create --env=dev   
-  - php bin/console doctrine:schema:update --env=dev --force   
+  - php bin/console doctrine:database:create --env=dev
+  - php bin/console doctrine:schema:update --env=dev --force
   - php bin/console hautelook:fixtures:load --env=dev --no-interaction
-  - php bin/phpunit tests/EndToEnd
+  # - php bin/phpunit tests/EndToEnd
   - php bin/phpunit tests/Entity
   - php bin/phpunit tests/Repository
   - php bin/phpunit tests/Controller

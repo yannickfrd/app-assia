@@ -17,17 +17,13 @@ class SupportDocumentSearchType extends AbstractType
         $builder
             ->add('name', null, [
                 'label_attr' => ['class' => 'sr-only'],
-                'attr' => [
-                    'placeholder' => 'Search',
-                ],
+                'attr' => ['placeholder' => 'Search'],
             ])
             ->add('type', ChoiceType::class, [
                 'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getchoices(Document::TYPE),
-                'attr' => [
-                    'class' => 'w-max-150',
-                ],
-                'placeholder' => 'placeholder.type',
+                'attr' => ['class' => 'w-max-150'],
+                'placeholder' => 'document.category.placeholder',
                 'required' => false,
             ]);
     }

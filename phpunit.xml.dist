@@ -37,7 +37,6 @@
 
     <listeners>
         <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
-        <listener class="Symfony\Component\Panther\ServerListener" />
     </listeners>
 
     <extensions>

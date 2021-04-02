@@ -49,12 +49,12 @@
 						</th>
 						<th scope="col" class="align-middle th-w-20"></th>
 						<th scope="col" class="align-middle th-w-150">{{ knp_pagination_sortable(documents, "Nom", "d.name") }}</th>
-						<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(documents, "Type", "d.type") }}</th>
+						<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(documents, "Catégorie", "d.type") }}</th>
 						<th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(documents, "Description", "d.content") }}</th>
 						<th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(documents, "Taille", "d.size") }}</th>
-						<th scope="col" class="align-middle th-w-60">Ext.</th>
-						<th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(documents, "Créé le", "d.createdAt") }}</th>
-						<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(documents, "Créé par", "u.lastname") }}</th>
+						<th scope="col" class="align-middle th-w-60">Type</th>
+						<th scope="col" class="d-none d-lg-table-cell align-middle th-date">{{ knp_pagination_sortable(documents, "Créé le", "d.createdAt") }}</th>
+						<th scope="col" class="d-none d-lg-table-cell align-middle th-w-100">{{ knp_pagination_sortable(documents, "Créé par", "u.lastname") }}</th>
 						<th scope="col" class="align-middle th-w-20"></th>
 					</tr>
 				</thead>
@@ -82,8 +82,8 @@
 							<td class="align-middle cursor-pointer" data-document="content">{{ document.content }}</td>
 							<td class="align-middle text-right">{{ (document.size / 1000000)|round(2) }} Mo</td>
 							<td class="align-middle">{{ document.fileType }}</td>
-							<td class="align-middle">{{ document.createdAt|date("d/m/Y H:i") }}</td>
-							<td class="align-middle">{{ document.createdby ? document.createdby.fullname }}</td>
+							<td class="d-none d-lg-table-cell align-middle">{{ document.createdAt|date("d/m/Y H:i") }}</td>
+							<td class="d-none d-lg-table-cell align-middle">{{ document.createdby ? document.createdby.fullname }}</td>
 							<td class="align-middle text-center">
 								<button data-url="{{ path('document_delete', {'id': document.id}) }}" class="btn btn-danger btn-sm shadow my-1" 
 									data-action="delete" data-placement="bottom" title="Supprimer le document"><span class="fas fa-trash-alt"></span>

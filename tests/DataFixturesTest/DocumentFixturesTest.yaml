@@ -14,7 +14,7 @@ App\Entity\Support\Document:
   document{2..5}:
     name: <sentence(5, true)>
     type: <numberBetween(1, 9)>
-    content: <sentence(6, true)>
+    content: <sentence(5, true)>
     internalFileName: <slug()>
     size: <numberBetween(200000, 4000000)>
     createdAt: <dateTimeBetween("-2 years", "now")>

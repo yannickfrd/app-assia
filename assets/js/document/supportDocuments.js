@@ -160,11 +160,11 @@ export default class SupportDocuments {
      */
     requestToDelete(e, id) {
         e.preventDefault()
-        if (window.confirm('Voulez-vous vraiment supprimer ce document ?')) {
-            this.loader.on()
-            const url = this.deleteBtnElt.getAttribute('data-url-document-delete').replace('__id__', id)
-            this.ajax.send('GET', url, this.responseAjax.bind(this))
-        }
+
+        const url = this.deleteBtnElt.getAttribute('data-url-document-delete').replace('__id__', id)
+        const documentName = this.documentFormElt.querySelector('#document_name').value
+
+        this.updateDeleteModal(documentName, url)
     }
 
     /**
@@ -213,13 +213,21 @@ export default class SupportDocuments {
         documentTrElt.addEventListener('click', e => this.showDocument(e, documentTrElt))
         const deleteBtnElt = documentTrElt.querySelector('button[data-action="delete"]')
         deleteBtnElt.addEventListener('click', () => {
-            const modalBodyElt = this.modalBlockElt.querySelector('div.modal-body')
-            const documentName = documentTrElt.querySelector('td[data-document="name"]').textContent
-            modalBodyElt.innerHTML = `Êtes-vous vraiment sûr de vouloir supprimer <b>${documentName}</b> ?`
-            this.deleteModalElt.show()
             deleteBtnElt.setAttribute('data-document-id', documentTrElt.getAttribute('data-document-id'))
-            this.confirmDeleteBtnElt.setAttribute('data-url', deleteBtnElt.getAttribute('data-url'))
+            const documentName = documentTrElt.querySelector('td[data-document="name"]').textContent
+            this.updateDeleteModal(documentName, deleteBtnElt.getAttribute('data-url'))
         })      
+    }
+
+    /**
+     * @param {String} documentName 
+     * @param {String} url 
+     */
+    updateDeleteModal(documentName, url) {
+        const modalBodyElt = this.modalBlockElt.querySelector('div.modal-body')
+        modalBodyElt.innerHTML = `<br/><p>Êtes-vous vraiment sûr de vouloir supprimer le document <b>${documentName}</b> ?</p><br/>`
+        this.confirmDeleteBtnElt.setAttribute('data-url', url)
+        this.deleteModalElt.show()
     }
 
     /**

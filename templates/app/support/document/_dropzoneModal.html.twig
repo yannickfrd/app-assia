@@ -19,7 +19,8 @@
                         {% endapply %}{% endset %}
                         <div class="dropzone card p-2 cursor-pointer" id="dropzone" data-placeholder="{{ dropzone_content }}"></div>
                     </div>
-                    <div class="col-sm-12 d-none">{{ form_widget(dropzoneForm.files) }}</div>
+                    <div class="col-sm-12 {{ APP_ENV != 'test' ? 'sr-only' }}">
+                        {{ form_widget(dropzoneForm.files) }}</div>
                     <div class="col-sm-12">{{ form_help(dropzoneForm.files) }}</div>
                 </div>
             </div>
@@ -27,7 +28,7 @@
                 <div class="float-right">
                     <button type="button" name="close" class="btn btn-secondary shadow" data-dismiss="modal">Fermer</button>
                     <button type="button" name="clear" class="btn btn-secondary shadow" data-dismiss="modal">Effacer</button>
-                    <button type="submit" name="send" class="btn btn-{{ theme_color }} d-none" data-action="update"></span>Envoyer</button>
+                    <button type="submit" name="send" class="btn btn-{{ theme_color }} sr-only" data-action="update"></span>Envoyer</button>
                 </div>
             </div>
             {{ form_row(dropzoneForm._token) }}

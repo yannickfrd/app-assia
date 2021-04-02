@@ -1,7 +1,7 @@
 {% form_theme documentForm "bootstrap_4_layout.html.twig" %}
 
 <div id="document-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="documentModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             {{ form_start(documentForm, {
                 'action': path('document_edit', {'id': '__id__'}), 
