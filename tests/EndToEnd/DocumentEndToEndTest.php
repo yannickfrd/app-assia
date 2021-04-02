@@ -2,6 +2,7 @@
 
 namespace App\Tests\EndToEnd;
 
+use Symfony\Component\DomCrawler\Field\FormField;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Panther\Client as PantherClient;
 use Symfony\Component\Panther\DomCrawler\Crawler;
@@ -60,18 +61,17 @@ class DocumentEndToEndTest extends PantherTestCase
         $crawler->selectButton('btn-new-files')->click();
         sleep(1); //pop-up effect
 
-        $uploadedFile = new UploadedFile(
-            dirname(__DIR__).'\DataFixturesTest\files\doc.docx',
-            'doc.docx', null, null, true
-        );
+        // $uploadedFile = new UploadedFile(
+        //     dirname(__DIR__).'\DataFixturesTest\files\doc.docx',
+        //     'doc.docx', null, 1, true
+        // );
 
         $this->client->waitFor('button[name="send"]');
-        $crawler->selectButton('send')->form([
-            'dropzone_document[files]' => [$uploadedFile],
-        ]);
-        // /** @var FormField $fileFormField */
-        // $fileFormField = $form['dropzone_document[files]'];
-        // $fileFormField->setValue(dirname(__DIR__).'/DataFixturesTest/files/doc.docx');
+        $form = $crawler->selectButton('send')->form([]);
+
+        /** @var FormField $fileFormField */
+        $fileFormField = $form['dropzone_document[files]'];
+        $fileFormField->setValue(dirname(__DIR__).'/DataFixturesTest/files/doc.docx');
 
         $this->client->waitFor('#js-msg-flash');
         $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
