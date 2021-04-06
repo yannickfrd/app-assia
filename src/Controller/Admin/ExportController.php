@@ -9,7 +9,7 @@ use App\Form\Admin\ExportSearchType;
 use App\Form\Model\Admin\ExportSearch;
 use App\Repository\Admin\ExportRepository;
 use App\Repository\Support\SupportPersonRepository;
-use App\Service\Download;
+use App\Service\File\Downloader;
 use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -86,12 +86,12 @@ class ExportController extends AbstractController
      *
      * @Route("export/{id}/get", name="export_get", methods="GET")
      */
-    public function getExport(Export $export, Download $download): Response
+    public function getExport(Export $export, Downloader $downloader): Response
     {
         $this->denyAccessUnlessGranted('GET', $export);
 
         if (file_exists($export->getFileName())) {
-            return $download->send($export->getFileName());
+            return $downloader->send($export->getFileName());
         }
 
         $this->addFlash('danger', 'Ce fichier n\'existe pas.');

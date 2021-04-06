@@ -1,12 +1,10 @@
 ###> symfony/framework-bundle ###
 .env
-/.env
-/.env.local
-/.env.local.php
-/.env.*.local
+.env.local
 /php.ini.lnk
 /public/bundles/
 /backups/
+/drivers/
 /var/
 /vendor/
 /web/
@@ -31,6 +29,7 @@ yarn-error.log
 
 ###> uploaded files ###
 /public/uploads/documents
+/public/downloads
 /public/uploads/exports
 ###< uploaded files ###
 
@@ -42,8 +41,6 @@ yarn-error.log
 /config/secrets/dev/dev.decrypt.private.php
 /config/secrets/prod/prod.decrypt.private.php
 ###< secrets keys ###
-.env.local
-.env.local
 
 ###> friendsofphp/php-cs-fixer ###
 /.php_cs

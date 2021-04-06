@@ -38,9 +38,11 @@
 
 			{% block body %}{% endblock %}
 
-			<a id="scroll-top" href="#top-body">
-				<span class="fa fa-chevron-up"></span>
-			</a>
+			{% if APP_ENV != 'test' %}
+				<a id="scroll-top" href="#top-body">
+					<span class="fa fa-chevron-up"></span>
+				</a>
+			{% endif %}
 
 		</main>
 

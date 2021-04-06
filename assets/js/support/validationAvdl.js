@@ -1,7 +1,7 @@
 import DisplayFields from '../utils/displayFields'
 import ValidationForm from '../utils/validationForm'
 import SelectType from '../utils/selectType'
-import ValidationDate from '../utils/validationDate'
+import ValidationDate from '../utils/date/validationDate'
 import Loader from '../utils/loader'
 
 /**

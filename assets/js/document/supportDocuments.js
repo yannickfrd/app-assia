@@ -3,6 +3,9 @@ import Loader from '../utils/loader'
 import SelectType from '../utils/selectType'
 import { Modal } from 'bootstrap'
 import Ajax from '../utils/ajax'
+import Dropzone from '../utils/file/dropzone'
+import CheckboxSelector from '../utils/checkboxSelector'
+import DateFormater from '../utils/date/dateFormat'
 
 /**
  * Classe de gestion des documents.
@@ -12,275 +15,294 @@ export default class SupportDocuments {
     constructor() {
         this.loader = new Loader()
         this.ajax = new Ajax(this.loader, 60)
-        this.modalElt = new Modal(document.getElementById('modal-document'))
-        this.modalDeleteElt = new Modal(document.getElementById('modal-block'))
         this.selectType = new SelectType()
+        this.checkboxSelector = new CheckboxSelector()
 
-        this.modalDocumentElt = document.getElementById('modal-document')
-        this.formDocumentElt = this.modalDocumentElt.querySelector('form[name=document]')
-        this.documentNameInput = this.modalDocumentElt.querySelector('#document_name')
-        this.documentTypeInput = this.modalDocumentElt.querySelector('#document_type')
-        this.documentContentInput = this.modalDocumentElt.querySelector('#document_content')
-        this.documentBlockFile = this.modalDocumentElt.querySelector('.js-document-block-file')
-        this.documentFileInput = this.modalDocumentElt.querySelector('#document_file')
-        this.documentFileLabelElt = this.modalDocumentElt.querySelector('.custom-file-label')
-        this.filePlaceholder = this.documentBlockFile.getAttribute('data-placeholder')
-        this.btnSaveElt = this.modalDocumentElt.querySelector('#js-btn-save')
-        this.btnDeleteElt = this.modalDocumentElt.querySelector('#modal-btn-delete')
-        this.modalConfirmElt = document.getElementById('modal-confirm')
+        this.dropzoneModalElt = new Modal(document.getElementById('dropzone-modal'))
+        this.dropzoneFormElt = document.querySelector('form[name="dropzone_document"]')
+        this.dropzone = new Dropzone(this.dropzoneFormElt, this.uploadFile.bind(this))
+        
+        this.documentModalElt = new Modal(document.getElementById('document-modal'))
+        this.documentFormElt = document.querySelector('form[name=document]')
+        this.updateBtnElt = this.documentFormElt.querySelector('button[data-action="update"]')
+        this.deleteBtnElt = this.documentFormElt.querySelector('button[data-action="delete"]')
 
+        this.modalBlockElt = document.getElementById('modal-block')
+        this.deleteModalElt = new Modal(this.modalBlockElt)
+        this.confirmDeleteBtnElt = document.getElementById('modal-confirm')
+
+        this.actionFormElt = document.querySelector('form[name="action"]')
+            
         this.themeColor = document.getElementById('header').getAttribute('data-color')
         this.countDocumentsElt = document.getElementById('count-documents')
-        this.supportId = document.getElementById('container-documents').getAttribute('data-support')
 
         this.init()
     }
 
     init() {
-        document.getElementById('js-new-document').addEventListener('click', this.newDocument.bind(this))
-
-        this.documentFileInput.addEventListener('input', this.checkFile.bind(this))
-
-        document.querySelectorAll('.js-document').forEach(documentElt => {
-            documentElt.addEventListener('click', e => this.getDocument(e, documentElt))
-            const btnDeleteElt = documentElt.querySelector('button.js-delete')
-            btnDeleteElt.addEventListener('click', () => {
-                this.modalDeleteElt.show()
-                this.documentId = Number(btnDeleteElt.parentElement.parentElement.id.replace('document-', ''))
-                this.modalConfirmElt.setAttribute('data-url', btnDeleteElt.getAttribute('data-url'))
-            })
+        document.querySelector('main').addEventListener('dragenter', () => this.dropzoneModalElt.show())
+        document.getElementById('btn-new-files').addEventListener('click', () => this.dropzoneModalElt.show())
+        document.querySelectorAll('tr[data-document-id]').forEach(documentTrElt => this.addEventListenersToTr(documentTrElt))
+        this.updateBtnElt.addEventListener('click', e => this.requestToUpdate(e))
+        this.deleteBtnElt.addEventListener('click', e => {
+            this.requestToDelete(e, this.deleteBtnElt.getAttribute('data-document-id'))
         })
-
-        this.btnSaveElt.addEventListener('click', e => this.saveDocument(e))
-
-        document.getElementById('js-btn-cancel').addEventListener('click', e => e.preventDefault())
-
-        this.btnDeleteElt.addEventListener('click', e => this.deleteDocument(e, this.btnDeleteElt.href))
-
-        this.modalConfirmElt.addEventListener('click', e => {
+        this.confirmDeleteBtnElt.addEventListener('click', e => {
             e.preventDefault()
-            this.ajax.send('GET', this.modalConfirmElt.getAttribute('data-url'), this.responseAjax.bind(this))
+            this.ajax.send('GET', this.confirmDeleteBtnElt.getAttribute('data-url'), this.responseAjax.bind(this))
         })
+        document.getElementById('action-validate').addEventListener('click', e => this.onValidateAction(e))
+        
     }
-
+    
     /**
-     * Affiche un formulaire modal vierge.
+     * @param {HTMLTableRowElement} documentTrElt 
      */
-    newDocument() {
-        this.modalDocumentElt.querySelector('form').action = '/support/' + this.supportId + '/document/new'
-        this.documentNameInput.value = ''
-        this.selectType.setOption(this.documentTypeInput, null)
-        this.documentContentInput.value = ''
-        this.documentBlockFile.classList.remove('d-none')
-        this.documentFileInput.value = null
-        this.documentFileLabelElt.textContent = this.filePlaceholder
-        this.documentFileLabelElt.classList.remove('small')
-        this.btnDeleteElt.classList.replace('d-block', 'd-none')
-        this.btnSaveElt.setAttribute('data-action', 'new')
-        this.btnSaveElt.textContent = 'Enregistrer'
-        this.modalElt.show()
+    addEventListenersToTr(documentTrElt) {
+        documentTrElt.addEventListener('click', e => this.showDocument(e, documentTrElt))
+        const deleteBtnElt = documentTrElt.querySelector('button[data-action="delete"]')
+        deleteBtnElt.addEventListener('click', () => {
+            deleteBtnElt.setAttribute('data-document-id', documentTrElt.getAttribute('data-document-id'))
+            const documentName = documentTrElt.querySelector('td[data-document="name"]').textContent
+            this.updateDeleteModal(documentName, deleteBtnElt.getAttribute('data-url'))
+        })      
     }
 
-
-
-    /**
-     * Donne le document sélectionné dans le formulaire modal.
+    /**    req.onprogress = updateProgress;
      * @param {Event} e 
-     * @param {HTMLElement} documentElt 
      */
-    getDocument(e, documentElt) {
-        if (e.target.localName != 'td') {
-            return null
-        }
-
-        this.documentElt = documentElt
-        this.contentDocumentElt = documentElt.querySelector('.document-content')
-
-        this.documentId = Number(documentElt.id.replace('document-', ''))
-        this.modalDocumentElt.querySelector('form').action = '/document/' + this.documentId + '/edit'
-
-        this.nameDocumentElt = documentElt.querySelector('.js-document-name')
-        this.documentNameInput.value = this.nameDocumentElt.textContent
-
-        const typeValue = documentElt.querySelector('.js-document-type').getAttribute('data-value')
-        this.selectType.setOption(this.documentTypeInput, typeValue)
-
-        this.contentDocumentElt = documentElt.querySelector('.js-document-content')
-        this.documentContentInput.value = this.contentDocumentElt.textContent
-
-        this.documentBlockFile.classList.add('d-none')
-
-        this.btnDeleteElt.classList.replace('d-none', 'd-block')
-        this.btnDeleteElt.href = '/document/' + this.documentId + '/delete'
-
-        this.btnSaveElt.setAttribute('data-action', 'edit')
-        this.btnSaveElt.textContent = 'Mettre à jour'
-        this.modalElt.show()
-    }
-
-    /**
-     * Vérifie le fichier choisi.
-     */
-    checkFile() {
-        let error = false
-        const validExtensions = ['csv', 'doc', 'docx', 'jpg', 'odp', 'ods', 'odt', 'pdf', 'png', 'rar', 'txt', 'xls', 'xlsx', 'zip']
-        const extensionFile = this.documentFileInput.value.split('.').pop().toLowerCase()
-        // Vérifie si l'extension du fichier est valide
-        if (!validExtensions.includes(extensionFile)) {
-            error = true
-            new MessageFlash('danger', `Le format du fichier n'est pas valide (${extensionFile}).\n Formats acceptés : ${validExtensions.join(', ')}.`)
-        }
-
-        const sizeFile = Math.round((this.documentFileInput.files[0].size / 1024 / 1024) * 10) / 10
-        // Vérifie si le fichier est supérieur à 5 Mo
-        if (sizeFile > 5) {
-            error = true
-            new MessageFlash('danger', `Le fichier est trop volumineux (${sizeFile} Mo). Maximum : 5 Mo.`)
-        }
-        // Si le fichier est valide, affiche le nom
-        if (error === false) {
-            const fileName = this.documentFileInput.value.split('\\').pop()
-            this.documentFileLabelElt.textContent = fileName
-            this.documentFileLabelElt.classList.add('small')
-            if (!this.documentNameInput.value) {
-                this.documentNameInput.value = fileName.split('.').slice(0, -1).join('.')
-            }
-            // Sinon, retire le fichier de l'input
-        } else {
-            this.documentFileInput.value = null
-            this.documentFileLabelElt.textContent = this.filePlaceholder
-            this.documentFileLabelElt.classList.remove('small')
-        }
-    }
-
-    /**
-     * Enregistre le document.
-     * @param {Event} e
-     */
-    saveDocument(e) {
+    onValidateAction(e) {
         e.preventDefault()
 
-        if (!this.documentNameInput.value) {
-            return  new MessageFlash('danger', 'Le nom du document est vide.')
-        }
+        const actionTypeSelect = document.getElementById('action_type')
+        const option = this.selectType.getOption(actionTypeSelect)
+        const items = this.checkboxSelector.getItems()
 
-        if (!this.selectType.getOption((this.documentTypeInput))) {
-            return new MessageFlash('danger', 'Le type de document n\'est pas renseigné.')
+        // Check if items are selected.
+        if (0 === items.length) {
+            return new MessageFlash('danger', 'Aucun document n\'est sélectionné.')
         }
-
-        if (this.btnSaveElt.getAttribute('data-action') === 'new' && !this.documentFileInput.value) {
-            return new MessageFlash('danger', 'Il n\'y a pas de fichier choisi.')
+        // If 'download' action
+        if (1 === option) {
+            return this.downloadFiles(items)
         }
-        
-        if (!this.loader.isActive()) {
-            this.loader.on()
-            this.uploadFiles(this.formDocumentElt.getAttribute('action'))
+        // If 'delete' action
+        if (2 === option && window.confirm('Attention, vous allez supprimer ces documents. Confirmer ?')) {
+            return this.deleteFiles(items)
         }
     }
 
     /**
-     * 
+     * @param {Array} items 
+     */
+    downloadFiles(items) {
+        this.loader.on()
+
+        const formData = new FormData(this.actionFormElt)
+        const url = this.actionFormElt.getAttribute('action')
+        formData.append('items', JSON.stringify(items))
+        // let parameters = '?'
+        // items.forEach(item => { parameters += 'items%5B%5D=' + item + '&' })
+        // window.location.assign(url + parameters)
+        this.ajax.send('POST', url, this.responseAjax.bind(this), formData)
+        return new MessageFlash('success', 'Le téléchargement est en cours. Veuillez patienter...')
+    }
+
+    /**
+     * @param {String} documentName 
      * @param {String} url 
      */
-    uploadFiles(url) {
-        const formData = new FormData(this.formDocumentElt)
-        formData.append('file', this.documentFileInput.files)
-        
+    updateDeleteModal(documentName, url) {
+        const modalBodyElt = this.modalBlockElt.querySelector('div.modal-body')
+        modalBodyElt.innerHTML = `<br/><p>Êtes-vous vraiment sûr de vouloir supprimer le document <b>${documentName}</b> ?</p><br/>`
+        this.confirmDeleteBtnElt.setAttribute('data-url', url)
+        this.deleteModalElt.show()
+    }
+
+    /**
+     * @param {Array} items 
+     */
+    deleteFiles(items) {
+        this.loader.on()
+        const url = this.deleteBtnElt.getAttribute('data-url-document-delete')
+        items.forEach(id => {
+            this.ajax.send('GET', url.replace('__id__', id), this.responseAjax.bind(this))
+        })
+    }
+
+    /**
+     * @param {File} file
+     */
+    uploadFile(file = null) {
+        const url = this.dropzoneFormElt.getAttribute('action')
+        const formData = new FormData(this.dropzoneFormElt)
+
+        if (file) {
+            formData.append('files', file)
+        }
+        // const ajax = new AjaxRequest(this.loader, 60)
         this.ajax.send('POST', url, this.responseAjax.bind(this), formData)
     }
 
     /**
-     * Envoie une requête ajax pour supprimer le document.
-     * @param {Event} e
-     * @param {String} url
+     * Affiche le document sélectionné dans le formulaire modal.
+     * @param {Event} e 
+     * @param {HTMLTableRowElement} documentTrElt 
      */
-    deleteDocument(e, url) {
+    showDocument(e, documentTrElt) {
+        if (!e.target.className.includes('cursor-pointer')) {
+            return null
+        }
+
+        const id = documentTrElt.getAttribute('data-document-id')
+        const typeValue = documentTrElt.querySelector('td[data-document="type"]').getAttribute('data-type-value')
+
+        this.documentFormElt.action = this.documentFormElt.getAttribute('data-url').replace('__id__', id)
+        this.documentFormElt.querySelector('#document_name').value = documentTrElt.querySelector('td[data-document="name"]').textContent
+        this.documentFormElt.querySelector('#document_content').value = documentTrElt.querySelector('td[data-document="content"]').textContent
+        this.selectType.setOption(this.documentFormElt.querySelector('#document_type'), typeValue)
+        this.deleteBtnElt.classList.replace('d-none', 'd-block')
+        this.deleteBtnElt.setAttribute('data-document-id', id)
+        this.documentModalElt.show()
+    }
+   
+    /**
+     * @param {Event} e
+     */
+    requestToUpdate(e) {
         e.preventDefault()
         this.loader.on()
-        if (window.confirm('Voulez-vous vraiment supprimer ce document ?')) {
-            this.ajax.send('GET', url, this.responseAjax.bind(this))
-        }
+        const formData = new FormData(this.documentFormElt)
+        const url = this.documentFormElt.getAttribute('action')
+        this.ajax.send('POST', url, this.responseAjax.bind(this), formData)
+        this.documentModalElt.hide()
     }
 
     /**
-     * Réponse du serveur.
+     * @param {Event} e
+     * @param {String} id
+     */
+    requestToDelete(e, id) {
+        e.preventDefault()
+
+        const url = this.deleteBtnElt.getAttribute('data-url-document-delete').replace('__id__', id)
+        const documentName = this.documentFormElt.querySelector('#document_name').value
+
+        this.updateDeleteModal(documentName, url)
+    }
+
+    /**
      * @param {Object} response 
      */
-    responseAjax(response) {     
-        if (response.code === 200) {
-            switch (response.action) {
-                case 'create':
-                    this.createDocument(response.data)
-                    break
-                case 'update':
-                    this.updateDocument(response.data)
-                    break
-                case 'delete':
-                    document.getElementById('document-' + this.documentId).remove()
-                    this.countDocumentsElt.textContent = parseInt(this.countDocumentsElt.textContent) - 1
-                    break
-                }
-            }
-            this.modalElt.hide()
-            new MessageFlash(response.alert, response.msg)
-            this.loader.off()
+    responseAjax(response) {
+        switch (response.action) {
+            case 'create':
+                this.createDocumentTr(response.data)
+                break
+            case 'update':
+                this.updateDocumentTr(response.data)
+                break
+            case 'delete':
+                this.deleteDocumentTr(response.data)
+                break
+            case 'download':
+                return this.getFile(response.data)
+                break
+        }
+        new MessageFlash(response.alert, response.msg)
+        this.loader.off()
     }
 
     /**
      * Crée la ligne du nouveau document dans le tableau.
      * @param {Object} data 
      */
-    createDocument(data) {
-        const documentElt = document.createElement('tr')
-        documentElt.id = 'document-' + data.documentId
-        documentElt.className = 'js-document'
+    createDocumentTr(datas) {
+        datas.forEach(data => {
+            const containerDocumentsElt = document.getElementById('container-documents')
+            const documentTrElt = this.getDocumentTrPrototype(data)
 
-        documentElt.innerHTML = this.getPrototypeDocument(data)
+            containerDocumentsElt.insertBefore(documentTrElt, containerDocumentsElt.firstChild)
 
-        const containerDocumentsElt = document.getElementById('container-documents')
-        containerDocumentsElt.insertBefore(documentElt, containerDocumentsElt.firstChild)
-        this.countDocumentsElt.textContent = parseInt(this.countDocumentsElt.textContent) + 1
-        documentElt.addEventListener('click', e => this.getDocument(e, documentElt))
-        const btnDeleteElt = documentElt.querySelector('button.js-delete')
-        btnDeleteElt.addEventListener('click', () => {
-            this.modalDeleteElt.show()
-            this.documentId = Number(btnDeleteElt.parentElement.parentElement.id.replace('document-', ''))
-            this.modalConfirmElt.setAttribute('data-url', btnDeleteElt.getAttribute('data-url'))
+            this.updateCounter(1)
+            this.addEventListenersToTr(documentTrElt)
+            this.dropzone.updateItemInList(data)
         })
-    }
+    }   
 
     /**
      * Met à jour la ligne du tableau correspondant au document.
      * @param {Object} data 
      */
-    updateDocument(data) {
-        this.nameDocumentElt.textContent = this.documentNameInput.value
-        const documentTypeInput = this.documentElt.querySelector('.js-document-type')
-        documentTypeInput.textContent = data.type
-        documentTypeInput.setAttribute('data-value', this.selectType.getOption(this.documentTypeInput))
-        this.documentElt.querySelector('.js-document-content').textContent = this.documentContentInput.value
+    updateDocumentTr(data) {
+        const documentTrElt = document.querySelector(`tr[data-document-id="${data.id}"]`)
+        documentTrElt.querySelector('td[data-document="name"]').textContent = data.name
+        const documentTypeTdElt = documentTrElt.querySelector('td[data-document="type"]')
+        documentTypeTdElt.setAttribute('data-type-value', data.type)
+        documentTypeTdElt.textContent = data.typeToString
+        documentTrElt.querySelector('td[data-document="content"]').textContent = data.content
+        this.documentModalElt.hide()
+    }
+    /**
+     * @param {Object} data 
+     */ 
+    deleteDocumentTr(data) {
+        this.documentModalElt.hide()
+        document.querySelector(`tr[data-document-id="${data.id}"]`).remove()
+        this.updateCounter(-1)
     }
 
-    getPrototypeDocument(data) {
-        const size = Math.floor(data.size / 10000) / 100 + ' Mo'
-
-        return `<td scope='row' class='align-middle text-center'>
-                    <a href='/document/${data.documentId}/read' class='btn btn-${this.themeColor} btn-sm shadow my-1' 
-                        title='Télécharger le document'><span class='fas fa-file-download'></span>
-                    </a>
-                </rd>
-                    <td class='align-middle js-document-name'>${this.documentNameInput.value}</td>
-                    <td class='align-middle js-document-type'
-                        data-value='${this.selectType.getOption(this.documentTypeInput)}'>${data.type}</td>
-                    <td class='align-middle js-document-content'>${this.documentContentInput.value}</td>
-                    <td class='align-middle js-document-size text-right'>${size}</td>
-                    <td class="align-middle js-document-extension">${data.extension}</td>
-                    <td class='align-middle js-document-createdAt'>${data.createdAt}</td>
-                    <td class='align-middle js-document-createdBy'>${data.createdBy}</td>
-                    <td class='align-middle text-center'>
-                        <button data-url='/document/${data.documentId}/delete' class='js-delete btn btn-danger btn-sm shadow my-1' 
-                            title='Supprimer le document'><span class='fas fa-trash-alt'></span>
-                        </button>
-                </td>`
+    /**
+     * @param {Object} data 
+     */
+    getFile(data) {
+        this.loader.on()
+        this.ajax.showFile(data.file, data.filename)
+        this.loader.off()
     }
+
+    /**
+     * @param {Object} data 
+     */ 
+    getDocumentTrPrototype(data) {
+        const documentTrElt = document.createElement('tr')
+        documentTrElt.setAttribute('data-document-id', data.id)
+        documentTrElt.innerHTML =`
+            <td scope="row" class="align-middle text-center">
+                <div class="custom-control custom-checkbox custom-checkbox-${this.themeColor} text-dark pl-0" 
+                    title="Sélectionner le document">
+                    <div class="form-check">
+                        <input type="checkbox" id="checkbox-file-${data.id}" data-checkbox="${data.id}"
+                            name="checkbox-file-${data.id}" class="custom-control-input checkbox form-check-input">
+                        <label class="custom-control-label form-check-label ml-2" for="checkbox-file-${data.id}"></label>
+                    </div>
+                </div>
+            </td>
+            <td class="align-middle text-center">
+                <a href="/document/${data.id}/download" class="btn btn-${this.themeColor} btn-sm shadow my-1" 
+                    title="Télécharger le document"><span class="fas fa-file-download"></span>
+                </a>
+            </td>
+            <td class="align-middle cursor-pointer" data-document="name">${data.name}</td>
+            <td class="align-middle cursor-pointer" data-document="type" data-type-value="${data.type}">${data.typeToString ?? ''}</td>
+            <td class="align-middle cursor-pointer" data-document="content">${data.content ?? ''}</td>
+            <td class="align-middle text-right">${((Math.floor(data.size / 10000) / 100).toLocaleString('fr') + ' Mo')}</td>
+            <td class="align-middle" data-document="extension">${data.fileType}</td>
+            <td class="align-middle">${new DateFormater().getDate(data.createdAt)}</td>
+            <td class="align-middle">${data.createdBy.fullname}</td>
+            <td class="align-middle text-center">
+                <button data-url="/document/${data.id}/delete" class="btn btn-danger btn-sm shadow my-1"
+                    data-action="delete" title="Supprimer le document"><span class="fas fa-trash-alt"></span>
+                </button>
+            </td>`
+        
+        return documentTrElt
+    }
+
+    /**
+     * @param {Number} number 
+     */
+    updateCounter(number) {
+        this.countDocumentsElt.textContent = parseInt(this.countDocumentsElt.textContent) + number
+    }    
 }

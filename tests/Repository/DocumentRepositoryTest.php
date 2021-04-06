@@ -48,7 +48,7 @@ class DocumentRepositoryTest extends WebTestCase
         $this->supportGroup = $dataFixtures['supportGroup'];
         $this->user = $dataFixtures['userRoleUser'];
         $this->search = (new SupportDocumentSearch())
-            ->setName('Document 666')
+            ->setName('Document')
             ->setType(1);
     }
 

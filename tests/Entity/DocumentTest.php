@@ -36,7 +36,7 @@ class DocumentTest extends WebTestCase
 
     public function testNullType()
     {
-        $this->assertHasErrors($this->document->setType(null), 1);
+        $this->assertHasErrors($this->document->setType(null), 0);
     }
 
     protected function tearDown(): void

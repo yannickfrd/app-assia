@@ -8,22 +8,25 @@ use App\Entity\Support\SupportGroup;
 use App\EntityManager\SupportManager;
 use App\Form\Model\Support\DocumentSearch;
 use App\Form\Model\Support\SupportDocumentSearch;
+use App\Form\Support\Document\ActionType;
 use App\Form\Support\Document\DocumentSearchType;
 use App\Form\Support\Document\DocumentType;
+use App\Form\Support\Document\DropzoneDocumentType;
 use App\Form\Support\Document\SupportDocumentSearchType;
 use App\Repository\Support\DocumentRepository;
 use App\Security\CurrentUserService;
-use App\Service\Download;
-use App\Service\FileUploader;
+use App\Service\File\Downloader;
+use App\Service\File\FileDownloader;
+use App\Service\File\FileUploader;
 use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Cache\CacheItemInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class DocumentController extends AbstractController
 {
@@ -31,11 +34,13 @@ class DocumentController extends AbstractController
 
     private $manager;
     private $repo;
+    private $documentsDirectory;
 
-    public function __construct(EntityManagerInterface $manager, DocumentRepository $repo)
+    public function __construct(EntityManagerInterface $manager, DocumentRepository $repo, string $documentsDirectory)
     {
         $this->manager = $manager;
         $this->repo = $repo;
+        $this->documentsDirectory = $documentsDirectory;
     }
 
     /**
@@ -64,17 +69,153 @@ class DocumentController extends AbstractController
     {
         $this->denyAccessUnlessGranted('VIEW', $supportGroup = $supportManager->getSupportGroup($id));
 
-        $formSearch = $this->createForm(SupportDocumentSearchType::class, $search = new SupportDocumentSearch());
-        $formSearch->handleRequest($request);
+        $formSearch = ($this->createForm(SupportDocumentSearchType::class, $search = new SupportDocumentSearch()))
+            ->handleRequest($request);
 
-        $form = $this->createForm(DocumentType::class, new Document());
+        $documentForm = $this->createForm(DocumentType::class, new Document());
+        $dropzoneForm = $this->createForm(DropzoneDocumentType::class, null, [
+            'action' => $this->generateUrl('document_new', ['id' => $supportGroup->getId()]),
+        ]);
+        $actionForm = $this->createForm(ActionType::class, null, [
+            'action' => $this->generateUrl('documents_download', ['id' => $supportGroup->getId()]),
+        ]);
 
         return $this->render('app/support/document/supportDocuments.html.twig', [
             'support' => $supportGroup,
             'form_search' => $formSearch->createView(),
-            'form' => $form->createView(),
+            'documentForm' => $documentForm->createView(),
+            'dropzoneForm' => $dropzoneForm->createView(),
+            'actionForm' => $actionForm->createView(),
             'documents' => $pagination->paginate($this->repo->findSupportDocumentsQuery($supportGroup, $search), $request),
         ]);
+    }
+
+    /**
+     * Nouveau document.
+     *
+     * @Route("support/{id}/document/new", name="document_new", methods="POST")
+     * @IsGranted("EDIT", subject="supportGroup")
+     */
+    public function newDocument(SupportGroup $supportGroup, Request $request, FileUploader $fileUploader): Response
+    {
+        $dropzoneDocument = $request->files->get('dropzone_document');
+        $files = $request->files->get('files');
+        if ($dropzoneDocument && !$dropzoneDocument['files'] && $files) {
+            $request->files->set('dropzone_document', ['files' => [$files]]);
+        }
+
+        $form = ($this->createForm(DropzoneDocumentType::class))
+            ->handleRequest($request);
+
+        $files = $form->get('files')->getData();
+
+        if ($form->isSubmitted() && $form->isValid() && count($files) > 0) {
+            $data = $fileUploader->createDocuments($supportGroup, $files);
+
+            $this->discache($supportGroup);
+
+            return $this->json($data);
+        }
+
+        return $this->getErrorMessage($form);
+    }
+
+    /**
+     * Télécharge un fichier.
+     *
+     * @Route("document/{id}/download", name="document_download", methods="GET")
+     * @IsGranted("VIEW", subject="document")
+     */
+    public function download(Document $document, Downloader $downloader): Response
+    {
+        $file = $this->getFilePath($document);
+
+        if (file_exists($file)) {
+            return $downloader->send($file);
+        }
+
+        $this->addFlash('danger', 'Ce fichier n\'existe pas.');
+
+        return $this->redirectToRoute('support_documents', ['id' => $document->getSupportGroup()->getId()]);
+    }
+
+    /**
+     * Modification d'un document.
+     *
+     * @Route("support/{id}/documents/download", name="documents_download", methods="GET|POST")
+     */
+    public function downloadDocuments(int $id, Request $request, SupportManager $supportManager, FileDownloader $downloader): Response
+    {
+        $this->denyAccessUnlessGranted('VIEW', $supportGroup = $supportManager->getSupportGroup($id));
+
+        $form = ($this->createForm(ActionType::class, null))
+            ->handleRequest($request);
+
+        $items = json_decode($request->request->get('items'));
+
+        if ($form->isSubmitted() && $form->isValid() && $items && count($items) > 0) {
+            return $this->json($downloader->sendDocuments($items, $supportGroup));
+        }
+
+        return $this->getErrorMessage($form);
+    }
+
+    /**
+     * Modification d'un document.
+     *
+     * @Route("document/{id}/edit", name="document_edit", methods="POST")
+     * @IsGranted("EDIT", subject="document")
+     */
+    public function editDocument(Document $document, Request $request, NormalizerInterface $normalizer): Response
+    {
+        $form = ($this->createForm(DocumentType::class, $document))
+            ->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->manager->flush();
+
+            $this->discache($document->getSupportGroup(), true);
+
+            return $this->json([
+                'action' => 'update',
+                'alert' => 'success',
+                'msg' => 'Les informations du document "'.$document->getName().'" sont mises à jour.',
+                'data' => $normalizer->normalize($document, null, ['groups' => ['get', 'view']]),
+            ]);
+        }
+
+        return $this->getErrorMessage($form);
+    }
+
+    /**
+     * Supprime un document.
+     *
+     * @Route("document/{id}/delete", name="document_delete", methods="GET")
+     */
+    public function deleteDocument(Document $document): Response
+    {
+        $this->manager->remove($document);
+        $this->manager->flush();
+
+        $this->discache($document->getSupportGroup());
+
+        return $this->json([
+            'action' => 'delete',
+            'alert' => 'warning',
+            'msg' => "Le document \"{$document->getName()}\" est supprimé.",
+            'data' => [
+                'id' => $document->getId(),
+                'name' => $document->getName(),
+            ],
+        ]);
+    }
+
+    /**
+     * Return the full path of a document.
+     */
+    private function getFilePath(Document $document): string
+    {
+        return $this->documentsDirectory.$document->getCreatedAt()->format('Y/m/d/').$document->getPeopleGroup()->getId().'/'.$document->getInternalFileName();
     }
 
     // /**
@@ -96,159 +237,6 @@ class DocumentController extends AbstractController
     //         }
     //     );
     // }
-
-    /**
-     * Nouveau document.
-     *
-     * @Route("support/{id}/document/new", name="document_new", methods="POST")
-     * @IsGranted("EDIT", subject="supportGroup")
-     */
-    public function newDocument(SupportGroup $supportGroup, Request $request, FileUploader $fileUploader): Response
-    {
-        $form = ($this->createForm(DocumentType::class, $document = new Document()))
-            ->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            return $this->createDocument($supportGroup, $form, $fileUploader, $document);
-        }
-
-        return $this->getErrorMessage($form);
-    }
-
-    /**
-     * Lit le document.
-     *
-     * @Route("document/{id}/read", name="document_read", methods="GET")
-     * @IsGranted("VIEW", subject="document")
-     */
-    public function readDocument(Document $document, Download $download): Response
-    {
-        $file = 'uploads/documents/'.$document->getCreatedAt()->format('Y/m/d/').$document->getPeopleGroup()->getId().'/'.$document->getInternalFileName();
-
-        if (file_exists($file)) {
-            return $download->send($file);
-        }
-
-        $this->addFlash('danger', 'Ce fichier n\'existe pas.');
-
-        return $this->redirectToRoute('support_documents', ['id' => $document->getSupportGroup()->getId()]);
-    }
-
-    /**
-     * Modification d'un document.
-     *
-     * @Route("document/{id}/edit", name="document_edit", methods="POST")
-     * @IsGranted("EDIT", subject="document")
-     */
-    public function editDocument(Document $document, Request $request): Response
-    {
-        $form = ($this->createForm(DocumentType::class, $document))
-            ->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            return $this->updateDocument($document);
-        }
-
-        return $this->getErrorMessage($form);
-    }
-
-    /**
-     * Supprime un document.
-     *
-     * @Route("document/{id}/delete", name="document_delete", methods="GET")
-     * @IsGranted("DELETE", subject="document", message="Vous n'avez pas les droits pour effectuer cette action.")
-     */
-    public function deleteDocument(Document $document): Response
-    {
-        $documentName = $document->getName();
-
-        $file = 'uploads/documents/'.$document->getSupportGroup()->getPeopleGroup()->getId().'/'.$document->getInternalFileName();
-
-        $this->manager->remove($document);
-        $this->manager->flush();
-
-        $count = $this->repo->count([
-            'peopleGroup' => $document->getSupportGroup()->getPeopleGroup(),
-            'internalFileName' => $document->getInternalFileName(),
-        ]);
-
-        if (1 === $count && \file_exists($file)) {
-            \unlink($file);
-        }
-
-        $this->discache($document->getSupportGroup());
-
-        return $this->json([
-            'code' => 200,
-            'action' => 'delete',
-            'alert' => 'warning',
-            'msg' => "Le document $documentName est supprimé.",
-        ], 200);
-    }
-
-    /**
-     * Crée un document une fois le formulaire soumis et validé.
-     */
-    protected function createDocument(SupportGroup $supportGroup, $form, FileUploader $fileUploader, Document $document): Response
-    {
-        $file = $form['file']->getData();
-
-        $peopleGroup = $supportGroup->getPeopleGroup();
-
-        $path = '/'.(new \DateTime())->format('Y/m/d/').$peopleGroup->getId().'/';
-
-        $fileName = $fileUploader->upload($file, $path);
-
-        $size = \filesize($fileUploader->getTargetDirectory().$path.'/'.$fileName);
-
-        $document->setInternalFileName($fileName)
-            ->setSize($size)
-            ->setPeopleGroup($peopleGroup)
-            ->setSupportGroup($supportGroup);
-
-        $supportGroup->setUpdatedAt(new \DateTime());
-
-        $this->manager->persist($document);
-        $this->manager->flush();
-
-        $this->discache($supportGroup);
-
-        return $this->json([
-            'code' => 200,
-            'action' => 'create',
-            'alert' => 'success',
-            'msg' => 'Le document "'.$document->getName().'" est enregistré.',
-            'data' => [
-                'documentId' => $document->getId(),
-                'peopleGroupId' => $peopleGroup->getId(),
-                'type' => $document->getTypeToString(),
-                'size' => $size,
-                'extension' => $document->getExtension(),
-                'createdBy' => $this->getUser()->getFullname(),
-                'createdAt' => $document->getCreatedAt()->format('d/m/Y H:i'),
-            ],
-        ]);
-    }
-
-    /**
-     * Met à jour le document une fois le formulaire soumis et validé.
-     */
-    protected function updateDocument(Document $document): Response
-    {
-        $this->manager->flush();
-
-        $this->discache($document->getSupportGroup(), true);
-
-        return $this->json([
-            'code' => 200,
-            'action' => 'update',
-            'alert' => 'success',
-            'msg' => 'Les informations du document "'.$document->getName().'" sont mises à jour.',
-            'data' => [
-                'type' => $document->getTypeToString(),
-            ],
-        ], 200);
-    }
 
     /**
      * Supprime les documents en cache du suivi.

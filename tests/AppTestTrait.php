@@ -3,15 +3,11 @@
 namespace App\Tests;
 
 use App\Entity\Organization\User;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 trait AppTestTrait
 {
-    // /** @var KernelBrowser */
-    // protected $client;
-
     /**
      * Crée une connexion.
      */
@@ -37,43 +33,11 @@ trait AppTestTrait
         ]);
     }
 
-    protected function createPantherLogin($followRedirects = true)
-    {
-        $this->client = static::createPantherClient(['browser' => 'firefox']);
-
-        $followRedirects ? $this->client->followRedirects() : null;
-
-        $crawler = $this->client->request('GET', '/');
-
-        $this->debug('try to login');
-
-        $form = $crawler->selectButton('send')->form([
-            '_username' => 'r.admin',
-            '_password' => 'Test123*',
-        ]);
-
-        $this->client->submit($form);
-    }
-
     /**
      * Generate an URI.
      */
     protected function generateUri(string $route, array $parameters = []): string
     {
         return $this->client->getContainer()->get('router')->generate($route, $parameters);
-    }
-
-    /**
-     * Generate an URI.
-     */
-    protected function generatePantherUri(string $route, array $parameters = []): string
-    {
-        return self::$container->get('router')->generate($route, $parameters);
-    }
-
-    public function debug(string $message)
-    {
-        // $message = "test : \e[20mXXXX \e[36mCyan \e[35mViolet \e[33mYellow \e[34mBlue \e[32mGreen \e[31mRed \e[37mWhite \e[0m \n";
-        file_put_contents('php://stdout', "\e[34mtest : \e[36m".$message."\e[0m \n");
     }
 }

@@ -1,7 +1,7 @@
 import Ajax from '../utils/ajax'
 import MessageFlash from '../utils/messageFlash'
 import Loader from '../utils/loader'
-import DateFormat from '../utils/dateFormat'
+import DateFormat from '../utils/date/dateFormat'
 import SelectType from '../utils/selectType'
 import { Modal } from 'bootstrap'
 import ParametersUrl from '../utils/parametersUrl'

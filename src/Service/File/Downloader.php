@@ -1,24 +1,27 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\File;
 
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class Download
+class Downloader
 {
     /**
      * Envoie le fichier à télécharger à l'utilisateur.
-     *
-     * @return void
      */
     public function send(string $file): StreamedResponse
     {
-        if (file_exists($file)) {
+        if (!file_exists($file)) {
+            throw new \Exception('This file doesn\'t exist.');
+        }
+
+        try {
             $response = new StreamedResponse();
 
             $response->headers->set('Content-Description', 'File Transfer');
-            $response->headers->set('Content-Type', 'application/octet-stream');
+            $response->headers->set('Content-Type', mime_content_type($file) ?? 'application/octet-stream');
             $response->headers->set('Content-Disposition', 'attachment; filename="'.basename($file).'"');
+            $response->headers->set('Content-name', basename($file));
             $response->headers->set('Expires', 0);
             $response->headers->set('Pragma', 'public');
             $response->headers->set('Content-Length', filesize($file));
@@ -30,8 +33,8 @@ class Download
             });
 
             return $response->send();
+        } catch (\Exception $e) {
+            throw $e;
         }
-
-        return null;
     }
 }

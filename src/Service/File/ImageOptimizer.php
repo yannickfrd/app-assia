@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\File;
 
 use Tinify\Tinify;
 
 /**
  * CLass to compress and optimize image files with Tinify API.
  */
-class OptimizeImage
+class ImageOptimizer
 {
     protected $tinify;
     protected $tinifyKey;
@@ -18,7 +18,7 @@ class OptimizeImage
     protected $originalFile;
     protected $optimizedFile;
 
-    public function __construct(Tinify $tinify, $tinifyKey)
+    public function __construct(Tinify $tinify, string $tinifyKey)
     {
         $this->tinify = $tinify;
         $this->tinifyKey = $tinifyKey;
@@ -82,7 +82,7 @@ class OptimizeImage
         return "L'image est redimesionnée avec la méthode \"".$method.'".';
     }
 
-    /** 
+    /**
      * Create an icon.
      */
     public function createIcon($toFolder): string

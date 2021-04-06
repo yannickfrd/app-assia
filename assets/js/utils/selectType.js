@@ -24,6 +24,21 @@ export default class SelectType {
     }
 
     /**
+     * Donne l'élement HTML de l'option sélectionnée.
+     * @param {HTMLSelectElement} selectElt 
+     * @return {HTMLOptionElement}
+     */
+    getOptionElt(selectElt) {      
+        let optionElt = null
+        selectElt.querySelectorAll('option').forEach(elt => {
+            if (elt.value && (elt.selected || true === elt.selected)) {
+                optionElt = elt
+            }
+        })
+        return optionElt
+    }
+
+    /**
      * Définie l'option sélectionnée.
      * @param {HTMLSelectElement} selectElt 
      * @param {String} value 

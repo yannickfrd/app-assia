@@ -43,6 +43,10 @@ https://demo.esperer95.app
 - Fix error with sql request duplicatedPeople (ONLY_FULL_GROUP_BY);
 
 ## Version 2.21.0 - 12/03/2021
+
+
+
+## Version 2.21.0 - 12/03/2021
 - Add fields 'schoolAddress', 'schoolCity' and 'schoolZipcode' in EvalFamilyPerson;
 - Add var 'nbChildrenUnder3years' in SupportGroup + create command to update this var;
 - Factorisation evaluation;
