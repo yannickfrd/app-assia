@@ -1,5 +1,35 @@
 App\Entity\Organization\Service:
-  service{2..5}:
+  service2:
+    name: AVDL
+    type: 2
+    pole: "@pole"
+    email: avdl@esperer-95.org
+    phone1: "01 00 00 00 00"
+    address: Pontoise
+    city: Pontoise
+    zipcode: 95 000
+    place: false
+    createdAt: <date_create()>
+    updatedAt: <date_create()>
+    createdBy: "@user*"
+    updatedBy: "@user*"
+
+  service3:
+    name: PASH
+    type: 3
+    pole: "@pole"
+    email: pash@esperer-95.org
+    phone1: "01 00 00 00 00"
+    address: Cergy
+    city: Cergy
+    zipcode: 95 000
+    place: false
+    createdAt: <date_create()>
+    updatedAt: <date_create()>
+    createdBy: "@user*"
+    updatedBy: "@user*"
+
+  service{4..5}:
     name: <sentence(3, true)>
     city: <fr_FR:city()>
     phone1: <fr_FR:phoneNumber()>
@@ -15,9 +45,9 @@ App\Entity\Organization\Service:
 
 App\Entity\Organization\Device:
   device1:
-    name: AVDL
+    name: Insertion
 
 App\Entity\Organization\SubService:
   subService1:
     service: "@service1"
-    name: AVDL sous-service
+    name: CHRS sous-service

@@ -4,8 +4,8 @@
 
 {% set ROLE_CHILD = constant("App\\Entity\\People\\RolePerson::ROLE_CHILD") %}
 {% set STATUS_IN_PROGRESS = constant("App\\Entity\\Support\\SupportGroup::STATUS_IN_PROGRESS") %}
-{% set SERVICE_AVDL_ID = constant("App\\Entity\\Organization\\Service::SERVICE_AVDL_ID") %}
-{% set SERVICE_PASH_ID = constant("App\\Entity\\Organization\\Service::SERVICE_PASH_ID") %}
+{% set SERVICE_TYPE_AVDL = constant("App\\Entity\\Organization\\Service::SERVICE_TYPE_AVDL") %}
+{% set SERVICE_TYPE_HOTEL = constant("App\\Entity\\Organization\\Service::SERVICE_TYPE_HOTEL") %}
 {% set supportPeople = support.supportPeople|filter(s => s.status == support.status) %}
 
 {% block title %}Suivi social{% endblock %}
@@ -57,8 +57,8 @@
 			<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
 				<a id='support-places' class="btn btn-{{ theme_color }} btn-block shadow" 
 				href="{{ path('support_places', {'id': support.id}) }}" data-toggle="tooltip" data-placement="bottom" 
-				title="{% if support.service.id == SERVICE_PASH_ID %}Prises en charge hôtelières{% else %}Modalités d'hébergement{% endif %}"><!--
-				-->{% if support.service.id == SERVICE_PASH_ID %}PEC Hôtel{% else %}Hébergement{% endif %}<!--
+				title="{% if support.service.type == SERVICE_TYPE_HOTEL %}Prises en charge hôtelières{% else %}Modalités d'hébergement{% endif %}"><!--
+				-->{% if support.service.type == SERVICE_TYPE_HOTEL %}PEC Hôtel{% else %}Hébergement{% endif %}<!--
 				--><span class="badge badge-light ml-2">{{ support.placeGroups|length }}</span></a>
 			</div>
 			{% endif %}
@@ -91,9 +91,9 @@
 			</div>
 		</div>
 
-		{% if support.service.id == SERVICE_AVDL_ID and support.avdl %}
+		{% if support.service.type == SERVICE_TYPE_AVDL and support.avdl %}
 			{% include "app/support/avdl/_avdlView.html.twig" %}
-		{% elseif support.service.id == SERVICE_PASH_ID %}
+		{% elseif support.service.type == SERVICE_TYPE_HOTEL %}
 			{% include "app/support/hotelSupport/_hotelSupportView.html.twig" %}
 		{% else %}		
 			{% include "app/support/support/_supportRegularView.html.twig" %}

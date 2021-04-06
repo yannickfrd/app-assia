@@ -4,7 +4,6 @@ namespace App\Controller\Support;
 
 use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Organization\Service;
-use App\Entity\Support\SupportGroup;
 use App\Form\Model\Support\AvdlSupportSearch;
 use App\Form\Support\Avdl\AvdlSupportSearchType;
 use App\Repository\Support\SupportPersonRepository;
@@ -18,13 +17,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class AvdlController extends AbstractController
 {
     use ErrorMessageTrait;
-
-    private $serviceId;
-
-    public function __construct()
-    {
-        $this->serviceId = Service::SERVICE_AVDL_ID;
-    }
 
     /**
      * Liste des suivis AVDL.
@@ -42,7 +34,7 @@ class AvdlController extends AbstractController
 
         return $this->render('app/support/avdl/listAvdlSupports.html.twig', [
             'form' => $form->createView(),
-            'supports' => $pagination->paginate($repo->findAvdlSupportsQuery($search, $this->serviceId), $request),
+            'supports' => $pagination->paginate($repo->findAvdlSupportsQuery($search), $request),
         ]);
     }
 
@@ -53,7 +45,7 @@ class AvdlController extends AbstractController
     {
         set_time_limit(10 * 60);
 
-        $supports = $repo->findSupportsOfServiceToExport($search, $this->serviceId);
+        $supports = $repo->findSupportsOfServiceToExport($search, Service::SERVICE_TYPE_AVDL);
 
         if (!$supports) {
             $this->addFlash('warning', 'Aucun résultat à exporter.');

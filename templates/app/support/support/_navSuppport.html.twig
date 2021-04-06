@@ -1,5 +1,5 @@
 {% set people_group = support.peopleGroup %}
-{% set SERVICE_PASH_ID = constant("App\\Entity\\Organization\\Service::SERVICE_PASH_ID") %}
+{% set SERVICE_TYPE_HOTEL = constant("App\\Entity\\Organization\\Service::SERVICE_TYPE_HOTEL") %}
 
 <section class="m-0">
 	<div class="d-md-flex justify-content-md-between mb-2">
@@ -11,7 +11,7 @@
 			</a>
 			{% if support.device and support.device.place == YES %}
 				<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_places', {'id': support.id}) }}" 
-					data-toggle="tooltip" data-placement="bottom" title="{% if support.service.id == SERVICE_PASH_ID %}Prises en charge hôtelelières{% else %}Modalités d'hébergement{% endif %}">
+					data-toggle="tooltip" data-placement="bottom" title="{% if support.service.type == SERVICE_TYPE_HOTEL %}Prises en charge hôtelelières{% else %}Modalités d'hébergement{% endif %}">
 					<span class="fas fa-bed"></span><span class="sr-only">Hébergement</span>
 				</a>
 			{% endif %}

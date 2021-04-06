@@ -52,13 +52,13 @@ class EditSupportGroupSubscriber implements EventSubscriberInterface
         $supportGroup = $event->getSupportGroup();
 
         $supportGroup->setUpdatedAt(new \DateTime());
-        $serviceId = $supportGroup->getService()->getId();
+        $serviceType = $supportGroup->getService()->getType();
 
         // Vérifie le service du suivi
-        if (Service::SERVICE_AVDL_ID === $serviceId) {
+        if (Service::SERVICE_TYPE_AVDL === $serviceType) {
             $supportGroup = (new AvdlService())->updateSupportGroup($supportGroup);
         }
-        if (Service::SERVICE_PASH_ID === $serviceId) {
+        if (Service::SERVICE_TYPE_HOTEL === $serviceType) {
             $supportGroup = (new HotelSupportService())->updateSupportGroup($supportGroup);
         }
 

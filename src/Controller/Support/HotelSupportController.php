@@ -15,13 +15,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class HotelSupportController extends AbstractController
 {
-    private $serviceId;
-
-    public function __construct()
-    {
-        $this->serviceId = Service::SERVICE_PASH_ID;
-    }
-
     /**
      * Liste des suivis AVDL.
      *
@@ -39,7 +32,7 @@ class HotelSupportController extends AbstractController
         return $this->render('app/support/hotelSupport/listHotelSupports.html.twig', [
             'form' => $form->createView(),
             'supports' => $pagination->paginate(
-                $repo->findHotelSupportsQuery($search, $this->serviceId),
+                $repo->findHotelSupportsQuery($search),
                 $request
             ),
         ]);
@@ -52,7 +45,7 @@ class HotelSupportController extends AbstractController
     {
         set_time_limit(10 * 60);
 
-        $supports = $repo->findSupportsOfServiceToExport($search, $this->serviceId);
+        $supports = $repo->findSupportsOfServiceToExport($search, Service::SERVICE_TYPE_HOTEL);
 
         if (!$supports) {
             $this->addFlash('warning', 'Aucun résultat à exporter.');

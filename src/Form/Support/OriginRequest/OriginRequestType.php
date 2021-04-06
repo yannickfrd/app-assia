@@ -19,10 +19,12 @@ class OriginRequestType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $serviceId = $builder->getOption('attr')['serviceId'] ?? null;
-        $required = in_array($serviceId, [
-            Service::SERVICE_AVDL_ID,
-            Service::SERVICE_PASH_ID,
+        /** @var Service $service */
+        $service = $builder->getOption('attr')['service'] ?? null;
+        $serviceType = $service ? $service->getType() : null;
+        $required = in_array($service->getType(), [
+            Service::SERVICE_TYPE_AVDL,
+            Service::SERVICE_TYPE_HOTEL,
         ]);
 
         $builder
@@ -33,23 +35,25 @@ class OriginRequestType extends AbstractType
             ->add('organization', EntityType::class, [
                 'class' => Organization::class,
                 'choice_label' => 'name',
-                'query_builder' => function (OrganizationRepository $repo) use ($serviceId) {
-                    return $repo->getOrganizationsQueryBuilder($serviceId);
+                'query_builder' => function (OrganizationRepository $repo) use ($service) {
+                    return $repo->getOrganizationsQueryBuilder($service);
                 },
                 'placeholder' => 'placeholder.select',
                 'required' => $required,
             ])
             ->add('organizationComment')
             ->add('orientationDate', DateType::class, [
-                'label' => Service::SERVICE_AVDL_ID === $serviceId ? 'avdl.orientationDate' : '',
+                'label' => Service::SERVICE_TYPE_AVDL === $serviceType ? 'avdl.orientationDate' : '',
                 'widget' => 'single_text',
                 'required' => $required,
-            ])
+                ])
             ->add('preAdmissionDate', DateType::class, [
+                'label' => Service::SERVICE_TYPE_AVDL === $serviceType ? 'avdl.preAdmissionDate' : '',
                 'widget' => 'single_text',
                 'required' => false,
-            ])
+                ])
             ->add('resulPreAdmission', ChoiceType::class, [
+                'label' => Service::SERVICE_TYPE_AVDL === $serviceType ? 'avdl.resulPreAdmission' : '',
                 'choices' => Choices::getChoices(OriginRequest::RESULT_PRE_ADMISSION),
                 'placeholder' => 'placeholder.select',
                 'required' => false,

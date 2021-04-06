@@ -59,9 +59,9 @@ App\Entity\Organization\User:
 
 App\Entity\Organization\Service:
   service1:
-    name: AVDL
+    name: CHRS XXX
     pole: "@pole"
-    email: avdl@esperer-95.org
+    email: chrs@esperer-95.org
     phone1: 01 00 00 00 00
     address: Pontoise
     city: Pontoise

@@ -1,6 +1,22 @@
 App\Entity\Organization\Service:
   service1:
+    name: CHRS XXX
+    type: 1
+    pole: "@pole1"
+    email: chrs@esperer-95.org
+    phone1: "01 00 00 00 00"
+    address: Pontoise
+    city: Pontoise
+    zipcode: 95 000
+    place: true
+    createdAt: <date_create()>
+    updatedAt: <date_create()>
+    createdBy: "@user*"
+    updatedBy: "@user*"
+
+  service2:
     name: AVDL
+    type: 2
     pole: "@pole1"
     email: avdl@esperer-95.org
     phone1: "01 00 00 00 00"
@@ -13,7 +29,22 @@ App\Entity\Organization\Service:
     createdBy: "@user*"
     updatedBy: "@user*"
 
-  service{2..10}:
+  service3:
+    name: PASH
+    type: 3
+    pole: "@pole1"
+    email: pash@esperer-95.org
+    phone1: "01 00 00 00 00"
+    address: Pontoise
+    city: Pontoise
+    zipcode: 95 000
+    place: true
+    createdAt: <date_create()>
+    updatedAt: <date_create()>
+    createdBy: "@user*"
+    updatedBy: "@user*"
+
+  service{4..10}:
     name: <sentence(3, true)>
     city: <fr_FR:city()>
     phone1: <fr_FR:phoneNumber()>

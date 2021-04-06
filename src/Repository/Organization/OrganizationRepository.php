@@ -2,11 +2,12 @@
 
 namespace App\Repository\Organization;
 
-use App\Entity\Organization\Organization;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use App\Entity\Organization\Service;
+use App\Entity\Organization\Organization;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Organization|null find($id, $lockMode = null, $lockVersion = null)
@@ -35,14 +36,14 @@ class OrganizationRepository extends ServiceEntityRepository
     /**
      * Retourne les organismes prescripteurs rattachés au service.
      */
-    public function getOrganizationsQueryBuilder(int $serviceId = null): QueryBuilder
+    public function getOrganizationsQueryBuilder(Service $service = null): QueryBuilder
     {
         $query = $this->createQueryBuilder('o')->select('PARTIAL o.{id, name}');
 
-        if ($serviceId && $this->countOrganizationsInService($serviceId)) {
+        if ($service && $this->countOrganizationsInService($service)) {
             $query = $query->leftJoin('o.services', 's')->addSelect('PARTIAL s.{id, name}')
                 ->where('s.id = :service')
-                ->setParameter('service', $serviceId);
+                ->setParameter('service', $service);
         }
 
         return $query->orderBy('o.name', 'ASC');
@@ -51,13 +52,13 @@ class OrganizationRepository extends ServiceEntityRepository
     /**
      * Compte le nombre d'organismes prescripteurs rattachés au service.
      */
-    public function countOrganizationsInService(int $serviceId)
+    public function countOrganizationsInService(Service $service)
     {
         return $this->createQueryBuilder('o')->select('o')
             ->join('o.services', 's')->select('COUNT(s.id)')
 
             ->where('s.id = :service')
-            ->setParameter('service', $serviceId)
+            ->setParameter('service', $service)
 
             ->getQuery()
             ->getSingleScalarResult();

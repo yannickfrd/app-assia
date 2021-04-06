@@ -33,8 +33,15 @@ class Service
     public const CACHE_SERVICE_SUBSERVICES_KEY = 'service.sub_services';
     public const CACHE_SERVICE_USERS_KEY = 'service.users';
 
-    public const SERVICE_AVDL_ID = 5;
-    public const SERVICE_PASH_ID = 10;
+    public const SERVICE_TYPE_AVDL = 2;
+    public const SERVICE_TYPE_HOTEL = 3;
+
+    public const SERVICE_TYPE = [
+        1 => 'Hébergement/Logement',
+        2 => 'AVDL',
+        3 => 'Accompagnement hôtel',
+        4 => 'Socio-judiciaire',
+    ];
 
     public const SUPPORT_ACCESS = [
         1 => 'Uniquement le référent du suivi',
@@ -62,6 +69,11 @@ class Service
      * @Groups("export")
      */
     private $name;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $type;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Organization\ServiceUser", mappedBy="service", orphanRemoval=true, cascade={"persist"})
@@ -202,6 +214,23 @@ class Service
     public function setName(?string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getType(): ?int
+    {
+        return $this->type;
+    }
+
+    public function getTypeToString(): ?string
+    {
+        return $this->type ? self::SERVICE_TYPE[$this->type] : null;
+    }
+
+    public function setType(?int $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }

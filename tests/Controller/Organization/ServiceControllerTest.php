@@ -39,7 +39,7 @@ class ServiceControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', $this->generateUri('services'));
 
         $form = $crawler->selectButton('search')->form([
-            'name' => 'AVDL',
+            'name' => 'CHRS XXX',
             'city' => 'Pontoise',
             'phone' => '01 00 00 00 00',
             'pole' => 1,

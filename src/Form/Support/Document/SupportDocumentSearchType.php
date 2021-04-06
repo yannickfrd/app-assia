@@ -22,7 +22,7 @@ class SupportDocumentSearchType extends AbstractType
             ->add('type', ChoiceType::class, [
                 'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getchoices(Document::TYPE),
-                'attr' => ['class' => 'w-max-150'],
+                'attr' => ['class' => 'w-max-160'],
                 'placeholder' => 'document.category.placeholder',
                 'required' => false,
             ]);

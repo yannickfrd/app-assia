@@ -69,7 +69,7 @@ class ServiceTest extends WebTestCase
     public function testServiceExists()
     {
         $service = $this->service
-            ->setName('AVDL');
+            ->setName('CHRS XXX');
         $this->assertHasErrors($service, 1);
     }
 

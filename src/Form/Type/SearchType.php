@@ -31,7 +31,8 @@ class SearchType extends AbstractType
     {
         $attr = $builder->getOption('attr');
         $attrOptions = $attr['options'] ?? null;
-        $serviceId = $attr['serviceId'] ?? null;
+        /** @var Service $service */
+        $service = $attr['service'] ?? null;
 
         if ($this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             $builder
@@ -75,8 +76,8 @@ class SearchType extends AbstractType
                     'class' => SubService::class,
                     'choice_label' => 'name',
                     'multiple' => true,
-                    'query_builder' => function (SubServiceRepository $repo) use ($serviceId) {
-                        return $repo->getSubServicesOfUserQueryBuilder($this->currentUser, $serviceId);
+                    'query_builder' => function (SubServiceRepository $repo) use ($service) {
+                        return $repo->getSubServicesOfUserQueryBuilder($this->currentUser, $service);
                     },
                     'placeholder' => 'placeholder.subService',
                     'attr' => [
@@ -93,8 +94,8 @@ class SearchType extends AbstractType
                     'class' => Device::class,
                     'choice_label' => 'name',
                     'multiple' => true,
-                    'query_builder' => function (DeviceRepository $repo) use ($serviceId) {
-                        return $repo->getDevicesOfUserQueryBuilder($this->currentUser, $serviceId);
+                    'query_builder' => function (DeviceRepository $repo) use ($service) {
+                        return $repo->getDevicesOfUserQueryBuilder($this->currentUser, $service);
                     },
                     'placeholder' => 'placeholder.device',
                     'attr' => [
@@ -111,8 +112,8 @@ class SearchType extends AbstractType
                     'class' => User::class,
                     'choice_label' => 'fullname',
                     'multiple' => true,
-                    'query_builder' => function (UserRepository $repo) use ($serviceId) {
-                        return $repo->getReferentsOfServicesQueryBuilder($this->currentUser, $serviceId);
+                    'query_builder' => function (UserRepository $repo) use ($service) {
+                        return $repo->getReferentsOfServicesQueryBuilder($this->currentUser, $service);
                     },
                     'placeholder' => 'placeholder.referent',
                     'attr' => [

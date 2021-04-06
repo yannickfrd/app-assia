@@ -68,14 +68,14 @@ class DeviceRepository extends ServiceEntityRepository
      *
      * @return Device[]|null
      */
-    public function getDevicesOfService(int $id): ?array
+    public function getDevicesOfService(Service $service): ?array
     {
         return $this->createQueryBuilder('d')->select('PARTIAL d.{id, name}')
             ->leftJoin('d.serviceDevices', 'sd')
 
             ->where('d.disabledAt IS NULL')
             ->andWhere('sd.service = :service')
-            ->setParameter('service', $id)
+            ->setParameter('service', $service)
 
             ->orderBy('d.name', 'ASC')
 
@@ -101,14 +101,14 @@ class DeviceRepository extends ServiceEntityRepository
     /**
      * Donne la liste des dispositifs de l'utilisateur.
      */
-    public function getDevicesOfUserQueryBuilder(CurrentUserService $currentUser, $serviceId = null, Device $device = null)
+    public function getDevicesOfUserQueryBuilder(CurrentUserService $currentUser, Service $service = null, Device $device = null)
     {
         $query = $this->createQueryBuilder('d')->select('PARTIAL d.{id, name, coefficient, place, disabledAt}')
             ->leftJoin('d.serviceDevices', 'sd')->addSelect('sd');
 
-        if ($serviceId) {
+        if ($service) {
             $query = $query->andWhere('sd.service = :service')
-                ->setParameter('service', $serviceId);
+                ->setParameter('service', $service);
         }
 
         if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {

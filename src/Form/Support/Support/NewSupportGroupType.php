@@ -72,7 +72,7 @@ class NewSupportGroupType extends AbstractType
 
     protected function addFieldsAfterSubmitService(FormInterface $form, Service $service)
     {
-        $optionsReferent = $this->optionsReferent($service->getId());
+        $optionsReferent = $this->optionsReferent($service);
 
         $form
             ->add('subService', EntityType::class, [
@@ -85,7 +85,7 @@ class NewSupportGroupType extends AbstractType
                 'class' => Device::class,
                 'choice_label' => 'name',
                 'query_builder' => function (DeviceRepository $repo) use ($service) {
-                    return $repo->getDevicesOfUserQueryBuilder($this->currentUser, $service->getId());
+                    return $repo->getDevicesOfUserQueryBuilder($this->currentUser, $service);
                 },
                 'placeholder' => 'placeholder.select',
             ])
@@ -102,7 +102,7 @@ class NewSupportGroupType extends AbstractType
                 'class' => Place::class,
                 'choice_label' => 'name',
                 'query_builder' => function (PlaceRepository $repo) use ($service, $subService) {
-                    return $repo->getPlacesQueryBuilder($service->getId(), $subService ? $subService->getId() : null);
+                    return $repo->getPlacesQueryBuilder($service, $subService);
                 },
                 'placeholder' => 'placeholder.select',
                 'mapped' => false,
@@ -128,13 +128,13 @@ class NewSupportGroupType extends AbstractType
     /**
      * Retourne les options du champ Référent.
      */
-    protected function optionsReferent(?int $serviceId): array
+    protected function optionsReferent(?Service $service = null): array
     {
         return [
             'class' => User::class,
             'choice_label' => 'fullname',
-            'query_builder' => function (UserRepository $repo) use ($serviceId) {
-                return $repo->getUsersQueryBuilder($serviceId, $this->currentUser->getUser());
+            'query_builder' => function (UserRepository $repo) use ($service) {
+                return $repo->getUsersQueryBuilder($service, $this->currentUser->getUser());
             },
             'placeholder' => 'placeholder.select',
             'required' => false,

@@ -502,7 +502,7 @@ class ImportDatasHebergement extends ImportDatas
         $this->fields = $this->getDatas($fileName);
         $this->service = $service;
         $this->subServices = $this->repoSubService->findBy(['service' => $service]);
-        $this->devices = $this->repoDevice->getDevicesOfService($service->getId());
+        $this->devices = $this->repoDevice->getDevicesOfService($service);
         // $this->places = $this->repoPlace->findBy(['service' => $service]);
 
         // $this->users = $this->getUsers();

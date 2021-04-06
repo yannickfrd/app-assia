@@ -181,7 +181,7 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Donne la liste des utilisateurs.
      */
-    public function getUsersQueryBuilder(int $serviceId = null, User $user = null): QueryBuilder
+    public function getUsersQueryBuilder(Service $service = null, User $user = null): QueryBuilder
     {
         return $this->createQueryBuilder('u')->select('PARTIAL u.{id, firstname, lastname}')
             ->leftJoin('u.serviceUser', 'r')
@@ -189,7 +189,7 @@ class UserRepository extends ServiceEntityRepository
             ->where('u.status IN (:status)')
             ->setParameter('status', [1, 2, 3])
             ->andWhere('r.service = :services')
-            ->setParameter('services', $serviceId)
+            ->setParameter('services', $service)
             ->orWhere('u.id = :user')
             ->setParameter('user', $user)
 
@@ -262,13 +262,13 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Donne la liste des utilisateurs pour les listes déroulantes.
      */
-    public function getReferentsOfServicesQueryBuilder(CurrentUserService $currentUser, int $serviceId = null): QueryBuilder
+    public function getReferentsOfServicesQueryBuilder(CurrentUserService $currentUser, Service $service = null): QueryBuilder
     {
         $query = $this->getReferentsQueryBuilder();
 
-        if ($serviceId) {
+        if ($service) {
             $query = $query->andWhere('su.service = :service')
-                ->setParameter('service', $serviceId);
+                ->setParameter('service', $service);
         }
 
         if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {

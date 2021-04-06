@@ -43,7 +43,7 @@
 			{% include "app/evaluation/edit/_evaluationProf.html.twig" with {accordion_id: "eval_prof"} %}
 			{% include "app/evaluation/edit/_evaluationBudget.html.twig" with {accordion_id: "eval_budget"} %}
 			{% include "app/evaluation/edit/_evaluationHousing.html.twig" with {accordion_id: "eval_housing"} %}
-			{% if support.service.id == constant("App\\Entity\\Organization\\Service::SERVICE_PASH_ID") %}
+			{% if support.service.type == constant("App\\Entity\\Organization\\Service::SERVICE_TYPE_HOTEL") %}
 				{% include "app/evaluation/edit/_evaluationHotelLife.html.twig" with {accordion_id: "eval_hotel_life"} %}
 			{% endif %}
 			{% include "app/evaluation/edit/_evaluationConclusion.html.twig" with {accordion_id: "eval_conclusion"} %}

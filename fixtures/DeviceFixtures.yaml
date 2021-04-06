@@ -1,6 +1,6 @@
 App\Entity\Organization\Device:
   device1:
-    name: AVDL
+    name: Insertion
     coefficient: 1
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>

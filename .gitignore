@@ -7,7 +7,7 @@
 /drivers/
 /var/
 /vendor/
-/web/
+/uploads/
 ###< symfony/framework-bundle ###
 
 ###> symfony/phpunit-bridge ###

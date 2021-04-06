@@ -64,7 +64,7 @@ class SubServiceControllerTest extends WebTestCase
         ]));
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', $dataFixtures['service1']->getName());
+        $this->assertSelectorTextContains('h1', $dataFixtures['subService1']->getName());
     }
 
     public function testEditSubServiceisSuccessful()

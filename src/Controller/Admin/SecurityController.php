@@ -48,7 +48,7 @@ class SecurityController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($user->getServiceUser()->count() > 0) {
+            if ($user->getServices()->count() > 0) {
                 $this->userManager->createUser($user, $userNotification);
 
                 return $this->redirectToRoute('security_user', ['id' => $user->getId()]);

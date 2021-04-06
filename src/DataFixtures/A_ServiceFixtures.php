@@ -14,6 +14,9 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
+/**
+ * @codeCoverageIgnore
+ */
 class A_ServiceFixtures extends Fixture
 {
     private $manager;

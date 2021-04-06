@@ -1,9 +1,19 @@
 <div id="avdl_support">
-	<div class="form-group row">
+	<div class="row">
 		<div class="col-md-12"><h2 class="h5 mb-3">Demande</h2></div>
+	</div>
+	<div class="row">
 		<div class="col-md-6">{{ form_row(form.originRequest.orientationDate) }}</div>
+	</div>
+	<div class="row">
 		<div class="col-md-6">{{ form_row(form.originRequest.organization) }}</div>
 		<div class="col-md-6" data-parent-field="organization">{{ form_row(form.originRequest.organizationComment) }}</div>
+	</div>
+	<div class="row">
+    <div class="col-md-6" data-parent-field="orientationDate">{{ form_row(form.originRequest.preAdmissionDate) }}</div>
+    <div class="col-md-6" data-parent-field="orientationDate">{{ form_row(form.originRequest.resulPreAdmission) }}</div>
+	</div>
+	<div class="row">
 		<div class="col-md-12" data-parent-field="organization">{{ form_widget(form.originRequest.comment) }}</div>
 	</div>
 	<hr/>
