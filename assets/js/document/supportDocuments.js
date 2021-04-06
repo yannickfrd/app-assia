@@ -54,8 +54,21 @@ export default class SupportDocuments {
         document.getElementById('action-validate').addEventListener('click', e => this.onValidateAction(e))
         
     }
-
+    
     /**
+     * @param {HTMLTableRowElement} documentTrElt 
+     */
+    addEventListenersToTr(documentTrElt) {
+        documentTrElt.addEventListener('click', e => this.showDocument(e, documentTrElt))
+        const deleteBtnElt = documentTrElt.querySelector('button[data-action="delete"]')
+        deleteBtnElt.addEventListener('click', () => {
+            deleteBtnElt.setAttribute('data-document-id', documentTrElt.getAttribute('data-document-id'))
+            const documentName = documentTrElt.querySelector('td[data-document="name"]').textContent
+            this.updateDeleteModal(documentName, deleteBtnElt.getAttribute('data-url'))
+        })      
+    }
+
+    /**    req.onprogress = updateProgress;
      * @param {Event} e 
      */
     onValidateAction(e) {
@@ -96,6 +109,17 @@ export default class SupportDocuments {
     }
 
     /**
+     * @param {String} documentName 
+     * @param {String} url 
+     */
+    updateDeleteModal(documentName, url) {
+        const modalBodyElt = this.modalBlockElt.querySelector('div.modal-body')
+        modalBodyElt.innerHTML = `<br/><p>Êtes-vous vraiment sûr de vouloir supprimer le document <b>${documentName}</b> ?</p><br/>`
+        this.confirmDeleteBtnElt.setAttribute('data-url', url)
+        this.deleteModalElt.show()
+    }
+
+    /**
      * @param {Array} items 
      */
     deleteFiles(items) {
@@ -116,7 +140,7 @@ export default class SupportDocuments {
         if (file) {
             formData.append('files', file)
         }
-
+        // const ajax = new AjaxRequest(this.loader, 60)
         this.ajax.send('POST', url, this.responseAjax.bind(this), formData)
     }
 
@@ -205,30 +229,6 @@ export default class SupportDocuments {
             this.dropzone.updateItemInList(data)
         })
     }   
-
-    /**
-     * @param {HTMLTableRowElement} documentTrElt 
-     */
-    addEventListenersToTr(documentTrElt) {
-        documentTrElt.addEventListener('click', e => this.showDocument(e, documentTrElt))
-        const deleteBtnElt = documentTrElt.querySelector('button[data-action="delete"]')
-        deleteBtnElt.addEventListener('click', () => {
-            deleteBtnElt.setAttribute('data-document-id', documentTrElt.getAttribute('data-document-id'))
-            const documentName = documentTrElt.querySelector('td[data-document="name"]').textContent
-            this.updateDeleteModal(documentName, deleteBtnElt.getAttribute('data-url'))
-        })      
-    }
-
-    /**
-     * @param {String} documentName 
-     * @param {String} url 
-     */
-    updateDeleteModal(documentName, url) {
-        const modalBodyElt = this.modalBlockElt.querySelector('div.modal-body')
-        modalBodyElt.innerHTML = `<br/><p>Êtes-vous vraiment sûr de vouloir supprimer le document <b>${documentName}</b> ?</p><br/>`
-        this.confirmDeleteBtnElt.setAttribute('data-url', url)
-        this.deleteModalElt.show()
-    }
 
     /**
      * Met à jour la ligne du tableau correspondant au document.
