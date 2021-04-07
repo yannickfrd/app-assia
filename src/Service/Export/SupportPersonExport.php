@@ -2,7 +2,6 @@
 
 namespace App\Service\Export;
 
-use App\Entity\People\RolePerson;
 use App\Entity\Support\OriginRequest;
 use App\Entity\Support\SupportPerson;
 use App\Service\ExportExcel;
@@ -38,7 +37,7 @@ class SupportPersonExport extends ExportExcel
             ++$i;
         }
 
-        $this->createSheet('export_suivis', 'xlsx', $arrayData);
+        $this->createSheet('export_suivis', 'xlsx', $arrayData, 15);
 
         return $this->exportFile();
     }
@@ -66,15 +65,12 @@ class SupportPersonExport extends ExportExcel
             $namePlaces[] = $place->getName().' ';
         }
 
-        // $nbChildren = 0;
-
-        // if ($supportGroup->getSupportPeople()) {
-        //     foreach ($supportGroup->getSupportPeople() as $supportPerson) {
-        //         if (RolePerson::ROLE_CHILD === $supportPerson->getRole()) {
-        //             ++$nbChildren;
-        //         }
-        //     }
-        // }
+        $referentsType = [];
+        $referentsName = [];
+        foreach ($peopleGroup->getReferents() as $referent) {
+            $referentsType[] = $referent->getTypeToString();
+            $referentsName[] = $referent->getName();
+        }
 
         $datas = [
             'N° Groupe' => $peopleGroup->getId(),
@@ -88,7 +84,6 @@ class SupportPersonExport extends ExportExcel
             'Sexe' => $person->getGenderToString(),
             'Typologie familiale' => $peopleGroup->getFamilyTypologyToString(),
             'Nb de personnes' => (string) $supportGroup->getNbPeople(),
-            // 'Nb d\'enfants' => $nbChildren,
             'Nb enfants -3 ans' => (string) $supportGroup->getNbChildrenUnder3years(),
             'Rôle dans le groupe' => $supportPerson->getRoleToString(),
             'DP' => $supportPerson->getHeadToString(),
@@ -100,7 +95,7 @@ class SupportPersonExport extends ExportExcel
             'Situation à la fin' => $supportPerson->getEndStatusToString(),
             'Commentaire situation à la fin' => $supportPerson->getEndStatusComment(),
             'Fin - Ville' => $supportGroup->getEndLocationCity(),
-            'Fin - Code postal' => (string) $supportGroup->getEndLocationZipcode(),
+            'Fin - Département' => (string) $supportGroup->getEndLocationDept(),
             'Pôle' => $supportGroup->getService()->getPole()->getName(),
             'Service' => $supportGroup->getService()->getName(),
             'Sous-service' => $supportGroup->getSubService() ? $supportGroup->getSubService()->getName() : null,
@@ -113,7 +108,7 @@ class SupportPersonExport extends ExportExcel
             'Nom du logement/ hébergement' => (string) join(', ', $namePlaces),
             'Adresse' => $supportGroup->getAddress(),
             'Ville' => $supportGroup->getCity(),
-            'Code postal' => (string) $supportGroup->getZipcode(),
+            'Département' => (string) $supportGroup->getDept(),
             // 'Statut suivi (groupe)' => $supportGroup->getStatusToString(),
             // 'Date début suivi (groupe)' => $this->formatDate($supportGroup->getStartDate()),
             // 'Date fin théorique suivi (groupe)' => $this->formatDate($supportGroup->getTheoreticalEndDate()),
@@ -126,6 +121,8 @@ class SupportPersonExport extends ExportExcel
             'Date entretien pré-admission' => $this->formatDate($originRequest->getPreAdmissionDate()),
             'Résultat de l\'orientation ou pré-admission' => $originRequest->getResulPreAdmissionToString(),
             'Date décision' => $this->formatDate($originRequest->getDecisionDate()),
+            'Autre service référent - Type' => join(', ', $referentsType),
+            'Autre service référent - Nom' => join(', ', $referentsName),
         ];
 
         return $datas;
