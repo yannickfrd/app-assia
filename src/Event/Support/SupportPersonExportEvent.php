@@ -5,23 +5,21 @@ namespace App\Event\Support;
 use App\Form\Model\Admin\ExportSearch;
 use App\Form\Model\Support\SupportSearch;
 use Symfony\Contracts\EventDispatcher\Event;
+use Symfony\Component\HttpFoundation\Request;
 
 class SupportPersonExportEvent extends Event
 {
     public const NAME = 'support_person.full_export';
 
-    private $search;
+    private $request;
 
-    /**
-     * @param ExportSearch|SupportSearch $search
-     */
-    public function __construct($search)
+    public function __construct(Request $request)
     {
-        $this->search = $search;
+        $this->request = $request;
     }
 
-    public function getSearch()
+    public function getRequest()
     {
-        return $this->search;
+        return $this->request;
     }
 }

@@ -3,8 +3,10 @@
 namespace App\EventListener;
 
 use App\Entity\Organization\User;
+use App\Event\Support\SupportPersonExportEvent;
 use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\Security\Core\Security;
 
@@ -14,11 +16,13 @@ class TerminateListener
 
     private $security;
     private $manager;
+    private $dispatcher;
 
-    public function __construct(Security $security, EntityManagerInterface $manager)
+    public function __construct(Security $security, EntityManagerInterface $manager, EventDispatcherInterface $dispatcher)
     {
         $this->security = $security;
         $this->manager = $manager;
+        $this->dispatcher = $dispatcher;
     }
 
     public function onKernelTerminate(TerminateEvent $event)
@@ -28,6 +32,12 @@ class TerminateListener
         }
 
         $this->updateLastActivity();
+
+        $request = $event->getRequest();
+        $route = $request->get('_route');
+        if ('export' === $route) {
+            $this->dispatcher->dispatch(new SupportPersonExportEvent($request), 'support_person.full_export');
+        }
     }
 
     /**

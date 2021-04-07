@@ -4,7 +4,6 @@ namespace App\Controller\Admin;
 
 use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Admin\Export;
-use App\Event\Support\SupportPersonExportEvent;
 use App\Form\Admin\ExportSearchType;
 use App\Form\Model\Admin\ExportSearch;
 use App\Repository\Admin\ExportRepository;
@@ -14,7 +13,6 @@ use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -36,14 +34,12 @@ class ExportController extends AbstractController
      * @Route("export", name="export", methods="GET|POST")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function export(Request $request, Pagination $pagination, EventDispatcherInterface $dispatcher): Response
+    public function export(Request $request, Pagination $pagination): Response
     {
-        $form = ($this->createForm(ExportSearchType::class, $search = new ExportSearch()))
+        $form = ($this->createForm(ExportSearchType::class, new ExportSearch()))
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $dispatcher->dispatch(new SupportPersonExportEvent($search), 'support_person.full_export');
-
             return $this->json([
                 'code' => 200,
                 'alert' => 'success',
