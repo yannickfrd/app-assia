@@ -4,7 +4,6 @@ namespace App\Entity\Evaluation;
 
 use App\Form\Utils\Choices;
 use Doctrine\ORM\Mapping as ORM;
-use SebastianBergmann\CodeCoverage\Report\Xml\Method;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
@@ -65,10 +64,16 @@ class EvalSocialPerson
      */
     private $rightSocialSecurity;
 
+    /** @Groups("export") */
+    private $rightSocialSecurityToString;
+
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $socialSecurity;
+
+    /** @Groups("export") */
+    private $socialSecurityToString;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -83,17 +88,53 @@ class EvalSocialPerson
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
+    private $infoCrip;
+
+    /** @Groups("export") */
+    private $infoCripToString;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     * @Groups("export")
+     */
+    private $infoCripDate;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $infoCripByService;
+
+    /** @Groups("export") */
+    private $infoCripByServiceToString;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $infoCripComment;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
     private $childWelfareBackground;
+
+    /** @Groups("export") */
+    private $childWelfareBackgroundToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $aseFollowUp;
 
+    /** @Groups("export") */
+    private $aseFollowUpToString;
+
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $aseMeasureType;
+
+    /** @Groups("export") */
+    private $aseMeasureTypeToString;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -103,67 +144,106 @@ class EvalSocialPerson
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $familyBreakdown;
-
-    /**
-     * @ORM\Column(type="smallint", nullable=true)
-     */
-    private $friendshipBreakdown;
-
-    /**
-     * @ORM\Column(type="smallint", nullable=true)
-     */
     private $healthProblem;
+
+    /** @Groups("export") */
+    private $healthProblemToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $physicalHealthProblem;
 
+    /** @Groups("export") */
+    private $physicalHealthProblemToString;
+
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $mentalHealthProblem;
+
+    /** @Groups("export") */
+    private $mentalHealthProblemToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $addictionProblem;
 
-    /**
-     * @ORM\Column(type="smallint", nullable=true)
-     */
-    private $wheelchair;
+    /** @Groups("export") */
+    private $addictionProblemToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $reducedMobility;
 
+    /** @Groups("export") */
+    private $reducedMobilityToString;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $wheelchair;
+
+    /** @Groups("export") */
+    private $wheelchairToString;
+
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $medicalFollowUp;
+
+    /** @Groups("export") */
+    private $medicalFollowUpToString;
 
     /**
      * @ORM\Column(name="care_support", type="smallint", nullable=true)
      */
     private $homeCareSupport;
 
+    /** @Groups("export") */
+    private $homeCareSupportToString;
+
     /**
      * @ORM\Column(name="care_support_type", type="smallint", nullable=true)
      */
     private $homeCareSupportType;
+
+    /** @Groups("export") */
+    private $homeCareSupportTypeToString;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $familyBreakdown;
+
+    /** @Groups("export") */
+    private $familyBreakdownToString;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $friendshipBreakdown;
+
+    /** @Groups("export") */
+    private $friendshipBreakdownToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $violenceVictim;
 
+    /** @Groups("export") */
+    private $violenceVictimToString;
+
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $domViolenceVictim;
+
+    /** @Groups("export") */
+    private $domViolenceVictimToString;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -186,9 +266,6 @@ class EvalSocialPerson
         return $this->rightSocialSecurity;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getRightSocialSecurityToString(): ?string
     {
         return $this->rightSocialSecurity ? Choices::YES_NO_IN_PROGRESS[$this->rightSocialSecurity] : null;
@@ -206,9 +283,6 @@ class EvalSocialPerson
         return $this->socialSecurity;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getSocialSecurityToString(): ?string
     {
         return $this->socialSecurity ? self::SOCIAL_SECURITY[$this->socialSecurity] : null;
@@ -250,9 +324,64 @@ class EvalSocialPerson
         return $this->childWelfareBackground;
     }
 
-    /**
-     * @Groups("export")
-     */
+    public function getInfoCrip(): ?int
+    {
+        return $this->infoCrip;
+    }
+
+    public function getInfoCripToString(): ?string
+    {
+        return $this->infoCrip ? Choices::YES_NO[$this->infoCrip] : null;
+    }
+
+    public function setInfoCrip(?int $infoCrip): self
+    {
+        $this->infoCrip = $infoCrip;
+
+        return $this;
+    }
+
+    public function getInfoCripDate(): ?\DateTimeInterface
+    {
+        return $this->infoCripDate;
+    }
+
+    public function setInfoCripDate(?\DateTimeInterface $infoCripDate): self
+    {
+        $this->infoCripDate = $infoCripDate;
+
+        return $this;
+    }
+
+    public function getInfoCripByService(): ?int
+    {
+        return $this->infoCripByService;
+    }
+
+    public function getInfoCripByServiceToString(): ?string
+    {
+        return $this->infoCripByService ? Choices::YES_NO[$this->infoCripByService] : null;
+    }
+
+    public function setInfoCripByService(?int $infoCripByService): self
+    {
+        $this->infoCripByService = $infoCripByService;
+
+        return $this;
+    }
+
+    public function getInfoCripComment(): ?string
+    {
+        return $this->infoCripComment;
+    }
+
+    public function setInfoCripComment(?string $infoCripComment): self
+    {
+        $this->infoCripComment = $infoCripComment;
+
+        return $this;
+    }
+
     public function getChildWelfareBackgroundToString(): ?string
     {
         return $this->childWelfareBackground ? Choices::YES_NO[$this->childWelfareBackground] : null;
@@ -270,9 +399,6 @@ class EvalSocialPerson
         return $this->aseFollowUp;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getAseFollowUpToString(): ?string
     {
         return $this->aseFollowUp ? Choices::YES_NO[$this->aseFollowUp] : null;
@@ -290,9 +416,6 @@ class EvalSocialPerson
         return $this->aseMeasureType;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getAseMeasureTypeToString(): ?string
     {
         return $this->aseMeasureType ? self::ASE_MEASURE_TYPE[$this->aseMeasureType] : null;
@@ -322,9 +445,6 @@ class EvalSocialPerson
         return $this->healthProblem;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getHealthProblemToString(): ?string
     {
         return $this->healthProblem ? Choices::YES_NO[$this->healthProblem] : null;
@@ -356,9 +476,6 @@ class EvalSocialPerson
         return $this->physicalHealthProblem;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getPhysicalHealthProblemToString(): ?string
     {
         return $this->physicalHealthProblem ? Choices::YES_NO_BOOLEAN[$this->physicalHealthProblem] : null;
@@ -376,9 +493,6 @@ class EvalSocialPerson
         return $this->mentalHealthProblem;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getMentalHealthProblemToString(): ?string
     {
         return $this->mentalHealthProblem ? Choices::YES_NO_BOOLEAN[$this->mentalHealthProblem] : null;
@@ -396,9 +510,6 @@ class EvalSocialPerson
         return $this->addictionProblem;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getAddictionProblemToString(): ?string
     {
         return $this->addictionProblem ? Choices::YES_NO_BOOLEAN[$this->addictionProblem] : null;
@@ -411,114 +522,11 @@ class EvalSocialPerson
         return $this;
     }
 
-    public function getMedicalFollowUp(): ?int
-    {
-        return $this->medicalFollowUp;
-    }
-
-    /**
-     * @Groups("export")
-     */
-    public function getMedicalFollowUpToString(): ?string
-    {
-        return $this->medicalFollowUp ? Choices::YES_NO_IN_PROGRESS[$this->medicalFollowUp] : null;
-    }
-
-    public function setMedicalFollowUp(?int $medicalFollowUp): self
-    {
-        $this->medicalFollowUp = $medicalFollowUp;
-
-        return $this;
-    }
-
-    public function getHomeCareSupport(): ?int
-    {
-        return $this->homeCareSupport;
-    }
-
-    /**
-     * @Groups("export")
-     */
-    public function getHomeCareSupportToString(): ?string
-    {
-        return $this->homeCareSupport ? Choices::YES_NO_IN_PROGRESS[$this->homeCareSupport] : null;
-    }
-
-    public function setHomeCareSupport(?int $homeCareSupport): self
-    {
-        $this->homeCareSupport = $homeCareSupport;
-
-        return $this;
-    }
-
-    public function getHomeCareSupportType(): ?int
-    {
-        return $this->homeCareSupportType;
-    }
-
-    /**
-     * @Groups("export")
-     */
-    public function getHomeCareSupportTypeToString(): ?string
-    {
-        return $this->homeCareSupportType ? self::CARE_SUPPORT[$this->homeCareSupportType] : null;
-    }
-
-    public function setHomeCareSupportType(?int $homeCareSupportType): self
-    {
-        $this->homeCareSupportType = $homeCareSupportType;
-
-        return $this;
-    }
-
-    public function getFamilyBreakdown(): ?int
-    {
-        return $this->familyBreakdown;
-    }
-
-    /**
-     * @Groups("export")
-     */
-    public function getFamilyBreakdownToString(): ?string
-    {
-        return $this->familyBreakdown ? Choices::YES_NO_PARTIAL[$this->familyBreakdown] : null;
-    }
-
-    public function setFamilyBreakdown(?int $familyBreakdown): self
-    {
-        $this->familyBreakdown = $familyBreakdown;
-
-        return $this;
-    }
-
-    public function getFriendshipBreakdown(): ?int
-    {
-        return $this->friendshipBreakdown;
-    }
-
-    /**
-     * @Groups("export")
-     */
-    public function getFriendshipBreakdownToString(): ?string
-    {
-        return $this->friendshipBreakdown ? Choices::YES_NO_PARTIAL[$this->friendshipBreakdown] : null;
-    }
-
-    public function setFriendshipBreakdown(?int $friendshipBreakdown): self
-    {
-        $this->friendshipBreakdown = $friendshipBreakdown;
-
-        return $this;
-    }
-
     public function getWheelchair(): ?int
     {
         return $this->wheelchair;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getWheelchairToString(): ?string
     {
         return $this->wheelchair ? Choices::YES_NO_BOOLEAN[$this->wheelchair] : null;
@@ -536,9 +544,6 @@ class EvalSocialPerson
         return $this->reducedMobility;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getReducedMobilityToString(): ?string
     {
         return $this->reducedMobility ? Choices::YES_NO_BOOLEAN[$this->reducedMobility] : null;
@@ -551,14 +556,96 @@ class EvalSocialPerson
         return $this;
     }
 
+    public function getMedicalFollowUp(): ?int
+    {
+        return $this->medicalFollowUp;
+    }
+
+    public function getMedicalFollowUpToString(): ?string
+    {
+        return $this->medicalFollowUp ? Choices::YES_NO_IN_PROGRESS[$this->medicalFollowUp] : null;
+    }
+
+    public function setMedicalFollowUp(?int $medicalFollowUp): self
+    {
+        $this->medicalFollowUp = $medicalFollowUp;
+
+        return $this;
+    }
+
+    public function getHomeCareSupport(): ?int
+    {
+        return $this->homeCareSupport;
+    }
+
+    public function getHomeCareSupportToString(): ?string
+    {
+        return $this->homeCareSupport ? Choices::YES_NO_IN_PROGRESS[$this->homeCareSupport] : null;
+    }
+
+    public function setHomeCareSupport(?int $homeCareSupport): self
+    {
+        $this->homeCareSupport = $homeCareSupport;
+
+        return $this;
+    }
+
+    public function getHomeCareSupportType(): ?int
+    {
+        return $this->homeCareSupportType;
+    }
+
+    public function getHomeCareSupportTypeToString(): ?string
+    {
+        return $this->homeCareSupportType ? self::CARE_SUPPORT[$this->homeCareSupportType] : null;
+    }
+
+    public function setHomeCareSupportType(?int $homeCareSupportType): self
+    {
+        $this->homeCareSupportType = $homeCareSupportType;
+
+        return $this;
+    }
+
+    public function getFamilyBreakdown(): ?int
+    {
+        return $this->familyBreakdown;
+    }
+
+    public function getFamilyBreakdownToString(): ?string
+    {
+        return $this->familyBreakdown ? Choices::YES_NO_PARTIAL[$this->familyBreakdown] : null;
+    }
+
+    public function setFamilyBreakdown(?int $familyBreakdown): self
+    {
+        $this->familyBreakdown = $familyBreakdown;
+
+        return $this;
+    }
+
+    public function getFriendshipBreakdown(): ?int
+    {
+        return $this->friendshipBreakdown;
+    }
+
+    public function getFriendshipBreakdownToString(): ?string
+    {
+        return $this->friendshipBreakdown ? Choices::YES_NO_PARTIAL[$this->friendshipBreakdown] : null;
+    }
+
+    public function setFriendshipBreakdown(?int $friendshipBreakdown): self
+    {
+        $this->friendshipBreakdown = $friendshipBreakdown;
+
+        return $this;
+    }
+
     public function getViolenceVictim(): ?int
     {
         return $this->violenceVictim;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getViolenceVictimToString(): ?string
     {
         return $this->violenceVictim ? Choices::YES_NO[$this->violenceVictim] : null;
@@ -576,9 +663,6 @@ class EvalSocialPerson
         return $this->domViolenceVictim;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getDomViolenceVictimToString(): ?string
     {
         return $this->domViolenceVictim ? Choices::YES_NO[$this->domViolenceVictim] : null;

@@ -174,6 +174,7 @@ Protective measure type: Type de mesure de protection
 Protective measure: Mesure de protection
 School address: Adresse école/garde
 School city: Ville école/garde
+School dept: Département école/garde
 School zipcode: Code postal école/garde
 Unborn child: Enfant à naître
 evalFamilyGroup.comment: Écrire un commentaire relatif à la situation familiale du groupe
@@ -221,6 +222,7 @@ Domiciliation type: Type d'organisme domiciliataire
 Domiciliation comment: Organisme ou personne domiciliataire
 Domiciliation address: Adresse de domiciliation
 Domiciliation city: Ville de domiciliation
+Domiciliation dept: Département de domiciliation
 Domiciliation zipcode: Code postal de domiciliation
 End domiciliation date: Date de fin domiciliation
 Expulsion comment: Commentaire sur l'expulsion location
@@ -269,6 +271,10 @@ Justice status: Situation judiciaire
 evalJusticePerson.comment: Écrire un commentaire relatif à la situation judiciaire de la personne
 
 # Social person
+Info crip: Transmission information préoccupante (IP)
+Info crip date: Date de transmission IP
+Info crip by service: IP transmise par le service
+Info crip comment: Commentaire IP
 evalSocialPerson:
   aseFollowUp.help: Aide sociale à l'enfance, PJJ…
   comment: Écrire un commentaire relatif à la situation sociale de la personne (évolution de la situation...)

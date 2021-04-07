@@ -153,9 +153,13 @@ class EvalFamilyPerson
 
     /**
      * @ORM\Column(type="string", length=10, nullable=true)
-     * @Groups("export")
      */
     private $schoolZipcode;
+
+    /**
+     * @Groups("export")
+     */
+    private $schoolDept;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -353,6 +357,11 @@ class EvalFamilyPerson
         $this->schoolZipcode = $schoolZipcode;
 
         return $this;
+    }
+
+    public function getSchoolDept(): ?string
+    {
+        return substr($this->schoolZipcode, 0, 2);
     }
 
     public function getSchoolChildCarePrecision(): ?string

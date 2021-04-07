@@ -414,9 +414,11 @@ class EvalHousingGroup
 
     /**
      * @ORM\Column(name="domiciliation_dept", type="string", length=10, nullable=true)
-     * @Groups("export")
      */
     private $domiciliationZipcode;
+
+    /** @Groups("export") */
+    private $domiciliationDept;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -1195,6 +1197,11 @@ class EvalHousingGroup
         $this->domiciliationZipcode = $domiciliationZipcode;
 
         return $this;
+    }
+
+    public function getDomiciliationDept(): ?string
+    {
+        return substr($this->domiciliationZipcode, 0, 2);
     }
 
     public function getDomiciliationComment(): ?string

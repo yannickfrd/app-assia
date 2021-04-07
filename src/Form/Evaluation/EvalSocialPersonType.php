@@ -38,6 +38,21 @@ class EvalSocialPersonType extends AbstractType
                 'widget' => 'single_text',
                 'required' => false,
             ])
+            ->add('infoCrip', ChoiceType::class, [
+                'choices' => Choices::getChoices(Choices::YES_NO),
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
+            ->add('infoCripDate', DateType::class, [
+                'widget' => 'single_text',
+                'required' => false,
+                ])
+            ->add('infoCripByService', ChoiceType::class, [
+                'choices' => Choices::getChoices(Choices::YES_NO),
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
+            ->add('infoCripComment')
             ->add('aseFollowUp', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
                 'placeholder' => 'placeholder.select',

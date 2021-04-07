@@ -54,7 +54,7 @@
                                                         <div class="sr-only">{{ form_widget(attribute(evalPerson.evalSocialPerson, healthKey)) }}</div>
                                                     </th>
                                                     <td class="align-middle">{{ healthValue }}</td>
-                                                    <td><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
+                                                    <td class="align-middle text-right"><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
                                                 </tr>
                                                 {% endfor %}
                                             </tbody>
@@ -73,12 +73,21 @@
                             {{ form_row(evalPerson.evalSocialPerson.homeCareSupportType) }}</div>
                     </div>
                     <hr class="my-3"/>
-                    <div class="form-group row">
-                        <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.aseFollowUp) }}</div>
-                        <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_aseFollowUp">{{ form_row(evalPerson.evalSocialPerson.aseMeasureType) }}</div>
-                        <div class="col-md-12" data-parent-field="{{ key }}_evalSocialPerson_aseFollowUp">{{ form_widget(evalPerson.evalSocialPerson.aseComment) }}</div>
-                    </div>
-                    <hr class="my-3"/>
+
+                    {% if nb_children > 0 %}
+                        <div class="form-group row">
+                            <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.infoCrip) }}</div>
+                            <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_infoCrip">{{ form_row(evalPerson.evalSocialPerson.infoCripDate) }}</div>
+                            <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_infoCrip">{{ form_row(evalPerson.evalSocialPerson.infoCripByService) }}</div>
+                            <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_infoCrip">{{ form_row(evalPerson.evalSocialPerson.infoCripComment) }}</div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.aseFollowUp) }}</div>
+                            <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_aseFollowUp">{{ form_row(evalPerson.evalSocialPerson.aseMeasureType) }}</div>
+                            <div class="col-md-12" data-parent-field="{{ key }}_evalSocialPerson_aseFollowUp">{{ form_widget(evalPerson.evalSocialPerson.aseComment) }}</div>
+                        </div>
+                        <hr class="my-3"/>
+                    {% endif %}
                     {% if supportPerson.role != ROLE_CHILD %}
                         <div class="form-group row">
                         </div>
@@ -86,11 +95,12 @@
                             <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.familyBreakdown) }}</div>
                             <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.friendshipBreakdown) }}</div>
                         </div>
-                            <div class="form-group row">
-                                <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.violenceVictim) }}</div>
-                                <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_violenceVictim">
-                                    {{ form_row(evalPerson.evalSocialPerson.domViolenceVictim) }}</div>
-                                </div>
+                        <div class="form-group row">
+                            <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.violenceVictim) }}</div>
+                            <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_violenceVictim">
+                                {{ form_row(evalPerson.evalSocialPerson.domViolenceVictim) }}</div>
+                        </div>
+                        <hr class="my-3"/>
                     {% endif %}
                     <div class="form-group row">
                         {{ form_label(evalPerson.evalSocialPerson.commentEvalSocialPerson) }}

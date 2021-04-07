@@ -50,7 +50,7 @@
 
             {% if evalHousing and evalHousing.domiciliation == YES and support.address != evalHousing.domiciliationAddress %}
                 {{ view_p.get((evalHousing.domiciliationComment ? evalHousing.domiciliationComment ~ " - ")  ~ evalHousing.domiciliationAddress ~ (evalHousing.domiciliationCity ? " - " ~ 
-                    evalHousing.domiciliationZipcode ~ " " ~ evalHousing.domiciliationCity), "Domiciliation address", "evaluation") }}
+                    evalHousing.domiciliationDept ~ " " ~ evalHousing.domiciliationCity), "Domiciliation address", "evaluation") }}
                 {{ view_p.get(evalHousing.endDomiciliationDate ? evalHousing.endDomiciliationDate|date("d/m/Y"), "End domiciliation date", "evaluation") }}
             {% endif %}
 
@@ -59,9 +59,9 @@
                 <p>&nbsp;</p>
                 {{ view_p.get(hotelSupport.entryHotelDate ? hotelSupport.entryHotelDate|date("d/m/Y"), "Entry hotel date") }}
                 {% set place = support.placeGroups|length > 0 ? support.placeGroups[support.placeGroups|length - 1].place %}
-                {{ view_p.get(place ? place.name ~ (place.city ? " (" ~ place.address ~ " - " ~ place.zipcode ~ " " ~ place.city ~ ")"), "Hotel") }}
+                {{ view_p.get(place ? place.name ~ (place.city ? " (" ~ place.address ~ " - " ~ place.dept ~ " " ~ place.city ~ ")"), "Hotel") }}
             {% else %}
-                {{ view_p.get(support.city or support.address ? support.address ~ ", " ~ support.zipcode ~ " " ~ support.city, "Adresse") }}
+                {{ view_p.get(support.city or support.address ? support.address ~ ", " ~ support.dept ~ " " ~ support.city, "Adresse") }}
             {% endif %}
 
             {{ view_p.get(support.startDate ? support.startDate|date("d/m/Y"), "support.startDate") }}

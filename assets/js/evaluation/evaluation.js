@@ -236,6 +236,7 @@ export default class evaluation {
             new DisplayFields(prefix, i + "_evalSocialPerson_healthProblem", [1])
             new DisplayFields(prefix, i + "_evalSocialPerson_medicalFollowUp", [1])
             new DisplayFields(prefix, i + "_evalSocialPerson_homeCareSupport", [1])
+            new DisplayFields(prefix, i + "_evalSocialPerson_infoCrip", [1])
             new DisplayFields(prefix, i + "_evalSocialPerson_aseFollowUp", [1])
             new DisplayFields(prefix, i + "_evalSocialPerson_violenceVictim", [1])
             this.editElt(i, "_evalSocialPerson_healthProblemType", "d-table-row")

@@ -93,7 +93,7 @@
     </div>
     <div class="row mb-3">
         {{ view_div.get(evalHousing.domiciliation == YES ? (evalHousing.domiciliationComment ? evalHousing.domiciliationComment ~ " - ") 
-            ~ evalHousing.domiciliationAddress ~ (evalHousing.domiciliationCity ? " - " ~ evalHousing.domiciliationZipcode ~ " " 
+            ~ evalHousing.domiciliationAddress ~ (evalHousing.domiciliationCity ? " - " ~ evalHousing.domiciliationDept ~ " " 
             ~ evalHousing.domiciliationCity), "Domiciliation", "evaluation") }}
         {{ view_div.get(evalHousing.endDomiciliationDate ? evalHousing.endDomiciliationDate|date("d/m/Y"), "End domiciliation date", "evaluation") }}
     </div>
