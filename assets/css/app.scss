@@ -247,12 +247,10 @@ th.required:after {
     border-radius: 4px;
 }
 
-.custom-checkbox .custom-control-input:checked~.custom-control-label::before,
-.custom-checkbox .custom-control-label::before,
-.custom-control-label::after,
-.custom-checkbox .custom-control-input:checked~.custom-control-label::after {
-    width: 1.5rem;
-    height: 1.5rem;
+.form-check-label.custom-control-label:after,
+.form-check-label.custom-control-label:before {
+    width: 1.25rem;
+    height: 1.25rem;
 }
 
 .custom-control-label {
