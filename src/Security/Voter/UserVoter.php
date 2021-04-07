@@ -70,9 +70,9 @@ class UserVoter extends Voter
     protected function isAdminUser(User $user): bool
     {
         if ($this->isGranted('ROLE_ADMIN')) {
-            foreach ($this->user->getServiceUser() as $serviceCurrentUser) {
-                foreach ($user->getServiceUser() as $serviceUser) {
-                    if ($serviceUser->getService()->getId() === $serviceCurrentUser->getService()->getId()) {
+            foreach ($this->user->getServices() as $serviceCurrentUser) {
+                foreach ($user->getServices() as $service) {
+                    if ($service->getId() === $serviceCurrentUser->getService()->getId()) {
                         return true;
                     }
                 }

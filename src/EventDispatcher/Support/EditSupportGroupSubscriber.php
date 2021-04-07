@@ -52,13 +52,13 @@ class EditSupportGroupSubscriber implements EventSubscriberInterface
         $supportGroup = $event->getSupportGroup();
 
         $supportGroup->setUpdatedAt(new \DateTime());
-        $serviceId = $supportGroup->getService()->getId();
+        $serviceType = $supportGroup->getService()->getType();
 
         // Vérifie le service du suivi
-        if (Service::SERVICE_AVDL_ID === $serviceId) {
+        if (Service::SERVICE_TYPE_AVDL === $serviceType) {
             $supportGroup = (new AvdlService())->updateSupportGroup($supportGroup);
         }
-        if (Service::SERVICE_PASH_ID === $serviceId) {
+        if (Service::SERVICE_TYPE_HOTEL === $serviceType) {
             $supportGroup = (new HotelSupportService())->updateSupportGroup($supportGroup);
         }
 
@@ -143,7 +143,7 @@ class EditSupportGroupSubscriber implements EventSubscriberInterface
             foreach ($supportGroup->getPlaceGroups() as $placeGroup) {
                 if (!$placeGroup->getEndDate()) {
                     null === $placeGroup->getEndDate() ? $placeGroup->setEndDate($supportGroup->getEndDate()) : null;
-                    null === $placeGroup->getEndReason() ? $placeGroup->setEndReason(SupportGroup::STATUS_ENDED) : null;
+                    null === $placeGroup->getEndReason() ? $placeGroup->setEndReason(PlaceGroup::END_REASON_SUPPORT_ENDED) : null;
 
                     $this->updatePlacePeople($placeGroup);
                 }
@@ -161,7 +161,7 @@ class EditSupportGroupSubscriber implements EventSubscriberInterface
             $person = $supportPerson->getPerson();
 
             null === $placePerson->getEndDate() ? $placePerson->setEndDate($supportPerson->getEndDate()) : null;
-            null === $placePerson->getEndReason() ? $placePerson->setEndReason(SupportGroup::STATUS_ENDED) : null;
+            null === $placePerson->getEndReason() ? $placePerson->setEndReason(PlaceGroup::END_REASON_SUPPORT_ENDED) : null;
 
             if ($supportPerson->getStartDate() && $supportPerson->getStartDate() < $person->getBirthdate()) {
                 $supportPerson->setStartDate($person->getBirthdate());

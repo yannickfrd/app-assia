@@ -8,7 +8,6 @@ use App\Entity\Support\PlaceGroup;
 use App\Repository\Organization\PlaceRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -20,27 +19,19 @@ class PlaceGroupHotelType extends AbstractType
     {
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $form = $event->getForm();
-            $serviceId = null;
             $attr = $form->getParent()->getConfig()->getOption('attr');
-
-            if ($attr['serviceId']) {
-                $serviceId = $attr['serviceId'];
-            // $subServiceId = $attr['subServiceId'];
-            } else {
-                $supportGroup = $form->getParent()->getParent()->getData();
-                $service = $supportGroup->getService();
-                $serviceId = $service ? $service->getId() : null;
-                // $subServiceId = $supportGroup->getSubService() ? $supportGroup->getSubService()->getId() : null;
-            }
+            $supportGroup = $form->getParent()->getParent()->getData();
+            /** * @var Service */
+            $service = $attr['service'] ?? $supportGroup->getService();
 
             $form
                 ->add('place', EntityType::class, [
                     'class' => Place::class,
                     'choice_label' => 'name',
-                    'query_builder' => function (PlaceRepository $repo) use ($serviceId) {
-                        return $repo->getPlacesQueryBuilder($serviceId);
+                    'query_builder' => function (PlaceRepository $repo) use ($service) {
+                        return $repo->getPlacesQueryBuilder($service);
                     },
-                    'label' => Service::SERVICE_PASH_ID === $serviceId ? 'hotelName' : 'place.name',
+                    'label' => Service::SERVICE_TYPE_HOTEL === $service->getType() ? 'hotelName' : 'place.name',
                     'placeholder' => 'placeholder.select',
                     'required' => true,
                 ])

@@ -3,13 +3,17 @@
 namespace App\DataFixtures;
 
 use App\Entity\People\Person;
+use App\Entity\Organization\User;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Support\SupportPerson;
-use App\Repository\People\PeopleGroupRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\People\PeopleGroupRepository;
 
+/*
+ * @codeCoverageIgnore
+ */
 class D_SupportGroupFixtures extends Fixture
 {
     private $manager;
@@ -41,8 +45,8 @@ class D_SupportGroupFixtures extends Fixture
             $this->user = $peopleGroup->getCreatedBy();
             $this->peopleGroup = $peopleGroup;
 
-            foreach ($this->user->getServiceUser() as $serviceUser) {
-                $this->service = $serviceUser->getService();
+            foreach ($this->user->getServices() as $service) {
+                $this->service = $service;
             }
 
             //Crée des faux suivis sociaux

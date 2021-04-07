@@ -8,6 +8,9 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 
+/*
+ * @codeCoverageIgnore
+ */
 class E_NoteFixtures extends Fixture
 {
     public function __construct(EntityManagerInterface $manager, SupportGroupRepository $repo)

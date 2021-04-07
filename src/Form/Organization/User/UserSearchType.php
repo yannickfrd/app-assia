@@ -2,7 +2,6 @@
 
 namespace App\Form\Organization\User;
 
-use App\Entity\Organization\ServiceUser;
 use App\Entity\Organization\User;
 use App\Form\Model\Organization\UserSearch;
 use App\Form\Type\SearchType;
@@ -39,13 +38,6 @@ class UserSearchType extends AbstractType
                     'class' => 'multi-select',
                     'data-select2-id' => 'status',
                 ],
-                'required' => false,
-            ])
-            ->add('serviceUser', ChoiceType::class, [
-                'choices' => Choices::getChoices(ServiceUser::ROLE),
-                'label_attr' => ['class' => 'sr-only'],
-                'attr' => ['class' => 'w-max-120'],
-                'placeholder' => '-- Rôle --',
                 'required' => false,
             ])
             ->add('phone', null, [

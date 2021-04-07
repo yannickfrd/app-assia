@@ -16,8 +16,7 @@ class HotelSupport
     public const STATUS = [
         2 => 'En cours', // Inclusion effective
         4 => 'Terminé', // Fin d\'accompagnement
-        1 => 'Demande en cours de traitement',
-        5 => 'Inclusion non aboutie',
+        5 => 'Non abouti',
         6 => 'Liste d\'attente',
         3 => 'Suspendu',
         97 => 'Autre',
@@ -49,10 +48,11 @@ class HotelSupport
     ];
 
     public const LEVEL_SUPPORT = [
-        1 => 'Evaluation (1)',
-        2 => 'Global (1)',
-        3 => 'Complémentarité (0,5)',
-        4 => 'Veille sociale (0,3)',
+        1 => 'Évaluation', // (1)
+        2 => 'Subsidiarité ', // Global (1)
+        3 => 'Complémentarité', // (0,5)
+        4 => 'Veille sociale avec référent', // (0,3)
+        5 => 'Veille sociale sans référent', // (0,3)
     ];
 
     public const END_SUPPORT_REASON = [

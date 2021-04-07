@@ -28,6 +28,12 @@
                     {{ view_div.get(evalSocial.socialSecurityOffice, "Social security office", "evaluation") }}
                 </div>
                 <div class="row mb-2">
+                    {{ view_div.get(evalSocial.infoCrip == YES ? evalSocial.infoCripToString 
+                        ~ (evalSocial.infoCripDate ? ' (le ' ~ evalSocial.infoCripDate|date('d/m/Y')
+                        ~ (evalSocial.infoCripByService == YES ? ' par le service') ~ ")"), "Info crip", "evaluation") }}
+                    {{ view_div.get(evalSocial.infoCripComment) }}
+                </div>
+                <div class="row mb-2">
                     {{ view_div.get(evalSocial.aseFollowUp == YES ? evalSocial.aseFollowUpToString 
                         ~ (evalSocial.aseMeasureType ? ' (Mesure ' ~ evalSocial.aseMeasureTypeToString ~ ")"), "Ase follow up", "evaluation") }}
                     {{ view_div.get(evalSocial.aseComment) }}

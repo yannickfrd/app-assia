@@ -49,13 +49,13 @@ class PlaceGroupType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $place = $event->getData();
 
-            $serviceId = $place->getSupportGroup()->getService()->getId();
+            $service = $place->getSupportGroup()->getService();
 
             $event->getForm()->add('place', EntityType::class, [
                 'class' => Place::class,
                 'choice_label' => 'name',
-                'query_builder' => function (PlaceRepository $repo) use ($serviceId) {
-                    return $repo->getPlacesQueryBuilder($serviceId);
+                'query_builder' => function (PlaceRepository $repo) use ($service) {
+                    return $repo->getPlacesQueryBuilder($service);
                 },
                 'placeholder' => 'placeholder.select',
             ]);

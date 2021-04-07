@@ -69,17 +69,17 @@ class PlaceRepository extends ServiceEntityRepository
     /**
      * Donne la liste des groupes de places.
      */
-    public function getPlacesQueryBuilder(?int $serviceId = null, ?int $subServiceId = null): QueryBuilder
+    public function getPlacesQueryBuilder(?Service $service = null, ?SubService $subService = null): QueryBuilder
     {
         $query = $this->createQueryBuilder('pl')
             ->select('PARTIAL pl.{id, name, service, address, city, zipcode, commentLocation, locationId, lat, lon}');
 
-        if ($subServiceId) {
+        if ($subService) {
             $query->where('pl.subService = :subService')
-            ->setParameter('subService', $subServiceId);
+            ->setParameter('subService', $subService);
         } else {
             $query->where('pl.service = :service')
-            ->setParameter('service', $serviceId);
+            ->setParameter('service', $service);
         }
 
         return  $query->andWhere('pl.endDate IS NULL')

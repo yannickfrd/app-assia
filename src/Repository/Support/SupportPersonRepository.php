@@ -2,6 +2,7 @@
 
 namespace App\Repository\Support;
 
+use App\Entity\Organization\Service;
 use App\Entity\People\PeopleGroup;
 use App\Entity\People\Person;
 use App\Entity\Support\SupportPerson;
@@ -57,7 +58,8 @@ class SupportPersonRepository extends ServiceEntityRepository
         $query = $this->getSupportsQuery()
             ->leftJoin('sp.placesPerson', 'pp')->addSelect('pp')
             ->leftJoin('pp.placeGroup', 'pg')->addSelect('pg')
-            ->leftJoin('pg.place', 'pl')->addSelect('pl');
+            ->leftJoin('pg.place', 'pl')->addSelect('pl')
+            ->leftJoin('g.referents', 'ref')->addSelect('PARTIAL ref.{id, name, type}');
 
         if ($search) {
             $query = $this->filters($query, $search);
@@ -73,14 +75,14 @@ class SupportPersonRepository extends ServiceEntityRepository
      *
      * @return SupportPerson[]|null
      */
-    public function findSupportsOfServiceToExport($search = null, int $serviceId): ?array
+    public function findSupportsOfServiceToExport($search = null, int $serviceType): ?array
     {
         $query = $this->getSupportsOfServiceQuery()
             ->leftJoin('sg.placeGroups', 'pg')->addSelect('PARTIAL pg.{id, place}')
             ->leftJoin('pg.place', 'pl')->addSelect('PARTIAL pl.{id, name}')
 
-            ->where('sg.service = :service')
-            ->setParameter('service', $serviceId);
+            ->where('s.type = :type')
+            ->setParameter('type', $serviceType);
 
         if ($search) {
             $query = $this->filters($query, $search);
@@ -94,13 +96,13 @@ class SupportPersonRepository extends ServiceEntityRepository
     /**
      * Trouve les suivis sociaux AVDL.
      */
-    public function findAvdlSupportsQuery(AvdlSupportSearch $search, int $serviceId): Query
+    public function findAvdlSupportsQuery(AvdlSupportSearch $search): Query
     {
         $query = $this->getSupportsQuery()
             ->leftJoin('sg.avdl', 'avdl')->addSelect('avdl')
 
-            ->where('sg.service = :service')
-            ->setParameter('service', $serviceId);
+            ->where('s.type = :type')
+            ->setParameter('type', Service::SERVICE_TYPE_AVDL);
 
         $query = $this->filters($query, $search);
 
@@ -123,15 +125,15 @@ class SupportPersonRepository extends ServiceEntityRepository
     /**
      * Trouve les suivis sociaux hôtel.
      */
-    public function findHotelSupportsQuery(HotelSupportSearch $search, int $serviceId): Query
+    public function findHotelSupportsQuery(HotelSupportSearch $search): Query
     {
         $query = $this->getSupportsQuery()
             ->leftJoin('sg.hotelSupport', 'hs')->addSelect('hs')
             ->leftJoin('sg.placeGroups', 'pg')->addSelect('PARTIAL pg.{id, place}')
             ->leftJoin('pg.place', 'pl')->addSelect('PARTIAL pl.{id, name}')
 
-            ->where('sg.service = :service')
-            ->setParameter('service', $serviceId);
+            ->where('s.type = :type')
+            ->setParameter('type', Service::SERVICE_TYPE_HOTEL);
 
         $query = $this->filters($query, $search);
 
@@ -187,6 +189,8 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->leftJoin('sp.placesPerson', 'pp')->addSelect('pp')
             ->leftJoin('pp.placeGroup', 'pg')->addSelect('pg')
             ->leftJoin('pg.place', 'pl')->addSelect('pl')
+
+            ->leftJoin('g.referents', 'ref')->addSelect('PARTIAL ref.{id, name, type}')
 
             ->leftJoin('sg.hotelSupport', 'hs')->addSelect('hs')
             ->leftJoin('sg.avdl', 'avdl')->addSelect('avdl')
@@ -267,7 +271,7 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->leftJoin('sp.supportGroup', 'sg')->addSelect('sg')
             ->leftJoin('sg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
             ->leftJoin('sg.referent', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
-            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, coefficient}')
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, type, coefficient}')
             ->leftJoin('sg.subService', 'ss')->addSelect('PARTIAL ss.{id, name}')
             ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
             ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')

@@ -29,6 +29,12 @@ class ServiceType extends AbstractType
                 'choice_label' => 'name',
                 'placeholder' => 'placeholder.select',
             ])
+            ->add('type', ChoiceType::class, [
+                'label' => 'service.type',
+                'choices' => Choices::getChoices(Service::SERVICE_TYPE),
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
             ->add('phone1', null, [
                 'attr' => [
                     'class' => 'js-phone',

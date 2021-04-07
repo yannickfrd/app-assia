@@ -19,14 +19,8 @@ class UserSearch
     /** @var array */
     private $status;
 
-    /** @var int|null */
-    private $serviceUser;
-
     /** @var string|null */
     private $phone;
-
-    /** @var string|null */
-    private $email;
 
     /** @var ArrayCollection */
     private $services;
@@ -94,18 +88,6 @@ class UserSearch
         return $this;
     }
 
-    public function getServiceUser(): ?int
-    {
-        return $this->serviceUser;
-    }
-
-    public function setServiceUser(?int $serviceUser): self
-    {
-        $this->serviceUser = $serviceUser;
-
-        return $this;
-    }
-
     public function getPhone(): ?string
     {
         return $this->phone;
@@ -114,18 +96,6 @@ class UserSearch
     public function setPhone(?string $phone): self
     {
         $this->phone = Phone::formatPhone($phone);
-
-        return $this;
-    }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(?string $email): self
-    {
-        $this->email = $email;
 
         return $this;
     }

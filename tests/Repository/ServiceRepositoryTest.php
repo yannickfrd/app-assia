@@ -51,8 +51,8 @@ class ServiceRepositoryTest extends WebTestCase
         $this->pole = $dataFixtures['pole'];
         $this->user = $dataFixtures['userSuperAdmin'];
         $this->search = (new ServiceSearch())
-            ->setName('AVDL')
-            ->setEmail('avdl@esperer-95.org')
+            ->setName('CHRS XXX')
+            ->setEmail('chrs@esperer-95.org')
             ->setCity('Pontoise')
             ->setPole($this->pole)
             ->setPhone('01 00 00 00 00');

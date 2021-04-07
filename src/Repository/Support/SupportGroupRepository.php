@@ -57,10 +57,10 @@ class SupportGroupRepository extends ServiceEntityRepository
         ->leftJoin('origin.organization', 'orga')->addSelect('PARTIAL orga.{id, name}')
         ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name, logoPath}')
 
-        // if ($service->getId() === Service::SERVICE_AVDL_ID) {
+        // if ($service->getType() === Service::SERVICE_TYPE_AVDL) {
             ->leftJoin('sg.avdl', 'avdl')->addSelect('avdl')
         // }
-        // if ($service->getId() === Service::SERVICE_PASH_ID) {
+        // if ($service->getType() === Service::SERVICE_TYPE_HOTEL) {
             ->leftJoin('sg.hotelSupport', 'hs')->addSelect('hs')
         // }
 
@@ -89,7 +89,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin('sg.createdBy', 'user')->addSelect('PARTIAL user.{id, firstname, lastname}')
             ->leftJoin('sg.referent', 'ref')->addSelect('PARTIAL ref.{id, firstname, lastname}')
             ->leftJoin('sg.referent2', 'ref2')->addSelect('PARTIAL ref2.{id, firstname, lastname}')
-            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, email, preAdmission, justice, coefficient}')
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, type, email, preAdmission, justice, coefficient}')
             ->leftJoin('sg.subService ', 'ss')->addSelect('PARTIAL ss.{id, name, email}')
             ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name, coefficient, place, contribution, contributionType, contributionRate}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')

@@ -1,8 +1,8 @@
 {% extends "base.html.twig" %}
 
 {% set support_group_places = support.placeGroups %}
-{% set SERVICE_PASH_ID = constant("App\\Entity\\Organization\\Service::SERVICE_PASH_ID") %}
-{% set title = support.service.id == SERVICE_PASH_ID ? "Prises en charge hôtelières" : "Logement/hébergement" %}
+{% set SERVICE_TYPE_HOTEL = constant("App\\Entity\\Organization\\Service::SERVICE_TYPE_HOTEL") %}
+{% set title = support.service.type == SERVICE_TYPE_HOTEL ? "Prises en charge hôtelières" : "Logement/hébergement" %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -23,7 +23,7 @@
 					<thead>
 						<tr>
 							<th scope="row" class="align-middle th-w-20"></th>
-							<th scope="col" class="align-middle th-w-150">{% if support.service.id == SERVICE_PASH_ID %}Hôtel{% else %}Nom du groupe de places{% endif %}</th>
+							<th scope="col" class="align-middle th-w-150">{% if support.service.type == SERVICE_TYPE_HOTEL %}Hôtel{% else %}Nom du groupe de places{% endif %}</th>
 							<th scope="col" class="align-middle th-w-120">Dispositif</th>
 							<th scope="col" class="align-middle th-date">Date de début</th>
 							<th scope="col" class="align-middle th-date">Date de fin</th>
@@ -59,7 +59,7 @@
 								<td class="align-middle">
 									{% if placeGroup.place %}
 										{{ placeGroup.place.address }}<br/>
-										{{ placeGroup.place.zipCode }} {{ placeGroup.place.city }}
+										{{ placeGroup.place.dept }} {{ placeGroup.place.city }}
 									{% endif %}
 								</td>
 								<td class="align-middle text-center">

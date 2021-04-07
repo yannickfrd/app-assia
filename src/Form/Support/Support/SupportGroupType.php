@@ -164,16 +164,15 @@ class SupportGroupType extends AbstractType
     protected function formModifier()
     {
         return function (FormInterface $form, ?Service $service = null, ?SubService $subService = null) {
-            $serviceId = $service ? $service->getId() : null;
-            $subServiceId = $subService ? $subService->getId() : null;
-            $optionsReferent = $this->optionsReferent($serviceId);
+            $serviceType = $service ? $service->getType() : null;
+            $optionsReferent = $this->optionsReferent($service);
 
             $form
                 ->add('subService', EntityType::class, [
                     'class' => SubService::class,
                     'choice_label' => 'name',
-                    'query_builder' => function (SubServiceRepository $repo) use ($serviceId) {
-                        return $repo->getSubServicesOfUserQueryBuilder($this->currentUser, $serviceId);
+                    'query_builder' => function (SubServiceRepository $repo) use ($service) {
+                        return $repo->getSubServicesOfUserQueryBuilder($this->currentUser, $service);
                     },
                     'placeholder' => 'placeholder.select',
                     'required' => false,
@@ -181,8 +180,8 @@ class SupportGroupType extends AbstractType
                 ->add('device', EntityType::class, [
                     'class' => Device::class,
                     'choice_label' => 'name',
-                    'query_builder' => function (DeviceRepository $repo) use ($serviceId) {
-                        return $repo->getDevicesOfUserQueryBuilder($this->currentUser, $serviceId);
+                    'query_builder' => function (DeviceRepository $repo) use ($service) {
+                        return $repo->getDevicesOfUserQueryBuilder($this->currentUser, $service);
                     },
                     'placeholder' => 'placeholder.select',
                 ])
@@ -191,27 +190,27 @@ class SupportGroupType extends AbstractType
                 ->add('place', EntityType::class, [
                     'class' => Place::class,
                     'choice_label' => 'name',
-                    'query_builder' => function (PlaceRepository $repo) use ($serviceId, $subServiceId) {
-                        return $repo->getPlacesQueryBuilder($serviceId, $subServiceId);
+                    'query_builder' => function (PlaceRepository $repo) use ($service, $subService) {
+                        return $repo->getPlacesQueryBuilder($service, $subService);
                     },
-                    'label' => Service::SERVICE_PASH_ID === $serviceId ? 'hotelName' : 'place.name',
+                    'label' => Service::SERVICE_TYPE_HOTEL === $serviceType ? 'hotelName' : 'place.name',
                     'placeholder' => 'placeholder.select',
                     'mapped' => false,
                     'required' => false,
                 ])
                 ->add('originRequest', OriginRequestType::class, [
-                    'attr' => ['serviceId' => $serviceId],
+                    'attr' => ['service' => $service],
                 ]);
         };
     }
 
     protected function addSupportFields(FormInterface $form, Service $service)
     {
-        switch ($service->getId()) {
-            case Service::SERVICE_AVDL_ID:
+        switch ($service->getType()) {
+            case Service::SERVICE_TYPE_AVDL:
                 $this->addAvdlFields($form);
                 break;
-            case Service::SERVICE_PASH_ID:
+            case Service::SERVICE_TYPE_HOTEL:
                 $this->addHotelFields($form);
                 break;
          }
@@ -250,8 +249,8 @@ class SupportGroupType extends AbstractType
             'allow_delete' => false,
             'delete_empty' => true,
             'attr' => [
-                'serviceId' => $supportGroup->getService() ? $supportGroup->getService()->getId() : null,
-                'subServiceId' => $supportGroup->getSubService() ? $supportGroup->getSubService()->getId() : null,
+                'service' => $supportGroup->getService(),
+                'subService' => $supportGroup->getSubService(),
             ],
             'required' => true,
         ]);
@@ -268,13 +267,13 @@ class SupportGroupType extends AbstractType
     /**
      * Retourne les options du champ Référent.
      */
-    protected function optionsReferent(?int $serviceId): array
+    protected function optionsReferent(?Service $service = null): array
     {
         return [
             'class' => User::class,
             'choice_label' => 'fullname',
-            'query_builder' => function (UserRepository $repo) use ($serviceId) {
-                return $repo->getUsersQueryBuilder($serviceId, $this->currentUser->getUser());
+            'query_builder' => function (UserRepository $repo) use ($service) {
+                return $repo->getUsersQueryBuilder($service, $this->currentUser->getUser());
             },
             'placeholder' => 'placeholder.select',
             'required' => false,

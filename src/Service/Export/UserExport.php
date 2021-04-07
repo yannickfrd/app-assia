@@ -30,9 +30,9 @@ class UserExport extends ExportExcel
     {
         $services = [];
         $poles = [];
-        foreach ($user->getServiceUser() as $serviceUser) {
-            $services[] = $serviceUser->getService()->getName();
-            $pole = $serviceUser->getService()->getPole()->getName();
+        foreach ($user->getServices() as $service) {
+            $services[] = $service->getName();
+            $pole = $service->getPole()->getName();
             if (!in_array($pole, $poles)) {
                 $poles[] = $pole;
             }

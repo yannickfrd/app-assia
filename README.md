@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.23.3 30/03/2021
+2.26.4 07/04/2021
 
 # Développeur
 Romain MADELAINE
@@ -12,6 +12,24 @@ https://github.com/RomMad/esperer95.app
 
 # Connection à la base démo
 https://demo.esperer95.app
+
+## Version 2.26.4 - 07/04/2021
+- Update HotelSupport (status, levelSupport) + fix bug check validation;
+- Update evaluation (add 'infoCrip'/'IP' fields);
+- Add other social referents in exports;
+- Edit full export system;
+- Create helpers 'departement' getter form 'zipcode';
+
+## Version 2.25.5 - 06/04/2021
+- New feature : dropzone for the documents (drag and drop);
+- Add SoftDeleteable for Document + Create command to delete really documents;
+- Update document tests;
+- Update all EndToEnd test;
+- Edit travis config;
+- Create 'type' of service (avdl, hotel...) and update all files with serviceId;
+
+## Version 2.24.0 - 06/04/2021
+- Create export of all support's notes in MS Word;
 
 ## Version 2.23.3 - 30/03/2021
 - Fix error when send email with no emails;

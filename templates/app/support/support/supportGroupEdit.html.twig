@@ -57,11 +57,11 @@
 		
 		<hr>
 
-		{% set serviceId = support.service ? support.service.id : null %}
+		{% set serviceType = support.service ? support.service.type : null %}
 		
-		{% if serviceId == constant("App\\Entity\\Organization\\Service::SERVICE_AVDL_ID") %}
+		{% if serviceType == constant("App\\Entity\\Organization\\Service::SERVICE_TYPE_AVDL") %}
 			{% include "app/support/avdl/_avdlEdit.html.twig" %}
-		{% elseif serviceId == constant("App\\Entity\\Organization\\Service::SERVICE_PASH_ID") %}
+		{% elseif serviceType == constant("App\\Entity\\Organization\\Service::SERVICE_TYPE_HOTEL") %}
 			{% include "app/support/hotelSupport/_hotelSupportEdit.html.twig" %}
 		{% else %}		
 			{% include "app/support/support/_supportRegular.html.twig" %}

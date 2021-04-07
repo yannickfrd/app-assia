@@ -61,7 +61,7 @@
         </div>
     </div>
     <hr/>
-    {% if typo in [4, 5, 6, 8] %}
+    {% if nb_children > 0 %}
         <div class="form-group row">
             <div class="col-md-6">{{ form_row(form.evalFamilyGroup.pmiFollowUp) }}</div>
             <div class="col-md-6" data-parent-field="pmiFollowUp">{{ form_row(form.evalFamilyGroup.pmiName) }}</div>

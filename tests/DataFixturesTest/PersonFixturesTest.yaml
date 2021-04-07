@@ -46,7 +46,8 @@ App\Entity\Organization\User:
 
 App\Entity\Organization\Service:
   service1:
-    name: AVDL
+    name: CHRS XXX
+    type: 1
     pole: "@pole"
     createdAt: <date_create()>
     updatedAt: <date_create()>
@@ -59,4 +60,4 @@ App\Entity\Organization\Pole:
 
 App\Entity\Organization\Device:
   device1:
-    name: AVDL
+    name: Insertion

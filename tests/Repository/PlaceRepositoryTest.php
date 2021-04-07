@@ -81,7 +81,7 @@ class PlaceRepositoryTest extends WebTestCase
 
     public function testGetPlacesQueryBuilder()
     {
-        $query = $this->repo->getPlacesQueryBuilder($this->service->getId());
+        $query = $this->repo->getPlacesQueryBuilder($this->service);
         $this->assertGreaterThanOrEqual(1, count($query->getQuery()->getResult()));
     }
 

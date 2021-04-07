@@ -34,7 +34,7 @@
                 {{ view_div.get(placeGroup.endReasonToString, "Motif de fin d'hébergement") }}
         {% endif %}	
     {% endfor %}
-    {{ view_div.get(support.city or support.address ? support.address ~ ", " ~ support.zipcode ~ " " ~ support.city, "Adresse") }}
+    {{ view_div.get(support.city or support.address ? support.address ~ ", " ~ support.dept ~ " " ~ support.city, "Adresse") }}
 </div>
 <div class="row">
     {{ view_div.get(support.comment) }}

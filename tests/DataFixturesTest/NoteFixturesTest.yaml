@@ -69,7 +69,7 @@ App\Entity\People\Person:
 
 App\Entity\Organization\Service:
   service1:
-    name: AVDL
+    name: CHRS XXX
     pole: "@pole"
     createdAt: <date_create()>
     updatedAt: <date_create()>

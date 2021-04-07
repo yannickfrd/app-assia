@@ -55,4 +55,4 @@ App\Entity\People\RolePerson:
 
 App\Entity\Organization\Device:
   device1:
-    name: AVDL
+    name: Insertion

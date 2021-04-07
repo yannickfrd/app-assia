@@ -12,6 +12,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 
+/**
+ * @codeCoverageIgnore
+ */
 class B_UserFixtures extends Fixture
 {
     private $passwordEncoder;

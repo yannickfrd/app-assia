@@ -13,7 +13,7 @@ class OriginRequest
 {
     public const RESULT_PRE_ADMISSION = [
         1 => 'En cours',
-        2 => 'Admission',
+        2 => 'Admis',
         3 => 'Refus du service',
         4 => 'Refus de la personne',
         5 => 'Refus autre',

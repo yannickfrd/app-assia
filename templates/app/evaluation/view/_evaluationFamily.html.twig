@@ -46,7 +46,7 @@
                 <div class="row">
                     {{ view_div.get((evalFamily.childcareOrSchool == YES ? evalFamily.childcareSchoolTypeToString : 
                         evalFamily.childcareOrSchoolToString) ~ (evalFamily.schoolCity or evalFamily.schoolChildCarePrecision ? " (" ~ evalFamily.schoolCity 
-                        ~ ( evalFamily.schoolChildCarePrecision ? " - " ~ evalFamily.schoolChildCarePrecision) ~ ")"), "Childcare or school", "evaluation") }}
+                        ~ ", " ~ (evalFamily.schoolChildCarePrecision ? evalFamily.schoolChildCarePrecision) ~ ")"), "Childcare or school", "evaluation") }}
                     {{ view_div.get(evalFamily.childToHostToString, "Child to host", "evaluation") }}
                     {{ view_div.get(evalFamily.childDependanceToString, "Child dependance", "evaluation") }}
                 </div>

@@ -14,17 +14,21 @@ php:
   - "7.4"
 
 install:
-  - npm install
+  - npm ci # npm install
+
+# keep the npm cache around to speed up installs
+cache:
+  directories:
+      - "$HOME/.npm"
 
 script:
   - echo "APP_ENV=prod" >> .env
 
-  - composer install
-
-  - composer require --dev dbrekelmans/bdi
+  - composer install --quiet
+  - composer require dbrekelmans/bdi --dev --quiet
   - vendor/bin/bdi detect drivers
 
-  - npm run build
+  - npm run build --silent
   - php bin/console doctrine:database:create --env=test
   - php bin/console doctrine:schema:update --env=test --force
   - php bin/console hautelook:fixtures:load --env=test --no-interaction

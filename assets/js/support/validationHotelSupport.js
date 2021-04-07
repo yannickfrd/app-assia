@@ -126,17 +126,17 @@ export default class ValidationHotelSupport {
 
     checkFields() {
         if (this.endDateElt.value && this.HOTEL_URG === this.selectType.getOption(this.deviceSelectElt)) {
-            this.checkSelectEltIsNotEmpty(this.evaluationDateElt)
-            this.checkSelectEltIsNotEmpty(this.emergencyActionRequestSelectElt)
-            this.checkSelectEltIsNotEmpty(this.emergencyActionDoneSelectElt)       
+            this.checkInputIsNotEmpty(this.evaluationDateElt)
+            this.checkSelectIsNotEmpty(this.emergencyActionRequestSelectElt)
+            this.checkSelectIsNotEmpty(this.emergencyActionDoneSelectElt)       
         }
         if (this.endDateElt.value && this.HOTEL_SUPPORT === this.selectType.getOption(this.deviceSelectElt)) {
-            this.checkSelectEltIsNotEmpty(this.levelSupportSelectElt)
-            this.checkSelectEltIsNotEmpty(this.departmentAnchorSelectElt)
-            this.checkSelectEltIsNotEmpty(this.recommendationSelectElt)
+            this.checkSelectIsNotEmpty(this.levelSupportSelectElt)
+            this.checkSelectIsNotEmpty(this.departmentAnchorSelectElt)
+            this.checkSelectIsNotEmpty(this.recommendationSelectElt)
         }
         if (this.STATUS_PRE_ADD_FAILED === this.selectType.getOption(this.statusSelectElt)) {
-            this.checkSelectEltIsNotEmpty(this.reasonNoInclusionSelectElt)
+            this.checkSelectIsNotEmpty(this.reasonNoInclusionSelectElt)
         } else {
             this.validationForm.validField(this.reasonNoInclusionSelectElt)
         }
@@ -144,14 +144,27 @@ export default class ValidationHotelSupport {
     
     /**
      * Check is a select element is not empty.
-     * @param {HTMLSelectElement} field 
+     * @param {HTMLSelectElement} selectElt 
      * @param {String} msg 
      */
-    checkSelectEltIsNotEmpty(field, msg = 'Saisie obligatoire') {
-        if (!this.selectType.getOption(field)) {
-            this.validationForm.invalidField(field, msg)
+    checkSelectIsNotEmpty(selectElt, msg = 'Saisie obligatoire') {
+        if (!this.selectType.getOption(selectElt)) {
+            this.validationForm.invalidField(selectElt, msg)
         } else {
-            this.validationForm.validField(field)
+            this.validationForm.validField(selectElt)
+        }  
+    }
+
+    /**
+     * Check is a select element is not empty.
+     * @param {HTMLInputElement} inputElt 
+     * @param {String} msg 
+     */
+    checkInputIsNotEmpty(inputElt, msg = 'Saisie obligatoire') {
+        if (!inputElt.value) {
+            this.validationForm.invalidField(inputElt, msg)
+        } else {
+            this.validationForm.validField(inputElt)
         }  
     }
 

@@ -214,7 +214,7 @@ class SupportDuplicator
         if ($evaluationGroup->getEvalSocialGroup()) {
             $newEvaluationGroup->setEvalSocialGroup(clone $evaluationGroup->getEvalSocialGroup());
         }
-        if (Service::SERVICE_PASH_ID && $this->supportGroup->getService()->getId() && $evaluationGroup->getEvalHotelLifeGroup()) {
+        if (Service::SERVICE_TYPE_HOTEL && $this->supportGroup->getService()->getType() && $evaluationGroup->getEvalHotelLifeGroup()) {
             $newEvaluationGroup->setEvalHotelLifeGroup(clone $evaluationGroup->getEvalHotelLifeGroup());
         }
 

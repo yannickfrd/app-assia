@@ -55,9 +55,9 @@ class PoleVoter extends Voter
         }
 
         if ($this->isGranted('ROLE_ADMIN') && User::STATUS_DIRECTOR === $this->user->getStatus()) {
-            foreach ($this->user->getServiceUser() as $serviceUser) {
+            foreach ($this->user->getServices() as $service) {
                 foreach ($this->pole->getServices() as $service) {
-                    if ($service->getId() === $serviceUser->getService()->getId()) {
+                    if ($service->getId() === $service->getId()) {
                         return true;
                     }
                 }

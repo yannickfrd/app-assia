@@ -77,7 +77,7 @@ class SubServiceRepository extends ServiceEntityRepository
     /**
      * Donne la liste des sous-services de l'utilisateur.
      */
-    public function getSubServicesOfUserQueryBuilder(CurrentUserService $currentUser, int $serviceId = null): QueryBuilder
+    public function getSubServicesOfUserQueryBuilder(CurrentUserService $currentUser, Service $service = null): QueryBuilder
     {
         $query = $this->createQueryBuilder('ss')->select('PARTIAL ss.{id, name}')
             ->leftJoin('ss.service', 's')->addSelect('PARTIAL s.{id, name}')
@@ -90,9 +90,9 @@ class SubServiceRepository extends ServiceEntityRepository
                 ->setParameter('services', $currentUser->getServices());
         }
 
-        if ($serviceId) {
+        if ($service) {
             $query = $query->andWhere('s.id = :service')
-                ->setParameter('service', $serviceId);
+                ->setParameter('service', $service);
         }
 
         return $query->orderBy('ss.name', 'ASC');

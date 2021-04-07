@@ -2,6 +2,7 @@
 
 namespace App\EventListener;
 
+use App\Entity\Organization\Service;
 use App\Entity\Organization\User;
 use App\Entity\Organization\UserConnection;
 use App\Form\Utils\Choices;
@@ -67,8 +68,8 @@ class LoginListener
      */
     private function addColorServiceInSession(User $user): void
     {
-        if ($user->getServiceUser()->count() > 0) {
-            $this->session->set('theme_color', $user->getServiceUser()->first()->getService()->getPole()->getColor());
+        if ($user->getServices()->count() > 0) {
+            $this->session->set('theme_color', $user->getServices()->first()->getPole()->getColor());
         }
     }
 
@@ -77,19 +78,24 @@ class LoginListener
      */
     private function addUserServicesInSession(User $user): void
     {
-        $userServices = [];
-        $haveServiceWithPlace = false;
-
-        foreach ($user->getServiceUser() as $serviceUser) {
-            $service = $serviceUser->getService();
-            $userServices[$service->getId()] = $service->getName();
+        $services = [];
+        foreach ($user->getServices() as $service) {
+            $services[$service->getId()] = $service->getName();
             if (Choices::YES === $service->getPlace()) {
                 $haveServiceWithPlace = true;
             }
+            if (Service::SERVICE_TYPE_AVDL === $service->getType()) {
+                $haveServiceAVDL = true;
+            }
+            if (Service::SERVICE_TYPE_HOTEL === $service->getType()) {
+                $haveServiceHotel = true;
+            }
         }
 
-        $this->session->set('userServices', $userServices);
-        $this->session->set('haveServiceWithPlace', $haveServiceWithPlace);
+        $this->session->set('userServices', $services);
+        $this->session->set('haveServiceWithPlace', $haveServiceWithPlace ?? false);
+        $this->session->set('haveServiceAVDL', $haveServiceAVDL ?? false);
+        $this->session->set('haveServiceHotel', $haveServiceHotel ?? false);
     }
 
     private function addFlashMessages(User $user): void

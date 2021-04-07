@@ -84,7 +84,7 @@ class DeviceControllerTest extends WebTestCase
         ]));
 
         $form = $crawler->selectButton('send')->form([
-            'device[name]' => 'AVDL',
+            'device[name]' => 'Insertion',
         ]);
 
         $this->client->submit($form);

@@ -21,6 +21,7 @@ ConfirmPassword: Confirmation du mot de passe
 Confirm new password: Confirmation nouveau mot de passe
 Contact other person: Contact autre personne
 Day: Jour
+Dept: Département
 Device: Dispositif
 Devices: Dispositifs
 device:
@@ -152,7 +153,7 @@ Organization comment: Précision concernant l'organisme
 Orientation date: Date d'orientation
 Pre admission date: Date d'entretien de pré-admission
 Resul pre admission: Résultat de l'orientation ou pré-admission
-originRequest.comment: Écrire un commentaire relatif à l'origine de la demande ou à la pré-admission
+originRequest.comment: Écrire un commentaire relatif à la demande ou à l'orientation'
 
 ### Document
 document:
@@ -187,6 +188,7 @@ Contribution type: Type de participation financière
 Contribution rate: Taux de participation financière
 Justice activity: Activité Justice
 service:
+  type: Type d'activité
   coefficient: Coefficient
   coefficient.placeholder: Suivis avec coefficient (pondération)
   comment.placeholder: Écrire une information complémentaire...
@@ -264,7 +266,9 @@ Propo result: Résultat de la proposition
 Access housing date: Date d'accès au logement
 End support comment: Commentaire sur la fin d'accompagnement
 avdl:
-  orientationDate: Date de mandatement
+  orientationDate: Date de mandatement ou d'orientation
+  preAdmissionDate: Date du 1er rendez-vous
+  resulPreAdmission: Statut de la demande
   diag: Diagnostic
   diagType: Type de diagnostic
   recommendationSupport: Préconisation d'accompagnement
