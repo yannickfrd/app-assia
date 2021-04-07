@@ -81,8 +81,6 @@ class HotelSupportService
 
     /**
      * Donne le coefficient du suivi hôtel.
-     *
-     * @return float
      */
     protected function getCoeffSupport(HotelSupport $hotelSupport): float
     {
@@ -91,7 +89,7 @@ class HotelSupportService
             return SupportGroup::COEFFICIENT_HALF;
         }
         // Si veille sociale : coeff. 0,3
-        if (4 === $hotelSupport->getLevelSupport()) {
+        if (in_array($hotelSupport->getLevelSupport(), [4, 5], true)) {
             return SupportGroup::COEFFICIENT_THIRD;
         }
         // Sinon par défaut : coeff. 1
