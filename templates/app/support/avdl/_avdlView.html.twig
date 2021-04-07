@@ -25,7 +25,7 @@
 {% endif %}
 
     <div class="row my-2">
-    {{ view_div.get(support.city or support.address ? support.address ~ ", " ~ support.zipcode ~ " " ~ support.city, "Adresse") }}
+    {{ view_div.get(support.city or support.address ? support.address ~ ", " ~ support.dept ~ " " ~ support.city, "Adresse") }}
 </div>
 
 {% set avdl = support.avdl %}

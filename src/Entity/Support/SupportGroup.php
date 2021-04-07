@@ -532,6 +532,11 @@ class SupportGroup
         return $this;
     }
 
+    public function getEndLocationDept(): ?string
+    {
+        return substr($this->endLocationZipcode, 0, 2);
+    }
+
     public function getNbPeople(): ?int
     {
         return $this->nbPeople;
