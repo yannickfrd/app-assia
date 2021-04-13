@@ -14,14 +14,14 @@ class Avdl
     public const DIAG_TYPE = [
         1 => 'Léger',
         2 => 'Approfondi',
-        99 => 'Non renseigné',
+        99 => 'Non évalué',
     ];
 
     public const RECOMMENDATION_SUPPORT = [
         1 => 'Oui',
         2 => 'Non',
         3 => 'Injoignable',
-        99 => 'Non renseigné',
+        99 => 'Non évalué',
     ];
 
     public const SUPPORT_TYPE = [
@@ -40,7 +40,7 @@ class Avdl
         2 => 'Non adhésion',
         3 => 'Transfert (autre département)',
         97 => 'Autre',
-        99 => 'Non renseigné',
+        99 => 'Non évalué',
     ];
 
     public const ACCESS_HOUSING_MODALITY = [
@@ -51,14 +51,14 @@ class Avdl
         7 => 'Propo. Mairie',
         6 => 'Protocole Logement d’Abord',
         97 => 'Autre',
-        99 => 'Non renseigné',
+        99 => 'Non évalué',
     ];
 
     public const PROPO_RESULT = [
         1 => 'Favorable',
         2 => 'Refus',
         3 => 'En attente',
-        99 => 'Non renseigné',
+        99 => 'Non évalué',
     ];
 
     /**

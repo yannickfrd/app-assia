@@ -18,7 +18,7 @@ class Rdv
         1 => 'Présent',
         2 => 'Absent',
         3 => 'Annulé',
-        99 => 'Non renseigné',
+        99 => 'Non évalué',
     ];
 
     /**

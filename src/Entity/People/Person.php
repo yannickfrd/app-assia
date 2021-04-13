@@ -38,7 +38,7 @@ class Person
         1 => 'Féminin',
         2 => 'Masculin',
         97 => 'Autre',
-        99 => 'Non renseigné',
+        99 => 'Non évalué',
     ];
 
     public const CIVILITY = [

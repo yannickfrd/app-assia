@@ -75,7 +75,9 @@
 									</td>
 									<td class="align-middle js-startDate text-center">
 										{% if contribution.startDate %}
+											{% set nbDays = contribution.nbDays %}
 											{{ contribution.startDate|date("d/m/Y") }} - {{ contribution.endDate|date("d/m/Y") }}
+											({{ nbDays }}&nbsp;jour{{ nbDays > 1 ? "s"}})
 										{% endif %}
 									</td>
 									<td class="align-middle text-right js-toPayAmt">{{ contribution.toPayAmt >= 0 ? contribution.toPayAmt|price }}</td>

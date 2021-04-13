@@ -26,7 +26,7 @@ class EvalJusticePerson
         13 => "Travail d'intérêt général (TIG)",
         97 => 'Autre',
         98 => 'Non concerné',
-        99 => 'Non renseigné',
+        99 => 'Non évalué',
     ];
 
     public const JUSTICE_ACT = [
@@ -47,7 +47,7 @@ class EvalJusticePerson
         15 => "Travail d'intérêt général (TIG)",
         97 => 'Autre',
         98 => 'Non concerné',
-        99 => 'Non renseigné',
+        99 => 'Non évalué',
     ];
 
     /**

@@ -40,7 +40,7 @@ class Contribution
         1 => 'Virement',
         3 => 'Chèque',
         4 => 'Espèce',
-        99 => 'Non renseigné',
+        99 => 'Non évalué',
     ];
 
     /**
@@ -236,13 +236,13 @@ class Contribution
         return $this;
     }
 
-    public function getNbDays(): int
+    public function getNbDays(): ?int
     {
-        if ($this->monthContrib && $this->getStartDate()) {
+        if ($this->getEndDate() >= $this->getStartDate()) {
             return $this->getStartDate()->diff($this->getEndDate())->days + 1;
         }
 
-        return 0;
+        return null;
     }
 
     public function getResourcesAmt(): ?float

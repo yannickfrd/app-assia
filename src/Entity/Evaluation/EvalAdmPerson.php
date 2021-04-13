@@ -16,7 +16,7 @@ class EvalAdmPerson
         2 => 'Union-Européenne',
         3 => 'Hors-UE',
         4 => 'Apatride',
-        99 => 'Non renseignée',
+        99 => 'Non évaluée',
     ];
 
     public const PAPER_TYPE = [
@@ -31,7 +31,7 @@ class EvalAdmPerson
         30 => 'Récépissé première demande',
         31 => 'Récépissé renouvellement de titre',
         97 => 'Autre',
-        99 => 'Non renseigné',
+        99 => 'Non évalué',
     ];
 
     public const RIGHT_TO_RESIDE = [
@@ -40,7 +40,7 @@ class EvalAdmPerson
         3 => 'Protection subsidiaire',
         4 => 'Réfugié',
         97 => 'Autre',
-        99 => 'Non renseigné',
+        99 => 'Non évalué',
     ];
 
     /**
