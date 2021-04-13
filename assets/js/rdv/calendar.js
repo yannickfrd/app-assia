@@ -249,6 +249,7 @@ export default class Calendar {
      * @param {Object} data 
      */
     responseAjax(data) {
+        console.log(data.rdv)
         if (data.code === 200) {
             if (data.action === 'show') {
                 this.showRdv(data.rdv)
@@ -290,7 +291,15 @@ export default class Calendar {
         this.modalRdvElt.querySelector('#rdv_content').value = rdv.content ? rdv.content : ''
 
         this.infoRdvElt.innerHTML = this.getInfoRdvElt(rdv)
-        this.rdvTitleElt.textContent = 'RDV' + (rdv.fullnameSupport ? ' | ' + rdv.fullnameSupport : '')
+        
+        const title = 'RDV' + (rdv.fullnameSupport ? ' | ' + rdv.fullnameSupport : '')
+        this.rdvTitleElt.textContent = title
+
+        if (rdv.supportId) {
+            const href = this.rdvTitleElt.getAttribute('data-url').replace('__id__', rdv.supportId)
+            const aElt = `<a href="${href}" class="text-${this.themeColor}" title="Accéder au suivi">${title}</a>`
+            this.rdvTitleElt.innerHTML = aElt
+        }
 
         if (rdv.canEdit) {
             this.btnDeleteElt.href = `/rdv/${this.rdvId}/delete` 

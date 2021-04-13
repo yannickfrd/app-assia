@@ -216,6 +216,7 @@ class RdvController extends AbstractController
                 'location' => $rdv->getLocation(),
                 'status' => $rdv->getStatus(),
                 'content' => $rdv->getContent(),
+                'supportId' => $rdv->getSupportGroup() ? $rdv->getSupportGroup()->getId() : null,
                 'createdBy' => $rdv->getCreatedBy()->getFullname(),
                 'createdAt' => $rdv->getCreatedAt()->format('d/m/Y à H:i'),
                 'updatedBy' => $rdv->getUpdatedBy()->getFullname(),
@@ -271,7 +272,7 @@ class RdvController extends AbstractController
     {
         // Si filtre ou tri utilisé, n'utilise pas le cache.
         if ($request->query->count() > 0) {
-            return  $pagination->paginate($this->repo->findRdvsQueryOfSupport($supportGroup->getId(), $search), $request);
+            return $pagination->paginate($this->repo->findRdvsQueryOfSupport($supportGroup->getId(), $search), $request);
         }
 
         // Sinon, récupère les rendez-vous en cache.
