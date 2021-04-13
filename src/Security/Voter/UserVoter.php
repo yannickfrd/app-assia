@@ -10,6 +10,7 @@ class UserVoter extends Voter
 {
     use VoterTrait;
 
+    /** @var User */
     protected $user;
 
     protected function supports($attribute, $subject)
@@ -72,7 +73,7 @@ class UserVoter extends Voter
         if ($this->isGranted('ROLE_ADMIN')) {
             foreach ($this->user->getServices() as $serviceCurrentUser) {
                 foreach ($user->getServices() as $service) {
-                    if ($service->getId() === $serviceCurrentUser->getService()->getId()) {
+                    if ($service->getId() === $serviceCurrentUser->getId()) {
                         return true;
                     }
                 }
