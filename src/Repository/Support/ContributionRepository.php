@@ -6,6 +6,7 @@ use App\Entity\Support\Contribution;
 use App\Entity\Support\SupportGroup;
 use App\Form\Model\Support\ContributionSearch;
 use App\Form\Model\Support\SupportContributionSearch;
+use App\Repository\Traits\QueryTrait;
 use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
@@ -20,6 +21,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ContributionRepository extends ServiceEntityRepository
 {
+    use QueryTrait;
+
     private $currentUser;
 
     public function __construct(ManagerRegistry $registry, CurrentUserService $currentUser)
@@ -61,7 +64,7 @@ class ContributionRepository extends ServiceEntityRepository
             $query = $this->filter($query, $search);
         }
 
-        return  $query->orderBy('c.startDate', 'DESC')
+        return $query->orderBy('c.startDate', 'DESC')
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
 
@@ -107,7 +110,7 @@ class ContributionRepository extends ServiceEntityRepository
 
         $query = $this->filter($query, $search);
 
-        return  $query->orderBy('c.startDate', 'DESC')
+        return $query->orderBy('c.startDate', 'DESC')
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
@@ -201,41 +204,7 @@ class ContributionRepository extends ServiceEntityRepository
                 ->setParameter('fullname', '%'.$search->getFullname().'%');
             }
 
-            if ($search->getReferents() && $search->getReferents()->count()) {
-                $expr = $query->expr();
-                $orX = $expr->orX();
-                foreach ($search->getReferents() as $referent) {
-                    $orX->add($expr->eq('sg.referent', $referent));
-                }
-                $query->andWhere($orX);
-            }
-
-            if ($search->getPoles() && count($search->getPoles())) {
-                $expr = $query->expr();
-                $orX = $expr->orX();
-                foreach ($search->getPoles() as $pole) {
-                    $orX->add($expr->eq('s.pole', $pole));
-                }
-                $query->andWhere($orX);
-            }
-
-            if ($search->getServices() && $search->getServices()->count()) {
-                $expr = $query->expr();
-                $orX = $expr->orX();
-                foreach ($search->getServices() as $service) {
-                    $orX->add($expr->eq('sg.service', $service));
-                }
-                $query->andWhere($orX);
-            }
-
-            if ($search->getDevices() && $search->getDevices()->count()) {
-                $expr = $query->expr();
-                $orX = $expr->orX();
-                foreach ($search->getDevices() as $device) {
-                    $orX->add($expr->eq('sg.device', $device));
-                }
-                $query->andWhere($orX);
-            }
+            $query = $this->addOrganizationFilters($query, $search);
         }
 
         return $query;
@@ -280,32 +249,28 @@ class ContributionRepository extends ServiceEntityRepository
 
             foreach ($criteria as $key => $value) {
                 if ('service' === $key) {
-                    $query = $query->andWhere('sg.service = :service')
-                        ->setParameter('service', $value);
+                    $query = $this->addOrWhere($query, 'sg.service', $value);
                 }
                 if ('subService' === $key) {
-                    $query = $query->andWhere('sg.subService = :subService')
-                        ->setParameter('subService', $value);
+                    $query = $this->addOrWhere($query, 'sg.subService', $value);
                 }
                 if ('device' === $key) {
-                    $query = $query->andWhere('sg.device = :device')
-                        ->setParameter('device', $value);
+                    $query = $this->addOrWhere($query, 'sg.device', $value);
+                }
+                if ('status' === $key) {
+                    $query = $this->addOrWhere($query, 'sg.status', $value);
                 }
                 if ('startDate' === $key) {
                     $query = $query->andWhere('c.createdAt >= :startDate')
-                            ->setParameter('startDate', $value);
+                        ->setParameter('startDate', $value);
                 }
                 if ('endDate' === $key) {
                     $query = $query->andWhere('c.createdAt <= :endDate')
-                            ->setParameter('endDate', $value);
+                        ->setParameter('endDate', $value);
                 }
                 if ('createdBy' === $key) {
                     $query = $query->andWhere('c.createdBy = :createdBy')
                         ->setParameter('createdBy', $value);
-                }
-                if ('status' === $key) {
-                    $query = $query->andWhere('sg.status = :status')
-                        ->setParameter('status', $value);
                 }
             }
         }

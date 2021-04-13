@@ -6,8 +6,10 @@ use App\Entity\Organization\Device;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\User;
 use App\Form\Model\Admin\OccupancySearch;
+use App\Form\Model\Admin\ServiceIndicatorsSearch;
 use App\Form\Model\Organization\ServiceSearch;
 use App\Form\Utils\Choices;
+use App\Repository\Traits\QueryTrait;
 use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
@@ -22,6 +24,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ServiceRepository extends ServiceEntityRepository
 {
+    use QueryTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Service::class);
@@ -186,5 +190,15 @@ class ServiceRepository extends ServiceEntityRepository
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
+    }
+
+    public function findServices(ServiceIndicatorsSearch $search)
+    {
+        $query = $this->createQueryBuilder('s')->select('s');
+
+        $query = $this->addPolesFilter($query, $search);
+
+        return $query->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
     }
 }

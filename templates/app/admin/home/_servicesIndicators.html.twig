@@ -18,7 +18,6 @@
                             "Nb de demandes SIAO",
                             "Nb de DLS",
                         ] %}
-                            {# "Nb de notes", "Nb de rendez-vous", "Nb de documents", "Nb de paiements", #}
                         {% for item in items %}
                             <th class="align-middle text-right th-w-100 w-min-80">{{ item }}</th>
                         {% endfor %}
@@ -29,10 +28,10 @@
                 {% set sumActiveSupports = 0 %}
                 {% set sumActiveSupportsPeople = 0 %}
                     {% for service_id, service in servicesIndicators %}  
-                        {% set activeSupports = service["activeSupportsGroups"] %}
-                        {% if activeSupports > 0 %}
-                            {% set sumActiveSupports = sumActiveSupports + activeSupports %}
-                            {% set sumActiveSupportsPeople = sumActiveSupportsPeople + service["activeSupportsPeople"] %}
+                        {% set nbActiveSupports = service["nbActiveSupportsGroups"] %}
+                        {% if nbActiveSupports > 0 %}
+                            {% set sumActiveSupports = sumActiveSupports + nbActiveSupports %}
+                            {% set sumActiveSupportsPeople = sumActiveSupportsPeople + service["nbActiveSupportsPeople"] %}
                             {% set nbTrCollapsed = service.subServices|length + service.devices|length %}
                             <tr class="{{ nbTrCollapsed ? 'cursor-pointer' }}" data-toggle="collapse" data-target=".multi-collapse-service-{{ service_id }}" 
                                 aria-expanded="false" aria-controls="multi-collapse-service-{{ service_id }}">
@@ -45,28 +44,23 @@
                                 <td class="align-middle"><span class="font-weight-bold">{{ service["name"] }}</span>
                                     {% if nbTrCollapsed %}<span class="badge badge-pill badge-secondary">{{ nbTrCollapsed }}</span>{% endif %}
                                 </td>
-                                <td class="align-middle text-right">{{ activeSupports|number }}</td>
-                                <td class="align-middle text-right">{{ service["activeSupportsPeople"]|number }}</td>
-                                {# <td class="align-middle text-right">{{ service["avgSupportsByUser"] }}</td> #}
+                                <td class="align-middle text-right">{{ nbActiveSupports|number }}</td>
+                                <td class="align-middle text-right">{{ service["nbActiveSupportsPeople"]|number }}</td>
                                 <td class="align-middle text-right">{{ service["avgTimeSupport"]|number }} jours</td>
                                 <td class="align-middle text-right">{{ service["siaoRequest"]|number }}<br/>
-                                    <span class="text-secondary font-italic">{{ activeSupports ? 
-                                        ((service["siaoRequest"] / activeSupports) * 100)|percent(0) }}
+                                    <span class="text-secondary font-italic">{{ nbActiveSupports ? 
+                                        ((service["siaoRequest"] / nbActiveSupports) * 100)|percent(0) }}
                                     </span>
                                 </td>
                                 <td class="align-middle text-right">{{ service["socialHousingRequest"] }}<br/>
-                                    <span class="text-secondary font-italic">{{ activeSupports ? 
-                                        ((service["socialHousingRequest"] / activeSupports) * 100)|percent(0) }}
+                                    <span class="text-secondary font-italic">{{ nbActiveSupports ? 
+                                        ((service["socialHousingRequest"] / nbActiveSupports) * 100)|percent(0) }}
                                     </span>
                                 </td>
                                 <td></td>
-                                {# <td class="align-middle text-right">{{ service["notes"]|number }}</td>
-                                <td class="align-middle text-right">{{ service["rdvs"]|number }}</td>
-                                <td class="align-middle text-right">{{ service["documents"]|number }}</td>
-                                <td class="align-middle text-right">{{ service["contributions"]|number }}</td> #}
                             </tr>
                             {% for sub_service_id, sub_service in service.subServices %}
-                                {% set activeSupports = sub_service["activeSupportsGroups"] %}
+                                {% set nbActiveSupports = sub_service["nbActiveSupportsGroups"] %}
                                 <tr class="collapse multi-collapse-service-{{ service_id }}" id="multi-collapse-service-{{ service_id }}">
                                     <td scope="row" class="align-middle text-center">
                                         <a href="{{ path('supports', {'status': [2], 'service': {'services': [service_id], 'subServices': [sub_service_id]}, 'head': true}) }}" 
@@ -75,28 +69,23 @@
                                         </a>
                                     </td>
                                     <td class="align-middle">{{ service["name"] }}<span class="fa fa-chevron-right mx-1"></span>{{ sub_service["name"] }}</td>
-                                    <td class="align-middle text-right">{{ activeSupports }}</td>
-                                    <td class="align-middle text-right">{{ sub_service["activeSupportsPeople"] }}</td>
-                                    {# <td class="align-middle text-right">{{ sub_service["avgSupportsByUser"] }}</td> #}
+                                    <td class="align-middle text-right">{{ nbActiveSupports }}</td>
+                                    <td class="align-middle text-right">{{ sub_service["nbActiveSupportsPeople"] }}</td>
                                     <td class="align-middle text-right">{{ sub_service["avgTimeSupport"]|number }} jours</td>
                                     <td class="align-middle text-right">{{ sub_service["siaoRequest"] }}<br/>
-                                        <span class="text-secondary font-italic">{{ activeSupports ? 
-                                            ((sub_service["siaoRequest"] / activeSupports) * 100)|percent(0) }}
+                                        <span class="text-secondary font-italic">{{ nbActiveSupports ? 
+                                            ((sub_service["siaoRequest"] / nbActiveSupports) * 100)|percent(0) }}
                                         </span>
                                     </td>
                                     <td class="align-middle text-right">{{ sub_service["socialHousingRequest"] }}<br/>
-                                        <span class="text-secondary font-italic">{{ activeSupports ? 
-                                            ((sub_service["socialHousingRequest"] / activeSupports) * 100)|percent(0) }}
+                                        <span class="text-secondary font-italic">{{ nbActiveSupports ? 
+                                            ((sub_service["socialHousingRequest"] / nbActiveSupports) * 100)|percent(0) }}
                                         </span>
                                     </td>
-                                    {# <td class="align-middle text-right">{{ sub_service["notes"]|number }}</td>
-                                    <td class="align-middle text-right">{{ sub_service["rdvs"]|number }}</td>
-                                    <td class="align-middle text-right">{{ sub_service["documents"]|number }}</td>
-                                    <td class="align-middle text-right">{{ sub_service["contributions"]|number }}</td> #}
                                 </tr>
                             {% endfor %}
                             {% for device_id, device in service.devices %}
-                                {% set activeSupports = device["activeSupportsGroups"] %}
+                                {% set nbActiveSupports = device["nbActiveSupportsGroups"] %}
                                 <tr class="text-secondary collapse multi-collapse-service-{{ service_id }}" id="multi-collapse-service-{{ service_id }}">
                                     <td scope="row" class="align-middle text-center">
                                         <a href="{{ path('supports', {'status': [2], 'service': {'services': [service_id], 'devices': [device_id]}, 'head': true}) }}" 
@@ -105,24 +94,19 @@
                                         </a>
                                     </td>
                                     <td class="align-middle">{{ service["name"] }}<span class="fa fa-chevron-right mx-1"></span>{{ device["name"] }}</td>
-                                    <td class="align-middle text-right">{{ activeSupports }}</td>
-                                    <td class="align-middle text-right">{{ device["activeSupportsPeople"] }}</td>
-                                    {# <td class="align-middle text-right">{{ device["avgSupportsByUser"] }}</td> #}
+                                    <td class="align-middle text-right">{{ nbActiveSupports }}</td>
+                                    <td class="align-middle text-right">{{ device["nbActiveSupportsPeople"] }}</td>
                                     <td class="align-middle text-right">{{ device["avgTimeSupport"]|number }} jours</td>
                                     <td class="align-middle text-right">{{ device["siaoRequest"] }}<br/>
-                                        <span class="text-secondary font-italic">{{ activeSupports ? 
-                                            ((device["siaoRequest"] / activeSupports) * 100)|percent(0) }}
+                                        <span class="text-secondary font-italic">{{ nbActiveSupports ? 
+                                            ((device["siaoRequest"] / nbActiveSupports) * 100)|percent(0) }}
                                         </span>
                                     </td>
                                     <td class="align-middle text-right">{{ device["socialHousingRequest"] }}<br/>
-                                        <span class="text-secondary font-italic">{{ activeSupports ? 
-                                            ((device["socialHousingRequest"] / activeSupports) * 100)|percent(0) }}
+                                        <span class="text-secondary font-italic">{{ nbActiveSupports ? 
+                                            ((device["socialHousingRequest"] / nbActiveSupports) * 100)|percent(0) }}
                                         </span>
                                     </td>
-                                    {# <td class="align-middle text-right">{{ device["notes"]|number }}</td>
-                                    <td class="align-middle text-right">{{ device["rdvs"]|number }}</td>
-                                    <td class="align-middle text-right">{{ device["documents"]|number }}</td>
-                                    <td class="align-middle text-right">{{ device["contributions"]|number }}</td> #}
                                 </tr>
                             {% endfor %}
                         {% endif %}

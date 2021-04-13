@@ -2,19 +2,22 @@
 
 namespace App\Controller\Admin;
 
-use App\Controller\Traits\ErrorMessageTrait;
-use App\Form\Model\Support\SupportSearch;
-use App\Form\Support\Support\SupportSearchType;
-use App\Repository\Admin\IndicatorRepository;
-use App\Repository\Support\SupportPersonRepository;
-use App\Service\Indicators\SocialIndicators;
 use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Form\Model\Support\SupportSearch;
+use App\Controller\Traits\ErrorMessageTrait;
+use App\Service\Indicators\ServiceIndicator;
+use App\Service\Indicators\SocialIndicators;
+use App\Repository\Admin\IndicatorRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Form\Admin\ServiceIndicatorsSearchType;
+use App\Form\Model\Admin\ServiceIndicatorsSearch;
+use App\Form\Support\Support\SupportSearchType;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\Support\SupportPersonRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class IndicatorController extends AbstractController
 {
@@ -39,6 +42,24 @@ class IndicatorController extends AbstractController
     {
         return $this->render('app/admin/indicator/dailyIndicators.html.twig', [
             'indicators' => $pagination->paginate($this->repo->findIndicatorsQuery(), $request, 30),
+        ]);
+    }
+
+    /**
+     * Indicateurs d'actvitié quotidiens.
+     *
+     * @Route("indicator/services", name="indicator_services", methods="GET|POST")
+     * @IsGranted("ROLE_SUPER_ADMIN")
+     */
+    public function showServiceIndicators(Request $request, ServiceIndicator $indicators): Response
+    {
+        $form = ($this->createForm(ServiceIndicatorsSearchType::class, $search = new ServiceIndicatorsSearch()))
+            ->handleRequest($request);
+
+        return $this->render('app/admin/indicator/servicesIndicators.html.twig', [
+            'search' => $search,
+            'form' => $form->createView(),
+            'servicesIndicators' => $indicators->getServicesIndicators($search),
         ]);
     }
 

@@ -9,6 +9,7 @@ use App\Entity\Support\SupportPerson;
 use App\Form\Model\Support\AvdlSupportSearch;
 use App\Form\Model\Support\HotelSupportSearch;
 use App\Form\Model\Support\SupportSearch;
+use App\Repository\Traits\QueryTrait;
 use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
@@ -23,6 +24,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class SupportPersonRepository extends ServiceEntityRepository
 {
+    use QueryTrait;
+
     private $currentUser;
 
     public function __construct(ManagerRegistry $registry, CurrentUserService $currentUser)
@@ -138,12 +141,7 @@ class SupportPersonRepository extends ServiceEntityRepository
         $query = $this->filters($query, $search);
 
         if ($search->getHotels()) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getHotels() as $hotel) {
-                $orX->add($expr->eq('pg.place', $hotel));
-            }
-            $query->andWhere($orX);
+            $query = $this->addOrWhere($query, 'pg.place', $search->getHotels());
         }
 
         if ($search->getLevelSupport()) {
@@ -316,58 +314,10 @@ class SupportPersonRepository extends ServiceEntityRepository
             }
         }
 
-        if ($search->getPoles() && $search->getPoles()->count()) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getPoles() as $pole) {
-                $orX->add($expr->eq('s.pole', $pole));
-            }
-            $query->andWhere($orX);
-        }
-
-        if ($search->getServices() && $search->getServices()->count()) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getServices() as $service) {
-                $orX->add($expr->eq('sg.service', $service));
-            }
-            $query->andWhere($orX);
-        }
-
-        if ($search->getSubServices() && $search->getSubServices()->count()) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getSubServices() as $subService) {
-                $orX->add($expr->eq('sg.subService', $subService));
-            }
-            $query->andWhere($orX);
-        }
-
-        if ($search->getDevices() && $search->getDevices()->count()) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getDevices() as $device) {
-                $orX->add($expr->eq('sg.device', $device));
-            }
-            $query->andWhere($orX);
-        }
-
-        if ($search->getReferents() && $search->getReferents()->count()) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getReferents() as $referent) {
-                $orX->add($expr->eq('sg.referent', $referent));
-            }
-            $query->andWhere($orX);
-        }
+        $query = $this->addOrganizationFilters($query, $search);
 
         if ($search->getStatus()) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getStatus() as $status) {
-                $orX->add($expr->eq('sg.status', $status));
-            }
-            $query->andWhere($orX);
+            $query = $this->addOrWhere($query, 'sg.status', $search->getStatus());
         }
 
         $supportDates = $search->getSupportDates();
@@ -406,12 +356,7 @@ class SupportPersonRepository extends ServiceEntityRepository
         }
 
         if ($search->getFamilyTypologies()) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getFamilyTypologies() as $familyTypology) {
-                $orX->add($expr->eq('g.familyTypology', $familyTypology));
-            }
-            $query->andWhere($orX);
+            $query = $this->addOrWhere($query, 'g.familyTypology', $search->getFamilyTypologies());
         }
 
         return $query;
@@ -426,12 +371,7 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->leftJoin('sp.supportGroup', 'sg')
             ->leftJoin('sp.person', 'p');
 
-        $expr = $query->expr();
-        $orX = $expr->orX();
-        foreach ($peopleGroup->getPeople() as $person) {
-            $orX->add($expr->eq('p.id', $person->getId()));
-        }
-        $query->andWhere($orX);
+        $query = $this->addOrWhere($query, 'p.id', $peopleGroup->getPeople());
 
         if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             $query = $query->andWhere('sg.service IN (:services)')

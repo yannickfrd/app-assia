@@ -7,6 +7,7 @@ use App\Entity\Support\Rdv;
 use App\Entity\Support\SupportGroup;
 use App\Form\Model\Support\RdvSearch;
 use App\Form\Model\Support\SupportRdvSearch;
+use App\Repository\Traits\QueryTrait;
 use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
@@ -21,6 +22,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class RdvRepository extends ServiceEntityRepository
 {
+    use QueryTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Rdv::class);
@@ -122,50 +125,7 @@ class RdvRepository extends ServiceEntityRepository
                 ->setParameter('end', $search->getEnd());
         }
 
-        if ($search->getPoles() && count($search->getPoles())) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getPoles() as $pole) {
-                $orX->add($expr->eq('s.pole', $pole));
-            }
-            $query->andWhere($orX);
-        }
-
-        if ($search->getServices() && count($search->getServices())) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getServices() as $service) {
-                $orX->add($expr->eq('sg.service', $service));
-            }
-            $query->andWhere($orX);
-        }
-
-        if ($search->getSubServices() && count($search->getSubServices())) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getSubServices() as $subService) {
-                $orX->add($expr->eq('sg.subService', $subService));
-            }
-            $query->andWhere($orX);
-        }
-
-        if ($search->getDevices() && count($search->getDevices())) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getDevices() as $device) {
-                $orX->add($expr->eq('sg.device', $device));
-            }
-            $query->andWhere($orX);
-        }
-
-        if ($search->getReferents() && count($search->getReferents())) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getReferents() as $referent) {
-                $orX->add($expr->eq('sg.referent', $referent));
-            }
-            $query->andWhere($orX);
-        }
+        $query = $this->addOrganizationFilters($query, $search);
 
         return $query;
     }
@@ -317,32 +277,28 @@ class RdvRepository extends ServiceEntityRepository
 
             foreach ($criteria as $key => $value) {
                 if ('service' === $key) {
-                    $query = $query->andWhere('sg.service = :service')
-                        ->setParameter('service', $value);
+                    $query = $this->addOrWhere($query, 'sg.service', $value);
                 }
                 if ('subService' === $key) {
-                    $query = $query->andWhere('sg.subService = :subService')
-                        ->setParameter('subService', $value);
+                    $query = $this->addOrWhere($query, 'sg.subService', $value);
                 }
                 if ('device' === $key) {
-                    $query = $query->andWhere('sg.device = :device')
-                        ->setParameter('device', $value);
+                    $query = $this->addOrWhere($query, 'sg.device', $value);
+                }
+                if ('status' === $key) {
+                    $query = $this->addOrWhere($query, 'sg.status', $value);
                 }
                 if ('startDate' === $key) {
                     $query = $query->andWhere('rdv.createdAt >= :startDate')
-                            ->setParameter('startDate', $value);
+                        ->setParameter('startDate', $value);
                 }
                 if ('endDate' === $key) {
                     $query = $query->andWhere('rdv.createdAt <= :endDate')
-                            ->setParameter('endDate', $value);
+                        ->setParameter('endDate', $value);
                 }
                 if ('createdBy' === $key) {
                     $query = $query->andWhere('rdv.createdBy = :createdBy')
                         ->setParameter('createdBy', $value);
-                }
-                if ('status' === $key) {
-                    $query = $query->andWhere('sg.status = :status')
-                        ->setParameter('status', $value);
                 }
             }
         }

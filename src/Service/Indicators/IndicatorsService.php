@@ -117,8 +117,8 @@ class IndicatorsService
 
         foreach ($service->getSubServices() as $subService) {
             $criteria = [
-                'subService' => $subService,
-                'status' => SupportGroup::STATUS_IN_PROGRESS,
+                'subService' => [$subService],
+                'status' => [SupportGroup::STATUS_IN_PROGRESS],
             ];
 
             $nbActiveSupportsGroups = $this->repoSupportGroup->count($criteria);
@@ -144,8 +144,8 @@ class IndicatorsService
 
         foreach ($service->getDevices() as $device) {
             $criteria = [
-                'device' => $device,
-                'status' => SupportGroup::STATUS_IN_PROGRESS,
+                'device' => [$device],
+                'status' => [SupportGroup::STATUS_IN_PROGRESS],
             ];
 
             $nbActiveSupportsGroups = $this->repoSupportGroup->count($criteria);
@@ -289,32 +289,27 @@ class IndicatorsService
     protected function getServiceDatas(Service $service): array
     {
         $criteria = [
-            'service' => $service,
-            'status' => SupportGroup::STATUS_IN_PROGRESS,
+            'service' => [$service],
+            'status' => [SupportGroup::STATUS_IN_PROGRESS],
         ];
 
         $nbActiveSupportsGroups = $this->repoSupportGroup->count($criteria);
 
         return [
             'name' => $service->getName(),
-            'activeSupportsGroups' => $nbActiveSupportsGroups,
-            'activeSupportsPeople' => $this->repoSupportPerson->countSupportPeople($criteria),
+            'nbActiveSupportsGroups' => $nbActiveSupportsGroups,
+            'nbActiveSupportsPeople' => $this->repoSupportPerson->countSupportPeople($criteria),
             'avgTimeSupport' => $this->repoSupportGroup->avgTimeSupport($criteria),
-            // 'avgSupportsByUser' => $this->repoSupportGroup->avgSupportsByUser($criteria),
             'siaoRequest' => $this->repoSupportGroup->countSupports([
-                'service' => $service,
-                'status' => SupportGroup::STATUS_IN_PROGRESS,
+                'service' => [$service],
+                'status' => [SupportGroup::STATUS_IN_PROGRESS],
                 'siaoRequest' => Choices::YES,
             ]),
             'socialHousingRequest' => $this->repoSupportGroup->countSupports([
-                'service' => $service,
-                'status' => SupportGroup::STATUS_IN_PROGRESS,
+                'service' => [$service],
+                'status' => [SupportGroup::STATUS_IN_PROGRESS],
                 'socialHousingRequest' => Choices::YES,
             ]),
-            // 'notes' => $this->repoNote->countNotes($criteria),
-            // 'rdvs' => $this->repoRdv->countRdvs($criteria),
-            // 'documents' => $this->repoDocument->countDocuments($criteria),
-            // 'contributions' => $this->repoContribution->countContributions($criteria),
             'devices' => $this->getDevicesIndicators($service),
             'subServices' => $this->getSubServicesIndicators($service),
         ];
@@ -327,24 +322,19 @@ class IndicatorsService
     {
         return [
             'name' => $subService->getName(),
-            'activeSupportsGroups' => $nbActiveSupportsGroups,
-            'activeSupportsPeople' => $this->repoSupportPerson->countSupportPeople($criteria),
+            'nbActiveSupportsGroups' => $nbActiveSupportsGroups,
+            'nbActiveSupportsPeople' => $this->repoSupportPerson->countSupportPeople($criteria),
             'avgTimeSupport' => $this->repoSupportGroup->avgTimeSupport($criteria),
-            // 'avgSupportsByUser' => $this->repoSupportGroup->avgSupportsByUser($criteria),
             'siaoRequest' => $this->repoSupportGroup->countSupports([
                 'subService' => $subService,
-                'status' => SupportGroup::STATUS_IN_PROGRESS,
+                'status' => [SupportGroup::STATUS_IN_PROGRESS],
                 'siaoRequest' => Choices::YES,
             ]),
             'socialHousingRequest' => $this->repoSupportGroup->countSupports([
                 'subService' => $subService,
-                'status' => SupportGroup::STATUS_IN_PROGRESS,
+                'status' => [SupportGroup::STATUS_IN_PROGRESS],
                 'socialHousingRequest' => Choices::YES,
             ]),
-            // 'notes' => $this->repoNote->countNotes($criteria),
-            // 'rdvs' => $this->repoRdv->countRdvs($criteria),
-            // 'documents' => $this->repoDocument->countDocuments($criteria),
-            // 'contributions' => $this->repoContribution->countContributions($criteria),
         ];
     }
 
@@ -355,24 +345,19 @@ class IndicatorsService
     {
         return [
             'name' => $device->getName(),
-            'activeSupportsGroups' => $nbActiveSupportsGroups,
-            'activeSupportsPeople' => $this->repoSupportPerson->countSupportPeople($criteria),
+            'nbActiveSupportsGroups' => $nbActiveSupportsGroups,
+            'nbActiveSupportsPeople' => $this->repoSupportPerson->countSupportPeople($criteria),
             'avgTimeSupport' => $this->repoSupportGroup->avgTimeSupport($criteria),
-            // 'avgSupportsByUser' => $this->repoSupportGroup->avgSupportsByUser($criteria),
             'siaoRequest' => $this->repoSupportGroup->countSupports([
-                'device' => $device,
-                'status' => SupportGroup::STATUS_IN_PROGRESS,
+                'device' => [$device],
+                'status' => [SupportGroup::STATUS_IN_PROGRESS],
                 'siaoRequest' => Choices::YES,
             ]),
             'socialHousingRequest' => $this->repoSupportGroup->countSupports([
-                'device' => $device,
-                'status' => SupportGroup::STATUS_IN_PROGRESS,
+                'device' => [$device],
+                'status' => [SupportGroup::STATUS_IN_PROGRESS],
                 'socialHousingRequest' => Choices::YES,
             ]),
-            // 'notes' => $this->repoNote->countNotes($criteria),
-            // 'rdvs' => $this->repoRdv->countRdvs($criteria),
-            // 'documents' => $this->repoDocument->countDocuments($criteria),
-            // 'contributions' => $this->repoContribution->countContributions($criteria),
         ];
     }
 
@@ -384,14 +369,14 @@ class IndicatorsService
         return [
             'id' => $user->getId(),
             'name' => $user->getFullname(),
-            'activeSupports' => $this->repoSupportGroup->count([
+            'nbActiveSupports' => $this->repoSupportGroup->count([
                 'referent' => $user,
                 'status' => SupportGroup::STATUS_IN_PROGRESS,
             ]),
-            'notes' => $this->repoNote->count(['createdBy' => $user]),
-            'rdvs' => $this->repoRdv->count(['createdBy' => $user]),
-            'documents' => $this->repoDocument->count(['createdBy' => $user]),
-            'contributions' => $this->repoContribution->count(['createdBy' => $user]),
+            'nbNotes' => $this->repoNote->count(['createdBy' => $user]),
+            'nbRvs' => $this->repoRdv->count(['createdBy' => $user]),
+            'nbDocuments' => $this->repoDocument->count(['createdBy' => $user]),
+            'nbContributions' => $this->repoContribution->count(['createdBy' => $user]),
         ];
     }
 

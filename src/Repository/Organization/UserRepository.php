@@ -6,6 +6,7 @@ use App\Entity\Organization\Service;
 use App\Entity\Organization\User;
 use App\Form\Model\Organization\UserSearch;
 use App\Form\Utils\Choices;
+use App\Repository\Traits\QueryTrait;
 use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
@@ -20,6 +21,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class UserRepository extends ServiceEntityRepository
 {
+    use QueryTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
@@ -131,31 +134,11 @@ class UserRepository extends ServiceEntityRepository
         }
 
         if ($search->getStatus()) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getStatus() as $status) {
-                $orX->add($expr->eq('u.status', $status));
-            }
-            $query->andWhere($orX);
+            $query = $this->addOrWhere($query, 'u.status', $search->getStatus());
         }
 
-        if ($search->getPoles()->count()) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getPoles() as $pole) {
-                $orX->add($expr->eq('p.id', $pole));
-            }
-            $query->andWhere($orX);
-        }
-
-        if ($search->getServices()->count()) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getServices() as $service) {
-                $orX->add($expr->eq('s.id', $service));
-            }
-            $query->andWhere($orX);
-        }
+        $query = $this->addPolesFilter($query, $search);
+        $query = $this->addServicesFilter($query, $search);
 
         if ($user && in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
             $query = $query->orderBy('u.lastActivityAt', 'DESC');

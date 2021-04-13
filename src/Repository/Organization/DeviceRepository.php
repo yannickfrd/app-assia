@@ -8,6 +8,7 @@ use App\Form\Model\Admin\OccupancySearch;
 use App\Form\Model\Organization\DeviceSearch;
 use App\Form\Model\Support\SupportsByUserSearch;
 use App\Form\Utils\Choices;
+use App\Repository\Traits\QueryTrait;
 use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
@@ -21,6 +22,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class DeviceRepository extends ServiceEntityRepository
 {
+    use QueryTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Device::class);
@@ -168,23 +171,8 @@ class DeviceRepository extends ServiceEntityRepository
                 ->setParameter('services', $currentUser->getServices());
         }
 
-        if ($search->getServices() && $search->getServices()->count() > 0) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getServices() as $service) {
-                $orX->add($expr->eq('sd.service', $service));
-            }
-            $query->andWhere($orX);
-        }
-
-        if ($search->getDevices() && $search->getDevices()->count() > 0) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getDevices() as $device) {
-                $orX->add($expr->eq('sd.device', $device));
-            }
-            $query->andWhere($orX);
-        }
+        $query = $this->addServicesFilter($query, $search);
+        $query = $this->addDevicesFilter($query, $search);
 
         return $query
             ->orderBy('d.name', 'ASC')

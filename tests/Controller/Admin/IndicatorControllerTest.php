@@ -7,6 +7,7 @@ use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
 
 class IndicatorControllerTest extends WebTestCase
@@ -45,6 +46,32 @@ class IndicatorControllerTest extends WebTestCase
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Indicateurs quotidiens d\'activité');
+    }
+
+    public function testIndicatorServicesPageIsUp()
+    {
+        $this->client->request('GET', 'indicator/services');
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', 'Indicateurs d\'activité des services');
+    }
+
+    public function testSearchIndicatorServicesIsSuccessful()
+    {
+        /** @var Crawler */
+        $crawler = $this->client->request('GET', 'indicator/services');
+
+        $now = new \DateTime();
+        $form = $crawler->selectButton('search')->form([
+            'status' => [SupportGroup::STATUS_IN_PROGRESS],
+            'date[start]' => (clone $now)->modify('-1 year')->format('Y-m-d'),
+            'date[end]' => $now->format('Y-m-d'),
+        ]);
+
+        $this->client->submit($form);
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('tr>td>span', 'CHRS XXX');
     }
 
     protected function tearDown(): void

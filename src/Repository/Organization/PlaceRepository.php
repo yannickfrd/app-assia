@@ -9,6 +9,7 @@ use App\Entity\Support\SupportGroup;
 use App\Form\Model\Admin\OccupancySearch;
 use App\Form\Model\Organization\PlaceSearch;
 use App\Form\Utils\Choices;
+use App\Repository\Traits\QueryTrait;
 use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
@@ -23,6 +24,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class PlaceRepository extends ServiceEntityRepository
 {
+    use QueryTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Place::class);
@@ -249,50 +252,16 @@ class PlaceRepository extends ServiceEntityRepository
             }
         }
 
-        if ($search->getPole()) {
-            $query->andWhere('pole.id = :pole_id')
-                ->setParameter('pole_id', $search->getPole());
-        }
-
         if (Choices::DISABLED === $search->getDisabled()) {
             $query->andWhere('pl.disabledAt IS NOT NULL');
         } elseif (Choices::ACTIVE === $search->getDisabled()) {
             $query->andWhere('pl.disabledAt IS NULL');
         }
 
-        if ($search->getPoles() && count($search->getPoles())) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getPoles() as $pole) {
-                $orX->add($expr->eq('s.pole', $pole));
-            }
-            $query->andWhere($orX);
-        }
-
-        if ($search->getServices()->count()) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getServices() as $service) {
-                $orX->add($expr->eq('s.id', $service));
-            }
-            $query->andWhere($orX);
-        }
-        if ($search->getSubServices() && $search->getSubServices()->count() > 0) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getSubServices() as $subService) {
-                $orX->add($expr->eq('ss.id', $subService));
-            }
-            $query->andWhere($orX);
-        }
-        if ($search->getDevices() && $search->getDevices()->count()) {
-            $expr = $query->expr();
-            $orX = $expr->orX();
-            foreach ($search->getDevices() as $device) {
-                $orX->add($expr->eq('d.id', $device));
-            }
-            $query->andWhere($orX);
-        }
+        $query = $this->addPolesFilter($query, $search);
+        $query = $this->addServicesFilter($query, $search);
+        $query = $this->addSubServicesFilter($query, $search);
+        $query = $this->addDevicesFilter($query, $search);
 
         return $query;
     }
