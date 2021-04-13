@@ -22,7 +22,7 @@ class EvalProfPerson
         8 => 'Bac +3 (licence)',
         9 => 'Bac +5 (master) et plus',
         97 => 'Autre',
-        99 => 'Non renseigné',
+        99 => 'Non évalué',
     ];
 
     public const PROF_EXPERIENCE = [
@@ -30,7 +30,7 @@ class EvalProfPerson
         2 => 'Très peu travaillé',
         3 => 'Alternance emploi et chômage',
         4 => 'A toujours travaillé',
-        99 => 'Non renseigné',
+        99 => 'Non évalué',
     ];
 
     public const PROF_STATUS = [
@@ -44,7 +44,7 @@ class EvalProfPerson
         7 => 'Retraité·e',
         8 => 'Salarié·e',
         97 => 'Autre',
-        99 => 'Non renseigné',
+        99 => 'Non évalué',
     ];
 
     public const CONTRACT_TYPE = [
@@ -57,14 +57,14 @@ class EvalProfPerson
         7 => 'Intérim (CTT)',
         8 => 'Stage',
         97 => 'Autre',
-        99 => 'Non renseigné',
+        99 => 'Non évalué',
     ];
 
     public const TRANSFORT_MEANS = [
         1 => 'Voiture',
         2 => 'Transport en commun',
         97 => 'Autre',
-        99 => 'Non renseigné',
+        99 => 'Non évalué',
     ];
 
     /**

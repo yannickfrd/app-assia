@@ -17,7 +17,7 @@ class EvalFamilyGroup
         3 => 'Envisagé',
         4 => 'En cours',
         5 => 'Accepté',
-        99 => 'Non renseigné',
+        99 => 'Non évalué',
     ];
 
     /**

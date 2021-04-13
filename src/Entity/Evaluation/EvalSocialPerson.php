@@ -19,7 +19,7 @@ class EvalSocialPerson
         1 => 'Régime général',
         2 => 'Régime général et mutuelle',
         97 => 'Autre régime',
-        99 => 'Non renseignée',
+        99 => 'Non évaluée',
     ];
 
     public const CARE_SUPPORT = [
@@ -28,7 +28,7 @@ class EvalSocialPerson
         3 => 'SAMSAH',
         4 => 'SAVS',
         97 => 'Autre',
-        99 => 'Non renseignée',
+        99 => 'Non évaluée',
     ];
 
     public const HEALTH_PROBLEMS_TYPE = [
@@ -49,7 +49,7 @@ class EvalSocialPerson
         7 => 'TISF', // Technicien d'intervention sociale et familiale
         8 => 'UEMO', // Unité éducative en milieu ouvert
         97 => 'Autre',
-        99 => 'Non renseignée',
+        99 => 'Non évaluée',
     ];
 
     /**

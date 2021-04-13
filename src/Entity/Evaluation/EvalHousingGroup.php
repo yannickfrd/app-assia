@@ -45,7 +45,7 @@ class EvalHousingGroup
         302 => 'Sous-location',
         002 => 'Squat',
         97 => 'Autre',
-        99 => 'Non renseignée',
+        99 => 'Non évaluée',
     ];
 
     public const SIAO_RECOMMENDATION = [
@@ -58,14 +58,14 @@ class EvalHousingGroup
         30 => 'Logement de droit commun (social ou privé)',
         400 => 'CADA - dispositif asile',
         602 => 'Structure de soin ou médical',
-        99 => 'Non renseignée',
+        99 => 'Non évaluée',
     ];
 
     public const DALO_TYPE = [
         1 => 'Hébergement',
         2 => 'Logement',
         3 => 'DALO requalifié hébergement',
-        99 => 'Non renseigné',
+        99 => 'Non évalué',
     ];
 
     public const HOUSING_HELPS = [
@@ -81,7 +81,7 @@ class EvalHousingGroup
         3 => 'Chez un tiers ou famille',
         4 => 'Hôtel',
         97 => 'Autre',
-        99 => 'Non renseigné',
+        99 => 'Non évalué',
     ];
 
     /**

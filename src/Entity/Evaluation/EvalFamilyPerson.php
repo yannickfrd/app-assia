@@ -20,14 +20,14 @@ class EvalFamilyPerson
         6 => 'Séparé·e',
         7 => 'Veuf/ve',
         97 => 'Autre',
-        99 => 'Non renseigné',
+        99 => 'Non évalué',
     ];
 
     public const PREGNANCY_TYPE = [
         1 => 'Simple',
         2 => 'Jumeaux',
         3 => 'Multiple',
-        99 => 'Non renseigné',
+        99 => 'Non évalué',
     ];
 
     public const PROTECTIVE_MEASURE_TYPE = [
@@ -41,16 +41,19 @@ class EvalFamilyPerson
         1 => 'Tutelle',
         97 => 'Autre',
         98 => 'Non concerné',
-        99 => 'Non renseigné',
+        99 => 'Non évalué',
     ];
 
     public const CHILDCARE_SCHOOL = [
+        3 => 'Famille',
         4 => 'Assistante maternelle',
         1 => 'Crèche',
         2 => 'École',
-        3 => 'Famille',
+        5 => 'Collège',
+        6 => 'Lycée',
+        7 => 'Enseignement supérieur',
         97 => 'Autre',
-        99 => 'Non renseigné',
+        99 => 'Non évalué',
     ];
 
     public const CHILD_TO_HOST = [
@@ -60,7 +63,7 @@ class EvalFamilyPerson
         4 => 'Uniquemt le WE et congés',
         5 => 'Par un tiers',
         97 => 'Autre',
-        99 => 'Non renseigné',
+        99 => 'Non évalué',
     ];
 
     public const CHILD_DEPENDANCE = [
@@ -74,7 +77,7 @@ class EvalFamilyPerson
         8 => 'Droit de visite',
         9 => "À l'étranger",
         97 => 'Autre',
-        99 => 'Non renseigné',
+        99 => 'Non évalué',
     ];
 
     /**

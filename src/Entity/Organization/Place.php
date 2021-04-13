@@ -47,7 +47,7 @@ class Place
         13 => 'Logement T9',
         14 => 'Pavillon',
         97 => 'Autre',
-        99 => 'Non renseigné',
+        99 => 'Non évalué',
     ];
 
     public const CONFIGURATION = [

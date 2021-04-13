@@ -40,7 +40,7 @@ class EvalSocialGroup
         26 => 'Traite humaine',
         27 => 'Violences familiales ou conjugales',
         97 => 'Autre',
-        99 => 'Non renseigné',
+        99 => 'Non évalué',
     ];
 
     public const WANDERING_TIME = [
@@ -54,7 +54,7 @@ class EvalSocialGroup
         8 => 'Plus de 10 ans',
         97 => 'Autre',
         98 => 'Non concerné',
-        99 => 'Non renseigné',
+        99 => 'Non évalué',
     ];
 
     /**

@@ -19,7 +19,7 @@ class EvalBudgetPerson
         2 => 'Non',
         3 => 'Démarches en cours',
         4 => 'Droits supendus',
-        99 => 'Non renseigné',
+        99 => 'Non évalué',
     ];
 
     public const RESOURCES_TYPE = [
@@ -96,7 +96,7 @@ class EvalBudgetPerson
         2 => 'Accepté',
         3 => 'Refusé',
         4 => 'En cours',
-        99 => 'Non renseigné',
+        99 => 'Non évalué',
     ];
 
     /**

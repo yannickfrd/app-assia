@@ -75,12 +75,14 @@
                     <hr class="my-3"/>
 
                     {% if nb_children > 0 %}
-                        <div class="form-group row">
-                            <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.infoCrip) }}</div>
-                            <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_infoCrip">{{ form_row(evalPerson.evalSocialPerson.infoCripDate) }}</div>
-                            <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_infoCrip">{{ form_row(evalPerson.evalSocialPerson.infoCripByService) }}</div>
-                            <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_infoCrip">{{ form_row(evalPerson.evalSocialPerson.infoCripComment) }}</div>
-                        </div>
+			            {% if SERVICE_TYPE_HOTEL %}
+                            <div class="form-group row">
+                                <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.infoCrip) }}</div>
+                                <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_infoCrip">{{ form_row(evalPerson.evalSocialPerson.infoCripDate) }}</div>
+                                <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_infoCrip">{{ form_row(evalPerson.evalSocialPerson.infoCripByService) }}</div>
+                                <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_infoCrip">{{ form_row(evalPerson.evalSocialPerson.infoCripComment) }}</div>
+                            </div>
+                        {% endif %}
                         <div class="form-group row">
                             <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.aseFollowUp) }}</div>
                             <div class="col-md-6" data-parent-field="{{ key }}_evalSocialPerson_aseFollowUp">{{ form_row(evalPerson.evalSocialPerson.aseMeasureType) }}</div>

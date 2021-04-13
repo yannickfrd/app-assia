@@ -63,7 +63,7 @@ class HotelSupport
         2 => 'Non adhésion à l\'accompagnement',
         4 => 'Départ vers un autre département',
         97 => 'Autre',
-        99 => 'Non renseigné',
+        99 => 'Non évalué',
     ];
 
     /**

@@ -104,7 +104,7 @@ class SupportGroup
         002 => 'Squat',
         602 => 'Structure de soin ou médical (LAM, autre)',
         97 => 'Autre',
-        99 => 'Non renseignée',
+        99 => 'Non évaluée',
     ];
 
     public const COEFFICIENT_DEFAULT = 1;

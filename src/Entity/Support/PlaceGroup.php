@@ -27,7 +27,7 @@ class PlaceGroup
         1 => 'Fin du suivi',
         2 => 'Changement de logement/hébergement',
         97 => 'Autre',
-        99 => 'Non renseigné',
+        99 => 'Non évalué',
     ];
 
     /**

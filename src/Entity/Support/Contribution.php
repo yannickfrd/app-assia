@@ -40,7 +40,7 @@ class Contribution
         1 => 'Virement',
         3 => 'Chèque',
         4 => 'Espèce',
-        99 => 'Non renseigné',
+        99 => 'Non évalué',
     ];
 
     /**
