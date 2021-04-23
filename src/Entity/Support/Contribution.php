@@ -9,6 +9,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ContributionRepository::class)
+ * @ORM\HasLifecycleCallbacks
  */
 class Contribution
 {
@@ -40,7 +41,7 @@ class Contribution
         1 => 'Virement',
         3 => 'Chèque',
         4 => 'Espèce',
-        99 => 'Non évalué',
+        99 => 'Non renseigné',
     ];
 
     /**
@@ -177,6 +178,18 @@ class Contribution
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $mailSentAt;
+
+    /**
+     * @ORM\PreFlush
+     */
+    public function preFlush()
+    {
+        $this->setStillToPayAmt($this->getToPayAmt() - $this->getPaidAmt());
+
+        if ($this->supportGroup) {
+            $this->supportGroup->setUpdatedAt(new \DateTime());
+        }
+    }
 
     public function getId(): ?int
     {

@@ -18,83 +18,99 @@ class ReferentControllerTest extends WebTestCase
     protected $client;
 
     /** @var array */
-    protected $dataFixtures;
+    protected $data;
 
     /** @var Referent */
     protected $referent;
 
     protected function setUp()
     {
-        $this->dataFixtures = $this->loadFixtureFiles([
-            dirname(__DIR__).'/../DataFixturesTest/ReferentFixturesTest.yaml',
-        ]);
-
-        $this->createLogin($this->dataFixtures['userRoleUser']);
-
-        $this->referent = $this->dataFixtures['referent1'];
     }
 
-    public function testNewReferentIsUp()
+    protected function getFixtureFiles()
     {
-        $this->client->request('GET', $this->generateUri('group_referent_new', [
-            'group_id' => $this->dataFixtures['peopleGroup']->getId(),
-        ]));
+        return [
+            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
+            dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
+            dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
+            dirname(__DIR__).'/../DataFixturesTest/ReferentFixturesTest.yaml',
+        ];
+    }
+    public function testCreateReferentByPeopleGroupIsSuccessful()
+    {
+        $data = $this->loadFixtureFiles($this->getFixtureFiles());
+
+        $this->createLogin($data['userRoleUser']);
+
+        $id = $data['peopleGroup1']->getId();
+        $this->client->request('GET', "/group/$id/referent/new");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Nouveau service social référent');
-    }
 
-    public function testCreateNewReferentIsSuccessful()
-    {
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('group_referent_new', [
-            'group_id' => $this->dataFixtures['peopleGroup']->getId(),
-        ]));
-
-        $form = $crawler->selectButton('send')->form([
-            'referent[name]' => 'Référent test',
-            'referent[type]' => 1,
-            'referent[socialWorker]' => 'XXXX',
-            'referent[socialWorker2]' => 'XXXX',
+        $this->client->submitForm('send', [
+            'referent' => [
+                'name' => 'Référent test',
+                'type' => 1,
+                'socialWorker' => 'XXXX',
+                'socialWorker2' => 'XXXX',
+            ],
         ]);
-
-        $this->client->submit($form);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorExists('.alert.alert-success');
     }
 
-    public function testEditReferentIsUp()
+    public function testCreateReferentBySupportIsSuccessful()
     {
-        $this->client->request('GET', $this->generateUri('group_referent_edit', [
-            'id' => $this->referent->getId(),
+        $data = $this->loadFixtureFiles(array_merge( $this->getFixtureFiles(), [
+            dirname(__DIR__).'/../DataFixturesTest/SupportFixturesTest.yaml',
         ]));
 
+        $this->createLogin($data['userRoleUser']);
+
+        $id = $data['supportGroup1']->getId();
+        $this->client->request('GET', "/suppport/$id/referent/new");
+
+        $this->client->submitForm('send', [
+            'referent[name]' => 'Référent test',
+            'referent[type]' => 1,
+        ]);
+
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', $this->referent->getName());
+        $this->assertSelectorExists('.alert.alert-success');
     }
 
-    public function testEditReferentIsSucessful()
+    public function testEditReferentIsSuccessful()
     {
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('group_referent_edit', [
-            'id' => $this->referent->getId(),
-        ]));
+        $data = $this->loadFixtureFiles($this->getFixtureFiles());
 
-        $form = $crawler->selectButton('send')->form([]);
+        $this->createLogin($data['userRoleUser']);
 
-        $this->client->submit($form);
+        $id = $data['referent1']->getId();
+        $this->client->request('GET', "/referent/$id/edit");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', $this->referent->getName());
+        $this->assertSelectorTextContains('h1', $data['referent1']->getName());
+
+        $this->client->submitForm('send', [
+            'referent[name]' => 'Référent test edit',
+            'referent[type]' => 2,
+        ]);
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', 'Référent test edit');
     }
 
     public function testDeleteReferent()
     {
-        $this->client->request('GET', $this->generateUri('referent_delete', [
-            'id' => $this->referent->getId(),
-        ]));
-        // $this->client->followRedirect();
+        $data = $this->loadFixtureFiles($this->getFixtureFiles());
+
+        $this->createLogin($data['userRoleUser']);
+
+        $id = $data['referent1']->getId();
+        $this->client->request('GET', "/referent/$id/delete");
+
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Group');
     }
@@ -103,6 +119,6 @@ class ReferentControllerTest extends WebTestCase
     {
         parent::tearDown();
         $this->client = null;
-        $this->dataFixtures = null;
+        $data = null;
     }
 }

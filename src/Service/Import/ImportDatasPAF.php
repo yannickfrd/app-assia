@@ -46,18 +46,18 @@ class ImportDatasPAF extends ImportDatas
     protected $field;
 
     protected $items = [];
-    protected $repoHotelSupport;
+    protected $hotelSupportRepo;
     protected $hotelSupports;
 
     protected $service;
 
     public function __construct(
         EntityManagerInterface $manager,
-        HotelSupportRepository $repoHotelSupport
+        HotelSupportRepository $hotelSupportRepo
         ) {
         $this->manager = $manager;
-        $this->repoHotelSupport = $repoHotelSupport;
-        $this->hotelSupports = $repoHotelSupport->findAll();
+        $this->hotelSupportRepo = $hotelSupportRepo;
+        $this->hotelSupports = $hotelSupportRepo->findAll();
     }
 
     public function importInDatabase(string $fileName, Service $service): int
@@ -94,7 +94,7 @@ class ImportDatasPAF extends ImportDatas
 
         $nbPafs = 0;
         foreach ($this->items as $key => $item) {
-            $hotelSupport = $this->repoHotelSupport->findOneBy(['accessId' => $key]);
+            $hotelSupport = $this->hotelSupportRepo->findOneBy(['accessId' => $key]);
             if ($hotelSupport) {
                 $this->items[$key]['peopleGroup'] = $hotelSupport;
                 foreach ($item['pafs'] as $paf) {

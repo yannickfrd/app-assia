@@ -55,4 +55,17 @@ export default class SelectType {
             return optionElt.selected = false
         })
     }
+
+    /**
+     * Donne le nombre d'options
+     * @param {HTMLSelectElement} selectElt 
+     * @return {Number}
+     */
+    countOptions(selectElt) {
+        if (selectElt === null) {
+            throw new Error('selectElt is null !')
+        }
+
+        return selectElt.querySelectorAll('option').length
+    }
 }

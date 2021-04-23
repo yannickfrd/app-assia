@@ -59,9 +59,11 @@ export default class Ajax {
 
             chunks.push(value)
             receivedLength += value.length
-            let msg = Math.round((receivedLength / contentLength) * 100) + ' %'
-            console.log('Download...' + msg)
-            this.loader.updateInfo(msg)
+            if (contentLength > 0) {
+                let msg = Math.round((receivedLength / contentLength) * 100) + ' %'
+                console.log('Download...' + msg)
+                this.loader.updateInfo(msg)
+            }
         }
 
         const chunksAll = new Uint8Array(receivedLength)

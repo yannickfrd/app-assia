@@ -2,14 +2,15 @@
 
 namespace App\Entity\Support;
 
+use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Organization\Place;
 use App\Entity\People\PeopleGroup;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Doctrine\Common\Collections\Collection;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -92,7 +93,7 @@ class PlaceGroup
 
     public function __toString()
     {
-        return strval($this->id);
+        return (string) $this->id;
     }
 
     public function getId(): ?int
@@ -205,7 +206,7 @@ class PlaceGroup
     }
 
     /**
-     * @return PlacePerson[]|Collection|null
+     * @return Collection<Person>
      */
     public function getPlacePeople()
     {

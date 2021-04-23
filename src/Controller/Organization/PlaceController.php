@@ -23,12 +23,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class PlaceController extends AbstractController
 {
     private $manager;
-    private $repo;
+    private $placeRepo;
 
-    public function __construct(EntityManagerInterface $manager, PlaceRepository $repo)
+    public function __construct(EntityManagerInterface $manager, PlaceRepository $placeRepo)
     {
         $this->manager = $manager;
-        $this->repo = $repo;
+        $this->placeRepo = $placeRepo;
     }
 
     /**
@@ -38,9 +38,7 @@ class PlaceController extends AbstractController
      */
     public function listPlaces(Request $request, Pagination $pagination, CurrentUserService $currentUser): Response
     {
-        $search = new PlaceSearch();
-
-        $form = ($this->createForm(PlaceSearchType::class, $search))
+        $form = $this->createForm(PlaceSearchType::class, $search = new PlaceSearch())
             ->handleRequest($request);
 
         if ($search->getExport()) {
@@ -50,7 +48,7 @@ class PlaceController extends AbstractController
         return $this->render('app/organization/place/listPlaces.html.twig', [
             'placeSearch' => $search,
             'form' => $form->createView(),
-            'places' => $pagination->paginate($this->repo->findPlacesQuery($search, $currentUser), $request) ?? null,
+            'places' => $pagination->paginate($this->placeRepo->findPlacesQuery($search, $currentUser), $request) ?? null,
         ]);
     }
 
@@ -65,7 +63,7 @@ class PlaceController extends AbstractController
 
         $place = (new Place())->setService($service);
 
-        $form = ($this->createForm(PlaceType::class, $place))
+        $form = $this->createForm(PlaceType::class, $place)
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -93,11 +91,11 @@ class PlaceController extends AbstractController
      *
      * @Route("/place/{id}", name="place_edit", methods="GET|POST")
      */
-    public function editPlace(Place $place, Request $request, PlaceGroupRepository $repo): Response
+    public function editPlace(Place $place, Request $request, PlaceGroupRepository $placeGroupRepo): Response
     {
         $this->denyAccessUnlessGranted('VIEW', $place);
 
-        $form = ($this->createForm(PlaceType::class, $place))
+        $form = $this->createForm(PlaceType::class, $place)
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -112,14 +110,14 @@ class PlaceController extends AbstractController
 
         return $this->render('app/organization/place/place.html.twig', [
             'form' => $form->createView(),
-            'places_group' => $repo->findAllPlace($place),
+            'places_group' => $placeGroupRepo->findAllPlace($place),
         ]);
     }
 
     /**
      * Supprime le groupe de places.
      *
-     * @Route("admin/place/{id}/delete", name="admin_place_delete", methods="GET")
+     * @Route("/admin/place/{id}/delete", name="admin_place_delete", methods="GET")
      * @IsGranted("DELETE", subject="place")
      */
     public function deletePlace(Place $place): Response
@@ -137,7 +135,7 @@ class PlaceController extends AbstractController
     /**
      * Désactive ou réactive le place.
      *
-     * @Route("admin/place/{id}/disable", name="admin_place_disable", methods="GET")
+     * @Route("/admin/place/{id}/disable", name="admin_place_disable", methods="GET")
      */
     public function disablePlace(Place $place): Response
     {
@@ -145,7 +143,7 @@ class PlaceController extends AbstractController
 
         if ($place->getDisabledAt()) {
             $place->setDisabledAt(null);
-            $this->addFlash('success', 'Le groupe de place "'.$place->getName().'" est réactivé.');
+            $this->addFlash('success', 'Le groupe de place "'.$place->getName().'" est ré-activé.');
         } else {
             $place->setDisabledAt(new \DateTime());
             $this->addFlash('warning', 'Le groupe de place "'.$place->getName().'" est désactivé.');
@@ -163,7 +161,7 @@ class PlaceController extends AbstractController
      */
     protected function exportData(PlaceSearch $search)
     {
-        $places = $this->repo->findPlacesToExport($search);
+        $places = $this->placeRepo->findPlacesToExport($search);
 
         if (!$places) {
             $this->addFlash('warning', 'Aucun résultat à exporter.');

@@ -20,7 +20,7 @@ class OriginRequest
         6 => 'Personne injoignable',
         97 => 'Autre',
         98 => 'Non concerné',
-        99 => 'Non évalué',
+        99 => 'Non renseigné',
     ];
 
     /**

@@ -11,12 +11,4 @@ class Grammar
     {
         return 1 === $gender ? 'e' : '';
     }
-
-    /**
-     * Met un "s" si plusieurs éléments.
-     */
-    public static function plural($plural): string
-    {
-        return 1 === $plural ? 's' : '';
-    }
 }

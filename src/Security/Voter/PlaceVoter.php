@@ -10,22 +10,23 @@ class PlaceVoter extends Voter
 {
     use VoterTrait;
 
+    /** @var User */
     protected $user;
     protected $userId;
     protected $place;
-
+    
     protected function supports($attribute, $subject)
     {
         return in_array($attribute, ['VIEW', 'EDIT', 'DELETE', 'DISABLE'])
-            && $subject instanceof \App\Entity\Organization\Place;
+        && $subject instanceof \App\Entity\Organization\Place;
     }
-
+    
     protected function voteOnAttribute($attribute, $place, TokenInterface $token)
     {
-        /* @var User */
+        /** @var User */
         $this->user = $token->getUser();
         $this->userId = $this->user->getId();
-        /* @var Place */
+        /** @var Place */
         $this->place = $place;
 
         if (!$this->user) {

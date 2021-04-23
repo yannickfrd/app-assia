@@ -2,12 +2,13 @@
 
 namespace App\Entity\Organization;
 
+use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\ContactEntityTrait;
-use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use App\Entity\Traits\DisableEntityTrait;
 use App\Entity\Traits\LocationEntityTrait;
+use Doctrine\Common\Collections\Collection;
+use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -88,7 +89,7 @@ class Pole
 
     public function __toString()
     {
-        return strval($this->id);
+        return (string) $this->id;
     }
 
     public function getId(): ?int
@@ -145,7 +146,7 @@ class Pole
     }
 
     /**
-     * @return Service[]|Collection|null
+     * @return Collection<Service>
      */
     public function getServices()
     {

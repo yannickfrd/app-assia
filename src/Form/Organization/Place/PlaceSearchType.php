@@ -6,7 +6,7 @@ use App\Entity\Organization\Pole;
 use App\Form\Model\Organization\PlaceSearch;
 use App\Form\Model\Support\RdvSearch;
 use App\Form\Type\DateSearchType;
-use App\Form\Type\SearchType;
+use App\Form\Type\ServiceDeviceReferentSearchType;
 use App\Form\Utils\Choices;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -29,7 +29,7 @@ class PlaceSearchType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('service', SearchType::class, [
+            ->add('service', ServiceDeviceReferentSearchType::class, [
                 'data_class' => RdvSearch::class,
             ])
             ->add('name', null, [

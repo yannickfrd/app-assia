@@ -15,13 +15,13 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PoleController extends AbstractController
 {
+    private $poleRepo;
     private $manager;
-    private $repo;
 
-    public function __construct(EntityManagerInterface $manager, PoleRepository $repo)
+    public function __construct(PoleRepository $poleRepo, EntityManagerInterface $manager)
     {
+        $this->poleRepo = $poleRepo;
         $this->manager = $manager;
-        $this->repo = $repo;
     }
 
     /**
@@ -32,7 +32,7 @@ class PoleController extends AbstractController
     public function listPole(Request $request, Pagination $pagination): Response
     {
         return $this->render('app/organization/pole/listPoles.html.twig', [
-            'poles' => $pagination->paginate($this->repo->findPolesQuery(), $request) ?? null,
+            'poles' => $pagination->paginate($this->poleRepo->findPolesQuery(), $request) ?? null,
         ]);
     }
 
@@ -42,11 +42,9 @@ class PoleController extends AbstractController
      * @Route("/pole/new", name="pole_new", methods="GET|POST")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
-    public function newPole(Pole $pole = null, Request $request): Response
+    public function newPole(Request $request): Response
     {
-        $pole = new Pole();
-
-        $form = ($this->createForm(PoleType::class, $pole))
+        $form = $this->createForm(PoleType::class, $pole = new Pole())
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -72,7 +70,7 @@ class PoleController extends AbstractController
     {
         $this->denyAccessUnlessGranted('EDIT', $pole);
 
-        $form = ($this->createForm(PoleType::class, $pole))
+        $form = $this->createForm(PoleType::class, $pole)
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

@@ -2,22 +2,24 @@
 
 namespace App\Entity\Support;
 
-use App\Entity\Evaluation\EvaluationGroup;
-use App\Entity\Evaluation\InitEvalGroup;
-use App\Entity\Organization\Device;
-use App\Entity\Organization\Service;
-use App\Entity\Organization\SubService;
+use App\Entity\Support\Note;
+use App\Entity\People\Person;
+use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Organization\User;
 use App\Entity\People\PeopleGroup;
-use App\Entity\People\Person;
-use App\Entity\Traits\CreatedUpdatedEntityTrait;
-use App\Entity\Traits\GeoLocationEntityTrait;
-use App\Entity\Traits\LocationEntityTrait;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Organization\Device;
+use App\Entity\Organization\Service;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use App\Entity\Organization\SubService;
+use App\Entity\Evaluation\InitEvalGroup;
+use App\Entity\Evaluation\EvaluationGroup;
+use App\Entity\Traits\LocationEntityTrait;
+use Doctrine\Common\Collections\Collection;
+use App\Entity\Traits\GeoLocationEntityTrait;
+use App\Entity\Traits\CreatedUpdatedEntityTrait;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -104,7 +106,7 @@ class SupportGroup
         002 => 'Squat',
         602 => 'Structure de soin ou médical (LAM, autre)',
         97 => 'Autre',
-        99 => 'Non évaluée',
+        99 => 'Inconnue',
     ];
 
     public const COEFFICIENT_DEFAULT = 1;
@@ -248,7 +250,7 @@ class SupportGroup
     private $service;
 
     /**
-     * @ORM\ManyToOne(targetEntity=SubService::class, inversedBy="supportGroup")
+     * @ORM\ManyToOne(targetEntity=SubService::class, inversedBy="supportGroups")
      * @Groups("export")
      */
     private $subService;
@@ -339,7 +341,7 @@ class SupportGroup
 
     public function __toString()
     {
-        return strval($this->id);
+        return (string) $this->id;
     }
 
     public function getId(): ?int
@@ -574,7 +576,7 @@ class SupportGroup
     }
 
     /**
-     * @return SupportPerson[]|Collection|null
+     * @return Collection<SupportPerson>
      */
     public function getSupportPeople()
     {
@@ -641,7 +643,7 @@ class SupportGroup
     }
 
     /**
-     * @return Note[]|Collection|null
+     * @return Collection<Note>
      */
     public function getNotes()
     {
@@ -672,7 +674,7 @@ class SupportGroup
     }
 
     /**
-     * @return Rdv[]|Collection|null
+     * @return Collection<Rdv>
      */
     public function getRdvs()
     {
@@ -703,7 +705,7 @@ class SupportGroup
     }
 
     /**
-     * @return Document[]|Collection|null
+     * @return Collection<Document>
      */
     public function getDocuments()
     {
@@ -734,7 +736,7 @@ class SupportGroup
     }
 
     /**
-     * @return PlaceGroup[]|Collection|null
+     * @return Collection<PlaceGroup>
      */
     public function getPlaceGroups()
     {
@@ -765,7 +767,7 @@ class SupportGroup
     }
 
     /**
-     * @return EvaluationGroup[]|Collection|null
+     * @return Collection<EvaluationGroup>
      */
     public function getEvaluationsGroup()
     {
@@ -843,7 +845,7 @@ class SupportGroup
     }
 
     /**
-     * @return Contribution[]|Collection|null
+     * @return Collection<Contribution>
      */
     public function getContributions()
     {

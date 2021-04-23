@@ -20,20 +20,20 @@ class B_UserFixtures extends Fixture
     private $passwordEncoder;
     protected $slugger;
     private $repo;
-    private $repoService;
+    private $serviceRepo;
 
     public $users = [];
 
     public function __construct(EntityManagerInterface $manager,
     UserPasswordEncoderInterface $passwordEncoder,
     ServiceUserRepository $repo,
-    ServiceRepository $repoService)
+    ServiceRepository $serviceRepo)
     {
         $this->manager = $manager;
         $this->passwordEncoder = $passwordEncoder;
         $this->slugger = new AsciiSlugger();
         $this->repo = $repo;
-        $this->repoService = $repoService;
+        $this->serviceRepo = $serviceRepo;
         $this->faker = \Faker\Factory::create('fr_FR');
     }
 
@@ -76,7 +76,7 @@ class B_UserFixtures extends Fixture
 
         //     foreach ($services as $service) {
 
-        //         $service = $this->repoService->findOneBy(["name" => $service]);
+        //         $service = $this->serviceRepo->findOneBy(["name" => $service]);
 
         //         $serviceUser = new ServiceUser();
 

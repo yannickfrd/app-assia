@@ -34,7 +34,7 @@ services:
         arguments:
             $documentsDirectory: "%documents_directory%"
 
-    App\Controller\Support\DocumentController:
+    App\Controller\Document\DocumentController:
         arguments:
             $documentsDirectory: "%documents_directory%"
 

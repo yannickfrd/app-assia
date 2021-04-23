@@ -190,23 +190,25 @@ export default class SupportNotes {
      * @param {Object} response 
      */
     responseAjax(response) {
-        if (response.code === 200) {
-            switch (response.action) {
-                case 'create':
-                    this.createNote(response.data)
-                    break
-                case 'update':
-                    this.updateNote(response.data)
-                    break
-                case 'delete':
-                    this.deleteNote(response.data)
-                    break
-            }
+        if (!response.action) {
+            return null
+        }
 
-            if (!this.autoSave.active && response.msg) {
-                new MessageFlash(response.alert, response.msg)
-                this.loader.off()
-            }
+        switch (response.action) {
+            case 'create':
+                this.createNote(response.data)
+                break
+            case 'update':
+                this.updateNote(response.data)
+                break
+            case 'delete':
+                this.deleteNote(response.data)
+                break
+        }
+
+        if (!this.autoSave.active && response.msg) {
+            new MessageFlash(response.alert, response.msg)
+            this.loader.off()
         }
     }
 

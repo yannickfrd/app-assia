@@ -21,16 +21,16 @@ class ChangeNamePeopleCommand extends Command
     protected static $defaultName = 'app:person:change_name';
 
     protected $manager;
-    protected $repoUser;
-    protected $repoPeopleGroup;
+    protected $userRepo;
+    protected $peopleGroupRepo;
     protected $faker;
     protected $stopwatch;
 
-    public function __construct(EntityManagerInterface $manager, UserRepository $repoUser, PeopleGroupRepository $repoPeopleGroup, Stopwatch $stopwatch)
+    public function __construct(EntityManagerInterface $manager, UserRepository $userRepo, PeopleGroupRepository $peopleGroupRepo, Stopwatch $stopwatch)
     {
         $this->manager = $manager;
-        $this->repoUser = $repoUser;
-        $this->repoPeopleGroup = $repoPeopleGroup;
+        $this->UserRepo = $userRepo;
+        $this->peopleGroupRepo = $peopleGroupRepo;
         $this->faker = \Faker\Factory::create('fr_FR');
         $this->stopwatch = $stopwatch;
         $this->disableListeners($this->manager);
@@ -53,13 +53,13 @@ class ChangeNamePeopleCommand extends Command
 
         $this->stopwatch->start('change_name');
 
-        foreach ($this->repoUser->findBy(['disabledAt' => null]) as $user) {
+        foreach ($this->UserRepo->findBy(['disabledAt' => null]) as $user) {
             $user->setLastname($this->faker->lastName)
                 ->setFirstname($this->faker->firstName());
         }
 
         $nbPeople = 0;
-        $peopleGroups = $this->repoPeopleGroup->findAll(['status' => 2]);
+        $peopleGroups = $this->peopleGroupRepo->findAll(['status' => 2]);
 
         foreach ($peopleGroups  as $group) {
             $lastname = $this->faker->lastName;

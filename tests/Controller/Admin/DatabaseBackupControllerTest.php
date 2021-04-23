@@ -18,63 +18,32 @@ class DatabaseBackupControllerTest extends WebTestCase
     protected $client;
 
     /** @var array */
-    protected $dataFixtures;
+    protected $data;
 
     /** @var Service */
     protected $service;
 
     protected function setUp()
     {
-        $this->dataFixtures = $this->loadFixtureFiles([
+        $this->data = $this->loadFixtureFiles([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
         ]);
 
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->data['userSuperAdmin']);
     }
 
     public function testBackupDatabasePageIsUp()
     {
-        $this->client->request('GET', $this->generateUri('database_backups'));
+        $this->client->request('GET', '/admin/database-backups');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Sauvegarde et export base de données');
     }
 
-    // public function testCreateBackup()
-    // {
-    //     $this->client->request('GET', $this->generateUri('database_backup_create'));
-
-    //     $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-    //     $this->assertSelectorExists('.alert.alert-success');
-    // }
-
-    // public function testGetDatabaseBackup()
-    // {
-    //     $this->client->request('GET', $this->generateUri('database_backup_create'));
-
-    //     $this->client->request('GET', $this->generateUri('database_backup_get', [
-    //         'id' => 1,
-    //     ]));
-
-    //     $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-    // }
-
-    // public function testDeleteDatabase()
-    // {
-    //     $this->client->request('GET', $this->generateUri('database_backup_create'));
-
-    //     $this->client->request('GET', $this->generateUri('database_backup_delete', [
-    //         'id' => 1,
-    //     ]));
-
-    //     $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-    //     $this->assertSelectorExists('.alert.alert-warning');
-    // }
-
     protected function tearDown(): void
     {
         parent::tearDown();
         $this->client = null;
-        $this->dataFixtures = null;
+        $this->data = null;
     }
 }

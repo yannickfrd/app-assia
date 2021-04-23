@@ -7,7 +7,7 @@ addons:
   firefox: latest
 
 before_install:
-  - nvm install node
+  - nvm install v15 # node for the lastest version
   # - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
 
 php:
@@ -19,7 +19,7 @@ install:
 # keep the npm cache around to speed up installs
 cache:
   directories:
-      - "$HOME/.npm"
+    - "$HOME/.npm"
 
 script:
   - echo "APP_ENV=prod" >> .env
@@ -38,5 +38,14 @@ script:
 
   - php bin/phpunit tests/Entity
   - php bin/phpunit tests/Repository
-  - php bin/phpunit tests/Controller
+  - php bin/phpunit tests/Controller/Organization
+  - php bin/phpunit tests/Controller/People
+  - php bin/phpunit tests/Controller/Support
+  - php bin/phpunit tests/Controller/Evaluation
+  - php bin/phpunit tests/Controller/Note
+  - php bin/phpunit tests/Controller/Rdv
+  - php bin/phpunit tests/Controller/Document
+  - php bin/phpunit tests/Controller/Contribution
+  - php bin/phpunit tests/Controller/Admin
+  - php bin/phpunit tests/Controller/App
   - php bin/phpunit tests/EndToEnd

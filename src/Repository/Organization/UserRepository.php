@@ -245,10 +245,14 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Donne la liste des utilisateurs pour les listes déroulantes.
      */
-    public function getReferentsOfServicesQueryBuilder(CurrentUserService $currentUser, Service $service = null): QueryBuilder
+    public function getReferentsOfServicesQueryBuilder(CurrentUserService $currentUser, Service $service = null, string $dataClass = null): QueryBuilder
     {
-        $query = $this->getReferentsQueryBuilder();
+        $query = $this->getReferentsQueryBuilder()
+            ->leftJoin('su.service', 's')->addSelect('PARTIAL s.{id, name, type}');
 
+        if ($dataClass) {
+            $query = $this->filterByServiceType($query, $dataClass);
+        }
         if ($service) {
             $query = $query->andWhere('su.service = :service')
                 ->setParameter('service', $service);
@@ -267,7 +271,7 @@ class UserRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('u')
             ->select('PARTIAL u.{id, firstname, lastname, disabledAt}')
-            ->leftJoin('u.serviceUser', 'su')
+            ->leftJoin('u.serviceUser', 'su')->addSelect('su')
 
             ->andWhere('u.disabledAt IS NULL')
             ->andWhere('u.status IN (:status)')

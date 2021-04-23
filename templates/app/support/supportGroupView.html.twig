@@ -1,0 +1,172 @@
+{% extends "base.html.twig" %}
+
+{% import "macros/viewDiv.html.twig" as view_div %}
+
+{% set ROLE_CHILD = constant("App\\Entity\\People\\RolePerson::ROLE_CHILD") %}
+{% set STATUS_IN_PROGRESS = constant("App\\Entity\\Support\\SupportGroup::STATUS_IN_PROGRESS") %}
+{% set SERVICE_TYPE_AVDL = constant("App\\Entity\\Organization\\Service::SERVICE_TYPE_AVDL") %}
+{% set SERVICE_TYPE_HOTEL = constant("App\\Entity\\Organization\\Service::SERVICE_TYPE_HOTEL") %}
+{% set supportPeople = support.supportPeople|filter(s => s.status == support.status) %}
+
+{% block title %}Suivi social{% endblock %}
+
+{% block body %}
+
+	<div class="container">
+
+		<div class="d-flex mb-2">
+			<h1 class="h2">Suivi social</h1>
+			<div class="align-content-center"><a href="{{ path('support_edit', {'id': support.id }) }}" 
+				class="text-{{ theme_color }} ml-2" title="Modifier le suivi"><span class="fas fa-edit"></span></a>
+			</div>
+		</div>
+
+		{% include "model/_msgFlash.html.twig" %}
+		<div id="js-msg-flash-content"></div>
+
+		{# {% cache "support.view" ~ support.id ~ support.updatedAt.timestamp support.updatedAt.timestamp %} #}
+
+		{% set people_group = support.peopleGroup %}
+		<div class="small text-secondary">
+			<p>Créé le {{support.createdAt|date("d/m/Y à H:i") }}{{ support.createdBy ? " par " ~ support.createdBy.fullname }}
+				{% if support.updatedAt != support.createdAt %}
+					(modifié le {{ support.updatedAt|date("d/m/Y à H:i") }}{{ support.updatedBy ? " par " ~ support.updatedBy.fullname }})				
+				{% endif %}
+			</p>
+		</div>
+
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<a class="text-{{ theme_color }}" href="{{ path('people_group_show', {'id': people_group.id}) }}">
+						<span class="fas fa-users mr-2"></span>Fiche groupe<span class="small"> {{ people_group.familyTypologyToString }}</span>
+					</a>
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">Suivi social (Accueil)</li>
+			</ol>
+		</nav>
+		{% for supportPerson in supportPeople %}
+			<a href="{{ path("group_person_show", {"id": people_group.id, "person_id": supportPerson.person.id, "slug": supportPerson.person.slug}) }}" 
+				class="btn btn-outline-{{ theme_color }} btn-sm rounded-pill mb-2">{{ supportPerson.person.fullname }}</a>
+		{% endfor %}
+
+		<hr>
+
+		<div class="d-flex row justify-content-center my-4">
+			{% if support.device and support.device.place == YES %}
+			<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
+				<a id='support-places' class="btn btn-{{ theme_color }} btn-block shadow" 
+				href="{{ path('support_places', {'id': support.id}) }}" data-toggle="tooltip" data-placement="bottom" 
+				title="{% if support.service.type == SERVICE_TYPE_HOTEL %}Prises en charge hôtelières{% else %}Modalités d'hébergement{% endif %}"><!--
+				-->{% if support.service.type == SERVICE_TYPE_HOTEL %}PEC Hôtel{% else %}Hébergement{% endif %}<!--
+				--><span class="badge badge-light ml-2">{{ support.placeGroups|length }}</span></a>
+			</div>
+			{% endif %}
+			{% if support.device and support.device.contribution == YES %}
+			<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
+				<a id='support-contributions' class="btn btn-{{ theme_color }} btn-block shadow" 
+				href="{{ path('support_contributions', {'id': support.id}) }}" data-toggle="tooltip" data-placement="bottom" 
+				title="Paiements (redevances, PF, caution...)">Paiements<span class="badge badge-light ml-2">{{ nbContributions }}</span></a>
+			</div>
+			{% endif %}
+			<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
+				<a id='support-evaluation' class="btn btn-{{ theme_color }} btn-block shadow" 
+				href="{{ path(evaluation ? 'support_evaluation_view' : 'support_evaluation_new', {'id': support.id}) }}" data-toggle="tooltip" data-placement="bottom" 
+				title="Évaluation sociale">Évaluation<span class="badge badge-light ml-2">{{ evaluation ? 1 : 0 }}</span></a>
+			</div>
+			<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
+				<a id='support-calendar' class="btn btn-{{ theme_color }} btn-block shadow" 
+					href="{{ path('support_calendar_show', {'id': support.id}) }}" data-toggle="tooltip" data-placement="bottom" 
+					title="Rendez-vous">Rendez-vous<span class="badge badge-light ml-2">{{ nbRdvs }}</span></a>
+			</div>
+			<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
+				<a id='support-notes' class="btn btn-{{ theme_color }} btn-block shadow" 
+					href="{{ path('support_notes', {'id': support.id}) }}" data-toggle="tooltip" data-placement="bottom" 
+					title="Notes sociales et rapports">Notes<span class="badge badge-light ml-2">{{ nbNotes }}</span></a>
+			</div>
+			<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
+				<a id='support-documents' class="btn btn-{{ theme_color }} btn-block shadow" 
+					href="{{ path('support_documents', {'id': support.id}) }}" data-toggle="tooltip" data-placement="bottom" 
+					title="Documents administratifs">Documents<span class="badge badge-light ml-2">{{ nbDocuments }}</span></a>
+			</div>
+		</div>
+
+		{% if support.service.type == SERVICE_TYPE_AVDL and support.avdl %}
+			{% include "app/support/avdl/_avdlView.html.twig" %}
+		{% elseif support.service.type == SERVICE_TYPE_HOTEL %}
+			{% include "app/support/hotelSupport/_hotelSupportView.html.twig" %}
+		{% else %}		
+			{% include "app/support/_shared/_supportRegularView.html.twig" %}
+		{% endif %}
+
+		<div class="row mt-3">
+			<div class="col-md-12">
+				<div class="float-left d-flex">
+					{% if is_granted("DELETE", support) %}
+						{% set textAlert = "'Tous les éléments rattachés au suivi vont être supprimés (évaluation sociale, RDVs, notes, documents...)." ~ 
+							" Êtes-vous vraiment sûr de vouloir supprimer ce suivi social ?'" %}
+						<a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('support_delete', {'id': support.id}) }}" 
+							title="Supprimer le suivi social" data-toggle="tooltip" data-placement="bottom" 
+							onclick="if(window.confirm({{ textAlert }})){return true;}else{return false;}">
+							<span class="fas fa-trash-alt mr-2"></span>Supprimer</a>
+					{% endif %}
+					{% if is_granted("ROLE_SUPER_ADMIN") %}
+						{% set textAlert = "'Êtes-vous vraiment sûr de vouloir récupérer les informations du précédent suivi social ?'" %}
+						<a class="btn btn-{{ theme_color }} d-block mr-3" href="{{ path('support_clone', {'id': support.id}) }}" 
+							title="Récupérer les éléments du précédent suivi social" data-toggle="tooltip" data-placement="bottom" 
+							onclick="if(window.confirm({{ textAlert }})){return true;}else{return false;}"><span class="fas fa-clone mr-2"></span><span class="d-none d-sm-inline">Copier suivi</span></a>
+					{% endif %}
+				</div>
+				<div class="mb-3 float-right">
+					<a href="{{ path('support_edit', {'id': support.id }) }}" id="support_edit" class="btn btn-{{ theme_color }} shadow"><span 
+						class="fas fa-edit mr-2"></span>Modifier</a>
+				</div>
+			</div>
+		</div>
+
+		{% if nbRdvs %}
+			<hr>
+			<div class="d-flex mb-3">
+				<h2 class="h4">Rendez-vous</h2>
+				{% set rdv = nextRdv ? nextRdv : lastRdv %}
+				<span class="align-content-center"><a href="{{ path('support_calendar_show', {'id': support.id, 'year': rdv.start|date('Y'),'month': rdv.start|date('m')}) }}" 
+					class="text-{{ theme_color }} ml-2" title="Voir les rendez-vous"><span class="fas fa-edit"></span></a>
+				</span>
+			</div>	
+			<div class="row mb-2">
+				{{ view_div.get(lastRdv ? lastRdv.start|date("d/m/Y à H:i"), "rdv.last") }}
+				{{ view_div.get(nextRdv ? nextRdv.start|date("d/m/Y à H:i"), "rdv.next") }}
+			</div>
+		{% endif %}
+
+		<hr>
+
+        {% include "app/organization/referent/_historyReferents.html.twig" %}
+
+		{# {% endcache %} #}
+
+		{% if evaluation %}
+			<hr>
+			<div class="row">
+				<div class="col-md-12 mb-2">
+					<div class="float-right">
+						<a href="{{ path('support_note_new_evaluation', {'id': support.id }) }}" class="btn btn-{{ theme_color }} shadow"
+							data-toggle="tooltip" data-placement="bottom" title="Exporter l'évaluation sociale vers une note">
+							<span class="fas fa-file-export fa-lg"></span><span class="d-none d-sm-inline ml-2">Note</span></a>
+						<a href="{{ path('evaluation_export', {'id': support.id, 'type': 'word' }) }}" class="btn btn-{{ theme_color }} shadow"
+							data-toggle="tooltip" data-placement="bottom" title="Exporter l'évaluation sociale au format Word">
+							<span class="fas fa-file-word bg-primary fa-lg"></span><span class="d-none d-sm-inline ml-2">Word</span></a>
+						<a href="{{ path('evaluation_export', {'id': support.id, 'type': 'pdf' }) }}" class="btn btn-{{ theme_color }} shadow"
+							data-toggle="tooltip" data-placement="bottom" title="Exporter l'évaluation sociale au format PDF">
+							<span class="fas fa-file-pdf bg-danger fa-lg"></span><span class="d-none d-sm-inline ml-2">PDF</span></a>
+					</div>
+				</div>
+			</div>	
+
+			{% include "app/evaluation/view/_evaluationView.html.twig" %}
+			
+		{% endif %}
+
+	</div>
+
+{% endblock %}

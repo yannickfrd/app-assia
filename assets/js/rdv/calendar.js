@@ -249,20 +249,20 @@ export default class Calendar {
      * @param {Object} data 
      */
     responseAjax(data) {
-        console.log(data.rdv)
-        if (data.code === 200) {
-            if (data.action === 'show') {
-                this.showRdv(data.rdv)
-                this.modalElt.show()
-            }
-            if (data.action === 'create') {
-                this.createRdv(data.rdv)
-            }
-            if (data.action === 'update') {
-                this.updateRdv(data.rdv)
-            }
-            if (data.action === 'delete') {
-                this.deleteRdv(data.rdv)
+        if (data.action) {
+            switch (data.action) {
+                case 'show':
+                    this.showRdv(data.rdv);
+                    break;
+                case 'create':
+                    this.createRdv(data.rdv);
+                    break;
+                case 'update':
+                    this.updateRdv(data.rdv);
+                    break;
+                case 'delete':
+                    this.deleteRdv(data.rdv);
+                    break;
             }
         }
         if (data.msg) {
@@ -309,6 +309,8 @@ export default class Calendar {
             this.btnDeleteElt.classList.add('d-none')
             this.btnSaveElt.classList.add('d-none')
         }
+        
+        this.modalElt.show()
     }
 
     /**  

@@ -10,7 +10,7 @@ App\Entity\Support\Rdv:
     updatedAt: <dateTimeBetween($createdAt, "now")>
     createdBy: "@userRoleUser"
     updatedBy: "@userRoleUser"
-    supportGroup: "@supportGroup"
+    supportGroup: "@supportGroup1"
 
   rdv{2..5}:
     title: <sentence(10, true)>
@@ -22,40 +22,4 @@ App\Entity\Support\Rdv:
     updatedAt: <dateTimeBetween($createdAt, "now")>
     createdBy: "@userRoleUser"
     updatedBy: "@userRoleUser"
-    supportGroup: "@supportGroup"
-
-App\Entity\People\Person:
-  person:
-    firstname: John
-    lastname: Doe
-    gender: 2
-    birthdate: <date_create("1980-01-01")>
-
-App\Entity\People\PeopleGroup:
-  peopleGroup:
-    familyTypology: 2
-    nbPeople: 1
-
-App\Entity\Support\SupportGroup:
-  supportGroup:
-    startDate: <date_create("2019-04-03")>
-    status: 2
-    referent: "@userRoleUser"
-    peopleGroup: "@peopleGroup"
-    service: "@service1"
-    createdAt: <date_create()>
-    updatedAt: <date_create()>
-    createdBy: "@userRoleUser"
-    updatedBy: "@userRoleUser"
-
-App\Entity\Support\SupportPerson:
-  supportPerson:
-    startDate: "@supportGroup->startDate"
-    endDate: "@supportGroup->endDate"
-    status: "@supportGroup->status"
-    createdAt: "@supportGroup->createdAt"
-    updatedAt: "@supportGroup->updatedAt"
-    supportGroup: "@supportGroup"
-    person: "@person"
-    head: true
-    role: 5
+    supportGroup: "@supportGroup1"

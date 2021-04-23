@@ -5,18 +5,25 @@ App\Entity\People\Person:
     gender: 2
     birthdate: <date_create("1980-01-01")>
     phone1: 01 00 00 00 00
+    email: "j.doe@free.fr"
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
     createdBy: "@userRoleUser"
     updatedBy: "@userRoleUser"
-
-  person{2..5}:
+  person2:
+    firstname: Jane
+    lastname: Doe
+    gender: 1
+    birthdate: <date_create("1981-01-01")>
+    createdAt: <dateTimeBetween("-2 years", "now")>
+    updatedAt: <dateTimeBetween($createdAt, "now")>
+    createdBy: "@userRoleUser"
+    updatedBy: "@userRoleUser"
+  person{3..5}:
     gender: <numberBetween(1, 2)>
     firstname: <fr_FR:firstName($gender, "fr_FR")>
     lastname: <lastName()>
     birthdate: <dateTimeBetween("-55 years", "now")>
-    email: <mb_strtolower($firstname)>.<mb_strtolower($lastname)>\@gmail.com
-    phone1: 06 00 00 00 00
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
     createdBy: "@userRoleUser"
@@ -24,40 +31,33 @@ App\Entity\People\Person:
 
 App\Entity\People\PeopleGroup:
   peopleGroup1:
+    familyTypology: 3
+    nbPeople: 2
+  peopleGroup2:
+    familyTypology: 1
+    nbPeople: 1
+  peopleGroup3:
     familyTypology: 2
     nbPeople: 1
 
 App\Entity\People\RolePerson:
-  rolePerson:
+  rolePerson1:
     head: 1
-    role: 5
+    role: 1
     person: "@person1"
     peopleGroup: "@peopleGroup1"
-
-App\Entity\Organization\User:
-  userRoleUser:
-    firstname: Role
-    lastname: SUPER_ADMIN
-    username: r.super_admin
-    email: r.super_admin@esperer-95.org
-    status: 1
-    roles: ["ROLE_SUPER_ADMIN"]
-    plainPassword: Test123*
-
-App\Entity\Organization\Service:
-  service1:
-    name: CHRS XXX
-    type: 1
-    pole: "@pole"
-    createdAt: <date_create()>
-    updatedAt: <date_create()>
-
-App\Entity\Organization\Pole:
-  pole:
-    name: Habitat
-    createdAt: <date_create()>
-    updatedAt: <date_create()>
-
-App\Entity\Organization\Device:
-  device1:
-    name: Insertion
+  rolePerson2:
+    head: 0
+    role: 1
+    person: "@person2"
+    peopleGroup: "@peopleGroup1"
+  rolePerson3:
+    head: 1
+    role: 1
+    person: "@person3"
+    peopleGroup: "@peopleGroup2"
+  rolePerson4:
+    head: 1
+    role: 1
+    person: "@person4"
+    peopleGroup: "@peopleGroup3"

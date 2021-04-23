@@ -2,18 +2,19 @@
 
 namespace App\Entity\Support;
 
-use Doctrine\ORM\Mapping as ORM;
 use App\Entity\People\PeopleGroup;
-use Gedmo\Mapping\Annotation as Gedmo;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Support\DocumentRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
+ * @ORM\HasLifecycleCallbacks
  */
 class Document
 {
@@ -108,6 +109,16 @@ class Document
      * @ORM\ManyToOne(targetEntity="App\Entity\Support\SupportGroup", inversedBy="documents")
      */
     private $supportGroup;
+
+    /**
+     * @ORM\PreFlush
+     */
+    public function preFlush()
+    {
+        if ($this->supportGroup) {
+            $this->supportGroup->setUpdatedAt(new \DateTime());
+        }
+    }
 
     public function getId(): ?int
     {

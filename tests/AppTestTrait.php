@@ -26,7 +26,7 @@ trait AppTestTrait
         $cookie = new Cookie($session->getName(), $session->getId());
         $this->client->getCookieJar()->set($cookie);
 
-        $this->client->request('POST', $this->generateUri('security_login'), [
+        $this->client->request('POST', '/login', [
             '_username' => $user->getUsername(),
             '_password' => $user->getPlainPassword(),
             '_csrf_token' => $this->client->getContainer()->get('security.csrf.token_manager')->getToken('authenticate'),

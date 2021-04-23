@@ -2,18 +2,19 @@
 
 namespace App\Entity\People;
 
+use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Support\PlacePerson;
 use App\Entity\Support\SupportPerson;
+use Gedmo\Mapping\Annotation as Gedmo;
 use App\Entity\Traits\ContactEntityTrait;
+use Doctrine\Common\Collections\Collection;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\String\Slugger\AsciiSlugger;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\People\PersonRepository")
@@ -38,7 +39,7 @@ class Person
         1 => 'Féminin',
         2 => 'Masculin',
         97 => 'Autre',
-        99 => 'Non évalué',
+        99 => 'Non renseigné',
     ];
 
     public const CIVILITY = [
@@ -170,7 +171,8 @@ class Person
 
     public function __toString()
     {
-        return $this->lastname.' '.$this->firstname;
+        return (string) $this->id;
+        // return $this->lastname.' '.$this->firstname;
     }
 
     public function getId(): ?int
@@ -307,7 +309,7 @@ class Person
     }
 
     /**
-     * @return RolePerson[]|Collection|null
+     * @return Collection<Person>
      */
     public function getRolesPerson()
     {
@@ -338,7 +340,7 @@ class Person
     }
 
     /**
-     * @return SupportPerson[]|Collection|null
+     * @return Collection<SupportPerson>
      */
     public function getSupports()
     {
@@ -369,7 +371,7 @@ class Person
     }
 
     /**
-     * @return PlacePerson[]|Collection|null
+     * @return Collection<Person>
      */
     public function getPlacePeople()
     {

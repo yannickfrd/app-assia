@@ -26,21 +26,8 @@ trait ErrorMessageTrait
         }
 
         return $this->json([
-            'code' => 200,
             'alert' => 'danger',
             'msg' => 'Une erreur s\'est produite. '.join(' ', $msg),
         ]);
-    }
-
-    /**
-     * Retourne un message d'accès refusé.
-     */
-    protected function accessDenied(): Response
-    {
-        return $this->json([
-            'code' => 403,
-            'alert' => 'danger',
-            'msg' => "Vous n'avez pas les droits pour cette action. Demandez à un administrateur de votre service.",
-        ], 200);
     }
 }

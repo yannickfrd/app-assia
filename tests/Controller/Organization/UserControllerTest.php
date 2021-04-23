@@ -7,7 +7,6 @@ use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserControllerTest extends WebTestCase
@@ -19,77 +18,70 @@ class UserControllerTest extends WebTestCase
     protected $client;
 
     /** @var array */
-    protected $dataFixtures;
+    protected $data;
 
     /** @var User */
     protected $user;
 
     protected function setUp()
     {
-        $this->dataFixtures = $this->loadFixtureFiles([
+        $this->data = $this->loadFixtureFiles([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
         ]);
 
-        $this->user = $this->dataFixtures['userRoleUser'];
+        $this->user = $this->data['userRoleUser'];
     }
 
-    public function test_list_users_page_is_up()
+    public function testSearchUsersPageIsSuccessful()
     {
-        $this->createLogin($this->dataFixtures['userRoleUser']);
+        $this->createLogin($this->data['userRoleUser']);
 
-        $this->client->request('GET', $this->generateUri('users'));
+        $this->client->request('GET', '/directory/users');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Utilisateurs');
-    }
 
-    public function test_search_users_page_is_successful()
-    {
-        $this->createLogin($this->dataFixtures['userRoleUser']);
-
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('users'));
-
-        $form = $crawler->selectButton('search')->form([
+        $this->client->submitForm('search', [
             'lastname' => 'SUPER_ADMIN',
             'firstname' => 'Role',
             'status' => 6,
             'phone' => '01 00 00 00 00',
-        ]);
-
-        $this->client->submit($form);
+        ], 'GET');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('table tbody tr td:nth-child(2)', 'SUPER_ADMIN');
     }
 
-    public function test_export_users_is_successful()
+    public function testExportUsersIsSuccessful()
     {
-        $this->createLogin($this->dataFixtures['userRoleUser']);
+        $this->createLogin($this->data['userRoleUser']);
 
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('users'));
+        $this->client->request('GET', '/directory/users');
 
-        $form = $crawler->selectButton('export')->form([]);
-
-        $this->client->submit($form);
+        $this->client->submitForm('export', [], 'GET');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertContains('spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
     }
 
-    public function test_admin_list_users_is_up()
+    public function testAdminListUsersIsUp()
     {
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->data['userSuperAdmin']);
 
-        $this->client->request('GET', $this->generateUri('admin_users'));
+        $this->client->request('GET', '/admin/users');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Administration des utilisateurs');
+
+        $this->client->submitForm('export', [], 'GET');
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertContains('spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
     }
 
-    public function test_username_exists_is_true()
+    public function testUsernameExistsIsTrue()
     {
-        $this->createLogin($this->dataFixtures['userRoleUser']);
+        $this->createLogin($this->data['userRoleUser']);
 
         $this->client->request('GET', '/user/username_exists/r.super_admin');
 
@@ -97,13 +89,11 @@ class UserControllerTest extends WebTestCase
         $this->assertTrue($result['response']);
     }
 
-    public function test_username_exists_is_false()
+    public function testUsernameExistsIsFalse()
     {
-        $this->createLogin($this->dataFixtures['userRoleUser']);
+        $this->createLogin($this->data['userRoleUser']);
 
-        $this->client->request('GET', $this->generateUri('username_exists', [
-            'value' => 'xxx',
-        ]));
+        $this->client->request('GET', '/user/username_exists/xxx');
 
         $result = json_decode($this->client->getResponse()->getContent(), true);
 
@@ -114,6 +104,6 @@ class UserControllerTest extends WebTestCase
     {
         parent::tearDown();
         $this->client = null;
-        $this->dataFixtures = null;
+        $this->data = null;
     }
 }

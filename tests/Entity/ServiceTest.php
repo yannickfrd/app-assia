@@ -29,12 +29,12 @@ class ServiceTest extends WebTestCase
             ->get('doctrine')
             ->getManager();
 
-        $dataFixtures = $this->loadFixtureFiles([
+        $data = $this->loadFixtureFiles([
             dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/DataFixturesTest/ServiceFixturesTest.yaml',
         ]);
 
-        $this->pole = $dataFixtures['pole'];
+        $this->pole = $data['pole1'];
 
         $faker = \Faker\Factory::create('fr_FR');
 

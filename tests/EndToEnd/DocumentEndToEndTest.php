@@ -96,14 +96,13 @@ class DocumentEndToEndTest extends PantherTestCase
         $this->outputMsg('Edit a document');
 
         $this->client->waitFor('button[name="document_update"]');
-        $form = $crawler->selectButton('document_update')->form([
+            
+        /** @var Crawler */
+        $crawler = $this->client->submitForm('document_update', [
             'document[name]' => $this->faker->sentence(mt_rand(3, 5), true),
             'document[type]' => mt_rand(1, 9),
             'document[content]' => join('. ', $this->faker->paragraphs(1)),
         ]);
-
-        /** @var Crawler */
-        $crawler = $this->client->submit($form);
 
         $this->client->waitFor('#js-msg-flash');
         $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
@@ -175,12 +174,10 @@ class DocumentEndToEndTest extends PantherTestCase
 
         $crawler->filter('#checkbox-all-files')->click();
 
-        $form = $crawler->selectButton('action-validate')->form([
+        /** @var Crawler */
+        $crawler = $this->client->submitForm('action-validate', [
             'action[type]' => 1,
         ]);
-
-        /** @var Crawler */
-        $crawler = $this->client->submit($form);
 
         $this->client->waitFor('#js-msg-flash');
         $this->assertSelectorExists('#js-msg-flash.alert.alert-success');

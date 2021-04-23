@@ -10,10 +10,12 @@
             <span>{{ support.subService ? " | " ~ support.subService.name }}</span>
         <span>{{ support.device ? " (" ~ support.device.name ~ ")" }}</span>
     </div>
-    {{ view_div.get(hotelSupport.statusToString 
-        ~ (support.service.coefficient == YES and support.status == STATUS_IN_PROGRESS ? " (coeff. " ~ support.coefficient ~ ")" )
-        ~ (hotelSupport.reasonNoInclusionToString ? " (" ~ hotelSupport.reasonNoInclusionToString ~ ")")
-        ~ (support.endStatus ? " (" ~ support.endStatusToString ~ ")" ), "Status") }}
+    {% if hotelSupport %}
+        {{ view_div.get(hotelSupport.statusToString 
+            ~ (support.service.coefficient == YES and support.status == STATUS_IN_PROGRESS ? " (coeff. " ~ support.coefficient ~ ")" )
+            ~ (hotelSupport.reasonNoInclusionToString ? " (" ~ hotelSupport.reasonNoInclusionToString ~ ")")
+            ~ (support.endStatus ? " (" ~ support.endStatusToString ~ ")" ), "Status") }}
+    {% endif %}
     {{ view_div.get(support.startDate ? support.startDate|date("d/m/Y") 
         ~ (support.endDate ? " - " ~ support.endDate|date("d/m/Y")), "Date de suivi") }}
     {{ view_div.get(support.referent ? support.referent.fullname ~ (support.referent2 ? " | " ~ support.referent2.fullname), "Referent") }}

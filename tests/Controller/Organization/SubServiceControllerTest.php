@@ -20,66 +20,41 @@ class SubServiceControllerTest extends WebTestCase
     {
     }
 
-    public function testNewSubServiceIsUp()
+    public function testCreateNewSubServiceIsSuccessful()
     {
-        $dataFixtures = $this->loadFixtureFiles($this->getFixtureFiles());
-        $this->createLogin($dataFixtures['userSuperAdmin']);
+        $data = $this->loadFixtureFiles($this->getFixtureFiles());
+        $this->createLogin($data['userAdmin']);
 
-        $this->client->request('GET', $this->generateUri('sub_service_new', [
-            'id' => $dataFixtures['service1']->getId(),
-        ]));
+        $id = $data['service1']->getId();
+        $this->client->request('GET', "/service/$id/sub-service/new");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Nouveau sous-service');
-    }
 
-    public function testCreateNewSubServiceIsSuccessfull()
-    {
-        $dataFixtures = $this->loadFixtureFiles($this->getFixtureFiles());
-        $this->createLogin($dataFixtures['userRoleAdmin']);
-
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('sub_service_new', [
-            'id' => $dataFixtures['service1']->getId(),
-        ]));
-
-        $form = $crawler->selectButton('send')->form([
+        $this->client->submitForm('send', [
             'sub_service[name]' => 'Sous-service test',
             'sub_service[phone1]' => '01 00 00 00 00',
         ]);
-
-        $this->client->submit($form);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorExists('.alert.alert-success');
     }
 
-    public function testEditSubServiceisUp()
+    public function testEditSubServiceIsSuccessful()
     {
-        $dataFixtures = $this->loadFixtureFiles($this->getFixtureFiles());
-        $this->createLogin($dataFixtures['userRoleAdmin']);
-
-        $this->client->request('GET', $this->generateUri('sub_service_edit', [
-            'id' => $dataFixtures['subService1']->getId(),
+        $data = $this->loadFixtureFiles(array_merge($this->getFixtureFiles(), [
+            dirname(__DIR__).'/../DataFixturesTest/PlaceFixturesTest.yaml',
         ]));
+
+        $this->createLogin($data['userAdmin']);
+
+        $id = $data['subService1']->getId();
+        $this->client->request('GET', "/sub-service/$id");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', $dataFixtures['subService1']->getName());
-    }
+        $this->assertSelectorTextContains('h1', $data['subService1']->getName());
 
-    public function testEditSubServiceisSuccessful()
-    {
-        $dataFixtures = $this->loadFixtureFiles($this->getFixtureFiles());
-        $this->createLogin($dataFixtures['userRoleAdmin']);
-
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('sub_service_edit', [
-            'id' => $dataFixtures['subService1']->getId(),
-        ]));
-
-        $form = $crawler->selectButton('send')->form([]);
-
-        $this->client->submit($form);
+        $this->client->submitForm('send', []);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorExists('.alert.alert-success');
@@ -87,15 +62,19 @@ class SubServiceControllerTest extends WebTestCase
 
     public function testDisableSubService()
     {
-        $dataFixtures = $this->loadFixtureFiles($this->getFixtureFiles());
-        $this->createLogin($dataFixtures['userSuperAdmin']);
+        $data = $this->loadFixtureFiles($this->getFixtureFiles());
+        $this->createLogin($data['userSuperAdmin']);
 
-        $this->client->request('GET', $this->generateUri('sub_service_disable', [
-            'id' => $dataFixtures['subService1']->getId(),
-        ]));
+        $id = $data['subService1']->getId();
+        $this->client->request('GET', "/sub-service/$id/disable");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorExists('.alert.alert-warning');
+        $this->assertSelectorTextContains('.alert.alert-warning', 'est désactivé');
+
+        $this->client->request('GET', "/sub-service/$id/disable");
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorExists('.alert.alert-success', 'est ré-activé');
     }
 
     protected function getFixtureFiles()
@@ -110,6 +89,6 @@ class SubServiceControllerTest extends WebTestCase
     {
         parent::tearDown();
         $this->client = null;
-        $dataFixtures = null;
+        $data = null;
     }
 }

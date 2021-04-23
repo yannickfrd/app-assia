@@ -2,6 +2,9 @@
 
 namespace App\Repository\Traits;
 
+use App\Entity\Organization\Service;
+use App\Form\Model\Support\AvdlSupportSearch;
+use App\Form\Model\Support\HotelSupportSearch;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\QueryBuilder;
 
@@ -66,15 +69,29 @@ trait QueryTrait
         return $query;
     }
 
+    protected function filterByServiceType(QueryBuilder $query, string $dataClass = null): QueryBuilder
+    {
+        if (HotelSupportSearch::class === $dataClass) {
+            $query->andWhere('s.type = :type')
+                ->setParameter('type', Service::SERVICE_TYPE_HOTEL);
+        }
+        if (AvdlSupportSearch::class === $dataClass) {
+            $query->andWhere('s.type = :type')
+                ->setParameter('type', Service::SERVICE_TYPE_AVDL);
+        }
+
+        return $query;
+    }
+
     /**
-     * @param array|ArrayCollection $options
+     * @param array|ArrayCollection $values
      */
-    protected function addOrWhere(QueryBuilder $query, string $x, $options): QueryBuilder
+    protected function addOrWhere(QueryBuilder $query, string $x, $values): QueryBuilder
     {
         $expr = $query->expr();
         $orX = $expr->orX();
-        foreach ($options as $option) {
-            $orX->add($expr->eq($x, $option));
+        foreach ($values as $value) {
+            $orX->add($expr->eq($x, $value));
             $query->andWhere($orX);
         }
 

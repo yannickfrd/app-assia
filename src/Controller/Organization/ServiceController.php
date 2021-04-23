@@ -13,23 +13,21 @@ use App\Repository\Organization\UserRepository;
 use App\Service\Export\ServiceExport;
 use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Cache\CacheItemInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ServiceController extends AbstractController
 {
+    private $serviceRepo;
     private $manager;
-    private $repo;
 
-    public function __construct(EntityManagerInterface $manager, ServiceRepository $repo)
+    public function __construct(ServiceRepository $serviceRepo, EntityManagerInterface $manager)
     {
+        $this->serviceRepo = $serviceRepo;
         $this->manager = $manager;
-        $this->repo = $repo;
     }
 
     /**
@@ -39,9 +37,7 @@ class ServiceController extends AbstractController
      */
     public function listServices(Request $request, Pagination $pagination): Response
     {
-        $search = new ServiceSearch();
-
-        $form = ($this->createForm(ServiceSearchType::class, $search))
+        $form = $this->createForm(ServiceSearchType::class, $search = new ServiceSearch())
             ->handleRequest($request);
 
         if ($search->getExport()) {
@@ -51,7 +47,7 @@ class ServiceController extends AbstractController
         return $this->render('app/organization/service/listServices.html.twig', [
             'serviceSearch' => $search,
             'form' => $form->createView(),
-            'services' => $pagination->paginate($this->repo->findServicesQuery($search, $this->getUser()), $request) ?? null,
+            'services' => $pagination->paginate($this->serviceRepo->findServicesQuery($search, $this->getUser()), $request) ?? null,
         ]);
     }
 
@@ -63,9 +59,7 @@ class ServiceController extends AbstractController
      */
     public function newService(Request $request): Response
     {
-        $service = new Service();
-
-        $form = ($this->createForm(ServiceType::class, $service))
+        $form = $this->createForm(ServiceType::class, $service = new Service())
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -89,13 +83,18 @@ class ServiceController extends AbstractController
      *
      * @param int $id from Service
      */
-    public function editService(int $id, SubServiceRepository $repoSubService, UserRepository $repoUser, PlaceRepository $repoPlace, Request $request): Response
-    {
-        $service = $this->repo->getFullService($id);
+    public function showService(
+        int $id,
+        Request $request,
+        SubServiceRepository $subServiceRepo,
+        UserRepository $userRepo,
+        PlaceRepository $placeRepo
+    ): Response {
+        $service = $this->serviceRepo->getFullService($id);
 
         $this->denyAccessUnlessGranted('VIEW', $service);
 
-        $form = ($this->createForm(ServiceType::class, $service))
+        $form = $this->createForm(ServiceType::class, $service)
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -106,9 +105,7 @@ class ServiceController extends AbstractController
             $this->addFlash('success', 'Les modifications sont enregistrées.');
         }
 
-        $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
-
-        $places = $this->getPlaces($service, $repoPlace, $cache);
+        $places = $placeRepo->findPlacesOfService($service);
 
         $nbPlaces = 0;
         foreach ($places as $place) {
@@ -117,8 +114,8 @@ class ServiceController extends AbstractController
 
         return $this->render('app/organization/service/service.html.twig', [
             'form' => $form->createView(),
-            'subServices' => $this->getSubServices($service, $repoSubService, $cache),
-            'users' => $this->getUsers($service, $repoUser, $cache),
+            'subServices' => $subServiceRepo->findSubServicesOfService($service),
+            'users' => $userRepo->findUsersOfService($service),
             'places' => $places,
             'nbPlaces' => $nbPlaces,
         ]);
@@ -127,7 +124,7 @@ class ServiceController extends AbstractController
     /**
      * Désactive ou réactive le service.
      *
-     * @Route("/service/{id}/disable", name="service_disable", methods="GET")
+     * @Route("/admin/service/{id}/disable", name="service_disable", methods="GET")
      */
     public function disableService(Service $service): Response
     {
@@ -135,10 +132,10 @@ class ServiceController extends AbstractController
 
         if ($service->getDisabledAt()) {
             $service->setDisabledAt(null);
-            $this->addFlash('success', 'Le service "'.$service->getName().'" est réactivé.');
+            $this->addFlash('success', 'Le service "'.$service->getName().'" est ré-activé.');
         } else {
             $service->setDisabledAt(new \DateTime());
-            $this->addFlash('warning', 'Le service "'.$service->getName().'" désactivé.');
+            $this->addFlash('warning', 'Le service "'.$service->getName().'" est désactivé.');
         }
 
         $this->manager->flush();
@@ -151,41 +148,8 @@ class ServiceController extends AbstractController
      */
     protected function exportData(ServiceSearch $search)
     {
-        $services = $this->repo->findServicesToExport($search);
+        $services = $this->serviceRepo->findServicesToExport($search);
 
         return (new ServiceExport())->exportData($services);
-    }
-
-    protected function getSubServices(Service $service, SubServiceRepository $repoSubService, FilesystemAdapter $cache)
-    {
-        return $repoSubService->findSubServicesOfService($service);
-
-        return $cache->get(Service::CACHE_SERVICE_SUBSERVICES_KEY.$service->getId(), function (CacheItemInterface $item) use ($service, $repoSubService) {
-            $item->expiresAfter(\DateInterval::createFromDateString('1 month'));
-
-            return $repoSubService->findSubServicesOfService($service);
-        });
-    }
-
-    protected function getPlaces(Service $service, PlaceRepository $repoPlace, FilesystemAdapter $cache)
-    {
-        return $repoPlace->findPlacesOfService($service);
-
-        return $cache->get(Service::CACHE_SERVICE_PLACES_KEY.$service->getId(), function (CacheItemInterface $item) use ($service, $repoPlace) {
-            $item->expiresAfter(\DateInterval::createFromDateString('1 month'));
-
-            return $repoPlace->findPlacesOfService($service);
-        });
-    }
-
-    protected function getUsers(Service $service, UserRepository $repoUser, FilesystemAdapter $cache)
-    {
-        return $repoUser->findUsersOfService($service);
-
-        return $cache->get(Service::CACHE_SERVICE_USERS_KEY.$service->getId(), function (CacheItemInterface $item) use ($service, $repoUser) {
-            $item->expiresAfter(\DateInterval::createFromDateString('1 month'));
-
-            return $repoUser->findUsersOfService($service);
-        });
     }
 }

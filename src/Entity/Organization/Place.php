@@ -2,18 +2,19 @@
 
 namespace App\Entity\Organization;
 
-use App\Entity\Support\PlaceGroup;
-use App\Entity\Traits\CreatedUpdatedEntityTrait;
-use App\Entity\Traits\DisableEntityTrait;
-use App\Entity\Traits\GeoLocationEntityTrait;
-use App\Entity\Traits\LocationEntityTrait;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Support\PlaceGroup;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use App\Entity\Traits\DisableEntityTrait;
+use App\Entity\Traits\LocationEntityTrait;
+use Doctrine\Common\Collections\Collection;
+use App\Entity\Traits\GeoLocationEntityTrait;
+use App\Entity\Traits\CreatedUpdatedEntityTrait;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Organization\PlaceRepository")
@@ -47,7 +48,7 @@ class Place
         13 => 'Logement T9',
         14 => 'Pavillon',
         97 => 'Autre',
-        99 => 'Non évalué',
+        99 => 'Non renseigné',
     ];
 
     public const CONFIGURATION = [
@@ -157,7 +158,7 @@ class Place
 
     public function __toString()
     {
-        return strval($this->id);
+        return (string) $this->id;
     }
 
     public function getId(): ?int
@@ -339,7 +340,7 @@ class Place
     }
 
     /**
-     * @return PlaceGroup[]|Collection|null
+     * @return Collection<PlaceGroup>
      */
     public function getPlaceGroups()
     {

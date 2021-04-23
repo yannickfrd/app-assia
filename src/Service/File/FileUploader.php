@@ -72,7 +72,6 @@ class FileUploader
             $documents[] = $document;
         }
 
-        $supportGroup->setUpdatedAt($now);
         $this->manager->flush();
 
         $data = [];

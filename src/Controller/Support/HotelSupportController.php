@@ -20,19 +20,19 @@ class HotelSupportController extends AbstractController
      *
      * @Route("/hotel-supports", name="hotel_supports", methods="GET|POST")
      */
-    public function viewListHotelSupports(Request $request, Pagination $pagination, SupportPersonRepository $repo): Response
+    public function viewListHotelSupports(Request $request, Pagination $pagination, SupportPersonRepository $supportPersonRepo): Response
     {
-        $form = ($this->createForm(HotelSupportSearchType::class, $search = new HotelSupportSearch()))
+        $form = $this->createForm(HotelSupportSearchType::class, $search = new HotelSupportSearch())
             ->handleRequest($request);
 
         if ($search->getExport()) {
-            return $this->exportData($search, $repo);
+            return $this->exportData($search, $supportPersonRepo);
         }
 
         return $this->render('app/support/hotelSupport/listHotelSupports.html.twig', [
             'form' => $form->createView(),
             'supports' => $pagination->paginate(
-                $repo->findHotelSupportsQuery($search),
+                $supportPersonRepo->findHotelSupportsQuery($search),
                 $request
             ),
         ]);
@@ -41,11 +41,11 @@ class HotelSupportController extends AbstractController
     /**
      * Exporte les données.
      */
-    protected function exportData(HotelSupportSearch $search, SupportPersonRepository $repo)
+    protected function exportData(HotelSupportSearch $search, SupportPersonRepository $supportPersonRepo)
     {
         set_time_limit(10 * 60);
 
-        $supports = $repo->findSupportsOfServiceToExport($search, Service::SERVICE_TYPE_HOTEL);
+        $supports = $supportPersonRepo->findSupportsOfServiceToExport($search, Service::SERVICE_TYPE_HOTEL);
 
         if (!$supports) {
             $this->addFlash('warning', 'Aucun résultat à exporter.');

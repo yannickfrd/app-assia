@@ -19,13 +19,15 @@ export default class RemoveTableRow {
 
     init() {
         this.trElts.forEach(trElt => {
-            let btnElt = trElt.querySelector('button.js-remove')
-            btnElt.addEventListener('click', e => {
-                e.preventDefault()
-                this.modalConfirmElt.addEventListener('click', this.sendRequest.bind(this, btnElt, trElt), {
-                    once: true
+            const btnElt = trElt.querySelector('button.js-remove')
+            if (btnElt) {
+                btnElt.addEventListener('click', e => {
+                    e.preventDefault()
+                    this.modalConfirmElt.addEventListener('click', this.sendRequest.bind(this, btnElt, trElt), {
+                        once: true
+                    })
                 })
-            })
+            }
         })
     }
 

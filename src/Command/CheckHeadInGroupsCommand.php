@@ -2,9 +2,9 @@
 
 namespace App\Command;
 
-use App\EntityManager\PeopleGroupManager;
 use App\Repository\People\PeopleGroupRepository;
 use App\Service\DoctrineTrait;
+use App\Service\People\PeopleGroupChecker;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,15 +19,15 @@ class CheckHeadInGroupsCommand extends Command
 
     protected static $defaultName = 'app:peopleGroup:check_head';
 
-    protected $repo;
+    protected $peopleGroupRepo;
     protected $manager;
-    protected $peopleGroupManager;
+    protected $peopleGroupChecker;
 
-    public function __construct(PeopleGroupRepository $repo, EntityManagerInterface $manager, PeopleGroupManager $peopleGroupManager)
+    public function __construct(PeopleGroupRepository $peopleGroupRepo, EntityManagerInterface $manager, PeopleGroupChecker $peopleGroupChecker)
     {
-        $this->repo = $repo;
+        $this->peopleGroupRepo = $peopleGroupRepo;
         $this->manager = $manager;
-        $this->peopleGroupManager = $peopleGroupManager;
+        $this->peopleGroupChecker = $peopleGroupChecker;
         $this->disableListeners($this->manager);
 
         parent::__construct();
@@ -43,7 +43,7 @@ class CheckHeadInGroupsCommand extends Command
 
     protected function update()
     {
-        $peopleGroups = $this->repo->findBy([], ['updatedAt' => 'DESC'], 1000);
+        $peopleGroups = $this->peopleGroupRepo->findBy([], ['updatedAt' => 'DESC'], 1000);
         $count = 0;
 
         foreach ($peopleGroups as $peopleGroup) {
@@ -53,9 +53,9 @@ class CheckHeadInGroupsCommand extends Command
                     ++$countHeads;
                 }
             }
-            if ($countHeads != 1) {
+            if (1 != $countHeads) {
                 echo $peopleGroup->getId()." => $countHeads DP\n";
-                $this->peopleGroupManager->checkValidHead($peopleGroup);
+                $this->peopleGroupChecker->checkValidHeader($peopleGroup);
                 ++$count;
             }
         }

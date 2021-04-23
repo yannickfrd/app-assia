@@ -4,7 +4,7 @@ namespace App\Form\Organization\User;
 
 use App\Entity\Organization\User;
 use App\Form\Model\Organization\UserSearch;
-use App\Form\Type\SearchType;
+use App\Form\Type\ServiceDeviceReferentSearchType;
 use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -48,7 +48,7 @@ class UserSearchType extends AbstractType
                     'autocomplete' => 'off',
                 ],
             ])
-            ->add('service', SearchType::class, [
+            ->add('service', ServiceDeviceReferentSearchType::class, [
                 'attr' => [
                     'options' => ['poles', 'services'],
                 ],

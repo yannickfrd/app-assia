@@ -188,7 +188,7 @@ export default class SearchPerson {
      */
     addBtnElt(person) {
         if (this.groupId) {
-            return `<a href="/group/${this.groupId}/add/person/${person.id}" class="js-add-person shadow" 
+            return `<a href="/group/${this.groupId}/add_person/${person.id}" class="js-add-person shadow" 
                         data-toggle="modal" data-target="#modal-block" data-placement="bottom" title="Ajouter la personne au groupe">
                         <span class="fas fa-plus-square text-dark fa-2x"></span>
                     </a>`

@@ -104,10 +104,15 @@ class DeviceRepository extends ServiceEntityRepository
     /**
      * Donne la liste des dispositifs de l'utilisateur.
      */
-    public function getDevicesOfUserQueryBuilder(CurrentUserService $currentUser, Service $service = null, Device $device = null)
+    public function getDevicesOfUserQueryBuilder(CurrentUserService $currentUser, Service $service = null, string $dataClass = null)
     {
         $query = $this->createQueryBuilder('d')->select('PARTIAL d.{id, name, coefficient, place, disabledAt}')
-            ->leftJoin('d.serviceDevices', 'sd')->addSelect('sd');
+            ->leftJoin('d.serviceDevices', 'sd')->addSelect('sd')
+            ->leftJoin('sd.service', 's')->addSelect('PARTIAL s.{id, name, type}');
+
+        if ($dataClass) {
+            $query = $this->filterByServiceType($query, $dataClass);
+        }
 
         if ($service) {
             $query = $query->andWhere('sd.service = :service')
@@ -120,11 +125,6 @@ class DeviceRepository extends ServiceEntityRepository
         }
 
         $query = $query->andWhere('d.disabledAt IS NULL');
-
-        if ($device) {
-            $query = $query->orWhere('d.id = :device')
-                ->setParameter('device', $device);
-        }
 
         return $query->orderBy('d.name', 'ASC');
     }

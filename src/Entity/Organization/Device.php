@@ -2,15 +2,16 @@
 
 namespace App\Entity\Organization;
 
-use App\Entity\Support\SupportGroup;
-use App\Entity\Traits\CreatedUpdatedEntityTrait;
-use App\Entity\Traits\DisableEntityTrait;
 use App\Form\Utils\Choices;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use App\Entity\Support\SupportGroup;
+use App\Entity\Traits\DisableEntityTrait;
+use Doctrine\Common\Collections\Collection;
+use App\Entity\Traits\CreatedUpdatedEntityTrait;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Organization\DeviceRepository")
@@ -127,7 +128,7 @@ class Device
 
     public function __toString()
     {
-        return strval($this->id);
+        return (string) $this->id;
     }
 
     public function getId(): ?int
@@ -254,7 +255,7 @@ class Device
     }
 
     /**
-     * @return ServiceDevice[]|Collection|null
+     * @return Collection<Device>
      */
     public function getServiceDevices()
     {
@@ -285,7 +286,7 @@ class Device
     }
 
     /**
-     * @return Place[]|Collection|null
+     * @return Collection<Place>
      */
     public function getPlaces()
     {
@@ -316,7 +317,7 @@ class Device
     }
 
     /**
-     * @return SupportGroup[]|Collection|null
+     * @return Collection<SupportGroup>
      */
     public function getSupportGroup()
     {
@@ -347,7 +348,7 @@ class Device
     }
 
     /**
-     * @return UserDevice[]|Collection|null
+     * @return Collection<Device>
      */
     public function getUserDevices()
     {

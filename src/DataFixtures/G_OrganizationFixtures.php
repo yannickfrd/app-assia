@@ -25,18 +25,18 @@ class G_OrganizationFixtures extends Fixture
         'Autre',
     ];
 
-    protected $repoUser;
+    protected $userRepo;
 
-    public function __construct(EntityManagerInterface $manager, UserRepository $repoUser)
+    public function __construct(EntityManagerInterface $manager, UserRepository $userRepo)
     {
         $this->manager = $manager;
-        $this->repoUser = $repoUser;
+        $this->UserRepo = $userRepo;
         $this->faker = \Faker\Factory::create('fr_FR');
     }
 
     public function load(ObjectManager $manager)
     {
-        $user = $this->repoUser->findOneBy(['username' => 'r.madelaine']);
+        $user = $this->UserRepo->findOneBy(['username' => 'r.madelaine']);
 
         foreach (self::ORGANIZATION as $value) {
             $now = new \Datetime();

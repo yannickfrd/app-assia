@@ -19,7 +19,7 @@ class DeviceControllerTest extends WebTestCase
     protected $client;
 
     /** @var array */
-    protected $dataFixtures;
+    protected $data;
 
     /** @var Service */
     protected $service;
@@ -29,19 +29,20 @@ class DeviceControllerTest extends WebTestCase
 
     protected function setUp()
     {
-        $this->dataFixtures = $this->loadFixtureFiles([
+        $this->data = $this->loadFixtureFiles([
+            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/DeviceFixturesTest.yaml',
         ]);
 
-        $this->service = $this->dataFixtures['service1'];
-        $this->device = $this->dataFixtures['device1'];
+        $this->service = $this->data['service1'];
+        $this->device = $this->data['device1'];
     }
 
     public function testListDevicesIsUp()
     {
-        $this->createLogin($this->dataFixtures['userRoleAdmin']);
+        $this->createLogin($this->data['userAdmin']);
 
-        $this->client->request('GET', $this->generateUri('admin_devices'));
+        $this->client->request('GET', '/admin/devices');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Dispositifs');
@@ -49,103 +50,97 @@ class DeviceControllerTest extends WebTestCase
 
     public function testNewDeviceIsUp()
     {
-        $this->createLogin($this->dataFixtures['userRoleAdmin']);
+        $this->createLogin($this->data['userAdmin']);
 
-        $this->client->request('GET', $this->generateUri('admin_device_new'));
+        $this->client->request('GET', '/admin/device/new');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Nouveau dispositif');
     }
 
-    public function testFailToCreateDevice()
+    public function testCreateDeviceIsFailed()
     {
-        $this->createLogin($this->dataFixtures['userRoleAdmin']);
+        $this->createLogin($this->data['userAdmin']);
 
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('admin_device_new'));
+        $this->client->request('GET', '/admin/device/new');
 
-        $form = $crawler->selectButton('send')->form([
+        // Test without name
+        $this->client->submitForm('send', [
             'device[name]' => '',
         ]);
 
-        $this->client->submit($form);
-
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorExists('.alert.alert-danger');
-    }
+        $this->assertSelectorExists('input#device_name.is-invalid');
 
-    public function testCreateDeviceThatExists()
-    {
-        $this->createLogin($this->dataFixtures['userRoleAdmin']);
-
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('admin_device_new', [
-            'id' => $this->service->getId(),
-        ]));
-
-        $form = $crawler->selectButton('send')->form([
+        // Test with device exists already
+        $this->client->submitForm('send', [
             'device[name]' => 'Insertion',
-        ]);
-
-        $this->client->submit($form);
+            ]);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorExists('.alert.alert-danger');
+        $this->assertSelectorTextContains('span.form-error-message', 'Ce dispositif existe déjà.');
     }
 
-    public function testSuccessToCreateNewDevice()
+    public function testCreateDeviceIsSuccessful()
     {
-        $this->createLogin($this->dataFixtures['userRoleAdmin']);
+        $this->createLogin($this->data['userAdmin']);
 
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('admin_device_new', [
-            'id' => $this->service->getId(),
-            'device[coefficient]' => mt_rand(1, 10),
-        ]));
+        $this->client->request('GET', '/admin/device/new');
 
-        $form = $crawler->selectButton('send')->form([
+        $this->client->submitForm('send', [
             'device[name]' => 'Nouveau dispositif',
         ]);
 
-        $this->client->submit($form);
-
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorExists('.alert.alert-success');
     }
 
-    public function testEditDeviceisUp()
+    public function testEditDeviceIsSuccessful()
     {
-        $this->createLogin($this->dataFixtures['userRoleAdmin']);
+        $this->createLogin($this->data['userAdmin']);
 
-        $this->client->request('GET', $this->generateUri('admin_device_edit', [
-            'id' => $this->device->getId(),
-        ]));
+        $id = $this->device->getId();
+        $this->client->request('GET', "/admin/device/$id");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', $this->device->getName());
-    }
 
-    public function testSuccessToEditDevice()
-    {
-        $this->createLogin($this->dataFixtures['userRoleAdmin']);
-
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('admin_device_edit', [
-            'id' => $this->service->getId(),
-        ]));
-
-        $form = $crawler->selectButton('send')->form([]);
-
-        $this->client->submit($form);
+        $this->client->submitForm('send');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorExists('.alert.alert-success');
+    }
+
+    public function testDisableDeviceIsFailed()
+    {
+        $this->createLogin($this->data['userAdmin']);
+
+        $id = $this->device->getId();
+        $this->client->request('GET', "/admin/device/$id/disable");
+
+        $this->assertSame(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function testDisableDeviceIsSuccessful()
+    {
+        $this->createLogin($this->data['userSuperAdmin']);
+
+        $id = $this->device->getId();
+        $this->client->request('GET', "/admin/device/$id/disable");
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('.alert.alert-warning', 'Le dispositif est désactivé.');
+
+        $this->client->request('GET', "/admin/device/$id/disable");
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('.alert.alert-success', 'Le dispositif est ré-activé.');
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
         $this->client = null;
-        $this->dataFixtures = null;
+        $this->data = null;
     }
 }

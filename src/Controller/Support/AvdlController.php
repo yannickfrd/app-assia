@@ -23,29 +23,29 @@ class AvdlController extends AbstractController
      *
      * @Route("/avdl-supports", name="avdl_supports", methods="GET|POST")
      */
-    public function viewListAvdlSupports(Request $request, Pagination $pagination, SupportPersonRepository $repo): Response
+    public function viewListAvdlSupports(Request $request, Pagination $pagination, SupportPersonRepository $supportPersonRepo): Response
     {
-        $form = ($this->createForm(AvdlSupportSearchType::class, $search = new AvdlSupportSearch()))
+        $form = $this->createForm(AvdlSupportSearchType::class, $search = new AvdlSupportSearch())
             ->handleRequest($request);
 
         if ($search->getExport()) {
-            return $this->exportData($search, $repo);
+            return $this->exportData($search, $supportPersonRepo);
         }
 
         return $this->render('app/support/avdl/listAvdlSupports.html.twig', [
             'form' => $form->createView(),
-            'supports' => $pagination->paginate($repo->findAvdlSupportsQuery($search), $request),
+            'supports' => $pagination->paginate($supportPersonRepo->findAvdlSupportsQuery($search), $request),
         ]);
     }
 
     /**
      * Exporte les données.
      */
-    protected function exportData(AvdlSupportSearch $search, SupportPersonRepository $repo)
+    protected function exportData(AvdlSupportSearch $search, SupportPersonRepository $supportPersonRepo)
     {
         set_time_limit(10 * 60);
 
-        $supports = $repo->findSupportsOfServiceToExport($search, Service::SERVICE_TYPE_AVDL);
+        $supports = $supportPersonRepo->findSupportsOfServiceToExport($search, Service::SERVICE_TYPE_AVDL);
 
         if (!$supports) {
             $this->addFlash('warning', 'Aucun résultat à exporter.');

@@ -152,7 +152,8 @@ export default class ValidationSupport {
      */
     sendAjaxRequest() {
         if (this.selectType.getOption(this.serviceSelectElt)) {
-            this.ajax.send('POST', '/support/change_service', this.responseAjax.bind(this), new URLSearchParams(this.getData()))
+            const url = this.serviceSelectElt.getAttribute('data-url')
+            this.ajax.send('POST', url, this.responseAjax.bind(this), new URLSearchParams(this.getData()))
         }
     }
 
@@ -171,22 +172,28 @@ export default class ValidationSupport {
 
     /**
      * Réponse à la requête Ajax.
-     * @param {String} data 
+     * @param {String} response 
      */
-    responseAjax(data) {
-        const html = new DOMParser().parseFromString(data, "text/xml")
+    responseAjax(response) {
+        const html = new DOMParser().parseFromString(response.html.content, "text/xml")
         const fields = ['subService', 'device', 'referent', 'referent2', 'originRequest_organization', 'place']
 
         fields.forEach(field => {
             let selectElt = document.querySelector('#support_' + field)
-            let newSelectElt = html.querySelector('#support_' + field)
+            const newSelectElt = html.querySelector('#support_' + field)
 
-            if (field === 'place') {
+            if ('place' === field) {
                 selectElt = document.querySelector('#support_placeGroups_0_place')
             }
-
+  
             if (selectElt && newSelectElt) {
                 this.updateField(selectElt, newSelectElt)
+                if ('referent' === field) {
+                    const referent2Elt = document.querySelector('#support_referent2')
+                    if (referent2Elt) {
+                        this.updateField(referent2Elt, newSelectElt)
+                    }
+                }
             }
         })
         this.loader.off()

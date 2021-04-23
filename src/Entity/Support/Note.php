@@ -8,10 +8,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Support\NoteRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class Note
 {
     use CreatedUpdatedEntityTrait;
+
+    public const TYPE_NOTE = 1;
+    public const TYPE_REPORT = 2;
 
     public const TYPE = [
         1 => 'Note',
@@ -19,7 +23,7 @@ class Note
         97 => 'Autre',
     ];
 
-    public const TYPE_DEFAULT = 1;
+    public const STATUS_DEFAULT = 1;
 
     public const STATUS = [
         1 => 'Brouillon',
@@ -27,8 +31,6 @@ class Note
         3 => 'En attente validation',
         4 => 'Validé',
     ];
-
-    public const STATUS_DEFAULT = 1;
 
     /**
      * @ORM\Id()
@@ -51,7 +53,7 @@ class Note
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $type = self::TYPE_DEFAULT;
+    private $type = self::TYPE_NOTE;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -78,6 +80,16 @@ class Note
      * @ORM\ManyToOne(targetEntity="App\Entity\Support\SupportPerson", inversedBy="notes")
      */
     private $supportPerson;
+
+    /**
+     * @ORM\PreFlush
+     */
+    public function preFlush()
+    {
+        if ($this->supportGroup) {
+            $this->supportGroup->setUpdatedAt(new \DateTime());
+        }
+    }
 
     public function getId(): ?int
     {

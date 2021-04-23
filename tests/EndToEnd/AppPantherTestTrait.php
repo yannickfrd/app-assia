@@ -25,18 +25,15 @@ trait AppPantherTestTrait
         // $this->client = Client::createChromeClient(__DIR__.'/../drivers/chromedriver');
         // $this->client = Client::createFirefoxClient(__DIR__.'/../drivers/geckodriver');
 
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', '/deconnexion');
-        $crawler = $this->client->request('GET', '/login');
+        $this->client->request('GET', '/deconnexion');
+        $this->client->request('GET', '/login');
 
         $this->outputMsg('Try to login');
 
-        $form = $crawler->selectButton('send')->form([
+        $this->client->submitForm('send', [
             '_username' => 'r.user',
             '_password' => 'Test123*',
         ]);
-
-        $this->client->submit($form);
 
         $this->assertSelectorTextContains('h1', 'Tableau de bord');
 

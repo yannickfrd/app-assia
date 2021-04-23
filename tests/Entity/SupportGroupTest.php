@@ -19,6 +19,9 @@ class SupportGroupTest extends WebTestCase
         $kernel = self::bootKernel();
 
         $dataFixutres = $this->loadFixtureFiles([
+            dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
+            dirname(__DIR__).'/DataFixturesTest/ServiceFixturesTest.yaml',
+            dirname(__DIR__).'/DataFixturesTest/PersonFixturesTest.yaml',
             dirname(__DIR__).'/DataFixturesTest/SupportFixturesTest.yaml',
         ]);
 

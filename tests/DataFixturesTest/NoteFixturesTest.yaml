@@ -8,7 +8,7 @@ App\Entity\Support\Note:
     updatedAt: <dateTimeBetween($createdAt, "now")>
     createdBy: "@userRoleUser"
     updatedBy: "@userRoleUser"
-    supportGroup: "@supportGroup"
+    supportGroup: "@supportGroup1"
 
   note{2..5}:
     title: <sentence(10, true)>
@@ -19,63 +19,4 @@ App\Entity\Support\Note:
     updatedAt: <dateTimeBetween($createdAt, "now")>
     createdBy: "@userRoleUser"
     updatedBy: "@userRoleUser"
-    supportGroup: "@supportGroup"
-
-App\Entity\Organization\User:
-  userRoleUser:
-    firstname: Role
-    lastname: SUPER_ADMIN
-    username: r.super_admin
-    email: r.super_admin@esperer-95.org
-    status: 1
-    roles: ["ROLE_SUPER_ADMIN"]
-    plainPassword: Test123*
-
-App\Entity\People\PeopleGroup:
-  peopleGroup:
-    familyTypology: 2
-    nbPeople: 1
-
-App\Entity\Support\SupportGroup:
-  supportGroup:
-    startDate: <date_create("2019-04-03")>
-    status: 2
-    referent: "@userRoleUser"
-    peopleGroup: "@peopleGroup"
-    service: "@service1"
-    createdAt: <date_create()>
-    updatedAt: <date_create()>
-    createdBy: "@userRoleUser"
-    updatedBy: "@userRoleUser"
-
-App\Entity\Support\SupportPerson:
-  supportPerson:
-    startDate: "@supportGroup->startDate"
-    endDate: "@supportGroup->endDate"
-    status: "@supportGroup->status"
-    createdAt: "@supportGroup->createdAt"
-    updatedAt: "@supportGroup->updatedAt"
-    supportGroup: "@supportGroup"
-    person: "@person"
-    head: 1
-    role: 5
-
-App\Entity\People\Person:
-  person:
-    firstname: John
-    lastname: Doe
-    gender: 2
-    birthdate: <date_create("1980-01-01")>
-
-App\Entity\Organization\Service:
-  service1:
-    name: CHRS XXX
-    pole: "@pole"
-    createdAt: <date_create()>
-    updatedAt: <date_create()>
-
-App\Entity\Organization\Pole:
-  pole:
-    name: Habitat
-    createdAt: <date_create()>
-    updatedAt: <date_create()>
+    supportGroup: "@supportGroup1"

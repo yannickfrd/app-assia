@@ -1,0 +1,92 @@
+{% extends "base.html.twig" %}
+
+{% set title = "Notes" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+
+    <section class="mt-0">
+
+        <div class="container-fluid mt-4">
+            <h1 class="h2 mb-3">{{ title }}</h1>
+            {% include "model/_msgFlash.html.twig" %}
+        </div>
+
+        {% include "app/note/_searchNotes.html.twig" %}
+
+        <div class="container-fluid mt-4">
+
+            <div class="row align-items-baseline">
+                <div class="col-md-4 count align-middle mb-2">
+                    <span class="align-middle">Résultat : {{ notes.getTotalItemCount|number  }}<!--
+                    --> note{% if notes.getTotalItemCount > 1 %}s{% endif %}.</span>
+                </div>
+                <div class="col-md-8">
+                    <div class="navigation">{{ knp_pagination_render(notes) }}</div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table id="table-notes" class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="align-middle th-w-20"></th>
+                            <th scope="col" class="align-middle th-w-150">{{ knp_pagination_sortable(notes, "Note", "n.title") }}</th>
+                            <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(notes, "Nom du suivi", "p.lastname") }}</th>
+                            <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(notes, "Type", "n.type") }}</th>
+                            <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(notes, "Statut", "n.status") }}</th>
+                            <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(notes, "Date de création", "n.createdAt") }}</th>
+                            <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(notes, "Créé par", "u.lastname") }}</th>
+                            <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(notes, "Date de modification", "n.updatedAt") }}</th>
+                            <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(notes, "Modifié par", "u2.lastname") }}</th>
+                            <th scope="col" class="align-middle th-w-80"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for note in notes %}
+                        <tr id="note-{{ note.id }}">
+                            <td scope="row" class="align-middle text-center ">
+                                <a href="{{ path('support_notes', {'id':note.supportGroup.id, 'noteId':note.id}) }}"
+                                    class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" data-placement="bottom"
+                                    title="Voir la note sociale"><span class="fas fa-eye"></span>
+                                </a>
+                            </td>
+                            <td class="align-middle justify"><span class="font-weight-bold">
+                                {{ note.title }}{% if note.title %} : {% endif %}</span>
+                                {{ note.content|u.truncate(200, " [...]", false)|striptags|raw }}
+                            </td>
+                            <td class="align-middle">{{ note.supportGroup.supportPeople|filter(s => s.head == true)|first.person.fullname }}</td>
+                            <td class="align-middle">{{ note.typeToString }}</td>
+                            <td class="align-middle">{{ note.statusToString }}</td>
+                            <td class="align-middle">{{ note.createdAt|date("d/m/Y") }}</td>
+                            <td class="align-middle">{{ note.createdBy ? note.createdBy.fullname }}</td>
+                            <td class="align-middle">{{ note.updatedAt|date("d/m/Y") }}</td>
+                            <td class="align-middle">{{ note.updatedBy ? note.updatedBy.fullname }}</td>
+                            <th scope="row" class="align-middle text-center p-1">
+                                <a href="{{ path('note_export_word', {'id':note.id}) }}"
+                                    class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-toggle="tooltip" data-placement="bottom"
+                                    title="Exporter la note au format Word"><span class="fas fa-file-word bg-primary fa-lg"><span class="sr-only">Word</span></span>
+                                </a>
+                                <a href="{{ path('note_export_pdf', {'id':note.id}) }}"
+                                    class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-toggle="tooltip" data-placement="bottom"
+                                    title="Exporter la note au format PDF"><span class="fas fa-file-pdf bg-danger fa-lg"><span class="sr-only">PDF</span></span>
+                                </a>
+                            </th>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="navigation">{{ knp_pagination_render(notes) }}</div>
+
+        </div>
+
+    </section>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags("search") }}
+{% endblock javascripts %}

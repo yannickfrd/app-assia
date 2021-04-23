@@ -2,9 +2,9 @@
 
 namespace App\Command;
 
-use App\EntityManager\SupportManager;
 use App\Repository\Support\SupportGroupRepository;
 use App\Service\DoctrineTrait;
+use App\Service\SupportGroup\SupportChecker;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -21,13 +21,13 @@ class CheckHeadInSupportsCommand extends Command
 
     protected $repo;
     protected $manager;
-    protected $supportManager;
+    protected $supportChecker;
 
-    public function __construct(SupportGroupRepository $repo, EntityManagerInterface $manager, SupportManager $supportManager)
+    public function __construct(SupportGroupRepository $repo, EntityManagerInterface $manager, SupportChecker $supportChecker)
     {
         $this->repo = $repo;
         $this->manager = $manager;
-        $this->supportManager = $supportManager;
+        $this->supportChecker = $supportChecker;
         $this->disableListeners($this->manager);
 
         parent::__construct();
@@ -53,9 +53,9 @@ class CheckHeadInSupportsCommand extends Command
                     ++$countHeads;
                 }
             }
-            if ($countHeads != 1) {
+            if (1 != $countHeads) {
                 echo $support->getId()." => $countHeads DP\n";
-                $this->supportManager->checkValidHead($support);
+                $this->supportChecker->checkValidHeader($support);
                 ++$count;
             }
         }

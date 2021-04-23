@@ -17,13 +17,13 @@ class CreateDailyIndicatorsCommand extends Command
     protected static $defaultName = 'app:indicator:create-last-day';
 
     protected $manager;
-    protected $repoIndicator;
+    protected $indicatorRepo;
     protected $indicators;
 
-    public function __construct(EntityManagerInterface $manager, IndicatorRepository $repoIndicator, IndicatorsService $indicators)
+    public function __construct(EntityManagerInterface $manager, IndicatorRepository $indicatorRepo, IndicatorsService $indicators)
     {
         $this->manager = $manager;
-        $this->repoIndicator = $repoIndicator;
+        $this->repoIndicator = $indicatorRepo;
         $this->indicators = $indicators;
 
         parent::__construct();

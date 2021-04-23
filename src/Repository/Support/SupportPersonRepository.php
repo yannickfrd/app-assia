@@ -368,10 +368,9 @@ class SupportPersonRepository extends ServiceEntityRepository
     public function countSupportsOfPeople(PeopleGroup $peopleGroup): int
     {
         $query = $this->createQueryBuilder('sp')->select('count(sp.id)')
-            ->leftJoin('sp.supportGroup', 'sg')
-            ->leftJoin('sp.person', 'p');
+            ->leftJoin('sp.supportGroup', 'sg');
 
-        $query = $this->addOrWhere($query, 'p.id', $peopleGroup->getPeople());
+        $query = $this->addOrWhere($query, 'sp.person', $peopleGroup->getPeople());
 
         if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             $query = $query->andWhere('sg.service IN (:services)')

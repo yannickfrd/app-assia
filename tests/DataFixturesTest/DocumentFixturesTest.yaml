@@ -8,8 +8,8 @@ App\Entity\Support\Document:
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
     createdBy: "@userRoleUser"
-    peopleGroup: "@peopleGroup"
-    supportGroup: "@supportGroup"
+    peopleGroup: "@peopleGroup1"
+    supportGroup: "@supportGroup1"
 
   document{2..5}:
     name: <sentence(5, true)>
@@ -20,40 +20,5 @@ App\Entity\Support\Document:
     createdAt: <dateTimeBetween("-2 years", "now")>
     updatedAt: <dateTimeBetween($createdAt, "now")>
     createdBy: "@userRoleUser"
-    peopleGroup: "@peopleGroup"
-    supportGroup: "@supportGroup"
-
-App\Entity\People\Person:
-  person:
-    firstname: John
-    lastname: Doe
-    gender: 2
-    birthdate: <date_create("1980-01-01")>
-
-App\Entity\People\PeopleGroup:
-  peopleGroup:
-    familyTypology: 2
-    nbPeople: 1
-
-App\Entity\Support\SupportGroup:
-  supportGroup:
-    startDate: <date_create("2019-04-03")>
-    status: 2
-    referent: "@userRoleUser"
-    peopleGroup: "@peopleGroup"
-    service: "@service1"
-    createdAt: <date_create()>
-    createdBy: "@userRoleUser"
-    updatedAt: <date_create()>
-    updatedBy: "@userRoleUser"
-
-App\Entity\Support\SupportPerson:
-  supportPerson:
-    person: "@person"
-    supportGroup: "@supportGroup"
-    startDate: "@supportGroup->startDate"
-    status: "@supportGroup->status"
-    createdAt: "@supportGroup->createdAt"
-    createdBy: "@supportGroup->createdBy"
-    updatedAt: "@supportGroup->updatedAt"
-    updatedBy: "@supportGroup->updatedBy"
+    peopleGroup: "@peopleGroup1"
+    supportGroup: "@supportGroup1"

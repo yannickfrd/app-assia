@@ -23,8 +23,9 @@ class PlaceTest extends WebTestCase
 
     protected function setUp()
     {
-        $dataFixtures = $this->loadFixtureFiles([
+        $data = $this->loadFixtureFiles([
             dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
+            dirname(__DIR__).'/DataFixturesTest/ServiceFixturesTest.yaml',
             dirname(__DIR__).'/DataFixturesTest/PlaceFixturesTest.yaml',
         ]);
 
@@ -36,7 +37,7 @@ class PlaceTest extends WebTestCase
             ->get('doctrine')
             ->getManager();
 
-        $this->service = $dataFixtures['service1'];
+        $this->service = $data['service1'];
     }
 
     protected function getPlace()

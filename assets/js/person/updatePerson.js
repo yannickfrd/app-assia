@@ -42,10 +42,8 @@ export default class UpdatePerson {
      * @param {Object} data 
      */
     response(data) {
-        if (data.code === 200) {
-            if (data.alert === 'success') {
-                document.getElementById('js-person-updated').textContent = `(modifié le ${data.date} par ${data.user}')`
-            }
+        if (data.alert && data.alert === 'success') {
+            document.getElementById('js-person-updated').textContent = `(modifié le ${data.date} par ${data.user}')`
         }
         this.loader.off()
         new MessageFlash(data.alert, data.msg)

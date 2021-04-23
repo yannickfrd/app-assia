@@ -2,13 +2,15 @@
 
 namespace App\Entity\Evaluation;
 
+use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Support\SupportGroup;
+use Doctrine\Common\Collections\Collection;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Evaluation\EvaluationGroupRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class EvaluationGroup
 {
@@ -122,6 +124,16 @@ class EvaluationGroup
             $this->setEvalSocialGroup(clone $this->evalSocialGroup);
         }
         $this->setInitEvalGroup(new InitEvalGroup());
+    }
+
+    /**
+     * @ORM\PreFlush
+     */
+    public function preFlush()
+    {
+        if ($this->supportGroup) {
+            $this->supportGroup->setUpdatedAt(new \DateTime());
+        }
     }
 
     public function getId(): ?int
@@ -274,7 +286,7 @@ class EvaluationGroup
     }
 
     /**
-     * @return EvaluationPerson[]|Collection|null
+     * @return Collection<Person>
      */
     public function getEvaluationPeople()
     {

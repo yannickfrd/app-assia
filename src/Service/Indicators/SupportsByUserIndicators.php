@@ -11,27 +11,27 @@ use App\Security\CurrentUserService;
 class SupportsByUserIndicators
 {
     protected $currentUser;
-    protected $repoDevice;
-    protected $repoUser;
-    protected $repoSupport;
+    protected $deviceRepo;
+    protected $userRepo;
+    protected $supportRepo;
 
     public function __construct(
         CurrentUserService $currentUser,
-        DeviceRepository $repoDevice,
-        UserRepository $repoUser,
-        SupportGroupRepository $repoSupport)
+        DeviceRepository $deviceRepo,
+        UserRepository $userRepo,
+        SupportGroupRepository $supportRepo)
     {
         $this->currentUser = $currentUser;
-        $this->repoDevice = $repoDevice;
-        $this->repoUser = $repoUser;
-        $this->repoSupport = $repoSupport;
+        $this->deviceRepo = $deviceRepo;
+        $this->UserRepo = $userRepo;
+        $this->supportRepo = $supportRepo;
     }
 
     public function getSupportsbyDevice(SupportsByUserSearch $search)
     {
-        $devices = $this->repoDevice->findDevicesForDashboard($this->currentUser, $search);
-        $users = $this->repoUser->findUsersOfServices($this->currentUser, $search);
-        $supports = $this->repoSupport->findSupportsForDashboard($search);
+        $devices = $this->deviceRepo->findDevicesForDashboard($this->currentUser, $search);
+        $users = $this->UserRepo->findUsersOfServices($this->currentUser, $search);
+        $supports = $this->supportRepo->findSupportsForDashboard($search);
 
         $initDevicesUser = $this->getInitDevicesUser($devices);
 

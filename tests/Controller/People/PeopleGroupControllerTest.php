@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Tests\Controller;
+namespace App\Tests\Controller\People;
 
 use App\Entity\People\PeopleGroup;
+use App\Service\Grammar;
 use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -19,51 +20,38 @@ class PeopleGroupControllerTest extends WebTestCase
     protected $client;
 
     /** @var array */
-    protected $dataFixtures;
+    protected $data;
 
     /** @var PeopleGroup */
     protected $peopleGroup;
 
     protected function setUp()
     {
-        $this->dataFixtures = $this->loadFixtureFiles([
+        $this->data = $this->loadFixtureFiles([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
         ]);
 
-        $this->peopleGroup = $this->dataFixtures['peopleGroup1'];
-    }
-
-    public function testEditPeopleGroupIsUp()
-    {
-        $this->createLogin($this->dataFixtures['userRoleUser']);
-
-        $this->client->request('GET', $this->generateUri('people_group_show', [
-            'id' => $this->peopleGroup->getId(),
-        ]));
-
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'Groupe');
+        $this->peopleGroup = $this->data['peopleGroup1'];
     }
 
     public function testEditPeopleGroupIsSuccessful()
     {
-        $this->createLogin($this->dataFixtures['userRoleUser']);
+        $this->createLogin($this->data['userRoleUser']);
 
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('people_group_show', [
-            'id' => $this->peopleGroup->getId(),
-        ]));
+        $id = $this->peopleGroup->getId();
+        $this->client->request('GET', "/group/$id");
 
-        $faker = \Faker\Factory::create('fr_FR');
+        // Page is up
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', 'Groupe');
 
-        $form = $crawler->selectButton('send')->form([
+        // Edit is successful
+        $this->client->submitForm('send', [
             'group[familyTypology]' => 1,
             'group[nbPeople]' => 1,
-            'group[comment]' => $faker->paragraphs(6, true),
+            'group[comment]' => 'XXX',
         ]);
-
-        $this->client->submit($form);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Groupe');
@@ -71,58 +59,83 @@ class PeopleGroupControllerTest extends WebTestCase
 
     public function testDeletePeopleGroupWithRoleUser()
     {
-        $this->createLogin($this->dataFixtures['userRoleUser']);
+        $this->createLogin($this->data['userRoleUser']);
 
-        $this->client->request('GET', $this->generateUri('people_group_delete', [
-            'id' => $this->peopleGroup->getId(),
-        ]));
+        $id = $this->peopleGroup->getId();
+        $this->client->request('GET', "/group/$id/delete");
 
         $this->assertSame(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
     }
 
     public function testDeletePeopleGroupWithRoleAdmin()
     {
-        $this->createLogin($this->dataFixtures['userRoleAdmin']);
+        $this->createLogin($this->data['userAdmin']);
 
-        $this->client->request('GET', $this->generateUri('people_group_delete', [
-            'id' => $this->peopleGroup->getId(),
-        ]));
+        $id = $this->peopleGroup->getId();
+        $this->client->request('GET', "/group/$id/delete");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testTryAddPersonInGroupIsUp()
+    public function testAddPersonInGroupIsSuccessful()
     {
-        $this->createLogin($this->dataFixtures['userRoleUser']);
+        $this->createLogin($this->data['userRoleUser']);
 
-        $this->client->request('POST', $this->generateUri('group_add_person', [
-            'id' => $this->peopleGroup->getId(),
-            'person_id' => $this->dataFixtures['person1']->getId(),
-        ]));
-        // $this->client->followRedirect();
+        $id = $this->peopleGroup->getId();
+        /** @var Crawler */
+        $crawler = $this->client->request('GET', "/group/$id/search_person");
+        $csrfToken = $crawler->filter('#role_person__token')->attr('value');
+
+        // Fail
+        $personId = $this->data['person1']->getId();
+        $this->client->request('POST', "/group/$id/add_person/$personId");
+
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('.alert.alert-danger', 'Une erreur s\'est produite.');
-    }
 
-    public function testFailToRemovePersonInGroup()
-    {
-        $this->createLogin($this->dataFixtures['userRoleUser']);
-
-        $this->client->request('GET', $this->generateUri('role_person_remove', [
-            'id' => $this->dataFixtures['rolePerson']->getId(),
-            '_token' => $this->client->getContainer()->get('security.csrf.token_manager')->getToken('remove'.$this->dataFixtures['rolePerson']->getId()),
-        ]));
-
-        $data = json_decode($this->client->getResponse()->getContent(), true);
+        // Success
+        $person = $this->data['person5'];
+        $personId = $person->getId();
+        $this->client->request('POST', "/group/$id/add_person/$personId", [
+            'role_person' => [
+                'role' => 1,
+                '_token' => $csrfToken,
+            ],
+        ]);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSame('danger', $data['alert']);
+        $this->assertSelectorTextContains('.alert.alert-success', $person->getFullname().' est ajouté'.Grammar::gender($person->getGender()).' au groupe.');
+    }
+
+    public function testRemovePersonInGroupIsSuccessful()
+    {
+        $this->createLogin($this->data['userAdmin']);
+
+        $id = $this->peopleGroup->getId();
+        /** @var Crawler */
+        $crawler = $this->client->request('GET', "/group/$id");
+        $url = $crawler->filter('.js-remove')->last()->attr('data-url');
+
+        // Fail
+        $id = $this->data['rolePerson2']->getId();
+        $this->client->request('GET', "/role_person/$id/remove/token");
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $content = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertSame('danger', $content['alert']);
+
+        // Success
+        $this->client->request('GET', $url);
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $content = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertSame('delete', $content['action']);
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
         $this->client = null;
-        $this->dataFixtures = null;
+        $this->data = null;
     }
 }

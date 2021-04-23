@@ -6,6 +6,7 @@ use App\Entity\Organization\Pole;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\User;
 use App\Form\Model\Organization\ServiceSearch;
+use App\Repository\Organization\ServiceRepository;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -33,7 +34,7 @@ class ServiceRepositoryTest extends WebTestCase
 
     protected function setUp()
     {
-        $dataFixtures = $this->loadFixtureFiles([
+        $data = $this->loadFixtureFiles([
             dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/DataFixturesTest/ServiceFixturesTest.yaml',
         ]);
@@ -44,15 +45,14 @@ class ServiceRepositoryTest extends WebTestCase
             ->get('doctrine')
             ->getManager();
 
-        /* @var ServiceRepository */
         $this->repo = $this->entityManager->getRepository(Service::class);
 
-        $this->service = $dataFixtures['service1'];
-        $this->pole = $dataFixtures['pole'];
-        $this->user = $dataFixtures['userSuperAdmin'];
+        $this->service = $data['service1'];
+        $this->pole = $data['pole1'];
+        $this->user = $data['userRoleUser'];
         $this->search = (new ServiceSearch())
             ->setName('CHRS XXX')
-            ->setEmail('chrs@esperer-95.org')
+            ->setEmail('chrs@mail.fr')
             ->setCity('Pontoise')
             ->setPole($this->pole)
             ->setPhone('01 00 00 00 00');

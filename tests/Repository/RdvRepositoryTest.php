@@ -36,8 +36,11 @@ class RdvRepositoryTest extends WebTestCase
 
     protected function setUp()
     {
-        $dataFixtures = $this->loadFixtureFiles([
+        $data = $this->loadFixtureFiles([
             dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
+            dirname(__DIR__).'/DataFixturesTest/ServiceFixturesTest.yaml',
+            dirname(__DIR__).'/DataFixturesTest/PersonFixturesTest.yaml',
+            dirname(__DIR__).'/DataFixturesTest/SupportFixturesTest.yaml',
             dirname(__DIR__).'/DataFixturesTest/RdvFixturesTest.yaml',
         ]);
 
@@ -50,8 +53,8 @@ class RdvRepositoryTest extends WebTestCase
         /* @var RdvRepository */
         $this->repo = $this->entityManager->getRepository(Rdv::class);
 
-        $this->supportGroup = $dataFixtures['supportGroup'];
-        $this->user = $dataFixtures['userRoleUser'];
+        $this->supportGroup = $data['supportGroup1'];
+        $this->user = $data['userRoleUser'];
 
         $referents = new ArrayCollection();
         $referents->add($this->user);

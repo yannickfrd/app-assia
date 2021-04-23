@@ -44,7 +44,7 @@ class PersonEndToEndTest extends PantherTestCase
         $this->client->waitFor('a.btn[title="Voir la fiche de la personne"]');
         $link = $crawler->filter('a.btn[title="Voir la fiche de la personne"]')->link();
 
-        $this->outputMsg('go to person page');
+        $this->outputMsg('Go to person page');
 
         /** @var Crawler */
         $crawler = $this->client->click($link);
@@ -75,13 +75,12 @@ class PersonEndToEndTest extends PantherTestCase
         sleep(1);
 
         $this->client->waitFor('#js-btn-confirm');
-        $form = $crawler->selectButton('js-btn-confirm')->form([
+            
+        $crawler = $this->client->submitForm('js-btn-confirm', [
             'person_new_group[peopleGroup][familyTypology]' => 1,
             'person_new_group[peopleGroup][nbPeople]' => 1,
             'person_new_group[role]' => 1,
         ]);
-
-        $this->client->submit($form);
 
         $this->assertSelectorTextContains('.alert.alert-success', 'Le nouveau groupe est créé.');
 

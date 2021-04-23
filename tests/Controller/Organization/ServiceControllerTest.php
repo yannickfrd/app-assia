@@ -19,122 +19,95 @@ class ServiceControllerTest extends WebTestCase
     {
     }
 
-    public function testListServicesIsUp()
+    public function testSearchServicesIsSuccessful()
     {
-        $dataFixtures = $this->loadFixtureFiles($this->getFixtureFiles());
-        $this->createLogin($dataFixtures['userRoleUser']);
+        $data = $this->loadFixtureFiles($this->getFixtureFiles());
+        $this->createLogin($data['userRoleUser']);
 
-        $this->client->request('GET', $this->generateUri('services'));
+        $this->client->request('GET', '/services');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Services');
-    }
 
-    public function testSearchServicesIsSuccessful()
-    {
-        $dataFixtures = $this->loadFixtureFiles($this->getFixtureFiles());
-        $this->createLogin($dataFixtures['userRoleUser']);
-
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('services'));
-
-        $form = $crawler->selectButton('search')->form([
+        $this->client->submitForm('search', [
             'name' => 'CHRS XXX',
             'city' => 'Pontoise',
             'phone' => '01 00 00 00 00',
-            'pole' => 1,
-        ]);
-
-        $this->client->submit($form);
+            'pole' => $data['pole1']->getId(),
+        ], 'GET');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Services');
     }
 
-    public function testNewServiceIsUp()
+    public function testExportServicesIsSuccessful()
     {
-        $dataFixtures = $this->loadFixtureFiles($this->getFixtureFiles());
-        $this->createLogin($dataFixtures['userSuperAdmin']);
+        $data = $this->loadFixtureFiles($this->getFixtureFiles());
+        $this->createLogin($data['userRoleUser']);
 
-        $this->client->request('GET', $this->generateUri('service_new'));
+        $this->client->request('GET', '/services');
+
+        $this->client->submitForm('export', [], 'GET');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'Nouveau service');
+        $this->assertContains('.spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
     }
 
     public function testCreateNewServiceIsSuccessful()
     {
-        $dataFixtures = $this->loadFixtureFiles($this->getFixtureFiles());
-        $this->createLogin($dataFixtures['userSuperAdmin']);
+        $data = $this->loadFixtureFiles($this->getFixtureFiles());
+        $this->createLogin($data['userSuperAdmin']);
 
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('service_new'));
+        $this->client->request('GET', '/service/new');
 
-        $form = $crawler->selectButton('send')->form([
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', 'Nouveau service');
+
+        $this->client->submitForm('send', [
             'service[name]' => 'Service test',
             'service[location][city]' => 'Pontoise',
             'service[phone1]' => '01 00 00 00 00',
-            'service[pole]' => 1,
+            'service[pole]' => $data['pole1'],
         ]);
-
-        $this->client->submit($form);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorExists('.alert.alert-success');
     }
 
-    public function testEditServiceisUpInSuperAdmin()
+    public function testEditServiceInSuperAdminIsUp()
     {
-        $dataFixtures = $this->loadFixtureFiles(array_merge($this->getFixtureFiles(), [
+        $data = $this->loadFixtureFiles(array_merge($this->getFixtureFiles(), [
             dirname(__DIR__).'/../DataFixturesTest/PlaceFixturesTest.yaml',
         ]));
 
-        $service = $dataFixtures['service1'];
+        $this->createLogin($data['userSuperAdmin']);
 
-        $this->createLogin($dataFixtures['userSuperAdmin']);
-
-        $this->client->request('GET', $this->generateUri('service_edit', [
-            'id' => $service->getId(),
-        ]));
+        $service = $data['service1'];
+        $id = $service->getId();
+        $this->client->request('GET', "/service/$id");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', $service->getName());
     }
 
-    public function testEditServiceisUpInRoleAdmin()
+    public function testEditServiceIsSuccessful()
     {
-        $dataFixtures = $this->loadFixtureFiles(array_merge($this->getFixtureFiles(), [
+        $data = $this->loadFixtureFiles(array_merge($this->getFixtureFiles(), [
             dirname(__DIR__).'/../DataFixturesTest/PlaceFixturesTest.yaml',
         ]));
 
-        $service = $dataFixtures['service1'];
+        $this->createLogin($data['userAdmin']);
 
-        $this->createLogin($dataFixtures['userRoleAdmin']);
-
-        $this->client->request('GET', $this->generateUri('service_edit', [
-            'id' => $service->getId(),
-        ]));
+        $service = $data['service1'];
+        $id = $service->getId();
+        $this->client->request('GET', "/service/$id");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', $service->getName());
-    }
 
-    public function testEditServiceisSuccessful()
-    {
-        $dataFixtures = $this->loadFixtureFiles(array_merge($this->getFixtureFiles(), [
-            dirname(__DIR__).'/../DataFixturesTest/PlaceFixturesTest.yaml',
-        ]));
-
-        $this->createLogin($dataFixtures['userRoleAdmin']);
-
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('service_edit', [
-            'id' => $dataFixtures['service1']->getId(),
-        ]));
-
-        $form = $crawler->selectButton('send')->form([]);
-
-        $this->client->submit($form);
+        $this->client->submitForm('send', [
+            'service[name]' => 'Service test edit',
+        ]);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorExists('.alert.alert-success');
@@ -142,16 +115,20 @@ class ServiceControllerTest extends WebTestCase
 
     public function testDisableService()
     {
-        $dataFixtures = $this->loadFixtureFiles($this->getFixtureFiles());
+        $data = $this->loadFixtureFiles($this->getFixtureFiles());
 
-        $this->createLogin($dataFixtures['userSuperAdmin']);
+        $this->createLogin($data['userSuperAdmin']);
 
-        $this->client->request('GET', $this->generateUri('service_disable', [
-            'id' => $dataFixtures['service1']->getId(),
-        ]));
+        $id = $data['service1']->getId();
+        $this->client->request('GET', "/admin/service/$id/disable");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorExists('.alert.alert-warning');
+        $this->assertSelectorTextContains('.alert.alert-warning', 'est désactivé');
+
+        $this->client->request('GET', "/admin/service/$id/disable");
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('.alert.alert-success', 'est ré-activé');
     }
 
     protected function getFixtureFiles()
@@ -166,6 +143,6 @@ class ServiceControllerTest extends WebTestCase
     {
         parent::tearDown();
         $this->client = null;
-        $dataFixtures = null;
+        $data = null;
     }
 }

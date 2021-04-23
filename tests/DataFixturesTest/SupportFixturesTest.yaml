@@ -1,29 +1,39 @@
 App\Entity\Support\SupportGroup:
   supportGroup1:
     startDate: <date_create("2019-04-03")>
-    endDate: null
     status: 2
     agreement: true
     referent: "@userRoleUser"
     service: "@service1"
     device: "@device1"
-    peopleGroup: "@peopleGroup"
+    peopleGroup: "@peopleGroup1"
     createdAt: <dateTimeBetween("-2 years", "now")>
-    updatedAt: <dateTimeBetween($createdAt, "now")>
     createdBy: $referent
+    updatedAt: <dateTimeBetween($createdAt, "now")>
     updatedBy: $referent
 
-  supportGroup{2..5}:
+  supportGroup2:
     startDate: <dateTimeBetween("-2 years", "now")>
-    endDate: <dateTimeBetween($startDate, "now")>
-    status: <numberBetween(1, 4)>
+    status: 2
     referent: "@userRoleUser"
-    service: "@service1"
-    device: "@device1"
-    peopleGroup: "@peopleGroup"
+    service: "@serviceAvdl"
+    device: "@deviceAvdl"
+    peopleGroup: "@peopleGroup2"
     createdAt: <dateTimeBetween("-2 years", "now")>
-    updatedAt: <dateTimeBetween($createdAt, "now")>
     createdBy: $referent
+    updatedAt: <dateTimeBetween($createdAt, "now")>
+    updatedBy: $referent
+
+  supportGroup3:
+    startDate: <dateTimeBetween("-2 years", "now")>
+    status: 2
+    referent: "@userRoleUser"
+    service: "@service2"
+    device: "@device*"
+    peopleGroup: "@peopleGroup1"
+    createdAt: <dateTimeBetween("-2 years", "now")>
+    createdBy: $referent
+    updatedAt: <dateTimeBetween($createdAt, "now")>
     updatedBy: $referent
 
 App\Entity\Support\SupportPerson:
@@ -34,61 +44,29 @@ App\Entity\Support\SupportPerson:
     createdAt: "@supportGroup1->createdAt"
     updatedAt: "@supportGroup1->updatedAt"
     supportGroup: "@supportGroup1"
-    person: "@person"
-    head: "@rolePerson->head"
-    role: "@rolePerson->role"
-
-App\Entity\Organization\User:
-  userRoleUser:
-    firstname: Role
-    lastname: SUPER_ADMIN
-    username: r.super_admin
-    email: r.super_admin@esperer-95.org
-    status: 1
-    roles: ["ROLE_SUPER_ADMIN"]
-    plainPassword: Test123*
-
-App\Entity\People\Person:
-  person:
-    firstname: John
-    lastname: Doe
-    gender: 2
-    birthdate: <date_create("1980-01-01")>
-
-App\Entity\People\PeopleGroup:
-  peopleGroup:
-    familyTypology: 2
-    nbPeople: 1
-
-App\Entity\People\RolePerson:
-  rolePerson:
-    head: 1
-    role: 5
-    person: "@person"
-    peopleGroup: "@peopleGroup"
-
-App\Entity\Organization\Service:
-  service1:
-    name: CHRS XXX
-    type: 1
-    pole: "@pole"
-    createdAt: <date_create()>
-    updatedAt: <date_create()>
-
-App\Entity\Organization\Pole:
-  pole:
-    name: Habitat
-    createdAt: <date_create()>
-    updatedAt: <date_create()>
-
-App\Entity\Organization\Device:
-  device1:
-    name: Insertion
-
-App\Entity\Organization\ServiceDevice:
-  servcieDevice:
-    device: "@device1"
-    service: "@service1"
+    person: "@person1"
+    head: "@rolePerson1->head"
+    role: "@rolePerson1->role"
+  supportPerson2:
+    startDate: "@supportGroup1->startDate"
+    endDate: "@supportGroup1->endDate"
+    status: "@supportGroup1->status"
+    createdAt: "@supportGroup1->createdAt"
+    updatedAt: "@supportGroup1->updatedAt"
+    supportGroup: "@supportGroup1"
+    person: "@person2"
+    head: "@rolePerson2->head"
+    role: "@rolePerson2->role"
+  supportPerson3:
+    startDate: "@supportGroup2->startDate"
+    endDate: "@supportGroup2->endDate"
+    status: "@supportGroup2->status"
+    createdAt: "@supportGroup2->createdAt"
+    updatedAt: "@supportGroup2->updatedAt"
+    supportGroup: "@supportGroup2"
+    person: "@person3"
+    head: "@rolePerson3->head"
+    role: "@rolePerson3->role"
 
 App\Entity\Organization\Organization:
   organization1:

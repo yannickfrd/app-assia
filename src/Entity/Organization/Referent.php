@@ -31,7 +31,7 @@ class Referent
         11 => 'Service hospitalier',
         12 => 'Service Justice',
         97 => 'Autre',
-        99 => 'Non évalué',
+        99 => 'Non renseigné',
     ];
 
     /**

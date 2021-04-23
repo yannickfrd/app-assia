@@ -138,7 +138,7 @@ class ExportExcel
             unlink($file);
         }
 
-        return  $zipFile;
+        return $zipFile;
     }
 
     /**
@@ -150,13 +150,16 @@ class ExportExcel
 
         $writer = $this->writer;
 
+        $response->headers->set('Content-Description', 'File Transfer');
         $response->headers->set('Content-Type', $this->contentType);
         $response->headers->set('Content-Disposition', 'attachment;filename='.$filename);
         $response->setPrivate();
         $response->headers->addCacheControlDirective('no-cache', true);
         $response->headers->addCacheControlDirective('must-revalidate', true);
         $response->setCallback(function () use ($writer) {
-            $writer->save('php://output');
+            if ('test' != $_ENV['APP_ENV']) {
+                $writer->save('php://output');
+            }
         });
 
         return $response;
@@ -189,7 +192,7 @@ class ExportExcel
     protected function formatDateColumns(): void
     {
         // Format les colonnes de date
-        foreach ($this->getColumnsWithType('Date') as  $col) {
+        foreach ($this->getColumnsWithType('Date') as $col) {
             for ($i = 2; $i <= $this->nbRows; ++$i) {
                 $this->sheet->getStyle($col.$i)
                     ->getNumberFormat()
@@ -204,7 +207,7 @@ class ExportExcel
     protected function formatMoneyColumns(): void
     {
         // Format les colonnes de date
-        foreach ($this->getColumnsWithType('Montant') as  $col) {
+        foreach ($this->getColumnsWithType('Montant') as $col) {
             for ($i = 2; $i <= $this->nbRows; ++$i) {
                 $this->sheet->getStyle($col.$i)
                     ->getNumberFormat()
@@ -219,7 +222,7 @@ class ExportExcel
     protected function formatUrlColumns(): void
     {
         // Format les colonnes avec une URL
-        foreach ($this->getColumnsWithType('Url') as  $col) {
+        foreach ($this->getColumnsWithType('Url') as $col) {
             for ($i = 2; $i <= $this->nbRows; ++$i) {
                 $this->sheet->getCell($col.$i)->getHyperlink()->setUrl($this->sheet->getCell($col.$i)->getValue());
                 $this->sheet->setCellValue($col.$i, 'Lien Url');
@@ -357,7 +360,7 @@ class ExportExcel
      */
     protected function getStyleTable(): array
     {
-        return  [
+        return [
             'alignment' => [
                 'vertical' => Alignment::VERTICAL_CENTER,
             ],

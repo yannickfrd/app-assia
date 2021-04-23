@@ -85,10 +85,23 @@ class PlaceRepository extends ServiceEntityRepository
             ->setParameter('service', $service);
         }
 
-        return  $query->andWhere('pl.endDate IS NULL')
+        return $query->andWhere('pl.endDate IS NULL')
             ->orWhere('pl.endDate > :date')
             ->setParameter('date', new \Datetime())
 
+            ->orderBy('pl.name', 'ASC');
+    }
+
+    /**
+     * Donne la liste des hôtels des services d'accompagnement à l'hôtel.
+     */
+    public function getHotelPlacesQueryBuilder(): QueryBuilder
+    {
+        return $this->createQueryBuilder('pl')->select('PARTIAL pl.{id, name}')
+            ->leftJoin('pl.service', 's')->addSelect('PARTIAL s.{id, name, type}')
+
+            ->where('s.type = :type')
+            ->setParameter('type', Service::SERVICE_TYPE_HOTEL)
             ->orderBy('pl.name', 'ASC');
     }
 

@@ -14,9 +14,10 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <p><a href="{{ path('occupancy_devices', {'date': {'start': search.start|date('Y-m-d'), 'end': search.end|date('Y-m-d') }}) }}" class="text-{{ theme_color }}"><!--
-                    --><span class="fas fa-undo mr-2"></span>{% if device %}Retour{% else %}Accès<!--
-                    -->{% endif %} aux taux d'ocupation par dispositif.</a>
+                <p><a href="{{ path('occupancy_devices', {'year': search.year, 'date': {'start': search.start|date('Y-m-d'), 
+                    'end': search.end|date('Y-m-d')}, 'pole': search.pole ? search.pole.id}) }}" class="text-{{ theme_color }}">
+                    <span class="fas fa-undo mr-2"></span>{% if device %}Retour{% else %}Accès
+                    {% endif %} aux taux d'ocupation par dispositif.</a>
                 </p>
                 {% set interval = date(search.start).diff(date(search.end)) %}
                 <p>Période du {{ search.start|date("d/m/Y") }} au {{ search.end|date("d/m/Y") }},<!--
@@ -60,13 +61,13 @@
                                 <tr>
                                     <td class="align-middle text-center" scope="row">
                                         {% if service.nbSubServices > 1 %}
-                                            <a href="{{ path('occupancy_sub_services', {'id': service_id, 
+                                            <a href="{{ path('occupancy_sub_services', {'id': service_id, 'year': search.year, 
                                                 'date': {'start': search.start|date('Y-m-d'), 'end': search.end|date('Y-m-d') }} ) }}" 
                                                 class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" 
                                                 title="Voir le détail par sous-service"><span class="fas fa-eye fa-sm"></span>
                                             </a>
                                         {% else %}
-                                            <a href="{{ path('occupancy_service_places', {'id': service_id, 
+                                            <a href="{{ path('occupancy_service_places', {'id': service_id, 'year': search.year, 
                                                 'date': {'start': search.start|date('Y-m-d'), 'end': search.end|date('Y-m-d') }} ) }}" 
                                                 class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" 
                                                 title="Voir le détail par groupe de places du service"><span class="fas fa-eye fa-sm"></span>

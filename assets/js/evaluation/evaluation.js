@@ -534,18 +534,15 @@ export default class evaluation {
      * @param {String} type 
      */
     updateAmtGroup(type) {
-        // const amounts = []
         let sumAmts = 0
         this.amtElts(type).forEach(amountElt => {
             if (amountElt.value) {
-                // amounts.push(parseFloat(amountElt.value))
                 sumAmts += parseFloat(amountElt.value)
 
             }
         })
 
-        // this.groupAmtElt(type).textContent = amounts.reduce((a, b) => a + b, 0)
-        this.groupAmtElt(type).textContent = sumAmts
+        this.groupAmtElt(type).textContent = sumAmts.toLocaleString()
         this.updateBudgetBalanceAmt()
     }
 
@@ -553,7 +550,20 @@ export default class evaluation {
      * Met à jour le reste à vivre du groupe.
      */
     updateBudgetBalanceAmt() {
-        this.budgetBalanceGroupAmtElt.textContent = parseFloat(this.resourcesGroupAmtElt.textContent - this.chargesGroupAmtElt.textContent - this.repaymentGroupAmtElt.textContent)
+
+        this.budgetBalanceGroupAmtElt.textContent = 
+            (this.convertsToNumber(this.resourcesGroupAmtElt.textContent)
+            - this.convertsToNumber(this.chargesGroupAmtElt.textContent)
+            - this.convertsToNumber(this.repaymentGroupAmtElt.textContent)).toLocaleString()
+    }
+
+    /**
+     * 
+     * @param {String} value 
+     * @returns {Number} 
+     */
+    convertsToNumber(value) {
+        return parseFloat(value.replace(' ', ''.replace(',', '.')))
     }
 
     /**

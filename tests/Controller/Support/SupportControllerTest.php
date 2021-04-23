@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Controller;
+namespace App\Tests\Controller\Support;
 
 use App\Entity\Support\SupportGroup;
 use App\Tests\AppTestTrait;
@@ -9,7 +9,6 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class SupportControllerTest extends WebTestCase
@@ -21,70 +20,80 @@ class SupportControllerTest extends WebTestCase
     protected $client;
 
     /** @var array */
-    protected $dataFixtures;
+    protected $data;
 
     /** @var SupportGroup */
     protected $supportGroup;
 
     protected function setUp()
     {
-        $this->dataFixtures = $this->loadFixtureFiles([
+        $this->data = $this->loadFixtureFiles([
+            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
+            dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
+            dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/SupportFixturesTest.yaml',
         ]);
-
-        $this->createLogin($this->dataFixtures['userRoleUser']);
-
-        $this->supportGroup = $this->dataFixtures['supportGroup1'];
-    }
-
-    public function testviewListSupportsIsUp()
-    {
-        $this->client->request('GET', $this->generateUri('supports'));
-
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'Suivis');
     }
 
     public function testSearchSupportsIsSuccessful()
     {
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('supports'));
+        $this->createLogin($this->data['userRoleUser']);
 
-        $form = $crawler->selectButton('search')->form([
+        $this->client->request('GET', '/supports');
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', 'Suivis');
+
+        $this->client->submitForm('search', [
             'fullname' => 'John Doe',
-            // 'familyTypologies' => [1],
             'date[start]' => '2018-01-01',
             'date[end]' => (new \DateTime())->format('Y-m-d'),
         ]);
-
-        $this->client->submit($form);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Suivis');
     }
 
-    public function testExportSupports()
+    public function testExportSupportsIsSuccessful()
     {
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('supports'));
+        $this->createLogin($this->data['userRoleUser']);
 
-        $form = $crawler->selectButton('export')->form([]);
+        $this->client->request('GET', '/supports');
 
-        $this->client->submit($form);
+        $this->client->submitForm('export', [
+            'supportDates' => 1,
+            'date[start]' => (new \DateTime())->modify('+1 year')->format('Y-m-d'),
+        ], 'GET');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('.alert.alert-warning', 'Aucun résultat à exporter.');
+
+        $this->client->submitForm('export', [], 'GET');
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertContains('.spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
     }
 
-    public function testNewSupportGroupIsUp()
+    public function testNewSupportGroupAjax()
     {
-        $this->client->request(
-            'POST',
-            $this->generateUri('support_new', [
-                'id' => $this->dataFixtures['peopleGroup']->getId(),
-            ]),
-            [
-                'support' => ['service' => 1],
-            ]);
+        $this->createLogin($this->data['userRoleUser']);
+
+        $id = $this->data['peopleGroup1']->getId();
+        $this->client->request('GET', "/group/$id/new_support");
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $content = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertArrayHasKey('html', $content);
+    }
+
+    public function testNewSupportGroupPageIsUp()
+    {
+        $this->createLogin($this->data['userRoleUser']);
+
+        $id = $this->data['peopleGroup2']->getId();
+        $this->client->request('POST', "/group/$id/support/new", [
+            'support' => ['service' => $this->data['service1']->getId()],
+        ]);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Nouveau suivi');
@@ -92,108 +101,276 @@ class SupportControllerTest extends WebTestCase
 
     public function testCreateNewSupportGroupIsSuccessful()
     {
-        /** @var Crawler */
-        $crawler = $this->client->request(
-            'POST',
-            $this->generateUri('support_new', [
-                'id' => ($this->dataFixtures['peopleGroup'])->getId(),
-            ]),
-            [
-                'support' => ['service' => 1],
+        $user = $this->data['userRoleUser'];
+        $this->createLogin($user);
+
+        $id = $this->data['peopleGroup2']->getId();
+        $this->client->request('POST', "/group/$id/support/new", [
+            'support' => [
+                'service' => $this->data['service1'],
+                'device' => $this->data['device1'],
+                'referent' => $user,
             ],
-        );
-
-        $now = new \DateTime();
-        $faker = \Faker\Factory::create('fr_FR');
-
-        $form = $crawler->selectButton('send')->form([
-            'support[originRequest][organization]' => 1,
-            'support[originRequest][organizationComment]' => $faker->sentence(mt_rand(3, 6), true),
-            'support[originRequest][preAdmissionDate]' => $now->format('Y-m-d'),
-            'support[originRequest][resulPreAdmission]' => 1,
-            'support[originRequest][decisionDate]' => $now->format('Y-m-d'),
-            'support[originRequest][comment]' => $faker->paragraphs(6, true),
-            'support[service]' => 1,
-            'support[device]' => 1,
-            'support[status]' => 2,
-            'support[referent]' => 1,
-            'support[startDate]' => $now->format('Y-m-d'),
-            'support[agreement]' => true,
         ]);
 
-        $this->client->submit($form);
+        $now = new \DateTime();
+        $this->client->submitForm('send', [
+            'support' => [
+                'originRequest' => [
+                    'organization' => $this->data['organization1'],
+                    'organizationComment' => 'XXX',
+                    'preAdmissionDate' => $now->format('Y-m-d'),
+                    'resulPreAdmission' => 1,
+                    'decisionDate' => $now->format('Y-m-d'),
+                    'comment' => 'XXX',
+                ],
+                'service' => $this->data['service1'],
+                'device' => $this->data['device1'],
+                'status' => SupportGroup::STATUS_IN_PROGRESS,
+                'referent' => $user,
+                'startDate' => $now->format('Y-m-d'),
+                'agreement' => true,
+            ],
+        ]);
 
+        // dump($this->client->getResponse()->getContent());
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        // $this->assertSelectorExists('.alert.alert-success');
+        $this->assertSelectorExists('.alert.alert-success');
     }
 
-    public function testEditSupportGroupIsUp()
+    public function testCreateNewSupportGroupAndCloneIsSuccessful()
     {
-        $this->client->request('GET', $this->generateUri('support_edit', [
-            'id' => ($this->dataFixtures['supportGroup1'])->getId(),
-        ]));
+        $user = $this->data['userRoleUser'];
+        $this->createLogin($user);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'Édition du suivi');
-    }
+        $id = $this->data['peopleGroup2']->getId();
+        $this->client->request('POST', "/group/$id/support/new", [
+            'support' => ['service' => $this->data['service1']->getId()],
+        ]);
 
-    public function testEditSupportGroupIsSuccessful()
-    {
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('support_edit', [
-            'id' => ($this->dataFixtures['supportGroup1'])->getId(),
-        ]));
-
-        $form = $crawler->selectButton('send')->form([]);
-
-        $this->client->submit($form);
+        $this->client->submitForm('send', [
+            'support' => [
+                'service' => $this->data['service1'],
+                'device' => $this->data['device1'],
+                'status' => SupportGroup::STATUS_IN_PROGRESS,
+                'agreement' => true,
+                'cloneSupport' => true,
+            ],
+        ]);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorExists('.alert.alert-success');
     }
 
+    public function testPeopleHaveOtherSupportInProgress()
+    {
+        $user = $this->data['userRoleUser'];
+        $this->createLogin($user);
+
+        $id = $this->data['peopleGroup1']->getId();
+        $this->client->request('POST', "/group/$id/support/new", [
+            'support' => ['service' => $this->data['service1']->getId()],
+        ]);
+
+        $this->client->submitForm('send', [
+            'support[service]' => $this->data['service1'],
+            'support[device]' => $this->data['device1'],
+            'support[status]' => SupportGroup::STATUS_IN_PROGRESS,
+            'support[agreement]' => true,
+        ]);
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('.alert.alert-danger', 'Attention, un suivi social est déjà en cours');
+    }
+
+    public function testEditSupportGroupIsSuccessful()
+    {
+        $this->createLogin($this->data['userRoleUser']);
+
+        $id = $this->data['supportGroup1']->getId();
+        $this->client->request('GET', "/support/$id/edit");
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', 'Édition du suivi');
+
+        $this->client->submitForm('send');
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorExists('.alert.alert-success');
+    }
+
+    public function testEditCoefficientIsSuccessful()
+    {
+        $this->createLogin($this->data['userAdmin']);
+
+        $id = $this->data['supportGroup2']->getId();
+        $this->client->request('GET', "/support/$id/edit");
+
+        $this->client->submitForm('send-coeff', [
+            'support_coefficient[coefficient]' => 2,
+        ]);
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('.alert.alert-success', 'Le coefficient du suivi est mis à jour.');
+    }
+
     public function testViewSupportGroupIsUp()
     {
-        $this->client->request('GET', $this->generateUri('support_view', [
-            'id' => ($this->dataFixtures['supportGroup1'])->getId(),
-        ]));
+        $this->data = $this->loadFixtureFiles([
+            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
+            dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
+            dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
+            dirname(__DIR__).'/../DataFixturesTest/SupportFixturesTest.yaml',
+            dirname(__DIR__).'/../DataFixturesTest/EvaluationFixturesTest.yaml',
+        ]);
+
+        $this->createLogin($this->data['userRoleUser']);
+
+        $id = $this->data['supportGroupWithEval']->getId();
+        $this->client->request('GET', "/support/$id/view");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Suivi social');
     }
 
-    public function testSuccessDeleteSupport()
+    public function testDeleteSupportIsFailed()
     {
-        $this->client->request('GET', $this->generateUri('support_delete', [
-            'id' => ($this->dataFixtures['supportGroup1'])->getId(),
-        ]));
-        // $this->client->followRedirect();
+        $this->createLogin($this->data['userRoleUser']);
+
+        $id = $this->data['supportGroup1']->getId();
+        $this->client->request('GET', "/support/$id/delete");
+
+        $this->assertSame(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function testDeleteSupportIsSuccessful()
+    {
+        $this->createLogin($this->data['userAdmin']);
+
+        $id = $this->data['supportGroup1']->getId();
+        $this->client->request('GET', "/support/$id/delete");
+
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Groupe');
         $this->assertSelectorExists('.alert.alert-warning');
     }
 
-    // public function testRemoveSupportPerson()
-    // {
-    //     $supportPerson = ($this->dataFixtures['supportPerson1']);
-    //     $csrfToken = $this->client->getContainer()->get('security.csrf.token_manager')->getToken('remove' . $supportPerson->getId());
+    public function testAddPeopleInSupportIsFailed()
+    {
+        $this->createLogin($this->data['userRoleUser']);
 
-    //     $this->client->request('GET', $this->generateUri('remove_support_pers', [
-    //         'id' => ($this->dataFixtures['supportGroup1'])->getId(),
-    //         'support_pers_id' => $supportPerson->getid(),
-    //         '_token' => $csrfToken
-    //     ]));
+        $id = $this->data['supportGroup1']->getId();
+        $this->client->request('GET', "/support/$id/add_people");
 
-    //     $result = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertSelectorTextContains('.alert.alert-warning', 'Aucune personne n\'a été ajouté');
+    }
 
-    //     $this->assertSame(200, $result['code']);
-    // }
+    public function testAddPeopleInSupportIsSuccessful()
+    {
+        $this->createLogin($this->data['userRoleUser']);
+
+        $person = $this->data['person5'];
+
+        $id = $this->data['peopleGroup1']->getId();
+        /** @var Crawler */
+        $crawler = $this->client->request('GET', "/group/$id/search_person");
+        $csrfToken = $crawler->filter('#role_person__token')->attr('value');
+
+        $personId = $person->getId();
+        $this->client->request('POST', "/group/$id/add_person/$personId", [
+            'role_person' => [
+                'role' => 1,
+                '_token' => $csrfToken,
+            ],
+        ]);
+
+        $id = $this->data['supportGroup1']->getId();
+        $this->client->request('GET', "/support/$id/add_people");
+
+        $this->assertSelectorTextContains('.alert.alert-success', $person->getFullname().' est ajouté');
+    }
+
+    public function testRemoveSupportPersonWithoutTokenIsFailed()
+    {
+        $this->createLogin($this->data['userRoleUser']);
+
+        $id = $this->data['supportGroup1']->getId();
+        $supportPersId = $this->data['supportPerson2']->getId();
+        $this->client->request('GET', "/support/$id/edit");
+        $this->client->request('GET', "/supportGroup/$id/remove-$supportPersId/tokenId");
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $content = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertSame('danger', $content['alert']);
+    }
+
+    public function testRemoveHeaderSupportPersonIsFailed()
+    {
+        $this->createLogin($this->data['userRoleUser']);
+
+        $id = $this->data['supportGroup1']->getId();
+        /** @var Crawler */
+        $crawler = $this->client->request('GET', "/support/$id/edit");
+        $url = $crawler->filter('.js-remove')->first()->attr('data-url');
+        $this->client->request('GET', $url);
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $content = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertSame('Le demandeur principal ne peut pas être retiré du suivi.', $content['msg']);
+    }
+
+    public function testRemoveSupportPersonIsSuccessful()
+    {
+        $this->createLogin($this->data['userRoleUser']);
+
+        $id = $this->data['supportGroup1']->getId();
+        /** @var Crawler */
+        $crawler = $this->client->request('GET', "/support/$id/edit");
+        $url = $crawler->filter('.js-remove')->last()->attr('data-url');
+        $this->client->request('GET', $url);
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $content = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertSame('delete', $content['action']);
+    }
+
+    public function testCloneSupportIsFailed()
+    {
+        $this->createLogin($this->data['userSuperAdmin']);
+
+        $id = $this->data['supportGroup2']->getId();
+        $this->client->request('GET', "/support/$id/clone");
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('.alert.alert-warning', 'Aucun autre suivi n\'a été trouvé.');
+    }
+
+    public function testCloneSupportIsSuccessful()
+    {
+        $this->createLogin($this->data['userSuperAdmin']);
+
+        $id = $this->data['supportGroup1']->getId();
+        $this->client->request('GET', "/support/$id/clone");
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('.alert.alert-success', 'Les informations du précédent suivi ont été ajoutées');
+    }
+
+    public function testShowSupportsWithContributioIsUp()
+    {
+        $this->createLogin($this->data['userRoleUser']);
+
+        $this->client->request('GET', '/supports/current_month');
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', 'Suivis en présence');
+    }
 
     protected function tearDown(): void
     {
         parent::tearDown();
         $this->client = null;
-        $this->dataFixtures = null;
+        $this->data = null;
 
         $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
         $cache->clear();

@@ -7,7 +7,6 @@ use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
 
 class IndicatorControllerTest extends WebTestCase
@@ -19,15 +18,16 @@ class IndicatorControllerTest extends WebTestCase
     protected $client;
 
     /** @var array */
-    protected $dataFixtures;
+    protected $data;
 
     /** @var SupportGroup */
     protected $supportGroup;
 
     protected function setUp()
     {
-        $this->dataFixtures = $this->loadFixtureFiles([
+        $this->data = $this->loadFixtureFiles([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
+            dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/SupportFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/EvaluationFixturesTest.yaml',
@@ -37,47 +37,49 @@ class IndicatorControllerTest extends WebTestCase
             dirname(__DIR__).'/../DataFixturesTest/ContributionFixturesTest.yaml',
         ]);
 
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->data['userSuperAdmin']);
     }
 
     public function testPageIndicatorsIsUp()
     {
-        $this->client->request('GET', $this->generateUri('daily_indicators'));
+        $this->client->request('GET', '/daily_indicators');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Indicateurs quotidiens d\'activité');
     }
 
-    public function testIndicatorServicesPageIsUp()
-    {
-        $this->client->request('GET', 'indicator/services');
-
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'Indicateurs d\'activité des services');
-    }
-
     public function testSearchIndicatorServicesIsSuccessful()
     {
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', 'indicator/services');
+        $this->client->request('GET', '/indicator/services');
 
+        // Page is up
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', 'Indicateurs d\'activité des services');
+
+        // Search is sucessful
         $now = new \DateTime();
-        $form = $crawler->selectButton('search')->form([
+        $this->client->submitForm('search', [
             'status' => [SupportGroup::STATUS_IN_PROGRESS],
             'date[start]' => (clone $now)->modify('-1 year')->format('Y-m-d'),
             'date[end]' => $now->format('Y-m-d'),
         ]);
 
-        $this->client->submit($form);
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('tr>td>span', 'AVDL');
+    }
+
+    public function testSocialIndicatorIsSuccessful()
+    {
+        $this->client->request('GET', '/indicators/social');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('tr>td>span', 'CHRS XXX');
+        $this->assertSelectorTextContains('h1', 'Indicateurs sociaux');
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
         $this->client = null;
-        $this->dataFixtures = null;
+        $this->data = null;
     }
 }

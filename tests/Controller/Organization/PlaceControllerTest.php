@@ -19,7 +19,7 @@ class PlaceControllerTest extends WebTestCase
     protected $client;
 
     /** @var array */
-    protected $dataFixtures;
+    protected $data;
 
     /** @var Service */
     protected $service;
@@ -29,33 +29,27 @@ class PlaceControllerTest extends WebTestCase
 
     protected function setUp()
     {
-        $this->dataFixtures = $this->loadFixtureFiles([
+        $this->data = $this->loadFixtureFiles([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
+            dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/PlaceFixturesTest.yaml',
         ]);
 
-        $this->service = $this->dataFixtures['service1'];
-        $this->place = $this->dataFixtures['place1'];
+        $this->service = $this->data['service1'];
+        $this->place = $this->data['place1'];
     }
 
-    public function testListPlacesIsUp()
+    public function testSearchListPlacesIsSuccessful()
     {
-        $this->createLogin($this->dataFixtures['userRoleAdmin']);
+        $this->createLogin($this->data['userAdmin']);
 
-        $this->client->request('GET', $this->generateUri('places'));
+        $this->client->request('GET', '/places');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Groupes de places');
-    }
-
-    public function testListPlacePageWithReasearch()
-    {
-        $this->createLogin($this->dataFixtures['userRoleAdmin']);
 
         /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('places'));
-
-        $form = $crawler->selectButton('search')->form([
+        $crawler = $this->client->submitForm('search', [
             'name' => 'Logement 666',
             'nbPlaces' => 6,
             'date[start]' => '2019-01-01',
@@ -63,102 +57,70 @@ class PlaceControllerTest extends WebTestCase
             'city' => 'Houilles',
         ]);
 
-        $this->client->submit($form);
-
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('table tbody tr td:nth-child(2)', 'Logement 666');
+        $this->assertGreaterThanOrEqual(2, $crawler->filter('tr')->count());
     }
 
-    public function testExportListPlaceWithResults()
+    public function testExportPlaceIsSuccessful()
     {
-        $this->createLogin($this->dataFixtures['userRoleAdmin']);
+        $this->createLogin($this->data['userAdmin']);
 
-        $crawler = $this->client->request('GET', $this->generateUri('places'));
+        $this->client->request('GET', '/places');
 
-        $form = $crawler->selectButton('export')->form([]);
-
-        $this->client->submit($form);
-
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testExportListPlaceWithoutResults()
-    {
-        $this->createLogin($this->dataFixtures['userRoleAdmin']);
-
-        $crawler = $this->client->request('GET', $this->generateUri('places'));
-
-        $form = $crawler->selectButton('export')->form([
+        // Export without result
+        $this->client->submitForm('export', [
             'name' => 'Logement inconnu',
-        ]);
-
-        $this->client->submit($form);
+        ], 'GET');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+
+        // Export with results
+        $this->client->request('GET', '/places');
+
+        $this->client->submitForm('export', [], 'GET');
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertContains('.spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
     }
 
-    public function testNewPlaceIsUp()
+    public function testCreatePlaceIsFailed()
     {
-        $this->createLogin($this->dataFixtures['userRoleAdmin']);
+        $this->createLogin($this->data['userAdmin']);
 
-        $this->client->request('GET', $this->generateUri('service_place_new', [
-            'id' => $this->service->getId(),
-        ]));
+        $id = $this->service->getId();
+        $this->client->request('GET', "/admin/service/$id/place/new");
 
+        // Page is up
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Nouveau groupe de places');
-    }
 
-    public function testFailToCreatePlace()
-    {
-        $this->createLogin($this->dataFixtures['userRoleAdmin']);
-
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('service_place_new', [
-            'id' => $this->service->getId(),
-        ]));
-
-        $form = $crawler->selectButton('send')->form([
-            // 'place[name]' => 'Nouveau logement',
-        ]);
-
-        $this->client->submit($form);
+        // Create is failed
+        $this->client->submitForm('send');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorExists('.alert.alert-danger');
     }
 
-    public function testCreatePlaceThatExists()
+    public function testCreateNewPlaceIsSuccessful()
     {
-        $this->createLogin($this->dataFixtures['userRoleAdmin']);
+        $this->createLogin($this->data['userAdmin']);
 
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('service_place_new', [
-            'id' => $this->service->getId(),
-        ]));
+        $id = $this->service->getId();
+        $this->client->request('GET', "/admin/service/$id/place/new");
 
-        $form = $crawler->selectButton('send')->form([
+        // Fail
+        $this->client->submitForm('send', [
             'place[name]' => 'Logement 666',
-            'place[service]' => $this->service,
+            'place[service]' => $this->service->getId(),
             'place[nbPlaces]' => 6,
             'place[startDate]' => '2019-01-01',
         ]);
 
-        $this->client->submit($form);
-
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorExists('.alert.alert-danger');
-    }
 
-    public function testSuccessToCreateNewPlace()
-    {
-        $this->createLogin($this->dataFixtures['userRoleAdmin']);
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('service_place_new', [
-            'id' => $this->service->getId(),
-            ]));
-
-        $form = $crawler->selectButton('send')->form([
+        // Success
+        $this->client->submitForm('send', [
             'place[name]' => 'Nouveau logement',
             'place[nbPlaces]' => 6,
             'place[startDate]' => '2019-01-01',
@@ -166,39 +128,26 @@ class PlaceControllerTest extends WebTestCase
             'place[location][city]' => 'Houilles',
             'place[location][zipcode]' => '78 800',
             'place[location][address]' => 'xxx',
-            'place[service]' => 1,
+            'place[service]' => $this->data['service1'],
         ]);
-
-        $this->client->submit($form);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorExists('.alert.alert-success');
     }
 
-    public function testEditPlaceisUp()
+    public function testEditPlaceIsSuccessful()
     {
-        $this->createLogin($this->dataFixtures['userRoleAdmin']);
+        $this->createLogin($this->data['userAdmin']);
 
-        $this->client->request('GET', $this->generateUri('place_edit', [
-            'id' => $this->place->getId(),
-        ]));
+        $id = $this->place->getId();
+        $this->client->request('GET', "/place/$id");
 
+        // Page is up
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', $this->place->getName());
-    }
 
-    public function testSuccessToEditPlace()
-    {
-        $this->createLogin($this->dataFixtures['userRoleAdmin']);
-
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('place_edit', [
-            'id' => $this->service->getId(),
-        ]));
-
-        $form = $crawler->selectButton('send')->form([]);
-
-        $this->client->submit($form);
+        // Edit is successful
+        $this->client->submitForm('send');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorExists('.alert.alert-success');
@@ -206,20 +155,35 @@ class PlaceControllerTest extends WebTestCase
 
     public function testDeletePlace()
     {
-        $this->createLogin($this->dataFixtures['userRoleAdmin']);
+        $this->createLogin($this->data['userAdmin']);
 
-        $this->client->request('GET', $this->generateUri('admin_place_delete', [
-            'id' => $this->place->getId(),
-        ]));
-        // $this->client->followRedirect();
+        $id = $this->place->getId();
+        $this->client->request('GET', "/admin/place/$id/delete");
+
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', $this->place->getService()->getName());
+    }
+
+    public function testDisablePlace()
+    {
+        $this->createLogin($this->data['userAdmin']);
+
+        $id = $this->data['place1']->getId();
+        $this->client->request('GET', "/admin/place/$id/disable");
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('.alert.alert-warning', 'est désactivé');
+
+        $this->client->request('GET', "/admin/place/$id/disable");
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('.alert.alert-success', 'est ré-activé');
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
         $this->client = null;
-        $this->dataFixtures = null;
+        $this->data = null;
     }
 }

@@ -139,12 +139,12 @@
                                 {# {% cache "referentSupport" ~ support.id support.updatedAt.timestamp %} #}
                                 {% set person = (support.supportPeople|filter(s => s.head == true)|first).person %}
                                 <tr>
-                                    <th scope="row" class="align-middle">
+                                    <td scope="row" class="align-middle">
                                         <a href="{{ path('support_edit', {'id':support.id}) }}"
                                             class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" data-placement="bottom"
                                             title="Voir le suivi social"><span class="fas fa-eye"></span>
                                         </a>
-                                    </th>
+                                    </td>
                                     <td class="align-middle"> {{ person ? person.fullname }}</td>
                                     <td class="align-middle">{{ support.peopleGroup.familyTypologyToString }}
                                         {{ support.peopleGroup.nbPeople ? ' ' ~ support.peopleGroup.nbPeople ~ ' personnes' }}

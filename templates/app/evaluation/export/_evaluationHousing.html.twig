@@ -58,15 +58,5 @@
         " (le " ~ evalHousing.publicForceDate|date("d/m/Y") ~ ")"), "Public force", "evaluation") }}
     {{ view_p.get(evalHousing.expulsionComment) }}
 {% endif %}
-{# {% if evalHousing.housingExperience %} #}
-    {{ view_p.get(evalHousing.housingExperienceToString, "Housing experience", "evaluation") }}
-    {# {{ view_p.get(evalHousing.housingExpeComment) }}
-{% endif %} #}
-{# <ul>
-    {% for key, value in evalHousing.housingHelps %}
-        {% if attribute(evalHousing, key) %}
-            <li>{{ value }}</li>
-        {% endif %}
-    {% endfor %}
-</ul> #}
+{{ view_p.get(evalHousing.housingExperienceToString, "Housing experience", "evaluation") }}
 {{ view_text.get(evalHousing.commentEvalHousing, null, null, type) }}

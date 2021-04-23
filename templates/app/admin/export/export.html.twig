@@ -36,7 +36,7 @@
                     {# <div class="col-md-6">{{ form_row(form.nbPeople) }}</div> #}
                      <div class="col-md-6">
                         <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark"
-                            data-placement="bottom" title="Demandeur/euse princiapl·e">{{ form_row(form.head) }}
+                            data-placement="bottom" title="Demandeur/euse principal·e">{{ form_row(form.head) }}
                         </div>
                     </div>
                 </div>
@@ -129,11 +129,11 @@
                             <tbody id="container-exports">
                                 {% for export in exports %}
                                     <tr id="export-{{ export.id }}" class="js-export">
-                                        <th scope="row" class="align-middle text-center">
+                                        <td scope="row" class="align-middle text-center">
                                             <a href="{{ path('export_get', {'id': export.id }) }}" class="btn btn-{{ theme_color }} btn-sm shadow my-1" 
                                                 data-toggle="tooltip" data-placement="bottom" title="Télécharger l'export"><span class="fas fa-file-download"></span>
                                             </a>
-                                        </th>
+                                        </td>
                                         <td class="js-export-title">{{ export.title }}</td>
                                         <td class="js-export-comment">{{ export.comment|raw }}</td>
                                         <td class="js-export-nbResults text-right">{{ export.nbResults|number }}</td>

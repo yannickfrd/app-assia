@@ -7,13 +7,13 @@ use App\Repository\Support\DocumentRepository;
 
 class FileDownloader extends Downloader
 {
-    private $repoDocument;
+    private $documentRepo;
     private $downloadsDirectory;
     private $documentsDirectory;
 
-    public function __construct(DocumentRepository $repoDocument, string $downloadsDirectory, string $documentsDirectory)
+    public function __construct(DocumentRepository $documentRepo, string $downloadsDirectory, string $documentsDirectory)
     {
-        $this->repoDocument = $repoDocument;
+        $this->documentRepo = $documentRepo;
         $this->downloadsDirectory = $downloadsDirectory;
         $this->documentsDirectory = $documentsDirectory;
     }
@@ -22,7 +22,7 @@ class FileDownloader extends Downloader
     {
         $now = new \DateTime();
 
-        $documents = $this->repoDocument->findDocumentsById($idDocuments, $supportGroup);
+        $documents = $this->documentRepo->findDocumentsById($idDocuments, $supportGroup);
         $path = $this->downloadsDirectory.$now->format('Y/m/d/').$supportGroup->getId().'/';
 
         if (!file_exists($path)) {

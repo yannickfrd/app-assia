@@ -9,7 +9,6 @@ use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\Settings;
 use PhpOffice\PhpWord\Shared\Html;
 use PhpOffice\PhpWord\Style\Language;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 
@@ -61,11 +60,9 @@ class ExportWord
     }
 
     /**
-     * Download file.
-     *
-     * @return Response|StreamedResponse
+     * Output the generated Word file to Browser.
      */
-    public function download($download = true)
+    public function download(string $appEnv = null): StreamedResponse
     {
         $objWriter = IOFactory::createWriter($this->phpWord, 'Word2007');
 
@@ -75,11 +72,13 @@ class ExportWord
         $response->setPrivate();
         $response->headers->addCacheControlDirective('no-cache', true);
         $response->headers->addCacheControlDirective('must-revalidate', true);
-        $response->setCallback(function () use ($objWriter) {
-            $objWriter->save('php://output');
+        $response->setCallback(function () use ($objWriter, $appEnv) {
+            if ('test' != $appEnv) {
+                $objWriter->save('php://output');
+            }
         });
 
-        return true === $download ? $response : new Response();
+        return $response;
     }
 
     /**

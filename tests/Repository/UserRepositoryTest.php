@@ -32,7 +32,7 @@ class UserRepositoryTest extends WebTestCase
 
     protected function setUp()
     {
-        $dataFixtures = $this->loadFixtureFiles([
+        $data = $this->loadFixtureFiles([
             dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
         ]);
 
@@ -45,9 +45,9 @@ class UserRepositoryTest extends WebTestCase
         /* @var UserRepository */
         $this->repo = $this->entityManager->getRepository(User::class);
 
-        $this->user = $dataFixtures['userSuperAdmin'];
-        $this->service = $dataFixtures['service1'];
-        $this->search = $this->getUserSearch($dataFixtures['pole']);
+        $this->user = $data['userRoleUser'];
+        $this->service = $data['service1'];
+        $this->search = $this->getUserSearch($data['pole1']);
     }
 
     protected function getUserSearch(Pole $pole)
@@ -57,9 +57,9 @@ class UserRepositoryTest extends WebTestCase
 
         return (new UserSearch())
             ->setFirstname('Role')
-            ->setLastname('ADMIN')
+            ->setLastname('USER')
             ->setPhone('01 00 00 00 00')
-            ->setStatus([6])
+            ->setStatus([1])
             ->setPoles($poles);
     }
 
@@ -75,7 +75,7 @@ class UserRepositoryTest extends WebTestCase
 
     public function testFindUserByEmail()
     {
-        $this->assertNotNull($this->repo->findUser('r.super_admin@esperer-95.org'));
+        $this->assertNotNull($this->repo->findUser('r.super_admin@mail.fr'));
     }
 
     public function testFindUserById()
@@ -85,14 +85,14 @@ class UserRepositoryTest extends WebTestCase
 
     public function testFindUsersQueryWithoutFilters()
     {
-        $query = $this->repo->findUsersQuery(new UserSearch());
-        $this->assertGreaterThanOrEqual(5, count($query->getResult()));
+        $result = $this->repo->findUsersQuery(new UserSearch())->getResult();
+        $this->assertGreaterThanOrEqual(5, count($result));
     }
 
     public function testFindUsersQueryWithFilters()
     {
-        $query = $this->repo->findUsersQuery($this->search);
-        $this->assertGreaterThanOrEqual(1, count($query->getResult()));
+        $result = $this->repo->findUsersQuery($this->search)->getResult();
+        $this->assertGreaterThanOrEqual(1, count($result));
     }
 
     public function testFindUsersToExport()
@@ -102,7 +102,7 @@ class UserRepositoryTest extends WebTestCase
     }
 
     /**
-     * Méthodes non testatables.
+     * Méthodes non testables.
      */
 
     // public function testGetUsersQueryBuilder()

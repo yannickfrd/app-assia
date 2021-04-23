@@ -15,10 +15,9 @@
 	{% set people_over_16 = evaluationPeople|filter(e => e.vars.value.supportPerson.person.age >= 16) %}
 	{% set nb_children = nb_people - people_adults|length %}
 	{% set SERVICE_TYPE_HOTEL = support.service.type == constant("App\\Entity\\Organization\\Service::SERVICE_TYPE_HOTEL") %}
-    {# {% cache "evaluation.edit" ~ evaluationGroup.id ~ evaluationGroup.updatedAt.timestamp evaluationGroup.updatedAt.timestamp %} #}
 	<div class="container">
 
-		{% include "app/support/support/_navSuppport.html.twig" %}
+		{% include "app/support/_shared/_navSuppport.html.twig" %}
 
 		{{ form_start(form) }}
 
@@ -60,8 +59,6 @@
 		{{ form_row(form._token) }}
 		{{ form_end(form, {"render_rest": false}) }}
 	</div>
-
-	{# {% endcache %} #}
 
 {% endblock %}
 

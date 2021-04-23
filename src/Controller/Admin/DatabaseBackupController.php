@@ -22,37 +22,37 @@ class DatabaseBackupController extends AbstractController
     use ErrorMessageTrait;
 
     protected $manager;
-    protected $repo;
+    protected $databaseBackupRepo;
 
-    public function __construct(EntityManagerInterface $manager, DatabaseBackupRepository $repo)
+    public function __construct(EntityManagerInterface $manager, DatabaseBackupRepository $databaseBackupRepo)
     {
         $this->manager = $manager;
-        $this->repo = $repo;
+        $this->databaseBackupRepo = $databaseBackupRepo;
     }
 
     /**
      * Sauvegardes de la base de données.
      *
-     * @Route("admin/database-backups", name="database_backups", methods="GET|POST")
+     * @Route("/admin/database-backups", name="database_backups", methods="GET|POST")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function listBackups(Request $request, Pagination $pagination): Response
     {
         $search = new BackupSearch();
 
-        $form = ($this->createForm(BackupSearchType::class, $search))
+        $form = $this->createForm(BackupSearchType::class, $search)
             ->handleRequest($request);
 
         return $this->render('app/admin/backupDatabase/backupDatabase.html.twig', [
             'form' => $form->createView(),
-            'backups' => $pagination->paginate($this->repo->findBackupsQuery(), $request, 10) ?? null,
+            'backups' => $pagination->paginate($this->databaseBackupRepo->findBackupsQuery(), $request, 10),
         ]);
     }
 
     /**
      * Créer une sauvegarde la base de données.
      *
-     * @Route("admin/database-backup/create", name="database_backup_create")
+     * @Route("/admin/database-backup/create", name="database_backup_create")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function createBackup(DumpDatabase $dumpDatabase): Response
@@ -75,7 +75,7 @@ class DatabaseBackupController extends AbstractController
     /**
      * Donne le fichier de sauvegarde la base de données.
      *
-     * @Route("admin/database-backup/{id}/get", name="database_backup_get", methods="GET")
+     * @Route("/admin/database-backup/{id}/get", name="database_backup_get", methods="GET")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function getDatabaseBackup(DatabaseBackup $databaseBackup, Downloader $downloader): Response
@@ -94,7 +94,7 @@ class DatabaseBackupController extends AbstractController
     /**
      * Supprime le fichier de sauvegarde de la base de données.
      *
-     * @Route("admin/database-backup/{id}/delete", name="database_backup_delete", methods="GET")
+     * @Route("/admin/database-backup/{id}/delete", name="database_backup_delete", methods="GET")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function deleteDatabase(DatabaseBackup $databaseBackup): Response

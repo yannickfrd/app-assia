@@ -23,7 +23,7 @@ class ImportDatasUser extends ImportDatas
     protected $fields;
     protected $field;
 
-    protected $repoUser;
+    protected $userRepo;
     protected $passwordEncoder;
 
     protected $users = [];
@@ -32,13 +32,13 @@ class ImportDatasUser extends ImportDatas
     public function __construct(
         EntityManagerInterface $manager,
         UserNotification $userNotification,
-        UserRepository $repoUser,
+        UserRepository $userRepo,
         UserPasswordEncoderInterface $passwordEncoder,
         SluggerInterface $slugger)
     {
         $this->manager = $manager;
         $this->userNotification = $userNotification;
-        $this->repoUser = $repoUser;
+        $this->UserRepo = $userRepo;
         $this->passwordEncoder = $passwordEncoder;
         $this->slugger = $slugger;
     }
@@ -135,7 +135,7 @@ class ImportDatasUser extends ImportDatas
      */
     protected function userExists(User $user)
     {
-        return $this->repoUser->findOneBy([
+        return $this->UserRepo->findOneBy([
             'username' => $user->getUsername(),
             // 'firstname' => $user->getFirstname(),
             // 'lastname' => $user->getLastname(),

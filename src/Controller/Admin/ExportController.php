@@ -21,27 +21,26 @@ class ExportController extends AbstractController
 {
     use ErrorMessageTrait;
 
-    private $repo;
+    private $exportRepo;
 
-    public function __construct(ExportRepository $repo)
+    public function __construct(ExportRepository $exportRepo)
     {
-        $this->repo = $repo;
+        $this->exportRepo = $exportRepo;
     }
 
     /**
      * Export des données.
      *
-     * @Route("export", name="export", methods="GET|POST")
+     * @Route("/export", name="export", methods="GET|POST")
      * @IsGranted("ROLE_ADMIN")
      */
     public function export(Request $request, Pagination $pagination): Response
     {
-        $form = ($this->createForm(ExportSearchType::class, new ExportSearch()))
+        $form = $this->createForm(ExportSearchType::class, new ExportSearch())
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->json([
-                'code' => 200,
                 'alert' => 'success',
                 'type' => 'export',
                 'msg' => 'Votre fichier d\'export est prêt. Un mail vous a été envoyé.',
@@ -50,28 +49,27 @@ class ExportController extends AbstractController
 
         return $this->render('app/admin/export/export.html.twig', [
             'form' => $form->createView(),
-            'exports' => $pagination->paginate($this->repo->findExportsQuery(), $request, 10),
+            'exports' => $pagination->paginate($this->exportRepo->findExportsQuery(), $request, 10),
         ]);
     }
 
     /**
      * Compte le nombre de résultats.
      *
-     * @Route("export/count_results", name="export_count_results", methods="POST")
+     * @Route("/export/count_results", name="export_count_results", methods="POST")
      */
-    public function countNbResults(Request $request, SupportPersonRepository $repo): Response
+    public function countNbResults(Request $request, SupportPersonRepository $supportPersonRepo): Response
     {
-        $form = ($this->createForm(ExportSearchType::class, $search = new ExportSearch()))
+        $form = $this->createForm(ExportSearchType::class, $search = new ExportSearch())
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->json([
-                    'code' => 200,
                     'alert' => 'success',
                     'type' => 'count',
-                    'count' => $count = $repo->countSupportsToExport($search),
+                    'count' => $count = $supportPersonRepo->countSupportsToExport($search),
                     'msg' => 'Nombre de résultats : '.number_format($count, 0, '', ' '),
-                ]);
+            ]);
         }
 
         return $this->getErrorMessage($form);
@@ -80,7 +78,7 @@ class ExportController extends AbstractController
     /**
      * Donne le fichier d'export.
      *
-     * @Route("export/{id}/get", name="export_get", methods="GET")
+     * @Route("/export/{id}/get", name="export_get", methods="GET")
      */
     public function getExport(Export $export, Downloader $downloader): Response
     {
@@ -90,18 +88,18 @@ class ExportController extends AbstractController
             return $downloader->send($export->getFileName());
         }
 
-        $this->addFlash('danger', 'Ce fichier n\'existe pas.');
-
         return $this->redirectToRoute('export');
     }
 
     /**
      * Supprime le fichier d'export.
      *
-     * @Route("export/{id}/delete", name="export_delete", methods="GET")
+     * @Route("/export/{id}/delete", name="export_delete", methods="GET")
      */
     public function deleteExport(Export $export, EntityManagerInterface $manager): Response
     {
+        $this->denyAccessUnlessGranted('DELETE', $export);
+
         if (file_exists($export->getFileName())) {
             unlink($export->getFileName());
         }

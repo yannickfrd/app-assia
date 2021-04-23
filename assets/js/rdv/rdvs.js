@@ -38,7 +38,7 @@ export default class Rdvs {
      * @param {Object} response 
      */
     responseAjax(response) {
-        if (response.code === 200) {
+        if (response.action) {
             switch (response.action) {
                 case 'delete':
                     this.deleteRdv(response.rdv)

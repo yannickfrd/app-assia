@@ -77,11 +77,15 @@ class ServiceRepository extends ServiceEntityRepository
     /**
      * Donne la liste des services de l'utilisateur.
      */
-    public function getServicesOfUserQueryBuilder(CurrentUserService $currentUser): QueryBuilder
+    public function getServicesOfUserQueryBuilder(CurrentUserService $currentUser, string $dataClass = null): QueryBuilder
     {
-        $query = $this->createQueryBuilder('s')->select('PARTIAL s.{id, name, preAdmission, coefficient}')
+        $query = $this->createQueryBuilder('s')->select('PARTIAL s.{id, name, type, preAdmission, coefficient}')
 
-        ->where('s.disabledAt IS NULL');
+            ->where('s.disabledAt IS NULL');
+
+        if ($dataClass) {
+            $query = $this->filterByServiceType($query, $dataClass);
+        }
 
         if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             $query->andWhere('s.id IN (:services)')

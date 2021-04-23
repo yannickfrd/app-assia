@@ -23,7 +23,6 @@ use App\Repository\Support\SupportPersonRepository;
 use App\Service\Grammar;
 use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Cache\CacheItemInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -38,49 +37,44 @@ class PersonController extends AbstractController
     use ErrorMessageTrait;
 
     private $manager;
-    private $repo;
+    private $personRepo;
 
-    public function __construct(EntityManagerInterface $manager, PersonRepository $repo)
+    public function __construct(EntityManagerInterface $manager, PersonRepository $personRepo)
     {
         $this->manager = $manager;
-        $this->repo = $repo;
+        $this->personRepo = $personRepo;
     }
 
     /**
-     * Liste des personnes.
+     * Voir la liste des personnes.
      *
      * @Route("/people", name="people", methods="GET|POST")
      * @Route("/new_support/search/person", name="new_support_search_person", methods="GET|POST")
      */
     public function listPeople(Request $request, Pagination $pagination): Response
     {
-        $search = new PersonSearch();
-
-        $form = ($this->createForm(PersonSearchType::class, $search))
+        $form = $this->createForm(PersonSearchType::class, $search = new PersonSearch())
             ->handleRequest($request);
 
         return $this->render('app/people/person/listPeople.html.twig', [
             'personSearch' => $search,
             'form' => $form->createView(),
-            'people' => $request->query->all() ? $pagination->paginate($this->repo->findPeopleQuery($search, $request->query->get('search-person'), 20), $request) : null,
+            'people' => $request->query->all() ? $pagination->paginate($this->personRepo->findPeopleQuery($search, $request->query->get('search-person'), 20), $request) : null,
         ]);
     }
 
     /**
-     * Permet de trouver les personnes par le mode de recherche instannée AJAX.
+     * Rechercher des personnes via requête Ajax.
      *
      * @Route("/people/search", name="people_search", methods="POST")
      */
     public function searchPeople(Request $request): Response
     {
-        $search = new PersonSearch();
-
-        $this->createForm(PersonSearchType::class, $search)
+        $this->createForm(PersonSearchType::class, $search = new PersonSearch())
             ->handleRequest($request);
 
         $people = [];
-
-        foreach ($this->repo->findPeopleQuery($search, null, 20)->getResult() as $person) {
+        foreach ($this->personRepo->findPeopleQuery($search)->getResult() as $person) {
             $people[] = [
                 'id' => $person->getId(),
                 'lastname' => $person->getLastname(),
@@ -94,9 +88,8 @@ class PersonController extends AbstractController
 
         return $this->json([
                 'search' => $search,
-                // 'count' => $count,
                 'people' => $people,
-        ], 200);
+        ]);
     }
 
     /**
@@ -106,12 +99,10 @@ class PersonController extends AbstractController
      */
     public function addPersonInGroup(PeopleGroup $peopleGroup, Request $request, Pagination $pagination): Response
     {
-        $search = new PersonSearch();
-
-        $form = ($this->createForm(PersonSearchType::class, $search))
+        $form = $this->createForm(PersonSearchType::class, $search = new PersonSearch())
             ->handleRequest($request);
 
-        $formRolePerson = ($this->createForm(RolePersonType::class, new RolePerson()))
+        $formRolePerson = $this->createForm(RolePersonType::class, new RolePerson())
             ->handleRequest($request);
 
         return $this->render('app/people/person/listPeople.html.twig', [
@@ -119,20 +110,18 @@ class PersonController extends AbstractController
             'form_role_person' => $formRolePerson->createView() ?? null,
             'people_group' => $peopleGroup,
             'personSearch' => $search,
-            'people' => $request->query->all() ? $pagination->paginate($this->repo->findPeopleQuery($search), $request) : null,
+            'people' => $request->query->all() ? $pagination->paginate($this->personRepo->findPeopleQuery($search), $request) : null,
         ]);
     }
 
     /**
-     * Nouvelle personne.
+     * Créer une nouvelle personne.
      *
      * @Route("/person/new", name="person_new", methods="GET|POST")
      */
-    public function newPerson(RolePerson $rolePerson = null, Request $request): Response
+    public function newPerson(Request $request): Response
     {
-        $rolePerson = new RolePerson();
-
-        $form = ($this->createForm(RolePersonGroupType::class, $rolePerson))
+        $form = $this->createForm(RolePersonGroupType::class, $rolePerson = new RolePerson())
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -148,15 +137,13 @@ class PersonController extends AbstractController
     }
 
     /**
-     * Crée une nouvelle personne dans un group existant.
+     * Créer une nouvelle personne dans un group existant.
      *
      * @Route("/group/{id}/person/new", name="group_create_person", methods="GET|POST")
      */
-    public function newPersonInGroup(PeopleGroup $peopleGroup, RolePerson $rolePerson = null, Request $request): Response
+    public function newPersonInGroup(PeopleGroup $peopleGroup, Request $request): Response
     {
-        $rolePerson = new RolePerson();
-
-        $form = ($this->createForm(PersonRolePersonType::class, $rolePerson))
+        $form = $this->createForm(PersonRolePersonType::class, $rolePerson = new RolePerson())
             ->handleRequest($request);
 
         $person = $rolePerson->getPerson();
@@ -184,28 +171,23 @@ class PersonController extends AbstractController
     }
 
     /**
-     * Modification d'une personne.
+     * Mettre à jour une personne.
      *
-     * @Route("/group/{id}/person/{person_id}-{slug}", name="group_person_show", requirements={"slug" : "[a-z0-9\-]*"}, methods="GET|POST")
+     * @Route("/group/{id}/person/{person_id}-{slug}", name="group_person_show", requirements={"slug" : "[a-z0-9\-]*"}, methods="GET")
      * @ParamConverter("person", options={"id" = "person_id"})
      */
-    public function editPersonInGroup(int $id, int $person_id, Request $request, PeopleGroupRepository $repoPeopleGroup, SupportPersonRepository $repoSuppport, SessionInterface $session): Response
+    public function editPersonInGroup(int $id, int $person_id, PeopleGroupRepository $peopleGroupRepo, SupportPersonRepository $supportRepo, SessionInterface $session): Response
     {
-        $peopleGroup = $repoPeopleGroup->findPeopleGroupById($id);
-        $person = $this->repo->findPersonById($person_id);
+        $peopleGroup = $peopleGroupRepo->findPeopleGroupById($id);
+        $person = $this->personRepo->findPersonById($person_id);
 
-        $form = ($this->createForm(PersonType::class, $person))
-            ->handleRequest($request);
+        $form = $this->createForm(PersonType::class, $person);
 
         $formNewGroup = $this->createForm(PersonNewGroupType::class, new RolePerson(), [
             'action' => $this->generateUrl('person_new_group', ['id' => $person->getId()]),
         ]);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->manager->flush();
-        }
-
-        $supports = $repoSuppport->findSupportsOfPerson($person);
+        $supports = $supportRepo->findSupportsOfPerson($person);
 
         return $this->render('app/people/person/person.html.twig', [
             'form' => $form->createView(),
@@ -222,11 +204,11 @@ class PersonController extends AbstractController
      * @Route("/person/{id}-{slug}", name="person_show", requirements={"slug" : "[a-z0-9\-]*"}, methods="GET")
      * @Route("/person/{id}", name="person_show", methods="GET")
      */
-    public function personShow(int $id, Request $request, SupportPersonRepository $repoSuppport, SessionInterface $session): Response
+    public function showPerson(int $id, Request $request, SupportPersonRepository $supportRepo, SessionInterface $session): Response
     {
-        $person = $this->repo->findPersonById($id);
+        $person = $this->personRepo->findPersonById($id);
 
-        $form = ($this->createForm(PersonType::class, $person))
+        $form = $this->createForm(PersonType::class, $person)
             ->handleRequest($request);
 
         // Formulaire pour ajouter un nouveau groupe à la personne
@@ -234,7 +216,7 @@ class PersonController extends AbstractController
             'action' => $this->generateUrl('person_new_group', ['id' => $person->getId()]),
         ]);
 
-        $supports = $repoSuppport->findSupportsOfPerson($person);
+        $supports = $supportRepo->findSupportsOfPerson($person);
 
         return $this->render('app/people/person/person.html.twig', [
             'form' => $form->createView(),
@@ -251,11 +233,20 @@ class PersonController extends AbstractController
      */
     public function editPerson(Person $person, Request $request): Response
     {
-        $form = ($this->createForm(PersonType::class, $person))
+        $form = $this->createForm(PersonType::class, $person)
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            return $this->updatePerson($person);
+            $this->manager->flush();
+
+            $this->discacheSupport($person);
+
+            return $this->json([
+                'alert' => 'success',
+                'msg' => 'Les modifications sont enregistrées.',
+                'user' => $this->getUser()->getFullname(),
+                'date' => $person->getUpdatedAt()->format('d/m/Y à H:i'),
+            ]);
         }
 
         return $this->getErrorMessage($form);
@@ -266,11 +257,9 @@ class PersonController extends AbstractController
      *
      * @Route("/person/{id}/new_group", name="person_new_group", methods="POST")
      */
-    public function addNewGroupToPerson(Person $person, RolePerson $rolePerson = null, Request $request)
+    public function addNewGroupToPerson(Person $person, Request $request)
     {
-        $rolePerson = new RolePerson();
-
-        $form = ($this->createForm(PersonNewGroupType::class, $rolePerson))
+        $form = $this->createForm(PersonNewGroupType::class, $rolePerson = new RolePerson())
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -306,8 +295,7 @@ class PersonController extends AbstractController
     public function searchPerson(string $search): Response
     {
         $people = [];
-
-        foreach ($this->repo->findPeopleByResearch($search) as $person) {
+        foreach ($this->personRepo->findPeopleByResearch($search) as $person) {
             $people[] = [
                 'id' => $person->getId(),
                 'fullname' => $person->getFullname(),
@@ -315,9 +303,7 @@ class PersonController extends AbstractController
             ];
         }
 
-        return $this->json([
-                'people' => $people,
-            ], 200);
+        return $this->json(['people' => $people]);
     }
 
     /**
@@ -328,14 +314,12 @@ class PersonController extends AbstractController
      */
     public function listDuplicatedPeople(Request $request): Response
     {
-        $search = new DuplicatedPeopleSearch();
-
-        $form = ($this->createForm(DuplicatedPeopleType::class, $search))
+        $form = $this->createForm(DuplicatedPeopleType::class, $search = new DuplicatedPeopleSearch())
             ->handleRequest($request);
 
         return $this->render('app/people/person/listDuplicatedPeople.html.twig', [
             'form' => $form->createView(),
-            'people' => $this->repo->findDuplicatedPeople($search),
+            'people' => $this->personRepo->findDuplicatedPeople($search),
         ]);
     }
 
@@ -377,7 +361,7 @@ class PersonController extends AbstractController
      */
     protected function personExists(Person $person): ?Person
     {
-        return $this->repo->findOneBy([
+        return $this->personRepo->findOneBy([
             'lastname' => $person->getLastname(),
             'firstname' => $person->getFirstname(),
             'birthdate' => $person->getBirthdate(),
@@ -401,24 +385,6 @@ class PersonController extends AbstractController
         $this->manager->flush();
 
         $this->addFlash('success', $person->getFullname().' est ajouté'.Grammar::gender($person->getGender()).' au groupe.');
-    }
-
-    /**
-     * Met à jour la personne.
-     */
-    protected function updatePerson(Person $person): Response
-    {
-        $this->manager->flush();
-
-        $this->discacheSupport($person);
-
-        return $this->json([
-            'code' => 200,
-            'alert' => 'success',
-            'msg' => 'Les modifications sont enregistrées.',
-            'user' => $this->getUser()->getFullname(),
-            'date' => $person->getUpdatedAt()->format('d/m/Y à H:i'),
-        ], 200);
     }
 
     /**
@@ -462,15 +428,6 @@ class PersonController extends AbstractController
         }
 
         return false;
-    }
-
-    protected function getSupports(Person $person, SupportPersonRepository $repoSuppport)
-    {
-        return (new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']))->get(Person::CACHE_PERSON_SUPPORTS_KEY.$person->getId(), function (CacheItemInterface $item) use ($person, $repoSuppport) {
-            $item->expiresAfter(\DateInterval::createFromDateString('30 days'));
-
-            return $repoSuppport->findSupportsOfPerson($person);
-        });
     }
 
     /**

@@ -27,14 +27,14 @@
 
 		<main class="min-vh-100">
 			<header id="header" data-color="{{ theme_color }}">
-				{% include "shared/_navbar.html.twig" %}
+				{% include "_shared/_navbar.html.twig" %}
 			</header>
 
 			<div class="z-index-9999 fixed-bottom">
 				<div id="js-notif-container" class="container py-0 d-none"></div>
 			</div>
 
-			{% include "shared/_autoLogout.html.twig" %}
+			{% include "_shared/_autoLogout.html.twig" %}
 
 			{% block body %}{% endblock %}
 
@@ -46,7 +46,7 @@
 
 		</main>
 
-		{% include "shared/_footer.html.twig" %}
+		{% include "_shared/_footer.html.twig" %}
 
 	{{ encore_entry_script_tags("app") }}
 	{% block javascripts %}{% endblock %}

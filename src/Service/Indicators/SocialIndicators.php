@@ -85,8 +85,6 @@ class SocialIndicators
         $datas['nbGroups'] = $this->nbGroups;
         $datas['nbPeople'] = count($supportPeople);
 
-        // dump($datas);
-
         return $datas;
     }
 

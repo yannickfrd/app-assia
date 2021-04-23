@@ -448,10 +448,10 @@ class ImportDatasHebergement extends ImportDatas
     protected $manager;
     protected $importNotification;
 
-    protected $repoSubService;
-    protected $repoDevice;
-    protected $repoPlace;
-    protected $repoPerson;
+    protected $subServiceRepo;
+    protected $deviceRepo;
+    protected $placeRepo;
+    protected $personRepo;
 
     protected $datas;
     protected $row;
@@ -484,25 +484,25 @@ class ImportDatasHebergement extends ImportDatas
     public function __construct(
         EntityManagerInterface $manager,
         ImportNotification $importNotification,
-        SubServiceRepository $repoSubService,
-        DeviceRepository $repoDevice,
-        PlaceRepository $repoPlace,
-        PersonRepository $repoPerson)
+        SubServiceRepository $subServiceRepo,
+        DeviceRepository $deviceRepo,
+        PlaceRepository $placeRepo,
+        PersonRepository $personRepo)
     {
         $this->manager = $manager;
         $this->importNotification = $importNotification;
-        $this->repoSubService = $repoSubService;
-        $this->repoDevice = $repoDevice;
-        $this->repoPlace = $repoPlace;
-        $this->repoPerson = $repoPerson;
+        $this->subServiceRepo = $subServiceRepo;
+        $this->deviceRepo = $deviceRepo;
+        $this->repoPlace = $placeRepo;
+        $this->personRepo = $personRepo;
     }
 
     public function importInDatabase(string $fileName, Service $service): int
     {
         $this->fields = $this->getDatas($fileName);
         $this->service = $service;
-        $this->subServices = $this->repoSubService->findBy(['service' => $service]);
-        $this->devices = $this->repoDevice->getDevicesOfService($service);
+        $this->subServices = $this->subServiceRepo->findBy(['service' => $service]);
+        $this->devices = $this->deviceRepo->getDevicesOfService($service);
         // $this->places = $this->repoPlace->findBy(['service' => $service]);
 
         // $this->users = $this->getUsers();
@@ -900,7 +900,7 @@ class ImportDatasHebergement extends ImportDatas
 
     protected function personExistsInDatabase(): ?Person
     {
-        return $this->repoPerson->findOneBy([
+        return $this->personRepo->findOneBy([
             'firstname' => $this->person->getFirstname(),
             'lastname' => $this->person->getLastname(),
             'birthdate' => $this->person->getBirthdate(),

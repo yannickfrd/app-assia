@@ -2,11 +2,7 @@
 
 namespace App\Service;
 
-use Dompdf\Css\Stylesheet;
 use Dompdf\Dompdf;
-use Dompdf\FontMetrics;
-use Dompdf\Options;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 use Twig\Environment;
@@ -89,15 +85,21 @@ class ExportPDF
     /**
      * Output the generated PDF to Browser.
      */
-    public function download($download = true): Response
+    public function download(string $appEnv = null): StreamedResponse
     {
-        if ($download) {
-            $this->dompdf->stream($this->getFileName());
-        }
+        $response = new StreamedResponse();
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response->headers->set('Content-Disposition', 'attachment;filename='.$this->getFilename().'.pdf');
+        $response->setPrivate();
+        $response->headers->addCacheControlDirective('no-cache', true);
+        $response->headers->addCacheControlDirective('must-revalidate', true);
+        $response->setCallback(function () use ($appEnv) {
+            if ('test' != $appEnv) {
+                $this->dompdf->stream($this->getFileName());
+            }
+        });
 
-        return new Response();
-
-        // return new StreamedResponse();
+        return $response;
     }
 
     protected function getFileName()

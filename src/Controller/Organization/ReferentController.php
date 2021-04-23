@@ -28,18 +28,22 @@ class ReferentController extends AbstractController
     /**
      * Nouveau service référent.
      *
-     * @Route("group/{group_id}/referent/new", name="group_referent_new", methods="GET|POST")
-     * @Route("suppport/{support_id}/referent/new", name="support_referent_new", methods="GET|POST")
+     * @Route("/group/{group_id}/referent/new", name="group_referent_new", methods="GET|POST")
+     * @Route("/suppport/{support_id}/referent/new", name="support_referent_new", methods="GET|POST")
      * @ParamConverter("peopleGroup", options={"id" = "group_id"})
      * @ParamConverter("supportGroup", options={"id" = "support_id"})
      */
-    public function newReferent(?int $group_id, ?int $support_id, Request $request, PeopleGroupRepository $repoPeopleGroup, SupportGroupRepository $repoSupport): Response
-    {
-        $support = $support_id ? $repoSupport->findSupportById($support_id) : null;
-        $peopleGroup = $group_id ? $repoPeopleGroup->findPeopleGroupById($group_id) : $support->getPeopleGroup();
-        $referent = new Referent();
+    public function newReferent(
+        ?int $group_id,
+        ?int $support_id,
+        Request $request,
+        PeopleGroupRepository $peopleGroupRepo,
+        SupportGroupRepository $supportRepo
+    ): Response {
+        $support = $support_id ? $supportRepo->findSupportById($support_id) : null;
+        $peopleGroup = $group_id ? $peopleGroupRepo->findPeopleGroupById($group_id) : $support->getPeopleGroup();
 
-        $form = ($this->createForm(ReferentType::class, $referent))
+        $form = $this->createForm(ReferentType::class, $referent = new Referent())
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -56,13 +60,17 @@ class ReferentController extends AbstractController
     /**
      * Modification d'un service référent.
      *
-     * @Route("referent/{id}/edit", name="group_referent_edit", methods="GET|POST")
-     * @Route("support/{support_id}/referent/{id}/edit", name="support_referent_edit", methods="GET|POST")
+     * @Route("/referent/{id}/edit", name="group_referent_edit", methods="GET|POST")
+     * @Route("/support/{support_id}/referent/{id}/edit", name="support_referent_edit", methods="GET|POST")
      * @ParamConverter("supportGroup", options={"id" = "support_id"})
      */
-    public function editReferent(Referent $referent, ?int $support_id = null, Request $request, SupportGroupRepository $repoSupport): Response
-    {
-        $form = ($this->createForm(ReferentType::class, $referent))
+    public function editReferent(
+        Referent $referent,
+        ?int $support_id = null,
+        Request $request,
+        SupportGroupRepository $supportRepo
+    ): Response {
+        $form = $this->createForm(ReferentType::class, $referent)
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -75,7 +83,7 @@ class ReferentController extends AbstractController
 
         return $this->render('app/organization/referent/referent.html.twig', [
             'people_group' => $referent->getPeopleGroup(),
-            'support' => $support_id ? $repoSupport->findSupportById($support_id) : null,
+            'support' => $support_id ? $supportRepo->findSupportById($support_id) : null,
             'form' => $form->createView(),
         ]);
     }
@@ -83,22 +91,20 @@ class ReferentController extends AbstractController
     /**
      * Supprime un service référent.
      *
-     * @Route("referent/{id}/delete", name="referent_delete", methods="GET")
+     * @Route("/referent/{id}/delete", name="referent_delete", methods="GET")
      */
     public function deleteReferent(Referent $referent): Response
     {
-        $name = $referent->getName();
-
         $this->manager->remove($referent);
         $this->manager->flush();
+
+        $name = $referent->getName();
 
         $this->addFlash('warning', "Le service social $name est supprimé.");
 
         $this->discache($referent->getPeopleGroup());
 
-        return $this->redirectToRoute('people_group_show', [
-            'id' => $referent->getPeopleGroup()->getId(),
-        ]);
+        return $this->redirectToRoute('people_group_show', ['id' => $referent->getPeopleGroup()->getId()]);
     }
 
     /**
@@ -122,9 +128,7 @@ class ReferentController extends AbstractController
             ]);
         }
 
-        return $this->redirectToRoute('group_referent_edit', [
-            'id' => $referent->getId(),
-        ]);
+        return $this->redirectToRoute('group_referent_edit', ['id' => $referent->getId()]);
     }
 
     /**

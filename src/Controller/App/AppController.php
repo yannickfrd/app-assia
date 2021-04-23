@@ -72,7 +72,7 @@ class AppController extends AbstractController
     {
         $this->cache->clear();
 
-        $this->addFlash('success', 'Le cache est vide.');
+        $this->addFlash('success', 'Le cache est vidé.');
 
         return $this->redirectToRoute('home');
     }
@@ -84,7 +84,7 @@ class AppController extends AbstractController
      */
     public function showSupportsByUser(SupportsByUserIndicators $indicators, SupportsByUserSearch $search, Request $request): Response
     {
-        $form = ($this->createForm(SupportsByUserSearchType::class, $search))
+        $form = $this->createForm(SupportsByUserSearchType::class, $search)
             ->handleRequest($request);
 
         return $this->render('app/admin/dashboard/supportsByUser.html.twig', [

@@ -3,7 +3,7 @@
 namespace App\Command;
 
 use App\Entity\People\RolePerson;
-use App\EntityManager\PeopleGroupManager;
+use App\Service\People\PeopleGroupManager;
 use App\Repository\People\PeopleGroupRepository;
 use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;

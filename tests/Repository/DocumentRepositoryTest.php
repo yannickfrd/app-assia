@@ -31,8 +31,11 @@ class DocumentRepositoryTest extends WebTestCase
 
     protected function setUp()
     {
-        $dataFixtures = $this->loadFixtureFiles([
+        $data = $this->loadFixtureFiles([
             dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
+            dirname(__DIR__).'/DataFixturesTest/ServiceFixturesTest.yaml',
+            dirname(__DIR__).'/DataFixturesTest/PersonFixturesTest.yaml',
+            dirname(__DIR__).'/DataFixturesTest/SupportFixturesTest.yaml',
             dirname(__DIR__).'/DataFixturesTest/DocumentFixturesTest.yaml',
         ]);
 
@@ -45,8 +48,8 @@ class DocumentRepositoryTest extends WebTestCase
         /* @var DocumentRepository */
         $this->repo = $this->entityManager->getRepository(Document::class);
 
-        $this->supportGroup = $dataFixtures['supportGroup'];
-        $this->user = $dataFixtures['userRoleUser'];
+        $this->supportGroup = $data['supportGroup1'];
+        $this->user = $data['userRoleUser'];
         $this->search = (new SupportDocumentSearch())
             ->setName('Document')
             ->setType(1);

@@ -36,7 +36,10 @@ class SupportGroupRepositoryTest extends WebTestCase
 
     protected function setUp()
     {
-        $dataFixtures = $this->loadFixtureFiles([
+        $data = $this->loadFixtureFiles([
+            dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
+            dirname(__DIR__).'/DataFixturesTest/ServiceFixturesTest.yaml',
+            dirname(__DIR__).'/DataFixturesTest/PersonFixturesTest.yaml',
             dirname(__DIR__).'/DataFixturesTest/SupportFixturesTest.yaml',
         ]);
 
@@ -49,9 +52,9 @@ class SupportGroupRepositoryTest extends WebTestCase
         /* @var SupportGroupRepository */
         $this->repo = $this->entityManager->getRepository(SupportGroup::class);
 
-        $this->supportGroup = $dataFixtures['supportGroup1'];
-        $this->service = $dataFixtures['service1'];
-        $this->user = $dataFixtures['userRoleUser'];
+        $this->supportGroup = $data['supportGroup1'];
+        $this->service = $data['service1'];
+        $this->user = $data['userRoleUser'];
         $this->search = $this->getSupportSearch();
     }
 
@@ -70,7 +73,7 @@ class SupportGroupRepositoryTest extends WebTestCase
 
     public function testCount()
     {
-        $this->assertGreaterThanOrEqual(5, $this->repo->count([]));
+        $this->assertGreaterThanOrEqual(3, $this->repo->count([]));
     }
 
     public function testFindSupportById()
@@ -90,7 +93,7 @@ class SupportGroupRepositoryTest extends WebTestCase
 
     public function testCountAllSupportsWithoutCriteria()
     {
-        $this->assertGreaterThanOrEqual(5, $this->repo->countSupports());
+        $this->assertGreaterThanOrEqual(3, $this->repo->countSupports());
     }
 
     protected function tearDown(): void

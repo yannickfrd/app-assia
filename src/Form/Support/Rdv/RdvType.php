@@ -19,12 +19,12 @@ use Symfony\Component\Security\Core\Security;
 class RdvType extends AbstractType
 {
     private $security;
-    private $repoSupportGroup;
+    private $supportGroupRepo;
 
-    public function __construct(Security $security, SupportGroupRepository $repoSupportGroup)
+    public function __construct(Security $security, SupportGroupRepository $supportGroupRepo)
     {
         $this->security = $security;
-        $this->repoSupportGroup = $repoSupportGroup;
+        $this->supportGroupRepo = $supportGroupRepo;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -72,7 +72,7 @@ class RdvType extends AbstractType
             // ])
             // ->add('supportGroup', EntityType::class, [
             //         'class' => SupportGroup::class,
-            //         'choices' => $this->repoSupportGroup->getSupportsOfUserQueryBuilder($this->security->getUser()),
+            //         'choices' => $this->supportGroupRepo->getSupportsOfUserQueryBuilder($this->security->getUser()),
             //         'choice_label' => function (SupportGroup $supportGroup) {
             //             return $supportGroup->getSupportPeople()->first()->getPerson()->getFullname();
             //         },

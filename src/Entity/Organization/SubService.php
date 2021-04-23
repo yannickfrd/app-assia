@@ -41,7 +41,7 @@ class SubService
     /**
      * @ORM\OneToMany(targetEntity=SupportGroup::class, mappedBy="subService")
      */
-    private $supportGroup;
+    private $supportGroups;
 
     /**
      * @ORM\ManyToOne(targetEntity=Service::class, inversedBy="subServices")
@@ -61,13 +61,13 @@ class SubService
 
     public function __construct()
     {
-        $this->supportGroup = new ArrayCollection();
+        $this->supportGroups = new ArrayCollection();
         $this->places = new ArrayCollection();
     }
 
     public function __toString()
     {
-        return strval($this->id);
+        return (string) $this->id;
     }
 
     public function getId(): ?int
@@ -100,17 +100,17 @@ class SubService
     }
 
     /**
-     * @return SupportGroup[]|Collection|null
+     * @return Collection<SupportGroup>
      */
-    public function getSupportGroup()
+    public function getSupportGroups()
     {
-        return $this->supportGroup;
+        return $this->supportGroups;
     }
 
     public function addSupportGroup(SupportGroup $supportGroup): self
     {
         if (!$this->supportGroup->contains($supportGroup)) {
-            $this->supportGroup[] = $supportGroup;
+            $this->supportGroups[] = $supportGroup;
             $supportGroup->setSubService($this);
         }
 
@@ -120,7 +120,7 @@ class SubService
     public function removeSupportGroup(SupportGroup $supportGroup): self
     {
         if ($this->supportGroup->contains($supportGroup)) {
-            $this->supportGroup->removeElement($supportGroup);
+            $this->supportGroups->removeElement($supportGroup);
             // set the owning side to null (unless already changed)
             if ($supportGroup->getSubService() === $this) {
                 $supportGroup->setSubService(null);
@@ -155,7 +155,7 @@ class SubService
     }
 
     /**
-     * @return Place[]|Collection|null
+     * @return Collection<Place>
      */
     public function getPlaces()
     {

@@ -9,6 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Support\RdvRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class Rdv
 {
@@ -18,7 +19,7 @@ class Rdv
         1 => 'Présent',
         2 => 'Absent',
         3 => 'Annulé',
-        99 => 'Non évalué',
+        99 => 'Non renseigné',
     ];
 
     /**
@@ -76,6 +77,16 @@ class Rdv
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="rdvs2")
      */
     private $user;
+
+    /**
+     * @ORM\PreFlush
+     */
+    public function preFlush()
+    {
+        if ($this->supportGroup) {
+            $this->supportGroup->setUpdatedAt(new \DateTime());
+        }
+    }
 
     public function getId(): ?int
     {

@@ -15,8 +15,9 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <p><a href="{{ path('occupancy_services', {'date': {'start': search.start|date('Y-m-d'), 'end': search.end|date('Y-m-d') }}) }}" 
-                    class="text-{{ theme_color }}"><span class="fas fa-undo mr-2"></span>Accès aux taux d'ocupation par service.</a>
+                <p><a href="{{ path('occupancy_services', {'year': search.year, 'date': {'start': search.start|date('Y-m-d'), 
+                    'end': search.end|date('Y-m-d')}, 'pole': search.pole ? search.pole.id}) }}" class="text-{{ theme_color }}">
+                    <span class="fas fa-undo mr-2"></span>Accès aux taux d'ocupation par service.</a>
                 </p>
                 {% set interval = date(search.start).diff(date(search.end)) %}
                 <p>Période du {{ search.start|date("d/m/Y") }} au {{ search.end|date("d/m/Y") }},<!--
@@ -59,7 +60,7 @@
                             {% endif %}
                                 <tr>
                                     <td scope="row" class="align-middle text-center">
-                                        <a href="{{ path('occupancy_sub_service_places', {'id': subServiceId, 
+                                        <a href="{{ path('occupancy_sub_service_places', {'id': subServiceId, 'year': search.year, 
                                             'date': {'start': search.start|date('Y-m-d'), 'end': search.end|date('Y-m-d')} }) }}" 
                                             class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" 
                                             title="Voir le détail des groupes de places du subService"><span class="fas fa-eye fa-sm"></span>
@@ -73,7 +74,7 @@
                                     <td class="align-middle text-right">{{ subService.averageCapacity|round(2) }}</td>
                                     <td class="align-middle text-right">{{ subService.averageOccupancy|round(2) }}</td>
                                     <td class="align-middle {{ alert_color(ocupancyRate) }} text-right">
-                                    <span class="font-weight-bold font-italic">{{ ocupancyRate|percent }}</span>
+                                        <span class="font-weight-bold font-italic">{{ ocupancyRate|percent }}</span>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -89,7 +90,7 @@
                                 <td class="align-middle text-right">{{ datas.averageOccupancy|round(2) }}</td>
                                 {% set ocupancyRate = ratio(datas.occupancyDays, datas.capacityDays) %}
                                 <td class="align-middle {{ alert_color( ocupancyRate) }} text-right">
-                                <span class="font-weight-bold font-italic">{{ ocupancyRate|percent }}</span>
+                                    <span class="font-weight-bold font-italic">{{ ocupancyRate|percent }}</span>
                                 </td>
                             </tr>
                         </tfoot>

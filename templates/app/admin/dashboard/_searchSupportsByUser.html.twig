@@ -2,15 +2,8 @@
 
 {% block search_form %}
 
-{% if form.service.services.vars.choices|length > 1 %}
-    <div class="form-group col-auto my-1 px-1">{{ form_widget(form.service.services) }}</div>
-{% endif %}
-{% if form.service.subServices.vars.choices|length > 1 %}
-    <div class="form-group col-auto my-1 px-1">{{ form_widget(form.service.subServices) }}</div>
-{% endif %}
-{% if form.service.devices.vars.choices|length > 1 %}
-    <div class="form-group col-auto my-1 px-1">{{ form_widget(form.service.devices) }}</div>
-{% endif %}
+    {% include "_shared/_serviceDeviceReferentSearch.html.twig" %}
+
 {{ form_widget(form.send) }}
 
 {% endblock %}

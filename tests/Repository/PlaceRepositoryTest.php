@@ -33,8 +33,9 @@ class PlaceRepositoryTest extends WebTestCase
 
     protected function setUp()
     {
-        $dataFixtures = $this->loadFixtureFiles([
+        $data = $this->loadFixtureFiles([
             dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
+            dirname(__DIR__).'/DataFixturesTest/ServiceFixturesTest.yaml',
             dirname(__DIR__).'/DataFixturesTest/PlaceFixturesTest.yaml',
         ]);
 
@@ -47,7 +48,7 @@ class PlaceRepositoryTest extends WebTestCase
         /* @var PlaceRepository */
         $this->repo = $this->entityManager->getRepository(Place::class);
 
-        $this->service = $dataFixtures['service1'];
+        $this->service = $data['service1'];
         $this->search = (new PlaceSearch())
             ->setName('Logement')
             ->setNbPlaces(6)

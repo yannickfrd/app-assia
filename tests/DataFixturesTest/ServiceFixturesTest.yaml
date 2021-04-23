@@ -1,36 +1,39 @@
 App\Entity\Organization\Service:
-  service2:
+  serviceAvdl:
     name: AVDL
     type: 2
-    pole: "@pole"
-    email: avdl@esperer-95.org
+    email: avdl@mail.fr
     phone1: "01 00 00 00 00"
     address: Pontoise
     city: Pontoise
     zipcode: 95 000
+    coefficient: 1
     place: false
+    pole: "@pole1"
     createdAt: <date_create()>
     updatedAt: <date_create()>
-    createdBy: "@user*"
-    updatedBy: "@user*"
+    createdBy: "@userSuperAdmin"
+    updatedBy: "@userSuperAdmin"
 
-  service3:
+  servicePash:
     name: PASH
     type: 3
-    pole: "@pole"
-    email: pash@esperer-95.org
+    pole: "@pole1"
+    email: pash@mail.fr
     phone1: "01 00 00 00 00"
     address: Cergy
     city: Cergy
     zipcode: 95 000
+    coefficient: 1
     place: false
     createdAt: <date_create()>
     updatedAt: <date_create()>
-    createdBy: "@user*"
-    updatedBy: "@user*"
+    createdBy: "@userSuperAdmin"
+    updatedBy: "@userSuperAdmin"
 
-  service{4..5}:
+  service5:
     name: <sentence(3, true)>
+    type: 1
     city: <fr_FR:city()>
     phone1: <fr_FR:phoneNumber()>
     email: <fr_FR:email()>
@@ -39,13 +42,36 @@ App\Entity\Organization\Service:
     place: true
     createdAt: <date_create()>
     updatedAt: <date_create()>
-    pole: "@pole"
+    pole: "@pole1"
     createdBy: "@userSuperAdmin"
     updatedBy: "@userSuperAdmin"
 
+App\Entity\Organization\serviceUser:
+  serv3User1:
+    service: "@serviceAvdl"
+    user: "@userRoleUser"
+  serv3UserAdmin:
+    service: "@serviceAvdl"
+    user: "@userAdmin"
+
 App\Entity\Organization\Device:
-  device1:
-    name: Insertion
+  deviceAvdl:
+    name: AVDL
+    place: false
+  deviceHotel:
+    name: Accommpagnement hôtel
+    place: false
+    contribution: true
+    contributionType: 1
+    contributionRate: 0.1
+
+App\Entity\Organization\ServiceDevice:
+  servDeviceAvdl:
+    service: "@serviceAvdl"
+    device: "@deviceAvdl"
+  servDevicePASH:
+    service: "@servicePash"
+    device: "@deviceHotel"
 
 App\Entity\Organization\SubService:
   subService1:

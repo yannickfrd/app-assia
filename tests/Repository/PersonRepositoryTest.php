@@ -16,7 +16,7 @@ class PersonRepositoryTest extends WebTestCase
     private $entityManager;
 
     /** @var PersonRepository */
-    protected $repo;
+    protected $personRepo;
 
     /** @var Person */
     protected $person;
@@ -26,7 +26,8 @@ class PersonRepositoryTest extends WebTestCase
 
     protected function setUp()
     {
-        $dataFixtures = $this->loadFixtureFiles([
+        $data = $this->loadFixtureFiles([
+            dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/DataFixturesTest/PersonFixturesTest.yaml',
         ]);
 
@@ -37,9 +38,9 @@ class PersonRepositoryTest extends WebTestCase
             ->getManager();
 
         /* @var PersonRepository */
-        $this->repo = $this->entityManager->getRepository(Person::class);
+        $this->personRepo = $this->entityManager->getRepository(Person::class);
 
-        $this->person = $dataFixtures['userRoleUser'];
+        $this->person = $data['userRoleUser'];
         $this->search = $this->getPersonSearch();
     }
 
@@ -54,45 +55,45 @@ class PersonRepositoryTest extends WebTestCase
     public function testCount()
     {
         // $people = self::$container->get(PersonRepository::class)->count([]);
-        $this->assertGreaterThanOrEqual(5, $this->repo->count([]));
+        $this->assertGreaterThanOrEqual(5, $this->personRepo->count([]));
     }
 
     public function testfindPersonById()
     {
-        $this->assertNotNull($this->repo->findPersonById($this->person->getId()));
+        $this->assertNotNull($this->personRepo->findPersonById($this->person->getId()));
     }
 
     public function testFindAllPeopleQueryWithoutFilters()
     {
-        $query = $this->repo->findPeopleQuery(new PersonSearch());
+        $query = $this->personRepo->findPeopleQuery(new PersonSearch());
         $this->assertGreaterThanOrEqual(5, count($query->getResult()));
     }
 
     public function testFindAllPeopleQueryWithFilters()
     {
-        $query = $this->repo->findPeopleQuery($this->search);
+        $query = $this->personRepo->findPeopleQuery($this->search);
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 
     public function testFindAllPeopleQueryWithSearch()
     {
-        $query = $this->repo->findPeopleQuery(new PersonSearch(), 'John');
+        $query = $this->personRepo->findPeopleQuery(new PersonSearch(), 'John');
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 
     public function testFindPeopleToExport()
     {
-        $this->assertGreaterThanOrEqual(5, count($this->repo->findPeopleToExport(new PersonSearch())));
+        $this->assertGreaterThanOrEqual(5, count($this->personRepo->findPeopleToExport(new PersonSearch())));
     }
 
     public function testFindPeopleByResearch()
     {
-        $this->assertGreaterThanOrEqual(1, count($this->repo->findPeopleByResearch('do')));
+        $this->assertGreaterThanOrEqual(1, count($this->personRepo->findPeopleByResearch('do')));
     }
 
     public function testCountAllPeople()
     {
-        $this->assertGreaterThanOrEqual(5, $this->repo->countPeople());
+        $this->assertGreaterThanOrEqual(5, $this->personRepo->countPeople());
     }
 
     protected function tearDown(): void
@@ -100,7 +101,7 @@ class PersonRepositoryTest extends WebTestCase
         parent::tearDown();
         $this->entityManager->close();
         $this->entityManager = null;
-        $this->repo = null;
+        $this->personRepo = null;
         $this->person = null;
         $this->search = null;
     }

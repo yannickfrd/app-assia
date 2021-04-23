@@ -15,12 +15,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class OrganizationController extends AbstractController
 {
     private $manager;
-    private $repo;
+    private $organizationRepo;
 
-    public function __construct(EntityManagerInterface $manager, OrganizationRepository $repo)
+    public function __construct(EntityManagerInterface $manager, OrganizationRepository $organizationRepo)
     {
         $this->manager = $manager;
-        $this->repo = $repo;
+        $this->organizationRepo = $organizationRepo;
     }
 
     /**
@@ -31,7 +31,7 @@ class OrganizationController extends AbstractController
     public function listOrganization(Request $request, Pagination $pagination): Response
     {
         return $this->render('app/organization/organization/listOrganizations.html.twig', [
-            'organizations' => $pagination->paginate($this->repo->findOrganizationsQuery(), $request) ?? null,
+            'organizations' => $pagination->paginate($this->organizationRepo->findOrganizationsQuery(), $request) ?? null,
         ]);
     }
 
@@ -40,11 +40,9 @@ class OrganizationController extends AbstractController
      *
      * @Route("/admin/organization/new", name="admin_organization_new", methods="GET|POST")
      */
-    public function newOrganization(Organization $organization = null, Request $request): Response
+    public function newOrganization(Request $request): Response
     {
-        $organization = new Organization();
-
-        $form = ($this->createForm(OrganizationType::class, $organization))
+        $form = $this->createForm(OrganizationType::class, $organization = new Organization())
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -61,14 +59,14 @@ class OrganizationController extends AbstractController
         ]);
     }
 
-    /**
+        /**
      * Modification d'un dispositif.
      *
      * @Route("/admin/organization/{id}", name="admin_organization_edit", methods="GET|POST")
      */
     public function editOrganization(Organization $organization, Request $request): Response
     {
-        $form = ($this->createForm(OrganizationType::class, $organization))
+        $form = $this->createForm(OrganizationType::class, $organization)
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

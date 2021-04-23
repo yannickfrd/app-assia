@@ -244,7 +244,7 @@ class User implements UserInterface
 
     public function __toString()
     {
-        return strval($this->id);
+        return (string) $this->id;
     }
 
     public function getId(): ?int
@@ -438,11 +438,11 @@ class User implements UserInterface
 
     public function isActiveNow(): bool
     {
-        return  $this->getLastActivityAt() > new \DateTime('5 minutes ago');
+        return $this->getLastActivityAt() > new \DateTime('5 minutes ago');
     }
 
     /**
-     * @return SupportGroup[]|Collection|null
+     * @return Collection<SupportGroup>
      */
     public function getSupports()
     {
@@ -473,7 +473,7 @@ class User implements UserInterface
     }
 
     /**
-     * @return ServiceUser[]|Collection|null
+     * @return Collection<User>
      */
     public function getServiceUser()
     {
@@ -504,7 +504,7 @@ class User implements UserInterface
     }
 
     /**
-     * @return Service[]|Collection|null
+     * @return Collection<Service>
      */
     public function getServices()
     {
@@ -518,7 +518,7 @@ class User implements UserInterface
     }
 
     /**
-     * @return UserConnection[]|Collection|null
+     * @return Collection<UserConnection>
      */
     public function getUserConnections()
     {
@@ -573,7 +573,7 @@ class User implements UserInterface
     }
 
     /**
-     * @return Referent[]|Collection|null
+     * @return Collection<Referent>
      */
     public function getReferentSupport()
     {
@@ -604,7 +604,7 @@ class User implements UserInterface
     }
 
     /**
-     * @return SupportGroup[]|Collection|null
+     * @return Collection<SupportGroup>
      */
     public function getReferent2Support()
     {
@@ -635,7 +635,7 @@ class User implements UserInterface
     }
 
     /**
-     * @return Note[]|Collection|null
+     * @return Collection<Note>
      */
     public function getNotes()
     {
@@ -666,7 +666,7 @@ class User implements UserInterface
     }
 
     /**
-     * @return Rdv[]|Collection|null
+     * @return Collection<Rdv>
      */
     public function getRdvs()
     {
@@ -697,7 +697,7 @@ class User implements UserInterface
     }
 
     /**
-     * @return Document[]|Collection|null
+     * @return Collection<Document>
      */
     public function getDocuments()
     {
@@ -728,7 +728,7 @@ class User implements UserInterface
     }
 
     /**
-     * @return UserDevice[]|Collection|null
+     * @return Collection<Device>
      */
     public function getUserDevices()
     {

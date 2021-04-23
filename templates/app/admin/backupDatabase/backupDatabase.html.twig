@@ -49,11 +49,11 @@
                             <tbody id="container-backups">
                                 {% for backup in backups %}
                                     <tr id="backup-{{ backup.id }}" class="js-backup">
-                                        <th scope="row" class="align-middle text-center">
+                                        <td scope="row" class="align-middle text-center">
                                             <a href="{{ path('database_backup_get', {'id': backup.id }) }}" class="btn btn-{{ theme_color }} btn-sm shadow my-1" 
                                                 data-toggle="tooltip" data-placement="bottom" title="Exporter la sauvegarde de la base de données"><span class="fas fa-file-download"></span>
                                             </a>
-                                        </th>
+                                        </td>
                                         <td class="align-middle js-backup-title">Sauvegarde {{ backup.createdBy ? 'manuelle' : 'automatique' }} du {{ backup.createdAt|date("d/m/Y") }}</td>
                                         <td class="align-middle js-backup-size text-right">{{ (backup.size / 1000)|round }} Ko</td>
                                         <td class="align-middle js-backup-size text-right">{{ (backup.zipSize / 1000)|round }} Ko</td>

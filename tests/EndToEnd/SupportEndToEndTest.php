@@ -31,12 +31,10 @@ class SupportEndToEndTest extends PantherTestCase
 
         $this->outputMsg('Search a support');
 
-        $form = $crawler->selectButton('search')->form([
+        /** @var Crawler */
+        $crawler = $this->client->submitForm('search', [
             'fullname' => 'Doe',
         ]);
-
-        /** @var Crawler */
-        $crawler = $this->client->submit($form);
 
         $this->outputMsg('Select a support');
 
@@ -58,9 +56,7 @@ class SupportEndToEndTest extends PantherTestCase
 
         $this->assertSelectorTextContains('h1', 'Édition du suivi');
 
-        $form = $crawler->selectButton('send')->form([]);
-
-        $crawler = $this->client->submit($form);
+        $crawler = $this->client->submitForm('send');
 
         $this->assertSelectorExists('.alert.alert-success');
     }

@@ -27,50 +27,50 @@ use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 class IndicatorsService
 {
-    protected $repoIndicator;
-    protected $repoUser;
-    protected $repoService;
-    protected $repoPerson;
-    protected $repoPeopleGroup;
-    protected $repoSupportGroup;
-    protected $repoSupportPerson;
-    protected $repoEvaluation;
-    protected $repoNote;
-    protected $repoRdv;
-    protected $repoDocument;
-    protected $repoContribution;
-    protected $repoConnection;
+    protected $indicatorRepo;
+    protected $userRepo;
+    protected $serviceRepo;
+    protected $personRepo;
+    protected $peopleGroupRepo;
+    protected $supportGroupRepo;
+    protected $supportPersonRepo;
+    protected $evaluationRepo;
+    protected $noteRepo;
+    protected $rdvRepo;
+    protected $documentRepo;
+    protected $contributionRepo;
+    protected $ConnectionRepo;
 
     protected $cache;
 
     public function __construct(
-        IndicatorRepository $repoIndicator,
-        UserRepository $repoUser,
-        ServiceRepository $repoService,
-        PersonRepository $repoPerson,
-        PeopleGroupRepository $repoPeopleGroup,
-        SupportGroupRepository $repoSupportGroup,
-        SupportPersonRepository $repoSupportPerson,
-        EvaluationGroupRepository $repoEvaluation,
-        NoteRepository $repoNote,
-        RdvRepository $repoRdv,
-        DocumentRepository $repoDocument,
-        ContributionRepository $repoContribution,
-        UserConnectionRepository $repoConnection)
+        IndicatorRepository $indicatorRepo,
+        UserRepository $userRepo,
+        ServiceRepository $serviceRepo,
+        PersonRepository $personRepo,
+        PeopleGroupRepository $peopleGroupRepo,
+        SupportGroupRepository $supportGroupRepo,
+        SupportPersonRepository $supportPersonRepo,
+        EvaluationGroupRepository $evaluationRepo,
+        NoteRepository $noteRepo,
+        RdvRepository $rdvRepo,
+        DocumentRepository $documentRepo,
+        ContributionRepository $contributionRepo,
+        UserConnectionRepository $ConnectionRepo)
     {
-        $this->repoIndicator = $repoIndicator;
-        $this->repoUser = $repoUser;
-        $this->repoService = $repoService;
-        $this->repoPerson = $repoPerson;
-        $this->repoPeopleGroup = $repoPeopleGroup;
-        $this->repoSupportGroup = $repoSupportGroup;
-        $this->repoSupportPerson = $repoSupportPerson;
-        $this->repoEvaluation = $repoEvaluation;
-        $this->repoNote = $repoNote;
-        $this->repoRdv = $repoRdv;
-        $this->repoDocument = $repoDocument;
-        $this->repoContribution = $repoContribution;
-        $this->repoConnection = $repoConnection;
+        $this->repoIndicator = $indicatorRepo;
+        $this->UserRepo = $userRepo;
+        $this->serviceRepo = $serviceRepo;
+        $this->personRepo = $personRepo;
+        $this->peopleGroupRepo = $peopleGroupRepo;
+        $this->supportGroupRepo = $supportGroupRepo;
+        $this->supportPersonRepo = $supportPersonRepo;
+        $this->evaluationRepo = $evaluationRepo;
+        $this->noteRepo = $noteRepo;
+        $this->rdvRepo = $rdvRepo;
+        $this->documentRepo = $documentRepo;
+        $this->contributionRepo = $contributionRepo;
+        $this->ConnectionRepo = $ConnectionRepo;
 
         $this->cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
     }
@@ -121,7 +121,7 @@ class IndicatorsService
                 'status' => [SupportGroup::STATUS_IN_PROGRESS],
             ];
 
-            $nbActiveSupportsGroups = $this->repoSupportGroup->count($criteria);
+            $nbActiveSupportsGroups = $this->supportGroupRepo->count($criteria);
 
             if ((int) $nbActiveSupportsGroups > 0) {
                 $datasSubServices[$subService->getId()] = $this->getSubServiceDatas($subService, $criteria, $nbActiveSupportsGroups);
@@ -148,7 +148,7 @@ class IndicatorsService
                 'status' => [SupportGroup::STATUS_IN_PROGRESS],
             ];
 
-            $nbActiveSupportsGroups = $this->repoSupportGroup->count($criteria);
+            $nbActiveSupportsGroups = $this->supportGroupRepo->count($criteria);
 
             if ((int) $nbActiveSupportsGroups > 0) {
                 $datasDevices[$device->getId()] = $this->getDeviceDatas($device, $criteria, $nbActiveSupportsGroups);
@@ -168,7 +168,7 @@ class IndicatorsService
 
             $users = [];
 
-            foreach ($this->repoUser->findUsers(['status' => 1]) as $user) {
+            foreach ($this->UserRepo->findUsers(['status' => 1]) as $user) {
                 $users[] = $this->getUserDatas($user);
             }
 
@@ -191,18 +191,18 @@ class IndicatorsService
         $criteriaByUpdate['filterDateBy'] = 'updatedAt';
 
         $indicator = (new Indicator())
-            ->setNbCreatedPeople($this->repoPerson->countPeople($criteriaByCreation))
-            ->setNbCreatedGroups($this->repoPeopleGroup->countGroups($criteriaByCreation))
-            ->setNbCreatedSupportsGroup($this->repoSupportGroup->countSupports($criteriaByCreation))
-            ->setNbUpdatedSupportsGroup($this->repoSupportGroup->countSupports($criteriaByUpdate))
-            ->setNbCreatedSupportsPeople($this->repoSupportPerson->countSupportPeople($criteriaByCreation))
-            ->setNbCreatedEvaluations($this->repoEvaluation->countEvaluations($criteriaByCreation))
-            ->setNbCreatedNotes($this->repoNote->countNotes($criteriaByCreation))
-            ->setNbUpdatedNotes($this->repoNote->countNotes($criteriaByUpdate))
-            ->setNbCreatedRdvs($this->repoRdv->countRdvs($criteriaByCreation))
-            ->setNbCreatedDocuments($this->repoDocument->countDocuments($criteriaByCreation))
-            ->setNbCreatedContributions($this->repoContribution->countContributions($criteriaByCreation))
-            ->setNbConnections($this->repoConnection->countConnections($criteriaByCreation))
+            ->setNbCreatedPeople($this->personRepo->countPeople($criteriaByCreation))
+            ->setNbCreatedGroups($this->peopleGroupRepo->countGroups($criteriaByCreation))
+            ->setNbCreatedSupportsGroup($this->supportGroupRepo->countSupports($criteriaByCreation))
+            ->setNbUpdatedSupportsGroup($this->supportGroupRepo->countSupports($criteriaByUpdate))
+            ->setNbCreatedSupportsPeople($this->supportPersonRepo->countSupportPeople($criteriaByCreation))
+            ->setNbCreatedEvaluations($this->evaluationRepo->countEvaluations($criteriaByCreation))
+            ->setNbCreatedNotes($this->noteRepo->countNotes($criteriaByCreation))
+            ->setNbUpdatedNotes($this->noteRepo->countNotes($criteriaByUpdate))
+            ->setNbCreatedRdvs($this->rdvRepo->countRdvs($criteriaByCreation))
+            ->setNbCreatedDocuments($this->documentRepo->countDocuments($criteriaByCreation))
+            ->setNbCreatedContributions($this->contributionRepo->countContributions($criteriaByCreation))
+            ->setNbConnections($this->ConnectionRepo->countConnections($criteriaByCreation))
             ->setDate($startDate);
 
         return $indicator;
@@ -226,59 +226,59 @@ class IndicatorsService
 
         return [
             'Nb. de personnes créées' => [
-                'all' => $this->repoPerson->count([]),
+                'all' => $this->personRepo->count([]),
                 'yesterday' => $yesterdayIndicator->getNbCreatedPeople(),
-                'today' => $this->repoPerson->countPeople($criteriaByCreation),
+                'today' => $this->personRepo->countPeople($criteriaByCreation),
             ],
             'Nb. de groupes créés' => [
-                'all' => $this->repoPeopleGroup->count([]),
+                'all' => $this->peopleGroupRepo->count([]),
                 'yesterday' => $yesterdayIndicator->getNbCreatedGroups(),
-                'today' => $this->repoPeopleGroup->countGroups($criteriaByCreation),
+                'today' => $this->peopleGroupRepo->countGroups($criteriaByCreation),
             ],
             'Nb. de suivis créés' => [
-                'all' => $allSupports = $this->repoSupportGroup->count([]),
+                'all' => $allSupports = $this->supportGroupRepo->count([]),
                 'yesterday' => $yesterdayIndicator->getNbCreatedSupportsGroup(),
-                'today' => $this->repoSupportGroup->countSupports($criteriaByCreation),
+                'today' => $this->supportGroupRepo->countSupports($criteriaByCreation),
             ],
             'Nb. de suivis mis à jour' => [
                 'all' => $allSupports,
                 'yesterday' => $yesterdayIndicator->getNbUpdatedSupportsGroup(),
-                'today' => $this->repoSupportGroup->countSupports($criteriaByUpdate),
+                'today' => $this->supportGroupRepo->countSupports($criteriaByUpdate),
             ],
             'Nb. de suivis en cours' => [
-                'all' => $this->repoSupportGroup->count(['status' => SupportGroup::STATUS_IN_PROGRESS]),
+                'all' => $this->supportGroupRepo->count(['status' => SupportGroup::STATUS_IN_PROGRESS]),
                 'yesterday' => '',
                 'today' => '',
             ],
             'Nb. de notes créées' => [
-                'all' => $this->repoNote->count([]),
+                'all' => $this->noteRepo->count([]),
                 'yesterday' => $yesterdayIndicator->getNbCreatedNotes(),
-                'today' => $this->repoNote->countNotes($criteriaByCreation),
+                'today' => $this->noteRepo->countNotes($criteriaByCreation),
             ],
             'Nb. de notes mises à jour' => [
                 'all' => '',
                 'yesterday' => $yesterdayIndicator->getNbUpdatedNotes(),
-                'today' => $this->repoNote->countNotes($criteriaByUpdate),
+                'today' => $this->noteRepo->countNotes($criteriaByUpdate),
             ],
             'Nb. de RDVs créés' => [
-                'all' => $this->repoRdv->count([]),
+                'all' => $this->rdvRepo->count([]),
                 'yesterday' => $yesterdayIndicator->getNbCreatedRdvs(),
-                'today' => $this->repoRdv->countRdvs($criteriaByCreation),
+                'today' => $this->rdvRepo->countRdvs($criteriaByCreation),
             ],
             'Nb. de documents créés' => [
-                'all' => $this->repoDocument->count([]),
+                'all' => $this->documentRepo->count([]),
                 'yesterday' => $yesterdayIndicator->getNbCreatedDocuments(),
-                'today' => $this->repoDocument->countDocuments($criteriaByCreation),
+                'today' => $this->documentRepo->countDocuments($criteriaByCreation),
             ],
             'Nb. de paiements créés' => [
-                'all' => $this->repoContribution->count([]),
+                'all' => $this->contributionRepo->count([]),
                 'yesterday' => $yesterdayIndicator->getNbCreatedContributions(),
-                'today' => $this->repoContribution->countContributions($criteriaByCreation),
+                'today' => $this->contributionRepo->countContributions($criteriaByCreation),
             ],
             'Nb. de connexions' => [
-                'all' => $this->repoConnection->count([]),
+                'all' => $this->ConnectionRepo->count([]),
                 'yesterday' => $yesterdayIndicator->getNbConnections(),
-                'today' => $this->repoConnection->countConnections($criteriaByCreation),
+                'today' => $this->ConnectionRepo->countConnections($criteriaByCreation),
             ],
         ];
     }
@@ -293,19 +293,19 @@ class IndicatorsService
             'status' => [SupportGroup::STATUS_IN_PROGRESS],
         ];
 
-        $nbActiveSupportsGroups = $this->repoSupportGroup->count($criteria);
+        $nbActiveSupportsGroups = $this->supportGroupRepo->count($criteria);
 
         return [
             'name' => $service->getName(),
             'nbActiveSupportsGroups' => $nbActiveSupportsGroups,
-            'nbActiveSupportsPeople' => $this->repoSupportPerson->countSupportPeople($criteria),
-            'avgTimeSupport' => $this->repoSupportGroup->avgTimeSupport($criteria),
-            'siaoRequest' => $this->repoSupportGroup->countSupports([
+            'nbActiveSupportsPeople' => $this->supportPersonRepo->countSupportPeople($criteria),
+            'avgTimeSupport' => $this->supportGroupRepo->avgTimeSupport($criteria),
+            'siaoRequest' => $this->supportGroupRepo->countSupports([
                 'service' => [$service],
                 'status' => [SupportGroup::STATUS_IN_PROGRESS],
                 'siaoRequest' => Choices::YES,
             ]),
-            'socialHousingRequest' => $this->repoSupportGroup->countSupports([
+            'socialHousingRequest' => $this->supportGroupRepo->countSupports([
                 'service' => [$service],
                 'status' => [SupportGroup::STATUS_IN_PROGRESS],
                 'socialHousingRequest' => Choices::YES,
@@ -323,14 +323,14 @@ class IndicatorsService
         return [
             'name' => $subService->getName(),
             'nbActiveSupportsGroups' => $nbActiveSupportsGroups,
-            'nbActiveSupportsPeople' => $this->repoSupportPerson->countSupportPeople($criteria),
-            'avgTimeSupport' => $this->repoSupportGroup->avgTimeSupport($criteria),
-            'siaoRequest' => $this->repoSupportGroup->countSupports([
+            'nbActiveSupportsPeople' => $this->supportPersonRepo->countSupportPeople($criteria),
+            'avgTimeSupport' => $this->supportGroupRepo->avgTimeSupport($criteria),
+            'siaoRequest' => $this->supportGroupRepo->countSupports([
                 'subService' => $subService,
                 'status' => [SupportGroup::STATUS_IN_PROGRESS],
                 'siaoRequest' => Choices::YES,
             ]),
-            'socialHousingRequest' => $this->repoSupportGroup->countSupports([
+            'socialHousingRequest' => $this->supportGroupRepo->countSupports([
                 'subService' => $subService,
                 'status' => [SupportGroup::STATUS_IN_PROGRESS],
                 'socialHousingRequest' => Choices::YES,
@@ -346,14 +346,14 @@ class IndicatorsService
         return [
             'name' => $device->getName(),
             'nbActiveSupportsGroups' => $nbActiveSupportsGroups,
-            'nbActiveSupportsPeople' => $this->repoSupportPerson->countSupportPeople($criteria),
-            'avgTimeSupport' => $this->repoSupportGroup->avgTimeSupport($criteria),
-            'siaoRequest' => $this->repoSupportGroup->countSupports([
+            'nbActiveSupportsPeople' => $this->supportPersonRepo->countSupportPeople($criteria),
+            'avgTimeSupport' => $this->supportGroupRepo->avgTimeSupport($criteria),
+            'siaoRequest' => $this->supportGroupRepo->countSupports([
                 'device' => [$device],
                 'status' => [SupportGroup::STATUS_IN_PROGRESS],
                 'siaoRequest' => Choices::YES,
             ]),
-            'socialHousingRequest' => $this->repoSupportGroup->countSupports([
+            'socialHousingRequest' => $this->supportGroupRepo->countSupports([
                 'device' => [$device],
                 'status' => [SupportGroup::STATUS_IN_PROGRESS],
                 'socialHousingRequest' => Choices::YES,
@@ -369,14 +369,14 @@ class IndicatorsService
         return [
             'id' => $user->getId(),
             'name' => $user->getFullname(),
-            'nbActiveSupports' => $this->repoSupportGroup->count([
+            'nbActiveSupports' => $this->supportGroupRepo->count([
                 'referent' => $user,
                 'status' => SupportGroup::STATUS_IN_PROGRESS,
             ]),
-            'nbNotes' => $this->repoNote->count(['createdBy' => $user]),
-            'nbRvs' => $this->repoRdv->count(['createdBy' => $user]),
-            'nbDocuments' => $this->repoDocument->count(['createdBy' => $user]),
-            'nbContributions' => $this->repoContribution->count(['createdBy' => $user]),
+            'nbNotes' => $this->noteRepo->count(['createdBy' => $user]),
+            'nbRvs' => $this->rdvRepo->count(['createdBy' => $user]),
+            'nbDocuments' => $this->documentRepo->count(['createdBy' => $user]),
+            'nbContributions' => $this->contributionRepo->count(['createdBy' => $user]),
         ];
     }
 
@@ -388,7 +388,7 @@ class IndicatorsService
         return $this->cache->get(User::CACHE_USER_SERVICES_KEY.$user->getId(), function (CacheItemInterface $item) use ($user) {
             $item->expiresAfter(\DateInterval::createFromDateString('30 days'));
 
-            return $this->repoService->findServicesAndSubServicesOfUser($user);
+            return $this->serviceRepo->findServicesAndSubServicesOfUser($user);
         });
     }
 
@@ -400,7 +400,7 @@ class IndicatorsService
         return $this->cache->get(User::CACHE_USER_SUPPORTS_KEY.$user->getId(), function (CacheItemInterface $item) use ($user) {
             $item->expiresAfter(\DateInterval::createFromDateString('24 hours'));
 
-            return $this->repoSupportGroup->findSupportsOfUser($user);
+            return $this->supportGroupRepo->findSupportsOfUser($user);
         });
     }
 
@@ -412,7 +412,7 @@ class IndicatorsService
         return $this->cache->get(User::CACHE_USER_NOTES_KEY.$user->getId(), function (CacheItemInterface $item) use ($user) {
             $item->expiresAfter(\DateInterval::createFromDateString('24 hours'));
 
-            return $this->repoNote->findNotesOfUser($user, 10);
+            return $this->noteRepo->findNotesOfUser($user, 10);
         });
     }
 
@@ -424,7 +424,7 @@ class IndicatorsService
         return $this->cache->get(User::CACHE_USER_RDVS_KEY.$user->getId(), function (CacheItemInterface $item) use ($user) {
             $item->expiresAfter(\DateInterval::createFromDateString('24 hours'));
 
-            return $this->repoRdv->findRdvsOfUser($user, 10);
+            return $this->rdvRepo->findRdvsOfUser($user, 10);
         });
     }
 }

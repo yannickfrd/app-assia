@@ -6,6 +6,13 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class Downloader
 {
+    protected $appEnv;
+
+    public function __construct(string $appEnv = 'prod')
+    {
+        $this->appEnv = $appEnv;
+    }
+
     /**
      * Envoie le fichier à télécharger à l'utilisateur.
      */
@@ -29,7 +36,9 @@ class Downloader
             $response->headers->addCacheControlDirective('no-cache', true);
             $response->headers->addCacheControlDirective('must-revalidate', true);
             $response->setCallback(function () use ($file) {
-                readfile($file);
+                if ('test' != $this->appEnv) {
+                    readfile($file);
+                }
             });
 
             return $response->send();

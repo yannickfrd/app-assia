@@ -18,77 +18,56 @@ class OrganizationControllerTest extends WebTestCase
     protected $client;
 
     /** @var array */
-    protected $dataFixtures;
+    protected $data;
 
     /** @var Organization */
     protected $organization;
 
     protected function setUp()
     {
-        $this->dataFixtures = $this->loadFixtureFiles([
+        $this->data = $this->loadFixtureFiles([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/OrganizationFixturesTest.yaml',
         ]);
 
-        $this->createLogin($this->dataFixtures['userRoleAdmin']);
+        $this->createLogin($this->data['userAdmin']);
 
-        $this->organization = $this->dataFixtures['organization1'];
+        $this->organization = $this->data['organization1'];
     }
 
     public function testListOrganizationsIsUp()
     {
-        $this->client->request('GET', $this->generateUri('organizations'));
+        $this->client->request('GET', '/organizations');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Organismes prescripteurs');
     }
 
-    public function testNewOrganizationIsUp()
+    public function testCreateNewOrganizationIsSuccessful()
     {
-        $this->client->request('GET', $this->generateUri('admin_organization_new'));
+        $this->client->request('GET', '/admin/organization/new');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Nouvel organisme');
-    }
 
-    public function testCreateNewOrganizationIsSuccessful()
-    {
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('admin_organization_new'));
-
-        $faker = \Faker\Factory::create('fr_FR');
-
-        $form = $crawler->selectButton('send')->form([
+        $this->client->submitForm('send', [
             'organization[name]' => 'Organisme test',
-            'organization[comment]' => $faker->paragraphs(6, true),
+            'organization[comment]' => 'XXX',
         ]);
-
-        $this->client->submit($form);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorExists('.alert.alert-success');
     }
 
-    public function testEditOrganizationisUp()
+    public function testEditOrganizationIsSuccessful()
     {
-        $this->client->request('GET', $this->generateUri('admin_organization_edit', [
-            'id' => $this->organization->getId(),
-        ]));
+        $id = $this->organization->getId();
+        $this->client->request('GET', "/admin/organization/ $id");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', $this->organization->getName());
-    }
 
-    public function testEditOrganizationIsSuccessful()
-    {
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('admin_organization_edit', [
-            'id' => $this->organization->getId(),
-        ]));
-
-        $form = $crawler->selectButton('send')->form([]);
-
-        $this->client->submit($form);
+        $this->client->submitForm('send');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorExists('.alert.alert-success');
@@ -98,6 +77,6 @@ class OrganizationControllerTest extends WebTestCase
     {
         parent::tearDown();
         $this->client = null;
-        $this->dataFixtures = null;
+        $this->data = null;
     }
 }

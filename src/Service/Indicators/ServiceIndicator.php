@@ -27,20 +27,20 @@ class ServiceIndicator
      */
     protected $user;
 
-    protected $repoIndicator;
-    protected $repoUser;
-    protected $repoService;
-    protected $repoPeopleGroup;
+    protected $indicatorRepo;
+    protected $userRepo;
+    protected $serviceRepo;
+    protected $peopleGroupRepo;
     /**
      * @var SupportGroupRepository
      */
-    protected $repoSupportGroup;
-    protected $repoEvaluation;
-    protected $repoNote;
-    protected $repoRdv;
-    protected $repoDocument;
-    protected $repoContribution;
-    protected $repoConnection;
+    protected $supportGroupRepo;
+    protected $evaluationRepo;
+    protected $noteRepo;
+    protected $rdvRepo;
+    protected $documentRepo;
+    protected $contributionRepo;
+    protected $ConnectionRepo;
 
     /**
      * @var array
@@ -51,31 +51,31 @@ class ServiceIndicator
 
     public function __construct(
         Security $security,
-        IndicatorRepository $repoIndicator,
-        UserRepository $repoUser,
-        ServiceRepository $repoService,
-        PeopleGroupRepository $repoPeopleGroup,
-        SupportGroupRepository $repoSupportGroup,
-        EvaluationGroupRepository $repoEvaluation,
-        NoteRepository $repoNote,
-        RdvRepository $repoRdv,
-        DocumentRepository $repoDocument,
-        ContributionRepository $repoContribution,
-        UserConnectionRepository $repoConnection)
+        IndicatorRepository $indicatorRepo,
+        UserRepository $userRepo,
+        ServiceRepository $serviceRepo,
+        PeopleGroupRepository $peopleGroupRepo,
+        SupportGroupRepository $supportGroupRepo,
+        EvaluationGroupRepository $evaluationRepo,
+        NoteRepository $noteRepo,
+        RdvRepository $rdvRepo,
+        DocumentRepository $documentRepo,
+        ContributionRepository $contributionRepo,
+        UserConnectionRepository $ConnectionRepo)
     {
         $this->user = $security->getUser();
 
-        $this->repoIndicator = $repoIndicator;
-        $this->repoUser = $repoUser;
-        $this->repoService = $repoService;
-        $this->repoPeopleGroup = $repoPeopleGroup;
-        $this->repoSupportGroup = $repoSupportGroup;
-        $this->repoEvaluation = $repoEvaluation;
-        $this->repoNote = $repoNote;
-        $this->repoRdv = $repoRdv;
-        $this->repoDocument = $repoDocument;
-        $this->repoContribution = $repoContribution;
-        $this->repoConnection = $repoConnection;
+        $this->repoIndicator = $indicatorRepo;
+        $this->UserRepo = $userRepo;
+        $this->serviceRepo = $serviceRepo;
+        $this->peopleGroupRepo = $peopleGroupRepo;
+        $this->supportGroupRepo = $supportGroupRepo;
+        $this->evaluationRepo = $evaluationRepo;
+        $this->noteRepo = $noteRepo;
+        $this->rdvRepo = $rdvRepo;
+        $this->documentRepo = $documentRepo;
+        $this->contributionRepo = $contributionRepo;
+        $this->ConnectionRepo = $ConnectionRepo;
 
         $this->cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
     }
@@ -89,7 +89,7 @@ class ServiceIndicator
 
         $datasServices = [];
 
-        foreach ($this->repoService->findServices($search) as $service) {
+        foreach ($this->serviceRepo->findServices($search) as $service) {
             $datasServices[] = $this->getServiceDatas($service);
         }
 
@@ -130,7 +130,7 @@ class ServiceIndicator
         foreach ($service->getSubServices() as $subService) {
             $criteria['subService'] = [$subService];
 
-            $nbSupports = $this->repoSupportGroup->count($criteria);
+            $nbSupports = $this->supportGroupRepo->count($criteria);
 
             if ((int) $nbSupports > 0) {
                 $datasSubServices[$subService->getId()] = $this->getSubServiceDatas($subService, $criteria, $nbSupports);
@@ -149,15 +149,15 @@ class ServiceIndicator
 
         return [
             'name' => $service->getName(),
-            'nbSocialWorkers' => $this->repoUser->countUsers([
+            'nbSocialWorkers' => $this->UserRepo->countUsers([
                 'service' => [$service],
                 'status' => [1],
             ]),
-            'nbSupports' => $this->repoSupportGroup->countSupports($this->criteria),
-            'nbNotes' => $this->repoNote->countNotes($this->criteria),
-            'nbRdvs' => $this->repoRdv->countRdvs($this->criteria),
-            'nbDocuments' => $this->repoDocument->countDocuments($this->criteria),
-            'nbContributions' => $this->repoContribution->countContributions($this->criteria),
+            'nbSupports' => $this->supportGroupRepo->countSupports($this->criteria),
+            'nbNotes' => $this->noteRepo->countNotes($this->criteria),
+            'nbRdvs' => $this->rdvRepo->countRdvs($this->criteria),
+            'nbDocuments' => $this->documentRepo->countDocuments($this->criteria),
+            'nbContributions' => $this->contributionRepo->countContributions($this->criteria),
             'subServices' => $this->getSubServicesIndicators($service),
         ];
     }
@@ -171,10 +171,10 @@ class ServiceIndicator
             'name' => $subService->getName(),
             'nbSocialWorkers' => '',
             'nbSupports' => $nbSupports,
-            'nbNotes' => $this->repoNote->countNotes($criteria),
-            'nbRdvs' => $this->repoRdv->countRdvs($criteria),
-            'nbDocuments' => $this->repoDocument->countDocuments($criteria),
-            'nbContributions' => $this->repoContribution->countContributions($criteria),
+            'nbNotes' => $this->noteRepo->countNotes($criteria),
+            'nbRdvs' => $this->rdvRepo->countRdvs($criteria),
+            'nbDocuments' => $this->documentRepo->countDocuments($criteria),
+            'nbContributions' => $this->contributionRepo->countContributions($criteria),
         ];
     }
 }

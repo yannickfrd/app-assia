@@ -8,10 +8,10 @@ use App\Entity\Support\PlaceGroup;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
-use phpDocumentor\Reflection\Types\Collection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -27,8 +27,6 @@ class PeopleGroup
     public const CACHE_GROUP_SUPPORTS_KEY = 'people_group.supports';
     public const CACHE_GROUP_REFERENTS_KEY = 'people_group.referents';
 
-
-    
     public const FAMILY_TYPOLOGY = [
         1 => 'Femme isolée',
         2 => 'Homme isolé',
@@ -178,7 +176,7 @@ class PeopleGroup
     }
 
     /**
-     * @return SupportGroup[]|Collection|null
+     * @return Collection<SupportGroup>
      */
     public function getSupports()
     {
@@ -209,7 +207,7 @@ class PeopleGroup
     }
 
     /**
-     * @return RolePerson[]|Collection|null
+     * @return Collection<RolePerson>
      */
     public function getRolePeople()
     {
@@ -240,7 +238,7 @@ class PeopleGroup
     }
 
     /**
-     * @return Person[]|Collection|null
+     * @return Collection<Person>
      */
     public function getPeople()
     {
@@ -254,7 +252,7 @@ class PeopleGroup
     }
 
     /**
-     * @return Referent[]|Collection|null
+     * @return Collection<Referent>
      */
     public function getReferents()
     {
@@ -285,7 +283,7 @@ class PeopleGroup
     }
 
     /**
-     * @return Document[]|Collection|null
+     * @return Collection<Document>
      */
     public function getDocuments()
     {
@@ -316,7 +314,7 @@ class PeopleGroup
     }
 
     /**
-     * @return PlaceGroup[]|Collection|null
+     * @return Collection<PlaceGroup>
      */
     public function getPlaceGroups()
     {

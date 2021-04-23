@@ -5,7 +5,7 @@ namespace App\Form\Support\Document;
 use App\Entity\Support\Document;
 use App\Form\Model\Support\DocumentSearch;
 use App\Form\Type\DateSearchType;
-use App\Form\Type\SearchType;
+use App\Form\Type\ServiceDeviceReferentSearchType;
 use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -36,7 +36,7 @@ class DocumentSearchType extends AbstractType
             ->add('date', DateSearchType::class, [
                 'data_class' => DocumentSearch::class,
             ])
-            ->add('service', SearchType::class, [
+            ->add('service', ServiceDeviceReferentSearchType::class, [
                 'data_class' => DocumentSearch::class,
             ]);
         // ->add('export');

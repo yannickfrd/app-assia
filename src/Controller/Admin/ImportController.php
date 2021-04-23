@@ -31,7 +31,7 @@ class ImportController extends AbstractController
     /**
      * Import de données du pôle Hébergement.
      *
-     * @Route("import_heb", name="import_heb", methods="GET|POST")
+     * @Route("/import_heb", name="import_heb", methods="GET|POST")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function importHebergement(Request $request, ImportDatasHebergement $importDatas): Response
@@ -42,7 +42,7 @@ class ImportController extends AbstractController
     /**
      * Import de données de l'opération ciblée hôtel.
      *
-     * @Route("import_oc", name="import_oc", methods="GET|POST")
+     * @Route("/import_oc", name="import_oc", methods="GET|POST")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function importOC(Request $request, ImportDatasOC $importDatas): Response
@@ -53,7 +53,7 @@ class ImportController extends AbstractController
     /**
      * Import de données de l'AMH.
      *
-     * @Route("import_amh", name="import_amh", methods="GET|POST")
+     * @Route("/import_amh", name="import_amh", methods="GET|POST")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function importAMH(Request $request, ImportDatasAMH $importDatas): Response
@@ -64,7 +64,7 @@ class ImportController extends AbstractController
     /**
      * Mise à jour des données de l'AMH.
      *
-     * @Route("update_import_amh", name="update_import_amh", methods="GET|POST")
+     * @Route("/update_import_amh", name="update_import_amh", methods="GET|POST")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function updateAMH(Request $request, UpdateDatasAMH $importDatas): Response
@@ -75,7 +75,7 @@ class ImportController extends AbstractController
     /**
      * Import des hôtels.
      *
-     * @Route("import_hotels", name="import_hotels", methods="GET|POST")
+     * @Route("/import_hotels", name="import_hotels", methods="GET|POST")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function importHotel(Request $request, ImportDatasHotel $importDatas): Response
@@ -86,7 +86,7 @@ class ImportController extends AbstractController
     /**
      * Import des utilisateurs.
      *
-     * @Route("import_users", name="import_users", methods="GET|POST")
+     * @Route("/import_users", name="import_users", methods="GET|POST")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function importUser(Request $request, ImportDatasUser $importDatas): Response
@@ -97,7 +97,7 @@ class ImportController extends AbstractController
     /**
      * Import des RDVs.
      *
-     * @Route("import_rdvs", name="import_rdvs", methods="GET|POST")
+     * @Route("/import_rdvs", name="import_rdvs", methods="GET|POST")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function importRdv(Request $request, ImportDatasRdv $importDatas): Response
@@ -108,7 +108,7 @@ class ImportController extends AbstractController
     /**
      * Import des PAFs.
      *
-     * @Route("import_paf", name="import_paf", methods="GET|POST")
+     * @Route("/import_paf", name="import_paf", methods="GET|POST")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function importPAF(Request $request, ImportDatasPAF $importDatas): Response
@@ -125,7 +125,7 @@ class ImportController extends AbstractController
 
         $datas = $importDatas->getDatas($file);
 
-        $form = ($this->createForm(ImportType::class, $this->import))
+        $form = $this->createForm(ImportType::class, $this->import)
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

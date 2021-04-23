@@ -18,74 +18,55 @@ class PoleControllerTest extends WebTestCase
     protected $client;
 
     /** @var array */
-    protected $dataFixtures;
+    protected $data;
 
     /** @var Pole */
     protected $pole;
 
     protected function setUp()
     {
-        $this->dataFixtures = $this->loadFixtureFiles([
+        $this->data = $this->loadFixtureFiles([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
         ]);
 
-        $this->createLogin($this->dataFixtures['userSuperAdmin']);
+        $this->createLogin($this->data['userSuperAdmin']);
 
-        $this->pole = $this->dataFixtures['pole'];
+        $this->pole = $this->data['pole1'];
     }
 
     public function testListPolesIsUp()
     {
-        $this->client->request('GET', $this->generateUri('poles'));
+        $this->client->request('GET', '/poles');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Pôles');
     }
 
-    public function testNewPoleIsUp()
+    public function testCreateNewPoleIsSuccessful()
     {
-        $this->client->request('GET', $this->generateUri('pole_new'));
+        $this->client->request('GET', '/pole/new');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Nouveau pôle');
-    }
 
-    public function testCreateNewPoleIsSuccessful()
-    {
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('pole_new'));
-
-        $form = $crawler->selectButton('send')->form([
+        $this->client->submitForm('send', [
             'pole[name]' => 'Pôle test',
         ]);
-
-        $this->client->submit($form);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorExists('.alert.alert-success');
     }
 
-    public function testEditPoleIsUp()
+    public function testEditPoleIsSuccessful()
     {
-        $this->client->request('GET', $this->generateUri('pole_edit', [
-            'id' => $this->pole->getId(),
-        ]));
+        $id = $this->pole->getId();
+        $this->client->request('GET', "/pole/$id");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', $this->pole->getName());
-    }
 
-    public function testEditPoleIsSuccessful()
-    {
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', $this->generateUri('pole_edit', [
-            'id' => $this->pole->getId(),
-        ]));
-
-        $form = $crawler->selectButton('send')->form([]);
-
-        $this->client->submit($form);
+        $this->client->submitForm('send');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', $this->pole->getName());
@@ -95,6 +76,6 @@ class PoleControllerTest extends WebTestCase
     {
         parent::tearDown();
         $this->client = null;
-        $this->dataFixtures = null;
+        $this->data = null;
     }
 }

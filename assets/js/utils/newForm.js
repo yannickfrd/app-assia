@@ -45,10 +45,10 @@ export default class NewForm {
 
     /**
      * Récupère les données envoyées par le serveur.
-     * @param {Object} data 
+     * @param {Object} response 
      */
-    response(data) {
-        this.containerElt.innerHTML = data.data.form.content
+    response(response) {
+        this.containerElt.innerHTML = response.html.content
         this.showForm()
     }
 

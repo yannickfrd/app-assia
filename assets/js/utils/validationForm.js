@@ -65,11 +65,13 @@ export default class ValidationForm {
     cleanHidedFields() {
         this.containerElt.querySelectorAll('div[data-parent-field].d-none').forEach(hideElt => {
             const fieldElt = hideElt.querySelector('input, select, textarea')
-            if (fieldElt.type === 'select-one') {
-                this.selectType.setOption(fieldElt, null)
-            } else {
-                fieldElt.value = null
+            if (null === fieldElt) {
+                return null
             }
+            if (fieldElt.type === 'select-one') {
+                return this.selectType.setOption(fieldElt, null)
+            } 
+            return fieldElt.value = null
         })
     }
 
@@ -80,6 +82,9 @@ export default class ValidationForm {
         this.containerElt.querySelectorAll('input[required], select[required]').forEach(fieldElt => {
             if (this.isFilledField(fieldElt)) {
                 return this.validField(fieldElt)
+            }
+            if (fieldElt.type === 'select-one' && this.selectType.countOptions(fieldElt) <= 1) {
+                return fieldElt.removeAttribute('required')
             }
             this.invalidField(fieldElt, 'Saisie obligatoire.')
             fieldElt.addEventListener('change', () => this.validField(fieldElt))

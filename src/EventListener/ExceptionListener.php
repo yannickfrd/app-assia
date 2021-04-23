@@ -21,10 +21,13 @@ class ExceptionListener
 
     public function onKernelException(ExceptionEvent $event)
     {
-        if (!$this->security->getUser() || !$this->exceptionListener) {
+        $exception = $event->getThrowable();
+
+        if (!$this->security->getUser() || !$this->exceptionListener
+            || $exception->getPrevious() && 403 === $exception->getPrevious()->getCode()) {
             return;
         }
 
-        $this->exceptionNotification->sendException($event->getThrowable());
+        $this->exceptionNotification->sendException($exception);
     }
 }

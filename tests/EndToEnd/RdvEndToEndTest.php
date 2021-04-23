@@ -54,15 +54,13 @@ class RdvEndToEndTest extends PantherTestCase
         $crawler->selectButton('js-new-rdv')->click();
         sleep(1); //pop-up effect
 
-        $form = $crawler->selectButton('js-btn-save')->form([
+        /** @var Crawler */
+        $crawler = $this->client->submitForm('js-btn-save', [
             'rdv[title]' => $this->faker->sentence(mt_rand(5, 10), true),
             'start' => '10:30',
             'end' => '12:30',
             'rdv[content]' => join('. ', $this->faker->paragraphs(mt_rand(1, 2))),
-            ]);
-
-        /** @var Crawler */
-        $crawler = $this->client->submit($form);
+        ]);
         sleep(1);
 
         $this->client->waitFor('#js-msg-flash');
@@ -80,14 +78,12 @@ class RdvEndToEndTest extends PantherTestCase
 
         $crawler->filter('a.calendar-event')->first()->click();
         sleep(1); //pop-up effect
-
-        $form = $crawler->selectButton('js-btn-save')->form([
+            
+        /** @var Crawler */
+        $crawler = $this->client->submitForm('js-btn-save', [
             'rdv[title]' => $this->faker->sentence(mt_rand(5, 10), true),
             'rdv[content]' => join('. ', $this->faker->paragraphs(mt_rand(1, 2))),
         ]);
-
-        /** @var Crawler */
-        $crawler = $this->client->submit($form);
 
         sleep(1);
         $this->assertSelectorExists('#js-msg-flash.alert.alert-success');

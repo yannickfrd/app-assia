@@ -7,8 +7,6 @@ use App\Entity\Organization\User;
 use App\Entity\People\PeopleGroup;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Support\SupportPerson;
-use App\EntityManager\SupportCollections;
-use App\EntityManager\SupportManager;
 use App\Event\Support\SupportGroupEvent;
 use App\Form\Model\Support\SupportSearch;
 use App\Form\Model\Support\SupportsInMonthSearch;
@@ -17,16 +15,18 @@ use App\Form\Support\Support\SupportCoefficientType;
 use App\Form\Support\Support\SupportGroupType;
 use App\Form\Support\Support\SupportSearchType;
 use App\Form\Support\Support\SupportsInMonthSearchType;
-use App\Form\Utils\Choices;
-use App\Repository\Evaluation\EvaluationGroupRepository;
-use App\Repository\Organization\ServiceRepository;
-use App\Repository\People\PeopleGroupRepository;
 use App\Repository\Support\ContributionRepository;
 use App\Repository\Support\SupportGroupRepository;
 use App\Repository\Support\SupportPersonRepository;
 use App\Service\Calendar;
+use App\Service\Export\SupportPersonExport;
 use App\Service\Grammar;
 use App\Service\Pagination;
+use App\Service\SupportGroup\SupportCollections;
+use App\Service\SupportGroup\SupportCreator;
+use App\Service\SupportGroup\SupportDuplicator;
+use App\Service\SupportGroup\SupportManager;
+use App\Service\SupportGroup\SupportPeopleAdder;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -42,10 +42,12 @@ class SupportController extends AbstractController
 {
     use ErrorMessageTrait;
 
+    private $supportPersonRepo;
     private $manager;
 
-    public function __construct(EntityManagerInterface $manager)
+    public function __construct(SupportPersonRepository $supportPersonRepo, EntityManagerInterface $manager)
     {
+        $this->supportPersonRepo = $supportPersonRepo;
         $this->manager = $manager;
     }
 
@@ -54,18 +56,18 @@ class SupportController extends AbstractController
      *
      * @Route("/supports", name="supports", methods="GET|POST")
      */
-    public function viewListSupports(Request $request, SupportManager $supportManager, SupportPersonRepository $repo, Pagination $pagination): Response
+    public function viewListSupports(Request $request, Pagination $pagination): Response
     {
-        $form = ($this->createForm(SupportSearchType::class, $search = new SupportSearch()))
+        $form = $this->createForm(SupportSearchType::class, $search = new SupportSearch())
             ->handleRequest($request);
 
         if ($search->getExport()) {
-            return $supportManager->exportData($search, $repo);
+            return $this->exportData($search, $this->supportPersonRepo);
         }
 
-        return $this->render('app/support/support/listSupports.html.twig', [
+        return $this->render('app/support/listSupports.html.twig', [
             'form' => $form->createView(),
-            'supports' => $pagination->paginate($repo->findSupportsQuery($search), $request),
+            'supports' => $pagination->paginate($this->supportPersonRepo->findSupportsQuery($search), $request),
         ]);
     }
 
@@ -75,38 +77,24 @@ class SupportController extends AbstractController
      * @Route("/group/{id}/support/new", name="support_new", methods="GET|POST")
      */
     public function newSupportGroup(
-        int $id,
-        PeopleGroupRepository $repoPeopleGroup,
+        PeopleGroup $peopleGroup,
         Request $request,
-        SupportManager $supportManager,
-        ServiceRepository $repoService,
+        SupportCreator $supportCreator,
         EventDispatcherInterface $dispatcher
     ): Response {
-        $peopleGroup = $repoPeopleGroup->findPeopleGroupById($id);
-        $supportGroup = $supportManager->getNewSupportGroup($peopleGroup, $request, $repoService);
+        $supportGroup = $supportCreator->getNewSupportGroup($peopleGroup, $request);
 
-        $form = ($this->createForm(SupportGroupType::class, $supportGroup))
+        $form = $this->createForm(SupportGroupType::class, $supportGroup)
             ->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid() && $supportGroup->getAgreement()) {
-            // Si pas de suivi en cours, en crée un nouveau, sinon ne fait rien
-            if ($supportManager->create($peopleGroup, $supportGroup)) {
-                $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support_group.before_create');
+            if ($supportCreator->create($supportGroup)) {
+                $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support.before_create');
 
                 $this->manager->flush();
 
                 $this->addFlash('success', 'Le suivi social est créé.');
 
-                $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support_group.after_create');
-
-                if (null != $form->get('cloneSupport')->getViewData()) {
-                    $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support_group.duplicator');
-                }
-
-                if ($supportGroup->getStartDate() && Choices::YES === $supportGroup->getService()->getPlace()
-                    && Choices::YES === $supportGroup->getDevice()->getPlace()) {
-                    return $this->redirectToRoute('support_place_new', ['id' => $supportGroup->getId()]);
-                }
+                $dispatcher->dispatch(new SupportGroupEvent($supportGroup, $form), 'support.after_create');
 
                 return $this->redirectToRoute('support_view', ['id' => $supportGroup->getId()]);
             }
@@ -114,7 +102,7 @@ class SupportController extends AbstractController
                 count($peopleGroup->getPeople()) > 1 ? 'ce ménage.' : 'cette personne.'));
         }
 
-        return $this->render('app/support/support/supportGroupEdit.html.twig', [
+        return $this->render('app/support/supportGroupEdit.html.twig', [
             'people_group' => $peopleGroup,
             'form' => $form->createView(),
         ]);
@@ -123,41 +111,20 @@ class SupportController extends AbstractController
     /**
      * Donne le formulaire pour créer un nouveau suivi social au groupe (via AJAX).
      *
-     * @Route("/group/{id}/new_support", name="people_group_new_support", methods="GET")
+     * @Route("/group/{id}/new_support", name="group_new_support", methods="GET")
+     * @Route("support/switch_service", name="support_switch_service", methods="POST")
      */
-    public function newSupportGroupAjax(PeopleGroup $peopleGroup, SupportPersonRepository $repoSupportPerson)
-    {
-        $supportGroup = (new SupportGroup())->setReferent($this->getUser());
-
-        $nbSupports = $repoSupportPerson->countSupportsOfPeople($peopleGroup);
-
-        $form = $this->createForm(NewSupportGroupType::class, $supportGroup, [
-            'action' => $this->generateUrl('support_new', ['id' => $peopleGroup->getId()]),
-        ]);
-
-        return $this->json([
-            'code' => 200,
-            'data' => [
-                'form' => $this->render('app/support/support/formNewSupport.html.twig', [
-                    'form' => $form->createView(),
-                    'nbSupports' => $nbSupports,
-                ]),
-            ],
-        ]);
-    }
-
-    /**
-     * Donne le formulaire pour éditer suivi social au groupe (via AJAX).
-     *
-     * @Route("/support/change_service", name="support_change_service", methods="GET|POST")
-     */
-    public function getSupportGroupType(Request $request)
+    public function newSupportGroupAjax(PeopleGroup $peopleGroup = null, Request $request)
     {
         $form = $this->createForm(NewSupportGroupType::class, new SupportGroup())
             ->handleRequest($request);
 
-        return $this->render('app/support/support/formSupportGroup.html.twig', [
-            'form' => $form->createView(),
+        return $this->json([
+            'html' => $this->render('app/support/_shared/_newSupportForm.html.twig', [
+                'form' => $form->createView(),
+                'people_group' => $peopleGroup,
+                'nb_supports' => $peopleGroup ? $this->supportPersonRepo->countSupportsOfPeople($peopleGroup) : null,
+            ]),
         ]);
     }
 
@@ -166,40 +133,66 @@ class SupportController extends AbstractController
      *
      * @Route("/support/{id}/edit", name="support_edit", methods="GET|POST")
      */
-    public function editSupportGroup(int $id, Request $request, SupportGroupRepository $repoSupportGroup, EventDispatcherInterface $dispatcher): Response
-    {
-        $supportGroup = $repoSupportGroup->findFullSupportById($id);
+    public function editSupportGroup(
+        int $id,
+        Request $request,
+        SupportGroupRepository $supportGroupRepo,
+        EventDispatcherInterface $dispatcher
+    ): Response {
+        $supportGroup = $supportGroupRepo->findFullSupportById($id);
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        $form = ($this->createForm(SupportGroupType::class, $supportGroup))
+        $form = $this->createForm(SupportGroupType::class, $supportGroup)
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support_group.before_update');
+            $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support.before_update');
 
             $this->manager->flush();
 
             $this->addFlash('success', 'Le suivi social est mis à jour.');
 
-            $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support_group.after_update');
+            $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support.after_update');
         }
 
-        $formCoeff = ($this->createForm(SupportCoefficientType::class, $supportGroup))
+        $formCoeff = $this->createForm(SupportCoefficientType::class, $supportGroup)
             ->handleRequest($request);
 
-        if ($this->isGranted('ROLE_ADMIN') && $formCoeff->isSubmitted() && $formCoeff->isValid()) {
+        return $this->render('app/support/supportGroupEdit.html.twig', [
+            'form' => $form->createView(),
+            'formCoeff' => $formCoeff->createView(),
+        ]);
+    }
+
+    /**
+     * Modifier le coefficient du suivi.
+     *
+     * @Route("/support/{id}/edit-coefficient", name="support_edit_coefficient", methods="POST")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function editCoefficient(
+        int $id,
+        Request $request,
+        SupportGroupRepository $supportGroupRepo,
+        EventDispatcherInterface $dispatcher
+    ): Response {
+        $supportGroup = $supportGroupRepo->findSupportById($id);
+
+        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
+
+        $formCoeff = $this->createForm(SupportCoefficientType::class, $supportGroup)
+            ->handleRequest($request);
+
+        if ($formCoeff->isSubmitted() && $formCoeff->isValid()) {
             $this->manager->flush();
 
             $this->addFlash('success', 'Le coefficient du suivi est mis à jour.');
 
-            return $this->redirectToRoute('support_view', ['id' => $supportGroup->getId()]);
+            $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support.after_update');
         }
 
-        return $this->render('app/support/support/supportGroupEdit.html.twig', [
-            'form' => $form->createView(),
-            'formCoeff' => $formCoeff->createView(),
-        ]);
+        return $this->redirectToRoute('support_view', ['id' => $supportGroup->getId()]);
     }
 
     /**
@@ -207,15 +200,19 @@ class SupportController extends AbstractController
      *
      * @Route("/support/{id}/view", name="support_view", methods="GET")
      */
-    public function viewSupportGroup(int $id, SupportManager $supportManager, SupportCollections $supportCollections, EventDispatcherInterface $dispatcher): Response
-    {
+    public function viewSupportGroup(
+        int $id,
+        SupportManager $supportManager,
+        SupportCollections $supportCollections,
+        EventDispatcherInterface $dispatcher
+    ): Response {
         $supportGroup = $supportManager->getFullSupportGroup($id);
 
-        $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support_group.view');
+        $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support.view');
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
-        return $this->render('app/support/support/supportGroupView.html.twig', [
+        return $this->render('app/support/supportGroupView.html.twig', [
             'support' => $supportGroup,
             'referents' => $supportCollections->getReferents($supportGroup),
             'nbNotes' => $supportCollections->getNbNotes($supportGroup),
@@ -244,7 +241,8 @@ class SupportController extends AbstractController
 
         $peopleGroup = $supportGroup->getPeopleGroup();
 
-        (new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']))->deleteItem(PeopleGroup::CACHE_GROUP_SUPPORTS_KEY.$peopleGroup->getId());
+        (new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']))->deleteItem(
+            PeopleGroup::CACHE_GROUP_SUPPORTS_KEY.$peopleGroup->getId());
 
         return $this->redirectToRoute('people_group_show', ['id' => $peopleGroup->getId()]);
     }
@@ -256,23 +254,20 @@ class SupportController extends AbstractController
      */
     public function addPeopleInSupport(
         SupportGroup $supportGroup,
-        SupportManager $supportManager,
-        EvaluationGroupRepository $repoEvaluationGroup,
+        SupportPeopleAdder $supportPeopleAdder,
         EventDispatcherInterface $dispatcher
     ): Response {
-        if (!$supportManager->addPeopleInSupport($supportGroup, $repoEvaluationGroup)) {
+        if ($supportPeopleAdder->addPeopleInSupport($supportGroup)) {
+            $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support.before_update');
+
+            $this->manager->flush();
+
+            $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support.after_update');
+        } else {
             $this->addFlash('warning', "Aucune personne n'a été ajoutée au suivi.");
         }
 
-        $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support_group.before_update');
-
-        $this->manager->flush();
-
-        $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support_group.after_update');
-
-        return $this->redirectToRoute('support_edit', [
-            'id' => $supportGroup->getId(),
-        ]);
+        return $this->redirectToRoute('support_edit', ['id' => $supportGroup->getId()]);
     }
 
     /**
@@ -281,8 +276,12 @@ class SupportController extends AbstractController
      * @Route("/supportGroup/{id}/remove-{support_pers_id}/{_token}", name="remove_support_pers", methods="GET")
      * @ParamConverter("supportPerson", options={"id" = "support_pers_id"})
      */
-    public function removeSupportPerson(SupportGroup $supportGroup, string $_token, SupportPerson $supportPerson, EventDispatcherInterface $dispatcher): Response
-    {
+    public function removeSupportPerson(
+        SupportGroup $supportGroup,
+        string $_token,
+        SupportPerson $supportPerson,
+        EventDispatcherInterface $dispatcher
+    ): Response {
         // Vérifie si le token est valide avant de retirer la personne du suivi social
         if (!$this->isCsrfTokenValid('remove'.$supportPerson->getId(), $_token)) {
             return $this->getErrorMessage();
@@ -290,52 +289,48 @@ class SupportController extends AbstractController
         // Vérifie si la personne est le demandeur principal
         if ($supportPerson->getHead()) {
             return $this->json([
-                'code' => 200,
-                'action' => null,
                 'alert' => 'danger',
                 'msg' => 'Le demandeur principal ne peut pas être retiré du suivi.',
-                'data' => null,
-            ], 200);
+            ]);
         }
 
         try {
             $supportGroup->removeSupportPerson($supportPerson);
 
-            $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support_group.before_update');
+            $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support.before_update');
 
             $this->manager->flush();
 
-            $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support_group.after_update');
+            $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support.after_update');
 
             return $this->json([
-                'code' => 200,
                 'action' => 'delete',
                 'alert' => 'warning',
-                'msg' => $supportPerson->getPerson()->getFullname().' est retiré'.Grammar::gender($supportPerson->getPerson()->getGender()).' du suivi social.',
-                'data' => null,
+                'msg' => $supportPerson->getPerson()->getFullname().' est retiré'.
+                    Grammar::gender($supportPerson->getPerson()->getGender()).' du suivi social.',
             ]);
         } catch (\Exception $e) {
-            return $this->json([
-                'code' => 200,
-                'action' => 'delete',
-                'alert' => 'warning',
-                'msg' => $supportPerson->getPerson()->getFullname().' est retiré'.Grammar::gender($supportPerson->getPerson()->getGender()).' du suivi social.',
-                'data' => null,
-            ]);
+            return $this->getErrorMessage();
         }
     }
 
     /**
      * Affiche les suivis dans le mois.
      *
-     * @Route("/supports/this_month", name="supports_current_month", methods="GET|POST")
+     * @Route("/supports/current_month", name="supports_current_month", methods="GET|POST")
      * @Route("/supports/{year}/{month}", name="supports_in_month", methods="GET|POST", requirements={
      * "year" : "\d{4}",
      * "month" : "0?[1-9]|1[0-2]",
      * })
      */
-    public function showSupportsWithContribution(int $year = null, int $month = null, Request $request, SupportGroupRepository $repoSupportGroup, ContributionRepository $repoContribution, Pagination $pagination): Response
-    {
+    public function showSupportsWithContribution(
+        int $year = null,
+        int $month = null,
+        Request $request,
+        SupportGroupRepository $supportGroupRepo,
+        ContributionRepository $contributionRepo,
+        Pagination $pagination
+    ): Response {
         $search = new SupportsInMonthSearch();
         if (User::STATUS_SOCIAL_WORKER === $this->getUser()->getStatus()) {
             $usersCollection = new ArrayCollection();
@@ -343,27 +338,25 @@ class SupportController extends AbstractController
             $search->setReferents($usersCollection);
         }
 
-        $form = ($this->createForm(SupportsInMonthSearchType::class, $search))
+        $form = $this->createForm(SupportsInMonthSearchType::class, $search)
             ->handleRequest($request);
-
-        // if ($month === null) {
-        //     $month = (new \DateTime())->modify('-1 month')->format('n');
-        // }
 
         $calendar = new Calendar($year, $month);
 
-        $supports = $pagination->paginate($repoSupportGroup->findSupportsBetween($calendar->getFirstDayOfTheMonth(), $calendar->getLastDayOfTheMonth(), $search), $request, 30);
+        $supports = $pagination->paginate(
+            $supportGroupRepo->findSupportsBetween($calendar->getFirstDayOfTheMonth(), $calendar->getLastDayOfTheMonth(), $search),
+            $request, 30);
 
         $supportsId = [];
         foreach ($supports->getItems() as $support) {
             $supportsId[] = $support->getId();
         }
 
-        return $this->render('app/support/support/supportsInMonthWithContributions.html.twig', [
+        return $this->render('app/support/supportsInMonthWithContributions.html.twig', [
             'calendar' => $calendar,
             'form' => $form->createView(),
             'supports' => $supports,
-            'contributions' => $repoContribution->findContributionsBetween(
+            'contributions' => $contributionRepo->findContributionsBetween(
                 $calendar->getFirstDayOfTheMonth(),
                 $calendar->getLastDayOfTheMonth(),
                 $supportsId
@@ -377,18 +370,39 @@ class SupportController extends AbstractController
      * @Route("/support/{id}/clone", name="support_clone", methods="GET")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
-    public function cloneSupport(SupportGroup $supportGroup, EventDispatcherInterface $dispatcher): Response
+    public function cloneSupport(SupportGroup $supportGroup, SupportDuplicator $supportDuplicator, EventDispatcherInterface $dispatcher): Response
     {
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support_group.duplicator');
+        if ($supportDuplicator->duplicate($supportGroup)) {
+            $this->addFlash('success', 'Les informations du précédent suivi ont été ajoutées (évaluation sociale, documents...)');
+            $this->manager->flush();
 
-        $this->manager->flush();
-
-        $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support_group.after_update');
+            $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support.after_update');
+        } else {
+            $this->addFlash('warning', 'Aucun autre suivi n\'a été trouvé.');
+        }
 
         return $this->redirectToRoute('support_view', [
             'id' => $supportGroup->getId(),
         ]);
+    }
+
+    /**
+     * Exporte les données.
+     */
+    protected function exportData(SupportSearch $search)
+    {
+        set_time_limit(10 * 60);
+
+        $supports = $this->supportPersonRepo->findSupportsToExport($search);
+
+        if (!$supports) {
+            $this->addFlash('warning', 'Aucun résultat à exporter.');
+
+            return $this->redirectToRoute('supports');
+        }
+
+        return (new SupportPersonExport())->exportData($supports);
     }
 }

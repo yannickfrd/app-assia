@@ -34,11 +34,7 @@ class HotelSupportSearchType extends AbstractType
                 'choice_label' => 'name',
                 'multiple' => true,
                 'query_builder' => function (PlaceRepository $repo) {
-                    return $repo->createQueryBuilder('a')
-                        ->select('PARTIAL a.{id, name}')
-                        ->where('a.service = :service')
-                        ->setParameter('service', 10)
-                        ->orderBy('a.name', 'ASC');
+                    return $repo->getHotelPlacesQueryBuilder();
                 },
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [

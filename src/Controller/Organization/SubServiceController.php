@@ -31,9 +31,7 @@ class SubServiceController extends AbstractController
     {
         $this->denyAccessUnlessGranted('EDIT', $service);
 
-        $subService = new SubService();
-
-        $form = ($this->createForm(SubServiceType::class, $subService))
+        $form = $this->createForm(SubServiceType::class, $subService = new SubService())
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -51,7 +49,7 @@ class SubServiceController extends AbstractController
 
         return $this->render('app/organization/subService/subServiceEdit.html.twig', [
             'service' => $service,
-            'form' => $form->createView(),
+                'form' => $form->createView(),
         ]);
     }
 
@@ -60,11 +58,11 @@ class SubServiceController extends AbstractController
      *
      * @Route("/sub-service/{id}", name="sub_service_edit", methods="GET|POST")
      */
-    public function editSubService(SubService $subService, PlaceRepository $repoPlace, Request $request): Response
+    public function editSubService(SubService $subService, PlaceRepository $placeRepo, Request $request): Response
     {
         $this->denyAccessUnlessGranted('EDIT', $subService->getService());
 
-        $form = ($this->createForm(SubServiceType::class, $subService))
+        $form = $this->createForm(SubServiceType::class, $subService)
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -77,7 +75,7 @@ class SubServiceController extends AbstractController
             $this->addFlash('success', 'Les modifications sont enregistrées.');
         }
 
-        $places = $repoPlace->findPlacesOfSubService($subService);
+        $places = $placeRepo->findPlacesOfSubService($subService);
 
         $nbPlaces = 0;
         foreach ($places as $place) {
@@ -87,7 +85,7 @@ class SubServiceController extends AbstractController
         return $this->render('app/organization/subService/subServiceEdit.html.twig', [
             'service' => $subService->getService(),
             'form' => $form->createView(),
-            // 'users' => $repoUser->findUsersFromSubService($subService),
+            // 'users' => $userRepo->findUsersFromSubService($subService),
             'places' => $places,
             'nbPlaces' => $nbPlaces,
         ]);
@@ -104,7 +102,7 @@ class SubServiceController extends AbstractController
 
         if ($subService->getDisabledAt()) {
             $subService->setDisabledAt(null);
-            $this->addFlash('success', 'Le sous-service "'.$subService->getName().'" est réactivé.');
+            $this->addFlash('success', 'Le sous-service "'.$subService->getName().'" est ré-activé.');
         } else {
             $subService->setDisabledAt(new \DateTime());
             $this->addFlash('warning', 'Le sous-service "'.$subService->getName().'" est désactivé.');

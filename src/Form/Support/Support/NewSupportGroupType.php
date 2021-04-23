@@ -35,6 +35,8 @@ class NewSupportGroupType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->setFormData($builder);
+
         $builder
             ->add('service', EntityType::class, [
                 'class' => Service::class,
@@ -67,6 +69,15 @@ class NewSupportGroupType extends AbstractType
             });
 
             $form->getParent()->add($builder->getForm());
+        });
+    }
+
+    protected function setFormData(FormBuilderInterface $builder): FormBuilderInterface
+    {
+        return $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            /** @var SupportGroup $supportGroup */
+            $supportGroup = $event->getData();
+            $supportGroup->setReferent($this->currentUser->getUser());
         });
     }
 

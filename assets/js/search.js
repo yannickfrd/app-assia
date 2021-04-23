@@ -24,6 +24,14 @@ for (let i in select2Array) {
     $(`select[data-select2-id='${i}']`).select2({
         placeholder: '  -- ' + select2Array[i] + ' --',
         // theme: 'bootstrap4',
+        'language': {
+            'noResults': () => {
+                return '<span class="text-secondary">Aucun résultat.</span>'
+            }
+        },
+        escapeMarkup: (markup) => {
+            return markup
+        }
     });
 }
 

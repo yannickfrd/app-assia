@@ -40,7 +40,7 @@ class Avdl
         2 => 'Non adhésion',
         3 => 'Transfert (autre département)',
         97 => 'Autre',
-        99 => 'Non évalué',
+        99 => 'Inconnu',
     ];
 
     public const ACCESS_HOUSING_MODALITY = [
@@ -51,14 +51,14 @@ class Avdl
         7 => 'Propo. Mairie',
         6 => 'Protocole Logement d’Abord',
         97 => 'Autre',
-        99 => 'Non évalué',
+        99 => 'Inconnu',
     ];
 
     public const PROPO_RESULT = [
         1 => 'Favorable',
         2 => 'Refus',
         3 => 'En attente',
-        99 => 'Non évalué',
+        99 => 'Inconnu',
     ];
 
     /**

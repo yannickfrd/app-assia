@@ -5,6 +5,7 @@ namespace App\Repository\Organization;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\SubService;
 use App\Form\Model\Admin\OccupancySearch;
+use App\Repository\Traits\QueryTrait;
 use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
@@ -19,6 +20,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class SubServiceRepository extends ServiceEntityRepository
 {
+    use QueryTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, SubService::class);
@@ -77,13 +80,17 @@ class SubServiceRepository extends ServiceEntityRepository
     /**
      * Donne la liste des sous-services de l'utilisateur.
      */
-    public function getSubServicesOfUserQueryBuilder(CurrentUserService $currentUser, Service $service = null): QueryBuilder
+    public function getSubServicesOfUserQueryBuilder(CurrentUserService $currentUser, Service $service = null, string $dataClass = null): QueryBuilder
     {
         $query = $this->createQueryBuilder('ss')->select('PARTIAL ss.{id, name}')
-            ->leftJoin('ss.service', 's')->addSelect('PARTIAL s.{id, name}')
+            ->leftJoin('ss.service', 's')->addSelect('PARTIAL s.{id, name, type}')
 
         ->where('ss.disabledAt IS NULL')
         ->andWhere('s.disabledAt IS NULL');
+
+        if ($dataClass) {
+            $query = $this->filterByServiceType($query, $dataClass);
+        }
 
         if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             $query = $query->andWhere('s.id IN (:services)')

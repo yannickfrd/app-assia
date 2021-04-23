@@ -24,36 +24,36 @@ class IndicatorController extends AbstractController
     use ErrorMessageTrait;
 
     protected $manager;
-    protected $repo;
+    protected $indicatorRepo;
 
-    public function __construct(EntityManagerInterface $manager, IndicatorRepository $repo)
+    public function __construct(EntityManagerInterface $manager, IndicatorRepository $indicatorRepo)
     {
         $this->manager = $manager;
-        $this->repo = $repo;
+        $this->indicatorRepo = $indicatorRepo;
     }
 
     /**
      * Indicateurs d'actvitié quotidiens.
      *
-     * @Route("daily_indicators", name="daily_indicators", methods="GET|POST")
+     * @Route("/daily_indicators", name="daily_indicators", methods="GET|POST")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function indicators(Request $request, Pagination $pagination): Response
     {
         return $this->render('app/admin/indicator/dailyIndicators.html.twig', [
-            'indicators' => $pagination->paginate($this->repo->findIndicatorsQuery(), $request, 30),
+            'indicators' => $pagination->paginate($this->indicatorRepo->findIndicatorsQuery(), $request, 30),
         ]);
     }
 
     /**
      * Indicateurs d'actvitié quotidiens.
      *
-     * @Route("indicator/services", name="indicator_services", methods="GET|POST")
+     * @Route("/indicator/services", name="indicator_services", methods="GET|POST")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function showServiceIndicators(Request $request, ServiceIndicator $indicators): Response
     {
-        $form = ($this->createForm(ServiceIndicatorsSearchType::class, $search = new ServiceIndicatorsSearch()))
+        $form = $this->createForm(ServiceIndicatorsSearchType::class, $search = new ServiceIndicatorsSearch())
             ->handleRequest($request);
 
         return $this->render('app/admin/indicator/servicesIndicators.html.twig', [
@@ -66,14 +66,12 @@ class IndicatorController extends AbstractController
     /**
      * @Route("/indicators/social", name="indicators_social", methods="GET|POST")
      */
-    public function showSocialIndicators(Request $request, SupportPersonRepository $repoSupportPerson, SocialIndicators $socialIndicators): Response
+    public function showSocialIndicators(Request $request, SupportPersonRepository $supportPersonRepo, SocialIndicators $socialIndicators): Response
     {
-        $search = new SupportSearch();
-
-        $form = ($this->createForm(SupportSearchType::class, $search))
+        $form = $this->createForm(SupportSearchType::class, $search = new SupportSearch())
             ->handleRequest($request);
 
-        $supports = $repoSupportPerson->findSupportsFullToExport($search);
+        $supports = $supportPersonRepo->findSupportsFullToExport($search);
 
         return $this->render('app/evaluation/socialIndicators.html.twig', [
             'search' => $search,

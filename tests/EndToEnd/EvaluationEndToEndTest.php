@@ -37,10 +37,7 @@ class EvaluationEndToEndTest extends PantherTestCase
 
         $this->outputMsg('Edit the evaluation');
 
-        $form = $crawler->selectButton('send')->form([]);
-
-        /** @var Crawler */
-        $crawler = $this->client->submit($form);
+        $crawler = $this->client->submitForm('send');
 
         $this->client->waitFor('div[data-edit-mode]');
 

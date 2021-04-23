@@ -5,7 +5,7 @@ namespace App\Form\Support\Support;
 use App\Entity\Support\SupportGroup;
 use App\Form\Model\Support\SupportSearch;
 use App\Form\Type\DateSearchType;
-use App\Form\Type\SearchType;
+use App\Form\Type\ServiceDeviceReferentSearchType;
 use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -17,6 +17,8 @@ class SupportSearchType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $dataClass = $builder->getDataClass();
+
         $builder
             ->add('fullname', null, [
                 'attr' => [
@@ -40,10 +42,10 @@ class SupportSearchType extends AbstractType
                 'required' => false,
             ])
             ->add('date', DateSearchType::class, [
-                'data_class' => SupportSearch::class,
+                'data_class' => $dataClass,
             ])
-            ->add('service', SearchType::class, [
-                'data_class' => SupportSearch::class,
+            ->add('service', ServiceDeviceReferentSearchType::class, [
+                'data_class' => $dataClass,
             ])
             ->add('head', CheckboxType::class, [
                 'label' => 'DP',

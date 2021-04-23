@@ -31,12 +31,11 @@ export default class UpdateEvaluation {
      * @param {Event} e 
      */
     save(e) {
-        if (this.editMode === 'true') {
-            e.preventDefault()
-            if (this.loader.isActive() === false) {
-                this.sendRequest()
-            }
+        e.preventDefault()
+        if (this.loader.isActive()) {
+            return null
         }
+        this.sendRequest()
     }
 
     sendRequest() {
@@ -50,8 +49,9 @@ export default class UpdateEvaluation {
     response(response) {
         this.loader.off()
 
-        if (typeof response != 'object') {
-            return new MessageFlash('danger', 'Attention, une erreur s\'est produite. Vous êtes probablement déconnecté.')
+        if (!response.alert) {
+            console.error(response)
+            return new MessageFlash('danger', 'Attention, une erreur s\'est produite.')
         }
         
         new MessageFlash(response.alert, response.msg)

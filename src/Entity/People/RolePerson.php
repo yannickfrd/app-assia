@@ -32,7 +32,7 @@ class RolePerson
         5 => 'Personne isolée',
         6 => 'Autre membre de la famille',
         97 => 'Autre',
-        99 => 'Non évalué',
+        99 => 'Non renseigné',
     ];
 
     /**

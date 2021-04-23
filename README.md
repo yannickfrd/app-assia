@@ -369,7 +369,7 @@ https://demo.esperer95.app
 - Ajout de champs lors de l'export de l'évaluation.
 - Modif des droits d'accès à la page "Répartition des suivis en cours" (uniquement profil administrateur).
 - Créé vérification de validité du demandeur principal d'un groupe et d'un suivi (age et DP != 1).
-- Créé class GroupPeopleManager pour gérer la logique métier de l'entité GroupPeople.
+- Créé class GroupPeopleGroupManager pour gérer la logique métier de l'entité GroupPeople.
 - Renommé entité 'GroupPeople' en 'PeopleGroup'.
 
 ## Version 2.6.12 - 16/11/2020

@@ -6,9 +6,9 @@ use App\Entity\Organization\Place;
 use App\Entity\Support\PlaceGroup;
 use App\Entity\Support\PlacePerson;
 use App\Entity\Support\SupportGroup;
-use App\EntityManager\SupportManager;
 use App\Form\Organization\Place\PlaceGroupType;
 use App\Repository\Support\PlaceGroupRepository;
+use App\Service\SupportGroup\SupportManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
@@ -22,18 +22,18 @@ use Symfony\Component\Routing\Annotation\Route;
 class PlaceGroupController extends AbstractController
 {
     private $manager;
-    private $repo;
+    private $placeGroupRepo;
 
-    public function __construct(EntityManagerInterface $manager, PlaceGroupRepository $repo)
+    public function __construct(EntityManagerInterface $manager, PlaceGroupRepository $placeGroupRepo)
     {
         $this->manager = $manager;
-        $this->repo = $repo;
+        $this->placeGroupRepo = $placeGroupRepo;
     }
 
     /**
      * Liste des hébergements du suivi social.
      *
-     * @Route("support/{id}/places", name="support_places", methods="GET")
+     * @Route("/support/{id}/places", name="support_places", methods="GET")
      */
     public function supportPlacesGroup(int $id, SupportManager $supportManager): Response
     {
@@ -69,7 +69,7 @@ class PlaceGroupController extends AbstractController
             ->setStartDate($supportGroup->getStartDate())
             ->setEndDate($supportGroup->getEndDate());
 
-        $form = ($this->createForm(PlaceGroupType::class, $placeGroup))
+        $form = $this->createForm(PlaceGroupType::class, $placeGroup)
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -95,13 +95,12 @@ class PlaceGroupController extends AbstractController
      */
     public function editPlaceGroup(int $id, SupportManager $supportManager, Request $request): Response
     {
-        $placeGroup = $this->repo->findPlaceGroupById($id);
-        // $supportGroup = $repoSupport->findSupportById($placeGroup->getSupportGroup()->getId());
+        $placeGroup = $this->placeGroupRepo->findPlaceGroupById($id);
         $supportGroup = $supportManager->getSupportGroup($placeGroup->getSupportGroup()->getId());
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        $form = ($this->createForm(PlaceGroupType::class, $placeGroup))
+        $form = $this->createForm(PlaceGroupType::class, $placeGroup)
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -142,13 +141,13 @@ class PlaceGroupController extends AbstractController
     /**
      * Supprime la prise en charge du groupe.
      *
-     * @Route("support/group-people-place/{id}/delete", name="support_group_people_place_delete", methods="GET")
+     * @Route("/support/group-people-place/{id}/delete", name="support_group_people_place_delete", methods="GET")
      */
     public function deletePlaceGroup(PlaceGroup $placeGroup): Response
     {
         $supportGroup = $placeGroup->getSupportGroup();
 
-        $this->denyAccessUnlessGranted('DELETE', $supportGroup);
+        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
         $this->manager->remove($placeGroup);
         $this->manager->flush();
@@ -163,13 +162,13 @@ class PlaceGroupController extends AbstractController
     /**
      * Supprime la prise en charge d'une personne.
      *
-     * @Route("support/person-place/{id}/delete", name="support_person_place_delete", methods="GET")
+     * @Route("/support/person-place/{id}/delete", name="support_person_place_delete", methods="GET")
      */
     public function deletePlacePerson(PlacePerson $placePerson): Response
     {
         $supportGroup = $placePerson->getPlaceGroup()->getSupportGroup();
 
-        $this->denyAccessUnlessGranted('DELETE', $supportGroup);
+        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
         $this->manager->remove($placePerson);
         $this->manager->flush();

@@ -23,12 +23,8 @@ class OccupancyRateController extends AbstractController
      */
     public function showOccupancyByDevice(Service $service = null, Request $request, OccupancyIndicators $occupancyIndicators): Response
     {
-        $search = new OccupancySearch();
-
-        $form = ($this->createForm(OccupancySearchType::class, $search))
+        $form = $this->createForm(OccupancySearchType::class, $search = new OccupancySearch())
             ->handleRequest($request);
-
-        $search = $this->updateOccupancySearch($search);
 
         return $this->render('app/occupancy/occupancyByDevice.html.twig', [
             'service' => $service,
@@ -46,12 +42,8 @@ class OccupancyRateController extends AbstractController
      */
     public function showOccupancyByService(Device $device = null, Request $request, OccupancyIndicators $occupancyIndicators): Response
     {
-        $search = new OccupancySearch();
-
-        $form = ($this->createForm(OccupancySearchType::class, $search))
+        $form = $this->createForm(OccupancySearchType::class, $search = new OccupancySearch())
             ->handleRequest($request);
-
-        $search = $this->updateOccupancySearch($search);
 
         return $this->render('app/occupancy/occupancyByService.html.twig', [
             'device' => $device,
@@ -62,18 +54,14 @@ class OccupancyRateController extends AbstractController
     }
 
     /**
-     * Taux d'occupation des services.
+     * Taux d'occupation des sous-services.
      *
      * @Route("/occupancy/service/{id}/sub_services", name="occupancy_sub_services", methods="GET|POST")
      */
     public function showOccupancyBySubService(Service $service, Request $request, OccupancyIndicators $occupancyIndicators): Response
     {
-        $search = new OccupancySearch();
-
-        $form = ($this->createForm(OccupancySearchType::class, $search))
+        $form = $this->createForm(OccupancySearchType::class, $search = new OccupancySearch())
             ->handleRequest($request);
-
-        $search = $this->updateOccupancySearch($search);
 
         return $this->render('app/occupancy/occupancyBySubService.html.twig', [
             'service' => $service,
@@ -91,12 +79,8 @@ class OccupancyRateController extends AbstractController
      */
     public function showOccupancyServiceByPlace(Service $service = null, Request $request, OccupancyIndicators $occupancyIndicators): Response
     {
-        $search = new OccupancySearch();
-
-        $form = ($this->createForm(OccupancySearchType::class, $search))
+        $form = $this->createForm(OccupancySearchType::class, $search = new OccupancySearch())
             ->handleRequest($request);
-
-        $search = $this->updateOccupancySearch($search);
 
         return $this->render('app/occupancy/occupancyByPlace.html.twig', [
             'service' => $service,
@@ -113,12 +97,8 @@ class OccupancyRateController extends AbstractController
      */
     public function showOccupancySubServiceByPlace(SubService $subService, Request $request, OccupancyIndicators $occupancyIndicators): Response
     {
-        $search = new OccupancySearch();
-
-        $form = ($this->createForm(OccupancySearchType::class, $search))
-        ->handleRequest($request);
-
-        $search = $this->updateOccupancySearch($search);
+        $form = $this->createForm(OccupancySearchType::class, $search = new OccupancySearch())
+            ->handleRequest($request);
 
         return $this->render('app/occupancy/occupancySubServiceByPlace.html.twig', [
             'subService' => $subService,
@@ -126,19 +106,5 @@ class OccupancyRateController extends AbstractController
             'form' => $form->createView(),
             'datas' => $occupancyIndicators->getOccupancyRateByPlace($search, null, $subService),
         ]);
-    }
-
-    protected function updateOccupancySearch(OccupancySearch $search): OccupancySearch
-    {
-        $today = new \DateTime('today');
-
-        if (null === $search->getStart()) {
-            $search->setStart((clone $today)->modify('-1 day'));
-        }
-        if (null === $search->getEnd()) {
-            $search->setEnd($today);
-        }
-
-        return $search;
     }
 }

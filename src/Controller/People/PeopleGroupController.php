@@ -6,16 +6,17 @@ use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\People\PeopleGroup;
 use App\Entity\People\Person;
 use App\Entity\People\RolePerson;
-use App\EntityManager\PeopleGroupManager;
+use App\Event\People\PeopleGroupEvent;
 use App\Form\People\PeopleGroup\PeopleGroupType;
 use App\Form\People\RolePerson\RolePersonType;
-use App\Repository\Organization\ReferentRepository;
 use App\Repository\People\PeopleGroupRepository;
-use App\Repository\People\RolePersonRepository;
-use App\Repository\Support\SupportGroupRepository;
+use App\Service\People\PeopleGroupCollections;
+use App\Service\People\PeopleGroupManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,55 +25,56 @@ class PeopleGroupController extends AbstractController
 {
     use ErrorMessageTrait;
 
-    private $groupManager;
-    private $repo;
+    private $peopleGroupRepo;
+    private $manager;
 
-    public function __construct(PeopleGroupManager $groupManager, PeopleGroupRepository $repo)
+    public function __construct(EntityManagerInterface $manager, PeopleGroupRepository $peopleGroupRepo)
     {
-        $this->groupManager = $groupManager;
-        $this->repo = $repo;
+        $this->peopleGroupRepo = $peopleGroupRepo;
+        $this->manager = $manager;
     }
 
     /**
-     * Modification d'un groupe.
+     * Voir ou modifier un groupe.
      *
      * @Route("/group/{id}", name="people_group_show", methods="GET|POST")
      */
-    public function showPeopleGroup(int $id, Request $request, ReferentRepository $repoReferent, SupportGroupRepository $repoSuppport): Response
+    public function showPeopleGroup(int $id, Request $request, PeopleGroupCollections $peopleGroupCollections, EventDispatcherInterface $dispatcher): Response
     {
-        $peopleGroup = $this->repo->findPeopleGroupById($id);
-
-        if (null === $peopleGroup) {
-            $this->addFlash('danger', 'Ce groupe n\'existe pas.');
-
-            return $this->redirectToRoute('home');
-        }
+        $peopleGroup = $this->peopleGroupRepo->findPeopleGroupById($id);
 
         $form = $this->createForm(PeopleGroupType::class, $peopleGroup)
             ->handleRequest($request);
 
-        $supports = $this->groupManager->getSupports($peopleGroup, $repoSuppport);
+        $supports = $peopleGroupCollections->getSupports($peopleGroup);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->groupManager->update($peopleGroup, $supports);
+            $dispatcher->dispatch(new PeopleGroupEvent($peopleGroup), 'people_group.before_update');
+
+            $this->manager->flush();
+
+            $this->addFlash('success', 'Les modifications sont enregistrées.');
+
+            $dispatcher->dispatch(new PeopleGroupEvent($peopleGroup, $supports), 'people_group.after_update');
         }
 
         return $this->render('app/people/peopleGroup/peopleGroup.html.twig', [
             'form' => $form->createView(),
             'supports' => $supports,
-            'referents' => $this->groupManager->getReferents($peopleGroup, $repoReferent),
+            'referents' => $peopleGroupCollections->getReferents($peopleGroup),
         ]);
     }
 
     /**
-     * Supprime le groupe de personnes.
+     * Supprime un groupe de personnes.
      *
      * @Route("/group/{id}/delete", name="people_group_delete", methods="GET")
      * @IsGranted("ROLE_ADMIN")
      */
     public function deletePeopleGroup(PeopleGroup $peopleGroup): Response
     {
-        $this->groupManager->delete($peopleGroup);
+        $this->manager->remove($peopleGroup);
+        $this->manager->flush();
 
         $this->addFlash('warning', 'Le groupe est supprimé.');
 
@@ -80,42 +82,39 @@ class PeopleGroupController extends AbstractController
     }
 
     /**
-     * Ajout d'une personne dans un groupe.
+     * Ajoute une personne dans un groupe.
      *
-     * @Route("/group/{id}/add/person/{person_id}", name="group_add_person", methods="POST")
+     * @Route("/group/{id}/add_person/{person_id}", name="group_add_person", methods="POST")
      * @ParamConverter("person", options={"id" = "person_id"})
      */
-    public function tryAddPersonInGroup(int $id, Request $request, Person $person, RolePersonRepository $repoRolePerson): Response
+    public function addPersonInGroup(int $id, Request $request, Person $person, PeopleGroupManager $peopleGroupManager): Response
     {
-        $peopleGroup = $this->repo->findPeopleGroupById($id);
+        $peopleGroup = $this->peopleGroupRepo->findPeopleGroupById($id);
 
-        $rolePerson = new RolePerson();
-
-        $form = ($this->createForm(RolePersonType::class, $rolePerson))
+        $form = $this->createForm(RolePersonType::class, $rolePerson = new RolePerson())
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->groupManager->addPerson($peopleGroup, $rolePerson, $person, $repoRolePerson);
+            $peopleGroupManager->addPerson($peopleGroup, $person, $rolePerson);
         } else {
-            $this->addFlash('danger', "Une erreur s'est produite.");
+            $this->addFlash('danger', 'Une erreur s\'est produite.');
         }
 
         return $this->redirectToRoute('people_group_show', ['id' => $peopleGroup->getId()]);
     }
 
     /**
-     * Retire la personne du groupe.
+     * Retire une personne du groupe.
      *
      * @Route("/role_person/{id}/remove/{_token}", name="role_person_remove", methods="GET")
+     * @IsGranted("ROLE_ADMIN")
      */
-    public function tryRemovePerson(RolePerson $rolePerson, string $_token): Response
+    public function removePerson(RolePerson $rolePerson, string $_token, PeopleGroupManager $peopleGroupManager): Response
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->accessDenied();
-        }
-        // Vérifie si le token est valide avant de retirer la personne du groupe
         if ($this->isCsrfTokenValid('remove'.$rolePerson->getId(), $_token)) {
-            return $this->json($this->groupManager->removePerson($rolePerson));
+            $data = $peopleGroupManager->removePerson($rolePerson);
+
+            return $this->json($data);
         }
 
         return $this->getErrorMessage();

@@ -9,6 +9,7 @@ use App\Entity\Traits\DisableEntityTrait;
 use App\Entity\Traits\LocationEntityTrait;
 use App\Form\Utils\Choices;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -198,7 +199,7 @@ class Service
 
     public function __toString()
     {
-        return strval($this->id);
+        return (string) $this->id;
     }
 
     public function getId(): ?int
@@ -236,7 +237,7 @@ class Service
     }
 
     /**
-     * @return ServiceUser[]|Collection|null
+     * @return Collection<User>
      */
     public function getserviceUser()
     {
@@ -267,7 +268,7 @@ class Service
     }
 
     /**
-     * @return User[]|Collection|null
+     * @return Collection<User>
      */
     public function getUsers()
     {
@@ -293,7 +294,7 @@ class Service
     }
 
     /**
-     * @return SupportGroup[]|Collection|null
+     * @return Collection<SupportGroup>
      */
     public function getSupportGroup()
     {
@@ -495,7 +496,7 @@ class Service
     }
 
     /**
-     * @return ServiceDevice[]|Collection|null
+     * @return Collection<Device>
      */
     public function getServiceDevices()
     {
@@ -503,7 +504,7 @@ class Service
     }
 
     /**
-     * @return Device[]|Collection|null
+     * @return Collection<Device>
      */
     public function getDevices()
     {
@@ -540,7 +541,7 @@ class Service
     }
 
     /**
-     * @return Place[]|Collection|null
+     * @return Collection<Place>
      */
     public function getPlaces()
     {
@@ -583,7 +584,7 @@ class Service
     }
 
     /**
-     * @return Organization[]|Collection|null
+     * @return Collection<Organization>
      */
     public function getOrganizations()
     {
@@ -609,7 +610,7 @@ class Service
     }
 
     /**
-     * @return SubService[]|Collection|null
+     * @return Collection<Service>
      */
     public function getSubServices()
     {

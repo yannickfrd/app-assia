@@ -2,17 +2,18 @@
 
 namespace App\Entity\Support;
 
-use App\Entity\Evaluation\EvaluationPerson;
-use App\Entity\Evaluation\InitEvalPerson;
-use App\Entity\People\Person;
-use App\Entity\People\RolePerson;
-use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use App\Form\Utils\Choices;
-use Doctrine\Common\Collections\ArrayCollection;
+use App\Entity\People\Person;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\People\RolePerson;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use App\Entity\Evaluation\InitEvalPerson;
+use App\Entity\Evaluation\EvaluationPerson;
+use Doctrine\Common\Collections\Collection;
+use App\Entity\Traits\CreatedUpdatedEntityTrait;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -287,7 +288,7 @@ class SupportPerson
     }
 
     /**
-     * @return Note[]|Collection|null
+     * @return Collection<Note>
      */
     public function getNotes()
     {
@@ -318,7 +319,7 @@ class SupportPerson
     }
 
     /**
-     * @return EvaluationPerson[]|Collection|null
+     * @return Collection<Person>
      */
     public function getEvaluationsPerson()
     {
@@ -366,7 +367,7 @@ class SupportPerson
     }
 
     /**
-     * @return PlacePerson[]|Collection|null
+     * @return Collection<Person>
      */
     public function getPlacesPerson()
     {

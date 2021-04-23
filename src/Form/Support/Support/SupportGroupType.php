@@ -150,6 +150,7 @@ class SupportGroupType extends AbstractType
             $subService = $supportGroup->getSubService();
 
             $formModifier($form, $service, $subService);
+
             $this->addSupportFields($form, $service);
         });
 

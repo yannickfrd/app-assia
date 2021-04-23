@@ -2,15 +2,15 @@
 
 namespace App\Form\Admin;
 
-use App\Form\Utils\Choices;
-use App\Form\Type\SearchType;
-use App\Form\Type\DateSearchType;
 use App\Entity\Support\SupportGroup;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
 use App\Form\Model\Admin\ServiceIndicatorsSearch;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use App\Form\Type\DateSearchType;
+use App\Form\Type\ServiceDeviceReferentSearchType;
+use App\Form\Utils\Choices;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ServiceIndicatorsSearchType extends AbstractType
 {
@@ -30,7 +30,7 @@ class ServiceIndicatorsSearchType extends AbstractType
             ->add('date', DateSearchType::class, [
                 'data_class' => ServiceIndicatorsSearch::class,
             ])
-            ->add('service', SearchType::class, [
+            ->add('service', ServiceDeviceReferentSearchType::class, [
                 'data_class' => ServiceIndicatorsSearch::class,
             ]);
     }

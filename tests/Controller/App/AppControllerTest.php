@@ -16,11 +16,11 @@ class AppControllerTest extends WebTestCase
     protected $client;
 
     /** @var array */
-    protected $dataFixtures;
+    protected $data;
 
     protected function setUp()
     {
-        $this->dataFixtures = $this->loadFixtureFiles([
+        $this->data = $this->loadFixtureFiles([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
         ]);
     }
@@ -41,9 +41,9 @@ class AppControllerTest extends WebTestCase
         $this->client = static::createClient();
         $this->client->followRedirects(true);
 
-        $user = $this->dataFixtures['userSuperAdmin'];
+        $user = $this->data['userSuperAdmin'];
 
-        $this->client->request('POST', $this->generateUri('security_login'), [
+        $this->client->request('POST', '/login', [
             '_username' => $user->getUsername(),
             '_password' => $user->getPlainPassword(),
             '_csrf_token' => $this->client->getContainer()->get('security.csrf.token_manager')->getToken('authenticate'),
@@ -54,11 +54,9 @@ class AppControllerTest extends WebTestCase
 
     public function testAccessHomePageInRoleAdmin()
     {
-        $this->createLogin($this->dataFixtures['userRoleAdmin']);
+        $this->createLogin($this->data['userAdmin']);
 
-        $this->client->request('GET', $this->generateUri('home'));
-
-        // dd($this->client->getResponse());
+        $this->client->request('GET', '/home');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Tableau de bord');
@@ -66,9 +64,19 @@ class AppControllerTest extends WebTestCase
 
     public function testAccessHomePageInRoleUser()
     {
-        $this->createLogin($this->dataFixtures['userRoleUser']);
+        $this->createLogin($this->data['userRoleUser']);
 
-        $this->client->request('GET', $this->generateUri('home'));
+        $this->client->request('GET', '/home');
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', 'Tableau de bord');
+    }
+
+    public function testAccessToLoginPage()
+    {
+        $this->createLogin($this->data['userRoleUser']);
+
+        $this->client->request('GET', '/login');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Tableau de bord');
@@ -76,9 +84,9 @@ class AppControllerTest extends WebTestCase
 
     public function testPageServiceDashboardInRoleUser()
     {
-        $this->createLogin($this->dataFixtures['userRoleUser']);
+        $this->createLogin($this->data['userRoleUser']);
 
-        $this->client->request('GET', $this->generateUri('supports_by_user'));
+        $this->client->request('GET', '/dashboard/supports_by_user');
 
         $this->assertSelectorTextContains('h1', 'Répartition des suivis en cours');
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -86,9 +94,9 @@ class AppControllerTest extends WebTestCase
 
     public function testPageServiceDashboardInRoleAdmin()
     {
-        $this->createLogin($this->dataFixtures['userRoleAdmin']);
+        $this->createLogin($this->data['userAdmin']);
 
-        $this->client->request('GET', $this->generateUri('supports_by_user'));
+        $this->client->request('GET', '/dashboard/supports_by_user');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Répartition des suivis en cours');
@@ -96,9 +104,9 @@ class AppControllerTest extends WebTestCase
 
     public function testPageAdminIsUp()
     {
-        $this->createLogin($this->dataFixtures['userRoleAdmin']);
+        $this->createLogin($this->data['userAdmin']);
 
-        $this->client->request('GET', $this->generateUri('admin'));
+        $this->client->request('GET', '/admin');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Administration');
@@ -106,18 +114,28 @@ class AppControllerTest extends WebTestCase
 
     public function testPageManagingIsUp()
     {
-        $this->createLogin($this->dataFixtures['userRoleUser']);
+        $this->createLogin($this->data['userRoleUser']);
 
-        $this->client->request('GET', $this->generateUri('managing'));
+        $this->client->request('GET', '/managing');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Gestion');
+    }
+
+    public function testCacheClearIsSuccessful()
+    {
+        $this->createLogin($this->data['userSuperAdmin']);
+
+        $this->client->request('GET', '/admin/cache/clear');
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('.alert.alert-success', 'Le cache est vidé.');
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
         $this->client = null;
-        $this->dataFixtures = null;
+        $this->data = null;
     }
 }
