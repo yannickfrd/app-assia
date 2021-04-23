@@ -31,6 +31,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class PersonController extends AbstractController
 {
@@ -181,6 +182,10 @@ class PersonController extends AbstractController
         $peopleGroup = $peopleGroupRepo->findPeopleGroupById($id);
         $person = $this->personRepo->findPersonById($person_id);
 
+        if (null === $person) {
+            throw new AccessDeniedException('Cette personne n\'existe pas.');
+        }
+
         $form = $this->createForm(PersonType::class, $person);
 
         $formNewGroup = $this->createForm(PersonNewGroupType::class, new RolePerson(), [
@@ -207,6 +212,10 @@ class PersonController extends AbstractController
     public function showPerson(int $id, Request $request, SupportPersonRepository $supportRepo, SessionInterface $session): Response
     {
         $person = $this->personRepo->findPersonById($id);
+
+        if (null === $person) {
+            throw new AccessDeniedException('Cette personne n\'existe pas.');
+        }
 
         $form = $this->createForm(PersonType::class, $person)
             ->handleRequest($request);

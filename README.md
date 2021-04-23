@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.26.4 07/04/2021
+2.28.1 23/04/2021
 
 # Développeur
 Romain MADELAINE
@@ -13,6 +13,26 @@ https://github.com/RomMad/esperer95.app
 # Connection à la base démo
 https://demo.esperer95.app
 
+## Version 2.28.1 - 23/04/2021
+- Update tests and factoring 
+    * Update fonctional tests for Rdv + factorisation RdvController
+    * Update fonctionnal tests + factorisation Controllers
+    * Add Doctrine Listeners + update travis config
+    * Fix error rename SupportCheckerSubscriber
+- Add JS validation in avdlSupport + rename JS files and factoring
+
+## Version 2.27.0 - 13/04/2021
+- Feature/stats by service (#13)
+    * Create service indicators page + factorisation repositories
+    * Rename indicator variables
+    * Add tests in IndicatorControllerTest
+
+## Version 2.26.8 - 13/04/2021
+- Fix bug 'nbDays' contribution + update views
+- Rename items 'Non renseigné' to 'Non évalué'
+- adds items in childcare-school
+- Fix error in UserVoter
+- Create a link in RDV to go directly to support page + Rename some view files (#12)
 ## Version 2.26.4 - 07/04/2021
 - Update HotelSupport (status, levelSupport) + fix bug check validation;
 - Update evaluation (add 'infoCrip'/'IP' fields);
