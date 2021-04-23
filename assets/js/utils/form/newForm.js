@@ -1,6 +1,6 @@
-import Ajax from './ajax'
-import Loader from './loader'
-import SwitchServiceSupport from '../support/switchServiceSupport'
+import Ajax from '../ajax'
+import Loader from '../loader'
+import ServiceSwitcher from '../../support/serviceSwitcher'
 import { Modal } from 'bootstrap'
 
 /**
@@ -59,6 +59,6 @@ export default class NewForm {
         this.modalElt.show()
         this.loader.off()
         this.isLoaded = true
-        new SwitchServiceSupport()
+        new ServiceSwitcher()
     }
 }

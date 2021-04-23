@@ -1,13 +1,13 @@
-import SelectRadioJS from '../utils/selectRadio'
+import RadioSelecter from '../utils/form/radioSelecter'
 import RemoveTableRow from '../utils/removeTableRow'
-import NewForm from '../utils/newForm'
-import CheckChange from '../utils/checkChange'
-import AutoSize from '../utils/AutoSize'
+import NewForm from '../utils/form/newForm'
+import changeChecker from '../utils/form/changeChecker'
+import AutoSizer from '../utils/form/autoSizer'
 
 document.addEventListener('DOMContentLoaded', () => {
-    new SelectRadioJS('table-people')
+    new RadioSelecter('table-people')
     new RemoveTableRow('.js-tr-person', 'modal-confirm', 'group_nbPeople')
     new NewForm('btn-new-support', 'container-form-new-support', 'modal-new-support') // Formulaire pour la création d'un nouveau suivi
-    new CheckChange('group') // form name
-    new AutoSize('textarea')
+    new changeChecker('group') // form name
+    new AutoSizer('textarea')
 })

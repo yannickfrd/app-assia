@@ -1,15 +1,15 @@
-// import ValidationForm from './validationForm'
+// import FormValidator from './formValidator'
 
-import ValidationForm from '../validationForm'
+import FormValidator from '../form/formValidator'
 
 /**
  * Permet de vérfiier la validité d 'une date.
  */
-export default class ValidationDate {
+export default class DateValidator {
 
-    constructor(inputElt, validationForm = new ValidationForm()) {
+    constructor(inputElt, formValidator = new FormValidator()) {
         this.inputElt = inputElt
-        this.validationForm = validationForm
+        this.formValidator = formValidator
         this.now = new Date()
         this.date = inputElt.value ? new Date(inputElt.value) : null
         this.intervalWithNow = (this.now - this.date) / (24 * 3600 * 1000)
@@ -87,8 +87,8 @@ export default class ValidationDate {
      */
     invalid(msg) {
         console.error('Invalid date !')
-        if (this.validationForm != null) {
-            this.validationForm.invalidField(this.inputElt, msg)
+        if (this.formValidator != null) {
+            this.formValidator.invalidField(this.inputElt, msg)
         }
         return false
     }

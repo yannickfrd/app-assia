@@ -1,4 +1,4 @@
-import SelectType from '../utils/selectType'
+import SelectType from '../utils/form/selectType'
 
 const selectType = new SelectType();
 const yearSelectElt = document.getElementById('year');

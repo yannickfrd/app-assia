@@ -1,12 +1,12 @@
 import UpdateEvaluation from './updateEvaluation'
 import Evaluation from './evaluation'
-import CheckChange from '../utils/checkChange'
+import changeChecker from '../utils/form/changeChecker'
 import '../utils/accordionChevron'
-import AutoSize from '../utils/AutoSize'
+import AutoSizer from '../utils/form/autoSizer'
 
 document.addEventListener('DOMContentLoaded', () => {
     new UpdateEvaluation()
     new Evaluation()
-    new CheckChange('evaluation')
-    new AutoSize('textarea')
+    new changeChecker('evaluation')
+    new AutoSizer('textarea')
 })

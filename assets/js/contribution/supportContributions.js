@@ -1,8 +1,8 @@
 import Ajax from '../utils/ajax'
 import MessageFlash from '../utils/messageFlash'
 import Loader from '../utils/loader'
-import SelectType from '../utils/selectType'
-import ValidationForm from '../utils/validationForm'
+import SelectType from '../utils/form/selectType'
+import FormValidator from '../utils/form/formValidator'
 import ParametersUrl from '../utils/parametersUrl'
 import { Modal } from 'bootstrap'
 
@@ -12,8 +12,8 @@ export default class SupportContributions {
         this.loader = new Loader()
         this.ajax = new Ajax(this.loader)
         this.selectType = new SelectType()
-        // this.validationDate = new ValidationDate()
-        this.validationForm = new ValidationForm()
+        // this.dateValidator = new DateValidator()
+        this.formValidator = new FormValidator()
         this.parametersUrl = new ParametersUrl()
         this.modalElt = new Modal(document.getElementById('contribution-modal'))
 
@@ -337,10 +337,10 @@ export default class SupportContributions {
     checkContributionType(option) {
         if (!option) {
             this.error = true
-            return this.validationForm.invalidField(this.typeSelect, 'Saisie obligatoire.')
+            return this.formValidator.invalidField(this.typeSelect, 'Saisie obligatoire.')
         }
 
-        return this.validationForm.validField(this.typeSelect)
+        return this.formValidator.validField(this.typeSelect)
     }
 
     /**
@@ -351,15 +351,15 @@ export default class SupportContributions {
         if ([1, 2].includes(option)) { // PF et Loyer
             if (!this.startDateInput.value) {
                 this.error = true
-                this.validationForm.invalidField(this.startDateInput, 'Saisie obligatoire.')
+                this.formValidator.invalidField(this.startDateInput, 'Saisie obligatoire.')
             } else {
-                this.validationForm.validField(this.startDateInput)
+                this.formValidator.validField(this.startDateInput)
             }
             if (!this.endDateInput.value) {
                 this.error = true
-                this.validationForm.invalidField(this.endDateInput, 'Saisie obligatoire.')
+                this.formValidator.invalidField(this.endDateInput, 'Saisie obligatoire.')
             } else {
-                this.validationForm.validField(this.endDateInput)
+                this.formValidator.validField(this.endDateInput)
             }
             this.checkEndDateContribution()
         } else {
@@ -370,9 +370,9 @@ export default class SupportContributions {
 
     checkEndDateContribution() {
         if (this.endDateInput.value && new Date(this.endDateInput.value) <= new Date(this.startDateInput.value)) {
-            this.validationForm.invalidField(this.endDateInput, 'Date antérieure au début de la période.')
+            this.formValidator.invalidField(this.endDateInput, 'Date antérieure au début de la période.')
         } else {
-            this.validationForm.validField(this.endDateInput)
+            this.formValidator.validField(this.endDateInput)
         }
     }
 
@@ -383,11 +383,11 @@ export default class SupportContributions {
     checkToPaidAmt(option) {
         if (isNaN(this.toPayAmtInput.value)) {
             this.error = true
-            return this.validationForm.invalidField(this.toPayAmtInput, 'Valeur invalide.')
+            return this.formValidator.invalidField(this.toPayAmtInput, 'Valeur invalide.')
         }
         if ([1, 2, 10, 20].includes(option) && !this.toPayAmtInput.value) { // PF, loyer, cautionn prêt
             this.error = true
-            return this.validationForm.invalidField(this.toPayAmtInput, 'Saisie obligatoire.')
+            return this.formValidator.invalidField(this.toPayAmtInput, 'Saisie obligatoire.')
         }
     }
 
@@ -398,11 +398,11 @@ export default class SupportContributions {
     checkReturnAmt(option) {
         if (isNaN(this.returnAmtInput.value)) {
             this.error = true
-            return this.validationForm.invalidField(this.returnAmtInput, 'Valeur invalide.')
+            return this.formValidator.invalidField(this.returnAmtInput, 'Valeur invalide.')
         }
         if (option == 11 && !this.returnAmtInput.value) { // Restitution Caution
             this.error = true
-            return this.validationForm.invalidField(this.returnAmtInput, 'Saisie obligatoire.')
+            return this.formValidator.invalidField(this.returnAmtInput, 'Saisie obligatoire.')
         }
     }
 
@@ -413,14 +413,14 @@ export default class SupportContributions {
     checkPaidAmt(option) {
         if (isNaN(this.paidAmtInput.value)) {
             this.error = true
-            return this.validationForm.invalidField(this.paidAmtInput, 'Valeur invalide.')
+            return this.formValidator.invalidField(this.paidAmtInput, 'Valeur invalide.')
         }
         if ((!this.paidAmtInput.value && [1, 2, 10].includes(option) && (this.paymentDateInput.value || this.selectType.getOption(this.paymentTypeSelect))) ||
             (!this.paidAmtInput.value && [30, 31, 32].includes(option))) {
             this.error = true
-            return this.validationForm.invalidField(this.paidAmtInput, 'Saisie obligatoire.')
+            return this.formValidator.invalidField(this.paidAmtInput, 'Saisie obligatoire.')
         }
-        return this.validationForm.validField(this.paidAmtInput)
+        return this.formValidator.validField(this.paidAmtInput)
     }
 
     /**
@@ -432,17 +432,17 @@ export default class SupportContributions {
 
         if ((this.paymentDateInput.value && !intervalWithNow) || intervalWithNow > (365 * 19)) {
             this.error = true
-            return this.validationForm.invalidField(this.paymentDateInput, 'Date invalide.')
+            return this.formValidator.invalidField(this.paymentDateInput, 'Date invalide.')
         }
         if (intervalWithNow < 0) {
             this.error = true
-            return this.validationForm.invalidField(this.paymentDateInput, 'La date ne peut être postérieure à la date du jour.')
+            return this.formValidator.invalidField(this.paymentDateInput, 'La date ne peut être postérieure à la date du jour.')
         }
         if (!this.paymentDateInput.value && (option === 20 || this.paidAmtInput.value || this.selectType.getOption(this.paymentTypeSelect) || this.returnAmtInput.value)) {
             this.error = true
-            return this.validationForm.invalidField(this.paymentDateInput, 'La date ne peut pas être vide.')
+            return this.formValidator.invalidField(this.paymentDateInput, 'La date ne peut pas être vide.')
         }
-        return this.validationForm.validField(this.paymentDateInput)
+        return this.formValidator.validField(this.paymentDateInput)
     }
 
     /**
@@ -452,9 +452,9 @@ export default class SupportContributions {
     checkPaymentType(option) {
         if (!this.selectType.getOption(this.paymentTypeSelect) && (option === 20 || this.paymentDateInput.value || this.paidAmtInput.value || this.returnAmtInput.value)) {
             this.error = true
-            return this.validationForm.invalidField(this.paymentTypeSelect, 'Saisie obligatoire.')
+            return this.formValidator.invalidField(this.paymentTypeSelect, 'Saisie obligatoire.')
         }
-        return this.validationForm.validField(this.paymentTypeSelect)
+        return this.formValidator.validField(this.paymentTypeSelect)
     }
 
 
@@ -497,7 +497,7 @@ export default class SupportContributions {
      * Réinitialise le formulaire.
      */
     initForm() {
-        this.validationForm.reinit()
+        this.formValidator.reinit()
         this.formContributionElt.querySelectorAll('input').forEach(inputElt => {
             if (inputElt.type != 'hidden') {
                 inputElt.value = null
@@ -782,9 +782,9 @@ export default class SupportContributions {
         let value = moneyElt.value
         value = value.replace(' ', '').replace(',', '.')
         if (Number(value) >= 0) {
-            return this.validationForm.validField(moneyElt)
+            return this.formValidator.validField(moneyElt)
         }
-        return this.validationForm.invalidField(moneyElt, 'Valeur invalide.')
+        return this.formValidator.invalidField(moneyElt, 'Valeur invalide.')
     }
 
     /**
@@ -794,9 +794,9 @@ export default class SupportContributions {
     checkDate(dateElt) {
         const interval = Math.round((this.now - new Date(dateElt.value)) / (1000 * 60 * 60 * 24))
         if ((dateElt.value && !Number.isInteger(interval)) || interval > (365 * 99) || interval < -(365 * 99)) {
-            return this.validationForm.invalidField(dateElt, 'Date invalide.')
+            return this.formValidator.invalidField(dateElt, 'Date invalide.')
         }
-        return this.validationForm.validField(dateElt)
+        return this.formValidator.validField(dateElt)
     }
 
     /**

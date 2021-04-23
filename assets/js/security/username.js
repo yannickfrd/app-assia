@@ -1,5 +1,5 @@
 import Ajax from '../utils/ajax'
-import ValidationForm from '../utils/validationForm'
+import FormValidator from '../utils/form/formValidator'
 
 // Création automatique du login de l'utilisateur
 export default class Username {
@@ -20,7 +20,7 @@ export default class Username {
         this.confirmPasswordInputElt = document.getElementById(formName + '_confirmPassword')
 
         this.ajax = new Ajax()
-        this.validationForm = new ValidationForm()
+        this.formValidator = new FormValidator()
         this.init()
     }
 
@@ -49,7 +49,7 @@ export default class Username {
         if (this.usernameInputElt.value.length > 6) {
             return this.sendAjaxRequest()
         }
-        return this.validationForm.invalidField(this.usernameInputElt, 'Le login est invalide.')
+        return this.formValidator.invalidField(this.usernameInputElt, 'Le login est invalide.')
     }
 
     updateUsername() {
@@ -69,37 +69,37 @@ export default class Username {
      */
     response(data) {
         if (data.response === true) {
-            return this.validationForm.invalidField(this.usernameInputElt, 'Ce login est déjà pris !')
+            return this.formValidator.invalidField(this.usernameInputElt, 'Ce login est déjà pris !')
         }
-        return this.validationForm.validField(this.usernameInputElt)
+        return this.formValidator.validField(this.usernameInputElt)
     }
 
     checkEmail() {
         if (this.emailInputElt.value === '' || this.emailInputElt.value.match('^[a-z0-9._-]+@[a-z0-9._-]{2,}\\.[a-z]{2,4}')) {
-            return this.validationForm.validField(this.emailInputElt)
+            return this.formValidator.validField(this.emailInputElt)
         }
-        return this.validationForm.invalidField(this.emailInputElt, 'L\'adresse email est incorrecte.')
+        return this.formValidator.invalidField(this.emailInputElt, 'L\'adresse email est incorrecte.')
     }
 
     checkPassword() {
         if (this.passwordInputElt.value.match(this.regexPassword)) {
-            return this.validationForm.validField(this.passwordInputElt)
+            return this.formValidator.validField(this.passwordInputElt)
         }
     }
 
     checkoutPassword() {
         if (!this.passwordInputElt.value.match(this.regexPassword)) {
-            this.validationForm.invalidField(this.passwordInputElt, 'Le mot de passe est invalide.')
+            this.formValidator.invalidField(this.passwordInputElt, 'Le mot de passe est invalide.')
         }
         this.checkConfirmPassword()
     }
 
     checkConfirmPassword() {
         if (this.confirmPasswordInputElt.value === this.passwordInputElt.value) {
-            return this.validationForm.validField(this.confirmPasswordInputElt)
+            return this.formValidator.validField(this.confirmPasswordInputElt)
         }
         if (this.confirmPasswordInputElt.value) {
-            return this.validationForm.invalidField(this.confirmPasswordInputElt, 'La confirmation est différente du mot de passe.')
+            return this.formValidator.invalidField(this.confirmPasswordInputElt, 'La confirmation est différente du mot de passe.')
         }
     }
 }

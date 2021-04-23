@@ -1,13 +1,13 @@
-import ValidationForm from '../utils/validationForm'
-import ValidationDate from '../utils/date/validationDate'
-import SelectType from '../utils/selectType'
+import FormValidator from '../utils/form/formValidator'
+import DateValidator from '../utils/date/dateValidator'
+import SelectType from '../utils/form/selectType'
 
 /**
  * Validation des données de la fiche personne.
  */
 export default class ValidationPerson {
     constructor(lastname, firstname, birthdate, gender, email, role, typo, nbPeople) {
-        this.validationForm = new ValidationForm(document.getElementById('person'))
+        this.formValidator = new FormValidator(document.getElementById('person'))
         this.selectType = new SelectType();
 
         this.lastnameInputElt = document.getElementById(lastname)
@@ -53,56 +53,56 @@ export default class ValidationPerson {
     }
 
     getNbErrors() {
-        return this.validationForm.checkForm()
+        return this.formValidator.checkForm()
     }
 
     checkLastname() {
         if (this.lastnameInputElt.value === '') {
-            return this.validationForm.invalidField(this.lastnameInputElt, 'Le nom peut pas être vide.')
+            return this.formValidator.invalidField(this.lastnameInputElt, 'Le nom peut pas être vide.')
         }
         if (this.lastnameInputElt.value.length >= 50) {
-            return this.validationForm.invalidField(this.lastnameInputElt, 'Le nom est trop long (50 caractères max.).')
+            return this.formValidator.invalidField(this.lastnameInputElt, 'Le nom est trop long (50 caractères max.).')
         }
-        return this.validationForm.validField(this.lastnameInputElt)
+        return this.formValidator.validField(this.lastnameInputElt)
     }
 
     checkFirstname() {
         if (this.firstnameInputElt.value === '')  {
-            return this.validationForm.invalidField(this.firstnameInputElt, 'Le prénom ne peut pas être vide.')
+            return this.formValidator.invalidField(this.firstnameInputElt, 'Le prénom ne peut pas être vide.')
         }
         if (this.firstnameInputElt.value.length >= 50) {
-            return this.validationForm.invalidField(this.firstnameInputElt, 'Le prénom est trop long (50 caractères max.).')
+            return this.formValidator.invalidField(this.firstnameInputElt, 'Le prénom est trop long (50 caractères max.).')
         } 
-        return this.validationForm.validField(this.firstnameInputElt)
+        return this.formValidator.validField(this.firstnameInputElt)
     }
 
     checkBirthdate() {
-        const validationDate = new ValidationDate(this.birthdateInputElt, this.validationForm)
+        const dateValidator = new DateValidator(this.birthdateInputElt, this.formValidator)
         const role = this.selectType.getOption(this.roleInputElt)
         
-        if ((!isNaN(role) && role != 3 && (validationDate.getIntervalWithNow() / 365) < 16)) {
-            return this.validationForm.invalidField(this.birthdateInputElt, 'Date invalide.')
+        if ((!isNaN(role) && role != 3 && (dateValidator.getIntervalWithNow() / 365) < 16)) {
+            return this.formValidator.invalidField(this.birthdateInputElt, 'Date invalide.')
         }
 
-        if (validationDate.isValid() === false || validationDate.isNotAfterToday() === false) {
+        if (dateValidator.isValid() === false || dateValidator.isNotAfterToday() === false) {
             return false
         }
-        return this.validationForm.validField(this.birthdateInputElt)
+        return this.formValidator.validField(this.birthdateInputElt)
 
     }
 
     checkEmail() {
         if (this.emailInputElt.value === '' || this.emailInputElt.value.match('^[a-z0-9._-]+@[a-z0-9._-]{2,}\\.[a-z]{2,4}')) {
-            return this.validationForm.validField(this.emailInputElt)
+            return this.formValidator.validField(this.emailInputElt)
         } 
-        return this.validationForm.invalidField(this.emailInputElt, 'L\'adresse email est incorrecte.')
+        return this.formValidator.invalidField(this.emailInputElt, 'L\'adresse email est incorrecte.')
     }
 
 
     checkNbPeople() {
         if (this.nbPeopleInputElt.value >= 1 && this.nbPeopleInputElt.value <= 19) {
-            return this.validationForm.validField(this.nbPeopleInputElt)
+            return this.formValidator.validField(this.nbPeopleInputElt)
         } 
-        return this.validationForm.invalidField(this.nbPeopleInputElt, 'Le nombre de personnes est incorrect.')
+        return this.formValidator.invalidField(this.nbPeopleInputElt, 'Le nombre de personnes est incorrect.')
     }
 }

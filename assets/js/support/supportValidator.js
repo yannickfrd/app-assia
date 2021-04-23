@@ -1,18 +1,17 @@
-import DisplayFields from '../utils/displayFields'
-import ValidationForm from '../utils/validationForm'
-import SelectType from '../utils/selectType'
-import ValidationDate from '../utils/date/validationDate'
+import FormValidator from '../utils/form/formValidator'
+import FieldDisplayer from '../utils/form/fieldDisplayer'
+import DateValidator from '../utils/date/dateValidator'
 import Ajax from '../utils/ajax'
 import Loader from '../utils/loader'
 
 /**
  * Validation des données du suivi social.
  */
-export default class ValidationSupport {
-
+export default class SupportValidator extends FormValidator
+{
     constructor() {
-        this.validationForm = new ValidationForm()
-        this.selectType = new SelectType()
+        super()
+
         this.loader = new Loader()
         this.ajax = new Ajax(this.loader)
 
@@ -59,9 +58,14 @@ export default class ValidationSupport {
                 if (this.startDateInputElt) {
                     this.checkStartDate()
                     this.checkEndDate()
-                    this.checkEndStatus()
                 }
-                if (this.loader.isActive() || this.validationForm.checkForm() > 0) {
+                if (this.endDateInputElt && this.endDateInputElt.value) {
+                    this.checkField(this.endStatusSelectElt)
+                } else {
+                    this.validField(this.endStatusSelectElt)
+                }
+
+                if (this.loader.isActive() || this.checkForm() > 0) {
                     e.preventDefault()
                 }
             })
@@ -72,18 +76,18 @@ export default class ValidationSupport {
      * Masque ou affiche les champs conditionnels
      */
     displayFields() {
-        new DisplayFields(this.prefix + 'originRequest_', 'orientationDate')
-        new DisplayFields(this.prefix, 'startDate')
-        new DisplayFields(this.prefix, 'endStatus')
+        new FieldDisplayer(this.prefix + 'originRequest_', 'orientationDate')
+        new FieldDisplayer(this.prefix, 'startDate')
+        new FieldDisplayer(this.prefix, 'endStatus')
     }
 
     checkDate(dateInputElt) {
-        const validationDate = new ValidationDate(dateInputElt, this.validationForm)
+        const dateValidator = new DateValidator(dateInputElt, this)
 
-        if (validationDate.isValid() === false) {
+        if (dateValidator.isValid() === false) {
             return
         }
-        this.validationForm.validField(dateInputElt)
+        this.validField(dateInputElt)
     }
 
     /**
@@ -94,20 +98,20 @@ export default class ValidationSupport {
         const status = this.statusSelectElt ? this.selectType.getOption(this.statusSelectElt) : null
 
         if ((this.startDateInputElt.value && !intervalWithNow) || intervalWithNow > (365 * 19)) {
-            return this.validationForm.invalidField(this.startDateInputElt, 'Date invalide.')
+            return this.invalidField(this.startDateInputElt, 'Date invalide.')
         }
         if (intervalWithNow < -30) {
-            return this.validationForm.invalidField(this.startDateInputElt, 'La date ne peut pas être supérieure de 30 jours par rapport à la date du jour.')
+            return this.invalidField(this.startDateInputElt, 'La date ne peut pas être supérieure de 30 jours par rapport à la date du jour.')
         }
 
         if (!intervalWithNow && [2, 3, 4].includes(status)) { // Statut = En cours, Suspendu, Terminé
-            return this.validationForm.invalidField(this.startDateInputElt, 'Saisie obligatoire.')
+            return this.invalidField(this.startDateInputElt, 'Saisie obligatoire.')
         }
         if (intervalWithNow && [1, 5].includes(status)) { // Statut = Orientation/pré-adm.
-            return this.validationForm.invalidField(this.startDateInputElt, 'Il ne peut pas y avoir de date début de suivi pour une pré-admission.')
+            return this.invalidField(this.startDateInputElt, 'Il ne peut pas y avoir de date début de suivi pour une pré-admission.')
         }
         if (intervalWithNow || (!intervalWithNow && [1, 6].includes(status))) { // Statut = Orientation/pré-adm. / Liste d'attente
-            return this.validationForm.validField(this.startDateInputElt)
+            return this.validField(this.startDateInputElt)
         }
     }
 
@@ -121,30 +125,17 @@ export default class ValidationSupport {
         const intervalWithNow = (this.now - endDate) / (24 * 3600 * 1000)
 
         if ((this.endDateInputElt.value && !intervalWithNow) || intervalWithNow > (365 * 9)) {
-            return this.validationForm.invalidField(this.endDateInputElt, 'Date invalide.')
+            return this.invalidField(this.endDateInputElt, 'Date invalide.')
         }
         if (intervalWithStart < 0) {
-            return this.validationForm.invalidField(this.endDateInputElt, 'La date ne peut pas être antérieure au début du suivi.')
+            return this.invalidField(this.endDateInputElt, 'La date ne peut pas être antérieure au début du suivi.')
         }
         if (intervalWithNow < 0) {
-            return this.validationForm.invalidField(this.endDateInputElt, 'La date ne peut pas être postérieure à la date du jour.')
+            return this.invalidField(this.endDateInputElt, 'La date ne peut pas être postérieure à la date du jour.')
         }
-        // if (!this.endDateInputElt.value && this.statusSelectElt && this.selectType.getOption(this.statusSelectElt) === 4) { // Statut = Terminé
-        //     return this.validationForm.invalidField(this.endDateInputElt, 'La date de fin ne peut pas être vide si le suivi est terminé.')
-        // }
         if (this.endDateInputElt.value && this.statusSelectElt) { // Statut = Terminé
             this.selectType.setOption(this.statusSelectElt, 4)
         }
-    }
-
-    /**
-     * Vérifie le motif de fin de suivi.
-     */
-    checkEndStatus() {
-        if (this.endDateInputElt.value && !this.selectType.getOption(this.endStatusSelectElt)) {
-            return this.validationForm.invalidField(this.endStatusSelectElt, 'La situation à la fin du suivi ne peut pas être vide.')
-        }
-        return this.validationForm.validField(this.endStatusSelectElt)
     }
     
     /**

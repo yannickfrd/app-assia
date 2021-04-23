@@ -1,8 +1,8 @@
 import Ajax from '../utils/ajax'
 import MessageFlash from '../utils/messageFlash'
 import Loader from '../utils/loader'
-import DateFormat from '../utils/date/dateFormat'
-import SelectType from '../utils/selectType'
+import DateFormater from '../utils/date/dateFormater'
+import SelectType from '../utils/form/selectType'
 import { Modal } from 'bootstrap'
 import ParametersUrl from '../utils/parametersUrl'
 
@@ -146,9 +146,9 @@ export default class Calendar {
         }
         this.rdvTitleElt.textContent = 'Rendez-vous'
 
-        const dateFormat = new DateFormat()
-        this.dateInput.value = dateFormat.getDateNow()
-        this.startInput.value = dateFormat.getHour()
+        const dateFormater = new DateFormater()
+        this.dateInput.value = dateFormater.getDateNow()
+        this.startInput.value = dateFormater.getHour()
         const end = parseInt(this.startInput.value.substr(0, 2)) + 1
         this.endInput.value = end + ':00'
 

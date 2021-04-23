@@ -1,9 +1,9 @@
 import SearchLocation from '../utils/searchLocation'
 import DeletePlace from './deletePlace'
-import CheckChange from '../utils/checkChange'
+import changeChecker from '../utils/form/changeChecker'
 
 document.addEventListener('DOMContentLoaded', () => {
     new SearchLocation('place_location')
     new DeletePlace()
-    new CheckChange('place') // form name
+    new changeChecker('place') // form name
 })

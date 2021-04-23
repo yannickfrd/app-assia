@@ -1,5 +1,5 @@
 import ValidationPerson from './validationPerson'
-import SelectType from '../utils/selectType'
+import SelectType from '../utils/form/selectType'
 import ParametersUrl from '../utils/parametersUrl'
 
 /**
