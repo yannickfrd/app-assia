@@ -2,7 +2,7 @@
 import Username from './username'
 import SeePassword from './seePassword'
 import DeleteTr from '../utils/deleteTr'
-import CheckChange from '../utils/checkChange'
+import changeChecker from '../utils/form/changeChecker'
 import AddCollectionWidget from '../utils/addCollectionWidget'
 import '../utils/maskPhone'
 
@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     new Username('user')
     new SeePassword()
     new DeleteTr('function-table')
-    new CheckChange('user') // form name
+    new changeChecker('user') // form name
 
     const addCollectionWidget = new AddCollectionWidget()
 

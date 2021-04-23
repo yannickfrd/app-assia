@@ -1,7 +1,7 @@
 /**
  * Ajuste la taille des éléments HTML (Texarea).
  */
-export default class AutoSize {
+export default class AutoSizer {
     
     /**
      * @param {String} selectors

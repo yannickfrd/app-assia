@@ -1,7 +1,7 @@
 /**
  * Tool to format date
  */
-export default class DateFormat {
+export default class DateFormater {
 
     /**
      * Return the current date.

@@ -1,4 +1,4 @@
-import ValidationForm from './validationForm'
+import FormValidator from './formValidator'
 
 /**
  * Test de performance d'une fonction ou d'une méthode
@@ -7,7 +7,7 @@ export default class SpeedTest {
 
     constructor(object, nbLoops = 10) {
         this.nbLoops = nbLoops
-        this.validationForm = new ValidationForm()
+        this.formValidator = new FormValidator()
         this.start(object)
     }
 
@@ -20,7 +20,7 @@ export default class SpeedTest {
         for (let i = 0; i < this.nbLoops; i++) {
             let startTime = new Date()
             for (let j = 0; j < 1; j++) {
-                this.validationForm.checkForm()
+                this.formValidator.checkForm()
             }
             let time = new Date() - startTime
             totalTime += time

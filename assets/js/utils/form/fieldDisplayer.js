@@ -3,8 +3,7 @@ import SelectType from './selectType'
 /**
  * Masque ou rend visible les champs Input dépendants d'un input parent
  */
-export default class DisplayFields {
-
+export default class FieldDisplayer {
     /**
      * @param {String} prefix 
      * @param {String} fieldId 

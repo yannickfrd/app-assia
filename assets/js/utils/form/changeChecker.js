@@ -1,7 +1,7 @@
 /**
  * Vérifie que l'utilisateur à sauvegarder ses modifications avant de changer de page.
  */
-export default class CheckChange {
+export default class changeChecker {
 
     constructor(formName) {
         this.formElt = document.querySelector(`form[name=${formName}`)

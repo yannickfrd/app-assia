@@ -1,29 +1,29 @@
-import ValidationSupport from './validationSupport'
-import ValidationAvdl from './validationAvdl'
-import ValidationHotelSupport from './validationHotelSupport'
-import SelectRadioJS from '../utils/selectRadio'
+import SupportValidator from './supportValidator'
+import AvdlValidator from './avdlValidator'
+import HotelSupportValidator from './hotelSupportValidator'
+import RadioSelecter from '../utils/form/radioSelecter'
 import RemoveTableRow from '../utils/removeTableRow'
 import SearchLocation from '../utils/searchLocation'
-import CheckChange from '../utils/checkChange'
-import AutoSize from '../utils/AutoSize'
+import changeChecker from '../utils/form/changeChecker'
+import AutoSizer from '../utils/form/autoSizer'
 
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('support')) {
-        new SelectRadioJS('table-support-people')
+        new RadioSelecter('table-support-people')
         new RemoveTableRow('.js-tr-support_pers')
     }
 
     if (document.getElementById('avdl_support')) {
-        new ValidationAvdl()
+        new AvdlValidator()
     } else if (document.getElementById('hotel_support')) {
-        new ValidationHotelSupport()
+        new HotelSupportValidator()
     }
 
-    new ValidationSupport()
+    new SupportValidator()
 
     new SearchLocation('support_location')
     new SearchLocation('ssd_location', 'city', '95')
     new SearchLocation('support_end_location')
-    new CheckChange('support') // form name
-    new AutoSize('textarea')
+    new changeChecker('support') // form name
+    new AutoSizer('textarea')
 })

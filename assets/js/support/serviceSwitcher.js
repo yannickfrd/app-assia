@@ -1,11 +1,11 @@
-import SelectType from '../utils/selectType'
+import SelectType from '../utils/form/selectType'
 import Ajax from '../utils/ajax'
 import Loader from '../utils/loader'
 
 /**
  * Changement du type de service du suivi.
  */
-export default class SwitchServiceSupport {
+export default class ServiceSwitcher {
 
     constructor() {
         this.selectType = new SelectType()

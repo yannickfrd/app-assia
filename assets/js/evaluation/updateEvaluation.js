@@ -1,7 +1,7 @@
 import Ajax from '../utils/ajax'
 import MessageFlash from '../utils/messageFlash'
 import Loader from '../utils/loader'
-import AutoSave from '../utils/autoSave'
+import AutoSaver from '../utils/form/autoSaver'
 
 /**
  * Requête Ajax pour mettre à jour les informations individuelles.
@@ -14,7 +14,7 @@ export default class UpdateEvaluation {
         this.formElt = document.querySelector('form[name="evaluation"]')
         this.btnSubmitElts = this.formElt.querySelectorAll('button[type="submit"]')
         this.editMode = document.querySelector('div[data-edit-mode]').getAttribute('data-edit-mode')
-        this.autoSave = new AutoSave(this.sendRequest.bind(this), this.formElt, 5 * 60, 20,  ['SELECT', 'INPUT', 'TEXTAREA'])
+        this.autoSaver = new AutoSaver(this.sendRequest.bind(this), this.formElt, 5 * 60, 20,  ['SELECT', 'INPUT', 'TEXTAREA'])
         this.init()
     }
 
@@ -23,7 +23,7 @@ export default class UpdateEvaluation {
             this.url = btnSubmitElt.getAttribute('data-url')
             btnSubmitElt.addEventListener('click', e => this.save(e))
         })
-        this.autoSave.init()
+        this.autoSaver.init()
     }
 
     /**

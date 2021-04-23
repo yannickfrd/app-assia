@@ -1,18 +1,14 @@
-import DisplayFields from '../utils/displayFields'
-import ValidationForm from '../utils/validationForm'
-import SelectType from '../utils/selectType'
-import ValidationDate from '../utils/date/validationDate'
-import Loader from '../utils/loader'
+import FormValidator from '../utils/form/formValidator'
+import FieldDisplayer from '../utils/form/fieldDisplayer'
+import DateValidator from '../utils/date/dateValidator'
 
 /**
  * Validation des données d'un suivi hôtel.
  */
-export default class ValidationHotelSupport {
+export default class HotelSupportValidator extends FormValidator {
 
     constructor() {
-        this.validationForm = new ValidationForm()
-        this.selectType = new SelectType()
-        this.loader = new Loader()
+        super()
 
         this.prefix = 'support_'
 
@@ -42,6 +38,7 @@ export default class ValidationHotelSupport {
         this.ASE_HEB = 16
         this.HOTEL_SUPPORT = 19
         this.HOTEL_URG = 20
+
         this.init()
     }
 
@@ -55,7 +52,7 @@ export default class ValidationHotelSupport {
         let dateElts = [this.orientationDateElt, this.startDateElt]
         dateElts.forEach(dateElt => {
             dateElt.addEventListener('focusout', () => {
-                this.validationForm.checkIntervalBeetweenDates(
+                this.checkIntervalBeetweenDates(
                     this.orientationDateElt,
                     this.startDateElt,
                     'La date ne peut pas être antérieure à la date de la demande.')
@@ -67,7 +64,7 @@ export default class ValidationHotelSupport {
         dateElts = [this.startDateElt, this.evaluationDateElt]
         dateElts.forEach(dateElt => {
             dateElt.addEventListener('focusout', () => {
-                this.validationForm.checkIntervalBeetweenDates(
+                this.checkIntervalBeetweenDates(
                     this.startDateElt,
                     this.evaluationDateElt,
                     msgStartDate
@@ -78,7 +75,7 @@ export default class ValidationHotelSupport {
         dateElts = [this.startDateElt, this.agreementDateElt]
         dateElts.forEach(dateElt => {
             dateElt.addEventListener('focusout', () => {
-                this.validationForm.checkIntervalBeetweenDates(
+                this.checkIntervalBeetweenDates(
                     this.startDateElt,
                     this.agreementDateElt,
                     msgStartDate
@@ -89,13 +86,14 @@ export default class ValidationHotelSupport {
         dateElts = [this.startDateElt, this.endDateElt]
         dateElts.forEach(dateElt => {
             dateElt.addEventListener('focusout', () => {
-                this.validationForm.checkIntervalBeetweenDates(
+                this.checkIntervalBeetweenDates(
                     this.startDateElt,
                     this.endDateElt,
                     msgStartDate
                 )
             })
         })
+
         this.checkFormBeforeSubmit()
     }
 
@@ -103,14 +101,14 @@ export default class ValidationHotelSupport {
      * Masque ou affiche les champs conditionnels.
      */
     displayFields() {
-        new DisplayFields(this.prefix, 'device')
-        new DisplayFields(this.prefix, 'status')
-        new DisplayFields('support_originRequest_', 'orientationDate')
-        new DisplayFields('support_originRequest_', 'organization')
-        new DisplayFields(this.prefix + 'hotelSupport_', 'evaluationDate')
-        new DisplayFields(this.prefix + 'hotelSupport_', 'emergencyActionDone')
-        new DisplayFields(this.prefix, 'startDate')
-        new DisplayFields(this.prefix, 'endDate')
+        new FieldDisplayer(this.prefix, 'device')
+        new FieldDisplayer(this.prefix, 'status')
+        new FieldDisplayer('support_originRequest_', 'orientationDate')
+        new FieldDisplayer('support_originRequest_', 'organization')
+        new FieldDisplayer(this.prefix + 'hotelSupport_', 'evaluationDate')
+        new FieldDisplayer(this.prefix + 'hotelSupport_', 'emergencyActionDone')
+        new FieldDisplayer(this.prefix, 'startDate')
+        new FieldDisplayer(this.prefix, 'endDate')
     }
 
     /**
@@ -118,54 +116,24 @@ export default class ValidationHotelSupport {
      */
     checkFormBeforeSubmit() {
         this.btnSubmitElts.forEach(btnElt => {
-            btnElt.addEventListener('click', e => {
-                this.checkFields()
+            btnElt.addEventListener('click', () => {
+                if (this.endDateElt.value && this.HOTEL_URG === this.selectType.getOption(this.deviceSelectElt)) {
+                    this.checkField(this.evaluationDateElt)
+                    this.checkField(this.emergencyActionRequestSelectElt)
+                    this.checkField(this.emergencyActionDoneSelectElt)       
+                }
+                if (this.endDateElt.value && this.HOTEL_SUPPORT === this.selectType.getOption(this.deviceSelectElt)) {
+                    this.checkField(this.levelSupportSelectElt)
+                    this.checkField(this.departmentAnchorSelectElt)
+                    this.checkField(this.recommendationSelectElt)
+                }
+                if (this.STATUS_PRE_ADD_FAILED === this.selectType.getOption(this.statusSelectElt)) {
+                    this.checkField(this.reasonNoInclusionSelectElt)
+                } else {
+                    this.validField(this.reasonNoInclusionSelectElt)
+                }
             })
         })
-    }
-
-    checkFields() {
-        if (this.endDateElt.value && this.HOTEL_URG === this.selectType.getOption(this.deviceSelectElt)) {
-            this.checkInputIsNotEmpty(this.evaluationDateElt)
-            this.checkSelectIsNotEmpty(this.emergencyActionRequestSelectElt)
-            this.checkSelectIsNotEmpty(this.emergencyActionDoneSelectElt)       
-        }
-        if (this.endDateElt.value && this.HOTEL_SUPPORT === this.selectType.getOption(this.deviceSelectElt)) {
-            this.checkSelectIsNotEmpty(this.levelSupportSelectElt)
-            this.checkSelectIsNotEmpty(this.departmentAnchorSelectElt)
-            this.checkSelectIsNotEmpty(this.recommendationSelectElt)
-        }
-        if (this.STATUS_PRE_ADD_FAILED === this.selectType.getOption(this.statusSelectElt)) {
-            this.checkSelectIsNotEmpty(this.reasonNoInclusionSelectElt)
-        } else {
-            this.validationForm.validField(this.reasonNoInclusionSelectElt)
-        }
-    }
-    
-    /**
-     * Check is a select element is not empty.
-     * @param {HTMLSelectElement} selectElt 
-     * @param {String} msg 
-     */
-    checkSelectIsNotEmpty(selectElt, msg = 'Saisie obligatoire') {
-        if (!this.selectType.getOption(selectElt)) {
-            this.validationForm.invalidField(selectElt, msg)
-        } else {
-            this.validationForm.validField(selectElt)
-        }  
-    }
-
-    /**
-     * Check is a select element is not empty.
-     * @param {HTMLInputElement} inputElt 
-     * @param {String} msg 
-     */
-    checkInputIsNotEmpty(inputElt, msg = 'Saisie obligatoire') {
-        if (!inputElt.value) {
-            this.validationForm.invalidField(inputElt, msg)
-        } else {
-            this.validationForm.validField(inputElt)
-        }  
     }
 
     /**
@@ -173,11 +141,11 @@ export default class ValidationHotelSupport {
      * @param {HTMLElement} inputElt 
      */
     checkDate(inputElt) {
-        const validationDate = new ValidationDate(inputElt, this.validationForm)
+        const dateValidator = new DateValidator(inputElt, this)
 
-        if (validationDate.isValid() === false) {
+        if (dateValidator.isValid() === false) {
             return false
         }
-        this.validationForm.validField(inputElt)
+        this.validField(inputElt)
     }
 }

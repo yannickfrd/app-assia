@@ -1,4 +1,4 @@
-import DisplayFields from '../utils/displayFields'
+import FieldDisplayer from '../utils/form/fieldDisplayer'
 
 export default class UpdateService {
 
@@ -12,8 +12,8 @@ export default class UpdateService {
     }
 
     init() {
-        new DisplayFields(this.prefix, 'place', [1])
-        new DisplayFields(this.prefix, 'contribution', [1])
-        new DisplayFields(this.prefix, 'contributionType', [1, 3])
+        new FieldDisplayer(this.prefix, 'place', [1])
+        new FieldDisplayer(this.prefix, 'contribution', [1])
+        new FieldDisplayer(this.prefix, 'contributionType', [1, 3])
     }
 }

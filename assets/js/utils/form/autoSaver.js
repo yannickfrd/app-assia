@@ -1,7 +1,7 @@
 /** 
  * Système de sauvegarde automatique avec décompte. 
  */
-export default class AutoSave {
+export default class AutoSaver {
 
 /**
  * @param {CallableFunction} callback 

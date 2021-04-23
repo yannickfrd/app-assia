@@ -1,7 +1,7 @@
-import CheckChange from '../utils/checkChange'
+import changeChecker from '../utils/form/changeChecker'
 import UpdateDevice from './updateDevice'
 
 document.addEventListener('DOMContentLoaded', () => {
-    new CheckChange('device') // form name
+    new changeChecker('device') // form name
     new UpdateDevice()
 })

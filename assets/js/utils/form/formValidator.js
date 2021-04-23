@@ -1,11 +1,11 @@
 import SelectType from './selectType'
-import MessageFlash from '../utils/messageFlash'
+import MessageFlash from '../messageFlash'
 
 /**
  * Contrôle de la validité des champs d'un formualaire
  * @return {Number}
  */
-export default class ValidationForm {
+export default class FormValidator {
 
     constructor(containerElt = document) {
         this.containerElt = containerElt
@@ -134,17 +134,19 @@ export default class ValidationForm {
      * @return {Boolean}
      */
     isFilledField(fieldElt) {
+        if ((['text', 'number', 'date'].includes(fieldElt.type) && fieldElt.value != '')
+            || (fieldElt.type === 'checkbox' && fieldElt.checked === true)) {
+            return true
+        }
         const value = this.selectType.getOption(fieldElt)
-        if ((['text', 'number', 'date'].includes(fieldElt.type) && fieldElt.value != '') ||
-            (fieldElt.type === 'checkbox' && fieldElt.checked === true) ||
-            (fieldElt.type === 'select-one' && value != '' && !isNaN(value))) {
+        if (fieldElt.type === 'select-one' && value != '' && !isNaN(value)) {
             return true
         }
         return false
     }
 
     /**
-     * Met le champ en valide .
+     * Met le champ en valide.
      * @param {HTMLElement} fieldElt 
      */
     validField(fieldElt) {
@@ -233,5 +235,18 @@ export default class ValidationForm {
         if (intervalWithStart < 0) {
             return this.invalidField(endDateElt, msg)
         }
+    }
+
+    /**
+     * Check if a field is valid or not.
+     * @param {HTMLElement} fieldElt 
+     * @param {String} msg 
+     */
+    checkField(fieldElt, msg = 'Saisie obligatoire') {
+        if (!this.isFilledField(fieldElt)) {
+            return this.invalidField(fieldElt, msg)
+        }
+        
+        return this.validField(fieldElt)
     }
 }

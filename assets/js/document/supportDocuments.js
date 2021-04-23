@@ -1,11 +1,11 @@
 import MessageFlash from '../utils/messageFlash'
 import Loader from '../utils/loader'
-import SelectType from '../utils/selectType'
+import SelectType from '../utils/form/selectType'
 import { Modal } from 'bootstrap'
 import Ajax from '../utils/ajax'
 import Dropzone from '../utils/file/dropzone'
-import CheckboxSelector from '../utils/checkboxSelector'
-import DateFormater from '../utils/date/dateFormat'
+import CheckboxSelector from '../utils/form/checkboxSelector'
+import DateFormater from '../utils/date/dateFormater'
 
 /**
  * Classe de gestion des documents.

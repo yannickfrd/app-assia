@@ -1,8 +1,8 @@
 import Ajax from '../utils/ajax'
 import MessageFlash from '../utils/messageFlash'
 import Loader from '../utils/loader'
-import AutoSave from '../utils/autoSave'
-import SelectType from '../utils/selectType'
+import AutoSaver from '../utils/form/autoSaver'
+import SelectType from '../utils/form/selectType'
 import ParametersUrl from '../utils/parametersUrl'
 import { Modal } from 'bootstrap'
 import CkEditor from '../utils/ckEditor'
@@ -31,7 +31,7 @@ export default class SupportNotes {
         
         this.searchSupportNotesElt = document.getElementById('js-search-support-notes')
         this.themeColor = document.getElementById('header').getAttribute('data-color')
-        this.autoSaveElt = document.getElementById('js-auto-save')
+        this.autoSaverElt = document.getElementById('js-auto-save')
         this.countNotesElt = document.getElementById('count-notes')
         this.nbTotalNotesElt = document.getElementById('nb-total-notes')
         this.containerNotesElt = document.getElementById('container-notes')
@@ -39,7 +39,7 @@ export default class SupportNotes {
         this.data = null
 
         this.init()
-        this.autoSave = new AutoSave(this.autoSaveNote.bind(this), this.CkEditor.getEditorElt(), 2 * 60, 20)
+        this.autoSaver = new AutoSaver(this.autoSaverNote.bind(this), this.CkEditor.getEditorElt(), 2 * 60, 20)
     }
 
     init() {
@@ -48,7 +48,7 @@ export default class SupportNotes {
         })
         this.newNoteBtn.addEventListener('click', () => this.showNewNote())
         this.btnSaveElt.addEventListener('click', e => this.requestToSave(e))
-        this.btnCancelElt.addEventListener('click', e => this.autoSave.clear(e))
+        this.btnCancelElt.addEventListener('click', e => this.autoSaver.clear(e))
         this.btnDeleteElt.addEventListener('click', e => this.requestToDelete(e))
         this.modalNoteElt.addEventListener('mousedown', e => this.goOutModal(e))
         this.checkIfNoteIdInUrl()
@@ -78,7 +78,7 @@ export default class SupportNotes {
         this.btnDeleteElt.classList.replace('d-block', 'd-none')
         this.btnExportWordElt.classList.replace('d-block', 'd-none')
         this.btnExportPdfElt.classList.replace('d-block', 'd-none')
-        this.autoSave.init()
+        this.autoSaver.init()
     }
 
 
@@ -105,7 +105,7 @@ export default class SupportNotes {
         const statusValue = noteElt.querySelector('[data-note-status]').getAttribute('data-note-status')
         this.selectType.setOption(this.modalNoteElt.querySelector('#note_status'), statusValue)
 
-        if (this.autoSave.active === false) {
+        if (this.autoSaver.active === false) {
             const content  = this.contentNoteElt.innerHTML
             this.CkEditor.setData(content)
             this.noteContentElt.textContent = content
@@ -120,7 +120,7 @@ export default class SupportNotes {
         this.btnExportPdfElt.classList.replace('d-none', 'd-block')
         this.btnExportPdfElt.href = '/note/' + this.cardId + '/export/pdf'
 
-        this.autoSave.init()
+        this.autoSaver.init()
     }
 
     /**
@@ -128,7 +128,7 @@ export default class SupportNotes {
      * @param {Event} e 
      */
     requestToSave(e) {
-        this.autoSave.clear(e)
+        this.autoSaver.clear(e)
 
         if (true === this.loader.isActive()) {
             return   
@@ -142,17 +142,17 @@ export default class SupportNotes {
             this.noteContentElt.textContent = this.CkEditor.getData()
         }
 
-        if (!this.autoSave.active) {
+        if (!this.autoSaver.active) {
             this.loader.on()
         }
 
         this.ajax.send('POST', this.formNoteElt.getAttribute('action'), this.responseAjax.bind(this), new FormData(this.formNoteElt))
     }
 
-    autoSaveNote() {
-        this.autoSaveElt.classList.add('d-block')
+    autoSaverNote() {
+        this.autoSaverElt.classList.add('d-block')
         setTimeout(() => {
-            this.autoSaveElt.classList.remove('d-block')
+            this.autoSaverElt.classList.remove('d-block')
         }, 5000)
         this.requestToSave()
     }
@@ -162,7 +162,7 @@ export default class SupportNotes {
      * @param {Event} e 
      */
     requestToDelete(e) {
-        this.autoSave.clear(e)
+        this.autoSaver.clear(e)
         if (true === this.loader.isActive()) {
             return
         }
@@ -206,7 +206,7 @@ export default class SupportNotes {
                 break
         }
 
-        if (!this.autoSave.active && response.msg) {
+        if (!this.autoSaver.active && response.msg) {
             new MessageFlash(response.alert, response.msg)
             this.loader.off()
         }
@@ -256,7 +256,7 @@ export default class SupportNotes {
      * @param {Object} data 
      */
     updateNote(data) {
-        if (this.autoSave.active) {
+        if (this.autoSaver.active) {
             return
         }
 
