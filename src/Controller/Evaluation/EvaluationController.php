@@ -47,16 +47,11 @@ class EvaluationController extends AbstractController
             return $this->redirectToRoute('support_evaluation_view', ['id' => $id]);
         }
 
-        $supportGroup = $this->supportGroupRepo->findSupportById($id);
+        $this->denyAccessUnlessGranted('EDIT', $supportGroup = $this->supportGroupRepo->findSupportById($id));
 
-        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
+        $evaluationCreator->create($supportGroup);
 
-        $form = $this->createForm(EvaluationGroupType::class, $evaluationGroup = $evaluationCreator->create($supportGroup));
-
-        return $this->render('app/evaluation/edit/evaluationEdit.html.twig', [
-            'support' => $supportGroup,
-            'form' => $form->createView(),
-        ]);
+        return $this->redirectToRoute('support_evaluation_view', ['id' => $supportGroup]);
     }
 
     /**

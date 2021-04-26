@@ -60,6 +60,7 @@ class EvaluationControllerTest extends WebTestCase
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Évaluation sociale');
+        $this->assertSelectorExists('button#heading-init_eval-0');
 
         $csrfToken = $crawler->filter('#evaluation__token')->attr('value');
 
@@ -79,6 +80,7 @@ class EvaluationControllerTest extends WebTestCase
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Évaluation sociale');
+        $this->assertSelectorExists('button#heading-init_eval-0');
     }
 
     public function testShowEvaluationIsRedirect()
@@ -90,6 +92,7 @@ class EvaluationControllerTest extends WebTestCase
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Évaluation sociale');
+        $this->assertSelectorExists('button#heading-init_eval-0');
     }
 
     public function testEditEvaluationIsSuccessful()
