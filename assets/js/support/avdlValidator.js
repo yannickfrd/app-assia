@@ -96,6 +96,10 @@ export default class AvdlValidatorSupport extends FormValidator {
                 }
                 if (this.supportEndDateElt.value) {
                     this.checkField(this.supportStartDateElt)    
+                } else {
+                    this.validField(this.supportTypeElt)    
+                }
+                if (this.AVDL_DALO === device && this.supportEndDateElt.value) {
                     this.checkField(this.supportTypeElt)    
                 } else {
                     this.validField(this.supportTypeElt)    
