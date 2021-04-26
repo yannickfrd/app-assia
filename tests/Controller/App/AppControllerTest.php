@@ -4,6 +4,7 @@ namespace App\Tests\Controller;
 
 use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -94,12 +95,28 @@ class AppControllerTest extends WebTestCase
 
     public function testPageServiceDashboardInRoleAdmin()
     {
+        $this->data = $this->loadFixtureFiles([
+            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
+            dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
+            dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
+            dirname(__DIR__).'/../DataFixturesTest/SupportFixturesTest.yaml',
+        ]);
+
         $this->createLogin($this->data['userAdmin']);
 
         $this->client->request('GET', '/dashboard/supports_by_user');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Répartition des suivis en cours');
+
+        $this->client->submitForm('search', [
+            'service' => [
+                'services' => $this->data['service1']->getId(),
+            ],
+            'send' => true,
+        ], 'GET');
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
 
     public function testPageAdminIsUp()

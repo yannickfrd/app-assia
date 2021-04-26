@@ -89,7 +89,7 @@ class AppController extends AbstractController
 
         return $this->render('app/admin/dashboard/supportsByUser.html.twig', [
             'form' => $form->createView(),
-            'datas' => $form->isSubmitted() || false == $this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getSupportsbyDevice($search) : null,
+            'datas' => $form->isSubmitted() || !$this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getSupportsbyDevice($search) : null,
         ]);
     }
 }
