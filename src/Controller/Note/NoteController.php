@@ -186,7 +186,10 @@ class NoteController extends AbstractController
      */
     public function export(int $id, NoteRepository $noteRepo, Request $request, NoteExporter $noteExporter): Response
     {
-        $note = $noteRepo->findNote($id);
+        if (null === $note = $noteRepo->findNote($id)) {
+            throw $this->createAccessDeniedException();
+        }
+
         $supportGroup = $note->getSupportGroup();
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);

@@ -37,7 +37,9 @@ class PlaceGroupController extends AbstractController
      */
     public function supportPlacesGroup(int $id, SupportManager $supportManager): Response
     {
-        $supportGroup = $supportManager->getFullSupportGroup($id);
+        if (null === $supportGroup = $supportManager->getFullSupportGroup($id)) {
+            throw $this->createAccessDeniedException('Ce suivi n\'existe pas.');
+        }
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
@@ -95,7 +97,10 @@ class PlaceGroupController extends AbstractController
      */
     public function editPlaceGroup(int $id, SupportManager $supportManager, Request $request): Response
     {
-        $placeGroup = $this->placeGroupRepo->findPlaceGroupById($id);
+        if (null === $placeGroup = $this->placeGroupRepo->findPlaceGroupById($id)) {
+            throw $this->createAccessDeniedException();
+        }
+
         $supportGroup = $supportManager->getSupportGroup($placeGroup->getSupportGroup()->getId());
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);

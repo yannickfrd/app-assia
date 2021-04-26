@@ -91,7 +91,9 @@ class EvaluationController extends AbstractController
      */
     public function editEvaluation(int $id, Request $request, EventDispatcherInterface $dispatcher, Normalisation $normalisation): Response
     {
-        $evaluationGroup = $this->evaluationRepo->findEvaluationOfSupport($id);
+        if (null === $evaluationGroup = $this->evaluationRepo->findEvaluationOfSupport($id)) {
+            throw $this->createAccessDeniedException();
+        }
 
         $this->denyAccessUnlessGranted('EDIT', $evaluationGroup->getSupportGroup());
 
