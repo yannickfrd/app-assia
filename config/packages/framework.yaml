@@ -10,7 +10,7 @@ framework:
         handler_id: session.handler.native_file
         cookie_secure: auto
         cookie_samesite: lax
-        gc_maxlifetime: 14400
+        gc_maxlifetime: 28800
 
     validation: { enable_annotations: true }
 
