@@ -20,7 +20,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class PeopleGroupController extends AbstractController
 {
@@ -42,10 +41,8 @@ class PeopleGroupController extends AbstractController
      */
     public function showPeopleGroup(int $id, Request $request, PeopleGroupCollections $peopleGroupCollections, EventDispatcherInterface $dispatcher): Response
     {
-        $peopleGroup = $this->peopleGroupRepo->findPeopleGroupById($id);
-
-        if (null === $peopleGroup) {
-            throw new AccessDeniedException('Ce groupe n\'existe pas.');
+        if (null === $peopleGroup = $this->peopleGroupRepo->findPeopleGroupById($id)) {
+            throw $this->createAccessDeniedException('Ce groupe n\'existe pas.');
         }
 
         $form = $this->createForm(PeopleGroupType::class, $peopleGroup)
@@ -94,7 +91,9 @@ class PeopleGroupController extends AbstractController
      */
     public function addPersonInGroup(int $id, Request $request, Person $person, PeopleGroupManager $peopleGroupManager): Response
     {
-        $peopleGroup = $this->peopleGroupRepo->findPeopleGroupById($id);
+        if (null === $peopleGroup = $this->peopleGroupRepo->findPeopleGroupById($id)) {
+            throw $this->createAccessDeniedException('Ce groupe n\'existe pas.');
+        }
 
         $form = $this->createForm(RolePersonType::class, $rolePerson = new RolePerson())
             ->handleRequest($request);

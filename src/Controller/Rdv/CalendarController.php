@@ -3,10 +3,10 @@
 namespace App\Controller\Rdv;
 
 use App\Entity\Support\Rdv;
-use App\Service\SupportGroup\SupportManager;
 use App\Form\Support\Rdv\RdvType;
 use App\Repository\Support\RdvRepository;
 use App\Service\Calendar;
+use App\Service\SupportGroup\SupportManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -59,7 +59,9 @@ class CalendarController extends AbstractController
      */
     public function showSupportCalendar(int $id, SupportManager $supportManager, $year = null, $month = null): Response
     {
-        $supportGroup = $supportManager->getSupportGroup($id);
+        if (null === $supportGroup = $supportManager->getSupportGroup($id)) {
+            throw $this->createAccessDeniedException('Ce suivi n\'existe pas.');
+        }
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 

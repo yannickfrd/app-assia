@@ -90,7 +90,9 @@ class ServiceController extends AbstractController
         UserRepository $userRepo,
         PlaceRepository $placeRepo
     ): Response {
-        $service = $this->serviceRepo->getFullService($id);
+        if (null === $service = $this->serviceRepo->getFullService($id)) {
+            throw $this->createAccessDeniedException('Ce service n\'existe pas.');
+        }
 
         $this->denyAccessUnlessGranted('VIEW', $service);
 

@@ -77,7 +77,9 @@ class ContributionController extends AbstractController
      */
     public function showSupportContributions(int $id, SupportManager $supportManager, Request $request, Pagination $pagination): Response
     {
-        $supportGroup = $supportManager->getSupportGroup($id);
+        if (null === $supportGroup = $supportManager->getSupportGroup($id)) {
+            throw $this->createAccessDeniedException('Ce suivi n\'existe pas.');
+        }
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
@@ -120,7 +122,9 @@ class ContributionController extends AbstractController
      */
     public function getResources(int $id, SupportManager $supportManager, PlaceRepository $placeRepo, EvaluationGroupRepository $evaluationRepo)
     {
-        $supportGroup = $supportManager->getSupportGroup($id);
+        if (null === $supportGroup = $supportManager->getSupportGroup($id)) {
+            throw $this->createAccessDeniedException('Ce suivi n\'existe pas.');
+        }
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
