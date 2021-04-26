@@ -167,12 +167,9 @@ class DeviceRepository extends ServiceEntityRepository
             ->where('d.disabledAt IS NULL');
 
         if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
-            $query = $query->where('sd.service IN (:services)')
+            $query = $query->andWhere('sd.service IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
         }
-
-        $query = $this->addServicesFilter($query, $search);
-        $query = $this->addDevicesFilter($query, $search);
 
         return $query
             ->orderBy('d.name', 'ASC')

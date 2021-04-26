@@ -46,7 +46,7 @@
                                 {% if datasUser.nbSupports > 0 %}
                                     <tr>
                                         <td scope="row" class="align-middle text-center">
-                                            <a href="{{ path('supports', {'status':[2], 'service':{'referents':[datasUser.user.id]}, 'head': true}) }}" 
+                                            <a href="{{ path('supports', {'status': [2], 'service': {'referents': [datasUser.user.id]}, 'head': true}) }}" 
                                                 class="btn btn-{{ theme_color }} btn-sm shadow" 
                                                 data-placement="bottom" title="Voir les suivis du travailleur social"><!--
                                                 --><span class="fas fa-eye fa-sm"></span>
@@ -78,7 +78,7 @@
                                         {% endfor %}
                                         {% if is_granted("ROLE_ADMIN") %}
                                             <td scope="row" class="align-middle text-center">
-                                                <a href="{{ path('security_user', {'id':datasUser.user.id}) }}#supports-by-device" class="btn btn-{{ theme_color }} btn-sm shadow" 
+                                                <a href="{{ path('security_user', {'id': datasUser.user.id}) }}#supports-by-device" class="btn btn-{{ theme_color }} btn-sm shadow" 
                                                     data-toggle="tooltip" data-placement="bottom" title="Modifier la répartition des suivis théoriques par dispositif"><span class="fas fa-edit"></span>
                                                 </a>
                                             </td>
@@ -90,7 +90,8 @@
                         {% if is_granted("ROLE_ADMIN") %}
                             <tfoot>
                                 <tr class="font-weight-bold">
-                                    <td scope="row" colspan="2" class="align-middle text-right">Total</td>
+                                    <td scope="row" class="align-middle">Total</td>
+                                    <td class="align-middle">{{ datasUsers|length }}</td>
                                     <td class="align-middle text-right">{{ nbSupports }}
                                         {% if nbSupports != sumCoeffSupports %}
                                             <br/><span class="text-{{ theme_color }}"> ({{ sumCoeffSupports }})</span>
@@ -105,10 +106,11 @@
                                             {% endif %}
                                             </td>
                                         {% endfor %}
+                                    <td></td>
                                 </tr>
                                 {% if datasUsers|length > 0 %} 
                                     <tr class="font-weight-bold">
-                                        <td scope="row" colspan="2" class="align-middle text-right">Moyenne</td>
+                                        <td scope="row" colspan="2" class="align-middle">Moyenne</td>
                                         <td class="align-middle text-right">{{ (nbSupports / datasUsers|length)|round(1) }}
                                             {% if nbSupports != sumCoeffSupports %}
                                                 <br/><span class="text-{{ theme_color }}"> ({{ (sumCoeffSupports / datasUsers|length)|round(1) }})</span>
