@@ -48,14 +48,14 @@
                                         <table class="table table-sm table-hover text-dark">
                                             <tbody>
                                                 {% for healthKey, healthValue in healthProblemsType %}
-                                                <tr id="js-{{ key }}_evalSocialPerson_healthProblemType-{{ healthKey }}" 
-                                                    class="js-{{ key }}_evalSocialPerson_healthProblemType d-table-row">
-                                                    <th scope="row">
-                                                        <div class="sr-only">{{ form_widget(attribute(evalPerson.evalSocialPerson, healthKey)) }}</div>
-                                                    </th>
-                                                    <td class="align-middle">{{ healthValue }}</td>
-                                                    <td class="align-middle text-right"><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-                                                </tr>
+                                                    <tr id="js-{{ key }}_evalSocialPerson_healthProblemType-{{ healthKey }}" 
+                                                        class="js-{{ key }}_evalSocialPerson_healthProblemType d-table-row">
+                                                        <td scope="row">
+                                                            <div class="sr-only">{{ form_widget(attribute(evalPerson.evalSocialPerson, healthKey)) }}</div>
+                                                        </td>
+                                                        <td class="align-middle">{{ healthValue }}</td>
+                                                        <td class="align-middle text-right"><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
+                                                    </tr>
                                                 {% endfor %}
                                             </tbody>
                                         </table>

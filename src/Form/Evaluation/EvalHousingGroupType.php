@@ -3,6 +3,7 @@
 namespace App\Form\Evaluation;
 
 use App\Entity\Evaluation\EvalHousingGroup;
+use App\Entity\Organization\Service;
 use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -14,16 +15,10 @@ class EvalHousingGroupType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        /** @var Service */
+        $service = $options['attr']['service'];
+
         $builder
-            ->add('housingStatus', ChoiceType::class, [
-                'choices' => Choices::getChoices(EvalHousingGroup::HOUSING_STATUS),
-                'attr' => [
-                    'class' => 'js-initEval important',
-                    'data-id' => 'housingStatus',
-                ],
-                'placeholder' => 'placeholder.select',
-                'required' => false,
-            ])
             ->add('siaoRequest', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS_NC),
                 'attr' => [
@@ -142,32 +137,6 @@ class EvalHousingGroupType extends AbstractType
                 'help' => 'location.department.help',
             ])
             ->add('hsgActionRecordId')
-            ->add('expulsionInProgress', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO),
-                'placeholder' => 'placeholder.select',
-                'required' => false,
-            ])
-            ->add('publicForce', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO),
-                'placeholder' => 'placeholder.select',
-                'required' => false,
-            ])
-            ->add('publicForceDate', DateType::class, [
-                'widget' => 'single_text',
-                'required' => false,
-            ])
-            ->add('expulsionComment')
-            ->add('housingExperience', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO),
-                'placeholder' => 'placeholder.select',
-                'required' => false,
-            ])
-            ->add('housingExpeComment')
-            ->add('fsl')
-            ->add('fslEligibility')
-            ->add('cafEligibility')
-            ->add('otherHelps')
-            ->add('hepsPrecision')
             ->add('domiciliation', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
                 'placeholder' => 'placeholder.select',
@@ -214,21 +183,12 @@ class EvalHousingGroupType extends AbstractType
                     'readonly' => true,
                 ],
             ])
-            ->add('housingAccessType', ChoiceType::class, [
+            ->add('housingExperience', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
-            ->add('housingArrivalDate', DateType::class, [
-                'widget' => 'single_text',
-                'required' => false,
-            ])
-            ->add('housingAddress')
-            ->add('housingCity')
-            ->add('housingDept', null, [
-                'attr' => ['class' => 'js-zipcode'],
-                'help' => 'location.department.help',
-            ])
+            ->add('housingExpeComment')
             ->add('commentEvalHousing', null, [
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
@@ -237,6 +197,54 @@ class EvalHousingGroupType extends AbstractType
                     'placeholder' => 'evalHousingGroup.comment',
                 ],
             ]);
+
+        if (Service::SERVICE_TYPE_AVDL === $service->getType() or 2 === $service->getId()) {
+            $builder
+                ->add('housingStatus', ChoiceType::class, [
+                    'choices' => Choices::getChoices(EvalHousingGroup::HOUSING_STATUS),
+                    'attr' => [
+                        'class' => 'js-initEval important',
+                        'data-id' => 'housingStatus',
+                    ],
+                    'placeholder' => 'placeholder.select',
+                    'required' => false,
+                ])
+                ->add('housingAccessType', ChoiceType::class, [
+                    'choices' => Choices::getChoices(Choices::YES_NO),
+                    'placeholder' => 'placeholder.select',
+                    'required' => false,
+                ])
+                ->add('housingArrivalDate', DateType::class, [
+                    'widget' => 'single_text',
+                    'required' => false,
+                ])
+                ->add('housingAddress')
+                ->add('housingCity')
+                ->add('housingDept', null, [
+                    'attr' => ['class' => 'js-zipcode'],
+                    'help' => 'location.department.help',
+                ])
+                ->add('expulsionInProgress', ChoiceType::class, [
+                    'choices' => Choices::getChoices(Choices::YES_NO),
+                    'placeholder' => 'placeholder.select',
+                    'required' => false,
+                ])
+                ->add('publicForce', ChoiceType::class, [
+                    'choices' => Choices::getChoices(Choices::YES_NO),
+                    'placeholder' => 'placeholder.select',
+                    'required' => false,
+                ])
+                ->add('publicForceDate', DateType::class, [
+                    'widget' => 'single_text',
+                    'required' => false,
+                ])
+                ->add('expulsionComment')
+                ->add('fsl')
+                ->add('fslEligibility')
+                ->add('cafEligibility')
+                ->add('otherHelps')
+                ->add('hepsPrecision');
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver)

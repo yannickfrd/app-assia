@@ -13,6 +13,7 @@ class EvalSocialGroup
 {
     public const REASON_REQUEST = [
         1 => 'Absence de ressource',
+        28 => 'Accès au logement',
         2 => 'Départ du département initial',
         3 => 'Dort dans la rue',
         4 => 'Exil économique',

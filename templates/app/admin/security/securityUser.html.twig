@@ -14,7 +14,7 @@
             <h1 class="h2 mb-3">{{ title }}</h1>
             {% if user.id %}
                 <div class="small text-secondary">
-                    <p> Créé le {{user.createdAt|date("d/m/Y à H:i") }}{{ user.createdBy ? " par " ~ user.createdBy.fullname }}
+                    <p> Créé le {{ user.createdAt|date("d/m/Y à H:i") }}{{ user.createdBy ? " par " ~ user.createdBy.fullname }}
                         {% if user.updatedAt %}(modifié le {{ user.updatedAt|date("d/m/Y à H:i") }}{{ user.updatedBy ? " par " ~ user.updatedBy.fullname }}{% endif %})
                     </p>
                 </div>

@@ -63,7 +63,7 @@
 							{% for form_person_place in form.placePeople.children %}
 								{% set person = form_person_place.vars.data.person %}
 								<tr class="js-tr-person-place">
-									<th scope="row"></th>
+									<td scope="row"></td>
 									<td class="px-1 align-middle">{{ person.fullname }}</td>
 									<td class="px-1">{{ form_widget(form_person_place.startDate) }}</td>
 									<td class="px-1">{{ form_widget(form_person_place.endDate) }}</td>

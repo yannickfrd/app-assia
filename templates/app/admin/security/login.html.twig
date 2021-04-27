@@ -1,5 +1,4 @@
 {% extends "base.html.twig" %}
-
 {# {% form_theme form "bootstrap_4_layout.html.twig" %} #}
 
 {% block title %}Connexion{% endblock %}
@@ -31,14 +30,12 @@
                     <div class="my-3">
                         <div class="input-group js-password-group">
                             {{ form_label(form._password) }}
-                            {{ form_widget(form._password, {'attr': {'class': 'js-password'}}) }}
+                            {{ form_widget(form._password, {'attr': {'class': 'js-password' }}) }}
                             <div class="input-group-append">
                                 <span class="input-group-text"><span class="js-show-password fa fa-eye"></span></span>
                             </div>
                         </div>
                     </div>
-                    {# <input type="hidden" name="_target_path" value="{{ path('security_after_login') }}" /> #}
-                    {# <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"> #}
                     <button type="submit" id="send" name="send" class="btn btn-lg btn-{{ theme_color }} btn-block shadow mb-4">Se connecter</button>
                 {{ form_end(form) }}
                 <a href="{{ path("security_forgot_password") }}" class="text-{{ theme_color }} mb-4">Mot de passe oublié ?</a>

@@ -3,6 +3,8 @@
 namespace App\Form\Evaluation;
 
 use App\Entity\Evaluation\EvalFamilyPerson;
+use App\Entity\People\RolePerson;
+use App\Entity\Support\SupportPerson;
 use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -13,6 +15,28 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class EvalFamilyPersonType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        /** @var SupportPerson */
+        $supportPerson = $options['attr']['supportPerson'];
+
+        if (RolePerson::ROLE_CHILD === $supportPerson->getRole()) {
+            $this->addChildFields($builder);
+        } else {
+            $this->addAdultFields($builder);
+        }
+
+        $builder
+            ->add('commentEvalFamilyPerson', null, [
+                'label_attr' => ['class' => 'sr-only'],
+                'attr' => [
+                    'rows' => 4,
+                    'class' => 'justify',
+                    'placeholder' => 'evalFamilyPerson.comment',
+                ],
+            ]);
+    }
+
+    protected function addAdultFields(FormBuilderInterface $builder)
     {
         $builder
             ->add('maritalStatus', ChoiceType::class, [
@@ -49,7 +73,12 @@ class EvalFamilyPersonType extends AbstractType
                 'choices' => Choices::getChoices(EvalFamilyPerson::PROTECTIVE_MEASURE_TYPE),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
-            ])
+            ]);
+    }
+
+    protected function addChildFields(FormBuilderInterface $builder)
+    {
+        $builder
             ->add('childcareOrSchool', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
                 'placeholder' => 'placeholder.select',
@@ -95,14 +124,6 @@ class EvalFamilyPersonType extends AbstractType
                 'choices' => Choices::getChoices(EvalFamilyPerson::CHILD_DEPENDANCE),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
-            ])
-            ->add('commentEvalFamilyPerson', null, [
-                'label_attr' => ['class' => 'sr-only'],
-                'attr' => [
-                    'rows' => 4,
-                    'class' => 'justify',
-                    'placeholder' => 'evalFamilyPerson.comment',
-                ],
             ]);
     }
 

@@ -12,13 +12,16 @@
 
             {% for key, evalPerson in people_over_16 %}
                 <div id="collapse-eval_prof-{{ key }}" class="collapse {% if loop.first %}show{% endif %} my-3"
-                    aria-labelledby="heading-eval_prof-{{ key }}" data-parent="#accordion-eval_prof" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
+                    aria-labelledby="heading-eval_prof-{{ key }}" data-parent="#accordion-eval_prof" 
+                    data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
                     <div class="row">
                         <div class="col-md-6">{{ form_row(evalPerson.evalProfPerson.profStatus) }}</div>
-                        <div class="col-md-6"  data-parent-field="{{ key }}_evalProfPerson_profStatus" data-parent-field-options="2, 3, 8, 97">
+                        <div class="col-md-6"  data-parent-field="{{ key }}_evalProfPerson_profStatus" 
+                            data-parent-field-options="2, 3, 8, 97">
                             {{ form_row(evalPerson.evalProfPerson.jobCenterId) }}</div>
                     </div>
-                    <div class="form-group row" data-parent-field="{{ key }}_evalProfPerson_profStatus" data-parent-field-options="3, 5, 8">
+                    <div class="form-group row" data-parent-field="{{ key }}_evalProfPerson_profStatus" 
+                        data-parent-field-options="3, 5, 8">
                         <div class="col-md-6" >{{ form_row(evalPerson.evalProfPerson.contractType) }}</div>
                         <div class="col-md-6">{{ form_row(evalPerson.evalProfPerson.jobType) }}</div>
                         <div class="col-md-6">{{ form_row(evalPerson.evalProfPerson.contractStartDate) }}</div>
@@ -30,7 +33,8 @@
                     </div>
                     <div class="form-group row" data-parent-field="{{ key }}_evalProfPerson_profStatus">
                         <div class="col-md-6">{{ form_row(evalPerson.evalProfPerson.transportMeansType) }}</div>
-                        <div class="col-md-6" data-parent-field="{{ key }}_evalProfPerson_transportMeansType">{{ form_row(evalPerson.evalProfPerson.transportMeans) }}</div>
+                        <div class="col-md-6" data-parent-field="{{ key }}_evalProfPerson_transportMeansType">
+                            {{ form_row(evalPerson.evalProfPerson.transportMeans) }}</div>
                     </div>
                     <div class="form-group row" data-parent-field="{{ key }}_evalProfPerson_profStatus">
                         <div class="col-md-6" title="Reconnaissance de la qualité de travailleur handicapé">
@@ -43,7 +47,6 @@
                         <div class="col-md-6">{{ form_row(evalPerson.evalProfPerson.profExperience) }}</div>
                     </div>
                     <div class="form-group row">
-                        {# {{ form_label(evalPerson.evalProfPerson.commentEvalProf) }} #}
                         <div class="col-md-12">{{ form_widget(evalPerson.evalProfPerson.commentEvalProf) }}</div>
                     </div>
                 </div>

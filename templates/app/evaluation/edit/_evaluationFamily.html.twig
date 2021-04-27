@@ -15,33 +15,37 @@
                 <div id="collapse-eval_family-{{ key }}" class="collapse {% if loop.first %}show{% endif %} my-3"
                     aria-labelledby="heading-eval_family-{{ key }}" data-parent="#accordion-eval_family" 
                     data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-                {% if supportPerson.role != ROLE_CHILD %}
-                    <div class="form-group row">
-                        <div class="col-md-6">{{ form_row(evalPerson.evalFamilyPerson.maritalStatus) }}</div>
-                        <div class="col-md-6" data-parent-field="{{ key }}_evalFamilyPerson_maritalStatus">
-                            {{ form_row(evalPerson.evalFamilyPerson.noConciliationOrder) }}</div>
-                    </div>
-                    <div class="form-group row">
-                        {% if supportPerson.person.gender == GENDER_FEMALE and supportPerson.person.age < 50 %}
-                            <div class="col-md-6">{{ form_row(evalPerson.evalFamilyPerson.unbornChild) }}</div>
-                            <div class="col-md-6" data-parent-field="{{ key }}_evalFamilyPerson_unbornChild">
-                                {{ form_row(evalPerson.evalFamilyPerson.expDateChildbirth) }}</div>
-                            <div class="col-md-6" data-parent-field="{{ key }}_evalFamilyPerson_unbornChild">
-                                {{ form_row(evalPerson.evalFamilyPerson.pregnancyType) }}</div>
-                        {% endif %}
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-md-6">{{ form_row(evalPerson.evalFamilyPerson.protectiveMeasure) }}</div>
-                        <div class="col-md-6" data-parent-field="{{ key }}_evalFamilyPerson_protectiveMeasure">
-                            {{ form_row(evalPerson.evalFamilyPerson.protectiveMeasureType) }}</div>
-                    </div>
+
+                    {% if supportPerson.role != ROLE_CHILD %}
+                        <div class="form-group row">
+                            <div class="col-md-6">{{ form_row(evalPerson.evalFamilyPerson.maritalStatus) }}</div>
+                            <div class="col-md-6" data-parent-field="{{ key }}_evalFamilyPerson_maritalStatus">
+                                {{ form_row(evalPerson.evalFamilyPerson.noConciliationOrder) }}</div>
+                        </div>
+                        <div class="form-group row">
+                            {% if supportPerson.person.gender == GENDER_FEMALE and supportPerson.person.age < 50 %}
+                                <div class="col-md-6">{{ form_row(evalPerson.evalFamilyPerson.unbornChild) }}</div>
+                                <div class="col-md-6" data-parent-field="{{ key }}_evalFamilyPerson_unbornChild">
+                                    {{ form_row(evalPerson.evalFamilyPerson.expDateChildbirth) }}</div>
+                                <div class="col-md-6" data-parent-field="{{ key }}_evalFamilyPerson_unbornChild">
+                                    {{ form_row(evalPerson.evalFamilyPerson.pregnancyType) }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-6">{{ form_row(evalPerson.evalFamilyPerson.protectiveMeasure) }}</div>
+                            <div class="col-md-6" data-parent-field="{{ key }}_evalFamilyPerson_protectiveMeasure">
+                                {{ form_row(evalPerson.evalFamilyPerson.protectiveMeasureType) }}</div>
+                        </div>
                     {% endif %}
+
                     {% if supportPerson.role == ROLE_CHILD %}
                         <div class="row">
                             <div class="col-md-6">{{ form_row(evalPerson.evalFamilyPerson.childcareOrSchool) }}</div>
-                            <div class="col-md-6" data-parent-field="{{ key }}_evalFamilyPerson_childcareOrSchool">{{ form_row(evalPerson.evalFamilyPerson.childcareSchoolType) }}</div>
+                            <div class="col-md-6" data-parent-field="{{ key }}_evalFamilyPerson_childcareOrSchool">
+                                {{ form_row(evalPerson.evalFamilyPerson.childcareSchoolType) }}</div>
                         </div>
-                        <div class="form-group row" id="school_location_{{ key }}" data-parent-field="{{ key }}_evalFamilyPerson_childcareOrSchool">
+                        <div class="form-group row" id="school_location_{{ key }}" 
+                            data-parent-field="{{ key }}_evalFamilyPerson_childcareOrSchool">
                             <div class="col-md-6">{{ form_row(evalPerson.evalFamilyPerson.schoolSearch) }}</div>
                             <div class="col-md-6">{{ form_row(evalPerson.evalFamilyPerson.schoolCity) }}</div>
                             <div class="col-md-6">{{ form_row(evalPerson.evalFamilyPerson.schoolZipcode) }}</div>
@@ -52,6 +56,7 @@
                             <div class="col-md-6">{{ form_row(evalPerson.evalFamilyPerson.childDependance) }}</div>
                         </div>
                     {% endif %}
+
                     <div class="form-group row">
                         <div class="col-md-12">{{ form_label(evalPerson.evalFamilyPerson.commentEvalFamilyPerson) }}</div>
                         <div class="col-md-12">{{ form_widget(evalPerson.evalFamilyPerson.commentEvalFamilyPerson) }}</div>

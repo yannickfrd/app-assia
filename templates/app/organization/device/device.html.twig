@@ -14,8 +14,8 @@
         <h1 class="h2 mb-3">{{ title }}</h1>
         {% if EDIT_MODE %}
             <div class="small text-secondary">
-                <p> Créé le {{device.createdAt|date("d/m/Y à H:i") }}{{ device.createdBy ? " par " ~ device.createdBy.fullname }}
-                    (modifié le {{ device.updatedAt|date("d/m/Y à H:i") }}{{device.updatedBy ? " par " ~ device.updatedBy.fullname }})
+                <p> Créé le {{ device.createdAt|date("d/m/Y à H:i") }}{{ device.createdBy ? " par " ~ device.createdBy.fullname }}
+                    (modifié le {{ device.updatedAt|date("d/m/Y à H:i") }}{{ device.updatedBy ? " par " ~ device.updatedBy.fullname }})
                 </p>
             </div>
         {% else %}
@@ -99,13 +99,13 @@
                     <tbody>
                         {% for serviceDevice in device.serviceDevices %}
                         <tr>
-                            <th scope="row">
+                            <td scope="row">
                                 <a href="{{ path('service_edit', {'id':serviceDevice.service.id}) }}"
                                     class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" 
                                     data-placement="bottom" title="Voir la fiche du service">
                                     <span class="fas fa-eye"></span>
                                 </a>
-                            </th>
+                            </td>
                             <td>{{ serviceDevice.service.name }}</td>
                             <td>{{ serviceDevice.service.phone1}}</td>
                             <td>{{ serviceDevice.service.email }}</td>

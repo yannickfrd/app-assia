@@ -14,8 +14,8 @@
         <h1 class="h2 mb-3">{{ title }}</h1>
         {% if EDIT_MODE %}
             <div class="small text-secondary">
-                <p> Créé le {{subService.createdAt|date("d/m/Y à H:i") }}{{ subService.createdBy ? " par " ~ subService.createdBy.fullname }}
-                    (modifié le {{ subService.updatedAt|date("d/m/Y à H:i") }}{{subService.updatedBy ? " par " ~ subService.updatedBy.fullname }})
+                <p> Créé le {{ subService.createdAt|date("d/m/Y à H:i") }}{{ subService.createdBy ? " par " ~ subService.createdBy.fullname }}
+                    (modifié le {{ subService.updatedAt|date("d/m/Y à H:i") }}{{ subService.updatedBy ? " par " ~ subService.updatedBy.fullname }})
                 </p>
             </div>
         {% else %}

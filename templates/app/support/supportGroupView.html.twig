@@ -28,7 +28,7 @@
 
 		{% set people_group = support.peopleGroup %}
 		<div class="small text-secondary">
-			<p>Créé le {{support.createdAt|date("d/m/Y à H:i") }}{{ support.createdBy ? " par " ~ support.createdBy.fullname }}
+			<p>Créé le {{ support.createdAt|date("d/m/Y à H:i") }}{{ support.createdBy ? " par " ~ support.createdBy.fullname }}
 				{% if support.updatedAt != support.createdAt %}
 					(modifié le {{ support.updatedAt|date("d/m/Y à H:i") }}{{ support.updatedBy ? " par " ~ support.updatedBy.fullname }})				
 				{% endif %}

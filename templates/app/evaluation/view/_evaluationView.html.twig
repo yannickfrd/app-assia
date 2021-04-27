@@ -9,6 +9,7 @@
 {% set eval_children = eval_people|filter(e => e.supportPerson.role == ROLE_CHILD) %}
 {% set people_over_18 = eval_people|filter(e => e.supportPerson.person.age >= 18) %}
 {% set nb_people = support.supportPeople|length %}
+{% set SERVICE_TYPE_AVDL = support.service.type == constant("App\\Entity\\Organization\\Service::SERVICE_TYPE_AVDL") %}
 
 {% apply spaceless %}
 

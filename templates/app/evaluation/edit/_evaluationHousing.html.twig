@@ -4,20 +4,22 @@
 
 {% block card_body %}
 
-	<div class="js-evalGroup" data-support-id="g-{{form.vars.value.supportGroup.id}}">
-		<div class="form-group">
-			<div class="row">
-				<div class="col-md-6">{{ form_row(form.evalHousingGroup.housingStatus) }}</div>
-				<div class="col-md-6" data-parent-field="housingStatus">{{ form_row(form.evalHousingGroup.housingArrivalDate) }}</div>
+	<div class="js-evalGroup" data-support-id="g-{{ form.vars.value.supportGroup.id }}">
+		{% if SERVICE_TYPE_AVDL or support.service.id == 2 %}
+			<div class="form-group">
+				<div class="row">
+					<div class="col-md-6">{{ form_row(form.evalHousingGroup.housingStatus) }}</div>
+					<div class="col-md-6" data-parent-field="housingStatus">{{ form_row(form.evalHousingGroup.housingArrivalDate) }}</div>
+				</div>
+				<div class="row" data-parent-field="housingStatus">
+					<div class="col-md-6">{{ form_row(form.evalHousingGroup.expulsionInProgress) }}</div>
+					<div class="col-md-6" data-parent-field="expulsionInProgress">{{ form_row(form.evalHousingGroup.publicForce) }}</div>
+					<div class="col-md-6" data-parent-field="expulsionInProgress">{{ form_row(form.evalHousingGroup.publicForceDate) }}</div>
+					<div class="col-md-6" data-parent-field="expulsionInProgress">{{ form_row(form.evalHousingGroup.expulsionComment) }}</div>
+				</div>
 			</div>
-			<div class="row" data-parent-field="housingStatus">
-				<div class="col-md-6">{{ form_row(form.evalHousingGroup.expulsionInProgress) }}</div>
-				<div class="col-md-6" data-parent-field="expulsionInProgress">{{ form_row(form.evalHousingGroup.publicForce) }}</div>
-				<div class="col-md-6" data-parent-field="expulsionInProgress">{{ form_row(form.evalHousingGroup.publicForceDate) }}</div>
-				<div class="col-md-6" data-parent-field="expulsionInProgress">{{ form_row(form.evalHousingGroup.expulsionComment) }}</div>
-			</div>
-		</div>
-		<hr/>
+			<hr/>
+		{% endif %}
 		<div class="form-group row">
 			<div class="col-md-6">{{ form_row(form.evalHousingGroup.siaoRequest) }}</div>
 			<div class="col-md-6" data-parent-field="siaoRequest">{{ form_row(form.evalHousingGroup.siaoRequestDate) }}</div>
@@ -55,7 +57,8 @@
 		</div>
 		{# <div class="form-group row">
 			<div class="col-md-6">{{ form_row(form.evalHousingGroup.collectiveAgreementHousing) }}</div>
-			<div class="col-md-6" data-parent-field="collectiveAgreementHousing">{{ form_row(form.evalHousingGroup.collectiveAgreementHousingDate) }}</div>
+			<div class="col-md-6" data-parent-field="collectiveAgreementHousing">
+				{{ form_row(form.evalHousingGroup.collectiveAgreementHousingDate) }}</div>
 		</div> #}
 		<hr/>
 		<div class="form-group row">
@@ -71,75 +74,49 @@
 			<div class="col-md-6" data-parent-field="housingExperience">{{ form_row(form.evalHousingGroup.housingExpeComment) }}</div>
 		</div>
 
-		{% set housingHelps = constant("App\\Entity\\Evaluation\\EvalHousingGroup::HOUSING_HELPS") %}
-
-		<div class="form-group row" data-parent-field="housingStatus">
-			<div class="col-md-6">
-				<div class="row">
-					<div class="col-form-label col-sm-4">Type d'aides liées au logement</div>
-					<div class="col-sm-8">
-						<select id="js-_evalHousingGroup_hsgHelps" name="hsgHelps" class="form-control">
-							<option class="default" value="">-- Ajouter --</option>
-							{% for hsgKey, hsgValue in housingHelps %}
-								<option value="{{ hsgKey }}">{{ hsgValue }}</option>
-							{% endfor %}
-						</select>
-					</div>
-					<div class="col-md-12 mt-3">
-						<div class="table-responsive">
-							<table class="table table-sm table-hover text-dark">
-								<tbody>
-									<tr id="js-_evalHousingGroup_hsgHelps-fsl" class="js-_evalHousingGroup_hsgHelps d-table-row">
-										<td scope="row">
-											<div class="d-none">{{ form_widget(form.evalHousingGroup.fsl) }}</div>
-										</td>
-										<td class="align-middle">Fonds de solidarité pour le logement (FSL)</td>
-										<td>
-											<button class="btn btn-danger js-remove">
-												<span class="fas fa-trash-alt"></span>
-											</button>
-										</td>
-									</tr>
-									<tr id="js-_evalHousingGroup_hsgHelps-fslEligibility" class="js-_evalHousingGroup_hsgHelps d-table-row">
-										<td scope="row">
-											<div class="d-none">{{ form_widget(form.evalHousingGroup.fslEligibility) }}</div>
-										</td>
-										<td class="align-middle">Eligibilité aide à l'installation FSL</td>
-										<td>
-											<button class="btn btn-danger js-remove">
-												<span class="fas fa-trash-alt"></span>
-											</button>
-										</td>
-									</tr>
-									<tr id="js-_evalHousingGroup_hsgHelps-cafEligibility" class="js-_evalHousingGroup_hsgHelps d-table-row">
-										<td scope="row">
-											<div class="d-none">{{ form_widget(form.evalHousingGroup.cafEligibility) }}</div>
-										</td>
-										<td class="align-middle">Eligibilité CAF</td>
-										<td>
-											<button class="btn btn-danger js-remove">
-												<span class="fas fa-trash-alt"></span>
-											</button>
-										</td>
-									</tr>
-									<tr id="js-_evalHousingGroup_hsgHelps-otherHelps" class="js-_evalHousingGroup_hsgHelps d-table-row">
-										<td scope="row">
-											<div class="d-none">{{ form_widget(form.evalHousingGroup.otherHelps) }}</div>
-										</td>
-										<td class="align-middle">{{ form_widget(form.evalHousingGroup.hepsPrecision) }}</td>
-										<td>
-											<button class="btn btn-danger js-remove">
-												<span class="fas fa-trash-alt"></span>
-											</button>
-										</td>
-									</tr>
-								</tbody>
-							</table>
+		{% if SERVICE_TYPE_AVDL or support.service.id == 2 %}
+			{% set housingHelps = constant("App\\Entity\\Evaluation\\EvalHousingGroup::HOUSING_HELPS") %}
+			<div class="form-group row" data-parent-field="housingStatus">
+				<div class="col-md-6">
+					<div class="row">
+						<div class="col-form-label col-sm-4">Type d'aides liées au logement</div>
+						<div class="col-sm-8">
+							<select id="js-_evalHousingGroup_hsgHelps" name="hsgHelps" class="form-control">
+								<option class="default" value="">-- Ajouter --</option>
+								{% for hsgHelpKey, hsgHelpValue in housingHelps %}
+									<option value="{{ hsgHelpKey }}">{{ hsgHelpValue }}</option>
+								{% endfor %}
+							</select>
+						</div>
+						<div class="col-md-12 mt-3">
+							<div class="table-responsive">
+								<table class="table table-sm table-hover text-dark">
+									<tbody>
+										{% for hsgHelpKey, hsgHelpValue in housingHelps %}
+											<tr id="js-_evalHousingGroup_hsgHelps-{{ hsgHelpKey }}" 
+												class="js-_evalHousingGroup_hsgHelps d-table-row">
+												<td scope="row">
+													<div class="d-none">
+														{{ form_widget(attribute(form.evalHousingGroup, hsgHelpKey)) }}
+													</div>
+												</td>
+												<td class="align-middle">{{ hsgHelpValue }}</td>
+												<td class="align-middle text-right">
+													<button class="btn btn-danger js-remove">
+														<span class="fas fa-trash-alt"></span>
+													</button>
+												</td>
+											</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
+		{% endif %}
+
 		<hr/>
 		<div class="form-group">
 			<div class="row">

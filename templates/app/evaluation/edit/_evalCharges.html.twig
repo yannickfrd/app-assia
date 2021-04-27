@@ -33,7 +33,7 @@
                     <tbody>
                         {% for chargeKey, chargeValue in charges %}
                         <tr id="js-{{ key }}_{{ entity }}_charges_type-{{ chargeKey }}" class="js-{{ key }}_{{ entity }}_charges_type d-table-row">
-                            <th scope="row"><div class="sr-only">{{ form_widget(attribute(evalBudgetPerson, chargeKey)) }}</div></th>
+                            <td scope="row"><div class="sr-only">{{ form_widget(attribute(evalBudgetPerson, chargeKey)) }}</div></td>
                             <td class="align-middle">{% if not loop.last %}{{ chargeValue }}<!--
                             -->{% else %}{{ form_widget(evalBudgetPerson.chargeOtherPrecision) }}{% endif %}</td>
                             <td>{{ form_widget(attribute(evalBudgetPerson, chargeKey ~ "Amt")) }}</td>

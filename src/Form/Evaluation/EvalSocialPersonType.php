@@ -3,6 +3,8 @@
 namespace App\Form\Evaluation;
 
 use App\Entity\Evaluation\EvalSocialPerson;
+use App\Entity\People\RolePerson;
+use App\Entity\Support\SupportPerson;
 use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -14,30 +16,14 @@ class EvalSocialPersonType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        /** @var SupportPerson */
+        $supportPerson = $options['attr']['supportPerson'];
+
+        if (RolePerson::ROLE_CHILD != $supportPerson->getRole()) {
+            $this->addAdultFields($builder);
+        }
+
         $builder
-            ->add('rightSocialSecurity', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
-                'attr' => [
-                    'class' => 'js-initEval important',
-                    'data-id' => 'rightSocialSecurity',
-                ],
-                'placeholder' => 'placeholder.select',
-                'required' => false,
-            ])
-            ->add('socialSecurity', ChoiceType::class, [
-                'choices' => Choices::getChoices(EvalSocialPerson::SOCIAL_SECURITY),
-                'attr' => [
-                    'class' => 'js-initEval important',
-                    'data-id' => 'socialSecurity',
-                ],
-                'placeholder' => 'placeholder.select',
-                'required' => false,
-            ])
-            ->add('socialSecurityOffice')
-            ->add('endRightsSocialSecurityDate', DateType::class, [
-                'widget' => 'single_text',
-                'required' => false,
-            ])
             ->add('infoCrip', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
                 'placeholder' => 'placeholder.select',
@@ -68,24 +54,6 @@ class EvalSocialPersonType extends AbstractType
                 'label' => false,
                 'attr' => ['placeholder' => 'Ase comment'],
             ])
-            ->add('familyBreakdown', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO_PARTIAL),
-                'attr' => [
-                    'class' => 'js-initEval',
-                    'data-id' => 'familyBreakdown',
-                ],
-                'placeholder' => 'placeholder.select',
-                'required' => false,
-            ])
-            ->add('friendshipBreakdown', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO_PARTIAL),
-                'attr' => [
-                    'class' => 'js-initEval',
-                    'data-id' => 'friendshipBreakdown',
-                ],
-                'placeholder' => 'placeholder.select',
-                'required' => false,
-            ])
             ->add('healthProblem', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
                 'placeholder' => 'placeholder.select',
@@ -111,6 +79,60 @@ class EvalSocialPersonType extends AbstractType
             ])
             ->add('wheelchair')
             ->add('reducedMobility')
+            ->add('commentEvalSocialPerson', null, [
+                'label_attr' => ['class' => 'sr-only'],
+                'attr' => [
+                    'rows' => 4,
+                    'class' => 'justify',
+                    'placeholder' => 'evalSocialPerson.comment',
+                ],
+            ]);
+    }
+
+    protected function addAdultFields(FormBuilderInterface $builder)
+    {
+        $builder
+            ->add('rightSocialSecurity', ChoiceType::class, [
+                'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
+                'attr' => [
+                    'class' => 'js-initEval important',
+                    'data-id' => 'rightSocialSecurity',
+                ],
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
+            ->add('socialSecurity', ChoiceType::class, [
+                'choices' => Choices::getChoices(EvalSocialPerson::SOCIAL_SECURITY),
+                'attr' => [
+                    'class' => 'js-initEval important',
+                    'data-id' => 'socialSecurity',
+                ],
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
+            ->add('socialSecurityOffice')
+            ->add('endRightsSocialSecurityDate', DateType::class, [
+                'widget' => 'single_text',
+                'required' => false,
+            ])
+            ->add('familyBreakdown', ChoiceType::class, [
+                'choices' => Choices::getChoices(Choices::YES_NO_PARTIAL),
+                'attr' => [
+                    'class' => 'js-initEval',
+                    'data-id' => 'familyBreakdown',
+                ],
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
+            ->add('friendshipBreakdown', ChoiceType::class, [
+                'choices' => Choices::getChoices(Choices::YES_NO_PARTIAL),
+                'attr' => [
+                    'class' => 'js-initEval',
+                    'data-id' => 'friendshipBreakdown',
+                ],
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
             ->add('violenceVictim', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
                 'placeholder' => 'placeholder.select',
@@ -120,14 +142,6 @@ class EvalSocialPersonType extends AbstractType
                 'choices' => Choices::getChoices(Choices::YES_NO),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
-            ])
-            ->add('commentEvalSocialPerson', null, [
-                'label_attr' => ['class' => 'sr-only'],
-                'attr' => [
-                    'rows' => 4,
-                    'class' => 'justify',
-                    'placeholder' => 'evalSocialPerson.comment',
-                ],
             ]);
     }
 

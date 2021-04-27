@@ -8,9 +8,11 @@
             class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
         </span>
     </div>
-    <div class="row mb-3">
-        {{ view_div.get(evalHousing.housingStatusToString, "Housing status", "evaluation") }}
-    </div>
+    {% if SERVICE_TYPE_AVDL or support.service.id == 2 %}
+        <div class="row mb-3">
+            {{ view_div.get(evalHousing.housingStatusToString, "Housing status", "evaluation") }}
+        </div>
+    {% endif %}
         <div class="row mb-3">
             {{ view_div.get(evalHousing.siaoRequestToString, "Siao request", "evaluation") }}
             {% if evalHousing.siaoRequest == YES %}

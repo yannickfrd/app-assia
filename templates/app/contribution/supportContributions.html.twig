@@ -44,17 +44,28 @@
 							</tr>
 							<tr>
 								<th scope="col" class="align-middle th-w-20"></th>
-								<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "contribution.type"|trans({}, "forms"), "c.type") }}</th>
-								<th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(contributions, "Période de la PF", "c.startDate") }}</th>
-								<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Montant à régler", "c.toPayAmt") }}</th>
-								<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Montant réglé", "c.paidAmt") }}</th>
-								<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Restant dû (différenciel)", "c.stillToPayAmt") }}</th>
-								<th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(contributions, "Date de l\'opération", "c.paymentDate") }}</th>
-								<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Mode de règlement", "c.paymentType") }}</th>
-								<th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(contributions, "Commentaire", "c.comment") }}</th>
-								<th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(contributions, "Date de création", "c.createdAt") }}</th>
-								<th scope="col" class="align-middle th-w-20">{{ knp_pagination_sortable(contributions, "PDF", "c.pdfGenerateAt") }}</th>
-								<th scope="col" class="align-middle th-w-20">{{ knp_pagination_sortable(contributions, "Mail", "c.mailSentAt") }}</th>
+								<th scope="col" class="align-middle th-w-100">
+									{{ knp_pagination_sortable(contributions, "contribution.type"|trans({}, "forms"), "c.type") }}</th>
+								<th scope="col" class="align-middle th-w-120">
+									{{ knp_pagination_sortable(contributions, "Période de la PF", "c.startDate") }}</th>
+								<th scope="col" class="align-middle th-w-100">
+									{{ knp_pagination_sortable(contributions, "Montant à régler", "c.toPayAmt") }}</th>
+								<th scope="col" class="align-middle th-w-100">
+									{{ knp_pagination_sortable(contributions, "Montant réglé", "c.paidAmt") }}</th>
+								<th scope="col" class="align-middle th-w-100">
+									{{ knp_pagination_sortable(contributions, "Restant dû (différenciel)", "c.stillToPayAmt") }}</th>
+								<th scope="col" class="align-middle th-date">
+									{{ knp_pagination_sortable(contributions, "Date de l\'opération", "c.paymentDate") }}</th>
+								<th scope="col" class="align-middle th-w-100">
+									{{ knp_pagination_sortable(contributions, "Mode de règlement", "c.paymentType") }}</th>
+								<th scope="col" class="align-middle th-w-140">
+									{{ knp_pagination_sortable(contributions, "Commentaire", "c.comment") }}</th>
+								<th scope="col" class="align-middle th-w-100">
+									{{ knp_pagination_sortable(contributions, "Date de création", "c.createdAt") }}</th>
+								<th scope="col" class="align-middle th-w-20">
+									{{ knp_pagination_sortable(contributions, "PDF", "c.pdfGenerateAt") }}</th>
+								<th scope="col" class="align-middle th-w-20">
+									{{ knp_pagination_sortable(contributions, "Mail", "c.mailSentAt") }}</th>
 								<th scope="col" class="align-middle th-w-20"></th>
 							</tr>
 						</thead>
@@ -86,7 +97,7 @@
 									<td class="align-middle text-center js-paymentDate">{{ contribution.paymentDate ? contribution.paymentDate|date("d/m/Y") }}
 									<td class="align-middle js-paymentType">{{ contribution.paymentTypeToString }}</td>
 									<td class="align-middle js-comment">{{ (contribution.comment ~ "\n"
-										~ contribution.commentExport)|u.truncate(200, " [...]", false) }}</td>
+										~ contribution.commentExport)|u.truncate(50, " [...]", false) }}</td>
 									<td class="align-middle js-createdAt">{{ contribution.createdAt|date("d/m/Y") }}</td>
 									<td class="align-middle text-center js-pdfGenerate">
 										<a href="{{ path('contribution_export_pdf', {'id': contribution.id}) }}" data-toggle="tooltip" data-placement="bottom" 
@@ -95,7 +106,7 @@
 									</td>
 									<td class="align-middle text-center js-mailSent">
 										<span data-url="{{ path('contribution_send_pdf', {'id': contribution.id}) }}" data-toggle="tooltip" data-placement="bottom" 
-										title="{{ contribution.mailSent ? 'Mail envoyé le ' ~ contribution.mailSentAt|date('d/m/Y à H:i')  }}"><i 
+										title="{{ contribution.mailSent ? 'Mail envoyé le ' ~ contribution.mailSentAt|date('d/m/Y à H:i') }}"><i 
 										class="fas fa-envelope{{ contribution.mailSent ? '-open text-success' : ' text-secondary' }} fa-lg"></i></span>
 									</td>
 									<td class="align-middle text-center">
@@ -108,14 +119,6 @@
 								</tr>
 							{% endfor %}
 						</tbody>
-						{# <tfoot>
-							<tr class="font-weight-bold">
-								<td scope="row" colspan="3" class="align-middle text-center">Sous-total</td>
-								<td class="align-middle text-right js-sumToPayAmt"></td>
-								<td class="align-middle text-right js-sumPaidAmt"></td>
-								<td class="align-middle text-right js-sumStillToPayAmt"></td>
-							</tr>
-						</tfoot> #}
 					</table>
 				</div>
 				<div class="navigation">{{ knp_pagination_render(contributions) }}</div>

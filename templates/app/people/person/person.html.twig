@@ -21,7 +21,7 @@
         
         {% if EDIT_MODE %}
             <div class="small text-secondary my-2">
-                <p> Créé le {{person.createdAt|date("d/m/Y à H:i") }}
+                <p> Créé le {{ person.createdAt|date("d/m/Y à H:i") }}
                     {{ person.createdBy ? " par " ~ person.createdBy.fullname }}
                     <span id="js-person-updated">
                         {% if person.createdAt != person.updatedAt %}

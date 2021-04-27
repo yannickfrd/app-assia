@@ -73,7 +73,7 @@
                                             </a>
                                         </td>
                                         <td class="align-middle text-capitalize">{{ person.firstname }}</td>
-                                        <td>{{person.birthdate ? person.birthdate|date("d/m/Y") }}</td>
+                                        <td>{{ person.birthdate ? person.birthdate|date("d/m/Y") }}</td>
                                         <td>{{ person.birthdate ? person.age ~ ' an' ~ (person.age > 1 ? 's') }}</td>
                                         <td class="align-middle">
                                             {% if person.gender == constant("GENDER_FEMALE", person) %}

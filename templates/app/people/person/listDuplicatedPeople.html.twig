@@ -40,7 +40,7 @@
                         {% set search = form.vars.value %}
                         {% for person in people %}
                             <tr>
-                                <th scope="row">
+                                <td scope="row">
                                     <a href="{{ path('people', { 
                                         'lastname':search.lastname ? person.lastname,
                                         'firstname':search.firstname ? person.firstname,
@@ -48,10 +48,10 @@
                                         class="btn btn-{{ theme_color }} shadow" data-placement="bottom" title="Voir les doublons">
                                         <span class="fas fa-eye"></span>
                                     </a>
-                                </th>
+                                </td>
                                 <td>{{ person.lastname }} {{ person.usename ? " (" ~ person.usename ~ ")" }}</td>
                                 <td class="text-capitalize">{{ person.firstname }}</td>
-                                <td>{% if person.birthdate %} {{person.birthdate|date("d/m/Y") }}<br/>
+                                <td>{% if person.birthdate %} {{ person.birthdate|date("d/m/Y") }}<br/>
                                     ({{ person.age }}{% if person.age > 1 %} ans{% elseif person.age %}
                                     an{% endif %}){% endif %}</td>
                                 <td>{% if person.gender == constant("GENDER_FEMALE", person) %}

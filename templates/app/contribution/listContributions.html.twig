@@ -29,7 +29,7 @@
 
             <div class="row align-items-baseline">
                 <div class="col-md-4 count align-middle mb-2">
-                    <span class="align-middle">Résultat : {{ contributions.getTotalItemCount|number  }}<!--
+                    <span class="align-middle">Résultat : {{ contributions.getTotalItemCount|number }}<!--
                     --> entrée{% if contributions.getTotalItemCount > 1 %}s{% endif %}.</span>
                 </div>
                 <div class="col-md-8">
@@ -88,7 +88,7 @@
                                 <td class="align-middle text-center">{{ contribution.paymentDate ? contribution.paymentDate|date("d/m/Y") }}</td>
                                 <td class="align-middle">{{ contribution.paymentTypeToString }}</td>
                                 <td class="align-middle">{{ (contribution.comment ~ "\n"
-									~ contribution.commentExport)|u.truncate(200, " [...]", false) }}</td>                  
+									~ contribution.commentExport)|u.truncate(100, " [...]", false) }}</td>                  
                                 <td class="align-middle">{{ contribution.supportGroup.service ? contribution.supportGroup.service.name }}<br/>
                                     <span class="text-secondary">{{ contribution.supportGroup.device ? "(" ~ contribution.supportGroup.device.name ~ ")" }}</span>
                                 </td>

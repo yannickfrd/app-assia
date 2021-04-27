@@ -53,7 +53,7 @@
                     <tbody>
                         {% for organization in organizations %}
                         <tr>
-                            <th scope="row">
+                            <td scope="row">
                                 {% if is_granted("ROLE_ADMIN") %}
                                 <a href="{{ path('admin_organization_edit', {'id': organization.id}) }}"
                                     class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip"
@@ -61,7 +61,7 @@
                                     <span class="fas fa-eye"></span>
                                 </a>
                                 {% endif %}
-                            </th>
+                            </td>
                             <td>{{ organization.name }}</td>
                             <td>{{ organization.comment }}</td>
                             <td>{{ organization.createdAt|date("d/m/Y") }}</td>

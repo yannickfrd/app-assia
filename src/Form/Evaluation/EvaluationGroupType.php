@@ -15,7 +15,25 @@ class EvaluationGroupType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        /** @var EvaluationGroup */
+        $evaluationGroup = $builder->getData();
+        /** @var Service */
+        $service = $evaluationGroup->getSupportGroup()->getService();
+
         $builder
+            ->add('initEvalGroup', InitEvalGroupType::class)
+            ->add('evalSocialGroup', EvalSocialGroupType::class)
+            ->add('evalFamilyGroup', EvalFamilyGroupType::class)
+            ->add('evalBudgetGroup', EvalBudgetGroupType::class)
+            ->add('evalHousingGroup', EvalHousingGroupType::class, [
+                'attr' => ['service' => $service],
+            ])
+            ->add('evaluationPeople', CollectionType::class, [
+                'entry_type' => EvaluationPersonType::class,
+                'allow_add' => false,
+                'allow_delete' => false,
+                'required' => false,
+            ])
             ->add('backgroundPeople', null, [
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
@@ -31,17 +49,6 @@ class EvaluationGroupType extends AbstractType
                     'class' => 'justify',
                     'placeholder' => 'conclusion.placeholder',
                 ],
-            ])
-            ->add('initEvalGroup', InitEvalGroupType::class)
-            ->add('evalSocialGroup', EvalSocialGroupType::class)
-            ->add('evalFamilyGroup', EvalFamilyGroupType::class)
-            ->add('evalBudgetGroup', EvalBudgetGroupType::class)
-            ->add('evalHousingGroup', EvalHousingGroupType::class)
-            ->add('evaluationPeople', CollectionType::class, [
-                'entry_type' => EvaluationPersonType::class,
-                'allow_add' => false,
-                'allow_delete' => false,
-                'required' => false,
             ]);
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {

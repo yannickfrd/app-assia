@@ -14,7 +14,7 @@
         <h1 class="h2 mb-3">{{ place.service.name }}<span class="fas fa-angle-right fa-xs mx-1"></span>{{ title }}</h1>
         {% if EDIT_MODE %}
             <div class="small text-secondary">
-                <p> Créé le {{place.createdAt|date("d/m/Y à H:i") }}
+                <p> Créé le {{ place.createdAt|date("d/m/Y à H:i") }}
                     {% if place.createdBy %}par {{ place.createdBy.fullname }}{% endif %}
                     {% if place.updatedAt %}(modifié le {{ place.updatedAt|date("d/m/Y à H:i") }}){% endif %}
                 </p>
@@ -130,11 +130,11 @@
                             {% for place_group in places_group %}
                                 {% set person = (place_group.supportGroup.supportPeople|first).person %}
                                 <tr>
-                                    <th scope="row">
+                                    <td scope="row">
                                         <a href="{{ path('support_place_edit', {'id':place_group.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow" 
                                             data-toggle="tooltip" data-placement="bottom" title="Voir le détail de la prise en charge"><span class="fas fa-eye"></span>
                                         </a>
-                                    </th>
+                                    </td>
                                     <td>{{ person ? person.fullname }}</td>
                                     <td>{{ place_group.peopleGroup.familyTypologyToString }}</td>
                                     <td>{{ place_group.placePeople ? place_group.placePeople|length }}</td>

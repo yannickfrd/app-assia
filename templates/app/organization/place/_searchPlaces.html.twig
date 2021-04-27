@@ -2,7 +2,7 @@
 
 {% block search_form %}
 <div class="form-group col-auto my-1 px-1 ">{{ form_row(form.name) }}</div>
-    {% include "_shared/_serviceDeviceReferentSearch.html.twig" with {"poles": true} %}
+    {% include "_shared/_serviceDeviceReferentSearch.html.twig" with {"referents": false} %}
 <div class="form-group col-auto my-1 px-1 ">{{ form_row(form.nbPlaces) }}</div>
 <div class="form-group col-auto my-1 px-1">{{ form_row(form.supportDates) }}</div>
 <div class="form-group col-auto my-1 px-1 d-inline-flex" data-toggle="tooltip" data-placement="bottom"

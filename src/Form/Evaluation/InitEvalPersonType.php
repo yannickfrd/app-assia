@@ -18,6 +18,9 @@ class InitEvalPersonType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        /** @var Person */
+        $person = $options['attr']['person'];
+
         $builder
             ->add('paper', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
@@ -56,6 +59,20 @@ class InitEvalPersonType extends AbstractType
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
+            ->add('comment', null, [
+                'label_attr' => ['class' => 'sr-only'],
+                'attr' => [
+                    'rows' => 4,
+                    'class' => 'justify',
+                    'placeholder' => 'initEvalPerson.comment',
+                ],
+            ]);
+
+        if ($person->getAge() < 16) {
+            return;
+        }
+
+        $builder
             ->add('familyBreakdown', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO_PARTIAL),
                 'attr' => [
@@ -110,14 +127,6 @@ class InitEvalPersonType extends AbstractType
                     'data-id' => 'debtsAmt',
                 ],
                 'required' => false,
-            ])
-            ->add('comment', null, [
-                'label_attr' => ['class' => 'sr-only'],
-                'attr' => [
-                    'rows' => 4,
-                    'class' => 'justify',
-                    'placeholder' => 'initEvalPerson.comment',
-                ],
             ]);
     }
 

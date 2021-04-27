@@ -34,6 +34,7 @@ class Service
     public const CACHE_SERVICE_SUBSERVICES_KEY = 'service.sub_services';
     public const CACHE_SERVICE_USERS_KEY = 'service.users';
 
+    public const SERVICE_TYPE_HEB = 1;
     public const SERVICE_TYPE_AVDL = 2;
     public const SERVICE_TYPE_HOTEL = 3;
 

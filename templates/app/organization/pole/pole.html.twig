@@ -12,7 +12,7 @@
         <h1 class="h2 mb-3">{{ title }}</h1>
         {% if EDIT_MODE %}
         <div class="small text-secondary">
-            <p> Créé le {{pole.createdAt|date("d/m/Y à H:i") }}
+            <p> Créé le {{ pole.createdAt|date("d/m/Y à H:i") }}
                 {{ pole.createdBy ?  " par " ~ pole.createdBy.fullname }}
                 {% if pole.updatedAt %}(modifié le {{ pole.updatedAt|date("d/m/Y à H:i") }}
                 {{ pole.updatedBy ? pole.updatedBy.fullname }}){% endif %}
@@ -91,13 +91,13 @@
                     <tbody>
                         {% for service in pole.services %}
                         <tr>
-                            <th scope="row">
+                            <td scope="row">
                                 <a href="{{ path('service_edit', {'id':service.id}) }}"
                                     class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" data-placement="bottom"
                                     title="Voir la fiche du service">
                                     <span class="fas fa-eye"></span>
                                 </a>
-                            </th>
+                            </td>
                             <td>{{ service.name }}</td>
                             <td>{{ service.phone1}}</td>
                             <td>{{ service.email }}</td>

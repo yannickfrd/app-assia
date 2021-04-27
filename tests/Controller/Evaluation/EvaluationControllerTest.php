@@ -164,7 +164,6 @@ class EvaluationControllerTest extends WebTestCase
                     'reasonRequest' => 1,
                 ],
                 'evalHousingGroup' => [
-                    'housingStatus' => 1,
                     'siaoRequest' => 1,
                     'siaoRequestDate' => '2020-04-03',
                     'siaoUpdatedRequestDate' => '2021-04-03',

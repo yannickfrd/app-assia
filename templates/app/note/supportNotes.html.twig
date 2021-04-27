@@ -44,7 +44,7 @@
 								{{ note.typeToString }}
 							</span>
 							<span data-note-status={{ note.status }}>({{ note.statusToString }})</span>
-							<span class="small text-secondary" data-note-created="true">| Créé le {{note.createdAt|date("d/m/Y à H:i") }} par {{ note.createdBy.fullname }}
+							<span class="small text-secondary" data-note-created="true">| Créé le {{ note.createdAt|date("d/m/Y à H:i") }} par {{ note.createdBy.fullname }}
 							</span>
 							<span class="small text-secondary" data-note-updated="true">
 								{% if note.updatedAt != note.createdAt %} (modifié le {{ note.updatedAt|date("d/m/Y à H:i") }} par {{ note.updatedBy.fullname }}){% endif %}
