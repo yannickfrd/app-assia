@@ -113,7 +113,8 @@ class SocialIndicators
             if ($supportPerson->getHead()) {
                 $varDatas[$var]['nbGroups'] = $varDatas[$var]['nbGroups'] + 1;
             }
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
+            throw $e;
         }
 
         return $varDatas;

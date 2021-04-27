@@ -57,9 +57,13 @@ class LoginListener
             ->setConnectionAt(new \DateTime())
             ->setUser($user);
 
-        if ($this->manager->isOpen()) {
-            $this->manager->persist($connection);
-            $this->manager->flush();
+        try {
+            if ($this->manager->isOpen()) {
+                $this->manager->persist($connection);
+                $this->manager->flush();
+            }
+        } catch (\Exception $e) {
+            // throw $e;
         }
     }
 
