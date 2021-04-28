@@ -46,6 +46,7 @@ class UserControllerTest extends WebTestCase
             'firstname' => 'Role',
             'status' => 6,
             'phone' => '01 00 00 00 00',
+            'service[services]' => [$this->data['service1']],
         ], 'GET');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());

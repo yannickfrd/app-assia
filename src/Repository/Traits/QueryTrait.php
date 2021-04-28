@@ -36,7 +36,7 @@ trait QueryTrait
     protected function addServicesFilter(QueryBuilder $query, object $search): QueryBuilder
     {
         if ($search->getServices() && count($search->getServices()) > 0) {
-            $query = $this->addOrWhere($query, 'sg.service', $search->getServices());
+            $query = $this->addOrWhere($query, 's.id', $search->getServices());
         }
 
         return $query;
