@@ -63,8 +63,9 @@
                 <div class="col-md-12">
                     {% if EDIT_MODE %}
                     <div class="float-left d-flex">
-                        <a id="modal-btn-delete" class="mr-3 btn btn-danger d-block"
-                            href="{{ path('referent_delete', {'id':referent.id}) }}"
+                        <a id="btn-delete" class="mr-3 btn btn-danger d-block"
+                            href="{{ support ? path('support_referent_delete', {'supportId': support.id, 'id': referent.id}) 
+                            : path('referent_delete', {'id': referent.id})  }}"
                             title="Supprimer le service social référent" data-toggle="tooltip" data-placement="bottom"
                             onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer ce service social référent ?')){return true;}else{return false;}"><span
                                 class="fas fa-trash-alt mr-2"></span>Supprimer</a>

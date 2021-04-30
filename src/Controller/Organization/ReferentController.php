@@ -92,9 +92,13 @@ class ReferentController extends AbstractController
      * Supprime un service référent.
      *
      * @Route("/referent/{id}/delete", name="referent_delete", methods="GET")
+     * @Route("/support/{supportId}/referent/{id}/delete", name="support_referent_delete", methods="GET")
      */
-    public function deleteReferent(Referent $referent): Response
+    public function deleteReferent(int $supportId = null, Referent $referent): Response
     {
+        $referent->setUpdatedBy($this->getUser());
+        $this->manager->flush();
+
         $this->manager->remove($referent);
         $this->manager->flush();
 
@@ -103,6 +107,10 @@ class ReferentController extends AbstractController
         $this->addFlash('warning', "Le service social $name est supprimé.");
 
         $this->discache($referent->getPeopleGroup());
+
+        if ($supportId) {
+            return $this->redirectToRoute('support_view', ['id' => $supportId]);
+        }
 
         return $this->redirectToRoute('people_group_show', ['id' => $referent->getPeopleGroup()->getId()]);
     }

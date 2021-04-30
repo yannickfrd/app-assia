@@ -36,6 +36,7 @@ class ReferentControllerTest extends WebTestCase
             dirname(__DIR__).'/../DataFixturesTest/ReferentFixturesTest.yaml',
         ];
     }
+
     public function testCreateReferentByPeopleGroupIsSuccessful()
     {
         $data = $this->loadFixtureFiles($this->getFixtureFiles());
@@ -55,26 +56,6 @@ class ReferentControllerTest extends WebTestCase
                 'socialWorker' => 'XXXX',
                 'socialWorker2' => 'XXXX',
             ],
-        ]);
-
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorExists('.alert.alert-success');
-    }
-
-    public function testCreateReferentBySupportIsSuccessful()
-    {
-        $data = $this->loadFixtureFiles(array_merge( $this->getFixtureFiles(), [
-            dirname(__DIR__).'/../DataFixturesTest/SupportFixturesTest.yaml',
-        ]));
-
-        $this->createLogin($data['userRoleUser']);
-
-        $id = $data['supportGroup1']->getId();
-        $this->client->request('GET', "/suppport/$id/referent/new");
-
-        $this->client->submitForm('send', [
-            'referent[name]' => 'Référent test',
-            'referent[type]' => 1,
         ]);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -102,7 +83,7 @@ class ReferentControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Référent test edit');
     }
 
-    public function testDeleteReferent()
+    public function testDeleteReferentIsSuccessful()
     {
         $data = $this->loadFixtureFiles($this->getFixtureFiles());
 
@@ -113,6 +94,31 @@ class ReferentControllerTest extends WebTestCase
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Group');
+    }
+
+    public function testCreateReferentBySupportIsSuccessful()
+    {
+        $data = $this->loadFixtureFiles(array_merge($this->getFixtureFiles(), [
+            dirname(__DIR__).'/../DataFixturesTest/SupportFixturesTest.yaml',
+        ]));
+
+        $this->createLogin($data['userRoleUser']);
+
+        $id = $data['supportGroup1']->getId();
+        $this->client->request('GET', "/suppport/$id/referent/new");
+
+        $this->client->submitForm('send', [
+            'referent[name]' => 'Référent test',
+            'referent[type]' => 1,
+        ]);
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorExists('.alert.alert-success');
+
+        $this->client->clickLink('Supprimer');
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('.alert.alert-warning', 'Le service social Référent test est supprimé.');
     }
 
     protected function tearDown(): void
