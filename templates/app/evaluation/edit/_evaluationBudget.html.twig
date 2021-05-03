@@ -6,82 +6,77 @@
 
 {% block card_body %}
 	{% set evalBudgetGroup = evaluationGroup.evalBudgetGroup %}
-	<div class="row mb-2">
-		<div class="col-md-6">{{ form_row(form.evalBudgetGroup.cafId) }}</div>
-		<div class="col-md-6" data-parent-field="cafId">{{ form_row(form.evalBudgetGroup.cafAttachment) }}</div>
-	</div>
-	<div class="card mb-4">
-		<div class="card-body p-1">
-			<div class="d-flex row justify-content-center">
-				<div class="col-12 col-md-2 my-1 text-center border-right border-gray">
-					<div class="row">
-						<div class="col-8 col-md-12">Total des resources</div>
-						<div class="col-4 col-md-12">
-							<span id="resourcesGroupAmt">{% if evalBudgetGroup.resourcesGroupAmt is defined %}
-							{{ evalBudgetGroup.resourcesGroupAmt|number }}{% else %}0{% endif %}</span> €
-						</div>
-					</div>
-				</div>
-				<div class="col-12 col-md-2 my-1 text-center border-right border-gray">
-					<div class="row">
-						<div class="col-8 col-md-12">Total des charges</div>
-						<div class="col-4 col-md-12">
-							<span id="chargesGroupAmt">{% if evalBudgetGroup.chargesGroupAmt is defined %}
-								{{ evalBudgetGroup.chargesGroupAmt|number }}{% else %}0{% endif %}</span> €
-						</div>
-					</div>
-				</div>
-				<div class="col-12 col-md-2 my-1 text-center border-right border-gray">
-					<div class="row">
-						<div class="col-8 col-md-12">Remboursemt mensuel</div>
-						<div class="col-4 col-md-12">
-							<span id="repaymentGroupAmt">{% if evalBudgetGroup.monthlyRepaymentAmt is defined %}
-								{{ evalBudgetGroup.monthlyRepaymentAmt|number }}{% else %}0{% endif %}</span> €
-						</div>
-					</div>
-				</div>
-				<div class="col-12 col-md-2 my-1 text-center font-weight-bold border-right border-gray">
-					<div class="row">
-						<div class="col-8 col-md-12">Reste à vivre</div>
-						<div class="col-4 col-md-12">
-						<span id="budgetBalanceGroupAmt">{% if evalBudgetGroup.budgetBalanceAmt is defined %}
-							{{ evalBudgetGroup.budgetBalanceAmt|number }}{% else %}0{% endif %}</span> €
-						</div>
-					</div>
-				</div>
-				<div class="col-12 col-md-2 my-1 text-center">
-					<div class="row">
-						<div class="col-8 col-md-12">Total des dettes</div>
-						<div class="col-4 col-md-12">
-							<span id="debtsGroupAmt">{% if evalBudgetGroup.debtsGroupAmt is defined %}
-								{{ evalBudgetGroup.debtsGroupAmt|number }}{% else %}0{% endif %}</span> €
-						</div>
-					</div>
+	<div class="row">
+		<div class="col-md-6">
+			<div class="row">
+				<div class="col-md-12">
+					<table class="table table-bordered table-striped">
+						<thead>
+							<tr>
+								<th scope="col">Budget du ménage</th>
+								<th class="text-right">Montant mensuel</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td scope="row">Total des ressources</td>
+								<td class="text-right">
+									<span id="resourcesGroupAmt">{{ evalBudgetGroup.resourcesGroupAmt|price }}</span>
+								</td>
+							</tr>
+							<tr>
+								<td scope="row">Total des charges</td>
+								<td class="text-right">
+									<span id="chargesGroupAmt">{{ evalBudgetGroup.chargesGroupAmt|price }}</span>
+								</td>
+							</tr>
+							<tr>
+								<td scope="row">Remboursement mensuel des dettes</td>
+								<td class="text-right">
+									<span id="repaymentGroupAmt">{{ evalBudgetGroup.monthlyRepaymentAmt|price }}</span>
+								</td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr class="font-weight-bold">
+								<td scope="row">Reste à vivre</td>
+								<td class="text-right">{{ evalBudgetGroup.budgetBalanceAmt|price }}</td>
+							</tr>
+							{% if evalBudgetGroup.debtsGroupAmt %}
+								<tr>
+									<td scope="row">Montant total des dettes</td>
+									<td class="text-right">{{ evalBudgetGroup.debtsGroupAmt|price }}</td>
+								</tr>
+							{% endif %}
+						</tfoot>
+					</table>
 				</div>
 			</div>
 		</div>
-	</div>
-		
-	{% if support.device.contributionType in [1, 3] %}
-		<div class="row mb-3">
-			<div class="col-md-6">
-				<div class="row">{{ form_label(form.evalBudgetGroup.contributionAmt) }}
-					<div class="col-5 col-md-6 pr-1" 
-						title="Le montant fixé sera pris en compte pour le calcul d'une nouvelle redevance.">
-						{{ form_widget(form.evalBudgetGroup.contributionAmt) }}</div>
-					<div class="col-3 col-md-2 pl-1">
+		<div class="col-md-6">
+			<div class="row">
+				<div class="col-md-12">{{ form_row(form.evalBudgetGroup.cafId) }}</div>
+				<div class="col-md-12" data-parent-field="cafId">{{ form_row(form.evalBudgetGroup.cafAttachment) }}</div>
+			</div>	
+			{% if support.device.contributionType in [1, 3] %}
+				<div class="row mt-2">
+					<div class="col-md-12" title="Le montant fixé sera pris en compte pour le calcul d'une nouvelle redevance.">
+						{{ form_row(form.evalBudgetGroup.contributionAmt) }}</div>
+				</div>
+				<div class="row">
+					<div class="col-md-4">
 						<button id="update_contribution" class="btn btn-secondary"
 							title="Calculer automatiquement le montant de la redevance"
 							data-contribution-type="{{ support.device.contributionType }}"
 							data-contribution-rate="{{ support.device.contributionRate }}">
-							<span class="fas fa-sync"></span>
+							<span class="fas fa-sync mr-2"></span>Calculer
 						</button>
 					</div>
+					<div class="col-md-8"><span class="text-secondary" id="calculationMethod"></span></div>
 				</div>
-			</div>
-			<div class="col-md-6"><span class="text-secondary" id="calculationMethod"></span></div>
+			{% endif %}
 		</div>
-	{% endif %}
+	</div>
 
 	<div class="row">
 		<div class="col-md-12 accordion" id="accordion-eval_budget">

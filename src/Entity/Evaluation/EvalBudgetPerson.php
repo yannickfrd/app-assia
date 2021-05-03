@@ -30,6 +30,8 @@ class EvalBudgetPerson
         'solidarityAllowance' => 'Allocation de solidarité spécifique (ASS)',
         'asylumAllowance' => 'Allocation pour demandeur d\'asile (ADA)',
         'tempWaitingAllowance' => 'Allocation temporaire d\'attente (ATA)',
+        'scholarships' => 'Bourse',
+        'familySupplement' => 'Complément familial',
         'paidTraining' => 'Formation rémunérée',
         'youthGuarantee' => 'Garantie jeunes',
         'maintenance' => 'Pension alimentaire',
@@ -54,6 +56,8 @@ class EvalBudgetPerson
         'solidarityAllowance' => 'ASS',
         'asylumAllowance' => 'ADA',
         'tempWaitingAllowance' => 'ATA',
+        'scholarships' => 'Bourse',
+        'familySupplement' => 'Complément familial',
         'paidTraining' => 'Formation',
         'youthGuarantee' => 'Garantie jeunes',
         'maintenance' => 'Pension alimentaire',
@@ -451,12 +455,12 @@ class EvalBudgetPerson
         $array = [];
 
         foreach (EvalBudgetPerson::CHARGES_TYPE as $key => $value) {
-                $method = 'get'.ucfirst($key);
+            $method = 'get'.ucfirst($key);
             if (Choices::YES === $this->$method()) {
                 $array[] = $value;
             }
         }
-        
+
         if ($this->getChargeOtherPrecision()) {
             $array[] = $this->getChargeOtherPrecision();
         }
@@ -909,7 +913,7 @@ class EvalBudgetPerson
                 $array[] = $value;
             }
         }
-        
+
         if ($this->getDebtOtherPrecision()) {
             $array[] = $this->getDebtOtherPrecision();
         }

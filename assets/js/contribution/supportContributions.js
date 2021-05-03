@@ -4,7 +4,8 @@ import Loader from '../utils/loader'
 import SelectType from '../utils/form/selectType'
 import FormValidator from '../utils/form/formValidator'
 import ParametersUrl from '../utils/parametersUrl'
-import { Modal } from 'bootstrap'
+import { Modal, Popover } from 'bootstrap'
+import FieldDisplayer from '../utils/form/fieldDisplayer'
 
 export default class SupportContributions {
 
@@ -16,6 +17,7 @@ export default class SupportContributions {
         this.formValidator = new FormValidator()
         this.parametersUrl = new ParametersUrl()
         this.modalElt = new Modal(document.getElementById('contribution-modal'))
+        this.contribCalculModal = new Modal(document.getElementById('contribution-calcul-modal'))
 
         this.resourcesChecked = false // Ressources vérifiées dans la base de données
         this.resourcesAmt = null
@@ -51,6 +53,7 @@ export default class SupportContributions {
         this.rentAmtInput = document.getElementById('contribution_rentAmt')
         this.aplAmtInput = document.getElementById('contribution_aplAmt')
         this.toPayAmtInput = document.getElementById('contribution_toPayAmt')
+        this.noContribInput = document.getElementById('contribution_noContrib')
         this.calculationMethodElt = document.getElementById('calculationMethod')
         this.paymentDateInput = document.getElementById('contribution_paymentDate')
         this.paymentTypeSelect = document.getElementById('contribution_paymentType')
@@ -129,31 +132,33 @@ export default class SupportContributions {
         })
 
         // Récupère les ressources et calcul le montant à payer du suivi au clic sur le bouton.
-        document.getElementById('btn-update-contribution').addEventListener('click', e => {
+        const calculContribBtnElt = document.getElementById('calcul-contribution-btn')
+        calculContribBtnElt.addEventListener('click', e => {
             e.preventDefault()
-            this.loader.on()
-            if (this.resourcesChecked === false) {
-                this.ajax.send('GET', this.btnNewElt.getAttribute('data-url'), this.responseAjax.bind(this))
-            } else {
-                this.getResources()
+            if (false === this.loader.isActive()) {
+                this.loader.on()
+                const url = calculContribBtnElt.getAttribute('data-url')
+                this.ajax.send('POST', url, this.responseAjax.bind(this), new FormData(this.formContributionElt))
             }
-        });
+        })
 
-        [this.rentAmtInput, this.aplAmtInput].forEach(elt => {
-            elt.addEventListener('input', () => {
-                this.calculateAmountToPay()
-            });
-        });
+        if (this.rentAmtInput) {
+            [this.rentAmtInput, this.aplAmtInput].forEach(elt => {
+                elt.addEventListener('input', () => {
+                    this.calculateAmountToPay()
+                })
+            })
+        }
             
         [this.toPayAmtInput, this.paidAmtInput].forEach(elt => {
             elt.addEventListener('input', () => {
                 this.calculateAmountStillDue()
-            });
-        });
+            })
+        })
 
         this.paymentDateInput.addEventListener('focusout', () => {
             this.checkPaidAmt()
-        });
+        })
 
         this.calculateSumAmts()
 
@@ -161,6 +166,21 @@ export default class SupportContributions {
         this.trElt = document.getElementById('contribution-' + contributionId)
         if (this.trElt) {
             this.getContribution(contributionId)
+        }
+
+        new FieldDisplayer('contribution_', 'noContrib')
+        new FieldDisplayer('contribution_', 'toPayAmt')
+        new FieldDisplayer('contribution_', 'paidAmt')
+
+        if (this.noContribInput) {
+            console.log(this.noContribInput)
+            this.noContribInput.addEventListener('click', () => {
+                console.log(this.noContribInput.value)
+                console.log(this.noContribInput.checked)
+                if (this.noContribInput.checked === true) {
+                    this.toPayAmtInput.value = 0
+                }
+            })
         }
 
         this.pdfBtnElt.addEventListener('click', e => {
@@ -497,10 +517,15 @@ export default class SupportContributions {
      * Réinitialise le formulaire.
      */
     initForm() {
+        console.log('initForm')
         this.formValidator.reinit()
         this.formContributionElt.querySelectorAll('input').forEach(inputElt => {
             if (inputElt.type != 'hidden') {
                 inputElt.value = null
+            }
+            if (inputElt.type === 'checkbox') {
+                console.log(inputElt)
+                inputElt.checked = false      
             }
         })
         this.selectType.setOption(this.paymentTypeSelect, '')
@@ -556,9 +581,12 @@ export default class SupportContributions {
      */
     responseAjax(response) {
         switch (response.action) {
-            case 'get_resources':
+            case 'get_contribution':
                 this.getResources(response.data)
                 break
+            // case 'get_resources':
+            //     this.getResources(response.data)
+            //     break
             case 'show':
                 this.showContribution(response.data)
                 break
@@ -588,23 +616,36 @@ export default class SupportContributions {
 
     /**
      * Donne le montant des ressources du ménage.
-     * @param {Array} data 
+     * @param {Object} data 
      */
-    getResources(data = null) {
-        if (this.resourcesChecked === false) {
-            this.resourcesAmt = data.resourcesAmt
-            this.contributionAmt = data.contributionAmt
-            this.toPayAmt = data.toPayAmt
-            this.rentAmt = data.rentAmt
-            this.resourcesChecked = true
-        }
+    getResources(data) {
+        // if (this.resourcesChecked === false) {
+        
+        const contribution = data.contribution
+            this.resourcesAmt = contribution.resourcesAmt
+            this.chargesAmt = contribution.chargesAmt
+            this.contributionAmt = contribution.contributionAmt
+            this.toPayAmt = contribution.toPayAmt
+            this.rentAmt = contribution.rentAmt
+            // this.resourcesChecked = true
+        // }
 
         this.resourcesAmtInput.value === '' ? this.resourcesAmtInput.value = this.resourcesAmt : null
         // this.contributionAmt = this.contributionAmt
         this.toPayAmtInput.value = this.toPayAmt
         this.rentAmtInput.value = this.rentAmt
 
-        this.calculateAmountToPay()
+        const modalBody = document.getElementById('contribution-calcul-modal').querySelector('.modal-body')
+        modalBody.innerHTML = data.view
+        modalBody.querySelectorAll('[data-toggle="popover"]').forEach(popover => {
+
+        this.contribCalculModal.show()
+        
+            new Popover(popover)
+        })
+
+
+        // this.calculateAmountToPay()
         this.loader.off()
     }
 

@@ -1,0 +1,98 @@
+{# {% extends "base.html.twig" %}
+{% block title %}Calcul de la participation financière{% endblock %} #}
+
+{# {% block body %} #}
+
+{% set rate_description %}
+    - Le taux de participation appliqué sur le montant total des ressources prises en compte, déduction faite des charges.</br>
+    - Le pourcentage est unique quelle que soit la composition du ménage : {{ contribution.rate * 100 }} % des ressources.</br>
+{% endset %}
+
+{% set uc_description %}
+    Le nombre d'unité de consommation (UC) dans le ménage est calculé sur la base de l’échelle de l'OCDE :</br>
+    - 1 UC pour le premier adulte du ménage,</br>
+    - 0,5 UC pour les autres personnes de 14 ans ou plus,</br>
+    - 0,3 UC pour les enfants de moins de 14 ans.</br>
+    (Source INSEE)
+{% endset %}
+
+{% set resources_description %}
+    - Les ressources prises en compte pour le calcul de la participation financière (PAF) sont toutes les ressources pérennes :</br>
+    salaires, prestations sociales (y compris liées au handicap), bourses scolaires, etc.</br>
+    - La PAF ne prend pas en compte des ressources temporaires (primes ponctuelles, rappels de prestations sociales, etc.).</br>
+{% endset %}
+
+{% set charges_description %}
+    - Les charges prises en compte en déduction des ressources sont les suivantes : assurance(s), eau, électricité, gaz, 
+    garde enfant(s), impôts, loyer, mutuelle, pension alimentaire, transports.</br>
+    - Les remboursements de dettes mensuelles sont également incluses dans les charges.</br>
+    - Les  charges relatives à l’alimentation et à l’envoi d’argent au pays ne sont prises en comptes dans le calcul.</br>
+{% endset %}
+
+{% set budget_balance_description %}
+    Le reste à vivre mensuel correspond au montant total des ressources mensuelles prises en compte, déduction faite des charges fixes mensuelles.
+{% endset %}
+
+{% set rav_description %}
+    Le reste à vivre journalier unitaire correspond au reste à vivre mensuel (ressources - charges fixes) par jour et par personne 
+    (en prenant compte des unités de consommation).
+{% endset %}
+
+	{# <div class="container">
+        <h1 class="h2 mb-4">Calcul de la participation financière</h1> #}
+<div class="row">
+    <div class="col-md-12">
+            <table class="table table-bordered">
+            <tbody>
+                <tr title="Calcul des ressources" data-content="{{ resources_description }}" data-toggle="popover" 
+                    data-trigger="hover" data-placement="bottom" data-html="true">
+                    <td class="align-middle">Montant total des ressources mensuelles</td>
+                    <td class="align-middle text-right">{{ contribution.resourcesAmt|price(0) }}</td>
+                </tr>
+                <tr title="Calcul des charges" data-content="{{ charges_description }}" data-toggle="popover" 
+                    data-trigger="hover" data-placement="bottom" data-html="true">
+                    <td class="align-middle">Montant total des charges fixes mensuelles</td>
+                    <td class="align-middle text-right">{{ contribution.chargesAmt|price(0) }}</td>
+                </tr>
+                <tr class="alert-secondary" title="Total reste à vivre mensuel" data-content="{{ budget_balance_description }}" data-toggle="popover" 
+                    data-trigger="hover" data-placement="bottom" data-html="true">
+                    <td class="align-middle">Total reste à vivre mensuel</td>
+                    <td class="align-middle text-right">{{ (contribution.resourcesAmt - contribution.chargesAmt)|price(0) }}</td>
+                </tr>
+                <tr title="Taux de participation financière" data-content="{{ rate_description }}" data-toggle="popover" 
+                    data-trigger="hover" data-placement="bottom" data-html="true">
+                    <td class="align-middle">Taux de participation financière</td>
+                    <td class="align-middle">{{ contribution.rate * 100 }} %</td>
+                </tr>
+                <tr title="Calcul des unité de consommation" data-content="{{ uc_description }}" data-toggle="popover" 
+                    data-trigger="hover" data-placement="bottom" data-html="true">
+                    <td class="align-middle">Nombre d'unités de consommation</td>
+                    <td class="align-middle">{{ contribution.nbUc }}</td>
+                </tr>
+                <tr title="Reste à vivre journalier unitaire" data-content="{{ rav_description }}" data-toggle="popover" 
+                    data-trigger="hover" data-placement="bottom" data-html="true">
+                    <td class="align-middle">Reste à vivre journalier unitaire</td>
+                    <td class="align-middle text-right">{{ contribution.rav|price }}</td>
+                </tr>
+            </tbody>
+            <tfoot class="bg-light">
+                <tr>
+                    {% if contribution.rav < 12 %}
+                        <td class="align-middle alert-danger" colspan="2">Reste à vivre journalier inférieur à 12 euros par jour et par personne</td>
+                    {% elseif contribution.noContrib == true %}
+                        <td class="align-middle alert-warning" colspan="2">PAF à 0 € fixée par le référent social</td>
+                    {% else %}
+                        <td class="align-middle alert-success" colspan="2">Reste à vivre supérieur à 12 euros par jour et par personne</td>
+                    {% endif %}
+                </tr>
+                <tr class="font-weight-bold alert-secondary">
+                    <td class="align-middle">Montant de la participation financière à payer</td>
+                    <td class="align-middle text-right">{{ contribution.toPayAmt|price(0) }}</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+	{# </div> #}
+
+{# {% endblock %} #}

@@ -1,4 +1,5 @@
 {% set contribution = form.vars.value %}
+{% set serviceTypeHotel = support.service.type == constant("SERVICE_TYPE_HOTEL", support.service) %}
 
 <div id="contribution-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalContributionLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
@@ -23,29 +24,40 @@
                 <div class="row js-contrib js-contribution d-none">
                     <div class="col-lg-4">{{ form_row(form.resourcesAmt) }}</div>
 				    <div class="col-md-4 col-lg-2 mb-3">
-					    <button id="btn-update-contribution" class="btn btn-secondary" title="Calculer le montant à régler">
+					    <button id="calcul-contribution-btn" class="btn btn-secondary" 
+                            title="Calculer le montant à régler" data-toggle="tooltip" data-placement="bottom" 
+                            data-url="{{ path('support_contribution_calcul', {'id': support.id}) }}">
                             <span class="fas fa-sync mr-2"></span>Calculer</button>
 				    </div>
                     <div class="col-sm-8 col-lg-6 mb-3">
                         <span id="calculationMethod" class="small text-secondary"></span>
                     </div>
                 </div>
-                <div class="row js-contrib js-rent d-none">
-                    <div class="col-lg-4">{{ form_row(form.rentAmt) }}</div>
-                    <div class="col-lg-4">{{ form_row(form.aplAmt) }}</div>
-                </div>
+                {# {% if false == serviceTypeHotel %} #}
+                    <div class="row js-contrib js-rent d-none">
+                        <div class="col-lg-4">{{ form_row(form.rentAmt) }}</div>
+                        <div class="col-lg-4">{{ form_row(form.aplAmt) }}</div>
+                    </div>
+                {# {% endif %} #}
                 <div class="row js-contrib js-toPayAmt d-none">
                     <div class="col-lg-4">{{ form_row(form.toPayAmt) }}</div>
-                </div>
+                        {% if true == serviceTypeHotel %}
+                            <div class="col-lg-4">
+                                <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2">
+                                    {{ form_row(form.noContrib) }}</div>
+                            </div>
+                            <div class="col-lg-4" data-parent-field="noContrib">{{ form_row(form.noContribReason) }}</div>
+                        {% endif %}
+                    </div>
                 <div>
                     <div class="row">
                         <div class="col-lg-4 js-contrib js-returnAmt d-none">{{ form_row(form.returnAmt) }}</div>
-                        <div class="col-lg-4 js-contrib js-payment js-paidAmt d-none">{{ form_row(form.paidAmt) }}</div>
-                        <div class="col-lg-4 js-contrib js-payment js-paymentDate d-none">{{ form_row(form.paymentDate) }}</div>
-                        <div class="col-lg-4 js-contrib js-payment js-paymentType d-none">{{ form_row(form.paymentType) }}</div>
+                        <div class="col-lg-4 js-contrib js-payment js-paidAmt d-none" data-parent-field="toPayAmt">{{ form_row(form.paidAmt) }}</div>
+                        <div class="col-lg-4 js-contrib js-payment js-paymentDate d-none" data-parent-field="paidAmt">{{ form_row(form.paymentDate) }}</div>
+                        <div class="col-lg-4 js-contrib js-payment js-paymentType d-none" data-parent-field="paidAmt">{{ form_row(form.paymentType) }}</div>
                     </div>
                     <div class="row js-contrib js-stillToPayAmt d-none">
-                        <div class="col-lg-4">{{ form_row(form.stillToPayAmt) }}</div>
+                        <div class="col-lg-4" data-parent-field="paidAmt">{{ form_row(form.stillToPayAmt) }}</div>
                     </div>
                 </div>
                 <div class="row js-contrib js-comment d-none">
@@ -83,7 +95,7 @@
                 </div>
             </div>
             {{ form_row(form._token) }}
-            {{ form_end(form) }}
+            {{ form_end(form, {'render_rest': false}) }}
         </div>
     </div>
 </div>

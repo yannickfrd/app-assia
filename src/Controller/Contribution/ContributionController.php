@@ -12,8 +12,6 @@ use App\Form\Model\Support\SupportContributionSearch;
 use App\Form\Support\Contribution\ContributionSearchType;
 use App\Form\Support\Contribution\ContributionType;
 use App\Form\Support\Contribution\SupportContributionSearchType;
-use App\Repository\Evaluation\EvaluationGroupRepository;
-use App\Repository\Organization\PlaceRepository;
 use App\Repository\Support\ContributionRepository;
 use App\Service\Contribution\ContributionExporter;
 use App\Service\Export\ContributionFullExport;
@@ -91,18 +89,10 @@ class ContributionController extends AbstractController
         }
 
         $contribution = (new Contribution())
+            ->setSupportGroup($supportGroup)
             ->setMonthContrib((new \DateTime())->modify('first day of last month'));
 
         $form = $this->createForm(ContributionType::class, $contribution);
-
-        // Récupère les contributions en cache.
-        // $contributions = (new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']))->get(SupportGroup::CACHE_SUPPORT_CONTRIBUTIONS_KEY.$supportGroup->getId(),
-        //     function (CacheItemInterface $item) use ($supportGroup, $pagination, $search, $request) {
-        //         $item->expiresAfter(\DateInterval::createFromDateString('7 hours'));
-
-        //         return $pagination->paginate($this->contributionRepo->findContributionsOfSupportQuery($supportGroup->getId(), $search), $request, 200);
-        //     }
-        // );
 
         return $this->render('app/contribution/supportContributions.html.twig', [
             'support' => $supportGroup,
@@ -110,49 +100,6 @@ class ContributionController extends AbstractController
             'form' => $form->createView(),
             'nbTotalContributions' => $request->query->count() ? $this->contributionRepo->count(['supportGroup' => $supportGroup]) : null,
             'contributions' => $pagination->paginate($this->contributionRepo->findContributionsOfSupportQuery($supportGroup->getId(), $search), $request, 200),
-        ]);
-    }
-
-    /**
-     * Donne les ressources.
-     *
-     * @Route("/support/{id}/resources", name="support_resources", methods="GET")
-     *
-     * @param int $id // SupportGroup
-     */
-    public function getResources(int $id, SupportManager $supportManager, PlaceRepository $placeRepo, EvaluationGroupRepository $evaluationRepo)
-    {
-        if (null === $supportGroup = $supportManager->getSupportGroup($id)) {
-            throw $this->createAccessDeniedException('Ce suivi n\'existe pas.');
-        }
-
-        $this->denyAccessUnlessGranted('VIEW', $supportGroup);
-
-        $evaluation = $evaluationRepo->findEvaluationResourceById($id);
-
-        $place = $placeRepo->findCurrentPlaceOfSupport($supportGroup);
-
-        $resourcesAmt = 0;
-
-        if ($evaluation) {
-            foreach ($evaluation->getEvaluationPeople() as $evaluationPerson) {
-                if ($evaluationPerson->getEvalBudgetPerson()) {
-                    $resourcesAmt += $evaluationPerson->getEvalBudgetPerson()->getResourcesAmt();
-                }
-            }
-
-            $contributionRate = $supportGroup->getService()->getContributionRate();
-            $toPayAmt = round($resourcesAmt * $contributionRate * 100) / 100;
-        }
-
-        return $this->json([
-            'action' => 'get_resources',
-            'data' => [
-                'resourcesAmt' => $resourcesAmt,
-                'toPayAmt' => $toPayAmt ?? null,
-                'contributionAmt' => $evaluation && $evaluation->getEvalBudgetGroup() ? $evaluation->getEvalBudgetGroup()->getContributionAmt() : null,
-                'rentAmt' => $place ? $place->getRentAmt() : null,
-            ],
         ]);
     }
 

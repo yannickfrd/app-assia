@@ -74,16 +74,19 @@ class EvaluationGroupRepository extends ServiceEntityRepository
     /**
      * Donne les ressources.
      */
-    public function findEvaluationResourceById(int $supportGroupId): ?EvaluationGroup
+    public function findEvaluationBudget(SupportGroup $supportGroup): ?EvaluationGroup
     {
-        return $this->createQueryBuilder('eg')->select('eg')
-            ->join('eg.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
-            ->leftJoin('eg.evaluationPeople', 'ep')->addSelect('ep')
-            ->leftJoin('eg.evalBudgetGroup', 'ebg')->addSelect('PARTIAL ebg.{id, contributionAmt}')
-            ->leftJoin('ep.evalBudgetPerson', 'ebp')->addSelect('PARTIAL ebp.{id, resourcesAmt, salaryAmt}')
+        return $this->createQueryBuilder('eg')->select('PARTIAL eg.{id}')
+            ->join('eg.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, startDate, endDate}')
+            ->leftJoin('eg.evaluationPeople', 'ep')->addSelect('PARTIAL ep.{id}')
+            ->leftJoin('ep.supportPerson', 'sp')->addSelect('PARTIAL sp.{id, startDate, endDate}')
+            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, birthdate}')
+            ->leftJoin('eg.evalBudgetGroup', 'ebg')->addSelect('PARTIAL ebg.{id}')
+            ->leftJoin('ep.evalBudgetPerson', 'ebp')->addSelect('ebp')
 
             ->andWhere('eg.supportGroup = :supportGroup')
-            ->setParameter('supportGroup', $supportGroupId)
+            ->setParameter('supportGroup', $supportGroup)
+
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();

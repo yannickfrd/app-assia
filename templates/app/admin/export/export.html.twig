@@ -140,7 +140,7 @@
                                         <td class="js-export-size text-right">{{ (export.size / 1000)|round }} Ko</td>
                                         <td class="js-export-createdAt">{{ export.createdAt|date("d/m/Y H:i") }}</td>
                                         <td class="align-middle text-center">
-                                            <a href="{{ path('export_delete', {'id':export.id}) }}" class="js-delete btn btn-danger btn-sm shadow my-1"
+                                            <a href="{{ path('export_delete', {'id': export.id}) }}" class="js-delete btn btn-danger btn-sm shadow my-1"
                                                 onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer cet export ?')){return true;}else{return false;}">
                                                 <span class="fas fa-trash-alt"></span>
                                             </a>

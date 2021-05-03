@@ -201,9 +201,12 @@ Contribution amt: Montant de la participation financière
 ### Paiement/Contribution
 Amount: Montant
 Apl amt: Montant APL
+Charges amt: Montant charges
 Credential: Justificatif de ressources
 Contrib start date: Date de début de la période
 Contrib end date: Date de fin de la période
+No contrib: PAF à 0 €
+No contrib reason: Motif de la PAF à 0 €
 Paid amt: Montant réglé
 Payment date: Date de l\'opération
 Payment type: Mode de règlement

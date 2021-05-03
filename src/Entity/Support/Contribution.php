@@ -25,14 +25,19 @@ class Contribution
     public const TYPE_RETURN_BAIL = 11;
 
     public const CONTRIBUTION_TYPE = [
-        1 => 'Participation / Redevance', // 1
-        2 => 'Loyer', // 1
-        10 => 'Caution', // ex 2
-        20 => 'Prêt / Avance', // ex 3
-        30 => 'Rembt dette | PF / Loyer', // ex 11
-        31 => 'Rembt dette | Caution', // ex 12
-        32 => 'Rembt dette | Prêt', // ex 13
-        11 => 'Restitution Caution', // ex 22
+        1 => 'Participation / Redevance',
+        2 => 'Loyer',
+        10 => 'Caution',
+        20 => 'Prêt / Avance',
+        30 => 'Rembt dette | PF / Loyer',
+        31 => 'Rembt dette | Caution',
+        32 => 'Rembt dette | Prêt',
+        11 => 'Restitution Caution',
+    ];
+
+    public const CONTRIBUTION_HOTEL_TYPE = [
+        1 => 'Participation financière',
+        30 => 'Remboursement dette | PF',
     ];
 
     public const DEFAULT_CONTRIBUTION_TYPE = 1;
@@ -42,6 +47,12 @@ class Contribution
         3 => 'Chèque',
         4 => 'Espèce',
         99 => 'Non renseigné',
+    ];
+
+    public const NO_CONTRIB_REASON = [
+        1 => 'Difficultés financières temporaires',
+        2 => 'Attribution d\'un logement en cours',
+        3 => 'Autre motif',
     ];
 
     /**
@@ -179,6 +190,35 @@ class Contribution
      */
     private $mailSentAt;
 
+    private $theoricalContribAmt;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $noContrib;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $noContribReason;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $chargesAmt;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $nbUC;
+
+    private $rav;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $rate;
+
     /**
      * @ORM\PreFlush
      */
@@ -251,7 +291,7 @@ class Contribution
 
     public function getNbDays(): ?int
     {
-        if ($this->getEndDate() >= $this->getStartDate()) {
+        if ($this->getEndDate() > $this->getStartDate()) {
             return $this->getStartDate()->diff($this->getEndDate())->days + 1;
         }
 
@@ -473,5 +513,89 @@ class Contribution
     public function MailSent(): bool
     {
         return null !== $this->mailSentAt;
+    }
+
+    public function getNoContrib(): ?bool
+    {
+        return $this->noContrib;
+    }
+
+    public function setNoContrib(?bool $noContrib): self
+    {
+        $this->noContrib = $noContrib;
+
+        return $this;
+    }
+
+    public function getNoContribReason(): ?int
+    {
+        return $this->noContribReason;
+    }
+
+    public function setNoContribReason(?int $noContribReason): self
+    {
+        $this->noContribReason = $noContribReason;
+
+        return $this;
+    }
+
+    public function getChargesAmt(): ?int
+    {
+        return $this->chargesAmt;
+    }
+
+    public function setChargesAmt(?int $chargesAmt): self
+    {
+        $this->chargesAmt = $chargesAmt;
+
+        return $this;
+    }
+
+    public function getNbUC(): ?float
+    {
+        return $this->nbUC;
+    }
+
+    public function setNbUC(?float $nbUC): self
+    {
+        $this->nbUC = $nbUC;
+
+        return $this;
+    }
+
+    public function getRate(): ?float
+    {
+        return $this->rate;
+    }
+
+    public function setRate(?float $rate): self
+    {
+        $this->rate = $rate;
+
+        return $this;
+    }
+
+    public function getTheoricalContribAmt(): ?float
+    {
+        return $this->theoricalContribAmt;
+    }
+
+    public function setTheoricalContribAmt(?float $theoricalContribAmt): self
+    {
+        $this->theoricalContribAmt = $theoricalContribAmt;
+
+        return $this;
+    }
+
+    public function getRav(): ?float
+    {
+        return $this->rav;
+    }
+
+    public function setRav(?float $rav): self
+    {
+        $this->rav = $rav;
+
+        return $this;
     }
 }
