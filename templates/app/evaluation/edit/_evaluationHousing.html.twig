@@ -5,7 +5,7 @@
 {% block card_body %}
 
 	<div class="js-evalGroup" data-support-id="g-{{ form.vars.value.supportGroup.id }}">
-		{% if SERVICE_TYPE_AVDL or support.service.id == 2 %}
+		{% if support.service.place != YES and false == SERVICE_TYPE_HOTEL %}
 			<div class="form-group">
 				<div class="row">
 					<div class="col-md-6">{{ form_row(form.evalHousingGroup.housingStatus) }}</div>
@@ -74,7 +74,7 @@
 			<div class="col-md-6" data-parent-field="housingExperience">{{ form_row(form.evalHousingGroup.housingExpeComment) }}</div>
 		</div>
 
-		{% if SERVICE_TYPE_AVDL or support.service.id == 2 %}
+		{% if support.service.place != YES and false == SERVICE_TYPE_HOTEL %}
 			{% set housingHelps = constant("App\\Entity\\Evaluation\\EvalHousingGroup::HOUSING_HELPS") %}
 			<div class="form-group row" data-parent-field="housingStatus">
 				<div class="col-md-6">

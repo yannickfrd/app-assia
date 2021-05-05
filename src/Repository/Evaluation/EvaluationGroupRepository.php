@@ -34,7 +34,7 @@ class EvaluationGroupRepository extends ServiceEntityRepository
             ->join('eg.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, status}')
             ->join('sg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
 
-            ->join('sg.service', 's')->addSelect('PARTIAL s.{id, name, type, email, preAdmission, justice}')
+            ->join('sg.service', 's')->addSelect('PARTIAL s.{id, name, email, type, place, preAdmission, justice}')
             ->join('sg.device', 'd')->addSelect('PARTIAL d.{id, name, coefficient, place, contribution, contributionType, contributionRate}')
 
             ->leftJoin('eg.evaluationPeople', 'ep')->addSelect('ep')

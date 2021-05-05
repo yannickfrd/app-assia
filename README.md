@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.28.15 05/05/2021
+2.28.16 05/05/2021
 
 # Développeur
 Romain MADELAINE
@@ -13,12 +13,13 @@ https://github.com/RomMad/esperer95.app
 # Connection à la base démo
 https://demo.esperer95.app
 
-## Version 2.28.11-15 - 05/05/2021
+## Version 2.28.11-16 - 05/05/2021
 - Update feature Note + Fix problem auto-save + Update tests
 - Fix problem discaching nbRdvs and nbContributions when delete action
 - Fix problem in evaluation export (health problem)
 - Update listAvdlSupports (supportStartDate and supportEndDate)
 - Add item 'Médico-social (SAVS, SAMSAH...)' in referent type 
+- Edit condition evalutionHousing
 
 ## Version 2.28.10 - 30/04/2021
 - Add SoftDeleteable in Referent entity + update tests

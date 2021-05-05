@@ -198,7 +198,7 @@ class EvalHousingGroupType extends AbstractType
                 ],
             ]);
 
-        if (Service::SERVICE_TYPE_AVDL === $service->getType() or 2 === $service->getId()) {
+        if (Choices::YES != $service->getPlace() && Service::SERVICE_TYPE_HOTEL != $service->getType()) {
             $builder
                 ->add('housingStatus', ChoiceType::class, [
                     'choices' => Choices::getChoices(EvalHousingGroup::HOUSING_STATUS),

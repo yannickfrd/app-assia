@@ -15,7 +15,6 @@
 	{% set people_over_16 = evaluationPeople|filter(e => e.vars.value.supportPerson.person.age >= 16) %}
 	{% set nb_children = nb_people - people_adults|length %}
 
-	{% set SERVICE_TYPE_HEB = support.service.type == constant("App\\Entity\\Organization\\Service::SERVICE_TYPE_HEB") %}
 	{% set SERVICE_TYPE_AVDL = support.service.type == constant("App\\Entity\\Organization\\Service::SERVICE_TYPE_AVDL") %}
 	{% set SERVICE_TYPE_HOTEL = support.service.type == constant("App\\Entity\\Organization\\Service::SERVICE_TYPE_HOTEL") %}
 	
