@@ -1,5 +1,7 @@
 {% extends "model/_supportSearch.html.twig" %}
 
+{% form_theme form_search "bootstrap_4_layout.html.twig" %}
+
 {% block search_form %}
     {% if notes.getTotalItemCount %}
         <div class="form-group col-auto my-1 px-1">

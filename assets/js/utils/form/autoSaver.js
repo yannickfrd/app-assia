@@ -57,12 +57,11 @@ export default class AutoSaver {
 
     /**
      * Remet à zéro le compteur.
-     * @param {Event} e 
      */
-    clear(e) {
-        e.preventDefault()
+    clear() {
         this.count = 0
         this.active = false
-        clearInterval(this.countdownID)
+        // clearInterval(this.countdownID)
+        this.init()
     }
 }

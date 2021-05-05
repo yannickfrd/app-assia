@@ -1,5 +1,4 @@
 import MessageFlash from './messageFlash'
-import Loader from './loader'
 
 /**
  * Requête AJAX.
@@ -8,10 +7,10 @@ export default class Ajax {
 
     /**
      * @param {Loader} loader 
-     * @param {Number} delayError in seconds 
+     * @param {Number} delayError delay in seconds 
      */
     constructor(loader = null, delayError = 20) {
-        this.loader = loader ?? new Loader()
+        this.loader = loader
         this.loading = false
         this.delayError = delayError
         this.countdownID = null
@@ -29,7 +28,11 @@ export default class Ajax {
      */
     async send(method = 'GET', url, callback, data = null) {
         this.loading = true
-        this.loader.on()
+
+        if (this.loader) {
+            this.loader.on()
+        }
+
         this.timer()
 
         await fetch(url, {
@@ -62,7 +65,9 @@ export default class Ajax {
             if (contentLength > 0) {
                 let msg = Math.round((receivedLength / contentLength) * 100) + ' %'
                 console.log('Download...' + msg)
-                this.loader.updateInfo(msg)
+                if (this.loader) {
+                    this.loader.updateInfo(msg)
+                }
             }
         }
 
@@ -76,7 +81,10 @@ export default class Ajax {
         const result = new TextDecoder("utf-8").decode(chunksAll)
 
         this.loading = false
-        this.loader.off()
+
+        if (this.loader) {
+            this.loader.off()
+        }
 
         clearInterval(this.countdownID)
 
@@ -147,7 +155,11 @@ export default class Ajax {
      */
     getError(error) {       
         this.loading = false
-        this.loader.off()
+
+        if (this.loader) {
+            this.loader.off()
+        }
+        
         clearInterval(this.countdownID)
         console.error(error.message)
 
