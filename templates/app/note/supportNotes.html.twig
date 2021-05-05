@@ -12,7 +12,7 @@
 		{% include "app/support/_shared/_navSuppport.html.twig" %}
 
 		<div class="row mb-2">
-			<div id="js-search-support-notes" class="col-md-12 {{ nbNotes ? 'd-none' }}">
+			<div id="js-search-support-notes" class="col-md-12 {{ nbNotes == 0 ? 'd-none' }}">
 				{% include "app/note/_searchSupportNotes.html.twig" %}
 			</div>
 		</div>
