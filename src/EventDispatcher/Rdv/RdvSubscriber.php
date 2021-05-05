@@ -33,7 +33,8 @@ class RdvSubscriber implements EventSubscriberInterface
                 SupportGroup::CACHE_SUPPORT_NEXT_RDV_KEY.$supportGroup->getId(),
                 SupportGroup::CACHE_SUPPORT_RDVS_KEY.$supportGroup->getId(),
             ]);
-            if ($rdv->getCreatedAt()->format('U') === $rdv->getUpdatedAt()->format('U')) {
+
+            if (null === $rdv->getId() || $rdv->getCreatedAt()->format('U') === $rdv->getUpdatedAt()->format('U')) {
                 $cache->deleteItem(SupportGroup::CACHE_SUPPORT_NB_RDVS_KEY.$supportGroup->getId());
             }
         }

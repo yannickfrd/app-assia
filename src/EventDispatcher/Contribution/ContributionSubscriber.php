@@ -27,7 +27,7 @@ class ContributionSubscriber implements EventSubscriberInterface
 
         $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
 
-        if ($contribution->getCreatedAt()->format('U') === $contribution->getUpdatedAt()->format('U')) {
+        if (null === $contribution->getId() || $contribution->getCreatedAt()->format('U') === $contribution->getUpdatedAt()->format('U')) {
             $cache->deleteItem(SupportGroup::CACHE_SUPPORT_NB_CONTRIBUTIONS_KEY.$supportGroup->getId());
         }
 
