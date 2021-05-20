@@ -13,7 +13,7 @@ class AppExtension extends AbstractExtension
         return [
             new TwigFilter('number', [$this, 'formatNumber']),
             new TwigFilter('percent', [$this, 'formatPercentage']),
-            new TwigFilter('price', [$this, 'formatPrice']),
+            new TwigFilter('amount', [$this, 'formatAmount']),
             new TwigFilter('round', [$this, 'roundNumber']),
         ];
     }
@@ -42,7 +42,7 @@ class AppExtension extends AbstractExtension
         return number_format($value, $decimals, ',', ' ').'%';
     }
 
-    public function formatPrice($value, int $decimals = 2): string
+    public function formatAmount($value, int $decimals = 2): string
     {
         return number_format($value, $decimals, ',', ' ').' €';
     }

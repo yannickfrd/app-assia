@@ -44,7 +44,7 @@ export default class CheckboxSelector {
     getItems() {
         const items = []
         document.querySelectorAll('input[data-checkbox]:checked').forEach(checkboxElt => {
-            items.push(checkboxElt.getAttribute('data-checkbox'))
+            items.push(checkboxElt.dataset.checkbox)
         })
         return items
     }

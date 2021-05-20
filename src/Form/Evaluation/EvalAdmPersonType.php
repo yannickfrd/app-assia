@@ -2,13 +2,14 @@
 
 namespace App\Form\Evaluation;
 
-use App\Entity\Evaluation\EvalAdmPerson;
 use App\Form\Utils\Choices;
+use App\Form\Utils\EvaluationChoices;
+use App\Entity\Evaluation\EvalAdmPerson;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class EvalAdmPersonType extends AbstractType
 {
@@ -26,10 +27,10 @@ class EvalAdmPersonType extends AbstractType
             ])
             ->add('country')
             ->add('paper', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS),
                 'attr' => [
-                    'class' => 'js-initEval important',
-                    'data-id' => 'paper',
+                    'data-important' => 'true',
+                    'data-twin-field' => 'paper',
                 ],
                 'placeholder' => 'placeholder.select',
                 'help' => 'evalAdmPerson.paper.help',
@@ -38,15 +39,15 @@ class EvalAdmPersonType extends AbstractType
             ->add('paperType', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalAdmPerson::PAPER_TYPE),
                 'attr' => [
-                    'class' => 'js-initEval important',
-                    'data-id' => 'paperType',
+                    'data-important' => 'true',
+                    'data-twin-field' => 'paperType',
                 ],
                 'placeholder' => 'placeholder.select',
                 'help' => 'evalAdmPerson.paperType.help',
                 'required' => false,
             ])
             ->add('asylumBackground', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
@@ -65,7 +66,7 @@ class EvalAdmPersonType extends AbstractType
             ])
             ->add('nbRenewals')
             ->add('workRight', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])

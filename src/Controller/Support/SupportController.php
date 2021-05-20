@@ -15,7 +15,7 @@ use App\Form\Support\Support\SupportCoefficientType;
 use App\Form\Support\Support\SupportGroupType;
 use App\Form\Support\Support\SupportSearchType;
 use App\Form\Support\Support\SupportsInMonthSearchType;
-use App\Repository\Support\ContributionRepository;
+use App\Repository\Support\PaymentRepository;
 use App\Repository\Support\SupportGroupRepository;
 use App\Repository\Support\SupportPersonRepository;
 use App\Service\Calendar;
@@ -206,13 +206,11 @@ class SupportController extends AbstractController
         SupportCollections $supportCollections,
         EventDispatcherInterface $dispatcher
     ): Response {
-        if (null === $supportGroup = $supportManager->getFullSupportGroup($id)) {
-            throw $this->createAccessDeniedException('Ce suivi n\'existe pas.');
-        }
-
-        $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support.view');
+        $supportGroup = $supportManager->getFullSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
+
+        $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support.view');
 
         return $this->render('app/support/supportGroupView.html.twig', [
             'support' => $supportGroup,
@@ -220,7 +218,7 @@ class SupportController extends AbstractController
             'nbNotes' => $supportCollections->getNbNotes($supportGroup),
             'nbRdvs' => $nbRdvs = $supportCollections->getNbRdvs($supportGroup),
             'nbDocuments' => $supportCollections->getNbDocuments($supportGroup),
-            'nbContributions' => $supportCollections->getNbContributions($supportGroup),
+            'nbPayments' => $supportCollections->getNbPayments($supportGroup),
             'lastRdv' => $nbRdvs ? $supportCollections->getLastRdvs($supportGroup) : null,
             'nextRdv' => $nbRdvs ? $supportCollections->getNextRdvs($supportGroup) : null,
             'evaluation' => $supportCollections->getEvaluation($supportGroup),
@@ -325,12 +323,12 @@ class SupportController extends AbstractController
      * "month" : "0?[1-9]|1[0-2]",
      * })
      */
-    public function showSupportsWithContribution(
+    public function showSupportsWithPayment(
         int $year = null,
         int $month = null,
         Request $request,
         SupportGroupRepository $supportGroupRepo,
-        ContributionRepository $contributionRepo,
+        PaymentRepository $paymentRepo,
         Pagination $pagination
     ): Response {
         $search = new SupportsInMonthSearch();
@@ -354,11 +352,11 @@ class SupportController extends AbstractController
             $supportsId[] = $support->getId();
         }
 
-        return $this->render('app/support/supportsInMonthWithContributions.html.twig', [
+        return $this->render('app/support/supportsInMonthWithPayments.html.twig', [
             'calendar' => $calendar,
             'form' => $form->createView(),
             'supports' => $supports,
-            'contributions' => $contributionRepo->findContributionsBetween(
+            'payments' => $paymentRepo->findPaymentsBetween(
                 $calendar->getFirstDayOfTheMonth(),
                 $calendar->getLastDayOfTheMonth(),
                 $supportsId

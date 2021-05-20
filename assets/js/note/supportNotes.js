@@ -2,7 +2,6 @@ import Ajax from '../utils/ajax'
 import MessageFlash from '../utils/messageFlash'
 import Loader from '../utils/loader'
 import AutoSaver from '../utils/form/autoSaver'
-import SelectType from '../utils/form/selectType'
 import ParametersUrl from '../utils/parametersUrl'
 import { Modal } from 'bootstrap'
 import CkEditor from '../utils/ckEditor'
@@ -12,7 +11,6 @@ export default class SupportNotes {
     constructor() {
         this.loader = new Loader()
         this.ajax = new Ajax()
-        this.selectType = new SelectType()
         this.parametersUrl = new ParametersUrl()
         
         this.CkEditor = new CkEditor('#editor')
@@ -37,15 +35,15 @@ export default class SupportNotes {
         this.confirmModalElt = document.getElementById('confirm-modal')
 
         this.searchSupportNotesElt = document.getElementById('js-search-support-notes')
-        this.themeColor = document.getElementById('header').getAttribute('data-color')
+        this.themeColor = document.getElementById('header').dataset.color
         this.autoSaveElt = document.getElementById('js-auto-save')
         this.countNotesElt = document.getElementById('count-notes')
         this.containerNotesElt = document.getElementById('container-notes')
-        this.supportId = this.containerNotesElt.getAttribute('data-support')
-        this.data = ''
+        this.supportId = this.containerNotesElt.dataset.support
+        this.data = null
 
         this.init()
-        this.autoSaver = new AutoSaver(this.autoSaveNote.bind(this), this.CkEditor.getEditorElt(), 60, 20)
+        this.autoSaver = new AutoSaver(this.autoSaveNote.bind(this), this.CkEditor.getEditorElt(), 6, 5)
     }
 
     init() {
@@ -78,7 +76,7 @@ export default class SupportNotes {
     }
 
     checkIfNoteIdInUrl() {
-        const noteElt = this.containerNotesElt.querySelector(`div[data-note-id="${Number(this.parametersUrl.get('noteId'))}"]`)
+        const noteElt = this.containerNotesElt.querySelector(`div[data-note-id="${parseInt(this.parametersUrl.get('noteId'))}"]`)
         if (noteElt) {
             setTimeout(() => {
                 this.noteModal.show()
@@ -95,8 +93,8 @@ export default class SupportNotes {
 
         this.noteModalElt.querySelector('form').action = '/support/' + this.supportId + '/note/new'
         this.noteModalElt.querySelector('#note_title').value = ''
-        this.selectType.setOption(this.noteModalElt.querySelector('#note_type'), 1)
-        this.selectType.setOption(this.noteModalElt.querySelector('#note_status'), 1)
+        this.noteModalElt.querySelector('#note_type').value = 1
+        this.noteModalElt.querySelector('#note_status').value = 1
         this.CkEditor.setData('')
         this.data = ''
         this.deleteBtnElt.classList.replace('d-block', 'd-none')
@@ -114,12 +112,8 @@ export default class SupportNotes {
         this.initNoteModal(noteElt)
 
         this.noteModalElt.querySelector('#note_title').value = this.titleNoteElt.textContent
-
-        const typeValue = noteElt.querySelector('[data-note-type]').getAttribute('data-note-type')
-        this.selectType.setOption(this.noteModalElt.querySelector('#note_type'), typeValue)
-
-        const statusValue = noteElt.querySelector('[data-note-status]').getAttribute('data-note-status')
-        this.selectType.setOption(this.noteModalElt.querySelector('#note_status'), statusValue)
+        this.noteModalElt.querySelector('#note_type').value = noteElt.querySelector('[data-note-type]').dataset.noteType
+        this.noteModalElt.querySelector('#note_status').value = noteElt.querySelector('[data-note-status]').dataset.noteStatus
 
         const content  = this.contentNoteElt.innerHTML
         this.CkEditor.setData(content)
@@ -137,13 +131,13 @@ export default class SupportNotes {
         this.noteElt = noteElt
         this.contentNoteElt = noteElt.querySelector('.card-text')
 
-        this.cardId = this.noteElt.getAttribute('data-note-id')
+        this.cardId = this.noteElt.dataset.noteId
         this.noteModalElt.querySelector('form').action = '/note/' + this.cardId + '/edit'
 
         this.titleNoteElt = noteElt.querySelector('.card-title')
 
         this.deleteBtnElt.classList.replace('d-none', 'd-block')
-        this.deleteBtnElt.setAttribute('data-url', '/note/' + this.cardId + '/delete')
+        this.deleteBtnElt.dataset.url = '/note/' + this.cardId + '/delete'
 
         this.exportWordBtnElt.classList.replace('d-none', 'd-block')
         this.exportWordBtnElt.href = '/note/' + this.cardId + '/export/word'
@@ -173,7 +167,7 @@ export default class SupportNotes {
             this.loader.on()
         }
 
-        const url = this.formNoteElt.getAttribute('action')
+        const url = this.formNoteElt.action
         this.ajax.send('POST', url, this.responseAjax.bind(this), new FormData(this.formNoteElt))
     }
 
@@ -187,16 +181,16 @@ export default class SupportNotes {
     }
 
     onclickModalConfirmBtn() {
-        switch (this.confirmModalElt.getAttribute('data-action')) {
+        switch (this.confirmModalElt.dataset.action) {
             case 'delete_note':
                 this.loader.on()
-                this.ajax.send('GET', this.deleteBtnElt.getAttribute('data-url'), this.responseAjax.bind(this))
+                this.ajax.send('GET', this.deleteBtnElt.dataset.url, this.responseAjax.bind(this))
                 break;
             case 'hide_note_modal':
                 this.noteModal.hide()
                 break;
         }
-        this.confirmModalElt.setAttribute('data-action', '')
+        this.confirmModalElt.dataset.action = ''
     }
 
     /**
@@ -211,7 +205,7 @@ export default class SupportNotes {
 
         const modalBody = this.confirmModalElt.querySelector('.modal-body')
         modalBody.innerHTML = "<p>Voulez-vous vraiment supprimer cette note ?</p>"
-        this.confirmModalElt.setAttribute('data-action', 'delete_note')
+        this.confirmModalElt.dataset.action = 'delete_note'
         this.confirmModal.show()
     }
 
@@ -225,7 +219,7 @@ export default class SupportNotes {
 
         const modalBody = this.confirmModalElt.querySelector('.modal-body')
         modalBody.innerHTML = "<p>Attention, vous n'avez pas enregistrer les modifications. <br/>Continuez sans sauvegarder ?</p>"
-        this.confirmModalElt.setAttribute('data-action', 'hide_note_modal')
+        this.confirmModalElt.dataset.action = 'hide_note_modal'
         this.confirmModal.show()
     }
 
@@ -234,6 +228,7 @@ export default class SupportNotes {
      * @param {Object} response 
      */
     responseAjax(response) {
+        console.log(response)
         if (!response.action) {
             return null
         }
@@ -265,13 +260,12 @@ export default class SupportNotes {
     createNote(note) {
         const noteElt = document.createElement('div')
         noteElt.className = 'col-sm-12 col-lg-6 mb-4 reveal'
-        noteElt.setAttribute('data-note-id', note.id)
+        noteElt.dataset.noteId = note.id
         noteElt.innerHTML =
             `<div class='card h-100 shadow'>
                 <div class='card-header'>
                     <h3 class='card-title h5 text-${this.themeColor}'>${this.noteModalElt.querySelector('#note_title').value}</h3>
-                    <span data-note-type="1">${note.typeToString}</span>
-                    <span data-note-status="1">(${note.statusToString})</span>
+                    <span data-note-type="1">${note.typeToString}</span> (<span data-note-status="1">${note.statusToString}</span>)
                     <span class="small text-secondary" data-note-created="true">${note.editionToString}</span>
                     <span class="small text-secondary" data-note-updated="true"></span>
                 </div>
@@ -304,21 +298,17 @@ export default class SupportNotes {
      * @param {Object} note 
      */
     updateNote(note) {
-        if (this.autoSaver.active) {
-            return
-        }
-
         this.titleNoteElt.textContent = this.noteModalElt.querySelector('#note_title').value
         this.contentNoteElt.innerHTML = this.CkEditor.getData()
         this.data = this.CkEditor.getData()
 
         const noteTypeElt = this.noteElt.querySelector('[data-note-type]')
         noteTypeElt.textContent = note.typeToString
-        noteTypeElt.setAttribute('data-note-type', this.selectType.getOption(this.noteModalElt.querySelector('#note_type')))
+        noteTypeElt.dataset.noteType = this.noteModalElt.querySelector('#note_type').value
 
         const noteStatusElt = this.noteElt.querySelector('[data-note-status]')
-        noteStatusElt.textContent = '(' + note.statusToString + ')'
-        noteStatusElt.setAttribute('data-note-status', this.selectType.getOption(this.noteModalElt.querySelector('#note_status')))
+        noteStatusElt.textContent = note.statusToString
+        noteStatusElt.dataset.noteStatus = this.noteModalElt.querySelector('#note_status').value
 
         this.noteElt.querySelector('[data-note-updated]').textContent = note.editionToString
     }
@@ -335,8 +325,8 @@ export default class SupportNotes {
      */
     updateCountNotes(nb) {
         const nbNotes = this.containerNotesElt.querySelectorAll('.card').length
-        const nbTotalNotes = parseInt(this.countNotesElt.getAttribute('data-nb-total-notes')) + nb
-        this.countNotesElt.setAttribute('data-nb-total-notes', nbTotalNotes)
+        const nbTotalNotes = parseInt(this.countNotesElt.dataset.nbTotalNotes) + nb
+        this.countNotesElt.dataset.nbTotalNotes = nbTotalNotes
 
         this.countNotesElt.textContent = `${nbNotes} note${nbNotes > 1 ? 's' : ''} sur ${nbTotalNotes}`
 

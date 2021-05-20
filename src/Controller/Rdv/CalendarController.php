@@ -59,9 +59,7 @@ class CalendarController extends AbstractController
      */
     public function showSupportCalendar(int $id, SupportManager $supportManager, $year = null, $month = null): Response
     {
-        if (null === $supportGroup = $supportManager->getSupportGroup($id)) {
-            throw $this->createAccessDeniedException('Ce suivi n\'existe pas.');
-        }
+        $supportGroup = $supportManager->getSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 

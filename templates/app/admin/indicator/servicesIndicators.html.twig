@@ -46,7 +46,7 @@
                                 {% set sumNotes = sumNotes + service["nbNotes"] %}
                                 {% set sumRdvs = sumRdvs + service["nbRdvs"] %}
                                 {% set sumDocuments = sumDocuments + service["nbDocuments"] %}
-                                {% set sumPaiments = sumPaiments + service["nbContributions"] %}
+                                {% set sumPaiments = sumPaiments + service["nbPayments"] %}
                                 {% set nbTrCollapsed = service.subServices|length %}
                                 <tr class="{{ nbTrCollapsed ? 'cursor-pointer' }}" data-toggle="collapse" data-target=".multi-collapse-service-{{ service_id }}" 
                                     aria-expanded="false" aria-controls="multi-collapse-service-{{ service_id }}">
@@ -58,7 +58,7 @@
                                     <td class="align-middle text-right">{{ service["nbNotes"]|number }}</td>
                                     <td class="align-middle text-right">{{ service["nbRdvs"]|number }}</td>
                                     <td class="align-middle text-right">{{ service["nbDocuments"]|number }}</td>
-                                    <td class="align-middle text-right">{{ service["nbContributions"]|number }}</td>
+                                    <td class="align-middle text-right">{{ service["nbPayments"]|number }}</td>
                                     <td></td>
                                 </tr>
                                 {% for sub_service_id, sub_service in service.subServices %}
@@ -70,7 +70,7 @@
                                         <td class="align-middle text-right">{{ sub_service["nbNotes"]|number }}</td>
                                         <td class="align-middle text-right">{{ sub_service["nbRdvs"]|number }}</td>
                                         <td class="align-middle text-right">{{ sub_service["nbDocuments"]|number }}</td>
-                                        <td class="align-middle text-right">{{ sub_service["nbContributions"]|number }}</td>
+                                        <td class="align-middle text-right">{{ sub_service["nbPayments"]|number }}</td>
                                         <td></td>
                                     </tr>
                                 {% endfor %}

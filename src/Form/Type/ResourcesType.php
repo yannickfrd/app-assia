@@ -19,24 +19,25 @@ class ResourcesType extends AbstractType
         ->add('resources', ChoiceType::class, [
             'choices' => Choices::getChoices(EvalBudgetPerson::RESOURCES),
             'attr' => [
-                'class' => 'js-initEval important',
-                'data-id' => 'resources',
+                'data-twin-field' => 'resources',
+                'data-important' => 'true',
             ],
             'placeholder' => 'placeholder.select',
             'required' => false,
         ])
         ->add('resourcesAmt', MoneyType::class, [
             'attr' => [
-                'class' => 'js-money js-resourcesAmt js-initEval important text-right',
+                'class' => 'text-right',
+                'data-amount' => 'resourcesAmt',
+                'data-important' => 'true',
+                'data-twin-field' => 'resourcesAmt',
                 'placeholder' => 'Amount',
-                'data-id' => 'resourcesAmt',
             ],
             'required' => false,
         ])
         ->add('ressourceOtherPrecision', null, [
             'attr' => [
-                'class' => 'js-initEval',
-                'data-id' => 'ressourceOtherPrecision',
+                'data-twin-field' => 'ressourceOtherPrecision',
                 'placeholder' => 'Other ressource(s)...',
             ],
         ]);
@@ -45,15 +46,16 @@ class ResourcesType extends AbstractType
             $builder
             ->add($key, IntegerType::class, [
                 'attr' => [
-                    'class' => 'js-initEval',
-                    'data-id' => $key,
+                    'data-twin-field' => $key,
                 ],
             ])
             ->add($key.'Amt', MoneyType::class, [
                 'attr' => [
-                    'class' => 'js-money js-resources js-initEval text-right',
+                    'class' => 'text-right',
+                    'data-amount' => 'resources',
+                    'data-twin-field' => $key.'Amt',
+                    'data-important' => 'true',
                     'placeholder' => 'Amount',
-                    'data-id' => $key.'Amt',
                 ],
                 'required' => false,
             ]);

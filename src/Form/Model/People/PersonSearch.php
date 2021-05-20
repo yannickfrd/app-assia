@@ -19,6 +19,11 @@ class PersonSearch
      */
     private $birthdate;
 
+    /**
+     * @var string|null
+     */
+    private $siSiaoId;
+
     public function __construct()
     {
     }
@@ -55,6 +60,18 @@ class PersonSearch
     public function setBirthdate(?\DateTimeInterface $birthdate): self
     {
         $this->birthdate = $birthdate;
+
+        return $this;
+    }
+
+    public function getSiSiaoId(): ?string
+    {
+        return $this->siSiaoId;
+    }
+
+    public function setSiSiaoId(?string $siSiaoId): self
+    {
+        $this->siSiaoId = $siSiaoId;
 
         return $this;
     }

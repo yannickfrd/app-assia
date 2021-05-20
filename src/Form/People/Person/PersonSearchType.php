@@ -13,11 +13,17 @@ class PersonSearchType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('siSiaoId', null, [
+                'label_attr' => ['class' => 'sr-only'],
+                'attr' => [
+                    'placeholder' => 'Si siao id',
+                ],
+            ])
             ->add('lastname', null, [
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'class' => 'w-max-140 text-uppercase',
-                    'placeholder' => 'Nom',
+                    'placeholder' => 'Lastname',
                     'autocomplete' => 'off',
                 ],
             ])
@@ -25,7 +31,7 @@ class PersonSearchType extends AbstractType
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'class' => 'w-max-140 text-capitalize',
-                    'placeholder' => 'Prénom',
+                    'placeholder' => 'Firstname',
                     'autocomplete' => 'off',
                 ],
             ])

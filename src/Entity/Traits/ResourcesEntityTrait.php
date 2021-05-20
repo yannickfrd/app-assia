@@ -106,6 +106,21 @@ trait ResourcesEntityTrait
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
+    private $familySupplement;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $scholarships;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $dailyAllowance;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
     private $ressourceOther;
 
     /**
@@ -148,6 +163,18 @@ trait ResourcesEntityTrait
      * @ORM\Column(type="float", nullable=true)
      * @Groups("export")
      */
+    private $familySupplementAmt;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
+     */
+    private $scholarshipsAmt;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
+     */
     private $familyAllowanceAmt;
 
     /**
@@ -167,6 +194,12 @@ trait ResourcesEntityTrait
      * @Groups("export")
      */
     private $youthGuaranteeAmt;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
+     */
+    private $dailyAllowanceAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
@@ -474,6 +507,46 @@ trait ResourcesEntityTrait
         return $this;
     }
 
+    public function getFamilySupplement(): ?int
+    {
+        return $this->familySupplement;
+    }
+
+    /**
+     * @Groups("export")
+     */
+    public function getFamilySupplementToString(): ?string
+    {
+        return $this->familySupplement ? Choices::YES_NO_BOOLEAN[$this->familySupplement] : null;
+    }
+
+    public function setFamilySupplement(?int $familySupplement): self
+    {
+        $this->familySupplement = $familySupplement;
+
+        return $this;
+    }
+
+    public function getScholarships(): ?int
+    {
+        return $this->scholarships;
+    }
+
+    /**
+     * @Groups("export")
+     */
+    public function getScholarshipsToString(): ?string
+    {
+        return $this->scholarships ? Choices::YES_NO_BOOLEAN[$this->scholarships] : null;
+    }
+
+    public function setScholarships(?int $scholarships): self
+    {
+        $this->scholarships = $scholarships;
+
+        return $this;
+    }
+
     public function getYouthGuarantee(): ?int
     {
         return $this->youthGuarantee;
@@ -490,6 +563,26 @@ trait ResourcesEntityTrait
     public function setYouthGuarantee(?int $youthGuarantee): self
     {
         $this->youthGuarantee = $youthGuarantee;
+
+        return $this;
+    }
+
+    public function getDailyAllowance(): ?int
+    {
+        return $this->dailyAllowance;
+    }
+
+    /**
+     * @Groups("export")
+     */
+    public function getDailyAllowanceToString(): ?string
+    {
+        return $this->dailyAllowance ? Choices::YES_NO_BOOLEAN[$this->dailyAllowance] : null;
+    }
+
+    public function setDailyAllowance(?int $dailyAllowance): self
+    {
+        $this->dailyAllowance = $dailyAllowance;
 
         return $this;
     }
@@ -830,6 +923,42 @@ trait ResourcesEntityTrait
         return $this;
     }
 
+    public function getFamilySupplementAmt(): ?float
+    {
+        return $this->familySupplementAmt;
+    }
+
+    public function setFamilySupplementAmt(?float $familySupplementAmt): self
+    {
+        $this->familySupplementAmt = $familySupplementAmt;
+
+        return $this;
+    }
+
+    public function getScholarshipsAmt(): ?float
+    {
+        return $this->scholarshipsAmt;
+    }
+
+    public function setScholarshipsAmt(?float $scholarshipsAmt): self
+    {
+        $this->scholarshipsAmt = $scholarshipsAmt;
+
+        return $this;
+    }
+
+    public function getDailyAllowanceAmt(): ?float
+    {
+        return $this->dailyAllowanceAmt;
+    }
+
+    public function setDailyAllowanceAmt(?float $dailyAllowanceAmt): self
+    {
+        $this->dailyAllowanceAmt = $dailyAllowanceAmt;
+
+        return $this;
+    }
+
     public function getRessourceOtherAmt(): ?float
     {
         return $this->ressourceOtherAmt;
@@ -847,12 +976,12 @@ trait ResourcesEntityTrait
         $array = [];
 
         foreach (EvalBudgetPerson::RESOURCES_TYPE as $key => $value) {
-                $method = 'get'.ucfirst($key);
+            $method = 'get'.ucfirst($key);
             if (Choices::YES === $this->$method()) {
                 $array[] = $value;
             }
         }
-        
+
         if ($this->getRessourceOtherPrecision()) {
             $array[] = $this->getRessourceOtherPrecision();
         }

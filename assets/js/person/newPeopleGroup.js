@@ -1,5 +1,4 @@
 import ValidationPerson from './validationPerson'
-import SelectType from '../utils/form/selectType'
 import ParametersUrl from '../utils/parametersUrl'
 
 /**
@@ -7,7 +6,6 @@ import ParametersUrl from '../utils/parametersUrl'
  */
 export default class NewPeopleGroup {
     constructor() {
-        this.selectType = new SelectType()
         this.parametersUrl = new ParametersUrl()
 
         this.form = document.querySelector('#person>form').name // role_person_group
@@ -30,11 +28,11 @@ export default class NewPeopleGroup {
 
     init() {
         if (this.genderInputElt) {
-            this.genderInputElt.addEventListener('input', this.selectType.getOption.bind(this, this.genderInputElt))
+            // this.genderInputElt.addEventListener('input', () => this.editTypo())
         }
         if (this.typoInputElt) {
-            this.typoInputElt.addEventListener('input', this.editTypo.bind(this))
-            this.nbPeopleInputElt.addEventListener('input', this.editNbPeople.bind(this))
+            this.typoInputElt.addEventListener('input', () => this.editTypo())
+            this.nbPeopleInputElt.addEventListener('input', () => this.editNbPeople())
         }
 
         const validationPerson = new ValidationPerson(
@@ -74,10 +72,10 @@ export default class NewPeopleGroup {
     }
 
     getValues() {
-        this.genderValue = this.selectType.getOption(this.genderInputElt)
-        this.typoValue = this.selectType.getOption(this.typoInputElt)
+        this.genderValue = parseInt(this.genderInputElt.value)
+        this.typoValue = parseInt(this.typoInputElt.value)
         this.nbPeopleValue = parseInt(this.nbPeopleInputElt.value)
-        this.roleValue = this.selectType.getOption(this.roleInputElt)
+        this.roleValue = parseInt(this.roleInputElt.value)
     }
 
     editTypo() {
@@ -111,8 +109,8 @@ export default class NewPeopleGroup {
         }
 
         this.nbPeopleInputElt.value = this.nbPeopleValue
-        this.selectType.setOption(this.roleInputElt, this.roleValue)
-        this.selectType.setOption(this.genderInputElt, this.genderValue)
+        this.roleInputElt.value = this.roleValue
+        this.genderInputElt.value = this.genderValue
     }
 
     editNbPeople() {
@@ -125,7 +123,7 @@ export default class NewPeopleGroup {
         }
 
         if (this.nbPeopleValue === 1 | this.typoValue <= 2) {
-            this.selectType.setOption(this.typoInputElt, this.typoValue)
+            this.typoInputElt.value = this.typoValue
         }
     }
 }

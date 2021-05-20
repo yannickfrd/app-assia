@@ -8,9 +8,9 @@ use App\Entity\Support\Rdv;
 use App\Entity\Support\SupportGroup;
 use App\Repository\Evaluation\EvaluationGroupRepository;
 use App\Repository\Organization\ReferentRepository;
-use App\Repository\Support\ContributionRepository;
 use App\Repository\Support\DocumentRepository;
 use App\Repository\Support\NoteRepository;
+use App\Repository\Support\PaymentRepository;
 use App\Repository\Support\RdvRepository;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
@@ -22,7 +22,7 @@ class SupportCollections
     private $noteRepository;
     private $rdvRepository;
     private $documentRepository;
-    private $contributionRepository;
+    private $paymentRepository;
     private $referentRepository;
     private $evaluationGroupRepository;
 
@@ -30,14 +30,14 @@ class SupportCollections
         NoteRepository $noteRepository,
         RdvRepository $rdvRepository,
         DocumentRepository $documentRepository,
-        ContributionRepository $contributionRepository,
+        PaymentRepository $paymentRepository,
         ReferentRepository $referentRepository,
         EvaluationGroupRepository $evaluationGroupRepository)
     {
         $this->noteRepository = $noteRepository;
         $this->rdvRepository = $rdvRepository;
         $this->documentRepository = $documentRepository;
-        $this->contributionRepository = $contributionRepository;
+        $this->paymentRepository = $paymentRepository;
         $this->referentRepository = $referentRepository;
         $this->evaluationGroupRepository = $evaluationGroupRepository;
 
@@ -131,18 +131,18 @@ class SupportCollections
     }
 
     /**
-     * Donne le nombre de contributions du suivi social.
+     * Donne le nombre de paiements du suivi social.
      */
-    public function getNbContributions(SupportGroup $supportGroup): ?int
+    public function getNbPayments(SupportGroup $supportGroup): ?int
     {
         if (!$supportGroup->getPlaceGroups()) {
-            return  null;
+            return null;
         }
 
-        return $this->cache->get(SupportGroup::CACHE_SUPPORT_NB_CONTRIBUTIONS_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup) {
+        return $this->cache->get(SupportGroup::CACHE_SUPPORT_NB_PAYMENTS_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup) {
             $item->expiresAfter(\DateInterval::createFromDateString('1 month'));
 
-            return $this->contributionRepository->count(['supportGroup' => $supportGroup->getId()]);
+            return $this->paymentRepository->count(['supportGroup' => $supportGroup->getId()]);
         });
     }
 }

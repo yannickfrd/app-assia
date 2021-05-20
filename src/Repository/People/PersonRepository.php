@@ -48,10 +48,17 @@ class PersonRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('p')->select('p');
 
         if ($searchQuery) {
-            $query->Where("CONCAT(p.lastname,' ' , p.firstname) LIKE :search")
+            $query->where("CONCAT(p.lastname,' ' , p.firstname) LIKE :search")
                 ->setParameter('search', '%'.$searchQuery.'%');
         }
 
+        if ($personSearch->getSiSiaoId()) {
+            $query->leftJoin('p.rolesPerson', 'r')->addSelect('PARTIAL r.{id}')
+                ->leftJoin('r.peopleGroup', 'g')->addSelect('PARTIAL g.{id, siSiaoId}')
+
+                ->andWhere('g.siSiaoId = :siSiaoId')
+                ->setParameter('siSiaoId', $personSearch->getSiSiaoId());
+        }
         if ($personSearch->getFirstname()) {
             $query->andWhere('p.firstname LIKE :firstname')
                 ->setParameter('firstname', $personSearch->getFirstname().'%');

@@ -21,7 +21,7 @@
 							<tr id="{{ organization.vars.id }}">
 								<td>{{ form_widget(organization.name) }}</td>
 								<td class="align-middle">
-									<button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button>
+									<button class="btn btn-danger" data-action="remove"><span class="fas fa-trash-alt"></span></button>
 								</td>
 							</tr>
 						{% endfor %}

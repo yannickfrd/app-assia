@@ -31,7 +31,7 @@ class Referent
         8 => 'Dispositif logement adapté',
         9 => 'ESPERER 95',
         13 => 'Médico-social (SAVS, SAMSAH...)',
-        1 => 'PASH (ex-AMH)',
+        1 => 'PASH',
         10 => 'Service de tutelle',
         11 => 'Service hospitalier',
         12 => 'Service Justice',

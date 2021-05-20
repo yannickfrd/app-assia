@@ -4,6 +4,7 @@ namespace App\Tests\Entity;
 
 use App\Entity\Organization\Place;
 use App\Entity\Organization\Service;
+use App\Tests\Entity\AssertHasErrorsTrait;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

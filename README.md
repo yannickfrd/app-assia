@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.28.16 05/05/2021
+2.29.7 20/05/2021
 
 # Développeur
 Romain MADELAINE
@@ -12,6 +12,16 @@ https://github.com/RomMad/esperer95.app
 
 # Connection à la base démo
 https://demo.esperer95.app
+
+## Version 2.29.7 - 20/05/2021
+- Create feature calcul contribution
+- Edit display 'infoCrip'/'IP' fields in evaluation
+- Add item 'Non concerné' in 'profStatus' field
+- Add 'SI SIAO ID' field in PeopleGroup form and HotelSupportEdit form
+- Create special hotel contributions export (DELTA) 
+- Create 'dailyAllowance', 'familySupplement' and 'scholarships' fields in EvalBudget form
+- Fix problem in creation of 'loan' and 'deposit refunt' PDF
+- Refactoring JS
 
 ## Version 2.28.11-16 - 05/05/2021
 - Update feature Note + Fix problem auto-save + Update tests

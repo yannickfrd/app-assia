@@ -114,7 +114,7 @@ class PeopleGroupControllerTest extends WebTestCase
         $id = $this->peopleGroup->getId();
         /** @var Crawler */
         $crawler = $this->client->request('GET', "/group/$id");
-        $url = $crawler->filter('.js-remove')->last()->attr('data-url');
+        $url = $crawler->filter('button[data-action="remove"]')->last()->attr('data-url');
 
         // Fail
         $id = $this->data['rolePerson2']->getId();

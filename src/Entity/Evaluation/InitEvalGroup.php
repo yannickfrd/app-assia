@@ -3,7 +3,7 @@
 namespace App\Entity\Evaluation;
 
 use App\Entity\Support\SupportGroup;
-use App\Form\Utils\Choices;
+use App\Form\Utils\EvaluationChoices;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -111,7 +111,7 @@ class InitEvalGroup
      */
     public function getSiaoRequestToString(): ?string
     {
-        return $this->siaoRequest ? Choices::YES_NO_IN_PROGRESS_NC[$this->siaoRequest] : null;
+        return $this->siaoRequest ? EvaluationChoices::YES_NO_IN_PROGRESS_NC[$this->siaoRequest] : null;
     }
 
     public function setSiaoRequest(?int $siaoRequest): self
@@ -131,7 +131,7 @@ class InitEvalGroup
      */
     public function getSocialHousingRequestToString(): ?string
     {
-        return $this->socialHousingRequest ? Choices::YES_NO_IN_PROGRESS_NC[$this->socialHousingRequest] : null;
+        return $this->socialHousingRequest ? EvaluationChoices::YES_NO_IN_PROGRESS_NC[$this->socialHousingRequest] : null;
     }
 
     public function setSocialHousingRequest(?int $socialHousingRequest): self

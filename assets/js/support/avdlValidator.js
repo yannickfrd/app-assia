@@ -1,5 +1,4 @@
 import FormValidator from '../utils/form/formValidator'
-import FieldDisplayer from '../utils/form/fieldDisplayer'
 import DateValidator from '../utils/date/dateValidator'
 
 /**
@@ -34,8 +33,6 @@ export default class AvdlValidatorSupport extends FormValidator {
             dateInputElt.addEventListener('focusout', this.checkDate.bind(this, dateInputElt))
         })
 
-        this.displayFields()
-
         this.diagStartDateElt.addEventListener('focusout', () => {
             this.checkIntervalBeetweenDates(
                 this.orientationDateElt,
@@ -68,26 +65,12 @@ export default class AvdlValidatorSupport extends FormValidator {
     }
 
     /**
-     * Masque ou affiche les champs conditionnels
-     */
-    displayFields() {
-        new FieldDisplayer('support_', 'device')
-        new FieldDisplayer('support_originRequest_', 'orientationDate')
-        new FieldDisplayer('support_originRequest_', 'organization')
-        new FieldDisplayer(this.prefix, 'diagStartDate')
-        new FieldDisplayer(this.prefix, 'supportStartDate')
-        new FieldDisplayer(this.prefix, 'supportEndDate')
-        new FieldDisplayer(this.prefix, 'propoHousingDate')
-        new FieldDisplayer(this.prefix, 'propoResult', [1])
-    }
-
-    /**
      * Vérifie la validité du formualire avant la soumission.
      */
     checkFormBeforeSubmit() {
         this.btnSubmitElts.forEach(btnElt => {
             btnElt.addEventListener('click', () => {
-                const device = this.selectType.getOption(this.deviceSelectElt)
+                const device = parseInt(this.deviceSelectElt.value)
                 if (this.AVDL_DALO === device && this.supportStartDateElt.value) {
                     this.checkField(this.diagStartDateElt)    
                     this.checkField(this.diagEndDateElt)    

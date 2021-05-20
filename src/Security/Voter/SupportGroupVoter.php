@@ -22,10 +22,10 @@ class SupportGroupVoter extends Voter
 
     protected function voteOnAttribute($attribute, $supportGroup, TokenInterface $token)
     {
-        /** @var User */
+        /* @var User */
         $this->user = $token->getUser();
         $this->userId = $this->user->getId();
-        /** @var SupportGroup */
+        /* @var SupportGroup */
         $this->supportGroup = $supportGroup;
 
         if (!$this->user) {

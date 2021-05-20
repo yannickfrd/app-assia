@@ -10,6 +10,7 @@ use App\Entity\People\Person;
 use App\Entity\People\RolePerson;
 use App\Entity\Support\SupportPerson;
 use App\Form\Utils\Choices;
+use App\Form\Utils\EvaluationChoices;
 
 class SocialIndicators
 {
@@ -34,8 +35,8 @@ class SocialIndicators
         $this->roleDatas = $this->initVar(RolePerson::ROLE);
         $this->profStatusDatas = $this->initVar(EvalProfPerson::PROF_STATUS);
         $this->contractTypeDatas = $this->initVar(EvalProfPerson::CONTRACT_TYPE);
-        $this->resourcesDatas = $this->initVar(Choices::YES_NO_IN_PROGRESS);
-        $this->chargesDatas = $this->initVar(Choices::YES_NO_IN_PROGRESS);
+        $this->resourcesDatas = $this->initVar(EvaluationChoices::YES_NO_IN_PROGRESS);
+        $this->chargesDatas = $this->initVar(EvaluationChoices::YES_NO_IN_PROGRESS);
 
         foreach ($supportPeople as $supportPerson) {
             /** @var SupportPerson */

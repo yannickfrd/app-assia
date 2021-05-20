@@ -2,13 +2,14 @@
 
 namespace App\Form\Evaluation;
 
-use App\Entity\Evaluation\EvalHousingGroup;
-use App\Entity\Evaluation\InitEvalGroup;
 use App\Form\Utils\Choices;
+use App\Form\Utils\EvaluationChoices;
+use App\Entity\Evaluation\InitEvalGroup;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use App\Entity\Evaluation\EvalHousingGroup;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class InitEvalGroupType extends AbstractType
 {
@@ -18,27 +19,27 @@ class InitEvalGroupType extends AbstractType
             ->add('housingStatus', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalHousingGroup::HOUSING_STATUS),
                 'attr' => [
-                    'class' => 'js-initEval important',
-                    'data-id' => 'housingStatus',
+                    'data-important' => 'true',
+                    'data-twin-field' => 'housingStatus',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
                 'help' => 'initEvalGroup.housingStatus.help',
             ])
             ->add('siaoRequest', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS_NC),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS_NC),
                 'attr' => [
-                    'class' => 'js-initEval important',
-                    'data-id' => 'siaoRequest',
+                    'data-important' => 'true',
+                    'data-twin-field' => 'siaoRequest',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('socialHousingRequest', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS_NC),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS_NC),
                 'attr' => [
-                    'class' => 'js-initEval important',
-                    'data-id' => 'socialHousingRequest',
+                    'data-important' => 'true',
+                    'data-twin-field' => 'socialHousingRequest',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,

@@ -40,7 +40,7 @@
 							<h3 class="card-title h5 text-{{ theme_color }} cursor-pointer" 
 								data-placement="bottom" title="Voir la note">{{ note.title }}</h3>
 							<span data-note-type={{ note.type }}>{{ note.typeToString }}</span>
-							<span data-note-status={{ note.status }}>({{ note.statusToString }})</span>
+							(<span data-note-status={{ note.status }}>{{ note.statusToString }}</span>)
 							<span class="small text-secondary" data-note-created="true">
 								| Créé le {{ note.createdAt|date("d/m/Y à H:i") }} par {{ note.createdBy.fullname }}
 							</span>

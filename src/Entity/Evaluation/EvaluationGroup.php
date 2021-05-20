@@ -286,7 +286,7 @@ class EvaluationGroup
     }
 
     /**
-     * @return Collection<Person>
+     * @return Collection<EvaluationPerson>
      */
     public function getEvaluationPeople()
     {

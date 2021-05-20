@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Controller;
+namespace App\Tests\Controller\App;
 
 use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Test\FixturesTrait;

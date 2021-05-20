@@ -32,6 +32,10 @@ class EvaluationSubscriber implements EventSubscriberInterface
         $evaluationGroup = $event->getEvaluationGroup();
         $supportGroup = $event->getSupportGroup();
 
+        $evaluationGroup
+            ->setUpdatedAt(new \DateTime())
+            ->setUpdatedBy($this->user);
+            
         $supportGroup->setUpdatedBy($this->user);
 
         $this->updateBudgetGroup($evaluationGroup);

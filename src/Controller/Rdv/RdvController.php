@@ -67,9 +67,7 @@ class RdvController extends AbstractController
      */
     public function viewSupportListRdvs(int $id, SupportManager $supportManager, Request $request, RdvPaginator $rdvPaginator): Response
     {
-        if (null === $supportGroup = $supportManager->getSupportGroup($id)) {
-            throw $this->createAccessDeniedException('Ce suivi n\'existe pas.');
-        }
+        $supportGroup = $supportManager->getSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
@@ -110,9 +108,7 @@ class RdvController extends AbstractController
      */
     public function createSupportRdv(int $id, SupportGroupRepository $supportGroupRepo, Request $request, EventDispatcherInterface $dispatcher): Response
     {
-        if (null === $supportGroup = $supportGroupRepo->findSupportById($id)) {
-            throw $this->createAccessDeniedException('Ce suivi n\'existe pas.');
-        }
+        $supportGroup = $supportGroupRepo->findSupportById($id);
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
@@ -138,11 +134,9 @@ class RdvController extends AbstractController
      *
      * @Route("/rdv/{id}/get", name="rdv_get", methods="GET")
      */
-    public function getRdv(int $id): Response
+    public function getRdv($id): Response
     {
-        if (null === $rdv = $this->rdvRepo->findRdv($id)) {
-            throw $this->createAccessDeniedException();
-        }
+        $rdv = $this->rdvRepo->findRdv($id);
 
         $this->denyAccessUnlessGranted('VIEW', $rdv);
 

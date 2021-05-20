@@ -30,6 +30,10 @@ export default class SupportValidator extends FormValidator
     }
 
     init() {
+        document.querySelectorAll('div[data-parent-field]').forEach(elt => {
+            new FieldDisplayer(elt)
+        })
+
         this.serviceSelectElt.addEventListener('change', () => this.sendAjaxRequest())
         this.subServiceSelectElt.addEventListener('change', () => this.sendAjaxRequest())
 
@@ -44,8 +48,6 @@ export default class SupportValidator extends FormValidator
         }
         this.checkFormBeforeSubmit()
 
-        this.displayFields()
-
         this.visibleElt(this.subServiceSelectElt.parentNode.parentNode, this.subServiceSelectElt.querySelectorAll('option').length > 1 ? true : false)
     }
 
@@ -59,11 +61,7 @@ export default class SupportValidator extends FormValidator
                     this.checkStartDate()
                     this.checkEndDate()
                 }
-                if (this.endDateInputElt && this.endDateInputElt.value) {
-                    this.checkField(this.endStatusSelectElt)
-                } else {
-                    this.validField(this.endStatusSelectElt)
-                }
+                this.checkEndStatus()
 
                 if (this.loader.isActive() || this.checkForm() > 0) {
                     e.preventDefault()
@@ -72,14 +70,6 @@ export default class SupportValidator extends FormValidator
         })
     }
 
-    /**
-     * Masque ou affiche les champs conditionnels
-     */
-    displayFields() {
-        new FieldDisplayer(this.prefix + 'originRequest_', 'orientationDate')
-        new FieldDisplayer(this.prefix, 'startDate')
-        new FieldDisplayer(this.prefix, 'endStatus')
-    }
 
     checkDate(dateInputElt) {
         const dateValidator = new DateValidator(dateInputElt, this)
@@ -95,7 +85,7 @@ export default class SupportValidator extends FormValidator
      */
     checkStartDate() {
         const intervalWithNow = (this.now - new Date(this.startDateInputElt.value)) / (24 * 3600 * 1000)
-        const status = this.statusSelectElt ? this.selectType.getOption(this.statusSelectElt) : null
+        const status = this.statusSelectElt ? parseInt(this.statusSelectElt.value) : null
 
         if ((this.startDateInputElt.value && !intervalWithNow) || intervalWithNow > (365 * 19)) {
             return this.invalidField(this.startDateInputElt, 'Date invalide.')
@@ -103,7 +93,6 @@ export default class SupportValidator extends FormValidator
         if (intervalWithNow < -30) {
             return this.invalidField(this.startDateInputElt, 'La date ne peut pas être supérieure de 30 jours par rapport à la date du jour.')
         }
-
         if (!intervalWithNow && [2, 3, 4].includes(status)) { // Statut = En cours, Suspendu, Terminé
             return this.invalidField(this.startDateInputElt, 'Saisie obligatoire.')
         }
@@ -134,16 +123,23 @@ export default class SupportValidator extends FormValidator
             return this.invalidField(this.endDateInputElt, 'La date ne peut pas être postérieure à la date du jour.')
         }
         if (this.endDateInputElt.value && this.statusSelectElt) { // Statut = Terminé
-            this.selectType.setOption(this.statusSelectElt, 4)
+            this.statusSelectElt.value = '4'
         }
     }
     
+    checkEndStatus() {
+        if (this.endDateInputElt && this.endDateInputElt.value && !this.endStatusSelectElt.value) {
+            return this.invalidField(this.endStatusSelectElt, 'Saisie obligatoire.')
+        }
+        return this.validField(this.endStatusSelectElt)
+    }
+
     /**
      * Envoie la requête Ajax.
      */
     sendAjaxRequest() {
-        if (this.selectType.getOption(this.serviceSelectElt)) {
-            const url = this.serviceSelectElt.getAttribute('data-url')
+        if (this.serviceSelectElt.value) {
+            const url = this.serviceSelectElt.dataset.url
             this.ajax.send('POST', url, this.responseAjax.bind(this), new URLSearchParams(this.getData()))
         }
     }
@@ -156,7 +152,7 @@ export default class SupportValidator extends FormValidator
         const data = {}
 
         selectElts.forEach(selectElt => {
-            data[selectElt.getAttribute('name')] = this.selectType.getOption(selectElt)
+            data[selectElt.getAttribute('name')] = selectElt.value
         })
         return data
     }
@@ -196,11 +192,11 @@ export default class SupportValidator extends FormValidator
      * @param {HTMLElement} newSelectElt 
      */
     updateField(selectElt, newSelectElt) {
-        const previousOption = this.selectType.getOption(selectElt)
+        const previousOption = selectElt.value
 
         selectElt.innerHTML = newSelectElt.innerHTML
 
-        this.selectType.setOption(selectElt, previousOption)
+        selectElt.value = previousOption
 
         const optionElts = selectElt.querySelectorAll('option')
         if (optionElts.length <= 2) {

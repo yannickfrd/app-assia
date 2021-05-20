@@ -52,10 +52,15 @@ class Service
         4 => "Tou·te·s les salarié·e·s de l'association",
     ];
 
+    public const FIX_PERCENT_CONTRIBUTION = 3;
+    public const VAR_PERCENT_CONTRIBUTION = 1;
+    public const RENT_CONTRIBUTION = 2;
+
     public const CONTRIBUTION_TYPE = [
-        1 => 'Pourcentage des ressources',
-        2 => 'Montant fixe',
-        3 => 'Autre',
+        3 => 'Pourcentage fixe selon les ressources',
+        1 => 'Pourcentage variable selon le dispositif',
+        2 => 'Loyer (montant fixé dans fiche logement)',
+        4 => 'Autre',
     ];
 
     /**
@@ -122,6 +127,11 @@ class Service
      * @ORM\Column(type="float", nullable=true)
      */
     private $contributionRate = 0.1;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $minRestToLive;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -403,6 +413,18 @@ class Service
     public function setContributionRate(?float $contributionRate): self
     {
         $this->contributionRate = $contributionRate;
+
+        return $this;
+    }
+
+    public function getMinRestToLive(): ?float
+    {
+        return $this->minRestToLive;
+    }
+
+    public function setMinRestToLive(?float $minRestToLive): self
+    {
+        $this->minRestToLive = $minRestToLive;
 
         return $this;
     }

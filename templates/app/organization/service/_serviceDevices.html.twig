@@ -21,7 +21,7 @@
 						<tr id="{{ serviceDevice.vars.id }}">
 							<td>{{ form_widget(serviceDevice.device) }}</td>
 							<td class="align-middle">
-								<button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button>
+								<button class="btn btn-danger" data-action="remove"><span class="fas fa-trash-alt"></span></button>
 							</td>
 						</tr>
 						{% endfor %}

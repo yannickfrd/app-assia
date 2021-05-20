@@ -311,7 +311,7 @@ class SupportControllerTest extends WebTestCase
         $id = $this->data['supportGroup1']->getId();
         /** @var Crawler */
         $crawler = $this->client->request('GET', "/support/$id/edit");
-        $url = $crawler->filter('.js-remove')->first()->attr('data-url');
+        $url = $crawler->filter('button[data-action="remove"]')->first()->attr('data-url');
         $this->client->request('GET', $url);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -326,7 +326,7 @@ class SupportControllerTest extends WebTestCase
         $id = $this->data['supportGroup1']->getId();
         /** @var Crawler */
         $crawler = $this->client->request('GET', "/support/$id/edit");
-        $url = $crawler->filter('.js-remove')->last()->attr('data-url');
+        $url = $crawler->filter('button[data-action="remove"]')->last()->attr('data-url');
         $this->client->request('GET', $url);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());

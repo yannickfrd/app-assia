@@ -2,14 +2,15 @@
 
 namespace App\Form\Evaluation;
 
-use App\Entity\Evaluation\EvalHousingGroup;
-use App\Entity\Organization\Service;
 use App\Form\Utils\Choices;
+use App\Entity\Organization\Service;
+use App\Form\Utils\EvaluationChoices;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+use App\Entity\Evaluation\EvalHousingGroup;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class EvalHousingGroupType extends AbstractType
 {
@@ -20,10 +21,10 @@ class EvalHousingGroupType extends AbstractType
 
         $builder
             ->add('siaoRequest', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS_NC),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS_NC),
                 'attr' => [
-                    'class' => 'js-initEval important',
-                    'data-id' => 'siaoRequest',
+                    'data-important' => 'true',
+                    'data-twin-field' => 'siaoRequest',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
@@ -37,7 +38,7 @@ class EvalHousingGroupType extends AbstractType
                 'required' => false,
                 ])
             ->add('siaoRequestDept', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::DEPARTMENTS),
+                'choices' => Choices::getChoices(EvaluationChoices::DEPARTMENTS),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
@@ -47,10 +48,10 @@ class EvalHousingGroupType extends AbstractType
                 'required' => false,
             ])
             ->add('socialHousingRequest', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS_NC),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS_NC),
                 'attr' => [
-                    'class' => 'js-initEval important',
-                    'data-id' => 'socialHousingRequest',
+                    'data-important' => 'true',
+                    'data-twin-field' => 'socialHousingRequest',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
@@ -70,7 +71,7 @@ class EvalHousingGroupType extends AbstractType
             ->add('citiesWishes')
             ->add('specificities')
             ->add('syplo', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
@@ -80,7 +81,7 @@ class EvalHousingGroupType extends AbstractType
                 'required' => false,
             ])
             ->add('daloAction', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
@@ -99,7 +100,7 @@ class EvalHousingGroupType extends AbstractType
                 'required' => false,
             ])
             ->add('daloTribunalAction', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
@@ -108,7 +109,7 @@ class EvalHousingGroupType extends AbstractType
                 'required' => false,
             ])
             // ->add('collectiveAgreementHousing', ChoiceType::class, [
-            //     'choices' => Choices::getChoices(Choices::YES_NO),
+            //     'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
             //     'placeholder' => 'placeholder.select',
             //     'required' => false,
             // ])
@@ -117,12 +118,12 @@ class EvalHousingGroupType extends AbstractType
             //     'required' => false,
             // ])
             ->add('hsgActionEligibility', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('hsgActionRecord', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
@@ -138,7 +139,7 @@ class EvalHousingGroupType extends AbstractType
             ])
             ->add('hsgActionRecordId')
             ->add('domiciliation', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
@@ -184,7 +185,7 @@ class EvalHousingGroupType extends AbstractType
                 ],
             ])
             ->add('housingExperience', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
@@ -203,14 +204,14 @@ class EvalHousingGroupType extends AbstractType
                 ->add('housingStatus', ChoiceType::class, [
                     'choices' => Choices::getChoices(EvalHousingGroup::HOUSING_STATUS),
                     'attr' => [
-                        'class' => 'js-initEval important',
-                        'data-id' => 'housingStatus',
+                        'data-important' => 'true',
+                        'data-twin-field' => 'housingStatus',
                     ],
                     'placeholder' => 'placeholder.select',
                     'required' => false,
                 ])
                 ->add('housingAccessType', ChoiceType::class, [
-                    'choices' => Choices::getChoices(Choices::YES_NO),
+                    'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
                     'placeholder' => 'placeholder.select',
                     'required' => false,
                 ])
@@ -225,12 +226,12 @@ class EvalHousingGroupType extends AbstractType
                     'help' => 'location.department.help',
                 ])
                 ->add('expulsionInProgress', ChoiceType::class, [
-                    'choices' => Choices::getChoices(Choices::YES_NO),
+                    'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
                     'placeholder' => 'placeholder.select',
                     'required' => false,
                 ])
                 ->add('publicForce', ChoiceType::class, [
-                    'choices' => Choices::getChoices(Choices::YES_NO),
+                    'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
                     'placeholder' => 'placeholder.select',
                     'required' => false,
                 ])

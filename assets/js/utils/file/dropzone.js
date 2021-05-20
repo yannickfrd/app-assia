@@ -155,13 +155,13 @@ export default class Dropzone {
     createLiElt(filename) {
         const liElt = document.createElement('li')
         liElt.className = 'list-group-item d-flex justify-content-between align-items-center list-group-item-light fade-in'
-        liElt.setAttribute('data-file-name', filename.toLowerCase())
+        liElt.dataset.fileName = filename.toLowerCase()
         liElt.innerHTML = `${filename}<span class="fas fa-sync-alt ml-2 text-secondary"></span>`
         return liElt
     }
 
     clearDropzoneContent() {
-        this.dropzoneElt.innerHTML = this.dropzoneElt.getAttribute('data-placeholder')
+        this.dropzoneElt.innerHTML = this.dropzoneElt.dataset.placeholder
         this.filesCollection = []
         this.content = ''
     }

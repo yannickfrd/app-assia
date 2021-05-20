@@ -2,13 +2,14 @@
 
 namespace App\Form\Evaluation;
 
-use App\Entity\Evaluation\EvalProfPerson;
 use App\Form\Utils\Choices;
+use App\Form\Utils\EvaluationChoices;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+use App\Entity\Evaluation\EvalProfPerson;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class EvalProfPersonType extends AbstractType
 {
@@ -18,8 +19,8 @@ class EvalProfPersonType extends AbstractType
             ->add('profStatus', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalProfPerson::PROF_STATUS),
                 'attr' => [
-                    'class' => 'js-initEval important',
-                    'data-id' => 'profStatus',
+                    'data-important' => 'true',
+                    'data-twin-field' => 'profStatus',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
@@ -28,8 +29,7 @@ class EvalProfPersonType extends AbstractType
             ->add('contractType', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalProfPerson::CONTRACT_TYPE),
                 'attr' => [
-                    'class' => 'js-initEval',
-                    'data-id' => 'contractType',
+                    'data-twin-field' => 'contractType',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
@@ -37,6 +37,8 @@ class EvalProfPersonType extends AbstractType
             ->add('jobType')
             ->add('contractStartDate', DateType::class, [
                 'widget' => 'single_text',
+                'html5' => false,
+                'attr' => ['class' => 'js-datepicker'],
                 'required' => false,
             ])
             ->add('contractEndDate', DateType::class, [
@@ -54,7 +56,7 @@ class EvalProfPersonType extends AbstractType
             ])
             ->add('transportMeans')
             ->add('rqth', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])

@@ -16,17 +16,19 @@ class EvalBudgetGroupType extends AbstractType
         ->add('cafId')
         ->add('cafAttachment')
         ->add('contributionAmt', MoneyType::class, [
-            'attr' => ['class' => 'js-money text-right'],
+            'attr' => [
+                'class' => 'text-right',
+                'data-amount' => 'true',
+            ],
             'required' => false,
+        ])
+        ->add('commentEvalBudget', null, [
+            'label' => 'Comment',
+            'attr' => [
+                'rows' => 2,
+                 'class' => 'justify',
+            ],
         ]);
-        // ->add('commentEvalBudget', null, [
-        //     'label_attr' => ['class' => 'sr-only'],
-        //     'attr' => [
-        //         'rows' => 5,
-        //          'class => 'justify',
-        //         'placeholder' => 'evalBudgetPerson.comment',
-        //     ],
-        // ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

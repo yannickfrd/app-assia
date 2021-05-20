@@ -2,19 +2,20 @@
 
 namespace App\Form\Organization\Service;
 
-use App\Entity\Organization\Pole;
-use App\Entity\Organization\Service;
-use App\Entity\Organization\User;
-use App\Form\Type\LocationType;
 use App\Form\Utils\Choices;
-use App\Repository\Organization\UserRepository;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Form\Type\LocationType;
+use App\Entity\Organization\Pole;
+use App\Entity\Organization\User;
+use App\Entity\Organization\Service;
 use Symfony\Component\Form\AbstractType;
+use App\Repository\Organization\UserRepository;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ServiceType extends AbstractType
 {
@@ -89,7 +90,6 @@ class ServiceType extends AbstractType
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
-
             ->add('justice', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
                 'label' => 'Justice activity',
@@ -108,6 +108,14 @@ class ServiceType extends AbstractType
             ])
             ->add('contributionRate', null, [
                 'help' => 'contribution.rate.help',
+            ])
+            ->add('minRestToLive', MoneyType::class, [
+                'attr' => [
+                    'class' => 'text-right',
+                    'placeholder' => 'Amount',
+                ],
+                'help' => 'service.minRestToLive.help',
+                'required' => false,
             ])
             ->add('comment', null, [
                 'attr' => [

@@ -2,7 +2,7 @@
 
 {% set support = form.vars.value %}
 {% set people = support.id ? form.vars.value.supportPeople : people_group.rolePeople %}
-{% set title = (support.id  ? "Édition du" : "Nouveau") ~ " suivi" %}
+{% set title = (support.id ? "Édition du" : "Nouveau") ~ " suivi" %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -30,10 +30,10 @@
 				<div class="col-md-6">{{ form_row(form.service, {'attr': {'data-url': path('support_switch_service')} }) }}</div>
 				<div class="col-md-6">{{ form_row(form.subService, {'required': form.subService.vars.choices|length > 0}) }}</div>
 			</div>
-			<div class="row" data-parent-field="service">
+			<div class="row" data-parent-field="support_service" data-options="*">
 				<div class="col-md-6">{{ form_row(form.device) }}</div>
 			</div>
-			<div class="row" data-parent-field="service">
+			<div class="row" data-parent-field="support_service" data-options="*">
 				<div class="col-md-6">{{ form_row(form.referent) }}</div>
 				<div class="col-md-6">{{ form_row(form.referent2) }}</div>
 			</div>

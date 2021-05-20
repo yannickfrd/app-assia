@@ -2,7 +2,7 @@
 
 namespace App\Entity\Evaluation;
 
-use App\Form\Utils\Choices;
+use App\Form\Utils\EvaluationChoices;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -268,7 +268,7 @@ class EvalSocialPerson
 
     public function getRightSocialSecurityToString(): ?string
     {
-        return $this->rightSocialSecurity ? Choices::YES_NO_IN_PROGRESS[$this->rightSocialSecurity] : null;
+        return $this->rightSocialSecurity ? EvaluationChoices::YES_NO_IN_PROGRESS[$this->rightSocialSecurity] : null;
     }
 
     public function setRightSocialSecurity(?int $rightSocialSecurity): self
@@ -331,7 +331,7 @@ class EvalSocialPerson
 
     public function getInfoCripToString(): ?string
     {
-        return $this->infoCrip ? Choices::YES_NO[$this->infoCrip] : null;
+        return $this->infoCrip ? EvaluationChoices::YES_NO[$this->infoCrip] : null;
     }
 
     public function setInfoCrip(?int $infoCrip): self
@@ -360,7 +360,7 @@ class EvalSocialPerson
 
     public function getInfoCripByServiceToString(): ?string
     {
-        return $this->infoCripByService ? Choices::YES_NO[$this->infoCripByService] : null;
+        return $this->infoCripByService ? EvaluationChoices::YES_NO[$this->infoCripByService] : null;
     }
 
     public function setInfoCripByService(?int $infoCripByService): self
@@ -384,7 +384,7 @@ class EvalSocialPerson
 
     public function getChildWelfareBackgroundToString(): ?string
     {
-        return $this->childWelfareBackground ? Choices::YES_NO[$this->childWelfareBackground] : null;
+        return $this->childWelfareBackground ? EvaluationChoices::YES_NO[$this->childWelfareBackground] : null;
     }
 
     public function setChildWelfareBackground(?int $childWelfareBackground): self
@@ -401,7 +401,7 @@ class EvalSocialPerson
 
     public function getAseFollowUpToString(): ?string
     {
-        return $this->aseFollowUp ? Choices::YES_NO[$this->aseFollowUp] : null;
+        return $this->aseFollowUp ? EvaluationChoices::YES_NO[$this->aseFollowUp] : null;
     }
 
     public function setAseFollowUp(?int $aseFollowUp): self
@@ -447,7 +447,7 @@ class EvalSocialPerson
 
     public function getHealthProblemToString(): ?string
     {
-        return $this->healthProblem ? Choices::YES_NO[$this->healthProblem] : null;
+        return $this->healthProblem ? EvaluationChoices::YES_NO[$this->healthProblem] : null;
     }
 
     public function setHealthProblem(?int $healthProblem): self
@@ -463,7 +463,7 @@ class EvalSocialPerson
 
         foreach (self::HEALTH_PROBLEMS_TYPE as $key => $value) {
             $method = 'get'.ucfirst($key);
-            if (Choices::YES === $this->$method()) {
+            if (EvaluationChoices::YES === $this->$method()) {
                 $array[] = $value;
             }
         }
@@ -478,7 +478,7 @@ class EvalSocialPerson
 
     public function getPhysicalHealthProblemToString(): ?string
     {
-        return $this->physicalHealthProblem ? Choices::YES_NO_BOOLEAN[$this->physicalHealthProblem] : null;
+        return $this->physicalHealthProblem ? EvaluationChoices::YES_NO_BOOLEAN[$this->physicalHealthProblem] : null;
     }
 
     public function setPhysicalHealthProblem(?int $physicalHealthProblem): self
@@ -495,7 +495,7 @@ class EvalSocialPerson
 
     public function getMentalHealthProblemToString(): ?string
     {
-        return $this->mentalHealthProblem ? Choices::YES_NO_BOOLEAN[$this->mentalHealthProblem] : null;
+        return $this->mentalHealthProblem ? EvaluationChoices::YES_NO_BOOLEAN[$this->mentalHealthProblem] : null;
     }
 
     public function setMentalHealthProblem(?int $mentalHealthProblem): self
@@ -512,7 +512,7 @@ class EvalSocialPerson
 
     public function getAddictionProblemToString(): ?string
     {
-        return $this->addictionProblem ? Choices::YES_NO_BOOLEAN[$this->addictionProblem] : null;
+        return $this->addictionProblem ? EvaluationChoices::YES_NO_BOOLEAN[$this->addictionProblem] : null;
     }
 
     public function setAddictionProblem(?int $addictionProblem): self
@@ -529,7 +529,7 @@ class EvalSocialPerson
 
     public function getWheelchairToString(): ?string
     {
-        return $this->wheelchair ? Choices::YES_NO_BOOLEAN[$this->wheelchair] : null;
+        return $this->wheelchair ? EvaluationChoices::YES_NO_BOOLEAN[$this->wheelchair] : null;
     }
 
     public function setWheelchair(?int $wheelchair): self
@@ -546,7 +546,7 @@ class EvalSocialPerson
 
     public function getReducedMobilityToString(): ?string
     {
-        return $this->reducedMobility ? Choices::YES_NO_BOOLEAN[$this->reducedMobility] : null;
+        return $this->reducedMobility ? EvaluationChoices::YES_NO_BOOLEAN[$this->reducedMobility] : null;
     }
 
     public function setReducedMobility(?int $reducedMobility): self
@@ -563,7 +563,7 @@ class EvalSocialPerson
 
     public function getMedicalFollowUpToString(): ?string
     {
-        return $this->medicalFollowUp ? Choices::YES_NO_IN_PROGRESS[$this->medicalFollowUp] : null;
+        return $this->medicalFollowUp ? EvaluationChoices::YES_NO_IN_PROGRESS[$this->medicalFollowUp] : null;
     }
 
     public function setMedicalFollowUp(?int $medicalFollowUp): self
@@ -580,7 +580,7 @@ class EvalSocialPerson
 
     public function getHomeCareSupportToString(): ?string
     {
-        return $this->homeCareSupport ? Choices::YES_NO_IN_PROGRESS[$this->homeCareSupport] : null;
+        return $this->homeCareSupport ? EvaluationChoices::YES_NO_IN_PROGRESS[$this->homeCareSupport] : null;
     }
 
     public function setHomeCareSupport(?int $homeCareSupport): self
@@ -614,7 +614,7 @@ class EvalSocialPerson
 
     public function getFamilyBreakdownToString(): ?string
     {
-        return $this->familyBreakdown ? Choices::YES_NO_PARTIAL[$this->familyBreakdown] : null;
+        return $this->familyBreakdown ? EvaluationChoices::YES_NO_PARTIAL[$this->familyBreakdown] : null;
     }
 
     public function setFamilyBreakdown(?int $familyBreakdown): self
@@ -631,7 +631,7 @@ class EvalSocialPerson
 
     public function getFriendshipBreakdownToString(): ?string
     {
-        return $this->friendshipBreakdown ? Choices::YES_NO_PARTIAL[$this->friendshipBreakdown] : null;
+        return $this->friendshipBreakdown ? EvaluationChoices::YES_NO_PARTIAL[$this->friendshipBreakdown] : null;
     }
 
     public function setFriendshipBreakdown(?int $friendshipBreakdown): self
@@ -648,7 +648,7 @@ class EvalSocialPerson
 
     public function getViolenceVictimToString(): ?string
     {
-        return $this->violenceVictim ? Choices::YES_NO[$this->violenceVictim] : null;
+        return $this->violenceVictim ? EvaluationChoices::YES_NO[$this->violenceVictim] : null;
     }
 
     public function setViolenceVictim(?int $violenceVictim): self
@@ -665,7 +665,7 @@ class EvalSocialPerson
 
     public function getDomViolenceVictimToString(): ?string
     {
-        return $this->domViolenceVictim ? Choices::YES_NO[$this->domViolenceVictim] : null;
+        return $this->domViolenceVictim ? EvaluationChoices::YES_NO[$this->domViolenceVictim] : null;
     }
 
     public function setDomViolenceVictim(?int $domViolenceVictim): self

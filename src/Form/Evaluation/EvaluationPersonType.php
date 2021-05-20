@@ -2,12 +2,12 @@
 
 namespace App\Form\Evaluation;
 
-use App\Entity\Evaluation\EvaluationPerson;
-use App\Form\Utils\Choices;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
+use App\Form\Utils\EvaluationChoices;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\AbstractType;
+use App\Entity\Evaluation\EvaluationPerson;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EvaluationPersonType extends AbstractType
@@ -39,7 +39,7 @@ class EvaluationPersonType extends AbstractType
                     ->add('evalBudgetPerson', EvalBudgetPersonType::class);
             }
 
-            if (Choices::YES === $service->getJustice()) {
+            if (EvaluationChoices::YES === $service->getJustice()) {
                 $form->add('evalJusticePerson', EvalJusticePersonType::class);
             }
         });

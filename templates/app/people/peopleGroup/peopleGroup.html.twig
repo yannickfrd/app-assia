@@ -32,7 +32,8 @@
             <div class="row">
                 <div class="col-md-12 mb-3">
                     <div class="float-right">
-                        <button type="submit" name="send" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>Mettre à jour</button>
+                        <button type="submit" name="send" class="btn btn-{{ theme_color }} shadow">
+                            <span class="fas fa-save mr-2"></span>Mettre à jour</button>
                     </div>
                 </div>
             </div>
@@ -59,7 +60,8 @@
                                     {% set person = form_person.vars.value.person %}
                                     <tr id="js-person-{{ person.id }}" class="js-tr-person">
                                         <td  class="align-middle" scope="row">
-                                            <a href="{{ path("group_person_show", {"id":people_group.id, "person_id":person.id, "slug":person.slug}) }}"
+                                            <a href="{{ path("group_person_show", 
+                                                {"id": people_group.id, "person_id": person.id, "slug": person.slug}) }}"
                                                 class="btn btn-{{ theme_color }} shadow" data-toggle="tooltip" data-placement="bottom"
                                                 title="Voir la fiche individuelle"><span class="fas fa-eye"></span>
                                             </a>
@@ -80,9 +82,10 @@
                                             {{ form_errors(form_person.role) }}</td>
                                         <td class="px-1 align-middle">
                                             {% if is_granted_ROLE_ADMIN %}
-                                                <button class="js-remove btn btn-danger shadow"
-                                                    data-url="{{ path('role_person_remove', {'id': form_person.vars.value.id, '_token': csrf_token('remove' ~ form_person.vars.value.id)}) }}"
-                                                    data-toggle="modal" data-target="#modal-remove-person" data-toggle="tooltip" data-placement="bottom"
+                                                <button class="btn btn-danger shadow" data-action="remove"
+                                                    data-url="{{ path('role_person_remove', {'id': form_person.vars.value.id, 
+                                                        '_token': csrf_token('remove' ~ form_person.vars.value.id)}) }}"
+                                                    data-toggle="modal" data-target="#modal-remove-person"
                                                     title="Retirer la personne du groupe"><span class="fas fa-user-times"></span>
                                                 </button>
                                             {% endif %}
@@ -96,11 +99,11 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <a href="{{ path("group_search_person", {"id":people_group.id}) }}"
+                    <a href="{{ path("group_search_person", {"id": people_group.id}) }}"
                         class="btn btn-{{ theme_color }} btn-sm my-2">
                         <span class="fas fa-plus-square mr-2"></span>Ajouter une personne</a>
-                    <a href="{{ path("group_create_person", {"id":people_group.id}) }}"
-                        data-toggle="tooltip" title="Ajouter un enfant" data-placement="bottom" class="btn btn-secondary btn-sm my-2">
+                    <a href="{{ path("group_create_person", {"id": people_group.id}) }}" class="btn btn-secondary btn-sm my-2"
+                        data-toggle="tooltip" title="Ajouter un enfant" data-placement="bottom">
                         <span class="fas fa-plus-square mr-2"></span>Naissance</a>
                 </div>
             </div>
@@ -109,6 +112,7 @@
             <div class="form-group row">
                 <div class="col-md-6">{{ form_row(form.familyTypology) }}</div>
                 <div class="col-md-6">{{ form_row(form.nbPeople) }}</div>
+                <div class="col-md-6">{{ form_row(form.siSiaoId) }}</div>
             </div>
             <div class="form-group row">
                 <div class="col-md-12">{{ form_widget(form.comment) }}</div>
@@ -117,14 +121,18 @@
                 <div class="col-md-12">
                     {% if is_granted_ROLE_ADMIN %}
                         <div class="float-left d-flex">
-                            <a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('people_group_delete', {'id': people_group.id}) }}"
+                        {% set msg_confirm = "Êtes-vous vraiment sûr de vouloir supprimer ce groupe ?" %}
+                            <a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" 
+                                href="{{ path('people_group_delete', {'id': people_group.id}) }}"
                                 data-toggle="tooltip" title="Supprimer le groupe" data-placement="bottom"
-                                onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer ce groupe ?')){return true;}else{return false;}"><span
+                                onclick="if(window.confirm('{{ msg_confirm }}')){return true;}else{return false;}"><span
                                 class="fas fa-trash-alt mr-2"></span><span class="">Supprimer</span></a>
                         </div>
                     {% endif %}
                     <div class="float-right">
-                        <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>Mettre à jour</button>
+                        <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">
+                            <span class="fas fa-save mr-2"></span>Mettre à jour
+                        </button>
                     </div>
                 </div>
             </div>

@@ -6,7 +6,7 @@
 
 	{% set title = "Évaluation sociale" %}
 	{% set evaluationGroup = form.vars.value %}
-	{% set EDIT_MODE = form.vars.value.evalBudgetGroup != null %}
+	{% set EDIT_MODE = evaluationGroup.updatedAt != evaluationGroup.createdAt %}
 	{% set ROLE_CHILD = constant("App\\Entity\\People\\RolePerson::ROLE_CHILD") %}
 	{% set GENDER_FEMALE = constant("App\\Entity\\People\\Person::GENDER_FEMALE") %}
 	{% set evaluationPeople = form.evaluationPeople %}
@@ -27,13 +27,18 @@
 		{% include "model/_msgFlash.html.twig" %}
 		<div id="js-msg-flash-content"></div>
 
-		<div class="row my-3 align-items-center">
-			<div class="col-md-12 my-1 small text-secondary">Évaluation créée le {{ evaluationGroup.createdAt|date("d/m/Y") }}
-				{% if evaluationGroup.updatedAt %} (modifiée le {{ evaluationGroup.updatedAt|date("d/m/Y à H:i") }}){% endif %}
+		<div class="row my-3 align-items-center" data-edit-mode="{{ EDIT_MODE ? 'true' : 'false' }}">
+			<div class="col-md-12 my-1 small text-secondary">Évaluation créée le {{ evaluationGroup.createdAt|date("d/m/Y à H:i") }}
+				<span id="evaluation-updateAt">
+					{% if evaluationGroup.updatedAt != evaluationGroup.createdAt %}
+						(modifiée le {{ evaluationGroup.updatedAt|date("d/m/Y à H:i") }}
+						{% if evaluationGroup.updatedBy %} par {{ evaluationGroup.updatedBy.fullname }}{% endif %})
+					{% endif %}
+				</span>
 			</div>
 		</div>
 
-		<div class="mb-4" data-edit-mode="{% if EDIT_MODE %}true{% else %}false{% endif %}">
+		<div class="mb-4">
 			{% include "app/evaluation/edit/_initEvaluation.html.twig" with {accordion_id: "init_eval"} %}
 			{% include "app/evaluation/edit/_evaluationBackground.html.twig" with {accordion_id: "eval_background"} %}
 			{% if support.service.justice == YES %}
@@ -51,17 +56,21 @@
 			{% include "app/evaluation/edit/_evaluationConclusion.html.twig" with {accordion_id: "eval_conclusion"} %}
 		</div>
 
-		<div class="form-group row">
+		<div class="row mb-3">
 			<div class="col-md-12">
 				<div class="mb-4 float-right">
-					<button type="submit" name="send" data-url="{{ path('support_evaluation_edit', {'id': support.id}) }}" 
-						class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>{% if EDIT_MODE %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+					<button type="submit" name="send" class="btn btn-{{ theme_color }} shadow" 
+						data-url="{{ path('support_evaluation_edit', {'id': support.id}) }}">
+						<span class="fas fa-save mr-2"></span>{% if EDIT_MODE %}Mettre à jour{% else %}Enregistrer{% endif %}
+					</button>
 				</div>
 			</div>
 		</div>
 		{{ form_row(form._token) }}
 		{{ form_end(form, {"render_rest": false}) }}
 	</div>
+
+	{% include "app/payment/_contributionCalculModal.html.twig" %}
 
 {% endblock %}
 

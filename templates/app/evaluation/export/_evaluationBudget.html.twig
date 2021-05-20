@@ -17,24 +17,24 @@
         <tbody>
             <tr>
                 <td>Ressources</td>
-                <td style="text-align: right;">{{ evalBudgetGroup.resourcesGroupAmt|price }}</td>
+                <td style="text-align: right;">{{ evalBudgetGroup.resourcesGroupAmt|amount }}</td>
             </tr>
             {% if evalBudgetGroup.chargesGroupAmt %}
                 <tr>
                     <td>Charges</td>
-                    <td style="text-align: right;">{{ evalBudgetGroup.chargesGroupAmt|price }}</td>
+                    <td style="text-align: right;">{{ evalBudgetGroup.chargesGroupAmt|amount }}</td>
                 </tr>
             {% endif %}
             {% if evalBudgetGroup.contributionAmt %}
                 <tr>
                     <td>Participation financière</td>
-                    <td style="text-align: right;">{{ evalBudgetGroup.contributionAmt|price }}</td>
+                    <td style="text-align: right;">{{ evalBudgetGroup.contributionAmt|amount }}</td>
                 </tr>
             {% endif %}
             {% if evalBudgetGroup.debtsGroupAmt and evalBudgetGroup.monthlyRepaymentAmt > 0 %}
                 <tr>
                     <td>Remboursement mensuel des dettes</td>
-                    <td style="text-align: right;">{{ evalBudgetGroup.monthlyRepaymentAmt|price }}</td>
+                    <td style="text-align: right;">{{ evalBudgetGroup.monthlyRepaymentAmt|amount }}</td>
                 </tr>
             {% endif %}
         </tbody>
@@ -42,13 +42,13 @@
             {% if evalBudgetGroup.budgetBalanceAmt > 0 %}
                 <tr style="font-weight: bold;">
                     <td>Reste à vivre</td>
-                    <td style="text-align: right;">{{ evalBudgetGroup.budgetBalanceAmt|price }}</td>
+                    <td style="text-align: right;">{{ evalBudgetGroup.budgetBalanceAmt|amount }}</td>
                 </tr>
             {% endif %}
             {% if evalBudgetGroup.debtsGroupAmt > 0 %}
                 <tr>
                     <td>Montant total des dettes</td>
-                    <td style="text-align: right;">{{ evalBudgetGroup.debtsGroupAmt|price }}</td>
+                    <td style="text-align: right;">{{ evalBudgetGroup.debtsGroupAmt|amount }}</td>
                 </tr>
             {% endif %}
         </tfoot>
@@ -83,7 +83,7 @@
                             <td>{{ not loop.last ? value : (attribute(evalBudget, key ~ 'Precision') ? 
                                 attribute(evalBudget, key ~ 'Precision') : "Autre(s) ressource(s)") }}</td>
                             {% set amt = attribute(evalBudget, key ~ 'Amt') %}
-                            <td style="text-align: right;">{{ amt > 0 ? amt|price }}</td>
+                            <td style="text-align: right;">{{ amt > 0 ? amt|amount }}</td>
                         </tr>
                         {% endif %}
                     {% endfor %}
@@ -91,18 +91,18 @@
                 <tfoot>
                     <tr style="font-weight: bold;">
                         <td>Total des ressources</td>
-                        <td style="text-align: right;">{{ evalBudget.resourcesAmt|price }}</td>
+                        <td style="text-align: right;">{{ evalBudget.resourcesAmt|amount }}</td>
                     </tr>
                     {% if evalBudget.incomeN1Amt %}
                         <tr>
                             <td>Impôts sur le revenu n-1</td>
-                            <td style="text-align: right;">{{ evalBudget.incomeN1Amt|price }}</td>
+                            <td style="text-align: right;">{{ evalBudget.incomeN1Amt|amount }}</td>
                         </tr>							
                     {% endif %}
                     {% if evalBudget.incomeN2Amt %}
                         <tr>
                             <td>Impôts sur le revenu n-2</td>
-                            <td style="text-align: right;">{{ evalBudget.incomeN2Amt|price }}</td>
+                            <td style="text-align: right;">{{ evalBudget.incomeN2Amt|amount }}</td>
                         </tr>
                     {% endif %}
                 </tfoot>
@@ -126,7 +126,7 @@
                         <tr>
                             <td>{{ not loop.last ? value : (attribute(evalBudget, key ~ 'Precision') ? 
                                 attribute(evalBudget, key ~ 'Precision') : "Autre(s) charge(s)") }}</td>
-                            <td style="text-align: right;">{{ attribute(evalBudget, key ~ 'Amt')|price }}</td>
+                            <td style="text-align: right;">{{ attribute(evalBudget, key ~ 'Amt')|amount }}</td>
                         </tr>
                         {% endif %}
                     {% endfor %}
@@ -134,7 +134,7 @@
                 <tfoot>
                     <tr style="font-weight: bold;">
                         <td>Total des charges</td>
-                        <td style="text-align: right;">{{ evalBudget.chargesAmt|price }}</td>
+                        <td style="text-align: right;">{{ evalBudget.chargesAmt|amount }}</td>
                     </tr>
                 </tfoot>
             </table>

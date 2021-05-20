@@ -1,0 +1,118 @@
+{% set contribution = form.vars.value %}
+{% set serviceTypeHotel = support.service.type == constant("SERVICE_TYPE_HOTEL", support.service) %}
+
+<div class="modal fade" id="payment-modal" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="mb-0">Paiement</h2>
+            <div class="small text-secondary">
+                <p class="mb-0 ml-3 text-right" id="js-info-payment">
+                </p>
+            </div>
+        </div>
+        {{ form_start(form, {
+            'attr': {'data-url': path('payment_edit', {'id': '__id__'})} 
+        }) }}
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-lg-6">{{ form_row(form.type) }}</div>
+                <div class="col-lg-6" data-payment="true" data-parent-field="payment_type" 
+                    data-options="30">{{ form_row(form.repaymentReason) }}</div>
+                <div class="col-lg-6 mb-3" data-payment="true" data-parent-field="payment_type" data-options="1|2">
+                    <button id="calcul-contribution-btn" class="btn btn-secondary" 
+                        title="Calculer le montant à régler" data-toggle="tooltip" data-placement="bottom" 
+                        data-url="{{ path('support_payment_calcul', {'id': support.id}) }}">
+                        <span class="fas fa-sync mr-2"></span>Calculer</button>
+                    <button id="show-calcul-contribution-btn" class="btn btn-{{ theme_color }} ml-2 d-none" 
+                        title="Voir le détail du montant à régler" data-toggle="tooltip" data-placement="bottom">
+                        <span class="fas fa-eye mr-2"></span>Voir le détail</button>
+                </div>
+            </div>
+            <div class="row" data-payment="true"
+                data-parent-field="payment_type" data-options="1|2">
+                <div class="col-lg-6">{{ form_row(form.startDate) }}</div>
+                <div class="col-lg-6">{{ form_row(form.endDate) }}</div>
+            </div>
+            <hr class="mt-0">
+            <div class="row" data-payment="true"
+                data-parent-field="payment_type" data-options="1">
+                <div class="col-lg-4">{{ form_row(form.resourcesAmt) }}</div>
+                <div class="col-lg-4">{{ form_row(form.chargesAmt) }}</div>
+            </div>
+            <div class="row d-none">
+                <div class="col-lg-4">{{ form_row(form.contributionRate) }}</div>
+                <div class="col-lg-4">{{ form_row(form.nbConsumUnits) }}</div>
+            </div>
+            <div class="row" data-payment="rent"
+                data-parent-field="payment_type" data-options="2">
+                <div class="col-lg-4">{{ form_row(form.rentAmt) }}</div>
+                <div class="col-lg-4">{{ form_row(form.aplAmt) }}</div>
+            </div>
+            <div class="row" data-payment="toPayAmt"
+                data-parent-field="payment_type" data-options="1|2|10|20">
+                <div class="col-lg-4">{{ form_row(form.toPayAmt) }}</div>
+                    {% if true == serviceTypeHotel %}
+                        <div class="col-lg-4 d-none" data-type="no_contrib">
+                            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2">
+                                {{ form_row(form.noContrib) }}</div>
+                        </div>
+                        <div class="col-lg-4" data-parent-field="payment_noContrib">{{ form_row(form.noContribReason) }}</div>
+                    {% endif %}
+                </div>
+            <div>
+                <div class="row">
+                    <div class="col-lg-4" data-payment="returnAmt"data-parent-field="payment_type" 
+                        data-options="11">{{ form_row(form.returnAmt) }}</div>
+                    <div class="col-lg-4" data-payment="paidAmt" data-parent-field="payment_type" 
+                        data-options="1|2|10|30">{{ form_row(form.paidAmt) }}</div>
+                    <div class="col-lg-4" data-payment="paymentDate" 
+                        data-parent-field="payment_type" data-options="*">{{ form_row(form.paymentDate) }}</div>
+                    <div class="col-lg-4" data-payment="paymentType" 
+                        data-parent-field="payment_type" data-options="*">{{ form_row(form.paymentType) }}</div>
+                </div>
+                <div class="row" data-payment="stillToPayAmt"
+                    data-parent-field="payment_type" data-options="1|2|10">
+                    <div class="col-lg-4">{{ form_row(form.stillToPayAmt) }}</div>
+                </div>
+            </div>
+            <div class="row" data-payment="comment" data-parent-field="payment_type" data-options="*">
+                <div class="col-lg-6 mb-2">{{ form_widget(form.comment) }}
+                    <div class="px-2">{{ form_help(form.comment) }}</div>
+                </div>
+                <div class="col-lg-6 mb-2">{{ form_widget(form.commentExport) }}
+                    <div class="px-2">{{ form_help(form.commentExport) }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer d-block">
+            <div class="d-flex justify-content-between">
+                <div class="d-flex float-left mr-3">
+                    <button class="btn btn-danger mr-3 mb-1" data-action="delete"
+                        data-edit="true" data-url="{{ path('payment_delete', {'id': '__id__'}) }}"
+                        data-placement="bottom" title="Supprimer"><span class="fas fa-trash-alt"></span><span 
+                        class="d-none d-md-inline ml-2">Supprimer</span></button>
+                    <button class="btn btn-{{ theme_color }} mr-2 mb-1 shadow" data-action="create_pdf"
+                        data-edit="true" data-url="{{ path('payment_export_pdf', {'id': '__id__'}) }}"
+                        data-toggle="tooltip" data-placement="bottom" title="Générer le reçu en PDF">
+                        <span class="fas fa-file-pdf bg-secondary fa-lg"></span>
+                        <span class="d-none d-md-inline ml-2">PDF</span></button>
+                    <button class="btn btn-{{ theme_color }} mb-1 shadow" data-action="send_email"
+                        data-edit="true" data-url="{{ path('payment_send_pdf', {'id': '__id__'}) }}"
+                        data-toggle="tooltip" data-placement="bottom" title="Envoyer un email avec le reçu en PDF">
+                        <span class="fas fa-envelope bg-secondary fa-lg"></span>
+                        <span class="d-none d-md-inline ml-2">Email</span></button>
+                </div>
+                <div class="d-flex float-right">
+                    <button type="button" class="btn btn-secondary mr-2 mb-1" data-action="close" data-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-{{ theme_color }} mb-1 shadow" data-action="save"
+                        data-url="{{ path('payment_edit', {'id': '__id__'}) }}">
+                        <i class="fas fa-save d-none d-md-inline mr-2"></i><span>Enregistrer</span></button>
+                </div>
+            </div>
+        </div>
+        {{ form_row(form._token) }}
+        {{ form_end(form, {'render_rest': false}) }}
+    </div>
+  </div>
+</div>

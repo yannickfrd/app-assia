@@ -21,6 +21,7 @@ class PeopleGroupType extends AbstractType
                 'placeholder' => 'placeholder.select',
             ])
             ->add('nbPeople')
+            ->add('siSiaoId')
             ->add('rolePeople', CollectionType::class, [
                 'entry_type' => RolePersonMinType::class,
                 'allow_add' => false,

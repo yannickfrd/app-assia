@@ -1,6 +1,5 @@
 import MessageFlash from '../utils/messageFlash'
 import Loader from '../utils/loader'
-import SelectType from '../utils/form/selectType'
 import { Modal } from 'bootstrap'
 import Ajax from '../utils/ajax'
 import Dropzone from '../utils/file/dropzone'
@@ -15,7 +14,6 @@ export default class SupportDocuments {
     constructor() {
         this.loader = new Loader()
         this.ajax = new Ajax(this.loader, 60)
-        this.selectType = new SelectType()
         this.checkboxSelector = new CheckboxSelector()
 
         this.dropzoneModalElt = new Modal(document.getElementById('dropzone-modal'))
@@ -33,7 +31,7 @@ export default class SupportDocuments {
 
         this.actionFormElt = document.querySelector('form[name="action"]')
             
-        this.themeColor = document.getElementById('header').getAttribute('data-color')
+        this.themeColor = document.getElementById('header').dataset.color
         this.countDocumentsElt = document.getElementById('count-documents')
 
         this.init()
@@ -45,11 +43,11 @@ export default class SupportDocuments {
         document.querySelectorAll('tr[data-document-id]').forEach(documentTrElt => this.addEventListenersToTr(documentTrElt))
         this.updateBtnElt.addEventListener('click', e => this.requestToUpdate(e))
         this.deleteBtnElt.addEventListener('click', e => {
-            this.requestToDelete(e, this.deleteBtnElt.getAttribute('data-document-id'))
+            this.requestToDelete(e, this.deleteBtnElt.dataset.documentId)
         })
         this.confirmDeleteBtnElt.addEventListener('click', e => {
             e.preventDefault()
-            this.ajax.send('GET', this.confirmDeleteBtnElt.getAttribute('data-url'), this.responseAjax.bind(this))
+            this.ajax.send('GET', this.confirmDeleteBtnElt.dataset.url, this.responseAjax.bind(this))
         })
         document.getElementById('action-validate').addEventListener('click', e => this.onValidateAction(e))
         
@@ -62,9 +60,9 @@ export default class SupportDocuments {
         documentTrElt.addEventListener('click', e => this.showDocument(e, documentTrElt))
         const deleteBtnElt = documentTrElt.querySelector('button[data-action="delete"]')
         deleteBtnElt.addEventListener('click', () => {
-            deleteBtnElt.setAttribute('data-document-id', documentTrElt.getAttribute('data-document-id'))
+            deleteBtnElt.dataset.documentId = documentTrElt.dataset.documentId
             const documentName = documentTrElt.querySelector('td[data-document="name"]').textContent
-            this.updateDeleteModal(documentName, deleteBtnElt.getAttribute('data-url'))
+            this.updateDeleteModal(documentName, deleteBtnElt.dataset.url)
         })      
     }
 
@@ -75,7 +73,7 @@ export default class SupportDocuments {
         e.preventDefault()
 
         const actionTypeSelect = document.getElementById('action_type')
-        const option = this.selectType.getOption(actionTypeSelect)
+        const option = parseInt(actionTypeSelect.value)
         const items = this.checkboxSelector.getItems()
 
         // Check if items are selected.
@@ -115,7 +113,7 @@ export default class SupportDocuments {
     updateDeleteModal(documentName, url) {
         const modalBodyElt = this.modalBlockElt.querySelector('div.modal-body')
         modalBodyElt.innerHTML = `<br/><p>Êtes-vous vraiment sûr de vouloir supprimer le document <b>${documentName}</b> ?</p><br/>`
-        this.confirmDeleteBtnElt.setAttribute('data-url', url)
+        this.confirmDeleteBtnElt.dataset.url = url
         this.deleteModalElt.show()
     }
 
@@ -124,7 +122,7 @@ export default class SupportDocuments {
      */
     deleteFiles(items) {
         this.loader.on()
-        const url = this.deleteBtnElt.getAttribute('data-url-document-delete')
+        const url = this.deleteBtnElt.dataset.urlDocumentDelete
         items.forEach(id => {
             this.ajax.send('GET', url.replace('__id__', id), this.responseAjax.bind(this))
         })
@@ -154,15 +152,15 @@ export default class SupportDocuments {
             return null
         }
 
-        const id = documentTrElt.getAttribute('data-document-id')
-        const typeValue = documentTrElt.querySelector('td[data-document="type"]').getAttribute('data-type-value')
+        const id = documentTrElt.dataset.documentId
+        const typeValue = documentTrElt.querySelector('td[data-document="type"]').dataset.typeValue
 
-        this.documentFormElt.action = this.documentFormElt.getAttribute('data-url').replace('__id__', id)
+        this.documentFormElt.action = this.documentFormElt.dataset.url.replace('__id__', id)
         this.documentFormElt.querySelector('#document_name').value = documentTrElt.querySelector('td[data-document="name"]').textContent
         this.documentFormElt.querySelector('#document_content').value = documentTrElt.querySelector('td[data-document="content"]').textContent
-        this.selectType.setOption(this.documentFormElt.querySelector('#document_type'), typeValue)
+        this.documentFormElt.querySelector('#document_type').value = typeValue
         this.deleteBtnElt.classList.replace('d-none', 'd-block')
-        this.deleteBtnElt.setAttribute('data-document-id', id)
+        this.deleteBtnElt.dataset.documentId = id
         this.documentModalElt.show()
     }
    
@@ -185,7 +183,7 @@ export default class SupportDocuments {
     requestToDelete(e, id) {
         e.preventDefault()
 
-        const url = this.deleteBtnElt.getAttribute('data-url-document-delete').replace('__id__', id)
+        const url = this.deleteBtnElt.dataset.urlDocumentDelete.replace('__id__', id)
         const documentName = this.documentFormElt.querySelector('#document_name').value
 
         this.updateDeleteModal(documentName, url)
@@ -238,7 +236,7 @@ export default class SupportDocuments {
         const documentTrElt = document.querySelector(`tr[data-document-id="${data.id}"]`)
         documentTrElt.querySelector('td[data-document="name"]').textContent = data.name
         const documentTypeTdElt = documentTrElt.querySelector('td[data-document="type"]')
-        documentTypeTdElt.setAttribute('data-type-value', data.type)
+        documentTypeTdElt.dataset.typeValue = data.type
         documentTypeTdElt.textContent = data.typeToString
         documentTrElt.querySelector('td[data-document="content"]').textContent = data.content
         this.documentModalElt.hide()
@@ -266,7 +264,7 @@ export default class SupportDocuments {
      */ 
     getDocumentTrPrototype(data) {
         const documentTrElt = document.createElement('tr')
-        documentTrElt.setAttribute('data-document-id', data.id)
+        documentTrElt.dataset.documentId = data.id
         documentTrElt.innerHTML =`
             <td scope="row" class="align-middle text-center">
                 <div class="custom-control custom-checkbox custom-checkbox-${this.themeColor} text-dark pl-0" 

@@ -2,7 +2,7 @@
 
 namespace App\Entity\Evaluation;
 
-use App\Form\Utils\Choices;
+use App\Form\Utils\EvaluationChoices;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -236,7 +236,7 @@ class EvalFamilyPerson
 
     public function getNoConciliationOrderToString(): ?string
     {
-        return $this->noConciliationOrder ? Choices::YES_NO[$this->noConciliationOrder] : null;
+        return $this->noConciliationOrder ? EvaluationChoices::YES_NO[$this->noConciliationOrder] : null;
     }
 
     public function setNoConciliationOrder(?int $noConciliationOrder): self
@@ -253,7 +253,7 @@ class EvalFamilyPerson
 
     public function getUnbornChildToString(): ?string
     {
-        return $this->unbornChild ? Choices::YES_NO[$this->unbornChild] : null;
+        return $this->unbornChild ? EvaluationChoices::YES_NO[$this->unbornChild] : null;
     }
 
     public function setUnbornChild(?int $unbornChild): self
@@ -299,7 +299,7 @@ class EvalFamilyPerson
 
     public function getChildcareOrSchoolToString(): ?string
     {
-        return $this->childcareOrSchool ? Choices::YES_NO[$this->childcareOrSchool] : null;
+        return $this->childcareOrSchool ? EvaluationChoices::YES_NO[$this->childcareOrSchool] : null;
     }
 
     public function setChildcareOrSchool(?int $childcareOrSchool): self
@@ -420,7 +420,7 @@ class EvalFamilyPerson
 
     public function getProtectiveMeasureToString(): ?string
     {
-        return $this->protectiveMeasure ? Choices::YES_NO_IN_PROGRESS[$this->protectiveMeasure] : null;
+        return $this->protectiveMeasure ? EvaluationChoices::YES_NO_IN_PROGRESS[$this->protectiveMeasure] : null;
     }
 
     public function setProtectiveMeasure(?int $protectiveMeasure): self

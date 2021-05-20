@@ -2,17 +2,18 @@
 
 namespace App\Form\Evaluation;
 
-use App\Entity\Evaluation\EvalAdmPerson;
-use App\Entity\Evaluation\EvalProfPerson;
-use App\Entity\Evaluation\EvalSocialPerson;
-use App\Entity\Evaluation\InitEvalPerson;
-use App\Form\Type\ResourcesType;
 use App\Form\Utils\Choices;
+use App\Form\Type\ResourcesType;
+use App\Form\Utils\EvaluationChoices;
+use App\Entity\Evaluation\EvalAdmPerson;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use App\Entity\Evaluation\EvalProfPerson;
+use App\Entity\Evaluation\InitEvalPerson;
+use App\Entity\Evaluation\EvalSocialPerson;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class InitEvalPersonType extends AbstractType
 {
@@ -23,10 +24,10 @@ class InitEvalPersonType extends AbstractType
 
         $builder
             ->add('paper', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS),
                 'attr' => [
-                    'class' => 'js-initEval important',
-                    'data-id' => 'paper',
+                    'data-important' => 'true',
+                    'data-twin-field' => 'paper',
                 ],
                 'placeholder' => 'placeholder.select',
                 'help' => 'evalAdmPerson.paper.help',
@@ -35,17 +36,17 @@ class InitEvalPersonType extends AbstractType
             ->add('paperType', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalAdmPerson::PAPER_TYPE),
                 'attr' => [
-                    'class' => 'js-initEval important',
-                    'data-id' => 'paperType',
+                    'data-important' => 'true',
+                    'data-twin-field' => 'paperType',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('rightSocialSecurity', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS),
                 'attr' => [
-                    'class' => 'js-initEval important',
-                    'data-id' => 'rightSocialSecurity',
+                    'data-important' => 'true',
+                    'data-twin-field' => 'rightSocialSecurity',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
@@ -53,8 +54,8 @@ class InitEvalPersonType extends AbstractType
             ->add('socialSecurity', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalSocialPerson::SOCIAL_SECURITY),
                 'attr' => [
-                    'class' => 'js-initEval important',
-                    'data-id' => 'socialSecurity',
+                    'data-important' => 'true',
+                    'data-twin-field' => 'socialSecurity',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
@@ -74,19 +75,17 @@ class InitEvalPersonType extends AbstractType
 
         $builder
             ->add('familyBreakdown', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO_PARTIAL),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO_PARTIAL),
                 'attr' => [
-                    'class' => 'js-initEval',
-                    'data-id' => 'familyBreakdown',
+                    'data-twin-field' => 'familyBreakdown',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('friendshipBreakdown', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO_PARTIAL),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO_PARTIAL),
                 'attr' => [
-                    'class' => 'js-initEval',
-                    'data-id' => 'friendshipBreakdown',
+                    'data-twin-field' => 'friendshipBreakdown',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
@@ -94,8 +93,8 @@ class InitEvalPersonType extends AbstractType
             ->add('profStatus', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalProfPerson::PROF_STATUS),
                 'attr' => [
-                    'class' => 'js-initEval important',
-                    'data-id' => 'profStatus',
+                    'data-important' => 'true',
+                    'data-twin-field' => 'profStatus',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
@@ -103,8 +102,8 @@ class InitEvalPersonType extends AbstractType
             ->add('contractType', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalProfPerson::CONTRACT_TYPE),
                 'attr' => [
-                    'class' => 'js-initEval important',
-                    'data-id' => 'contractType',
+                    'data-important' => 'true',
+                    'data-twin-field' => 'contractType',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
@@ -113,20 +112,21 @@ class InitEvalPersonType extends AbstractType
             ->add('resources', ResourcesType::class)
 
             ->add('debts', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
                 'attr' => [
-                    'class' => 'js-initEval important',
-                    'data-id' => 'debts',
+                    'data-important' => 'true',
+                    'data-twin-field' => 'debts',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('debtsAmt', MoneyType::class, [
                 'attr' => [
-                    'class' => 'js-money js-debtsAmt js-initEval text-right',
-                    'data-id' => 'debtsAmt',
+                    'class' => 'text-right',
+                    'data-amount' => 'debtsAmt',
+                    'data-twin-field' => 'debtsAmt',
+                    'placeholder' => 'Amount',
                 ],
-                'required' => false,
             ]);
     }
 

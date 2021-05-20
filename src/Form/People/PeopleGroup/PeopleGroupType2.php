@@ -20,6 +20,7 @@ class PeopleGroupType2 extends AbstractType
                 'empty_data' => 'placeholder.select',
             ])
             ->add('nbPeople')
+            ->add('siSiaoId')
             ->add('comment', null, [
                 'attr' => [
                     'rows' => 4,

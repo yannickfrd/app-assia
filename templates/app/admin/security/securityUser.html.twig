@@ -88,7 +88,7 @@
                                     <tr id="{{ role.vars.id }}">
                                         <td>{{ form_widget(role.service) }}</td>
                                         <td class="align-middle">
-                                            <button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button>
+                                            <button class="btn btn-danger" data-action="remove"><span class="fas fa-trash-alt"></span></button>
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -139,7 +139,7 @@
                                             <td class="align-middle">{{ form_widget(userDevice.device) }}</td>
                                             <td class="align-middle">{{ form_widget(userDevice.nbSupports) }}</td>
                                             <td class="align-middle">
-                                                <button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button>
+                                                <button class="btn btn-danger" data-action="remove"><span class="fas fa-trash-alt"></span></button>
                                             </td>
                                         </tr>
                                     {% endfor %}

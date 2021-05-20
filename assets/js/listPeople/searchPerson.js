@@ -18,10 +18,10 @@ export default class SearchPerson {
         this.birthdateInputElt = document.getElementById('birthdate')
         this.tableElt = document.querySelector('div.table-responsive')
         this.listResultElt = document.getElementById('list-result-people')
-        this.groupId = this.listResultElt.getAttribute('data-group-id')
+        this.groupId = this.listResultElt.dataset.groupId
         this.helperSearchElt = document.querySelector('.js-helper-search')
         this.createPersonBtnElt = document.querySelector('.js-create-person')
-        this.themeColor = document.getElementById('header').getAttribute('data-color')
+        this.themeColor = document.getElementById('header').dataset.color
         this.lengthSearch = lengthSearch
         this.time = time
         this.countdownID = null

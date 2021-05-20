@@ -2,7 +2,7 @@
 
 namespace App\Entity\Evaluation;
 
-use App\Form\Utils\Choices;
+use App\Form\Utils\EvaluationChoices;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -44,6 +44,7 @@ class EvalProfPerson
         7 => 'Retraité·e',
         8 => 'Salarié·e',
         97 => 'Autre',
+        98 => 'Non concerné',
         99 => 'Non évalué',
     ];
 
@@ -355,7 +356,7 @@ class EvalProfPerson
 
     public function getRqthToString(): ?string
     {
-        return $this->rqth ? Choices::YES_NO_IN_PROGRESS[$this->rqth] : null;
+        return $this->rqth ? EvaluationChoices::YES_NO_IN_PROGRESS[$this->rqth] : null;
     }
 
     public function setRqth(?int $rqth): self

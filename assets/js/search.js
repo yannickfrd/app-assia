@@ -6,7 +6,7 @@ import 'select2'
 // import MaskInput from './utils/maskInput'
 // new MaskInput('.js-phone')
 
-const select2Array = {
+const items = {
     'typology': 'Typologie familiale',
     'status': 'Statut',
     'poles': 'Pôles',
@@ -15,14 +15,14 @@ const select2Array = {
     'devices': 'Dispositifs',
     'referents': 'Référents',
     'hotels': 'Hôtel',
-    'contribution-type': 'Type',
+    'payment-type': 'Type',
     'support-type': 'Type d\'acc.',
     'levelSupport': 'Niveau d\'intervention',
 };
 
-for (let i in select2Array) {
+for (let i in items) {
     $(`select[data-select2-id='${i}']`).select2({
-        placeholder: '  -- ' + select2Array[i] + ' --',
+        placeholder: '  -- ' + items[i] + ' --',
         // theme: 'bootstrap4',
         'language': {
             'noResults': () => {
