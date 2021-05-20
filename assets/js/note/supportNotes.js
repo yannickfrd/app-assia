@@ -43,7 +43,7 @@ export default class SupportNotes {
         this.data = null
 
         this.init()
-        this.autoSaver = new AutoSaver(this.autoSaveNote.bind(this), this.CkEditor.getEditorElt(), 6, 5)
+        this.autoSaver = new AutoSaver(this.autoSaveNote.bind(this), this.CkEditor.getEditorElt(), 60, 20)
     }
 
     init() {
