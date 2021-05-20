@@ -1,14 +1,17 @@
 import DeleteTr from '../utils/deleteTr'
 import changeChecker from '../utils/form/changeChecker'
 import AddCollectionWidget from '../utils/addCollectionWidget'
-import UpdateService from './updateService'
+import FieldDisplayer from '../utils/form/fieldDisplayer'
 import SearchLocation from '../utils/searchLocation'
 import '../utils/maskPhone'
 
 document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('div[data-parent-field]').forEach(elt => {
+        new FieldDisplayer(elt)
+    })   
+
     new DeleteTr('function-table')
     new changeChecker('service') // form name
     new AddCollectionWidget()
-    new UpdateService()
     new SearchLocation('service_location')
 })

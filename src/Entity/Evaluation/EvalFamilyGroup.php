@@ -2,7 +2,7 @@
 
 namespace App\Entity\Evaluation;
 
-use App\Form\Utils\Choices;
+use App\Form\Utils\EvaluationChoices;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -104,7 +104,7 @@ class EvalFamilyGroup
      */
     public function getChildrenBehindToString(): ?string
     {
-        return $this->childrenBehind ? Choices::YES_NO[$this->childrenBehind] : null;
+        return $this->childrenBehind ? EvaluationChoices::YES_NO[$this->childrenBehind] : null;
     }
 
     public function getFamlReunification(): ?int
@@ -161,7 +161,7 @@ class EvalFamilyGroup
      */
     public function getPmiFollowUpToString(): ?string
     {
-        return $this->pmiFollowUp ? Choices::YES_NO_IN_PROGRESS[$this->pmiFollowUp] : null;
+        return $this->pmiFollowUp ? EvaluationChoices::YES_NO_IN_PROGRESS[$this->pmiFollowUp] : null;
     }
 
     public function setPmiFollowUp(?int $pmiFollowUp): self

@@ -3,6 +3,7 @@ placeholder.select: -- Sélectionner --
 initEvalPerson.comment: Écrire un commentaire relatif à la situation initiale de la personne
 backgroundPeople: Parcours de vie
 backgroundPeople.placeholder: Présenter le parcours de vie / historique du ménage
+Comment: Commentaire
 conclusion: Conclusion
 conclusion.placeholder: Synthèse et/ou conclusion de la situation (autonomie, axes de travail, objectifs...)
 

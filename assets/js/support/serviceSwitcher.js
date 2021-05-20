@@ -1,4 +1,3 @@
-import SelectType from '../utils/form/selectType'
 import Ajax from '../utils/ajax'
 import Loader from '../utils/loader'
 
@@ -8,7 +7,6 @@ import Loader from '../utils/loader'
 export default class ServiceSwitcher {
 
     constructor() {
-        this.selectType = new SelectType()
         this.loader = new Loader()
         this.ajax = new Ajax(this.loader)
 
@@ -41,8 +39,8 @@ export default class ServiceSwitcher {
      * Au changement de service dans la liste déroulante.
      */
     changeService() {
-        if (this.selectType.getOption(this.serviceSelectElt)) {
-            const url = this.serviceSelectElt.getAttribute('data-url')
+        if (this.serviceSelectElt.value) {
+            const url = this.serviceSelectElt.dataset.url
             this.ajax.send('POST', url, this.responseAjax.bind(this), new URLSearchParams(this.getData()))
         }
     }
@@ -56,7 +54,7 @@ export default class ServiceSwitcher {
 
         selectElts.forEach(selectElt => {
             if (selectElt) {
-                data[selectElt.getAttribute('name')] = this.selectType.getOption(selectElt)
+                data[selectElt.getAttribute('name')] = selectElt.value
             }
         })
 
@@ -98,13 +96,13 @@ export default class ServiceSwitcher {
      * @param {HTMLElement} newElt 
      */
     updateField(selectElt, newElt) {
-        const previousOption = this.selectType.getOption(selectElt)
+        const previousOption = selectElt.value
 
         this.updateVisibilityFields()
 
         selectElt.innerHTML = newElt.innerHTML
 
-        this.selectType.setOption(selectElt, previousOption)
+        selectElt.value = previousOption
 
         const optionElts = selectElt.querySelectorAll('option')
         if (optionElts.length <= 2) {
@@ -120,7 +118,7 @@ export default class ServiceSwitcher {
      * Vérifie la visibilté des champs Sous-service et Dispositif.
      */
     updateVisibilityFields() {
-        this.visibleElt(document.querySelector(`div[data-parent-field='service'`), this.selectType.getOption(this.serviceSelectElt) >= 1)
+        this.visibleElt(document.querySelector(`div[data-parent-field='service'`), parseInt(this.serviceSelectElt.value) >= 1)
         this.visibleElt(this.subServiceBlockElt, this.subServiceSelectElt.querySelectorAll('option').length > 1)
     }
 

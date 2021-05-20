@@ -64,9 +64,9 @@
 			{% endif %}
 			{% if support.device and support.device.contribution == YES %}
 			<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">
-				<a id='support-contributions' class="btn btn-{{ theme_color }} btn-block shadow" 
-				href="{{ path('support_contributions', {'id': support.id}) }}" data-toggle="tooltip" data-placement="bottom" 
-				title="Paiements (redevances, PF, caution...)">Paiements<span class="badge badge-light ml-2">{{ nbContributions }}</span></a>
+				<a id='support-payments' class="btn btn-{{ theme_color }} btn-block shadow" 
+				href="{{ path('support_payments', {'id': support.id}) }}" data-toggle="tooltip" data-placement="bottom" 
+				title="Paiements (redevances, PF, caution...)">Paiements<span class="badge badge-light ml-2">{{ nbPayments }}</span></a>
 			</div>
 			{% endif %}
 			<div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-3">

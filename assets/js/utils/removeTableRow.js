@@ -19,7 +19,7 @@ export default class RemoveTableRow {
 
     init() {
         this.trElts.forEach(trElt => {
-            const btnElt = trElt.querySelector('button.js-remove')
+            const btnElt = trElt.querySelector('button[data-action="remove"]')
             if (btnElt) {
                 btnElt.addEventListener('click', e => {
                     e.preventDefault()
@@ -39,7 +39,7 @@ export default class RemoveTableRow {
     sendRequest(btnElt, trElt) {
         this.loader.on()
         this.trElt = trElt
-        this.ajax.send('GET', btnElt.getAttribute('data-url'), this.response.bind(this)), {
+        this.ajax.send('GET', btnElt.dataset.url, this.response.bind(this)), {
             once: true
         }
     }

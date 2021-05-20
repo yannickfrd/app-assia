@@ -16,7 +16,7 @@ use App\Repository\Organization\UserConnectionRepository;
 use App\Repository\Organization\UserRepository;
 use App\Repository\People\PeopleGroupRepository;
 use App\Repository\People\PersonRepository;
-use App\Repository\Support\ContributionRepository;
+use App\Repository\Support\PaymentRepository;
 use App\Repository\Support\DocumentRepository;
 use App\Repository\Support\NoteRepository;
 use App\Repository\Support\RdvRepository;
@@ -38,7 +38,7 @@ class IndicatorsService
     protected $noteRepo;
     protected $rdvRepo;
     protected $documentRepo;
-    protected $contributionRepo;
+    protected $paymentRepo;
     protected $ConnectionRepo;
 
     protected $cache;
@@ -55,7 +55,7 @@ class IndicatorsService
         NoteRepository $noteRepo,
         RdvRepository $rdvRepo,
         DocumentRepository $documentRepo,
-        ContributionRepository $contributionRepo,
+        PaymentRepository $paymentRepo,
         UserConnectionRepository $ConnectionRepo)
     {
         $this->repoIndicator = $indicatorRepo;
@@ -69,7 +69,7 @@ class IndicatorsService
         $this->noteRepo = $noteRepo;
         $this->rdvRepo = $rdvRepo;
         $this->documentRepo = $documentRepo;
-        $this->contributionRepo = $contributionRepo;
+        $this->paymentRepo = $paymentRepo;
         $this->ConnectionRepo = $ConnectionRepo;
 
         $this->cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
@@ -201,7 +201,7 @@ class IndicatorsService
             ->setNbUpdatedNotes($this->noteRepo->countNotes($criteriaByUpdate))
             ->setNbCreatedRdvs($this->rdvRepo->countRdvs($criteriaByCreation))
             ->setNbCreatedDocuments($this->documentRepo->countDocuments($criteriaByCreation))
-            ->setNbCreatedContributions($this->contributionRepo->countContributions($criteriaByCreation))
+            ->setNbCreatedPayments($this->paymentRepo->countPayments($criteriaByCreation))
             ->setNbConnections($this->ConnectionRepo->countConnections($criteriaByCreation))
             ->setDate($startDate);
 
@@ -271,9 +271,9 @@ class IndicatorsService
                 'today' => $this->documentRepo->countDocuments($criteriaByCreation),
             ],
             'Nb. de paiements créés' => [
-                'all' => $this->contributionRepo->count([]),
-                'yesterday' => $yesterdayIndicator->getNbCreatedContributions(),
-                'today' => $this->contributionRepo->countContributions($criteriaByCreation),
+                'all' => $this->paymentRepo->count([]),
+                'yesterday' => $yesterdayIndicator->getNbCreatedPayments(),
+                'today' => $this->paymentRepo->countPayments($criteriaByCreation),
             ],
             'Nb. de connexions' => [
                 'all' => $this->ConnectionRepo->count([]),
@@ -376,7 +376,7 @@ class IndicatorsService
             'nbNotes' => $this->noteRepo->count(['createdBy' => $user]),
             'nbRvs' => $this->rdvRepo->count(['createdBy' => $user]),
             'nbDocuments' => $this->documentRepo->count(['createdBy' => $user]),
-            'nbContributions' => $this->contributionRepo->count(['createdBy' => $user]),
+            'nbPayments' => $this->paymentRepo->count(['createdBy' => $user]),
         ];
     }
 

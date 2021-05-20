@@ -1,17 +1,23 @@
-<section class="form-group row">
-	<div class="col-md-12"><h2 class="h5 mb-3">Orientation / pré-admission</h2></div>
-    <div class="col-md-6">{{ form_row(form.originRequest.infoToSiaoDate) }}</div>
-    <div class="col-md-6">{{ form_row(form.originRequest.orientationDate) }}</div>
-    <div class="col-md-6">{{ form_row(form.originRequest.organization) }}</div>
-    <div class="col-md-6" data-parent-field="orientationDate">{{ form_row(form.originRequest.organizationComment) }}</div>
-    <div class="col-md-6" data-parent-field="orientationDate">{{ form_row(form.originRequest.preAdmissionDate) }}</div>
-    <div class="col-md-6" data-parent-field="orientationDate">{{ form_row(form.originRequest.resulPreAdmission) }}</div>
-    <div class="col-md-6" data-parent-field="orientationDate">{{ form_row(form.originRequest.decisionDate) }}</div>
-    <div class="col-md-12" data-parent-field="orientationDate">{{ form_label(form.originRequest.comment) }}{{ form_widget(form.originRequest.comment) }}</div>
+<section class="mb-3">
+    <div class="row">
+        <div class="col-md-12"><h2 class="h5 mb-3">Orientation / pré-admission</h2></div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">{{ form_row(form.originRequest.infoToSiaoDate) }}</div>
+        <div class="col-md-6">{{ form_row(form.originRequest.orientationDate) }}</div>
+        <div class="col-md-6">{{ form_row(form.originRequest.organization) }}</div>
+        <div class="col-md-6" data-parent-field="support_originRequest_organization" data-options="*">{{ form_row(form.originRequest.organizationComment) }}</div>
+    </div>
+    <div class="row" data-parent-field="support_originRequest_orientationDate">
+        <div class="col-md-6">{{ form_row(form.originRequest.preAdmissionDate) }}</div>
+        <div class="col-md-6">{{ form_row(form.originRequest.resulPreAdmission) }}</div>
+        <div class="col-md-6">{{ form_row(form.originRequest.decisionDate) }}</div>
+        <div class="col-md-12">{{ form_label(form.originRequest.comment) }}{{ form_widget(form.originRequest.comment) }}</div>
+    </div>
 </section>
 <section class="{% if support.device and support.device.place == YES %}d-none{% endif %}">
 <hr>
-    <div class="form-group row" id="support_location">
+    <div class="row mb-3" id="support_location">
         <div class="col-md-12"><h2 class="h5 mb-3">Adresse du suivi</h2></div>
         <div class="col-md-6">{{ form_row(form.location.search) }}</div>
         <div class="col-md-6">{{ form_row(form.location.address) }}</div>
@@ -24,7 +30,7 @@
     </div>
 </section>
 <hr>
-<section class="form-group">
+<section class="mb-3">
     <div class="row">
         <div class="col-md-12"><h2 class="h5 mb-3">Accompagnement</h2></div>
         <div class="col-md-6">{{ form_row(form.status) }}</div>
@@ -36,21 +42,21 @@
             <div class="col-md-6">{{ form_row(form.placeGroups[0].startDate) }}</div>
         </div>
     {% endif %} #}
-    <div class="row">
-        <div class="col-md-6" data-parent-field="startDate">{{ form_row(form.theoreticalEndDate) }}</div>
-        <div class="col-md-6" data-parent-field="startDate">{{ form_row(form.endDate) }}</div>
+    <div class="row" data-parent-field="support_startDate">
+        <div class="col-md-6" >{{ form_row(form.theoreticalEndDate) }}</div>
+        <div class="col-md-6">{{ form_row(form.endDate) }}</div>
     </div>
     <div class="row">
-        <div class="col-md-6" data-parent-field="startDate">{{ form_row(form.endStatus) }}</div>
-        <div class="col-md-6" data-parent-field="endStatus">{{ form_row(form.endStatusComment) }}</div>
+        <div class="col-md-6" data-parent-field="support_startDate">{{ form_row(form.endStatus) }}</div>
+        <div class="col-md-6" data-parent-field="support_endStatus" data-options="*">{{ form_row(form.endStatusComment) }}</div>
     </div>
-    <div class="row" data-parent-field="endStatus" id="support_end_location">
+    <div class="row" id="support_end_location" data-parent-field="support_endStatus" data-options="*">
         <div class="col-md-6">{{ form_row(form.endLocationSearch) }}</div>
         <div class="col-md-6">{{ form_row(form.endLocationAddress) }}</div>
         <div class="col-md-6">{{ form_row(form.endLocationCity) }}</div>
         <div class="col-md-6">{{ form_row(form.endLocationZipcode) }}</div>
     </div>
-    <div class="row" data-parent-field="endStatus">
+    <div class="row" data-parent-field="support_endStatus" data-options="*">
         {% if support.id and support.device and support.device.place == YES %}
             <div class="col-md-6">
                 <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
@@ -60,6 +66,6 @@
         {% endif %}
     </div>
 </section>
-<div class="form-group row">
+<div class="row mb-3">
     <div class="col-md-12">{{ form_widget(form.comment) }}</div>
 </div>

@@ -35,7 +35,7 @@
 								<td class="px-1">{{ form_widget(form_support_pers.endStatus) }}</td>
 								<td class="px-1">{{ form_widget(form_support_pers.endStatusComment) }}</td>
 								<th scope="row" class="px-1 align-middle">
-									<button class="js-remove btn btn-danger btn-sm shadow" data-url="{{ path('remove_support_pers', 
+									<button class="btn btn-danger btn-sm shadow" data-action="remove" data-url="{{ path('remove_support_pers', 
 										{'id':support.id, 'support_pers_id':form_support_pers.vars.value.id, '_token':csrf_token('remove' ~ form_support_pers.vars.value.id)}) }}" 
 										data-toggle="modal" data-target="#modal-block" data-toggle="tooltip" data-placement="bottom" title="Retirer la personne du suivi">
 										<span class="fas fa-user-times"></span>

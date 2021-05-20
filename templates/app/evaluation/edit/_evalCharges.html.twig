@@ -2,15 +2,15 @@
 {% set charges = constant("App\\Entity\\Evaluation\\EvalBudgetPerson::CHARGES_TYPE") %}
 
 <div class="col-md-6">
-    <div class="form-group row">
+    <div class="row mb-3">
         <div class="col-md-12">{{ form_row(evalBudgetPerson.charges) }}</div>
-        <div class="col-md-12" data-parent-field="{{ key }}_{{ entity }}_charges">
+        <div class="col-md-12" data-parent-field="{{ prefix }}_charges" data-options="1">
             <div class="row">
                 <div class="col-form-label col-sm-4">Type de charges</div>
                 <div class="col-sm-8">
-                    <select id="js-{{ key }}_{{ entity }}_charges_type"
-                        name="js-{{ key }}_{{ entity }}_charges_type" class="form-control"
-                        data-id="chargesType" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
+                    <select id="{{ key }}_{{ entity }}_chargesType"
+                        name="{{ key }}_{{ entity }}_chargesType" class="form-control"
+                        data-type="charges" data-sp-id="{{ support_person_id }}">
                         <option class="default" value="">-- Ajouter --</option>
                         {% for chargeKey, chargeValue in charges %}
                             <option value="{{ chargeKey }}">{{ chargeValue }}</option>
@@ -20,7 +20,7 @@
             </div>
         </div>
         <div class="col-md-12 mt-3">
-            <div class="table-responsive" data-parent-field="{{ key }}_{{ entity }}_charges">
+            <div class="table-responsive" data-parent-field="{{ prefix }}_charges"  data-options="1">
                 <table class="table table-sm table-hover text-dark">
                     <thead>
                         <tr>
@@ -32,17 +32,25 @@
                     </thead>
                     <tbody>
                         {% for chargeKey, chargeValue in charges %}
-                        <tr id="js-{{ key }}_{{ entity }}_charges_type-{{ chargeKey }}" class="js-{{ key }}_{{ entity }}_charges_type d-table-row">
-                            <td scope="row"><div class="sr-only">{{ form_widget(attribute(evalBudgetPerson, chargeKey)) }}</div></td>
-                            <td class="align-middle">{% if not loop.last %}{{ chargeValue }}<!--
-                            -->{% else %}{{ form_widget(evalBudgetPerson.chargeOtherPrecision) }}{% endif %}</td>
+                        <tr class="d-table-row" data-parent-select="{{ key }}_{{ entity }}_chargesType" 
+                            data-value="{{ chargeKey }}">
+                            <td scope="row">
+                                <div class="d-none">{{ form_widget(attribute(evalBudgetPerson, chargeKey)) }}</div>
+                            </td>
+                            <td class="align-middle">{{ not loop.last ? chargeValue : 
+                                form_widget(evalBudgetPerson.chargeOtherPrecision) }}
+                            </td>
                             <td>{{ form_widget(attribute(evalBudgetPerson, chargeKey ~ "Amt")) }}</td>
-                            <td class="align-middle"><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
+                            <td class="align-middle">
+                                <button class="btn btn-danger" data-action="remove"><!--
+                                --><span class="fas fa-trash-alt"></span>
+                                </button>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
                     <tfoot>
-                        <tr id="js-{{ key }}_{{ entity }}_chargesAmt" class="font-weight-bold">
+                        <tr class="font-weight-bold">
                             <td scope="row"></td>
                             <td class="align-middle">Total des charges</td>
                             <td class="align-middle">{{ form_widget(evalBudgetPerson.chargesAmt) }}</td>

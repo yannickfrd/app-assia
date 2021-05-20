@@ -93,6 +93,7 @@ Select: Sélectionner
 Service: Service
 Services: Services
 Service name: Nom du service
+Si siao id: ID fiche groupe SI-SIAO
 Start: Début
 Start date: Date de début
 Status: Statut
@@ -153,7 +154,7 @@ Organization comment: Précision concernant l'organisme
 Orientation date: Date d'orientation
 Pre admission date: Date d'entretien de pré-admission
 Resul pre admission: Résultat de l'orientation ou pré-admission
-originRequest.comment: Écrire un commentaire relatif à la demande ou à l'orientation'
+originRequest.comment: Écrire un commentaire relatif à la demande ou à l'orientation
 
 ### Document
 document:
@@ -193,10 +194,12 @@ service:
   coefficient.placeholder: Suivis avec coefficient (pondération)
   comment.placeholder: Écrire une information complémentaire...
   name: Nom du service
+  minRestToLive.help: Reste à vivre minimum par jour et par personne
 Place type: Type de logement ou d'hébergement
 Configuration: Configuration
 Individual collective: Individuel ou partagé
 Contribution amt: Montant de la participation financière
+Min rest to live: Reste à vivre minimum
 
 ### Paiement/Contribution
 Amount: Montant
@@ -211,12 +214,15 @@ Paid amt: Montant réglé
 Payment date: Date de l\'opération
 Payment type: Mode de règlement
 Rent amt: Montant du loyer
+Repayment reason: Motif du remboursement
+Nb consum units: Nb d'unités de consommation
 Resources amt: Montant ressources
 Return amt: Montant restitué
 Salary amt: Montant salaire(s)
 Still to pay amt: Montant restant dû
 To pay amt: Montant à régler
-contribution:
+payment:
+  contributionType: Taux de participation appliqué
   startDate: Début de période
   endDate: Fin de période
   comment:
@@ -226,7 +232,7 @@ contribution:
     placeholder: Ajouter un commentaire visible dans le PDF...
     help: Ce commentaire s'afichera dans le document PDF.
   type: Type d'opération
-  rate.help: Nombre entre 0 et 1.
+contribution.rate.help: Nombre entre 0 et 1.
 
 ### Note
 notes.export.title: Exporter toutes les notes sur un document Word

@@ -24,11 +24,14 @@
 {% set originRequest = support.originRequest %}
 {% if originRequest %}
     <div class="row my-2">
+        {{ view_div.get(originRequest.orientationDate ? originRequest.orientationDate|date("d/m/Y"), "Orientation date", "forms") }}
         {{ view_div.get(originRequest.organization ? originRequest.organization.name ~ (originRequest.organizationComment ? " (" 
             ~ originRequest.organizationComment ~ ")"), "Organization", "forms") }}
-        {{ view_div.get(originRequest.orientationDate ? originRequest.orientationDate|date("d/m/Y"), "Orientation date", "forms") }}
     </div>
 {% endif %}
+    <div class="row my-2">
+        {{ view_div.get(support.peopleGroup.siSiaoId, "Si siao id", "forms") }}
+    </div>
 
 {% if hotelSupport %}
     <div class="row my-2">

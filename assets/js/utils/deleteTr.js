@@ -8,7 +8,7 @@ export default class DeleteTr {
 
     init() {
         this.trElts.forEach(trElt => {
-            let btnRemoveElt = trElt.querySelector('button.js-remove')
+            let btnRemoveElt = trElt.querySelector('button[data-action="remove"]')
             btnRemoveElt.addEventListener('click', e => {
                 e.preventDefault()
                 trElt.remove()

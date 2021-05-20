@@ -36,6 +36,7 @@ class EvaluationGroupRepository extends ServiceEntityRepository
 
             ->join('sg.service', 's')->addSelect('PARTIAL s.{id, name, type, email, preAdmission, justice}')
             ->join('sg.device', 'd')->addSelect('PARTIAL d.{id, name, coefficient, place, contribution, contributionType, contributionRate}')
+            ->leftJoin('eg.updatedBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
 
             ->leftJoin('eg.evaluationPeople', 'ep')->addSelect('ep')
             ->join('ep.supportPerson', 'sp')->addSelect('PARTIAL sp.{id, person, head, role, status}')
@@ -76,7 +77,7 @@ class EvaluationGroupRepository extends ServiceEntityRepository
      */
     public function findEvaluationBudget(SupportGroup $supportGroup): ?EvaluationGroup
     {
-        return $this->createQueryBuilder('eg')->select('PARTIAL eg.{id}')
+        return $this->createQueryBuilder('eg')->select('eg')
             ->join('eg.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, startDate, endDate}')
             ->leftJoin('eg.evaluationPeople', 'ep')->addSelect('PARTIAL ep.{id}')
             ->leftJoin('ep.supportPerson', 'sp')->addSelect('PARTIAL sp.{id, startDate, endDate}')

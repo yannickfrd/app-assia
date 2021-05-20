@@ -2,7 +2,6 @@ import Ajax from '../utils/ajax'
 import MessageFlash from '../utils/messageFlash'
 import Loader from '../utils/loader'
 import DateFormater from '../utils/date/dateFormater'
-import SelectType from '../utils/form/selectType'
 import { Modal } from 'bootstrap'
 import ParametersUrl from '../utils/parametersUrl'
 
@@ -11,7 +10,6 @@ export default class Calendar {
     constructor() {
         this.loader = new Loader()
         this.ajax = new Ajax(this.loader)
-        this.selectType = new SelectType()
         this.parametersUrl = new ParametersUrl()
         this.modalElt = new Modal(document.getElementById('modal-rdv'))
 
@@ -39,7 +37,7 @@ export default class Calendar {
         this.btnCancelElt = this.modalRdvElt.querySelector('#js-btn-cancel')
         this.btnDeleteElt = this.modalRdvElt.querySelector('#modal-btn-delete')
 
-        this.themeColor = document.getElementById('header').getAttribute('data-color')
+        this.themeColor = document.getElementById('header').dataset.color
         this.supportElt = document.getElementById('support')
         this.supportPeopleElt = document.getElementById('js-support-people')
 
@@ -137,7 +135,7 @@ export default class Calendar {
     resetData(e) {
         e.preventDefault()
         if (this.supportElt) {
-            this.modalRdvElt.querySelector('form').action = '/support/' + this.supportElt.getAttribute('data-support') + '/rdv/new'
+            this.modalRdvElt.querySelector('form').action = '/support/' + this.supportElt.dataset.support + '/rdv/new'
             const fullname = this.supportPeopleElt.querySelector('.btn').textContent
             this.modalRdvElt.querySelector('#rdv_title').value = fullname
         } else {
@@ -156,7 +154,7 @@ export default class Calendar {
         this.rdvStartInput.value = ''
         this.rdvEndInput.value = ''
         this.rdvLocationInput.value = ''
-        this.selectType.setOption(this.rdvStatusInput)
+        this.rdvStatusInput.value = ''
 
         this.modalRdvElt.querySelector('#rdv_content').value = ''
         this.btnDeleteElt.classList.add('d-none')
@@ -287,7 +285,7 @@ export default class Calendar {
         this.endInput.value = rdv.end.substr(11, 5)
 
         this.rdvLocationInput.value = rdv.location
-        this.selectType.setOption(this.rdvStatusInput, rdv.status)
+        this.rdvStatusInput.value = rdv.status
         this.modalRdvElt.querySelector('#rdv_content').value = rdv.content ? rdv.content : ''
 
         this.infoRdvElt.innerHTML = this.getInfoRdvElt(rdv)
@@ -296,7 +294,7 @@ export default class Calendar {
         this.rdvTitleElt.textContent = title
 
         if (rdv.supportId) {
-            const href = this.rdvTitleElt.getAttribute('data-url').replace('__id__', rdv.supportId)
+            const href = this.rdvTitleElt.dataset.url.replace('__id__', rdv.supportId)
             const aElt = `<a href="${href}" class="text-${this.themeColor}" title="Accéder au suivi">${title}</a>`
             this.rdvTitleElt.innerHTML = aElt
         }
@@ -333,7 +331,7 @@ export default class Calendar {
         const rdvElt = document.createElement('div')
         rdvElt.className = `calendar-event bg-${this.themeColor} text-light`
         rdvElt.id = `rdv-${rdv.id}`
-        rdvElt.setAttribute('title', 'Voir le rendez-vous')
+        rdvElt.dataset.title = 'Voir le rendez-vous'
 
         const title = this.modalRdvElt.querySelector('#rdv_title').value
 
@@ -414,7 +412,7 @@ export default class Calendar {
             let date = dayElt.id.replace('-', '/')
             date = date.replace('-', '/')
             divElt.href = '/calendar/day/' + date
-            divElt.setAttribute('title', 'Voir tous les rendez-vous du jour')
+            divElt.dataset.title = 'Voir tous les rendez-vous du jour'
             divElt.textContent = (parseInt(rdvElts.length - maxHeight) + 2) + ' autres...'
             dayElt.insertBefore(divElt, dayElt.lastChild)
         }

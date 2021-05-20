@@ -4,14 +4,14 @@ namespace App\Service\Import;
 
 use App\Entity\Organization\Service;
 use App\Entity\Organization\User;
-use App\Entity\Support\Contribution;
+use App\Entity\Support\Payment;
 use App\Entity\Support\SupportGroup;
 use App\Repository\Support\HotelSupportRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ImportDatasPAF extends ImportDatas
 {
-    public const DEFAULT_CONTRIBUTION_TYPE = 1;
+    public const DEFAULT_PAYMENT_TYPE = 1;
 
     public const PAYMENT_TYPE = [
         'Virement automatique' => 1,
@@ -118,12 +118,12 @@ class ImportDatasPAF extends ImportDatas
             (!$userReferent && $paf['TS'] ? 'TS : '.$paf['TS']."\n" : null).
             ($paf['Commentaire'] ?? null);
 
-        $contribution = (new Contribution())
+        $payment = (new Payment())
             ->setMonthContrib($paf['Date PAF'] ? new \Datetime($paf['Date PAF']) : null)
             ->setResourcesAmt((float) $paf['Montant ressources'])
             ->setToPayAmt((float) $paf['Montant à payer'])
             ->setPaidAmt((float) $paf['Montant réglé'])
-            ->setType(Contribution::TYPE_CONTRIBUTION)
+            ->setType(Payment::CONTRIBUTION)
             ->setPaymentDate($paf['Date paiement'] ? new \Datetime($paf['Date paiement']) : null)
             ->setStillToPayAmt()
             ->setPaymentType($this->findInArray($paf['Type paiement'], self::PAYMENT_TYPE) ?? 99)
@@ -135,9 +135,9 @@ class ImportDatasPAF extends ImportDatas
             ->setUpdatedAt(new \Datetime($paf['Date mise à jour']))
             ->setSupportGroup($supportGroup);
 
-        $this->manager->persist($contribution);
+        $this->manager->persist($payment);
 
-        return $contribution;
+        return $payment;
     }
 
     protected function getUserReferent(string $ts): ?User

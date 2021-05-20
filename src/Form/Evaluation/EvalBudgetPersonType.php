@@ -2,15 +2,16 @@
 
 namespace App\Form\Evaluation;
 
-use App\Entity\Evaluation\EvalBudgetPerson;
-use App\Form\Type\ResourcesType;
 use App\Form\Utils\Choices;
+use App\Form\Type\ResourcesType;
+use App\Form\Utils\EvaluationChoices;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use App\Entity\Evaluation\EvalBudgetPerson;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class EvalBudgetPersonType extends AbstractType
 {
@@ -19,33 +20,36 @@ class EvalBudgetPersonType extends AbstractType
         $builder
             ->add('resources', ResourcesType::class)
             ->add('incomeTax', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('incomeN1Amt', MoneyType::class, [
                 'attr' => [
-                    'class' => 'js-money text-right',
+                    'class' => 'text-right',
+                    'data-amount' => 'true',
                     'placeholder' => 'Amount',
                 ],
                 'required' => false,
             ])
             ->add('incomeN2Amt', MoneyType::class, [
                 'attr' => [
-                    'class' => 'js-money text-right',
+                    'class' => 'text-right',
+                    'data-amount' => 'true',
                     'placeholder' => 'Amount',
                 ],
                 'required' => false,
             ])
             ->add('resourcesComment')
             ->add('charges', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('chargesAmt', MoneyType::class, [
                 'attr' => [
-                    'class' => 'js-chargesAmt text-right',
+                    'class' => 'text-right',
+                    'data-amount' => 'chargesAmt',
                     'placeholder' => 'Amount',
                 ],
                 'required' => false,
@@ -56,7 +60,8 @@ class EvalBudgetPersonType extends AbstractType
             ->add($key)
             ->add($key.'Amt', MoneyType::class, [
                 'attr' => [
-                    'class' => 'js-money js-charges text-right',
+                    'class' => 'text-right',
+                    'data-amount' => 'charges',
                     'placeholder' => 'Amount',
                 ],
                 'required' => false,
@@ -67,21 +72,21 @@ class EvalBudgetPersonType extends AbstractType
             ->add('chargeOtherPrecision', null, ['attr' => ['placeholder' => 'Other charge(s)...']])
             ->add('chargeComment')
             ->add('debts', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
                 'attr' => [
-                    'class' => 'js-initEval important',
-                    'data-id' => 'debts',
+                    'data-important' => 'true',
+                    'data-twin-field' => 'debts',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('debtsAmt', MoneyType::class, [
                 'attr' => [
-                    'class' => 'js-money js-debtsAmt js-initEval text-right',
+                    'class' => 'text-right',
+                    'data-amount' => 'debtsAmt',
+                    'data-twin-field' => 'debtsAmt',
                     'placeholder' => 'Amount',
-                    'data-id' => 'debtsAmt',
                 ],
-                'required' => false,
             ]);
 
         foreach (EvalBudgetPerson::DEBTS_TYPE as $key => $value) {
@@ -93,13 +98,14 @@ class EvalBudgetPersonType extends AbstractType
             ->add('debtComment')
             ->add('monthlyRepaymentAmt', MoneyType::class, [
                 'attr' => [
-                    'class' => 'js-money js-repaymentAmt text-right',
+                    'class' => 'text-right',
+                    'data-amount' => 'repaymentAmt',
                     'placeholder' => 'Amount',
                 ],
                 'required' => false,
             ])
             ->add('overIndebtRecord', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
@@ -113,7 +119,7 @@ class EvalBudgetPersonType extends AbstractType
                 'required' => false,
             ])
             ->add('moratorium', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])

@@ -1,58 +1,39 @@
-import SelectType from './selectType'
-
 /**
- * Masque ou rend visible les champs Input dépendants d'un input parent
+ * Masque ou rend visible un élement en fonction d'un champ parent (select, input, checkbox)
  */
 export default class FieldDisplayer {
     /**
-     * @param {String} prefix 
-     * @param {String} fieldId 
-     * @param {Array} optionValues 
+     * @param {HTMLElement} elt 
      */
-    constructor(prefix, fieldId, optionValues = []) {
-        this.selectType = new SelectType()
-        this.fieldId = fieldId
-        this.fieldElt = document.getElementById(prefix + fieldId)
-        this.childrenElts = document.querySelectorAll(`div[data-parent-field='${fieldId}'], td[data-parent-field='${fieldId}']`)
-        this.optionValues = optionValues
+    constructor(elt) {
+        this.elt = elt
+        this.parentFieldElt = document.getElementById(elt.dataset.parentField)
         this.init()
     }
 
-    init() {
-        if (null === this.fieldElt) {
-            return null
+    init() {      
+        if (null === this.parentFieldElt) {
+            return console.error('No parent field with the name :' + this.elt.dataset.parentField)
         }
 
-        switch (this.fieldElt.type) {
+        switch (this.parentFieldElt.type) {
             case 'select-one':
                 this.checkSelect();
-                ['change', 'click'].forEach(eventType => {
-                    this.fieldElt.addEventListener(eventType, this.checkSelect.bind(this)) // au click sur ordinateur ou au changement sur mobile
-                })
+                this.parentFieldElt.addEventListener('click', this.checkSelect.bind(this))
+                this.parentFieldElt.addEventListener('change', this.checkSelect.bind(this))
                 break
             case 'date':
                 this.checkInput()
-                this.fieldElt.addEventListener('change', this.checkInput.bind(this)) // au changement sur mobile
+                this.parentFieldElt.addEventListener('change', this.checkInput.bind(this))
                 break
             case 'text':
                 this.checkInput()
-                this.fieldElt.addEventListener('input', this.checkInput.bind(this)) // au changement sur mobile
+                this.parentFieldElt.addEventListener('input', this.checkInput.bind(this))
                 break
             case 'checkbox':
                 this.checkbox()
-                this.fieldElt.addEventListener('change', this.checkbox.bind(this)) // au changement sur mobile
+                this.parentFieldElt.addEventListener('change', this.checkbox.bind(this))
                 break
-        }
-    }
-
-    /**
-     * Vérifie le champ de type input.
-     */
-    checkInput() {
-        if (this.fieldElt.value) {
-            this.editChildrenElts(true)
-        } else {
-            this.editChildrenElts(false)
         }
     }
 
@@ -60,68 +41,54 @@ export default class FieldDisplayer {
      * Vérifie le champ de type Select.
      */
     checkSelect() {
-        const selectedOption = this.selectType.getOption(this.fieldElt)
+        const options = this.elt.dataset.options
         let isVisible = false
+        
+        if (null === options) {
+            return console.error('No option defined for the select field : ' + this.elt.dataset.parentField)
+        }
 
-        if (this.optionValues.length > 0) {
-            this.optionValues.forEach(optionValue => {
-                if (optionValue === selectedOption) {
+        if ('*' === options && this.parentFieldElt.value) {
+            isVisible = true
+        } else {
+            options.split('|').forEach(option => {
+                if (option === this.parentFieldElt.value) {
                     isVisible = true
                 }
             })
-        } else if (this.optionValues.length === 0 && selectedOption > 0) {
-            isVisible = true
         }
 
-        this.editChildrenElts(isVisible, selectedOption)
+        this.visibleElt(isVisible)
     }
 
     /**
-     * Masque ou rend visible les éléments enfants de l'input parent.
-     * @param {Boolean} isVisible 
+     * Vérifie le champ de type input.
      */
-    editChildrenElts(isVisible, selectedOption = null) {
-        this.childrenElts.forEach(elt => {
-            let visibility = isVisible
-            const options = elt.getAttribute('data-parent-field-options')
-            if (options) {
-                visibility = false
-                options.split(', ').forEach(option => {
-                    if (parseInt(option) === selectedOption) {
-                        visibility = true
-                    }
-                })
-            }
-            this.visibleElt(elt, visibility)
-        })
-    }
-
-    /**
-     * Rend visible ou non un élément HTML
-     * @param {HTMLElement} elt 
-     * @param {Boolean} isVisible 
-     */
-    visibleElt(elt, visibility) {
-        if (visibility === true) {
-            elt.classList.remove('d-none')
-            setTimeout(() => {
-                elt.classList.add('fade-in')
-                elt.classList.remove('fade-out')
-            }, 10)
-        } else {
-            elt.classList.add('d-none', 'fade-out')
-            elt.classList.remove('fade-in')
-        }
+    checkInput() {
+        this.visibleElt(this.parentFieldElt.value ? true : false)
     }
 
     /**
      * Vérifie le champ de type Checkbox.
      */
     checkbox() {
-        let isVisible = false
-        if (this.fieldElt.checked === true) {
-            isVisible = true
+        this.visibleElt(true === this.parentFieldElt.checked)
+    }
+
+    /**
+     * Rend visible ou non un élément HTML
+     * @param {Boolean} isVisible 
+     */
+    visibleElt(isVisible) {
+        if (true === isVisible) {
+            this.elt.classList.remove('d-none')
+            setTimeout(() => {
+                this.elt.classList.add('fade-in')
+                this.elt.classList.remove('fade-out')
+            }, 10)
+        } else {
+            this.elt.classList.add('d-none', 'fade-out')
+            this.elt.classList.remove('fade-in')
         }
-        this.editChildrenElts(isVisible)
     }
 }

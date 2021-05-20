@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Controller;
+namespace App\Tests\Controller\Admin;
 
 use App\Entity\Support\SupportGroup;
 use App\Tests\AppTestTrait;
@@ -34,7 +34,7 @@ class IndicatorControllerTest extends WebTestCase
             dirname(__DIR__).'/../DataFixturesTest/NoteFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/RdvFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/DocumentFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/ContributionFixturesTest.yaml',
+            dirname(__DIR__).'/../DataFixturesTest/PaymentFixturesTest.yaml',
         ]);
 
         $this->createLogin($this->data['userSuperAdmin']);

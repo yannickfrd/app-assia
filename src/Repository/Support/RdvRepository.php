@@ -38,7 +38,7 @@ class RdvRepository extends ServiceEntityRepository
 
         $query = $this->filter($query, $search, $currentUser);
 
-        return  $query->orderBy('r.start', 'ASC')
+        return $query->orderBy('r.start', 'ASC')
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
 
@@ -62,7 +62,7 @@ class RdvRepository extends ServiceEntityRepository
             ->setParameter('id', $id)
 
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getSingleResult();
+            ->getOneOrNullResult();
     }
 
     /**
@@ -76,7 +76,7 @@ class RdvRepository extends ServiceEntityRepository
 
         $query = $this->filter($query, $search);
 
-        return  $query->orderBy('r.createdBy', 'DESC')
+        return $query->orderBy('r.createdBy', 'DESC')
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
@@ -157,7 +157,7 @@ class RdvRepository extends ServiceEntityRepository
                 ->setParameter('end', $search->getEnd());
         }
 
-        return  $query->orderBy('r.createdAt', 'DESC')
+        return $query->orderBy('r.createdAt', 'DESC')
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
 

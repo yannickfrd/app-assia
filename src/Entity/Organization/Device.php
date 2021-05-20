@@ -2,16 +2,16 @@
 
 namespace App\Entity\Organization;
 
-use App\Form\Utils\Choices;
-use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Support\SupportGroup;
-use App\Entity\Traits\DisableEntityTrait;
-use Doctrine\Common\Collections\Collection;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
+use App\Entity\Traits\DisableEntityTrait;
+use App\Form\Utils\Choices;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Organization\DeviceRepository")
@@ -35,10 +35,13 @@ class Device
     public const HOTEL_SUPPORT = 19; // 19
     public const HOTEL_URG = 20; //15
 
+    public const VAR_CONTRIBUTION = 1;
+    public const RENT_CONTRIBUTION = 2;
+
     public const CONTRIBUTION_TYPE = [
-        1 => 'Taux de participation sur les ressources',
-        2 => 'Loyer/redevance fixe',
-        3 => 'Mixte',
+        1 => 'Pourcentage des ressources',
+        2 => 'Loyer (montant fixé dans fiche logement)',
+        3 => 'Autre',
     ];
 
     /**

@@ -1,0 +1,111 @@
+{% extends "base.html.twig" %}
+
+{% set title = "Suivis en présence" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+
+    <section class="mt-0">
+
+        <div class="container-fluid mt-4">
+            {% include "model/_msgFlash.html.twig" %}
+            <h1 class="h2 mb-3">{{ title }} | {{ calendar.getMonthToString }}</h1>
+        </div>
+
+        {% include "app/support/_shared/_searchSupportsInMonth.html.twig" %}
+
+        <div class="container-fluid mt-4">
+            <div>
+                {% set query = app.request.query %}
+                <a href="{{ path('supports_current_month', query|merge({})) }}" 
+                    class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-toggle="tooltip" data-placement="bottom" title="Mois actuel"><!--
+                    --><span class="fas fa-calendar-day"></span><span class="d-none d-sm-inline ml-2">Mois actuel</span></a>
+                <a href="{{ path('supports_in_month', query|merge({'year': calendar.previousMonth.year, 'month': calendar.previousMonth.month})) }}"
+                    class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-toggle="tooltip" data-placement="bottom" title="Mois précédent"><span class="fas fa-angle-left"></span>
+                </a>
+                <a href="{{ path('supports_in_month', query|merge({'year': calendar.nextMonth.year, 'month': calendar.nextMonth.month})) }}"
+                    class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-toggle="tooltip" data-placement="bottom" title="Mois suivant"><span class="fas fa-angle-right"></span>
+                </a>
+            </div>
+
+            <div class="row align-items-baseline">
+                <div class="col-md-4 count align-middle mb-2">
+                    <span class="align-middle">Résultat : {{ supports.getTotalItemCount|number }} <!--
+                    -->suivi{% if supports.getTotalItemCount > 1 %}s{% endif %}.</span>
+                </div>
+                <div class="col-md-8">
+                    <div class="navigation">{{ knp_pagination_render(supports) }}</div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="align-middle th-w-20"></th>
+                            <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, "Nom et prénom", "p.lastname") }}</th>
+                            <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, "Début de suivi", "sg.startDate") }}</th>
+                            <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, "Fin de suivi", "sg.endDate") }}</th>
+                            <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, "Référent·e social·e", "u.lastname") }}</th>
+                            <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, "Service (Dispositif)", "s.name") }}</th>
+                            {# {% if paymemt|length > 0 %} #}
+                            <th scope="col" class="align-middle th-w-100">Redevance -<br/>Période</th>
+                            <th scope="col" class="align-middle th-w-100">Redevance -<br/>Montant à régler</th>
+                            <th scope="col" class="align-middle th-w-100">Redevance -<br/>Montant réglé</th>
+                            <th scope="col" class="align-middle th-w-100">Redevance -<br/>Date de l'opération</th>
+                            <th scope="col" class="align-middle th-w-100">Redevance -<br/>Mode de règlement</th>
+                            <th scope="col" class="align-middle th-w-120">Redevance -<br/>Commentaire</th>
+                            {# {% endif %} #}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for support in supports %}
+                            {% set person = (support.supportPeople|filter(s => s.head == true)|first).person %}
+                            <tr>
+                                <th scope="row" class="align-middle">
+                                    <a href="{{ path('support_payments', {'id':support.id}) }}"
+                                        class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-toggle="tooltip" data-placement="bottom"
+                                        title="Voir la fiche du suivi"><span class="fas fa-eye"></span>
+                                    </a>
+                                </th>
+                                <td class="align-middle">{{ person ? person.fullname }}</td>
+                                <td class="align-middle">{{ support.startDate ? support.startDate|date("d/m/Y") }}</td>
+                                <td class="align-middle">{{ support.endDate ? support.endDate|date("d/m/Y") }}</td>
+                                <td class="align-middle">{{ support.referent ? support.referent.fullname }}</td>
+                                <td class="align-middle">
+                                    {{ support.service ? support.service.name }}<br/>{{ support.device ? "(" ~ support.device.name ~ ")" }}
+                                </td>
+                                {% for payment in payments|filter(c => c.supportGroup == support and c.type == constant("App\\Entity\\Support\\Payment::CONTRIBUTION") ) %}
+                                    {% if loop.first %}
+                                        <td class="align-middle text-center">
+                                            {% if payment.startDate %}
+                                                {{ payment.startDate|date("d/m/Y") }} - {{ payment.endDate|date("d/m/Y") }}
+                                            {% endif %}
+                                        </td>
+                                        <td class="align-middle text-right">{{ payment.toPayAmt|amount }}</td>
+                                        <td class="align-middle text-right">{{ payment.paidAmt|amount }}</td>
+                                        <td class="align-middle">{{ payment.paymentDate|date("d/m/Y") }}</td>
+                                        <td class="align-middle">{{ payment.paymentTypeToString }}</td>
+                                        <td class="align-middle">{{ payment.comment }}</td>
+                                    {% endif %}
+                                {% else %}
+                                    <td colspan="6"></td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="navigation">{{ knp_pagination_render(supports) }}</div>
+
+        </div>
+
+    </section>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags("search") }}
+{% endblock javascripts %}

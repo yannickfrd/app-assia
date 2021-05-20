@@ -75,9 +75,9 @@ class Indicator
     private $nbCreatedDocuments;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(name="nb_created_contributions", type="integer", nullable=true)
      */
-    private $nbCreatedContributions;
+    private $nbCreatedPayments;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -221,14 +221,14 @@ class Indicator
         return $this;
     }
 
-    public function getNbCreatedContributions(): ?int
+    public function getNbCreatedPayments(): ?int
     {
-        return $this->nbCreatedContributions;
+        return $this->nbCreatedPayments;
     }
 
-    public function setNbCreatedContributions(?int $nbCreatedContributions): self
+    public function setNbCreatedPayments(?int $nbCreatedPayments): self
     {
-        $this->nbCreatedContributions = $nbCreatedContributions;
+        $this->nbCreatedPayments = $nbCreatedPayments;
 
         return $this;
     }

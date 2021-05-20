@@ -2,7 +2,7 @@
 
 namespace App\Entity\Evaluation;
 
-use App\Form\Utils\Choices;
+use App\Form\Utils\EvaluationChoices;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -156,7 +156,7 @@ class EvalSocialGroup
      */
     public function getAnimalToString(): ?string
     {
-        return $this->animal ? Choices::YES_NO[$this->animal] : null;
+        return $this->animal ? EvaluationChoices::YES_NO[$this->animal] : null;
     }
 
     public function setAnimal(?int $animal): self

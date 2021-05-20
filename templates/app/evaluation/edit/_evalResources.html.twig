@@ -2,15 +2,16 @@
 {% set ressources = constant("App\\Entity\\Evaluation\\EvalBudgetPerson::RESOURCES_TYPE") %}
 
 <div class="col-md-6">
-    <div class="form-group row">
+    <div class="row mb-3">
         <div class="col-md-12">{{ form_row(evalBudgetPerson.resources.resources) }}</div>
-        <div class="col-md-12" data-parent-field="{{ key }}_{{ entity }}_resources_resources">
+        <div class="col-md-12" data-parent-field="{{ prefix }}_resources_resources"
+			data-options="1|3">
             <div class="row">
-                <div class="col-form-label col-sm-4" data-parent-field="resources">Type de ressources</div>
+                <div class="col-form-label col-sm-4">Type de ressources</div>
                 <div class="col-sm-8">
-                    <select id="js-{{ key }}_{{ entity }}_resources_type"
-                        name="js-{{ key }}_{{ entity }}_resources_type" class="form-control" 
-                        data-id="resourcesType" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
+                    <select id="{{ key }}_{{ entity }}_resourcesType"
+                        name="{{ key }}_{{ entity }}_resourcesType" class="form-control" 
+                        data-type="resources" data-sp-id="{{ support_person_id }}">
                         <option class="default" value="">-- Ajouter --</option>
                         {% for ressKey, ressValue in ressources %}
                             <option value="{{ ressKey }}">{{ ressValue }}</option>
@@ -20,7 +21,8 @@
             </div>
         </div>
         <div class="col-md-12 mt-3">
-            <div class="table-responsive" data-parent-field="{{ key }}_{{ entity }}_resources_resources">
+            <div class="table-responsive" data-parent-field="{{ prefix }}_resources_resources" 
+                data-options="1|3">
                 <table class="table table-sm table-hover text-dark">
                     <thead>
                         <tr>
@@ -32,21 +34,31 @@
                     </thead>
                     <tbody> 
                         {% for ressKey, ressValue in ressources %}
-                        <tr id="js-{{ key }}_{{ entity }}_resources_type-{{ ressKey }}" class="js-{{ key }}_{{ entity }}_resources_type d-table-row" 
-                            data-id="{{ ressKey }}" data-support-id="p-{{ evalPerson.vars.value.supportPerson.id }}">
-                            <td scope="row"><div class="sr-only">{{ form_widget(attribute(evalBudgetPerson.resources, ressKey)) }}</div></td>
-                            <td class="align-middle">{% if not loop.last %}{{ ressValue }}<!--
-                                -->{% else %}{{ form_widget(evalBudgetPerson.resources.ressourceOtherPrecision) }}{% endif %}</td>
-                            <td class="align-middle">{{ form_widget(attribute(evalBudgetPerson.resources, ressKey ~ "Amt")) }}</td>
-                            <td class="align-middle"><button class="btn btn-danger js-remove"><span class="fas fa-trash-alt"></span></button></td>
-                        </tr>
+                            <tr class="d-table-row" data-parent-select="{{ key }}_{{ entity }}_resourcesType"
+                                data-value="{{ ressKey }}" data-sp-id="{{ support_person_id }}">
+                                <td scope="row">
+                                    <div class="d-none">{{ form_widget(attribute(evalBudgetPerson.resources, ressKey)) }}</div>
+                                </td>
+                                <td class="align-middle">{{ not loop.last ? ressValue : 
+                                    form_widget(evalBudgetPerson.resources.ressourceOtherPrecision) }}
+                                </td>
+                                <td class="align-middle">{{ form_widget(attribute(evalBudgetPerson.resources, ressKey ~ "Amt")) }}</td>
+                                <td class="align-middle">
+                                    <button class="btn btn-danger" data-action="remove"><!--
+                                    --><span class="fas fa-trash-alt"></span>
+                                    </button>
+                                </td>
+                            </tr>
                         {% endfor %}
                     </tbody>
                     <tfoot>
-                        <tr id="js-{{ key }}_{{ entity }}_resourcesAmt" class="font-weight-bold">
+                        <tr class="font-weight-bold">
                             <td scope="row"></td>
                             <td class="align-middle">Total des resources</td>
-                            <td class="align-middle" data-parent-field="{{ key }}_{{ entity }}_resources_resources">{{ form_widget(evalBudgetPerson.resources.resourcesAmt) }}</td>
+                            <td class="align-middle">
+                                <div data-parent-field="{{ prefix }}_resources_resources" data-options="1|3">
+                                    {{ form_widget(evalBudgetPerson.resources.resourcesAmt) }}</div>
+                            </td>
                         </tr>
                     </tfoot>
                 </table>

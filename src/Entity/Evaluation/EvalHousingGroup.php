@@ -2,7 +2,7 @@
 
 namespace App\Entity\Evaluation;
 
-use App\Form\Utils\Choices;
+use App\Form\Utils\EvaluationChoices;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -455,7 +455,7 @@ class EvalHousingGroup
 
     public function getSiaoRequestToString(): ?string
     {
-        return $this->siaoRequest ? Choices::YES_NO_IN_PROGRESS_NC[$this->siaoRequest] : null;
+        return $this->siaoRequest ? EvaluationChoices::YES_NO_IN_PROGRESS_NC[$this->siaoRequest] : null;
     }
 
     public function setSiaoRequest(?int $siaoRequest): self
@@ -496,7 +496,7 @@ class EvalHousingGroup
 
     public function getSiaoRequestDeptToString(): ?string
     {
-        return $this->siaoRequestDept ? Choices::DEPARTMENTS[$this->siaoRequestDept] : null;
+        return $this->siaoRequestDept ? EvaluationChoices::DEPARTMENTS[$this->siaoRequestDept] : null;
     }
 
     public function setSiaoRequestDept(?int $siaoRequestDept): self
@@ -530,7 +530,7 @@ class EvalHousingGroup
 
     public function getSocialHousingRequestToString(): ?string
     {
-        return $this->socialHousingRequest ? Choices::YES_NO_IN_PROGRESS_NC[$this->socialHousingRequest] : null;
+        return $this->socialHousingRequest ? EvaluationChoices::YES_NO_IN_PROGRESS_NC[$this->socialHousingRequest] : null;
     }
 
     public function setSocialHousingRequest(?int $socialHousingRequest): self
@@ -619,7 +619,7 @@ class EvalHousingGroup
 
     public function getSyploToString(): ?string
     {
-        return $this->syplo ? Choices::YES_NO_IN_PROGRESS[$this->syplo] : null;
+        return $this->syplo ? EvaluationChoices::YES_NO_IN_PROGRESS[$this->syplo] : null;
     }
 
     public function setSyplo(?int $syplo): self
@@ -660,7 +660,7 @@ class EvalHousingGroup
 
     public function getDaloActionToString(): ?string
     {
-        return $this->daloAction ? Choices::YES_NO_IN_PROGRESS[$this->daloAction] : null;
+        return $this->daloAction ? EvaluationChoices::YES_NO_IN_PROGRESS[$this->daloAction] : null;
     }
 
     public function setDaloAction(?int $daloAction): self
@@ -730,7 +730,7 @@ class EvalHousingGroup
 
     public function getDaloTribunalActionToString(): ?string
     {
-        return $this->daloTribunalAction ? Choices::YES_NO_IN_PROGRESS[$this->daloTribunalAction] : null;
+        return $this->daloTribunalAction ? EvaluationChoices::YES_NO_IN_PROGRESS[$this->daloTribunalAction] : null;
     }
 
     public function setDaloTribunalAction(?int $daloTribunalAction): self
@@ -759,7 +759,7 @@ class EvalHousingGroup
 
     public function getCollectiveAgreementHousingToString(): ?string
     {
-        return $this->collectiveAgreementHousing ? Choices::YES_NO_IN_PROGRESS[$this->collectiveAgreementHousing] : null;
+        return $this->collectiveAgreementHousing ? EvaluationChoices::YES_NO_IN_PROGRESS[$this->collectiveAgreementHousing] : null;
     }
 
     public function setCollectiveAgreementHousing(?int $collectiveAgreementHousing): self
@@ -788,7 +788,7 @@ class EvalHousingGroup
 
     public function getHsgActionEligibilityToString(): ?string
     {
-        return $this->hsgActionEligibility ? Choices::YES_NO_IN_PROGRESS[$this->hsgActionEligibility] : null;
+        return $this->hsgActionEligibility ? EvaluationChoices::YES_NO_IN_PROGRESS[$this->hsgActionEligibility] : null;
     }
 
     public function setHsgActionEligibility(?int $hsgActionEligibility): self
@@ -805,7 +805,7 @@ class EvalHousingGroup
 
     public function getHsgActionRecordToString(): ?string
     {
-        return $this->hsgActionRecord ? Choices::YES_NO[$this->hsgActionRecord] : null;
+        return $this->hsgActionRecord ? EvaluationChoices::YES_NO[$this->hsgActionRecord] : null;
     }
 
     public function setHsgActionRecord(?int $hsgActionRecord): self
@@ -858,7 +858,7 @@ class EvalHousingGroup
 
     public function getExpulsionInProgressToString(): ?string
     {
-        return $this->expulsionInProgress ? Choices::YES_NO[$this->expulsionInProgress] : null;
+        return $this->expulsionInProgress ? EvaluationChoices::YES_NO[$this->expulsionInProgress] : null;
     }
 
     public function setExpulsionInProgress(?int $expulsionInProgress): self
@@ -875,7 +875,7 @@ class EvalHousingGroup
 
     public function getPublicForceToString(): ?string
     {
-        return $this->publicForce ? Choices::YES_NO[$this->publicForce] : null;
+        return $this->publicForce ? EvaluationChoices::YES_NO[$this->publicForce] : null;
     }
 
     public function setPublicForce(?int $publicForce): self
@@ -916,7 +916,7 @@ class EvalHousingGroup
 
     public function getHousingExperienceToString(): ?string
     {
-        return $this->housingExperience ? Choices::YES_NO[$this->housingExperience] : null;
+        return $this->housingExperience ? EvaluationChoices::YES_NO[$this->housingExperience] : null;
     }
 
     public function setHousingExperience(?int $housingExperience): self
@@ -950,7 +950,7 @@ class EvalHousingGroup
 
     public function getFslToString(): ?string
     {
-        return $this->fsl ? Choices::YES_NO_BOOLEAN[$this->fsl] : null;
+        return $this->fsl ? EvaluationChoices::YES_NO_BOOLEAN[$this->fsl] : null;
     }
 
     public function setFsl(?int $fsl): self
@@ -967,7 +967,7 @@ class EvalHousingGroup
 
     public function getFslEligibilityToString(): ?string
     {
-        return $this->fslEligibility ? Choices::YES_NO_BOOLEAN[$this->fslEligibility] : null;
+        return $this->fslEligibility ? EvaluationChoices::YES_NO_BOOLEAN[$this->fslEligibility] : null;
     }
 
     public function setFslEligibility(?int $fslEligibility): self
@@ -984,7 +984,7 @@ class EvalHousingGroup
 
     public function getCafEligibilityToString(): ?string
     {
-        return $this->cafEligibility ? Choices::YES_NO_BOOLEAN[$this->cafEligibility] : null;
+        return $this->cafEligibility ? EvaluationChoices::YES_NO_BOOLEAN[$this->cafEligibility] : null;
     }
 
     public function setCafEligibility(?int $cafEligibility): self
@@ -1001,7 +1001,7 @@ class EvalHousingGroup
 
     public function getOtherHelpsToString(): ?string
     {
-        return $this->otherHelps ? Choices::YES_NO_BOOLEAN[$this->otherHelps] : null;
+        return $this->otherHelps ? EvaluationChoices::YES_NO_BOOLEAN[$this->otherHelps] : null;
     }
 
     public function setOtherHelps(?int $otherHelps): self
@@ -1059,7 +1059,7 @@ class EvalHousingGroup
 
     public function getHousingToString(): ?string
     {
-        return $this->housing ? Choices::YES_NO[$this->housing] : null;
+        return $this->housing ? EvaluationChoices::YES_NO[$this->housing] : null;
     }
 
     public function setHousing(?int $housing): self
@@ -1112,7 +1112,7 @@ class EvalHousingGroup
 
     public function getDomiciliationToString(): ?string
     {
-        return $this->domiciliation ? Choices::YES_NO_IN_PROGRESS[$this->domiciliation] : null;
+        return $this->domiciliation ? EvaluationChoices::YES_NO_IN_PROGRESS[$this->domiciliation] : null;
     }
 
     public function setDomiciliation(?int $domiciliation): self

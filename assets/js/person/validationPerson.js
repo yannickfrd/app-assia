@@ -1,6 +1,5 @@
 import FormValidator from '../utils/form/formValidator'
 import DateValidator from '../utils/date/dateValidator'
-import SelectType from '../utils/form/selectType'
 
 /**
  * Validation des données de la fiche personne.
@@ -8,7 +7,6 @@ import SelectType from '../utils/form/selectType'
 export default class ValidationPerson {
     constructor(lastname, firstname, birthdate, gender, email, role, typo, nbPeople) {
         this.formValidator = new FormValidator(document.getElementById('person'))
-        this.selectType = new SelectType();
 
         this.lastnameInputElt = document.getElementById(lastname)
         this.lastnameLabelElt = document.querySelector('label[for=' + lastname + ']')
@@ -78,7 +76,7 @@ export default class ValidationPerson {
 
     checkBirthdate() {
         const dateValidator = new DateValidator(this.birthdateInputElt, this.formValidator)
-        const role = this.selectType.getOption(this.roleInputElt)
+        const role = parseInt(this.roleInputElt.value)
         
         if ((!isNaN(role) && role != 3 && (dateValidator.getIntervalWithNow() / 365) < 16)) {
             return this.formValidator.invalidField(this.birthdateInputElt, 'Date invalide.')

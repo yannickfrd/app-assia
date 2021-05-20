@@ -11,7 +11,7 @@ export default class DeletePlace {
             this.btnDeleteElt.addEventListener('click', () => {
                 this.modalConfirmElt.removeAttribute('data-dismiss')
                 this.modalConfirmElt.removeAttribute('type')
-                this.modalConfirmElt.setAttribute('href', this.btnDeleteElt.getAttribute('data-url'))
+                this.modalConfirmElt.setAttribute('href', this.btnDeleteElt.dataset.url)
             })
         }
     }

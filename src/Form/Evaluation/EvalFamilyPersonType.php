@@ -2,15 +2,16 @@
 
 namespace App\Form\Evaluation;
 
-use App\Entity\Evaluation\EvalFamilyPerson;
+use App\Form\Utils\Choices;
 use App\Entity\People\RolePerson;
 use App\Entity\Support\SupportPerson;
-use App\Form\Utils\Choices;
+use App\Form\Utils\EvaluationChoices;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+use App\Entity\Evaluation\EvalFamilyPerson;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class EvalFamilyPersonType extends AbstractType
 {
@@ -41,17 +42,19 @@ class EvalFamilyPersonType extends AbstractType
         $builder
             ->add('maritalStatus', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalFamilyPerson::MARITAL_STATUS),
-                'attr' => ['class' => 'js-initEval important'],
+                'attr' => [
+                    'data-important' => 'true',
+                ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('noConciliationOrder', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('unbornChild', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
@@ -65,7 +68,7 @@ class EvalFamilyPersonType extends AbstractType
                 'required' => false,
             ])
             ->add('protectiveMeasure', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
@@ -80,7 +83,7 @@ class EvalFamilyPersonType extends AbstractType
     {
         $builder
             ->add('childcareOrSchool', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])

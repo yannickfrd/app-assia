@@ -39,11 +39,11 @@ class SupportGroup
     public const CACHE_SUPPORT_NOTES_KEY = 'support.notes';
     public const CACHE_SUPPORT_RDVS_KEY = 'support.rdvs';
     public const CACHE_SUPPORT_DOCUMENTS_KEY = 'support.documents';
-    public const CACHE_SUPPORT_CONTRIBUTIONS_KEY = 'support.contributions';
+    public const CACHE_SUPPORT_PAYMENTS_KEY = 'support.payments';
     public const CACHE_SUPPORT_NB_NOTES_KEY = 'support.notes_count';
     public const CACHE_SUPPORT_NB_RDVS_KEY = 'support.rdvs_count';
     public const CACHE_SUPPORT_NB_DOCUMENTS_KEY = 'support.documents_count';
-    public const CACHE_SUPPORT_NB_CONTRIBUTIONS_KEY = 'support.contributions_count';
+    public const CACHE_SUPPORT_NB_PAYMENTS_KEY = 'support.payments_count';
     public const CACHE_SUPPORT_LAST_RDV_KEY = 'support.last_rdv';
     public const CACHE_SUPPORT_NEXT_RDV_KEY = 'support.next_rdv';
 
@@ -304,9 +304,9 @@ class SupportGroup
     private $originRequest;
 
     /**
-     * @ORM\OneToMany(targetEntity=Contribution::class, mappedBy="supportGroup", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Payment::class, mappedBy="supportGroup", orphanRemoval=true)
      */
-    private $contributions;
+    private $payments;
 
     /**
      * @ORM\OneToOne(targetEntity=Avdl::class, mappedBy="supportGroup", cascade={"persist", "remove"})
@@ -336,7 +336,7 @@ class SupportGroup
         $this->documents = new ArrayCollection();
         $this->placeGroups = new ArrayCollection();
         $this->evaluationsGroup = new ArrayCollection();
-        $this->contributions = new ArrayCollection();
+        $this->payments = new ArrayCollection();
     }
 
     public function __toString()
@@ -845,30 +845,30 @@ class SupportGroup
     }
 
     /**
-     * @return Collection<Contribution>
+     * @return Collection<Payment>
      */
-    public function getContributions()
+    public function getPayments()
     {
-        return $this->contributions;
+        return $this->payments;
     }
 
-    public function addContribution(Contribution $contribution): self
+    public function addPayment(Payment $payment): self
     {
-        if (!$this->contributions->contains($contribution)) {
-            $this->contributions[] = $contribution;
-            $contribution->setSupportGroup($this);
+        if (!$this->payments->contains($payment)) {
+            $this->payments[] = $payment;
+            $payment->setSupportGroup($this);
         }
 
         return $this;
     }
 
-    public function removeContribution(Contribution $contribution): self
+    public function removePayment(Payment $payment): self
     {
-        if ($this->contributions->contains($contribution)) {
-            $this->contributions->removeElement($contribution);
+        if ($this->payments->contains($payment)) {
+            $this->payments->removeElement($payment);
             // set the owning side to null (unless already changed)
-            if ($contribution->getSupportGroup() === $this) {
-                $contribution->setSupportGroup(null);
+            if ($payment->getSupportGroup() === $this) {
+                $payment->setSupportGroup(null);
             }
         }
 

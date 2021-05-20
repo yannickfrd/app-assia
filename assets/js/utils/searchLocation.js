@@ -129,7 +129,7 @@ export default class SearchLocation {
             let itemElt = this.createItem(result, i)
             this.resultsSearchElt.appendChild(itemElt)
             itemElt.addEventListener('click', () => {
-                this.updateLocation(itemElt.getAttribute('data-result'))
+                this.updateLocation(itemElt.dataset.result)
             })
             i++
         })
@@ -146,7 +146,7 @@ export default class SearchLocation {
         const itemElt = document.createElement('a')
         itemElt.innerHTML = `<span class='text-secondary small'>${this.getLabel(result)}</span>`
         itemElt.className = 'list-group-item list-group-item-action pl-3 pr-1 py-1 cursor-pointer'
-        itemElt.setAttribute('data-result', i)
+        itemElt.dataset.result = i
 
         return itemElt
     }

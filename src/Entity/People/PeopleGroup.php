@@ -108,7 +108,7 @@ class PeopleGroup
     private $placeGroups;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     private $siSiaoId;
 
@@ -344,12 +344,12 @@ class PeopleGroup
         return $this;
     }
 
-    public function getSiSiaoId(): ?int
+    public function getSiSiaoId(): ?string
     {
         return $this->siSiaoId;
     }
 
-    public function setSiSiaoId(?int $siSiaoId): self
+    public function setSiSiaoId(?string $siSiaoId): self
     {
         $this->siSiaoId = $siSiaoId;
 

@@ -22,14 +22,14 @@ export default class Rdvs {
             if (btnDeleteElt) {
                 btnDeleteElt.addEventListener('click', () => {
                     this.modalDeleteElt.show()
-                    this.modalConfirmElt.setAttribute('data-url', btnDeleteElt.getAttribute('data-url'))
+                    this.modalConfirmElt.dataset.url = btnDeleteElt.dataset.url
                 })
             }
         })  
         
         this.modalConfirmElt.addEventListener('click', e => {
             e.preventDefault()
-            this.ajax.send('GET', this.modalConfirmElt.getAttribute('data-url'), this.responseAjax.bind(this))
+            this.ajax.send('GET', this.modalConfirmElt.dataset.url, this.responseAjax.bind(this))
         })
     }
 

@@ -5,7 +5,7 @@ namespace App\Entity\Evaluation;
 use App\Entity\Support\SupportPerson;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use App\Entity\Traits\ResourcesEntityTrait;
-use App\Form\Utils\Choices;
+use App\Form\Utils\EvaluationChoices;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -99,7 +99,7 @@ class InitEvalPerson
      */
     public function getPaperToString(): ?string
     {
-        return $this->paper ? Choices::YES_NO_IN_PROGRESS[$this->paper] : null;
+        return $this->paper ? EvaluationChoices::YES_NO_IN_PROGRESS[$this->paper] : null;
     }
 
     public function setPaper(?int $paper): self
@@ -139,7 +139,7 @@ class InitEvalPerson
      */
     public function getRightSocialSecurityToString(): ?string
     {
-        return $this->rightSocialSecurity ? Choices::YES_NO_IN_PROGRESS[$this->rightSocialSecurity] : null;
+        return $this->rightSocialSecurity ? EvaluationChoices::YES_NO_IN_PROGRESS[$this->rightSocialSecurity] : null;
     }
 
     public function setRightSocialSecurity(?int $rightSocialSecurity): self
@@ -179,7 +179,7 @@ class InitEvalPerson
      */
     public function getFamilyBreakdownToString(): ?string
     {
-        return $this->familyBreakdown ? Choices::YES_NO_PARTIAL[$this->familyBreakdown] : null;
+        return $this->familyBreakdown ? EvaluationChoices::YES_NO_PARTIAL[$this->familyBreakdown] : null;
     }
 
     public function setFamilyBreakdown(?int $familyBreakdown): self
@@ -199,7 +199,7 @@ class InitEvalPerson
      */
     public function getFriendshipBreakdownToString(): ?string
     {
-        return $this->friendshipBreakdown ? Choices::YES_NO_PARTIAL[$this->friendshipBreakdown] : null;
+        return $this->friendshipBreakdown ? EvaluationChoices::YES_NO_PARTIAL[$this->friendshipBreakdown] : null;
     }
 
     public function setFriendshipBreakdown(?int $friendshipBreakdown): self
@@ -259,7 +259,7 @@ class InitEvalPerson
      */
     public function getDebtsToString(): ?string
     {
-        return $this->debts ? Choices::YES_NO[$this->debts] : null;
+        return $this->debts ? EvaluationChoices::YES_NO[$this->debts] : null;
     }
 
     public function setDebts(?int $debts): self

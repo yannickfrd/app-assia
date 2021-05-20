@@ -11,16 +11,15 @@ export default class UpdateEvaluation {
     constructor() {
         this.loader = new Loader()
         this.ajax = new Ajax(this.loader)
+        this.autoSaver = new AutoSaver(this.sendRequest.bind(this), this.formElt, 5 * 60, 20, ['SELECT', 'INPUT', 'TEXTAREA'])
         this.formElt = document.querySelector('form[name="evaluation"]')
         this.btnSubmitElts = this.formElt.querySelectorAll('button[type="submit"]')
-        this.editMode = document.querySelector('div[data-edit-mode]').getAttribute('data-edit-mode')
-        this.autoSaver = new AutoSaver(this.sendRequest.bind(this), this.formElt, 5 * 60, 20,  ['SELECT', 'INPUT', 'TEXTAREA'])
         this.init()
     }
 
     init() {
         this.btnSubmitElts.forEach(btnSubmitElt => {
-            this.url = btnSubmitElt.getAttribute('data-url')
+            this.url = btnSubmitElt.dataset.url
             btnSubmitElt.addEventListener('click', e => this.save(e))
         })
         this.autoSaver.init()
@@ -55,5 +54,7 @@ export default class UpdateEvaluation {
         }
         
         new MessageFlash(response.alert, response.msg)
+
+        document.getElementById('evaluation-updateAt').textContent = '(modifiée le ' + response.data.updatedAt + ')'
     }
 }

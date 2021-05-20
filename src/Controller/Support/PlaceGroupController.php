@@ -37,9 +37,7 @@ class PlaceGroupController extends AbstractController
      */
     public function supportPlacesGroup(int $id, SupportManager $supportManager): Response
     {
-        if (null === $supportGroup = $supportManager->getFullSupportGroup($id)) {
-            throw $this->createAccessDeniedException('Ce suivi n\'existe pas.');
-        }
+        $supportGroup = $supportManager->getFullSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 

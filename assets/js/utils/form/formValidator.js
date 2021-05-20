@@ -1,4 +1,3 @@
-import SelectType from './selectType'
 import MessageFlash from '../messageFlash'
 
 /**
@@ -9,7 +8,6 @@ export default class FormValidator {
 
     constructor(containerElt = document) {
         this.containerElt = containerElt
-        this.selectType = new SelectType()
     }
 
     /**
@@ -22,8 +20,8 @@ export default class FormValidator {
 
         // Récupère toutes les catégories de champs à vérifier
         let categories = []
-        document.querySelectorAll('div[data-check-valid]').forEach(elt => {
-            const category = elt.getAttribute('data-check-valid')
+        document.querySelectorAll('div[data-check-valid]').forEach(elt  => {
+            const category = elt.dataset.checkValid
             if (!categories.includes(category)) {
                 categories.push(category)
             }
@@ -64,14 +62,7 @@ export default class FormValidator {
      */
     cleanHidedFields() {
         this.containerElt.querySelectorAll('div[data-parent-field].d-none').forEach(hideElt => {
-            const fieldElt = hideElt.querySelector('input, select, textarea')
-            if (null === fieldElt) {
-                return null
-            }
-            if (fieldElt.type === 'select-one') {
-                return this.selectType.setOption(fieldElt, null)
-            } 
-            return fieldElt.value = null
+            return hideElt.querySelector('input, select, textarea').value = ''
         })
     }
 
@@ -83,7 +74,7 @@ export default class FormValidator {
             if (this.isFilledField(fieldElt)) {
                 return this.validField(fieldElt)
             }
-            if (fieldElt.type === 'select-one' && this.selectType.countOptions(fieldElt) <= 1) {
+            if (fieldElt.type === 'select-one' && fieldElt.querySelectorAll('option').length <= 1) {
                 return fieldElt.removeAttribute('required')
             }
             this.invalidField(fieldElt, 'Saisie obligatoire.')
@@ -134,12 +125,8 @@ export default class FormValidator {
      * @return {Boolean}
      */
     isFilledField(fieldElt) {
-        if ((['text', 'number', 'date'].includes(fieldElt.type) && fieldElt.value != '')
-            || (fieldElt.type === 'checkbox' && fieldElt.checked === true)) {
-            return true
-        }
-        const value = this.selectType.getOption(fieldElt)
-        if (fieldElt.type === 'select-one' && value != '' && !isNaN(value)) {
+        if ((['text', 'number', 'date', 'select-one'].includes(fieldElt.type) && '' != fieldElt.value)
+            || ('checkbox' === fieldElt.type && true === fieldElt.checked)) {
             return true
         }
         return false
@@ -248,5 +235,30 @@ export default class FormValidator {
         }
         
         return this.validField(fieldElt)
+    }
+
+    /**
+     * Check is a date input is valid.
+     * @param {HTMLInputElement} inputElt 
+     */
+    checkDate(inputElt, min = -(365 * 99), max = (365 * 99)) {
+        const interval = Math.round((new Date() - new Date(inputElt.value)) / (24 * 3600 * 1000))
+        if ((inputElt.value && !Number.isInteger(interval))
+            || interval < min || interval > max) {
+            return this.invalidField(inputElt, 'Date invalide.')
+        }
+        return this.validField(inputElt)
+    }
+
+    /**
+     * Check is a amount input is valid.
+     * @param {HTMLInputElement} inputElt 
+     */
+    checkAmount(inputElt, min = 0, max = 99999) {
+        inputElt.value = inputElt.value.replace(' ', '').replace(',', '.')
+        if (Number(inputElt.value) >= min) {
+            return this.validField(inputElt)
+        }
+        return this.invalidField(inputElt, 'Montant invalide.')
     }
 }

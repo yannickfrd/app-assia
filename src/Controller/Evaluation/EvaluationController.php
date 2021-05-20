@@ -106,8 +106,10 @@ class EvaluationController extends AbstractController
             return $this->json([
                 'alert' => 'success',
                 'msg' => 'Les modifications sont enregistrées.',
-                'date' => $evaluationGroup->getUpdatedAt()->format('d/m/Y à H:i'),
-                'user' => $this->getUser()->getFullName(),
+                'data' => [
+                    'updatedAt' => $evaluationGroup->getUpdatedAt()->format('d/m/Y à H:i'),
+                    'updatedBy' => $this->getUser()->getFullName(),
+                ],
             ]);
         }
 

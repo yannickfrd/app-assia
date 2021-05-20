@@ -1,5 +1,4 @@
 import FormValidator from '../utils/form/formValidator'
-import FieldDisplayer from '../utils/form/fieldDisplayer'
 import DateValidator from '../utils/date/dateValidator'
 
 /**
@@ -46,8 +45,6 @@ export default class HotelSupportValidator extends FormValidator {
         this.dateInputElts.forEach(dateInputElt => {
             dateInputElt.addEventListener('focusout', this.checkDate.bind(this, dateInputElt))
         })
-
-        this.displayFields()
 
         let dateElts = [this.orientationDateElt, this.startDateElt]
         dateElts.forEach(dateElt => {
@@ -98,36 +95,22 @@ export default class HotelSupportValidator extends FormValidator {
     }
 
     /**
-     * Masque ou affiche les champs conditionnels.
-     */
-    displayFields() {
-        new FieldDisplayer(this.prefix, 'device')
-        new FieldDisplayer(this.prefix, 'status')
-        new FieldDisplayer('support_originRequest_', 'orientationDate')
-        new FieldDisplayer('support_originRequest_', 'organization')
-        new FieldDisplayer(this.prefix + 'hotelSupport_', 'evaluationDate')
-        new FieldDisplayer(this.prefix + 'hotelSupport_', 'emergencyActionDone')
-        new FieldDisplayer(this.prefix, 'startDate')
-        new FieldDisplayer(this.prefix, 'endDate')
-    }
-
-    /**
      * Vérifie la validité du formualire avant la soumission.
      */
     checkFormBeforeSubmit() {
         this.btnSubmitElts.forEach(btnElt => {
             btnElt.addEventListener('click', () => {
-                if (this.endDateElt.value && this.HOTEL_URG === this.selectType.getOption(this.deviceSelectElt)) {
+                if (this.endDateElt.value && this.HOTEL_URG === parseInt(this.deviceSelectElt.value)) {
                     this.checkField(this.evaluationDateElt)
                     this.checkField(this.emergencyActionRequestSelectElt)
                     this.checkField(this.emergencyActionDoneSelectElt)       
                 }
-                if (this.endDateElt.value && this.HOTEL_SUPPORT === this.selectType.getOption(this.deviceSelectElt)) {
+                if (this.endDateElt.value && this.HOTEL_SUPPORT === parseInt(this.deviceSelectElt.value)) {
                     this.checkField(this.levelSupportSelectElt)
                     this.checkField(this.departmentAnchorSelectElt)
                     this.checkField(this.recommendationSelectElt)
                 }
-                if (this.STATUS_PRE_ADD_FAILED === this.selectType.getOption(this.statusSelectElt)) {
+                if (this.STATUS_PRE_ADD_FAILED === parseInt(this.statusSelectElt.value)) {
                     this.checkField(this.reasonNoInclusionSelectElt)
                 } else {
                     this.validField(this.reasonNoInclusionSelectElt)

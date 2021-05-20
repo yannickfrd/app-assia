@@ -12,7 +12,7 @@ use App\Repository\Organization\ServiceRepository;
 use App\Repository\Organization\UserConnectionRepository;
 use App\Repository\Organization\UserRepository;
 use App\Repository\People\PeopleGroupRepository;
-use App\Repository\Support\ContributionRepository;
+use App\Repository\Support\PaymentRepository;
 use App\Repository\Support\DocumentRepository;
 use App\Repository\Support\NoteRepository;
 use App\Repository\Support\RdvRepository;
@@ -39,7 +39,7 @@ class ServiceIndicator
     protected $noteRepo;
     protected $rdvRepo;
     protected $documentRepo;
-    protected $contributionRepo;
+    protected $paymentRepo;
     protected $ConnectionRepo;
 
     /**
@@ -60,7 +60,7 @@ class ServiceIndicator
         NoteRepository $noteRepo,
         RdvRepository $rdvRepo,
         DocumentRepository $documentRepo,
-        ContributionRepository $contributionRepo,
+        PaymentRepository $paymentRepo,
         UserConnectionRepository $ConnectionRepo)
     {
         $this->user = $security->getUser();
@@ -74,7 +74,7 @@ class ServiceIndicator
         $this->noteRepo = $noteRepo;
         $this->rdvRepo = $rdvRepo;
         $this->documentRepo = $documentRepo;
-        $this->contributionRepo = $contributionRepo;
+        $this->paymentRepo = $paymentRepo;
         $this->ConnectionRepo = $ConnectionRepo;
 
         $this->cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
@@ -157,7 +157,7 @@ class ServiceIndicator
             'nbNotes' => $this->noteRepo->countNotes($this->criteria),
             'nbRdvs' => $this->rdvRepo->countRdvs($this->criteria),
             'nbDocuments' => $this->documentRepo->countDocuments($this->criteria),
-            'nbContributions' => $this->contributionRepo->countContributions($this->criteria),
+            'nbPayments' => $this->paymentRepo->countPayments($this->criteria),
             'subServices' => $this->getSubServicesIndicators($service),
         ];
     }
@@ -174,7 +174,7 @@ class ServiceIndicator
             'nbNotes' => $this->noteRepo->countNotes($criteria),
             'nbRdvs' => $this->rdvRepo->countRdvs($criteria),
             'nbDocuments' => $this->documentRepo->countDocuments($criteria),
-            'nbContributions' => $this->contributionRepo->countContributions($criteria),
+            'nbPayments' => $this->paymentRepo->countPayments($criteria),
         ];
     }
 }

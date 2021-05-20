@@ -24,14 +24,14 @@ export default class AddCollectionWidget {
      * @param {HTMLButtonElement} btnElt 
      */
     addElt(btnElt) {
-        this.list = document.querySelector(btnElt.getAttribute('data-list-selector'))
-        this.counter = parseInt(this.list.getAttribute('data-widget-counter') || this.list.children().length) // Try to find the counter of the list or use the length of the list
+        this.list = document.querySelector(btnElt.dataset.listSelector)
+        this.counter = parseInt(this.list.dataset.widgetCounter || this.list.children().length) // Try to find the counter of the list or use the length of the list
         // grab the prototype template
-        let newWidget = this.list.getAttribute('data-prototype')
+        let newWidget = this.list.dataset.prototype
         // replace the '__name__' used in the id and name of the prototype with a number that's unique to your emails
         newWidget = newWidget.replace(/__name__/g, this.counter)
         // Increase the counter and store it, the length cannot be used if deleting widgets is allowed
-        this.list.setAttribute('data-widget-counter', this.counter + 1)
+        this.list.dataset.widgetCounter = this.counter + 1
         
         // create a new list element
         const trElt = document.createElement('tr')
@@ -53,7 +53,8 @@ export default class AddCollectionWidget {
         tdElt.className = 'align-middle'
 
         const btnElt = document.createElement('boutton')
-        btnElt.className = 'btn btn-danger js-remove'
+        btnElt.className = 'btn btn-danger'
+        btnElt.dataset.action = 'remove'
         btnElt.innerHTML = '<span class="fas fa-trash-alt"></span>'
 
         btnElt.addEventListener('click', e => {

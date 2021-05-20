@@ -3,7 +3,7 @@
 namespace App\Entity\Evaluation;
 
 use App\Entity\Traits\ResourcesEntityTrait;
-use App\Form\Utils\Choices;
+use App\Form\Utils\EvaluationChoices;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -34,6 +34,7 @@ class EvalBudgetPerson
         'familySupplement' => 'Complément familial',
         'paidTraining' => 'Formation rémunérée',
         'youthGuarantee' => 'Garantie jeunes',
+        'dailyAllowance' => 'Indemnités journalières (IJ)',
         'maintenance' => 'Pension alimentaire',
         'disabilityPension' => 'Pension d\'invalidité',
         'paje' => 'Prestation d\'accueil du jeune enfant (PAJE)',
@@ -60,6 +61,7 @@ class EvalBudgetPerson
         'familySupplement' => 'Complément familial',
         'paidTraining' => 'Formation',
         'youthGuarantee' => 'Garantie jeunes',
+        'dailyAllowance' => 'IJ',
         'maintenance' => 'Pension alimentaire',
         'disabilityPension' => 'Pension d\'invalidité',
         'paje' => 'PAJE',
@@ -399,7 +401,7 @@ class EvalBudgetPerson
      */
     public function getIncomeTaxToString(): ?string
     {
-        return $this->incomeTax ? Choices::YES_NO[$this->incomeTax] : null;
+        return $this->incomeTax ? EvaluationChoices::YES_NO[$this->incomeTax] : null;
     }
 
     public function setIncomeTax(?int $incomeTax): self
@@ -456,7 +458,7 @@ class EvalBudgetPerson
 
         foreach (EvalBudgetPerson::CHARGES_TYPE as $key => $value) {
             $method = 'get'.ucfirst($key);
-            if (Choices::YES === $this->$method()) {
+            if (EvaluationChoices::YES === $this->$method()) {
                 $array[] = $value;
             }
         }
@@ -473,7 +475,7 @@ class EvalBudgetPerson
      */
     public function getChargesToString(): ?string
     {
-        return $this->charges ? Choices::YES_NO[$this->charges] : null;
+        return $this->charges ? EvaluationChoices::YES_NO[$this->charges] : null;
     }
 
     public function setCharges(?int $charges): self
@@ -514,7 +516,7 @@ class EvalBudgetPerson
 
     public function getElectricityGasToString(): ?string
     {
-        return $this->electricityGas ? Choices::YES_NO_BOOLEAN[$this->electricityGas] : null;
+        return $this->electricityGas ? EvaluationChoices::YES_NO_BOOLEAN[$this->electricityGas] : null;
     }
 
     public function setElectricityGas(?int $electricityGas): self
@@ -531,7 +533,7 @@ class EvalBudgetPerson
 
     public function getWaterToString(): ?string
     {
-        return $this->water ? Choices::YES_NO_BOOLEAN[$this->water] : null;
+        return $this->water ? EvaluationChoices::YES_NO_BOOLEAN[$this->water] : null;
     }
 
     public function setWater(?int $water): self
@@ -548,7 +550,7 @@ class EvalBudgetPerson
 
     public function getInsuranceToString(): ?string
     {
-        return $this->insurance ? Choices::YES_NO_BOOLEAN[$this->insurance] : null;
+        return $this->insurance ? EvaluationChoices::YES_NO_BOOLEAN[$this->insurance] : null;
     }
 
     public function setInsurance(?int $insurance): self
@@ -565,7 +567,7 @@ class EvalBudgetPerson
 
     public function getMutualToString(): ?string
     {
-        return $this->mutual ? Choices::YES_NO_BOOLEAN[$this->mutual] : null;
+        return $this->mutual ? EvaluationChoices::YES_NO_BOOLEAN[$this->mutual] : null;
     }
 
     public function setMutual(?int $mutual): self
@@ -582,7 +584,7 @@ class EvalBudgetPerson
 
     public function getTaxesToString(): ?string
     {
-        return $this->taxes ? Choices::YES_NO_BOOLEAN[$this->taxes] : null;
+        return $this->taxes ? EvaluationChoices::YES_NO_BOOLEAN[$this->taxes] : null;
     }
 
     public function setTaxes(?int $taxes): self
@@ -599,7 +601,7 @@ class EvalBudgetPerson
 
     public function getTransportToString(): ?string
     {
-        return $this->transport ? Choices::YES_NO_BOOLEAN[$this->transport] : null;
+        return $this->transport ? EvaluationChoices::YES_NO_BOOLEAN[$this->transport] : null;
     }
 
     public function setTransport(?int $transport): self
@@ -616,7 +618,7 @@ class EvalBudgetPerson
 
     public function getChildcareToString(): ?string
     {
-        return $this->childcare ? Choices::YES_NO_BOOLEAN[$this->childcare] : null;
+        return $this->childcare ? EvaluationChoices::YES_NO_BOOLEAN[$this->childcare] : null;
     }
 
     public function setChildcare(?int $childcare): self
@@ -633,7 +635,7 @@ class EvalBudgetPerson
 
     public function getAlimonyToString(): ?string
     {
-        return $this->alimony ? Choices::YES_NO_BOOLEAN[$this->alimony] : null;
+        return $this->alimony ? EvaluationChoices::YES_NO_BOOLEAN[$this->alimony] : null;
     }
 
     public function setAlimony(?int $alimony): self
@@ -650,7 +652,7 @@ class EvalBudgetPerson
 
     public function getPhoneToString(): ?string
     {
-        return $this->phone ? Choices::YES_NO_BOOLEAN[$this->phone] : null;
+        return $this->phone ? EvaluationChoices::YES_NO_BOOLEAN[$this->phone] : null;
     }
 
     public function setPhone(?int $phone): self
@@ -667,7 +669,7 @@ class EvalBudgetPerson
 
     public function getConsumerCreditToString(): ?string
     {
-        return $this->consumerCredit ? Choices::YES_NO_BOOLEAN[$this->consumerCredit] : null;
+        return $this->consumerCredit ? EvaluationChoices::YES_NO_BOOLEAN[$this->consumerCredit] : null;
     }
 
     public function setConsumerCredit(?int $consumerCredit): self
@@ -684,7 +686,7 @@ class EvalBudgetPerson
 
     public function getCanteenToString(): ?string
     {
-        return $this->canteen ? Choices::YES_NO_BOOLEAN[$this->canteen] : null;
+        return $this->canteen ? EvaluationChoices::YES_NO_BOOLEAN[$this->canteen] : null;
     }
 
     public function setCanteen(?int $canteen): self
@@ -701,7 +703,7 @@ class EvalBudgetPerson
 
     public function getChargeOtherToString(): ?string
     {
-        return $this->chargeOther ? Choices::YES_NO_BOOLEAN[$this->chargeOther] : null;
+        return $this->chargeOther ? EvaluationChoices::YES_NO_BOOLEAN[$this->chargeOther] : null;
     }
 
     public function setChargeOther(?int $chargeOther): self
@@ -909,7 +911,7 @@ class EvalBudgetPerson
 
         foreach (EvalBudgetPerson::DEBTS_TYPE as $key => $value) {
             $method = 'get'.ucfirst($key);
-            if (Choices::YES === $this->$method()) {
+            if (EvaluationChoices::YES === $this->$method()) {
                 $array[] = $value;
             }
         }
@@ -926,7 +928,7 @@ class EvalBudgetPerson
      */
     public function getDebtsToString(): ?string
     {
-        return $this->debts ? Choices::YES_NO[$this->debts] : null;
+        return $this->debts ? EvaluationChoices::YES_NO[$this->debts] : null;
     }
 
     public function getDebtRental(): ?int
@@ -939,7 +941,7 @@ class EvalBudgetPerson
      */
     public function getDebtRentalToString(): ?string
     {
-        return $this->debtRental ? Choices::YES_NO_BOOLEAN[$this->debtRental] : null;
+        return $this->debtRental ? EvaluationChoices::YES_NO_BOOLEAN[$this->debtRental] : null;
     }
 
     public function setDebtRental(?int $debtRental): self
@@ -956,7 +958,7 @@ class EvalBudgetPerson
 
     public function getDebtConsrCreditToString(): ?string
     {
-        return $this->debtConsrCredit ? Choices::YES_NO_BOOLEAN[$this->debtConsrCredit] : null;
+        return $this->debtConsrCredit ? EvaluationChoices::YES_NO_BOOLEAN[$this->debtConsrCredit] : null;
     }
 
     public function setDebtConsrCredit(?int $debtConsrCredit): self
@@ -973,7 +975,7 @@ class EvalBudgetPerson
 
     public function getDebtMortgageToString(): ?string
     {
-        return $this->debtMortgage ? Choices::YES_NO_BOOLEAN[$this->debtMortgage] : null;
+        return $this->debtMortgage ? EvaluationChoices::YES_NO_BOOLEAN[$this->debtMortgage] : null;
     }
 
     public function setDebtMortgage(?int $debtMortgage): self
@@ -990,7 +992,7 @@ class EvalBudgetPerson
 
     public function getDebtFinesToString(): ?string
     {
-        return $this->debtFines ? Choices::YES_NO_BOOLEAN[$this->debtFines] : null;
+        return $this->debtFines ? EvaluationChoices::YES_NO_BOOLEAN[$this->debtFines] : null;
     }
 
     public function setDebtFines(?int $debtFines): self
@@ -1007,7 +1009,7 @@ class EvalBudgetPerson
 
     public function getDebtTaxDelaysToString(): ?string
     {
-        return $this->debtTaxDelays ? Choices::YES_NO_BOOLEAN[$this->debtTaxDelays] : null;
+        return $this->debtTaxDelays ? EvaluationChoices::YES_NO_BOOLEAN[$this->debtTaxDelays] : null;
     }
 
     public function setDebtTaxDelays(?int $debtTaxDelays): self
@@ -1024,7 +1026,7 @@ class EvalBudgetPerson
 
     public function getDebtBankOverdraftsToString(): ?string
     {
-        return $this->getDebtBankOverdrafts() ? Choices::YES_NO_BOOLEAN[$this->debtBankOverdrafts] : null;
+        return $this->getDebtBankOverdrafts() ? EvaluationChoices::YES_NO_BOOLEAN[$this->debtBankOverdrafts] : null;
     }
 
     public function setDebtBankOverdrafts(?int $debtBankOverdrafts): self
@@ -1041,7 +1043,7 @@ class EvalBudgetPerson
 
     public function getDebtHealthToString(): ?string
     {
-        return $this->debtHealth ? Choices::YES_NO_BOOLEAN[$this->debtHealth] : null;
+        return $this->debtHealth ? EvaluationChoices::YES_NO_BOOLEAN[$this->debtHealth] : null;
     }
 
     public function setDebtHealth(?int $debtHealth): self
@@ -1058,7 +1060,7 @@ class EvalBudgetPerson
 
     public function getDebtOtherToString(): ?string
     {
-        return $this->debtOther ? Choices::YES_NO_BOOLEAN[$this->debtOther] : null;
+        return $this->debtOther ? EvaluationChoices::YES_NO_BOOLEAN[$this->debtOther] : null;
     }
 
     public function setDebtOther(?int $debtOther): self
@@ -1126,7 +1128,7 @@ class EvalBudgetPerson
      */
     public function getOverIndebtRecordToString(): ?string
     {
-        return $this->overIndebtRecord ? Choices::YES_NO_IN_PROGRESS[$this->overIndebtRecord] : null;
+        return $this->overIndebtRecord ? EvaluationChoices::YES_NO_IN_PROGRESS[$this->overIndebtRecord] : null;
     }
 
     public function setOverIndebtRecord(?int $overIndebtRecord): self
@@ -1178,7 +1180,7 @@ class EvalBudgetPerson
      */
     public function getMoratoriumToString(): ?string
     {
-        return $this->moratorium ? Choices::YES_NO_IN_PROGRESS[$this->moratorium] : null;
+        return $this->moratorium ? EvaluationChoices::YES_NO_IN_PROGRESS[$this->moratorium] : null;
     }
 
     public function setMoratorium(?int $moratorium): self

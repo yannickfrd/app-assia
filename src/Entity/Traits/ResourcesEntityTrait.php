@@ -116,6 +116,11 @@ trait ResourcesEntityTrait
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
+    private $dailyAllowance;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
     private $ressourceOther;
 
     /**
@@ -158,6 +163,18 @@ trait ResourcesEntityTrait
      * @ORM\Column(type="float", nullable=true)
      * @Groups("export")
      */
+    private $familySupplementAmt;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
+     */
+    private $scholarshipsAmt;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
+     */
     private $familyAllowanceAmt;
 
     /**
@@ -177,6 +194,12 @@ trait ResourcesEntityTrait
      * @Groups("export")
      */
     private $youthGuaranteeAmt;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
+     */
+    private $dailyAllowanceAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
@@ -225,18 +248,6 @@ trait ResourcesEntityTrait
      * @Groups("export")
      */
     private $disabilityPensionAmt;
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
-     */
-    private $familySupplementAmt;
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
-     */
-    private $scholarshipsAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
@@ -552,6 +563,26 @@ trait ResourcesEntityTrait
     public function setYouthGuarantee(?int $youthGuarantee): self
     {
         $this->youthGuarantee = $youthGuarantee;
+
+        return $this;
+    }
+
+    public function getDailyAllowance(): ?int
+    {
+        return $this->dailyAllowance;
+    }
+
+    /**
+     * @Groups("export")
+     */
+    public function getDailyAllowanceToString(): ?string
+    {
+        return $this->dailyAllowance ? Choices::YES_NO_BOOLEAN[$this->dailyAllowance] : null;
+    }
+
+    public function setDailyAllowance(?int $dailyAllowance): self
+    {
+        $this->dailyAllowance = $dailyAllowance;
 
         return $this;
     }
@@ -912,6 +943,18 @@ trait ResourcesEntityTrait
     public function setScholarshipsAmt(?float $scholarshipsAmt): self
     {
         $this->scholarshipsAmt = $scholarshipsAmt;
+
+        return $this;
+    }
+
+    public function getDailyAllowanceAmt(): ?float
+    {
+        return $this->dailyAllowanceAmt;
+    }
+
+    public function setDailyAllowanceAmt(?float $dailyAllowanceAmt): self
+    {
+        $this->dailyAllowanceAmt = $dailyAllowanceAmt;
 
         return $this;
     }

@@ -18,7 +18,7 @@ export default class ExportData {
             btnElt.addEventListener('click', e => {
                 this.loader.on()
                 e.preventDefault()
-                this.ajax.send('POST', btnElt.getAttribute('data-url'), this.response.bind(this), new FormData(this.formElt))
+                this.ajax.send('POST', btnElt.dataset.url, this.response.bind(this), new FormData(this.formElt))
 
                 if (btnElt.id === 'export') {
                     this.loader.off()

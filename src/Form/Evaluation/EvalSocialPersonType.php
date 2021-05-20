@@ -2,15 +2,16 @@
 
 namespace App\Form\Evaluation;
 
-use App\Entity\Evaluation\EvalSocialPerson;
+use App\Form\Utils\Choices;
 use App\Entity\People\RolePerson;
 use App\Entity\Support\SupportPerson;
-use App\Form\Utils\Choices;
+use App\Form\Utils\EvaluationChoices;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+use App\Entity\Evaluation\EvalSocialPerson;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class EvalSocialPersonType extends AbstractType
 {
@@ -25,7 +26,7 @@ class EvalSocialPersonType extends AbstractType
 
         $builder
             ->add('infoCrip', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
@@ -34,13 +35,13 @@ class EvalSocialPersonType extends AbstractType
                 'required' => false,
                 ])
             ->add('infoCripByService', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('infoCripComment')
             ->add('aseFollowUp', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
                 'help' => 'evalSocialPerson.aseFollowUp.help',
@@ -55,7 +56,7 @@ class EvalSocialPersonType extends AbstractType
                 'attr' => ['placeholder' => 'Ase comment'],
             ])
             ->add('healthProblem', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
@@ -63,12 +64,12 @@ class EvalSocialPersonType extends AbstractType
             ->add('mentalHealthProblem')
             ->add('addictionProblem')
             ->add('medicalFollowUp', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('homeCareSupport', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
@@ -93,10 +94,10 @@ class EvalSocialPersonType extends AbstractType
     {
         $builder
             ->add('rightSocialSecurity', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO_IN_PROGRESS),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS),
                 'attr' => [
-                    'class' => 'js-initEval important',
-                    'data-id' => 'rightSocialSecurity',
+                    'data-important' => 'true',
+                    'data-twin-field' => 'rightSocialSecurity',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
@@ -104,8 +105,8 @@ class EvalSocialPersonType extends AbstractType
             ->add('socialSecurity', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalSocialPerson::SOCIAL_SECURITY),
                 'attr' => [
-                    'class' => 'js-initEval important',
-                    'data-id' => 'socialSecurity',
+                    'data-important' => 'true',
+                    'data-twin-field' => 'socialSecurity',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
@@ -116,30 +117,28 @@ class EvalSocialPersonType extends AbstractType
                 'required' => false,
             ])
             ->add('familyBreakdown', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO_PARTIAL),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO_PARTIAL),
                 'attr' => [
-                    'class' => 'js-initEval',
-                    'data-id' => 'familyBreakdown',
+                    'data-twin-field' => 'familyBreakdown',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('friendshipBreakdown', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO_PARTIAL),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO_PARTIAL),
                 'attr' => [
-                    'class' => 'js-initEval',
-                    'data-id' => 'friendshipBreakdown',
+                    'data-twin-field' => 'friendshipBreakdown',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('violenceVictim', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('domViolenceVictim', ChoiceType::class, [
-                'choices' => Choices::getChoices(Choices::YES_NO),
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ]);

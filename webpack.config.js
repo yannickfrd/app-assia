@@ -26,7 +26,7 @@ Encore
     .addEntry('app', './assets/js/app.js')
     .addEntry('calendar_css', './assets/css/calendar.scss')
     .addEntry('calendar', './assets/js/rdv/calendarIndex.js')
-    .addEntry('contribution', './assets/js/contribution/contribution.js')
+    .addEntry('payment', './assets/js/payment/payment.js')
     .addEntry('directory', './assets/js/directory/directory.js')
     .addEntry('device', './assets/js/device/device.js')
     .addEntry('document', './assets/js/document/document.js')

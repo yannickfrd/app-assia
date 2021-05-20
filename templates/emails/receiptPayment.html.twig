@@ -11,19 +11,19 @@
 {% endblock %}
 {% block body %}
     <p>Je vous prie de trouver en pièce-jointe <b>le reçu du paiement</b> concernant 
-        {% if contribution.type == 1 %}
+        {% if payment.type == 1 %}
             la participation à l'hébergement
-        {% elseif contribution.type == 2 %}
+        {% elseif payment.type == 2 %}
             le loyer
-        {% elseif contribution.type == 10 %}
+        {% elseif payment.type == 10 %}
            la caution
-        {% elseif contribution.type in [30, 31, 32] %}
+        {% elseif payment.type in [30, 31, 32] %}
             le remboursement de dette
         {% endif %}
-        d'un montant de <b>{{ contribution.paidAmt|price }}</b>{#
-        #}{% if contribution.type in [1, 2] %}{#
-            #} pour la période du <b>{{ contribution.startDate|date("d/m/Y") }}</b> au <b>{{ contribution.endDate|date("d/m/Y") }}</b> 
-            (soit {{ contribution.nbDays }} jour{{ contribution.nbDays > 1 ? "s" }}){#
+        d'un montant de <b>{{ payment.paidAmt|amount }}</b>{#
+        #}{% if payment.type in [1, 2] %}{#
+            #} pour la période du <b>{{ payment.startDate|date("d/m/Y") }}</b> au <b>{{ payment.endDate|date("d/m/Y") }}</b> 
+            (soit {{ payment.nbDays }} jour{{ payment.nbDays > 1 ? "s" }}){#
         #}{% endif %}.
     </p>
     <br/>

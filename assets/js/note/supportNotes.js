@@ -2,7 +2,6 @@ import Ajax from '../utils/ajax'
 import MessageFlash from '../utils/messageFlash'
 import Loader from '../utils/loader'
 import AutoSaver from '../utils/form/autoSaver'
-import SelectType from '../utils/form/selectType'
 import ParametersUrl from '../utils/parametersUrl'
 import { Modal } from 'bootstrap'
 import CkEditor from '../utils/ckEditor'
@@ -12,7 +11,6 @@ export default class SupportNotes {
     constructor() {
         this.loader = new Loader()
         this.ajax = new Ajax(this.loader)
-        this.selectType = new SelectType()
         this.parametersUrl = new ParametersUrl()
         this.noteModalElt = new Modal(document.getElementById('note-modal'))
         this.CkEditor = new CkEditor('#editor')
@@ -30,12 +28,12 @@ export default class SupportNotes {
         this.btnDeleteElt = this.modalNoteElt.querySelector('#modal-btn-delete')
         
         this.searchSupportNotesElt = document.getElementById('js-search-support-notes')
-        this.themeColor = document.getElementById('header').getAttribute('data-color')
+        this.themeColor = document.getElementById('header').dataset.color
         this.autoSaverElt = document.getElementById('js-auto-save')
         this.countNotesElt = document.getElementById('count-notes')
         this.nbTotalNotesElt = document.getElementById('nb-total-notes')
         this.containerNotesElt = document.getElementById('container-notes')
-        this.supportId = this.containerNotesElt.getAttribute('data-support')
+        this.supportId = this.containerNotesElt.dataset.support
         this.data = null
 
         this.init()
@@ -72,8 +70,8 @@ export default class SupportNotes {
 
         this.modalNoteElt.querySelector('form').action = '/support/' + this.supportId + '/note/new'
         this.modalNoteElt.querySelector('#note_title').value = ''
-        this.selectType.setOption(this.modalNoteElt.querySelector('#note_type'), 1)
-        this.selectType.setOption(this.modalNoteElt.querySelector('#note_status'), 1)
+        this.modalNoteElt.querySelector('#note_type').value = 1
+        this.modalNoteElt.querySelector('#note_status').value = 1
         this.CkEditor.setData('')
         this.btnDeleteElt.classList.replace('d-block', 'd-none')
         this.btnExportWordElt.classList.replace('d-block', 'd-none')
@@ -93,17 +91,17 @@ export default class SupportNotes {
         this.noteElt = noteElt
         this.contentNoteElt = noteElt.querySelector('.card-text')
 
-        this.cardId = this.noteElt.getAttribute('data-note-id')
+        this.cardId = this.noteElt.dataset.noteId
         this.modalNoteElt.querySelector('form').action = '/note/' + this.cardId + '/edit'
 
         this.titleNoteElt = noteElt.querySelector('.card-title')
         this.modalNoteElt.querySelector('#note_title').value = this.titleNoteElt.textContent
 
-        const typeValue = noteElt.querySelector('[data-note-type]').getAttribute('data-note-type')
-        this.selectType.setOption(this.modalNoteElt.querySelector('#note_type'), typeValue)
+        const typeValue = noteElt.querySelector('[data-note-type]').dataset.noteType
+        this.modalNoteElt.querySelector('#note_type').value = typeValue
 
-        const statusValue = noteElt.querySelector('[data-note-status]').getAttribute('data-note-status')
-        this.selectType.setOption(this.modalNoteElt.querySelector('#note_status'), statusValue)
+        const statusValue = noteElt.querySelector('[data-note-status]').dataset.noteStatus
+        this.modalNoteElt.querySelector('#note_status').value = statusValue
 
         if (this.autoSaver.active === false) {
             const content  = this.contentNoteElt.innerHTML
@@ -219,7 +217,7 @@ export default class SupportNotes {
     createNote(data) {
         const noteElt = document.createElement('div')
         noteElt.className = 'col-sm-12 col-lg-6 mb-4 reveal'
-        noteElt.setAttribute('data-note-id', data.noteId)
+        noteElt.dataset.noteId = data.noteId
         noteElt.innerHTML =
             `<div class='card h-100 shadow'>
                 <div class='card-header'>
@@ -266,11 +264,11 @@ export default class SupportNotes {
 
         const noteTypeElt = this.noteElt.querySelector('[data-note-type]')
         noteTypeElt.textContent = data.type
-        noteTypeElt.setAttribute('data-note-type', this.selectType.getOption(this.modalNoteElt.querySelector('#note_type')))
+        noteTypeElt.dataset.noteType = this.modalNoteElt.querySelector('#note_type').value
 
         const noteStatusElt = this.noteElt.querySelector('[data-note-status]')
         noteStatusElt.textContent = '(' + data.status + ')'
-        noteStatusElt.setAttribute('data-note-status', this.selectType.getOption(this.modalNoteElt.querySelector('#note_status')))
+        noteStatusElt.dataset.noteStatus = this.modalNoteElt.querySelector('#note_status').value
 
         this.noteElt.querySelector('[data-note-updated]').textContent = data.editInfo
     }

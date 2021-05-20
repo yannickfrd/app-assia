@@ -2,7 +2,7 @@
 
 namespace App\Entity\Evaluation;
 
-use App\Form\Utils\Choices;
+use App\Form\Utils\EvaluationChoices;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -175,7 +175,7 @@ class EvalAdmPerson
      */
     public function getPaperToString(): ?string
     {
-        return $this->paper ? Choices::YES_NO_IN_PROGRESS[$this->paper] : null;
+        return $this->paper ? EvaluationChoices::YES_NO_IN_PROGRESS[$this->paper] : null;
     }
 
     public function setPaper(?int $paper): self
@@ -215,7 +215,7 @@ class EvalAdmPerson
      */
     public function getAsylumBackgroundToString(): ?string
     {
-        return $this->asylumBackground ? Choices::YES_NO[$this->asylumBackground] : null;
+        return $this->asylumBackground ? EvaluationChoices::YES_NO[$this->asylumBackground] : null;
     }
 
     public function setAsylumBackground(?int $asylumBackground): self
@@ -291,7 +291,7 @@ class EvalAdmPerson
      */
     public function getWorkRightToString(): ?string
     {
-        return $this->workRight ? Choices::YES_NO_IN_PROGRESS[$this->workRight] : null;
+        return $this->workRight ? EvaluationChoices::YES_NO_IN_PROGRESS[$this->workRight] : null;
     }
 
     public function setWorkRight(?int $workRight): self
