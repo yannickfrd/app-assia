@@ -84,7 +84,7 @@ class PaymentControllerTest extends WebTestCase
         $this->client->request('GET', '/payments');
 
         // Empty export 2
-        $this->client->submitForm('export2', [
+        $this->client->submitForm('export-accounting', [
             'date[start]' => (new \Datetime())->modify('+1 year')->format('Y-m-d'),
         ], 'GET');
 
@@ -92,7 +92,19 @@ class PaymentControllerTest extends WebTestCase
         $this->assertSelectorTextContains('.alert.alert-warning', 'Aucun résultat à exporter.');
 
         // Export 2
-        $this->client->submitForm('export2', [], 'GET');
+        $this->client->submitForm('export-accounting', [], 'GET');
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertContains('spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
+    }
+
+    public function testExportDeltaPaymentsIsSuccessful()
+    {
+        $this->createLogin($this->data['userSuperAdmin']);
+
+        $this->client->request('GET', '/payments');
+
+        $this->client->submitForm('export-delta', [], 'GET');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertContains('spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));

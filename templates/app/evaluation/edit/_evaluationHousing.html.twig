@@ -7,7 +7,7 @@
 {% block card_body %}
 
 	<div data-sp-id="g-{{ form.vars.value.supportGroup.id }}">
-		{% if SERVICE_TYPE_AVDL or support.service.id == 2 %}
+		{% if support.service.place != YES and false == SERVICE_TYPE_HOTEL %}
 		{% set housingStatusOptions = "200|201|202|203|204|205|206|207|300|301|302|303|304" %}
 			<div class="mb-3">
 				<div class="row">
@@ -103,7 +103,7 @@
 				{{ form_row(form.evalHousingGroup.housingExpeComment) }}</div>
 		</div>
 
-		{% if SERVICE_TYPE_AVDL or support.service.id == 2 %}
+		{% if support.service.place != YES and false == SERVICE_TYPE_HOTEL %}
 			{% set housingHelps = constant("App\\Entity\\Evaluation\\EvalHousingGroup::HOUSING_HELPS") %}
 			<div class="row mb-3" data-parent-field="{{ prefix }}_housingStatus" 
 				data-options="{{ housingStatusOptions }}">

@@ -420,7 +420,7 @@ export default class SupportPayments {
         this.initForm()
         this.checkType()
         this.deleteBtnElt.classList.replace('d-block', 'd-none')
-        this.saveBtnElt.textContent = 'Enregistrer'
+        this.saveBtnElt.querySelector('span').textContent = 'Enregistrer'
         this.modalPaymentElt.querySelector('form').action = this.btnNewElt.dataset.url
         document.getElementById('show-calcul-contribution-btn').classList.add('d-none')
         this.editBtnElts.forEach(elt => {
@@ -440,7 +440,7 @@ export default class SupportPayments {
 
         this.deleteBtnElt.classList.replace('d-none', 'd-block')
         this.deleteBtnElt.href = this.deleteBtnElt.dataset.url.replace('__id__', id)
-        this.saveBtnElt.textContent = 'Mettre à jour'
+        this.saveBtnElt.querySelector('span').textContent = 'Mettre à jour'
 
         this.initForm()
         this.checkType()
@@ -608,7 +608,7 @@ export default class SupportPayments {
             elt.classList.remove('d-none')
         })
 
-        this.saveBtnElt.textContent = 'Mettre à jour'
+        this.saveBtnElt.querySelector('span').textContent = 'Mettre à jour'
 
         const paymentElt = document.createElement('tr')
         paymentElt.className = 'js-payment'

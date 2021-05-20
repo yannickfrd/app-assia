@@ -31,7 +31,7 @@ class NoteEndToEndTest extends PantherTestCase
         $crawler = $this->failToCreateNote($crawler);
         // $crawler = $this->createNote($crawler);
         $crawler = $this->editNote($crawler);
-        // $crawler = $this->deleteNote($crawler);
+        $crawler = $this->deleteNote($crawler);
     }
 
     private function goToNotesPage(Crawler $crawler): Crawler
@@ -67,7 +67,7 @@ class NoteEndToEndTest extends PantherTestCase
         $this->assertSelectorExists('#js-msg-flash.alert.alert-danger');
 
         $crawler->selectButton('btn-close-msg')->click();
-        $crawler->filter('button[data-action="cancel"]')->click();
+        $crawler->filter('button[data-action="close"]')->click();
         sleep(2);
 
         return $crawler;
@@ -98,7 +98,7 @@ class NoteEndToEndTest extends PantherTestCase
         $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
 
         $crawler->selectButton('btn-close-msg')->click();
-        $crawler->filter('button[data-action="cancel"]')->click();
+        $crawler->filter('button[data-action="close"]')->click();
         sleep(1);
 
         return $crawler;
@@ -125,7 +125,8 @@ class NoteEndToEndTest extends PantherTestCase
         $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
 
         $crawler->selectButton('btn-close-msg')->click();
-        $crawler->filter('button[data-action="cancel"]')->click();
+        $crawler->filter('button[data-action="close"]')->click();
+
         sleep(1);
 
         return $crawler;
@@ -143,11 +144,15 @@ class NoteEndToEndTest extends PantherTestCase
         $this->client->waitFor('#modal-btn-delete');
         $crawler->filter('#modal-btn-delete')->click();
 
+        $this->client->waitFor('#confirm-modal');
+        $crawler->filter('#modal-confirm-btn')->click();
+
         $this->client->waitFor('#js-msg-flash');
         $this->assertSelectorExists('#js-msg-flash.alert.alert-warning');
 
         $crawler->selectButton('btn-close-msg')->click();
-        $crawler->filter('button[data-action="cancel"]')->click();
+        // $crawler->filter('button[data-action="close"]')->click();
+
         sleep(1);
 
         return $crawler;

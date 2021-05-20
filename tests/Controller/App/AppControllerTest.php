@@ -111,7 +111,7 @@ class AppControllerTest extends WebTestCase
 
         $this->client->submitForm('search', [
             'service' => [
-                'services' => $this->data['service1']->getId(),
+                'services' => $this->data['service1'],
             ],
             'send' => true,
         ], 'GET');

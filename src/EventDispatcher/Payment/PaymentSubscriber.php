@@ -26,8 +26,7 @@ class PaymentSubscriber implements EventSubscriberInterface
         $supportGroup = $payment->getSupportGroup();
 
         $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
-
-        if ($payment->getCreatedAt()->format('U') === $payment->getUpdatedAt()->format('U')) {
+        if (null === $payment->getId() || $payment->getCreatedAt()->format('U') === $payment->getUpdatedAt()->format('U')) {
             $cache->deleteItem(SupportGroup::CACHE_SUPPORT_NB_PAYMENTS_KEY.$supportGroup->getId());
         }
 

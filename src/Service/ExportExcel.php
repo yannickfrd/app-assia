@@ -191,13 +191,10 @@ class ExportExcel
      */
     protected function formatDateColumns(): void
     {
-        // Format les colonnes de date
         foreach ($this->getColumnsWithType('Date') as $col) {
-            for ($i = 2; $i <= $this->nbRows; ++$i) {
-                $this->sheet->getStyle($col.$i)
-                    ->getNumberFormat()
-                    ->setFormatCode(NumberFormat::FORMAT_DATE_DDMMYYYY);
-            }
+            $this->sheet->getStyle($col.'2:'.$col.$this->nbRows)
+                ->getNumberFormat()
+                ->setFormatCode(NumberFormat::FORMAT_DATE_DDMMYYYY);
         }
     }
 
@@ -206,13 +203,10 @@ class ExportExcel
      */
     protected function formatMoneyColumns(): void
     {
-        // Format les colonnes de date
         foreach ($this->getColumnsWithType('Montant') as $col) {
-            for ($i = 2; $i <= $this->nbRows; ++$i) {
-                $this->sheet->getStyle($col.$i)
-                    ->getNumberFormat()
-                    ->setFormatCode(NumberFormat::FORMAT_CURRENCY_EUR_SIMPLE);
-            }
+            $this->sheet->getStyle($col.'2:'.$col.$this->nbRows)
+                ->getNumberFormat()
+                ->setFormatCode(NumberFormat::FORMAT_CURRENCY_EUR_SIMPLE);
         }
     }
 
@@ -221,7 +215,6 @@ class ExportExcel
      */
     protected function formatUrlColumns(): void
     {
-        // Format les colonnes avec une URL
         foreach ($this->getColumnsWithType('Url') as $col) {
             for ($i = 2; $i <= $this->nbRows; ++$i) {
                 $this->sheet->getCell($col.$i)->getHyperlink()->setUrl($this->sheet->getCell($col.$i)->getValue());

@@ -7,13 +7,17 @@ use App\Entity\Traits\ContactEntityTrait;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use App\Entity\Traits\LocationEntityTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Organization\ReferentRepository")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class Referent
 {
     use CreatedUpdatedEntityTrait;
+    use SoftDeleteableEntity;
     use LocationEntityTrait;
     use ContactEntityTrait;
 
@@ -26,7 +30,8 @@ class Referent
         7 => 'Dispositif asile',
         8 => 'Dispositif logement adapté',
         9 => 'ESPERER 95',
-        1 => 'PASH (ex-AMH)',
+        13 => 'Médico-social (SAVS, SAMSAH...)',
+        1 => 'PASH',
         10 => 'Service de tutelle',
         11 => 'Service hospitalier',
         12 => 'Service Justice',

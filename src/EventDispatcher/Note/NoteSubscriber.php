@@ -27,7 +27,7 @@ class NoteSubscriber implements EventSubscriberInterface
         $supportGroup = $note->getSupportGroup();
         $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
 
-        if ($note->getCreatedAt()->format('U') === $note->getUpdatedAt()->format('U')) {
+        if (null === $note->getId() || $note->getCreatedAt()->format('U') === $note->getUpdatedAt()->format('U')) {
             $cache->deleteItem(SupportGroup::CACHE_SUPPORT_NB_NOTES_KEY.$supportGroup->getId());
         }
 

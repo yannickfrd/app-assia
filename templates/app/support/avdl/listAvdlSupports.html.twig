@@ -78,15 +78,15 @@
                                     <td class="align-middle">{{ avdl.diagEndDate ? avdl.diagEndDate|date("d/m/Y") }}</td>
                                     <td class="align-middle">{{ avdl.diagTypeToString }}</td>
                                     <td class="align-middle">{{ avdl.recommendationSupportToString }}</td>
-                                    <td class="align-middle">{{ support.startDate ? support.startDate|date("d/m/Y") }}</td>
-                                    <td class="align-middle">{{ support.endDate ? support.endDate|date("d/m/Y") }}</td>
+                                    <td class="align-middle">{{ avdl.supportStartDate ? avdl.supportStartDate|date("d/m/Y") }}</td>
+                                    <td class="align-middle">{{ avdl.supportEndDate ? avdl.supportEndDate|date("d/m/Y") }}</td>
                                     <td class="align-middle">{{ avdl.supportTypeToString }}</td>
                                     <td class="align-middle">{{ avdl.endSupportReasonToString }}</td>
                                     <td class="align-middle">{{ avdl.accessHousingModalityToString }}</td>
                                     <td class="align-middle">{{ avdl.propoHousingDate ? avdl.propoHousingDate|date("d/m/Y") }}</td>
                                     <td class="align-middle">{{ avdl.propoResultToString }}</td>
                                 {% else %}
-                                    <td class="align-middle" colspan="12"></td>
+                                    <td class="align-middle" colspan="11"></td>
                                 {% endif %}
                             </tr>
                         {% endfor %}

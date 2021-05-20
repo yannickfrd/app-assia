@@ -27,13 +27,10 @@ class Device
 
     public const AVDL_DALO = 10;
     public const AVDL_HORS_DALO = 4;
-    public const HOTEL_AMH = 14;
-    public const ASE_MAB = 15; //14
-    public const ASE_HEB = 16; //14
-    public const HOTEL_INJ = 17;  // 16
-    public const HOTEL_OC = 18; // 17
-    public const HOTEL_SUPPORT = 19; // 19
-    public const HOTEL_URG = 20; //15
+    public const ASE_MAB = 15;
+    public const ASE_HEB = 16;
+    public const HOTEL_SUPPORT = 19;
+    public const HOTEL_URG = 20;
 
     public const VAR_CONTRIBUTION = 1;
     public const RENT_CONTRIBUTION = 2;

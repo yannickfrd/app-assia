@@ -113,12 +113,9 @@ class NoteController extends AbstractController
             return $this->json([
                 'action' => 'create',
                 'alert' => 'success',
-                'msg' => 'La note sociale est enregistrée.',
+                'msg' => 'La note est enregistrée.',
                 'data' => [
-                    'noteId' => $note->getId(),
-                    'type' => $note->getTypeToString(),
-                    'status' => $note->getStatusToString(),
-                    'editInfo' => '| Créé le '.$note->getCreatedAt()->format('d/m/Y à H:i').' par '.$note->getCreatedBy()->getFullname(),
+                    'note' => $this->getNote($note),
                 ],
             ]);
         }
@@ -143,14 +140,11 @@ class NoteController extends AbstractController
             $dispatcher->dispatch(new NoteEvent($note), 'note.after_update');
 
             return $this->json([
-            'action' => 'update',
-            'alert' => 'success',
-            'msg' => 'La note sociale est modifiée.',
-            'data' => [
-                'noteId' => $note->getId(),
-                'type' => $note->getTypeToString(),
-                'status' => $note->getStatusToString(),
-                'editInfo' => '(modifié le '.$note->getUpdatedAt()->format('d/m/Y à H:i').' par '.$note->getUpdatedBy()->getFullname().')',
+                'action' => 'update',
+                'alert' => 'success',
+                'msg' => 'Les modifications sont enregistrées.',
+                'data' => [
+                    'note' => $this->getNote($note),
                 ],
             ]);
         }
@@ -166,6 +160,8 @@ class NoteController extends AbstractController
      */
     public function deleteNote(Note $note, EventDispatcherInterface $dispatcher): Response
     {
+        $noteId = $note->getId();
+
         $this->manager->remove($note);
         $this->manager->flush();
 
@@ -174,7 +170,10 @@ class NoteController extends AbstractController
         return $this->json([
             'action' => 'delete',
             'alert' => 'warning',
-            'msg' => 'La note sociale est supprimée.',
+            'msg' => 'La note est supprimée.',
+            'data' => [
+                'note' => ['id' => $noteId],
+            ],
         ]);
     }
 
@@ -229,5 +228,15 @@ class NoteController extends AbstractController
             'id' => $id,
             'noteId' => $note->getId(),
         ]);
+    }
+
+    private function getNote(Note $note): array
+    {
+        return [
+            'id' => $note->getId(),
+            'typeToString' => $note->getTypeToString(),
+            'statusToString' => $note->getStatusToString(),
+            'editionToString' => '(modifié le '.$note->getUpdatedAt()->format('d/m/Y à H:i').' par '.$note->getUpdatedBy()->getFullname().')',
+        ];
     }
 }

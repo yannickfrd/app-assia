@@ -1,7 +1,6 @@
 {% extends "base.html.twig" %}
 
-{% form_theme form_search "bootstrap_4_layout.html.twig" %}
-{% form_theme form "bootstrap_4_layout.html.twig" %}
+{% set nbNotes = notes|length %}
 
 {% block title %}Notes sociales{% endblock %}
 
@@ -13,19 +12,19 @@
 		{% include "app/support/_shared/_navSuppport.html.twig" %}
 
 		<div class="row mb-2">
-			<div id="js-search-support-notes" class="col-md-12 {{ notes|length == 0 ? 'd-none' }}">
+			<div id="js-search-support-notes" class="col-md-12 {{ nbNotes == 0 ? 'd-none' }}">
 				{% include "app/note/_searchSupportNotes.html.twig" %}
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-6 mb-2">
+			<div class="col-md-6 mb-3">
 				<button id="js-new-note" class="btn btn-{{ theme_color }} btn-sm shadow mr-2"
 					data-toggle="tooltip" data-placement="bottom" title="Créer une nouvelle note">
 					<span class="fas fa-plus-square mr-2"></span>Nouvelle note</button>
 				<div class="d-inline align-middle">Total :
-					<span id="count-notes">{{ notes.getTotalItemCount|number }}</span>
-					note{% if notes.getTotalItemCount > 1 %}s{% endif %}<!--
-				-->{% if nbTotalNotes %} sur <span id="nb-total-notes">{{ nbTotalNotes }}</span>{% endif %}.
+					<span id="count-notes" data-nb-total-notes="{{ nbTotalNotes }}">
+					{{ nbNotes }} note{% if nbNotes > 1 %}s{% endif %}
+					{{ nbTotalNotes ? " sur " ~ nbTotalNotes }}</span>
 				</div>
 			</div>
 			<div class="col-md-6">
@@ -40,17 +39,19 @@
 						<div class="card-header">
 							<h3 class="card-title h5 text-{{ theme_color }} cursor-pointer" 
 								data-placement="bottom" title="Voir la note">{{ note.title }}</h3>
-							<span data-note-type={{ note.type }}>
-								{{ note.typeToString }}
-							</span>
-							<span data-note-status={{ note.status }}>({{ note.statusToString }})</span>
-							<span class="small text-secondary" data-note-created="true">| Créé le {{ note.createdAt|date("d/m/Y à H:i") }} par {{ note.createdBy.fullname }}
+							<span data-note-type={{ note.type }}>{{ note.typeToString }}</span>
+							(<span data-note-status={{ note.status }}>{{ note.statusToString }}</span>)
+							<span class="small text-secondary" data-note-created="true">
+								| Créé le {{ note.createdAt|date("d/m/Y à H:i") }} par {{ note.createdBy.fullname }}
 							</span>
 							<span class="small text-secondary" data-note-updated="true">
-								{% if note.updatedAt != note.createdAt %} (modifié le {{ note.updatedAt|date("d/m/Y à H:i") }} par {{ note.updatedBy.fullname }}){% endif %}
+								{% if note.updatedAt != note.createdAt %} 
+									(modifié le {{ note.updatedAt|date("d/m/Y à H:i") }} par {{ note.updatedBy.fullname }})
+								{% endif %}
 							</span>
 						</div>
-						<div class="card-body note-content cursor-pointer" data-toggle="tooltip" data-placement="bottom" title="Voir la note">
+						<div class="card-body note-content cursor-pointer" data-toggle="tooltip" 
+							data-placement="bottom" title="Voir la note">
 							<div class="card-text">{{ note.content|raw }}</div><span class="note-fadeout"></span>
 						</div>
 					</div>
@@ -66,7 +67,8 @@
 
 	</div>
 
-	{% include "app/note/_modalNote.html.twig" %}
+	{% include "app/note/_noteModal.html.twig" %}
+	{% include "model/_confirmModal.html.twig" %}
 
 {% endblock %}
 

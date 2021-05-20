@@ -96,18 +96,18 @@
                         data-edit="true" data-url="{{ path('payment_export_pdf', {'id': '__id__'}) }}"
                         data-toggle="tooltip" data-placement="bottom" title="Générer le reçu en PDF">
                         <span class="fas fa-file-pdf bg-secondary fa-lg"></span>
-                        <span class="d-none d-sm-inline ml-2">PDF</span></button>
+                        <span class="d-none d-md-inline ml-2">PDF</span></button>
                     <button class="btn btn-{{ theme_color }} mb-1 shadow" data-action="send_email"
                         data-edit="true" data-url="{{ path('payment_send_pdf', {'id': '__id__'}) }}"
                         data-toggle="tooltip" data-placement="bottom" title="Envoyer un email avec le reçu en PDF">
                         <span class="fas fa-envelope bg-secondary fa-lg"></span>
-                        <span class="d-none d-sm-inline ml-2">Email</span></button>
+                        <span class="d-none d-md-inline ml-2">Email</span></button>
                 </div>
                 <div class="d-flex float-right">
                     <button type="button" class="btn btn-secondary mr-2 mb-1" data-action="close" data-dismiss="modal">Fermer</button>
                     <button type="submit" class="btn btn-{{ theme_color }} mb-1 shadow" data-action="save"
                         data-url="{{ path('payment_edit', {'id': '__id__'}) }}">
-                        <span class="fas fa-save mr-2 d-none d-sm-inline"></span>Enregistrer</button>
+                        <i class="fas fa-save d-none d-md-inline mr-2"></i><span>Enregistrer</span></button>
                 </div>
             </div>
         </div>

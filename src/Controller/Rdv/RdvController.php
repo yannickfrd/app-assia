@@ -108,6 +108,8 @@ class RdvController extends AbstractController
      */
     public function createSupportRdv(int $id, SupportGroupRepository $supportGroupRepo, Request $request, EventDispatcherInterface $dispatcher): Response
     {
+        $supportGroup = $supportGroupRepo->findSupportById($id);
+
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
         $form = $this->createForm(RdvType::class, $rdv = new Rdv())

@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.28.6 26/04/2021
+2.29.7 20/05/2021
 
 # Développeur
 Romain MADELAINE
@@ -13,6 +13,32 @@ https://github.com/RomMad/esperer95.app
 # Connection à la base démo
 https://demo.esperer95.app
 
+## Version 2.29.7 - 20/05/2021
+- Create feature calcul contribution
+- Edit display 'infoCrip'/'IP' fields in evaluation
+- Add item 'Non concerné' in 'profStatus' field
+- Add 'SI SIAO ID' field in PeopleGroup form and HotelSupportEdit form
+- Create special hotel contributions export (DELTA) 
+- Create 'dailyAllowance', 'familySupplement' and 'scholarships' fields in EvalBudget form
+- Fix problem in creation of 'loan' and 'deposit refunt' PDF
+- Refactoring JS
+
+## Version 2.28.11-16 - 05/05/2021
+- Update feature Note + Fix problem auto-save + Update tests
+- Fix problem discaching nbRdvs and nbContributions when delete action
+- Fix problem in evaluation export (health problem)
+- Update listAvdlSupports (supportStartDate and supportEndDate)
+- Add item 'Médico-social (SAVS, SAMSAH...)' in referent type 
+- Edit condition evalutionHousing
+
+## Version 2.28.10 - 30/04/2021
+- Add SoftDeleteable in Referent entity + update tests
+
+## Version 2.28.7-9 - 27/04/2021
+- Optimize evaluation : add conditions in formType and views
+- Optimize Export Excel
+- Add try/catch in LoginListener
+
 ## Version 2.28.6 - 26/04/2021
 - Fix error 500 in SupportsByUser seach page + update test + add pole filter
 - Add denyAccessUnlessGranted in controllers
@@ -20,7 +46,7 @@ https://demo.esperer95.app
 - Fix error validation fields for SAVL/AVDL
 - Add Command to update AVDL supports
 ## Version 2.28.1 - 23/04/2021
-- Update tests and factoring 
+- Update tests and factoring
     * Update fonctional tests for Rdv + factorisation RdvController
     * Update fonctionnal tests + factorisation Controllers
     * Add Doctrine Listeners + update travis config
