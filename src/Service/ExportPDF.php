@@ -132,7 +132,7 @@ class ExportPDF
     }
 
     /**
-     * Retourne le chemin d'une image au bon format (base 64).
+     * Retourne l'image encodée en base64.
      */
     public function getPathImage(string $path = null): ?string
     {

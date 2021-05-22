@@ -20,3 +20,6 @@ framework:
         log: true
 
     ide: "vscode"
+
+    assets:
+        base_path: "/public"

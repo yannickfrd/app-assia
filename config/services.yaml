@@ -100,9 +100,23 @@ services:
             $documentsDirectory: "%documents_directory%"
             $downloadsDirectory: "%downloads_directory%"
 
-    App\Service\File\ImageOptimizer:
-        arguments:
-            $tinifyKey: "%env(TINIFY_KEY)%"
+    app.filter.grayscale_filter:
+        class: App\Service\File\ImageFilter\GrayscaleFilter
+        tags:
+            - { name: "liip_imagine.filter.loader", loader: grayscale_filter }
+
+    app.filter.portrait_rotation_filter:
+        class: App\Service\File\ImageFilter\PortraitRotationFilter
+        tags:
+            - {
+                  name: "liip_imagine.filter.loader",
+                  loader: portrait_rotation_filter,
+              }
+
+    app.filter.sharpen_filter:
+        class: App\Service\File\ImageFilter\SharpenFilter
+        tags:
+            - { name: "liip_imagine.filter.loader", loader: sharpen_filter }
 
     # App\Twig\AppExtension:
     #     lazy: true

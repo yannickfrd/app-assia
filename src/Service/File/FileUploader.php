@@ -6,7 +6,6 @@ use App\Entity\Support\Document;
 use App\Entity\Support\SupportGroup;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -22,18 +21,21 @@ class FileUploader
     protected $targetDirectory;
     protected $normalizer;
     protected $optimizer;
+    protected $imageToPdfConverter;
     protected $slugger;
 
     public function __construct(
         EntityManagerInterface $manager,
         NormalizerInterface $normalizer,
         ImageOptimizer $optimizer,
+        ImageToPdfConverter $imageToPdfConverter,
         SluggerInterface $slugger,
         string $targetDirectory
         ) {
         $this->manager = $manager;
         $this->optimizer = $optimizer;
         $this->normalizer = $normalizer;
+        $this->imageToPdfConverter = $imageToPdfConverter;
         $this->slugger = $slugger;
         $this->targetDirectory = $targetDirectory;
     }
@@ -103,8 +105,23 @@ class FileUploader
             throw new \Exception("Une erreur s'est produite lors du téléchargement du document : ".$e->getMessage());
         }
 
-        if ($this->checkIfImage($path, $filename)) {
-            $this->optimizer->compressImage($this->targetDirectory.$path.'/'.$filename);
+        if ($this->isImage($path, $filename)) {
+            try {
+                $fullPath = $this->targetDirectory.$path.'/'.$filename;
+                $resolvedUrl = $this->optimizer->optimize('uploads/documents/'.$path.$filename, ['scan_medium']);
+                $optimizedFilePath = $this->targetDirectory.'../..'.parse_url($resolvedUrl, PHP_URL_PATH);
+                if (file_exists($optimizedFilePath)) {
+                    copy($optimizedFilePath, $fullPath);
+                }
+
+                $this->imageToPdfConverter->convert($fullPath, [
+                    'title' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
+                ]);
+
+                return $filename;
+            } catch (\Exception $e) {
+                throw $e;
+            }
         }
 
         return $filename;
@@ -128,7 +145,7 @@ class FileUploader
     /**
      * Check if the file is an image.
      */
-    protected function checkIfImage(string $path, string $newFilename): bool
+    protected function isImage(string $path, string $newFilename): bool
     {
         $pathFile = $this->targetDirectory.$path.'/'.$newFilename;
         $pathParts = pathinfo($pathFile);

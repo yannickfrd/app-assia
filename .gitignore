@@ -28,9 +28,8 @@ yarn-error.log
 ###< symfony/webpack-encore-bundle ###
 
 ###> uploaded files ###
-/public/uploads/documents
+/public/uploads
 /public/downloads
-/public/uploads/exports
 ###< uploaded files ###
 
 ###> migration files ###
