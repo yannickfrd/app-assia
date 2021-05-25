@@ -77,6 +77,7 @@ class SupportPersonExport extends ExportExcel
             'N° Suivi groupe' => $supportGroup->getId(),
             'N° Personne' => $person->getId(),
             'N° Suivi personne' => $supportPerson->getId(),
+            'ID groupe SI-SIAO' => $peopleGroup->getSiSiaoId(),
             'Nom' => $person->getLastname(),
             'Prénom' => $person->getFirstname(),
             'Date de naissance' => $this->formatDate($person->getBirthdate()),

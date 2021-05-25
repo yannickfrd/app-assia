@@ -67,6 +67,7 @@ class ContributionCalculator
 
     private const RESOURCES_TYPE = [
         'salary' => 'Salaire', // SI-SIAO => OK
+        'activityBonus' => 'Prime d\'activité', // SI-SIAO => OK
         'unemplBenefit' => 'ARE', // SI-SIAO => OK
         'minimumIncome' => 'RSA', // SI-SIAO => OK
         'familyAllowance' => 'AF', // SI-SIAO => OK
@@ -82,9 +83,8 @@ class ContributionCalculator
         'youthGuarantee' => 'Garantie jeunes', // SI-SIAO => OK
         'dailyAllowance' => 'Indemnités journalières (IJ)', // SI-SIAO => OK
         'maintenance' => 'Pension alimentaire', // ??
-        'disabilityPension' => 'dzsa    esza', // ??
+        'disabilityPension' => 'Pension d\'invalidité', // ??
         'paje' => 'PAJE', // ??
-        'activityBonus' => 'Prime d\'activité', // SI-SIAO => OK
         'pensionBenefit' => 'Retraite', // SI-SIAO => OK
         // 'ressourceOther' => 'Autre', // ??
     ];

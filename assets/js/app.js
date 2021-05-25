@@ -5,6 +5,7 @@ import 'select2-bootstrap4-theme/dist/select2-bootstrap4.min.css'
 import SearchPerson from './searchPerson'
 import autoLogout from './utils/autoLogout'
 import { Tooltip, Popover } from 'bootstrap'
+// import { Toast } from 'bootstrap'
 
 require('bootstrap')
 
@@ -17,6 +18,9 @@ window.onload = () => {
     document.querySelectorAll('[data-toggle="popover"]').forEach(popover => {
         new Popover(popover)
     })
+    // document.querySelectorAll('.toast').forEach(toast => {
+    //     (new Toast(toast)).show()
+    // })
     // Stop le spinner loader 
     document.getElementById('loader').classList.add('d-none')
     // Recherche instannée d'une personne via Ajax

@@ -138,7 +138,11 @@ class SupportGroupEditorSubscriber implements EventSubscriberInterface
 
         foreach ($supportGroup->getSupportPeople() as $supportPerson) {
             if ($supportPerson->getEndDate() === $supportGroup->getEndDate()) {
-                $birthdate = $supportPerson->getPerson()->getBirthdate();
+                if (!$person = $supportPerson->getPerson()) {
+                    continue;
+                }
+
+                $birthdate = $person->getBirthdate();
                 $age = $birthdate->diff($supportPerson->getEndDate() ?? $today)->y ?? 0;
                 if ($age < 3) {
                     ++$nbChildrenUnder3years;

@@ -2,18 +2,18 @@
 
 namespace App\Entity\Support;
 
-use App\Form\Utils\Choices;
-use App\Entity\People\Person;
-use Doctrine\ORM\Mapping as ORM;
-use App\Entity\People\RolePerson;
-use Gedmo\Mapping\Annotation as Gedmo;
-use App\Entity\Evaluation\InitEvalPerson;
 use App\Entity\Evaluation\EvaluationPerson;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\Evaluation\InitEvalPerson;
+use App\Entity\People\Person;
+use App\Entity\People\RolePerson;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
+use App\Form\Utils\Choices;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -367,7 +367,7 @@ class SupportPerson
     }
 
     /**
-     * @return Collection<Person>
+     * @return Collection<PlacePerson>
      */
     public function getPlacesPerson()
     {

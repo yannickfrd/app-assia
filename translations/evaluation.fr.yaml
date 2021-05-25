@@ -1,4 +1,4 @@
-Init eval: Initial
+Init eval: Entrée
 placeholder.select: -- Sélectionner --
 initEvalPerson.comment: Écrire un commentaire relatif à la situation initiale de la personne
 backgroundPeople: Parcours de vie
@@ -56,6 +56,7 @@ Charges: Charges
 Childcare amt: Montant garde enfant(s)
 Childcare: Garde d'enfant(s)
 Contribution amt: Montant de la participation financière
+Daily allowance: Indemnités journalières
 Debt amt: Montant total des dettes
 Debt bank old amt: Montant découverts bancaires
 Debt bank overdrafts: Découverts bancaires
@@ -88,6 +89,7 @@ Electricity gas amt: Montant électricité / Gaz
 Electricity gas: Electricité / Gaz
 End rights date: Date de fin de droits
 Family allowance amt: Montant allocations familiales
+Family supplement amt: Complément familial
 Family allowance: Allocations familiales
 Income tax: Impôt sur le revenu (n-1 ou n-2)
 Income n1 amt: Revenu fiscal n-1
@@ -128,6 +130,7 @@ Ressource other precision: Précision autres revenus
 Ressource other: Autre ressource
 Salary amt: Montant salaire
 Salary: Salaire
+Scholarships amt: Bourse
 Settlement plan: Plan d'apurement
 Solidarity allowance amt: Montant ASS
 Solidarity allowance: ASS

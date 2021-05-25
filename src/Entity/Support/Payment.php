@@ -26,7 +26,7 @@ class Payment
 
     public const TYPES = [
         1 => 'Participation financière',
-        2 => 'Loyer',
+        2 => 'Loyer / Redevance',
         10 => 'Caution',
         20 => 'Prêt / Avance',
         30 => 'Remboursement de dette',
@@ -35,11 +35,11 @@ class Payment
 
     public const CONTRIBUTION_HOTEL_TYPES = [
         1 => 'Participation financière',
-        30 => 'Remboursement dette',
+        30 => 'Remboursement de dette',
     ];
 
     public const REPAYMENT_REASONS = [
-        1 => 'Participation financière / Loyer',
+        1 => 'PF / Redevance',
         2 => 'Caution',
         3 => 'Prêt / Avance',
         4 => 'Divers',

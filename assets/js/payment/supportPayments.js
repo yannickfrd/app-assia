@@ -30,6 +30,7 @@ export default class SupportPayments {
         this.countPaymentsElt = document.getElementById('count-payments')
         this.nbTotalPaymentsElt = document.getElementById('nb-total-payments')
         this.paymentId = null
+        this.paymentTypeValue = null
 
         // Formulaire modal
         this.modalPaymentElt = document.getElementById('payment-modal')
@@ -62,7 +63,7 @@ export default class SupportPayments {
         this.contributionCalcul = new ContributionCalcul(this.formPaymentElt, this.afterCalculContribution.bind(this))
 
         this.now = new Date()
-        this.error = false
+        this.isValid = true
 
         this.init()
     }
@@ -106,7 +107,7 @@ export default class SupportPayments {
         this.deleteBtnElt.addEventListener('click', e => {
             e.preventDefault()
             if (this.loader.isActive() === false) {
-                this.deletePayment(this.deleteBtnElt.href)
+                this.deletePayment()
             }
         })
 
@@ -124,40 +125,32 @@ export default class SupportPayments {
         this.endDateInputElt.addEventListener('focusout', () => this.checkEndDate())
 
         this.modalPaymentElt.querySelectorAll('input[data-amount]').forEach(elt => {
-            elt.addEventListener('input', () => {
-                this.checkMoney(elt)
-            })
+            elt.addEventListener('input', () => this.formValidator.checkAmount(elt, 0, 9999))
         })
 
         if (this.rentAmtInputElt) {
             [this.rentAmtInputElt, this.aplAmtInputElt].forEach(elt => {
-                // elt.addEventListener('input', () => {
-                //     // this.calculateAmountToPay()
-                // })
+                elt.addEventListener('input', () => this.calculateAmountToPay())
             })
         }
-            
-        [this.toPayAmtInputElt, this.paidAmtInputElt].forEach(elt => {
-            elt.addEventListener('input', () => {
-                if (this.typeSelectElt.value) {
-                    
-                }
-                this.calculateAmountStillDue()
-            })
+        
+        this.toPayAmtInputElt.addEventListener('input', () => {
+            this.calculateAmountStillDue()
         })
 
-        this.paymentDateInputElt.addEventListener('focusout', () => {
-            this.checkPaidAmt()
+        this.paidAmtInputElt.addEventListener('input', () => {
+            this.calculateAmountStillDue()
         })
+
+        this.paymentDateInputElt.addEventListener('focusout', () => this.checkPaymentDate())
 
         this.calculateSumAmts()
 
-        const paymentId = Number(this.parametersUrl.get('paymentId'))
+        const paymentId = this.parametersUrl.get('paymentId')
         this.trElt = document.getElementById('payment-' + paymentId)
         if (this.trElt) {
             this.getPayment(paymentId)
         }
-
 
         if (this.noContribInputElt) {
             this.noContribInputElt.addEventListener('click', () => {
@@ -185,16 +178,16 @@ export default class SupportPayments {
      * Vérifie le type (redevance ou caution).
      */
     checkType() {
-        const option = parseInt(this.typeSelectElt.value)
+        this.paymentTypeValue = parseInt(this.typeSelectElt.value)
 
         // Masque tous les champs du formulaire.
         this.formPaymentElt.querySelectorAll('[data-payment]').forEach(elt => {
             elt.classList.add('d-none')
         })
-        if ([1, 2, 10].includes(option)) { // Redevance, loyer, caution
+        if ([1, 2, 10].includes(this.paymentTypeValue)) { // Redevance, loyer, caution
             this.formPaymentElt.querySelector('label[for="payment_toPayAmt"]').textContent = 'Montant à régler'
         }
-        if (option === 20) { // Prêt
+        if (20 === this.paymentTypeValue) { // Prêt
             this.formPaymentElt.querySelector('label[for="payment_toPayAmt"]').textContent = 'Montant prêté'
         }
     }
@@ -232,6 +225,12 @@ export default class SupportPayments {
         this.changeTextColor(this.sumStillToPayAmtElt, sumStillToPayAmt)
     }
 
+    calculateAmountToPay() {
+            if (!isNaN(this.rentAmtInputElt.value) && !isNaN(this.aplAmtInputElt.value)) {
+            this.toPayAmtInputElt.value = Math.round((this.rentAmtInputElt.value - this.aplAmtInputElt.value) * 100) / 100
+        }
+    }
+
     /**
      * Calcule le restant dû.
      */
@@ -244,30 +243,30 @@ export default class SupportPayments {
 
     /**
      * Retourne vrai si le formualaire est valide.
+     * @return {Boolean}
      */
     isValidForm() {
-        this.error = false
-        const option = parseInt(this.typeSelectElt.value)
+        this.isValid = true
+        this.paymentTypeValue = parseInt(this.typeSelectElt.value)
 
-        this.checkPaymentType(option)
-        this.checkContributionDate(option)
-        this.checkToPaidAmt(option)
-        this.checkReturnAmt(option)
-        this.checkPaymentDate(option)
-        this.checkPaymentMeans(option)
-        this.checkPaidAmt(option)
-        this.checkNoContribReason(option)
+        this.checkPaymentType()
+        this.checkContributionDate()
+        this.checkToPaidAmt()
+        this.checkReturnAmt()
+        this.checkPaymentDate()
+        this.checkPaymentMeans()
+        this.checkPaidAmt()
+        this.checkNoContribReason()
 
-        return this.error != true
+        return this.isValid
     }
 
     /**
      * Vérifie le type de paiement.
-     * @param {Number} option 
      */
-    checkPaymentType(option) {
-        if (!option) {
-            this.error = true
+    checkPaymentType() {
+        if (!this.paymentTypeValue) {
+            this.isValid = false
             return this.formValidator.invalidField(this.typeSelectElt, 'Saisie obligatoire.')
         }
 
@@ -276,10 +275,9 @@ export default class SupportPayments {
 
     /**
      * Vérifie la date de paiement.
-     * @param {Number} option 
      */
-    checkContributionDate(option) {
-        if (![1, 2].includes(option)) { // PF et Loyer
+    checkContributionDate() {
+        if (![1, 2].includes(this.paymentTypeValue)) { // PF et Loyer
             this.startDateInputElt.value = ''
             this.endDateInputElt.value = ''
             return null
@@ -291,120 +289,122 @@ export default class SupportPayments {
 
     checkStartDate() {
         if (!this.startDateInputElt.value) {
-            this.error = true
+            this.isValid = false
             return this.formValidator.invalidField(this.startDateInputElt, 'Saisie obligatoire.')
         } 
-        
-        this.formValidator.validField(this.startDateInputElt)
+        if (false === this.formValidator.checkDate(this.startDateInputElt, -(365 * 2), 0)) {
+            this.isValid = false
+        }
     }
 
     checkEndDate() {
         if (!this.endDateInputElt.value) {
-            this.error = true
+            this.isValid = false
             return this.formValidator.invalidField(this.endDateInputElt, 'Saisie obligatoire.')
         } else if (this.endDateInputElt.value && new Date(this.endDateInputElt.value) <= new Date(this.startDateInputElt.value)) {
-            this.error = true
+            this.isValid = false
             return this.formValidator.invalidField(this.endDateInputElt, 'La date doit être supérieure à la date de début.')
         }
         
-        this.formValidator.validField(this.endDateInputElt)
+        if (false === this.formValidator.checkDate(this.endDateInputElt, -(365 * 2), 31)) {
+            this.isValid = false
+        }
     }
 
     /**
      * Vérfifie le montant à payer si redevance ou caution.
-     * @param {Number} option 
      */
-    checkToPaidAmt(option) {
+    checkToPaidAmt() {
         if (isNaN(this.toPayAmtInputElt.value)) {
-            this.error = true
+            this.isValid = false
             return this.formValidator.invalidField(this.toPayAmtInputElt, 'Valeur invalide.')
         }
-        if ([1, 2, 10, 20].includes(option) && !this.toPayAmtInputElt.value) { // PF, loyer, cautionn prêt
-            this.error = true
+        if ([1, 2, 10, 20].includes(this.paymentTypeValue) && !this.toPayAmtInputElt.value) { // PF, loyer, cautionn prêt
+            this.isValid = false
             return this.formValidator.invalidField(this.toPayAmtInputElt, 'Saisie obligatoire.')
         }
-        return this.formValidator.validField(this.toPayAmtInputElt)
+        if (false === this.formValidator.checkAmount(this.toPayAmtInputElt, 0, 9999)) {
+            this.isValid = false
+        }
     }
 
     /**
      * Vérifie le montant restitué si Restitution caution.
-     * @param {Number} option 
      */
-    checkReturnAmt(option) {
+    checkReturnAmt() {
         if (isNaN(this.returnAmtInputElt.value)) {
-            this.error = true
+            this.isValid = false
             return this.formValidator.invalidField(this.returnAmtInputElt, 'Valeur invalide.')
         }
-        if (option == 11 && !this.returnAmtInputElt.value) { // Restitution Caution
-            this.error = true
+        if (this.paymentTypeValue == 11 && !this.returnAmtInputElt.value) { // Restitution Caution
+            this.isValid = false
             return this.formValidator.invalidField(this.returnAmtInputElt, 'Saisie obligatoire.')
+        }
+        if (false === this.formValidator.checkAmount(this.returnAmtInputElt, 0, 999)) {
+            this.isValid = false
         }
     }
 
     /**
      * Vérifie le montant du paiement saisi.
-     * @param {Number} option 
      */
-    checkPaidAmt(option) {
+    checkPaidAmt() {
         if (isNaN(this.paidAmtInputElt.value)) {
-            this.error = true
+            this.isValid = false
             return this.formValidator.invalidField(this.paidAmtInputElt, 'Valeur invalide.')
         }
-        if ((!this.paidAmtInputElt.value && [1, 2, 10].includes(option)
+        if ((!this.paidAmtInputElt.value && [1, 2, 10].includes(this.paymentTypeValue)
             && (this.paymentDateInputElt.value || this.paymentTypeSelectElt.value))
-            || (!this.paidAmtInputElt.value && 30 === option)) {
-            this.error = true
+            || (!this.paidAmtInputElt.value && 30 === this.paymentTypeValue)) {
+            this.isValid = false
             return this.formValidator.invalidField(this.paidAmtInputElt, 'Saisie obligatoire.')
         }
-        return this.formValidator.validField(this.paidAmtInputElt)
+        if (false === this.formValidator.checkAmount(this.paidAmtInputElt, 0, 9999)) {
+            this.isValid = false
+        }
     }
 
     /**
      * Vérifie la date du paiement.
-     * @param {Number} option 
      */
-    checkPaymentDate(option) {
+    checkPaymentDate() {
         const intervalWithNow = (this.now - new Date(this.paymentDateInputElt.value)) / (1000 * 60 * 60 * 24)
 
-        if ((this.paymentDateInputElt.value && !intervalWithNow) || intervalWithNow > (365 * 19)) {
-            this.error = true
-            return this.formValidator.invalidField(this.paymentDateInputElt, 'Date invalide.')
-        }
         if (intervalWithNow < 0) {
-            this.error = true
+            this.isValid = false
             return this.formValidator.invalidField(this.paymentDateInputElt, 'La date ne peut être postérieure à la date du jour.')
         }
-        if (!this.paymentDateInputElt.value && (option === 20 || this.paidAmtInputElt.value > 0
+        if (!this.paymentDateInputElt.value && (20 === this.paymentTypeValue || this.paidAmtInputElt.value > 0
             || this.paymentTypeSelectElt.value) || this.returnAmtInputElt.value > 0) {
-            this.error = true
+            this.isValid = false
             return this.formValidator.invalidField(this.paymentDateInputElt, 'Saisie obligatoire.')
         }
-        return this.formValidator.validField(this.paymentDateInputElt)
+
+        if (false === this.formValidator.checkDate(this.paymentDateInputElt, -(365 * 2), 0)) {
+            this.isValid = false
+        }
     }
 
     /**
      * Vérifie le moyen de paiement saisi.
-     * @param {Number} option 
      */
-    checkPaymentMeans(option) {
-        if (!this.paymentTypeSelectElt.value && (option === 20 || this.paymentDateInputElt.value
+    checkPaymentMeans() {
+        if (!this.paymentTypeSelectElt.value && (20 === this.paymentTypeValue || this.paymentDateInputElt.value
             || this.paidAmtInputElt.value > 0 || this.returnAmtInputElt.value > 0)) {
-            this.error = true
+            this.isValid = false
             return this.formValidator.invalidField(this.paymentTypeSelectElt, 'Saisie obligatoire.')
         }
         return this.formValidator.validField(this.paymentTypeSelectElt)
     }
 
     /**
-     * @param {Number} option 
      */
-    checkNoContribReason(option) {
-        if (1 != option || null === this.noContribInputElt) {
+    checkNoContribReason() {
+        if (1 != this.paymentTypeValue || null === this.noContribInputElt) {
             return null
         }
-         
         if (this.noContribInputElt.checked === true && !this.noContribReasonSelectElt.value) {
-            this.error = true
+            this.isValid = false
             return this.formValidator.invalidField(this.noContribReasonSelectElt, 'Saisie obligatoire.')
         }
         return this.formValidator.validField(this.noContribReasonSelectElt)
@@ -439,7 +439,6 @@ export default class SupportPayments {
         this.formPaymentElt.action = this.formPaymentElt.dataset.url.replace('__id__', id)
 
         this.deleteBtnElt.classList.replace('d-none', 'd-block')
-        this.deleteBtnElt.href = this.deleteBtnElt.dataset.url.replace('__id__', id)
         this.saveBtnElt.querySelector('span').textContent = 'Mettre à jour'
 
         this.initForm()
@@ -493,6 +492,7 @@ export default class SupportPayments {
     deletePayment(url) {
         if (window.confirm('Confirmer la suppression cet enregistrement ?')) {
             this.loader.on()
+            const url = this.deleteBtnElt.dataset.url.replace('__id__', this.paymentId)
             this.ajax.send('GET', url, this.responseAjax.bind(this))
         }
     }
@@ -544,6 +544,9 @@ export default class SupportPayments {
         this.formPaymentElt.querySelector('#payment_contributionRate').value = payment.contributionRate
         this.formPaymentElt.querySelector('#payment_nbConsumUnits').value = payment.nbConsumUnits
 
+        this.checkStartDate()
+        this.checkEndDate()
+        this.checkToPaidAmt()
         this.checkResources()
     }
 
@@ -603,6 +606,7 @@ export default class SupportPayments {
      */
     createPayment(payment) {
 
+        this.paymentId = payment.id
         this.formPaymentElt.action = this.formPaymentElt.dataset.url.replace('__id__', payment.id)
         this.editBtnElts.forEach(elt => {
             elt.classList.remove('d-none')
@@ -726,31 +730,6 @@ export default class SupportPayments {
         if (this.nbTotalPaymentsElt) {
             this.nbTotalPaymentsElt.textContent = parseInt(this.nbTotalPaymentsElt.textContent) + value
         }
-    }
-
-    /**
-     * Vérifie si le montant saisie est valide.
-     * @param {inputElt} moneyElt 
-     */
-    checkMoney(moneyElt) {
-        let value = moneyElt.value
-        value = value.replace(' ', '').replace(',', '.')
-        if (Number(value) >= 0) {
-            return this.formValidator.validField(moneyElt)
-        }
-        return this.formValidator.invalidField(moneyElt, 'Valeur invalide.')
-    }
-
-    /**
-     * Vérifie si la date est valide.
-     * @param {inputElt} dateElt 
-     */
-    checkDate(dateElt) {
-        const interval = Math.round((this.now - new Date(dateElt.value)) / (1000 * 60 * 60 * 24))
-        if ((dateElt.value && !Number.isInteger(interval)) || interval > (365 * 99) || interval < -(365 * 99)) {
-            return this.formValidator.invalidField(dateElt, 'Date invalide.')
-        }
-        return this.formValidator.validField(dateElt)
     }
 
     /**

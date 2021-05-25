@@ -16,6 +16,7 @@ export default class SearchPerson {
         this.lastnameInputElt = document.getElementById('lastname')
         this.firstnameInputElt = document.getElementById('firstname')
         this.birthdateInputElt = document.getElementById('birthdate')
+        this.siSiaoIdInputElt = document.getElementById('siSiaoId')
         this.tableElt = document.querySelector('div.table-responsive')
         this.listResultElt = document.getElementById('list-result-people')
         this.groupId = this.listResultElt.dataset.groupId
@@ -33,7 +34,7 @@ export default class SearchPerson {
     }
     
     init() {
-        [this.lastnameInputElt, this.firstnameInputElt].forEach(elt =>
+        [this.siSiaoIdInputElt, this.lastnameInputElt, this.firstnameInputElt].forEach(elt =>
             elt.addEventListener('keyup', () => this.timer())
         );
 
@@ -54,7 +55,7 @@ export default class SearchPerson {
      * Compte le nombre de caratères saisis et lance la requête Ajax<.
      */
     count() {
-        const newValueSearch = this.lastnameInputElt.value + this.firstnameInputElt.value
+        const newValueSearch = this.siSiaoIdInputElt + this.lastnameInputElt.value + this.firstnameInputElt.value
         if (this.valueSearch != newValueSearch && newValueSearch.length >= this.lengthSearch) {
             this.valueSearch = newValueSearch
             this.sendRequest()

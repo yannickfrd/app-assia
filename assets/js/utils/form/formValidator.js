@@ -135,6 +135,7 @@ export default class FormValidator {
     /**
      * Met le champ en valide.
      * @param {HTMLElement} fieldElt 
+     * @return {Boolean} 
      */
     validField(fieldElt) {
         this.removeInvalidFeedbackElt(this.getlabel(fieldElt))
@@ -142,12 +143,14 @@ export default class FormValidator {
         if (fieldElt.value) {
             fieldElt.classList.add('is-valid')
         }
+        return true
     }
 
     /**
      * Met le champ en invalide et indique un message d'erreur.
      * @param {HTMLElement} fieldElt 
      * @param {string} msg 
+     * @return {Boolean} 
      */
     invalidField(fieldElt, msg = 'Saisie incorrecte.') {
         const labelElt = this.getlabel(fieldElt)
@@ -158,6 +161,8 @@ export default class FormValidator {
         this.removeInvalidFeedbackElt(labelElt)
 
         labelElt.appendChild(this.createInvalidFeedbackElt(msg))
+
+        return false
     }
 
     /**
@@ -240,25 +245,35 @@ export default class FormValidator {
     /**
      * Check is a date input is valid.
      * @param {HTMLInputElement} inputElt 
+     * @return {Boolean} 
      */
-    checkDate(inputElt, min = -(365 * 99), max = (365 * 99)) {
-        const interval = Math.round((new Date() - new Date(inputElt.value)) / (24 * 3600 * 1000))
+    checkDate(inputElt, min = -(365 * 99), max = (365 * 99), msg = 'Date invalide.') {
+        const interval = Math.round((new Date(inputElt.value) - new Date()) / (24 * 3600 * 1000))
+
         if ((inputElt.value && !Number.isInteger(interval))
             || interval < min || interval > max) {
-            return this.invalidField(inputElt, 'Date invalide.')
+            return this.invalidField(inputElt, msg)
         }
+
         return this.validField(inputElt)
     }
 
     /**
      * Check is a amount input is valid.
      * @param {HTMLInputElement} inputElt 
+     * @return {Boolean} 
      */
-    checkAmount(inputElt, min = 0, max = 99999) {
-        inputElt.value = inputElt.value.replace(' ', '').replace(',', '.')
-        if (Number(inputElt.value) >= min) {
-            return this.validField(inputElt)
+    checkAmount(inputElt, min = 0, max = 99999, resetValue = false, msg = 'Montant invalide.') {
+        const value = parseFloat(inputElt.value.replace(' ', '').replace(',', '.'))
+
+        if (true === resetValue) {
+            inputElt.value = value
         }
-        return this.invalidField(inputElt, 'Montant invalide.')
+
+        if ((inputElt.value && isNaN(value)) || value < min || value > max) {
+            return this.invalidField(inputElt, msg)
+        }
+
+        return this.validField(inputElt)
     }
 }

@@ -38,13 +38,10 @@ export default class evaluation {
         document.querySelectorAll('input[type="date"]').forEach(dateElt => {
             dateElt.addEventListener('focusout', () => {
                 this.formValidator.checkDate(dateElt, -(365 * 20), (365 * 11))
-                if (!dateElt.value) {
+                if (!dateElt.value) {   
                     dateElt.value = ''
                 }
             })
-        })
-        document.querySelectorAll('input[data-amount]').forEach(amountElt => {
-            amountElt.addEventListener('change', () => this.formValidator.checkAmount(amountElt))
         })
     }
     

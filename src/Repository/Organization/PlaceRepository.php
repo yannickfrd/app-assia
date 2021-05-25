@@ -274,7 +274,7 @@ class PlaceRepository extends ServiceEntityRepository
         $query = $this->addPolesFilter($query, $search);
         $query = $this->addServicesFilter($query, $search);
         $query = $this->addSubServicesFilter($query, $search);
-        $query = $this->addDevicesFilter($query, $search);
+        $query = $this->addDevicesFilter($query, $search, 'd.id');
 
         return $query;
     }

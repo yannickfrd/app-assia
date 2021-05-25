@@ -44,7 +44,7 @@ class HoteContributionlExport extends ExportExcel
 
         return [
             'ID PAF (interne)' => $payment->getId(),
-            'ID fiche groupe SI-SIAO' => $supportGroup->getPeopleGroup()->getSiSiaoId(),
+            'ID groupe SI-SIAO' => $supportGroup->getPeopleGroup()->getSiSiaoId(),
             'Nom ménage' => $person->getLastname(),
             'Prénom' => $person->getFirstname(),
             'Date de naissance' => $this->formatDate($person->getBirthdate()),

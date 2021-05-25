@@ -23,9 +23,13 @@ class EvalBudgetPerson
     ];
 
     public const RESOURCES_TYPE = [
+        'salary' => 'Salaire',
+        'activityBonus' => 'Prime d\'activité',
+        'unemplBenefit' => 'Allocation chômage (ARE)',
+        'minimumIncome' => 'RSA',
+        'familyAllowance' => 'Prestations familiales (AF)',
         'disAdultAllowance' => 'Allocation adulte handicapé (AAH)',
         'disChildAllowance' => 'Allocation d\'éducation de l\'enfant handicapé (AEEH)',
-        'unemplBenefit' => 'Allocation chômage (ARE)',
         'asf' => 'Allocation de soutien familial (ASF)',
         'solidarityAllowance' => 'Allocation de solidarité spécifique (ASS)',
         'asylumAllowance' => 'Allocation pour demandeur d\'asile (ADA)',
@@ -38,16 +42,13 @@ class EvalBudgetPerson
         'maintenance' => 'Pension alimentaire',
         'disabilityPension' => 'Pension d\'invalidité',
         'paje' => 'Prestation d\'accueil du jeune enfant (PAJE)',
-        'familyAllowance' => 'Prestations familiales (AF)',
-        'activityBonus' => 'Prime d\'activité',
         'pensionBenefit' => 'Retraite',
-        'minimumIncome' => 'RSA',
-        'salary' => 'Salaire',
         'ressourceOther' => 'Autre ressource',
     ];
 
     public const RESOURCES_MIN_TYPE = [
         'salary' => 'Salaire',
+        'activityBonus' => 'Prime d\'activité',
         'unemplBenefit' => 'ARE',
         'minimumIncome' => 'RSA',
         'familyAllowance' => 'AF',
@@ -65,7 +66,6 @@ class EvalBudgetPerson
         'maintenance' => 'Pension alimentaire',
         'disabilityPension' => 'Pension d\'invalidité',
         'paje' => 'PAJE',
-        'activityBonus' => 'Prime d\'activité',
         'pensionBenefit' => 'Retraite',
         'ressourceOther' => 'Autre',
     ];

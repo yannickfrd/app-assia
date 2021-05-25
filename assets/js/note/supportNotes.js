@@ -228,7 +228,6 @@ export default class SupportNotes {
      * @param {Object} response 
      */
     responseAjax(response) {
-        console.log(response)
         if (!response.action) {
             return null
         }

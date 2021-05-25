@@ -61,7 +61,7 @@
                                     <td class="align-middle">{{ evalAdm.nationalityToString ~ (evalAdm.country ? ' (' ~ evalAdm.country ~ ')') }}</td>
                                     <td class="align-middle">{{ evalAdm.paper == YES ? evalAdm.paperType ? evalAdm.paperTypeToString ~ (evalAdm.endValidPermitDate ? " (fin de validité : " ~ evalAdm.endValidPermitDate|date("d/m/Y") ~ ")") : evalAdm.paperToString }}</td>
                                     {% if nb_asylum_children > 0 %}
-                                        <td>{{ evalAdm.asylumBackground == YES ? evalAdm.asylumStatus ? evalAdm.asylumStatusToString : evalAdm.asylumBackgroundToString }}</td>
+                                        <td class="align-middle">{{ evalAdm.asylumBackground == YES ? evalAdm.asylumStatus ? evalAdm.asylumStatusToString : evalAdm.asylumBackgroundToString }}</td>
                                     {% endif %}
                                     <td class="align-middle">{{ evalAdm.commentEvalAdmPerson }}</td>
                                 </tr>

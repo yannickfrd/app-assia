@@ -54,15 +54,13 @@ export default class importantFields {
         if (fieldElt.value || ('select-one' === fieldElt.type && fieldElt.value)) {
             const twinField = fieldElt.dataset.twinField
             const spId = fieldElt.dataset.spId
-
             document.querySelectorAll(`[data-twin-field="${twinField}"][data-sp-id="${spId}"]`).forEach(twinElt => {
-                if ('select-one' === fieldElt.type && !twinElt.value) {
-                    twinElt.value = fieldElt.value
-                } else if (!twinElt.value && 'false' === this.editMode && (null === twinElt.dataset.edit)) {
+                if (('select-one' === fieldElt.type && !twinElt.value)
+                    || (!twinElt.value && 'false' === this.editMode && (!twinElt.dataset.edit))) {
                     twinElt.value = fieldElt.value
                 }
-                    twinElt.classList.remove('border-warning')
-                    twinElt.click()
+                twinElt.classList.remove('border-warning')
+                twinElt.click()
             })
 
         } else if (fieldElt.dataset.important) {

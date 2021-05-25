@@ -42,27 +42,27 @@
 							<tr>
 								<th scope="col" class="align-middle th-w-20"></th>
 								<th scope="col" class="align-middle th-w-100">
-									{{ knp_pagination_sortable(payments, "payment.type"|trans({}, "forms"), "c.type") }}</th>
+									{{ knp_pagination_sortable(payments, "payment.type"|trans({}, "forms"), "p.type") }}</th>
 								<th scope="col" class="align-middle th-w-120">
-									{{ knp_pagination_sortable(payments, "Période de la PF", "c.startDate") }}</th>
+									{{ knp_pagination_sortable(payments, "Période de la PF", "p.startDate") }}</th>
 								<th scope="col" class="align-middle th-w-100">
-									{{ knp_pagination_sortable(payments, "Montant à régler", "c.toPayAmt") }}</th>
+									{{ knp_pagination_sortable(payments, "Montant à régler", "p.toPayAmt") }}</th>
 								<th scope="col" class="align-middle th-w-100">
-									{{ knp_pagination_sortable(payments, "Montant réglé", "c.paidAmt") }}</th>
+									{{ knp_pagination_sortable(payments, "Montant réglé", "p.paidAmt") }}</th>
 								<th scope="col" class="align-middle th-w-100">
-									{{ knp_pagination_sortable(payments, "Restant dû (différenciel)", "c.stillToPayAmt") }}</th>
+									{{ knp_pagination_sortable(payments, "Restant dû (différenciel)", "p.stillToPayAmt") }}</th>
 								<th scope="col" class="align-middle th-date">
-									{{ knp_pagination_sortable(payments, "Date de l\'opération", "c.paymentDate") }}</th>
+									{{ knp_pagination_sortable(payments, "Date de l\'opération", "p.paymentDate") }}</th>
 								<th scope="col" class="align-middle th-w-100">
-									{{ knp_pagination_sortable(payments, "Mode de règlement", "c.paymentType") }}</th>
+									{{ knp_pagination_sortable(payments, "Mode de règlement", "p.paymentType") }}</th>
 								<th scope="col" class="align-middle th-w-140">
-									{{ knp_pagination_sortable(payments, "Commentaire", "c.comment") }}</th>
+									{{ knp_pagination_sortable(payments, "Commentaire", "p.comment") }}</th>
 								<th scope="col" class="align-middle th-w-100">
-									{{ knp_pagination_sortable(payments, "Date de création", "c.createdAt") }}</th>
+									{{ knp_pagination_sortable(payments, "Date de création", "p.createdAt") }}</th>
 								<th scope="col" class="align-middle th-w-20">
-									{{ knp_pagination_sortable(payments, "PDF", "c.pdfGenerateAt") }}</th>
+									{{ knp_pagination_sortable(payments, "PDF", "p.pdfGenerateAt") }}</th>
 								<th scope="col" class="align-middle th-w-20">
-									{{ knp_pagination_sortable(payments, "Mail", "c.mailSentAt") }}</th>
+									{{ knp_pagination_sortable(payments, "Mail", "p.mailSentAt") }}</th>
 								<th scope="col" class="align-middle th-w-20"></th>
 							</tr>
 						</thead>

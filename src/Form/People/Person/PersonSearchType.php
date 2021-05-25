@@ -13,39 +13,40 @@ class PersonSearchType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('siSiaoId', null, [
-                'label_attr' => ['class' => 'sr-only'],
-                'attr' => [
-                    'placeholder' => 'Si siao id',
-                ],
+        ->add('lastname', null, [
+            'label_attr' => ['class' => 'sr-only'],
+            'attr' => [
+                'class' => 'w-max-140 text-uppercase',
+                'placeholder' => 'Lastname',
+                'autocomplete' => 'off',
+            ],
             ])
-            ->add('lastname', null, [
-                'label_attr' => ['class' => 'sr-only'],
-                'attr' => [
-                    'class' => 'w-max-140 text-uppercase',
-                    'placeholder' => 'Lastname',
-                    'autocomplete' => 'off',
-                ],
+        ->add('firstname', null, [
+            'label_attr' => ['class' => 'sr-only'],
+            'attr' => [
+                'class' => 'w-max-140 text-capitalize',
+                'placeholder' => 'Firstname',
+                'autocomplete' => 'off',
+            ],
             ])
-            ->add('firstname', null, [
-                'label_attr' => ['class' => 'sr-only'],
-                'attr' => [
-                    'class' => 'w-max-140 text-capitalize',
-                    'placeholder' => 'Firstname',
-                    'autocomplete' => 'off',
-                ],
+        ->add('birthdate', DateType::class, [
+            'label_attr' => ['class' => 'sr-only'],
+            'widget' => 'single_text',
+            // "html5" => false,
+            // "format" => "dd/MM/yyyy",
+            'attr' => [
+                'class' => 'w-max-180',
+                'autocomplete' => 'off',
+            ],
+            'required' => false,
             ])
-            ->add('birthdate', DateType::class, [
-                'label_attr' => ['class' => 'sr-only'],
-                'widget' => 'single_text',
-                // "html5" => false,
-                // "format" => "dd/MM/yyyy",
-                'attr' => [
-                    'class' => 'w-max-180',
-                    'autocomplete' => 'off',
-                ],
-                'required' => false,
-            ]);
+        ->add('siSiaoId', null, [
+            'label_attr' => ['class' => 'sr-only'],
+            'attr' => [
+                'class' => 'w-max-160',
+                'placeholder' => 'Si siao id',
+            ],
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

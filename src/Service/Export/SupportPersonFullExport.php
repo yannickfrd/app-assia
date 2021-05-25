@@ -88,12 +88,14 @@ class SupportPersonFullExport extends ExportExcel
         foreach ($supports as $supportPerson) {
             $arrayData[] = $this->getDatas($supportPerson);
             if ($i > 100) {
-                sleep(5);
+                // sleep(5);
                 $this->logger->info(count($arrayData).' / '.$nbSupports);
                 $i = 1;
             }
             ++$i;
         }
+
+        set_time_limit(60 * 60);
 
         $this->createSheet('export_suivis', 'xlsx', $arrayData, 15);
 

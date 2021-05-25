@@ -46,6 +46,7 @@ export default class UpdateEvaluation {
      * @param {Object} response 
      */
     response(response) {
+        console.log(response)
         this.loader.off()
 
         if (!response.alert) {
@@ -54,6 +55,10 @@ export default class UpdateEvaluation {
         }
         
         new MessageFlash(response.alert, response.msg)
+
+        if (!response.data) {
+            return null
+        }
 
         document.getElementById('evaluation-updateAt').textContent = '(modifiée le ' + response.data.updatedAt + ')'
     }

@@ -51,10 +51,10 @@ trait QueryTrait
         return $query;
     }
 
-    protected function addDevicesFilter(QueryBuilder $query, object $search): QueryBuilder
+    protected function addDevicesFilter(QueryBuilder $query, object $search, string $x = 'sg.device'): QueryBuilder
     {
         if ($search->getDevices() && count($search->getDevices()) > 0) {
-            $query = $this->addOrWhere($query, 'sg.device', $search->getDevices());
+            $query = $this->addOrWhere($query, $x, $search->getDevices());
         }
 
         return $query;

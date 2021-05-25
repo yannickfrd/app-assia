@@ -22,16 +22,16 @@ class ResponseListener
 
         $server = $request->server;
 
-        if ($response->getContent() && ($server->get('APP_ENV') != 'prod' || $server->get('SERVER_NAME') === '127.0.0.1:8000')) {
-            return $this->addBeta($response);
+        if ($response->getContent() && ('prod' != $server->get('APP_ENV') || '127.0.0.1:8000' === $server->get('SERVER_NAME'))) {
+            return $this->addPopUp($response);
         }
     }
 
-    public function addBeta(Response $response): Response
+    public function addPopUp(Response $response): Response
     {
         $content = $response->getContent();
 
-        $toastContent = $this->renderer->render('app/betaTest.html.twig');
+        $toastContent = $this->renderer->render('_shared/_betaTest.html.twig');
 
         $content = str_replace(
           '</body>',

@@ -40,6 +40,11 @@ export default class evaluationBudget {
         this.initEvalPerson(prefix)
         this.evalBudgetPerson(prefix)
 
+        document.querySelectorAll('input[data-amount]').forEach(amountElt => {
+            amountElt.addEventListener('input', () => this.formValidator.checkAmount(amountElt, 0, 99999))
+            amountElt.addEventListener('focusout', () => this.formValidator.checkAmount(amountElt, 0, 99999, true))
+        })
+
         if (document.getElementById('calcul-contribution-btn')) {
             new ContributionCalcul(null, this.afterCalculContribution.bind(this))
         }
@@ -100,24 +105,25 @@ export default class evaluationBudget {
      */
     changeSelectToNo(prefix, collapseId, key, entity, type) {
         const resourceInput = document.getElementById(`${prefix}${key}_${entity}${type === 'resources' ? '_resources' : ''}_${type}`)
-
         if (!resourceInput) {
             return null
         }
-
+        
         resourceInput.addEventListener('change', () => {
-            if (this.NO === resourceInput.value) {
-                document.querySelectorAll(`tr[data-parent-select="${key}_${entity}_${type}Type"]`).forEach(trElt => {
-                    trElt.querySelectorAll('input').forEach(inputElt => {
-                        inputElt.getAttribute('type') === 'number' ? inputElt.value = 0 : inputElt.value = null
-                    })
-                    trElt.classList.replace('d-table-row', 'd-none')
-                })
-                const sumAmtElt = document.getElementById(`${prefix}${key}_${entity}${type === 'resources' ? '_resources' : ''}_${type}Amt`)
-                sumAmtElt.value = 0 // met le montant à zéro
-                
-                this.updateAmtGroup(type)
+            if (this.NO != parseInt(resourceInput.value)) {
+                return null   
             }
+
+            document.querySelectorAll(`tr[data-parent-select="${key}_${entity}_${type}Type"]`).forEach(trElt => {
+                trElt.querySelectorAll('input').forEach(inputElt => {
+                    inputElt.getAttribute('type') === 'number' ? inputElt.value = 0 : inputElt.value = null
+                })
+                trElt.classList.replace('d-table-row', 'd-none')
+            })
+            const sumAmtElt = document.getElementById(`${prefix}${key}_${entity}${type === 'resources' ? '_resources' : ''}_${type}Amt`)
+            sumAmtElt.value = 0
+            
+            this.updateAmtGroup(type)
         })
     }
 
@@ -168,11 +174,11 @@ export default class evaluationBudget {
         let sumAmts = 0
         inputElts.forEach(inputElt => {
             if (inputElt.value) {
-                sumAmts += parseFloat(inputElt.value)
+                sumAmts += parseFloat(inputElt.value.replace(' ', '').replace(',', '.'))
             }
         })
         if (!isNaN(sumAmts)) {
-            return sumAmts
+            return Math.round(sumAmts * 100) / 100
         }
         return 'Erreur'
     }
@@ -185,10 +191,9 @@ export default class evaluationBudget {
      * @param {String} type 
      */
     updateSumAmt(collapseId, entity, key, type) {
-        const inputElts = document.getElementById(`collapse-${collapseId}-${key}`)
-            .querySelectorAll(`input[data-amount="${type}"]`)
-        document.getElementById(`evaluation_evaluationPeople_${key}_${entity}${type === 'resources' ? '_resources' : ''}_${type}Amt`)
-            .value = this.getSumAmts(inputElts)
+        const inputElts = document.getElementById(`collapse-${collapseId}-${key}`).querySelectorAll(`input[data-amount="${type}"]`)
+        const sumAmtElt = document.getElementById(`evaluation_evaluationPeople_${key}_${entity}${type === 'resources' ? '_resources' : ''}_${type}Amt`)
+        sumAmtElt.value = this.getSumAmts(inputElts)
         this.updateAmtGroup(type)
     }
 
@@ -215,7 +220,9 @@ export default class evaluationBudget {
             }
         })
 
-        this.groupAmtElt(type).textContent = sumAmts.toLocaleString() + ' €'
+        const groupAmtElt = this.groupAmtElt(type)
+        groupAmtElt.textContent = sumAmts.toLocaleString(undefined, {minimumFractionDigits: 2}) + ' €'
+        groupAmtElt.dataset.value = Math.round(sumAmts * 100) / 100
         this.updateBudgetBalanceAmt()
     }
 
@@ -223,21 +230,14 @@ export default class evaluationBudget {
      * Met à jour le reste à vivre du groupe.
      */
     updateBudgetBalanceAmt() {
-        this.budgetBalanceGroupAmtElt.textContent = 
-            (this.convertsToNumber(this.resourcesGroupAmtElt.textContent)
-            - this.convertsToNumber(this.chargesGroupAmtElt.textContent)
-            - this.convertsToNumber(this.repaymentGroupAmtElt.textContent)).toLocaleString() + ' €'
+        const budgetBalanceGroupAmt = Math.round(parseFloat(
+            this.resourcesGroupAmtElt.dataset.value
+            - this.chargesGroupAmtElt.dataset.value
+            - this.repaymentGroupAmtElt.dataset.value) * 100) / 100;
+        
+        this.budgetBalanceGroupAmtElt.textContent = budgetBalanceGroupAmt.toLocaleString(undefined, {minimumFractionDigits: 2}) + ' €'
     }
-
-    /**
-     * 
-     * @param {String} value 
-     * @returns {Number} 
-     */
-    convertsToNumber(value) {
-        return parseFloat(value.replace(' ', ''.replace(',', '.')))
-    }
-    
+   
     /**
      * 
      * @param {String} type 

@@ -52,6 +52,10 @@ class PlaceControllerTest extends WebTestCase
         $crawler = $this->client->submitForm('search', [
             'name' => 'Logement 666',
             'nbPlaces' => 6,
+            'service' => [
+                'services' => $this->service->getId(),
+                'devices' => $this->data['device1'],
+            ],
             'date[start]' => '2019-01-01',
             'date[end]' => '2020-01-01',
             'city' => 'Houilles',

@@ -43,16 +43,16 @@
                         <tr>
                             <th scope="col" class="align-middle th-w-20"></th>
                             <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(payments, "Suivi", "p.lastname") }}</th>
-                            <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(payments, "payment.type"|trans({}, "forms"), "c.type") }}</th>
-                            <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(payments, "Période de la PF", "c.startDate") }}</th>
-                            <th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(payments, "Montant à régler", "c.toPayAmt") }}</th>
-                            <th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(payments, "Montant réglé", "c.paidAmt") }}</th>
-                            <th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(payments, "Restant dû (différenciel)", "c.stillToPayAmt") }}</th>
-                            <th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(payments, "Date de l\'opération", "c.paymentDate") }}</th>
-                            <th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(payments, "Mode de règlement", "c.paymentType") }}</th>
-                            <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(payments, "Commentaire", "c.comment") }}</th>
+                            <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(payments, "payment.type"|trans({}, "forms"), "p.type") }}</th>
+                            <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(payments, "Période de la PF", "p.startDate") }}</th>
+                            <th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(payments, "Montant à régler", "p.toPayAmt") }}</th>
+                            <th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(payments, "Montant réglé", "p.paidAmt") }}</th>
+                            <th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(payments, "Restant dû (différenciel)", "p.stillToPayAmt") }}</th>
+                            <th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(payments, "Date de l\'opération", "p.paymentDate") }}</th>
+                            <th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(payments, "Mode de règlement", "p.paymentType") }}</th>
+                            <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(payments, "Commentaire", "p.comment") }}</th>
                             <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(payments, "Service (Dispositif)", "s.name") }}</th>
-                            <th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(payments, "Créé le", "c.createdAt") }}</th>
+                            <th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(payments, "Créé le", "p.createdAt") }}</th>
                             <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(payments, "Créé par", "u.lastname") }}</th>
                         </tr>
                     </thead>
@@ -88,7 +88,7 @@
                                 <td class="align-middle text-center">{{ payment.paymentDate ? payment.paymentDate|date("d/m/Y") }}</td>
                                 <td class="align-middle">{{ payment.paymentTypeToString }}</td>
                                 <td class="align-middle">{{ (payment.comment ~ "\n"
-									~ payment.commentExport)|u.truncate(100, " [...]", false) }}</td>                  
+									~ payment.commentExport)|u.truncate(50, " [...]", false) }}</td>                  
                                 <td class="align-middle">{{ payment.supportGroup.service ? payment.supportGroup.service.name }}<br/>
                                     <span class="text-secondary">{{ payment.supportGroup.device ? "(" ~ payment.supportGroup.device.name ~ ")" }}</span>
                                 </td>
