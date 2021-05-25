@@ -211,11 +211,11 @@ class ContributionCalculator
         /** @var float Reste à vivre journalier unitaire */
         $restToLive = round((($budgetBalanceAmt - $theoricalContribAmt) / $nbConsumUnits / self::NB_DAYS), 2);
 
-        $paymentAmt = $theoricalContribAmt;
+        $toPayAmt = $theoricalContribAmt;
 
         if ($restToLive < ($this->service->getMinRestToLive() ?? self::MIN_REST_TO_LIVE)
             || true === $this->payment->getNoContrib()) {
-            $paymentAmt = 0;
+            $toPayAmt = 0;
         }
 
         return $this->payment
@@ -223,11 +223,11 @@ class ContributionCalculator
             ->setNbConsumUnits($nbConsumUnits)
             ->setTheoricalContribAmt($theoricalContribAmt)
             ->setRestToLive($restToLive)
-            ->setToPayAmt($paymentAmt);
+            ->setToPayAmt($toPayAmt);
     }
 
     /**
-     * Get sum of consumeption unit.
+     * Get sum of consumption unit.
      */
     protected function getNbConsumUnits(): float
     {
@@ -253,7 +253,7 @@ class ContributionCalculator
             }
         }
 
-        return round($nbConsumUnits, 2);
+        return round($nbConsumUnits > 0 ? $nbConsumUnits : 1, 2);
     }
 
     protected function getBudgetBalanceAmt(
@@ -269,18 +269,20 @@ class ContributionCalculator
 
         $endDateSupportGroup = $this->supportGroup->getEndDate();
 
-        foreach ($evaluationGroup->getEvaluationPeople() as $evaluationPerson) {
-            $supportPerson = $evaluationPerson->getSupportPerson();
+        if ($evaluationGroup) {
+            foreach ($evaluationGroup->getEvaluationPeople() as $evaluationPerson) {
+                $supportPerson = $evaluationPerson->getSupportPerson();
 
-            if ($supportPerson->getEndDate() != $endDateSupportGroup
-                || $supportPerson->getPerson()->getAge() < self::AGE_ADULT) {
-                continue;
-            }
+                if ($supportPerson->getEndDate() != $endDateSupportGroup
+                    || $supportPerson->getPerson()->getAge() < self::AGE_ADULT) {
+                    continue;
+                }
 
-            $evalBudgetPerson = $evaluationPerson->getEvalBudgetPerson();
-            if ($evalBudgetPerson) {
-                $resourcesGroupAmt += $this->getSumAmt($evalBudgetPerson, $resourcesTypes);
-                $chargesGroupAmt += $this->getSumAmt($evalBudgetPerson, $chargesTypes) + $evalBudgetPerson->getMonthlyRepaymentAmt();
+                $evalBudgetPerson = $evaluationPerson->getEvalBudgetPerson();
+                if ($evalBudgetPerson) {
+                    $resourcesGroupAmt += $this->getSumAmt($evalBudgetPerson, $resourcesTypes);
+                    $chargesGroupAmt += $this->getSumAmt($evalBudgetPerson, $chargesTypes) + $evalBudgetPerson->getMonthlyRepaymentAmt();
+                }
             }
         }
 
