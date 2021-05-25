@@ -11,23 +11,23 @@ trait ErrorMessageTrait
     /**
      * Retourne un message d'erreur au format JSON.
      */
-    public function getErrorMessage(FormInterface $form = null, Normalisation $normalisation = null): Response
-    {
+    public function getErrorMessage(
+        FormInterface $form = null,
+        Normalisation $normalisation = null,
+        array $translationFiles = ['forms']
+    ): Response {
         $msg = [];
 
         if ($form) {
             foreach ($form->getErrors(true) as $error) {
-                if ($normalisation) {
-                    $msg[] = $normalisation->unCamelCase($error->getOrigin()->getName()).' => '.$error->getMessage();
-                } else {
-                    $msg[] = $error->getMessage();
-                }
+                $msg[] = ($normalisation ? $normalisation->unCamelCase($error->getOrigin()->getName(), ' ', $translationFiles)
+                    : $error->getOrigin()->getName()).' : '.$error->getMessage().'<br/>';
             }
         }
 
         return $this->json([
             'alert' => 'danger',
-            'msg' => 'Une erreur s\'est produite. '.join(' ', $msg),
+            'msg' => 'Une erreur s\'est produite. <br/>'.join(' ', $msg),
         ]);
     }
 }

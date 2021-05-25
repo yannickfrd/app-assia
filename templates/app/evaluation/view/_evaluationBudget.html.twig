@@ -105,17 +105,17 @@
                                     <td scope="row">Total des ressources</td>
                                     <td class="text-right">{{ evalBudget.resourcesAmt|amount }}</td>
                                 </tr>
-                                {% if evalBudget.incomeN1Amt %}
-                                <tr>
-                                    <td scope="row">Impôts sur le revenu n-1</td>
-                                    <td class="text-right">{{ evalBudget.incomeN1Amt|amount }}</td>
-                                </tr>							
+                                {% if evalBudget.incomeN1Amt is not null %}
+                                    <tr>
+                                        <td scope="row">Impôts sur le revenu n-1</td>
+                                        <td class="text-right">{{ evalBudget.incomeN1Amt|amount }}</td>
+                                    </tr>							
                                 {% endif %}
-                                {% if evalBudget.incomeN2Amt %}
-                                <tr>
-                                    <td scope="row">Impôts sur le revenu n-2</td>
-                                    <td class="text-right">{{ evalBudget.incomeN2Amt|amount }}</td>
-                                </tr>
+                                {% if evalBudget.incomeN2Amt is not null %}
+                                    <tr>
+                                        <td scope="row">Impôts sur le revenu n-2</td>
+                                        <td class="text-right">{{ evalBudget.incomeN2Amt|amount }}</td>
+                                    </tr>
                                 {% endif %}
                             </tfoot>
                         </table>
@@ -166,6 +166,8 @@
                 <div class="row mb-2">
                     {{ view_div.get(evalBudget.debtsToString ~ (evalBudget.debtsType ? 
                         " (" ~ evalBudget.debtsType|join(", ")|lower ~ ")"), "Debts", "evaluation") }}
+                    {{ view_div.get(evalBudget.debtsAmt|amount(0), "Debts amt", "evaluation") }}
+                    {{ view_div.get(evalBudget.monthlyRepaymentAmt|amount(2), "Monthly repayment amt", "evaluation") }}
                 </div>
                 <div class="row mb-2">
                     {{ view_div.get(evalBudget.debtComment, "Debt comment", "evaluation") }}

@@ -43,6 +43,7 @@ class PaymentFullExport extends ExportExcel
         return [
             'N° opération' => $payment->getId(),
             'N° suivi' => $payment->getSupportGroup()->getId(),
+            'ID groupe SI-SIAO' => $supportGroup->getPeopleGroup()->getSiSiaoId(),
             'Nom' => $person ? $person->getLastname() : null,
             'Prénom' => $person ? $person->getFirstname() : null,
             'Date de naissance' => $person ? $this->formatDate($person->getBirthdate()) : null,

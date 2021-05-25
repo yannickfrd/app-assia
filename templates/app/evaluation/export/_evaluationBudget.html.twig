@@ -79,12 +79,12 @@
                 <tbody>
                     {% for key, value in constant("RESOURCES_TYPE", evalBudget) %}
                         {% if attribute(evalBudget, key) %}
-                        <tr>
-                            <td>{{ not loop.last ? value : (attribute(evalBudget, key ~ 'Precision') ? 
-                                attribute(evalBudget, key ~ 'Precision') : "Autre(s) ressource(s)") }}</td>
-                            {% set amt = attribute(evalBudget, key ~ 'Amt') %}
-                            <td style="text-align: right;">{{ amt > 0 ? amt|amount }}</td>
-                        </tr>
+                            <tr>
+                                <td>{{ not loop.last ? value : (attribute(evalBudget, key ~ 'Precision') ? 
+                                    attribute(evalBudget, key ~ 'Precision') : "Autre(s) ressource(s)") }}</td>
+                                {% set amt = attribute(evalBudget, key ~ 'Amt') %}
+                                <td style="text-align: right;">{{ amt > 0 ? amt|amount }}</td>
+                            </tr>
                         {% endif %}
                     {% endfor %}
                 </tbody>
@@ -93,13 +93,13 @@
                         <td>Total des ressources</td>
                         <td style="text-align: right;">{{ evalBudget.resourcesAmt|amount }}</td>
                     </tr>
-                    {% if evalBudget.incomeN1Amt %}
+                    {% if evalBudget.incomeN1Amt is not null %}
                         <tr>
                             <td>Impôts sur le revenu n-1</td>
                             <td style="text-align: right;">{{ evalBudget.incomeN1Amt|amount }}</td>
                         </tr>							
                     {% endif %}
-                    {% if evalBudget.incomeN2Amt %}
+                    {% if evalBudget.incomeN2Amt is not null %}
                         <tr>
                             <td>Impôts sur le revenu n-2</td>
                             <td style="text-align: right;">{{ evalBudget.incomeN2Amt|amount }}</td>
@@ -147,6 +147,8 @@
         {% if evalBudget.debts %}
             {{ view_p.get(evalBudget.debtsToString ~ (evalBudget.debtsType ? 
                 " (" ~ evalBudget.debtsType|join(", ")|lower ~ ")"), "Debts", "evaluation") }}
+            {{ view_p.get(evalBudget.debtsAmt|amount(0), "Debts amt", "evaluation") }}
+            {{ view_p.get(evalBudget.monthlyRepaymentAmt|amount(2), "Monthly repayment amt", "evaluation") }}
             {{ view_p.get(evalBudget.debtComment, "Debt comment", "evaluation") }}
             {{ view_p.get(evalBudget.overIndebtRecord ? evalBudget.overIndebtRecordToString ~ (evalBudget.overIndebtRecordDate ? 
                 " (date de dépôt : " ~ evalBudget.overIndebtRecordDate|date("d/m/Y") ~ ")"), "Over indebt record", "evaluation") }}

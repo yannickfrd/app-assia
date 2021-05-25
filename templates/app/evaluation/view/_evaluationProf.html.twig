@@ -9,12 +9,12 @@
         </span>
     </div>
 
-    {% set eval_adults_prof = eval_adults|filter(e => e.evalProfPerson) %}
-    {% set nb_adults_prof = eval_adults_prof|length %}
-    {% for evalPerson in eval_adults_prof %}
+    {% set eval_people_prof = people_over_16|filter(e => e.evalProfPerson) %}
+    {% set nb_people_prof = eval_people_prof|length %}
+    {% for evalPerson in eval_people_prof %}
         {% set evalProf = evalPerson.evalProfPerson %}
         <div class="my-3">
-            {% if nb_adults_prof > 1 %}
+            {% if nb_people_prof > 1 %}
                 <div class="row mb-2">
                     <div class="col-md-12 font-weight-bold"><span class="text-underline">{{ evalPerson.supportPerson.person.fullname }}</span> :</div>
                 </div>

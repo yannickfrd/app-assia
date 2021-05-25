@@ -46,9 +46,8 @@ export default class UpdateEvaluation {
      * @param {Object} response 
      */
     response(response) {
-        console.log(response)
         this.loader.off()
-
+        
         if (!response.alert) {
             console.error(response)
             return new MessageFlash('danger', 'Attention, une erreur s\'est produite.')

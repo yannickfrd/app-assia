@@ -266,7 +266,7 @@ export default class FormValidator {
     checkAmount(inputElt, min = 0, max = 99999, resetValue = false, msg = 'Montant invalide.') {
         const value = parseFloat(inputElt.value.replace(' ', '').replace(',', '.'))
 
-        if (true === resetValue) {
+        if (!isNaN(value) && true === resetValue) {
             inputElt.value = value
         }
 

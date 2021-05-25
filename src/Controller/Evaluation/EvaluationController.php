@@ -113,7 +113,7 @@ class EvaluationController extends AbstractController
             ]);
         }
 
-        return $this->getErrorMessage($form, $normalisation);
+        return $this->getErrorMessage($form, $normalisation, ['evaluation']);
     }
 
     /**

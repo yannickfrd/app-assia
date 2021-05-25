@@ -6,7 +6,7 @@ use App\Entity\Support\Payment;
 use App\Service\ExportExcel;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class HoteContributionlExport extends ExportExcel
+class HotelContributionlExport extends ExportExcel
 {
     protected $router;
 

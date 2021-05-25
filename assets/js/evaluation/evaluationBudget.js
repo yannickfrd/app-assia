@@ -41,8 +41,8 @@ export default class evaluationBudget {
         this.evalBudgetPerson(prefix)
 
         document.querySelectorAll('input[data-amount]').forEach(amountElt => {
-            amountElt.addEventListener('input', () => this.formValidator.checkAmount(amountElt, 0, 99999))
-            amountElt.addEventListener('focusout', () => this.formValidator.checkAmount(amountElt, 0, 99999, true))
+            amountElt.addEventListener('input', () => this.formValidator.checkAmount(amountElt, 0, 999999))
+            amountElt.addEventListener('focusout', () => this.formValidator.checkAmount(amountElt, 0, 999999, true))
         })
 
         if (document.getElementById('calcul-contribution-btn')) {

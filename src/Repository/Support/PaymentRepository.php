@@ -38,11 +38,11 @@ class PaymentRepository extends ServiceEntityRepository
     public function findPayment(int $id): ?Payment
     {
         return $this->createQueryBuilder('p')->select('p')
-            ->leftJoin('p.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, service, startDate, endDate, address, city}')
+            ->leftJoin('p.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, service, status, startDate, endDate, address, city}')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, email, phone1, contribution, contributionType, contributionRate, city, address}')
             ->leftJoin('sg.subService', 'ss')->addSelect('PARTIAL ss.{id, name, email, phone1}')
             ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name, logoPath}')
-            ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, role, head}')
+            ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, role, head, status}')
             ->leftJoin('sp.person', 'person')->addSelect('PARTIAL person.{id, firstname, lastname, birthdate, gender, email}')
 
             ->where("p.id = $id")
@@ -101,6 +101,7 @@ class PaymentRepository extends ServiceEntityRepository
     public function findPaymentsToExport($search, SupportGroup $supportGroup = null): ?array
     {
         $query = $this->getPaymentQuery()
+            ->leftJoin('sg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, siSiaoId}')
             ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}');
 
         if ($supportGroup) {
