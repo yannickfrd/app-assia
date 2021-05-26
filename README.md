@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.29.18 25/05/2021
+2.29.20 26/05/2021
 
 # Développeur
 Romain MADELAINE
@@ -12,6 +12,10 @@ https://github.com/RomMad/esperer95.app
 
 # Connection à la base démo
 https://demo.esperer95.app
+
+## Version 2.29.19-20 - 26/05/2021
+- Edit export PAF DELTA
+- Edit displayed fields in evaluationProf
 
 ## Version 2.29.8-18 - 25/05/2021
 - Fix bugs in evaluation (calcul resources)
@@ -23,7 +27,7 @@ https://demo.esperer95.app
 - Rename HotelContributionExport file
 - Translate error message in evaluation
 - Add SI-SIAO ID in export payments
-- Fix display problems in evaluation view/expor (incomeTax, debtsAmt, monthlyRepaymentAmt...)
+- Fix display problems in evaluation view/export (incomeTax, debtsAmt, monthlyRepaymentAmt...)
 - Fix errors in ContributionCalculator (if evaluationGroup is null or nbConsumUnits == 0)
 
 ## Version 2.29.7 - 20/05/2021

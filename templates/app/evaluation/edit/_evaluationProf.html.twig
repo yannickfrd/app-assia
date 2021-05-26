@@ -32,12 +32,12 @@
                         <div class="col-md-6">{{ form_row(evalPerson.evalProfPerson.workPlace) }}</div>
                         <div class="col-md-6">{{ form_row(evalPerson.evalProfPerson.employerName) }}</div>
                     </div>
-                    <div class="row mb-3" data-parent-field="{{ prefix }}_profStatus" data-options="*">
+                    <div class="row mb-3" data-parent-field="{{ prefix }}_profStatus" data-options="1|2|3|6|8|97">
                         <div class="col-md-6">{{ form_row(evalPerson.evalProfPerson.transportMeansType) }}</div>
                         <div class="col-md-6" data-parent-field="{{ prefix }}_transportMeansType" data-options="1|2|97">
                             {{ form_row(evalPerson.evalProfPerson.transportMeans) }}</div>
                     </div>
-                    <div class="row mb-3" data-parent-field="{{ prefix }}_profStatus" data-options="*">
+                    <div class="row mb-3" data-parent-field="{{ prefix }}_profStatus" data-options="1|2|3|4|8|9|97">
                         <div class="col-md-6" title="Reconnaissance de la qualité de travailleur handicapé">
                             {{ form_row(evalPerson.evalProfPerson.rqth) }}</div>
                         <div class="col-md-6" data-parent-field="{{ prefix }}_rqth" data-options="1">
@@ -45,7 +45,8 @@
                     </div>
                      <div class="row mb-3">
                         <div class="col-md-6">{{ form_row(evalPerson.evalProfPerson.schoolLevel) }}</div>
-                        <div class="col-md-6">{{ form_row(evalPerson.evalProfPerson.profExperience) }}</div>
+                        <div class="col-md-6"data-parent-field="{{ prefix }}_profStatus" data-options="1|2|3|4|8|9|97">
+                            {{ form_row(evalPerson.evalProfPerson.profExperience) }}</div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-12">{{ form_widget(evalPerson.evalProfPerson.commentEvalProf) }}</div>
