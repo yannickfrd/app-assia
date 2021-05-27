@@ -2,14 +2,14 @@
 
 namespace App\Form\Evaluation;
 
+use App\Entity\Evaluation\EvalProfPerson;
 use App\Form\Utils\Choices;
 use App\Form\Utils\EvaluationChoices;
 use Symfony\Component\Form\AbstractType;
-use App\Entity\Evaluation\EvalProfPerson;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class EvalProfPersonType extends AbstractType
 {
@@ -37,8 +37,6 @@ class EvalProfPersonType extends AbstractType
             ->add('jobType')
             ->add('contractStartDate', DateType::class, [
                 'widget' => 'single_text',
-                'html5' => false,
-                'attr' => ['class' => 'js-datepicker'],
                 'required' => false,
             ])
             ->add('contractEndDate', DateType::class, [
