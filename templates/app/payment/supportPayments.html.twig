@@ -86,20 +86,21 @@
 										{% if payment.startDate %}
 											{% set nbDays = payment.nbDays %}
 											{{ payment.startDate|date("d/m/Y") }} - {{ payment.endDate|date("d/m/Y") }}
-											({{ nbDays }}&nbsp;jour{{ nbDays > 1 ? "s"}})
+											<span class="small secondary">({{ nbDays }}&nbsp;jour{{ nbDays > 1 ? "s"}})</span>
 										{% endif %}
 									</td>
 									<td class="align-middle text-right" data-payment="toPayAmt"><!--
-										-->{{ payment.toPayAmt >= 0 ? payment.toPayAmt|amount }}</td>
+										-->{{ payment.toPayAmt is not null ? payment.toPayAmt|amount }}</td>
 									<td class="align-middle text-right" data-payment="paidAmt"><!--
-										-->{{ payment.paidAmt ? payment.paidAmt|amount }}</td>
+										-->{{ payment.paidAmt is not null ? payment.paidAmt|amount }}</td>
 									<td class="align-middle text-right" data-payment="stillToPayAmt"><!--
 										-->{{ payment.stillToPayAmt ? payment.stillToPayAmt|amount }}</td>
 									<td class="align-middle text-center" data-payment="paymentDate"><!--
 										-->{{ payment.paymentDate ? payment.paymentDate|date("d/m/Y") }}
 									<td class="align-middle" data-payment="paymentType">{{ payment.paymentTypeToString }}</td>
-									<td class="align-middle" data-payment="comment">{{ (payment.comment ~ "\n"
-										~ payment.commentExport)|u.truncate(50, " [...]", false) }}</td>
+									<td class="align-middle small" data-payment="comment">
+										{{ payment.noContrib ? "PAF à zéro (" ~ payment.noContribReasonToString ~ ")" }}
+										{{ (payment.comment ~ "\n" ~ payment.commentExport)|u.truncate(50, " [...]", false) }}</td>
 									<td class="align-middle" data-payment="createdAt">{{ payment.createdAt|date("d/m/Y") }}</td>
 									<td class="align-middle text-center" data-payment="pdfGenerate">
 										<a href="{{ path('payment_export_pdf', {'id': payment.id}) }}" 

@@ -43,14 +43,14 @@ class HotelContributionlExport extends ExportExcel
         $organization = $originRequest ? $originRequest->getOrganization() : null;
 
         return [
-            'Période concerné' => $payment->getStartDate()->format('m/Y'),
+            'Période concernée' => $payment->getStartDate() ? $payment->getStartDate()->format('m/Y') : null,
             'ID PAF (interne)' => $payment->getId(),
             'ID groupe SI-SIAO' => $supportGroup->getPeopleGroup()->getSiSiaoId(),
             'Nom ménage' => $person->getLastname(),
             'Prénom' => $person->getFirstname(),
             'Date de naissance' => $this->formatDate($person->getBirthdate()),
             'Montant PAF' => (string) $payment->getToPayAmt(),
-            'PAF à zéro' => $payment->getNoContribToString(),
+            'PAF à zéro' => $payment->getNoContribToString().($payment->getNoContribReason() ? ' ('.$payment->getNoContribReasonToString().')' : ''),
             'SIAO prescripteur nuitée' => $organization ? $organization->getName() : null,
             'PASH' => 'PASH 95',
             'Commentaire' => $payment->getComment(),

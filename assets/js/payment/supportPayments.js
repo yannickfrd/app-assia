@@ -20,7 +20,8 @@ export default class SupportPayments {
         this.btnNewElt = document.querySelector('button[data-action="new_payment"')
         this.trElt = null
 
-        this.modalConfirmElt = document.getElementById('modal-confirm')
+        this.confirmBtnElt = document.getElementById('modal-confirm')
+        document.querySelector('#modal-block div.modal-content').classList.add('bg-light')
 
         this.sumToPayAmtElt = document.querySelector('td[data-payment="sumToPayAmt"]')
         this.sumPaidAmtElt = document.querySelector('td[data-payment="sumPaidAmt"]')
@@ -64,13 +65,14 @@ export default class SupportPayments {
 
         this.now = new Date()
         this.isValid = true
+        this.displayedFields = []
 
         this.init()
     }
 
     init() {
         document.querySelectorAll('div[data-parent-field]').forEach(elt => {
-            new FieldDisplayer(elt)
+            this.displayedFields.push(new FieldDisplayer(elt))
         })
 
         this.btnNewElt.addEventListener('click', () => {
@@ -90,7 +92,7 @@ export default class SupportPayments {
             const btnDeleteElt = trElt.querySelector('button[data-action="delete"]')
             btnDeleteElt.addEventListener('click', () => {
                 this.trElt = trElt
-                this.modalConfirmElt.dataset.url = btnDeleteElt.dataset.url
+                this.confirmBtnElt.dataset.url = btnDeleteElt.dataset.url
             })
 
         })
@@ -104,16 +106,14 @@ export default class SupportPayments {
             }
         })
 
-        this.deleteBtnElt.addEventListener('click', e => {
+        this.deleteBtnElt.addEventListener('click', (e) => {
             e.preventDefault()
-            if (this.loader.isActive() === false) {
-                this.deletePayment()
-            }
+            this.confirmBtnElt.dataset.url = this.deleteBtnElt.dataset.url.replace('__id__', this.paymentId)
         })
 
-        this.modalConfirmElt.addEventListener('click', e => {
+        this.confirmBtnElt.addEventListener('click', e => {
             e.preventDefault()
-            this.ajax.send('GET', this.modalConfirmElt.dataset.url, this.responseAjax.bind(this))
+            this.ajax.send('GET', this.confirmBtnElt.dataset.url, this.responseAjax.bind(this))
         })
 
         this.typeSelectElt.addEventListener('input', () => {
@@ -190,19 +190,29 @@ export default class SupportPayments {
         if (20 === this.paymentTypeValue) { // Prêt
             this.formPaymentElt.querySelector('label[for="payment_toPayAmt"]').textContent = 'Montant prêté'
         }
+
+        this.displayedFields.forEach(displayedField => {
+            displayedField.check()
+        })
     }
 
     checkResources() {
         const noContribDivElt = this.formPaymentElt.querySelector('div[data-type="no_contrib"]')
-
+        
         if (!noContribDivElt) {
-           return null 
+            return null 
         }
 
         if (this.resourcesAmtInputElt.value > 0) {
-            return noContribDivElt.classList.remove('d-none')
+            noContribDivElt.classList.remove('d-none')
+            setTimeout(() => {
+                noContribDivElt.classList.add('fade-in')
+                noContribDivElt.classList.remove('fade-out')
+            }, 10)
+        } else {
+            noContribDivElt.classList.add('d-none', 'fade-out')
+            noContribDivElt.classList.remove('fade-in') 
         }
-        noContribDivElt.classList.add('d-none')
     }
 
 
@@ -292,7 +302,7 @@ export default class SupportPayments {
             this.isValid = false
             return this.formValidator.invalidField(this.startDateInputElt, 'Saisie obligatoire.')
         } 
-        if (false === this.formValidator.checkDate(this.startDateInputElt, -(365 * 2), 0)) {
+        if (false === this.formValidator.checkDate(this.startDateInputElt, -(365 * 2), 31)) {
             this.isValid = false
         }
     }
@@ -306,7 +316,7 @@ export default class SupportPayments {
             return this.formValidator.invalidField(this.endDateInputElt, 'La date doit être supérieure à la date de début.')
         }
         
-        if (false === this.formValidator.checkDate(this.endDateInputElt, -(365 * 2), 31)) {
+        if (false === this.formValidator.checkDate(this.endDateInputElt, -(365 * 2), 62)) {
             this.isValid = false
         }
     }
@@ -486,18 +496,6 @@ export default class SupportPayments {
     }
 
     /**
-     * Envoie une requête ajax pour supprimer l 'enregistrement.
-     * @param {String} url 
-     */
-    deletePayment(url) {
-        if (window.confirm('Confirmer la suppression cet enregistrement ?')) {
-            this.loader.on()
-            const url = this.deleteBtnElt.dataset.url.replace('__id__', this.paymentId)
-            this.ajax.send('GET', url, this.responseAjax.bind(this))
-        }
-    }
-
-    /**
      * Réponse du serveur.
      * @param {Object} response 
      */
@@ -572,12 +570,18 @@ export default class SupportPayments {
         this.commentInputElt.value = payment.comment
         this.commentExportInputElt.value = payment.commentExport;
         
+        const noContribCheckboxElt = this.formPaymentElt.querySelector('#payment_noContrib')
+        if (noContribCheckboxElt) {
+            noContribCheckboxElt.checked = payment.noContrib
+            this.formPaymentElt.querySelector('#payment_noContribReason').value = payment.noContribReason ?? ''
+        }
+
         this.formPaymentElt.querySelector('#payment_contributionRate').value = payment.contributionRate
         this.formPaymentElt.querySelector('#payment_nbConsumUnits').value = payment.nbConsumUnits
 
         this.infoPaymentDivElt.innerHTML = this.getInfoPaymentElt(data)
         this.checkType()
-        this.typeSelectElt.click()
+        this.checkResources()
         if (payment.id) {
             this.editBtnElts.forEach(elt => {
                 elt.classList.remove('d-none')
@@ -636,7 +640,7 @@ export default class SupportPayments {
         const btnDeleteElt = paymentElt.querySelector('button[data-action="delete"]')
         btnDeleteElt.addEventListener('click', () => {
             this.trElt = paymentElt
-            this.modalConfirmElt.dataset.url = btnDeleteElt.dataset.url
+            this.confirmBtnElt.dataset.url = btnDeleteElt.dataset.url
         })
         this.loader.off()
     }
@@ -653,7 +657,8 @@ export default class SupportPayments {
         this.trElt.querySelector('td[data-payment="stillToPayAmt"]').textContent = this.formatMoney(this.roundAmount(payment.stillToPayAmt))
         this.trElt.querySelector('td[data-payment="paymentDate"]').textContent = this.formatDatetime(payment.paymentDate, 'date')
         this.trElt.querySelector('td[data-payment="paymentType"]').textContent = payment.paymentTypeToString
-        this.trElt.querySelector('td[data-payment="comment"]').textContent = this.sliceComment((payment.comment ?? '')  + " \n" + (payment.commentExport ?? ''))
+        this.trElt.querySelector('td[data-payment="comment"]').textContent = (payment.noContrib ? 'PAF à zéro (' + payment.noContribReasonToString + ') ' : '')
+            + this.sliceComment((payment.comment ?? '') + " \n" + (payment.commentExport ?? ''))
         this.calculateSumAmts()
         this.loader.off()
     }
@@ -679,7 +684,8 @@ export default class SupportPayments {
             <td class="align-middle text-right" data-payment="stillToPayAmt">${this.formatMoney(this.roundAmount(payment.stillToPayAmt))}</td>
             <td class="align-middle text-center" data-payment="paymentDate">${this.formatDatetime(payment.paymentDate, 'date')}</td>
             <td class="align-middle" data-payment="paymentType">${payment.paymentType ? payment.paymentTypeToString : ''}</td>
-            <td class="align-middle" data-payment="comment">${this.sliceComment((payment.comment ?? '')  + " \n" + (payment.commentExport ?? ''))}</td>
+            <td class="align-middle small" data-payment="comment">${(payment.noContrib ? 'PAF à zéro (' + payment.noContribReasonToString + ') ' : '')}
+                ${this.sliceComment((payment.comment ?? '') + " \n" + (payment.commentExport ?? ''))}</td>
             <td class="align-middle" data-payment="createdAt">${this.formatDatetime(this.now, 'date')}</td>
             <td class="align-middle text-center" data-payment="pdfGenerate">
                 <span><i class="fas fa-file-pdf text-secondary fa-lg"></i></span>

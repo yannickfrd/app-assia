@@ -62,7 +62,8 @@ class PaymentFullExport extends ExportExcel
             'Date de l\'opération' => $this->formatDate($payment->getPaymentDate()),
             'Mode de règlement' => $payment->getPaymentType() ? $payment->getPaymentTypeToString() : null,
             'Caution - Montant restitué' => $payment->getReturnAmt(),
-            'Commentaire' => $payment->getComment(),
+            'Commentaire' => ($payment->getNoContrib() ? 'PAF à zéro ('.$payment->getNoContribReasonToString().') ' : '')
+                .$payment->getComment(),
             'Date de création' => $this->formatDate($payment->getCreatedAt()),
             'Créé par' => $payment->getCreatedBy()->getFullname(),
             'Date de modification' => $this->formatDate($payment->getUpdatedAt()),

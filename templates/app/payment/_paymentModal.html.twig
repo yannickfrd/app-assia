@@ -53,16 +53,17 @@
                 data-parent-field="payment_type" data-options="1|2|10|20">
                 <div class="col-lg-4">{{ form_row(form.toPayAmt) }}</div>
                     {% if true == serviceTypeHotel %}
-                        <div class="col-lg-4 d-none" data-type="no_contrib">
+                        <div class="col-lg-4" data-parent-field="payment_toPayAmt" data-type="no_contrib">
                             <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2">
                                 {{ form_row(form.noContrib) }}</div>
                         </div>
-                        <div class="col-lg-4" data-parent-field="payment_noContrib">{{ form_row(form.noContribReason) }}</div>
+                        <div class="col-lg-4" data-parent-field="payment_noContrib" data-type="no_contrib_reason">
+                            {{ form_row(form.noContribReason) }}</div>
                     {% endif %}
                 </div>
             <div>
                 <div class="row">
-                    <div class="col-lg-4" data-payment="returnAmt"data-parent-field="payment_type" 
+                    <div class="col-lg-4" data-payment="returnAmt" data-parent-field="payment_type" 
                         data-options="11">{{ form_row(form.returnAmt) }}</div>
                     <div class="col-lg-4" data-payment="paidAmt" data-parent-field="payment_type" 
                         data-options="1|2|10|30">{{ form_row(form.paidAmt) }}</div>
@@ -89,6 +90,7 @@
             <div class="d-flex justify-content-between">
                 <div class="d-flex float-left mr-3">
                     <button class="btn btn-danger mr-3 mb-1" data-action="delete"
+                        data-toggle="modal" data-target="#modal-block"
                         data-edit="true" data-url="{{ path('payment_delete', {'id': '__id__'}) }}"
                         data-placement="bottom" title="Supprimer"><span class="fas fa-trash-alt"></span><span 
                         class="d-none d-md-inline ml-2">Supprimer</span></button>

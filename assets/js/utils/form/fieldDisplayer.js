@@ -1,5 +1,5 @@
 /**
- * Masque ou rend visible un élement en fonction d'un champ parent (select, input, checkbox)
+ * Masque ou rend visible un élement en fonction d'un champ parent (select, input, checkbox).
  */
 export default class FieldDisplayer {
     /**
@@ -19,21 +19,34 @@ export default class FieldDisplayer {
         switch (this.parentFieldElt.type) {
             case 'select-one':
                 this.checkSelect();
-                this.parentFieldElt.addEventListener('click', this.checkSelect.bind(this))
-                this.parentFieldElt.addEventListener('change', this.checkSelect.bind(this))
+                this.parentFieldElt.addEventListener('click', () => this.checkSelect())
+                this.parentFieldElt.addEventListener('change', () => this.checkSelect())
                 break
             case 'date':
                 this.checkInput()
-                this.parentFieldElt.addEventListener('change', this.checkInput.bind(this))
+                this.parentFieldElt.addEventListener('change', () => this.checkInput())
                 break
             case 'text':
                 this.checkInput()
-                this.parentFieldElt.addEventListener('input', this.checkInput.bind(this))
+                this.parentFieldElt.addEventListener('input', () => this.checkInput())
                 break
             case 'checkbox':
                 this.checkbox()
-                this.parentFieldElt.addEventListener('change', this.checkbox.bind(this))
+                this.parentFieldElt.addEventListener('change', () => this.checkbox())
                 break
+        }
+    }
+
+    check() {
+        switch (this.parentFieldElt.type) {
+            case 'select-one':
+                this.checkSelect();
+                break
+            case 'checkbox':
+                this.checkbox()
+                break
+            default:
+                this.checkInput()
         }
     }
 

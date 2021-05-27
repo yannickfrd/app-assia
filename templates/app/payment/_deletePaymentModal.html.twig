@@ -1,5 +1,7 @@
 {% extends "model/_modalDialog.html.twig" %}
 
-{% block modal_body %}Êtes-vous vraiment sûr de vouloir supprimer cet enregistrement ?{% endblock %}
+{% block modal_body %}
+    <p>Êtes-vous vraiment sûr de vouloir supprimer cet enregistrement ?</p>
+{% endblock %}
 {% block modal_confirm %}Supprimer{% endblock %}
 {% block modal_alert %}danger{% endblock %}

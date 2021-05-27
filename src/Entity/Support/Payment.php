@@ -202,11 +202,13 @@ class Payment
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * @Groups("get")
      */
     private $noContrib;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
+     * @Groups("get")
      */
     private $noContribReason;
 
@@ -570,6 +572,7 @@ class Payment
         return $this->noContribReason;
     }
 
+    /** @Groups("get") */
     public function getNoContribReasonToString(): ?string
     {
         return $this->noContribReason ? self::NO_CONTRIB_REASONS[$this->noContribReason] : null;
@@ -656,6 +659,6 @@ class Payment
 
     private function formatAmountToString(?float $value)
     {
-        return $value ? (new \NumberFormatter('fr-FR', \NumberFormatter::SPELLOUT))->format($value) : null;
+        return $value >= 0 ? (new \NumberFormatter('fr-FR', \NumberFormatter::SPELLOUT))->format($value) : null;
     }
 }

@@ -97,7 +97,7 @@ class ContributionCalculator
         'electricityGas' => 'Electricité / Gaz', // SI-SIAO => OK
         'childcare' => 'Garde d\'enfant(s)', // SI-SIAO => OK
         'taxes' => 'Impôts', // SI-SIAO => OK
-        'rent' => 'Loyer', // SI-SIAO => OK
+        // 'rent' => 'Loyer', // SI-SIAO => OK
         'mutual' => 'Mutuelle(s)', // SI-SIAO => OK
         'alimony' => 'Pension alimentaire', // SI-SIAO => OK
         'phone' => 'Téléphone', // SI-SIAO => OK

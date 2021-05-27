@@ -5,13 +5,17 @@ namespace App\Entity\Evaluation;
 use App\Entity\Support\SupportPerson;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Evaluation\EvaluationPersonRepository")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class EvaluationPerson
 {
     use CreatedUpdatedEntityTrait;  // A supprimer après test
+    use SoftDeleteableEntity;
 
     /**
      * @ORM\Id()

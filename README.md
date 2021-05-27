@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.29.21 27/05/2021
+2.29.26 27/05/2021
 
 # Développeur
 Romain MADELAINE
@@ -13,8 +13,13 @@ https://github.com/RomMad/esperer95.app
 # Connection à la base démo
 https://demo.esperer95.app
 
-## Version 2.29.21 - 27/05/2021
+## Version 2.29.21-26 - 27/05/2021
 - Fix problem format date contractStartDate
+- Fix error in ContributionCalculator when evaluationPerson->getSupportPerson() is null
+- Edit view listPayments and supportPayments
+- Fix problem update and display fields in paymentForm modal (no contrib and reason)
+- Add softDeleteable in EvaluationPerson entity
+- Edit hotelContributionExport
 
 ## Version 2.29.19-20 - 26/05/2021
 - Edit export PAF DELTA
