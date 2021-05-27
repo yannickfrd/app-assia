@@ -273,7 +273,7 @@ class ContributionCalculator
             foreach ($evaluationGroup->getEvaluationPeople() as $evaluationPerson) {
                 $supportPerson = $evaluationPerson->getSupportPerson();
 
-                if ($supportPerson->getEndDate() != $endDateSupportGroup
+                if (null === $supportPerson || $supportPerson->getEndDate() != $endDateSupportGroup
                     || $supportPerson->getPerson()->getAge() < self::AGE_ADULT) {
                     continue;
                 }
