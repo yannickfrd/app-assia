@@ -6,6 +6,25 @@ use App\Form\Model\Support\SupportSearch;
 
 class ExportSearch extends SupportSearch
 {
+    public const MODELS = [
+        'full' => 'Export complet',
+        'light' => 'Export simplifié',
+        // 'avdl' => 'Export AVDL',
+        // 'pash' => 'Export PASH',
+    ];
+
+    /** @var bool */
+    private $formattedSheet;
+
+    /** @var string */
+    private $model = 'full';
+
+    /** @var string */
+    private $path;
+
+    /** @var bool */
+    private $anonymized;
+
     /**
      * @var bool|null
      */
@@ -121,6 +140,54 @@ class ExportSearch extends SupportSearch
     public function setEvalJustice(bool $evalJustice): self
     {
         $this->evalJustice = $evalJustice;
+
+        return $this;
+    }
+
+    public function getFormattedSheet(): ?bool
+    {
+        return $this->formattedSheet;
+    }
+
+    public function setFormattedSheet(bool $formattedSheet): self
+    {
+        $this->formattedSheet = $formattedSheet;
+
+        return $this;
+    }
+
+    public function getModel(): ?string
+    {
+        return $this->model;
+    }
+
+    public function setModel(?string $model): self
+    {
+        $this->model = $model;
+
+        return $this;
+    }
+
+    public function getPath(): ?string
+    {
+        return $this->path;
+    }
+
+    public function setPath(?string $path): self
+    {
+        $this->path = $path;
+
+        return $this;
+    }
+
+    public function getAnonymized(): bool
+    {
+        return $this->anonymized;
+    }
+
+    public function setAnonymized(bool $anonymized): self
+    {
+        $this->anonymized = $anonymized;
 
         return $this;
     }

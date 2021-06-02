@@ -18,11 +18,11 @@ class ExportSearchType extends AbstractType
     {
         $builder
             ->add('head', CheckboxType::class, [
-                'label' => 'Demandeur principal',
+                'label' => 'head.help',
                 'label_attr' => ['class' => 'custom-control-label'],
                 'attr' => ['class' => 'custom-control-input checkbox'],
                 'required' => false,
-            ])
+                ])
             ->add('calcul', null, ['mapped' => false])
             ->add('familyTypologies', ChoiceType::class, [
                 'multiple' => true,
@@ -32,6 +32,21 @@ class ExportSearchType extends AbstractType
                     'data-select2-id' => 'typology',
                 ],
                 'placeholder' => 'placeholder.familtyTypology',
+                'required' => false,
+            ])
+            ->add('model', ChoiceType::class, [
+                'choices' => Choices::getChoices(ExportSearch::MODELS),
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
+            ->add('formattedSheet', CheckboxType::class, [
+                'label_attr' => ['class' => 'custom-control-label'],
+                'attr' => ['class' => 'custom-control-input checkbox'],
+                'required' => false,
+            ])
+            ->add('anonymized', CheckboxType::class, [
+                'label_attr' => ['class' => 'custom-control-label'],
+                'attr' => ['class' => 'custom-control-input checkbox'],
                 'required' => false,
             ]);
         // ->add('nbPeople', null, [

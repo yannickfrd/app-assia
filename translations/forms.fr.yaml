@@ -81,6 +81,7 @@ Phone: Téléphone
 Phone1: Téléphone 1
 Phone2: Téléphone 2
 Pole: Pôle
+Poles: Pôles
 Pole name: Nom du pôle
 Pre admission: Pré-admission
 Referent: Référent
@@ -320,3 +321,9 @@ hotelSupport:
   ssd:
     search: Recherche du SSD orienteur
     city: SSD orienteur (auto.)
+
+#Export
+
+Formatted sheet: Tableur formaté
+Model: Modèle d'export
+Anonymized: Anonymisé

@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
@@ -18,10 +19,20 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ExportExcel
 {
+    protected $data;
+
+    protected $options = [
+        'name' => 'export',
+        'fileType' => 'xlsx',
+        'columnsWidth' => null,
+        'formatted' => true,
+        'modelPath' => false,
+        'startCell' => 'A1',
+        'totalRow' => false,
+    ];
+
     protected $name;
     protected $format;
-    protected $arrayData;
-    protected $columnsWidth;
 
     protected $spreadsheet;
     /** @var Worksheet */
@@ -45,28 +56,59 @@ class ExportExcel
     /**
      * Initialize the style sheet.
      */
-    public function createSheet(string $name, string $format, array $arrayData, int $columnsWidth = null): void
+    public function createSheet(array $data, array $options = []): void
     {
-        $this->name = $name;
-        $this->format = $format;
-        $this->arrayData = $arrayData;
-        $this->columnsWidth = $columnsWidth;
+        $this->data = $data;
         $this->now = new \DateTime();
+        $this->setOptions($options);
 
-        $this->spreadsheet = new Spreadsheet();
+        if ($this->options['modelPath']) {
+            $reader = IOFactory::createReader('Xlsx');
+            $path = $this->options['modelPath'];
+
+            if (!file_exists($path)) {
+                throw new \Exception('The file don\'t exist');
+            }
+
+            $this->spreadsheet = $reader->load($path);
+        } else {
+            $this->spreadsheet = new Spreadsheet();
+        }
 
         $this->sheet = $this->spreadsheet->getActiveSheet();
 
         $this->sheet->fromArray(
-            $arrayData,  // The data to set
-            null,        // Array values with this value will not be set
-            'A1'         // Top left coordinate of the worksheet range where
+            $data,  // The data to set
+            null,   // Array values with this value will not be set
+            $this->options['startCell'] // Top left coordinate of the worksheet range where
         );
 
-        $this->nbColumns = count($arrayData[0]);
+        $this->format();
+        $this->addTotalRow();
+    }
+
+    protected function setOptions(array $options): void
+    {
+        foreach ($options as $key => $value) {
+            if (!key_exists($key, $this->options)) {
+                throw new \Exception(sprintf('The key "%s" don\'t exist in the options : %s.', $key, join(', ', array_keys($this->options))));
+            }
+            $this->options[$key] = $value;
+        }
+
+        $this->name = $this->options['name'];
+        $this->fileType = $this->options['fileType'];
+    }
+
+    protected function format(): void
+    {
+        if (true != $this->options['formatted'] || $this->options['modelPath']) {
+            return;
+        }
+
+        $this->nbColumns = count($this->data[0]);
         $this->nbRows = $this->sheet->getHighestRow();
         $this->highestColumn = $this->sheet->getHighestColumn();
-        // $this->selectedCells = $this->sheet->getSelectedCells();
 
         $this->headers = 'A1:'.$this->highestColumn.'1';
         $this->allCells = 'A1:'.$this->highestColumn.$this->nbRows;
@@ -74,7 +116,7 @@ class ExportExcel
         $this->formatColumnsWidth();
         $this->formatDateColumns();
         $this->formatMoneyColumns();
-        // $this->formatUrlColumns();
+
         $this->formatSheet();
         $this->formatPrint();
     }
@@ -86,7 +128,7 @@ class ExportExcel
      */
     public function exportFile(bool $asynch = false)
     {
-        $this->getFormat($this->format);
+        $this->getFormatType($this->fileType);
 
         $path = \dirname(__DIR__).'/../public/uploads/exports/'.$this->now->format('Y/m/d/');
 
@@ -94,7 +136,7 @@ class ExportExcel
             mkdir($path, 0777, true);
         }
 
-        $filename = $this->now->format('Y_m_d_His_').$this->name.'.'.$this->format;
+        $filename = $this->now->format('Y_m_d_His_').$this->name.'.'.$this->fileType;
         $file = $path.$filename;
 
         $this->writer->save($file);
@@ -111,13 +153,19 @@ class ExportExcel
      */
     public function addTotalRow(): void
     {
+        if (true != $this->options['totalRow']) {
+            return;
+        }
+
         $this->sheet->insertNewRowBefore(1, 1);
         $this->sheet->getCell('A1')->setValue('Total :');
         $this->sheet->getCell('B1')->setValue('=SUBTOTAL(3,A3:A'.($this->nbRows + 1).')');
+
         foreach ($this->getColumnsWithType('Montant') as $col) {
             $this->sheet->getCell($col.'1')->setValue('=SUBTOTAL(9,'.$col.'3:'.$col.($this->nbRows + 1).')');
             $this->sheet->getStyle($col.'1')->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_CURRENCY_EUR_SIMPLE);
         }
+
         $this->sheet->getStyle('A1:'.$this->highestColumn.'1')->getFont()->setBold(true);
     }
 
@@ -170,11 +218,12 @@ class ExportExcel
      */
     protected function formatColumnsWidth(): void
     {
+        $columnsWidth = $this->options['columnsWidth'];
         $columnLetter = 'A';
 
-        if ($this->columnsWidth) {
+        if ($columnsWidth) {
             $method = 'setWidth';
-            $value = $this->columnsWidth;
+            $value = $columnsWidth;
         } else {
             $method = 'setAutoSize';
             $value = true;
@@ -230,7 +279,7 @@ class ExportExcel
     {
         $alphas = range('A', 'Z');
         $columns = [];
-        foreach ($this->arrayData[0] as $key => $value) {
+        foreach ($this->data[0] as $key => $value) {
             if (stristr($value, $word)) {
                 if ($key < 26) {
                     $columns[] = $alphas[$key];
@@ -296,11 +345,11 @@ class ExportExcel
     }
 
     /**
-     * Get format of file.
+     * Get format type of file.
      */
-    protected function getFormat(string $format): void
+    protected function getFormatType(string $fileType): void
     {
-        switch ($format) {
+        switch ($fileType) {
             case 'xlsx':
                 $this->contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
                 $this->writer = new Xlsx($this->spreadsheet);
@@ -308,10 +357,6 @@ class ExportExcel
             case 'ods':
                 $this->contentType = 'application/vnd.oasis.opendocument.spreadsheet';
                 $this->writer = new Ods($this->spreadsheet);
-                break;
-            case 'csv':
-                $this->contentType = 'text/csv';
-                $this->writer = new Csv($this->spreadsheet);
                 break;
             default:
                 $this->contentType = 'text/csv';

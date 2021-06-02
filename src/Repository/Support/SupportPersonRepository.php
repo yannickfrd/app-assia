@@ -61,8 +61,7 @@ class SupportPersonRepository extends ServiceEntityRepository
         $query = $this->getSupportsQuery()
             ->leftJoin('sp.placesPerson', 'pp')->addSelect('pp')
             ->leftJoin('pp.placeGroup', 'pg')->addSelect('pg')
-            ->leftJoin('pg.place', 'pl')->addSelect('pl')
-            ->leftJoin('g.referents', 'ref')->addSelect('PARTIAL ref.{id, name, type}');
+            ->leftJoin('pg.place', 'pl')->addSelect('pl');
 
         if ($search) {
             $query = $this->filters($query, $search);
@@ -193,7 +192,7 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->leftJoin('sg.hotelSupport', 'hs')->addSelect('hs')
             ->leftJoin('sg.avdl', 'avdl')->addSelect('avdl')
 
-            ->leftJoin('sp.evaluationsPerson', 'ep')->addSelect('ep')
+            ->leftJoin('sp.evaluationsPerson', 'ep')->addSelect('PARTIAL ep.{id}')
             ->leftJoin('ep.initEvalPerson', 'initEvalPerson')->addSelect('initEvalPerson')
             ->leftJoin('ep.evalJusticePerson', 'evalJusticePerson')->addSelect('evalJusticePerson')
             ->leftJoin('ep.evalAdmPerson', 'evalAdmPerson')->addSelect('evalAdmPerson')
@@ -202,7 +201,7 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->leftJoin('ep.evalProfPerson', 'evalProfPerson')->addSelect('evalProfPerson')
             ->leftJoin('ep.evalSocialPerson', 'evalSocialPerson')->addSelect('evalSocialPerson')
 
-            ->leftJoin('ep.evaluationGroup', 'eg')->addSelect('eg')
+            ->leftJoin('ep.evaluationGroup', 'eg')->addSelect('PARTIAL eg.{id}')
             ->leftJoin('eg.initEvalGroup', 'initEvalGroup')->addSelect('initEvalGroup')
             ->leftJoin('eg.evalBudgetGroup', 'evalBudgetGroup')->addSelect('evalBudgetGroup')
             ->leftJoin('eg.evalFamilyGroup', 'evalFamilyGroup')->addSelect('evalFamilyGroup')

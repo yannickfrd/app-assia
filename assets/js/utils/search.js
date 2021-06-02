@@ -59,17 +59,23 @@ export default class Search {
      */
     clearSearch() {
         this.inputElts.forEach(inputElt => {
-            inputElt.value = null
+            if (!inputElt.dataset.noReset) {
+                inputElt.value = null
+            }
+
         })
-        this.checkboxElts.forEach(checkboxElt => {
-            checkboxElt.removeAttribute('checked')
-            checkboxElt.value = '0'
-        })
+
         this.selectElts.forEach(selectElt => {
-            selectElt.querySelectorAll('option').forEach(optionElt => {
-                optionElt.removeAttribute('selected')
-                optionElt.selected = ''
-            })
+            if (!selectElt.dataset.noReset) {
+                selectElt.value = ''
+            }
+        })
+
+        this.checkboxElts.forEach(checkboxElt => {
+            if (!checkboxElt.dataset.noReset) {
+                checkboxElt.removeAttribute('checked')
+                checkboxElt.value = '0'
+            }
         })
 
         this.formSearch.querySelectorAll('.select2-container').forEach(containerElt => {

@@ -26,8 +26,11 @@ class PaymentFullExport extends ExportExcel
             $arrayData[] = $this->getDatas($payment);
         }
 
-        $this->createSheet('export_paiements', 'xlsx', $arrayData, 16);
-        $this->addTotalRow();
+        $this->createSheet($arrayData, [
+            'name' => 'export_paiements',
+            'columnsWidth' => 16,
+            'totalRow' => true,
+        ]);
 
         return $this->exportFile();
     }

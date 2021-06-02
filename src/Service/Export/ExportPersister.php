@@ -4,6 +4,7 @@ namespace App\Service\Export;
 
 use App\Entity\Admin\Export;
 use App\Form\Model\Admin\ExportSearch;
+use App\Form\Model\Support\SupportSearch;
 use App\Notification\ExportNotification;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
@@ -21,7 +22,10 @@ class ExportPersister
         $this->exportNotification = $exportNotification;
     }
 
-    public function save($file, $supports, ExportSearch $search): Export
+    /**
+     * @param ExportSearch|SupportSearch $search
+     */
+    public function save($file, $supports, $search): Export
     {
         $export = (new Export())
             ->setTitle('Export des suivis')
@@ -41,7 +45,10 @@ class ExportPersister
         return $export;
     }
 
-    private function getCommentExport(ExportSearch $search): string
+    /**
+     * @param ExportSearch|SupportSearch $search
+     */
+    private function getCommentExport($search): string
     {
         $comment = [];
         $comment[] = 'Statut : '.($search->getStatus() ? join(', ', $search->getStatusToString()) : 'tous');

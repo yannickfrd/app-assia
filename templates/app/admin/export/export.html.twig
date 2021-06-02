@@ -16,7 +16,7 @@
             
             <div id="form-search">
                 {{ form_start(form) }}
-                <div class="form-group row">
+                <div class="row mb-3">
                     {% if is_granted("ROLE_SUPER_ADMIN") %}
                         <div class="col-md-6">{{ form_row(form.service.poles) }}</div>
                     {% endif %}
@@ -25,22 +25,27 @@
                     <div class="col-md-6">{{ form_row(form.service.devices) }}</div>
                     <div class="col-md-6">{{ form_row(form.service.referents) }}</div>
                 </div>
-                <div class="form-group row">
+                <div class="row mb-3">
                     <div class="col-md-6">{{ form_row(form.status) }}</div>
                     <div class="col-md-6">{{ form_row(form.supportDates) }}</div>
                     <div class="col-md-6">{{ form_row(form.date.start) }}</div>
                     <div class="col-md-6">{{ form_row(form.date.end) }}</div>
                 </div>
-                <div class="form-group row">
+                <div class="row mb-3">
                     <div class="col-md-6">{{ form_row(form.familyTypologies) }}</div>
                     {# <div class="col-md-6">{{ form_row(form.nbPeople) }}</div> #}
                      <div class="col-md-6">
                         <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark"
-                            data-placement="bottom" title="Demandeur/euse principal·e">{{ form_row(form.head) }}
+                            data-toggle="tooltip" data-placement="bottom" title="Demandeur/euse principal·e">{{ form_row(form.head) }}
                         </div>
                     </div>
                 </div>
-                {# <div class="form-group row">
+
+                <div class="mb-4">
+                    {% include "app/admin/export/_optionsExport.html.twig" with {accordion_id: "optionsExport"} %}
+                </div>
+
+                {# <div class="row mb-3">
                     <div class="col-md-3">
                         <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">
                             {{ form_widget(form.evalSocial) }}
@@ -77,7 +82,7 @@
                         </div>
                     </div>
                 </div> #}
-                <div class="form-group row">
+                <div class="row mb-3">
                     <div class="col-md-12">
                         <div class="float-left d-flex">
                             <p id="results"></p>

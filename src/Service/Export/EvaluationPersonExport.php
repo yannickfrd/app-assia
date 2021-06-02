@@ -18,19 +18,24 @@ use App\Entity\Evaluation\InitEvalGroup;
 use App\Entity\Evaluation\InitEvalPerson;
 use App\Entity\Support\Avdl;
 use App\Entity\Support\HotelSupport;
+use App\Entity\Support\OriginRequest;
 use App\Entity\Support\SupportPerson;
+use App\Form\Model\Admin\ExportSearch;
 use App\Service\ExportExcel;
 use App\Service\Normalisation;
 use Psr\Log\LoggerInterface;
 
-class SupportPersonFullExport extends ExportExcel
+class EvaluationPersonExport extends ExportExcel
 {
+    use SupportPersonDataTrait;
+    use EvaluationPersonDataTrait;
+
     protected $normalisation;
     protected $logger;
     protected $datas;
+    protected $anonymized;
 
-    protected $avdl;
-    protected $hotelSupport;
+    protected $originRequest;
 
     protected $initEvalGroup;
     protected $initEvalPerson;
@@ -49,13 +54,15 @@ class SupportPersonFullExport extends ExportExcel
     protected $evalBudgetGroup;
     protected $evalHousingGroup;
 
+    protected $avdl;
+    protected $hotelSupport;
+
     public function __construct(Normalisation $normalisation, LoggerInterface $logger)
     {
         $this->normalisation = $normalisation;
         $this->logger = $logger;
 
-        $this->avdl = new Avdl();
-        $this->hotelSupport = new HotelSupport();
+        $this->originRequest = new OriginRequest();
 
         $this->initEvalGroup = new InitEvalGroup();
         $this->initEvalPerson = new InitEvalPerson();
@@ -73,47 +80,72 @@ class SupportPersonFullExport extends ExportExcel
         $this->evalFamilyPerson = new EvalFamilyPerson();
         $this->evalProfPerson = new EvalProfPerson();
         $this->evalSocialPerson = new EvalSocialPerson();
+
+        $this->avdl = new Avdl();
+        $this->hotelSupport = new HotelSupport();
     }
 
     /**
      * Exporte les données.
+     *
+     * @param SupportPerson[] $supports
      */
-    public function exportData($supports, bool $asynch = true)
+    public function exportData(array $supports, ExportSearch $search, bool $asynch = true)
     {
+        $this->anonymized = $search->getAnonymized();
+        $getDatas = 'light' === $search->getModel() ? 'getEvaluationPersonDatas' : 'getFullDatas';
+
+        $this->logger->info('Used memory : '.number_format(memory_get_usage(), 0, ',', ' '));
+
         $arrayData = [];
-        $arrayData[] = $this->normalisation->getKeys(array_keys($this->getDatas($supports[0])), ['forms', 'evaluation']);
+        $arrayData[] = $this->normalisation->getKeys(array_keys($this->$getDatas($supports[0])), ['forms', 'evaluation']);
 
         $i = 0;
         $nbSupports = count($supports);
         foreach ($supports as $supportPerson) {
-            $arrayData[] = $this->getDatas($supportPerson);
+            $arrayData[] = $this->$getDatas($supportPerson);
             if ($i > 100) {
                 // sleep(5);
-                $this->logger->info(count($arrayData).' / '.$nbSupports);
+                $this->logger->info(count($arrayData).' / '.$nbSupports.' | Used memory : '.number_format(memory_get_usage(), 0, ',', ' '));
                 $i = 1;
             }
             ++$i;
         }
 
-        set_time_limit(60 * 60);
+        $this->logger->info('Used memory : '.number_format(memory_get_usage(), 0, ',', ' '));
 
-        $this->createSheet('export_suivis', 'xlsx', $arrayData, 15);
+        $this->createSheet($arrayData, [
+            'name' => 'export_suivis',
+            'columnsWidth' => $search->getModel() ? null : 15,
+            'formatted' => $search->getFormattedSheet(),
+            'modelPath' => $search->getModel() ?
+                \dirname(__DIR__).'/../../public/documentation/models/model_evaluation_export_'.$search->getModel().'.xlsx' : null,
+        ]);
+
+        $this->logger->info('Used memory : '.number_format(memory_get_usage(), 0, ',', ' '));
 
         return $this->exportFile($asynch);
     }
 
-    /**
-     * Retourne les résultats sous forme de tableau.
-     */
-    protected function getDatas(SupportPerson $supportPerson): array
+    protected function getFullDatas(SupportPerson $supportPerson): array
     {
-        $this->datas = (new SupportPersonExport())->getDatas($supportPerson);
+        $this->datas = $this->getSupportPersonDatas($supportPerson, $this->anonymized);
         $evaluations = $supportPerson->getEvaluationsPerson();
         $supportGroup = $supportPerson->getSupportGroup();
         $evaluationPerson = $evaluations[$evaluations->count() - 1] ?? $this->evaluationPerson;
         $evaluationGroup = $evaluationPerson->getEvaluationGroup() ?? $this->evaluationGroup;
 
+        $referentsType = [];
+        $referentsName = [];
+
+        foreach ($supportGroup->getPeopleGroup()->getReferents() as $referent) {
+            $referentsType[] = $referent->getTypeToString();
+            $referentsName[] = $referent->getName();
+        }
+
         $this->datas = array_merge($this->datas, [
+            'Service(s) référent(s) - Type' => join(', ', $referentsType),
+            'Service(s) référent(s) - Nom' => $this->anonymized ? 'XXX' : join(', ', $referentsName),
             'ID évaluation groupe' => $evaluationGroup->getId(),
             'ID évaluation personne' => $evaluationPerson->getId(),
         ]);

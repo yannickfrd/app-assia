@@ -26,8 +26,11 @@ class RdvExport extends ExportExcel
             $arrayData[] = $this->getDatas($rdv);
         }
 
-        $this->createSheet('export_rdvs', 'xlsx', $arrayData, 16);
-        $this->addTotalRow();
+        $this->createSheet($arrayData, [
+            'name' => 'export_rdvs',
+            'columnsWidth' => 16,
+            'totalRow' => true,
+        ]);
 
         return $this->exportFile();
     }

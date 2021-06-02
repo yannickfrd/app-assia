@@ -18,7 +18,9 @@ class ServiceExport extends ExportExcel
             $arrayData[] = $this->getDatas($service);
         }
 
-        $this->createSheet('export_services', 'xlsx', $arrayData);
+        $this->createSheet($arrayData, [
+            'name' => 'export_services',
+        ]);
 
         return $this->exportFile();
     }

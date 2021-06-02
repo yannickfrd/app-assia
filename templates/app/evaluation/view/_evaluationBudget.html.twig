@@ -164,7 +164,7 @@
             </div>
             {% if evalBudget.debts %}
                 <div class="row mb-2">
-                    {{ view_div.get(evalBudget.debtsToString ~ (evalBudget.debtsType ? 
+                    {{ view_div.get(evalBudget.debtsToString ~ (evalBudget.debtTypes ? 
                         " (" ~ evalBudget.debtsType|join(", ")|lower ~ ")"), "Debts", "evaluation") }}
                     {{ view_div.get(evalBudget.debtsAmt|amount(0), "Debts amt", "evaluation") }}
                     {{ view_div.get(evalBudget.monthlyRepaymentAmt|amount(2), "Monthly repayment amt", "evaluation") }}

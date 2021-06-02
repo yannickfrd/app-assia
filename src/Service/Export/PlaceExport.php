@@ -34,7 +34,9 @@ class PlaceExport extends ExportExcel
             ++$i;
         }
 
-        $this->createSheet('export_places', 'xlsx', $arrayData);
+        $this->createSheet($arrayData, [
+            'name' => 'export_places',
+        ]);
 
         return $this->exportFile();
     }

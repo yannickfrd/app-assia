@@ -485,6 +485,24 @@ class EvalBudgetPerson
         return $this;
     }
 
+    public function getChargeTypes(): array
+    {
+        $array = [];
+
+        foreach (self::CHARGES_TYPE as $key => $value) {
+            $method = 'get'.ucfirst($key);
+            if (EvaluationChoices::YES === $this->$method()) {
+                $array[] = $value;
+            }
+        }
+
+        if ($this->getChargeOther()) {
+            $array[] = $this->getChargeOtherPrecision();
+        }
+
+        return $array;
+    }
+
     public function getChargesAmt(): ?float
     {
         return $this->chargesAmt;
@@ -905,11 +923,11 @@ class EvalBudgetPerson
         return $this;
     }
 
-    public function getDebtsType(): array
+    public function getDebtTypes(): array
     {
         $array = [];
 
-        foreach (EvalBudgetPerson::DEBTS_TYPE as $key => $value) {
+        foreach (self::DEBTS_TYPE as $key => $value) {
             $method = 'get'.ucfirst($key);
             if (EvaluationChoices::YES === $this->$method()) {
                 $array[] = $value;

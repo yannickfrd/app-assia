@@ -457,7 +457,7 @@ class EvalSocialPerson
         return $this;
     }
 
-    public function getHealthProblemsType(): array
+    public function getHealthProblemTypes(): array
     {
         $array = [];
 

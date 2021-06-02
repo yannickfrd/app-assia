@@ -18,7 +18,9 @@ class PersonExport extends ExportExcel
             $arrayData[] = $this->getDatas($person);
         }
 
-        $this->createSheet('export_personnes', 'xlsx', $arrayData);
+        $this->createSheet($arrayData, [
+            'name' => 'export_personnes',
+        ]);
 
         return $this->exportFile();
     }

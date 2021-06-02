@@ -5,7 +5,6 @@ namespace App\Form\Model\Support;
 use App\Entity\Support\SupportGroup;
 use App\Form\Model\Organization\ReferentServiceDeviceSearchTrait;
 use App\Form\Model\Traits\DateSearchTrait;
-use Symfony\Component\Validator\Constraints as Assert;
 
 class SupportSearch
 {

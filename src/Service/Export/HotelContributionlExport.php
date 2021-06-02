@@ -26,8 +26,11 @@ class HotelContributionlExport extends ExportExcel
             $arrayData[] = $this->getDatas($payment);
         }
 
-        $this->createSheet('export_paf_hotel', 'xlsx', $arrayData, 22);
-        $this->addTotalRow();
+        $this->createSheet($arrayData, [
+            'name' => 'export_paf_hotel',
+            'columnsWidth' => 22,
+            'totalRow' => true,
+        ]);
 
         return $this->exportFile();
     }

@@ -1,15 +1,13 @@
 <?php
 
-namespace App\Event\Support;
+namespace App\Event\Evaluation;
 
-use App\Form\Model\Admin\ExportSearch;
-use App\Form\Model\Support\SupportSearch;
-use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\EventDispatcher\Event;
 
-class SupportPersonExportEvent extends Event
+class EvaluationPersonExportEvent extends Event
 {
-    public const NAME = 'support_person.full_export';
+    public const NAME = 'evaluation_person.export';
 
     private $request;
 

@@ -18,7 +18,10 @@ class UserExport extends ExportExcel
             $arrayData[] = $this->getDatas($user);
         }
 
-        $this->createSheet('export_utilisateurs', 'xlsx', $arrayData, 15);
+        $this->createSheet($arrayData, [
+            'name' => 'export_utilisateurs',
+            'columnsWidth' => 15,
+        ]);
 
         return $this->exportFile();
     }

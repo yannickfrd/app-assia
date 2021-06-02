@@ -36,7 +36,10 @@ class AvdlSupportPersonExport extends ExportExcel
             ++$i;
         }
 
-        $this->createSheet('export_avdl', 'xlsx', $arrayData, 15);
+        $this->createSheet($arrayData, [
+            'name' => 'export_suivis',
+            'columnsWidth' => 15,
+        ]);
 
         return $this->exportFile();
     }

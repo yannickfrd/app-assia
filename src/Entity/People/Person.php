@@ -309,7 +309,7 @@ class Person
     }
 
     /**
-     * @return Collection<Person>
+     * @return Collection<RolePerson>
      */
     public function getRolesPerson()
     {

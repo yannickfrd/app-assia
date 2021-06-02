@@ -9,17 +9,20 @@ use App\Service\ExportExcel;
 
 class HotelSupportPersonExport extends ExportExcel
 {
-    protected $arrayData;
+    protected $arrayData = [];
 
     public function __construct()
     {
-        $this->arrayData = [];
     }
 
     /**
-     * Exporte les données.
+     * Undocumented function.
+     *
+     * @param SupportPerson[] $supports
+     *
+     * @return void
      */
-    public function exportData($supports)
+    public function exportData(array $supports)
     {
         $arrayData = [];
         $i = 0;
@@ -36,7 +39,10 @@ class HotelSupportPersonExport extends ExportExcel
             ++$i;
         }
 
-        $this->createSheet('export_suivis_hotel', 'xlsx', $arrayData, 15);
+        $this->createSheet($arrayData, [
+            'name' => 'export_suivis_hotel',
+            'columnsWidth' => 15,
+        ]);
 
         return $this->exportFile();
     }

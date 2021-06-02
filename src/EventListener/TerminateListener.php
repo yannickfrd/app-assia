@@ -3,7 +3,7 @@
 namespace App\EventListener;
 
 use App\Entity\Organization\User;
-use App\Event\Support\SupportPersonExportEvent;
+use App\Event\Evaluation\EvaluationPersonExportEvent;
 use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -36,7 +36,7 @@ class TerminateListener
         $request = $event->getRequest();
         $route = $request->get('_route');
         if ('export' === $route) {
-            $this->dispatcher->dispatch(new SupportPersonExportEvent($request), 'support_person.full_export');
+            $this->dispatcher->dispatch(new EvaluationPersonExportEvent($request), 'evaluation_person.export');
         }
     }
 
