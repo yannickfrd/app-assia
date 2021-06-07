@@ -302,7 +302,7 @@ export default class SupportPayments {
             this.isValid = false
             return this.formValidator.invalidField(this.startDateInputElt, 'Saisie obligatoire.')
         } 
-        if (false === this.formValidator.checkDate(this.startDateInputElt, -(365 * 2), 31)) {
+        if (false === this.formValidator.checkDate(this.startDateInputElt, -(9 * 365), (3 * 31))) {
             this.isValid = false
         }
     }
@@ -316,7 +316,7 @@ export default class SupportPayments {
             return this.formValidator.invalidField(this.endDateInputElt, 'La date doit être supérieure à la date de début.')
         }
         
-        if (false === this.formValidator.checkDate(this.endDateInputElt, -(365 * 2), 62)) {
+        if (false === this.formValidator.checkDate(this.endDateInputElt, -(9 * 365), (3 * 31))) {
             this.isValid = false
         }
     }
@@ -384,8 +384,10 @@ export default class SupportPayments {
             this.isValid = false
             return this.formValidator.invalidField(this.paymentDateInputElt, 'La date ne peut être postérieure à la date du jour.')
         }
-        if (!this.paymentDateInputElt.value && (20 === this.paymentTypeValue || this.paidAmtInputElt.value > 0
-            || this.paymentTypeSelectElt.value) || this.returnAmtInputElt.value > 0) {
+
+        if (!this.paymentDateInputElt.value &&
+            ((20 === this.paymentTypeValue || this.paidAmtInputElt.value > 0 || this.paymentTypeSelectElt.value)
+            || (11 === this.paymentTypeValue || this.returnAmtInputElt.value > 0 || this.paymentTypeSelectElt.value))) {
             this.isValid = false
             return this.formValidator.invalidField(this.paymentDateInputElt, 'Saisie obligatoire.')
         }
