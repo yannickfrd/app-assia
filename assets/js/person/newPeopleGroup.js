@@ -22,6 +22,8 @@ export default class NewPeopleGroup {
         this.birthdateInputElt = document.getElementById(this.form + '_person_birthdate')
         this.genderInputElt = document.getElementById(this.form + '_person_gender')
 
+        this.siSiaoIdInputElt = document.getElementById(this.form + '_peopleGroup_siSiaoId')
+
         this.genderValue = null, this.typoValue = null, this.nbPeopleValue = null, this.roleValue = null
         this.init()
     }
@@ -68,6 +70,10 @@ export default class NewPeopleGroup {
         const birthdate = this.parametersUrl.get('birthdate')
         if (birthdate) {
             this.birthdateInputElt.value = birthdate
+        }
+        const siSiaoId = this.parametersUrl.get('siSiaoId')
+        if (siSiaoId) {
+            this.siSiaoIdInputElt.value = siSiaoId
         }
     }
 

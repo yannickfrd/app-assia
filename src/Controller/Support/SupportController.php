@@ -86,6 +86,7 @@ class SupportController extends AbstractController
 
         $form = $this->createForm(SupportGroupType::class, $supportGroup)
             ->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid() && $supportGroup->getAgreement()) {
             if ($supportCreator->create($supportGroup)) {
                 $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support.before_create');

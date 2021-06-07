@@ -73,6 +73,11 @@ class PeopleGroup
     private $nbPeople;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $siSiaoId;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $comment;
@@ -106,11 +111,6 @@ class PeopleGroup
      * @ORM\OneToMany(targetEntity="App\Entity\Support\PlaceGroup", mappedBy="peopleGroup", orphanRemoval=true)
      */
     private $placeGroups;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $siSiaoId;
 
     public function __construct()
     {
@@ -159,6 +159,18 @@ class PeopleGroup
     public function setNbPeople(?int $nbPeople): self
     {
         $this->nbPeople = $nbPeople;
+
+        return $this;
+    }
+
+    public function getSiSiaoId(): ?string
+    {
+        return $this->siSiaoId;
+    }
+
+    public function setSiSiaoId(?string $siSiaoId): self
+    {
+        $this->siSiaoId = $siSiaoId;
 
         return $this;
     }
@@ -340,18 +352,6 @@ class PeopleGroup
                 $placeGroup->setPeopleGroup(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getSiSiaoId(): ?string
-    {
-        return $this->siSiaoId;
-    }
-
-    public function setSiSiaoId(?string $siSiaoId): self
-    {
-        $this->siSiaoId = $siSiaoId;
 
         return $this;
     }

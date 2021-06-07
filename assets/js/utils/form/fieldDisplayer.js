@@ -56,8 +56,8 @@ export default class FieldDisplayer {
     checkSelect() {
         const options = this.elt.dataset.options
         let isVisible = false
-        
-        if (null === options) {
+
+        if (!options) {
             return console.error('No option defined for the select field : ' + this.elt.dataset.parentField)
         }
 

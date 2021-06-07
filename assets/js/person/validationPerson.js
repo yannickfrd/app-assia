@@ -9,31 +9,12 @@ export default class ValidationPerson {
         this.formValidator = new FormValidator(document.getElementById('person'))
 
         this.lastnameInputElt = document.getElementById(lastname)
-        this.lastnameLabelElt = document.querySelector('label[for=' + lastname + ']')
-
         this.firstnameInputElt = document.getElementById(firstname)
-        this.firstnameLabelElt = document.querySelector('label[for=' + firstname + ']')
-
         this.birthdateInputElt = document.getElementById(birthdate)
-        this.birthdateLabelElt = document.querySelector('label[for=' + birthdate + ']')
-
         this.genderInputElt = document.getElementById(gender)
-        this.genderLabelElt = document.querySelector('label[for=' + gender + ']')
-        this.genderValue = null
-
         this.emailInputElt = document.getElementById(email)
-        this.emailLabelElt = document.querySelector('label[for=' + email + ']')
-
         this.roleInputElt = document.getElementById(role)
-        this.roleLabelElt = document.querySelector('label[for=' + role + ']')
-        this.roleValue = null
-
-        this.typoInputElt = document.getElementById(typo)
-        this.typoLabelElt = document.querySelector('label[for=' + typo + ']')
-        this.typoValue = null
-
         this.nbPeopleInputElt = document.getElementById(nbPeople)
-        this.nbPeopleLabelElt = document.querySelector('label[for=' + nbPeople + ']')
 
         this.init()
     }
@@ -45,7 +26,7 @@ export default class ValidationPerson {
         if (this.emailInputElt) {
             this.emailInputElt.addEventListener('focusout', this.checkEmail.bind(this))
         }
-        if (this.typoInputElt) {
+        if (this.nbPeopleInputElt) {
             this.nbPeopleInputElt.addEventListener('change', this.checkNbPeople.bind(this))
         }
     }

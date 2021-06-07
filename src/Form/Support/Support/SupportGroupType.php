@@ -2,40 +2,39 @@
 
 namespace App\Form\Support\Support;
 
-use App\Form\Utils\Choices;
-use App\Form\Type\LocationType;
-use App\Entity\Organization\User;
-use App\Entity\Organization\Place;
-use App\Entity\Support\PlaceGroup;
 use App\Entity\Organization\Device;
-use App\Form\Support\Avdl\AvdlType;
+use App\Entity\Organization\Place;
 use App\Entity\Organization\Service;
+use App\Entity\Organization\SubService;
+use App\Entity\Organization\User;
 use App\Entity\Support\HotelSupport;
+use App\Entity\Support\PlaceGroup;
 use App\Entity\Support\SupportGroup;
+use App\Form\Organization\Place\PlaceGroupHotelType;
+use App\Form\People\PeopleGroup\PeopleGroupSiSiaoType;
+use App\Form\Support\Avdl\AvdlType;
+use App\Form\Support\HotelSupport\HotelSupportType;
+use App\Form\Support\OriginRequest\OriginRequestType;
+use App\Form\Type\LocationType;
+use App\Form\Utils\Choices;
+use App\Repository\Organization\DeviceRepository;
+use App\Repository\Organization\PlaceRepository;
+use App\Repository\Organization\ServiceRepository;
+use App\Repository\Organization\SubServiceRepository;
+use App\Repository\Organization\UserRepository;
 use App\Security\CurrentUserService;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use App\Entity\Organization\SubService;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
-use App\Repository\Organization\UserRepository;
-use App\Repository\Organization\PlaceRepository;
-use Symfony\Component\Form\FormBuilderInterface;
-use App\Form\People\PeopleGroup\PeopleGroupType2;
-use App\Repository\Organization\DeviceRepository;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use App\Repository\Organization\ServiceRepository;
-use App\Form\Support\HotelSupport\HotelSupportType;
-use App\Form\Organization\Place\PlaceGroupHotelType;
-use App\Form\Support\OriginRequest\OriginRequestType;
-use App\Repository\Organization\SubServiceRepository;
-use App\Form\People\PeopleGroup\PeopleGroupSiSiaoType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class SupportGroupType extends AbstractType
 {
@@ -230,6 +229,9 @@ class SupportGroupType extends AbstractType
 
     protected function addHotelFields(FormInterface $form)
     {
+        /** @var SupportGroup */
+        $supportGroup = $form->getConfig()->getData();
+
         $form
             ->remove('location')
             ->add('status', ChoiceType::class, [
@@ -237,10 +239,10 @@ class SupportGroupType extends AbstractType
                 'placeholder' => 'placeholder.select',
                 'required' => true,
             ])
-            ->add('peopleGroup', PeopleGroupSiSiaoType::class)
+            ->add('peopleGroup', PeopleGroupSiSiaoType::class, [
+                'data' => $supportGroup->getPeopleGroup(),
+            ])
             ->add('hotelSupport', HotelSupportType::class);
-
-        $supportGroup = $form->getConfig()->getData();
 
         if (0 === $supportGroup->getPlaceGroups()->count()) {
             $this->addPlaceGroup($supportGroup);
