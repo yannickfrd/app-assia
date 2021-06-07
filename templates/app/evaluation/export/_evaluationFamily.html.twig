@@ -7,7 +7,6 @@
 {% set evalFamily = evaluation.evalFamilyGroup %}
 {% if evalFamily %}
     {{ view_p.get(evalFamily.pmiFollowUp == YES ? (evalFamily.pmiName ? evalFamily.pmiName), "Pmi follow up", "evaluation") }}
-    {{ view_p.get(evalFamily.nbDependentChildren, "Nb dependent children", "evaluation") }}
     {{ view_p.get(evalFamily.famlReunification == YES ? evalFamily.famlReunificationToString ~ (evalFamily.nbPeopleReunification ? " (" 
         ~ evalFamily.nbPeopleReunification ~ " personne(s))"), "Faml reunification", "evaluation") }}
     {{ view_text.get(evaluation.evalFamilyGroup.commentEvalFamilyGroup, null, null, type) }}

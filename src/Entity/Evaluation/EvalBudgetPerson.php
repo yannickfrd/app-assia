@@ -33,7 +33,7 @@ class EvalBudgetPerson
         'asf' => 'Allocation de soutien familial (ASF)',
         'solidarityAllowance' => 'Allocation de solidarité spécifique (ASS)',
         'asylumAllowance' => 'Allocation pour demandeur d\'asile (ADA)',
-        'tempWaitingAllowance' => 'Allocation temporaire d\'attente (ATA)',
+        // 'tempWaitingAllowance' => 'Allocation temporaire d\'attente (ATA)', // To delete
         'scholarships' => 'Bourse',
         'familySupplement' => 'Complément familial',
         'paidTraining' => 'Formation rémunérée',
@@ -57,7 +57,7 @@ class EvalBudgetPerson
         'asf' => 'ASF',
         'solidarityAllowance' => 'ASS',
         'asylumAllowance' => 'ADA',
-        'tempWaitingAllowance' => 'ATA',
+        // 'tempWaitingAllowance' => 'ATA', // To delete
         'scholarships' => 'Bourse',
         'familySupplement' => 'Complément familial',
         'paidTraining' => 'Formation',
@@ -356,7 +356,6 @@ class EvalBudgetPerson
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("export")
      */
     private $overIndebtRecordDate;
 
@@ -452,24 +451,6 @@ class EvalBudgetPerson
         return $this->charges;
     }
 
-    public function getChargesType(): array
-    {
-        $array = [];
-
-        foreach (EvalBudgetPerson::CHARGES_TYPE as $key => $value) {
-            $method = 'get'.ucfirst($key);
-            if (EvaluationChoices::YES === $this->$method()) {
-                $array[] = $value;
-            }
-        }
-
-        if ($this->getChargeOtherPrecision()) {
-            $array[] = $this->getChargeOtherPrecision();
-        }
-
-        return $array;
-    }
-
     /**
      * @Groups("export")
      */
@@ -485,22 +466,27 @@ class EvalBudgetPerson
         return $this;
     }
 
-    public function getChargeTypes(): array
+    public function chargesTypes(): array
     {
         $array = [];
 
-        foreach (self::CHARGES_TYPE as $key => $value) {
+        foreach (EvalBudgetPerson::CHARGES_TYPE as $key => $value) {
             $method = 'get'.ucfirst($key);
             if (EvaluationChoices::YES === $this->$method()) {
-                $array[] = $value;
+                $array[$key] = $value;
             }
         }
 
-        if ($this->getChargeOther()) {
-            $array[] = $this->getChargeOtherPrecision();
+        if ($this->chargeOther && $this->chargeOtherPrecision) {
+            $array['chargeOther'] = $array['chargeOther'].' ('.$this->chargeOtherPrecision.')';
         }
 
         return $array;
+    }
+
+    public function getChargesTypesToString(): ?string
+    {
+        return join(', ', $this->chargesTypes());
     }
 
     public function getChargesAmt(): ?float
@@ -923,22 +909,27 @@ class EvalBudgetPerson
         return $this;
     }
 
-    public function getDebtTypes(): array
+    public function debtsTypes(): array
     {
         $array = [];
 
         foreach (self::DEBTS_TYPE as $key => $value) {
             $method = 'get'.ucfirst($key);
             if (EvaluationChoices::YES === $this->$method()) {
-                $array[] = $value;
+                $array[$key] = $value;
             }
         }
 
-        if ($this->getDebtOtherPrecision()) {
-            $array[] = $this->getDebtOtherPrecision();
+        if ($this->debtOther && $this->debtOtherPrecision) {
+            $array['debtOther'] = $array['debtOther'].' ('.$this->debtOtherPrecision.')';
         }
 
         return $array;
+    }
+
+    public function getDebtsTypesToString(): ?string
+    {
+        return join(', ', $this->debtsTypes());
     }
 
     /**

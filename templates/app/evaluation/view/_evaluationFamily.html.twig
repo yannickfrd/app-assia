@@ -13,7 +13,6 @@
     {% if evalFamily %}
         <div class="row mb-2">
             {{ view_div.get(evalFamily.pmiFollowUp == YES ? (evalFamily.pmiName ? evalFamily.pmiName), "Pmi follow up", "evaluation") }}
-            {{ view_div.get(evalFamily.nbDependentChildren, "Nb dependent children", "evaluation") }}
             {{ view_div.get(evalFamily.famlReunification == YES ? evalFamily.famlReunificationToString ~ (evalFamily.nbPeopleReunification ? " (" 
                 ~ evalFamily.nbPeopleReunification ~ " personne(s))"), "Faml reunification", "evaluation") }}
         </div>

@@ -27,11 +27,10 @@ class EvalFamilyGroup
      */
     private $id;
 
-    /**
-     * @ORM\Column(type="smallint", nullable=true)
-     * @Groups("export")
-     */
-    private $nbDependentChildren;
+    // /**
+    //  * @ORM\Column(type="smallint", nullable=true)
+    //  */
+    // private $nbDependentChildren; // TO DELETE
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -75,17 +74,17 @@ class EvalFamilyGroup
         return $this->id;
     }
 
-    public function getNbDependentChildren(): ?int
-    {
-        return $this->nbDependentChildren;
-    }
+    // public function getNbDependentChildren(): ?int
+    // {
+    //     return $this->nbDependentChildren;
+    // }
 
-    public function setNbDependentChildren(?int $nbDependentChildren): self
-    {
-        $this->nbDependentChildren = $nbDependentChildren;
+    // public function setNbDependentChildren(?int $nbDependentChildren): self
+    // {
+    //     $this->nbDependentChildren = $nbDependentChildren;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getChildrenBehind(): ?int
     {

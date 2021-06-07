@@ -46,8 +46,8 @@
                 {% endif %}
                 {% if evalSocial.healthProblem == YES %}
                     <div class="row mb-2">
-                        {{ view_div.get(evalSocial.healthProblemToString ~ (evalSocial.healthProblemsType ? 
-                            " (" ~ evalSocial.healthProblemsType|join(", ") ~ ")"), "Health problem", "evaluation") }}
+                        {{ view_div.get(evalSocial.healthProblemToString ~ (evalSocial.healthProblemTypes ? 
+                            " (" ~ evalSocial.healthProblemTypes|join(", ") ~ ")"), "Health problem", "evaluation") }}
                     </div>
                 {% endif %}
                 <div class="row mb-2">

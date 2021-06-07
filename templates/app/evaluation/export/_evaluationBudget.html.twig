@@ -145,8 +145,8 @@
         {% endif %}
 
         {% if evalBudget.debts %}
-            {{ view_p.get(evalBudget.debtsToString ~ (evalBudget.debtTypes ? 
-                " (" ~ evalBudget.debtsType|join(", ")|lower ~ ")"), "Debts", "evaluation") }}
+            {{ view_p.get(evalBudget.debtsToString ~ (evalBudget.debtsTypes ? 
+                " (" ~ evalBudget.debtsTypesToString|lower ~ ")"), "Debts", "evaluation") }}
             {{ view_p.get(evalBudget.debtsAmt|amount(0), "Debts amt", "evaluation") }}
             {{ view_p.get(evalBudget.monthlyRepaymentAmt|amount(2), "Monthly repayment amt", "evaluation") }}
             {{ view_p.get(evalBudget.debtComment, "Debt comment", "evaluation") }}

@@ -2,13 +2,13 @@
 
 namespace App\Form\Evaluation;
 
+use App\Entity\Evaluation\EvalFamilyGroup;
 use App\Form\Utils\Choices;
 use App\Form\Utils\EvaluationChoices;
 use Symfony\Component\Form\AbstractType;
-use App\Entity\Evaluation\EvalFamilyGroup;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class EvalFamilyGroupType extends AbstractType
 {
@@ -22,7 +22,6 @@ class EvalFamilyGroupType extends AbstractType
                 // 'help' => 'pmiFollowUp.help',
             ])
             ->add('pmiName')
-            ->add('nbDependentChildren')
             ->add('childrenBehind', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
                 'placeholder' => 'placeholder.select',
