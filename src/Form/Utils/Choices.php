@@ -20,14 +20,14 @@ class Choices
     ];
 
     public const DEPARTMENTS = [
-        75 => '75',
-        77 => '77',
-        78 => '78',
-        91 => '91',
-        92 => '92',
-        93 => '93',
-        94 => '94',
-        95 => '95',
+        75 => '75 - Paris',
+        77 => '77 - Seine-et-Marne',
+        78 => '78 - Yvelines',
+        91 => '91 - Essone',
+        92 => '92 - Hauts-de-Seine',
+        93 => '93 - Seine-St-Denis',
+        94 => '94 - Val-de-Marne',
+        95 => '95 - Val-d\'Oise',
         98 => 'Hors IDF',
         99 => 'Non renseigné',
     ];

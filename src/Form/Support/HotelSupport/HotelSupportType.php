@@ -80,6 +80,11 @@ class HotelSupportType extends AbstractType
                 'choices' => Choices::getChoices(HotelSupport::END_SUPPORT_REASON),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
+            ])
+            ->add('endSupportDepartment', ChoiceType::class, [
+                'choices' => Choices::getChoices(Choices::DEPARTMENTS),
+                'placeholder' => 'placeholder.select',
+                'required' => false,
             ]);
     }
 

@@ -169,7 +169,7 @@ class Avdl
      */
     public function getDiagTypeToString(): ?string
     {
-        return $this->getDiagType() ? self::DIAG_TYPE[$this->getDiagType()] : null;
+        return $this->diagType ? self::DIAG_TYPE[$this->diagType] : null;
     }
 
     public function setDiagType(?int $diagType): self
@@ -213,7 +213,7 @@ class Avdl
      */
     public function getRecommendationSupportToString(): ?string
     {
-        return $this->getRecommendationSupport() ? self::RECOMMENDATION_SUPPORT[$this->getRecommendationSupport()] : null;
+        return $this->recommendationSupport ? self::RECOMMENDATION_SUPPORT[$this->recommendationSupport] : null;
     }
 
     public function setRecommendationSupport(?int $recommendationSupport): self
@@ -269,7 +269,7 @@ class Avdl
      */
     public function getSupportTypeToString(): ?string
     {
-        return $this->getSupportType() ? self::SUPPORT_TYPE[$this->getSupportType()] : null;
+        return $this->supportType ? self::SUPPORT_TYPE[$this->supportType] : null;
     }
 
     public function setSupportType(?int $supportType): self
@@ -301,7 +301,7 @@ class Avdl
      */
     public function getEndSupportReasonToString(): ?string
     {
-        return $this->getEndSupportReason() ? self::END_SUPPORT_REASON[$this->getEndSupportReason()] : null;
+        return $this->endSupportReason ? self::END_SUPPORT_REASON[$this->endSupportReason] : null;
     }
 
     public function setEndSupportReason(?int $endSupportReason): self
@@ -321,7 +321,7 @@ class Avdl
      */
     public function getAccessHousingModalityToString(): ?string
     {
-        return $this->getAccessHousingModality() ? self::ACCESS_HOUSING_MODALITY[$this->getAccessHousingModality()] : null;
+        return $this->accessHousingModality ? self::ACCESS_HOUSING_MODALITY[$this->accessHousingModality] : null;
     }
 
     public function setAccessHousingModality(?int $accessHousingModality): self
@@ -353,7 +353,7 @@ class Avdl
      */
     public function getPropoResultToString(): ?string
     {
-        return $this->getPropoResult() ? self::PROPO_RESULT[$this->getPropoResult()] : null;
+        return $this->propoResult ? self::PROPO_RESULT[$this->propoResult] : null;
     }
 
     public function setPropoResult(?int $propoResult): self

@@ -111,12 +111,12 @@ class HotelSupport
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $originDept; // A SUPPRIMER
+    private $originDept; // TO DELETE
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    private $gipId; // A SUPPRIMER
+    private $gipId; // TO DELETE
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -167,6 +167,14 @@ class HotelSupport
 
     /** @Groups("export") */
     private $endSupportReasonToString;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $endSupportDepartment;
+
+    /** @Groups("export") */
+    private $endSupportDepartmentToString;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -295,7 +303,7 @@ class HotelSupport
 
     public function getLevelSupportToString(): ?string
     {
-        return $this->getLevelSupport() ? self::LEVEL_SUPPORT[$this->getLevelSupport()] : null;
+        return $this->levelSupport ? self::LEVEL_SUPPORT[$this->levelSupport] : null;
     }
 
     public function setLevelSupport(?int $levelSupport): self
@@ -312,7 +320,7 @@ class HotelSupport
 
     public function getRecommendationToString(): ?string
     {
-        return $this->getRecommendation() ? EvalHousingGroup::SIAO_RECOMMENDATION[$this->getRecommendation()] : null;
+        return $this->recommendation ? EvalHousingGroup::SIAO_RECOMMENDATION[$this->recommendation] : null;
     }
 
     public function setRecommendation(?int $recommendation): self
@@ -341,7 +349,7 @@ class HotelSupport
 
     public function getDepartmentAnchorToString(): ?string
     {
-        return $this->getDepartmentAnchor() ? Choices::DEPARTMENTS[$this->getDepartmentAnchor()] : null;
+        return $this->departmentAnchor ? Choices::DEPARTMENTS[$this->departmentAnchor] : null;
     }
 
     public function setDepartmentAnchor(?int $departmentAnchor): self
@@ -358,12 +366,29 @@ class HotelSupport
 
     public function getEndSupportReasonToString(): ?string
     {
-        return $this->getEndSupportReason() ? self::END_SUPPORT_REASON[$this->getEndSupportReason()] : null;
+        return $this->endSupportReason ? self::END_SUPPORT_REASON[$this->endSupportReason] : null;
     }
 
     public function setEndSupportReason(?int $endSupportReason): self
     {
         $this->endSupportReason = $endSupportReason;
+
+        return $this;
+    }
+
+    public function getEndSupportDepartment(): ?int
+    {
+        return $this->endSupportDepartment;
+    }
+
+    public function getEndSupportDepartmentToString(): ?string
+    {
+        return $this->endSupportDepartment ? Choices::DEPARTMENTS[$this->endSupportDepartment] : null;
+    }
+
+    public function setEndSupportDepartment(?int $endSupportDepartment): self
+    {
+        $this->endSupportDepartment = $endSupportDepartment;
 
         return $this;
     }
