@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.29.26 27/05/2021
+2.30.9 07/06/2021
 
 # Développeur
 Romain MADELAINE
@@ -12,6 +12,21 @@ https://github.com/RomMad/esperer95.app
 
 # Connection à la base démo
 https://demo.esperer95.app
+
+## Version 2.30.4-9 - 07/06/2021
+- Fix problem date controls in payments
+- Add 'endSupportDepartment' field in HotelSupport
+- Fix problem display siSIaoId field during creation person or creation hotel support
+- Update evaluation
+- Update export (remove fields in export, add path to model stat file)
+- Update ContributionCalculator for hotelSupport
+
+## Version 2.30.3 - 02/06/2021
+- Update feature export (Factoring, add new options export, create model files...)
+- Fix error namespace
+
+## Version 2.29.27 - 31/05/2021
+- Fix error when sort by lastname in listPayments
 
 ## Version 2.29.21-26 - 27/05/2021
 - Fix problem format date contractStartDate
