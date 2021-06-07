@@ -119,7 +119,8 @@ class EvaluationPersonExport extends ExportExcel
             'columnsWidth' => $search->getModel() ? null : 15,
             'formatted' => $search->getFormattedSheet(),
             'modelPath' => $search->getModel() ?
-                \dirname(__DIR__).'/../../public/documentation/models/model_evaluation_export_'.$search->getModel().'.xlsx' : null,
+                \dirname(__DIR__).'/../../public/documentation/models/model_export_evaluation_'.$search->getModel().'.xlsx' : null,
+            'startCell' => $search->getModel() ? 'A2' : 'A1',
         ]);
 
         $this->logger->info('Used memory : '.number_format(memory_get_usage(), 0, ',', ' '));

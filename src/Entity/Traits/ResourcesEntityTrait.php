@@ -12,6 +12,12 @@ trait ResourcesEntityTrait
      */
     private $resources;
 
+    /** @Groups("export") */
+    private $resourcesToString;
+
+    /** @Groups("export") */
+    private $resourcesTypesToString;
+
     /**
      * @ORM\Column(type="float", nullable=true)
      * @Groups("export")
@@ -21,67 +27,67 @@ trait ResourcesEntityTrait
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $disAdultAllowance;
+    private $disAdultAllowance; // AAH
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $disChildAllowance;
+    private $disChildAllowance; // AEEH
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $unemplBenefit;
+    private $unemplBenefit; // ARE
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $asylumAllowance;
+    private $asylumAllowance; // ADA
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $tempWaitingAllowance;
+    private $tempWaitingAllowance; // ATA
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $familyAllowance;
+    private $familyAllowance; // AF
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $solidarityAllowance;
+    private $solidarityAllowance; // ASS
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $paidTraining;
+    private $paidTraining; // Formation
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $youthGuarantee;
+    private $youthGuarantee; // Garantie Jeunes
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $maintenance;
+    private $maintenance; // Pension alimentaire
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $activityBonus;
+    private $activityBonus; // Prime d'activité
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $pensionBenefit;
+    private $pensionBenefit; // Retraite
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $minimumIncome;
+    private $minimumIncome; // RSA
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -125,105 +131,92 @@ trait ResourcesEntityTrait
 
     /**
      * @ORM\Column(type="string", nullable=true)
-     * @Groups("export")
      */
     private $ressourceOtherPrecision;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
      */
-    private $disAdultAllowanceAmt;
+    private $disAdultAllowanceAmt; //AAH
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $disChildAllowanceAmt; // AEEH
 
     /**
      * @ORM\Column(type="float", nullable=true)
      * @Groups("export")
      */
-    private $disChildAllowanceAmt;
+    private $unemplBenefitAmt; // ARE
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $asylumAllowanceAmt; // ADA
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $tempWaitingAllowanceAmt; // ATA
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $familySupplementAmt; // Complément familial
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $scholarshipsAmt; // Bourse
 
     /**
      * @ORM\Column(type="float", nullable=true)
      * @Groups("export")
      */
-    private $unemplBenefitAmt;
+    private $familyAllowanceAmt; // AF
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $solidarityAllowanceAmt; // ASS
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $paidTrainingAmt; // Formation
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $youthGuaranteeAmt; // Garantie Jeunes
 
     /**
      * @ORM\Column(type="float", nullable=true)
      * @Groups("export")
      */
-    private $asylumAllowanceAmt;
+    private $dailyAllowanceAmt; // IJ
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $maintenanceAmt; // Pension alimentaire
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $activityBonusAmt; // Prime d'activité
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $pensionBenefitAmt; // Retraite
 
     /**
      * @ORM\Column(type="float", nullable=true)
      * @Groups("export")
      */
-    private $tempWaitingAllowanceAmt;
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
-     */
-    private $familySupplementAmt;
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
-     */
-    private $scholarshipsAmt;
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
-     */
-    private $familyAllowanceAmt;
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
-     */
-    private $solidarityAllowanceAmt;
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
-     */
-    private $paidTrainingAmt;
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
-     */
-    private $youthGuaranteeAmt;
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
-     */
-    private $dailyAllowanceAmt;
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
-     */
-    private $maintenanceAmt;
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
-     */
-    private $activityBonusAmt;
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
-     */
-    private $pensionBenefitAmt;
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
-     */
-    private $minimumIncomeAmt;
+    private $minimumIncomeAmt; // RSA
 
     /**
      * @ORM\Column(type="float", nullable=true)
@@ -233,25 +226,21 @@ trait ResourcesEntityTrait
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
      */
     private $pajeAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
      */
     private $asfAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
      */
     private $disabilityPensionAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
      */
     private $ressourceOtherAmt;
 
@@ -260,9 +249,6 @@ trait ResourcesEntityTrait
         return $this->resources;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getResourcesToString(): ?string
     {
         return $this->resources ? EvalBudgetPerson::RESOURCES[$this->resources] : null;
@@ -292,9 +278,6 @@ trait ResourcesEntityTrait
         return $this->disAdultAllowance;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getDisAdultAllowanceToString(): ?string
     {
         return $this->disAdultAllowance ? Choices::YES_NO_BOOLEAN[$this->disAdultAllowance] : null;
@@ -312,9 +295,6 @@ trait ResourcesEntityTrait
         return $this->disChildAllowance;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getDisChildAllowanceToString(): ?string
     {
         return $this->disChildAllowance ? Choices::YES_NO_BOOLEAN[$this->disChildAllowance] : null;
@@ -332,9 +312,6 @@ trait ResourcesEntityTrait
         return $this->unemplBenefit;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getUnemplBenefitToString(): ?string
     {
         return $this->unemplBenefit ? Choices::YES_NO_BOOLEAN[$this->unemplBenefit] : null;
@@ -352,9 +329,6 @@ trait ResourcesEntityTrait
         return $this->asylumAllowance;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getAsylumAllowanceToString(): ?string
     {
         return $this->asylumAllowance ? Choices::YES_NO_BOOLEAN[$this->asylumAllowance] : null;
@@ -372,9 +346,6 @@ trait ResourcesEntityTrait
         return $this->tempWaitingAllowance;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getTempWaitingAllowanceToString(): ?string
     {
         return $this->tempWaitingAllowance ? Choices::YES_NO_BOOLEAN[$this->tempWaitingAllowance] : null;
@@ -392,9 +363,6 @@ trait ResourcesEntityTrait
         return $this->familyAllowance;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getFamilyAllowanceToString(): ?string
     {
         return $this->getFamilyAllowance() ? Choices::YES_NO_BOOLEAN[$this->familyAllowance] : null;
@@ -412,9 +380,6 @@ trait ResourcesEntityTrait
         return $this->solidarityAllowance;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getSolidarityAllowanceToString(): ?string
     {
         return $this->solidarityAllowance ? Choices::YES_NO_BOOLEAN[$this->solidarityAllowance] : null;
@@ -432,9 +397,6 @@ trait ResourcesEntityTrait
         return $this->paidTraining;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getPaidTrainingToString(): ?string
     {
         return $this->paidTraining ? Choices::YES_NO_BOOLEAN[$this->paidTraining] : null;
@@ -452,9 +414,6 @@ trait ResourcesEntityTrait
         return $this->paje;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getPajeToString(): ?string
     {
         return $this->paje ? Choices::YES_NO_BOOLEAN[$this->paje] : null;
@@ -472,9 +431,6 @@ trait ResourcesEntityTrait
         return $this->asf;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getAsfToString(): ?string
     {
         return $this->asf ? Choices::YES_NO_BOOLEAN[$this->asf] : null;
@@ -492,9 +448,6 @@ trait ResourcesEntityTrait
         return $this->disabilityPension;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getDisabilityPensionToString(): ?string
     {
         return $this->disabilityPension ? Choices::YES_NO_BOOLEAN[$this->disabilityPension] : null;
@@ -512,9 +465,6 @@ trait ResourcesEntityTrait
         return $this->familySupplement;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getFamilySupplementToString(): ?string
     {
         return $this->familySupplement ? Choices::YES_NO_BOOLEAN[$this->familySupplement] : null;
@@ -532,9 +482,6 @@ trait ResourcesEntityTrait
         return $this->scholarships;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getScholarshipsToString(): ?string
     {
         return $this->scholarships ? Choices::YES_NO_BOOLEAN[$this->scholarships] : null;
@@ -552,9 +499,6 @@ trait ResourcesEntityTrait
         return $this->youthGuarantee;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getYouthGuaranteeToString(): ?string
     {
         return $this->youthGuarantee ? Choices::YES_NO_BOOLEAN[$this->youthGuarantee] : null;
@@ -572,9 +516,6 @@ trait ResourcesEntityTrait
         return $this->dailyAllowance;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getDailyAllowanceToString(): ?string
     {
         return $this->dailyAllowance ? Choices::YES_NO_BOOLEAN[$this->dailyAllowance] : null;
@@ -592,9 +533,6 @@ trait ResourcesEntityTrait
         return $this->maintenance;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getMaintenanceToString(): ?string
     {
         return $this->maintenance ? Choices::YES_NO_BOOLEAN[$this->maintenance] : null;
@@ -612,9 +550,6 @@ trait ResourcesEntityTrait
         return $this->activityBonus;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getActivityBonusToString(): ?string
     {
         return $this->activityBonus ? Choices::YES_NO_BOOLEAN[$this->activityBonus] : null;
@@ -632,9 +567,6 @@ trait ResourcesEntityTrait
         return $this->pensionBenefit;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getPensionBenefitToString(): ?string
     {
         return $this->pensionBenefit ? Choices::YES_NO_BOOLEAN[$this->pensionBenefit] : null;
@@ -652,9 +584,6 @@ trait ResourcesEntityTrait
         return $this->minimumIncome;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getMinimumIncomeToString(): ?string
     {
         return $this->minimumIncome ? Choices::YES_NO_BOOLEAN[$this->minimumIncome] : null;
@@ -672,9 +601,6 @@ trait ResourcesEntityTrait
         return $this->salary;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getSalaryToString(): ?string
     {
         return $this->salary ? Choices::YES_NO_BOOLEAN[$this->salary] : null;
@@ -692,9 +618,6 @@ trait ResourcesEntityTrait
         return $this->ressourceOther;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getRessourceOtherToString(): ?string
     {
         return $this->ressourceOther ? Choices::YES_NO_BOOLEAN[$this->ressourceOther] : null;
@@ -971,21 +894,26 @@ trait ResourcesEntityTrait
         return $this;
     }
 
-    public function getResourceTypes(): array
+    public function resourcesTypes(): array
     {
         $array = [];
 
         foreach (EvalBudgetPerson::RESOURCES_MIN_TYPE as $key => $value) {
             $method = 'get'.ucfirst($key);
             if (Choices::YES === $this->$method()) {
-                $array[] = $value;
+                $array[$key] = $value;
             }
         }
 
-        if ($this->getRessourceOtherPrecision()) {
-            $array[] = $this->getRessourceOtherPrecision();
+        if ($this->ressourceOther && $this->ressourceOtherPrecision) {
+            $array['ressourceOther'] = $array['ressourceOther'].' ('.$this->ressourceOtherPrecision.')';
         }
 
         return $array;
+    }
+
+    public function getResourcesTypesToString(): ?string
+    {
+        return join(', ', $this->resourcesTypes());
     }
 }

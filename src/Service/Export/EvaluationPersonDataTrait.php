@@ -71,11 +71,11 @@ trait EvaluationPersonDataTrait
             // 'Montant salaire' => $evalBudgetPerson->getSalaryAmt(),
             // 'Montant ARE' => $evalBudgetPerson->getUnemplBenefitAmt(),
             // 'Montant RSA' => $evalBudgetPerson->getMinimumIncomeAmt(),
-            'Type de ressources' => join(', ', $evalBudgetPerson->getResourceTypes()),
+            'Type de ressources' => $evalBudgetPerson->getResourcesTypesToString(),
             'Montant charges' => $evalBudgetPerson->getChargesAmt(),
-            'Type de charges' => join(', ', $evalBudgetPerson->getChargeTypes()),
+            'Type de charges' => $evalBudgetPerson->getChargesTypesToString(),
             'Montant dettes' => $evalBudgetPerson->getDebtsAmt(),
-            'Type de dettes' => join(', ', $evalBudgetPerson->getDebtTypes()),
+            'Type de dettes' => $evalBudgetPerson->getDebtsTypesToString(),
 
             // Prof
             'Emploi' => $evalProfPerson->getProfStatusToString(),

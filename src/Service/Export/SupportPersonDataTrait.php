@@ -27,10 +27,10 @@ trait SupportPersonDataTrait
         }
 
         $datas = [
-            'N° groupe' => $peopleGroup->getId(),
+            'N° suivi personne' => $supportPerson->getId(),
             'N° suivi groupe' => $supportGroup->getId(),
             'N° personne' => $person->getId(),
-            'N° suivi personne' => $supportPerson->getId(),
+            'N° groupe' => $peopleGroup->getId(),
             'ID groupe SI-SIAO' => (string) $peopleGroup->getSiSiaoId(),
             'Nom' => $anonymized ? 'XXX' : $person->getLastname(),
             'Prénom' => $anonymized ? 'XXX' : $person->getFirstname(),
