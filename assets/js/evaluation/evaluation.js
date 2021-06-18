@@ -37,7 +37,7 @@ export default class evaluation {
         
         document.querySelectorAll('input[type="date"]').forEach(dateElt => {
             dateElt.addEventListener('focusout', () => {
-                this.formValidator.checkDate(dateElt, -(365 * 20), (365 * 11))
+                this.formValidator.checkDate(dateElt, -(365 * 99), (365 * 11))
                 if (!dateElt.value) {   
                     dateElt.value = ''
                 }
