@@ -2,7 +2,7 @@
 Application métier de gestion des accompagnements pour les travailleurs sociaux
 
 # Versions
-2.30.9 07/06/2021
+2.30.13 03/08/2021
 
 # Développeur
 Romain MADELAINE
@@ -12,6 +12,12 @@ https://github.com/RomMad/esperer95.app
 
 # Connection à la base démo
 https://demo.esperer95.app
+
+## Version 2.30.13 - 03/08/2021
+- Fix problem route 'person_show' with slug
+- Add item 'Récépissé asile' in ASYLUM_STATUS const
+- Fix problem control valid date in evaluation (n+10)
+- Fix problem URL 'www.esperer-95.org'
 
 ## Version 2.30.4-9 - 07/06/2021
 - Fix problem date controls in payments
