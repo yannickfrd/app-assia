@@ -34,10 +34,11 @@ class EvalAdmPerson
         99 => 'Non évalué',
     ];
 
-    public const RIGHT_TO_RESIDE = [
+    public const ASYLUM_STATUS = [
         1 => "Débouté du droit d'asile",
         2 => "Demandeur d'asile",
         3 => 'Protection subsidiaire',
+        5 => 'Récépissé asile',
         4 => 'Réfugié',
         97 => 'Autre',
         99 => 'Non évalué',
@@ -235,7 +236,7 @@ class EvalAdmPerson
      */
     public function getAsylumStatusToString(): ?string
     {
-        return $this->asylumStatus ? self::RIGHT_TO_RESIDE[$this->asylumStatus] : null;
+        return $this->asylumStatus ? self::ASYLUM_STATUS[$this->asylumStatus] : null;
     }
 
     public function setAsylumStatus(?int $asylumStatus): self

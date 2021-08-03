@@ -52,7 +52,7 @@ class EvalAdmPersonType extends AbstractType
                 'required' => false,
             ])
             ->add('asylumStatus', ChoiceType::class, [
-                'choices' => Choices::getChoices(EvalAdmPerson::RIGHT_TO_RESIDE),
+                'choices' => Choices::getChoices(EvalAdmPerson::ASYLUM_STATUS),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
