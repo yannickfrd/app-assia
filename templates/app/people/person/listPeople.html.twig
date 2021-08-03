@@ -59,7 +59,7 @@
                                                     <span class="fas fa-plus-square text-{{ theme_color }} fa-2x"></span>
                                                 </a>
                                             {% else %}
-                                                <a href="{{ path('person_show', {'id':person.id, 'slug':person.slug}) }}"
+                                                <a href="{{ path('person_show_slug', {'id':person.id, 'slug':person.slug}) }}"
                                                     class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
                                                     title="Voir la fiche individuelle">
                                                     <span class="fas fa-eye"></span>
@@ -67,7 +67,7 @@
                                             {% endif %}
                                         </td>
                                         <td class="align-middle">
-                                            <a href="{{ path('person_show', {'id':person.id, 'slug':person.slug}) }}"
+                                            <a href="{{ path('person_show_slug', {'id':person.id, 'slug':person.slug}) }}"
                                                 class="text-{{ theme_color }} text-uppercase font-weight-bold">
                                                 {{ person.lastname }}{{ person.usename ? " (" ~ person.usename ~ ")" }}
                                             </a>

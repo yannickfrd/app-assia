@@ -202,7 +202,7 @@ class PersonController extends AbstractController
     /**
      * Voir la fiche individuelle.
      *
-     * @Route("/person/{id}-{slug}", name="person_show", requirements={"slug" : "[a-z0-9\-]*"}, methods="GET")
+     * @Route("/person/{id}-{slug}", name="person_show_slug", requirements={"slug" : "[a-z0-9\-]*"}, methods="GET")
      * @Route("/person/{id}", name="person_show", methods="GET")
      */
     public function showPerson(int $id, Request $request, SupportPersonRepository $supportRepo, SessionInterface $session): Response
