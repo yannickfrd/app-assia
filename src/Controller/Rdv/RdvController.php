@@ -201,14 +201,18 @@ class RdvController extends AbstractController
      * @Route("/rdv/{id}/delete", name="rdv_delete", methods="GET")
      * @IsGranted("DELETE", subject="rdv")
      */
-    public function deleteRdv(Rdv $rdv): Response
+    public function deleteRdv(Rdv $rdv, EventDispatcherInterface $dispatcher): Response
     {
+        $id = $rdv->getId();
+
         $this->manager->remove($rdv);
         $this->manager->flush();
 
+        $dispatcher->dispatch(new RdvEvent($rdv), 'rdv.after_update');
+
         return $this->json([
             'action' => 'delete',
-            'rdv' => ['id' => $rdv->getId()],
+            'rdv' => ['id' => $id],
             'alert' => 'warning',
             'msg' => 'Le RDV est supprimé.',
         ]);
