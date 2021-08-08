@@ -6,6 +6,6 @@ yearSelectElt.addEventListener('click', () => {
     const value = yearSelectElt.value;
     if (value) {
         startInputElt.value = value + '-01-01';
-        endInputElt.value = (value + 1) + '-01-01';
+        endInputElt.value = (parseInt(value) + 1) + '-01-01';
     }
 })
