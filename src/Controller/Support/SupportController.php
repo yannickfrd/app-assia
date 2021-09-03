@@ -294,6 +294,13 @@ class SupportController extends AbstractController
                 'msg' => 'Le demandeur principal ne peut pas être retiré du suivi.',
             ]);
         }
+        // Vérifie si le nombre de personne dans le suivi est supérieur à 1
+        if ($supportGroup->getSupportPeople()->count() <= 1) {
+            return $this->json([
+                'alert' => 'danger',
+                'msg' => 'Le suivi doit être constitué d\'au moins une personne.',
+            ]);
+        }
 
         try {
             $supportGroup->removeSupportPerson($supportPerson);
