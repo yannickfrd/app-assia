@@ -57,7 +57,7 @@
                                 <td class="align-middle">{{ rdv.start|date("d/m/Y") }}<br/>{{ rdv.start|date("H:i") }} – {{ rdv.end|date("H:i") }}</td>
                                 <td class="align-middle">{{ rdv.location }}</td>
                                 <td class="align-middle">{{ rdv.content }}</td>
-                                <td class="align-middle">{{ rdv.statusToString }}</td>
+                                <td class="align-middle">{{ rdv.start|date("Y-m-d-H") > "now"|date("Y-m-d-H") ? "À venir" : rdv.statusToString }}</td>
                                 <td class="align-middle">{{ rdv.createdBy ? rdv.createdBy.fullname }}</td>
                                 <td class="align-middle">{{ rdv.createdAt ? rdv.createdAt|date("d/m/Y H:i") }}</td>
                                 <td class="align-middle text-center">

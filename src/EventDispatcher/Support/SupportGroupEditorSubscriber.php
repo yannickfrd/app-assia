@@ -24,8 +24,11 @@ class SupportGroupEditorSubscriber implements EventSubscriberInterface
     private $flashbag;
     private $cache;
 
-    public function __construct(SupportDuplicator $supportDuplicator, SupportChecker $supportChecker, FlashBagInterface $flashbag)
-    {
+    public function __construct(
+        SupportDuplicator $supportDuplicator, 
+        SupportChecker $supportChecker,
+        FlashBagInterface $flashbag
+    ){
         $this->supportDuplicator = $supportDuplicator;
         $this->supportChecker = $supportChecker;
         $this->flashbag = $flashbag;
@@ -208,9 +211,14 @@ class SupportGroupEditorSubscriber implements EventSubscriberInterface
     {
         $supportGroup = $event->getSupportGroup();
         $id = $supportGroup->getId();
+        $oldReferent = $event->getReferent();
 
         if ($supportGroup->getReferent()) {
             $this->cache->deleteItem(User::CACHE_USER_SUPPORTS_KEY.$supportGroup->getReferent()->getId());
+
+            if ($oldReferent != $supportGroup->getReferent()) {
+                $this->cache->deleteItem(User::CACHE_USER_SUPPORTS_KEY.$oldReferent->getId());
+            }
         }
 
         return $this->cache->deleteItems([

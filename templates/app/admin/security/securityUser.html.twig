@@ -55,9 +55,11 @@
                                 title="{{ disabled ? 'Réactiver' : 'Désactiver' }} l'utilisateur" data-toggle="tooltip" data-placement="bottom"
                                 {% if disabled == false %}onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir désactiver cet utilisateur ?')){return true;}else{return false;}"{% endif %}>
                                 {% if disabled %}Réactiver{% else %}Désactiver{% endif %}</a>
-                            <a class="mr-3 btn btn-{{ theme_color }} d-block" href="{{ path('security_user_send_new_email', {'id':user.id}) }}"
-                                title="Envoyer un nouvel e-mail à l'utilisateur afin de définir son mot de passe" data-toggle="tooltip" data-placement="bottom" 
-                                onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir envoyer un e-mail à l\'utilisateur ?')){return true;}else{return false;}">Envoyer e-mail</a>
+                            {% if false == disabled %}
+                                <a class="mr-3 btn btn-{{ theme_color }} d-block" href="{{ path('security_user_send_new_email', {'id':user.id}) }}"
+                                    title="Envoyer un nouvel e-mail à l'utilisateur afin de définir son mot de passe" data-toggle="tooltip" data-placement="bottom" 
+                                    onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir envoyer un e-mail à l\'utilisateur ?')){return true;}else{return false;}">Envoyer e-mail</a>
+                            {% endif %}
                         </div>
                         <div class="float-right">
                             <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>Enregistrer</button>

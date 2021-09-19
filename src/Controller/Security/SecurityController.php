@@ -211,10 +211,7 @@ class SecurityController extends AbstractController
             $user->setDisabledAt(null);
             $this->addFlash('success', 'Ce compte utilisateur est ré-activé.');
         } else {
-            $user->setUsername('xxx')
-                ->setPassword('xxx')
-                ->setRoles([])
-                ->setEmail('xxx')
+            $user->setPassword(bin2hex(random_bytes(8).'?!'))
                 ->setDisabledAt(new \DateTime());
             $this->addFlash('warning', 'Ce compte utilisateur est désactivé.');
         }

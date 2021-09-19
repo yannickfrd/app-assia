@@ -157,7 +157,7 @@ class RdvRepository extends ServiceEntityRepository
                 ->setParameter('end', $search->getEnd());
         }
 
-        return $query->orderBy('r.createdAt', 'DESC')
+        return $query->orderBy('r.start', 'DESC')
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
 

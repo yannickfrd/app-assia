@@ -285,7 +285,7 @@ export default class Calendar {
         this.endInput.value = rdv.end.substr(11, 5)
 
         this.rdvLocationInput.value = rdv.location
-        this.rdvStatusInput.value = rdv.status
+        this.rdvStatusInput.value = rdv.status ? rdv.status : ''
         this.modalRdvElt.querySelector('#rdv_content').value = rdv.content ? rdv.content : ''
 
         this.infoRdvElt.innerHTML = this.getInfoRdvElt(rdv)
@@ -324,7 +324,7 @@ export default class Calendar {
     }
 
     /**
-     * Crée le RDV dans le container du jour de l 'agenda.
+     * Crée le RDV dans le container du jour de l'agenda.
      * @param {Object} rdv 
      */
     createRdv(rdv) {
@@ -337,24 +337,27 @@ export default class Calendar {
 
         rdvElt.innerHTML = rdv.start + ' ' + title
         const dayElt = document.getElementById(rdv.day)
-        dayElt.insertBefore(rdvElt, dayElt.lastChild)
 
-        this.sortDayBlock(dayElt)
-        this.hideRdvElts(dayElt)
+        if (dayElt) {
+            dayElt.insertBefore(rdvElt, dayElt.lastChild)
+            this.sortDayBlock(dayElt)
+            this.hideRdvElts(dayElt)
+        }
 
         rdvElt.addEventListener('click', this.requestGetRdv.bind(this, rdvElt))
     }
 
     /**
-     * Met à jour le RDV dans l 'agenda.
+     * Met à jour le RDV dans l'agenda.
      * @param {Object} rdv 
      */
     updateRdv(rdv) {
-        this.rdvElt.textContent = rdv.start + ' ' + rdv.title;
+        this.rdvElt.remove()
+        this.createRdv(rdv)
     }
 
     /**
-     * Supprime le RDV dans l 'agenda.
+     * Supprime le RDV dans l'agenda.
      */
     deleteRdv() {
         const rdvElt = document.getElementById('rdv-' + this.rdvId)

@@ -141,6 +141,7 @@ class SupportController extends AbstractController
         EventDispatcherInterface $dispatcher
     ): Response {
         $supportGroup = $supportGroupRepo->findFullSupportById($id);
+        $referent = $supportGroup->getReferent();
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
@@ -154,7 +155,7 @@ class SupportController extends AbstractController
 
             $this->addFlash('success', 'Le suivi social est mis à jour.');
 
-            $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support.after_update');
+            $dispatcher->dispatch(new SupportGroupEvent($supportGroup, null, $referent), 'support.after_update');
         }
 
         $formCoeff = $this->createForm(SupportCoefficientType::class, $supportGroup)
