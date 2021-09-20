@@ -32,7 +32,7 @@ class SupportGroupEvent extends Event
         return $this->form;
     }
 
-    public function getReferent(): User
+    public function getReferent(): ?User
     {
         return $this->referent;
     }

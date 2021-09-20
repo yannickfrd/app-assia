@@ -23,7 +23,7 @@ class Choices
         75 => '75 - Paris',
         77 => '77 - Seine-et-Marne',
         78 => '78 - Yvelines',
-        91 => '91 - Essone',
+        91 => '91 - Essonne',
         92 => '92 - Hauts-de-Seine',
         93 => '93 - Seine-St-Denis',
         94 => '94 - Val-de-Marne',

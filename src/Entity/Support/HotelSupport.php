@@ -36,7 +36,7 @@ class HotelSupport
         2 => 'Violences familiales',
         3 => 'Problèmes liés à l\'alimentation',
         4 => 'Problèmes de santé',
-        97 => 'Autre critères de vulnérabilité',
+        97 => 'Autres critères de vulnérabilité',
     ];
 
     public const EMERGENCY_ACTION_DONE = [
@@ -49,7 +49,7 @@ class HotelSupport
 
     public const LEVEL_SUPPORT = [
         1 => 'Évaluation', // (1)
-        2 => 'Subsidiarité ', // Global (1)
+        2 => 'Subsidiarité', // Global (1)
         3 => 'Complémentarité', // (0,5)
         4 => 'Veille sociale avec référent', // (0,3)
         5 => 'Veille sociale sans référent', // (0,3)
