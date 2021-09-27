@@ -32,7 +32,7 @@ class DatabaseBackupCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $path = 'backups/esperer95.app/'.date('Y/m/');
+        $path = 'backups/app-assia/'.date('Y/m/');
 
         $dump = $this->dumpDatabase->dump($path);
 
@@ -40,11 +40,11 @@ class DatabaseBackupCommand extends Command
             $message = "\n[OK] Backup of database is successful !\n";
             $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
 
-            return 0;
+            return Command::SUCCESS;
         }
         $message = "\n[Error] Backup of database is failed !\n";
         $output->writeln("\e[30m\e[41m\n ".$message."\e[0m\n");
 
-        return 1;
+        return Command::FAILURE;
     }
 }

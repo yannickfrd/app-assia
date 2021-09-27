@@ -42,6 +42,7 @@ class PaymentRepository extends ServiceEntityRepository
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, email, phone1, contribution, contributionType, contributionRate, city, address}')
             ->leftJoin('sg.subService', 'ss')->addSelect('PARTIAL ss.{id, name, email, phone1}')
             ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name, logoPath}')
+            ->leftJoin('pole.organization', 'o')->addSelect('PARTIAL o.{id, name}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, role, head, status}')
             ->leftJoin('sp.person', 'person')->addSelect('PARTIAL person.{id, firstname, lastname, birthdate, gender, email}')
 

@@ -29,7 +29,7 @@ class NoteControllerTest extends WebTestCase
     /** @var Note */
     protected $note;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->data = $this->loadFixtureFiles([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',

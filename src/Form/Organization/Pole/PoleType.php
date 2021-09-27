@@ -2,10 +2,12 @@
 
 namespace App\Form\Organization\Pole;
 
+use App\Entity\Organization\Organization;
 use App\Entity\Organization\Pole;
 use App\Entity\Organization\User;
 use App\Form\Type\LocationType;
 use App\Form\Utils\Choices;
+use App\Repository\Organization\OrganizationRepository;
 use App\Repository\Organization\UserRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -21,9 +23,7 @@ class PoleType extends AbstractType
             ->add('name')
             ->add('email')
             ->add('phone1', null, [
-                'attr' => [
-                    'class' => 'js-phone',
-                ],
+                'attr' => ['class' => 'js-phone'],
             ])
             ->add('chief', EntityType::class, [
                 'class' => User::class,
@@ -37,6 +37,18 @@ class PoleType extends AbstractType
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
+            ->add('organization', EntityType::class, [
+                'class' => Organization::class,
+                'choice_label' => 'name',
+                'query_builder' => function (OrganizationRepository $repo) {
+                    return $repo->createQueryBuilder('o')
+                        ->orderBy('o.name', 'ASC');
+                },
+                'label' => 'organization.name',
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
+            ->add('logoPath')
             ->add('comment')
             ->add('color', ChoiceType::class, [
                 'choices' => Choices::getChoices(Pole::COLOR),

@@ -23,7 +23,7 @@ class PoleControllerTest extends WebTestCase
     /** @var Pole */
     protected $pole;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->data = $this->loadFixtureFiles([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',

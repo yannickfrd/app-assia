@@ -21,7 +21,7 @@ class ExportPDF
     {
         $this->dompdf = new Dompdf();
         $this->slugger = new AsciiSlugger();
-        $this->defaultLogo = 'images/logo_esperer95.png';
+        $this->defaultLogo = 'images/logo_app_black.png';
     }
 
     /**
@@ -121,7 +121,7 @@ class ExportPDF
 
         $headerFooter = $renderer->render('pdf/_headerFooterPdf.html.twig', [
             'logo_path' => $logoPath,
-            'header_info' => 'ESPERER 95 | '.$title.' | '.$infoAdd,
+            'header_info' => $title.' | '.$infoAdd,
         ]);
 
         // $content = \str_replace('<h2', '<hr/><h2', $content);

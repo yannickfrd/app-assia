@@ -31,7 +31,7 @@ class ExportWord
         $this->fullHTML = $fullHTML;
         $this->phpWord->getSettings()->setThemeFontLang(new Language(Language::FR_FR));
         Settings::setOutputEscapingEnabled(true);
-        $this->defaultLogo = 'images/logo_esperer95.png';
+        $this->defaultLogo = 'images/logo_app_black.png';
     }
 
     /**
@@ -118,7 +118,7 @@ class ExportWord
 
         // Add sub page header
         $headerSub = $section->addHeader();
-        $headerSub->addPreserveText('ESPERER 95 | '.$this->title.($this->infoAdd ? ' | '.$this->infoAdd : ''), $this->getFontStyleFooter(), [
+        $headerSub->addPreserveText($this->title.($this->infoAdd ? ' | '.$this->infoAdd : ''), $this->getFontStyleFooter(), [
             'alignment' => 'right',
         ]);
     }

@@ -23,7 +23,7 @@ class UserControllerTest extends WebTestCase
     /** @var User */
     protected $user;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->data = $this->loadFixtureFiles([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',

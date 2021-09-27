@@ -22,8 +22,8 @@
             {{ view_p.get(evalSocial.friendshipBreakdownToString, "Friendship breakdown", "evaluation") }}
         {% endif %}
         {% if evalSocial.healthProblem == YES %}
-            {{ view_p.get(evalSocial.healthProblemToString ~ (evalSocial.healthProblemsType ? 
-            " (" ~ evalSocial.healthProblemsType|join(", ") ~ ")"), "Health problem", "evaluation") }}
+            {{ view_p.get(evalSocial.healthProblemToString ~ (evalSocial.healthProblemTypes ? 
+            " (" ~ evalSocial.healthProblemTypes|join(", ") ~ ")"), "Health problem", "evaluation") }}
         {% endif %}
         {{ view_p.get(evalSocial.medicalFollowUp == YES ? evalSocial.medicalFollowUpToString, "Medical follow up", "evaluation") }}
         {{ view_p.get(evalSocial.homeCareSupport == YES ? evalSocial.homeCareSupportToString ~ (evalSocial.homeCareSupportType ? " - " 

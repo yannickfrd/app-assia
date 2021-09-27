@@ -102,5 +102,13 @@ App\Entity\Organization\ServiceDevice:
 App\Entity\Organization\Pole:
   pole1:
     name: Habitat
+    organization: "@organization1"
+    logoPath: images/logo_assia_mail.png
+    createdAt: <date_create()>
+    updatedAt: <date_create()>
+
+App\Entity\Organization\Organization:
+  organization1:
+    name: ESPERER 95
     createdAt: <date_create()>
     updatedAt: <date_create()>

@@ -34,7 +34,7 @@ class CreateDailyIndicatorsCommand extends Command
         $message = $this->createDailyIndicators((new \DateTime('today'))->modify('-1 day'));
         $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     /**

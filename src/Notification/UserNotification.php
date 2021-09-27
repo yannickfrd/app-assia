@@ -14,7 +14,7 @@ class UserNotification extends MailNotifier
     {
         $email = (new TemplatedEmail())
             ->to($user->getEmail())
-            ->subject('Esperer95.app'.('prod' != $this->appVersion ? ' version DEMO' : null).' : Création de compte | '.$user->getFullname())
+            ->subject('Application Assia'.('prod' != $this->appVersion ? ' version DEMO' : null).' : Création de compte | '.$user->getFullname())
             ->htmlTemplate('emails/newUserEmail.html.twig')
             ->context([
                 'user' => $user,
@@ -31,7 +31,7 @@ class UserNotification extends MailNotifier
     {
         $email = (new TemplatedEmail())
             ->to($user->getEmail())
-            ->subject('Esperer95.app : Réinitialisation du mot de passe | '.$user->getFullname())
+            ->subject('Application Assia : Réinitialisation du mot de passe | '.$user->getFullname())
             ->htmlTemplate('emails/reinitPasswordEmail.html.twig')
             ->context(['user' => $user]);
 

@@ -59,6 +59,7 @@ class SupportGroupRepository extends ServiceEntityRepository
         ->leftJoin('sg.originRequest', 'origin')->addSelect('origin')
         ->leftJoin('origin.organization', 'orga')->addSelect('PARTIAL orga.{id, name}')
         ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name, logoPath}')
+        ->leftJoin('pole.organization', 'pole_orga')->addSelect('PARTIAL pole_orga.{id, name}')
 
         // if ($service->getType() === Service::SERVICE_TYPE_AVDL) {
             ->leftJoin('sg.avdl', 'avdl')->addSelect('avdl')

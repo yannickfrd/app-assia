@@ -5,7 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\Organization\Organization;
 use App\Repository\Organization\UserRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 
 /*
@@ -16,11 +16,7 @@ class G_OrganizationFixtures extends Fixture
     public const ORGANIZATION = [
         'CCAS',
         'Conseil Départemental',
-        'ESPERER 95 - CHRS Hermitage',
-        'ESPERER 95 - PE 95',
-        'ESPERER 95 - PE 78',
-        'ESPERER 95 - Pré-sententiel',
-        'ESPERER 95 - Autre',
+        'CHRS',
         'SPIP',
         'Autre',
     ];

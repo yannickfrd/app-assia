@@ -14,7 +14,7 @@ class DocumentTest extends WebTestCase
     /** @var Document */
     protected $document;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $faker = \Faker\Factory::create('fr_FR');
 

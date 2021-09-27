@@ -10,7 +10,7 @@ class ImportNotification extends MailNotifier
     {
         $email = (new TemplatedEmail())
             ->to($this->getAdminEmail())
-            ->subject('Esperer95.app | Doublons personnes')
+            ->subject('Application Assia | Doublons personnes')
             ->html($content);
 
         $this->mailer->send($email);

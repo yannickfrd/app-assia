@@ -53,10 +53,12 @@ class PaymentExporter
         $path = $this->create($payment);
         $date = $payment->getPaymentDate() ? $payment->getPaymentDate()->format('d-m-Y') :
             $payment->getCreatedAt()->format('d-m-Y');
+        
+        $organizationName = $supportGroup->getService()->getPole()->getOrganization()->getName();
 
         $this->paymentNotification->sendPayment(
             $emails,
-            'ESPERER 95 | '.$title.' '.$date.' | '.join(' - ', $fullnames),
+             $organizationName.' | '.$title.' '.$date.' | '.join(' - ', $fullnames),
             [
                 'payment' => $payment,
                 'support' => $supportGroup,

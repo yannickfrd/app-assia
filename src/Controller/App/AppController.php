@@ -63,7 +63,7 @@ class AppController extends AbstractController
     }
 
     /**
-     * Page de gestion du ou des services.
+     * Vide le cache.
      *
      * @Route("/admin/cache/clear", name="cache_clear", methods="GET")
      * @IsGranted("ROLE_SUPER_ADMIN")

@@ -15,7 +15,7 @@ class ServiceControllerTest extends WebTestCase
     /** @var KernelBrowser */
     protected $client;
 
-    protected function setUp()
+    protected function setUp(): void
     {
     }
 

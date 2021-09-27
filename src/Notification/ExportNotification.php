@@ -11,7 +11,7 @@ class ExportNotification extends MailNotifier
     {
         $email = (new TemplatedEmail())
             ->to($to)
-            ->subject('Esperer95.app | Export de données')
+            ->subject('Application Assia | Export de données')
             ->htmlTemplate('emails/exportFileEmail.html.twig')
             ->context(['export' => $export]);
 

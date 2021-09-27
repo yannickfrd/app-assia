@@ -51,12 +51,14 @@ hotelName: Nom de l'hôtel
 Lastname: Nom
 Lessor: Bailleur/Propriétaire
 Location: Lieu
+logo path: Chemin du logo
 Month: Mois
 Name: Nom
 Nb people: Nb. de personnes
 NbPeople: Nb. pers.
 New password: Nouveau mot de passe
 Old password: Ancien mot de passe
+organization.name: Organisme
 placeholder:
   action: -- Action --
   comment: Écrire un commentaire...

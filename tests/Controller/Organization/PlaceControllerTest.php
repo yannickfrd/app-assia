@@ -27,7 +27,7 @@ class PlaceControllerTest extends WebTestCase
     /** @var Place */
     protected $place;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->data = $this->loadFixtureFiles([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',

@@ -2,6 +2,6 @@ framework:
     mailer:
         dsn: "%env(MAILER_DSN)%"
         envelope:
-            sender: "noreply@esperer95.app"
+            sender: "noreply@app-assia.org"
         headers:
-            from: "Esperer95.app <noreply@esperer95.app>"
+            from: "Application Assia <noreply@app-assia.org>"

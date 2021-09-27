@@ -23,7 +23,7 @@ class IndicatorControllerTest extends WebTestCase
     /** @var SupportGroup */
     protected $supportGroup;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->data = $this->loadFixtureFiles([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',

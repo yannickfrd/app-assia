@@ -473,7 +473,7 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection<User>
+     * @return Collection<ServiceUser>
      */
     public function getServiceUser()
     {

@@ -54,10 +54,16 @@ class Organization
      */
     private $services;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Pole::class, mappedBy="organization")
+     */
+    private $poles;
+
     public function __construct()
     {
         $this->originRequests = new ArrayCollection();
         $this->services = new ArrayCollection();
+        $this->poles = new ArrayCollection();
     }
 
     public function __toString()
@@ -165,6 +171,36 @@ class Organization
         if ($this->services->contains($service)) {
             $this->services->removeElement($service);
             $service->removeOrganization($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Pole[]
+     */
+    public function getPoles(): Collection
+    {
+        return $this->poles;
+    }
+
+    public function addPole(Pole $pole): self
+    {
+        if (!$this->poles->contains($pole)) {
+            $this->poles[] = $pole;
+            $pole->setOrganization($this);
+        }
+
+        return $this;
+    }
+
+    public function removePole(Pole $pole): self
+    {
+        if ($this->poles->removeElement($pole)) {
+            // set the owning side to null (unless already changed)
+            if ($pole->getOrganization() === $this) {
+                $pole->setOrganization(null);
+            }
         }
 
         return $this;

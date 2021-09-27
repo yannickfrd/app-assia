@@ -19,7 +19,7 @@ class AppControllerTest extends WebTestCase
     /** @var array */
     protected $data;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->data = $this->loadFixtureFiles([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',

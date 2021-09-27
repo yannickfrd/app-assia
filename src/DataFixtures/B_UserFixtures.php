@@ -7,7 +7,7 @@ use App\Entity\Organization\User;
 use App\Repository\Organization\ServiceRepository;
 use App\Repository\Organization\ServiceUserRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\String\Slugger\AsciiSlugger;
@@ -58,7 +58,7 @@ class B_UserFixtures extends Fixture
         //     $password = strtolower($this->slugger->slug($habitatUser["firstname"] . "2502"));
 
         //     $email = $habitatUser["firstname"] . "." . $habitatUser["lastname"];
-        //     $email = strtolower($this->slugger->slug($email) . "@esperer-95.org");
+        //     $email = strtolower($this->slugger->slug($email) . "@app-assia.org");
 
         //     $user->setUsername($username)
         //         ->setFirstName($habitatUser["firstname"])
@@ -104,7 +104,7 @@ class B_UserFixtures extends Fixture
             ->setRoles(['ROLE_SUPER_ADMIN'])
             // ->addServiceUser($serviceUser)
             ->setPassword($this->passwordEncoder->encodePassword($user, 'test123'))
-            ->setEmail('romain.madelaine@esperer-95.org')
+            ->setEmail('romain.madelaine@app-assia.org')
             ->setLoginCount(1)
             ->setLastLogin($now)
             ->setCreatedAt($now)
@@ -134,7 +134,7 @@ class B_UserFixtures extends Fixture
             ->setLastName($lastname)
             ->setPassword($this->passwordEncoder->encodePassword($user, 'test2020'))
             ->setStatus(1)
-            ->setEmail(mb_strtolower($firstname).'.'.mb_strtolower($lastname).'@esperer-95.org')
+            ->setEmail(mb_strtolower($firstname).'.'.mb_strtolower($lastname).'@app-assia.org')
             ->setphone1($phone)
             ->setLoginCount(mt_rand(0, 99))
             ->setLastLogin($lastLogin)

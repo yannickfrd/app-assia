@@ -22,7 +22,7 @@ class ServiceTest extends WebTestCase
     /** @var Pole */
     protected $pole;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $kernel = self::bootKernel();
 

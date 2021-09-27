@@ -22,7 +22,7 @@ class PlaceTest extends WebTestCase
     /** @var Service */
     protected $service;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $data = $this->loadFixtureFiles([
             dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',

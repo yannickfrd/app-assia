@@ -60,6 +60,6 @@ class UpdatePlacePersonCommand extends Command
         $message = "[OK] Update PlacePerson entities is successfull !\n  ".$countUpdate.' / '.$nbPlacePeople;
         $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

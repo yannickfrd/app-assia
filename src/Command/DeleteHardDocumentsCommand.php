@@ -44,7 +44,7 @@ class DeleteHardDocumentsCommand extends Command
         $message = $this->delete($date);
         $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     protected function delete(\Datetime $date)

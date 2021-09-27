@@ -15,7 +15,7 @@ class SupportGroupTest extends WebTestCase
     /** @var SupportGroup */
     protected $supportGroup;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $kernel = self::bootKernel();
 

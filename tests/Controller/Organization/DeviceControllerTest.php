@@ -27,7 +27,7 @@ class DeviceControllerTest extends WebTestCase
     /** @var Device */
     protected $device;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->data = $this->loadFixtureFiles([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',

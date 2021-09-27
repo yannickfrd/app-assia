@@ -10,9 +10,9 @@ return new class extends DefaultDeployer
             // SSH connection string to connect to the remote server (format: user@host-or-IP:port-number)
             ->server('u96695347@access775853914.webspace-data.io')
             // the absolute path of the remote server directory where the project is deployed
-            ->deployDir('/kunden/homepages/4/d775853914/htdocs/esperer95-app')
+            ->deployDir('/var/www/app-assia')
             // the URL of the Git repository where the project code is hosted
-            ->repositoryUrl('github.com/RomMad/esperer95-app.git')
+            ->repositoryUrl('github.com/RomMad/app-assia.git')
             // the repository branch to deploy
             ->repositoryBranch('master');
     }

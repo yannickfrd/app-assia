@@ -3,7 +3,7 @@ App\Entity\Organization\Service:
     name: CHRS XXX
     type: 1
     pole: "@pole1"
-    email: chrs@esperer-95.org
+    email: chrs@app-assia.org
     phone1: "01 00 00 00 00"
     address: Pontoise
     city: Pontoise
@@ -18,7 +18,7 @@ App\Entity\Organization\Service:
     name: AVDL
     type: 2
     pole: "@pole1"
-    email: avdl@esperer-95.org
+    email: avdl@app-assia.org
     phone1: "01 00 00 00 00"
     address: Pontoise
     city: Pontoise
@@ -33,7 +33,7 @@ App\Entity\Organization\Service:
     name: PASH
     type: 3
     pole: "@pole1"
-    email: pash@esperer-95.org
+    email: pash@app-assia.org
     phone1: "01 00 00 00 00"
     address: Pontoise
     city: Pontoise

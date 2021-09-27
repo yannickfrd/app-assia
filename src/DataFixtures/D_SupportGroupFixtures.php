@@ -8,7 +8,7 @@ use App\Entity\Support\SupportGroup;
 use App\Entity\Support\SupportPerson;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use App\Repository\People\PeopleGroupRepository;
 
 /*

@@ -10,7 +10,7 @@ use App\Entity\Organization\ServiceDevice;
 use App\Entity\Organization\ServiceUser;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -20,6 +20,11 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class A_ServiceFixtures extends Fixture
 {
     private $manager;
+
+    public const POLES = [
+        4 => 'Hébergement',
+        3 => 'Habitat',
+    ];
 
     public const SERVICES_HABITAT = [
         1 => 'ALTHO',
@@ -93,7 +98,7 @@ class A_ServiceFixtures extends Fixture
         // Créé les dispositifs
         $this->createDevices();
         //Crée les pôles d'activité
-        foreach (Pole::POLES as $key => $pole) {
+        foreach (self::POLES as $key => $pole) {
             $this->addPoles($key, $pole);
             switch ($key) {
                 case 3:

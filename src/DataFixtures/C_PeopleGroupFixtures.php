@@ -7,7 +7,7 @@ use App\Entity\People\Person;
 use App\Entity\People\RolePerson;
 use App\Repository\Organization\UserRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 
 /*

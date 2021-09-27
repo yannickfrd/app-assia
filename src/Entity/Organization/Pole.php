@@ -24,15 +24,6 @@ class Pole
     use CreatedUpdatedEntityTrait;
     use DisableEntityTrait;
 
-    public const POLES = [
-        1 => 'Accueil Publics Migrants',
-        2 => 'Insertion-Formation',
-        3 => 'Habitat et Accès au Logement',
-        4 => 'Hébergement Social',
-        5 => 'SIAO',
-        6 => 'Socio-judiciaire',
-    ];
-
     public const COLOR = [
         'beige' => 'Beige',
         'pink2' => 'Rouge rose',
@@ -81,6 +72,11 @@ class Pole
      * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User")
      */
     private $chief;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Organization::class, inversedBy="poles")
+     */
+    private $organization;
 
     public function construct()
     {
@@ -184,6 +180,18 @@ class Pole
     public function setChief(?User $chief): self
     {
         $this->chief = $chief;
+
+        return $this;
+    }
+
+    public function getOrganization(): ?Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(?Organization $organization): self
+    {
+        $this->organization = $organization;
 
         return $this;
     }

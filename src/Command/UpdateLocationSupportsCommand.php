@@ -35,7 +35,7 @@ class UpdateLocationSupportsCommand extends Command
         $message = $this->updateLocationSupports();
         $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     /**

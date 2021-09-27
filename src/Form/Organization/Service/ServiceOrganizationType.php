@@ -23,9 +23,7 @@ class ServiceOrganizationType extends AbstractType
                         ->orderBy('o.name', 'ASC');
                 },
                 'placeholder' => 'placeholder.select',
-                'attr' => [
-                    'class' => 'col-auto my-1',
-                ],
+                'attr' => ['class' => 'col-auto my-1'],
             ]);
     }
 

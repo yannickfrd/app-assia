@@ -48,7 +48,7 @@ class ChangeNamePeopleCommand extends Command
         if ('dev' != $_SERVER['APP_ENV'] || 'localhost' != $_SERVER['DB_HOST']) {
             $output->writeln("\e[97m\e[41m\n Environnement invalid \e[0m\n");
 
-            return 1;
+            return Command::FAILURE;
         }
 
         $this->stopwatch->start('change_name');
@@ -79,6 +79,6 @@ class ChangeNamePeopleCommand extends Command
         $message = "[OK] Change name of people is successfull !\n  ".$nbPeople." people modified.\n  ".$this->stopwatch->getEvent('change_name')->getDuration().' ms';
         $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

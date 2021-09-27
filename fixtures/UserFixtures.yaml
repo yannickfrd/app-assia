@@ -7,7 +7,7 @@ App\Entity\Organization\User:
     lastname: SUPER_ADMIN
     username: r.super_admin
     plainPassword: Test123*
-    email: $username@esperer-95.org
+    email: $username@app-assia.org
     status: 6
     roles: ["ROLE_SUPER_ADMIN"]
     phone1: "01 00 00 00 00"
@@ -21,7 +21,7 @@ App\Entity\Organization\User:
     lastname: ADMIN
     username: r.admin
     plainPassword: Test123*
-    email: $username@esperer-95.org
+    email: $username@app-assia.org
     status: 6
     roles: ["ROLE_ADMIN"]
     phone1: "01 00 00 00 00"
@@ -35,7 +35,7 @@ App\Entity\Organization\User:
     lastname: USER
     username: r.user
     plainPassword: Test123*
-    email: $username@esperer-95.org
+    email: $username@app-assia.org
     status: 1
     phone1: 01 00 00 00 00
     createdAt: <dateTimeBetween("-2 years", "now")>
@@ -50,7 +50,7 @@ App\Entity\Organization\User:
     lastname: <fr_FR:lastName()>
     username: <mb_strtolower($firstname.$lastname)>
     plainPassword: Test123*
-    email: $username@esperer-95.org
+    email: $username@app-assia.org
     status: 1
     phone1: "01 00 00 00 00"
     createdAt: <dateTimeBetween("-2 years", "now")>

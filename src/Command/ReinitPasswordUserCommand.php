@@ -43,7 +43,7 @@ class ReinitPasswordUserCommand extends Command
         if ($_SERVER['APP_ENV'] != 'dev' || $_SERVER['DB_HOST'] != 'localhost') {
             $output->writeln("\e[97m\e[41m\n Environnement invalid \e[0m\n");
 
-            return 1;
+            return Command::FAILURE;
         }
 
         $nbUsers = 0;
@@ -62,6 +62,6 @@ class ReinitPasswordUserCommand extends Command
         $message = "[OK] Reinit password users is successfull !\n  ".$count.' / '.$nbUsers;
         $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

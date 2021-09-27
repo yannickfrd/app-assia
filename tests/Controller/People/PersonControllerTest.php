@@ -27,7 +27,7 @@ class PersonControllerTest extends WebTestCase
     /** @var Person */
     protected $person;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->data = $this->loadFixtureFiles([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',

@@ -23,7 +23,7 @@ class ReferentControllerTest extends WebTestCase
     /** @var Referent */
     protected $referent;
 
-    protected function setUp()
+    protected function setUp(): void
     {
     }
 

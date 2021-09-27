@@ -13,7 +13,7 @@ class NoteEndToEndTest extends PantherTestCase
     /** @var PantherClient */
     protected $client;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->client = $this->createPantherLogin();
 

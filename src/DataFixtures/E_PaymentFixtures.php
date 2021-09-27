@@ -6,7 +6,7 @@ use App\Entity\Support\Payment;
 use App\Repository\Support\SupportGroupRepository;
 use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 
 /*

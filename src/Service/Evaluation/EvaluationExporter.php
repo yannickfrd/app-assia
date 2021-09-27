@@ -69,6 +69,8 @@ class EvaluationExporter
 
     private function getContent(SupportGroup $supportGroup, EvaluationGroup $evaluation, string $exportType, string $pathImage = null, string $fullnameSupport = null)
     {
+        $organization = $supportGroup->getService()->getPole()->getOrganization()->getName();
+
         return $this->renderer->render('app/evaluation/export/evaluationExport.html.twig', [
             'type' => $exportType,
             'support' => $supportGroup,
@@ -78,7 +80,7 @@ class EvaluationExporter
             'nextRdv' => $this->supportCollections->getNextRdvs($supportGroup),
             'title' => self::TITLE,
             'logo_path' => $pathImage,
-            'header_info' => 'ESPERER 95 | '.self::TITLE.' | '.$fullnameSupport,
+            'header_info' => $organization.' | '.self::TITLE.' | '.$fullnameSupport,
         ]);
     }
 

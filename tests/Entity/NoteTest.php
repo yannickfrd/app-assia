@@ -15,7 +15,7 @@ class NoteTest extends WebTestCase
     /** @var Note */
     protected $note;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $faker = \Faker\Factory::create('fr_FR');
 

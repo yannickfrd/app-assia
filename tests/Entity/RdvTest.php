@@ -15,7 +15,7 @@ class RdvTest extends WebTestCase
     /** @var Rdv */
     protected $rdv;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $faker = \Faker\Factory::create('fr_FR');
         $start = $faker->dateTimeBetween('-1 months', '+ 1 months');
