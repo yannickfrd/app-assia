@@ -70,7 +70,7 @@ class ImportDatas
     protected function createNote(SupportGroup $supportGroup, string $title, string $content): Note
     {
         $contentArray = explode("\n", $content);
-        $content = '<p>'.join($contentArray, '</p><p>').'</p>';
+        $content = '<p>'.join('</p><p>', $contentArray).'</p>';
 
         $note = (new Note())
         ->setTitle($title)

@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
-class ImportDatasUser extends ImportDatas
+class ImportUserDatas extends ImportDatas
 {
     protected $manager;
     /** @var Request */
@@ -43,7 +43,7 @@ class ImportDatasUser extends ImportDatas
         $this->slugger = $slugger;
     }
 
-    public function importInDatabase(string $fileName, Service $service, ?Request $request = null): int
+    public function importInDatabase(string $fileName, Service $service, ?Request $request = null): array
     {
         $this->fields = $this->getDatas($fileName);
         $this->request = $request;
@@ -64,8 +64,7 @@ class ImportDatasUser extends ImportDatas
             $this->userNotification->newUser($user);
         }
 
-        // dd($this->users);
-        return count($this->users);
+        return $this->users;
     }
 
     /**
@@ -124,7 +123,7 @@ class ImportDatasUser extends ImportDatas
             $username = $username.substr($value, 0, 1);
         }
 
-        $appEnv = $this->request->server->get('APP_ENV');
+        $appEnv = $this->request ? $this->request->server->get('APP_ENV') : 'prod';
         $postfix = $appEnv && $appEnv != 'prod' ? '_test' : '';
 
         return strtolower($this->slugger->slug($username).'.'.$this->slugger->slug($lastname).$postfix);

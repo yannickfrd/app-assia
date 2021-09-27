@@ -4,20 +4,16 @@ namespace App\Controller\Admin;
 
 use App\Form\Admin\ImportType;
 use App\Form\Model\Admin\Import;
-use App\Service\Import\ImportDatasAMH;
-use App\Service\Import\ImportDatasHebergement;
-use App\Service\Import\ImportDatasHotel;
-use App\Service\Import\ImportDatasOC;
 use App\Service\Import\ImportDatasPAF;
-use App\Service\Import\ImportDatasRdv;
-use App\Service\Import\ImportDatasUser;
-use App\Service\Import\UpdateDatasAMH;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use App\Service\Import\ImportPlaceDatas;
 use Symfony\Component\HttpFoundation\Request;
+use App\Service\Import\ImportDatasHebergement;
+use App\Service\Import\ImportUserDatas;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ImportController extends AbstractController
 {
@@ -40,75 +36,31 @@ class ImportController extends AbstractController
     }
 
     /**
-     * Import de données de l'opération ciblée hôtel.
-     *
-     * @Route("/import_oc", name="import_oc", methods="GET|POST")
-     * @IsGranted("ROLE_SUPER_ADMIN")
-     */
-    public function importOC(Request $request, ImportDatasOC $importDatas): Response
-    {
-        return $this->import($request, $importDatas, 'import_oc.csv');
-    }
-
-    /**
-     * Import de données de l'AMH.
-     *
-     * @Route("/import_amh", name="import_amh", methods="GET|POST")
-     * @IsGranted("ROLE_SUPER_ADMIN")
-     */
-    public function importAMH(Request $request, ImportDatasAMH $importDatas): Response
-    {
-        return $this->import($request, $importDatas, 'import_amh.csv');
-    }
-
-    /**
-     * Mise à jour des données de l'AMH.
-     *
-     * @Route("/update_import_amh", name="update_import_amh", methods="GET|POST")
-     * @IsGranted("ROLE_SUPER_ADMIN")
-     */
-    public function updateAMH(Request $request, UpdateDatasAMH $importDatas): Response
-    {
-        return $this->import($request, $importDatas, 'import_amh.csv');
-    }
-
-    /**
      * Import des hôtels.
      *
-     * @Route("/import_hotels", name="import_hotels", methods="GET|POST")
+     * @Route("/import/places", name="import_places", methods="GET|POST")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
-    public function importHotel(Request $request, ImportDatasHotel $importDatas): Response
+    public function importPlaces(Request $request, ImportPlaceDatas $importDatas): Response
     {
-        return $this->import($request, $importDatas, 'import_hotels.csv');
+        return $this->import($request, $importDatas, 'import_places.csv');
     }
 
     /**
      * Import des utilisateurs.
      *
-     * @Route("/import_users", name="import_users", methods="GET|POST")
+     * @Route("/import/users", name="import_users", methods="GET|POST")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
-    public function importUser(Request $request, ImportDatasUser $importDatas): Response
+    public function importUser(Request $request, ImportUserDatas $importDatas): Response
     {
         return $this->import($request, $importDatas, 'import_users.csv');
     }
 
     /**
-     * Import des RDVs.
-     *
-     * @Route("/import_rdvs", name="import_rdvs", methods="GET|POST")
-     * @IsGranted("ROLE_SUPER_ADMIN")
-     */
-    public function importRdv(Request $request, ImportDatasRdv $importDatas): Response
-    {
-        return $this->import($request, $importDatas, 'import_rdvs.csv');
-    }
-
-    /**
      * Import des PAFs.
      *
-     * @Route("/import_paf", name="import_paf", methods="GET|POST")
+     * @Route("/import/paf", name="import_paf", methods="GET|POST")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function importPAF(Request $request, ImportDatasPAF $importDatas): Response
@@ -129,7 +81,7 @@ class ImportController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $nbItems = $importDatas->importInDatabase($file, $this->import->getService(), $request);
+            $nbItems = count($importDatas->importInDatabase($file, $this->import->getService(), $request));
             if ($nbItems > 0) {
                 (new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']))->clear();
 

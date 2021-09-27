@@ -9,7 +9,7 @@ use App\Entity\Support\SupportGroup;
 use App\Repository\Support\HotelSupportRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
-class ImportDatasPAF extends ImportDatas
+class ImportPAFDatas extends ImportDatas
 {
     public const DEFAULT_PAYMENT_TYPE = 1;
 
@@ -21,23 +21,6 @@ class ImportDatasPAF extends ImportDatas
     ];
 
     public const SOCIAL_WORKER = [
-        'Marie-Laure PEBORDE',
-        'Camille RAVEZ',
-        'Typhaine PECHE',
-        'Cécile BAZIN',
-        'Nathalie POULIQUEN',
-        'Marina DJORDJEVIC',
-        'Melody ROMET',
-        'Gaëlle PRINCET',
-        'Marion FRANCOIS',
-        'Margot COURAUDON',
-        'Marilyse TOURNIER',
-        'Rozenn DOUELE ZAHAR',
-        'Laurine VIALLE',
-        'Ophélie QUENEL',
-        'Camille GALAN',
-        'Christine VESTUR',
-        'Julie MARTIN',
     ];
 
     protected $manager;
@@ -104,10 +87,9 @@ class ImportDatasPAF extends ImportDatas
             }
         }
 
-        // dd($this->items);
         $this->manager->flush();
 
-        return $nbPafs;
+        return $this->items;
     }
 
     protected function createPAF(SupportGroup $supportGroup, array $paf)
