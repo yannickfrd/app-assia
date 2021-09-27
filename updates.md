@@ -1,5 +1,38 @@
-## Version 3.0.0 - 17/09/2021
-- Update esperer95.app to app-assia
+## Version 3.1.1 - 27/09/2021
+- Feature API-SIAO to import group and evaluation 
+- Create Commands to import users and places
+
+## Version 3.0.0 - 27/09/2021
+- Update to assia (#50)
+    * Update esperer95.app to app-assia
+    * Create command to clear items cached in the pool
+    * Create command to create new user
+    * Create command to create new service
+    * Fix size logo email
+    * Update namespace ObjectManager in DataFixtures
+    * Add 'void' return type for all setUp methods tests
+    * Update JS dependencies
+    * Edit pole fixtures
+    * Delete conditionnaly for 'famlReunification' field in Evaluation
+
+## Version 2.30.19-24 - 20/09/2021
+- Fix bugs (#49)
+    * Fix error typo in items
+    * Fix error SupportGroupEvent if referent is null
+## Version 2.30.19-24 - 19/09/2021
+- Fix bugs  (sort rdvs, edit date rdv, change referent, disable user) (#48)
+    * Fix problem cache user's support when update support
+    * Change sort of supportRdvs (by start)
+    * Add auto-status 'A venir' in listRdvs
+    * Fix problem when edit date RDV
+    * Edit feature to check if referent is changed
+    * Edit feature to disable user
+
+## Version 2.30.18 - 09/09/2021
+- Add 'https' scheme for all url
+
+## Version 2.30.17 - 03/09/2021
+- Add control : supportPeople must be greater than 1 in removeSupportPerson
 
 ## Version 2.30.16 - 08/08/2021
 - Fix error to select year in occupancy page
