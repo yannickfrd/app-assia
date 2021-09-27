@@ -62,7 +62,7 @@ class ImportDatasHebergement extends ImportDatas
         'NR' => Choices::NO_INFORMATION,
     ];
 
-    public const GENDER = [
+    public const GENDERS = [
         'Femme' => Person::GENDER_FEMALE, // A Vérifier
         'Homme' => Person::GENDER_MALE, // A Vérifier
         '' => Choices::NO_INFORMATION,

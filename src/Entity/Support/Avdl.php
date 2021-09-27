@@ -35,7 +35,7 @@ class Avdl
     // 2 => '2 - Moyen',
     // 3 => '3 - Lourd',
 
-    public const END_SUPPORT_REASON = [
+    public const END_SUPPORT_REASONS = [
         1 => 'Autonome',
         2 => 'Non adhésion',
         3 => 'Transfert (autre département)',
@@ -301,7 +301,7 @@ class Avdl
      */
     public function getEndSupportReasonToString(): ?string
     {
-        return $this->endSupportReason ? self::END_SUPPORT_REASON[$this->endSupportReason] : null;
+        return $this->endSupportReason ? self::END_SUPPORT_REASONS[$this->endSupportReason] : null;
     }
 
     public function setEndSupportReason(?int $endSupportReason): self

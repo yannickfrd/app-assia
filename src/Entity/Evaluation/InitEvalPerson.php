@@ -75,7 +75,7 @@ class InitEvalPerson
     private $contractType;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Support\SupportPerson", inversedBy="initEvalPerson", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Support\SupportPerson", inversedBy="initEvalPerson", cascade={"persist"})
      */
     private $supportPerson;
 

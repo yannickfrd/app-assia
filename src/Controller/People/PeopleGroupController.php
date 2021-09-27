@@ -2,24 +2,26 @@
 
 namespace App\Controller\People;
 
-use App\Controller\Traits\ErrorMessageTrait;
-use App\Entity\People\PeopleGroup;
 use App\Entity\People\Person;
 use App\Entity\People\RolePerson;
+use App\Entity\People\PeopleGroup;
 use App\Event\People\PeopleGroupEvent;
-use App\Form\People\PeopleGroup\PeopleGroupType;
-use App\Form\People\RolePerson\RolePersonType;
-use App\Repository\People\PeopleGroupRepository;
-use App\Service\People\PeopleGroupCollections;
-use App\Service\People\PeopleGroupManager;
+use App\Form\Model\SiSiao\SiSiaoLogin;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use App\Service\People\PeopleGroupManager;
+use App\Controller\Traits\ErrorMessageTrait;
+use App\Form\Admin\Security\SiSiaoLoginType;
 use Symfony\Component\HttpFoundation\Request;
+use App\Form\People\RolePerson\RolePersonType;
+use App\Service\People\PeopleGroupCollections;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Form\People\PeopleGroup\PeopleGroupType;
+use App\Repository\People\PeopleGroupRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class PeopleGroupController extends AbstractController
 {
@@ -49,6 +51,8 @@ class PeopleGroupController extends AbstractController
             ->handleRequest($request);
 
         $supports = $peopleGroupCollections->getSupports($peopleGroup);
+        
+        $siSiaoLoginForm = $this->createForm(SiSiaoLoginType::class, new SiSiaoLogin());
 
         if ($form->isSubmitted() && $form->isValid()) {
             $dispatcher->dispatch(new PeopleGroupEvent($peopleGroup), 'people_group.before_update');
@@ -64,6 +68,7 @@ class PeopleGroupController extends AbstractController
             'form' => $form->createView(),
             'supports' => $supports,
             'referents' => $peopleGroupCollections->getReferents($peopleGroup),
+            'siSiaoLoginForm' => $siSiaoLoginForm->createView(),
         ]);
     }
 

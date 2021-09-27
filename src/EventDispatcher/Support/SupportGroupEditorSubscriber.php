@@ -2,17 +2,18 @@
 
 namespace App\EventDispatcher\Support;
 
-use App\Entity\Evaluation\EvaluationGroup;
-use App\Entity\Organization\Service;
 use App\Entity\Organization\User;
 use App\Entity\People\PeopleGroup;
 use App\Entity\Support\PlaceGroup;
+use App\Entity\Organization\Service;
 use App\Entity\Support\SupportGroup;
 use App\Event\Support\SupportGroupEvent;
 use App\Service\SupportGroup\AvdlService;
-use App\Service\SupportGroup\HotelSupportService;
+use App\Entity\Evaluation\EvaluationGroup;
 use App\Service\SupportGroup\SupportChecker;
 use App\Service\SupportGroup\SupportDuplicator;
+use App\Service\SiSiao\SiSiaoEvaluationImporter;
+use App\Service\SupportGroup\HotelSupportService;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
@@ -20,16 +21,20 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 class SupportGroupEditorSubscriber implements EventSubscriberInterface
 {
     private $supportDuplicator;
+    private $siSiaoEvalImporter;
     private $supportChecker;
     private $flashbag;
     private $cache;
 
     public function __construct(
         SupportDuplicator $supportDuplicator, 
-        SupportChecker $supportChecker,
+        SiSiaoEvaluationImporter $siSiaoEvalImporter,
+        SupportChecker $supportChecker, 
         FlashBagInterface $flashbag
-    ){
+    )
+    {
         $this->supportDuplicator = $supportDuplicator;
+        $this->siSiaoEvalImporter = $siSiaoEvalImporter;
         $this->supportChecker = $supportChecker;
         $this->flashbag = $flashbag;
         $this->cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
@@ -64,6 +69,11 @@ class SupportGroupEditorSubscriber implements EventSubscriberInterface
 
         if (null != $form->get('cloneSupport')->getViewData()) {
             $this->supportDuplicator->duplicate($supportGroup);
+        }
+        if (null != $form->get('siSiaoImport')->getViewData()) {
+            if ($this->siSiaoEvalImporter->import($supportGroup)) {
+                $this->flashbag->add('success', "L'évaluation sociale a été importée.");
+            }
         }
     }
 

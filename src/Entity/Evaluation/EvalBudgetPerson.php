@@ -380,7 +380,7 @@ class EvalBudgetPerson
     private $commentEvalBudget;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvaluationPerson", inversedBy="evalBudgetPerson", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvaluationPerson", inversedBy="evalBudgetPerson", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      */
     private $evaluationPerson;

@@ -28,11 +28,14 @@ class EvaluationCreator
             ->setSupportGroup($supportGroup)
             ->setDate(new \DateTime());
 
-        $initEvalGroup = (new InitEvalGroup())->setSupportGroup($supportGroup);
+        if (!$supportGroup->getInitEvalGroup()) {
+            $initEvalGroup = (new InitEvalGroup())->setSupportGroup($supportGroup);
 
-        $this->manager->persist($initEvalGroup);
+            $this->manager->persist($initEvalGroup);
 
-        $supportGroup->setInitEvalGroup($initEvalGroup);
+            $supportGroup->setInitEvalGroup($initEvalGroup);
+        }
+
         $evaluationGroup->setInitEvalGroup($supportGroup->getInitEvalGroup());
 
         $this->manager->persist($evaluationGroup);
@@ -55,12 +58,14 @@ class EvaluationCreator
             ->setEvaluationGroup($evaluationGroup)
             ->setSupportPerson($supportPerson);
 
-        $initEvalPerson = (new InitEvalPerson())
-            ->setSupportPerson($supportPerson);
+        if (!$supportPerson->getInitEvalPerson()) {
+            $initEvalPerson = (new InitEvalPerson())->setSupportPerson($supportPerson);
 
-        $this->manager->persist($initEvalPerson);
+            $this->manager->persist($initEvalPerson);
 
-        $supportPerson->setInitEvalPerson($initEvalPerson);
+            $supportPerson->setInitEvalPerson($initEvalPerson);
+        }
+
         $evaluationPerson->setInitEvalPerson($supportPerson->getInitEvalPerson());
 
         $this->manager->persist($evaluationPerson);

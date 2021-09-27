@@ -202,7 +202,7 @@ class EvalFamilyPerson
     private $commentEvalFamilyPerson;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvaluationPerson", inversedBy="evalFamilyPerson", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvaluationPerson", inversedBy="evalFamilyPerson", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $evaluationPerson;

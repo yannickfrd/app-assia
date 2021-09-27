@@ -24,6 +24,11 @@ class PersonSearch
      */
     private $siSiaoId;
 
+    /**
+     * @var bool
+     */
+    private $siSiaoSearch;
+
     public function __construct()
     {
     }
@@ -72,6 +77,18 @@ class PersonSearch
     public function setSiSiaoId(?string $siSiaoId): self
     {
         $this->siSiaoId = $siSiaoId;
+
+        return $this;
+    }
+
+    public function getSiSiaoSearch(): bool
+    {
+        return $this->siSiaoSearch;
+    }
+
+    public function setSiSiaoSearch(bool $siSiaoSearch): self
+    {
+        $this->siSiaoSearch = $siSiaoSearch;
 
         return $this;
     }

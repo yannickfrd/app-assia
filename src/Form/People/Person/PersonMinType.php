@@ -42,7 +42,7 @@ class PersonMinType extends AbstractType
                 'attr' => [
                     'class' => 'w-min-150',
                 ],
-                'choices' => Choices::getChoices(Person::GENDER),
+                'choices' => Choices::getChoices(Person::GENDERS),
                 'placeholder' => 'placeholder.select',
             ]);
     }

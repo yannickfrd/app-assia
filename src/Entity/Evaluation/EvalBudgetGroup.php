@@ -79,7 +79,7 @@ class EvalBudgetGroup
     private $commentEvalBudget;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvaluationGroup", inversedBy="evalBudgetGroup", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvaluationGroup", inversedBy="evalBudgetGroup", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $evaluationGroup;

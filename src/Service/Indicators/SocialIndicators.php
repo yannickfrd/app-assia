@@ -31,7 +31,7 @@ class SocialIndicators
         $datas = [];
 
         $this->typologyDatas = $this->initVar(PeopleGroup::FAMILY_TYPOLOGY);
-        $this->genderDatas = $this->initVar(Person::GENDER);
+        $this->genderDatas = $this->initVar(Person::GENDERS);
         $this->roleDatas = $this->initVar(RolePerson::ROLE);
         $this->profStatusDatas = $this->initVar(EvalProfPerson::PROF_STATUS);
         $this->contractTypeDatas = $this->initVar(EvalProfPerson::CONTRACT_TYPE);

@@ -47,7 +47,7 @@ class InitEvalGroup
     private $socialHousingRequest;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Support\SupportGroup", inversedBy="initEvalGroup", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Support\SupportGroup", inversedBy="initEvalGroup", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      */
     private $supportGroup;

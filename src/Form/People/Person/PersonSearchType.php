@@ -4,9 +4,10 @@ namespace App\Form\People\Person;
 
 use App\Form\Model\People\PersonSearch;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class PersonSearchType extends AbstractType
 {
@@ -44,8 +45,14 @@ class PersonSearchType extends AbstractType
             'label_attr' => ['class' => 'sr-only'],
             'attr' => [
                 'class' => 'w-max-160',
-                'placeholder' => 'Si siao id',
+                'data-mask-type' => 'number',
+                'placeholder' => 'siSiaoId.placeholder',
             ],
+        ])
+        ->add('siSiaoSearch', CheckboxType::class, [
+            'label_attr' => ['class' => 'custom-control-label'],
+            'attr' => ['class' => 'custom-control-input checkbox'],
+            'required' => false,
         ]);
     }
 

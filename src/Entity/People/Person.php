@@ -2,19 +2,19 @@
 
 namespace App\Entity\People;
 
-use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Support\PlacePerson;
 use App\Entity\Support\SupportPerson;
-use Gedmo\Mapping\Annotation as Gedmo;
 use App\Entity\Traits\ContactEntityTrait;
-use Doctrine\Common\Collections\Collection;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\String\Slugger\AsciiSlugger;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\String\Slugger\AsciiSlugger;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\People\PersonRepository")
@@ -35,14 +35,14 @@ class Person
     public const GENDER_FEMALE = 1;
     public const GENDER_MALE = 2;
 
-    public const GENDER = [
+    public const GENDERS = [
         1 => 'Féminin',
         2 => 'Masculin',
         97 => 'Autre',
         99 => 'Non renseigné',
     ];
 
-    public const CIVILITY = [
+    public const CIVILITIES = [
         1 => 'Madame',
         2 => 'Monsieur',
         97 => '',
@@ -276,12 +276,12 @@ class Person
 
     public function getGenderToString(): ?string
     {
-        return self::GENDER[$this->gender] ?? null;
+        return self::GENDERS[$this->gender] ?? null;
     }
 
     public function getCivilityToString(): ?string
     {
-        return self::CIVILITY[$this->gender] ?? null;
+        return self::CIVILITIES[$this->gender] ?? null;
     }
 
     public function getContactOtherPerson(): ?string

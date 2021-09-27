@@ -3,6 +3,7 @@
 namespace App\Controller\Evaluation;
 
 use App\Controller\Traits\ErrorMessageTrait;
+use App\Entity\Evaluation\EvaluationGroup;
 use App\Event\Evaluation\EvaluationEvent;
 use App\Form\Evaluation\EvaluationGroupType;
 use App\Repository\Evaluation\EvaluationGroupRepository;
@@ -12,7 +13,9 @@ use App\Service\Evaluation\EvaluationExporter;
 use App\Service\Normalisation;
 use App\Service\SupportGroup\SupportManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,7 +50,7 @@ class EvaluationController extends AbstractController
             return $this->redirectToRoute('support_evaluation_view', ['id' => $id]);
         }
 
-        $this->denyAccessUnlessGranted('EDIT', $supportGroup = $this->supportGroupRepo->findSupportById($id));
+        $this->denyAccessUnlessGranted('EDIT', $supportGroup = $this->supportGroupRepo->find($id));
 
         $evaluationCreator->create($supportGroup);
 
@@ -114,6 +117,32 @@ class EvaluationController extends AbstractController
         }
 
         return $this->getErrorMessage($form, $normalisation, ['evaluation']);
+    }
+
+    /**
+     * Supprime l'évaluation sociale du suivi.
+     *
+     * @Route("/evaluation/{id}/delete", name="evaluation_delete", methods="GET")
+     * @IsGranted("ROLE_SUPER_ADMIN")
+     */
+    public function deleteEvaluationGroup(EvaluationGroup $evaluationGroup): Response
+    {
+        $supportGroup = $evaluationGroup->getSupportGroup();
+
+        $evaluationGroup->getInitEvalGroup()->setSupportGroup(null);
+        foreach ($evaluationGroup->getEvaluationPeople() as $evaluationPerson) {
+            $evaluationPerson->getInitEvalPerson()->setSupportPerson(null);
+        }
+
+        $this->manager->remove($evaluationGroup);
+        $this->manager->flush();
+
+        $this->addFlash('warning', "L'évaluation sociale est supprimée.");
+
+        (new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']))->deleteItem(
+            EvaluationGroup::CACHE_EVALUATION_KEY.$supportGroup->getId());
+
+        return $this->redirectToRoute('support_view', ['id' => $supportGroup->getId()]);
     }
 
     /**

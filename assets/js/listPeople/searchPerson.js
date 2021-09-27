@@ -1,5 +1,9 @@
 import Loader from '../utils/loader'
 import Ajax from '../utils/ajax'
+import SiSiaoLogin from '../siSiao/siSiaoLogin'
+import MessageFlash from '../utils/messageFlash'
+import { Modal } from 'bootstrap'
+import  '../utils/maskNumber'
 
 /**
  * Recherche instannée Ajax.
@@ -9,7 +13,7 @@ export default class SearchPerson {
     constructor(lengthSearch = 3, time = 500) {
         this.loader = new Loader()
         this.ajax = new Ajax(this.loader)
-        
+        this.siSiaoLogin = new SiSiaoLogin()
         this.formElt = document.querySelector('#people_search')
         this.formModal = document.querySelector('.modal-content form')
         this.searchBtnElt = document.getElementById('search')
@@ -21,7 +25,7 @@ export default class SearchPerson {
         this.listResultElt = document.getElementById('list-result-people')
         this.groupId = this.listResultElt.dataset.groupId
         this.helperSearchElt = document.querySelector('.js-helper-search')
-        this.createPersonBtnElt = document.querySelector('.js-create-person')
+        this.createPersonBtnElt = document.querySelector('[data-action="create-person"]')
         this.themeColor = document.getElementById('header').dataset.color
         this.lengthSearch = lengthSearch
         this.time = time
@@ -29,7 +33,15 @@ export default class SearchPerson {
         this.paramsToString = null
         this.helperSearch = this.helperSearchElt.textContent
         this.valueSearch = ''
-
+        
+        this.siSiaoSearchCheckboxElt = document.getElementById('siSiaoSearch')
+        
+        if (this.siSiaoSearchCheckboxElt) {
+            this.siSiaoGroupModal = new Modal(document.getElementById('modal-si-siao-group'))
+            this.importSiSiaoGroupAElt = null
+            this.importSiSiaoGroupAElt = document.querySelector('a[data-action="import-si-siao-group"]');
+        }
+        
         this.init()
     }
     
@@ -41,6 +53,17 @@ export default class SearchPerson {
         this.birthdateInputElt.addEventListener('change', () => this.checkDate(this.birthdateInputElt))
         this.searchBtnElt.addEventListener('click', e => this.onClickBtnElt(e))
         this.createPersonBtnElt.addEventListener('click', () => this.setParams())
+
+        if (this.siSiaoSearchCheckboxElt) {
+            this.siSiaoLogin.init('siSiaoSearch')
+            
+            this.importSiSiaoGroupAElt.addEventListener('click', e => {
+                if (this.loader.isActive()) {
+                    return e.preventDefault()
+                }
+                this.loader.on()
+            })
+        }
     }
 
     /**
@@ -55,7 +78,7 @@ export default class SearchPerson {
      * Compte le nombre de caratères saisis et lance la requête Ajax<.
      */
     count() {
-        const newValueSearch = this.siSiaoIdInputElt + this.lastnameInputElt.value + this.firstnameInputElt.value
+        const newValueSearch = this.siSiaoIdInputElt.value + this.lastnameInputElt.value + this.firstnameInputElt.value
         if (this.valueSearch != newValueSearch && newValueSearch.length >= this.lengthSearch) {
             this.valueSearch = newValueSearch
             this.sendRequest()
@@ -88,7 +111,6 @@ export default class SearchPerson {
         return data
     }
 
-
     /**
      * Vérifie la validité de la date saisie.
      * @param {HTMLInputElement} inputElt 
@@ -104,8 +126,17 @@ export default class SearchPerson {
      * Envoie la requête Ajax.
      */
     sendRequest() {
+        if (this.siSiaoSearchCheckboxElt && this.siSiaoSearchCheckboxElt.checked && this.siSiaoLogin.isConnected) {
+            if (0 === this.siSiaoIdInputElt.value.length) {
+                return new MessageFlash('danger', "L'ID groupe est obligatoire pour effectuer une recherche via le SI-SIAO.")
+            }
+            const url = '/api-sisiao/show-group/'+ this.siSiaoIdInputElt.value
+            return this.ajax.send('GET', url, this.responseShowGroup.bind(this))
+        }
+        
         const formData = new FormData(this.formElt)
         const paramsToString = new URLSearchParams(formData).toString()
+
         if (paramsToString != this.paramsToString) {
             this.ajax.send('POST', '/people/search', this.response.bind(this), new FormData(this.formElt))
             this.loader.on()
@@ -125,6 +156,7 @@ export default class SearchPerson {
             this.noResults()
         }
         this.createPersonBtnElt.classList.remove('d-none')
+
         this.loader.off()
     }
 
@@ -157,11 +189,8 @@ export default class SearchPerson {
     addItem(person) {
         const trElt = document.createElement('tr')
         trElt.innerHTML = 
-            `<td scope="row" class="align-middle text-center">
-            </td>
-            <td class="align-middle"><a href="/person/${person.id}" class="text-dark text-uppercase font-weight-bold">
-                ${person.lastname}${person.usename ? ' ('+person.usename+')' : ''}</a
-            </td>
+            `<td scope="row" class="align-middle text-center"></td>
+            <td class="align-middle">${this.getLastname(person)}</td>
             <td class="align-middle text-capitalize">${person.firstname}</td>
             <td class="align-middle">${person.birthdate}</td>
             <td class="align-middle">${person.age} an${person.age > 1 ? 's' : '' }</td>
@@ -180,7 +209,44 @@ export default class SearchPerson {
             })
         }
         
+        const btnElt = trElt.querySelector('button[data-action="show-group"]')
+        if (btnElt) {
+            btnElt.addEventListener('click', e => {
+                this.ajax.send('GET', '/api-sisiao/show-group/' + btnElt.dataset.id, this.responseShowGroup.bind(this))
+                // data-url="/api-sisiao/import-group/${person.idGroup}" 
+            })            
+        }
+
         this.listResultElt.appendChild(trElt)
+    }
+
+    /**
+     * Donne la réponse à la requête Ajax.
+     * @param {Object} data 
+     */
+    responseShowGroup(data) {
+        if ('warning' === data.alert) {
+            return this.noResults()
+        }
+        
+        document.querySelector('#modal-si-siao-group .modal-body').innerHTML = data.html.content
+        this.siSiaoGroupModal.show()
+
+        this.importSiSiaoGroupAElt.href = this.importSiSiaoGroupAElt.dataset.url.replace('__id__', data.idGroup)
+        this.loader.off()
+    }
+
+    /**
+     * Ajoute un élément à la liste des résultats.
+     * @param {Object} person 
+     */
+    getLastname(person) {
+        if (person.id) {
+            return `<a href="/person/${person.id}" class="text-dark text-uppercase font-weight-bold">
+                ${person.lastname}${person.usename ? ' ('+ person.usename + ')' : ''}</a`
+        }
+
+        return person.lastname + '<span class="ml-1">(<i class="fas fa-map-marker-alt mr-1"></i>' + person.deptCode + ')</span>'
     }
 
     /**
@@ -194,9 +260,16 @@ export default class SearchPerson {
                         <span class="fas fa-plus-square text-dark fa-2x"></span>
                     </a>`
         }
-        return `<a href="/person/${person.id}" class="btn btn-${this.themeColor} btn-sm shadow"
-                    data-placement="bottom" title="Voir la fiche de la personne"><span class="fas fa-eye"></span>
-                </a>`
+
+        if (person.id) {
+            return `<a href="/person/${person.id}" class="btn btn-${this.themeColor} btn-sm shadow"
+                        data-placement="bottom" title="Voir la fiche de la personne"><span class="fas fa-eye"></span>
+                    </a>`
+        }
+
+        return `<button data-action="show-group" data-id="${person.idFiche}" class="btn bg-violet text-light btn-sm shadow"
+                    data-placement="bottom" title="Voir la fiche groupe SI-SIAO de cette personne"><i class="fas fa-eye"></i>
+                </button>`
     }
 
     /**

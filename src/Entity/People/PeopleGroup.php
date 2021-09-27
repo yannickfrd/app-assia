@@ -78,6 +78,11 @@ class PeopleGroup
     private $siSiaoId;
 
     /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $siSiaoImport;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $comment;
@@ -171,6 +176,18 @@ class PeopleGroup
     public function setSiSiaoId(?string $siSiaoId): self
     {
         $this->siSiaoId = $siSiaoId;
+
+        return $this;
+    }
+
+    public function getSiSiaoImport(): ?bool
+    {
+        return $this->siSiaoImport;
+    }
+
+    public function setSiSiaoImport(?bool $siSiaoImport): self
+    {
+        $this->siSiaoImport = $siSiaoImport;
 
         return $this;
     }

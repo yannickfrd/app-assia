@@ -47,7 +47,7 @@ class HotelSupport
         97 => 'Autre',
     ];
 
-    public const LEVEL_SUPPORT = [
+    public const SUPPORT_LEVELS = [
         1 => 'Évaluation', // (1)
         2 => 'Subsidiarité', // Global (1)
         3 => 'Complémentarité', // (0,5)
@@ -55,7 +55,7 @@ class HotelSupport
         5 => 'Veille sociale sans référent', // (0,3)
     ];
 
-    public const END_SUPPORT_REASON = [
+    public const END_SUPPORT_REASONS = [
         1 => 'Accès à une solution d\'hébgt/logt',
         6 => 'Fin d\'intervention d\'urgence',
         5 => 'Fin de prise en charge 115',
@@ -65,6 +65,9 @@ class HotelSupport
         97 => 'Autre',
         99 => 'Non évalué',
     ];
+
+    public const RECOMMENDATIONS = EvalHousingGroup::SIAO_RECOMMENDATION;
+    public const DEPARTMENTS = Choices::DEPARTMENTS;
 
     /**
      * @ORM\Id()
@@ -187,6 +190,11 @@ class HotelSupport
      */
     private $supportGroup;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $rosalieId;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -194,7 +202,7 @@ class HotelSupport
 
     public function getStatusToString(): ?string
     {
-        return $this->supportGroup->getStatus() ? self::STATUS[$this->supportGroup->getStatus()] : null;
+        return $this->supportGroup ? self::STATUS[$this->supportGroup->getStatus()] : null;
     }
 
     public function getReasonNoInclusion(): ?int
@@ -303,7 +311,7 @@ class HotelSupport
 
     public function getLevelSupportToString(): ?string
     {
-        return $this->levelSupport ? self::LEVEL_SUPPORT[$this->levelSupport] : null;
+        return $this->levelSupport ? self::SUPPORT_LEVELS[$this->levelSupport] : null;
     }
 
     public function setLevelSupport(?int $levelSupport): self
@@ -320,7 +328,7 @@ class HotelSupport
 
     public function getRecommendationToString(): ?string
     {
-        return $this->recommendation ? EvalHousingGroup::SIAO_RECOMMENDATION[$this->recommendation] : null;
+        return $this->recommendation ? self::RECOMMENDATIONS[$this->recommendation] : null;
     }
 
     public function setRecommendation(?int $recommendation): self
@@ -366,7 +374,7 @@ class HotelSupport
 
     public function getEndSupportReasonToString(): ?string
     {
-        return $this->endSupportReason ? self::END_SUPPORT_REASON[$this->endSupportReason] : null;
+        return $this->endSupportReason ? self::END_SUPPORT_REASONS[$this->endSupportReason] : null;
     }
 
     public function setEndSupportReason(?int $endSupportReason): self
@@ -413,6 +421,18 @@ class HotelSupport
     public function setSupportGroup(SupportGroup $supportGroup): self
     {
         $this->supportGroup = $supportGroup;
+
+        return $this;
+    }
+
+    public function getRosalieId(): ?string
+    {
+        return $this->rosalieId;
+    }
+
+    public function setRosalieId(?string $rosalieId): self
+    {
+        $this->rosalieId = $rosalieId;
 
         return $this;
     }

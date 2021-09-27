@@ -1,0 +1,47 @@
+{% extends "base.html.twig" %}
+
+{% set title = "Glossaire" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        <h1 class="h2 m-3">{{ title }}</h1>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                        <thead>
+                            <tr>
+                                {% set items = ["N°", "Entité", "Variable", "Trad. variable", "Type", "Trad. type", "Valeurs"] %}
+                                {% for item in items %}
+                                    <th scope="col" class="align-middle th-w-100">{{ item }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% set i = 1 %}
+                            {% for entity in entities %}
+                                {% for var in entity %}
+                                    <tr>
+                                        <td class="align-midle">{{ i }}</td>
+                                        {# <td class="align-midle">{{ var["entity"] }}</td> #}
+                                        <td class="align-midle">{{ var["trans_entity"] }}</td>
+                                        <td class="align-midle">{{ var["name"] }}</td>
+                                        <td class="align-midle">{{ var["trans_name"] }}</td>
+                                        <td class="align-midle">{{ var["type"] }}</td>
+                                        <td class="align-midle">{{ var["trans_type"] }}</td>
+                                        <td class="align-midle">{{ var["values_to_string"] }}</td>
+                                    </tr>
+                                    {% set i = i + 1 %}
+                                {% endfor %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+{% endblock %}

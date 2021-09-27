@@ -62,7 +62,7 @@ class AvdlType extends AbstractType
                 'required' => false,
             ])
             ->add('endSupportReason', ChoiceType::class, [
-                'choices' => Choices::getChoices(Avdl::END_SUPPORT_REASON),
+                'choices' => Choices::getChoices(Avdl::END_SUPPORT_REASONS),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])

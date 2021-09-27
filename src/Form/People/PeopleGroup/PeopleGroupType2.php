@@ -20,7 +20,9 @@ class PeopleGroupType2 extends AbstractType
                 'empty_data' => 'placeholder.select',
             ])
             ->add('nbPeople')
-            ->add('siSiaoId')
+            ->add('siSiaoId', null, [
+                    'attr' => ['data-mask-type' => 'number'],
+            ])
             ->add('comment', null, [
                 'attr' => [
                     'rows' => 4,

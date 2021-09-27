@@ -91,7 +91,7 @@ class EvalSocialGroup
     private $commentEvalSocialGroup;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvaluationGroup", inversedBy="evalSocialGroup", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvaluationGroup", inversedBy="evalSocialGroup", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      */
     private $evaluationGroup;

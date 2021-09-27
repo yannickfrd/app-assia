@@ -13,6 +13,7 @@
                 {% include "app/people/peopleGroup/_navGroup.html.twig" %}
             {% else %}
                 <h1 class="h2 mb-3">{{ title }}</h1>
+                {% include "model/_msgFlash.html.twig" %}
             {% endif %}
         </div>
 
@@ -25,15 +26,10 @@
             <div class="row justify-content-center">
                 <div class="col-12 col-lg-8">
                     <a href="{{ people_group is defined ? path('group_create_person', {'id': people_group.id}) : path('person_new') }}"
-                        class="btn btn-{{ theme_color }} btn-sm mb-3 float-right d-none js-create-person">
+                        class="btn btn-{{ theme_color }} btn-sm mb-3 d-none" data-action="create-person">
                         <span class="fas fa-plus-square mr-2"></span>Créer une nouvelle personne</a>
                 </div>
             </div>
-            {# <div class="row align-items-baseline">
-                <div class="col-md-4 count align-middle">
-                    <p class="align-middle">Résultat : <span id="count-result"></span></p>
-                </div>
-            </div> #}
             <div class="row justify-content-center">
                 <div class="col-12 col-lg-8">
                     <div class="table-responsive {% if app.request.get("_route") != "people" %}d-none{% endif %}">     
@@ -94,6 +90,11 @@
 
     {% if form_role_person is defined %}
         {% include "app/people/peopleGroup/_addPerson.html.twig" %}
+    {% endif %}
+
+    {% if siSiaoLoginForm is defined %}
+        {% include "app/admin/siSiao/_siSiaoLoginModal.html.twig" with {"modal_id": "modal-si-siao-login"} %}
+        {% include "app/admin/siSiao/_siSiaoGroupModal.html.twig" %}
     {% endif %}
 
 {% endblock %}

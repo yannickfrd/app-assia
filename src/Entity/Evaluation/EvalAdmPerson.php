@@ -112,10 +112,15 @@ class EvalAdmPerson
     private $commentEvalAdmPerson;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvaluationPerson", inversedBy="evalAdmPerson", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvaluationPerson", inversedBy="evalAdmPerson", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $evaluationPerson;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $AgdrefId;
 
     public function getId(): ?int
     {
@@ -322,6 +327,18 @@ class EvalAdmPerson
     public function setEvaluationPerson(EvaluationPerson $evaluationPerson): self
     {
         $this->evaluationPerson = $evaluationPerson;
+
+        return $this;
+    }
+
+    public function getAgdrefId(): ?string
+    {
+        return $this->AgdrefId;
+    }
+
+    public function setAgdrefId(?string $AgdrefId): self
+    {
+        $this->AgdrefId = $AgdrefId;
 
         return $this;
     }

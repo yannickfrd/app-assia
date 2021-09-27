@@ -4,6 +4,7 @@ namespace App\Controller\App;
 
 use App\Form\Admin\SupportsByUserSearchType;
 use App\Form\Model\Support\SupportsByUserSearch;
+use App\Service\GlossaryService;
 use App\Service\Indicators\IndicatorsService;
 use App\Service\Indicators\SupportsByUserIndicators;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -90,6 +91,19 @@ class AppController extends AbstractController
         return $this->render('app/admin/dashboard/supportsByUser.html.twig', [
             'form' => $form->createView(),
             'datas' => $form->isSubmitted() || !$this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getSupportsbyDevice($search) : null,
+        ]);
+    }
+
+    /**
+     * Glossaire de toutes les variables.
+     *
+     * @Route("/admin/glossary", name="admin_glossary", methods="GET")
+     * @IsGranted("ROLE_SUPER_ADMIN")
+     */
+    public function glossary(GlossaryService $glossary): Response
+    {
+        return $this->render('app/admin/glossary.html.twig', [
+            'entities' => $glossary->getAll(),
         ]);
     }
 }

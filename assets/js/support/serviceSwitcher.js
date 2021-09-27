@@ -1,5 +1,6 @@
 import Ajax from '../utils/ajax'
 import Loader from '../utils/loader'
+import SiSiaoLogin from '../siSiao/siSiaoLogin'
 
 /**
  * Changement du type de service du suivi.
@@ -9,6 +10,7 @@ export default class ServiceSwitcher {
     constructor() {
         this.loader = new Loader()
         this.ajax = new Ajax(this.loader)
+        this.siSiaoLogin = new SiSiaoLogin()
 
         this.formElt = document.getElementById('modal-new-support')
         this.serviceSelectElt = document.getElementById('support_service')
@@ -34,6 +36,7 @@ export default class ServiceSwitcher {
 
         this.updateVisibilityFields()
         this.changeService()
+        this.siSiaoLogin.init('support_siSiaoImport')
     }
     /**
      * Au changement de service dans la liste déroulante.
@@ -87,6 +90,8 @@ export default class ServiceSwitcher {
                 }
             }
         })
+
+        this.siSiaoLogin.checkConnection()
         this.loader.off()
     }
 

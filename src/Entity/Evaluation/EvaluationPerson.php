@@ -2,12 +2,11 @@
 
 namespace App\Entity\Evaluation;
 
+use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Support\SupportPerson;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
-use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
-
+use Gedmo\Mapping\Annotation as Gedmo;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Evaluation\EvaluationPersonRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
@@ -67,7 +66,7 @@ class EvaluationPerson
     private $evalJusticePerson;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Evaluation\InitEvalPerson", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Evaluation\InitEvalPerson", cascade={"persist"})
      */
     private $initEvalPerson;
 

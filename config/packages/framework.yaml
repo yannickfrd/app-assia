@@ -20,3 +20,7 @@ framework:
         log: true
 
     ide: "vscode"
+
+    http_client:
+        default_options:
+            verify_peer : true

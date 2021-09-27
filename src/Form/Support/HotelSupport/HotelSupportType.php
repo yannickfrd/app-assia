@@ -58,7 +58,7 @@ class HotelSupportType extends AbstractType
                 'required' => false,
             ])
             ->add('levelSupport', ChoiceType::class, [
-                'choices' => Choices::getChoices(HotelSupport::LEVEL_SUPPORT),
+                'choices' => Choices::getChoices(HotelSupport::SUPPORT_LEVELS),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
@@ -72,12 +72,17 @@ class HotelSupportType extends AbstractType
                 'required' => false,
             ])
             ->add('recommendation', ChoiceType::class, [
-                'choices' => Choices::getChoices(EvalHousingGroup::SIAO_RECOMMENDATION),
+                'choices' => Choices::getChoices(HotelSupport::RECOMMENDATIONS),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('endSupportReason', ChoiceType::class, [
-                'choices' => Choices::getChoices(HotelSupport::END_SUPPORT_REASON),
+                'choices' => Choices::getChoices(HotelSupport::END_SUPPORT_REASONS),
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
+            ->add('endSupportDepartment', ChoiceType::class, [
+                'choices' => Choices::getChoices(HotelSupport::DEPARTMENTS),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])

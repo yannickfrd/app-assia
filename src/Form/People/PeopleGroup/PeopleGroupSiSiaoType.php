@@ -21,6 +21,7 @@ class PeopleGroupSiSiaoType extends AbstractType
             $form
                 ->add('siSiaoId', null, [
                     'required' => true,
+                    'attr' => ['data-mask-type' => 'number'],
                     'empty_data' => $peopleGroup->getSiSiaoId(),
                 ]);
         });

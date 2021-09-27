@@ -325,7 +325,14 @@ hotelSupport:
     city: SSD orienteur (auto.)
 
 #Export
-
 Formatted sheet: Tableur formaté
 Model: Modèle d'export
 Anonymized: Anonymisé
+
+#SI-SIAO
+siSiao:
+  username: Identifiant SI-SIAO
+  password: Mot de passe
+Si siao search: Recherche SI-SIAO
+siSiaoId.placeholder: ID groupe SI-SIAO
+Si siao import: Importer l'évaluation sociale présente dans le SI-SIAO.

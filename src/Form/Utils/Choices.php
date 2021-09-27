@@ -29,7 +29,7 @@ class Choices
         94 => '94 - Val-de-Marne',
         95 => '95 - Val-d\'Oise',
         98 => 'Hors IDF',
-        99 => 'Non renseigné',
+        99 => 'Inconnu',
     ];
 
     public const DISABLE = [

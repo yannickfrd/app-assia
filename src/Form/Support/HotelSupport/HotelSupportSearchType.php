@@ -46,7 +46,7 @@ class HotelSupportSearchType extends AbstractType
             ->add('levelSupport', ChoiceType::class, [
                 'label_attr' => ['class' => 'sr-only'],
                 'multiple' => true,
-                'choices' => Choices::getChoices(HotelSupport::LEVEL_SUPPORT),
+                'choices' => Choices::getChoices(HotelSupport::SUPPORT_LEVELS),
                 'attr' => [
                     'class' => 'multi-select w-min-120',
                     'data-select2-id' => 'levelSupport',
@@ -62,7 +62,7 @@ class HotelSupportSearchType extends AbstractType
             ->add('endSupportReasons', ChoiceType::class, [
                 'label_attr' => ['class' => 'sr-only'],
                 'multiple' => true,
-                'choices' => Choices::getChoices(HotelSupport::END_SUPPORT_REASON),
+                'choices' => Choices::getChoices(HotelSupport::END_SUPPORT_REASONS),
                 'attr' => [
                     'class' => 'multi-select w-min-120',
                     'data-select2-id' => 'endSupportReasons',

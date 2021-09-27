@@ -106,6 +106,18 @@ services:
         arguments:
             $tinifyKey: "%env(TINIFY_KEY)%"
 
+    App\Service\SiSiao\SiSiaoRequest:
+        arguments:
+            $url: "%env(SISIAO_URL)%"
+
+    App\Service\SiSiao\SiSiaoGroupImporter:
+        arguments:
+            $url: "%env(SISIAO_URL)%"
+
+    App\Service\SiSiao\SiSiaoEvaluationImporter:
+        arguments:
+            $url: "%env(SISIAO_URL)%"
+
     # App\Twig\AppExtension:
     #     lazy: true
 

@@ -54,6 +54,12 @@ class NewSupportGroupType extends AbstractType
                 'required' => false,
                 'mapped' => false,
             ])
+            ->add('siSiaoImport', CheckboxType::class, [
+                'label_attr' => ['class' => 'custom-control-label'],
+                'attr' => ['class' => 'custom-control-input checkbox'],
+                'required' => false,
+                'mapped' => false,
+            ])
             ->add('status', HiddenType::class)
             ->add('referent', HiddenType::class);
 

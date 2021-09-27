@@ -148,6 +148,10 @@
     {% include "app/people/peopleGroup/_removePerson.html.twig" %}
     {% include "app/support/_shared/_modalNewSupport.html.twig" %}
 
+    {% if siSiaoLoginForm is defined %}
+        {% include "app/admin/siSiao/_siSiaoLoginModal.html.twig" with {"modal_id": "modal-si-siao-login"} %}
+    {% endif %}
+
 {% endblock %}
 
 {% block javascripts %}

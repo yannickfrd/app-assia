@@ -305,7 +305,7 @@ class SupportPersonRepository extends ServiceEntityRepository
                 $query->andWhere('p.birthdate = :birthdate')
                     ->setParameter('birthdate', $date->format('Y-m-d'));
             } elseif ($int > 0) {
-                $query->andWhere('sg.id = :id')
+                $query->andWhere('g.siSiaoId = :id')
                     ->setParameter('id', $int);
             } else {
                 $query->andWhere("CONCAT(p.lastname,' ' ,p.firstname) LIKE :fullname")

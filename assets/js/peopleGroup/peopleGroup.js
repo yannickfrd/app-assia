@@ -3,6 +3,7 @@ import RemoveTableRow from '../utils/removeTableRow'
 import NewForm from '../utils/form/newForm'
 import changeChecker from '../utils/form/changeChecker'
 import AutoSizer from '../utils/form/autoSizer'
+import  '../utils/maskNumber'
 
 document.addEventListener('DOMContentLoaded', () => {
     new RadioSelecter('table-people')

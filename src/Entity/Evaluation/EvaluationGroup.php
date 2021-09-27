@@ -7,15 +7,20 @@ use App\Entity\Support\SupportGroup;
 use Doctrine\Common\Collections\Collection;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Evaluation\EvaluationGroupRepository")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  * @ORM\HasLifecycleCallbacks
  */
 class EvaluationGroup
 {
     use CreatedUpdatedEntityTrait;
-
+    use SoftDeleteableEntity;
+    
     public const CACHE_EVALUATION_KEY = 'evaluation.support_group';
 
     /**
@@ -58,6 +63,7 @@ class EvaluationGroup
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Evaluation\EvaluationPerson", mappedBy="evaluationGroup", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @MaxDepth(1)
      */
     private $evaluationPeople;
 
@@ -82,7 +88,7 @@ class EvaluationGroup
     private $evalBudgetGroup;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Evaluation\InitEvalGroup", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Evaluation\InitEvalGroup", cascade={"persist"})
      */
     private $initEvalGroup;
 

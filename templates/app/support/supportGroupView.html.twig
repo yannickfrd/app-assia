@@ -111,6 +111,9 @@
 							<span class="fas fa-trash-alt mr-2"></span>Supprimer</a>
 					{% endif %}
 					{% if is_granted("ROLE_SUPER_ADMIN") %}
+						<a class="btn btn-{{ theme_color }} d-block mr-3" href="{{ path('api_sisiao_import_evaluation', {'id': support.id}) }}" 
+							title="Importer l'évaluation sociale du SI-SIAO" data-toggle="tooltip" data-placement="bottom">
+								<span class="fas fa-clone mr-2"></span><span class="d-none d-sm-inline">Import SI-SIAO</span></a>
 						{% set textAlert = "'Êtes-vous vraiment sûr de vouloir récupérer les informations du précédent suivi social ?'" %}
 						<a class="btn btn-{{ theme_color }} d-block mr-3" href="{{ path('support_clone', {'id': support.id}) }}" 
 							title="Récupérer les éléments du précédent suivi social" data-toggle="tooltip" data-placement="bottom" 

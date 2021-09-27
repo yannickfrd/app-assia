@@ -6,7 +6,7 @@ export default class Loader {
     constructor() {
         this.inLoading = false
         this.loaderElt = document.getElementById('loader')
-        this.infoElt = this.loaderElt.querySelector('span.sr-only')
+        this.infoElt = this.loaderElt.querySelector('span.small')
     }
 
     /**
@@ -23,8 +23,7 @@ export default class Loader {
     off() {
         this.inLoading = false
         this.loaderElt.classList.add('d-none')
-        this.infoElt.classList.add('sr-only')
-        this.infoElt.textContent = ''   
+        this.infoElt.textContent = this.infoElt.dataset.value
     }
 
     /**
@@ -32,7 +31,6 @@ export default class Loader {
      */
     updateInfo(info) {
         if (info != this.infoElt.textContent) {
-            this.infoElt.classList.remove('sr-only')
             this.infoElt.textContent = info
         }
     }
@@ -42,6 +40,6 @@ export default class Loader {
      * @return {Boolean}
      */
     isActive() {
-        return this.inLoading || false === this.loaderElt.classList.contains('d-none')
+        return false === this.loaderElt.classList.contains('d-none')
     }
 }

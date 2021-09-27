@@ -140,6 +140,9 @@ class SupportGroupType extends AbstractType
             ])
             ->add('cloneSupport', HiddenType::class, [
                 'mapped' => false,
+            ])
+            ->add('siSiaoImport', HiddenType::class, [
+                'mapped' => false,
             ]);
 
         $formModifier = $this->formModifier();

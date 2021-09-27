@@ -42,7 +42,7 @@ class EvalHotelLifeGroup
     private $commentHotelLife;
 
     /**
-     * @ORM\OneToOne(targetEntity=EvaluationGroup::class, inversedBy="evalHotelLifeGroup", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=EvaluationGroup::class, inversedBy="evalHotelLifeGroup", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $evaluationGroup;

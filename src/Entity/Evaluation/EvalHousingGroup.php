@@ -12,7 +12,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class EvalHousingGroup
 {
     public const HOUSING_STATUS = [
-        001 => 'A la rue - abri de fortune',
+        001 => 'A la rue / abri de fortune',
+        004 => 'Camp / Bidonville',
         400 => 'CADA',
         304 => 'Colocation',
         500 => 'Détention',
@@ -438,7 +439,7 @@ class EvalHousingGroup
     private $housingArrivalDate;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvaluationGroup", inversedBy="evalHousingGroup", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvaluationGroup", inversedBy="evalHousingGroup", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $evaluationGroup;
@@ -619,7 +620,7 @@ class EvalHousingGroup
 
     public function getSyploToString(): ?string
     {
-        return $this->syplo ? EvaluationChoices::YES_NO_IN_PROGRESS[$this->syplo] : null;
+        return $this->syplo ? EvaluationChoices::YES_NO_IN_PROGRESS_NC[$this->syplo] : null;
     }
 
     public function setSyplo(?int $syplo): self

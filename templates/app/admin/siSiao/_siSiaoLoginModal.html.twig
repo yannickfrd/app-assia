@@ -1,0 +1,51 @@
+{% extends "model/_modalDialog.html.twig" %}
+
+{% block modal_title %}Connexion au SI-SIAO{% endblock %}
+
+{% block modal_body %}
+    <div class="form-signin m-auto">
+        {{ form_start(siSiaoLoginForm, {
+                "action": path("api_sisiao_login")
+            }) 
+        }}
+            <div class="alert alert-danger alert-dismissible mb-3 fade d-none" role="alert">
+                Identifiant SI-SIAO ou mot de passe incorrect.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        <p class="small text-secondary"><i class="fas fa-info-circle mr-2"></i>
+            <span>Pour vous connecter au SI-SIAO, il faut saisir votre identifiant de la manière suivante :</span></br>
+            siao_ + première lettre de votre prénom + votre nom + 0 + le numéro de votre départemental</br>
+            <i>Exemple : siao_adupont095</i>
+        </p>
+        <div class="my-1">
+            <div class="input-group mb-2">
+                {{ form_label(siSiaoLoginForm.username) }}
+                {{ form_widget(siSiaoLoginForm.username) }}
+            </div>
+        </div>
+        <div class="my-3">
+            <div class="input-group js-password-group">
+                {{ form_label(siSiaoLoginForm.password) }}
+                {{ form_widget(siSiaoLoginForm.password, {'attr': {'class': 'js-password' }}) }}
+                <div class="input-group-append">
+                    <span class="input-group-text"><span class="js-show-password fa fa-eye"></span></span>
+                </div>
+            </div>
+        </div>
+        <a href="https://sisiao.social.gouv.fr" target="_blank" class="text-{{ theme_color }} mb-4">Mot de passe SI-SIAO oublié ?</a>
+    </div>
+{% endblock %}
+
+{% block modal_footer %}
+    <div class="float-left">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+    </div>
+    <div class="float-right">
+        <button type="submit" id="si-siao-connection" name="si-siao-connection" data-url="{{ path("api_sisiao_check_connection") }}"
+        class="btn btn-lg btn-{{ theme_color }} btn-block shadow">Se connecter</button>
+    </div>
+    {{ form_row(siSiaoLoginForm._token) }}
+    {{ form_end(siSiaoLoginForm, {"render_rest": false}) }}
+{% endblock %}

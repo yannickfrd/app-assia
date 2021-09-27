@@ -6,6 +6,7 @@ import RemoveTableRow from '../utils/removeTableRow'
 import SearchLocation from '../utils/searchLocation'
 import changeChecker from '../utils/form/changeChecker'
 import AutoSizer from '../utils/form/autoSizer'
+import '../utils/maskNumber'
 
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('support')) {
