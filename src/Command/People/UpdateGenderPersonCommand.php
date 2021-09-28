@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Command;
+namespace App\Command\People;
 
 use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,7 +16,7 @@ class UpdateGenderPersonCommand extends Command
 {
     use DoctrineTrait;
 
-    protected static $defaultName = 'app:person:update:gender';
+    protected static $defaultName = 'app:person:update_gender';
 
     protected $manager;
     protected $repo;

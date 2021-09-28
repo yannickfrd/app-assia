@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Command;
+namespace App\Command\User;
 
-use App\Service\DoctrineTrait;
+use App\Repository\Organization\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
-use App\Repository\Organization\UserRepository;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -15,8 +14,6 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  */
 class ReinitPasswordUserCommand extends Command
 {
-    use DoctrineTrait;
-
     protected static $defaultName = 'app:user:reinit_password';
 
     protected $manager;
@@ -28,7 +25,6 @@ class ReinitPasswordUserCommand extends Command
         $this->manager = $manager;
         $this->repo = $repo;
         $this->encoder = $encoder;
-        $this->disableListeners($this->manager);
 
         parent::__construct();
     }
@@ -40,7 +36,7 @@ class ReinitPasswordUserCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        if ($_SERVER['APP_ENV'] != 'dev' || $_SERVER['DB_HOST'] != 'localhost') {
+        if ('dev' != $_SERVER['APP_ENV'] || 'localhost' != $_SERVER['DB_HOST']) {
             $output->writeln("\e[97m\e[41m\n Environnement invalid \e[0m\n");
 
             return Command::FAILURE;

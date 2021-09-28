@@ -32,7 +32,7 @@ services:
         resource: "../src/Controller"
         tags: ["controller.service_arguments"]
 
-    App\Command\DeleteHardDocumentsCommand:
+    App\Command\Document\DeleteHardDocumentsCommand:
         arguments:
             $documentsDirectory: "%documents_directory%"
 

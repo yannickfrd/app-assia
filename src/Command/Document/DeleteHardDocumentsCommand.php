@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Command;
+namespace App\Command\Document;
 
 use App\Repository\Support\DocumentRepository;
 use App\Service\DoctrineTrait;

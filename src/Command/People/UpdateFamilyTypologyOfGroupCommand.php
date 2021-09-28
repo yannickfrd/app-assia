@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Command;
+namespace App\Command\People;
 
 use App\Entity\People\RolePerson;
 use App\Service\People\PeopleGroupManager;
@@ -18,7 +18,7 @@ class UpdateFamilyTypologyOfGroupCommand extends Command
 {
     use DoctrineTrait;
 
-    protected static $defaultName = 'app:peopleGroup:update:family_typology';
+    protected static $defaultName = 'app:peopleGroup:update_family_typology';
 
     protected $repo;
     protected $manager;

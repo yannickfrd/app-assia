@@ -1,27 +1,27 @@
 <?php
 
-namespace App\Command;
+namespace App\Command\Place;
 
+use App\Repository\Organization\PlaceRepository;
 use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
-use App\Repository\Support\SupportGroupRepository;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Commande pour mettre à jour l'adresse des suivis via l'API adresse.data.gouv.fr (TEMPORAIRE, A SUPPRIMER).
+ * Commande pour mettre à jour l'adresse des groupes de places via l'API adresse.data.gouv.fr (TEMPORAIRE, A SUPPRIMER).
  */
-class UpdateSupportsGeoAPICommand extends Command
+class UpdatePlacesGeoAPICommand extends Command
 {
     use DoctrineTrait;
 
-    protected static $defaultName = 'app:support:update:geo_api';
+    protected static $defaultName = 'app:place:update_geo_api';
 
     protected $repo;
     protected $manager;
 
-    public function __construct(SupportGroupRepository $repo, EntityManagerInterface $manager)
+    public function __construct(PlaceRepository $repo, EntityManagerInterface $manager)
     {
         $this->repo = $repo;
         $this->manager = $manager;
@@ -32,22 +32,22 @@ class UpdateSupportsGeoAPICommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $message = $this->updateLocationSupports();
+        $message = $this->updateLocationPlaces();
         $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
 
         return Command::SUCCESS;
     }
 
     /**
-     * Met à jour les adresses des suivis.
+     * Met à jour les adresses des groupes de places.
      */
-    protected function updateLocationSupports()
+    protected function updateLocationPlaces()
     {
         $count = 0;
-        $supports = $this->repo->findAll();
-        foreach ($supports as $support) {
-            if (null === $support->getLocationId() && $count < 10) {
-                $valueSearch = $support->getAddress().'+'.$support->getCity();
+        $places = $this->repo->findAll();
+        foreach ($places as $place) {
+            if (null === $place->getLocationId() && $count < 10) {
+                $valueSearch = $place->getAddress().'+'.$place->getCity();
                 $valueSearch = $this->cleanString($valueSearch);
                 $geo = '&lat=49.04&lon=2.04';
                 $url = 'https://api-adresse.data.gouv.fr/search/?q='.$valueSearch.$geo.'&limit=1';
@@ -57,7 +57,7 @@ class UpdateSupportsGeoAPICommand extends Command
                 if (count($json->features)) {
                     $feature = $json->features[0];
                     if ($feature->properties->score > 0.4) {
-                        $support
+                        $place
                             ->setCity($feature->properties->city)
                             ->setAddress($feature->properties->name)
                             ->setZipcode($feature->properties->postcode)
@@ -71,7 +71,7 @@ class UpdateSupportsGeoAPICommand extends Command
             }
         }
 
-        return "[OK] The address of supports are update ! \n ".$count.' / '.count($supports);
+        return "[OK] The address of places are update ! \n ".$count.' / '.count($places);
     }
 
     protected function cleanString(string $string)

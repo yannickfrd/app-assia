@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Command;
+namespace App\Command\Admin;
 
-use App\Service\DoctrineTrait;
+use App\Command\CommandTrait;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 /**
  * Commande pour supprimer toutes les items en cache dans le pool.
  */
 class CacheClearCommand extends Command
 {
-    use DoctrineTrait;
+    use CommandTrait;
 
     protected static $defaultName = 'app:cache:clear';
 
@@ -35,8 +35,7 @@ class CacheClearCommand extends Command
     {
         $this->cache->clear();
 
-        $message = "[OK] Items in the pool were successfully cleared !\n  ";
-        $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
+        $this->writeMessage('success', 'Items in the pool were successfully cleared !');
 
         return Command::SUCCESS;
     }

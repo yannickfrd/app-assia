@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Command;
+namespace App\Command\Evaluation;
 
 use App\Entity\Evaluation\EvalBudgetPerson;
 use App\Entity\Evaluation\InitEvalPerson;
@@ -19,7 +19,7 @@ class UpdateEvalBudgetCommand extends Command
 {
     use DoctrineTrait;
 
-    protected static $defaultName = 'app:evaluation:update:evalBudget';
+    protected static $defaultName = 'app:evaluation:evalBudget:update';
 
     protected $repo;
     protected $manager;

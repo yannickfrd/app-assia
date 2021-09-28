@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Command;
+namespace App\Command\People;
 
 use App\Repository\Organization\UserRepository;
 use App\Repository\People\PeopleGroupRepository;

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Command;
+namespace App\Command\Admin;
 
+use App\Command\CommandTrait;
 use App\Service\DumpDatabase;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -12,6 +13,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class DatabaseBackupCommand extends Command
 {
+    use CommandTrait;
+
     protected static $defaultName = 'app:database:backup';
 
     protected $dumpDatabase;
@@ -37,13 +40,12 @@ class DatabaseBackupCommand extends Command
         $dump = $this->dumpDatabase->dump($path);
 
         if (0 === $dump['return']) {
-            $message = "\n[OK] Backup of database is successful !\n";
-            $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
+            $this->writeMessage('success', 'Backup of database is successful !');
 
             return Command::SUCCESS;
         }
-        $message = "\n[Error] Backup of database is failed !\n";
-        $output->writeln("\e[30m\e[41m\n ".$message."\e[0m\n");
+
+        $this->writeMessage('error', 'Backup of database is failed !');
 
         return Command::FAILURE;
     }

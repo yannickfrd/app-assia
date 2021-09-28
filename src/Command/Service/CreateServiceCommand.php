@@ -1,25 +1,25 @@
 <?php
 
-namespace App\Command;
+namespace App\Command\Service;
 
-use App\Service\DoctrineTrait;
+use App\Command\CommandTrait;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\ServiceDevice;
 use App\Repository\Organization\DeviceRepository;
+use App\Repository\Organization\PoleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
-use App\Repository\Organization\PoleRepository;
-use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
+use Symfony\Component\Console\Question\Question;
 
 /**
  * Commande pour créer un nouveau service.
  */
 class CreateServiceCommand extends Command
 {
-    use DoctrineTrait;
+    use CommandTrait;
 
     protected static $defaultName = 'app:service:create';
 
@@ -48,13 +48,13 @@ class CreateServiceCommand extends Command
     {
         $helper = $this->getHelper('question');
 
-        $nameQuestion = new Question("Name ? \n");
+        $nameQuestion = new Question("<info>Name</info>:\n> ");
         $name = $helper->ask($input, $output, $nameQuestion);
 
-        $emailQuestion = new Question("Email ? \n");
+        $emailQuestion = new Question("<info>Email</info>:\n> ");
         $email = $helper->ask($input, $output, $emailQuestion);
 
-        $phoneQuestion = new Question("Phone ? \n");
+        $phoneQuestion = new Question("<info>Phone</info>:\n> ");
         $phone = $helper->ask($input, $output, $phoneQuestion);
 
         $poleChoices = [];
@@ -64,7 +64,7 @@ class CreateServiceCommand extends Command
         }
 
         $poleQuestion = (new ChoiceQuestion(
-            'Pole',
+            '<info>Pole</info>:',
             $poleChoices,
         ));
 
@@ -77,7 +77,7 @@ class CreateServiceCommand extends Command
         }
 
         $devicesQuestion = (new ChoiceQuestion(
-            'Devices',
+            '<info>Devices</info>:',
             $deviceChoices,
         ))->setMultiselect(true);
 
@@ -95,14 +95,13 @@ class CreateServiceCommand extends Command
             $serviceDevice = (new ServiceDevice())
                 ->setDevice($this->deviceRepo->findOneBy(['name' => $device]))
                 ->setService($service);
-    
+
             $this->manager->persist($serviceDevice);
         }
 
         $this->manager->flush();
 
-        $message = "[OK] The service {$service->getName()} is create !\n  ";
-        $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
+        $this->writeMessage('success', "The service {$service->getName()} is create !");
 
         return Command::SUCCESS;
     }

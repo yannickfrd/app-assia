@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Command;
+namespace App\Command\Support;
 
 use App\Service\DumpDatabase;
 use Symfony\Component\Console\Command\Command;

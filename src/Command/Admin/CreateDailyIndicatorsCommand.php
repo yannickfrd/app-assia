@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Command;
+namespace App\Command\Admin;
 
 use App\Repository\Admin\IndicatorRepository;
 use App\Service\Indicators\IndicatorsService;
@@ -10,11 +10,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Commande pour créer les indicateurs généraux.
+ * Commande pour créer les indicateurs de la veille.
  */
-class CreateIndicatorsCommand extends Command
+class CreateDailyIndicatorsCommand extends Command
 {
-    protected static $defaultName = 'app:indicator:create-all';
+    protected static $defaultName = 'app:indicator:create-last-day';
 
     protected $manager;
     protected $indicatorRepo;
@@ -31,7 +31,7 @@ class CreateIndicatorsCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $message = $this->createAllIndicators();
+        $message = $this->createDailyIndicators((new \DateTime('today'))->modify('-1 day'));
         $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
 
         return Command::SUCCESS;
@@ -40,26 +40,17 @@ class CreateIndicatorsCommand extends Command
     /**
      * Mettre à jour les indicateurs.
      */
-    protected function createAllIndicators()
+    protected function createDailyIndicators(\DateTime $date)
     {
-        $startDate = (new \DateTime('2020-02-25'));
+        $indicator = $this->indicators->createIndicator($date);
 
-        $diff = $startDate->diff(new \DateTime())->days;
+        if (!$this->repoIndicator->findOneBy(['date' => $date])) {
+            $this->manager->persist($indicator);
+            $this->manager->flush();
 
-        $date = clone $startDate;
-        $count = 0;
-
-        for ($i = 0; $i < $diff; ++$i) {
-            file_put_contents('php://stdout', "\e[36m".$date->format('Y-m-d')."\e[0m \n");
-            $indicator = $this->indicators->createIndicator($date);
-            if (!$this->repoIndicator->findOneBy(['date' => $date])) {
-                $this->manager->persist($indicator);
-                ++$count;
-            }
-            $date = $date->modify('+1 day');
+            return '[OK] The daily indicators are create !';
         }
-        $this->manager->flush();
 
-        return "[OK] The indicators are create !\n  ".$count;
+        return '[FAILED] The daily indicators exists already !';
     }
 }

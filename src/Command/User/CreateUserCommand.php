@@ -1,30 +1,29 @@
 <?php
 
-namespace App\Command;
+namespace App\Command\User;
 
-use App\Form\Utils\Choices;
-use App\Service\DoctrineTrait;
-use App\Entity\Organization\User;
-use App\Notification\UserNotification;
+use App\Command\CommandTrait;
 use App\Entity\Organization\ServiceUser;
+use App\Entity\Organization\User;
+use App\Form\Utils\Choices;
+use App\Notification\UserNotification;
+use App\Repository\Organization\ServiceRepository;
+use App\Repository\Organization\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
-use App\Repository\Organization\UserRepository;
-use Symfony\Component\Console\Question\Question;
-use App\Repository\Organization\ServiceRepository;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
-use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
  * Commande pour créer un nouvel utilisateur.
  */
 class CreateUserCommand extends Command
 {
-    use DoctrineTrait;
+    use CommandTrait;
 
     protected static $defaultName = 'app:user:create';
 
@@ -62,20 +61,20 @@ class CreateUserCommand extends Command
     {
         $helper = $this->getHelper('question');
 
-        $lastnameQuestion = new Question("Lastname ? \n");
+        $lastnameQuestion = new Question("<info>Lastname</info>:\n> ");
         $lastname = $helper->ask($input, $output, $lastnameQuestion);
 
-        $firstnameQuestion = new Question("Firstname ? \n");
+        $firstnameQuestion = new Question("<info>Firstname</info>:\n> ");
         $firstname = $helper->ask($input, $output, $firstnameQuestion);
 
-        $emailQuestion = new Question("Email ? \n");
+        $emailQuestion = new Question("<info>Email</info>:\n> ");
         $email = $helper->ask($input, $output, $emailQuestion);
 
-        $phoneQuestion = new Question("Phone ? \n");
+        $phoneQuestion = new Question("<info>Phone</info>:\n> ");
         $phone = $helper->ask($input, $output, $phoneQuestion);
 
         $statusQuestion = (new ChoiceQuestion(
-            'Status ? [default: 1 Travailleur social]',
+            '<info>Status</info> [default: 1 Travailleur social]:',
             User::STATUS,
             1
         ))->setErrorMessage('Status %s is invalid.');
@@ -83,18 +82,18 @@ class CreateUserCommand extends Command
         $status = $helper->ask($input, $output, $statusQuestion);
 
         $roleQuestion = (new ChoiceQuestion(
-            'Role ? [default: ROLE_USER]',
+            '<info>Role</info> [default: ROLE_USER]:',
             [
                 0 => 'ROLE_USER',
                 1 => 'ROLE_ADMIN',
-                2 => 'ROLE_SUPER_ADMIN'
+                2 => 'ROLE_SUPER_ADMIN',
             ],
             0
         ))->setErrorMessage('Role %s is invalid.');
 
         $role = $helper->ask($input, $output, $roleQuestion);
 
-        $passwordQuestion = (new Question("Password ? \n", bin2hex(random_bytes(8))))
+        $passwordQuestion = (new Question("<info>Password</info>\n> ", bin2hex(random_bytes(8))))
             ->setHidden(true)
             ->setHiddenFallback(false);
         $password = $helper->ask($input, $output, $passwordQuestion);
@@ -127,8 +126,7 @@ class CreateUserCommand extends Command
         $this->manager->persist($user);
 
         if ($this->userExists($user)) {
-            $message = "\n[Error] This user already exists !\n";
-            $output->writeln("\e[37m\e[41m\n ".$message."\e[0m\n");
+            $this->writeMessage('error', 'This user already exists !');
 
             return Command::FAILURE;
         }
@@ -137,15 +135,13 @@ class CreateUserCommand extends Command
             $serviceUser = (new ServiceUser())
                 ->setUser($user)
                 ->setService($this->serviceRepo->findOneBy(['name' => $service]));
-    
+
             $this->manager->persist($serviceUser);
         }
 
         $this->manager->flush();
 
-
-        $message = "[OK] The user {$user->getLastname()} {$user->getFirstname()} is create !\n  ";
-        $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
+        $this->writeMessage('success', "The user {$user->getLastname()} {$user->getFirstname()} is create !");
 
         $notificationChoices = [
             Choices::YES => 'Yes',
@@ -163,8 +159,7 @@ class CreateUserCommand extends Command
         if (Choices::YES === Choices::getchoices($notificationChoices)[$notification]) {
             $this->userNotification->newUser($user);
 
-            $message = "[OK] The email notification is sended !\n  ";
-            $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
+            $this->writeMessage('success', "The email notification is sended !\n  ");
         }
 
         return Command::SUCCESS;

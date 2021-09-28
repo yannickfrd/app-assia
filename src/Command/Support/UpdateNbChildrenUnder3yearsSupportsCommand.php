@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Command;
+namespace App\Command\Support;
 
+use App\Command\CommandTrait;
 use App\Entity\People\RolePerson;
-use App\Service\DoctrineTrait;
+use App\Repository\Support\SupportGroupRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
-use App\Repository\Support\SupportGroupRepository;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -15,9 +15,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class UpdateNbChildrenUnder3yearsSupportsCommand extends Command
 {
-    use DoctrineTrait;
+    use CommandTrait;
 
-    protected static $defaultName = 'app:support:update:nb_children_under_3_years';
+    protected static $defaultName = 'app:support:update_nb_children_under_3_years';
 
     protected $repo;
     protected $manager;
@@ -26,15 +26,13 @@ class UpdateNbChildrenUnder3yearsSupportsCommand extends Command
     {
         $this->repo = $repo;
         $this->manager = $manager;
-        $this->disableListeners($this->manager);
 
         parent::__construct();
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $message = $this->update();
-        $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
+        $this->update();
 
         return Command::SUCCESS;
     }
@@ -65,6 +63,6 @@ class UpdateNbChildrenUnder3yearsSupportsCommand extends Command
         }
         $this->manager->flush();
 
-        return "[OK] The number of children under 3 years in supports are update ! \n ".$count.' / '.count($supports);
+        $this->writeMessage('success', "The number of children under 3 years in supports are update ! \n ".$count.' / '.count($supports));
     }
 }

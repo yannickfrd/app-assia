@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Command;
+namespace App\Command\Place;
 
 use App\Repository\Support\PlaceGroupRepository;
 use App\Service\DoctrineTrait;
@@ -16,7 +16,7 @@ class UpdatePlacePersonCommand extends Command
 {
     use DoctrineTrait;
 
-    protected static $defaultName = 'app:placePerson:update:supportPerson';
+    protected static $defaultName = 'app:placePerson:update_supportPerson';
 
     protected $repo;
     protected $manager;

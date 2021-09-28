@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Command;
+namespace App\Command\People;
 
 use App\Repository\People\PersonRepository;
 use App\Service\DoctrineTrait;
@@ -17,7 +17,7 @@ class UpdateSoundexNamePersonCommand extends Command
 {
     use DoctrineTrait;
 
-    protected static $defaultName = 'app:person:update:soundex_name';
+    protected static $defaultName = 'app:person:update_soundex_name';
 
     protected $manager;
     protected $repo;

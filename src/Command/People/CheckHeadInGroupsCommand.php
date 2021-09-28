@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Command;
+namespace App\Command\People;
 
 use App\Repository\People\PeopleGroupRepository;
 use App\Service\DoctrineTrait;

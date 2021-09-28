@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Command;
+namespace App\Command\Evaluation;
 
+use App\Repository\Evaluation\EvaluationPersonRepository;
 use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use App\Repository\Evaluation\EvaluationPersonRepository;
 
 /**
  * Corrige le support_person_id de evaluation_person des évaluations duppliquées (TEMPORAIRE, A SUPPRIMER).
@@ -26,7 +26,7 @@ class UpdateDupplicatedEvaluationsCommand extends Command
         $this->repo = $repo;
         $this->manager = $manager;
         $this->disableListeners($this->manager);
-        $this->manager->getFilters()->disable('softdeleteable');
+        // $this->manager->getFilters()->disable('softdeleteable');
 
         parent::__construct();
     }
@@ -43,7 +43,7 @@ class UpdateDupplicatedEvaluationsCommand extends Command
     {
         $evaluationPeople = $this->repo->findBy([], ['updatedAt' => 'DESC'], 1000);
         $count = 0;
-        
+
         foreach ($this->repo->findAll() as $evaluationPerson) {
             foreach ($evaluationPerson->getEvaluationGroup()->getSupportGroup()->getSupportPeople() as $supportPerson) {
                 if ($supportPerson->getPerson()->getId() === $evaluationPerson->getSupportPerson()->getPerson()->getId()
