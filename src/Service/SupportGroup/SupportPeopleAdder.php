@@ -21,8 +21,8 @@ class SupportPeopleAdder
     public function __construct(
         EntityManagerInterface $manager,
         EvaluationGroupRepository $evaluationRepo,
-        FlashBagInterface $flashbag)
-    {
+        FlashBagInterface $flashbag
+    ) {
         $this->manager = $manager;
         $this->evaluationRepo = $evaluationRepo;
         $this->flashbag = $flashbag;

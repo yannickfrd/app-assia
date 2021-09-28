@@ -32,7 +32,8 @@ class RdvPaginator
         }
 
         // Sinon, récupère les rendez-vous en cache.
-        return (new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']))->get(SupportGroup::CACHE_SUPPORT_RDVS_KEY.$supportGroup->getId(),
+        return (new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']))->get(
+            SupportGroup::CACHE_SUPPORT_RDVS_KEY.$supportGroup->getId(),
             function (CacheItemInterface $item) use ($supportGroup, $search, $request) {
                 $item->expiresAfter(\DateInterval::createFromDateString('7 days'));
 

@@ -34,8 +34,8 @@ class ImportUserDatas extends ImportDatas
         UserNotification $userNotification,
         UserRepository $userRepo,
         UserPasswordEncoderInterface $passwordEncoder,
-        SluggerInterface $slugger)
-    {
+        SluggerInterface $slugger
+    ) {
         $this->manager = $manager;
         $this->userNotification = $userNotification;
         $this->UserRepo = $userRepo;

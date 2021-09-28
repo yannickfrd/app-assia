@@ -46,7 +46,7 @@ class OccupancySearchType extends AbstractType
         // ->add('export');
     }
 
-    private  function setData(OccupancySearch $search): OccupancySearch
+    private function setData(OccupancySearch $search): OccupancySearch
     {
         $today = new \DateTime('today');
 

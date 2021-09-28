@@ -65,7 +65,9 @@ class PersonController extends AbstractController
             'form' => $form->createView(),
             'siSiaoLoginForm' => $siSiaoLoginForm->createView(),
             'people' => $request->query->all() ? $pagination->paginate(
-                $this->personRepo->findPeopleQuery($search, $request->query->get('search-person'), 20), $request) : null,
+                $this->personRepo->findPeopleQuery($search, $request->query->get('search-person'), 20),
+                $request
+            ) : null,
         ]);
     }
 

@@ -38,7 +38,8 @@ class NotePaginator
         }
 
         // Sinon, récupère les notes en cache.
-        return (new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']))->get(SupportGroup::CACHE_SUPPORT_NOTES_KEY.$supportGroup->getId(),
+        return (new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']))->get(
+            SupportGroup::CACHE_SUPPORT_NOTES_KEY.$supportGroup->getId(),
             function (CacheItemInterface $item) use ($supportGroup, $search, $request) {
                 $item->expiresAfter(\DateInterval::createFromDateString('7 days'));
 
@@ -47,10 +48,11 @@ class NotePaginator
         );
     }
 
-    public function paginateNotes(Request $request, NoteSearch $search) {
+    public function paginateNotes(Request $request, NoteSearch $search)
+    {
         return $this->pagination->paginate(
             $this->noteRepo->findNotesQuery($search, $this->currentUser),
-            $request, 
+            $request,
             self::NB_ITEMS
         );
     }

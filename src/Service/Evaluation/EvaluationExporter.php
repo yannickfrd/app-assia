@@ -5,9 +5,9 @@ namespace App\Service\Evaluation;
 use App\Entity\Evaluation\EvaluationGroup;
 use App\Entity\Support\Note;
 use App\Entity\Support\SupportGroup;
-use App\Service\SupportGroup\SupportCollections;
 use App\Service\ExportPDF;
 use App\Service\ExportWord;
+use App\Service\SupportGroup\SupportCollections;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -61,7 +61,7 @@ class EvaluationExporter
         }
 
         return (new Note())
-            ->setTitle(self::TITLE.(new \DateTime())->format('d/m/Y'))
+            ->setTitle(self::TITLE.' '.(new \DateTime())->format('d/m/Y'))
             ->setContent($this->getContent($supportGroup, $evaluation, 'note'))
             ->setType(Note::TYPE_NOTE)
             ->setSupportGroup($supportGroup);

@@ -28,7 +28,7 @@ class ImportUserCommand extends Command
         EntityManagerInterface $manager,
         ServiceRepository $serviceRepo,
         ImportUserDatas $importUserDatas
-    ){
+    ) {
         $this->manager = $manager;
         $this->serviceRepo = $serviceRepo;
         $this->importUserDatas = $importUserDatas;
@@ -59,7 +59,7 @@ class ImportUserCommand extends Command
         $service = $helper->ask($input, $output, $serviceQuestion);
         
         $users = $this->importUserDatas->importInDatabase(
-            \dirname(__DIR__).'/../public/import/datas/import_users.csv', 
+            \dirname(__DIR__).'/../public/import/datas/import_users.csv',
             $this->serviceRepo->findOneBy(['name' => $service])
         );
 

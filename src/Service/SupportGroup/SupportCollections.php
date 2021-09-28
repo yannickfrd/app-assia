@@ -32,8 +32,8 @@ class SupportCollections
         DocumentRepository $documentRepository,
         PaymentRepository $paymentRepository,
         ReferentRepository $referentRepository,
-        EvaluationGroupRepository $evaluationGroupRepository)
-    {
+        EvaluationGroupRepository $evaluationGroupRepository
+    ) {
         $this->noteRepository = $noteRepository;
         $this->rdvRepository = $rdvRepository;
         $this->documentRepository = $documentRepository;

@@ -32,7 +32,7 @@
 
 {% if avdl and avdl.diagStartDate %}
     <div class="row my-2">
-        {{ view_div.get(avdl.diagStartDate ? avdl.diagStartDate|date("d/m/Y") 
+        {{ view_div.get(avdl.diagStartDate|date("d/m/Y") 
             ~ (avdl.diagEndDate ? " - " ~ avdl.diagEndDate|date("d/m/Y")), "avdl.diag") }}
         {{ view_div.get(avdl.diagTypeToString, "avdl.diagType") }}
         {{ view_div.get(avdl.recommendationSupportToString, "avdl.recommendationSupport") }}
@@ -42,13 +42,14 @@
 
 {% if avdl and avdl.supportStartDate %}
     <div class="row my-2">
-        {{ view_div.get(avdl.supportStartDate ? avdl.supportStartDate|date("d/m/Y") 
+        {{ view_div.get(avdl.supportStartDate|date("d/m/Y") 
             ~ (avdl.supportEndDate ? " - " ~ avdl.supportEndDate|date("d/m/Y")), "avdl.support") }}
         {{ view_div.get(avdl.supportTypeToString, "avdl.supportType") }}
         {{ view_div.get(avdl.supportComment, "Comment") }}
     </div>
 {% endif %}
-{% if avdl and avdl.supportStartDate %}
+
+{% if avdl %}
     <div class="row my-2">
         {{ view_div.get(avdl.endSupportReasonToString, "avdl.endSupportReason") }}
         {{ view_div.get(avdl.accessHousingModalityToString, "avdl.accessHousingModality") }}

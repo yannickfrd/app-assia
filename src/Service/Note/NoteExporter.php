@@ -46,7 +46,8 @@ class NoteExporter
         $this->exportWord->createDocument(
             $content,
             'Notes '.$supportGroup->getHeader()->getFullname(),
-            $supportGroup->getService()->getPole()->getLogoPath());
+            $supportGroup->getService()->getPole()->getLogoPath()
+        );
 
         return $this->exportWord->download($this->appEnv);
     }

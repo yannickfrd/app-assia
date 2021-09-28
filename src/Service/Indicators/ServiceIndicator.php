@@ -61,8 +61,8 @@ class ServiceIndicator
         RdvRepository $rdvRepo,
         DocumentRepository $documentRepo,
         PaymentRepository $paymentRepo,
-        UserConnectionRepository $ConnectionRepo)
-    {
+        UserConnectionRepository $ConnectionRepo
+    ) {
         $this->user = $security->getUser();
 
         $this->repoIndicator = $indicatorRepo;

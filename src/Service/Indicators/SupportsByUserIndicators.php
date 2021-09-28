@@ -19,8 +19,8 @@ class SupportsByUserIndicators
         CurrentUserService $currentUser,
         DeviceRepository $deviceRepo,
         UserRepository $userRepo,
-        SupportGroupRepository $supportRepo)
-    {
+        SupportGroupRepository $supportRepo
+    ) {
         $this->currentUser = $currentUser;
         $this->deviceRepo = $deviceRepo;
         $this->UserRepo = $userRepo;

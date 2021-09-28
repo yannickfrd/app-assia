@@ -56,8 +56,8 @@ class IndicatorsService
         RdvRepository $rdvRepo,
         DocumentRepository $documentRepo,
         PaymentRepository $paymentRepo,
-        UserConnectionRepository $ConnectionRepo)
-    {
+        UserConnectionRepository $ConnectionRepo
+    ) {
         $this->repoIndicator = $indicatorRepo;
         $this->UserRepo = $userRepo;
         $this->serviceRepo = $serviceRepo;

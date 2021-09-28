@@ -46,7 +46,9 @@ class SupportCheckerSubscriber implements EventSubscriberInterface
         $nbPeople = $supportGroup->getPeopleGroup()->getNbPeople();
 
         if ($nbSupportPeople != $nbPeople && $nbActiveSupportPeople != $nbPeople) {
-            $this->flashbag->add('warning', 'Attention, le nombre de personnes suivies 
+            $this->flashbag->add(
+                'warning',
+                'Attention, le nombre de personnes suivies 
                 ne correspond pas à la composition familiale du groupe ('.$nbPeople.' personnes).'
             );
         }
@@ -69,7 +71,9 @@ class SupportCheckerSubscriber implements EventSubscriberInterface
             // Vérifie que le nombre de personnes suivies correspond au nombre de personnes hébergées
             $nbPlacePeople = $this->getNbPlacePeople($supportGroup);
             if (!$supportGroup->getEndDate() && $nbActiveSupportPeople != $nbPlacePeople) {
-                $this->flashbag->add('warning', 'Attention, le nombre de personnes suivies ('.$nbActiveSupportPeople.') 
+                $this->flashbag->add(
+                    'warning',
+                    'Attention, le nombre de personnes suivies ('.$nbActiveSupportPeople.') 
                     ne correspond pas au nombre de personnes hébergées ('.$nbPlacePeople.').<br/> 
                     Allez dans l\'onglet <b>Hébergement</b> pour ajouter les personnes à l\'hébergement.'
                 );

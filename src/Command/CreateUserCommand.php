@@ -37,12 +37,12 @@ class CreateUserCommand extends Command
 
     public function __construct(
         EntityManagerInterface $manager,
-        UserRepository $userRepo, 
-        ServiceRepository $serviceRepo, 
-        UserPasswordEncoderInterface $encoder, 
+        UserRepository $userRepo,
+        ServiceRepository $serviceRepo,
+        UserPasswordEncoderInterface $encoder,
         SluggerInterface $slugger,
         UserNotification $userNotification
-    ){
+    ) {
         $this->manager = $manager;
         $this->userRepo = $userRepo;
         $this->serviceRepo = $serviceRepo;
@@ -85,8 +85,8 @@ class CreateUserCommand extends Command
         $roleQuestion = (new ChoiceQuestion(
             'Role ? [default: ROLE_USER]',
             [
-                0 => 'ROLE_USER', 
-                1 => 'ROLE_ADMIN', 
+                0 => 'ROLE_USER',
+                1 => 'ROLE_ADMIN',
                 2 => 'ROLE_SUPER_ADMIN'
             ],
             0
@@ -139,7 +139,7 @@ class CreateUserCommand extends Command
                 ->setService($this->serviceRepo->findOneBy(['name' => $service]));
     
             $this->manager->persist($serviceUser);
-        }            
+        }
 
         $this->manager->flush();
 
@@ -148,8 +148,8 @@ class CreateUserCommand extends Command
         $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
 
         $notificationChoices = [
-            Choices::YES => 'Yes', 
-            Choices::NO => 'No', 
+            Choices::YES => 'Yes',
+            Choices::NO => 'No',
         ];
 
         $notificationQuestion = (new ChoiceQuestion(

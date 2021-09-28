@@ -28,7 +28,7 @@ class ImportPlaceCommand extends Command
         EntityManagerInterface $manager,
         ServiceRepository $serviceRepo,
         ImportPlaceDatas $importPlaceDatas
-    ){
+    ) {
         $this->manager = $manager;
         $this->serviceRepo = $serviceRepo;
         $this->importPlaceDatas = $importPlaceDatas;
@@ -59,7 +59,7 @@ class ImportPlaceCommand extends Command
         $service = $helper->ask($input, $output, $serviceQuestion);
         
         $places = $this->importPlaceDatas->importInDatabase(
-            \dirname(__DIR__).'/../public/import/datas/import_places.csv', 
+            \dirname(__DIR__).'/../public/import/datas/import_places.csv',
             $this->serviceRepo->findOneBy(['name' => $service])
         );
 

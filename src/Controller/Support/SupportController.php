@@ -100,7 +100,8 @@ class SupportController extends AbstractController
                 return $this->redirectToRoute('support_view', ['id' => $supportGroup->getId()]);
             }
             $this->addFlash('danger', 'Attention, un suivi social est déjà en cours pour '.(
-                count($peopleGroup->getPeople()) > 1 ? 'ce ménage.' : 'cette personne.'));
+                count($peopleGroup->getPeople()) > 1 ? 'ce ménage.' : 'cette personne.'
+            ));
         }
 
         return $this->render('app/support/supportGroupEdit.html.twig', [
@@ -244,7 +245,8 @@ class SupportController extends AbstractController
         $peopleGroup = $supportGroup->getPeopleGroup();
 
         (new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']))->deleteItem(
-            PeopleGroup::CACHE_GROUP_SUPPORTS_KEY.$peopleGroup->getId());
+            PeopleGroup::CACHE_GROUP_SUPPORTS_KEY.$peopleGroup->getId()
+        );
 
         return $this->redirectToRoute('people_group_show', ['id' => $peopleGroup->getId()]);
     }
@@ -354,7 +356,9 @@ class SupportController extends AbstractController
 
         $supports = $pagination->paginate(
             $supportGroupRepo->findSupportsBetween($calendar->getFirstDayOfTheMonth(), $calendar->getLastDayOfTheMonth(), $search),
-            $request, 30);
+            $request,
+            30
+        );
 
         $supportsId = [];
         foreach ($supports->getItems() as $support) {

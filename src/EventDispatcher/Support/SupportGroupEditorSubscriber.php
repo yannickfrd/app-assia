@@ -27,12 +27,11 @@ class SupportGroupEditorSubscriber implements EventSubscriberInterface
     private $cache;
 
     public function __construct(
-        SupportDuplicator $supportDuplicator, 
+        SupportDuplicator $supportDuplicator,
         SiSiaoEvaluationImporter $siSiaoEvalImporter,
-        SupportChecker $supportChecker, 
+        SupportChecker $supportChecker,
         FlashBagInterface $flashbag
-    )
-    {
+    ) {
         $this->supportDuplicator = $supportDuplicator;
         $this->siSiaoEvalImporter = $siSiaoEvalImporter;
         $this->supportChecker = $supportChecker;

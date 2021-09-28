@@ -31,7 +31,7 @@ class CreateServiceCommand extends Command
         EntityManagerInterface $manager,
         PoleRepository $poleRepo,
         DeviceRepository $deviceRepo
-    ){
+    ) {
         $this->manager = $manager;
         $this->poleRepo = $poleRepo;
         $this->deviceRepo = $deviceRepo;
@@ -97,7 +97,7 @@ class CreateServiceCommand extends Command
                 ->setService($service);
     
             $this->manager->persist($serviceDevice);
-        }            
+        }
 
         $this->manager->flush();
 

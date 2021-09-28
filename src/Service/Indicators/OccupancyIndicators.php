@@ -35,8 +35,8 @@ class OccupancyIndicators
         PlacePersonRepository $placeRepoPerson,
         ServiceRepository $serviceRepo,
         SubServiceRepository $subServiceRepo,
-        DeviceRepository $deviceRepo)
-    {
+        DeviceRepository $deviceRepo
+    ) {
         $this->currentUser = $currentUser;
         $this->repoPlace = $placeRepo;
         $this->placePersonRepo = $placeRepoPerson;

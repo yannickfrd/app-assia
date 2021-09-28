@@ -72,7 +72,8 @@ class CalendarController extends AbstractController
             'rdvs' => $this->rdvRepo->findRdvsBetweenByDay(
                 $calendar->getFirstMonday(),
                 $calendar->getLastday(),
-                $supportGroup),
+                $supportGroup
+            ),
         ]);
     }
 
