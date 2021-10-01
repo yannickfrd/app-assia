@@ -163,7 +163,8 @@ section {
 
 //
 #logo-site {
-    max-width: 200px;
+    max-height: 60px;
+    width: 154px;
 }
 
 .fa-phone {
@@ -600,6 +601,11 @@ button.btn-outline-secondary a:hover {
 @media (max-width: 576px) {
     nav.fixed-top {
         min-height: 50px;
+    }
+
+    #logo-site {
+        max-height: 40px;
+        width: 103px;
     }
 
     body {

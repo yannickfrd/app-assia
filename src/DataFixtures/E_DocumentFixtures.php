@@ -2,49 +2,49 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Support\Payment;
+use App\Entity\Support\Document;
 use App\Repository\Support\SupportGroupRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 /*
  * @codeCoverageIgnore
  */
-class E_PaymentFixtures extends Fixture
+class E_DocumentFixtures extends Fixture
 {
     private $manager;
     private $supportGroupRepo;
+    private $slugger;
     private $faker;
 
-    public function __construct(EntityManagerInterface $manager, SupportGroupRepository $supportGroupRepo)
+    public function __construct(EntityManagerInterface $manager, SluggerInterface $slugger, SupportGroupRepository $supportGroupRepo)
     {
         $this->manager = $manager;
         $this->supportGroupRepo = $supportGroupRepo;
+        $this->slugger = $slugger;
         $this->faker = \Faker\Factory::create('fr_FR');
     }
 
-    public function load(ObjectManager $manager): void
+    public function load(ObjectManager $manager)
     {
         foreach ($this->supportGroupRepo->findAll() as $support) {
             for ($i = 0; $i < mt_rand(6, 10); ++$i) {
                 $createdAt = AppFixtures::getDateTimeBeetwen('-12 months', 'now');
 
-                $payment = (new Payment())
-                ->setType(1)
-                ->setMonthContrib(new \DateTime($createdAt->format('Y-m').'-01'))
-                ->setResourcesAmt($resourcesAmt = mt_rand(0, 1500))
-                ->setToPayAmt($resourcesAmt * 0.1)
-                ->setPaidAmt($resourcesAmt * 0.1)
-                ->setPaymentDate($createdAt)
-                ->setPaymentType(mt_rand(1, 4))
+                $document = (new Document())
+                ->setName($name = $this->faker->sentence(mt_rand(2, 5), true))
+                ->setInternalFileName('/documents/'.$createdAt->format('Y/m/d/').strtolower($this->slugger->slug($name)))
+                ->setPeopleGroup($support->getPeopleGroup())
+                ->setType(mt_rand(1, 10))
                 ->setSupportGroup($support)
                 ->setCreatedAt($createdAt)
                 ->setCreatedBy($support->getReferent())
                 ->setUpdatedAt($createdAt)
                 ->setUpdatedBy($support->getReferent());
 
-                $this->manager->persist($payment);
+                $this->manager->persist($document);
             }
         }
         $this->manager->flush();

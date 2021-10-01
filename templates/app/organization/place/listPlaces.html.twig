@@ -31,7 +31,7 @@
                         <tr>
                             <th scope="col" class="align-middle th-w-20"></th>
                             <th scope="col" class="align-middle th-w-150">
-                                {{ knp_pagination_sortable(places, "Groupe de places", "a.name") }}
+                                {{ knp_pagination_sortable(places, "Groupe de places", "pl.name") }}
                             </th>
                             <th scope="col" class="align-middle th-w-100">
                                 {{ knp_pagination_sortable(places, "Service", "s.name") }}
@@ -40,28 +40,28 @@
                                 {{ knp_pagination_sortable(places, "Dispositif", "d.name") }}
                             </th>
                             <th scope="col" class="align-middle th-w-80">
-                                {{ knp_pagination_sortable(places, "Nombre de places", "a.nbPlaces") }}
+                                {{ knp_pagination_sortable(places, "Nombre de places", "pl.nbPlaces") }}
                             </th>
                             <th scope="col" class="align-middle th-date">
-                                {{ knp_pagination_sortable(places, "Date d'ouverture", "a.startDate") }}
+                                {{ knp_pagination_sortable(places, "Date d'ouverture", "pl.startDate") }}
                             </th>
                             <th scope="col" class="align-middle th-date">
-                                {{ knp_pagination_sortable(places, "Date de fermeture", "a.endDate") }}
+                                {{ knp_pagination_sortable(places, "Date de fermeture", "pl.endDate") }}
                             </th>
                             </th>
                             <th scope="col" class="align-middle th-w-150">
-                                {{ knp_pagination_sortable(places, "Adresse", "a.address") }}
+                                {{ knp_pagination_sortable(places, "Adresse", "pl.address") }}
                             </th>
                             <th scope="col" class="align-middle th-w-100">
-                                {{ knp_pagination_sortable(places, "Ville", "a.city") }}
+                                {{ knp_pagination_sortable(places, "Ville", "pl.city") }}
                             </th>
                             <th scope="col" class="align-middle th-w-60">
-                                {{ knp_pagination_sortable(places, "Code postal", "a.zipcode") }}
+                                {{ knp_pagination_sortable(places, "Code postal", "pl.zipcode") }}
                             </th>
                             <th scope="col" class="align-middle th-w-150">Occupation actuelle (Nb de personnes)</th>
                             {% if is_granted('ROLE_ADMIN') %}
                                 <th scope="col" class="align-middle th-w-60">
-                                    {{ knp_pagination_sortable(places, "Désactivé", "a.disabledAt") }}
+                                    {{ knp_pagination_sortable(places, "Désactivé", "pl.disabledAt") }}
                                 </th>
                             {% endif %}
                         </tr>
@@ -87,7 +87,7 @@
                                 <td class="align-middle">{{ place.zipcode }}</td>
                                 <td class="align-middle">{% set nbPeople = 0 %}
                                     {% if place.placeType != 3 %}
-                                        {% for placeGroup in place.placeGroups|filter(a => a.endDate|date("Y-m-d") >= "now"|date("Y-m-d")) %} 
+                                        {% for placeGroup in place.placeGroups|filter(pl => pl.endDate|date("Y-m-d") >= "now"|date("Y-m-d")) %} 
                                             {% set nbPlacePeople = placeGroup.placePeople|length %}
                                             {% if not loop.first %} + {% endif %}{{ nbPlacePeople }}
                                             {% set nbPeople = nbPeople + nbPlacePeople %}

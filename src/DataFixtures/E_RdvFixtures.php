@@ -5,43 +5,39 @@ namespace App\DataFixtures;
 use App\Entity\Support\Rdv;
 use App\Repository\Support\SupportGroupRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectManager;
 
 /*
  * @codeCoverageIgnore
  */
 class E_RdvFixtures extends Fixture
 {
-    public function __construct(EntityManagerInterface $manager, SupportGroupRepository $repo)
+    private $manager;
+    private $supportGroupRepo;
+    private $faker;
+
+    public function __construct(EntityManagerInterface $manager, SupportGroupRepository $supportGroupRepo)
     {
         $this->manager = $manager;
-        $this->repo = $repo;
+        $this->supportGroupRepo = $supportGroupRepo;
         $this->faker = \Faker\Factory::create('fr_FR');
     }
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
-        $supports = $this->repo->findAll();
-
-        foreach ($supports as $support) {
+        foreach ($this->supportGroupRepo->findAll() as $support) {
             for ($i = 0; $i < mt_rand(6, 10); ++$i) {
-                $rdvCreatedAt = AppFixtures::getDateTimeBeetwen('-2 months', '+2 months');
-                $rdvUpdatedAt = $rdvCreatedAt;
-
-                $start = $rdvCreatedAt;
-                $end = $this->faker->dateTimeInInterval($start, '+1 hours');
-
                 $rdv = (new Rdv())
-                    ->setTitle($this->faker->sentence($nbWords = mt_rand(5, 10), $variableNbWords = true))
-                    ->setStart($start)
-                    ->setEnd($end)
-                    ->setLocation('Cergy-Pontoise')
-                    ->setSupportGroup($support)
-                    ->setCreatedAt($rdvCreatedAt)
-                    ->setCreatedBy($support->getReferent())
-                    ->setUpdatedAt($rdvUpdatedAt)
-                    ->setUpdatedBy($support->getReferent());
+                ->setTitle($this->faker->sentence(mt_rand(5, 10), true))
+                ->setStart($rdvCreatedAt = AppFixtures::getDateTimeBeetwen('-2 months', '+2 months'))
+                ->setEnd($this->faker->dateTimeInInterval($rdvCreatedAt, '+1 hours'))
+                ->setLocation('Cergy-Pontoise')
+                ->setSupportGroup($support)
+                ->setCreatedAt($rdvCreatedAt)
+                ->setCreatedBy($support->getReferent())
+                ->setUpdatedAt($rdvCreatedAt)
+                ->setUpdatedBy($support->getReferent());
 
                 $this->manager->persist($rdv);
             }

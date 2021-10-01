@@ -6,63 +6,53 @@ use App\Entity\People\PeopleGroup;
 use App\Entity\People\Person;
 use App\Entity\People\RolePerson;
 use App\Repository\Organization\UserRepository;
+use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectManager;
 
 /*
  * @codeCoverageIgnore
  */
-class C_PeopleGroupFixtures extends Fixture
+class C_PeopleFixtures extends Fixture
 {
     private $manager;
+    private $userRepository;
+    private $faker;
 
     private $user;
 
-    private $peopleGroup;
     private $familyTypology;
     private $nbPeople;
-    private $groupCreatedAt;
-    private $groupUpdatedAt;
-    private $rolePerson;
+    private $createdAt;
+    private $updatedAt;
     private $head;
     private $role;
-    private $person;
     private $lastname;
     private $firstname;
     private $birthdate;
     private $sex;
 
-    public function __construct(EntityManagerInterface $manager, UserRepository $repo)
+    public function __construct(EntityManagerInterface $manager, UserRepository $userRepository)
     {
         $this->manager = $manager;
-        $this->repo = $repo;
+        $this->userRepository = $userRepository;
         $this->faker = \Faker\Factory::create('fr_FR');
     }
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
-        $this->init(); // Fixtures
-    }
-
-    protected function init()
-    {
-        $users = $this->repo->findAll();
-
-        foreach ($users as $user) {
+        foreach ($this->userRepository->findAll() as $user) {
             $this->user = $user;
-
             // Crée des faux groupes
             for ($i = 1; $i <= mt_rand(10, 15); ++$i) {
                 $this->setTypology();
-                $this->addPeopleGroup();
+                $peopleGroup = $this->createPeopleGroup();
 
                 // Crée des fausses personnes dans le groupe
                 for ($j = 1; $j <= $this->nbPeople; ++$j) {
                     $this->familyTypology($j);
-                    $this->addRolePerson();
-                    $this->addPerson();
-                    // $this->addSupportPerson();
+                    $this->createPerson($peopleGroup);
                 }
             }
         }
@@ -70,7 +60,7 @@ class C_PeopleGroupFixtures extends Fixture
     }
 
     // Définit la typologie familiale et le nombre de personnes
-    protected function setTypology()
+    protected function setTypology(): void
     {
         // Définit la typologie familiale
         $this->familyTypology = mt_rand(1, 6);
@@ -86,76 +76,66 @@ class C_PeopleGroupFixtures extends Fixture
     }
 
     // Crée le groupe
-    public function addPeopleGroup()
+    public function createPeopleGroup(): PeopleGroup
     {
         // Définit la date de création et de mise à jour
-        $this->groupCreatedAt = AppFixtures::getDateTimeBeetwen('-24 months', 'now');
-        $this->groupUpdatedAt = AppFixtures::getDateTimeBeetwen(AppFixtures::getStartDate($this->groupCreatedAt), 'now');
+        $this->createdAt = AppFixtures::getDateTimeBeetwen('-24 months', 'now');
+        $this->updatedAt = AppFixtures::getDateTimeBeetwen(AppFixtures::getStartDate($this->createdAt), 'now');
 
         $this->lastname = $this->faker->lastName();
 
-        $this->peopleGroup = (new PeopleGroup())
+        $peopleGroup = (new PeopleGroup())
             ->setFamilyTypology($this->familyTypology)
             ->setNbPeople($this->nbPeople)
-            ->setCreatedAt($this->groupCreatedAt)
+            ->setCreatedAt($this->createdAt)
             ->setCreatedBy($this->user)
-            ->setUpdatedAt($this->groupUpdatedAt)
+            ->setUpdatedAt($this->updatedAt)
             ->setUpdatedBy($this->user);
 
-        $this->manager->persist($this->peopleGroup);
+        $this->manager->persist($peopleGroup);
+
+        return $peopleGroup;
     }
 
     // Détermine différentes infos sur la personne en fonction de la typologie familiale
-    protected function familyTypology($l)
+    protected function familyTypology(int $l): void
     {
         if (1 === $this->familyTypology) {
-            $this->setPerson('adult', 1, true, 5);
+            $this->setPerson('adult', Person::GENDER_FEMALE, true, 5);
         } elseif (2 === $this->familyTypology) {
-            $this->setPerson('adult', 2, true, 5);
+            $this->setPerson('adult', Person::GENDER_MALE, true, 5);
         } elseif (3 === $this->familyTypology || 6 === $this->familyTypology) {
             if (1 === $l) {
-                $this->setPerson('adult', 1, true, 1);
+                $this->setPerson('adult', Person::GENDER_FEMALE, true, 1);
             } elseif (2 === $l) {
-                $this->setPerson('adult', 2, false, 1);
+                $this->setPerson('adult', Person::GENDER_MALE, false, 1);
             }
         } elseif (4 === $this->familyTypology) {
             if (1 === $l) {
-                $this->setPerson('adult', 1, true, 4);
+                $this->setPerson('adult', Person::GENDER_FEMALE, true, 4);
             }
         } elseif (5 === $this->familyTypology) {
             if (1 === $l) {
-                $this->setPerson('adult', 2, true, 4);
+                $this->setPerson('adult', Person::GENDER_MALE, true, 4);
             }
         }
 
         if (($this->familyTypology >= 4 && $this->familyTypology <= 5 && $l >= 2) || (6 === $this->familyTypology && $l >= 3)) {
-            $this->setPerson('child', mt_rand(1, 2), false, 3);
+            $this->setPerson('child', mt_rand(1, 2), false, RolePerson::ROLE_CHILD);
         }
     }
 
-    protected function setPerson($age, $sex, $head, $role)
+    protected function setPerson(string $age, int $sex, bool $head, int $role): void
     {
-        $this->firstname = $this->faker->firstName(1 === $sex ? 'female' : 'male');
-        $this->birthdate = $this->birthdate($age);
+        $this->firstname = $this->faker->firstName(Person::GENDER_FEMALE === $sex ? 'female' : 'male');
+        $this->birthdate = $this->getBirthdate($age);
         $this->sex = $sex;
         $this->head = $head;
         $this->role = $role;
     }
 
-    // Crée le rôle de la personne dans le groupe
-    public function addRolePerson()
-    {
-        $this->rolePerson = (new RolePerson())
-            ->setHead($this->head)
-            ->setRole($this->role)
-            ->setPeopleGroup($this->peopleGroup)
-            ->setCreatedAt($this->groupCreatedAt);
-
-        $this->manager->persist($this->rolePerson);
-    }
-
     // Crée la personne
-    public function addPerson()
+    public function createPerson(PeopleGroup $peopleGroup): Person
     {
         $this->firstname = $this->faker->firstName();
 
@@ -164,31 +144,39 @@ class C_PeopleGroupFixtures extends Fixture
             $phone = $phone.' '.strval(mt_rand(0, 9)).strval(mt_rand(0, 9));
         }
 
-        $this->person = (new Person())
+        $person = (new Person())
             ->setFirstName($this->firstname)
             ->setLastName($this->lastname)
             ->setBirthdate($this->birthdate)
             ->setGender($this->sex)
             ->setEmail($this->faker->freeEmail())
             ->setPhone1($phone)
-            ->setCreatedAt($this->groupCreatedAt)
-            ->setUpdatedAt($this->groupUpdatedAt)
+            ->setCreatedAt($this->createdAt)
+            ->setUpdatedAt($this->updatedAt)
             ->setCreatedBy($this->user)
-            ->setUpdatedBy($this->user)
-            ->addRolesPerson($this->rolePerson);
-        // Prépare le manager à faire persister les données dans le temps
-        $this->manager->persist($this->person);
+            ->setUpdatedBy($this->user);
+
+        $this->manager->persist($person);
+
+        $rolePerson = (new RolePerson())
+            ->setHead($this->head)
+            ->setRole($this->role)
+            ->setPeopleGroup($peopleGroup)
+            ->setPerson($person)
+            ->setCreatedAt($this->createdAt);
+
+        $this->manager->persist($rolePerson);
+
+        return $person;
     }
 
     // Donne une date de naissanc en fonction du role de la personne
-    protected function birthdate($role = 'adult')
+    protected function getBirthdate(string $role = 'adult'): DateTime
     {
         if ('adult' === $role) {
-            $birthdate = $this->faker->dateTimeBetween($startDate = '-55 years', $endDate = '-18 years', $timezone = null);
-        } else {
-            $birthdate = $this->faker->dateTimeBetween($startDate = '-18 years', $endDate = 'now', $timezone = null);
+            return $this->faker->dateTimeBetween('-55 years', '-18 years');
         }
 
-        return $birthdate;
+        return $this->faker->dateTimeBetween('-18 years', 'now');
     }
 }

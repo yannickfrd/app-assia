@@ -5,9 +5,11 @@ namespace App\Service\Import;
 use App\Entity\Organization\Place;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\SubService;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\Organization\PlaceRepository;
 use App\Repository\Organization\SubServiceRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ImportPlaceDatas extends ImportDatas
 {
@@ -26,7 +28,12 @@ class ImportPlaceDatas extends ImportDatas
         $this->subServiceRepo = $subServiceRepo;
     }
 
-    public function importInDatabase(string $fileName, Service $service): array
+    /**
+     * Importe les données.
+     *
+     * @param Collection<Service> $services
+     */
+    public function importInDatabase(string $fileName, ArrayCollection $services): array
     {
         $this->fields = $this->getDatas($fileName);
 
@@ -34,7 +41,7 @@ class ImportPlaceDatas extends ImportDatas
         foreach ($this->fields as $field) {
             $this->field = $field;
             if ($i > 0) {
-                $this->items[] = $this->createPlace($service);
+                $this->items[] = $this->createPlace($services);
             }
             ++$i;
         }
@@ -44,29 +51,34 @@ class ImportPlaceDatas extends ImportDatas
         return $this->items;
     }
 
-    protected function createPlace(Service $service): ?Place
+    /**
+     * @param Collection<Service> $services
+     */
+    protected function createPlace(ArrayCollection $services): ?Place
     {
         $placeExists = $this->placeRepo->findOneBy([
             'name' => $this->field['Nom'],
         ]);
 
-        if ($this->field['Nom'] == 'Non' || $placeExists) {
+        if ('Non' == $this->field['Nom'] || $placeExists) {
             return null;
         }
 
-        $place = (new Place())
-            ->setService($service)
-            ->setSubService($this->getSubService())
-            ->setName($this->field['Nom'])
-            ->setPlaceType(3)
-            ->setConfiguration(2)
-            ->setIndividualCollective(1)
-            ->setAddress($this->field['Adresse'])
-            ->setCity($this->field['Commune']);
+        foreach ($services as $service) {
+            $place = (new Place())
+                ->setService($service)
+                ->setSubService($this->getSubService())
+                ->setName($this->field['Nom'])
+                ->setPlaceType(3)
+                ->setConfiguration(2)
+                ->setIndividualCollective(1)
+                ->setAddress($this->field['Adresse'])
+                ->setCity($this->field['Commune']);
 
-        $this->updateLocation($place);
+            $this->updateLocation($place);
 
-        $this->manager->persist($place);
+            $this->manager->persist($place);
+        }
 
         return $place;
     }
@@ -118,7 +130,7 @@ class ImportPlaceDatas extends ImportDatas
         }
 
         $subService = $this->subServiceRepo->findOneBy([
-            'name' => $subServiceName, 
+            'name' => $subServiceName,
         ]);
 
         if ($subService) {

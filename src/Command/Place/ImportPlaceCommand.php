@@ -2,11 +2,12 @@
 
 namespace App\Command\Place;
 
+use App\Repository\Organization\ServiceRepository;
 use App\Service\DoctrineTrait;
+use App\Service\Import\ImportPlaceDatas;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
-use App\Repository\Organization\ServiceRepository;
-use App\Service\Import\ImportPlaceDatas;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
@@ -54,16 +55,21 @@ class ImportPlaceCommand extends Command
         $serviceQuestion = (new ChoiceQuestion(
             'Choice the service : ',
             $serviceChoices,
-        ));
+        ))->setMultiselect(true);
 
-        $service = $helper->ask($input, $output, $serviceQuestion);
-        
+        $nameServices = $helper->ask($input, $output, $serviceQuestion);
+
+        $services = new ArrayCollection();
+        foreach ($nameServices as $name) {
+            $services->add($this->serviceRepo->findOneBy(['name' => $name]));
+        }
+
         $places = $this->importPlaceDatas->importInDatabase(
             \dirname(__DIR__).'/../../public/import/datas/import_places.csv',
-            $this->serviceRepo->findOneBy(['name' => $service])
+            $services
         );
 
-        $message = "[OK] ".count($places)." places are imported !\n  ";
+        $message = '[OK] '.count($places)." places are imported !\n  ";
         $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
 
         return Command::SUCCESS;

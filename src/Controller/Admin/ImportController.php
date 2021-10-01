@@ -4,16 +4,16 @@ namespace App\Controller\Admin;
 
 use App\Form\Admin\ImportType;
 use App\Form\Model\Admin\Import;
-use App\Service\Import\ImportDatasPAF;
-use App\Service\Import\ImportPlaceDatas;
-use Symfony\Component\HttpFoundation\Request;
 use App\Service\Import\ImportDatasHebergement;
+use App\Service\Import\ImportPAFDatas;
+use App\Service\Import\ImportPlaceDatas;
 use App\Service\Import\ImportUserDatas;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class ImportController extends AbstractController
 {
@@ -63,7 +63,7 @@ class ImportController extends AbstractController
      * @Route("/import/paf", name="import_paf", methods="GET|POST")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
-    public function importPAF(Request $request, ImportDatasPAF $importDatas): Response
+    public function importPAF(Request $request, ImportPAFDatas $importDatas): Response
     {
         return $this->import($request, $importDatas, 'import_paf.csv');
     }
@@ -81,7 +81,7 @@ class ImportController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $nbItems = count($importDatas->importInDatabase($file, $this->import->getService(), $request));
+            $nbItems = count($importDatas->importInDatabase($file, $this->import->getServices(), $request));
             if ($nbItems > 0) {
                 (new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']))->clear();
 

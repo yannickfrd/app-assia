@@ -2,24 +2,35 @@
 
 namespace App\Form\Model\Admin;
 
-use App\Entity\Organization\Service;
+use Doctrine\Common\Collections\ArrayCollection;
 
-class Import
-{
-    /**
-     * @var Service
-     */
-    private $service;
-
-    public function getService(): ?Service
+    class Import
     {
-        return $this->service;
-    }
+        /**
+         * @var ArrayCollection
+         */
+        private $services;
 
-    public function setService(?Service $service): self
-    {
-        $this->service = $service;
+        public function getServices(): ?ArrayCollection
+        {
+            return $this->services;
+        }
 
-        return $this;
+        public function getServicesToString(): array
+        {
+            $services = [];
+
+            foreach ($this->services as $service) {
+                $services[] = $service->getName();
+            }
+
+            return $services;
+        }
+
+        public function setServices(?ArrayCollection $services): self
+        {
+            $this->services = $services;
+
+            return $this;
+        }
     }
-}

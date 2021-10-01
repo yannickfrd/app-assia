@@ -1,1 +1,2 @@
-/images/
+/images/*
+!/images/logo_assia_mail.png

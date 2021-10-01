@@ -7,6 +7,8 @@ use App\Entity\Organization\ServiceUser;
 use App\Entity\Organization\User;
 use App\Notification\UserNotification;
 use App\Repository\Organization\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -43,7 +45,12 @@ class ImportUserDatas extends ImportDatas
         $this->slugger = $slugger;
     }
 
-    public function importInDatabase(string $fileName, Service $service, ?Request $request = null): array
+    /**
+     * Importe les données.
+     *
+     * @param Collection<Service> $services
+     */
+    public function importInDatabase(string $fileName, ArrayCollection $services, ?Request $request = null): array
     {
         $this->fields = $this->getDatas($fileName);
         $this->request = $request;
@@ -52,7 +59,7 @@ class ImportUserDatas extends ImportDatas
         foreach ($this->fields as $field) {
             $this->field = $field;
             if ($i > 0) {
-                $user = $this->createUser($service);
+                $user = $this->createUser($services);
             }
             ++$i;
         }
@@ -69,8 +76,10 @@ class ImportUserDatas extends ImportDatas
 
     /**
      * Créé l'utilisateur.
+     *
+     * @param Collection<Service> $services
      */
-    public function createUser(Service $service): ?User
+    public function createUser($services): ?User
     {
         $user = new User();
 
@@ -101,11 +110,13 @@ class ImportUserDatas extends ImportDatas
 
         $this->manager->persist($user);
 
-        $serviceUser = (new ServiceUser())
-            ->setUser($user)
-            ->setService($service);
+        foreach ($services as $service) {
+            $serviceUser = (new ServiceUser())
+                ->setUser($user)
+                ->setService($service);
 
-        $this->manager->persist($serviceUser);
+            $this->manager->persist($serviceUser);
+        }
 
         $this->users[] = $user;
 
@@ -124,7 +135,7 @@ class ImportUserDatas extends ImportDatas
         }
 
         $appEnv = $this->request ? $this->request->server->get('APP_ENV') : 'prod';
-        $postfix = $appEnv && $appEnv != 'prod' ? '_test' : '';
+        $postfix = $appEnv && 'prod' != $appEnv ? '_test' : '';
 
         return strtolower($this->slugger->slug($username).'.'.$this->slugger->slug($lastname).$postfix);
     }

@@ -7,6 +7,8 @@ use App\Entity\Organization\User;
 use App\Entity\Support\Payment;
 use App\Entity\Support\SupportGroup;
 use App\Repository\Support\HotelSupportRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ImportPAFDatas extends ImportDatas
@@ -43,12 +45,15 @@ class ImportPAFDatas extends ImportDatas
         $this->hotelSupports = $hotelSupportRepo->findAll();
     }
 
-    public function importInDatabase(string $fileName, Service $service): int
+    /**
+     * Importe les données.
+     *
+     * @param Collection<Service> $services
+     */
+    public function importInDatabase(string $fileName, ArrayCollection $services): int
     {
         $this->fields = $this->getDatas($fileName);
-        $this->service = $service;
-
-        $this->users = $this->getUsers();
+        $this->users = $this->getUsers($services);
 
         $i = 0;
         foreach ($this->fields as $field) {
@@ -133,14 +138,19 @@ class ImportPAFDatas extends ImportDatas
         return null;
     }
 
-    protected function getUsers(): array
+    /**
+     * @param Collection<Service> $services
+     */
+    protected function getUsers(ArrayCollection $services): array
     {
         $users = [];
 
-        foreach ($this->service->getUsers() as $user) {
-            foreach (self::SOCIAL_WORKER as $name) {
-                if (strstr($name, $user->getLastname())) {
-                    $users[$name] = $user;
+        foreach ($services as $service) {
+            foreach ($service->getUsers() as $user) {
+                foreach (self::SOCIAL_WORKER as $name) {
+                    if (strstr($name, $user->getLastname())) {
+                        $users[$name] = $user;
+                    }
                 }
             }
         }

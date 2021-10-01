@@ -15,13 +15,18 @@ class ImportType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('service', EntityType::class, [
+            ->add('services', EntityType::class, [
                 'class' => Service::class,
                 'choice_label' => 'name',
+                'multiple' => true,
                 'query_builder' => function (ServiceRepository $repo) {
                     return $repo->createQueryBuilder('s')->orderBy('s.name', 'ASC');
                 },
-                'placeholder' => 'placeholder.select',
+                'placeholder' => 'placeholder.service',
+                'attr' => [
+                    'class' => 'multi-select w-min-150',
+                    'data-select2-id' => 'services',
+                ],
                 'required' => true,
             ]);
     }

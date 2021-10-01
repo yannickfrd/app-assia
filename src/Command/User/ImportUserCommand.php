@@ -5,6 +5,7 @@ namespace App\Command\User;
 use App\Command\CommandTrait;
 use App\Repository\Organization\ServiceRepository;
 use App\Service\Import\ImportUserDatas;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -52,15 +53,20 @@ class ImportUserCommand extends Command
         }
 
         $serviceQuestion = (new ChoiceQuestion(
-            '<info>Choice the service</info>:',
+            '<info>Choice the service(s)</info>:',
             $serviceChoices,
-        ));
+        ))->setMultiselect(true);
 
-        $service = $helper->ask($input, $output, $serviceQuestion);
+        $nameServices = $helper->ask($input, $output, $serviceQuestion);
+
+        $services = new ArrayCollection();
+        foreach ($nameServices as $name) {
+            $services->add($this->serviceRepo->findOneBy(['name' => $name]));
+        }
 
         $users = $this->importUserDatas->importInDatabase(
             \dirname(__DIR__).'/../../public/import/datas/import_users.csv',
-            $this->serviceRepo->findOneBy(['name' => $service])
+            $services
         );
 
         $this->writeMessage('success', count($users).' users are imported !');

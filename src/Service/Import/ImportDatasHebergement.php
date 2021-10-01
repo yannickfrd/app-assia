@@ -35,6 +35,7 @@ use App\Repository\Organization\DeviceRepository;
 use App\Repository\Organization\PlaceRepository;
 use App\Repository\Organization\SubServiceRepository;
 use App\Repository\People\PersonRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 
@@ -497,12 +498,17 @@ class ImportDatasHebergement extends ImportDatas
         $this->personRepo = $personRepo;
     }
 
-    public function importInDatabase(string $fileName, Service $service): int
+    /**
+     * Importe les données.
+     *
+     * @param Collection<Service> $services
+     */
+    public function importInDatabase(string $fileName, ArrayCollection $services): array
     {
         $this->fields = $this->getDatas($fileName);
-        $this->service = $service;
-        $this->subServices = $this->subServiceRepo->findBy(['service' => $service]);
-        $this->devices = $this->deviceRepo->getDevicesOfService($service);
+        $this->service = $services->first();
+        $this->subServices = $this->subServiceRepo->findBy(['service' => $this->service]);
+        $this->devices = $this->deviceRepo->getDevicesOfService($this->service);
         // $this->places = $this->repoPlace->findBy(['service' => $service]);
 
         // $this->users = $this->getUsers();
@@ -513,7 +519,7 @@ class ImportDatasHebergement extends ImportDatas
             if ($i > 0) {
                 $typology = $this->findInArray($this->field['Typologie familiale'], self::FAMILY_TYPOLOGY) ?? 9;
                 $this->device = $this->getDevice();
-                $this->place = $this->getPlace($service);
+                $this->place = $this->getPlace($this->service);
 
                 $this->getRoleAndGender($typology);
                 $this->person = $this->getPerson();
@@ -549,7 +555,7 @@ class ImportDatasHebergement extends ImportDatas
         // dd($this->items);
         $this->manager->flush();
 
-        return count($this->items);
+        return $this->items;
     }
 
     protected function getPerson()

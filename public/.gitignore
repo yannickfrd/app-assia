@@ -4,4 +4,6 @@
 /uploads/import.csv
 /build.zip
 /build.rar
-/images/
+/images/*
+!/images/logo_assia_white.png
+!/images/logo_assia.ico
