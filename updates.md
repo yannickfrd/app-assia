@@ -1,3 +1,26 @@
+## Version 3.1.5 - 04/10/2021
+- Fix bugs, factoring and resize logo
+    * Fix error full export when supports is null
+    * Edit JSON message for full export evaluationPeople
+    * Delete 'sleep' function in exports
+    * Resize logo (height : 60 -> 56px)
+    * Update ExeptionListener and email template
+
+## Version 3.1.4 - 01/10/2021
+- Fix bugs, add img logo and update import feat (#56)
+    * Update and factoring Fixtures
+    * Update gitignore (add 'images' folders)
+    * Fix error to sort places in listPlaces
+    * Add img logo and fix size
+    * Update Import feature (multi services for user and place)
+## Version 3.1.2-3 - 28/09/2021
+- Factoring Commands (#55)
+    * Reorganize folder 'src/Commands' and factoring
+- Fix bugs (#54)
+    * Edit title in evaluationExporter
+    * php-cs-fixer
+    * Delete conditionnality for 'propoHousingDate' field
+    * update yarn file
 ## Version 3.1.1 - 27/09/2021
 - Feature API-SIAO to import group and evaluation 
 - Create Commands to import users and places

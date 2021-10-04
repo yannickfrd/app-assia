@@ -19,11 +19,6 @@ export default class ExportData {
                 this.loader.on()
                 e.preventDefault()
                 this.ajax.send('POST', btnElt.dataset.url, this.response.bind(this), new FormData(this.formElt))
-
-                if (btnElt.id === 'export') {
-                    this.loader.off()
-                    new MessageFlash('success', 'Votre export est en cours de préparation... Vous recevrez le lien de téléchargement par email.')
-                }
             })
         })
     }

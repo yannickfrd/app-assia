@@ -6,7 +6,7 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 
 class ExceptionNotification extends MailNotifier
 {
-    public function sendException(\Throwable $exception): bool
+    public function sendException(\Exception $exception): bool
     {
         $statusCodeMethod = 'getStatusCode';
 
@@ -20,7 +20,14 @@ class ExceptionNotification extends MailNotifier
             ->to($this->getAdminEmail())
             ->subject('Application Assia : '.$message)
             ->htmlTemplate('emails/exceptionEmail.html.twig')
-            ->context(['exception' => $exception]);
+            ->context([
+                'code' => $exception->getCode(),
+                'message' => $exception->getMessage(),
+                'line' => $exception->getLine(),
+                'file' => $exception->getFile(),
+                'trace' => $exception->getTraceAsString(),
+            ])
+        ;
 
         return $this->send($email);
     }

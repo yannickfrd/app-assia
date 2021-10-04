@@ -19,15 +19,15 @@ class ExceptionListener
         $this->exceptionListener = $exceptionListener;
     }
 
-    public function onKernelException(ExceptionEvent $event)
+    public function onKernelException(ExceptionEvent $event): ?bool
     {
         $exception = $event->getThrowable();
 
         if (!$this->security->getUser() || !$this->exceptionListener
-            || $exception->getPrevious() && 403 === $exception->getPrevious()->getCode()) {
-            return;
+            || $exception->getPrevious() && in_array($exception->getPrevious()->getCode(), [403, 404])) {
+            return null;
         }
 
-        $this->exceptionNotification->sendException($exception);
+        return $this->exceptionNotification->sendException($exception);
     }
 }

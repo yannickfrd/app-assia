@@ -27,10 +27,6 @@ class PlaceExport extends ExportExcel
                 $arrayData[] = array_keys($this->getDatas($place));
             }
             $arrayData[] = $this->getDatas($place);
-            if ($i > 100) {
-                sleep(5);
-                $i = 1;
-            }
             ++$i;
         }
 

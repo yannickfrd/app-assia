@@ -98,14 +98,16 @@ class EvaluationPersonExport extends ExportExcel
         $this->logger->info('Used memory : '.number_format(memory_get_usage(), 0, ',', ' '));
 
         $arrayData = [];
-        $arrayData[] = $this->normalisation->getKeys(array_keys($this->$getDatas($supports[0])), ['forms', 'evaluation']);
+
+        if (0 === $supports) {
+            $arrayData[] = $this->normalisation->getKeys(array_keys($this->$getDatas($supports[0])), ['forms', 'evaluation']);
+        }
 
         $i = 0;
         $nbSupports = count($supports);
         foreach ($supports as $supportPerson) {
             $arrayData[] = $this->$getDatas($supportPerson);
             if ($i > 100) {
-                // sleep(5);
                 $this->logger->info(count($arrayData).' / '.$nbSupports.' | Used memory : '.number_format(memory_get_usage(), 0, ',', ' '));
                 $i = 1;
             }

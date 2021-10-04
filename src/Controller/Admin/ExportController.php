@@ -43,7 +43,7 @@ class ExportController extends AbstractController
             return $this->json([
                 'alert' => 'success',
                 'type' => 'export',
-                'msg' => 'Votre fichier d\'export est prêt. Un mail vous a été envoyé.',
+                'msg' => 'Votre export est en cours de préparation... Vous recevrez le lien de téléchargement par email.',
             ]);
         }
 

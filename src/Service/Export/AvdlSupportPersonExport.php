@@ -29,10 +29,6 @@ class AvdlSupportPersonExport extends ExportExcel
                 $arrayData[] = array_keys($this->getDatas($supportPerson));
             }
             $arrayData[] = $this->getDatas($supportPerson);
-            if ($i > 100) {
-                sleep(5);
-                $i = 1;
-            }
             ++$i;
         }
 

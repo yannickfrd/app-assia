@@ -172,21 +172,21 @@ class ExportExcel
     protected function getPath(string $path, string $filename)
     {
         $file = $path.$filename;
-        $zipFile = $file.'.zip';
+        // $zipFile = $file.'.zip';
 
-        $zip = new \ZipArchive();
+        // $zip = new \ZipArchive();
 
-        if ($zip->open($zipFile, \ZipArchive::CREATE)) {
-            // $zip->addFromString('localname', 'file content goes here');
-            $zip->addFile($file, $filename);
-            $zip->close();
-        }
+        // if ($zip->open($zipFile, \ZipArchive::CREATE)) {
+        //     // $zip->addFromString('localname', 'file content goes here');
+        //     $zip->addFile($file, $filename);
+        //     $zip->close();
+        // }
 
-        if (file_exists($file)) {
-            unlink($file);
-        }
+        // if (file_exists($file)) {
+        //     unlink($file);
+        // }
 
-        return $zipFile;
+        return $file;
     }
 
     /**

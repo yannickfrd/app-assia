@@ -3,12 +3,11 @@
     <p class="mb-4">Bonjour, </p>
 {% endblock %}
 {% block body %}
-    <p class="p-2 font-weight-bold alert-danger">Error {% if exception.statusCode is defined %}<!--
-        -->{{ exception.statusCode }}{% else %}{{ exception.code }}{% endif %} : {{ exception.message }}</p>
+    <p class="p-2 font-weight-bold alert-danger">Error {{ code != 0 ? code }} {{ message }}</p>
     <p>Datetime : {{ "now"|date("d/m/Y H:i") }}</p>
     <p>User : {% if app.user %}{{ app.user.fullname }}{% endif %}</p>
     <p>Url : {% if app.request  %}{{ app.request.requestUri }}{% endif %}</p>
-    <p>File : {{ exception.file }}</p>
-    <p>Line : {{ exception.line }}</p>
-    <p class="small text-secondary">{{ exception }}</p>
+    <p>File : {{ file }}</p>
+    <p>Line : {{ line }}</p>
+    <p class="small text-secondary">{{ trace }}</p>
 {% endblock %}

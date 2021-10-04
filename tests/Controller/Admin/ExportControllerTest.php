@@ -56,7 +56,7 @@ class ExportControllerTest extends WebTestCase
         // Success to get the export
         $this->client->request('GET', '/export/1/get');
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertContains('application/zip', $this->client->getResponse()->headers->get('content-type'));
+        $this->assertContains('spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
 
         // Delete the export
         $this->client->request('GET', '/export/1/delete');
