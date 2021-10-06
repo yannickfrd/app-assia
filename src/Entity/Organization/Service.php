@@ -633,7 +633,7 @@ class Service
     }
 
     /**
-     * @return Collection<Service>
+     * @return Collection<SubService>
      */
     public function getSubServices()
     {

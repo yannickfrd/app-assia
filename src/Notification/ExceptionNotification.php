@@ -6,7 +6,7 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 
 class ExceptionNotification extends MailNotifier
 {
-    public function sendException(\Exception $exception): bool
+    public function sendException(\Throwable $exception): bool
     {
         $statusCodeMethod = 'getStatusCode';
 

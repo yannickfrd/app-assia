@@ -1,5 +1,10 @@
+## Version 3.1.6 - 06/10/2021
+- Fix bugs, factoring and update fixtures (#57)
+    * Fix error if support without device (Fixtures)
+    * Fix error ExceptionNotification if Error is not Exception
+    * Update DataFixtures
 ## Version 3.1.5 - 04/10/2021
-- Fix bugs, factoring and resize logo
+- Fix bugs, factoring and resize logo (#57)
     * Fix error full export when supports is null
     * Edit JSON message for full export evaluationPeople
     * Delete 'sleep' function in exports

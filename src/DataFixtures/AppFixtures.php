@@ -32,35 +32,73 @@ class AppFixtures extends Fixture
         2 => 'Habitat',
     ];
 
-    public const SERVICES_HABITAT = [
-        'ALTHO',
-        'ASSLT',
-        'AVDL',
-        'PASH',
-    ];
-
-    public const SERVICES_HEB = [
-        'CHU les Carrières',
-        'CHRS Etape',
-        'DHUA',
-        "CHRS L'Ensemble",
-        "Maison Relais L'Ensemble",
-        'Maison Milada',
-    ];
-
     public const DEVICES = [
         1 => 'ALT',
         2 => 'ALTHO',
-        3 => 'ASLL',
-        4 => 'AVDL',
-        5 => "Hébergement d'insertion",
-        6 => "Hébergement d'urgence",
+        3 => 'ASLLT',
+        4 => 'AVDL hors-DALO',
+        5 => 'Insertion - Regroupé',
+        6 => 'HU - Diffus',
         7 => 'Maison relais',
+        8 => 'ASLL',
+        9 => '10 000 LA BA',
+        10 => 'AVDL DALO',
+        11 => 'AVDL (SAVL)',
+        12 => 'XXX1',
+        13 => '10 000 LA BD',
+        14 => 'Famille AMH',
+        15 => "ASE mise à l'abri",
+        16 => 'ASE hébergement',
+        17 => 'Injonctions Réfugiés',
+        18 => 'Opération ciblée',
+        19 => 'Accompagnement hôtel',
+        20 => "Intervention d'urgence",
+        21 => 'HU - Regroupé',
+        26 => 'HU hiver',
+    ];
+
+    public const SERVICES = [
+        0 => [
+            'name' => 'CHU Pontoise',
+            'pole' => 1,
+            'devices' => [21],
+        ],
+        3 => [
+            'name' => 'CHRS Cergy',
+            'pole' => 1,
+            'devices' => [5, 21],
+        ],
+        4 => [
+            'name' => 'Maison Relais Cergy',
+            'pole' => 1,
+            'devices' => [7],
+        ],
+        10 => [
+            'name' => 'ALTHO',
+            'pole' => 2,
+            'devices' => [2],
+        ],
+        11 => [
+            'name' => 'ASSL',
+            'pole' => 2,
+            'devices' => [3],
+        ],
+        12 => [
+            'name' => 'AVDL',
+            'pole' => 2,
+            'devices' => [4, 11],
+        ],
+        13 => [
+            'name' => 'PASH',
+            'pole' => 2,
+            'devices' => [19, 20],
+        ],
     ];
 
     public $organization = null;
-    public $services = [];
+    public $poles = [];
     public $devices = [];
+    public $services = [];
 
     public function __construct(EntityManagerInterface $manager)
     {
@@ -72,27 +110,18 @@ class AppFixtures extends Fixture
     {
         // Créé les dispositifs
         $this->createDevices();
+
         //Crée les pôles d'activité
         foreach (self::POLES as $key => $name) {
             $pole = $this->createPole($key, $name);
+        }
 
-            if (1 === $key) {
-                $this->addData($pole, $this::SERVICES_HEB);
-            }
-            // if (2 === $key) {
-            //     $this->addData($pole, $this::SERVICES_HABITAT);
-            // }
+        //Crée les différents services
+        foreach (self::SERVICES as $serviceArray) {
+            $this->createService($serviceArray);
         }
 
         $this->manager->flush();
-    }
-
-    public function addData(Pole $pole, array $services)
-    {
-        //Créee les services d'activité
-        foreach ($services as $service) {
-            $service = $this->createService($pole, $service);
-        }
     }
 
     public function createOrganizations()
@@ -114,42 +143,44 @@ class AppFixtures extends Fixture
         $pole = (new Pole())
             ->setName($name)
             ->setOrganization($this->organization)
-            ->setColor(3 === $key ? 'brown' : 'dark')
+            ->setColor('dark')
             ->setCreatedAt(new \DateTime());
 
         $this->manager->persist($pole);
 
+        $this->poles[$key] = $pole;
+
         return $pole;
     }
 
-    public function createService(Pole $pole, string $name): Service
+    public function createService(array $arrayService): Service
     {
         $service = (new Service())
-            ->setName($name)
+            ->setName($arrayService['name'])
             ->setPlace(true)
-            ->setPole($pole);
+            ->setPole($this->poles[$arrayService['pole']]);
 
         $this->manager->persist($service);
 
         $this->services[] = $service;
-        $this->addServiceDevice($service);
+
+        $this->createServiceDevices($service, $arrayService['devices']);
 
         return $service;
     }
 
-    protected function addServiceDevice(Service $service): void
+    protected function createServiceDevices(Service $service, array $arrayDevices): void
     {
-        $serviceDevice = (new ServiceDevice())
-            ->setService($service);
+        foreach ($arrayDevices as $deviceKey) {
+            $device = $this->devices[$deviceKey];
 
-        foreach ($this->devices as $device) {
-            if ($device->getName() === $service->getName()) {
-                $serviceDevice->setDevice($device);
+            $serviceDevice = (new ServiceDevice())
+                ->setService($service)
+                ->setDevice($device);
 
-                $this->manager->persist($serviceDevice);
+            $this->manager->persist($serviceDevice);
 
-                $this->createPlaces($service, $device); // Fixtures
-            }
+            $this->createPlaces($service, $device);
         }
     }
 
@@ -176,7 +207,7 @@ class AppFixtures extends Fixture
 
             $this->manager->persist($device);
 
-            $this->devices[] = $device;
+            $this->devices[$key] = $device;
         }
     }
 

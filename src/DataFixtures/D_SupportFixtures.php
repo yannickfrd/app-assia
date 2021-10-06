@@ -2,6 +2,8 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Organization\Device;
+use App\Entity\Organization\Service;
 use App\Entity\People\PeopleGroup;
 use App\Entity\People\Person;
 use App\Entity\Support\SupportGroup;
@@ -18,13 +20,11 @@ class D_SupportFixtures extends Fixture
 {
     private $manager;
     private $peopleGroupRepo;
-    private $faker;
 
     public function __construct(EntityManagerInterface $manager, PeopleGroupRepository $peopleGroupRepo)
     {
         $this->manager = $manager;
         $this->peopleGroupRepo = $peopleGroupRepo;
-        $this->faker = \Faker\Factory::create('fr_FR');
     }
 
     public function load(ObjectManager $manager): void
@@ -40,7 +40,10 @@ class D_SupportFixtures extends Fixture
     private function createSupportGroup(PeopleGroup $peopleGroup, int $k): ?SupportGroup
     {
         $user = $peopleGroup->getCreatedBy();
+        /** @var Service $service */
         $service = $user->getServices()->first();
+        /** @var Device $device */
+        $device = $service ? $service->getDevices()->first() : null;
 
         if (!$service) {
             return null;
@@ -67,15 +70,18 @@ class D_SupportFixtures extends Fixture
         $supportGroup = (new SupportGroup())
             ->setStartDate($startDate)
             ->setEndDate($endDate)
-            ->setStatus($status)
+            ->setStatus($endDate ? SupportGroup::STATUS_ENDED : $status)
             ->setReferent($user)
             ->setPeopleGroup($peopleGroup)
             ->setNbPeople($peopleGroup->getNbPeople())
+            ->setAgreement(true)
             ->setCreatedAt($startDate)
             ->setCreatedBy($user)
             ->setUpdatedAt($peopleGroup->getUpdatedAt())
             ->setUpdatedBy($user)
-            ->setService($service);
+            ->setService($service)
+            ->setDevice($device)
+        ;
 
         $this->manager->persist($supportGroup);
 
