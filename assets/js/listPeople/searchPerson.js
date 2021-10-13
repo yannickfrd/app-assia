@@ -280,6 +280,8 @@ export default class SearchPerson {
         this.formElt.querySelectorAll('input').forEach(input => {
             params += `${input.id}=${input.value}&`
         })
-        this.createPersonBtnElt.href += '?' + params
+        
+        const prefix = this.createPersonBtnElt.href.includes('?') ? '&' : '?'
+        this.createPersonBtnElt.href += prefix + params
     }
 }

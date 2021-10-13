@@ -2,9 +2,14 @@
 
 namespace App\Service\SupportGroup;
 
+use App\Entity\Evaluation\EvaluationGroup;
 use App\Entity\Evaluation\EvaluationPerson;
 use App\Entity\People\Person;
+use App\Entity\People\RolePerson;
+use App\Entity\Support\PlaceGroup;
+use App\Entity\Support\PlacePerson;
 use App\Entity\Support\SupportGroup;
+use App\Entity\Support\SupportPerson;
 use App\Repository\Evaluation\EvaluationGroupRepository;
 use App\Service\Grammar;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,49 +20,81 @@ class SupportPeopleAdder
     use SupportPersonCreator;
 
     private $manager;
+    /** @var EvaluationGroupRepository */
     private $evaluationRepo;
     private $flashbag;
 
-    public function __construct(
-        EntityManagerInterface $manager,
-        EvaluationGroupRepository $evaluationRepo,
-        FlashBagInterface $flashbag
-    ) {
+    public function __construct(EntityManagerInterface $manager, FlashBagInterface $flashbag)
+    {
         $this->manager = $manager;
-        $this->evaluationRepo = $evaluationRepo;
+        $this->evaluationRepo = $manager->getRepository(EvaluationGroup::class);
         $this->flashbag = $flashbag;
     }
 
-    /**
-     * Ajoute les personnes au suivi.
-     */
-    public function addPeopleInSupport(SupportGroup $supportGroup): bool
+    public function addPersonToSupport(SupportGroup $supportGroup, RolePerson $rolePerson): ?SupportPerson
     {
-        $addPeople = false;
+        $person = $rolePerson->getPerson();
 
-        foreach ($supportGroup->getPeopleGroup()->getRolePeople() as $rolePerson) {
-            if (!$this->personIsInSupport($rolePerson->getPerson(), $supportGroup)) {
-                $supportPerson = $this->createSupportPerson($supportGroup, $rolePerson);
-                $this->manager->persist($supportPerson);
+        if ($this->personIsInSupport($person, $supportGroup)) {
+            $this->flashbag->add('warning', $person->getFullname().' est déjà rattaché'.Grammar::gender($person->getGender()).' au suivi.');
 
-                $supportGroup->addSupportPerson($supportPerson);
-                $evaluationGroup = $this->evaluationRepo->findLastEvaluationOfSupport($supportGroup);
-
-                if ($evaluationGroup) {
-                    $evaluationPerson = (new EvaluationPerson())
-                        ->setEvaluationGroup($evaluationGroup)
-                        ->setSupportPerson($supportPerson);
-
-                    $this->manager->persist($evaluationPerson);
-                }
-
-                $this->flashbag->add('success', $rolePerson->getPerson()->getFullname().' est ajouté'.Grammar::gender($supportPerson->getPerson()->getGender()).' au suivi.');
-
-                $addPeople = true;
-            }
+            return null;
         }
 
-        return $addPeople;
+        $supportPerson = $this->createSupportPerson($supportGroup, $rolePerson);
+
+        $this->manager->persist($supportPerson);
+
+        $supportGroup->addSupportPerson($supportPerson);
+
+        $this->createPlacePerson($supportGroup, $supportPerson);
+        $this->createEvaluationPerson($supportGroup, $supportPerson);
+
+        $this->manager->flush();
+
+        $this->flashbag->add('success', $person->getFullname().' est ajouté'.Grammar::gender($person->getGender()).' au suivi en cours.');
+
+        return $supportPerson;
+    }
+
+    /**
+     * Si un hébergement est actuellement en cours, alors ajoute cette personne à celui-ci.
+     */
+    protected function createPlacePerson(SupportGroup $supportGroup, SupportPerson $supportPerson): ?PlacePerson
+    {
+        /** @var PlaceGroup $placeGroup */
+        $placeGroup = $supportGroup->getPlaceGroups()->last();
+
+        if (!$placeGroup || null === $placeGroup->getStartDate() || $placeGroup->getEndDate()) {
+            return null;
+        }
+
+        $placePerson = (new PlacePerson())
+                ->setStartDate($supportPerson->getStartDate())
+                ->setPlaceGroup($placeGroup)
+                ->setSupportPerson($supportPerson)
+                ->setPerson($supportPerson->getPerson());
+
+        $this->manager->persist($placePerson);
+
+        return $placePerson;
+    }
+
+    protected function createEvaluationPerson(SupportGroup $supportGroup, SupportPerson $supportPerson): ?EvaluationPerson
+    {
+        $evaluationGroup = $this->evaluationRepo->findLastEvaluationOfSupport($supportGroup);
+
+        if (null === $evaluationGroup) {
+            return null;
+        }
+
+        $evaluationPerson = (new EvaluationPerson())
+            ->setEvaluationGroup($evaluationGroup)
+            ->setSupportPerson($supportPerson);
+
+        $this->manager->persist($evaluationPerson);
+
+        return $evaluationPerson;
     }
 
     /**

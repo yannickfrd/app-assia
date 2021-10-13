@@ -4,6 +4,7 @@ namespace App\Event\People;
 
 use App\Entity\People\PeopleGroup;
 use App\Entity\Support\SupportGroup;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class PeopleGroupEvent extends Event
@@ -14,9 +15,9 @@ class PeopleGroupEvent extends Event
     private $supports;
 
     /**
-     * @param SupportGroup[]|null $supports
+     * @param Collection<SupportGroup>|null $supports
      */
-    public function __construct(PeopleGroup $peopleGroup, array $supports = null)
+    public function __construct(PeopleGroup $peopleGroup, $supports = null)
     {
         $this->peopleGroup = $peopleGroup;
         $this->supports = $supports;
@@ -28,9 +29,9 @@ class PeopleGroupEvent extends Event
     }
 
     /**
-     * @return SupportGroup[]|null
+     * @return Collection<SupportGroup>|null
      */
-    public function getSupports(): ?array
+    public function getSupports()
     {
         return $this->supports;
     }

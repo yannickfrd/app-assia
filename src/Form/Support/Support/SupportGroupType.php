@@ -143,7 +143,8 @@ class SupportGroupType extends AbstractType
             ])
             ->add('siSiaoImport', HiddenType::class, [
                 'mapped' => false,
-            ]);
+            ])
+        ;
 
         $formModifier = $this->formModifier();
 
@@ -192,20 +193,24 @@ class SupportGroupType extends AbstractType
                 ])
                 ->add('referent', EntityType::class, $optionsReferent)
                 ->add('referent2', EntityType::class, $optionsReferent)
-                ->add('place', EntityType::class, [
+                ->add('originRequest', OriginRequestType::class, [
+                    'attr' => ['service' => $service],
+                ]);
+
+            if (Service::SERVICE_TYPE_HEB === $serviceType) {
+                $form->add('place', EntityType::class, [
                     'class' => Place::class,
                     'choice_label' => 'name',
                     'query_builder' => function (PlaceRepository $repo) use ($service, $subService) {
                         return $repo->getPlacesQueryBuilder($service, $subService);
                     },
-                    'label' => Service::SERVICE_TYPE_HOTEL === $serviceType ? 'hotelName' : 'place.name',
+                    'label' => 'place.name',
                     'placeholder' => 'placeholder.select',
+                    'help' => 'placeGroup.help',
                     'mapped' => false,
                     'required' => false,
-                ])
-                ->add('originRequest', OriginRequestType::class, [
-                    'attr' => ['service' => $service],
                 ]);
+            }
         };
     }
 

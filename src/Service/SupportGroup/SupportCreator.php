@@ -5,27 +5,27 @@ namespace App\Service\SupportGroup;
 use App\Entity\Organization\Service;
 use App\Entity\People\PeopleGroup;
 use App\Entity\Support\SupportGroup;
-use App\Repository\Organization\ServiceRepository;
-use App\Repository\Support\SupportGroupRepository;
+use App\Event\Support\SupportGroupEvent;
+use App\Service\Place\PlaceGroupManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class SupportCreator
 {
     use SupportPersonCreator;
 
-    private $manager;
-    private $supportGroupRepo;
-    private $serviceRepo;
+    private $em;
+    private $dispatcher;
+    private $flashBag;
 
-    public function __construct(
-        EntityManagerInterface $manager,
-        SupportGroupRepository $supportGroupRepo,
-        ServiceRepository $serviceRepo)
+    public function __construct(EntityManagerInterface $em, EventDispatcherInterface $dispatcher, FlashBagInterface $flashBag)
     {
-        $this->manager = $manager;
-        $this->supportGroupRepo = $supportGroupRepo;
-        $this->serviceRepo = $serviceRepo;
+        $this->em = $em;
+        $this->dispatcher = $dispatcher;
+        $this->flashBag = $flashBag;
     }
 
     /**
@@ -38,7 +38,8 @@ class SupportCreator
         $serviceId = $request->request->get('support')['service'];
 
         if ((int) $serviceId) {
-            $supportGroup->setService($this->serviceRepo->find($serviceId));
+            $service = $this->em->getRepository(Service::class)->find($serviceId);
+            $supportGroup->setService($service);
         }
 
         return $supportGroup;
@@ -47,9 +48,14 @@ class SupportCreator
     /**
      * Créé un nouveau suivi.
      */
-    public function create(SupportGroup $supportGroup): ?SupportGroup
+    public function create(SupportGroup $supportGroup, ?Form $form): ?SupportGroup
     {
+        // Vérfie si un suivi est déjà en cours pour ce ménage dans ce service.
         if ($this->activeSupportExists($supportGroup)) {
+            $this->flashBag->add('danger', 'Attention, un suivi social est déjà en cours pour '.(
+                count($supportGroup->getPeopleGroup()->getPeople()) > 1 ? 'ce ménage.' : 'cette personne.'
+            ));
+
             return null;
         }
 
@@ -67,15 +73,27 @@ class SupportCreator
                 break;
         }
 
-        $this->manager->persist($supportGroup);
+        $this->em->persist($supportGroup);
 
         // Créé un suivi social individuel pour chaque personne du groupe
         foreach ($supportGroup->getPeopleGroup()->getRolePeople() as $rolePerson) {
             $supportPerson = $this->createSupportPerson($supportGroup, $rolePerson);
-            $this->manager->persist($supportPerson);
+            $this->em->persist($supportPerson);
 
             $supportGroup->addSupportPerson($supportPerson);
         }
+
+        $this->flashBag->add('success', 'Le suivi social est créé.');
+
+        if ($form && $form->has('place') && $form->get('place')->getData()) {
+            (new PlaceGroupManager($this->em, $this->flashBag))->createPlaceGroup($supportGroup, null, $form->get('place')->getData());
+        }
+
+        $this->dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support.before_create');
+
+        $this->em->flush();
+
+        $this->dispatcher->dispatch(new SupportGroupEvent($supportGroup, $form), 'support.after_create');
 
         return $supportGroup;
     }
@@ -85,7 +103,7 @@ class SupportCreator
      */
     protected function activeSupportExists(SupportGroup $supportGroup): ?SupportGroup
     {
-        return $this->supportGroupRepo->findOneBy([
+        return $this->em->getRepository(SupportGroup::class)->findOneBy([
             'peopleGroup' => $supportGroup->getPeopleGroup(),
             'status' => SupportGroup::STATUS_IN_PROGRESS,
             'service' => $supportGroup->getService(),

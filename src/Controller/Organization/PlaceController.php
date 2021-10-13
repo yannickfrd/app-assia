@@ -143,10 +143,10 @@ class PlaceController extends AbstractController
 
         if ($place->getDisabledAt()) {
             $place->setDisabledAt(null);
-            $this->addFlash('success', 'Le groupe de place "'.$place->getName().'" est ré-activé.');
+            $this->addFlash('success', 'Le groupe de places "'.$place->getName().'" est ré-activé.');
         } else {
             $place->setDisabledAt(new \DateTime());
-            $this->addFlash('warning', 'Le groupe de place "'.$place->getName().'" est désactivé.');
+            $this->addFlash('warning', 'Le groupe de places "'.$place->getName().'" est désactivé.');
         }
 
         $this->discache($place->getService());

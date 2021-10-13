@@ -3,6 +3,7 @@
 namespace App\Tests\Controller\Support;
 
 use App\Entity\Support\SupportGroup;
+use App\Service\Grammar;
 use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -255,39 +256,37 @@ class SupportControllerTest extends WebTestCase
         $this->assertSelectorExists('.alert.alert-warning');
     }
 
-    public function testAddPeopleInSupportIsFailed()
+    public function testAddPersonToSupportIsSuccessful()
     {
-        $this->createLogin($this->data['userRoleUser']);
-
-        $id = $this->data['supportGroup1']->getId();
-        $this->client->request('GET', "/support/$id/add_people");
-
-        $this->assertSelectorTextContains('.alert.alert-warning', 'Aucune personne n\'a été ajouté');
-    }
-
-    public function testAddPeopleInSupportIsSuccessful()
-    {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->data['userSuperAdmin']);
 
         $person = $this->data['person5'];
-
-        $id = $this->data['peopleGroup1']->getId();
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', "/group/$id/search_person");
-        $csrfToken = $crawler->filter('#role_person__token')->attr('value');
-
         $personId = $person->getId();
-        $this->client->request('POST', "/group/$id/add_person/$personId", [
+        $groupId = $this->data['peopleGroup1']->getId();
+        $supportId = $this->data['supportGroup1']->getId();
+
+        /** @var Crawler */
+        $crawler = $this->client->request('GET', "/group/$groupId/search_person");
+
+        $this->client->request('POST', "/group/$groupId/add_person/$personId", [
             'role_person' => [
                 'role' => 1,
-                '_token' => $csrfToken,
+                'addPersonToSupport' => false,
+                '_token' => $crawler->filter('#role_person__token')->attr('value'),
             ],
         ]);
 
-        $id = $this->data['supportGroup1']->getId();
-        $this->client->request('GET', "/support/$id/add_people");
+        /** @var Crawler */
+        $crawler = $this->client->request('GET', "/support/$supportId/edit");
 
-        $this->assertSelectorTextContains('.alert.alert-success', $person->getFullname().' est ajouté');
+        $this->client->submitForm('add-person', [
+            'add_person_to_support[rolePerson]' => $crawler->filter('#add_person_to_support_rolePerson option')->last()->attr('value'),
+        ]);
+
+        $this->assertSelectorTextContains(
+            '.alert.alert-success',
+            $person->getFullname().' est ajouté'.Grammar::gender($person->getGender()).' au suivi en cours.'
+        );
     }
 
     public function testRemoveSupportPersonWithoutTokenIsFailed()

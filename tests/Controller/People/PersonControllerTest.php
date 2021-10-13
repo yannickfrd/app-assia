@@ -63,7 +63,7 @@ class PersonControllerTest extends WebTestCase
         $this->assertSame('DOE', $content['people'][0]['lastname']);
     }
 
-    public function testAddPersonInGroupIsUp()
+    public function testAddPersonToGroupIsUp()
     {
         $this->createLogin($this->user);
 
@@ -154,7 +154,7 @@ class PersonControllerTest extends WebTestCase
         $this->assertSelectorExists('.alert.alert-success');
     }
 
-    public function testAddPersonInGroupIsFailed()
+    public function testAddPersonToGroupIsFailed()
     {
         $this->createLogin($this->user);
 
@@ -191,7 +191,7 @@ class PersonControllerTest extends WebTestCase
         $this->assertSelectorExists('.alert.alert-danger');
     }
 
-    public function testAddPersonInGroupIsSuccessful()
+    public function testAddPersonToGroupIsSuccessful()
     {
         $this->createLogin($this->user);
 
@@ -254,6 +254,13 @@ class PersonControllerTest extends WebTestCase
 
     public function testShowPersonWithoutEdition()
     {
+        $this->data = $this->loadFixtureFiles([
+            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
+            dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
+            dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
+            dirname(__DIR__).'/../DataFixturesTest/SupportFixturesTest.yaml',
+        ]);
+
         $this->createLogin($this->data['user5']);
 
         $id = $this->data['person1']->getId();

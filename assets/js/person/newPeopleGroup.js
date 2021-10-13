@@ -12,7 +12,7 @@ export default class NewPeopleGroup {
 
         this.typoInputElt = document.getElementById('role_person_group_peopleGroup_familyTypology')
         this.nbPeopleInputElt = document.getElementById('role_person_group_peopleGroup_nbPeople')
-        this.roleInputElt = document.getElementById('role_person_role')
+        this.roleInputElt = document.getElementById('person_role_person_role')
 
         if (this.typoInputElt) {
             this.roleInputElt = document.getElementById(this.form + '_role')
@@ -70,6 +70,10 @@ export default class NewPeopleGroup {
         const birthdate = this.parametersUrl.get('birthdate')
         if (birthdate) {
             this.birthdateInputElt.value = birthdate
+        }
+        const role = this.parametersUrl.get('role')
+        if (role) {
+            this.roleInputElt.value = role
         }
         const siSiaoId = this.parametersUrl.get('siSiaoId')
         if (siSiaoId) {

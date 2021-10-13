@@ -206,7 +206,7 @@ class PlaceGroup
     }
 
     /**
-     * @return Collection<Person>
+     * @return Collection<PlacePerson>
      */
     public function getPlacePeople()
     {

@@ -36,12 +36,12 @@
         <div class="col-md-6">{{ form_row(form.status) }}</div>
         <div class="col-md-6">{{ form_row(form.startDate) }}</div>
     </div>
-    {# {% if form.vars.value.placeGroups.count > 0 and form.placeGroups is defined %}
-        <div class="row {% if support.device and support.device.place != YES %}d-none{% endif %}">
-            <div class="col-md-6">{{ form_row(form.placeGroups[0].place) }}</div>
-            <div class="col-md-6">{{ form_row(form.placeGroups[0].startDate) }}</div>
+    {% if null == support.id and support.device and support.device.place == YES %}
+        <div class="row">
+            <div class="col-md-6" data-parent-field="support_startDate"
+                 data-check-valid="startDate">{{ form_row(form.place) }}</div>
         </div>
-    {% endif %} #}
+    {% endif %}
     <div class="row" data-parent-field="support_startDate">
         <div class="col-md-6" >{{ form_row(form.theoreticalEndDate) }}</div>
         <div class="col-md-6">{{ form_row(form.endDate) }}</div>
@@ -56,7 +56,7 @@
         <div class="col-md-6">{{ form_row(form.endLocationCity) }}</div>
         <div class="col-md-6">{{ form_row(form.endLocationZipcode) }}</div>
     </div>
-    <div class="row" data-parent-field="support_endStatus" data-options="*">
+    <div class="row" data-parent-field="support_endDate">
         {% if support.id and support.device and support.device.place == YES %}
             <div class="col-md-6">
                 <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark">

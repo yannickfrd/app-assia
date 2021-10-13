@@ -1,8 +1,10 @@
-<section>
+<hr>
+
+<section class="mb-1">
 	<h2 class="h5 my-4">Personnes rattachées au suivi social</h2>
 	<div class="row">
 		<div class="col-md-12">
-			<div class="table-responsive mb-3">
+			<div class="table-responsive">
 				<table id="table-support-people" class="table table-sm table-striped table-hover text-dark shadow-sm">
 					<thead>
 						<tr>
@@ -11,7 +13,6 @@
 							<th scope="col" class="align-middle th-w-140">Rôle</th>
 							<th scope="col" class="align-middle th-date">Date de début</th>
 							<th scope="col" class="align-middle th-date">Date de fin</th>
-							{# <th scope="col" class="align-middle th-w-120">Statut</th> #}
 							<th scope="col" class="align-middle th-w-140">Situation à la fin</th>
 							<th scope="col" class="align-middle th-w-100">Commentaire situation à la fin</th>
 							<th scope="col" class="align-middle th-w-20"></th>
@@ -31,12 +32,11 @@
 								<td class="px-1">{{ form_widget(form_support_pers.role) }}</td>
 								<td class="px-1">{{ form_widget(form_support_pers.startDate) }}</td>
 								<td class="px-1">{{ form_widget(form_support_pers.endDate) }}</td>
-								{# <td class="px-1">{{ form_widget(form_support_pers.status) }}</td> #}
 								<td class="px-1">{{ form_widget(form_support_pers.endStatus) }}</td>
 								<td class="px-1">{{ form_widget(form_support_pers.endStatusComment) }}</td>
 								<th scope="row" class="px-1 align-middle">
 									<button class="btn btn-danger btn-sm shadow" data-action="remove" data-url="{{ path('remove_support_pers', 
-										{'id':support.id, 'support_pers_id':form_support_pers.vars.value.id, '_token':csrf_token('remove' ~ form_support_pers.vars.value.id)}) }}" 
+										{'id': support.id, 'support_pers_id': form_support_pers.vars.value.id, '_token': csrf_token('remove' ~ form_support_pers.vars.value.id)}) }}" 
 										data-toggle="modal" data-target="#modal-block" data-toggle="tooltip" data-placement="bottom" title="Retirer la personne du suivi">
 										<span class="fas fa-user-times"></span>
 									</button>
@@ -48,16 +48,14 @@
 			</div>
 		</div>
 	</div>
-
-	<div class="form-group row">
+	<div class="row mb-3">
 		<div class="col-md-12">
-			<a id="add-people" href="{{ path('support_add_people', {'id':support.id}) }}" class="btn btn-{{ theme_color }} btn-sm mb-2">
-				<span class="fas fa-plus-square mr-2"></span>Ajouter les autres personnes du groupe au suivi</a>
 			<div class="float-right">
 				<button type="submit" id="send3" name="send3" class="btn btn-{{ theme_color }} shadow">
 					<span class="fas fa-save mr-2"></span>Mettre à jour</button>
 			</div>
 		</div>
 	</div>
-
 </section>
+
+{% include "app/support/_shared/_removeSupportPerson.html.twig" %}

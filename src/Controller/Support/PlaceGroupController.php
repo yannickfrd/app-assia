@@ -6,12 +6,14 @@ use App\Entity\Organization\Place;
 use App\Entity\Support\PlaceGroup;
 use App\Entity\Support\PlacePerson;
 use App\Entity\Support\SupportGroup;
+use App\Form\Organization\Place\AddPersonToPlaceGroupType;
 use App\Form\Organization\Place\PlaceGroupType;
 use App\Repository\Support\PlaceGroupRepository;
+use App\Service\Grammar;
+use App\Service\Place\PlaceGroupManager;
 use App\Service\SupportGroup\SupportManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,13 +23,13 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class PlaceGroupController extends AbstractController
 {
-    private $manager;
-    private $placeGroupRepo;
+    private $em;
+    private $placeGroupManager;
 
-    public function __construct(EntityManagerInterface $manager, PlaceGroupRepository $placeGroupRepo)
+    public function __construct(EntityManagerInterface $em, PlaceGroupManager $placeGroupManager)
     {
-        $this->manager = $manager;
-        $this->placeGroupRepo = $placeGroupRepo;
+        $this->em = $em;
+        $this->placeGroupManager = $placeGroupManager;
     }
 
     /**
@@ -73,7 +75,11 @@ class PlaceGroupController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            return $this->createPlaceGroup($supportGroup, $placeGroup);
+            $placeGroup = $this->placeGroupManager->createPlaceGroup($supportGroup, $placeGroup);
+
+            return $this->redirectToRoute('support_places', [
+                'id' => $placeGroup->getSupportGroup()->getId(),
+            ]);
         }
 
         if ($form->isSubmitted() && !$form->isValid()) {
@@ -93,9 +99,9 @@ class PlaceGroupController extends AbstractController
      *
      * @param int $id // PlaceGroup
      */
-    public function editPlaceGroup(int $id, SupportManager $supportManager, Request $request): Response
+    public function editPlaceGroup(int $id, Request $request, SupportManager $supportManager, PlaceGroupRepository $placeGroupRepo): Response
     {
-        if (null === $placeGroup = $this->placeGroupRepo->findPlaceGroupById($id)) {
+        if (null === $placeGroup = $placeGroupRepo->findPlaceGroupById($id)) {
             throw $this->createAccessDeniedException();
         }
 
@@ -107,38 +113,49 @@ class PlaceGroupController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            return $this->updatePlaceGroup($supportGroup, $placeGroup);
+            $this->placeGroupManager->updatePlaceGroup($supportGroup, $placeGroup);
+
+            return $this->redirectToRoute('support_place_edit', ['id' => $placeGroup->getId()]);
         }
+
+        $addPersonForm = $this->createForm(AddPersonToPlaceGroupType::class, null, [
+            'attr' => ['placeGroup' => $placeGroup],
+        ]);
 
         return $this->render('app/organization/place/placeGroup.html.twig', [
             'support' => $supportGroup,
             'form' => $form->createView(),
+            'addPersonForm' => $addPersonForm->createView(),
         ]);
     }
 
     /**
-     * Ajout de personnes à la prise en charge.
+     * Ajout de personnes à la prise en charge hébergement/logement.
      *
-     * @Route("/support/group_people_place/{id}/add_people", name="support_group_people_place_add_people", methods="GET")
+     * @Route("/support/place_group/{id}/add_person", name="support_place_group_add_person", methods="POST")
      */
-    public function addPeopleInPlace(PlaceGroup $placeGroup): Response
+    public function addPersonToPlace(PlaceGroup $placeGroup, Request $request): Response
     {
         $supportGroup = $placeGroup->getSupportGroup();
-
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        $countAddPeople = $this->createPlacePeople($supportGroup, $placeGroup);
+        $form = $this->createForm(AddPersonToPlaceGroupType::class, null, [
+            'attr' => ['placeGroup' => $placeGroup],
+        ])->handleRequest($request);
 
-        if ($countAddPeople >= 1) {
-            $this->addFlash('success', $countAddPeople.' personne(s) sont ajoutée(s) à la prise en charge.');
-            $this->discacheSupport($supportGroup);
-        } else {
-            $this->addFlash('warning', 'Aucune personne n\'a été ajoutée.');
+        $supportPerson = $form->get('supportPerson')->getData();
+
+        if ($this->placeGroupManager->createPlacePerson($placeGroup, $supportPerson)) {
+            $this->em->flush();
+
+            $person = $supportPerson->getPerson();
+
+            $this->addFlash('success', $person->getFullname().' est ajouté'.Grammar::gender($person->getGender()).' à la prise en charge.');
+
+            $this->placeGroupManager->discacheSupport($supportGroup);
         }
 
-        return $this->redirectToRoute('support_place_edit', [
-            'id' => $placeGroup->getId(),
-        ]);
+        return $this->redirectToRoute('support_place_edit', ['id' => $placeGroup->getId()]);
     }
 
     /**
@@ -152,10 +169,10 @@ class PlaceGroupController extends AbstractController
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        $this->manager->remove($placeGroup);
-        $this->manager->flush();
+        $this->em->remove($placeGroup);
+        $this->em->flush();
 
-        $this->discacheSupport($supportGroup);
+        $this->placeGroupManager->discacheSupport($supportGroup);
 
         $this->addFlash('warning', 'La prise en charge est supprimée.');
 
@@ -165,7 +182,7 @@ class PlaceGroupController extends AbstractController
     /**
      * Supprime la prise en charge d'une personne.
      *
-     * @Route("/support/person-place/{id}/delete", name="support_person_place_delete", methods="GET")
+     * @Route("/support/place-person/{id}/delete", name="support_person_place_delete", methods="GET")
      */
     public function deletePlacePerson(PlacePerson $placePerson): Response
     {
@@ -173,140 +190,15 @@ class PlaceGroupController extends AbstractController
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        $this->manager->remove($placePerson);
-        $this->manager->flush();
+        $this->em->remove($placePerson);
+        $this->em->flush();
 
-        $this->discacheSupport($supportGroup);
+        $this->placeGroupManager->discacheSupport($supportGroup);
 
         $this->addFlash('warning', $placePerson->getPerson()->getFullname().' est retiré de la prise en charge.');
 
         return $this->redirectToRoute('support_place_edit', [
             'id' => $placePerson->getPlaceGroup()->getId(),
         ]);
-    }
-
-    /**
-     * Crée la prise en charge du groupe.
-     */
-    protected function createPlaceGroup(SupportGroup $supportGroup, PlaceGroup $placeGroup): Response
-    {
-        $placeGroup->setPeopleGroup($supportGroup->getPeopleGroup());
-
-        $this->manager->persist($placeGroup);
-
-        $this->createPlacePeople($supportGroup, $placeGroup);
-
-        $this->updateLocationSupportGroup($supportGroup, $placeGroup->getPlace());
-
-        $this->manager->flush();
-
-        $this->discacheSupport($supportGroup);
-
-        $this->addFlash('success', "L'hébergement est créé.");
-
-        return $this->redirectToRoute('support_places', [
-            'id' => $placeGroup->getSupportGroup()->getId(),
-        ]);
-    }
-
-    /**
-     * Met à jour l'adresse du suivi via l'adresse du groupe de places.
-     */
-    protected function updateLocationSupportGroup(SupportGroup $supportGroup, Place $place)
-    {
-        $supportGroup
-            ->setAddress($place->getAddress())
-            ->setCity($place->getCity())
-            ->setZipcode($place->getZipcode())
-            ->setCommentLocation($place->getCommentLocation())
-            ->setLocationId($place->getLocationId())
-            ->setLat($place->getLat())
-            ->setLon($place->getLon());
-    }
-
-    /**
-     * Met à jour la prise en charge du groupe.
-     */
-    protected function updatePlaceGroup(SupportGroup $supportGroup, PlaceGroup $placeGroup)
-    {
-        foreach ($placeGroup->getPlacePeople() as $placePerson) {
-            $person = $placePerson->getPerson();
-            // if (null === $placePerson->getEndDate()) {
-            $placePerson->setStartDate($placeGroup->getStartDate());
-            // }
-            if ($placePerson->getStartDate() < $person->getBirthdate()) {
-                $placePerson->setStartDate($person->getBirthdate());
-                $this->addFlash('warning', 'La date de début d\'hébergement ne peut pas être antérieure à la date de naissance de la personne ('.$person->getFullname().').');
-            }
-            if (null === $placePerson->getEndDate()) {
-                $placePerson->setEndDate($placeGroup->getEndDate());
-            }
-
-            if (null === $placePerson->getEndReason()) {
-                $placePerson->setEndReason($placeGroup->getEndReason());
-            }
-        }
-        $this->manager->flush();
-
-        $this->addFlash('success', 'L\'hébergement est mis à jour');
-
-        $this->discacheSupport($supportGroup);
-
-        return $this->redirectToRoute('support_place_edit', ['id' => $placeGroup->getId()]);
-    }
-
-    /**
-     * Crée les prises en charge individuelles.
-     */
-    protected function createPlacePeople(SupportGroup $supportGroup, PlaceGroup $placeGroup): int
-    {
-        $countAddPeople = 0;
-        foreach ($placeGroup->getSupportGroup()->getSupportPeople() as $supportPerson) {
-            // Vérifie si la personne n'est pas déjà rattachée à la prise en charge
-            if ((null === $supportPerson->getEndDate() || 0 === $supportGroup->getPlaceGroups()->count())
-                && !in_array($supportPerson->getPerson()->getId(), $this->getPeopleInPlace($placeGroup))) {
-                // Si elle n'est pas déjà pris en charge, on la créé
-                $placePerson = (new PlacePerson())
-                    ->setStartDate($placeGroup->getStartDate())
-                    ->setEndDate($placeGroup->getEndDate())
-                    ->setEndReason($placeGroup->getEndReason())
-                    ->setCommentEndReason($placeGroup->getCommentEndReason())
-                    ->setPlaceGroup($placeGroup)
-                    ->setSupportPerson($supportPerson)
-                    ->setPerson($supportPerson->getPerson());
-
-                // Vérifie si la date de prise enn charge n'est pas antérieure à la date de naissance
-                $person = $supportPerson->getPerson();
-                if ($placePerson->getStartDate() < $person->getBirthdate()) {
-                    // Si c'est le cas, on prend en compte la date de naissance
-                    $placePerson->setStartDate($person->getBirthdate());
-                }
-
-                $this->manager->persist($placePerson);
-                ++$countAddPeople;
-            }
-        }
-        $this->manager->flush();
-
-        return $countAddPeople;
-    }
-
-    // Donne les ID des personnes rattachées à la prise en charge.
-    protected function getPeopleInPlace(PlaceGroup $placeGroup)
-    {
-        $people = [];
-        foreach ($placeGroup->getPlacePeople() as $placePerson) {
-            $people[] = $placePerson->getPerson()->getId();
-        }
-
-        return $people;
-    }
-
-    /**
-     * Supprime l'item en cache du suivi social.
-     */
-    public function discacheSupport(SupportGroup $supportGroup): bool
-    {
-        return (new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']))->deleteItem(SupportGroup::CACHE_FULLSUPPORT_KEY.$supportGroup->getId());
     }
 }

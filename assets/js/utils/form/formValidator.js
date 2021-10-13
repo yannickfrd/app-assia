@@ -62,7 +62,10 @@ export default class FormValidator {
      */
     cleanHidedFields() {
         this.containerElt.querySelectorAll('div[data-parent-field].d-none').forEach(hideElt => {
-            return hideElt.querySelector('input, select, textarea').value = ''
+            const fieldElt = hideElt.querySelector('input, select, textarea')
+            if (fieldElt) {
+                return fieldElt.value = ''
+            }
         })
     }
 

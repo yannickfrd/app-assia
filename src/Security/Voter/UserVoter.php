@@ -48,7 +48,8 @@ class UserVoter extends Voter
     {
         if ($this->userId === $user->getId()
             || $this->isAdminUser($user)
-            || $this->isGranted('ROLE_SUPER_ADMIN')) {
+            || $this->isGranted('ROLE_SUPER_ADMIN')
+            || 0 === $user->getServices()->count() && !in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
             return true;
         }
 

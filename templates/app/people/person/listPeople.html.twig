@@ -25,8 +25,8 @@
             </div>
             <div class="row justify-content-center">
                 <div class="col-12 col-lg-8">
-                    <a href="{{ people_group is defined ? path('group_create_person', {'id': people_group.id}) : path('person_new') }}"
-                        class="btn btn-{{ theme_color }} btn-sm mb-3 d-none" data-action="create-person">
+                    <a href="{{ people_group is defined ? path('group_create_person', {'id': people_group.id, 'supports': app.request.get('supports') }) : 
+                        path('person_new') }}" class="btn btn-{{ theme_color }} btn-sm mb-3 d-none" data-action="create-person">
                         <span class="fas fa-plus-square mr-2"></span>Créer une nouvelle personne</a>
                 </div>
             </div>

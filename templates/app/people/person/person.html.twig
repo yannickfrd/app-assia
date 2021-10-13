@@ -60,6 +60,13 @@
                         <div class="col-md-6">{{ form_row(form.peopleGroup.nbPeople) }}</div>
                     {% endif %}
                     <div class="col-md-6">{{ form_row(form.role) }}</div>
+                    {% if people_group is defined and (app.request.get("supports") or people_group.supports|length > 0) %}
+                        <div class="col-md-6">
+                            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} mb-3 pl-2 text-dark">
+                                {{ form_row(form.addPersonToSupport) }}
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
                 {% if people_group is not defined %}
                     <div class="row mb-3">
@@ -69,7 +76,7 @@
                 <hr class="my-4">
             {% endif %}
 
-            {% if EDIT_MODE == false or canEdit %}
+            {% if false == EDIT_MODE or canEdit %}
                 <div class="row mb-3">
                     <div class="col-md-6">{{ form_row(form_person.phone1) }}</div>
                     <div class="col-md-6">{{ form_row(form_person.phone2) }}</div>
@@ -82,7 +89,7 @@
 
                 <div class="row mb-3">
                     <div class="col-md-12">
-                        {% if EDIT_MODE == true and is_granted("ROLE_ADMIN") %}
+                        {% if true == EDIT_MODE and is_granted("ROLE_ADMIN") %}
                             <div class="float-left d-flex">
                             {% set msg_confirm = "Êtes-vous vraiment sûr de vouloir supprimer cette personne ?" %}
                                 <a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('person_delete', {'id': person.id}) }}"
@@ -92,7 +99,7 @@
                             </div>
                         {% endif %}
                         <div class="mb-4 float-right">
-                            {% if EDIT_MODE == true %}
+                            {% if true == EDIT_MODE %}
                                 <button type="submit" id="updatePerson" name="updatePerson" class="btn btn-{{ theme_color }} shadow"
                                     data-url="{{ path('person_edit_ajax', {'id': person.id}) }}">
                                     <span class="fas fa-save mr-2"></span>Mettre à jour

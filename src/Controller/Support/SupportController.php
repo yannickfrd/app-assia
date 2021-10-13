@@ -10,6 +10,7 @@ use App\Entity\Support\SupportPerson;
 use App\Event\Support\SupportGroupEvent;
 use App\Form\Model\Support\SupportSearch;
 use App\Form\Model\Support\SupportsInMonthSearch;
+use App\Form\Support\Support\AddPersonToSupportType;
 use App\Form\Support\Support\NewSupportGroupType;
 use App\Form\Support\Support\SupportCoefficientType;
 use App\Form\Support\Support\SupportGroupType;
@@ -42,13 +43,11 @@ class SupportController extends AbstractController
 {
     use ErrorMessageTrait;
 
-    private $supportPersonRepo;
-    private $manager;
+    private $em;
 
-    public function __construct(SupportPersonRepository $supportPersonRepo, EntityManagerInterface $manager)
+    public function __construct(EntityManagerInterface $em)
     {
-        $this->supportPersonRepo = $supportPersonRepo;
-        $this->manager = $manager;
+        $this->em = $em;
     }
 
     /**
@@ -56,18 +55,18 @@ class SupportController extends AbstractController
      *
      * @Route("/supports", name="supports", methods="GET|POST")
      */
-    public function viewListSupports(Request $request, Pagination $pagination): Response
+    public function viewListSupports(Request $request, SupportPersonRepository $supportPersonRepo, Pagination $pagination): Response
     {
         $form = $this->createForm(SupportSearchType::class, $search = new SupportSearch())
             ->handleRequest($request);
 
         if ($search->getExport()) {
-            return $this->exportData($search, $this->supportPersonRepo);
+            return $this->exportData($search);
         }
 
         return $this->render('app/support/listSupports.html.twig', [
             'form' => $form->createView(),
-            'supports' => $pagination->paginate($this->supportPersonRepo->findSupportsQuery($search), $request),
+            'supports' => $pagination->paginate($supportPersonRepo->findSupportsQuery($search), $request),
         ]);
     }
 
@@ -76,32 +75,17 @@ class SupportController extends AbstractController
      *
      * @Route("/group/{id}/support/new", name="support_new", methods="GET|POST")
      */
-    public function newSupportGroup(
-        PeopleGroup $peopleGroup,
-        Request $request,
-        SupportCreator $supportCreator,
-        EventDispatcherInterface $dispatcher
-    ): Response {
+    public function newSupportGroup(PeopleGroup $peopleGroup, Request $request, SupportCreator $supportCreator): Response
+    {
         $supportGroup = $supportCreator->getNewSupportGroup($peopleGroup, $request);
 
         $form = $this->createForm(SupportGroupType::class, $supportGroup)
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && $supportGroup->getAgreement()) {
-            if ($supportCreator->create($supportGroup)) {
-                $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support.before_create');
-
-                $this->manager->flush();
-
-                $this->addFlash('success', 'Le suivi social est créé.');
-
-                $dispatcher->dispatch(new SupportGroupEvent($supportGroup, $form), 'support.after_create');
-
+            if ($supportCreator->create($supportGroup, $form)) {
                 return $this->redirectToRoute('support_view', ['id' => $supportGroup->getId()]);
             }
-            $this->addFlash('danger', 'Attention, un suivi social est déjà en cours pour '.(
-                count($peopleGroup->getPeople()) > 1 ? 'ce ménage.' : 'cette personne.'
-            ));
         }
 
         return $this->render('app/support/supportGroupEdit.html.twig', [
@@ -116,7 +100,7 @@ class SupportController extends AbstractController
      * @Route("/group/{id}/new_support", name="group_new_support", methods="GET")
      * @Route("support/switch_service", name="support_switch_service", methods="POST")
      */
-    public function newSupportGroupAjax(PeopleGroup $peopleGroup = null, Request $request)
+    public function newSupportGroupAjax(PeopleGroup $peopleGroup = null, Request $request, SupportPersonRepository $supportPersonRepo)
     {
         $form = $this->createForm(NewSupportGroupType::class, new SupportGroup())
             ->handleRequest($request);
@@ -125,7 +109,7 @@ class SupportController extends AbstractController
             'html' => $this->render('app/support/_shared/_newSupportForm.html.twig', [
                 'form' => $form->createView(),
                 'people_group' => $peopleGroup,
-                'nb_supports' => $peopleGroup ? $this->supportPersonRepo->countSupportsOfPeople($peopleGroup) : null,
+                'nb_supports' => $peopleGroup ? $supportPersonRepo->countSupportsOfPeople($peopleGroup) : null,
             ]),
         ]);
     }
@@ -152,19 +136,23 @@ class SupportController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support.before_update');
 
-            $this->manager->flush();
+            $this->em->flush();
 
             $this->addFlash('success', 'Le suivi social est mis à jour.');
 
             $dispatcher->dispatch(new SupportGroupEvent($supportGroup, null, $referent), 'support.after_update');
         }
 
-        $formCoeff = $this->createForm(SupportCoefficientType::class, $supportGroup)
-            ->handleRequest($request);
+        $coefForm = $this->createForm(SupportCoefficientType::class, $supportGroup);
+
+        $addPersonForm = $this->createForm(AddPersonToSupportType::class, null, [
+            'attr' => ['supportGroup' => $supportGroup],
+        ]);
 
         return $this->render('app/support/supportGroupEdit.html.twig', [
             'form' => $form->createView(),
-            'formCoeff' => $formCoeff->createView(),
+            'coefForm' => $coefForm->createView(),
+            'addPersonForm' => $addPersonForm->createView(),
         ]);
     }
 
@@ -184,11 +172,11 @@ class SupportController extends AbstractController
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        $formCoeff = $this->createForm(SupportCoefficientType::class, $supportGroup)
+        $coefForm = $this->createForm(SupportCoefficientType::class, $supportGroup)
             ->handleRequest($request);
 
-        if ($formCoeff->isSubmitted() && $formCoeff->isValid()) {
-            $this->manager->flush();
+        if ($coefForm->isSubmitted() && $coefForm->isValid()) {
+            $this->em->flush();
 
             $this->addFlash('success', 'Le coefficient du suivi est mis à jour.');
 
@@ -236,9 +224,9 @@ class SupportController extends AbstractController
      */
     public function deleteSupportGroup(SupportGroup $supportGroup): Response
     {
-        $this->manager->getFilters()->disable('softdeleteable');
-        $this->manager->remove($supportGroup);
-        $this->manager->flush();
+        $this->em->getFilters()->disable('softdeleteable');
+        $this->em->remove($supportGroup);
+        $this->em->flush();
 
         $this->addFlash('warning', 'Le suivi social est supprimé.');
 
@@ -254,21 +242,30 @@ class SupportController extends AbstractController
     /**
      * Ajout de nouvelles personnes au suivi.
      *
-     * @Route("/support/{id}/add_people", name="support_add_people", methods="GET")
+     * @Route("/support/{id}/add_person", name="support_add_person", methods="POST")
      */
-    public function addPeopleInSupport(
+    public function addPersonToSupport(
         SupportGroup $supportGroup,
+        Request $request,
         SupportPeopleAdder $supportPeopleAdder,
         EventDispatcherInterface $dispatcher
     ): Response {
-        if ($supportPeopleAdder->addPeopleInSupport($supportGroup)) {
+        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
+
+        // $rolePerson = $this->em->find(RolePerson::class, $request->request->get('add_person_to_support')['rolePerson']);
+
+        $form = $this->createForm(AddPersonToSupportType::class, null, [
+            'attr' => ['supportGroup' => $supportGroup],
+        ])->handleRequest($request);
+
+        $rolePerson = $form->get('rolePerson')->getData();
+
+        if ($rolePerson && $supportPeopleAdder->addPersonToSupport($supportGroup, $rolePerson)) {
             $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support.before_update');
 
-            $this->manager->flush();
+            $this->em->flush();
 
             $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support.after_update');
-        } else {
-            $this->addFlash('warning', "Aucune personne n'a été ajoutée au suivi.");
         }
 
         return $this->redirectToRoute('support_edit', ['id' => $supportGroup->getId()]);
@@ -310,7 +307,7 @@ class SupportController extends AbstractController
 
             $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support.before_update');
 
-            $this->manager->flush();
+            $this->em->flush();
 
             $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support.after_update');
 
@@ -321,7 +318,7 @@ class SupportController extends AbstractController
                     Grammar::gender($supportPerson->getPerson()->getGender()).' du suivi social.',
             ]);
         } catch (\Exception $e) {
-            return $this->getErrorMessage();
+            throw $e;
         }
     }
 
@@ -389,7 +386,7 @@ class SupportController extends AbstractController
 
         if ($supportDuplicator->duplicate($supportGroup)) {
             $this->addFlash('success', 'Les informations du précédent suivi ont été ajoutées (évaluation sociale, documents...)');
-            $this->manager->flush();
+            $this->em->flush();
 
             $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support.after_update');
         } else {
@@ -408,7 +405,10 @@ class SupportController extends AbstractController
     {
         set_time_limit(10 * 60);
 
-        $supports = $this->supportPersonRepo->findSupportsToExport($search);
+        /** @var SupportPersonRepository $supportPersonRepo */
+        $supportPersonRepo = $this->em->getRepository(SupportPerson::class);
+
+        $supports = $supportPersonRepo->findSupportsToExport($search);
 
         if (!$supports) {
             $this->addFlash('warning', 'Aucun résultat à exporter.');

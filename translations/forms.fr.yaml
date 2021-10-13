@@ -7,7 +7,9 @@ place:
   configuration.help: Diffus ou regroupé
   type.help: Chambre, T1, T2, T3...
 placeGroup:
+  help: Indiquer le groupe places
   startDate: Date d'entrée
+Add person to support: Ajouter la personne au suivi en cours.
 Address: Adresse
 Area: Superficie
 Birthdate: Date de naissance
@@ -69,6 +71,7 @@ placeholder:
   familtyTypology: -- Typologie familiale --
   gender: -- Sexe --
   nbSupports: Nb de suivis
+  person: -- Personne --
   pole: -- Pôle --
   referent: -- Référent --
   select: -- Sélectionner --
@@ -122,7 +125,7 @@ peopleGroup.comment: Écrire un commentaire concernant le groupe
 person:
   contactOtherPerson.help: Autre personne à contacter en cas d'urgence.
   comment: Écrire un commentaire concernant la personne
-comment.placeholder: Écrire un commentaire concernant le suivi social
+comment.placeholder: Écrire un commentaire relatif au suivi social
 service.comment: Écrire un commentaire concernant le service
 Year: Année
 Zipcode: Code postal

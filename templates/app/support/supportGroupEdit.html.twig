@@ -19,13 +19,24 @@
 		{% include "model/_msgFlash.html.twig" %}
 		<div id="js-msg-flash-content"></div>
 
-		{% if support.service.coefficient == YES and formCoeff is defined and is_granted("ROLE_ADMIN")  %}
+		{% if support.service.coefficient == YES and coefForm is defined and is_granted("ROLE_ADMIN")  %}
 			{% include "app/support/_shared/_coefficientSupport.html.twig" %}
 		{% endif %}
 
 		{{ form_start(form) }}
 
-		<div class="form-group">
+		{% if support.id %}
+			<div class="row mb-4">
+				<div class="col-md-12">
+					<div class="float-right">
+						<button type="submit" id="send2" name="send2" class="btn btn-{{ theme_color }} shadow">
+							<span class="fas fa-save mr-2"></span>Mettre à jour</button>
+					</div>
+				</div>
+			</div>
+		{% endif %}
+
+		<div class="mb-3">
 			<div class="row">
 				<div class="col-md-6">{{ form_row(form.service, {'attr': {'data-url': path('support_switch_service')} }) }}</div>
 				<div class="col-md-6">{{ form_row(form.subService, {'required': form.subService.vars.choices|length > 0}) }}</div>
@@ -51,24 +62,7 @@
 			{% include "app/support/_shared/_supportRegular.html.twig" %}
 		{% endif %}
 
-		{% if support.id %}
-		
-			<div class="form-group row">
-				<div class="col-md-12">
-					<div class="mb-4 float-right">
-						<button type="submit" id="send2" name="send2" class="btn btn-{{ theme_color }} shadow">
-							<span class="fas fa-save mr-2"></span>Mettre à jour</button>
-					</div>
-				</div>
-			</div>
-
-			<hr>
-			
-			{% include "app/support/_shared/_supportPeople.html.twig" %}
-
-		{% endif %}
-
-		<div class="form-group row">
+		<div class="row mb-3">
 			<div class="col-md-12"> 
 				<div class="card border-warning"> 
 					<div class="card-body p-3"> 
@@ -85,17 +79,17 @@
 			</div>
 		</div>
 
-		<div class="form-group row my-5">
+		<div class="row my-4">
 			<div class="col-md-12">
 				{% if support.id and is_granted("DELETE", support) %}
-				<div class="float-left d-flex">
-					{% set textAlert = "'Tous les éléments rattachés au suivi vont être supprimés (évaluation sociale, RDVs, notes, documents...)." ~ 
-						" Êtes-vous vraiment sûr de vouloir supprimer ce suivi social ?'" %}
-					<a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('support_delete', {'id':support.id}) }}"
-						title="Supprimer le suivi social" data-toggle="tooltip" data-placement="bottom"
-						onclick="if(window.confirm({{ textAlert }})){return true;}else{return false;}"><span
-						class="fas fa-trash-alt mr-2"></span><span class="">Supprimer</span></a>
-				</div>
+					<div class="float-left d-flex">
+						{% set textAlert = "'Tous les éléments rattachés au suivi vont être supprimés (évaluation sociale, RDVs, notes, documents...)." ~ 
+							" Êtes-vous vraiment sûr de vouloir supprimer ce suivi social ?'" %}
+						<a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('support_delete', {'id': support.id}) }}"
+							title="Supprimer le suivi social" data-toggle="tooltip" data-placement="bottom"
+							onclick="if(window.confirm({{ textAlert }})){return true;}else{return false;}"><span
+							class="fas fa-trash-alt mr-2"></span><span class="">Supprimer</span></a>
+					</div>
 				{% endif %}
 				<div class="float-right">
 					<button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>
@@ -104,14 +98,21 @@
 			</div>
 		</div>
 
+		
+		{% if support.id %}
+			{% include "app/support/_shared/_supportPeople.html.twig" %}
+		{% endif %}
+
 		{{ form_row(form.cloneSupport) }}
 		{{ form_row(form.siSiaoImport) }}
 		{{ form_row(form._token) }}
 		{{ form_end(form, {"render_rest": false}) }}
 
-	</div>
+		{% if support.id %}
+			{% include "app/support/_shared/_addPersonToSupport.html.twig" %}
+		{% endif %}
 
-{% include "app/support/_shared/_removeSupportPerson.html.twig" %}
+	</div>		
 
 {% endblock %}
 

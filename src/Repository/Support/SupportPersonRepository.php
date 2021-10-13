@@ -5,6 +5,8 @@ namespace App\Repository\Support;
 use App\Entity\Organization\Service;
 use App\Entity\People\PeopleGroup;
 use App\Entity\People\Person;
+use App\Entity\Support\PlaceGroup;
+use App\Entity\Support\SupportGroup;
 use App\Entity\Support\SupportPerson;
 use App\Form\Model\Support\AvdlSupportSearch;
 use App\Form\Model\Support\HotelSupportSearch;
@@ -416,5 +418,50 @@ class SupportPersonRepository extends ServiceEntityRepository
 
         return (int) $query->getQuery()
             ->getSingleScalarResult();
+    }
+
+    /**
+     * @return SupportPerson[]
+     */
+    public function findPeopleInSupport(SupportGroup $supportGroup): array
+    {
+        return $this->createQueryBuilder('sp')->select('sp')
+            ->leftJoin('sp.person', 'p')->addSelect('p')
+
+            ->where('sp.supportGroup = :supportGroup')
+            ->setParameter('supportGroup', $supportGroup)
+
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return SupportPerson[]
+     */
+    public function findPeopleNotInPlaceGroup(PlaceGroup $placeGroup): array
+    {
+        $supportPeople = [];
+
+        foreach ($this->findPeopleInSupport($placeGroup->getSupportGroup()) as $supportPerson) {
+            if (!$this->personIsInSupport($supportPerson, $placeGroup)) {
+                $supportPeople[] = $supportPerson;
+            }
+        }
+
+        return $supportPeople;
+    }
+
+    /**
+     * Vérifie si la personne est déjà dans le suivi social.
+     */
+    protected function personIsInSupport(SupportPerson $supportPerson, PlaceGroup $placeGroup): bool
+    {
+        foreach ($placeGroup->getPlacePeople() as $placePerson) {
+            if ($placePerson->getPerson() === $supportPerson->getPerson()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

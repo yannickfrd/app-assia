@@ -2,14 +2,15 @@
 
 namespace App\Tests\Controller\Support;
 
-use App\Tests\AppTestTrait;
 use App\Entity\Support\PlaceGroup;
 use App\Entity\Support\SupportGroup;
-use Symfony\Component\HttpFoundation\Response;
+use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\HttpFoundation\Response;
 
 class PlaceGroupControllerTest extends WebTestCase
 {
@@ -103,13 +104,20 @@ class PlaceGroupControllerTest extends WebTestCase
         $this->assertSelectorExists('.alert.alert-success');
     }
 
-    public function testAddPeopleInPlaceIsSuccessful()
+    public function testAdPersonToPlaceIsSuccessful()
     {
-        $id = $this->data['plPerson1']->getId();
-        $this->client->request('GET', "/support/person-place/$id/delete");
+        $placePersonId = $this->data['plPerson1']->getId();
+        $this->client->request('GET', "/support/place-person/$placePersonId/delete");
 
-        $id = $this->placeGroup->getId();
-        $this->client->request('GET', "/support/group_people_place/$id/add_people");
+        $placeGroupId = $this->placeGroup->getId();
+        /** @var Crawler $crawler */
+        $crawler = $this->client->request('GET', "/support/place_group/$placeGroupId");
+
+        $supportPersonId = $crawler->filter('form[name="add_person_to_place_group"] option')->last()->attr('value');
+
+        $this->client->submitForm('add-person', [
+            'add_person_to_place_group[supportPerson]' => $supportPersonId,
+        ]);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Logement/hébergement');
@@ -128,7 +136,7 @@ class PlaceGroupControllerTest extends WebTestCase
     public function testDeletePlacePersonIsSuccessful()
     {
         $id = $this->data['plPerson1']->getId();
-        $this->client->request('GET', "/support/person-place/$id/delete");
+        $this->client->request('GET', "/support/place-person/$id/delete");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorExists('.alert.alert-warning');
@@ -142,6 +150,5 @@ class PlaceGroupControllerTest extends WebTestCase
 
         $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
         $cache->clear();
-
     }
 }

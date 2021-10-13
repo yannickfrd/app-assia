@@ -2,26 +2,26 @@
 
 namespace App\Controller\People;
 
+use App\Controller\Traits\ErrorMessageTrait;
+use App\Entity\People\PeopleGroup;
 use App\Entity\People\Person;
 use App\Entity\People\RolePerson;
-use App\Entity\People\PeopleGroup;
 use App\Event\People\PeopleGroupEvent;
-use App\Form\Model\SiSiao\SiSiaoLogin;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Service\People\PeopleGroupManager;
-use App\Controller\Traits\ErrorMessageTrait;
 use App\Form\Admin\Security\SiSiaoLoginType;
-use Symfony\Component\HttpFoundation\Request;
+use App\Form\Model\SiSiao\SiSiaoLogin;
+use App\Form\People\PeopleGroup\PeopleGroupType;
 use App\Form\People\RolePerson\RolePersonType;
+use App\Repository\People\PeopleGroupRepository;
 use App\Service\People\PeopleGroupCollections;
+use App\Service\People\PeopleGroupManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Form\People\PeopleGroup\PeopleGroupType;
-use App\Repository\People\PeopleGroupRepository;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class PeopleGroupController extends AbstractController
 {
@@ -51,7 +51,7 @@ class PeopleGroupController extends AbstractController
             ->handleRequest($request);
 
         $supports = $peopleGroupCollections->getSupports($peopleGroup);
-        
+
         $siSiaoLoginForm = $this->createForm(SiSiaoLoginType::class, new SiSiaoLogin());
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -94,7 +94,7 @@ class PeopleGroupController extends AbstractController
      * @Route("/group/{id}/add_person/{person_id}", name="group_add_person", methods="POST")
      * @ParamConverter("person", options={"id" = "person_id"})
      */
-    public function addPersonInGroup(int $id, Request $request, Person $person, PeopleGroupManager $peopleGroupManager): Response
+    public function addPersonToGroup(int $id, Request $request, Person $person, PeopleGroupManager $peopleGroupManager): Response
     {
         if (null === $peopleGroup = $this->peopleGroupRepo->findPeopleGroupById($id)) {
             throw $this->createAccessDeniedException('Ce groupe n\'existe pas.');
@@ -102,9 +102,8 @@ class PeopleGroupController extends AbstractController
 
         $form = $this->createForm(RolePersonType::class, $rolePerson = new RolePerson())
             ->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
-            $peopleGroupManager->addPerson($peopleGroup, $person, $rolePerson);
+            $peopleGroupManager->addPerson($peopleGroup, $person, $rolePerson, $form->get('addPersonToSupport')->getData());
         } else {
             $this->addFlash('danger', 'Une erreur s\'est produite.');
         }
@@ -116,7 +115,6 @@ class PeopleGroupController extends AbstractController
      * Retire une personne du groupe.
      *
      * @Route("/role_person/{id}/remove/{_token}", name="role_person_remove", methods="GET")
-     * @IsGranted("ROLE_ADMIN")
      */
     public function removePerson(RolePerson $rolePerson, string $_token, PeopleGroupManager $peopleGroupManager): Response
     {

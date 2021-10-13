@@ -2,18 +2,18 @@
 
 namespace App\EventDispatcher\Support;
 
+use App\Entity\Evaluation\EvaluationGroup;
+use App\Entity\Organization\Service;
 use App\Entity\Organization\User;
 use App\Entity\People\PeopleGroup;
 use App\Entity\Support\PlaceGroup;
-use App\Entity\Organization\Service;
 use App\Entity\Support\SupportGroup;
 use App\Event\Support\SupportGroupEvent;
+use App\Service\SiSiao\SiSiaoEvaluationImporter;
 use App\Service\SupportGroup\AvdlService;
-use App\Entity\Evaluation\EvaluationGroup;
+use App\Service\SupportGroup\HotelSupportService;
 use App\Service\SupportGroup\SupportChecker;
 use App\Service\SupportGroup\SupportDuplicator;
-use App\Service\SiSiao\SiSiaoEvaluationImporter;
-use App\Service\SupportGroup\HotelSupportService;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
@@ -172,15 +172,12 @@ class SupportGroupEditorSubscriber implements EventSubscriberInterface
     protected function updatePlaceGroup(SupportGroup $supportGroup): void
     {
         // Si le statut du suivi est égal à terminé et si  "Fin d'hébergement" coché, alors met à jour la prise en charge
-        if (SupportGroup::STATUS_ENDED === $supportGroup->getStatus() && $supportGroup->getEndPlace()) {
-            foreach ($supportGroup->getPlaceGroups() as $placeGroup) {
-                if (!$placeGroup->getEndDate()) {
-                    null === $placeGroup->getEndDate() ? $placeGroup->setEndDate($supportGroup->getEndDate()) : null;
-                    null === $placeGroup->getEndReason() ? $placeGroup->setEndReason(PlaceGroup::END_REASON_SUPPORT_ENDED) : null;
-
-                    $this->updatePlacePeople($placeGroup);
-                }
+        foreach ($supportGroup->getPlaceGroups() as $placeGroup) {
+            if (SupportGroup::STATUS_ENDED === $supportGroup->getStatus() && $supportGroup->getEndPlace() && !$placeGroup->getEndDate()) {
+                null === $placeGroup->getEndDate() ? $placeGroup->setEndDate($supportGroup->getEndDate()) : null;
+                null === $placeGroup->getEndReason() ? $placeGroup->setEndReason(PlaceGroup::END_REASON_SUPPORT_ENDED) : null;
             }
+            $this->updatePlacePeople($placeGroup);
         }
     }
 
@@ -190,15 +187,21 @@ class SupportGroupEditorSubscriber implements EventSubscriberInterface
     protected function updatePlacePeople(PlaceGroup $placeGroup): void
     {
         foreach ($placeGroup->getPlacePeople() as $placePerson) {
-            $supportPerson = $placePerson->getSupportPerson();
+            if (null === $supportPerson = $placePerson->getSupportPerson()) {
+                return;
+            }
+
             $person = $supportPerson->getPerson();
 
-            null === $placePerson->getEndDate() ? $placePerson->setEndDate($supportPerson->getEndDate()) : null;
-            null === $placePerson->getEndReason() ? $placePerson->setEndReason(PlaceGroup::END_REASON_SUPPORT_ENDED) : null;
-
+            if (null === $placePerson->getEndDate()) {
+                $placePerson->setEndDate($supportPerson->getEndDate());
+            }
+            if ($supportPerson->getEndDate() && null === $placePerson->getEndReason()) {
+                $placePerson->setEndReason(PlaceGroup::END_REASON_SUPPORT_ENDED);
+            }
             if ($supportPerson->getStartDate() && $supportPerson->getStartDate() < $person->getBirthdate()) {
-                $supportPerson->setStartDate($person->getBirthdate());
-                $this->flashbag->add('warning', 'La date de début d\'hébergement ne peut pas être antérieure à la date de naissance de la personne ('.$placePerson->getPerson()->getFullname().').');
+                $placePerson->setStartDate($person->getBirthdate());
+                $this->flashbag->add('warning', 'La date de début d\'hébergement ne peut pas être antérieure à la date de naissance de la personne ('.$person->getFullname().').');
             }
         }
     }
@@ -225,11 +228,11 @@ class SupportGroupEditorSubscriber implements EventSubscriberInterface
         if ($supportGroup->getReferent()) {
             $this->cache->deleteItem(User::CACHE_USER_SUPPORTS_KEY.$supportGroup->getReferent()->getId());
         }
-        
+
         if ($initReferent && $initReferent != $supportGroup->getReferent()) {
             $this->cache->deleteItem(User::CACHE_USER_SUPPORTS_KEY.$initReferent->getId());
         }
-        
+
         return $this->cache->deleteItems([
             PeopleGroup::CACHE_GROUP_SUPPORTS_KEY.$supportGroup->getPeopleGroup()->getId(),
             SupportGroup::CACHE_SUPPORT_KEY.$id,

@@ -77,7 +77,7 @@ class PeopleGroupControllerTest extends WebTestCase
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testAddPersonInGroupIsSuccessful()
+    public function testAddPersonToGroupIsSuccessful()
     {
         $this->createLogin($this->data['userRoleUser']);
 

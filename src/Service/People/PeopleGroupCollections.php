@@ -2,9 +2,12 @@
 
 namespace App\Service\People;
 
+use App\Entity\Organization\User;
 use App\Entity\People\PeopleGroup;
+use App\Entity\Support\SupportGroup;
 use App\Repository\Organization\ReferentRepository;
 use App\Repository\Support\SupportGroupRepository;
+use Doctrine\Common\Collections\Collection;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
@@ -21,6 +24,9 @@ class PeopleGroupCollections
         $this->cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
     }
 
+    /**
+     * @return Collection<SupportGroup>
+     */
     public function getSupports(PeopleGroup $peopleGroup)
     {
         return $this->cache->get(PeopleGroup::CACHE_GROUP_SUPPORTS_KEY.$peopleGroup->getId(), function (CacheItemInterface $item) use ($peopleGroup) {
@@ -30,6 +36,9 @@ class PeopleGroupCollections
         });
     }
 
+    /**
+     * @return Collection<User>
+     */
     public function getReferents(PeopleGroup $peopleGroup)
     {
         return $this->cache->get(PeopleGroup::CACHE_GROUP_REFERENTS_KEY.$peopleGroup->getId(), function (CacheItemInterface $item) use ($peopleGroup) {

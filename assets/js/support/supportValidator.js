@@ -22,6 +22,7 @@ export default class SupportValidator extends FormValidator
         this.startDateInputElt = document.getElementById(this.prefix + 'startDate')
         this.endDateInputElt = document.getElementById(this.prefix + 'endDate')
         this.endStatusSelectElt = document.getElementById(this.prefix + 'endStatus')
+        this.placeSelectElt = document.getElementById(this.prefix + 'place')
         this.btnSubmitElts = document.querySelectorAll('button[type="submit"]')
         this.dateInputElts = document.querySelectorAll('input[type="date"]')
         this.now = new Date()
@@ -46,6 +47,9 @@ export default class SupportValidator extends FormValidator
             this.endDateInputElt.addEventListener('focusout', () => this.checkEndDate())
             this.endStatusSelectElt.addEventListener('change', () => this.checkEndStatus())
         }
+        if (this.placeSelectElt) {
+            this.placeSelectElt.addEventListener('change', () => this.checkPlace())
+        }
         this.checkFormBeforeSubmit()
 
         this.visibleElt(this.subServiceSelectElt.parentNode.parentNode, this.subServiceSelectElt.querySelectorAll('option').length > 1 ? true : false)
@@ -59,6 +63,7 @@ export default class SupportValidator extends FormValidator
             btnElt.addEventListener('click', e => {
                 if (this.startDateInputElt) {
                     this.checkStartDate()
+                    this.checkPlace()
                     this.checkEndDate()
                 }
                 this.checkEndStatus()
@@ -101,9 +106,20 @@ export default class SupportValidator extends FormValidator
         }
         if (intervalWithNow || (!intervalWithNow && [1, 6].includes(status))) { // Statut = Orientation/pré-adm. / Liste d'attente
             return this.validField(this.startDateInputElt)
-        }
+        } 
     }
 
+    /**
+     * Vérifie si le groupe de places doit être saisi ou non.
+     */
+    checkPlace() {
+        if (this.placeSelectElt) {
+            if (this.startDateInputElt.value && !this.placeSelectElt.value) {
+                return this.invalidField(this.placeSelectElt, 'Saisie obligatoire.');
+            }
+            return this.validField(this.placeSelectElt)
+        }
+    }
     /**
      * Vérifie la date de fin.
      */

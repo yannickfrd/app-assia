@@ -81,14 +81,12 @@
                                         <td class="px-1 align-middle">{{ form_widget(form_person.role) }}
                                             {{ form_errors(form_person.role) }}</td>
                                         <td class="px-1 align-middle">
-                                            {% if is_granted_ROLE_ADMIN %}
-                                                <button class="btn btn-danger shadow" data-action="remove"
-                                                    data-url="{{ path('role_person_remove', {'id': form_person.vars.value.id, 
-                                                        '_token': csrf_token('remove' ~ form_person.vars.value.id)}) }}"
-                                                    data-toggle="modal" data-target="#modal-remove-person"
-                                                    title="Retirer la personne du groupe"><span class="fas fa-user-times"></span>
-                                                </button>
-                                            {% endif %}
+                                            <button class="btn btn-danger shadow" data-action="remove"
+                                                data-url="{{ path('role_person_remove', {'id': form_person.vars.value.id, 
+                                                    '_token': csrf_token('remove' ~ form_person.vars.value.id)}) }}"
+                                                data-toggle="modal" data-target="#modal-remove-person"
+                                                title="Retirer la personne du groupe"><span class="fas fa-user-times"></span>
+                                            </button>
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -98,11 +96,12 @@
                 </div>
             </div>
             <div class="row">
+            {% set withSupports = supports|length > 0 %}
                 <div class="col-md-12">
-                    <a href="{{ path("group_search_person", {"id": people_group.id}) }}"
+                    <a href="{{ path('group_search_person', {'id': people_group.id, 'supports': withSupports}) }}"
                         class="btn btn-{{ theme_color }} btn-sm my-2">
                         <span class="fas fa-plus-square mr-2"></span>Ajouter une personne</a>
-                    <a href="{{ path("group_create_person", {"id": people_group.id}) }}" class="btn btn-secondary btn-sm my-2"
+                    <a href="{{ path('group_create_person', {'id': people_group.id, 'supports': withSupports, 'role': 3}) }}" class="btn btn-secondary btn-sm my-2"
                         data-toggle="tooltip" title="Ajouter un enfant" data-placement="bottom">
                         <span class="fas fa-plus-square mr-2"></span>Naissance</a>
                 </div>

@@ -1,20 +1,19 @@
-{% form_theme formCoeff "bootstrap_4_layout.html.twig" %}
+{% form_theme coefForm "bootstrap_4_layout.html.twig" %}
 
 <section>
     <h2 class="h5 my-4">Coefficient du suivi</h2>
-    {{ form_start(formCoeff, {
+    {{ form_start(coefForm, {
         'action': path('support_edit_coefficient', {'id': support.id})
     }) }}
         <div class="form-inline">
-            {{ form_label(formCoeff.coefficient) }}
-            <div class="form-group my-1 px-1">{{ form_widget(formCoeff.coefficient) }}</div>
+            {{ form_label(coefForm.coefficient) }}
+            <div class="form-group my-1 px-1">{{ form_widget(coefForm.coefficient) }}</div>
             <div class="form-group my-1 px-1">
                 <button type="submit" id="send-coeff" name="send-coeff" class="btn btn-{{ theme_color }} shadow">
                     <span class="fas fa-save mr-2"></span>Modifier</button>
             </div>
         </div>
-        {{ form_row(formCoeff._token) }}
-    {{ form_end(formCoeff) }}
+    {{ form_end(coefForm) }}
 </section>
 
 <hr>

@@ -2,37 +2,38 @@
 
 namespace App\Controller\People;
 
-use App\Service\Grammar;
-use App\Service\Pagination;
+use App\Controller\Traits\ErrorMessageTrait;
+use App\Entity\Evaluation\EvaluationGroup;
+use App\Entity\People\PeopleGroup;
 use App\Entity\People\Person;
 use App\Entity\People\RolePerson;
-use App\Entity\People\PeopleGroup;
 use App\Entity\Support\SupportGroup;
-use App\Form\Model\SiSiao\SiSiaoLogin;
-use App\Form\People\Person\PersonType;
-use App\Form\Model\People\PersonSearch;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\Evaluation\EvaluationGroup;
-use App\Repository\People\PersonRepository;
-use App\Controller\Traits\ErrorMessageTrait;
 use App\Form\Admin\Security\SiSiaoLoginType;
-use App\Form\People\Person\PersonSearchType;
-use Symfony\Component\HttpFoundation\Request;
-use App\Form\People\Person\PersonNewGroupType;
-use App\Form\People\RolePerson\RolePersonType;
-use Symfony\Component\HttpFoundation\Response;
-use App\Form\People\Person\RolePersonGroupType;
-use Symfony\Component\Routing\Annotation\Route;
-use App\Form\People\Person\DuplicatedPeopleType;
-use App\Form\People\Person\PersonRolePersonType;
-use App\Repository\People\PeopleGroupRepository;
 use App\Form\Model\People\DuplicatedPeopleSearch;
+use App\Form\Model\People\PersonSearch;
+use App\Form\Model\SiSiao\SiSiaoLogin;
+use App\Form\People\Person\DuplicatedPeopleType;
+use App\Form\People\Person\PersonNewGroupType;
+use App\Form\People\Person\PersonRolePersonType;
+use App\Form\People\Person\PersonSearchType;
+use App\Form\People\Person\PersonType;
+use App\Form\People\Person\RolePersonGroupType;
+use App\Form\People\RolePerson\RolePersonType;
+use App\Repository\People\PeopleGroupRepository;
+use App\Repository\People\PersonRepository;
 use App\Repository\Support\SupportPersonRepository;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use App\Service\Grammar;
+use App\Service\Pagination;
+use App\Service\People\PeopleGroupManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Routing\Annotation\Route;
 
 class PersonController extends AbstractController
 {
@@ -105,13 +106,15 @@ class PersonController extends AbstractController
      *
      * @Route("/group/{id}/search_person", name="group_search_person", methods="GET|POST")
      */
-    public function addPersonInGroup(PeopleGroup $peopleGroup, Request $request, Pagination $pagination): Response
+    public function addPersonToGroup(PeopleGroup $peopleGroup, Request $request, Pagination $pagination): Response
     {
         $form = $this->createForm(PersonSearchType::class, $search = new PersonSearch())
             ->handleRequest($request);
 
-        $formRolePerson = $this->createForm(RolePersonType::class, new RolePerson())
-            ->handleRequest($request);
+        $rolePerson = (new RolePerson())->setPeopleGroup($peopleGroup);
+        $formRolePerson = $this->createForm(RolePersonType::class, $rolePerson, [
+            'attr' => ['supports' => $request->get('supports')],
+        ])->handleRequest($request);
 
         return $this->render('app/people/person/listPeople.html.twig', [
             'form' => $form->createView(),
@@ -149,10 +152,11 @@ class PersonController extends AbstractController
      *
      * @Route("/group/{id}/person/new", name="group_create_person", methods="GET|POST")
      */
-    public function newPersonInGroup(PeopleGroup $peopleGroup, Request $request): Response
+    public function newPersonInGroup(PeopleGroup $peopleGroup, Request $request, PeopleGroupManager $peopleGroupManager): Response
     {
-        $form = $this->createForm(PersonRolePersonType::class, $rolePerson = new RolePerson())
-            ->handleRequest($request);
+        $form = $this->createForm(PersonRolePersonType::class, $rolePerson = new RolePerson(), [
+            'attr' => ['supports' => $request->get('supports')],
+        ])->handleRequest($request);
 
         $person = $rolePerson->getPerson();
 
@@ -164,7 +168,8 @@ class PersonController extends AbstractController
 
                 return $this->redirectToRoute('person_show', ['id' => $personExists->getId()]);
             }
-            $this->createPersonInGroup($person, $rolePerson, $peopleGroup);
+
+            $peopleGroupManager->createPersonInGroup($peopleGroup, $person, $rolePerson, $form->get('addPersonToSupport')->getData());
 
             return $this->redirectToRoute('people_group_show', ['id' => $peopleGroup->getId()]);
         }
@@ -219,7 +224,7 @@ class PersonController extends AbstractController
             throw $this->createAccessDeniedException('Cette personne n\'existe pas.');
         }
 
-        $form = $this->createForm(PersonType::class, $person)
+        $form = $this->createForm(PersonType::class, $person, [])
             ->handleRequest($request);
 
         // Formulaire pour ajouter un nouveau groupe à la personne
@@ -380,25 +385,6 @@ class PersonController extends AbstractController
     }
 
     /**
-     * Crée une personne avec son rôle.
-     */
-    protected function createPersonInGroup(Person $person, RolePerson $rolePerson = null, PeopleGroup $peopleGroup)
-    {
-        $rolePerson->setHead(false)
-            ->setPeopleGroup($peopleGroup);
-        $this->manager->persist($rolePerson);
-
-        $person->addRolesPerson($rolePerson);
-        $this->manager->persist($person);
-
-        $peopleGroup->setNbPeople(count($peopleGroup->getRolePeople()) + 1);
-
-        $this->manager->flush();
-
-        $this->addFlash('success', $person->getFullname().' est ajouté'.Grammar::gender($person->getGender()).' au groupe.');
-    }
-
-    /**
      * Crée un nouveau groupe à la personne.
      */
     protected function createNewGroupToPerson(Person $person, RolePerson $rolePerson)
@@ -428,7 +414,7 @@ class PersonController extends AbstractController
      */
     protected function canEdit(Person $person, array $supports, SessionInterface $session): bool
     {
-        if ($this->isGranted('ROLE_SUPER_ADMIN') || $person->getCreatedBy() === $this->getUser()) {
+        if ($this->isGranted('ROLE_SUPER_ADMIN') || $person->getCreatedBy() === $this->getUser() || 0 === count($supports)) {
             return true;
         }
 
