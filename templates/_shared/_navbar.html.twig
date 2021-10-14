@@ -1,11 +1,11 @@
 <nav class="navbar fixed-top navbar-expand-xl navbar-light bg-{{ theme_color }} mb-0 shadow">
     <a class="navbar-brand py-0 text-light" href="{{ path("home") }}">
-        {# {% if app.request.server.get('APP_VERSION') == "prod" %} #}
+        {% if app.request.server.get('APP_VERSION') == "prod" %}
             <img id="logo-site" src="{{ asset("images/logo_assia_white.png") }}" height="56" width="144" alt="Application Assia"
                 title="Application Assia">
-        {# {% else %}
+        {% else %}
             <span class="fas fa-exclamation-triangle text-warning mr-2"></span>Assia version test
-        {% endif %} #}
+        {% endif %}
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar"
         aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">

@@ -22,7 +22,7 @@ class ResponseListener
 
         $server = $request->server;
 
-        if ($response->getContent() && ('prod' != $server->get('APP_ENV') || '127.0.0.1:8000' === $server->get('SERVER_NAME'))) {
+        if ($response->getContent() && ('prod' != $server->get('APP_VERSION') || '127.0.0.1:8000' === $server->get('SERVER_NAME'))) {
             return $this->addPopUp($response);
         }
     }

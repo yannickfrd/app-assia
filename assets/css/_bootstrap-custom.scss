@@ -1,4 +1,4 @@
-$blue: #00adee !default;
+$blue: #0CBEE2 !default;
 $purple: #6f5290 !default;
 $pink2: #e63553 !default;
 $orange2: #e26b11 !default;
@@ -62,7 +62,7 @@ $custom-file-text: (fr: 'Dossier',
 // @import "../../node_modules/bootstrap/scss/media";
 @import "../../node_modules/bootstrap/scss/list-group";
 @import "../../node_modules/bootstrap/scss/close";
-// @import "../../node_modules/bootstrap/scss/toasts";
+@import "../../node_modules/bootstrap/scss/toasts";
 @import "../../node_modules/bootstrap/scss/modal";
 
 $tooltip-font-size: .8rem;
