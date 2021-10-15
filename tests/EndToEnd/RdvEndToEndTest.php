@@ -76,9 +76,11 @@ class RdvEndToEndTest extends PantherTestCase
     {
         $this->outputMsg('Edit a rdv');
 
+        $crawler->filter('#show-weekend')->click();
+
         $crawler->filter('a.calendar-event')->first()->click();
         sleep(1); //pop-up effect
-            
+
         /** @var Crawler */
         $crawler = $this->client->submitForm('js-btn-save', [
             'rdv[title]' => $this->faker->sentence(mt_rand(5, 10), true),

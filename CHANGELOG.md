@@ -1,12 +1,16 @@
 # CHANGELOG
 
-## Version 3.1.9 - 15/10/2021
+## Version 3.1.9-10 - 15/10/2021
 - Update documentations and fixtures
     * Edit README to install app
     * Update user fixtures
     * Delete updates.md Create CHANGELOG.md for all updates
     * Create GLOSSARY.md for glossary and translations
     * Update composer.json (hautelook/alice-bundle)
+- Fix bugs
+ * Fix bad url in mail for new user
+ * Fix error edit user after disable/able user
+ * Fix error to sort organizations
 
 ## Version 3.1.8 - 14/10/2021
 - Update to demo version (#60)

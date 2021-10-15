@@ -2,12 +2,12 @@
 
 namespace App\Repository\Organization;
 
+use App\Entity\Organization\Organization;
+use App\Entity\Organization\Service;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-use App\Entity\Organization\Service;
-use App\Entity\Organization\Organization;
 use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Organization|null find($id, $lockMode = null, $lockVersion = null)

@@ -27,7 +27,7 @@ class AppController extends AbstractController
      * Page d'accueil / Tableau de bord.
      *
      * @Route("/home", name="home", methods="GET")
-     * @Route("/")
+     * @Route("/", name="index", methods="GET")
      * @IsGranted("ROLE_USER")
      */
     public function home(IndicatorsService $indicators): Response

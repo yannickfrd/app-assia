@@ -7,6 +7,7 @@ use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
 
 class OrganizationControllerTest extends WebTestCase
@@ -40,7 +41,20 @@ class OrganizationControllerTest extends WebTestCase
         $this->client->request('GET', '/organizations');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'Organismes prescripteurs');
+        $this->assertSelectorTextContains('h1', 'Organismes');
+    }
+
+    public function testSortOrganizationsIsSuccessful()
+    {
+        /** @var Crawler $crawler */
+        $crawler = $this->client->request('GET', '/organizations');
+
+        $link = $crawler->filter('table thead tr a.sortable')->first()->link();
+
+        $this->client->click($link);
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', 'Organismes');
     }
 
     public function testCreateNewOrganizationIsSuccessful()
