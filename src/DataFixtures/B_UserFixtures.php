@@ -48,6 +48,8 @@ class B_UserFixtures extends Fixture
             }
         }
 
+        $this->createDefaultUser($services[0]);
+
         $manager->flush();
     }
 
@@ -59,14 +61,34 @@ class B_UserFixtures extends Fixture
             ->setLastName('Madelaine')
             ->setStatus(6)
             ->setRoles(['ROLE_SUPER_ADMIN'])
-            ->setPassword($this->passwordEncoder->encodePassword($user, 'Test123'))
+            ->setPassword($this->passwordEncoder->encodePassword($user, 'test123'))
             ->setEmail('romain.madelaine@app-assia.org')
             ->setLoginCount(1);
 
         $this->manager->persist($user);
     }
 
-    public function createUser(Service $service)
+    protected function createDefaultUser(Service $service)
+    {
+        $user = new User();
+        $user->setUsername('user_test')
+            ->setFirstName('Test')
+            ->setLastName('Test')
+            ->setStatus(1)
+            ->setPassword($this->passwordEncoder->encodePassword($user, 'test123'))
+            ->setEmail('test@app-assia.org')
+            ->setLoginCount(0);
+
+        $this->manager->persist($user);
+
+        $serviceUser = (new ServiceUser())
+            ->setUser($user)
+            ->setService($service);
+
+        $this->manager->persist($serviceUser);
+    }
+
+    protected function createUser(Service $service)
     {
         $user = new User();
         $lastLogin = AppFixtures::getDateTimeBeetwen('-2 months', 'now');
@@ -84,7 +106,7 @@ class B_UserFixtures extends Fixture
             ->setUsername($username)
             ->setFirstName($firstname)
             ->setLastName($lastname)
-            ->setPassword($this->passwordEncoder->encodePassword($user, 'Test123'))
+            ->setPassword($this->passwordEncoder->encodePassword($user, 'test123'))
             ->setStatus(1)
             ->setEmail($username.'@app-assia.org')
             ->setphone1($phone)

@@ -45,6 +45,14 @@ App\Entity\Organization\User:
     createdBy: "@userSuperAdmin"
     updatedBy: "@userSuperAdmin"
 
+  userTest:
+    firstname: Test
+    lastname: Test
+    username: user_test
+    plainPassword: test123
+    email: test@app-assia.org
+    status: 1
+
   user{2..10}:
     firstname: <fr_FR:firstName()>
     lastname: <fr_FR:lastName()>

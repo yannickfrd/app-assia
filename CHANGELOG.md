@@ -1,8 +1,33 @@
+# CHANGELOG
+
+## Version 3.1.9 - 15/10/2021
+- Update documentations and fixtures
+    * Edit README to install app
+    * Update user fixtures
+    * Delete updates.md Create CHANGELOG.md for all updates
+    * Create GLOSSARY.md for glossary and translations
+    * Update composer.json (hautelook/alice-bundle)
+
+## Version 3.1.8 - 14/10/2021
+- Update to demo version (#60)
+    * Edit navbar if app_version != prod
+    * Update Response listener and add toast
+
+## Version 3.1.7 - 13/10/2021
+- Add new person in group to active support/placeGroup (#59)
+    * Add automatically new person in group to active support
+    * New form to select and add 1 person to supportSupport or to placeGroup
+    * Select directly a placeGroup in new support
+    * Fix problem for admin user to edit user if this user have any services
+    * Update functional tests
+
 ## Version 3.1.6 - 06/10/2021
 - Fix bugs, factoring and update fixtures (#57)
     * Fix error if support without device (Fixtures)
     * Fix error ExceptionNotification if Error is not Exception
     * Update DataFixtures
+    * Fix error annotation $service->getSubServices()
+
 ## Version 3.1.5 - 04/10/2021
 - Fix bugs, factoring and resize logo (#57)
     * Fix error full export when supports is null
@@ -18,6 +43,7 @@
     * Fix error to sort places in listPlaces
     * Add img logo and fix size
     * Update Import feature (multi services for user and place)
+
 ## Version 3.1.2-3 - 28/09/2021
 - Factoring Commands (#55)
     * Reorganize folder 'src/Commands' and factoring
@@ -26,6 +52,7 @@
     * php-cs-fixer
     * Delete conditionnality for 'propoHousingDate' field
     * update yarn file
+
 ## Version 3.1.1 - 27/09/2021
 - Feature API-SIAO to import group and evaluation 
 - Create Commands to import users and places
@@ -47,6 +74,7 @@
 - Fix bugs (#49)
     * Fix error typo in items
     * Fix error SupportGroupEvent if referent is null
+
 ## Version 2.30.19-24 - 19/09/2021
 - Fix bugs  (sort rdvs, edit date rdv, change referent, disable user) (#48)
     * Fix problem cache user's support when update support

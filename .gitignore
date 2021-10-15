@@ -1,6 +1,5 @@
 ###> symfony/framework-bundle ###
 .env
-.env.local
 /php.ini.lnk
 /public/bundles/
 /backups/
@@ -46,3 +45,8 @@ yarn-error.log
 /.php_cs
 /.php_cs.cache
 ###< friendsofphp/php-cs-fixer ###
+
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###

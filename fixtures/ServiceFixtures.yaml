@@ -68,6 +68,9 @@ App\Entity\Organization\ServiceUser:
   servUser3:
     service: "@service1"
     user: "@userRoleUser"
+  servUserTest:
+    service: "@service1"
+    user: "@userTest"
 
   servUser{4..10}:
     service: "@service*"
