@@ -59,7 +59,7 @@
 		{% if support.supportPeople %}
 			{% for support_person in support.supportPeople|filter(s => s.status == support.status) %}
 				<a href="{{ path("group_person_show", {"id": people_group.id, "person_id": support_person.person.id, "slug": support_person.person.slug}) }}" 
-					class="btn btn-outline-{{ theme_color }} btn-sm rounded-pill smal mb-2">{{ support_person.person.fullname }}</a>
+					class="btn btn-outline-{{ theme_color }} btn-sm rounded-pill small mb-2">{{ support_person.person.fullname }}</a>
 			{% endfor %}
 		{% endif %}
 	</div>

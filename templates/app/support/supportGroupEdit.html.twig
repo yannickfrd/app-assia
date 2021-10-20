@@ -11,7 +11,7 @@
 	<div class="container">
 
 		{% if support.id %}
-			{% include "app/support/_shared/_navSuppport.html.twig" %}
+			{% include "app/support/_partials/_navSuppport.html.twig" %}
 		{% else %}
 			{% include "app/people/peopleGroup/_navGroup.html.twig" %}
 		{% endif %}
@@ -20,7 +20,7 @@
 		<div id="js-msg-flash-content"></div>
 
 		{% if support.service.coefficient == YES and coefForm is defined and is_granted("ROLE_ADMIN")  %}
-			{% include "app/support/_shared/_coefficientSupport.html.twig" %}
+			{% include "app/support/_partials/_coefficientSupport.html.twig" %}
 		{% endif %}
 
 		{{ form_start(form) }}
@@ -59,7 +59,7 @@
 		{% elseif serviceType == constant("App\\Entity\\Organization\\Service::SERVICE_TYPE_HOTEL") %}
 			{% include "app/support/hotelSupport/_hotelSupportEdit.html.twig" %}
 		{% else %}		
-			{% include "app/support/_shared/_supportRegular.html.twig" %}
+			{% include "app/support/_partials/_supportRegular.html.twig" %}
 		{% endif %}
 
 		<div class="row mb-3">
@@ -100,7 +100,7 @@
 
 		
 		{% if support.id %}
-			{% include "app/support/_shared/_supportPeople.html.twig" %}
+			{% include "app/support/_partials/_supportPeople.html.twig" %}
 		{% endif %}
 
 		{{ form_row(form.cloneSupport) }}
@@ -109,7 +109,7 @@
 		{{ form_end(form, {"render_rest": false}) }}
 
 		{% if support.id %}
-			{% include "app/support/_shared/_addPersonToSupport.html.twig" %}
+			{% include "app/support/_partials/_addPersonToSupport.html.twig" %}
 		{% endif %}
 
 	</div>		

@@ -3,31 +3,40 @@ import MessageFlash from './messageFlash'
 import Loader from './loader'
 
 /**
- * Supprime une ligne d'un tableau et l'objet associé via requête AJAX.
+ * Confirmation d'une action (supprimer, editer, ajouter).
  */
-export default class RemoveTableRow {
+export default class ConfirmAction {
 
-    constructor(selectors = '', btnConfirmId = 'modal-confirm', updatedFieldId = null) {
+    /**
+     * @param {String} selectors 
+     * @param {String} btnConfirmId 
+     * @param {String} updatedFieldId 
+     * @param {Boolean} async 
+     */
+    constructor(selectors = '', btnConfirmId = 'modal-confirm', updatedFieldId = null, async = false) {
         this.loader = new Loader()
         this.ajax = new Ajax(this.loader)
         this.trElts = document.querySelectorAll(selectors)
         this.modalConfirmElt = document.getElementById(btnConfirmId)
         this.updatedField = document.getElementById(updatedFieldId)
+        this.asynch = async
         this.trElt = null
         this.init()
     }
 
     init() {
         this.trElts.forEach(trElt => {
-            const btnElt = trElt.querySelector('button[data-action="remove"]')
-            if (btnElt) {
-                btnElt.addEventListener('click', e => {
-                    e.preventDefault()
-                    this.modalConfirmElt.addEventListener('click', this.sendRequest.bind(this, btnElt, trElt), {
-                        once: true
-                    })
-                })
+            const btnElt = trElt.querySelector('button[data-action]')
+            if (!btnElt) {
+                return
             }
+            
+            btnElt.addEventListener('click', e => {
+                e.preventDefault()
+                this.modalConfirmElt.addEventListener('click', this.sendRequest.bind(this, btnElt, trElt), {
+                    once: true
+                })
+            })
         })
     }
 
@@ -39,7 +48,12 @@ export default class RemoveTableRow {
     sendRequest(btnElt, trElt) {
         this.loader.on()
         this.trElt = trElt
-        this.ajax.send('GET', btnElt.dataset.url, this.response.bind(this)), {
+
+        if (false === this.asynch) {
+            return location.assign(btnElt.dataset.url)
+        }
+        
+        return this.ajax.send('GET', btnElt.dataset.url, this.response.bind(this)), {
             once: true
         }
     }

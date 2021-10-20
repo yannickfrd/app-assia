@@ -2,7 +2,7 @@
 Application d’Accompagnement Social et Solidaire Inter-Associative
 
 ## Version
-3.1.9 15/10/2021
+3.1.11 20/10/2021
 
 ## Creator
 Romain MADELAINE

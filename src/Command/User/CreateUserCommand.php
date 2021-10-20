@@ -2,7 +2,6 @@
 
 namespace App\Command\User;
 
-use App\Command\CommandTrait;
 use App\Entity\Organization\ServiceUser;
 use App\Entity\Organization\User;
 use App\Form\Utils\Choices;
@@ -15,6 +14,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
@@ -23,8 +23,6 @@ use Symfony\Component\String\Slugger\SluggerInterface;
  */
 class CreateUserCommand extends Command
 {
-    use CommandTrait;
-
     protected static $defaultName = 'app:user:create';
 
     protected $manager;
@@ -59,6 +57,8 @@ class CreateUserCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $io = new SymfonyStyle($input, $output);
+
         $helper = $this->getHelper('question');
 
         $lastnameQuestion = new Question("<info>Lastname</info>:\n> ");
@@ -126,7 +126,7 @@ class CreateUserCommand extends Command
         $this->manager->persist($user);
 
         if ($this->userExists($user)) {
-            $this->writeMessage('error', 'This user already exists !');
+            $io->error('This user already exists !');
 
             return Command::FAILURE;
         }
@@ -141,7 +141,7 @@ class CreateUserCommand extends Command
 
         $this->manager->flush();
 
-        $this->writeMessage('success', "The user {$user->getLastname()} {$user->getFirstname()} is create !");
+        $io->success("The user {$user->getLastname()} {$user->getFirstname()} is create !");
 
         $notificationChoices = [
             Choices::YES => 'Yes',
@@ -159,7 +159,7 @@ class CreateUserCommand extends Command
         if (Choices::YES === Choices::getchoices($notificationChoices)[$notification]) {
             $this->userNotification->newUser($user);
 
-            $this->writeMessage('success', "The email notification is sended !\n  ");
+            $io->success('The email notification is sended !');
         }
 
         return Command::SUCCESS;

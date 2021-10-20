@@ -126,7 +126,7 @@ class SupportPerson
     private $initEvalPerson;
 
     /**
-     * @ORM\OneToMany(targetEntity=PlacePerson::class, mappedBy="supportPerson")
+     * @ORM\OneToMany(targetEntity=PlacePerson::class, mappedBy="supportPerson", cascade={"persist", "remove"})
      */
     private $placesPerson;
 

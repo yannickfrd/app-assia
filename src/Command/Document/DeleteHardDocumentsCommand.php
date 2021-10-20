@@ -9,6 +9,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Delete really the soft-deleted documents and associate files.
@@ -19,14 +20,14 @@ class DeleteHardDocumentsCommand extends Command
 
     protected static $defaultName = 'app:document:delete_hard';
 
-    protected $repo;
+    protected $documentRepo;
     protected $manager;
     protected $documentsDirectory;
     protected $output;
 
-    public function __construct(DocumentRepository $repo, EntityManagerInterface $manager, string $documentsDirectory)
+    public function __construct(DocumentRepository $documentRepo, EntityManagerInterface $manager, string $documentsDirectory)
     {
-        $this->repo = $repo;
+        $this->documentRepo = $documentRepo;
         $this->manager = $manager;
         $this->documentsDirectory = $documentsDirectory;
         $this->disableListeners($this->manager);
@@ -35,25 +36,25 @@ class DeleteHardDocumentsCommand extends Command
         parent::__construct();
     }
 
+    protected function configure()
+    {
+        $this
+        ->addArgument('nb_months', InputArgument::OPTIONAL, 'Number of months before today.')
+        ->setHelp('This command delete really the soft-deleted documents and associate files.');
+    }
+
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $io = new SymfonyStyle($input, $output);
+
         $nbMonths = $input->getArgument('nb_months') ?? 12;
         $date = (new \Datetime())->modify("-{$nbMonths} months");
 
-        $this->output = $output;
-        $message = $this->delete($date);
-        $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
-
-        return Command::SUCCESS;
-    }
-
-    protected function delete(\Datetime $date)
-    {
-        $documents = $this->repo->findSoftDeletedDocuments($date);
+        $documents = $this->documentRepo->findSoftDeletedDocuments($date);
         $count = 0;
 
         foreach ($documents as $document) {
-            $nbFiles = $this->repo->count([
+            $nbFiles = $this->documentRepo->count([
                 'peopleGroup' => $document->getSupportGroup()->getPeopleGroup(),
                 'internalFileName' => $document->getInternalFileName(),
             ]);
@@ -63,7 +64,7 @@ class DeleteHardDocumentsCommand extends Command
 
             if (1 === $nbFiles && \file_exists($file)) {
                 \unlink($file);
-                $this->output->writeln($document->getId().' => deleted');
+                $io->info($document->getId().' => deleted');
                 ++$count;
             }
 
@@ -71,13 +72,8 @@ class DeleteHardDocumentsCommand extends Command
         }
         $this->manager->flush();
 
-        return "\n[OK] The documents are deleted ! \n ".$count.' / '.count($documents)."\n";
-    }
+        $io->success("The documents are deleted ! \n ".$count.' / '.count($documents)."\n");
 
-    protected function configure()
-    {
-        $this
-        ->addArgument('nb_months', InputArgument::OPTIONAL, 'Number of months before today.')
-        ->setHelp('This command delete really the soft-deleted documents and associate files.');
+        return Command::SUCCESS;
     }
 }

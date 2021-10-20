@@ -7,7 +7,9 @@ use App\Service\Indicators\IndicatorsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Commande pour créer les indicateurs généraux.
@@ -15,6 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class CreateIndicatorsCommand extends Command
 {
     protected static $defaultName = 'app:indicator:create-all';
+    protected static $defaultDescription = 'Create all daily indicators.';
 
     protected $manager;
     protected $indicatorRepo;
@@ -29,20 +32,20 @@ class CreateIndicatorsCommand extends Command
         parent::__construct();
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    protected function configure()
     {
-        $message = $this->createAllIndicators();
-        $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
-
-        return Command::SUCCESS;
+        $this
+            ->setDescription(self::$defaultDescription)
+            ->addOption('start', 's', InputOption::VALUE_OPTIONAL, 'Query limit')
+        ;
     }
 
-    /**
-     * Mettre à jour les indicateurs.
-     */
-    protected function createAllIndicators()
+    public function execute(InputInterface $input, OutputInterface $output)
     {
-        $startDate = (new \DateTime('2020-02-25'));
+        $io = new SymfonyStyle($input, $output);
+        $start = $input->getOption('start');
+
+        $startDate = $start ? new \DateTime($start) : (new \DateTime())->modify('-3 month');
 
         $diff = $startDate->diff(new \DateTime())->days;
 
@@ -50,7 +53,7 @@ class CreateIndicatorsCommand extends Command
         $count = 0;
 
         for ($i = 0; $i < $diff; ++$i) {
-            file_put_contents('php://stdout', "\e[36m".$date->format('Y-m-d')."\e[0m \n");
+            $io->text($date->format('Y-m-d'));
             $indicator = $this->indicators->createIndicator($date);
             if (!$this->repoIndicator->findOneBy(['date' => $date])) {
                 $this->manager->persist($indicator);
@@ -60,6 +63,8 @@ class CreateIndicatorsCommand extends Command
         }
         $this->manager->flush();
 
-        return "[OK] The indicators are create !\n  ".$count;
+        $io->success("The indicators are create !\n  ".$count);
+
+        return Command::SUCCESS;
     }
 }

@@ -40,6 +40,7 @@ Encore
     .addEntry('occupancy', './assets/js/app/occupancy.js')
     .addEntry('person', './assets/js/person/person.js')
     .addEntry('place', './assets/js/place/place.js')
+    .addEntry('placeGroup', './assets/js/place/placeGroup.js')
     .addEntry('rdvs', './assets/js/rdv/rdvsIndex.js')
     .addEntry('referent', './assets/js/referent/referent.js')
     .addEntry('search', './assets/js/search.js')

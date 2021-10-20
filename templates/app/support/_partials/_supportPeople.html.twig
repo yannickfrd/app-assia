@@ -8,7 +8,8 @@
 				<table id="table-support-people" class="table table-sm table-striped table-hover text-dark shadow-sm">
 					<thead>
 						<tr>
-							<th scope="col" class="align-middle text-center th-w-20" data-toggle="tooltip" data-placement="bottom" title="Demandeur/euse principal·e">DP</th>									
+							<th scope="col" class="align-middle text-center th-w-20" data-toggle="tooltip" 
+								data-placement="bottom" title="Demandeur/euse principal·e">DP</th>									
 							<th scope="col" class="align-middle th-w-140">Nom et prénom</th>
 							<th scope="col" class="align-middle th-w-140">Rôle</th>
 							<th scope="col" class="align-middle th-date">Date de début</th>
@@ -21,8 +22,9 @@
 
 					<tbody>
 						{% for form_support_pers in form.supportPeople.children %}
+							{% set supportId = form_support_pers.vars.value.id %}
 							{% set person = form_support_pers.vars.data.person %}
-							<tr class="js-tr-support_pers">
+							<tr data-support-person="{{ supportId }}">
 								<td class="px-1 align-middle">
 									<div class="custom-control custom-radio custom-radio-{{ theme_color }} pl-3">
 										{{ form_widget(form_support_pers.head) }}
@@ -35,11 +37,14 @@
 								<td class="px-1">{{ form_widget(form_support_pers.endStatus) }}</td>
 								<td class="px-1">{{ form_widget(form_support_pers.endStatusComment) }}</td>
 								<th scope="row" class="px-1 align-middle">
-									<button class="btn btn-danger btn-sm shadow" data-action="remove" data-url="{{ path('remove_support_pers', 
-										{'id': support.id, 'support_pers_id': form_support_pers.vars.value.id, '_token': csrf_token('remove' ~ form_support_pers.vars.value.id)}) }}" 
-										data-toggle="modal" data-target="#modal-block" data-toggle="tooltip" data-placement="bottom" title="Retirer la personne du suivi">
-										<span class="fas fa-user-times"></span>
-									</button>
+									{% if false == form_support_pers.vars.value.head %}
+										<button class="btn btn-danger btn-sm shadow" data-action="remove" data-url="{{ path('remove_support_pers', 
+											{'id': support.id, 'support_pers_id': supportId, '_token': csrf_token('remove' ~ form_support_pers.vars.value.id)}) }}" 
+											data-toggle="modal" data-target="#modal-block" data-toggle="tooltip" data-placement="bottom" 
+											title="Supprimer la personne du suivi">
+											<span class="fas fa-user-times"></span>
+										</button>
+									{% endif %}
 								</th>
 							</tr>
 						{% endfor %}
@@ -58,4 +63,4 @@
 	</div>
 </section>
 
-{% include "app/support/_shared/_removeSupportPerson.html.twig" %}
+{% include "app/support/_partials/_removeSupportPerson.html.twig" %}

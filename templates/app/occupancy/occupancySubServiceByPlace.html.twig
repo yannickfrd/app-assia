@@ -68,7 +68,8 @@
                         </tbody>
                         <tfoot>
                             <tr class="font-weight-bold">
-                                <td scope="row" colspan="4" class="align-middle text-center py-2">Total</td>
+                                <td class="align-middle text-center" scope="row">Total</td>
+                                <td class="align-middle py-2" colspan="3">{{ datas.places|length }}</td>
                                 <td class="align-middle text-right">{{ datas.sumPlaces|number }}</td>
                                 <td class="align-middle text-right">{{ datas.capacityDays|number }}</td>
                                 <td class="align-middle text-right">{{ datas.occupancyDays|number }}</td>

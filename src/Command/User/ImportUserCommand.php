@@ -2,7 +2,6 @@
 
 namespace App\Command\User;
 
-use App\Command\CommandTrait;
 use App\Repository\Organization\ServiceRepository;
 use App\Service\Import\ImportUserDatas;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -11,14 +10,13 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Commande pour importer des utilisateurs.
  */
 class ImportUserCommand extends Command
 {
-    use CommandTrait;
-
     protected static $defaultName = 'app:user:import';
 
     protected $manager;
@@ -44,6 +42,8 @@ class ImportUserCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $io = new SymfonyStyle($input, $output);
+
         $helper = $this->getHelper('question');
 
         $serviceChoices = [];
@@ -69,7 +69,7 @@ class ImportUserCommand extends Command
             $services
         );
 
-        $this->writeMessage('success', count($users).' users are imported !');
+        $io->success(count($users).' users are imported !');
 
         return Command::SUCCESS;
     }

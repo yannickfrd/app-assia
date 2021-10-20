@@ -1,5 +1,20 @@
 # CHANGELOG
 
+## Version 3.1.11 - 20/10/2021
+- Update system to remove person, supportPerson and placePerson + factoring commands + fix bugs
+    * Fix invalid phone and email format in import people from SI-SIAO
+    * Fix visibility devices disabled in service form
+    * Fix visibility places disabled
+    * Fix problem number places in Service page
+    * Update and factoring commands
+    * Update var env 'SISIAO_URL'
+    * Update feature to backup database
+    * Add totals in footer in occupancy pages
+    * Edit system to delete person of peopleGroup
+    * Edit system to delete supportPerson of supportGroup
+    * Edit system to delete placePerson of placeGroup
+    * Update functionnals tests
+
 ## Version 3.1.9-10 - 15/10/2021
 - Update documentations and fixtures
     * Edit README to install app

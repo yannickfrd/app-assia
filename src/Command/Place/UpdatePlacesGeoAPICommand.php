@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Commande pour mettre à jour l'adresse des groupes de places via l'API adresse.data.gouv.fr (TEMPORAIRE, A SUPPRIMER).
@@ -32,17 +33,8 @@ class UpdatePlacesGeoAPICommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $message = $this->updateLocationPlaces();
-        $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
+        $io = new SymfonyStyle($input, $output);
 
-        return Command::SUCCESS;
-    }
-
-    /**
-     * Met à jour les adresses des groupes de places.
-     */
-    protected function updateLocationPlaces()
-    {
         $count = 0;
         $places = $this->repo->findAll();
         foreach ($places as $place) {
@@ -71,7 +63,9 @@ class UpdatePlacesGeoAPICommand extends Command
             }
         }
 
-        return "[OK] The address of places are update ! \n ".$count.' / '.count($places);
+        $io->success("The address of places are update ! \n ".$count.' / '.count($places));
+
+        return Command::SUCCESS;
     }
 
     protected function cleanString(string $string)

@@ -43,7 +43,7 @@ class PlaceGroupController extends AbstractController
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
-        return $this->render('app/organization/place/supportPlacesGroup.html.twig', [
+        return $this->render('app/placeGroup/supportPlacesGroup.html.twig', [
             'support' => $supportGroup,
         ]);
     }
@@ -86,7 +86,7 @@ class PlaceGroupController extends AbstractController
             $this->addFlash('danger', "Une erreur s'est produite");
         }
 
-        return $this->render('app/organization/place/placeGroup.html.twig', [
+        return $this->render('app/placeGroup/placeGroup.html.twig', [
             'support' => $supportGroup,
             'form' => $form->createView(),
         ]);
@@ -122,7 +122,7 @@ class PlaceGroupController extends AbstractController
             'attr' => ['placeGroup' => $placeGroup],
         ]);
 
-        return $this->render('app/organization/place/placeGroup.html.twig', [
+        return $this->render('app/placeGroup/placeGroup.html.twig', [
             'support' => $supportGroup,
             'form' => $form->createView(),
             'addPersonForm' => $addPersonForm->createView(),

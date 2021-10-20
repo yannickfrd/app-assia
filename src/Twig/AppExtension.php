@@ -15,6 +15,7 @@ class AppExtension extends AbstractExtension
             new TwigFilter('percent', [$this, 'formatPercentage']),
             new TwigFilter('amount', [$this, 'formatAmount']),
             new TwigFilter('round', [$this, 'roundNumber']),
+            new TwigFilter('cumulate', [$this, 'cumulate']),
         ];
     }
 
@@ -56,6 +57,29 @@ class AppExtension extends AbstractExtension
         }
 
         return number_format($value, $decimals, ',', ' ');
+    }
+
+    /**
+     * Filter to cumulate the value of method from objects collection.
+     *
+     * @param object[] $array
+     */
+    public function cumulate(?array $array, string $methodName): ?float
+    {
+        if (!$array) {
+            return null;
+        }
+
+        $sum = 0;
+
+        foreach ($array as $object) {
+            $getMethod = 'get'.$methodName;
+            if (method_exists($object, $getMethod)) {
+                $sum += $object->$getMethod();
+            }
+        }
+
+        return $sum;
     }
 
     public function ratio(int $value1, int $value2): ?float

@@ -20,7 +20,8 @@ class ServiceDeviceType extends AbstractType
                 'choice_label' => 'name',
                 'query_builder' => function (DeviceRepository $repo) {
                     return $repo->createQueryBuilder('d')
-                        ->select('PARTIAL d.{id, name}')
+                        ->select('PARTIAL d.{id, name, disabledAt}')
+                        ->where('d.disabledAt IS NULL')
                         ->orderBy('d.name', 'ASC');
                 },
                 'placeholder' => 'placeholder.select',

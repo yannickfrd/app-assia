@@ -7,7 +7,9 @@ use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Commande pour mettre à jour l'adresse des suivis via l'API adresse.data.gouv.fr (TEMPORAIRE, A SUPPRIMER).
@@ -17,34 +19,36 @@ class UpdateSupportsGeoAPICommand extends Command
     use DoctrineTrait;
 
     protected static $defaultName = 'app:support:update_geo_api';
+    protected static $defaultDescription = 'Update location in supports with API adresse.data.gouv.fr';
 
-    protected $repo;
+    protected $supportGroupRepo;
     protected $manager;
 
-    public function __construct(SupportGroupRepository $repo, EntityManagerInterface $manager)
+    public function __construct(SupportGroupRepository $supportGroupRepo, EntityManagerInterface $manager)
     {
-        $this->repo = $repo;
+        $this->supportGroupRepo = $supportGroupRepo;
         $this->manager = $manager;
         $this->disableListeners($this->manager);
 
         parent::__construct();
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    protected function configure()
     {
-        $message = $this->updateLocationSupports();
-        $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
-
-        return Command::SUCCESS;
+        $this
+            ->setDescription(self::$defaultDescription)
+            ->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Query limit', 1000)
+        ;
     }
 
-    /**
-     * Met à jour les adresses des suivis.
-     */
-    protected function updateLocationSupports()
+    public function execute(InputInterface $input, OutputInterface $output)
     {
+        $io = new SymfonyStyle($input, $output);
+        $limit = $input->getOption('limit');
+
+        $supports = $this->supportGroupRepo->findBy([], ['updatedAt' => 'DESC'], $limit);
         $count = 0;
-        $supports = $this->repo->findAll();
+
         foreach ($supports as $support) {
             if (null === $support->getLocationId() && $count < 10) {
                 $valueSearch = $support->getAddress().'+'.$support->getCity();
@@ -71,7 +75,9 @@ class UpdateSupportsGeoAPICommand extends Command
             }
         }
 
-        return "[OK] The address of supports are update ! \n ".$count.' / '.count($supports);
+        $io->success("The address of supports are update ! \n ".$count.' / '.count($supports));
+
+        return Command::SUCCESS;
     }
 
     protected function cleanString(string $string)

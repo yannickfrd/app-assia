@@ -29,9 +29,9 @@ class DatabaseBackup
     private $size;
 
     /**
-     * @ORM\Column(type="float", nullable=true)
+     * @ORM\Column(type="string", length=255)
      */
-    private $zipSize;
+    private $path;
 
     /**
      * @Gedmo\Timestampable(on="create")
@@ -75,14 +75,14 @@ class DatabaseBackup
         return $this;
     }
 
-    public function getZipSize(): ?float
+    public function getPath(): ?string
     {
-        return $this->zipSize;
+        return $this->path;
     }
 
-    public function setZipSize(?float $zipSize): self
+    public function setPath(string $path): self
     {
-        $this->zipSize = $zipSize;
+        $this->path = $path;
 
         return $this;
     }

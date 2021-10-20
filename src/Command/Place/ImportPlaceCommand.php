@@ -11,6 +11,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Commande pour importer des groupes de places.
@@ -44,6 +45,8 @@ class ImportPlaceCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $io = new SymfonyStyle($input, $output);
+
         $helper = $this->getHelper('question');
 
         $serviceChoices = [];
@@ -69,8 +72,7 @@ class ImportPlaceCommand extends Command
             $services
         );
 
-        $message = '[OK] '.count($places)." places are imported !\n  ";
-        $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
+        $io->success(count($places).' places are imported !');
 
         return Command::SUCCESS;
     }

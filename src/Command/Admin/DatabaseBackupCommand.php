@@ -2,51 +2,55 @@
 
 namespace App\Command\Admin;
 
-use App\Command\CommandTrait;
-use App\Service\DumpDatabase;
+use App\Service\DatabaseDumper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Commande pour créer une sauvegarde de la base de données.
  */
 class DatabaseBackupCommand extends Command
 {
-    use CommandTrait;
-
     protected static $defaultName = 'app:database:backup';
+    protected static $defaultDescription = 'Create a dump of database.';
 
-    protected $dumpDatabase;
+    protected $databaseDumper;
 
-    public function __construct(DumpDatabase $dumpDatabase)
+    public function __construct(DatabaseDumper $databaseDumper)
     {
-        $this->dumpDatabase = $dumpDatabase;
+        $this->databaseDumper = $databaseDumper;
 
         parent::__construct();
     }
 
     protected function configure()
     {
-        // $this->setName('app:database:backup');
-        $this->setAliases(['app:db:b']);
-        $this->setDescription('Create a backup of database.');
+        $this
+            ->setDescription('Create a backup of database.')
+            ->addOption('path', 'p', InputOption::VALUE_OPTIONAL, 'Path to save backup of database.', null)
+            ->addOption('zipped', 'z', InputOption::VALUE_OPTIONAL, 'Gzip compression option', 'yes')
+        ;
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $path = 'backups/app-assia/'.date('Y/m/');
+        $io = new SymfonyStyle($input, $output);
+        $path = $input->getOption('path');
+        $zipped = in_array($input->getOption('zipped'), ['no', 'n']) ? false : true;
 
-        $dump = $this->dumpDatabase->dump($path);
+        $dump = $this->databaseDumper->dump($path, $zipped);
 
-        if (0 === $dump['return']) {
-            $this->writeMessage('success', 'Backup of database is successful !');
+        if (0 != $dump['resultCode']) {
+            $io->error('Backup of database is failed !');
 
-            return Command::SUCCESS;
+            return Command::FAILURE;
         }
 
-        $this->writeMessage('error', 'Backup of database is failed !');
+        $io->success('Backup of database is successful !');
 
-        return Command::FAILURE;
+        return Command::SUCCESS;
     }
 }

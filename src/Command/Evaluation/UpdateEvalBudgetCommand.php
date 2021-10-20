@@ -10,7 +10,9 @@ use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Corrige les incorrences dans la situation budgétaire de l'évaluation.
@@ -20,31 +22,35 @@ class UpdateEvalBudgetCommand extends Command
     use DoctrineTrait;
 
     protected static $defaultName = 'app:evaluation:evalBudget:update';
+    protected static $defaultDescription = 'Fix invalid datas in evaluation budget.';
 
-    protected $repo;
+    protected $evaluationGroupRepo;
     protected $manager;
     protected int $count = 0;
 
-    public function __construct(EvaluationGroupRepository $repo, EntityManagerInterface $manager)
+    public function __construct(EvaluationGroupRepository $evaluationGroupRepo, EntityManagerInterface $manager)
     {
-        $this->repo = $repo;
+        $this->evaluationGroupRepo = $evaluationGroupRepo;
         $this->manager = $manager;
         $this->disableListeners($this->manager);
 
         parent::__construct();
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    protected function configure()
     {
-        $message = $this->updateEvaluations();
-        $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
-
-        return Command::SUCCESS;
+        $this
+            ->setDescription(self::$defaultDescription)
+            ->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Query limit', 1000)
+        ;
     }
 
-    protected function updateEvaluations()
+    public function execute(InputInterface $input, OutputInterface $output)
     {
-        $evaluations = $this->repo->findBy([], ['updatedAt' => 'DESC'], 1000);
+        $io = new SymfonyStyle($input, $output);
+        $limit = $input->getOption('limit');
+
+        $evaluations = $this->evaluationGroupRepo->findBy([], ['updatedAt' => 'DESC'], $limit);
 
         foreach ($evaluations as $evaluation) {
             $resourcesGroupAmt = 0;
@@ -69,7 +75,9 @@ class UpdateEvalBudgetCommand extends Command
         }
         $this->manager->flush();
 
-        return "[OK] The evaluation budget are update ! \n ".$this->count.' / '.count($evaluations);
+        $io->success("The evaluation budget are update !\n ".$this->count.' / '.count($evaluations));
+
+        return Command::SUCCESS;
     }
 
     /**

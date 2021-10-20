@@ -2,7 +2,6 @@
 
 namespace App\Command\Service;
 
-use App\Command\CommandTrait;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\ServiceDevice;
 use App\Repository\Organization\DeviceRepository;
@@ -13,14 +12,13 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Commande pour créer un nouveau service.
  */
 class CreateServiceCommand extends Command
 {
-    use CommandTrait;
-
     protected static $defaultName = 'app:service:create';
 
     protected $manager;
@@ -46,6 +44,8 @@ class CreateServiceCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $io = new SymfonyStyle($input, $output);
+
         $helper = $this->getHelper('question');
 
         $nameQuestion = new Question("<info>Name</info>:\n> ");
@@ -101,7 +101,7 @@ class CreateServiceCommand extends Command
 
         $this->manager->flush();
 
-        $this->writeMessage('success', "The service {$service->getName()} is create !");
+        $io->success("The service {$service->getName()} is create !");
 
         return Command::SUCCESS;
     }

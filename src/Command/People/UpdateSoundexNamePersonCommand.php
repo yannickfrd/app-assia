@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Commande pour mettre à jour le nom Soundex des personnes.
@@ -20,13 +21,13 @@ class UpdateSoundexNamePersonCommand extends Command
     protected static $defaultName = 'app:person:update_soundex_name';
 
     protected $manager;
-    protected $repo;
+    protected $personRepo;
     protected $soundexFr;
 
-    public function __construct(EntityManagerInterface $manager, PersonRepository $repo, SoundexFr $soundexFr)
+    public function __construct(EntityManagerInterface $manager, PersonRepository $personRepo, SoundexFr $soundexFr)
     {
         $this->manager = $manager;
-        $this->repo = $repo;
+        $this->personRepo = $personRepo;
         $this->soundexFr = $soundexFr;
         $this->disableListeners($this->manager);
 
@@ -35,16 +36,10 @@ class UpdateSoundexNamePersonCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $message = $this->updateSoundexNames();
-        $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
+        $io = new SymfonyStyle($input, $output);
 
-        return Command::SUCCESS;
-    }
-
-    protected function updateSoundexNames()
-    {
         $count = 0;
-        $people = $this->repo->findAll();
+        $people = $this->personRepo->findAll();
 
         foreach ($people as $person) {
             $person->setSoundexFirstname($this->soundexFr->get2($person->getFirstname()));
@@ -54,6 +49,8 @@ class UpdateSoundexNamePersonCommand extends Command
 
         $this->manager->flush();
 
-        return "[OK] The soundex names of people are update !\n  ".$count.' / '.count($people);
+        $io->success("The soundex names of people are update !\n  ".$count.' / '.count($people));
+
+        return Command::SUCCESS;
     }
 }

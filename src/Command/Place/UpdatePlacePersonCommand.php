@@ -7,7 +7,9 @@ use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Commande pour mettre à jour les prises en charges individuelles.
@@ -17,13 +19,14 @@ class UpdatePlacePersonCommand extends Command
     use DoctrineTrait;
 
     protected static $defaultName = 'app:placePerson:update_supportPerson';
+    protected static $defaultDescription = 'Update the supportPerson item in the AccommpdationPerson entities.';
 
-    protected $repo;
+    protected $placeGroupRepo;
     protected $manager;
 
-    public function __construct(EntityManagerInterface $manager, PlaceGroupRepository $repo)
+    public function __construct(PlaceGroupRepository $placeGroupRepo, EntityManagerInterface $manager)
     {
-        $this->repo = $repo;
+        $this->placeGroupRepo = $placeGroupRepo;
         $this->manager = $manager;
         $this->disableListeners($this->manager);
 
@@ -32,15 +35,21 @@ class UpdatePlacePersonCommand extends Command
 
     protected function configure()
     {
-        $this->setDescription('Update the supportPerson item in the AccommpdationPerson entities.');
+        $this
+            ->setDescription(self::$defaultDescription)
+            ->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Query limit', 1000)
+        ;
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $io = new SymfonyStyle($input, $output);
+        $limit = $input->getOption('limit');
+
         $nbPlacePeople = 0;
         $countUpdate = 0;
 
-        $placeGroups = $this->repo->findBy([], ['updatedAt' => 'DESC'], 1000);
+        $placeGroups = $this->placeGroupRepo->findBy([], ['updatedAt' => 'DESC'], $limit);
 
         foreach ($placeGroups as $placeGroup) {
             $supportGroup = $placeGroup->getSupportGroup();
@@ -57,8 +66,7 @@ class UpdatePlacePersonCommand extends Command
         }
         $this->manager->flush();
 
-        $message = "[OK] Update PlacePerson entities is successfull !\n  ".$countUpdate.' / '.$nbPlacePeople;
-        $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
+        $io->success("Update PlacePerson entities is successfull !\n  ".$countUpdate.' / '.$nbPlacePeople);
 
         return Command::SUCCESS;
     }

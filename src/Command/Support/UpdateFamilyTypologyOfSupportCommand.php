@@ -8,7 +8,10 @@ use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * Commande pour mettre à jour le nombre de personnes par suivi (TEMPORAIRE, A SUPPRIMER).
@@ -18,30 +21,38 @@ class UpdateFamilyTypologyOfSupportCommand extends Command
     use DoctrineTrait;
 
     protected static $defaultName = 'app:support:update_family_typology';
+    protected static $defaultDescription = 'Update family typology and number of people in support';
 
-    protected $repo;
+    protected $supportGroupRepo;
     protected $manager;
+    protected $stopwatch;
 
-    public function __construct(SupportGroupRepository $repo, EntityManagerInterface $manager)
+    public function __construct(SupportGroupRepository $supportGroupRepo, EntityManagerInterface $manager, Stopwatch $stopwatch)
     {
-        $this->repo = $repo;
+        $this->supportGroupRepo = $supportGroupRepo;
         $this->manager = $manager;
+        $this->stopwatch = $stopwatch;
         $this->disableListeners($this->manager);
 
         parent::__construct();
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    protected function configure()
     {
-        $message = $this->update();
-        $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
-
-        return Command::SUCCESS;
+        $this
+            ->setDescription(self::$defaultDescription)
+            ->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Query limit', 1000)
+        ;
     }
 
-    protected function update()
+    public function execute(InputInterface $input, OutputInterface $output)
     {
-        $supports = $this->repo->findBy([], ['updatedAt' => 'DESC']);
+        $io = new SymfonyStyle($input, $output);
+        $limit = $input->getOption('limit');
+
+        $this->stopwatch->start('command');
+
+        $supports = $this->supportGroupRepo->findBy([], ['updatedAt' => 'DESC'], $limit);
         $count = 0;
 
         foreach ($supports as $supportGroup) {
@@ -51,7 +62,8 @@ class UpdateFamilyTypologyOfSupportCommand extends Command
             foreach ($supportGroup->getSupportPeople() as $supportPerson) {
                 $person = $supportPerson->getPerson();
 
-                if (null === $supportGroup->getEndDate() && null === $supportPerson->getEndDate()) {
+                if ($supportGroup->getEndDate()
+                    || (null === $supportGroup->getEndDate() && null === $supportPerson->getEndDate())) {
                     ++$nbSupportPeople;
                 }
                 if (in_array($peopleGroup->getFamilyTypology(), [1, 2]) && 1 === $supportGroup->getNbPeople()
@@ -77,6 +89,10 @@ class UpdateFamilyTypologyOfSupportCommand extends Command
 
         $this->manager->flush();
 
-        return "[OK] The typology family of supports is update !\n  ".$count.' / '.count($supports);
+        $io->success('The typology family of supports are update !'
+            ."\n  ".$count.' / '.count($supports)
+            ."\n  ".number_format($this->stopwatch->start('command')->getDuration(), 0, ',', ' ').' ms');
+
+        return Command::SUCCESS;
     }
 }

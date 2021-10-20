@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
@@ -19,6 +20,7 @@ class ChangeNamePeopleCommand extends Command
     use DoctrineTrait;
 
     protected static $defaultName = 'app:person:change_name';
+    protected static $defaultDescription = 'Change the name of people in development environnement.';
 
     protected $manager;
     protected $userRepo;
@@ -26,10 +28,14 @@ class ChangeNamePeopleCommand extends Command
     protected $faker;
     protected $stopwatch;
 
-    public function __construct(EntityManagerInterface $manager, UserRepository $userRepo, PeopleGroupRepository $peopleGroupRepo, Stopwatch $stopwatch)
-    {
+    public function __construct(
+        EntityManagerInterface $manager,
+        UserRepository $userRepo,
+        PeopleGroupRepository $peopleGroupRepo,
+        Stopwatch $stopwatch
+    ) {
         $this->manager = $manager;
-        $this->UserRepo = $userRepo;
+        $this->userRepo = $userRepo;
         $this->peopleGroupRepo = $peopleGroupRepo;
         $this->faker = \Faker\Factory::create('fr_FR');
         $this->stopwatch = $stopwatch;
@@ -40,20 +46,22 @@ class ChangeNamePeopleCommand extends Command
 
     protected function configure()
     {
-        $this->setDescription('change the name of people in development environnement.');
+        $this->setDescription(self::$defaultDescription);
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $io = new SymfonyStyle($input, $output);
+
         if ('dev' != $_SERVER['APP_ENV'] || 'localhost' != $_SERVER['DB_HOST']) {
-            $output->writeln("\e[97m\e[41m\n Environnement invalid \e[0m\n");
+            $io->error('Environnement invalid');
 
             return Command::FAILURE;
         }
 
-        $this->stopwatch->start('change_name');
+        $this->stopwatch->start('command');
 
-        foreach ($this->UserRepo->findBy(['disabledAt' => null]) as $user) {
+        foreach ($this->userRepo->findBy(['disabledAt' => null]) as $user) {
             $user->setLastname($this->faker->lastName)
                 ->setFirstname($this->faker->firstName());
         }
@@ -74,10 +82,11 @@ class ChangeNamePeopleCommand extends Command
 
         $this->manager->flush();
 
-        $this->stopwatch->stop('change_name');
+        $this->stopwatch->stop('command');
 
-        $message = "[OK] Change name of people is successfull !\n  ".$nbPeople." people modified.\n  ".$this->stopwatch->getEvent('change_name')->getDuration().' ms';
-        $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
+        $io->success('Change name of people is successfull !'
+            ."\n  ".$nbPeople.' people modified.'
+            ."\n  ".number_format($this->stopwatch->start('command')->getDuration(), 0, ',', ' ').' ms');
 
         return Command::SUCCESS;
     }

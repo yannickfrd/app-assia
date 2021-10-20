@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Commande pour créer les indicateurs de la veille.
@@ -31,26 +32,23 @@ class CreateDailyIndicatorsCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $message = $this->createDailyIndicators((new \DateTime('today'))->modify('-1 day'));
-        $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
+        $io = new SymfonyStyle($input, $output);
 
-        return Command::SUCCESS;
-    }
+        $date = (new \DateTime('today'))->modify('-1 day');
 
-    /**
-     * Mettre à jour les indicateurs.
-     */
-    protected function createDailyIndicators(\DateTime $date)
-    {
         $indicator = $this->indicators->createIndicator($date);
 
-        if (!$this->repoIndicator->findOneBy(['date' => $date])) {
-            $this->manager->persist($indicator);
-            $this->manager->flush();
+        if ($this->repoIndicator->findOneBy(['date' => $date])) {
+            $io->error('The daily indicators exists already !');
 
-            return '[OK] The daily indicators are create !';
+            return Command::FAILURE;
         }
 
-        return '[FAILED] The daily indicators exists already !';
+        $this->manager->persist($indicator);
+        $this->manager->flush();
+
+        $io->success('The daily indicators are create !');
+
+        return Command::SUCCESS;
     }
 }

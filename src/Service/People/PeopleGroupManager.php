@@ -113,17 +113,14 @@ class PeopleGroupManager
     /**
      * Remove the person from a group.
      */
-    public function removePerson(RolePerson $rolePerson): array
+    public function removePerson(RolePerson $rolePerson): void
     {
         $person = $rolePerson->getPerson();
         $peopleGroup = $rolePerson->getPeopleGroup();
         $nbPeople = count($peopleGroup->getRolePeople());
 
         if ($rolePerson->getHead()) {
-            return [
-                'alert' => 'danger',
-                'msg' => 'Le demandeur principal ne peut pas être retiré du groupe.',
-            ];
+            $this->flashbag->add('danger', 'Le demandeur principal ne peut pas être retiré du groupe.');
         }
 
         $peopleGroup->removeRolePerson($rolePerson);
@@ -131,12 +128,7 @@ class PeopleGroupManager
 
         $this->manager->flush();
 
-        return [
-            'action' => 'delete',
-            'alert' => 'warning',
-            'msg' => $person->getFullname().' est retiré'.Grammar::gender($person->getGender()).' du groupe.',
-            'data' => $nbPeople - 1,
-        ];
+        $this->flashbag->add('warning', $person->getFullname().' est retiré'.Grammar::gender($person->getGender()).' du groupe.');
     }
 
     /**

@@ -89,13 +89,12 @@ services:
             $appVersion: "%env(APP_VERSION)%"
             $appEnv: "%app_env%"
 
-    App\Service\DumpDatabase:
+    App\Service\DatabaseDumper:
         arguments:
             $databaseName: "%env(DB_DATABASE_NAME)%"
             $userName: "%env(DB_USERNAME)%"
             $password: "%env(DB_PASSWORD)%"
             $host: "%env(DB_HOST)%"
-            $pathMySqlDump: "%env(PATH_MYSQLDUMP)%"
 
     App\Service\File\FileUploader:
         arguments:

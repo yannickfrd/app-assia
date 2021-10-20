@@ -121,15 +121,13 @@ class PeopleGroupControllerTest extends WebTestCase
         $this->client->request('GET', "/role_person/$id/remove/token");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $content = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertSame('danger', $content['alert']);
+        $this->assertSelectorExists('.alert.alert-danger');
 
         // Success
         $this->client->request('GET', $url);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $content = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertSame('delete', $content['action']);
+        $this->assertSelectorTextContains('.alert.alert-warning', 'est retiré');
     }
 
     protected function tearDown(): void

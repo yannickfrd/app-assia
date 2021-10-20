@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Réorganise le classement des documents dans le dossier d'upload (TEMPORAIRE A SUPPRIMER).
@@ -33,15 +34,8 @@ class ReorganizeUploadFolderCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->output = $output;
-        $message = $this->update();
-        $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
+        $io = new SymfonyStyle($input, $output);
 
-        return Command::SUCCESS;
-    }
-
-    protected function update()
-    {
         $documents = $this->repo->findAll();
         $count = 0;
 
@@ -57,12 +51,14 @@ class ReorganizeUploadFolderCommand extends Command
                 if (copy($file, $newFile)) {
                     unlink($file);
                     ++$count;
-                    $this->output->writeln($document->getId().' => OK');
+                    $io->info($document->getId().' => OK');
                 }
             }
         }
         $this->manager->flush();
 
-        return "\n[OK] The document paths are update ! \n ".$count.' / '.count($documents)."\n";
+        $io->success("The document paths are update ! \n ".$count.' / '.count($documents)."\n");
+
+        return Command::SUCCESS;
     }
 }

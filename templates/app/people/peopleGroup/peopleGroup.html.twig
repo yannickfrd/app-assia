@@ -81,12 +81,14 @@
                                         <td class="px-1 align-middle">{{ form_widget(form_person.role) }}
                                             {{ form_errors(form_person.role) }}</td>
                                         <td class="px-1 align-middle">
-                                            <button class="btn btn-danger shadow" data-action="remove"
-                                                data-url="{{ path('role_person_remove', {'id': form_person.vars.value.id, 
-                                                    '_token': csrf_token('remove' ~ form_person.vars.value.id)}) }}"
-                                                data-toggle="modal" data-target="#modal-remove-person"
-                                                title="Retirer la personne du groupe"><span class="fas fa-user-times"></span>
-                                            </button>
+                                            {% if false == form_person.vars.value.head %}
+                                                <button class="btn btn-danger shadow" data-action="remove"
+                                                    data-url="{{ path('role_person_remove', {'id': form_person.vars.value.id, 
+                                                        '_token': csrf_token('remove' ~ form_person.vars.value.id)}) }}"
+                                                    data-toggle="modal" data-target="#modal-remove-person"
+                                                    title="Retirer la personne du groupe"><span class="fas fa-user-times"></span>
+                                                </button>
+                                            {% endif %}
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -139,13 +141,13 @@
         {{ form_row(form._token) }}
         {{ form_end(form, {"render_rest": false}) }}
         <hr>
-        {% include "app/support/_shared/_historySupports.html.twig" %}
+        {% include "app/support/_partials/_historySupports.html.twig" %}
         <hr>
         {% include "app/organization/referent/_historyReferents.html.twig" %}
     </div>
 
     {% include "app/people/peopleGroup/_removePerson.html.twig" %}
-    {% include "app/support/_shared/_modalNewSupport.html.twig" %}
+    {% include "app/support/_partials/_modalNewSupport.html.twig" %}
 
     {% if siSiaoLoginForm is defined %}
         {% include "app/admin/siSiao/_siSiaoLoginModal.html.twig" with {"modal_id": "modal-si-siao-login"} %}

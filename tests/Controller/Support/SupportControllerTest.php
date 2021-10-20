@@ -299,23 +299,7 @@ class SupportControllerTest extends WebTestCase
         $this->client->request('GET', "/supportGroup/$id/remove-$supportPersId/tokenId");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $content = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertSame('danger', $content['alert']);
-    }
-
-    public function testRemoveHeaderSupportPersonIsFailed()
-    {
-        $this->createLogin($this->data['userRoleUser']);
-
-        $id = $this->data['supportGroup1']->getId();
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', "/support/$id/edit");
-        $url = $crawler->filter('button[data-action="remove"]')->first()->attr('data-url');
-        $this->client->request('GET', $url);
-
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $content = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertSame('Le demandeur principal ne peut pas être retiré du suivi.', $content['msg']);
+        $this->assertSelectorTextContains('.alert.alert-danger', 'Une erreur');
     }
 
     public function testRemoveSupportPersonIsSuccessful()
@@ -329,8 +313,7 @@ class SupportControllerTest extends WebTestCase
         $this->client->request('GET', $url);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $content = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertSame('delete', $content['action']);
+        $this->assertSelectorTextContains('.alert.alert-warning', 'est retiré');
     }
 
     public function testCloneSupportIsFailed()

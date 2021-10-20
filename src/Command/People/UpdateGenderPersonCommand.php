@@ -2,12 +2,13 @@
 
 namespace App\Command\People;
 
+use App\Repository\People\PersonRepository;
 use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\People\PersonRepository;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Commande pour mettre à jour le sexe des personnes si information non renseignée.
@@ -32,17 +33,8 @@ class UpdateGenderPersonCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $message = $this->updateGender();
-        $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
+        $io = new SymfonyStyle($input, $output);
 
-        return Command::SUCCESS;
-    }
-
-    /**
-     * Mettre à jour le sexe.
-     */
-    protected function updateGender()
-    {
         $people = $this->repo->findBy(['gender' => 99]);
         $count = 0;
 
@@ -57,6 +49,8 @@ class UpdateGenderPersonCommand extends Command
 
         $this->manager->flush();
 
-        return "[OK] The gender of people is update !\n  ".$count.' / '.count($people);
+        $io->success("The gender of people is update !\n  ".$count.' / '.count($people));
+
+        return Command::SUCCESS;
     }
 }

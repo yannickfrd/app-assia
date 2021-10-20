@@ -7,7 +7,9 @@ use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Commande pour mettre à jour l'adresse des suivis à partir du groupe de places ou de l'évaluaiton sociale (TEMPORAIRE, A SUPPRIMER).
@@ -17,34 +19,35 @@ class UpdateLocationSupportsCommand extends Command
     use DoctrineTrait;
 
     protected static $defaultName = 'app:support:update_location';
+    protected static $defaultDescription = 'Update location in supports';
 
-    protected $repo;
+    protected $supportGroupRepo;
     protected $manager;
 
-    public function __construct(SupportGroupRepository $repo, EntityManagerInterface $manager)
+    public function __construct(SupportGroupRepository $supportGroupRepo, EntityManagerInterface $manager)
     {
-        $this->repo = $repo;
+        $this->supportGroupRepo = $supportGroupRepo;
         $this->manager = $manager;
         $this->disableListeners($this->manager);
 
         parent::__construct();
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    protected function configure()
     {
-        $message = $this->updateLocationSupports();
-        $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
-
-        return Command::SUCCESS;
+        $this
+            ->setDescription(self::$defaultDescription)
+            ->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Query limit', 1000)
+        ;
     }
 
-    /**
-     * Mettre à jour le nb de personnes.
-     */
-    protected function updateLocationSupports()
+    public function execute(InputInterface $input, OutputInterface $output)
     {
+        $io = new SymfonyStyle($input, $output);
+        $limit = $input->getOption('limit');
+
         $count = 0;
-        $supports = $this->repo->findBy([], ['updatedAt' => 'DESC'], 1000);
+        $supports = $this->supportGroupRepo->findBy([], ['updatedAt' => 'DESC'], $limit);
 
         foreach ($supports as $support) {
             if (null === $support->getLocationId()) {
@@ -78,6 +81,8 @@ class UpdateLocationSupportsCommand extends Command
 
         $this->manager->flush();
 
-        return "[OK] The address of supports are update ! \n ".$count.' / '.count($supports);
+        $io->success("The address of supports are update ! \n ".$count.' / '.count($supports));
+
+        return Command::SUCCESS;
     }
 }

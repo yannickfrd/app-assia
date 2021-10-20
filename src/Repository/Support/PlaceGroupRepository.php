@@ -35,6 +35,7 @@ class PlaceGroupRepository extends ServiceEntityRepository
             ->leftJoin('pg.placePeople', 'pp')->addSelect('pp')
             ->leftJoin('pp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, birthdate}')
             ->leftJoin('pg.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, startDate, endDate}')
+            ->leftJoin('pp.supportPerson', 'sp')->addSelect('PARTIAL sp.{id, head, role, startDate, endDate}')
             ->leftJoin('pg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
             ->leftJoin('sg.service', 'sv')->addSelect('PARTIAL sv.{id, name, place}')
             ->leftJoin('g.rolePeople', 'rp')->addSelect('PARTIAL rp.{id, role, head}')

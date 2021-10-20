@@ -118,12 +118,12 @@ class PeopleGroupController extends AbstractController
      */
     public function removePerson(RolePerson $rolePerson, string $_token, PeopleGroupManager $peopleGroupManager): Response
     {
-        if ($this->isCsrfTokenValid('remove'.$rolePerson->getId(), $_token)) {
-            $data = $peopleGroupManager->removePerson($rolePerson);
+        $peopleGroup = $rolePerson->getPeopleGroup();
 
-            return $this->json($data);
+        if ($this->isCsrfTokenValid('remove'.$rolePerson->getId(), $_token)) {
+            $peopleGroupManager->removePerson($rolePerson);
         }
 
-        return $this->getErrorMessage();
+        return $this->redirectToRoute('people_group_show', ['id' => $peopleGroup->getId()]);
     }
 }

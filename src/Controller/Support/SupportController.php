@@ -106,7 +106,7 @@ class SupportController extends AbstractController
             ->handleRequest($request);
 
         return $this->json([
-            'html' => $this->render('app/support/_shared/_newSupportForm.html.twig', [
+            'html' => $this->render('app/support/_partials/_newSupportForm.html.twig', [
                 'form' => $form->createView(),
                 'people_group' => $peopleGroup,
                 'nb_supports' => $peopleGroup ? $supportPersonRepo->countSupportsOfPeople($peopleGroup) : null,
@@ -283,43 +283,43 @@ class SupportController extends AbstractController
         SupportPerson $supportPerson,
         EventDispatcherInterface $dispatcher
     ): Response {
+        $error = false;
+
         // Vérifie si le token est valide avant de retirer la personne du suivi social
         if (!$this->isCsrfTokenValid('remove'.$supportPerson->getId(), $_token)) {
-            return $this->getErrorMessage();
+            $error = true;
+            $this->addFlash('danger', 'Une erreur s\'est produite (Token invalide).');
         }
         // Vérifie si la personne est le demandeur principal
         if ($supportPerson->getHead()) {
-            return $this->json([
-                'alert' => 'danger',
-                'msg' => 'Le demandeur principal ne peut pas être retiré du suivi.',
-            ]);
+            $error = true;
+            $this->addFlash('danger', 'Le demandeur principal ne peut pas être retiré du suivi.');
         }
         // Vérifie si le nombre de personne dans le suivi est supérieur à 1
         if ($supportGroup->getSupportPeople()->count() <= 1) {
-            return $this->json([
-                'alert' => 'danger',
-                'msg' => 'Le suivi doit être constitué d\'au moins une personne.',
-            ]);
+            $error = true;
+            $this->addFlash('danger', 'Le suivi doit être constitué d\'au moins une personne.');
         }
 
-        try {
-            $supportGroup->removeSupportPerson($supportPerson);
+        if (false === $error) {
+            try {
+                $supportGroup->removeSupportPerson($supportPerson);
 
-            $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support.before_update');
+                $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support.before_update');
 
-            $this->em->flush();
+                $this->em->flush();
 
-            $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support.after_update');
+                $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support.after_update');
 
-            return $this->json([
-                'action' => 'delete',
-                'alert' => 'warning',
-                'msg' => $supportPerson->getPerson()->getFullname().' est retiré'.
-                    Grammar::gender($supportPerson->getPerson()->getGender()).' du suivi social.',
-            ]);
-        } catch (\Exception $e) {
-            throw $e;
+                $this->addFlash('warning', $supportPerson->getPerson()->getFullname().' est retiré'.
+                    Grammar::gender($supportPerson->getPerson()->getGender()).' du suivi social.');
+            } catch (\Exception $e) {
+                throw $e;
+                $this->addFlash('danger', 'Une erreur s\'est produite ('.$e->getMessage().').');
+            }
         }
+
+        return $this->redirectToRoute('support_edit', ['id' => $supportGroup->getId()]);
     }
 
     /**

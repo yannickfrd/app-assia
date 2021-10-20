@@ -4,10 +4,8 @@ namespace App\Controller\Admin;
 
 use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Admin\DatabaseBackup;
-use App\Form\Admin\BackupSearchType;
-use App\Form\Model\Admin\BackupSearch;
 use App\Repository\Admin\DatabaseBackupRepository;
-use App\Service\DumpDatabase;
+use App\Service\DatabaseDumper;
 use App\Service\File\Downloader;
 use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
@@ -38,13 +36,7 @@ class DatabaseBackupController extends AbstractController
      */
     public function listBackups(Request $request, Pagination $pagination): Response
     {
-        $search = new BackupSearch();
-
-        $form = $this->createForm(BackupSearchType::class, $search)
-            ->handleRequest($request);
-
         return $this->render('app/admin/backupDatabase/backupDatabase.html.twig', [
-            'form' => $form->createView(),
             'backups' => $pagination->paginate($this->databaseBackupRepo->findBackupsQuery(), $request, 10),
         ]);
     }
@@ -55,14 +47,14 @@ class DatabaseBackupController extends AbstractController
      * @Route("/admin/database-backup/create", name="database_backup_create")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
-    public function createBackup(DumpDatabase $dumpDatabase): Response
+    public function createBackup(DatabaseDumper $databaseDumper): Response
     {
-        $backupDatas = $dumpDatabase->dump();
+        $backupDatas = $databaseDumper->dump();
 
         $databaseBackup = (new DatabaseBackup())
             ->setSize($backupDatas['size'])
-            ->setZipSize($backupDatas['zipSize'])
-            ->setFileName($backupDatas['fileName']);
+            ->setFileName($backupDatas['fileName'])
+            ->setPath($backupDatas['path']);
 
         $this->manager->persist($databaseBackup);
         $this->manager->flush();
@@ -80,10 +72,8 @@ class DatabaseBackupController extends AbstractController
      */
     public function getDatabaseBackup(DatabaseBackup $databaseBackup, Downloader $downloader): Response
     {
-        $path = $this->getPathDatabaseBackup($databaseBackup);
-
-        if (file_exists($path.$databaseBackup->getFileName())) {
-            return $downloader->send($path.$databaseBackup->getFileName());
+        if (file_exists($databaseBackup->getPath())) {
+            return $downloader->send($databaseBackup->getPath());
         }
 
         $this->addFlash('danger', 'Ce fichier n\'existe pas.');
@@ -99,10 +89,8 @@ class DatabaseBackupController extends AbstractController
      */
     public function deleteDatabase(DatabaseBackup $databaseBackup): Response
     {
-        $path = $this->getPathDatabaseBackup($databaseBackup);
-
-        if (file_exists($path.$databaseBackup->getFileName())) {
-            unlink($path.$databaseBackup->getFileName());
+        if (file_exists($databaseBackup->getPath())) {
+            unlink($databaseBackup->getPath());
         }
 
         $this->manager->remove($databaseBackup);
@@ -111,10 +99,5 @@ class DatabaseBackupController extends AbstractController
         $this->addFlash('warning', 'La sauvegarde de la base de données est supprimée.');
 
         return $this->redirectToRoute('database_backups');
-    }
-
-    protected function getPathDatabaseBackup(DatabaseBackup $databaseBackup)
-    {
-        return 'backups/'.$databaseBackup->getCreatedAt()->format('Y/m/d/');
     }
 }

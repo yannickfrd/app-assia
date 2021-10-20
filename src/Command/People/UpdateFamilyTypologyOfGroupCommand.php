@@ -3,13 +3,15 @@
 namespace App\Command\People;
 
 use App\Entity\People\RolePerson;
-use App\Service\People\PeopleGroupManager;
 use App\Repository\People\PeopleGroupRepository;
 use App\Service\DoctrineTrait;
+use App\Service\People\PeopleGroupManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Commande pour mettre à jour la typologie familiale des groupes de personnes.
@@ -19,14 +21,15 @@ class UpdateFamilyTypologyOfGroupCommand extends Command
     use DoctrineTrait;
 
     protected static $defaultName = 'app:peopleGroup:update_family_typology';
+    protected static $defaultDescription = 'Update the family typology in groups';
 
-    protected $repo;
+    protected $peopleGroupRepo;
     protected $manager;
     protected $peopleGroupManager;
 
-    public function __construct(PeopleGroupRepository $repo, EntityManagerInterface $manager, PeopleGroupManager $peopleGroupManager)
+    public function __construct(PeopleGroupRepository $peopleGroupRepo, EntityManagerInterface $manager, PeopleGroupManager $peopleGroupManager)
     {
-        $this->repo = $repo;
+        $this->peopleGroupRepo = $peopleGroupRepo;
         $this->manager = $manager;
         $this->peopleGroupManager = $peopleGroupManager;
         $this->disableListeners($this->manager);
@@ -34,17 +37,20 @@ class UpdateFamilyTypologyOfGroupCommand extends Command
         parent::__construct();
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    protected function configure()
     {
-        $message = $this->update();
-        $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
-
-        return Command::SUCCESS;
+        $this
+            ->setDescription(self::$defaultDescription)
+            ->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Query limit', 1000)
+        ;
     }
 
-    protected function update()
+    public function execute(InputInterface $input, OutputInterface $output)
     {
-        $peopleGroups = $this->repo->findBy([], ['updatedAt' => 'DESC'], 5000);
+        $io = new SymfonyStyle($input, $output);
+        $limit = $input->getOption('limit');
+
+        $peopleGroups = $this->peopleGroupRepo->findBy([], ['updatedAt' => 'DESC'], $limit);
         $count = 0;
 
         foreach ($peopleGroups as $peopleGroup) {
@@ -89,6 +95,8 @@ class UpdateFamilyTypologyOfGroupCommand extends Command
 
         $this->manager->flush();
 
-        return "[OK] The typology family of peopleGroup are updated !\n  ".$count.' / '.count($peopleGroups);
+        $io->success("The typology family of peopleGroup are updated !\n  ".$count.' / '.count($peopleGroups));
+
+        return Command::SUCCESS;
     }
 }

@@ -8,7 +8,9 @@ use App\Service\People\PeopleGroupChecker;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Commande pour vérifier le demandeur principal dans chaque groupe et suivi.
@@ -18,6 +20,7 @@ class CheckHeadInGroupsCommand extends Command
     use DoctrineTrait;
 
     protected static $defaultName = 'app:peopleGroup:check_head';
+    protected static $defaultDescription = 'Check head in groups';
 
     protected $peopleGroupRepo;
     protected $manager;
@@ -33,17 +36,20 @@ class CheckHeadInGroupsCommand extends Command
         parent::__construct();
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    protected function configure()
     {
-        $message = $this->update();
-        $output->writeln("\e[30m\e[42m\n ".$message."\e[0m\n");
-
-        return Command::SUCCESS;
+        $this
+            ->setDescription(self::$defaultDescription)
+            ->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Query limit', 1000)
+        ;
     }
 
-    protected function update()
+    public function execute(InputInterface $input, OutputInterface $output)
     {
-        $peopleGroups = $this->peopleGroupRepo->findBy([], ['updatedAt' => 'DESC'], 1000);
+        $io = new SymfonyStyle($input, $output);
+        $limit = $input->getOption('limit');
+
+        $peopleGroups = $this->peopleGroupRepo->findBy([], ['updatedAt' => 'DESC'], $limit);
         $count = 0;
 
         foreach ($peopleGroups as $peopleGroup) {
@@ -62,6 +68,9 @@ class CheckHeadInGroupsCommand extends Command
 
         $this->manager->flush();
 
-        return "[OK] The headers in peopleGroup are checked !\n  ".$count.' / '.count($peopleGroups).' are invalids.';
+        $io->success('The headers in peopleGroup are checked !'.
+            "\n  ".$count.' / '.count($peopleGroups).' are invalids.');
+
+        return Command::SUCCESS;
     }
 }

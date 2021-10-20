@@ -122,9 +122,9 @@ class SiSiaoGroupImporter extends SiSiaoRequest
             ->setGender($this->findInArray($personne->sexe, SiSiaoItems::GENDERS))
             ->setMaidenName($personne->nomJeuneFille ?? $personne->nomUsage)
             ->setSiSiaoId($this->getFichePersonneId($personne))
-            ->setPhone1($personne->telephone)
-            ->setEmail($personne->id === $this->ficheGroupe->demandeurprincipal->id ?
-                $this->ficheGroupe->courrielDemandeur : null)
+            ->setPhone1(preg_match('^0[1-9]([-._/ ]?[0-9]{2}){4}$^', $personne->telephone) ? $personne->telephone : null)
+            ->setEmail($personne->id === $this->ficheGroupe->demandeurprincipal->id
+                && preg_match('^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$^', $this->ficheGroupe->courrielDemandeur) ? $this->ficheGroupe->courrielDemandeur : null)
             ->setCreatedBy($this->user)
             ->setUpdatedBy($this->user);
 
