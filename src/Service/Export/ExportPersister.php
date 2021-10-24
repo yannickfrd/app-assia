@@ -15,8 +15,11 @@ class ExportPersister
     private $manager;
     private $exportNotification;
 
-    public function __construct(Security $security, EntityManagerInterface $manager, ExportNotification $exportNotification)
-    {
+    public function __construct(
+        Security $security,
+        EntityManagerInterface $manager,
+        ExportNotification $exportNotification
+    ) {
         $this->security = $security;
         $this->manager = $manager;
         $this->exportNotification = $exportNotification;
@@ -31,7 +34,9 @@ class ExportPersister
             ->setTitle('Export des suivis')
             ->setFileName($file)
             ->setSize(filesize($file))
+            ->setUsedMemory(round(memory_get_usage() / 1000 / 1000))
             ->setNbResults(count($supports))
+
             ->setComment($this->getCommentExport($search));
 
         $this->manager->persist($export);

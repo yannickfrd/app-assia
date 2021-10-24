@@ -92,29 +92,22 @@ class EvaluationPersonExport extends ExportExcel
      */
     public function exportData(array $supports, ExportSearch $search, bool $asynch = true)
     {
+        $this->logger->info('Used memory after database query: '.number_format(memory_get_usage(), 0, ',', ' '));
+
         $this->anonymized = $search->getAnonymized();
         $getDatas = 'light' === $search->getModel() ? 'getEvaluationPersonDatas' : 'getFullDatas';
 
-        $this->logger->info('Used memory : '.number_format(memory_get_usage(), 0, ',', ' '));
-
         $arrayData = [];
 
-        if (0 === $supports) {
+        if (count($supports) > 0) {
             $arrayData[] = $this->normalisation->getKeys(array_keys($this->$getDatas($supports[0])), ['forms', 'evaluation']);
         }
 
-        $i = 0;
-        $nbSupports = count($supports);
         foreach ($supports as $supportPerson) {
             $arrayData[] = $this->$getDatas($supportPerson);
-            if ($i > 100) {
-                $this->logger->info(count($arrayData).' / '.$nbSupports.' | Used memory : '.number_format(memory_get_usage(), 0, ',', ' '));
-                $i = 1;
-            }
-            ++$i;
         }
 
-        $this->logger->info('Used memory : '.number_format(memory_get_usage(), 0, ',', ' '));
+        $this->logger->info('Used memory after normalize datas: '.number_format(memory_get_usage(), 0, ',', ' '));
 
         $this->createSheet($arrayData, [
             'name' => 'export_suivis',
@@ -125,7 +118,7 @@ class EvaluationPersonExport extends ExportExcel
             'startCell' => $search->getModel() ? 'A2' : 'A1',
         ]);
 
-        $this->logger->info('Used memory : '.number_format(memory_get_usage(), 0, ',', ' '));
+        $this->logger->info('Used memory after create sheet: '.number_format(memory_get_usage(), 0, ',', ' '));
 
         return $this->exportFile($asynch);
     }

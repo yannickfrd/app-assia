@@ -95,6 +95,21 @@ class AppController extends AbstractController
     }
 
     /**
+     * PHP Info.
+     *
+     * @Route("/admin/phpinfo", name="admin_phpinfo", methods="GET")
+     * @IsGranted("ROLE_SUPER_ADMIN")
+     */
+    public function getPhpInfo(): Response
+    {
+        if (1 != $this->getUser()->getId()) {
+            return $this->redirect('home');
+        }
+
+        return new Response(phpinfo());
+    }
+
+    /**
      * Glossaire de toutes les variables.
      *
      * @Route("/admin/glossary", name="admin_glossary", methods="GET")

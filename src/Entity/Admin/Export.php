@@ -25,7 +25,7 @@ class Export
     private $title;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $comment;
 
@@ -38,6 +38,11 @@ class Export
      * @ORM\Column(type="float", nullable=true)
      */
     private $size;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $usedMemory;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -93,6 +98,18 @@ class Export
     public function setSize(?float $size): self
     {
         $this->size = $size;
+
+        return $this;
+    }
+
+    public function getUsedMemory(): ?float
+    {
+        return $this->usedMemory;
+    }
+
+    public function setUsedMemory(?float $usedMemory): self
+    {
+        $this->usedMemory = $usedMemory;
 
         return $this;
     }

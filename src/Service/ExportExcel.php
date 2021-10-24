@@ -2,7 +2,10 @@
 
 namespace App\Service;
 
+use Cache\Adapter\Apcu\ApcuCachePool;
+use Cache\Bridge\SimpleCache\SimpleCacheBridge;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Settings;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
@@ -58,6 +61,8 @@ class ExportExcel
      */
     public function createSheet(array $data, array $options = []): void
     {
+        $this->activeCache();
+
         $this->data = $data;
         $this->now = new \DateTime();
         $this->setOptions($options);
@@ -434,8 +439,23 @@ class ExportExcel
     /**
      * Ajoute l'objet normalisé.
      */
-    protected function add(object $object, string $name = null)
+    protected function add(object $object, string $name = null): void
     {
         $this->datas = array_merge($this->datas, $this->normalisation->normalize($object, $name));
+    }
+
+    protected function activeCache(): void
+    {
+        if (false === ini_get('apc.enabled') || false === function_exists('apcu_store')) {
+            return;
+        }
+
+        try {
+            $cacheItemPool = new ApcuCachePool();
+            $simpleCache = new SimpleCacheBridge($cacheItemPool);
+            Settings::setCache($simpleCache);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
     }
 }
