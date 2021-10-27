@@ -28,7 +28,7 @@ export default class evaluation {
         })
         
         
-        document.getElementsByClassName('card').forEach(cardElt => {
+        document.querySelectorAll('.card').forEach(cardElt => {
             const btnPersonElts = cardElt.querySelectorAll('button[data-person-key]')
             btnPersonElts.forEach(btnElt => {
                 btnElt.addEventListener('click', () => this.activeBtn(btnPersonElts, btnElt))

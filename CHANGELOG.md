@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## Version 3.1.12 - 27/10/2021
+- Edit system to import or delete evaluation + fix bugs
+    * Add check if user is connected before try to import evaluation from SI-SIAO
+    * Change grants to import or delete evaluation (ROLE_ADMIN is OK)
+    * Header set X-Frame-Options DENY
+    * Add cookie_secure = true
+    * Edit get method in SiSiaoRequest (if 401 error)
+    * Fix error in OriginRequestType
+    * Fix error JS in evaluation
+    * Rename button 'Ajouter un service ou référent'
+
 ## Version 3.1.11 - 20/10/2021
 - Update system to remove person, supportPerson and placePerson + factoring commands + fix bugs
     * Fix invalid phone and email format in import people from SI-SIAO

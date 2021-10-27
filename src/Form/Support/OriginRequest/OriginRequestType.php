@@ -22,7 +22,7 @@ class OriginRequestType extends AbstractType
         /** @var Service $service */
         $service = $builder->getOption('attr')['service'] ?? null;
         $serviceType = $service ? $service->getType() : null;
-        $required = in_array($service->getType(), [
+        $required = in_array($serviceType, [
             Service::SERVICE_TYPE_AVDL,
             Service::SERVICE_TYPE_HOTEL,
         ]);

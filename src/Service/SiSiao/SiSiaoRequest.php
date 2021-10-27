@@ -298,7 +298,7 @@ class SiSiaoRequest
     }
 
     /**
-     * @return array|object
+     * @return array|object|null
      */
     public function get(string $path)
     {
@@ -306,7 +306,7 @@ class SiSiaoRequest
         $response = $this->client->request('GET', $this->url.$path, ['headers' => $this->headers]);
         $code = $response->getStatusCode();
 
-        if (Response::HTTP_FORBIDDEN === $code) {
+        if (in_array($code, [Response::HTTP_UNAUTHORIZED, Response::HTTP_FORBIDDEN])) {
             return null;
         }
 

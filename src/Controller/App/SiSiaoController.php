@@ -164,12 +164,18 @@ class SiSiaoController extends AbstractController
         SiSiaoEvaluationImporter $siSiaoEvalImporter,
         EventDispatcherInterface $dispatcher
     ): Response {
-        $evaluationGroup = $siSiaoEvalImporter->import($supportGroup);
+        $isConnected = $this->siSiaoRequest->isConnected();
 
-        if ($evaluationGroup) {
-            $dispatcher->dispatch(new EvaluationEvent($evaluationGroup), 'evaluation.after_update');
+        if ($isConnected) {
+            $evaluationGroup = $siSiaoEvalImporter->import($supportGroup);
 
-            $this->addFlash('success', "L'évaluation sociale a été importée.");
+            if ($evaluationGroup) {
+                $dispatcher->dispatch(new EvaluationEvent($evaluationGroup), 'evaluation.after_update');
+
+                $this->addFlash('success', "L'évaluation sociale a été importée.");
+            }
+        } else {
+            $this->addFlash('danger', "Vous n'êtes pas connecté au SI-SIAO.");
         }
 
         return $this->redirectToRoute('support_view', ['id' => $supportGroup->getId()]);
