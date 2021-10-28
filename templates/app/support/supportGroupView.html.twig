@@ -110,17 +110,19 @@
 							onclick="if(window.confirm({{ textAlert }})){return true;}else{return false;}"><i class="fas fa-trash-alt mr-2"></i>
 							<span class="d-none d-sm-inline">Supprimer</span></a>
 					{% endif %}
-					{% if null == evaluation and is_granted("ROLE_ADMIN") %}
-						{% set textAlert = "'Êtes-vous vraiment sûr de vouloir récupérer l évaluation sociale du SI-SIAO ?'" %}
+					{% if null == evaluation %}
+						{% set textAlert = "'Êtes-vous vraiment sûr de vouloir récupérer l`évaluation sociale du SI-SIAO ?'" %}
 						<a class="btn btn-{{ theme_color }} d-block mr-3" href="{{ path('api_sisiao_import_evaluation', {'id': support.id}) }}" 
 							title="Importer l'évaluation sociale du SI-SIAO" data-toggle="tooltip" data-placement="bottom" 
 							onclick="if(window.confirm({{ textAlert }})){return true;}else{return false;}"><i class="fas fa-cloud-download-alt mr-2"></i>
 							<span class="d-none d-sm-inline">Import SI-SIAO</span></a>
-						{% set textAlert = "'Êtes-vous vraiment sûr de vouloir récupérer les informations du précédent suivi social ?'" %}
-						<a class="btn btn-{{ theme_color }} d-block mr-3" href="{{ path('support_clone', {'id': support.id}) }}" 
-							title="Récupérer les éléments du précédent suivi social" data-toggle="tooltip" data-placement="bottom" 
-							onclick="if(window.confirm({{ textAlert }})){return true;}else{return false;}"><i class="fas fa-clone mr-2"></i>
-							<span class="d-none d-sm-inline">Copier suivi</span></a>
+						{% if is_granted("ROLE_ADMIN") %}	
+							{% set textAlert = "'Êtes-vous vraiment sûr de vouloir récupérer les informations du précédent suivi social ?'" %}
+							<a class="btn btn-{{ theme_color }} d-block mr-3" href="{{ path('support_clone', {'id': support.id}) }}" 
+								title="Récupérer les éléments du précédent suivi social" data-toggle="tooltip" data-placement="bottom" 
+								onclick="if(window.confirm({{ textAlert }})){return true;}else{return false;}"><i class="fas fa-clone mr-2"></i>
+								<span class="d-none d-sm-inline">Copier suivi</span></a>
+						{% endif %}
 					{% endif %}
 				</div>
 				<div class="mb-3 float-right">

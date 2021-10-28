@@ -13,13 +13,13 @@ class SupportGroupEvent extends Event
 
     private $supportGroup;
     private $form;
-    private $referent;
+    private $currentReferent;
 
-    public function __construct(SupportGroup $supportGroup, FormInterface $form =  null, User $referent = null)
+    public function __construct(SupportGroup $supportGroup, ?FormInterface $form = null, ?User $currentReferent = null)
     {
         $this->supportGroup = $supportGroup;
         $this->form = $form;
-        $this->referent = $referent;
+        $this->currentReferent = $currentReferent;
     }
 
     public function getSupportGroup(): SupportGroup
@@ -32,8 +32,8 @@ class SupportGroupEvent extends Event
         return $this->form;
     }
 
-    public function getReferent(): ?User
+    public function getCurrentReferent(): ?User
     {
-        return $this->referent;
+        return $this->currentReferent;
     }
 }

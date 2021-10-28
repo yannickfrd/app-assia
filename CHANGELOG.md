@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Version 3.1.13 - 28/10/2021
+- Fix bugs + Edit grants to import evaluation from SI-SIAO
+    * Fix error 500 if go to 'support_edit' route after removal support
+    * Edit grants to import evaluation from SI-SIAO (for all ROLE)
+
 ## Version 3.1.12 - 27/10/2021
 - Edit system to import or delete evaluation + fix bugs
     * Add check if user is connected before try to import evaluation from SI-SIAO

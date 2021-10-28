@@ -223,14 +223,14 @@ class SupportGroupEditorSubscriber implements EventSubscriberInterface
     {
         $supportGroup = $event->getSupportGroup();
         $id = $supportGroup->getId();
-        $initReferent = $event->getReferent();
+        $currentReferent = $event->getCurrentReferent();
 
         if ($supportGroup->getReferent()) {
             $this->cache->deleteItem(User::CACHE_USER_SUPPORTS_KEY.$supportGroup->getReferent()->getId());
         }
 
-        if ($initReferent && $initReferent != $supportGroup->getReferent()) {
-            $this->cache->deleteItem(User::CACHE_USER_SUPPORTS_KEY.$initReferent->getId());
+        if ($currentReferent && $currentReferent != $supportGroup->getReferent()) {
+            $this->cache->deleteItem(User::CACHE_USER_SUPPORTS_KEY.$currentReferent->getId());
         }
 
         return $this->cache->deleteItems([
