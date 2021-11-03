@@ -24,28 +24,28 @@ trait QueryTrait
         return $query;
     }
 
-    protected function addPolesFilter(QueryBuilder $query, object $search): QueryBuilder
+    protected function addPolesFilter(QueryBuilder $query, object $search, string $x = 's.pole'): QueryBuilder
     {
         if ($search->getPoles() && count($search->getPoles()) > 0) {
-            $query = $this->addOrWhere($query, 's.pole', $search->getPoles());
+            $query = $this->addOrWhere($query, $x, $search->getPoles());
         }
 
         return $query;
     }
 
-    protected function addServicesFilter(QueryBuilder $query, object $search): QueryBuilder
+    protected function addServicesFilter(QueryBuilder $query, object $search, string $x = 's.id'): QueryBuilder
     {
         if ($search->getServices() && count($search->getServices()) > 0) {
-            $query = $this->addOrWhere($query, 's.id', $search->getServices());
+            $query = $this->addOrWhere($query, $x, $search->getServices());
         }
 
         return $query;
     }
 
-    protected function addSubServicesFilter(QueryBuilder $query, object $search): QueryBuilder
+    protected function addSubServicesFilter(QueryBuilder $query, object $search, string $x = 'sg.subService'): QueryBuilder
     {
         if ($search->getSubServices() && count($search->getSubServices()) > 0) {
-            $query = $this->addOrWhere($query, 'sg.subService', $search->getSubServices());
+            $query = $this->addOrWhere($query, $x, $search->getSubServices());
         }
 
         return $query;
@@ -60,10 +60,10 @@ trait QueryTrait
         return $query;
     }
 
-    protected function addReferentsFilter(QueryBuilder $query, object $search): QueryBuilder
+    protected function addReferentsFilter(QueryBuilder $query, object $search, string $x = 'sg.referent'): QueryBuilder
     {
         if ($search->getReferents() && count($search->getReferents()) > 0) {
-            $query = $this->addOrWhere($query, 'sg.referent', $search->getReferents());
+            $query = $this->addOrWhere($query, $x, $search->getReferents());
         }
 
         return $query;

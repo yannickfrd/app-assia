@@ -37,6 +37,7 @@ class DocumentRepository extends ServiceEntityRepository
             ->leftJoin('d.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
             ->join('d.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
             ->join('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
+            ->join('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
             ->join('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}');
 

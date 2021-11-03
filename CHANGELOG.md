@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## Version 3.1.14 - 03/11/2021
+- Fix problem filters (poles, services, subservices, devices) in repositories
+
 ## Version 3.1.13 - 28/10/2021
 - Fix bugs + Edit grants to import evaluation from SI-SIAO
     * Fix error 500 if go to 'support_edit' route after removal support

@@ -137,7 +137,7 @@ class UserRepository extends ServiceEntityRepository
             $query = $this->addOrWhere($query, 'u.status', $search->getStatus());
         }
 
-        $query = $this->addPolesFilter($query, $search);
+        $query = $this->addPolesFilter($query, $search, 'p.id');
         $query = $this->addServicesFilter($query, $search);
 
         if ($user && in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {

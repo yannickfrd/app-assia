@@ -200,7 +200,7 @@ class ServiceRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('s')->select('s');
 
-        $query = $this->addPolesFilter($query, $search);
+        $query = $this->addPolesFilter($query, $search, 's.pole');
 
         return $query->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();

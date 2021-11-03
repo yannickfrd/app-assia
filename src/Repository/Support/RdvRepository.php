@@ -71,7 +71,6 @@ class RdvRepository extends ServiceEntityRepository
     public function findRdvsToExport(RdvSearch $search): ?array
     {
         $query = $this->getRdvsQuery()
-            ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
             ->leftJoin('r.updatedBy', 'u2')->addSelect('PARTIAL u2.{id, firstname, lastname}');
 
         $query = $this->filter($query, $search);
@@ -87,6 +86,7 @@ class RdvRepository extends ServiceEntityRepository
             ->leftJoin('r.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
             ->leftJoin('r.supportGroup', 'sg')->addSelect('sg')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
+            ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
             ->leftJoin('sg.referent', 'ref')->addSelect('PARTIAL ref.{id, firstname, lastname}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}');

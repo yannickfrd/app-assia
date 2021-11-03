@@ -204,13 +204,13 @@ class PlaceRepository extends ServiceEntityRepository
     protected function getPlaces()
     {
         return $this->createQueryBuilder('pl')->select('pl')
-            ->leftJoin('pl.device', 'd')->addSelect('PARTIAL d.{id,name}')
-            ->leftJoin('pl.service', 's')->addSelect('PARTIAL s.{id,name}')
-            ->leftJoin('pl.subService', 'ss')->addSelect('PARTIAL ss.{id,name}')
-            ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id,name}')
-            ->leftJoin('pl.placeGroups', 'pg')->addSelect('PARTIAL pg.{id,startDate, endDate}')
-            ->leftJoin('pg.placePeople', 'pp')->addSelect('PARTIAL pp.{id,startDate, endDate}');
-        // ->leftJoin("pp.person", "p")->addSelect("PARTIAL p.{id,firstname, lastname}");
+            ->leftJoin('pl.device', 'd')->addSelect('PARTIAL d.{id, name}')
+            ->leftJoin('pl.service', 's')->addSelect('PARTIAL s.{id, name}')
+            ->leftJoin('pl.subService', 'ss')->addSelect('PARTIAL ss.{id, name}')
+            ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
+            ->leftJoin('pl.placeGroups', 'pg')->addSelect('PARTIAL pg.{id, startDate, endDate}')
+            ->leftJoin('pg.placePeople', 'pp')->addSelect('PARTIAL pp.{id, startDate, endDate}');
+        // ->leftJoin("pp.person", "p")->addSelect("PARTIAL p.{id, firstname, lastname}");
     }
 
     /**
@@ -274,7 +274,7 @@ class PlaceRepository extends ServiceEntityRepository
 
         $query = $this->addPolesFilter($query, $search);
         $query = $this->addServicesFilter($query, $search);
-        $query = $this->addSubServicesFilter($query, $search);
+        $query = $this->addSubServicesFilter($query, $search, 'ss.id');
         $query = $this->addDevicesFilter($query, $search, 'd.id');
 
         return $query;
