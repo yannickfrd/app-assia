@@ -39,8 +39,8 @@ class EvaluationGroupRepository extends ServiceEntityRepository
             ->leftJoin('eg.updatedBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
 
             ->leftJoin('eg.evaluationPeople', 'ep')->addSelect('ep')
-            ->join('ep.supportPerson', 'sp')->addSelect('PARTIAL sp.{id, person, head, role, status}')
-            ->join('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, birthdate, gender}')
+            ->leftJoin('ep.supportPerson', 'sp')->addSelect('PARTIAL sp.{id, person, head, role, status}')
+            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, birthdate, gender}')
 
             ->leftJoin('eg.initEvalGroup', 'initEvalGroup')->addSelect('initEvalGroup')
             ->leftJoin('eg.evalSocialGroup', 'evalSocialGroup')->addSelect('evalSocialGroup')
