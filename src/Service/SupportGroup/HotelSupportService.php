@@ -17,7 +17,7 @@ class HotelSupportService
 
         $supportGroup->setStatus($this->getStatus($supportGroup));
 
-        if ($hotelSupport && Device::HOTEL_SUPPORT === $supportGroup->getDevice()->getId()) {
+        if ($hotelSupport && Device::HOTEL_SUPPORT === $supportGroup->getDevice()->getCode()) {
             $supportGroup->setCoefficient($this->getCoeffSupport($hotelSupport));
         }
 

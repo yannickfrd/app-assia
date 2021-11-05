@@ -88,7 +88,7 @@ class AvdlControllerTest extends WebTestCase
         $this->client->request('POST', "/group/$id/support/new", [
             'support' => [
                 'service' => $this->data['serviceAvdl'],
-                'device' => $this->data['deviceAvdl'],
+                'device' => $this->data['deviceAvdl']->getCode(),
                 'referent' => $user,
             ],
         ]);
@@ -97,7 +97,7 @@ class AvdlControllerTest extends WebTestCase
         $this->client->submitForm('send', [
             'support' => [
                 'service' => $this->data['serviceAvdl'],
-                'device' => $this->data['deviceAvdl'],
+                'device' => $this->data['deviceAvdl']->getCode(),
                 'status' => SupportGroup::STATUS_IN_PROGRESS,
                 'referent' => $user,
                 'originRequest' => [
@@ -133,7 +133,7 @@ class AvdlControllerTest extends WebTestCase
         $this->client->submitForm('send', [
             'support' => [
                 'service' => $this->data['serviceAvdl'],
-                'device' => $this->data['deviceAvdl'],
+                'device' => $this->data['deviceAvdl']->getCode(),
                 'status' => SupportGroup::STATUS_IN_PROGRESS,
                 'referent' => $user,
                 'originRequest' => [

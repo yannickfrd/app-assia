@@ -15,6 +15,10 @@ class DeviceType extends AbstractType
     {
         $builder
             ->add('name')
+            ->add('code', ChoiceType::class, [
+                'choices' => Choices::getChoices(Device::CODES),
+                'placeholder' => 'placeholder.select',
+            ])
             ->add('coefficient', null, [
                 'help' => 'device.coefficient.help',
             ])
@@ -24,7 +28,6 @@ class DeviceType extends AbstractType
                 'required' => false,
                 'help' => 'device.place.help',
             ])
-
             ->add('justice', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::YES_NO),
                 'label' => 'Justice activity',

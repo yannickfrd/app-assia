@@ -185,6 +185,7 @@ class SupportGroupType extends AbstractType
                 ])
                 ->add('device', EntityType::class, [
                     'class' => Device::class,
+                    'choice_value' => 'code',
                     'choice_label' => 'name',
                     'query_builder' => function (DeviceRepository $repo) use ($service) {
                         return $repo->getDevicesOfUserQueryBuilder($this->currentUser, $service);

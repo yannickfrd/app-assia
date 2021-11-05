@@ -93,6 +93,7 @@ App\Entity\Organization\Device:
   device1:
     name: Insertion
     place: true
+    code: 5
 
 App\Entity\Organization\ServiceDevice:
   servDevice1:

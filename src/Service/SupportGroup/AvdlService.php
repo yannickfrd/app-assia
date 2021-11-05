@@ -24,7 +24,7 @@ class AvdlService
             ->setStartDate($this->getAvdlStartDate($avdl))
             ->setEndDate($this->getAvdlEndDate($avdl));
 
-        if (Device::AVDL_DALO === $supportGroup->getDevice()->getId()) {
+        if (Device::AVDL_DALO === $supportGroup->getDevice()->getCode()) {
             $supportGroup->setCoefficient($this->getAvdlCoeffSupport($avdl));
         }
 
@@ -93,8 +93,6 @@ class AvdlService
 
     /**
      * Donne le coefficient du suivi AVDL.
-     *
-     * @return float
      */
     protected function getAvdlCoeffSupport(Avdl $avdl): float
     {

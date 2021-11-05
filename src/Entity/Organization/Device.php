@@ -25,6 +25,30 @@ class Device
     use CreatedUpdatedEntityTrait;
     use DisableEntityTrait;
 
+    public const CODES = [
+        9 => '10 000 LA BA',
+        13 => '10 000 LA BD',
+        1 => 'ALT',
+        2 => 'ALTHO',
+        8 => 'ASLL',
+        3 => 'ASLLT',
+        11 => 'AVDL',
+        10 => 'AVDL DALO',
+        4 => 'AVDL hors DALO',
+        15 => 'ASE Mise à l\'abri',
+        16 => 'ASE hébergement',
+        19 => 'Acommpagnement hôtel',
+        20 => 'Intervention d\'urgence hôtel',
+        6 => 'HU - Diffus',
+        22 => 'HU - Regroupé',
+        23 => 'HU - Regroupé ACSE',
+        24 => 'HU - Regroupé HAVC',
+        25 => 'HU - Regroupé PE',
+        26 => 'HU hiver',
+        5 => 'Insertion - regroupé',
+        7 => 'Maison relais',
+    ];
+
     public const AVDL_DALO = 10;
     public const AVDL_HORS_DALO = 4;
     public const ASE_MAB = 15;
@@ -62,6 +86,12 @@ class Device
      * maxMessage="Le coefficient ne peut être supérieur à {{ limit }}")
      */
     private $coefficient;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     * @Assert\NotNull();
+     */
+    private $code;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -144,6 +174,23 @@ class Device
     public function setName(?string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getCode(): ?int
+    {
+        return $this->code;
+    }
+
+    public function getCodeToString(): ?string
+    {
+        return $this->code ? self::CODES[$this->code] : null;
+    }
+
+    public function setCode(?int $code): self
+    {
+        $this->code = $code;
 
         return $this;
     }

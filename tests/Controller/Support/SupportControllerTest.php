@@ -109,7 +109,7 @@ class SupportControllerTest extends WebTestCase
         $this->client->request('POST', "/group/$id/support/new", [
             'support' => [
                 'service' => $this->data['service1'],
-                'device' => $this->data['device1'],
+                'device' => $this->data['device1']->getCode(),
                 'referent' => $user,
             ],
         ]);
@@ -126,7 +126,7 @@ class SupportControllerTest extends WebTestCase
                     'comment' => 'XXX',
                 ],
                 'service' => $this->data['service1'],
-                'device' => $this->data['device1'],
+                'device' => $this->data['device1']->getCode(),
                 'status' => SupportGroup::STATUS_IN_PROGRESS,
                 'referent' => $user,
                 'startDate' => $now->format('Y-m-d'),
@@ -152,7 +152,7 @@ class SupportControllerTest extends WebTestCase
         $this->client->submitForm('send', [
             'support' => [
                 'service' => $this->data['service1'],
-                'device' => $this->data['device1'],
+                'device' => $this->data['device1']->getCode(),
                 'status' => SupportGroup::STATUS_IN_PROGRESS,
                 'agreement' => true,
                 'cloneSupport' => true,
@@ -175,7 +175,7 @@ class SupportControllerTest extends WebTestCase
 
         $this->client->submitForm('send', [
             'support[service]' => $this->data['service1'],
-            'support[device]' => $this->data['device1'],
+            'support[device]' => $this->data['device1']->getCode(),
             'support[status]' => SupportGroup::STATUS_IN_PROGRESS,
             'support[agreement]' => true,
         ]);

@@ -2,18 +2,19 @@
 
 namespace App\Controller\Organization;
 
-use App\Entity\Organization\Device;
-use App\Form\Model\Organization\DeviceSearch;
-use App\Form\Organization\Device\DeviceSearchType;
-use App\Form\Organization\Device\DeviceType;
-use App\Repository\Organization\DeviceRepository;
-use App\Security\CurrentUserService;
 use App\Service\Pagination;
+use App\Entity\Organization\Device;
+use App\Security\CurrentUserService;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Form\Organization\Device\DeviceType;
+use App\Form\Model\Organization\DeviceSearch;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\Organization\DeviceRepository;
+use App\Form\Organization\Device\DeviceSearchType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class DeviceController extends AbstractController
 {
@@ -47,6 +48,7 @@ class DeviceController extends AbstractController
      * Nouveau dispositif.
      *
      * @Route("/admin/device/new", name="admin_device_new", methods="GET|POST")
+     * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function newDevice(Request $request): Response
     {
@@ -69,6 +71,7 @@ class DeviceController extends AbstractController
      * Modification d'un dispositif.
      *
      * @Route("/admin/device/{id}", name="admin_device_edit", methods="GET|POST")
+     * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function editDevice(Device $device, Request $request): Response
     {
@@ -90,6 +93,7 @@ class DeviceController extends AbstractController
      * Désactive ou réactive le dispositif.
      *
      * @Route("/admin/device/{id}/disable", name="admin_device_disable", methods="GET")
+     * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function disableDevice(Device $device): Response
     {

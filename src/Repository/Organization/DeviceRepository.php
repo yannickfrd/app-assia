@@ -106,7 +106,7 @@ class DeviceRepository extends ServiceEntityRepository
      */
     public function getDevicesOfUserQueryBuilder(CurrentUserService $currentUser, Service $service = null, string $dataClass = null)
     {
-        $query = $this->createQueryBuilder('d')->select('PARTIAL d.{id, name, coefficient, place, disabledAt}')
+        $query = $this->createQueryBuilder('d')->select('PARTIAL d.{id, name, code, coefficient, place, disabledAt}')
             ->leftJoin('d.serviceDevices', 'sd')->addSelect('sd')
             ->leftJoin('sd.service', 's')->addSelect('PARTIAL s.{id, name, type}');
 

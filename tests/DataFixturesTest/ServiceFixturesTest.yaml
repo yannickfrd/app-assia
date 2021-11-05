@@ -57,9 +57,11 @@ App\Entity\Organization\serviceUser:
 App\Entity\Organization\Device:
   deviceAvdl:
     name: AVDL
+    code: 4
     place: false
   deviceHotel:
     name: Accommpagnement hôtel
+    code: 19
     place: false
     contribution: true
     contributionType: 1

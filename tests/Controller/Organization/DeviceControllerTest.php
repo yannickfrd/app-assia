@@ -50,7 +50,7 @@ class DeviceControllerTest extends WebTestCase
 
     public function testNewDeviceIsUp()
     {
-        $this->createLogin($this->data['userAdmin']);
+        $this->createLogin($this->data['userSuperAdmin']);
 
         $this->client->request('GET', '/admin/device/new');
 
@@ -60,7 +60,7 @@ class DeviceControllerTest extends WebTestCase
 
     public function testCreateDeviceIsFailed()
     {
-        $this->createLogin($this->data['userAdmin']);
+        $this->createLogin($this->data['userSuperAdmin']);
 
         $this->client->request('GET', '/admin/device/new');
 
@@ -83,12 +83,13 @@ class DeviceControllerTest extends WebTestCase
 
     public function testCreateDeviceIsSuccessful()
     {
-        $this->createLogin($this->data['userAdmin']);
+        $this->createLogin($this->data['userSuperAdmin']);
 
         $this->client->request('GET', '/admin/device/new');
 
         $this->client->submitForm('send', [
             'device[name]' => 'Nouveau dispositif',
+            'device[code]' => 22,
         ]);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -97,17 +98,17 @@ class DeviceControllerTest extends WebTestCase
 
     public function testEditDeviceIsSuccessful()
     {
-        $this->createLogin($this->data['userAdmin']);
+        $this->createLogin($this->data['userSuperAdmin']);
 
         $id = $this->device->getId();
         $this->client->request('GET', "/admin/device/$id");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         $this->assertSelectorTextContains('h1', $this->device->getName());
 
         $this->client->submitForm('send');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         $this->assertSelectorExists('.alert.alert-success');
     }
 

@@ -87,7 +87,7 @@ class HotelControllerTest extends WebTestCase
         $this->client->request('POST', "/group/$id/support/new", [
             'support' => [
                 'service' => $this->data['servicePash'],
-                'device' => $this->data['deviceHotel'],
+                'device' => $this->data['deviceHotel']->getCode(),
                 'referent' => $user,
             ],
         ]);
@@ -96,7 +96,7 @@ class HotelControllerTest extends WebTestCase
         $this->client->submitForm('send', [
             'support' => [
                 'service' => $this->data['servicePash'],
-                'device' => $this->data['deviceHotel'],
+                'device' => $this->data['deviceHotel']->getCode(),
                 'status' => SupportGroup::STATUS_IN_PROGRESS,
                 'referent' => $user,
                 'originRequest' => [
@@ -132,7 +132,7 @@ class HotelControllerTest extends WebTestCase
             'support' => [
                 'service' => $this->data['servicePash'],
                 'subService' => $this->data['subServicePash'],
-                'device' => $this->data['deviceHotel'],
+                'device' => $this->data['deviceHotel']->getCode(),
                 'status' => SupportGroup::STATUS_IN_PROGRESS,
                 'referent' => $user,
                 'originRequest' => [

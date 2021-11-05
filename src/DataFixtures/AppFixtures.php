@@ -203,6 +203,7 @@ class AppFixtures extends Fixture
     {
         foreach (self::DEVICES as $key => $name) {
             $device = (new Device())
+                ->setCode($key)
                 ->setName($name);
 
             $this->manager->persist($device);
