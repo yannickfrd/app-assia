@@ -5,7 +5,6 @@ namespace App\Controller\Document;
 use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Support\Document;
 use App\Entity\Support\SupportGroup;
-use App\Service\SupportGroup\SupportManager;
 use App\Form\Model\Support\DocumentSearch;
 use App\Form\Model\Support\SupportDocumentSearch;
 use App\Form\Support\Document\ActionType;
@@ -18,7 +17,9 @@ use App\Security\CurrentUserService;
 use App\Service\File\Downloader;
 use App\Service\File\FileDownloader;
 use App\Service\File\FileUploader;
+use App\Service\Normalisation;
 use App\Service\Pagination;
+use App\Service\SupportGroup\SupportManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,7 +27,6 @@ use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class DocumentController extends AbstractController
 {
@@ -165,7 +165,7 @@ class DocumentController extends AbstractController
      * @Route("/document/{id}/edit", name="document_edit", methods="POST")
      * @IsGranted("EDIT", subject="document")
      */
-    public function editDocument(Document $document, Request $request, NormalizerInterface $normalizer): Response
+    public function editDocument(Document $document, Request $request, Normalisation $normalisation): Response
     {
         $form = $this->createForm(DocumentType::class, $document)
             ->handleRequest($request);
@@ -179,11 +179,11 @@ class DocumentController extends AbstractController
                 'action' => 'update',
                 'alert' => 'success',
                 'msg' => 'Les informations du document "'.$document->getName().'" sont mises à jour.',
-                'data' => $normalizer->normalize($document, null, ['groups' => ['get', 'view']]),
+                'data' => $normalisation->normalizer->normalize($document, null, ['groups' => ['get', 'view']]),
             ]);
         }
 
-        return $this->getErrorMessage($form);
+        return $this->getErrorMessage($form, $normalisation);
     }
 
     /**

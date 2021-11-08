@@ -1,15 +1,27 @@
 # CHANGELOG
+## Version 3.1.16 - 08/11/2021
+- Fix bugs (#71)
+    * Fix error in addAPerson form (add token csrf)
+    * Fix error when name of document is empty
+    * Edit view form_role_person : render_rest = false
+    * Fix error if count EvaluationPeople == 0
 
+## Version 3.1.15 - 08/11/2021
+- Add a code to device entity (#70)
+    * Add 'code' variable to Device entity
+    * Edit authorization to create or edit device (ROLE_SUPER_ADMIN)
+    * Update fixtures
+    * Update tests
 ## Version 3.1.14 - 03/11/2021
-- Fix problem filters (poles, services, subservices, devices) in repositories
+- Fix problem filters (poles, services, subservices, devices) in repositories (#69)
 
 ## Version 3.1.13 - 28/10/2021
-- Fix bugs + Edit grants to import evaluation from SI-SIAO
+- Fix bugs + Edit grants to import evaluation from SI-SIAO (#68)
     * Fix error 500 if go to 'support_edit' route after removal support
     * Edit grants to import evaluation from SI-SIAO (for all ROLE)
 
 ## Version 3.1.12 - 27/10/2021
-- Edit system to import or delete evaluation + fix bugs
+- Edit system to import or delete evaluation + fix bugs (#67)
     * Add check if user is connected before try to import evaluation from SI-SIAO
     * Change grants to import or delete evaluation (ROLE_ADMIN is OK)
     * Header set X-Frame-Options DENY
@@ -19,8 +31,17 @@
     * Fix error JS in evaluation
     * Rename button 'Ajouter un service ou référent'
 
+## Version 3.1.11 - 24/10/2021
+- Cache phpspreadsheet (#65)
+    * Create route for phpinfo
+    * Add UsedMemory var in entity Export ; factoring EvaluationPersonExporter
+    * Add cache/apcu-adapter and cache/simple-cache-bridge in PHP dependencies
+    * Active cache in PhpSpreadsheet
+    * Add condition before try to active AcpuCache
+    * Fix bad condition in EvaluationPersonExport
+
 ## Version 3.1.11 - 20/10/2021
-- Update system to remove person, supportPerson and placePerson + factoring commands + fix bugs
+- Update system to remove person, supportPerson and placePerson + factoring commands + fix bugs (#64)
     * Fix invalid phone and email format in import people from SI-SIAO
     * Fix visibility devices disabled in service form
     * Fix visibility places disabled

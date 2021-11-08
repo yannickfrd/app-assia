@@ -8,13 +8,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class Normalisation
 {
-    protected $translator;
-    protected $normalizer;
+    public $normalizer;
+    public $translator;
 
-    public function __construct(TranslatorInterface $translator, NormalizerInterface $normalizer)
+    public function __construct(NormalizerInterface $normalizer, TranslatorInterface $translator)
     {
-        $this->translator = $translator;
         $this->normalizer = $normalizer;
+        $this->translator = $translator;
     }
 
     /**

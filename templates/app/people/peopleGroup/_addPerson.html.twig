@@ -20,6 +20,6 @@
     <div class="float-right">
         <button type="submit" id="js-btn-confirm" class="btn btn-{{ theme_color }}">Ajouter la personne</button>
     </div>
-
-    {{ form_end(form_role_person) }}
+    {{ form_row(form_role_person._token) }}
+    {{ form_end(form_role_person, {'render_rest': false}) }}
 {% endblock %}
