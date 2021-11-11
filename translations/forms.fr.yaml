@@ -310,6 +310,7 @@ Evaluation date: Date de l'évaluation / diagnostic
 Level support: Niveau d'intervention
 Origin dept: Département d'origine
 Recommendation: Préconisation
+Rosalie id: ID Rosalie
 hotelSupport:
   startDate: Date d'arrivée
   evaluation: Date de l'évaluation / diagnostic

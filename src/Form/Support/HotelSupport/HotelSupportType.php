@@ -2,7 +2,6 @@
 
 namespace App\Form\Support\HotelSupport;
 
-use App\Entity\Evaluation\EvalHousingGroup;
 use App\Entity\Support\HotelSupport;
 use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
@@ -16,6 +15,9 @@ class HotelSupportType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('rosalieId', null, [
+                'attr' => ['data-mask-type' => 'number'],
+            ])
             ->add('reasonNoInclusion', ChoiceType::class, [
                 'choices' => Choices::getChoices(HotelSupport::REASON_NO_INCLUSION),
                 'placeholder' => 'placeholder.select',

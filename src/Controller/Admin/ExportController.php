@@ -96,18 +96,22 @@ class ExportController extends AbstractController
      *
      * @Route("/export/{id}/delete", name="export_delete", methods="GET")
      */
-    public function deleteExport(Export $export, EntityManagerInterface $manager): Response
+    public function deleteExport(?Export $export, EntityManagerInterface $manager): Response
     {
-        $this->denyAccessUnlessGranted('DELETE', $export);
+        try {
+            $this->denyAccessUnlessGranted('DELETE', $export);
 
-        if (file_exists($export->getFileName())) {
-            unlink($export->getFileName());
+            if (file_exists($export->getFileName())) {
+                unlink($export->getFileName());
+            }
+
+            $manager->remove($export);
+            $manager->flush();
+
+            $this->addFlash('warning', 'Le fichier d\'export est supprimé.');
+        } catch (\Throwable $th) {
+            $this->addFlash('danger', "Une erreur s'est produite ({$th->getMessage()})");
         }
-
-        $manager->remove($export);
-        $manager->flush();
-
-        $this->addFlash('warning', 'Le fichier d\'export est supprimé.');
 
         return $this->redirectToRoute('export');
     }

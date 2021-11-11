@@ -16,9 +16,11 @@ use App\Entity\Evaluation\EvaluationPerson;
 use App\Entity\Evaluation\InitEvalGroup;
 use App\Entity\Evaluation\InitEvalPerson;
 use App\Entity\People\Person;
+use App\Entity\Support\HotelSupport;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Support\SupportPerson;
 use App\Form\Utils\Choices;
+use App\Form\Utils\EvaluationChoices;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -164,8 +166,20 @@ class SiSiaoEvaluationImporter extends SiSiaoRequest
         $this->createEvalSocialGroup($evaluationGroup, $sitSociale, $demandeSiao);
         $this->createEvalFamilyGroup($evaluationGroup, $this->ficheGroupe->situationfamille);
         $this->createEvalHousingGroup($evaluationGroup, $sitSociale, $sitLogement, $demandeSiao);
+        $this->updateHotelSupport($supportGroup->getHotelSupport());
 
         return $evaluationGroup;
+    }
+
+    protected function updateHotelSupport(?HotelSupport $hotelSupport = null): ?HotelSupport
+    {
+        if (!$hotelSupport) {
+            return null;
+        }
+
+        $hotelSupport->setRosalieId($this->ficheGroupe->rosalieFamilleId);
+
+        return $hotelSupport;
     }
 
     protected function createEvalFamilyGroup(EvaluationGroup $evaluationGroup, ?object $sitFamille = null): ?EvalFamilyGroup
@@ -396,7 +410,6 @@ class SiSiaoEvaluationImporter extends SiSiaoRequest
             ->setSocialSecurity($this->getSocialSecurity($sitAdm->typeDroitSecuriteSociale))
             ->setSocialSecurityOffice($sitAdm->nomcaisse)
             // ->setChildWelfareBackground(null)
-            // ->setHealthProblem(null)
             // ->setMentalHealthProblem(null)
             // ->setAddictionProblem(null)
             // ->setHomeCareSupport(null)
@@ -410,8 +423,10 @@ class SiSiaoEvaluationImporter extends SiSiaoRequest
 
             $evalSocialPerson
                 ->setMedicalFollowUp($this->findInArray($sitSocial->suivimedical, SiSiaoItems::YES_NO))
-                ->setReducedMobility($this->findInArray($sitSocial->problemeMobilite, SiSiaoItems::YES_NO))
-                ->setWheelchair($this->findInArray($sitSocial->fauteuilRoulant, SiSiaoItems::YES_NO))
+                ->setHealthProblem(in_array(SiSiaoItems::YES, [$sitSocial->problemeMobilite, $sitSocial->fauteuilRoulant]) ?
+                    EvaluationChoices::YES : EvaluationChoices::NO)
+                ->setReducedMobility($this->findInArray($sitSocial->problemeMobilite, SiSiaoItems::YES_NO_STRING_TO_BOOL))
+                ->setWheelchair($this->findInArray($sitSocial->fauteuilRoulant, SiSiaoItems::YES_NO_STRING_TO_BOOL))
                 ->setViolenceVictim($this->ficheGroupe->victimeviolence)
                 ->setDomViolenceVictim($this->findInArray($this->ficheGroupe->typevictime, SiSiaoItems::DOM_VIOLENCE_VICTIM))
                 ->setAseFollowUp($this->findInArray($sitSocial->priseEnChargeASE, SiSiaoItems::YES_NO))

@@ -1,4 +1,14 @@
 # CHANGELOG
+
+## Version 3.1.17 - 11/11/2021
+- Add Rosalie ID from SI-SIAO and fix bugs 
+    * Import Rosalie ID from SI-SIAO
+    * Fix invalid values in SI-SIAO evaluation import (reducedMobility and wheelchair)
+    * Fix error 500 on delete export if don't exist
+    * Fix granted to delete evaluation and clone support with ROLE_ADMIN
+    * Fix error JS : Change 'getElementsByTagName' to 'querySelectorAll' JS function
+    * Edit ExceptionListener and ExceptionNotification
+
 ## Version 3.1.16 - 08/11/2021
 - Fix bugs (#71)
     * Fix error in addAPerson form (add token csrf)

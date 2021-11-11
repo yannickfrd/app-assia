@@ -31,6 +31,7 @@
 {% endif %}
     <div class="row my-2">
         {{ view_div.get(support.peopleGroup.siSiaoId, "Si siao id", "forms") }}
+        {{ hotelSupport ? view_div.get(hotelSupport.rosalieId, "Rosalie id", "forms") }}
     </div>
 
 {% if hotelSupport %}

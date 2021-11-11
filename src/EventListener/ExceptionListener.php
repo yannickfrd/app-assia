@@ -4,10 +4,13 @@ namespace App\EventListener;
 
 use App\Notification\ExceptionNotification;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Security\Core\Security;
 
 class ExceptionListener
 {
+    private const IGNORED_CODE = [403, 404];
+
     private $security;
     private $exceptionNotification;
     private $exceptionListener;
@@ -22,12 +25,12 @@ class ExceptionListener
     public function onKernelException(ExceptionEvent $event): ?bool
     {
         $exception = $event->getThrowable();
+        $code = $exception instanceof HttpException ? $exception->getStatusCode() : 500;
 
-        if (!$this->security->getUser() || !$this->exceptionListener
-            || $exception->getPrevious() && in_array($exception->getPrevious()->getCode(), [403, 404])) {
-            return null;
+        if ($this->security->getUser() && $this->exceptionListener && $exception && !in_array($code, self::IGNORED_CODE)) {
+            return $this->exceptionNotification->sendException($exception, $code);
         }
 
-        return $this->exceptionNotification->sendException($exception);
+        return null;
     }
 }

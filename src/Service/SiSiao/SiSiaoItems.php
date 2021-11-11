@@ -23,6 +23,11 @@ class SiSiaoItems
         'NR' => Choices::NO_INFORMATION,
     ];
 
+    public const YES_NO_STRING_TO_BOOL = [
+        'OUI' => true,
+        'NON' => false,
+    ];
+
     public const YES_NO_BOOL = [
         true => Choices::YES,
         false => Choices::NO,

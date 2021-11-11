@@ -13,7 +13,6 @@ use App\Service\Evaluation\EvaluationExporter;
 use App\Service\Normalisation;
 use App\Service\SupportGroup\SupportManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -123,11 +122,12 @@ class EvaluationController extends AbstractController
      * Supprime l'évaluation sociale du suivi.
      *
      * @Route("/evaluation/{id}/delete", name="evaluation_delete", methods="GET")
-     * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function deleteEvaluationGroup(EvaluationGroup $evaluationGroup): Response
     {
         $supportGroup = $evaluationGroup->getSupportGroup();
+
+        $this->denyAccessUnlessGranted('DELETE', $supportGroup);
 
         $evaluationGroup->getInitEvalGroup()->setSupportGroup(null);
         foreach ($evaluationGroup->getEvaluationPeople() as $evaluationPerson) {

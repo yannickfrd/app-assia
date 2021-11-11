@@ -16,8 +16,8 @@ class ExportVoter extends Voter
 
     protected function supports($attribute, $subject)
     {
-        return in_array($attribute, ['GET', 'VIEW', 'EDIT', 'DELETE'])
-            && $subject instanceof \App\Entity\Admin\Export;
+        return in_array($attribute, ['GET', 'VIEW', 'DELETE'])
+            && $subject instanceof Export;
     }
 
     protected function voteOnAttribute($attribute, $export, TokenInterface $token)

@@ -6,14 +6,12 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 
 class ExceptionNotification extends MailNotifier
 {
-    public function sendException(\Throwable $exception): bool
+    public function sendException(\Throwable $exception, ?int $code = null): bool
     {
-        $statusCodeMethod = 'getStatusCode';
-
         $message = sprintf(
             'Exception throwed : %s with code : %s',
             $exception->getMessage(),
-            method_exists($exception, $statusCodeMethod) ? $exception->$statusCodeMethod() : $exception->getCode(),
+            $code ?? $exception->getCode(),
         );
 
         $email = (new TemplatedEmail())

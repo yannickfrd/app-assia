@@ -287,6 +287,8 @@ class SupportController extends AbstractController
     ): Response {
         $error = false;
 
+        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
+
         // Vérifie si le token est valide avant de retirer la personne du suivi social
         if (!$this->isCsrfTokenValid('remove'.$supportPerson->getId(), $_token)) {
             $error = true;
@@ -380,7 +382,6 @@ class SupportController extends AbstractController
      * Crée une copie d'un suivi social.
      *
      * @Route("/support/{id}/clone", name="support_clone", methods="GET")
-     * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function cloneSupport(SupportGroup $supportGroup, SupportDuplicator $supportDuplicator, EventDispatcherInterface $dispatcher): Response
     {

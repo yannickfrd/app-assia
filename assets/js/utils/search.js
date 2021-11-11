@@ -9,9 +9,9 @@ export default class Search {
     constructor(formId) {
         this.loader = new Loader();
         this.formSearch = document.getElementById(formId)
-        this.inputElts = this.formSearch.getElementsByTagName('input')
+        this.inputElts = this.formSearch.querySelectorAll('input')
         this.checkboxElts = this.formSearch.querySelectorAll('input[type="checkbox"]')
-        this.selectElts = this.formSearch.getElementsByTagName('select')
+        this.selectElts = this.formSearch.querySelectorAll('select')
         this.resultsElt = document.getElementById('results')
         this.btnSearchElt = document.getElementById('search')
         this.btnExportElt = document.getElementById('js-btn-export')
