@@ -112,7 +112,7 @@
 					{% endif %}
 					{% if null == evaluation %}
 						{% set textAlert = "'Êtes-vous vraiment sûr de vouloir récupérer l`évaluation sociale du SI-SIAO ?'" %}
-						<a class="btn btn-{{ theme_color }} d-block mr-3" href="{{ path('api_sisiao_import_evaluation', {'id': support.id}) }}" 
+						<a class="btn btn-{{ theme_color }} d-block mr-3" href="{{ path('api_sisiao_support_import_evaluation', {'id': support.id}) }}" 
 							title="Importer l'évaluation sociale du SI-SIAO" data-toggle="tooltip" data-placement="bottom" 
 							onclick="if(window.confirm({{ textAlert }})){return true;}else{return false;}"><i class="fas fa-cloud-download-alt mr-2"></i>
 							<span class="d-none d-sm-inline">Import SI-SIAO</span></a>

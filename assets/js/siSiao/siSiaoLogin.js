@@ -60,7 +60,7 @@ export default class SiSiaoLogin {
         }
 
         const url = this.sisiaoConnectionBtnElt.dataset.url
-        this.ajax.send('POST', url, this.responseCheckConnection.bind(this))
+        this.ajax.send('GET', url, this.responseCheckConnection.bind(this))
     }
 
     /**

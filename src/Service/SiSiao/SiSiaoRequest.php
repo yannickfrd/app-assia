@@ -78,12 +78,14 @@ class SiSiaoRequest
 
     /**
      * Search by ID group.
+     *
+     * @return array|object
      */
-    public function searchById(string $id): ?object
+    public function searchById(int $id)
     {
         $result = $this->get("personnes/search/findByCriteria?idGroupe={$id}");
 
-        if (0 === $result->total) {
+        if (!is_object($result) || 0 === $result->total) {
             $result = $this->get("personnes/search/findByCriteria?idFichePersonne={$id}");
         }
 
@@ -93,7 +95,7 @@ class SiSiaoRequest
     /**
      * Find people by ID group.
      */
-    public function findPeople(string $id): ?array
+    public function findPeople(int $id): ?array
     {
         $people = [];
         $result = $this->searchById($id);
@@ -122,9 +124,60 @@ class SiSiaoRequest
     }
 
     /**
-     * Find a group by ID group.
+     * Get group by id from API SI-SIAO.
      */
-    public function findGroupById(string $id)
+    public function findGroupById(int $id): array
+    {
+        $result = $this->searchById($id);
+
+        if (!is_object($result)) {
+            return $result;
+        }
+
+        if (0 === $result->total) {
+            return [
+                'alert' => 'warning',
+                'group' => null,
+                'msg' => 'Aucun résultat.',
+            ];
+        }
+
+        $data = $this->get("fiches/ficheIdentite/{$id}");
+
+        $dp = $data->demandeurprincipal;
+
+        if ('Personne' === $data->typefiche) {
+            foreach ($dp->fiches as $fiche) {
+                if ('Groupe' === $fiche->typefiche) {
+                    $personnes = $fiche->personnes;
+                    $idGroupe = $fiche->id;
+                }
+            }
+            if (!isset($personnes)) {
+                $fiche = $dp->fiches[count($dp->fiches) - 1];
+                $personnes = $fiche->personnes;
+                $idGroupe = $fiche->id;
+            }
+        } else {
+            $personnes = $data->personnes;
+            $idGroupe = $data->id;
+        }
+
+        return [
+            'alert' => 'success',
+            'group' => [
+                'composition' => $data->composition,
+                'dp' => $dp,
+                'personnes' => $personnes,
+                'idGroupe' => $idGroupe,
+            ],
+        ];
+    }
+
+    /**
+     * Dump a group by ID group.
+     */
+    public function dumpGroupById(int $id)
     {
         $ficheGroupe = $this->get("fiches/ficheIdentite/{$id}");
         dump($ficheGroupe);
@@ -169,7 +222,7 @@ class SiSiaoRequest
     /*
      * Update evaluation by ID group.
      */
-    public function updateEvaluation(string $id)
+    public function updateEvaluation(int $id)
     {
         $this->login();
 
@@ -234,7 +287,7 @@ class SiSiaoRequest
      * Update a SIAO request by ID group.
      */
 
-    public function updateSiaoRequest(string $id)
+    public function updateSiaoRequest(int $id)
     {
         $this->login();
 
@@ -306,12 +359,12 @@ class SiSiaoRequest
         $response = $this->client->request('GET', $this->url.$path, ['headers' => $this->headers]);
         $code = $response->getStatusCode();
 
-        if (in_array($code, [Response::HTTP_UNAUTHORIZED, Response::HTTP_FORBIDDEN])) {
-            return null;
-        }
-
         if (Response::HTTP_OK !== $code) {
-            throw new \Exception('Error response with status code '.$code.' for the path '.$path, $code);
+            return [
+                'alert' => 'danger',
+                'msg' => 'Error response with status code '.$code.' for the path '.$path, $code,
+                'code' => $code,
+            ];
         }
 
         $content = $response->getContent();

@@ -38,7 +38,6 @@ export default class SearchPerson {
         
         if (this.siSiaoSearchCheckboxElt) {
             this.siSiaoGroupModal = new Modal(document.getElementById('modal-si-siao-group'))
-            this.importSiSiaoGroupAElt = null
             this.importSiSiaoGroupAElt = document.querySelector('a[data-action="import-si-siao-group"]');
         }
         
@@ -213,7 +212,6 @@ export default class SearchPerson {
         if (btnElt) {
             btnElt.addEventListener('click', e => {
                 this.ajax.send('GET', '/api-sisiao/show-group/' + btnElt.dataset.id, this.responseShowGroup.bind(this))
-                // data-url="/api-sisiao/import-group/${person.idGroup}" 
             })            
         }
 

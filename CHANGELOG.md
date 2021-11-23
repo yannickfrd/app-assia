@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## Version 3.1.18 - 23/11/2021
+- Create functionnal tests to SiSiaoController and fix bugs SI-SIAO
+    * Fix error 500 when search group SI-SIAO
+    * Edit import socialSecurity value
+    * Create functionnal tests to SiSiaoController
+    * Refactor SiSiaoController (return types, param types...)
+    * Add control access to import SI-SIAO evaluation
+    * Delete useless code in searchPerson.js
+    
 ## Version 3.1.17 - 11/11/2021
 - Add Rosalie ID from SI-SIAO and fix bugs 
     * Import Rosalie ID from SI-SIAO

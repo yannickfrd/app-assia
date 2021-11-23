@@ -345,19 +345,19 @@ class SiSiaoItems
 
     // DROIT_OUVERT_SECURITE_SOCIALES
     public const SOCIAL_SECURITY = [
-        15 => 6, // Aide Complémentaire Santé (ACS)
-        10 => 5, // Aide médicale de l'Etat
-        200 => 97, // Autre
-        20 => 3, // CMU
-        30 => 4, // CMU complémentaire
-        70 => 97, // Couverture sociale européenne
         40 => 2, // Mutuelle
-        1 => 99, // Non renseignée
-        190 => 99, // NSP
-        60 => 97, // Régime agricole
+        30 => 4, // CMU-C -> CSS (ex-CMU-C)
+        15 => 6, // Aide Complémentaire Santé (ACS)
+        10 => 5, // Aide médicale de l'Etat (AME)
+        20 => 3, // CMU -> PUMA (ex-CMU)
         50 => 1, // Régime général
-        90 => 97, // Régime social des indépendants
+        90 => 1, // Régime social des indépendants -> Régime général
+        60 => 97, // Régime agricole
+        70 => 97, // Couverture sociale européenne
+        200 => 97, // Autre
+        190 => 99, // NSP
         80 => null, // Sans couverture sociale
+        1 => 99, // Non renseigné
     ];
 
     // Animaux

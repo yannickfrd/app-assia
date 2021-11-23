@@ -12,6 +12,7 @@ use App\Service\SiSiao\SiSiaoRequest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -28,7 +29,7 @@ class SiSiaoController extends AbstractController
     /**
      * @Route("/api-sisiao/login", name="api_sisiao_login", methods="POST")
      */
-    public function login(Request $request): Response
+    public function login(Request $request): JsonResponse
     {
         $form = $this->createForm(SiSiaoLoginType::class, $siSiaoUser = new SiSiaoLogin())
             ->handleRequest($request);
@@ -45,16 +46,17 @@ class SiSiaoController extends AbstractController
         }
 
         return $this->json([
-            'alert' => 'danger',
-            'msg' => 'Identifiant ou mot de passe incorrect.',
-            'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
-        ]);
+                'alert' => 'danger',
+                'msg' => 'Identifiant ou mot de passe incorrect.',
+            ],
+            Response::HTTP_UNPROCESSABLE_ENTITY,
+        );
     }
 
     /**
-     * @Route("/api-sisiao/check-connection", name="api_sisiao_check_connection", methods="POST")
+     * @Route("/api-sisiao/check-connection", name="api_sisiao_check_connection", methods="GET")
      */
-    public function checkConnection(): Response
+    public function checkConnection(): JsonResponse
     {
         if (false === $this->siSiaoRequest->isConnected()) {
             return $this->json(['isConnected' => false]);
@@ -70,22 +72,9 @@ class SiSiaoController extends AbstractController
     /**
      * Search group by id in API SI-SIAO.
      *
-     * @Route("/api-sisiao/find-group/{id}", name="api_sisiao_find_group", methods="GET")
-     * @IsGranted("ROLE_SUPER_ADMIN")
-     */
-    public function findGroup(string $id): Response
-    {
-        $result = $this->siSiaoRequest->findGroupById($id);
-
-        return $this->json($result);
-    }
-
-    /**
-     * Search group by id in API SI-SIAO.
-     *
      * @Route("/api-sisiao/search-group/{id}", name="api_sisiao_search_group", methods="GET")
      */
-    public function searchGroup(string $id): Response
+    public function searchGroup(int $id): JsonResponse
     {
         return $this->json([
             'people' => $this->siSiaoRequest->findPeople($id),
@@ -97,45 +86,19 @@ class SiSiaoController extends AbstractController
      *
      * @Route("/api-sisiao/show-group/{id}", name="api_sisiao_show_group", methods="GET")
      */
-    public function showGroup(string $id): Response
+    public function showGroup(int $id): JsonResponse
     {
-        $data = $this->siSiaoRequest->get("fiches/ficheIdentite/{$id}");
-        if (null === $data) {
+        $data = $this->siSiaoRequest->findGroupById($id);
+
+        if (is_array($data) && 'success' === $data['alert']) {
             return $this->json([
-                'alert' => 'warning',
-                'msg' => 'Aucun résultat.',
+                'alert' => 'success',
+                'html' => $this->render('app/admin/siSiao/_siSiaoGroup.html.twig', $data['group']),
+                'idGroup' => $data['group']['idGroupe'],
             ]);
         }
 
-        $dp = $data->demandeurprincipal;
-
-        if ('Personne' === $data->typefiche) {
-            foreach ($dp->fiches as $fiche) {
-                if ('Groupe' === $fiche->typefiche) {
-                    $personnes = $fiche->personnes;
-                    $idGroupe = $fiche->id;
-                }
-            }
-            if (!isset($personnes)) {
-                $fiche = $dp->fiches[count($dp->fiches) - 1];
-                $personnes = $fiche->personnes;
-                $idGroupe = $fiche->id;
-            }
-        } else {
-            $personnes = $data->personnes;
-            $idGroupe = $data->id;
-        }
-
-        return $this->json([
-            'html' => $this->render('app/admin/siSiao/_siSiaoGroup.html.twig', [
-                'composition' => $data->composition,
-                'dp' => $dp,
-                'personnes' => $personnes,
-                'idGroupe' => $idGroupe,
-            ]),
-            'alert' => 'success',
-            'idGroup' => $idGroupe,
-        ]);
+        return $this->json($data);
     }
 
     /**
@@ -143,30 +106,30 @@ class SiSiaoController extends AbstractController
      *
      * @Route("/api-sisiao/import-group/{id}", name="api_sisiao_import_group", methods="GET")
      */
-    public function importGroup(SiSiaoGroupImporter $siSiaoGroupImporter, string $id): Response
+    public function importGroup(int $id, SiSiaoGroupImporter $siSiaoGroupImporter): Response
     {
-        $peopleGroup = $siSiaoGroupImporter->import((int) $id);
+        $peopleGroup = $siSiaoGroupImporter->import($id);
 
-        if (!$peopleGroup) {
-            return $this->redirectToRoute('new_support_search_person');
+        if ($peopleGroup) {
+            return $this->redirectToRoute('people_group_show', ['id' => $peopleGroup->getId()]);
         }
 
-        return $this->redirectToRoute('people_group_show', ['id' => $peopleGroup->getId()]);
+        return $this->redirectToRoute('new_support_search_person');
     }
 
     /**
      * Search group by id in API SI-SIAO.
      *
-     * @Route("/api-sisiao/import-evaluation/{id}", name="api_sisiao_import_evaluation", methods="GET")
+     * @Route("/api-sisiao/support/{id}/import-evaluation", name="api_sisiao_support_import_evaluation", methods="GET")
      */
     public function importEvaluation(
         SupportGroup $supportGroup,
         SiSiaoEvaluationImporter $siSiaoEvalImporter,
         EventDispatcherInterface $dispatcher
     ): Response {
-        $isConnected = $this->siSiaoRequest->isConnected();
+        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        if ($isConnected) {
+        if ($this->siSiaoRequest->isConnected()) {
             $evaluationGroup = $siSiaoEvalImporter->import($supportGroup);
 
             if ($evaluationGroup) {
@@ -182,33 +145,26 @@ class SiSiaoController extends AbstractController
     }
 
     /**
-     * @Route("/api-sisiao/update-evaluation/{id}", name="api_sisiao_update_evaluation", methods="GET")
-     */
-    public function updateEvaluation(string $id): Response
-    {
-        $result = $this->siSiaoRequest->updateEvaluation($id);
-
-        return $this->json($result);
-    }
-
-    /**
-     * @Route("/api-sisiao/update-siao-request/{id}", name="api_sisiao_update_siao_request", methods="GET")
-     */
-    public function updateSiaoRequest(string $id): Response
-    {
-        $result = $this->siSiaoRequest->updateSiaoRequest($id);
-
-        return $this->json($result);
-    }
-
-    /**
      * Get informations of connected user.
      *
      * @Route("/api-sisiao/user", name="api_sisiao_user", methods="GET")
+     * @IsGranted("ROLE_SUPER_ADMIN")
      */
-    public function getUser(): Response
+    public function getUser(): JsonResponse
     {
         return $this->json($this->siSiaoRequest->getUser());
+    }
+
+    /**
+     * @Route("/api-sisiao/logout", name="api_sisiao_logout", methods="GET")
+     */
+    public function logout(): Response
+    {
+        $this->siSiaoRequest->logout();
+
+        $this->addFlash('success', 'Vous avez bien été déconnecté du SI-SIAO.');
+
+        return $this->redirectToRoute('home');
     }
 
     /**
@@ -219,20 +175,33 @@ class SiSiaoController extends AbstractController
      */
     public function getReferentiels(): Response
     {
-        $results = $this->siSiaoRequest->getReferentielsToString();
-
-        return new Response($results);
+        return new Response($this->siSiaoRequest->getReferentielsToString());
     }
 
-    /**
-     * @Route("/api-sisiao/logout", name="api_sisiao_logout", methods="GET")
-     */
-    public function logout(): Response
-    {
-        $this->siSiaoRequest->logout();
+    // /**
+    //  * @Route("/api-sisiao/update-evaluation/{id}", name="api_sisiao_update_evaluation", methods="GET")
+    //  */
+    // public function updateEvaluation(int $id): JsonResponse
+    // {
+    //     return $this->json($this->siSiaoRequest->updateEvaluation($id));
+    // }
 
-        $this->addFlash('success', 'Vous êtes déconnecté du SI-SIAO.');
+    // /**
+    //  * @Route("/api-sisiao/update-siao-request/{id}", name="api_sisiao_update_siao_request", methods="GET")
+    //  */
+    // public function updateSiaoRequest(int $id): JsonResponse
+    // {
+    //     return $this->json($this->siSiaoRequest->updateSiaoRequest($id));
+    // }
 
-        return $this->redirectToRoute('home');
-    }
+    // /**
+    //  * Search group by id in API SI-SIAO.
+    //  *
+    //  * @Route("/api-sisiao/dump-group/{id}", name="api_sisiao_dump_group", methods="GET")
+    //  * @IsGranted("ROLE_SUPER_ADMIN")
+    //  */
+    // public function dumpGroup(int $id): JsonResponse
+    // {
+    //     return $this->json($this->siSiaoRequest->dumpGroupById($id));
+    // }
 }
