@@ -471,6 +471,6 @@ class SiSiaoRequest
                 break;
         }
 
-        return $message." (erreur $code).";
+        return $message.(0 !== $code ? " (erreur $code)" : '').'. ';
     }
 }

@@ -21,6 +21,7 @@ use App\Entity\Support\SupportGroup;
 use App\Entity\Support\SupportPerson;
 use App\Form\Utils\Choices;
 use App\Form\Utils\EvaluationChoices;
+use App\Notification\ExceptionNotification;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -37,6 +38,7 @@ class SiSiaoEvaluationImporter extends SiSiaoRequest
     protected $manager;
     protected $user;
     protected $flashBag;
+    protected $exceptionNotification;
 
     /** @var int ID fiche groupe SI-SIAO */
     protected $id;
@@ -58,6 +60,7 @@ class SiSiaoEvaluationImporter extends SiSiaoRequest
         EntityManagerInterface $manager,
         Security $security,
         FlashBagInterface $flashBag,
+        ExceptionNotification $exceptionNotification,
         string $url
     ) {
         parent::__construct($client, $session, $url);
@@ -65,6 +68,7 @@ class SiSiaoEvaluationImporter extends SiSiaoRequest
         $this->manager = $manager;
         $this->user = $security->getUser();
         $this->flashBag = $flashBag;
+        $this->exceptionNotification = $exceptionNotification;
     }
 
     /**
@@ -75,7 +79,10 @@ class SiSiaoEvaluationImporter extends SiSiaoRequest
         try {
             return $this->createEvaluation($supportGroup);
         } catch (\Exception $e) {
-            $this->flashBag->add('danger', "L'évaluation sociale SI-SIAO n'a pas pu être importée. ".$this->getErrorMessage($e));
+            $this->exceptionNotification->sendException($e);
+
+            $this->flashBag->add('danger', $this->getErrorMessage($e).
+                "L'évaluation sociale SI-SIAO n'a pas pu être importée.");
 
             return null;
         }
@@ -83,6 +90,13 @@ class SiSiaoEvaluationImporter extends SiSiaoRequest
 
     protected function createEvaluation(SupportGroup $supportGroup): ?EvaluationGroup
     {
+        if (false === $this->isConnected()) {
+            $this->flashBag->add('danger', "L'évaluation sociale SI-SIAO n'a pas pu être importée, 
+                car vous n'êtes pas ou plus connecté au SI-SIAO.");
+
+            return null;
+        }
+
         if ($supportGroup->getEvaluationsGroup()->count() > 0) {
             $this->flashBag->add('warning', 'Une évaluation sociale a déjà été créée pour ce suivi.');
 
@@ -206,7 +220,10 @@ class SiSiaoEvaluationImporter extends SiSiaoRequest
         return $evalFamilyGroup;
     }
 
-    protected function createEvalSocialGroup(EvaluationGroup $evaluationGroup, ?object $sitSociale = null, ?object $demandeSiao = null): ?EvalSocialGroup
+    /**
+     * @param object|array|null $demandeSiao
+     */
+    protected function createEvalSocialGroup(EvaluationGroup $evaluationGroup, ?object $sitSociale = null, $demandeSiao = null): ?EvalSocialGroup
     {
         if (!$sitSociale) {
             return null;
@@ -215,7 +232,7 @@ class SiSiaoEvaluationImporter extends SiSiaoRequest
         $animaux = $this->ficheGroupe->animaux;
 
         $evalSocialGroup = (new EvalSocialGroup())
-            ->setReasonRequest($this->findInArray($demandeSiao ? $demandeSiao->motifDemande :
+            ->setReasonRequest($this->findInArray($demandeSiao && is_object($demandeSiao) ? $demandeSiao->motifDemande :
                 $sitSociale->motifdemande, SiSiaoItems::REASON_REQUEST))
             ->setWanderingTime($this->findInArray($sitSociale->dureederrance, SiSiaoItems::WANDERING_TIME))
             ->setCommentEvalSocialGroup(null)
@@ -258,14 +275,22 @@ class SiSiaoEvaluationImporter extends SiSiaoRequest
         return $evalBudgetGroup;
     }
 
-    protected function createEvalHousingGroup(EvaluationGroup $evaluationGroup, ?object $sitSociale = null, ?object $sitLogement = null, ?object $demandeSiao = null): EvalHousingGroup
-    {
+    /**
+     * @param object|array|null $demandeSiao
+     */
+    protected function createEvalHousingGroup(
+        EvaluationGroup $evaluationGroup,
+        ?object $sitSociale = null,
+        ?object $sitLogement = null,
+        $demandeSiao = null
+    ): EvalHousingGroup {
         $evalHousingGroup = (new EvalHousingGroup())
-            ->setExpulsionInProgress($this->findInArray($sitSociale->expulsion, SiSiaoItems::YES_NO))
-            ->setEvaluationGroup($evaluationGroup);
+        ->setExpulsionInProgress($this->findInArray($sitSociale->expulsion, SiSiaoItems::YES_NO))
+        ->setEvaluationGroup($evaluationGroup);
 
         if ($sitLogement) {
             $evalHousingGroup
+                ->setSiaoRequest($demandeSiao ? Choices::YES : Choices::NO)
                 ->setSocialHousingRequest($this->findInArray($sitLogement->demandeLogementSocial, SiSiaoItems::YES_NO))
                 ->setSocialHousingRequestId($sitLogement->numeroUniqueLogementDocial)
                 ->setSocialHousingRequestDate($this->convertDate($sitLogement->dateDemandeLogementSocial))
@@ -290,10 +315,9 @@ class SiSiaoEvaluationImporter extends SiSiaoRequest
                 ->setCommentEvalHousing($sitLogement->commentaireSituationLogement);
         }
 
-        if ($demandeSiao) {
+        if ($demandeSiao && is_object($demandeSiao)) {
             $evalHousingGroup
                 ->setHousingStatus($this->findInArray($demandeSiao->situationDemande, SiSiaoItems::HOUSING_STATUS))
-                ->setSiaoRequest($demandeSiao ? Choices::YES : Choices::NO)
                 ->setSiaoRequestDate($this->convertDate($demandeSiao->dateTransmissionInitialeSiao))
                 ->setSiaoUpdatedRequestDate($this->convertDate($demandeSiao->dateTransmissionSiao))
                 ->setSiaoRequestDept($this->findInArray($demandeSiao->siao->territoire->codeDepartement, SiSiaoItems::DEPARTMENTS))

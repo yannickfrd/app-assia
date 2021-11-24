@@ -129,16 +129,10 @@ class SiSiaoController extends AbstractController
     ): Response {
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        if ($this->siSiaoRequest->isConnected()) {
-            $evaluationGroup = $siSiaoEvalImporter->import($supportGroup);
+        if ($evaluationGroup = $siSiaoEvalImporter->import($supportGroup)) {
+            $dispatcher->dispatch(new EvaluationEvent($evaluationGroup), 'evaluation.after_update');
 
-            if ($evaluationGroup) {
-                $dispatcher->dispatch(new EvaluationEvent($evaluationGroup), 'evaluation.after_update');
-
-                $this->addFlash('success', "L'évaluation sociale a été importée.");
-            }
-        } else {
-            $this->addFlash('danger', "Vous n'êtes pas connecté au SI-SIAO.");
+            $this->addFlash('success', "L'évaluation sociale a été importée.");
         }
 
         return $this->redirectToRoute('support_view', ['id' => $supportGroup->getId()]);
@@ -158,13 +152,14 @@ class SiSiaoController extends AbstractController
     /**
      * @Route("/api-sisiao/logout", name="api_sisiao_logout", methods="GET")
      */
-    public function logout(): Response
+    public function logout(): JsonResponse
     {
         $this->siSiaoRequest->logout();
 
-        $this->addFlash('success', 'Vous avez bien été déconnecté du SI-SIAO.');
-
-        return $this->redirectToRoute('home');
+        return $this->json([
+            'alert' => 'success',
+            'msg' => 'Vous avez bien été déconnecté du SI-SIAO.',
+        ]);
     }
 
     /**

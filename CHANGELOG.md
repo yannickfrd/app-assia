@@ -1,30 +1,38 @@
 # CHANGELOG
 
+## Version 3.1.19 - 24/11/2021
+- Fix errors, add notification by email if exception, factoring
+    * [SiSiaoRequest] Edit error message
+    * [SiSiaoGroupImporter] Edit flashbag
+    * [SisiaoGroupImporter] Add notification by email if exception
+    * [SisiaoEvaluationImporter] Add condition if 'demandeSIAO' is an object
+    * [SisiaoEvaluationImporter] Add notification by email if exception
+    * [SisiaoEvaluationImporter] Check if user is connected to SI-SIAO before to try import evaluation
+    * [SiSiaoController] Change logout response to JsonResponse
+    * [SiSiaoController] Update functionnal tests
+    * [ExceptionNotification] Factoring
 ## Version 3.1.18 - 23/11/2021
-- Create functionnal tests to SiSiaoController and fix bugs SI-SIAO
+- Create functionnal tests to SiSiaoController and fix bugs SI-SIAO (#73)
     * Fix error 500 when search group SI-SIAO
     * Edit import socialSecurity value
     * Create functionnal tests to SiSiaoController
     * Refactor SiSiaoController (return types, param types...)
     * Add control access to import SI-SIAO evaluation
     * Delete useless code in searchPerson.js
-    
 ## Version 3.1.17 - 11/11/2021
-- Add Rosalie ID from SI-SIAO and fix bugs 
+- Add Rosalie ID from SI-SIAO and fix bugs (#72)
     * Import Rosalie ID from SI-SIAO
     * Fix invalid values in SI-SIAO evaluation import (reducedMobility and wheelchair)
     * Fix error 500 on delete export if don't exist
     * Fix granted to delete evaluation and clone support with ROLE_ADMIN
     * Fix error JS : Change 'getElementsByTagName' to 'querySelectorAll' JS function
     * Edit ExceptionListener and ExceptionNotification
-
 ## Version 3.1.16 - 08/11/2021
 - Fix bugs (#71)
     * Fix error in addAPerson form (add token csrf)
     * Fix error when name of document is empty
     * Edit view form_role_person : render_rest = false
     * Fix error if count EvaluationPeople == 0
-
 ## Version 3.1.15 - 08/11/2021
 - Add a code to device entity (#70)
     * Add 'code' variable to Device entity
@@ -33,7 +41,6 @@
     * Update tests
 ## Version 3.1.14 - 03/11/2021
 - Fix problem filters (poles, services, subservices, devices) in repositories (#69)
-
 ## Version 3.1.13 - 28/10/2021
 - Fix bugs + Edit grants to import evaluation from SI-SIAO (#68)
     * Fix error 500 if go to 'support_edit' route after removal support

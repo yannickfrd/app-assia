@@ -8,15 +8,15 @@ class ExceptionNotification extends MailNotifier
 {
     public function sendException(\Throwable $exception, ?int $code = null): bool
     {
-        $message = sprintf(
-            'Exception throwed : %s with code : %s',
+        $subject = sprintf(
+            'Application Assia | Exception throwed : %s with code : %s',
             $exception->getMessage(),
             $code ?? $exception->getCode(),
         );
 
         $email = (new TemplatedEmail())
             ->to($this->getAdminEmail())
-            ->subject('Application Assia : '.$message)
+            ->subject($subject)
             ->htmlTemplate('emails/exceptionEmail.html.twig')
             ->context([
                 'code' => $exception->getCode(),

@@ -182,9 +182,10 @@ class SiSiaoControllerTest extends WebTestCase
 
         $this->client->request('GET', '/api-sisiao/logout');
 
-        $this->assertResponseIsSuccessful();
+        $responseContent = json_decode($this->client->getResponse()->getContent(), true);
 
-        $this->assertSelectorTextContains('.alert.alert-success', 'Vous avez bien été déconnecté du SI-SIAO');
+        $this->assertResponseIsSuccessful();
+        $this->assertSame('success', $responseContent['alert']);
     }
 
     private function loginToSiSiao(?string $username = null, ?string $password = null): array

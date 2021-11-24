@@ -5,6 +5,7 @@ namespace App\Service\SiSiao;
 use App\Entity\People\PeopleGroup;
 use App\Entity\People\Person;
 use App\Entity\People\RolePerson;
+use App\Notification\ExceptionNotification;
 use App\Repository\People\PeopleGroupRepository;
 use App\Repository\People\PersonRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,6 +26,7 @@ class SiSiaoGroupImporter extends SiSiaoRequest
     protected $personRepo;
     protected $peopleGroupRepo;
     protected $flashBag;
+    protected $exceptionNotification;
 
     /** @var object */
     protected $ficheGroupe;
@@ -37,6 +39,7 @@ class SiSiaoGroupImporter extends SiSiaoRequest
         PersonRepository $personRepo,
         PeopleGroupRepository $peopleGroupRepo,
         FlashBagInterface $flashBag,
+        ExceptionNotification $exceptionNotification,
         string $url
     ) {
         parent::__construct($client, $session, $url);
@@ -46,6 +49,7 @@ class SiSiaoGroupImporter extends SiSiaoRequest
         $this->personRepo = $personRepo;
         $this->peopleGroupRepo = $peopleGroupRepo;
         $this->flashBag = $flashBag;
+        $this->exceptionNotification = $exceptionNotification;
     }
 
     /**
@@ -56,7 +60,9 @@ class SiSiaoGroupImporter extends SiSiaoRequest
         try {
             return $this->createGroup($id);
         } catch (\Exception $e) {
-            $this->flashBag->add('danger', "Le groupe n'a pas pu être importé. ".$this->getErrorMessage($e));
+            $this->exceptionNotification->sendException($e);
+
+            $this->flashBag->add('danger', $this->getErrorMessage($e)."Le groupe n'a pas pu être importé.");
 
             return null;
         }
@@ -86,6 +92,10 @@ class SiSiaoGroupImporter extends SiSiaoRequest
 
         $this->manager->flush();
 
+        if ($peopleGroup->getCreatedAt() > (new \DateTime())->modify('-10 sec')) {
+            $this->flashBag->add('success', 'Le groupe a été importé.');
+        }
+
         return $peopleGroup;
     }
 
@@ -103,8 +113,6 @@ class SiSiaoGroupImporter extends SiSiaoRequest
             ->setUpdatedBy($this->user);
 
             $this->manager->persist($peopleGroup);
-
-            $this->flashBag->add('success', 'Le groupe a été importé.');
         }
 
         return $peopleGroup;
