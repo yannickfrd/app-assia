@@ -124,6 +124,7 @@ class SiSiaoController extends AbstractController
      */
     public function importEvaluation(
         SupportGroup $supportGroup,
+        Request $request,
         SiSiaoEvaluationImporter $siSiaoEvalImporter,
         EventDispatcherInterface $dispatcher
     ): Response {
@@ -131,11 +132,9 @@ class SiSiaoController extends AbstractController
 
         if ($evaluationGroup = $siSiaoEvalImporter->import($supportGroup)) {
             $dispatcher->dispatch(new EvaluationEvent($evaluationGroup), 'evaluation.after_update');
-
-            $this->addFlash('success', "L'évaluation sociale a été importée.");
         }
 
-        return $this->redirectToRoute('support_view', ['id' => $supportGroup->getId()]);
+        return $this->redirect($request->headers->get('referer'));
     }
 
     /**

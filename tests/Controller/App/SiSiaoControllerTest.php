@@ -150,6 +150,11 @@ class SiSiaoControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('.alert.alert-success', "L'évaluation sociale a été importée");
+
+        $this->client->request('GET', '/api-sisiao/support/1/import-evaluation');
+
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorTextContains('.alert.alert-success', "L'évaluation sociale a été actualisée");
     }
 
     public function testGetUserIsSuccessful()

@@ -319,7 +319,7 @@ class SupportPerson
     }
 
     /**
-     * @return Collection<Person>
+     * @return Collection<EvaluationPerson>
      */
     public function getEvaluationsPerson()
     {

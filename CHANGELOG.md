@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Version 3.2.0 - 25/11/2021
+- New feature : update the current evaluation by SI-SIAO API
+    * [SiSiaoEvaluationImporter] New feature : update the current evaluation by SI-SIAO API
+    * [evaluationEdit] Add a button in 'evaluationEdit' page to update evaluation by SI-SIAO API
+    * [SupportPerson] Fix invalid return for getEvaluationsPerson
+    * [SiSiaoControllerTest] Update functionnal tests
 ## Version 3.1.19 - 24/11/2021
 - Fix errors, add notification by email if exception, factoring
     * [SiSiaoRequest] Edit error message

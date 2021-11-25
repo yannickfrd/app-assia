@@ -70,9 +70,7 @@ class SupportGroupEditorSubscriber implements EventSubscriberInterface
             $this->supportDuplicator->duplicate($supportGroup);
         }
         if (null != $form->get('siSiaoImport')->getViewData()) {
-            if ($this->siSiaoEvalImporter->import($supportGroup)) {
-                $this->flashbag->add('success', "L'évaluation sociale a été importée.");
-            }
+            $this->siSiaoEvalImporter->import($supportGroup);
         }
     }
 
