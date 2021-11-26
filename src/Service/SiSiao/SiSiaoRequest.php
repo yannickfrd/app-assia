@@ -73,7 +73,7 @@ class SiSiaoRequest
 
         $this->url = $url.self::API;
 
-        $this->headers = $this->session->get('sisiao_headers') ?? $this->getHeaders();
+        $this->headers = $this->session->get('sisiao.headers') ?? $this->getHeaders();
     }
 
     /**
@@ -303,7 +303,7 @@ class SiSiaoRequest
         dd($this->get('demandeInsertion/'.$demandeInsertion->id));
     }
 
-    public function login(?SiSiaoLogin $siSiaoUser = null): array
+    public function login(?SiSiaoLogin $siSiaoLogin = null): array
     {
         if ($this->isConnected()) {
             return [
@@ -316,14 +316,14 @@ class SiSiaoRequest
             $response = $this->client->request('POST', $this->url.'login', [
                 'headers' => $this->headers = $this->getHeaders(),
                 'body' => [
-                    'username' => $siSiaoUser ? $siSiaoUser->getUsername() : '',
-                    'password' => $siSiaoUser ? $siSiaoUser->getPassword() : '',
+                    'username' => $siSiaoLogin ? $siSiaoLogin->getUsername() : '',
+                    'password' => $siSiaoLogin ? $siSiaoLogin->getPassword() : '',
                 ],
             ]);
 
             array_push($this->headers, 'Cookie: '.join('; ', $response->getHeaders()['set-cookie']));
 
-            $this->session->set('sisiao_headers', $this->headers);
+            $this->session->set('sisiao.headers', $this->headers);
 
             return [
                 'isConnected' => Response::HTTP_UNAUTHORIZED !== $response->getStatusCode(),

@@ -15,11 +15,11 @@ class SiSiaoLoginType extends AbstractType
         $builder
             ->add('username', null, [
                 'label_attr' => ['class' => 'sr-only'],
-                'attr' => ['placeholder' => 'siSiao.username'],
+                'attr' => ['placeholder' => 'si_siao.username'],
             ])
             ->add('password', PasswordType::class, [
                 'label_attr' => ['class' => 'sr-only'],
-                'attr' => ['placeholder' => 'siSiao.password'],
+                'attr' => ['placeholder' => 'si_siao.password'],
             ]);
     }
 
@@ -27,7 +27,6 @@ class SiSiaoLoginType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => SiSiaoLogin::class,
-            'allow_extra_fields' => true,
             'translation_domain' => 'forms',
         ]);
     }

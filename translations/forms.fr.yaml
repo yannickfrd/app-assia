@@ -334,9 +334,12 @@ Model: Modèle d'export
 Anonymized: Anonymisé
 
 #SI-SIAO
-siSiao:
+si_siao:
+  login_successfully: Vous êtes connecté·e au SI-SIAO.
+  login_failed: Identifiant SI-SIAO ou mot de passe incorrect.
+  logout_successfully: Vous avez bien été déconnecté·e du SI-SIAO.
   username: Identifiant SI-SIAO
   password: Mot de passe
+si_siao_id.placeholder: ID groupe SI-SIAO
 Si siao search: Recherche SI-SIAO
-siSiaoId.placeholder: ID groupe SI-SIAO
 Si siao import: Importer l'évaluation sociale présente dans le SI-SIAO.

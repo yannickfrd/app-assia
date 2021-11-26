@@ -95,7 +95,7 @@ class SiSiaoEvaluationImporter extends SiSiaoRequest
     {
         if (false === $this->isConnected()) {
             $this->flashBag->add('danger', "L'évaluation sociale SI-SIAO n'a pas pu être importée, 
-                car vous n'êtes pas ou plus connecté au SI-SIAO.");
+                car vous n'êtes pas ou plus connecté·e au SI-SIAO.");
 
             return null;
         }

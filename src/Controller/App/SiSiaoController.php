@@ -16,40 +16,74 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SiSiaoController extends AbstractController
 {
-    protected $siSiaoRequest;
+    use TargetPathTrait;
 
-    public function __construct(SiSiaoRequest $siSiaoRequest)
+    protected $siSiaoRequest;
+    protected $translator;
+
+    public function __construct(SiSiaoRequest $siSiaoRequest, TranslatorInterface $translator)
     {
         $this->siSiaoRequest = $siSiaoRequest;
+        $this->translator = $translator;
     }
 
     /**
-     * @Route("/api-sisiao/login", name="api_sisiao_login", methods="POST")
+     * @Route("/api-sisiao/login", name="api_sisiao_login", methods={"GET", "POST"})
      */
-    public function login(Request $request): JsonResponse
+    public function login(Request $request): Response
     {
-        $form = $this->createForm(SiSiaoLoginType::class, $siSiaoUser = new SiSiaoLogin())
+        if ('GET' === $request->getMethod()) {
+            $this->saveTargetPath($request->getSession(), 'main', $request->headers->get('referer') ?? '/home');
+        }
+
+        $form = $this->createForm(SiSiaoLoginType::class, $siSiaoLogin = new SiSiaoLogin())
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $response = $this->siSiaoRequest->login($siSiaoUser);
+            $response = $this->siSiaoRequest->login($siSiaoLogin);
+
+            if ($response['isConnected']) {
+                $this->addFlash('success', 'si_siao.login_successfully');
+
+                return $this->redirect($this->getTargetPath($request->getSession(), 'main'));
+            }
+
+            $this->addFlash('danger', 'si_siao.login_failed');
+        }
+
+        return $this->render('app/siSiao/si_siao_login.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/api-sisiao/login-ajax", name="api_sisiao_login_ajax", methods="POST")
+     */
+    public function loginAjax(Request $request): JsonResponse
+    {
+        $form = $this->createForm(SiSiaoLoginType::class, $siSiaoLogin = new SiSiaoLogin())
+            ->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $response = $this->siSiaoRequest->login($siSiaoLogin);
 
             if ($response['isConnected']) {
                 return $this->json([
                     'alert' => 'success',
-                    'msg' => 'Connexion SI-SIAO réussie.',
+                    'msg' => $this->translator->trans('si_siao.login_successfully', [], 'forms'),
                 ]);
             }
         }
 
         return $this->json([
                 'alert' => 'danger',
-                'msg' => 'Identifiant ou mot de passe incorrect.',
-            ],
-            Response::HTTP_UNPROCESSABLE_ENTITY,
+                'msg' => $this->translator->trans('si_siao.login_failed', [], 'forms'),
+            ], Response::HTTP_UNPROCESSABLE_ENTITY,
         );
     }
 
@@ -65,7 +99,7 @@ class SiSiaoController extends AbstractController
         return $this->json([
             'isConnected' => true,
             'alert' => 'success',
-            'msg' => 'Connexion SI-SIAO réussie.',
+            'msg' => $this->translator->trans('si_siao.login_successfully', [], 'forms'),
         ]);
     }
 
@@ -93,7 +127,7 @@ class SiSiaoController extends AbstractController
         if (is_array($data) && 'success' === $data['alert']) {
             return $this->json([
                 'alert' => 'success',
-                'html' => $this->render('app/admin/siSiao/_siSiaoGroup.html.twig', $data['group']),
+                'html' => $this->render('app/siSiao/_si_siao_group.html.twig', $data['group']),
                 'idGroup' => $data['group']['idGroupe'],
             ]);
         }
@@ -130,6 +164,10 @@ class SiSiaoController extends AbstractController
     ): Response {
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
+        if (!$siSiaoEvalImporter->isConnected()) {
+            return $this->redirectToRoute('api_sisiao_login');
+        }
+
         if ($evaluationGroup = $siSiaoEvalImporter->import($supportGroup)) {
             $dispatcher->dispatch(new EvaluationEvent($evaluationGroup), 'evaluation.after_update');
         }
@@ -157,7 +195,7 @@ class SiSiaoController extends AbstractController
 
         return $this->json([
             'alert' => 'success',
-            'msg' => 'Vous avez bien été déconnecté du SI-SIAO.',
+            'msg' => $this->translator->trans('si_siao.logout_successfully', [], 'forms'),
         ]);
     }
 

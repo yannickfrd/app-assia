@@ -1,13 +1,21 @@
-# CHANGELOG
+CHANGELOG
+=========
+
+## Version 3.3.0 - 26/11/2021
+New feature : update the current evaluation by SI-SIAO API
+* [SiSiaoController] Create SI-SIAO login page with redirection to previous page
+* [SiSiaoController] Add test to SI-SIAO login page
+* [SiSiaoController]Add translator for messages
+* [SiSiao] Rename Twig files to snake_case
 
 ## Version 3.2.0 - 25/11/2021
-- New feature : update the current evaluation by SI-SIAO API
+- New feature : update the current evaluation by SI-SIAO API (#75)
     * [SiSiaoEvaluationImporter] New feature : update the current evaluation by SI-SIAO API
     * [evaluationEdit] Add a button in 'evaluationEdit' page to update evaluation by SI-SIAO API
     * [SupportPerson] Fix invalid return for getEvaluationsPerson
     * [SiSiaoControllerTest] Update functionnal tests
 ## Version 3.1.19 - 24/11/2021
-- Fix errors, add notification by email if exception, factoring
+- Fix errors, add notification by email if exception, factoring (#74)
     * [SiSiaoRequest] Edit error message
     * [SiSiaoGroupImporter] Edit flashbag
     * [SisiaoGroupImporter] Add notification by email if exception

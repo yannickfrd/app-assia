@@ -29,6 +29,15 @@ class SiSiaoControllerTest extends WebTestCase
         $this->siSiaoGroupId = $_SERVER['SISIAO_GROUP_ID'];
     }
 
+    public function testSiSiaoLoginPageIsUp()
+    {
+        $this->createLogin($this->fixtures['userRoleUser']);
+
+        $this->client->request('GET', '/api-sisiao/login');
+
+        $this->assertResponseIsSuccessful();
+    }
+
     public function testSiSiaoLoginIsFailed()
     {
         $this->createLogin($this->fixtures['userRoleUser']);
@@ -197,7 +206,7 @@ class SiSiaoControllerTest extends WebTestCase
     {
         $crawler = $this->client->request('GET', '/new_support/search/person');
 
-        $this->client->request('POST', '/api-sisiao/login', [
+        $this->client->request('POST', '/api-sisiao/login-ajax', [
             'si_siao_login' => [
                 'username' => $username ?? $_SERVER['SISIAO_LOGIN'],
                 'password' => $password ?? $_SERVER['SISIAO_PASSWORD'],
