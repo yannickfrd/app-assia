@@ -5,7 +5,6 @@ namespace App\Service\SiSiao;
 use App\Entity\People\Person;
 use App\Form\Model\SiSiao\SiSiaoLogin;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\HttpClient\HttpClientInterface;

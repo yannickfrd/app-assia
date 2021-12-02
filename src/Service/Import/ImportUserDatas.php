@@ -2,17 +2,17 @@
 
 namespace App\Service\Import;
 
-use App\Entity\Organization\Service;
-use App\Entity\Organization\ServiceUser;
 use App\Entity\Organization\User;
+use App\Entity\Organization\Service;
 use App\Notification\UserNotification;
+use App\Entity\Organization\ServiceUser;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Common\Collections\Collection;
+use Symfony\Component\HttpFoundation\Request;
 use App\Repository\Organization\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class ImportUserDatas extends ImportDatas
 {

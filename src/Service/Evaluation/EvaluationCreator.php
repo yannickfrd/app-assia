@@ -20,7 +20,7 @@ class EvaluationCreator
     }
 
     /**
-     * Crée l'évaluation sociale du groupe.
+     * Crée l'évaluation sociale du suivi.
      */
     public function create(SupportGroup $supportGroup): EvaluationGroup
     {
@@ -50,9 +50,9 @@ class EvaluationCreator
     }
 
     /**
-     * Crée l'évaluation sociale d'une personne du groupe.
+     * Crée l'évaluation sociale d'une personne du suivi.
      */
-    protected function createEvaluationPerson(SupportPerson $supportPerson, EvaluationGroup $evaluationGroup): EvaluationPerson
+    public function createEvaluationPerson(SupportPerson $supportPerson, EvaluationGroup $evaluationGroup): EvaluationPerson
     {
         $evaluationPerson = (new EvaluationPerson())
             ->setEvaluationGroup($evaluationGroup)

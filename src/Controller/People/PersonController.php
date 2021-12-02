@@ -2,38 +2,38 @@
 
 namespace App\Controller\People;
 
-use App\Service\Grammar;
-use App\Service\Pagination;
+use App\Controller\Traits\ErrorMessageTrait;
+use App\Entity\Evaluation\EvaluationGroup;
+use App\Entity\People\PeopleGroup;
 use App\Entity\People\Person;
 use App\Entity\People\RolePerson;
-use App\Entity\People\PeopleGroup;
 use App\Entity\Support\SupportGroup;
-use App\Form\Model\SiSiao\SiSiaoLogin;
-use App\Form\People\Person\PersonType;
-use App\Form\Model\People\PersonSearch;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\Evaluation\EvaluationGroup;
-use App\Service\People\PeopleGroupManager;
-use App\Repository\People\PersonRepository;
-use App\Controller\Traits\ErrorMessageTrait;
 use App\Form\Admin\Security\SiSiaoLoginType;
-use App\Form\People\Person\PersonSearchType;
-use Symfony\Component\HttpFoundation\Request;
-use App\Form\People\Person\PersonNewGroupType;
-use App\Form\People\RolePerson\RolePersonType;
-use Symfony\Component\HttpFoundation\Response;
-use App\Form\People\Person\RolePersonGroupType;
-use Symfony\Component\Routing\Annotation\Route;
-use App\Form\People\Person\DuplicatedPeopleType;
-use App\Form\People\Person\PersonRolePersonType;
-use App\Repository\People\PeopleGroupRepository;
 use App\Form\Model\People\DuplicatedPeopleSearch;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Form\Model\People\PersonSearch;
+use App\Form\Model\SiSiao\SiSiaoLogin;
+use App\Form\People\Person\DuplicatedPeopleType;
+use App\Form\People\Person\PersonNewGroupType;
+use App\Form\People\Person\PersonRolePersonType;
+use App\Form\People\Person\PersonSearchType;
+use App\Form\People\Person\PersonType;
+use App\Form\People\Person\RolePersonGroupType;
+use App\Form\People\RolePerson\RolePersonType;
+use App\Repository\People\PeopleGroupRepository;
+use App\Repository\People\PersonRepository;
 use App\Repository\Support\SupportPersonRepository;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use App\Service\Grammar;
+use App\Service\Pagination;
+use App\Service\People\PeopleGroupManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class PersonController extends AbstractController
 {

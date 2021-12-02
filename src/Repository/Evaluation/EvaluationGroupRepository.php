@@ -31,16 +31,19 @@ class EvaluationGroupRepository extends ServiceEntityRepository
         //     return null;
         // }
         return $this->createQueryBuilder('eg')->select('eg')
-            ->join('eg.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, status}')
+            ->join('eg.supportGroup', 'sg')->addSelect('sg')
             ->join('sg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
+            ->leftJoin('sg.supportPeople', 'sp1')->addSelect('PARTIAL sp1.{id, person, head, role, status}')
+            ->leftJoin('sp1.person', 'p1')->addSelect('PARTIAL p1.{id, firstname, lastname, birthdate, gender}')
 
             ->join('sg.service', 's')->addSelect('PARTIAL s.{id, name, email, type, place, preAdmission, justice}')
             ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name, code, coefficient, place, contribution, contributionType, contributionRate}')
-            ->leftJoin('eg.updatedBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
+            ->leftJoin('sg.updatedBy', 'u1')->addSelect('PARTIAL u1.{id, firstname, lastname}')
+            ->leftJoin('eg.updatedBy', 'u2')->addSelect('PARTIAL u2.{id, firstname, lastname}')
 
             ->leftJoin('eg.evaluationPeople', 'ep')->addSelect('ep')
-            ->leftJoin('ep.supportPerson', 'sp')->addSelect('PARTIAL sp.{id, person, head, role, status}')
-            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, birthdate, gender}')
+            ->leftJoin('ep.supportPerson', 'sp2')->addSelect('PARTIAL sp2.{id, person, head, role, status}')
+            ->leftJoin('sp2.person', 'p2')->addSelect('PARTIAL p2.{id, firstname, lastname, birthdate, gender}')
 
             ->leftJoin('eg.initEvalGroup', 'initEvalGroup')->addSelect('initEvalGroup')
             ->leftJoin('eg.evalSocialGroup', 'evalSocialGroup')->addSelect('evalSocialGroup')
@@ -63,9 +66,9 @@ class EvaluationGroupRepository extends ServiceEntityRepository
             // ->andWhere('eg.id = :id')
             // ->setParameter('id', $lastEvaluationId)
 
-            ->addOrderBy('sp.status', 'ASC')
-            ->addOrderBy('sp.head', 'DESC')
-            ->addOrderBy('p.birthdate', 'ASC')
+            ->addOrderBy('sp2.status', 'ASC')
+            ->addOrderBy('sp2.head', 'DESC')
+            ->addOrderBy('p2.birthdate', 'ASC')
 
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)

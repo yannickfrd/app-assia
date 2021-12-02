@@ -2,13 +2,12 @@
 
 namespace App\Tests\Controller\Organization;
 
-use App\Entity\Organization\Referent;
 use App\Tests\AppTestTrait;
-use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
-use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Response;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 
 class ReferentControllerTest extends WebTestCase
 {
@@ -133,7 +132,6 @@ class ReferentControllerTest extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
-
         $this->client = null;
         $fixtures = null;
     }

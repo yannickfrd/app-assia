@@ -2,13 +2,13 @@
 
 namespace App\Service\User;
 
-use App\Entity\Organization\Service;
 use App\Entity\Organization\User;
+use App\Entity\Organization\Service;
+use App\Notification\UserNotification;
+use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Model\Security\UserChangeInfo;
 use App\Form\Model\Security\UserResetPassword;
-use App\Notification\UserNotification;
 use App\Repository\Organization\UserRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;

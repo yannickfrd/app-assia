@@ -2,14 +2,14 @@
 
 namespace App\Entity\Evaluation;
 
-use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Support\SupportGroup;
-use Doctrine\Common\Collections\Collection;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Evaluation\EvaluationGroupRepository")
@@ -20,7 +20,7 @@ class EvaluationGroup
 {
     use CreatedUpdatedEntityTrait;
     use SoftDeleteableEntity;
-    
+
     public const CACHE_EVALUATION_KEY = 'evaluation.support_group';
 
     /**

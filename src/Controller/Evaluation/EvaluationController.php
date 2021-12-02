@@ -2,24 +2,25 @@
 
 namespace App\Controller\Evaluation;
 
-use App\Service\Normalisation;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Event\Evaluation\EvaluationEvent;
-use App\Entity\Evaluation\EvaluationGroup;
 use App\Controller\Traits\ErrorMessageTrait;
+use App\Entity\Evaluation\EvaluationGroup;
+use App\Event\Evaluation\EvaluationEvent;
 use App\Form\Evaluation\EvaluationGroupType;
-use App\Service\SupportGroup\SupportManager;
+use App\Repository\Evaluation\EvaluationGroupRepository;
+use App\Repository\Support\SupportGroupRepository;
 use App\Service\Evaluation\EvaluationCreator;
-use Symfony\Component\HttpFoundation\Request;
 use App\Service\Evaluation\EvaluationExporter;
+use App\Service\Evaluation\EvaluationManager;
+use App\Service\Normalisation;
+use App\Service\SupportGroup\SupportManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Repository\Support\SupportGroupRepository;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use App\Repository\Evaluation\EvaluationGroupRepository;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class EvaluationController extends AbstractController
 {
@@ -101,7 +102,6 @@ class EvaluationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $dispatcher->dispatch(new EvaluationEvent($evaluationGroup), 'evaluation.before_update');
 
-            $this->em->persist($evaluationGroup);
             $this->em->flush();
 
             $dispatcher->dispatch(new EvaluationEvent($evaluationGroup), 'evaluation.after_update');
@@ -145,6 +145,20 @@ class EvaluationController extends AbstractController
         );
 
         return $this->redirectToRoute('support_view', ['id' => $supportGroup->getId()]);
+    }
+
+    /**
+     * Ajoute les personnes du suivi absentes de l'évaluation sociale.
+     *
+     * @Route("/evaluation/{id}/fix-people", name="evaluation_fix_people", methods="GET")
+     */
+    public function fixPeople(EvaluationGroup $evaluationGroup, EvaluationManager $evaluationManager): Response
+    {
+        $this->denyAccessUnlessGranted('EDIT', $evaluationGroup->getSupportGroup());
+
+        $evaluationManager->addEvaluationPeople($evaluationGroup);
+
+        return $this->redirectToRoute('support_evaluation_view', ['id' => $evaluationGroup->getSupportGroup()->getId()]);
     }
 
     /**

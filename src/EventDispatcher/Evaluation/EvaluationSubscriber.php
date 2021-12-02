@@ -3,6 +3,7 @@
 namespace App\EventDispatcher\Evaluation;
 
 use App\Entity\Evaluation\EvaluationGroup;
+use App\Entity\Support\SupportGroup;
 use App\Event\Evaluation\EvaluationEvent;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -33,7 +34,11 @@ class EvaluationSubscriber implements EventSubscriberInterface
         $supportGroup = $event->getSupportGroup();
 
         $evaluationGroup
-            ->setUpdatedAt(new \DateTime())
+            ->setUpdatedAt($now = new \DateTime())
+            ->setUpdatedBy($this->user);
+
+        $supportGroup
+            ->setUpdatedAt($now)
             ->setUpdatedBy($this->user);
 
         $supportGroup->setUpdatedBy($this->user);
@@ -44,9 +49,13 @@ class EvaluationSubscriber implements EventSubscriberInterface
     public function discache(EvaluationEvent $event): bool
     {
         $evaluationGroup = $event->getEvaluationGroup();
+        $supportGroupId = $evaluationGroup->getSupportGroup()->getId();
         $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
 
-        return $cache->deleteItem(EvaluationGroup::CACHE_EVALUATION_KEY.$evaluationGroup->getSupportGroup()->getId());
+        return $cache->deleteItems([
+            EvaluationGroup::CACHE_EVALUATION_KEY.$supportGroupId,
+            SupportGroup::CACHE_FULLSUPPORT_KEY.$supportGroupId,
+        ]);
     }
 
     /**

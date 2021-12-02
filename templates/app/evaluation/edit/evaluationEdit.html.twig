@@ -42,7 +42,7 @@
 			{% include "app/evaluation/edit/_initEvaluation.html.twig" with {accordion_id: "init_eval"} %}
 			{% include "app/evaluation/edit/_evaluationBackground.html.twig" with {accordion_id: "eval_background"} %}
 			{% if support.service.justice == YES %}
-				{% include "app/evaluation/edit/_evaluationJustice.html.twig" with {accordion_id: "eval_justice"}  %}
+				{% include "app/evaluation/edit/_evaluationJustice.html.twig" with {accordion_id: "eval_justice"} %}
 			{% endif %}
 			{% include "app/evaluation/edit/_evaluationAdm.html.twig" with {accordion_id: "eval_adm"} %}
 			{% include "app/evaluation/edit/_evaluationFamily.html.twig" with {accordion_id: "eval_family"} %}
@@ -64,7 +64,15 @@
 						<a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('evaluation_delete', {'id': evaluationGroup.id}) }}" 
 							title="Supprimer l'évaluation sociale" data-toggle="tooltip" data-placement="bottom" 
 							onclick="if(window.confirm({{ textAlert }})){return true;}else{return false;}">
-							<span class="fas fa-trash-alt mr-2"></span>Supprimer</a>
+							<i class="fas fa-trash-alt mr-2"></i>Supprimer</a>
+					{% endif %}
+					{% if nb_people != support.supportPeople|length %}
+						{% set textAlert = "'Êtes-vous vraiment sûr de corriger cette évaluation sociale ? " ~ 
+							"(Ajout ou suppression de personne en fonction des personnes rattachées au suivi)'" %}
+						<a id="modal-btn-delete" class="mr-3 btn btn-warning d-block" href="{{ path('evaluation_fix_people', {'id': evaluationGroup.id}) }}" 
+							title="Mettre à jour les personnes rattachées à l'évaluation sociale" data-toggle="tooltip" data-placement="bottom" 
+							onclick="if(window.confirm({{ textAlert }})){return true;}else{return false;}">
+							<i class="fas fa-tools mr-2"></i></span><span class="d-none d-sm-inline">Corriger</span></a>
 					{% endif %}
 					{% set textAlert = "'Attention, cela va écraser les données de la présente évaluation sociale." ~ 
 						" Êtes-vous vraiment sûr de vouloir récupérer l`évaluation sociale du SI-SIAO ?'" %}
@@ -76,7 +84,7 @@
 				<div class="mb-4 float-right">
 					<button type="submit" name="send" class="btn btn-{{ theme_color }} shadow" 
 						data-url="{{ path('support_evaluation_edit', {'id': support.id}) }}">
-						<span class="fas fa-save mr-2"></span>{% if EDIT_MODE %}Mettre à jour{% else %}Enregistrer{% endif %}
+						<i class="fas fa-save mr-2"></i>{% if EDIT_MODE %}Mettre à jour{% else %}Enregistrer{% endif %}
 					</button>
 				</div>
 			</div>
