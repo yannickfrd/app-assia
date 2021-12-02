@@ -18,18 +18,18 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ReferentController extends AbstractController
 {
-    private $manager;
+    private $em;
 
-    public function __construct(EntityManagerInterface $manager)
+    public function __construct(EntityManagerInterface $em)
     {
-        $this->manager = $manager;
+        $this->em = $em;
     }
 
     /**
      * Nouveau service référent.
      *
      * @Route("/group/{group_id}/referent/new", name="group_referent_new", methods="GET|POST")
-     * @Route("/suppport/{support_id}/referent/new", name="support_referent_new", methods="GET|POST")
+     * @Route("/support/{support_id}/referent/new", name="support_referent_new", methods="GET|POST")
      * @ParamConverter("peopleGroup", options={"id" = "group_id"})
      * @ParamConverter("supportGroup", options={"id" = "support_id"})
      */
@@ -74,7 +74,7 @@ class ReferentController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->manager->flush();
+            $this->em->flush();
 
             $this->addFlash('success', "Le service social {$referent->getName()} est mis à jour.");
 
@@ -97,10 +97,10 @@ class ReferentController extends AbstractController
     public function deleteReferent(int $supportId = null, Referent $referent): Response
     {
         $referent->setUpdatedBy($this->getUser());
-        $this->manager->flush();
+        $this->em->flush();
 
-        $this->manager->remove($referent);
-        $this->manager->flush();
+        $this->em->remove($referent);
+        $this->em->flush();
 
         $name = $referent->getName();
 
@@ -122,8 +122,8 @@ class ReferentController extends AbstractController
     {
         $referent->setPeopleGroup($peopleGroup);
 
-        $this->manager->persist($referent);
-        $this->manager->flush();
+        $this->em->persist($referent);
+        $this->em->flush();
 
         $this->addFlash('success', "Le service social {$referent->getName()} est créé.");
 

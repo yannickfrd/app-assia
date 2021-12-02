@@ -23,12 +23,12 @@ class IndicatorController extends AbstractController
 {
     use ErrorMessageTrait;
 
-    protected $manager;
+    protected $em;
     protected $indicatorRepo;
 
-    public function __construct(EntityManagerInterface $manager, IndicatorRepository $indicatorRepo)
+    public function __construct(EntityManagerInterface $em, IndicatorRepository $indicatorRepo)
     {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->indicatorRepo = $indicatorRepo;
     }
 

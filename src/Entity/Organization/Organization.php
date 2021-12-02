@@ -66,7 +66,7 @@ class Organization
         $this->poles = new ArrayCollection();
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return (string) $this->id;
     }
@@ -118,9 +118,9 @@ class Organization
     }
 
     /**
-     * @return Collection<OriginRequest>
+     * @return Collection<OriginRequest>|OriginRequest[]|null
      */
-    public function getOriginRequests()
+    public function getOriginRequests(): ?Collection
     {
         return $this->originRequests;
     }
@@ -149,9 +149,9 @@ class Organization
     }
 
     /**
-     * @return Collection<Service>
+     * @return Collection<Service>|Service[]|null
      */
-    public function getServices()
+    public function getServices(): ?Collection
     {
         return $this->services;
     }
@@ -177,9 +177,9 @@ class Organization
     }
 
     /**
-     * @return Collection|Pole[]
+     * @return Collection|Pole[]|null
      */
-    public function getPoles(): Collection
+    public function getPoles(): ?Collection
     {
         return $this->poles;
     }

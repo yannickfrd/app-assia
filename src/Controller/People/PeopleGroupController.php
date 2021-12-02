@@ -28,12 +28,12 @@ class PeopleGroupController extends AbstractController
     use ErrorMessageTrait;
 
     private $peopleGroupRepo;
-    private $manager;
+    private $em;
 
-    public function __construct(EntityManagerInterface $manager, PeopleGroupRepository $peopleGroupRepo)
+    public function __construct(EntityManagerInterface $em, PeopleGroupRepository $peopleGroupRepo)
     {
         $this->peopleGroupRepo = $peopleGroupRepo;
-        $this->manager = $manager;
+        $this->em = $em;
     }
 
     /**
@@ -57,7 +57,7 @@ class PeopleGroupController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $dispatcher->dispatch(new PeopleGroupEvent($peopleGroup), 'people_group.before_update');
 
-            $this->manager->flush();
+            $this->em->flush();
 
             $this->addFlash('success', 'Les modifications sont enregistrées.');
 
@@ -80,8 +80,8 @@ class PeopleGroupController extends AbstractController
      */
     public function deletePeopleGroup(PeopleGroup $peopleGroup): Response
     {
-        $this->manager->remove($peopleGroup);
-        $this->manager->flush();
+        $this->em->remove($peopleGroup);
+        $this->em->flush();
 
         $this->addFlash('warning', 'Le groupe est supprimé.');
 

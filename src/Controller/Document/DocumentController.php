@@ -2,43 +2,44 @@
 
 namespace App\Controller\Document;
 
-use App\Controller\Traits\ErrorMessageTrait;
-use App\Entity\Support\Document;
-use App\Entity\Support\SupportGroup;
-use App\Form\Model\Support\DocumentSearch;
-use App\Form\Model\Support\SupportDocumentSearch;
-use App\Form\Support\Document\ActionType;
-use App\Form\Support\Document\DocumentSearchType;
-use App\Form\Support\Document\DocumentType;
-use App\Form\Support\Document\DropzoneDocumentType;
-use App\Form\Support\Document\SupportDocumentSearchType;
-use App\Repository\Support\DocumentRepository;
-use App\Security\CurrentUserService;
-use App\Service\File\Downloader;
-use App\Service\File\FileDownloader;
-use App\Service\File\FileUploader;
-use App\Service\Normalisation;
 use App\Service\Pagination;
-use App\Service\SupportGroup\SupportManager;
+use App\Service\Normalisation;
+use App\Entity\Support\Document;
+use App\Service\File\Downloader;
+use App\Service\File\FileUploader;
+use App\Entity\Support\SupportGroup;
+use App\Security\CurrentUserService;
+use App\Service\File\FileDownloader;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use App\Form\Support\Document\ActionType;
+use App\Form\Model\Support\DocumentSearch;
+use App\Form\Support\Document\DocumentType;
+use App\Controller\Traits\ErrorMessageTrait;
+use App\Service\SupportGroup\SupportManager;
 use Symfony\Component\HttpFoundation\Request;
+use App\Repository\Support\DocumentRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Form\Model\Support\SupportDocumentSearch;
+use App\Form\Support\Document\DocumentSearchType;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Form\Support\Document\DropzoneDocumentType;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use App\Form\Support\Document\SupportDocumentSearchType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class DocumentController extends AbstractController
 {
     use ErrorMessageTrait;
 
-    private $manager;
+    private $em;
     private $documentRepo;
     private $documentsDirectory;
 
-    public function __construct(EntityManagerInterface $manager, DocumentRepository $documentRepo, string $documentsDirectory)
+    public function __construct(EntityManagerInterface $em, DocumentRepository $documentRepo, string $documentsDirectory)
     {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->documentRepo = $documentRepo;
         $this->documentsDirectory = $documentsDirectory;
     }
@@ -95,7 +96,7 @@ class DocumentController extends AbstractController
      * @Route("/support/{id}/document/new", name="document_new", methods="POST")
      * @IsGranted("EDIT", subject="supportGroup")
      */
-    public function newDocument(SupportGroup $supportGroup, Request $request, FileUploader $fileUploader): Response
+    public function newDocument(SupportGroup $supportGroup, Request $request, FileUploader $fileUploader): JsonResponse
     {
         $dropzoneDocument = $request->files->get('dropzone_document');
         $files = $request->files->get('files');
@@ -143,7 +144,7 @@ class DocumentController extends AbstractController
      *
      * @Route("/support/{id}/documents/download", name="documents_download", methods="GET|POST")
      */
-    public function downloadDocuments(int $id, Request $request, SupportManager $supportManager, FileDownloader $downloader): Response
+    public function downloadDocuments(int $id, Request $request, SupportManager $supportManager, FileDownloader $downloader): JsonResponse
     {
         $this->denyAccessUnlessGranted('VIEW', $supportGroup = $supportManager->getSupportGroup($id));
 
@@ -165,13 +166,13 @@ class DocumentController extends AbstractController
      * @Route("/document/{id}/edit", name="document_edit", methods="POST")
      * @IsGranted("EDIT", subject="document")
      */
-    public function editDocument(Document $document, Request $request, Normalisation $normalisation): Response
+    public function editDocument(Document $document, Request $request, Normalisation $normalisation): JsonResponse
     {
         $form = $this->createForm(DocumentType::class, $document)
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->manager->flush();
+            $this->em->flush();
 
             $this->discache($document->getSupportGroup(), true);
 
@@ -191,10 +192,10 @@ class DocumentController extends AbstractController
      *
      * @Route("/document/{id}/delete", name="document_delete", methods="GET")
      */
-    public function deleteDocument(Document $document): Response
+    public function deleteDocument(Document $document): JsonResponse
     {
-        $this->manager->remove($document);
-        $this->manager->flush();
+        $this->em->remove($document);
+        $this->em->flush();
 
         $this->discache($document->getSupportGroup());
 

@@ -2,21 +2,21 @@
 
 namespace App\Command\User;
 
-use App\Entity\Organization\ServiceUser;
-use App\Entity\Organization\User;
 use App\Form\Utils\Choices;
+use App\Entity\Organization\User;
 use App\Notification\UserNotification;
-use App\Repository\Organization\ServiceRepository;
-use App\Repository\Organization\UserRepository;
+use App\Entity\Organization\ServiceUser;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
+use App\Repository\Organization\UserRepository;
+use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Style\SymfonyStyle;
+use App\Repository\Organization\ServiceRepository;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
-use Symfony\Component\Console\Question\Question;
-use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
  * Commande pour créer un nouvel utilisateur.
@@ -25,37 +25,37 @@ class CreateUserCommand extends Command
 {
     protected static $defaultName = 'app:user:create';
 
-    protected $manager;
+    protected $em;
     protected $userRepo;
     protected $serviceRepo;
-    protected $encoder;
+    protected $passwordHasher;
     protected $slugger;
     protected $userNotification;
 
     public function __construct(
-        EntityManagerInterface $manager,
+        EntityManagerInterface $em,
         UserRepository $userRepo,
         ServiceRepository $serviceRepo,
-        UserPasswordEncoderInterface $encoder,
+        UserPasswordHasherInterface $passwordHasher,
         SluggerInterface $slugger,
         UserNotification $userNotification
     ) {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->userRepo = $userRepo;
         $this->serviceRepo = $serviceRepo;
-        $this->encoder = $encoder;
+        $this->passwordHasher = $passwordHasher;
         $this->slugger = $slugger;
         $this->userNotification = $userNotification;
 
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Create a new user.');
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
@@ -117,13 +117,13 @@ class CreateUserCommand extends Command
             ->setFirstName($firstname)
             ->setLastName($lastname)
             ->setUsername($this->getUsername($firstname, $lastname))
-            ->setPassword($this->encoder->encodePassword($user, $password))
+            ->setPassword($this->passwordHasher->hashPassword($user, $password))
             ->setStatus(Choices::getchoices(User::STATUS)[$status])
             ->setRoles([$role])
             ->setEmail($email)
             ->setphone1($phone);
 
-        $this->manager->persist($user);
+        $this->em->persist($user);
 
         if ($this->userExists($user)) {
             $io->error('This user already exists !');
@@ -136,10 +136,10 @@ class CreateUserCommand extends Command
                 ->setUser($user)
                 ->setService($this->serviceRepo->findOneBy(['name' => $service]));
 
-            $this->manager->persist($serviceUser);
+            $this->em->persist($serviceUser);
         }
 
-        $this->manager->flush();
+        $this->em->flush();
 
         $io->success("The user {$user->getLastname()} {$user->getFirstname()} is create !");
 
@@ -168,7 +168,7 @@ class CreateUserCommand extends Command
     /**
      * Formatte et donne le login de l'utilisateur.
      */
-    protected function getUsername(string $firstname, string $lastname)
+    protected function getUsername(string $firstname, string $lastname): string
     {
         $nameArray = explode('-', $firstname);
         $username = '';
@@ -182,7 +182,7 @@ class CreateUserCommand extends Command
     /**
      * Vérifie si l'utilisateur existe déjà dans la base de données.
      */
-    protected function userExists(User $user)
+    protected function userExists(User $user): ?User
     {
         return $this->userRepo->findOneBy([
             'username' => $user->getUsername(),

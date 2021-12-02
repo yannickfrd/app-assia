@@ -11,7 +11,9 @@ use App\Form\Utils\Choices;
 use App\Repository\Traits\QueryTrait;
 use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -89,7 +91,7 @@ class DeviceRepository extends ServiceEntityRepository
     /**
      * Donne la liste des dispositifs du service.
      */
-    public function getDevicesOfServiceQueryBuilder(Service $service)
+    public function getDevicesOfServiceQueryBuilder(Service $service): QueryBuilder
     {
         return $this->createQueryBuilder('d')->select('PARTIAL d.{id, name}')
             ->leftJoin('d.serviceDevices', 'sd')
@@ -104,7 +106,7 @@ class DeviceRepository extends ServiceEntityRepository
     /**
      * Donne la liste des dispositifs de l'utilisateur.
      */
-    public function getDevicesOfUserQueryBuilder(CurrentUserService $currentUser, Service $service = null, string $dataClass = null)
+    public function getDevicesOfUserQueryBuilder(CurrentUserService $currentUser, Service $service = null, string $dataClass = null): QueryBuilder
     {
         $query = $this->createQueryBuilder('d')->select('PARTIAL d.{id, name, code, coefficient, place, disabledAt}')
             ->leftJoin('d.serviceDevices', 'sd')->addSelect('sd')
@@ -129,7 +131,10 @@ class DeviceRepository extends ServiceEntityRepository
         return $query->orderBy('d.name', 'ASC');
     }
 
-    public function findDevicesWithPlace(OccupancySearch $search, CurrentUserService $currentUser, Service $service = null)
+    /**
+     * @return Device[]|null
+     */
+    public function findDevicesWithPlace(OccupancySearch $search, CurrentUserService $currentUser, Service $service = null): ?array
     {
         $query = $this->createQueryBuilder('d')->select('d')
             ->leftJoin('d.places', 'pl')->addSelect('PARTIAL pl.{id, name, startDate, endDate, nbPlaces, service}')
@@ -158,7 +163,10 @@ class DeviceRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findDevicesForDashboard(CurrentUserService $currentUser, SupportsByUserSearch $search)
+    /**
+     * @return Device[]|null
+     */
+    public function findDevicesForDashboard(CurrentUserService $currentUser, SupportsByUserSearch $search): ?array
     {
         $query = $this->createQueryBuilder('d')->select('PARTIAL d.{id, name, coefficient}')
             ->leftJoin('d.serviceDevices', 'sd')->addSelect('sd')

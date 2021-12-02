@@ -10,23 +10,23 @@ use Symfony\Component\Security\Core\Security;
 
 class ImportDatas
 {
-    protected $manager;
+    protected $em;
     protected $user;
     protected $importNotification;
 
     protected $datas;
 
     public function __construct(
-        EntityManagerInterface $manager,
+        EntityManagerInterface $em,
         Security $security,
         ImportNotification $importNotification)
     {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->user = $security->getUser();
         $this->importNotification = $importNotification;
     }
 
-    public function getDatas(string $fileName)
+    public function getDatas(string $fileName): array
     {
         $this->datas = [];
 
@@ -79,12 +79,12 @@ class ImportDatas
         ->setCreatedBy($this->user)
         ->setUpdatedBy($this->user);
 
-        $this->manager->persist($note);
+        $this->em->persist($note);
 
         return $note;
     }
 
-    protected function sendDuplicatedPeople(array $people)
+    protected function sendDuplicatedPeople(array $people): void
     {
         $content = count($people).' doublons de personnes : <br/>';
         foreach ($people as $person) {

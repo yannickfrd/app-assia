@@ -1,25 +1,28 @@
 <?php
 
-namespace App\Tests\Controller;
+namespace App\Tests\Controller\Organization;
 
+use App\Tests\AppTestTrait;
 use App\Entity\Organization\Place;
 use App\Entity\Organization\Service;
-use App\Tests\AppTestTrait;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Response;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 
 class PlaceControllerTest extends WebTestCase
 {
-    use FixturesTrait;
     use AppTestTrait;
 
     /** @var KernelBrowser */
     protected $client;
 
+    /** @var AbstractDatabaseTool */
+    protected $databaseTool;
+
     /** @var array */
-    protected $data;
+    protected $fixtures;
 
     /** @var Service */
     protected $service;
@@ -29,19 +32,26 @@ class PlaceControllerTest extends WebTestCase
 
     protected function setUp(): void
     {
-        $this->data = $this->loadFixtureFiles([
+        parent::setUp();
+
+        $this->client = $this->createClient();
+
+        /** @var AbstractDatabaseTool */
+        $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
+
+        $this->fixtures = $this->databaseTool->loadAliceFixture([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/PlaceFixturesTest.yaml',
         ]);
 
-        $this->service = $this->data['service1'];
-        $this->place = $this->data['place1'];
+        $this->service = $this->fixtures['service1'];
+        $this->place = $this->fixtures['place1'];
     }
 
     public function testSearchListPlacesIsSuccessful()
     {
-        $this->createLogin($this->data['userAdmin']);
+        $this->createLogin($this->fixtures['userAdmin']);
 
         $this->client->request('GET', '/places');
 
@@ -50,11 +60,11 @@ class PlaceControllerTest extends WebTestCase
 
         /** @var Crawler */
         $crawler = $this->client->submitForm('search', [
-            'name' => 'Logement 666',
+            'name' => 'Logement test',
             'nbPlaces' => 6,
             'service' => [
                 'services' => $this->service->getId(),
-                'devices' => $this->data['device1'],
+                'devices' => $this->fixtures['device1'],
             ],
             'date[start]' => '2019-01-01',
             'date[end]' => '2020-01-01',
@@ -67,7 +77,7 @@ class PlaceControllerTest extends WebTestCase
 
     public function testExportPlaceIsSuccessful()
     {
-        $this->createLogin($this->data['userAdmin']);
+        $this->createLogin($this->fixtures['userAdmin']);
 
         $this->client->request('GET', '/places');
 
@@ -84,12 +94,12 @@ class PlaceControllerTest extends WebTestCase
         $this->client->submitForm('export', [], 'GET');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertContains('.spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
+        $this->assertStringContainsString('.spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
     }
 
     public function testCreatePlaceIsFailed()
     {
-        $this->createLogin($this->data['userAdmin']);
+        $this->createLogin($this->fixtures['userAdmin']);
 
         $id = $this->service->getId();
         $this->client->request('GET', "/admin/service/$id/place/new");
@@ -107,14 +117,14 @@ class PlaceControllerTest extends WebTestCase
 
     public function testCreateNewPlaceIsSuccessful()
     {
-        $this->createLogin($this->data['userAdmin']);
+        $this->createLogin($this->fixtures['userAdmin']);
 
         $id = $this->service->getId();
         $this->client->request('GET', "/admin/service/$id/place/new");
 
         // Fail
         $this->client->submitForm('send', [
-            'place[name]' => 'Logement 666',
+            'place[name]' => 'Logement test',
             'place[service]' => $this->service->getId(),
             'place[nbPlaces]' => 6,
             'place[startDate]' => '2019-01-01',
@@ -132,7 +142,7 @@ class PlaceControllerTest extends WebTestCase
             'place[location][city]' => 'Houilles',
             'place[location][zipcode]' => '78 800',
             'place[location][address]' => 'xxx',
-            'place[service]' => $this->data['service1'],
+            'place[service]' => $this->fixtures['service1'],
         ]);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -141,7 +151,7 @@ class PlaceControllerTest extends WebTestCase
 
     public function testEditPlaceIsSuccessful()
     {
-        $this->createLogin($this->data['userAdmin']);
+        $this->createLogin($this->fixtures['userAdmin']);
 
         $id = $this->place->getId();
         $this->client->request('GET', "/place/$id");
@@ -159,7 +169,7 @@ class PlaceControllerTest extends WebTestCase
 
     public function testDeletePlace()
     {
-        $this->createLogin($this->data['userAdmin']);
+        $this->createLogin($this->fixtures['userAdmin']);
 
         $id = $this->place->getId();
         $this->client->request('GET', "/admin/place/$id/delete");
@@ -170,9 +180,9 @@ class PlaceControllerTest extends WebTestCase
 
     public function testDisablePlace()
     {
-        $this->createLogin($this->data['userAdmin']);
+        $this->createLogin($this->fixtures['userAdmin']);
 
-        $id = $this->data['place1']->getId();
+        $id = $this->fixtures['place1']->getId();
         $this->client->request('GET', "/admin/place/$id/disable");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -187,7 +197,8 @@ class PlaceControllerTest extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
+        
         $this->client = null;
-        $this->data = null;
+        $this->fixtures = null;
     }
 }

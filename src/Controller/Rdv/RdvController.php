@@ -2,39 +2,40 @@
 
 namespace App\Controller\Rdv;
 
-use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Support\Rdv;
 use App\Event\Rdv\RdvEvent;
-use App\Form\Model\Support\RdvSearch;
-use App\Form\Model\Support\SupportRdvSearch;
-use App\Form\Support\Rdv\RdvSearchType;
-use App\Form\Support\Rdv\RdvType;
-use App\Form\Support\Rdv\SupportRdvSearchType;
-use App\Repository\Support\RdvRepository;
-use App\Repository\Support\SupportGroupRepository;
-use App\Security\CurrentUserService;
-use App\Service\Export\RdvExport;
 use App\Service\Pagination;
+use App\Form\Support\Rdv\RdvType;
+use App\Service\Export\RdvExport;
 use App\Service\Rdv\RdvPaginator;
-use App\Service\SupportGroup\SupportManager;
+use App\Security\CurrentUserService;
+use App\Form\Model\Support\RdvSearch;
+use App\Form\Support\Rdv\RdvSearchType;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use App\Repository\Support\RdvRepository;
+use App\Controller\Traits\ErrorMessageTrait;
+use App\Form\Model\Support\SupportRdvSearch;
+use App\Service\SupportGroup\SupportManager;
 use Symfony\Component\HttpFoundation\Request;
+use App\Form\Support\Rdv\SupportRdvSearchType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\Support\SupportGroupRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class RdvController extends AbstractController
 {
     use ErrorMessageTrait;
 
-    private $manager;
+    private $em;
     private $rdvRepo;
 
-    public function __construct(EntityManagerInterface $manager, RdvRepository $rdvRepo)
+    public function __construct(EntityManagerInterface $em, RdvRepository $rdvRepo)
     {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->rdvRepo = $rdvRepo;
     }
 
@@ -86,14 +87,14 @@ class RdvController extends AbstractController
      *
      * @Route("/rdv/new", name="rdv_new", methods="POST")
      */
-    public function createRdv(Request $request): Response
+    public function createRdv(Request $request): JsonResponse
     {
         $form = $this->createForm(RdvType::class, $rdv = new Rdv())
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->manager->persist($rdv);
-            $this->manager->flush();
+            $this->em->persist($rdv);
+            $this->em->flush();
 
             return $this->json($this->getDataNewRdv($rdv));
         }
@@ -106,7 +107,7 @@ class RdvController extends AbstractController
      *
      * @Route("/support/{id}/rdv/new", name="support_rdv_new", methods="POST")
      */
-    public function createSupportRdv(int $id, SupportGroupRepository $supportGroupRepo, Request $request, EventDispatcherInterface $dispatcher): Response
+    public function createSupportRdv(int $id, SupportGroupRepository $supportGroupRepo, Request $request, EventDispatcherInterface $dispatcher): JsonResponse
     {
         $supportGroup = $supportGroupRepo->findSupportById($id);
 
@@ -118,8 +119,8 @@ class RdvController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $rdv->setSupportGroup($supportGroup);
 
-            $this->manager->persist($rdv);
-            $this->manager->flush();
+            $this->em->persist($rdv);
+            $this->em->flush();
 
             $dispatcher->dispatch(new RdvEvent($rdv), 'rdv.after_create');
 
@@ -134,7 +135,7 @@ class RdvController extends AbstractController
      *
      * @Route("/rdv/{id}/get", name="rdv_get", methods="GET")
      */
-    public function getRdv($id): Response
+    public function getRdv($id): JsonResponse
     {
         $rdv = $this->rdvRepo->findRdv($id);
 
@@ -167,7 +168,7 @@ class RdvController extends AbstractController
      *
      * @Route("/rdv/{id}/edit", name="rdv_edit", methods="POST")
      */
-    public function editRdv(Rdv $rdv, Request $request, EventDispatcherInterface $dispatcher): Response
+    public function editRdv(Rdv $rdv, Request $request, EventDispatcherInterface $dispatcher): JsonResponse
     {
         $this->denyAccessUnlessGranted('EDIT', $rdv);
 
@@ -175,7 +176,7 @@ class RdvController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->manager->flush();
+            $this->em->flush();
 
             $dispatcher->dispatch(new RdvEvent($rdv), 'rdv.after_update');
 
@@ -201,12 +202,12 @@ class RdvController extends AbstractController
      * @Route("/rdv/{id}/delete", name="rdv_delete", methods="GET")
      * @IsGranted("DELETE", subject="rdv")
      */
-    public function deleteRdv(Rdv $rdv, EventDispatcherInterface $dispatcher): Response
+    public function deleteRdv(Rdv $rdv, EventDispatcherInterface $dispatcher): JsonResponse
     {
         $id = $rdv->getId();
 
-        $this->manager->remove($rdv);
-        $this->manager->flush();
+        $this->em->remove($rdv);
+        $this->em->flush();
 
         $dispatcher->dispatch(new RdvEvent($rdv), 'rdv.after_update');
 
@@ -218,7 +219,7 @@ class RdvController extends AbstractController
         ]);
     }
 
-    private function getDataNewRdv(Rdv $rdv)
+    private function getDataNewRdv(Rdv $rdv): array
     {
         return [
             'action' => 'create',
@@ -236,7 +237,7 @@ class RdvController extends AbstractController
     /**
      * Exporte les données.
      */
-    private function exportData(RdvSearch $search)
+    private function exportData(RdvSearch $search): Response
     {
         $rdvs = $this->rdvRepo->findRdvsToExport($search);
 

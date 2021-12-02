@@ -5,12 +5,12 @@ namespace App\Tests\Entity;
 use App\Entity\Organization\Place;
 use App\Entity\Organization\Service;
 use App\Tests\Entity\AssertHasErrorsTrait;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 
 class PlaceTest extends WebTestCase
 {
-    use FixturesTrait;
     use AssertHasErrorsTrait;
 
     /** @var \Doctrine\ORM\EntityManager */
@@ -24,12 +24,6 @@ class PlaceTest extends WebTestCase
 
     protected function setUp(): void
     {
-        $data = $this->loadFixtureFiles([
-            dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/DataFixturesTest/ServiceFixturesTest.yaml',
-            dirname(__DIR__).'/DataFixturesTest/PlaceFixturesTest.yaml',
-        ]);
-
         $this->place = $this->getPlace();
 
         $kernel = self::bootKernel();
@@ -37,8 +31,6 @@ class PlaceTest extends WebTestCase
         $this->entityManager = $kernel->getContainer()
             ->get('doctrine')
             ->getManager();
-
-        $this->service = $data['service1'];
     }
 
     protected function getPlace()
@@ -82,9 +74,18 @@ class PlaceTest extends WebTestCase
 
     public function testPlaceExists()
     {
+        /** @var AbstractDatabaseTool */
+        $databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
+
+        $fixtures = $databaseTool->loadAliceFixture([
+            dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
+            dirname(__DIR__).'/DataFixturesTest/ServiceFixturesTest.yaml',
+            dirname(__DIR__).'/DataFixturesTest/PlaceFixturesTest.yaml',
+        ]);
+
         $place = $this->place
-            ->setName('Logement 666')
-            ->setService($this->service);
+            ->setName('Logement test')
+            ->setService($fixtures['service1']);
 
         $this->assertHasErrors($place, 1);
     }

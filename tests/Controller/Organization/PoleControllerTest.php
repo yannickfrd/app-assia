@@ -1,38 +1,48 @@
 <?php
 
-namespace App\Tests\Controller;
+namespace App\Tests\Controller\Organization;
 
-use App\Entity\Organization\Pole;
 use App\Tests\AppTestTrait;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use App\Entity\Organization\Pole;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Response;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 
 class PoleControllerTest extends WebTestCase
 {
-    use FixturesTrait;
     use AppTestTrait;
 
     /** @var KernelBrowser */
     protected $client;
 
+    /** @var AbstractDatabaseTool */
+    protected $databaseTool;
+
     /** @var array */
-    protected $data;
+    protected $fixtures;
 
     /** @var Pole */
     protected $pole;
 
     protected function setUp(): void
     {
-        $this->data = $this->loadFixtureFiles([
+        parent::setUp();
+
+        $this->client = $this->createClient();
+
+        /** @var AbstractDatabaseTool */
+        $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
+
+        $this->fixtures = $this->databaseTool->loadAliceFixture([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
         ]);
 
-        $this->createLogin($this->data['userSuperAdmin']);
+        $this->createLogin($this->fixtures['userSuperAdmin']);
 
-        $this->pole = $this->data['pole1'];
+        $this->pole = $this->fixtures['pole1'];
     }
 
     public function testListPolesIsUp()
@@ -75,7 +85,8 @@ class PoleControllerTest extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
+        
         $this->client = null;
-        $this->data = null;
+        $this->fixtures = null;
     }
 }

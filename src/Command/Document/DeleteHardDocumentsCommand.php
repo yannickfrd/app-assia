@@ -21,29 +21,29 @@ class DeleteHardDocumentsCommand extends Command
     protected static $defaultName = 'app:document:delete_hard';
 
     protected $documentRepo;
-    protected $manager;
+    protected $em;
     protected $documentsDirectory;
     protected $output;
 
-    public function __construct(DocumentRepository $documentRepo, EntityManagerInterface $manager, string $documentsDirectory)
+    public function __construct(DocumentRepository $documentRepo, EntityManagerInterface $em, string $documentsDirectory)
     {
         $this->documentRepo = $documentRepo;
-        $this->manager = $manager;
+        $this->em = $em;
         $this->documentsDirectory = $documentsDirectory;
-        $this->disableListeners($this->manager);
-        $this->manager->getFilters()->disable('softdeleteable');
+        $this->disableListeners($this->em);
+        $this->em->getFilters()->disable('softdeleteable');
 
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
         ->addArgument('nb_months', InputArgument::OPTIONAL, 'Number of months before today.')
         ->setHelp('This command delete really the soft-deleted documents and associate files.');
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
@@ -68,9 +68,9 @@ class DeleteHardDocumentsCommand extends Command
                 ++$count;
             }
 
-            $this->manager->remove($document);
+            $this->em->remove($document);
         }
-        $this->manager->flush();
+        $this->em->flush();
 
         $io->success("The documents are deleted ! \n ".$count.' / '.count($documents)."\n");
 

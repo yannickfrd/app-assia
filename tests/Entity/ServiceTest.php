@@ -5,12 +5,10 @@ namespace App\Tests\Entity;
 use App\Entity\Organization\Pole;
 use App\Entity\Organization\Service;
 use App\Tests\Entity\AssertHasErrorsTrait;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ServiceTest extends WebTestCase
 {
-    use FixturesTrait;
     use AssertHasErrorsTrait;
 
     /** @var \Doctrine\ORM\EntityManager */
@@ -30,13 +28,6 @@ class ServiceTest extends WebTestCase
             ->get('doctrine')
             ->getManager();
 
-        $data = $this->loadFixtureFiles([
-            dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/DataFixturesTest/ServiceFixturesTest.yaml',
-        ]);
-
-        $this->pole = $data['pole1'];
-
         $faker = \Faker\Factory::create('fr_FR');
 
         $this->service = (new Service())
@@ -44,7 +35,7 @@ class ServiceTest extends WebTestCase
             ->setCity($faker->city)
             ->setZipcode($faker->numberBetween(1, 95))
             ->setAddress($faker->address)
-            ->setPole($this->pole);
+            ->setPole(new Pole());
     }
 
     public function testValidService()
@@ -70,7 +61,7 @@ class ServiceTest extends WebTestCase
     public function testServiceExists()
     {
         $service = $this->service
-            ->setName('CHRS XXX');
+            ->setName('CHRS Cergy');
         $this->assertHasErrors($service, 1);
     }
 

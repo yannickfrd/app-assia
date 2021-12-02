@@ -9,28 +9,25 @@ use App\Form\Utils\Choices;
 use App\Repository\Organization\UserConnectionRepository;
 use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 class LoginListener
 {
-    use DoctrineTrait;
-
-    private $manager;
-    /** @var Session */
+    private $em;
     private $session;
-    private $repo;
+    private $userConnectionRepo;
 
-    public function __construct(EntityManagerInterface $manager, SessionInterface $session, UserConnectionRepository $repo)
+    public function __construct(EntityManagerInterface $em, UserConnectionRepository $userConnectionRepo)
     {
-        $this->session = $session;
-        $this->repo = $repo;
-        $this->manager = $manager;
-        $this->disableListeners($this->manager);
+        $this->session = new Session();
+        $this->userConnectionRepo = $userConnectionRepo;
+        $this->em = $em;
     }
 
-    public function onSecurityInteractiveLogin(InteractiveLoginEvent $event)
+    public function onSecurityInteractiveLogin(InteractiveLoginEvent $event): void
     {
         /** @var User */
         $user = $event->getAuthenticationToken()->getUser();
@@ -43,7 +40,7 @@ class LoginListener
 
     private function addLastConnection(User $user): void
     {
-        $lastConnection = $this->repo->findOneBy(
+        $lastConnection = $this->userConnectionRepo->findOneBy(
             ['user' => $user],
             ['connectionAt' => 'DESC']
         );
@@ -58,9 +55,9 @@ class LoginListener
             ->setUser($user);
 
         try {
-            if ($this->manager->isOpen()) {
-                $this->manager->persist($connection);
-                $this->manager->flush();
+            if ($this->em->isOpen()) {
+                $this->em->persist($connection);
+                $this->em->flush();
             }
         } catch (\Exception $e) {
             // throw $e;

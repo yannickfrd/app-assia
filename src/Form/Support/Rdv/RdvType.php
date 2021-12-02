@@ -27,7 +27,7 @@ class RdvType extends AbstractType
         $this->supportGroupRepo = $supportGroupRepo;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('title', null, [
@@ -81,7 +81,7 @@ class RdvType extends AbstractType
             // ]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Rdv::class,

@@ -22,34 +22,34 @@ class ChangeNamePeopleCommand extends Command
     protected static $defaultName = 'app:person:change_name';
     protected static $defaultDescription = 'Change the name of people in development environnement.';
 
-    protected $manager;
+    protected $em;
     protected $userRepo;
     protected $peopleGroupRepo;
     protected $faker;
     protected $stopwatch;
 
     public function __construct(
-        EntityManagerInterface $manager,
+        EntityManagerInterface $em,
         UserRepository $userRepo,
         PeopleGroupRepository $peopleGroupRepo,
         Stopwatch $stopwatch
     ) {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->userRepo = $userRepo;
         $this->peopleGroupRepo = $peopleGroupRepo;
         $this->faker = \Faker\Factory::create('fr_FR');
         $this->stopwatch = $stopwatch;
-        $this->disableListeners($this->manager);
+        $this->disableListeners($this->em);
 
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription(self::$defaultDescription);
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
@@ -80,7 +80,7 @@ class ChangeNamePeopleCommand extends Command
             }
         }
 
-        $this->manager->flush();
+        $this->em->flush();
 
         $this->stopwatch->stop('command');
 

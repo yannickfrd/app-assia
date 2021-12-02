@@ -19,24 +19,24 @@ class ReorganizeUploadFolderCommand extends Command
 
     protected static $defaultName = 'app:document:reorganize_upload_folder';
 
-    protected $repo;
-    protected $manager;
+    protected $documentRepo;
+    protected $em;
     protected $output;
 
-    public function __construct(DocumentRepository $repo, EntityManagerInterface $manager)
+    public function __construct(DocumentRepository $documentRepo, EntityManagerInterface $em)
     {
-        $this->repo = $repo;
-        $this->manager = $manager;
-        $this->disableListeners($this->manager);
+        $this->documentRepo = $documentRepo;
+        $this->em = $em;
+        $this->disableListeners($this->em);
 
         parent::__construct();
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
-        $documents = $this->repo->findAll();
+        $documents = $this->documentRepo->findAll();
         $count = 0;
 
         foreach ($documents as $document) {
@@ -55,7 +55,7 @@ class ReorganizeUploadFolderCommand extends Command
                 }
             }
         }
-        $this->manager->flush();
+        $this->em->flush();
 
         $io->success("The document paths are update ! \n ".$count.' / '.count($documents)."\n");
 

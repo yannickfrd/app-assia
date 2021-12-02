@@ -18,23 +18,23 @@ use Doctrine\Persistence\ObjectManager;
  */
 class D_SupportFixtures extends Fixture
 {
-    private $manager;
+    private $em;
     private $peopleGroupRepo;
 
-    public function __construct(EntityManagerInterface $manager, PeopleGroupRepository $peopleGroupRepo)
+    public function __construct(EntityManagerInterface $em, PeopleGroupRepository $peopleGroupRepo)
     {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->peopleGroupRepo = $peopleGroupRepo;
     }
 
-    public function load(ObjectManager $manager): void
+    public function load(ObjectManager $em): void
     {
         foreach ($this->peopleGroupRepo->findAll() as $peopleGroup) {
             for ($i = 1; $i <= 1; ++$i) {
                 $this->createSupportGroup($peopleGroup, $i);
             }
         }
-        $this->manager->flush();
+        $this->em->flush();
     }
 
     private function createSupportGroup(PeopleGroup $peopleGroup, int $k): ?SupportGroup
@@ -83,7 +83,7 @@ class D_SupportFixtures extends Fixture
             ->setDevice($device)
         ;
 
-        $this->manager->persist($supportGroup);
+        $this->em->persist($supportGroup);
 
         foreach ($peopleGroup->getPeople() as $person) {
             $this->createSupportPerson($supportGroup, $person);
@@ -107,7 +107,7 @@ class D_SupportFixtures extends Fixture
             ->setPerson($person)
             ->setSupportGroup($supportGroup);
 
-        $this->manager->persist($supportPerson);
+        $this->em->persist($supportPerson);
 
         return $supportPerson;
     }

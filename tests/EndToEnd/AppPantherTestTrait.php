@@ -2,9 +2,9 @@
 
 namespace App\Tests\EndToEnd;
 
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Panther\Client;
-use Symfony\Component\Panther\DomCrawler\Crawler;
 
 trait AppPantherTestTrait
 {
@@ -20,19 +20,19 @@ trait AppPantherTestTrait
         $this->documentsDirectory = dirname(__DIR__).'/../../public/uploads/documents/';
 
         $this->client = static::createClient();
-
         $this->client = static::createPantherClient(['browser' => 'firefox']);
-        // $this->client = Client::createChromeClient(__DIR__.'/../drivers/chromedriver');
-        // $this->client = Client::createFirefoxClient(__DIR__.'/../drivers/geckodriver');
 
-        $this->client->request('GET', '/deconnexion');
+        $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
+        $cache->clear();
+
+        $this->client->request('GET', '/logout');
         $this->client->request('GET', '/login');
 
         $this->outputMsg('Try to login');
 
         $this->client->submitForm('send', [
-            '_username' => 'r.user',
-            '_password' => 'Test123*',
+            'username' => 'r.user',
+            'password' => 'Test123*',
         ]);
 
         $this->assertSelectorTextContains('h1', 'Tableau de bord');

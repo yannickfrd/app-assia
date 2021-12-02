@@ -14,20 +14,20 @@ use Symfony\Component\String\Slugger\SluggerInterface;
  */
 class E_DocumentFixtures extends Fixture
 {
-    private $manager;
+    private $em;
     private $supportGroupRepo;
     private $slugger;
     private $faker;
 
-    public function __construct(EntityManagerInterface $manager, SluggerInterface $slugger, SupportGroupRepository $supportGroupRepo)
+    public function __construct(EntityManagerInterface $em, SluggerInterface $slugger, SupportGroupRepository $supportGroupRepo)
     {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->supportGroupRepo = $supportGroupRepo;
         $this->slugger = $slugger;
         $this->faker = \Faker\Factory::create('fr_FR');
     }
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $em): void
     {
         foreach ($this->supportGroupRepo->findAll() as $support) {
             for ($i = 0; $i < mt_rand(6, 10); ++$i) {
@@ -44,9 +44,9 @@ class E_DocumentFixtures extends Fixture
                 ->setUpdatedAt($createdAt)
                 ->setUpdatedBy($support->getReferent());
 
-                $this->manager->persist($document);
+                $this->em->persist($document);
             }
         }
-        $this->manager->flush();
+        $this->em->flush();
     }
 }

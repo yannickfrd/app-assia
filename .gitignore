@@ -10,8 +10,8 @@
 ###< symfony/framework-bundle ###
 
 ###> symfony/phpunit-bridge ###
-.phpunit
 .phpunit.result.cache
+.phpunit
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
 
@@ -33,7 +33,7 @@ yarn-error.log
 ###< uploaded files ###
 
 ###> migration files ###
-/src/Migrations/
+/migrations/*
 ###< migration files ###
 
 ###> secrets keys ###

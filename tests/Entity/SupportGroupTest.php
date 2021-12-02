@@ -2,14 +2,15 @@
 
 namespace App\Tests\Entity;
 
+use App\Entity\Organization\Device;
+use App\Entity\Organization\Service;
+use App\Entity\Organization\User;
 use App\Entity\Support\SupportGroup;
 use App\Tests\Entity\AssertHasErrorsTrait;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class SupportGroupTest extends WebTestCase
 {
-    use FixturesTrait;
     use AssertHasErrorsTrait;
 
     /** @var SupportGroup */
@@ -17,22 +18,13 @@ class SupportGroupTest extends WebTestCase
 
     protected function setUp(): void
     {
-        $kernel = self::bootKernel();
-
-        $dataFixutres = $this->loadFixtureFiles([
-            dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/DataFixturesTest/ServiceFixturesTest.yaml',
-            dirname(__DIR__).'/DataFixturesTest/PersonFixturesTest.yaml',
-            dirname(__DIR__).'/DataFixturesTest/SupportFixturesTest.yaml',
-        ]);
-
         $this->supportGroup = (new SupportGroup())
             ->setStartDate(new \DateTime('2020-01-01'))
             ->setStatus(2)
             ->setAgreement(true)
-            ->setReferent($dataFixutres['userRoleUser'])
-            ->setService($dataFixutres['service1'])
-            ->setDevice($dataFixutres['device1']);
+            ->setReferent(new User())
+            ->setService(new Service())
+            ->setDevice(new Device());
     }
 
     public function testValidSupportGroup()

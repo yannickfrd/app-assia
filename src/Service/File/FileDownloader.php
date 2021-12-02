@@ -4,6 +4,8 @@ namespace App\Service\File;
 
 use App\Entity\Support\SupportGroup;
 use App\Repository\Support\DocumentRepository;
+use Symfony\Component\BrowserKit\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class FileDownloader extends Downloader
 {
@@ -18,7 +20,7 @@ class FileDownloader extends Downloader
         $this->documentsDirectory = $documentsDirectory;
     }
 
-    public function sendDocuments(array $idDocuments, SupportGroup $supportGroup)
+    public function sendDocuments(array $idDocuments, SupportGroup $supportGroup): StreamedResponse
     {
         $now = new \DateTime();
 
@@ -49,12 +51,12 @@ class FileDownloader extends Downloader
         return $this->send($zipFile);
     }
 
-    public function getDownloadDirectory()
+    public function getDownloadDirectory(): string
     {
         return $this->downloadsDirectory;
     }
 
-    public function getDocumentsDirectory()
+    public function getDocumentsDirectory(): string
     {
         return $this->documentsDirectory;
     }

@@ -10,7 +10,7 @@ class ServiceExport extends ExportExcel
     /**
      * Exporte les données.
      */
-    public function exportData($services)
+    public function exportData(array $services)
     {
         $arrayData[] = array_keys($this->getDatas($services[0]));
 

@@ -5,13 +5,12 @@ namespace App\Tests\Repository;
 use App\Entity\People\Person;
 use App\Form\Model\People\PersonSearch;
 use App\Repository\People\PersonRepository;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 
 class PersonRepositoryTest extends WebTestCase
 {
-    use FixturesTrait;
-
     /** @var \Doctrine\ORM\EntityManager */
     private $entityManager;
 
@@ -26,7 +25,10 @@ class PersonRepositoryTest extends WebTestCase
 
     protected function setUp(): void
     {
-        $data = $this->loadFixtureFiles([
+        /** @var AbstractDatabaseTool */
+        $databaseTool = $this->getContainer()->get(DatabaseToolCollection::class)->get();
+
+        $fixtures = $databaseTool->loadAliceFixture([
             dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/DataFixturesTest/PersonFixturesTest.yaml',
         ]);
@@ -40,7 +42,7 @@ class PersonRepositoryTest extends WebTestCase
         /* @var PersonRepository */
         $this->personRepo = $this->entityManager->getRepository(Person::class);
 
-        $this->person = $data['userRoleUser'];
+        $this->person = $fixtures['userRoleUser'];
         $this->search = $this->getPersonSearch();
     }
 

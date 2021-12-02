@@ -205,9 +205,9 @@ class PeopleGroup
     }
 
     /**
-     * @return Collection<SupportGroup>
+     * @return Collection<SupportGroup>|SupportGroup[]|null
      */
-    public function getSupports()
+    public function getSupports(): ?Collection
     {
         return $this->supports;
     }
@@ -236,9 +236,9 @@ class PeopleGroup
     }
 
     /**
-     * @return Collection<RolePerson>
+     * @return Collection<RolePerson>|RolePerson[]|null
      */
-    public function getRolePeople()
+    public function getRolePeople(): ?Collection
     {
         return $this->rolePeople;
     }
@@ -267,9 +267,9 @@ class PeopleGroup
     }
 
     /**
-     * @return Collection<Person>
+     * @return Collection<Person>|Person[]|null
      */
-    public function getPeople()
+    public function getPeople(): ?Collection
     {
         $people = new ArrayCollection();
 
@@ -281,9 +281,9 @@ class PeopleGroup
     }
 
     /**
-     * @return Collection<Referent>
+     * @return Collection<Referent>|Referent[]|null
      */
-    public function getReferents()
+    public function getReferents(): ?Collection
     {
         return $this->referents;
     }
@@ -312,9 +312,9 @@ class PeopleGroup
     }
 
     /**
-     * @return Collection<Document>
+     * @return Collection<Document>|Document[]|null
      */
-    public function getDocuments()
+    public function getDocuments(): ?Collection
     {
         return $this->documents;
     }
@@ -343,9 +343,9 @@ class PeopleGroup
     }
 
     /**
-     * @return Collection<PlaceGroup>
+     * @return Collection<PlaceGroup>|PlaceGroup[]|null
      */
-    public function getPlaceGroups()
+    public function getPlaceGroups(): ?Collection
     {
         return $this->placeGroups;
     }

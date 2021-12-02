@@ -9,8 +9,9 @@ class PersonExport extends ExportExcel
 {
     /**
      * Exporte les données.
+     * @return StreamedResponse|Response|string
      */
-    public function exportData($people)
+    public function exportData(array $people)
     {
         $arrayData[] = array_keys((array) $this->getDatas($people[0]));
 

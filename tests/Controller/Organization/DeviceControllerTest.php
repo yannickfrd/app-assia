@@ -1,25 +1,28 @@
 <?php
 
-namespace App\Tests\Controller;
+namespace App\Tests\Controller\Organization;
 
 use App\Entity\Organization\Device;
 use App\Entity\Organization\Service;
 use App\Tests\AppTestTrait;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
 class DeviceControllerTest extends WebTestCase
 {
-    use FixturesTrait;
     use AppTestTrait;
 
     /** @var KernelBrowser */
     protected $client;
 
+    /** @var AbstractDatabaseTool */
+    protected $databaseTool;
+
     /** @var array */
-    protected $data;
+    protected $fixtures;
 
     /** @var Service */
     protected $service;
@@ -29,18 +32,25 @@ class DeviceControllerTest extends WebTestCase
 
     protected function setUp(): void
     {
-        $this->data = $this->loadFixtureFiles([
+        parent::setUp();
+
+        $this->client = $this->createClient();
+
+        /* @var AbstractDatabaseTool */
+        $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
+
+        $this->fixtures = $this->databaseTool->loadAliceFixture([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/DeviceFixturesTest.yaml',
         ]);
 
-        $this->service = $this->data['service1'];
-        $this->device = $this->data['device1'];
+        $this->service = $this->fixtures['service1'];
+        $this->device = $this->fixtures['device1'];
     }
 
     public function testListDevicesIsUp()
     {
-        $this->createLogin($this->data['userAdmin']);
+        $this->createLogin($this->fixtures['userAdmin']);
 
         $this->client->request('GET', '/admin/devices');
 
@@ -50,7 +60,7 @@ class DeviceControllerTest extends WebTestCase
 
     public function testNewDeviceIsUp()
     {
-        $this->createLogin($this->data['userSuperAdmin']);
+        $this->createLogin($this->fixtures['userSuperAdmin']);
 
         $this->client->request('GET', '/admin/device/new');
 
@@ -60,7 +70,7 @@ class DeviceControllerTest extends WebTestCase
 
     public function testCreateDeviceIsFailed()
     {
-        $this->createLogin($this->data['userSuperAdmin']);
+        $this->createLogin($this->fixtures['userSuperAdmin']);
 
         $this->client->request('GET', '/admin/device/new');
 
@@ -83,7 +93,7 @@ class DeviceControllerTest extends WebTestCase
 
     public function testCreateDeviceIsSuccessful()
     {
-        $this->createLogin($this->data['userSuperAdmin']);
+        $this->createLogin($this->fixtures['userSuperAdmin']);
 
         $this->client->request('GET', '/admin/device/new');
 
@@ -98,7 +108,7 @@ class DeviceControllerTest extends WebTestCase
 
     public function testEditDeviceIsSuccessful()
     {
-        $this->createLogin($this->data['userSuperAdmin']);
+        $this->createLogin($this->fixtures['userSuperAdmin']);
 
         $id = $this->device->getId();
         $this->client->request('GET', "/admin/device/$id");
@@ -114,7 +124,7 @@ class DeviceControllerTest extends WebTestCase
 
     public function testDisableDeviceIsFailed()
     {
-        $this->createLogin($this->data['userAdmin']);
+        $this->createLogin($this->fixtures['userAdmin']);
 
         $id = $this->device->getId();
         $this->client->request('GET', "/admin/device/$id/disable");
@@ -124,7 +134,7 @@ class DeviceControllerTest extends WebTestCase
 
     public function testDisableDeviceIsSuccessful()
     {
-        $this->createLogin($this->data['userSuperAdmin']);
+        $this->createLogin($this->fixtures['userSuperAdmin']);
 
         $id = $this->device->getId();
         $this->client->request('GET', "/admin/device/$id/disable");
@@ -141,7 +151,8 @@ class DeviceControllerTest extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
+
         $this->client = null;
-        $this->data = null;
+        $this->fixtures = null;
     }
 }

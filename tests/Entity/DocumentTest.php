@@ -3,12 +3,10 @@
 namespace App\Tests\Entity;
 
 use App\Entity\Support\Document;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class DocumentTest extends WebTestCase
 {
-    use FixturesTrait;
     use AssertHasErrorsTrait;
 
     /** @var Document */
@@ -19,7 +17,7 @@ class DocumentTest extends WebTestCase
         $faker = \Faker\Factory::create('fr_FR');
 
         $this->document = (new Document())
-            ->setName('Document 666')
+            ->setName('Document test')
             ->setType(1)
             ->setInternalFileName($faker->slug());
     }

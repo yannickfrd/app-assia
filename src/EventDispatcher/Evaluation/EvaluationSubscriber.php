@@ -17,7 +17,7 @@ class EvaluationSubscriber implements EventSubscriberInterface
         $this->user = $security->getUser();
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             'evaluation.before_create' => 'beforeUpdate',
@@ -27,7 +27,7 @@ class EvaluationSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function beforeUpdate(EvaluationEvent $event)
+    public function beforeUpdate(EvaluationEvent $event): void
     {
         $evaluationGroup = $event->getEvaluationGroup();
         $supportGroup = $event->getSupportGroup();
@@ -35,13 +35,13 @@ class EvaluationSubscriber implements EventSubscriberInterface
         $evaluationGroup
             ->setUpdatedAt(new \DateTime())
             ->setUpdatedBy($this->user);
-            
+
         $supportGroup->setUpdatedBy($this->user);
 
         $this->updateBudgetGroup($evaluationGroup);
     }
 
-    public function discache(EvaluationEvent $event)
+    public function discache(EvaluationEvent $event): bool
     {
         $evaluationGroup = $event->getEvaluationGroup();
         $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
@@ -52,7 +52,7 @@ class EvaluationSubscriber implements EventSubscriberInterface
     /**
      * Met à jour le budget du groupe.
      */
-    protected function updateBudgetGroup(EvaluationGroup $evaluationGroup)
+    protected function updateBudgetGroup(EvaluationGroup $evaluationGroup): void
     {
         $resourcesGroupAmt = 0;
         $chargesGroupAmt = 0;

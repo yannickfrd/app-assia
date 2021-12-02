@@ -36,7 +36,7 @@ class PlaceRepository extends ServiceEntityRepository
      */
     public function findPlacesQuery(PlaceSearch $search = null, CurrentUserService $currentUser = null): Query
     {
-        $query = $this->getPlaces();
+        $query = $this->getPlacesAlterQueryBuilder();
 
         if ($currentUser && !$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             $query = $query->andWhere('pl.service IN (:services)')
@@ -54,11 +54,11 @@ class PlaceRepository extends ServiceEntityRepository
     /**
      * Retourne toutes les places pour l'export.
      *
-     * @return mixed
+     * @return Place[]|null
      */
-    public function findPlacesToExport(PlaceSearch $search = null)
+    public function findPlacesToExport(PlaceSearch $search = null): ?array
     {
-        $query = $this->getPlaces();
+        $query = $this->getPlacesAlterQueryBuilder();
 
         if ($search) {
             $query = $this->filter($query, $search);
@@ -111,7 +111,7 @@ class PlaceRepository extends ServiceEntityRepository
      *
      * @return Place[]|null
      */
-    public function findPlacesOfService(Service $service)
+    public function findPlacesOfService(Service $service): ?array
     {
         return $this->createQueryBuilder('pl')->select('pl')
             ->leftJoin('pl.service', 's')->addSelect('PARTIAL s.{id, name}')
@@ -131,7 +131,7 @@ class PlaceRepository extends ServiceEntityRepository
      *
      * @return Place[]|null
      */
-    public function findPlacesOfSubService(SubService $subService)
+    public function findPlacesOfSubService(SubService $subService): ?array
     {
         return $this->createQueryBuilder('pl')->select('pl')
             ->innerJoin('pl.device', 'd')->addSelect('PARTIAL d.{id,name}')
@@ -150,7 +150,7 @@ class PlaceRepository extends ServiceEntityRepository
      *
      * @return Place[]|null
      */
-    public function findPlacesForOccupancy(OccupancySearch $search, $currentUser, Service $service = null, SubService $subService = null): array
+    public function findPlacesForOccupancy(OccupancySearch $search, $currentUser, Service $service = null, SubService $subService = null): ?array
     {
         $query = $this->createQueryBuilder('pl')->select('pl')
             ->innerJoin('pl.service', 's')->addSelect('PARTIAL s.{id, name}')
@@ -201,7 +201,7 @@ class PlaceRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    protected function getPlaces()
+    protected function getPlacesAlterQueryBuilder(): QueryBuilder
     {
         return $this->createQueryBuilder('pl')->select('pl')
             ->leftJoin('pl.device', 'd')->addSelect('PARTIAL d.{id, name}')
@@ -216,7 +216,7 @@ class PlaceRepository extends ServiceEntityRepository
     /**
      * Filtre la recherche.
      */
-    protected function filter($query, PlaceSearch $search)
+    protected function filter($query, PlaceSearch $search): QueryBuilder
     {
         if ($search->getName()) {
             $query->andWhere('pl.name LIKE :name')

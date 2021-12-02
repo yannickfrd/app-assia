@@ -10,22 +10,28 @@ class RdvVoter extends Voter
 {
     use VoterTrait;
 
+    /** @var User */
     protected $user;
+    
     protected $userId;
-    protected $rdv;
 
-    protected function supports($attribute, $subject)
+    /** @var Rdv */
+    protected $rdv;
+    
+    /** @var SupportGroup */
+    protected $supportGroup;
+    
+    protected function supports($attribute, $subject): bool
     {
         return in_array($attribute, ['VIEW', 'EDIT', 'DELETE'])
             && $subject instanceof \App\Entity\Support\Rdv;
     }
 
-    protected function voteOnAttribute($attribute, $rdv, TokenInterface $token)
+    protected function voteOnAttribute($attribute, $rdv, TokenInterface $token): bool
     {
         /** @var User */
         $this->user = $token->getUser();
         $this->userId = $this->user->getId();
-        /** @var Rdv */
         $this->rdv = $rdv;
         $this->supportGroup = $this->rdv->getSupportGroup();
 
@@ -48,7 +54,7 @@ class RdvVoter extends Voter
         return false;
     }
 
-    protected function canView()
+    protected function canView(): bool
     {
         if ($this->isCreatorOrReferent()
             || ($this->supportGroup && $this->isUserOfService($this->supportGroup->getService()))
@@ -60,7 +66,7 @@ class RdvVoter extends Voter
         return false;
     }
 
-    protected function canEdit()
+    protected function canEdit(): bool
     {
         if ($this->isCreatorOrReferent()
             || ($this->supportGroup && $this->isAdminOfService($this->supportGroup->getService()))
@@ -72,7 +78,7 @@ class RdvVoter extends Voter
         return false;
     }
 
-    protected function canDelete()
+    protected function canDelete(): bool
     {
         return $this->canEdit();
     }

@@ -24,6 +24,8 @@ use App\Form\Model\Admin\ExportSearch;
 use App\Service\ExportExcel;
 use App\Service\Normalisation;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class EvaluationPersonExport extends ExportExcel
 {
@@ -89,6 +91,8 @@ class EvaluationPersonExport extends ExportExcel
      * Exporte les données.
      *
      * @param SupportPerson[] $supports
+     *
+     * @return StreamedResponse|Response|string
      */
     public function exportData(array $supports, ExportSearch $search, bool $asynch = true)
     {

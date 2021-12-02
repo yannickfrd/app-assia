@@ -9,8 +9,8 @@ use App\Notification\ExceptionNotification;
 use App\Repository\People\PeopleGroupRepository;
 use App\Repository\People\PersonRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -21,7 +21,7 @@ class SiSiaoGroupImporter extends SiSiaoRequest
 {
     use SiSiaoClientTrait;
 
-    protected $manager;
+    protected $em;
     protected $user;
     protected $personRepo;
     protected $peopleGroupRepo;
@@ -33,8 +33,8 @@ class SiSiaoGroupImporter extends SiSiaoRequest
 
     public function __construct(
         HttpClientInterface $client,
-        SessionInterface $session,
-        EntityManagerInterface $manager,
+        RequestStack $request,
+        EntityManagerInterface $em,
         Security $security,
         PersonRepository $personRepo,
         PeopleGroupRepository $peopleGroupRepo,
@@ -42,9 +42,9 @@ class SiSiaoGroupImporter extends SiSiaoRequest
         ExceptionNotification $exceptionNotification,
         string $url
     ) {
-        parent::__construct($client, $session, $url);
+        parent::__construct($client, $request, $url);
 
-        $this->manager = $manager;
+        $this->em = $em;
         $this->user = $security->getUser();
         $this->personRepo = $personRepo;
         $this->peopleGroupRepo = $peopleGroupRepo;
@@ -90,7 +90,7 @@ class SiSiaoGroupImporter extends SiSiaoRequest
             $peopleGroup->addRolePerson($rolePerson);
         }
 
-        $this->manager->flush();
+        $this->em->flush();
 
         if ($peopleGroup->getCreatedAt() > (new \DateTime())->modify('-10 sec')) {
             $this->flashBag->add('success', 'Le groupe a été importé.');
@@ -112,7 +112,7 @@ class SiSiaoGroupImporter extends SiSiaoRequest
             ->setCreatedBy($this->user)
             ->setUpdatedBy($this->user);
 
-            $this->manager->persist($peopleGroup);
+            $this->em->persist($peopleGroup);
         }
 
         return $peopleGroup;
@@ -136,7 +136,7 @@ class SiSiaoGroupImporter extends SiSiaoRequest
             ->setCreatedBy($this->user)
             ->setUpdatedBy($this->user);
 
-            $this->manager->persist($person);
+            $this->em->persist($person);
         }
 
         return $this->createRolePerson($person, $peopleGroup, $personne);
@@ -154,7 +154,7 @@ class SiSiaoGroupImporter extends SiSiaoRequest
             ->setPerson($person)
             ->setPeopleGroup($peopleGroup);
 
-        $this->manager->persist($rolePerson);
+        $this->em->persist($rolePerson);
 
         return $rolePerson;
     }

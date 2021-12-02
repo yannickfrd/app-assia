@@ -2,30 +2,34 @@
 
 namespace App\Security\Voter;
 
+use App\Entity\Organization\User;
 use App\Entity\Support\SupportGroup;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class SupportGroupVoter extends Voter
 {
     use VoterTrait;
 
+    /** @var User */
     protected $user;
+
     protected $userId;
+
+    /** @var SupportGroup */
     protected $supportGroup;
 
-    protected function supports($attribute, $subject)
+    protected function supports($attribute, $subject): bool
     {
         return in_array($attribute, ['VIEW', 'EDIT', 'DELETE'])
             && $subject instanceof \App\Entity\Support\SupportGroup;
     }
 
-    protected function voteOnAttribute($attribute, $supportGroup, TokenInterface $token)
+    protected function voteOnAttribute($attribute, $supportGroup, TokenInterface $token): bool
     {
-        /* @var User */
+        /** @var User */
         $this->user = $token->getUser();
         $this->userId = $this->user->getId();
-        /* @var SupportGroup */
         $this->supportGroup = $supportGroup;
 
         if (!$this->user) {
@@ -47,7 +51,7 @@ class SupportGroupVoter extends Voter
         return false;
     }
 
-    protected function canView()
+    protected function canView(): bool
     {
         if ($this->isCreatorOrReferent()
             || $this->isUserOfService($this->supportGroup->getService())
@@ -59,12 +63,12 @@ class SupportGroupVoter extends Voter
         return false;
     }
 
-    protected function canEdit()
+    protected function canEdit(): bool
     {
         return $this->canView();
     }
 
-    protected function canDelete()
+    protected function canDelete(): bool
     {
         if ($this->isAdminOfService($this->supportGroup->getService())
             || $this->isGranted('ROLE_SUPER_ADMIN')) {

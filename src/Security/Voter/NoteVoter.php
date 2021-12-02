@@ -10,12 +10,18 @@ class NoteVoter extends Voter
 {
     use VoterTrait;
 
+    /** @var User */
     protected $user;
+    
     protected $userId;
+
     /** @var Note */
     protected $note;
-
-    protected function supports($attribute, $subject)
+    
+    /** @var SupportGroup */
+    protected $supportGroup;
+    
+    protected function supports($attribute, $subject): bool
     {
         return in_array($attribute, ['VIEW', 'EDIT', 'DELETE'])
             && $subject instanceof \App\Entity\Support\Note;
@@ -26,7 +32,6 @@ class NoteVoter extends Voter
         /** @var User */
         $this->user = $token->getUser();
         $this->userId = $this->user->getId();
-        /** @var Note */
         $this->note = $note;
         $this->supportGroup = $this->note->getSupportGroup();
 

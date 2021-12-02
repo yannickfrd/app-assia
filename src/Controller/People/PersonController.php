@@ -2,49 +2,49 @@
 
 namespace App\Controller\People;
 
-use App\Controller\Traits\ErrorMessageTrait;
-use App\Entity\Evaluation\EvaluationGroup;
-use App\Entity\People\PeopleGroup;
-use App\Entity\People\Person;
-use App\Entity\People\RolePerson;
-use App\Entity\Support\SupportGroup;
-use App\Form\Admin\Security\SiSiaoLoginType;
-use App\Form\Model\People\DuplicatedPeopleSearch;
-use App\Form\Model\People\PersonSearch;
-use App\Form\Model\SiSiao\SiSiaoLogin;
-use App\Form\People\Person\DuplicatedPeopleType;
-use App\Form\People\Person\PersonNewGroupType;
-use App\Form\People\Person\PersonRolePersonType;
-use App\Form\People\Person\PersonSearchType;
-use App\Form\People\Person\PersonType;
-use App\Form\People\Person\RolePersonGroupType;
-use App\Form\People\RolePerson\RolePersonType;
-use App\Repository\People\PeopleGroupRepository;
-use App\Repository\People\PersonRepository;
-use App\Repository\Support\SupportPersonRepository;
 use App\Service\Grammar;
 use App\Service\Pagination;
-use App\Service\People\PeopleGroupManager;
+use App\Entity\People\Person;
+use App\Entity\People\RolePerson;
+use App\Entity\People\PeopleGroup;
+use App\Entity\Support\SupportGroup;
+use App\Form\Model\SiSiao\SiSiaoLogin;
+use App\Form\People\Person\PersonType;
+use App\Form\Model\People\PersonSearch;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use App\Entity\Evaluation\EvaluationGroup;
+use App\Service\People\PeopleGroupManager;
+use App\Repository\People\PersonRepository;
+use App\Controller\Traits\ErrorMessageTrait;
+use App\Form\Admin\Security\SiSiaoLoginType;
+use App\Form\People\Person\PersonSearchType;
 use Symfony\Component\HttpFoundation\Request;
+use App\Form\People\Person\PersonNewGroupType;
+use App\Form\People\RolePerson\RolePersonType;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use App\Form\People\Person\RolePersonGroupType;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Form\People\Person\DuplicatedPeopleType;
+use App\Form\People\Person\PersonRolePersonType;
+use App\Repository\People\PeopleGroupRepository;
+use App\Form\Model\People\DuplicatedPeopleSearch;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Repository\Support\SupportPersonRepository;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class PersonController extends AbstractController
 {
     use ErrorMessageTrait;
 
-    private $manager;
+    private $em;
     private $personRepo;
 
-    public function __construct(EntityManagerInterface $manager, PersonRepository $personRepo)
+    public function __construct(EntityManagerInterface $em, PersonRepository $personRepo)
     {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->personRepo = $personRepo;
     }
 
@@ -77,7 +77,7 @@ class PersonController extends AbstractController
      *
      * @Route("/people/search", name="people_search", methods="POST")
      */
-    public function searchPeople(Request $request): Response
+    public function searchPeople(Request $request): JsonResponse
     {
         $this->createForm(PersonSearchType::class, $search = new PersonSearch())
             ->handleRequest($request);
@@ -189,7 +189,7 @@ class PersonController extends AbstractController
      * @Route("/group/{id}/person/{person_id}-{slug}", name="group_person_show", requirements={"slug" : "[a-z0-9\-]*"}, methods="GET")
      * @ParamConverter("person", options={"id" = "person_id"})
      */
-    public function editPersonInGroup(int $id, int $person_id, PeopleGroupRepository $peopleGroupRepo, SupportPersonRepository $supportRepo, SessionInterface $session): Response
+    public function editPersonInGroup(int $id, int $person_id, PeopleGroupRepository $peopleGroupRepo, SupportPersonRepository $supportRepo, Request $request): Response
     {
         if (null === $person = $this->personRepo->findPersonById($person_id)) {
             throw $this->createAccessDeniedException('Cette personne n\'existe pas.');
@@ -208,7 +208,7 @@ class PersonController extends AbstractController
             'people_group' => $peopleGroupRepo->findPeopleGroupById($id),
             'supports' => $supports,
             'form_new_group' => $formNewGroup->createView(),
-            'canEdit' => $this->canEdit($person, $supports, $session),
+            'canEdit' => $this->canEdit($person, $supports, $request),
         ]);
     }
 
@@ -218,7 +218,7 @@ class PersonController extends AbstractController
      * @Route("/person/{id}-{slug}", name="person_show_slug", requirements={"slug" : "[a-z0-9\-]*"}, methods="GET")
      * @Route("/person/{id}", name="person_show", methods="GET")
      */
-    public function showPerson(int $id, Request $request, SupportPersonRepository $supportRepo, SessionInterface $session): Response
+    public function showPerson(int $id, Request $request, SupportPersonRepository $supportRepo): Response
     {
         if (null === $person = $this->personRepo->findPersonById($id)) {
             throw $this->createAccessDeniedException('Cette personne n\'existe pas.');
@@ -238,7 +238,7 @@ class PersonController extends AbstractController
             'form' => $form->createView(),
             'supports' => $supports,
             'form_new_group' => $formNewGroup->createView(),
-            'canEdit' => $this->canEdit($person, $supports, $session),
+            'canEdit' => $this->canEdit($person, $supports, $request),
         ]);
     }
 
@@ -247,13 +247,13 @@ class PersonController extends AbstractController
      *
      * @Route("/person/{id}/edit", name="person_edit_ajax", methods="POST")
      */
-    public function editPerson(Person $person, Request $request): Response
+    public function editPerson(Person $person, Request $request): JsonResponse
     {
         $form = $this->createForm(PersonType::class, $person)
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->manager->flush();
+            $this->em->flush();
 
             $this->discacheSupport($person);
 
@@ -273,7 +273,7 @@ class PersonController extends AbstractController
      *
      * @Route("/person/{id}/new_group", name="person_new_group", methods="POST")
      */
-    public function addNewGroupToPerson(Person $person, Request $request)
+    public function addNewGroupToPerson(Person $person, Request $request): Response
     {
         $form = $this->createForm(PersonNewGroupType::class, $rolePerson = new RolePerson())
             ->handleRequest($request);
@@ -294,8 +294,8 @@ class PersonController extends AbstractController
      */
     public function deletePerson(Person $person): Response
     {
-        $this->manager->remove($person);
-        $this->manager->flush();
+        $this->em->remove($person);
+        $this->em->flush();
 
         $this->addFlash('warning', 'La personne est supprimée.');
 
@@ -308,7 +308,7 @@ class PersonController extends AbstractController
      * @Route("/search/person", name="search_person", methods="GET")
      * @Route("/search/person/{search}", name="search_person", methods="GET")
      */
-    public function searchPerson(string $search): Response
+    public function searchPerson(string $search): JsonResponse
     {
         $people = [];
         foreach ($this->personRepo->findPeopleByResearch($search) as $person) {
@@ -342,7 +342,7 @@ class PersonController extends AbstractController
     /**
      * Crée une nouvelle personne.
      */
-    protected function createPerson(RolePerson $rolePerson)
+    protected function createPerson(RolePerson $rolePerson): ?Response
     {
         $person = $rolePerson->getPerson();
         $peopleGroup = $rolePerson->getPeopleGroup();
@@ -351,21 +351,21 @@ class PersonController extends AbstractController
         if ($this->personExists($person)) {
             $this->addFlash('warning', 'Attention : '.$person->getFullname().' existe déjà !');
 
-            return;
+            return null;
         }
 
-        $this->manager->persist($peopleGroup);
+        $this->em->persist($peopleGroup);
 
         $rolePerson->setHead(true)
             ->setPeopleGroup($peopleGroup);
 
-        $this->manager->persist($rolePerson);
+        $this->em->persist($rolePerson);
 
         $person->addRolesPerson($rolePerson);
 
-        $this->manager->persist($person);
+        $this->em->persist($person);
 
-        $this->manager->flush();
+        $this->em->flush();
 
         $this->addFlash('success', $person->getFullname().' est créé'.Grammar::gender($person->getGender()).', ainsi que son groupe.');
 
@@ -387,22 +387,22 @@ class PersonController extends AbstractController
     /**
      * Crée un nouveau groupe à la personne.
      */
-    protected function createNewGroupToPerson(Person $person, RolePerson $rolePerson)
+    protected function createNewGroupToPerson(Person $person, RolePerson $rolePerson): Response
     {
         $peopleGroup = $rolePerson->getPeopleGroup();
 
-        $this->manager->persist($peopleGroup);
+        $this->em->persist($peopleGroup);
 
         $rolePerson->setHead(true)
             ->setPeopleGroup($peopleGroup);
 
-        $this->manager->persist($rolePerson);
+        $this->em->persist($rolePerson);
 
         $person->addRolesPerson($rolePerson);
 
-        $this->manager->persist($person);
+        $this->em->persist($person);
 
-        $this->manager->flush();
+        $this->em->flush();
 
         $this->addFlash('success', 'Le nouveau groupe est créé.');
 
@@ -412,14 +412,14 @@ class PersonController extends AbstractController
     /**
      * Vérifie si l'utilisateur a les droits concernant la personne.
      */
-    protected function canEdit(Person $person, array $supports, SessionInterface $session): bool
+    protected function canEdit(Person $person, array $supports, Request $request): bool
     {
         if ($this->isGranted('ROLE_SUPER_ADMIN') || $person->getCreatedBy() === $this->getUser() || 0 === count($supports)) {
             return true;
         }
 
         foreach ($supports as $supportPerson) {
-            if (in_array($supportPerson->getSupportGroup()->getService()->getId(), array_keys($session->get('userServices')))) {
+            if (in_array($supportPerson->getSupportGroup()->getService()->getId(), array_keys($request->getSession()->get('userServices')))) {
                 return true;
             }
         }

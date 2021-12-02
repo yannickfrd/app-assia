@@ -154,7 +154,7 @@ class Calendar
     /**
      * Détermine le nombre de semaines dans le mois.
      */
-    public function setWeeks()
+    public function setWeeks(): void
     {
         $startMonth = $this->getFirstDayOfTheMonth();
         $endMonth = (clone $startMonth)->modify('+1 month -1 day');

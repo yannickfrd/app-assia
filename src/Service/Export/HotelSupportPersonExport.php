@@ -6,6 +6,7 @@ use App\Entity\Support\HotelSupport;
 use App\Entity\Support\OriginRequest;
 use App\Entity\Support\SupportPerson;
 use App\Service\ExportExcel;
+use Doctrine\Common\Collections\Collection;
 
 class HotelSupportPersonExport extends ExportExcel
 {
@@ -18,11 +19,11 @@ class HotelSupportPersonExport extends ExportExcel
     /**
      * Undocumented function.
      *
-     * @param SupportPerson[] $supports
+     * @param Collection>SupportPerson>|SupportPerson[]|null $supports
      *
-     * @return void
+     * @return StreamedResponse|Response|string
      */
-    public function exportData(array $supports)
+    public function exportData(?array $supports)
     {
         $arrayData = [];
         $i = 0;

@@ -5,7 +5,8 @@ namespace App\Tests\Controller\Support;
 use App\Entity\Support\SupportGroup;
 use App\Service\Grammar;
 use App\Tests\AppTestTrait;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
@@ -14,21 +15,32 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SupportControllerTest extends WebTestCase
 {
-    use FixturesTrait;
     use AppTestTrait;
 
     /** @var KernelBrowser */
     protected $client;
 
+    /** @var AbstractDatabaseTool */
+    protected $databaseTool;
+
     /** @var array */
-    protected $data;
+    protected $fixtures;
 
     /** @var SupportGroup */
     protected $supportGroup;
 
     protected function setUp(): void
     {
-        $this->data = $this->loadFixtureFiles([
+        parent::setUp();
+
+        $this->client = $this->createClient();
+
+        $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
+    }
+
+    protected function loadFixtures(): void
+    {
+        $this->fixtures = $this->databaseTool->loadAliceFixture([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
@@ -38,7 +50,9 @@ class SupportControllerTest extends WebTestCase
 
     public function testSearchSupportsIsSuccessful()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->loadFixtures();
+
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $this->client->request('GET', '/supports');
 
@@ -57,7 +71,9 @@ class SupportControllerTest extends WebTestCase
 
     public function testExportSupportsIsSuccessful()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->loadFixtures();
+
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $this->client->request('GET', '/supports');
 
@@ -72,14 +88,16 @@ class SupportControllerTest extends WebTestCase
         $this->client->submitForm('export', [], 'GET');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertContains('.spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
+        $this->assertStringContainsString('.spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
     }
 
     public function testNewSupportGroupAjax()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->loadFixtures();
 
-        $id = $this->data['peopleGroup1']->getId();
+        $this->createLogin($this->fixtures['userRoleUser']);
+
+        $id = $this->fixtures['peopleGroup1']->getId();
         $this->client->request('GET', "/group/$id/new_support");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -89,11 +107,13 @@ class SupportControllerTest extends WebTestCase
 
     public function testNewSupportGroupPageIsUp()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->loadFixtures();
 
-        $id = $this->data['peopleGroup2']->getId();
+        $this->createLogin($this->fixtures['userRoleUser']);
+
+        $id = $this->fixtures['peopleGroup2']->getId();
         $this->client->request('POST', "/group/$id/support/new", [
-            'support' => ['service' => $this->data['service1']->getId()],
+            'support' => ['service' => $this->fixtures['service1']->getId()],
         ]);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -102,14 +122,15 @@ class SupportControllerTest extends WebTestCase
 
     public function testCreateNewSupportGroupIsSuccessful()
     {
-        $user = $this->data['userRoleUser'];
-        $this->createLogin($user);
+        $this->loadFixtures();
 
-        $id = $this->data['peopleGroup2']->getId();
+        $this->createLogin($user = $this->fixtures['userRoleUser']);
+
+        $id = $this->fixtures['peopleGroup2']->getId();
         $this->client->request('POST', "/group/$id/support/new", [
             'support' => [
-                'service' => $this->data['service1'],
-                'device' => $this->data['device1']->getCode(),
+                'service' => $this->fixtures['service1'],
+                'device' => $this->fixtures['device1']->getCode(),
                 'referent' => $user,
             ],
         ]);
@@ -118,15 +139,15 @@ class SupportControllerTest extends WebTestCase
         $this->client->submitForm('send', [
             'support' => [
                 'originRequest' => [
-                    'organization' => $this->data['organization1'],
+                    'organization' => $this->fixtures['organization1'],
                     'organizationComment' => 'XXX',
                     'preAdmissionDate' => $now->format('Y-m-d'),
                     'resulPreAdmission' => 1,
                     'decisionDate' => $now->format('Y-m-d'),
                     'comment' => 'XXX',
                 ],
-                'service' => $this->data['service1'],
-                'device' => $this->data['device1']->getCode(),
+                'service' => $this->fixtures['service1'],
+                'device' => $this->fixtures['device1']->getCode(),
                 'status' => SupportGroup::STATUS_IN_PROGRESS,
                 'referent' => $user,
                 'startDate' => $now->format('Y-m-d'),
@@ -141,18 +162,19 @@ class SupportControllerTest extends WebTestCase
 
     public function testCreateNewSupportGroupAndCloneIsSuccessful()
     {
-        $user = $this->data['userRoleUser'];
-        $this->createLogin($user);
+        $this->loadFixtures();
 
-        $id = $this->data['peopleGroup2']->getId();
+        $this->createLogin($this->fixtures['userRoleUser']);
+
+        $id = $this->fixtures['peopleGroup2']->getId();
         $this->client->request('POST', "/group/$id/support/new", [
-            'support' => ['service' => $this->data['service1']->getId()],
+            'support' => ['service' => $this->fixtures['service1']->getId()],
         ]);
 
         $this->client->submitForm('send', [
             'support' => [
-                'service' => $this->data['service1'],
-                'device' => $this->data['device1']->getCode(),
+                'service' => $this->fixtures['service1'],
+                'device' => $this->fixtures['device1']->getCode(),
                 'status' => SupportGroup::STATUS_IN_PROGRESS,
                 'agreement' => true,
                 'cloneSupport' => true,
@@ -165,17 +187,18 @@ class SupportControllerTest extends WebTestCase
 
     public function testPeopleHaveOtherSupportInProgress()
     {
-        $user = $this->data['userRoleUser'];
-        $this->createLogin($user);
+        $this->loadFixtures();
 
-        $id = $this->data['peopleGroup1']->getId();
+        $this->createLogin($this->fixtures['userRoleUser']);
+
+        $id = $this->fixtures['peopleGroup1']->getId();
         $this->client->request('POST', "/group/$id/support/new", [
-            'support' => ['service' => $this->data['service1']->getId()],
+            'support' => ['service' => $this->fixtures['service1']->getId()],
         ]);
 
         $this->client->submitForm('send', [
-            'support[service]' => $this->data['service1'],
-            'support[device]' => $this->data['device1']->getCode(),
+            'support[service]' => $this->fixtures['service1'],
+            'support[device]' => $this->fixtures['device1']->getCode(),
             'support[status]' => SupportGroup::STATUS_IN_PROGRESS,
             'support[agreement]' => true,
         ]);
@@ -186,9 +209,11 @@ class SupportControllerTest extends WebTestCase
 
     public function testEditSupportGroupIsSuccessful()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->loadFixtures();
 
-        $id = $this->data['supportGroup1']->getId();
+        $this->createLogin($this->fixtures['userRoleUser']);
+
+        $id = $this->fixtures['supportGroup1']->getId();
         $this->client->request('GET', "/support/$id/edit");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -202,9 +227,11 @@ class SupportControllerTest extends WebTestCase
 
     public function testEditCoefficientIsSuccessful()
     {
-        $this->createLogin($this->data['userAdmin']);
+        $this->loadFixtures();
 
-        $id = $this->data['supportGroup2']->getId();
+        $this->createLogin($this->fixtures['userAdmin']);
+
+        $id = $this->fixtures['supportGroup2']->getId();
         $this->client->request('GET', "/support/$id/edit");
 
         $this->client->submitForm('send-coeff', [
@@ -217,7 +244,7 @@ class SupportControllerTest extends WebTestCase
 
     public function testViewSupportGroupIsUp()
     {
-        $this->data = $this->loadFixtureFiles([
+        $this->fixtures = $this->databaseTool->loadAliceFixture([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
@@ -225,9 +252,9 @@ class SupportControllerTest extends WebTestCase
             dirname(__DIR__).'/../DataFixturesTest/EvaluationFixturesTest.yaml',
         ]);
 
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
-        $id = $this->data['supportGroupWithEval']->getId();
+        $id = $this->fixtures['supportGroupWithEval']->getId();
         $this->client->request('GET', "/support/$id/view");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -236,9 +263,11 @@ class SupportControllerTest extends WebTestCase
 
     public function testDeleteSupportIsFailed()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->loadFixtures();
 
-        $id = $this->data['supportGroup1']->getId();
+        $this->createLogin($this->fixtures['userRoleUser']);
+
+        $id = $this->fixtures['supportGroup1']->getId();
         $this->client->request('GET', "/support/$id/delete");
 
         $this->assertSame(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
@@ -246,9 +275,11 @@ class SupportControllerTest extends WebTestCase
 
     public function testDeleteSupportIsSuccessful()
     {
-        $this->createLogin($this->data['userAdmin']);
+        $this->loadFixtures();
 
-        $id = $this->data['supportGroup1']->getId();
+        $this->createLogin($this->fixtures['userAdmin']);
+
+        $id = $this->fixtures['supportGroup1']->getId();
         $this->client->request('GET', "/support/$id/delete");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -258,12 +289,14 @@ class SupportControllerTest extends WebTestCase
 
     public function testAddPersonToSupportIsSuccessful()
     {
-        $this->createLogin($this->data['userSuperAdmin']);
+        $this->loadFixtures();
 
-        $person = $this->data['person5'];
+        $this->createLogin($this->fixtures['userSuperAdmin']);
+
+        $person = $this->fixtures['person5'];
         $personId = $person->getId();
-        $groupId = $this->data['peopleGroup1']->getId();
-        $supportId = $this->data['supportGroup1']->getId();
+        $groupId = $this->fixtures['peopleGroup1']->getId();
+        $supportId = $this->fixtures['supportGroup1']->getId();
 
         /** @var Crawler */
         $crawler = $this->client->request('GET', "/group/$groupId/search_person");
@@ -291,10 +324,12 @@ class SupportControllerTest extends WebTestCase
 
     public function testRemoveSupportPersonWithoutTokenIsFailed()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->loadFixtures();
 
-        $id = $this->data['supportGroup1']->getId();
-        $supportPersId = $this->data['supportPerson2']->getId();
+        $this->createLogin($this->fixtures['userRoleUser']);
+
+        $id = $this->fixtures['supportGroup1']->getId();
+        $supportPersId = $this->fixtures['supportPerson2']->getId();
         $this->client->request('GET', "/support/$id/edit");
         $this->client->request('GET', "/supportGroup/$id/remove-$supportPersId/tokenId");
 
@@ -304,9 +339,11 @@ class SupportControllerTest extends WebTestCase
 
     public function testRemoveSupportPersonIsSuccessful()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->loadFixtures();
 
-        $id = $this->data['supportGroup1']->getId();
+        $this->createLogin($this->fixtures['userRoleUser']);
+
+        $id = $this->fixtures['supportGroup1']->getId();
         /** @var Crawler */
         $crawler = $this->client->request('GET', "/support/$id/edit");
         $url = $crawler->filter('button[data-action="remove"]')->last()->attr('data-url');
@@ -318,9 +355,11 @@ class SupportControllerTest extends WebTestCase
 
     public function testCloneSupportIsFailed()
     {
-        $this->createLogin($this->data['userSuperAdmin']);
+        $this->loadFixtures();
 
-        $id = $this->data['supportGroup2']->getId();
+        $this->createLogin($this->fixtures['userSuperAdmin']);
+
+        $id = $this->fixtures['supportGroup2']->getId();
         $this->client->request('GET', "/support/$id/clone");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -329,9 +368,11 @@ class SupportControllerTest extends WebTestCase
 
     public function testCloneSupportIsSuccessful()
     {
-        $this->createLogin($this->data['userSuperAdmin']);
+        $this->loadFixtures();
 
-        $id = $this->data['supportGroup1']->getId();
+        $this->createLogin($this->fixtures['userSuperAdmin']);
+
+        $id = $this->fixtures['supportGroup1']->getId();
         $this->client->request('GET', "/support/$id/clone");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -340,7 +381,9 @@ class SupportControllerTest extends WebTestCase
 
     public function testShowSupportsWithContributioIsUp()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->loadFixtures();
+
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $this->client->request('GET', '/supports/current_month');
 
@@ -351,8 +394,9 @@ class SupportControllerTest extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
+
         $this->client = null;
-        $this->data = null;
+        $this->fixtures = null;
 
         $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
         $cache->clear();

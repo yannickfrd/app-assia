@@ -5,7 +5,8 @@ namespace App\Tests\Controller\Note;
 use App\Entity\Support\Note;
 use App\Entity\Support\SupportGroup;
 use App\Tests\AppTestTrait;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
@@ -14,14 +15,16 @@ use Symfony\Component\HttpFoundation\Response;
 
 class NoteControllerTest extends WebTestCase
 {
-    use FixturesTrait;
     use AppTestTrait;
 
     /** @var KernelBrowser */
     protected $client;
 
+    /** @var AbstractDatabaseTool */
+    protected $databaseTool;
+
     /** @var array */
-    protected $data;
+    protected $fixtures;
 
     /** @var SupportGroup */
     protected $supportGroup;
@@ -31,7 +34,16 @@ class NoteControllerTest extends WebTestCase
 
     protected function setUp(): void
     {
-        $this->data = $this->loadFixtureFiles([
+        parent::setUp();
+
+        $this->client = $this->createClient();
+
+        $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
+    }
+
+    protected function loadFixtures(): void
+    {
+        $this->fixtures = $this->databaseTool->loadAliceFixture([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
@@ -39,13 +51,15 @@ class NoteControllerTest extends WebTestCase
             dirname(__DIR__).'/../DataFixturesTest/NoteFixturesTest.yaml',
         ]);
 
-        $this->supportGroup = $this->data['supportGroup1'];
-        $this->note = $this->data['note1'];
+        $this->supportGroup = $this->fixtures['supportGroup1'];
+        $this->note = $this->fixtures['note1'];
     }
 
     public function testSearchNotesIsSuccessful()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->loadFixtures();
+
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         // Page is up
         $this->client->request('GET', '/notes');
@@ -56,7 +70,7 @@ class NoteControllerTest extends WebTestCase
         // Search is up
         /** @var Crawler */
         $crawler = $this->client->submitForm('search', [
-            'content' => 'Note 666',
+            'content' => 'Note test',
             'type' => 1,
             'status' => 1,
         ]);
@@ -67,7 +81,9 @@ class NoteControllerTest extends WebTestCase
 
     public function testSearchSupportNotesIsSuccessful()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->loadFixtures();
+
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $id = $this->supportGroup->getId();
         $this->client->request('GET', "/support/$id/notes");
@@ -79,7 +95,7 @@ class NoteControllerTest extends WebTestCase
         // Search is successful
         /** @var Crawler */
         $crawler = $this->client->submitForm('search', [
-            'content' => 'Note 666',
+            'content' => 'Note test',
             'type' => 1,
             'status' => 1,
         ]);
@@ -90,7 +106,9 @@ class NoteControllerTest extends WebTestCase
 
     public function testExportNotesOfSupportIsSuccessful()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->loadFixtures();
+
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $id = $this->supportGroup->getId();
         $this->client->request('GET', "/support/$id/notes");
@@ -103,7 +121,9 @@ class NoteControllerTest extends WebTestCase
 
     public function testCreateNoteIsSuccessful()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->loadFixtures();
+
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $id = $this->supportGroup->getId();
         /** @var Crawler */
@@ -134,7 +154,9 @@ class NoteControllerTest extends WebTestCase
 
     public function testUpdateNoteIsSuccessful()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->loadFixtures();
+
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $id = $this->supportGroup->getId();
         /** @var Crawler */
@@ -166,7 +188,9 @@ class NoteControllerTest extends WebTestCase
 
     public function testDeleteNote()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->loadFixtures();
+
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $id = $this->note->getId();
         $this->client->request('GET', "/note/$id/delete");
@@ -178,7 +202,9 @@ class NoteControllerTest extends WebTestCase
 
     public function testExportNoteIsSuccessful()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->loadFixtures();
+
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $id = $this->note->getId();
 
@@ -197,7 +223,9 @@ class NoteControllerTest extends WebTestCase
 
     public function testGenerateNoteEvaluationIsFailed()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->loadFixtures();
+
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $id = $this->note->getId();
         $this->client->request('GET', "/support/$id/note/new_evaluation");
@@ -208,7 +236,7 @@ class NoteControllerTest extends WebTestCase
 
     public function testGenerateNoteEvaluationIsSuccessful()
     {
-        $data = $this->loadFixtureFiles([
+        $this->fixtures = $this->databaseTool->loadAliceFixture([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
@@ -216,12 +244,12 @@ class NoteControllerTest extends WebTestCase
             dirname(__DIR__).'/../DataFixturesTest/EvaluationFixturesTest.yaml',
         ]);
 
-        $this->createLogin($data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
-        $id = $data['supportGroupWithEval']->getId();
+        $id = $this->fixtures['supportGroupWithEval']->getId();
         $this->client->request('GET', "/support/$id/evaluation/view");
 
-        $this->client->submitForm('send', []);
+        $this->client->submitForm('send');
 
         $this->client->request('GET', "/support/$id/note/new_evaluation");
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -231,8 +259,9 @@ class NoteControllerTest extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
+
         $this->client = null;
-        $this->data = null;
+        $this->fixtures = null;
 
         $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
         $cache->clear();

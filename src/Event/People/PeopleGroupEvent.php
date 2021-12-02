@@ -29,9 +29,9 @@ class PeopleGroupEvent extends Event
     }
 
     /**
-     * @return Collection<SupportGroup>|null
+     * @return Collection<SupportGroup>|SupportGroup[]|null
      */
-    public function getSupports()
+    public function getSupports(): ?array
     {
         return $this->supports;
     }

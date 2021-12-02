@@ -4,8 +4,10 @@ namespace App\Service\SiSiao;
 
 use App\Entity\People\Person;
 use App\Form\Model\SiSiao\SiSiaoLogin;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class SiSiaoRequest
@@ -65,11 +67,11 @@ class SiSiaoRequest
 
     public function __construct(
         HttpClientInterface $client,
-        SessionInterface $session,
+        RequestStack $request,
         string $url
     ) {
         $this->client = $client;
-        $this->session = $session;
+        $this->session = $request->getSession();
 
         $this->url = $url.self::API;
 
@@ -203,6 +205,8 @@ class SiSiaoRequest
 
     /**
      * Get informations of connected user.
+     *
+     * @return array|object
      */
     public function getUser()
     {
@@ -212,7 +216,7 @@ class SiSiaoRequest
     /**
      * Get current role of connected user.
      */
-    protected function getCurrentRoleUser()
+    protected function getCurrentRoleUser(): JsonResponse
     {
         $user = $this->get('login/user');
 
@@ -377,7 +381,7 @@ class SiSiaoRequest
         return json_decode($content);
     }
 
-    public function set(string $path, object $data)
+    public function set(string $path, object $data): void
     {
         $response = $this->client->request('PUT', $this->url.$path, [
             'headers' => $this->headers,
@@ -455,7 +459,7 @@ class SiSiaoRequest
         ];
     }
 
-    protected function getErrorMessage(\Exception $e)
+    protected function getErrorMessage(\Exception $e): string
     {
         $code = $e->getCode();
 

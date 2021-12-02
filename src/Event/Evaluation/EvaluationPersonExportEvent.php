@@ -16,7 +16,7 @@ class EvaluationPersonExportEvent extends Event
         $this->request = $request;
     }
 
-    public function getRequest()
+    public function getRequest(): Request
     {
         return $this->request;
     }

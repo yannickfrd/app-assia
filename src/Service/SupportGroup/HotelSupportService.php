@@ -61,12 +61,12 @@ class HotelSupportService
     /**
      * Met à jour l'adresse du suivi via l'adresse du groupe de places.
      */
-    protected function updateLocation(SupportGroup $supportGroup)
+    protected function updateLocation(SupportGroup $supportGroup): void
     {
         $place = $supportGroup->getPlaceGroups()->first()->getPlace();
 
         if (null === $place) {
-            return false;
+            return;
         }
 
         $supportGroup

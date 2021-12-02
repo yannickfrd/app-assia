@@ -17,8 +17,9 @@ class RdvExport extends ExportExcel
 
     /**
      * Exporte les données.
+     * @return StreamedResponse|Response|string
      */
-    public function exportData($rdvs)
+    public function exportData(array $rdvs)
     {
         $arrayData[] = array_keys($this->getDatas($rdvs[0]));
 

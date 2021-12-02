@@ -25,7 +25,7 @@ class ImportPAFDatas extends ImportDatas
     public const SOCIAL_WORKER = [
     ];
 
-    protected $manager;
+    protected $em;
 
     protected $fields;
     protected $field;
@@ -37,10 +37,10 @@ class ImportPAFDatas extends ImportDatas
     protected $service;
 
     public function __construct(
-        EntityManagerInterface $manager,
+        EntityManagerInterface $em,
         HotelSupportRepository $hotelSupportRepo
         ) {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->hotelSupportRepo = $hotelSupportRepo;
         $this->hotelSupports = $hotelSupportRepo->findAll();
     }
@@ -92,7 +92,7 @@ class ImportPAFDatas extends ImportDatas
             }
         }
 
-        $this->manager->flush();
+        $this->em->flush();
 
         return $this->items;
     }
@@ -122,7 +122,7 @@ class ImportPAFDatas extends ImportDatas
             ->setUpdatedAt(new \Datetime($paf['Date mise à jour']))
             ->setSupportGroup($supportGroup);
 
-        $this->manager->persist($payment);
+        $this->em->persist($payment);
 
         return $payment;
     }

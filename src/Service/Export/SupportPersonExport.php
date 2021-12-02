@@ -22,7 +22,9 @@ class SupportPersonExport extends ExportExcel
     /**
      * Exporte les données.
      *
-     * @param SupportPerson[] $supports
+     * @param Collection<SupportPerson>|null $supports
+     *
+     * @return StreamedResponse|Response|string
      */
     public function exportData(array $supports)
     {

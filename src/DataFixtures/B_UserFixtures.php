@@ -2,41 +2,41 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Organization\Service;
-use App\Entity\Organization\ServiceUser;
 use App\Entity\Organization\User;
-use App\Repository\Organization\ServiceRepository;
-use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Organization\Service;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use App\Entity\Organization\ServiceUser;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use App\Repository\Organization\ServiceRepository;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
  * @codeCoverageIgnore
  */
 class B_UserFixtures extends Fixture
 {
-    private $manager;
+    private $em;
     private $serviceRepo;
-    private $passwordEncoder;
+    private $passwordHasher;
     private $slugger;
     private $faker;
 
     public function __construct(
-        EntityManagerInterface $manager,
+        EntityManagerInterface $em,
         ServiceRepository $serviceRepo,
         SluggerInterface $slugger,
-        UserPasswordEncoderInterface $passwordEncoder
+        UserPasswordHasherInterface $passwordHasher
     ) {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->serviceRepo = $serviceRepo;
-        $this->passwordEncoder = $passwordEncoder;
+        $this->passwordHasher = $passwordHasher;
         $this->slugger = $slugger;
         $this->faker = \Faker\Factory::create('fr_FR');
     }
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $em)
     {
         $this->createSuperAdmin();
 
@@ -50,10 +50,10 @@ class B_UserFixtures extends Fixture
 
         $this->createDefaultUser($services[0]);
 
-        $manager->flush();
+        $em->flush();
     }
 
-    protected function createSuperAdmin()
+    protected function createSuperAdmin(): void
     {
         $user = new User();
         $user->setUsername('r.madelaine')
@@ -61,14 +61,14 @@ class B_UserFixtures extends Fixture
             ->setLastName('Madelaine')
             ->setStatus(6)
             ->setRoles(['ROLE_SUPER_ADMIN'])
-            ->setPassword($this->passwordEncoder->encodePassword($user, 'test123'))
+            ->setPassword($this->passwordHasher->hashPassword($user, 'Test123'))
             ->setEmail('romain.madelaine@app-assia.org')
             ->setLoginCount(1);
 
-        $this->manager->persist($user);
+        $this->em->persist($user);
     }
 
-    protected function createDefaultUser(Service $service)
+    protected function createDefaultUser(Service $service): void
     {
         $user = new User();
         $user->setUsername('user_test')
@@ -79,16 +79,16 @@ class B_UserFixtures extends Fixture
             ->setEmail('test@app-assia.org')
             ->setLoginCount(0);
 
-        $this->manager->persist($user);
+        $this->em->persist($user);
 
         $serviceUser = (new ServiceUser())
             ->setUser($user)
             ->setService($service);
 
-        $this->manager->persist($serviceUser);
+        $this->em->persist($serviceUser);
     }
 
-    protected function createUser(Service $service)
+    protected function createUser(Service $service): void
     {
         $user = new User();
         $lastLogin = AppFixtures::getDateTimeBeetwen('-2 months', 'now');
@@ -106,19 +106,19 @@ class B_UserFixtures extends Fixture
             ->setUsername($username)
             ->setFirstName($firstname)
             ->setLastName($lastname)
-            ->setPassword($this->passwordEncoder->encodePassword($user, 'test123'))
+            ->setPassword($this->passwordHasher->hashPassword($user, 'Test123'))
             ->setStatus(1)
             ->setEmail($username.'@app-assia.org')
             ->setphone1($phone)
             ->setLoginCount(mt_rand(0, 99))
             ->setLastLogin($lastLogin);
 
-        $this->manager->persist($user);
+        $this->em->persist($user);
 
         $serviceUser = (new ServiceUser())
             ->setUser($user)
             ->setService($service);
 
-        $this->manager->persist($serviceUser);
+        $this->em->persist($serviceUser);
     }
 }

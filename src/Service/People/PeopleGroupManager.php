@@ -19,18 +19,18 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class PeopleGroupManager
 {
-    private $manager;
+    private $em;
     private $currentUserService;
     private $dispatcher;
     private $flashbag;
 
     public function __construct(
-        EntityManagerInterface $manager,
+        EntityManagerInterface $em,
         CurrentUserService $currentUserService,
         EventDispatcherInterface $dispatcher,
         FlashBagInterface $flashbag
     ) {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->currentUserService = $currentUserService;
         $this->dispatcher = $dispatcher;
         $this->flashbag = $flashbag;
@@ -43,9 +43,9 @@ class PeopleGroupManager
     {
         $this->addRolePerson($peopleGroup, $person, $rolePerson, $addPersonToSupport);
 
-        $this->manager->persist($person);
+        $this->em->persist($person);
 
-        $this->manager->flush();
+        $this->em->flush();
 
         return $person;
     }
@@ -63,7 +63,7 @@ class PeopleGroupManager
 
         $this->addRolePerson($peopleGroup, $person, $rolePerson, $addPersonToSupport);
 
-        $this->manager->flush();
+        $this->em->flush();
 
         return $person;
     }
@@ -77,7 +77,7 @@ class PeopleGroupManager
             ->setPerson($person)
             ->setPeopleGroup($peopleGroup);
 
-        $this->manager->persist($rolePerson);
+        $this->em->persist($rolePerson);
 
         $peopleGroup->addRolePerson($rolePerson);
 
@@ -98,12 +98,12 @@ class PeopleGroupManager
         }
 
         /** @var SupportGroupRepository $supportGroupRepo */
-        $supportGroupRepo = $this->manager->getRepository(SupportGroup::class);
+        $supportGroupRepo = $this->em->getRepository(SupportGroup::class);
 
         foreach ($supportGroupRepo->findBy(['peopleGroup' => $peopleGroup]) as $supportGroup) {
             if (SupportGroup::STATUS_IN_PROGRESS === $supportGroup->getStatus()
                 && ($this->currentUserService->isInService($supportGroup->getService()))) {
-                (new SupportPeopleAdder($this->manager, $this->flashbag))->addPersonToSupport($supportGroup, $rolePerson);
+                (new SupportPeopleAdder($this->em, $this->flashbag))->addPersonToSupport($supportGroup, $rolePerson);
 
                 $this->dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support.after_update');
             }
@@ -126,7 +126,7 @@ class PeopleGroupManager
         $peopleGroup->removeRolePerson($rolePerson);
         $peopleGroup->setNbPeople($nbPeople - 1);
 
-        $this->manager->flush();
+        $this->em->flush();
 
         $this->flashbag->add('warning', $person->getFullname().' est retiré'.Grammar::gender($person->getGender()).' du groupe.');
     }
@@ -137,7 +137,7 @@ class PeopleGroupManager
     protected function personIsInGroup(PeopleGroup $peopleGroup, Person $person): bool
     {
         /** @var RolePersonRepository $rolePersonRepo */
-        $rolePersonRepo = $this->manager->getRepository(RolePerson::class);
+        $rolePersonRepo = $this->em->getRepository(RolePerson::class);
 
         return 0 != $rolePersonRepo->count([
             'person' => $person->getId(),

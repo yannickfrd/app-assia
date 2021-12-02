@@ -113,7 +113,7 @@ class Document
     /**
      * @ORM\PreFlush
      */
-    public function preFlush()
+    public function preFlush(): void
     {
         if ($this->supportGroup) {
             $this->supportGroup->setUpdatedAt(new \DateTime());

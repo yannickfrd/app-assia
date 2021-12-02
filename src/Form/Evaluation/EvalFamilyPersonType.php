@@ -15,7 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class EvalFamilyPersonType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         /** @var SupportPerson */
         $supportPerson = $options['attr']['supportPerson'];
@@ -79,7 +79,7 @@ class EvalFamilyPersonType extends AbstractType
             ]);
     }
 
-    protected function addChildFields(FormBuilderInterface $builder)
+    protected function addChildFields(FormBuilderInterface $builder): void
     {
         $builder
             ->add('childcareOrSchool', ChoiceType::class, [
@@ -130,7 +130,7 @@ class EvalFamilyPersonType extends AbstractType
             ]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => EvalFamilyPerson::class,

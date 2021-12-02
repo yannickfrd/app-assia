@@ -1,8 +1,21 @@
 CHANGELOG
 =========
 
+## Version 3.4.0 - 02/12/2021
+Update app to symfony 5.4
+* Update PHP dependencies
+* Update JS dependencies
+* Update to the new Authentication system
+* Update all tests for Liip 2.x
+* Fix error typo 'suppport' to 'support'
+* Move 'migrations' folder
+* Remove 'twig/cache-extension' and add 'twig/cache-extra'PHP package
+* Add/Update return types in PHP classes 
+* Fix error typo 'suppport' to 'support'
+* Update README (add tests)
+
 ## Version 3.3.0 - 26/11/2021
-New feature : update the current evaluation by SI-SIAO API
+New feature : create SI-SIAO login page with redirection to previous page
 * [SiSiaoController] Create SI-SIAO login page with redirection to previous page
 * [SiSiaoController] Add test to SI-SIAO login page
 * [SiSiaoController]Add translator for messages
@@ -401,7 +414,7 @@ New feature : update the current evaluation by SI-SIAO API
 - Rename entities 'Accommodation' => 'Place', 'AccommodationPerson' => 'PlacePerson', 'AccommodationGroup' => 'PlaceGroup';
 - Edit filter referents query and factorisation of searchs;
 - Add role of people in evaluation page;
-- Edit some views (table users and suppports); Edit 'status' of user in multiple; 
+- Edit some views (table users and supports); Edit 'status' of user in multiple; 
 - Add checking if user have an phone number in login;
 - Add checking if support have an start date;
 - Create Command to update familto typology of groups and supports;

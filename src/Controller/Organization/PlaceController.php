@@ -22,12 +22,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PlaceController extends AbstractController
 {
-    private $manager;
+    private $em;
     private $placeRepo;
 
-    public function __construct(EntityManagerInterface $manager, PlaceRepository $placeRepo)
+    public function __construct(EntityManagerInterface $em, PlaceRepository $placeRepo)
     {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->placeRepo = $placeRepo;
     }
 
@@ -67,8 +67,8 @@ class PlaceController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->manager->persist($place);
-            $this->manager->flush();
+            $this->em->persist($place);
+            $this->em->flush();
 
             $this->addFlash('success', 'Le groupe de places est créé.');
 
@@ -101,7 +101,7 @@ class PlaceController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->denyAccessUnlessGranted('EDIT', $place->getService());
 
-            $this->manager->flush();
+            $this->em->flush();
 
             $this->discache($place->getService());
 
@@ -122,8 +122,8 @@ class PlaceController extends AbstractController
      */
     public function deletePlace(Place $place): Response
     {
-        $this->manager->remove($place);
-        $this->manager->flush();
+        $this->em->remove($place);
+        $this->em->flush();
 
         $this->addFlash('warning', 'Le groupe de places est supprimé.');
 
@@ -151,7 +151,7 @@ class PlaceController extends AbstractController
 
         $this->discache($place->getService());
 
-        $this->manager->flush();
+        $this->em->flush();
 
         return $this->redirectToRoute('place_edit', ['id' => $place->getId()]);
     }
@@ -159,7 +159,7 @@ class PlaceController extends AbstractController
     /**
      * Exporte les données.
      */
-    protected function exportData(PlaceSearch $search)
+    protected function exportData(PlaceSearch $search): Response
     {
         $places = $this->placeRepo->findPlacesToExport($search);
 

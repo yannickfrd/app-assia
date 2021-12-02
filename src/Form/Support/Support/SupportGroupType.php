@@ -23,6 +23,7 @@ use App\Repository\Organization\ServiceRepository;
 use App\Repository\Organization\SubServiceRepository;
 use App\Repository\Organization\UserRepository;
 use App\Security\CurrentUserService;
+use Closure;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -45,7 +46,7 @@ class SupportGroupType extends AbstractType
         $this->currentUser = $currentUser;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('service', EntityType::class, [
@@ -167,7 +168,7 @@ class SupportGroupType extends AbstractType
         });
     }
 
-    protected function formModifier()
+    protected function formModifier(): Closure
     {
         return function (FormInterface $form, ?Service $service = null, ?SubService $subService = null) {
             $serviceType = $service ? $service->getType() : null;
@@ -215,7 +216,7 @@ class SupportGroupType extends AbstractType
         };
     }
 
-    protected function addSupportFields(FormInterface $form, Service $service)
+    protected function addSupportFields(FormInterface $form, Service $service): void
     {
         switch ($service->getType()) {
             case Service::SERVICE_TYPE_AVDL:
@@ -227,7 +228,7 @@ class SupportGroupType extends AbstractType
          }
     }
 
-    protected function addAvdlFields(FormInterface $form)
+    protected function addAvdlFields(FormInterface $form): void
     {
         $form
             ->remove('startDate')
@@ -236,7 +237,7 @@ class SupportGroupType extends AbstractType
             ->add('avdl', AvdlType::class);
     }
 
-    protected function addHotelFields(FormInterface $form)
+    protected function addHotelFields(FormInterface $form): void
     {
         /** @var SupportGroup */
         $supportGroup = $form->getConfig()->getData();
@@ -271,12 +272,10 @@ class SupportGroupType extends AbstractType
         ]);
     }
 
-    protected function addPlaceGroup(SupportGroup $supportGroup)
+    protected function addPlaceGroup(SupportGroup $supportGroup): void
     {
         $placeGroup = (new PlaceGroup())->setPeopleGroup($supportGroup->getPeopleGroup());
         $supportGroup->addPlaceGroup($placeGroup);
-
-        return $supportGroup;
     }
 
     /**
@@ -295,7 +294,7 @@ class SupportGroupType extends AbstractType
         ];
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => SupportGroup::class,
@@ -304,7 +303,7 @@ class SupportGroupType extends AbstractType
         ]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'support';
     }

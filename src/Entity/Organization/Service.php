@@ -2,18 +2,19 @@
 
 namespace App\Entity\Organization;
 
+use App\Form\Utils\Choices;
+use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Traits\ContactEntityTrait;
-use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use App\Entity\Traits\DisableEntityTrait;
+use App\Entity\Organization\ServiceDevice;
 use App\Entity\Traits\LocationEntityTrait;
-use App\Form\Utils\Choices;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use App\Entity\Traits\CreatedUpdatedEntityTrait;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Organization\ServiceRepository")
@@ -208,7 +209,7 @@ class Service
         $this->subServices = new ArrayCollection();
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return (string) $this->id;
     }
@@ -248,9 +249,9 @@ class Service
     }
 
     /**
-     * @return Collection<User>
+     * @return Collection<User>|User[]|null
      */
-    public function getserviceUser()
+    public function getserviceUser(): ?Collection
     {
         return $this->serviceUser;
     }
@@ -279,9 +280,9 @@ class Service
     }
 
     /**
-     * @return Collection<User>
+     * @return Collection<User>|User[]|null
      */
-    public function getUsers()
+    public function getUsers(): ?Collection
     {
         $users = new ArrayCollection();
 
@@ -305,9 +306,9 @@ class Service
     }
 
     /**
-     * @return Collection<SupportGroup>
+     * @return Collection<SupportGroup>|SupportGroup[]|null
      */
-    public function getSupportGroup()
+    public function getSupportGroup(): ?Collection
     {
         return $this->supportGroup;
     }
@@ -519,17 +520,17 @@ class Service
     }
 
     /**
-     * @return Collection<Device>
+     * @return Collection<ServiceDevice>|ServiceDevice[]|null
      */
-    public function getServiceDevices()
+    public function getServiceDevices(): ?Collection
     {
         return $this->serviceDevices;
     }
 
     /**
-     * @return Collection<Device>
+     * @return Collection<Device>|Device[]|null
      */
-    public function getDevices()
+    public function getDevices(): ?Collection
     {
         $devices = new ArrayCollection();
 
@@ -564,9 +565,9 @@ class Service
     }
 
     /**
-     * @return Collection<Place>
+     * @return Collection<Place>|Place[]|null
      */
-    public function getPlaces()
+    public function getPlaces(): ?Collection
     {
         return $this->places;
     }
@@ -607,9 +608,9 @@ class Service
     }
 
     /**
-     * @return Collection<Organization>
+     * @return Collection<Organization>|Organization[]|null
      */
-    public function getOrganizations()
+    public function getOrganizations(): ?Collection
     {
         return $this->organizations;
     }
@@ -633,9 +634,9 @@ class Service
     }
 
     /**
-     * @return Collection<SubService>
+     * @return Collection<SubService>|SubService[]|null
      */
-    public function getSubServices()
+    public function getSubServices(): ?Collection
     {
         return $this->subServices;
     }

@@ -16,8 +16,9 @@ class PlaceExport extends ExportExcel
 
     /**
      * Exporte les données.
+     * @return StreamedResponse|Response|string
      */
-    public function exportData($places)
+    public function exportData(array $places)
     {
         $arrayData = [];
         $i = 0;

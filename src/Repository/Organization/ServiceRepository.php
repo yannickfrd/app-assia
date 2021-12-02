@@ -12,6 +12,7 @@ use App\Form\Utils\Choices;
 use App\Repository\Traits\QueryTrait;
 use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -67,9 +68,9 @@ class ServiceRepository extends ServiceEntityRepository
     /**
      * Donne tous les services à exporter.
      *
-     * @return mixed
+     * @return Service[]|null
      */
-    public function findServicesToExport(ServiceSearch $serviceSearch)
+    public function findServicesToExport(ServiceSearch $serviceSearch): ?array
     {
         return $this->findServicesQuery($serviceSearch)->getResult();
     }
@@ -95,7 +96,10 @@ class ServiceRepository extends ServiceEntityRepository
         return $query->orderBy('s.name', 'ASC');
     }
 
-    public function findServicesWithPlace(OccupancySearch $search, CurrentUserService $currentUser, Device $device = null)
+    /**
+     * @return Service[]|null
+     */
+    public function findServicesWithPlace(OccupancySearch $search, CurrentUserService $currentUser, Device $device = null): ?array
     {
         $query = $this->createQueryBuilder('s')->select('s')
             ->leftJoin('s.subServices', 'ss')->addSelect('PARTIAL ss.{id, name}')
@@ -129,9 +133,9 @@ class ServiceRepository extends ServiceEntityRepository
     /**
      * Donne tous les services de l'utilisateur.
      *
-     * @return mixed
+     * @return Service[]|null
      */
-    public function findServicesOfUser(User $user)
+    public function findServicesOfUser(User $user): ?array
     {
         return $this->createQueryBuilder('s')
             ->select('PARTIAL s.{id, name, email, phone1}')
@@ -152,9 +156,9 @@ class ServiceRepository extends ServiceEntityRepository
     /**
      * Donne tous les services de l'utilisateur.
      *
-     * @return mixed
+     * @return Service[]|null
      */
-    public function findServicesAndSubServicesOfUser(User $user)
+    public function findServicesAndSubServicesOfUser(User $user): ?array
     {
         $query = $this->createQueryBuilder('s')->select('PARTIAL s.{id, name}')
             ->leftJoin('s.subServices', 'ss')->addSelect('PARTIAL ss.{id, name}')
@@ -196,7 +200,10 @@ class ServiceRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function findServices(ServiceIndicatorsSearch $search)
+    /**
+     * @return Service[]|null
+     */
+    public function findServices(ServiceIndicatorsSearch $search): ?array
     {
         $query = $this->createQueryBuilder('s')->select('s');
 

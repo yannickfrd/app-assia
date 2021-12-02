@@ -22,7 +22,7 @@ class RolePersonRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return RolePerson[]
+     * @return RolePerson[]|null
      */
     public function findPeopleInGroup(PeopleGroup $peopleGroup): array
     {
@@ -37,7 +37,7 @@ class RolePersonRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return RolePerson[]
+     * @return RolePerson[]|null
      */
     public function findPeopleNotInSupport(SupportGroup $supportGroup): array
     {

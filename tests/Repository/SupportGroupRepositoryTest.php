@@ -2,17 +2,17 @@
 
 namespace App\Tests\Repository;
 
-use App\Entity\Organization\Service;
 use App\Entity\Organization\User;
+use App\Entity\Organization\Service;
 use App\Entity\Support\SupportGroup;
 use App\Form\Model\Support\SupportSearch;
 use Doctrine\Common\Collections\ArrayCollection;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 
 class SupportGroupRepositoryTest extends WebTestCase
 {
-    use FixturesTrait;
 
     /**
      * @var \Doctrine\ORM\EntityManager
@@ -20,7 +20,7 @@ class SupportGroupRepositoryTest extends WebTestCase
     private $entityManager;
 
     /** @var SupportGroupRepository */
-    protected $repo;
+    protected $supportGroupRepo;
 
     /** @var SupportGroup */
     protected $supportGroup;
@@ -36,7 +36,10 @@ class SupportGroupRepositoryTest extends WebTestCase
 
     protected function setUp(): void
     {
-        $data = $this->loadFixtureFiles([
+        /** @var AbstractDatabaseTool */
+        $databaseTool = $this->getContainer()->get(DatabaseToolCollection::class)->get();
+
+        $fixtures = $databaseTool->loadAliceFixture([
             dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/DataFixturesTest/ServiceFixturesTest.yaml',
             dirname(__DIR__).'/DataFixturesTest/PersonFixturesTest.yaml',
@@ -50,11 +53,11 @@ class SupportGroupRepositoryTest extends WebTestCase
             ->getManager();
 
         /* @var SupportGroupRepository */
-        $this->repo = $this->entityManager->getRepository(SupportGroup::class);
+        $this->supportGroupRepo = $this->entityManager->getRepository(SupportGroup::class);
 
-        $this->supportGroup = $data['supportGroup1'];
-        $this->service = $data['service1'];
-        $this->user = $data['userRoleUser'];
+        $this->supportGroup = $fixtures['supportGroup1'];
+        $this->service = $fixtures['service1'];
+        $this->user = $fixtures['userRoleUser'];
         $this->search = $this->getSupportSearch();
     }
 
@@ -73,27 +76,27 @@ class SupportGroupRepositoryTest extends WebTestCase
 
     public function testCount()
     {
-        $this->assertGreaterThanOrEqual(3, $this->repo->count([]));
+        $this->assertGreaterThanOrEqual(3, $this->supportGroupRepo->count([]));
     }
 
     public function testFindSupportById()
     {
-        $this->assertNotNull($this->repo->findSupportById($this->supportGroup->getId()));
+        $this->assertNotNull($this->supportGroupRepo->findSupportById($this->supportGroup->getId()));
     }
 
     public function testFindFullSupportById()
     {
-        $this->assertNotNull($this->repo->findFullSupportById($this->supportGroup->getId()));
+        $this->assertNotNull($this->supportGroupRepo->findFullSupportById($this->supportGroup->getId()));
     }
 
     public function testFindAllSupportsOfUser()
     {
-        $this->assertGreaterThanOrEqual(1, count($this->repo->findSupportsOfUser($this->user)));
+        $this->assertGreaterThanOrEqual(1, count($this->supportGroupRepo->findSupportsOfUser($this->user)));
     }
 
     public function testCountAllSupportsWithoutCriteria()
     {
-        $this->assertGreaterThanOrEqual(3, $this->repo->countSupports());
+        $this->assertGreaterThanOrEqual(3, $this->supportGroupRepo->countSupports());
     }
 
     protected function tearDown(): void
@@ -101,7 +104,7 @@ class SupportGroupRepositoryTest extends WebTestCase
         parent::tearDown();
         $this->entityManager->close();
         $this->entityManager = null;
-        $this->repo = null;
+        $this->supportGroupRepo = null;
         $this->supportGroup = null;
         $this->service = null;
         $this->user = null;

@@ -2,16 +2,16 @@
 
 namespace App\Form\Admin\Security;
 
-use App\Form\Utils\Choices;
 use App\Entity\Organization\User;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Security\Core\Security;
-use App\Form\Organization\User\UserDeviceType;
-use Symfony\Component\Form\FormBuilderInterface;
 use App\Form\Organization\Service\ServiceUserType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use App\Form\Organization\User\UserDeviceType;
+use App\Form\Utils\Choices;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Security;
 
 class SecurityUserType extends AbstractType
 {
@@ -22,7 +22,7 @@ class SecurityUserType extends AbstractType
         $this->security = $security;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('firstname', null, [
@@ -110,7 +110,7 @@ class SecurityUserType extends AbstractType
             ]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => User::class,
@@ -118,7 +118,7 @@ class SecurityUserType extends AbstractType
         ]);
     }
 
-    public function getRoles()
+    public function getRoles(): array
     {
         if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
             return Choices::getChoices(User::ROLES);
@@ -130,7 +130,7 @@ class SecurityUserType extends AbstractType
         ];
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'user';
     }

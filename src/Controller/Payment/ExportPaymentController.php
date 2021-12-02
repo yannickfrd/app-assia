@@ -3,21 +3,22 @@
 namespace App\Controller\Payment;
 
 use App\Entity\Support\Payment;
-use App\Repository\Support\PaymentRepository;
 use App\Service\Payment\PaymentExporter;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Repository\Support\PaymentRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ExportPaymentController extends AbstractController
 {
-    private $manager;
+    private $em;
     private $paymentRepo;
 
-    public function __construct(EntityManagerInterface $manager, PaymentRepository $paymentRepo)
+    public function __construct(EntityManagerInterface $em, PaymentRepository $paymentRepo)
     {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->paymentRepo = $paymentRepo;
     }
 
@@ -34,7 +35,7 @@ class ExportPaymentController extends AbstractController
 
         $payment->setPdfGenerateAt(new \Datetime());
 
-        $this->manager->flush();
+        $this->em->flush();
 
         return $paymentExporter->export($payment);
     }
@@ -44,7 +45,7 @@ class ExportPaymentController extends AbstractController
      *
      * @Route("/payment/{id}/send/pdf", name="payment_send_pdf", methods="GET")
      */
-    public function sendPaymentByEmail(int $id, PaymentExporter $paymentExporter): Response
+    public function sendPaymentByEmail(int $id, PaymentExporter $paymentExporter): JsonResponse
     {
         $payment = $this->paymentRepo->findPayment($id);
 
@@ -58,7 +59,7 @@ class ExportPaymentController extends AbstractController
             ]);
         }
 
-        $this->manager->flush();
+        $this->em->flush();
 
         return $this->json([
             'action' => 'send_receipt',

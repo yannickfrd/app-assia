@@ -14,7 +14,7 @@ trait AppTestTrait
     protected function createLogin(User $user, bool $followRedirects = true): void
     {
         /* @var KernelBrowser */
-        $this->client = static::createClient();
+        // $this->client = static::createClient();
 
         $followRedirects ? $this->client->followRedirects() : null;
 
@@ -27,8 +27,8 @@ trait AppTestTrait
         $this->client->getCookieJar()->set($cookie);
 
         $this->client->request('POST', '/login', [
-            '_username' => $user->getUsername(),
-            '_password' => $user->getPlainPassword(),
+            'username' => $user->getUsername(),
+            'password' => $user->getPlainPassword(),
             '_csrf_token' => $this->client->getContainer()->get('security.csrf.token_manager')->getToken('authenticate'),
         ]);
     }

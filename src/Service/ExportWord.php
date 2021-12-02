@@ -54,7 +54,7 @@ class ExportWord
     /**
      * Save the document.
      */
-    public function save()
+    public function save(): void
     {
         $objWriter = IOFactory::createWriter($this->phpWord, 'Word2007');
     }

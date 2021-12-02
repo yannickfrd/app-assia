@@ -4,12 +4,10 @@ namespace App\Tests\Entity;
 
 use App\Entity\Support\Rdv;
 use App\Tests\Entity\AssertHasErrorsTrait;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class RdvTest extends WebTestCase
 {
-    use FixturesTrait;
     use AssertHasErrorsTrait;
 
     /** @var Rdv */
@@ -22,7 +20,7 @@ class RdvTest extends WebTestCase
         $end = $faker->dateTimeBetween($start, '+ 1 months');
 
         $this->rdv = (new Rdv())
-            ->setTitle('Rdv 666')
+            ->setTitle('RDV test')
             ->setContent($faker->paragraphs(6, true))
             ->setStart($start)
             ->setEnd($end)

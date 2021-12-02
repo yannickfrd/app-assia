@@ -3,23 +3,22 @@
 namespace App\Tests\Repository;
 
 use App\Entity\Organization\Pole;
-use App\Entity\Organization\Service;
 use App\Entity\Organization\User;
+use App\Entity\Organization\Service;
 use App\Form\Model\Organization\UserSearch;
 use App\Repository\Organization\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 
 class UserRepositoryTest extends WebTestCase
 {
-    use FixturesTrait;
-
     /** @var \Doctrine\ORM\EntityManager */
     private $entityManager;
 
     /** @var UserRepository */
-    protected $repo;
+    protected $userRepo;
 
     /** @var User */
     protected $user;
@@ -32,7 +31,10 @@ class UserRepositoryTest extends WebTestCase
 
     protected function setUp(): void
     {
-        $data = $this->loadFixtureFiles([
+        /** @var AbstractDatabaseTool */
+        $databaseTool = $this->getContainer()->get(DatabaseToolCollection::class)->get();
+
+        $fixtures = $databaseTool->loadAliceFixture([            
             dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
         ]);
 
@@ -43,11 +45,11 @@ class UserRepositoryTest extends WebTestCase
             ->getManager();
 
         /* @var UserRepository */
-        $this->repo = $this->entityManager->getRepository(User::class);
+        $this->userRepo = $this->entityManager->getRepository(User::class);
 
-        $this->user = $data['userRoleUser'];
-        $this->service = $data['service1'];
-        $this->search = $this->getUserSearch($data['pole1']);
+        $this->user = $fixtures['userRoleUser'];
+        $this->service = $fixtures['service1'];
+        $this->search = $this->getUserSearch($fixtures['pole1']);
     }
 
     protected function getUserSearch(Pole $pole)
@@ -65,39 +67,39 @@ class UserRepositoryTest extends WebTestCase
 
     public function testCount()
     {
-        $this->assertGreaterThanOrEqual(5, $this->repo->count([]));
+        $this->assertGreaterThanOrEqual(5, $this->userRepo->count([]));
     }
 
     public function testFindUserByUsername()
     {
-        $this->assertNotNull($this->repo->findUser('r.super_admin'));
+        $this->assertNotNull($this->userRepo->findUser('r.super_admin'));
     }
 
     public function testFindUserByEmail()
     {
-        $this->assertNotNull($this->repo->findUser('r.super_admin@mail.fr'));
+        $this->assertNotNull($this->userRepo->findUser('r.super_admin@mail.fr'));
     }
 
     public function testFindUserById()
     {
-        $this->assertNotNull($this->repo->findUserById($this->user->getId()));
+        $this->assertNotNull($this->userRepo->findUserById($this->user->getId()));
     }
 
     public function testFindUsersQueryWithoutFilters()
     {
-        $result = $this->repo->findUsersQuery(new UserSearch())->getResult();
+        $result = $this->userRepo->findUsersQuery(new UserSearch())->getResult();
         $this->assertGreaterThanOrEqual(5, count($result));
     }
 
     public function testFindUsersQueryWithFilters()
     {
-        $result = $this->repo->findUsersQuery($this->search)->getResult();
+        $result = $this->userRepo->findUsersQuery($this->search)->getResult();
         $this->assertGreaterThanOrEqual(1, count($result));
     }
 
     public function testFindUsersToExport()
     {
-        $users = $this->repo->findUsersToExport($this->search);
+        $users = $this->userRepo->findUsersToExport($this->search);
         $this->assertGreaterThanOrEqual(1, count($users));
     }
 
@@ -107,28 +109,28 @@ class UserRepositoryTest extends WebTestCase
 
     // public function testGetUsersQueryBuilder()
     // {
-    //     $this->assertNotNull($this->repo->getUsersQueryBuilder();
+    //     $this->assertNotNull($this->userRepo->getUsersQueryBuilder();
     // }
 
     // public function testGetAllUsersOfServicesQueryBuilder()
     // {
-    //     $this->assertNotNull($this->repo->getReferentsOfServicesQueryBuilder();
+    //     $this->assertNotNull($this->userRepo->getReferentsOfServicesQueryBuilder();
     // }
 
     public function testfindUsersOfService()
     {
-        $users = $this->repo->findUsersOfService($this->service);
+        $users = $this->userRepo->findUsersOfService($this->service);
         $this->assertGreaterThanOrEqual(1, count($users));
     }
 
     public function testFindUsersWithoutCriteria()
     {
-        $this->assertGreaterThanOrEqual(5, count($this->repo->findUsers()));
+        $this->assertGreaterThanOrEqual(5, count($this->userRepo->findUsers()));
     }
 
     public function testFindUsersWithCriteria()
     {
-        $this->assertGreaterThanOrEqual(1, count($this->repo->findUsers(['status' => 1])));
+        $this->assertGreaterThanOrEqual(1, count($this->userRepo->findUsers(['status' => 1])));
     }
 
     protected function tearDown(): void
@@ -137,7 +139,7 @@ class UserRepositoryTest extends WebTestCase
         // doing this is recommended to avoid memory leaks
         $this->entityManager->close();
         $this->entityManager = null;
-        $this->repo = null;
+        $this->userRepo = null;
         $this->user = null;
         $this->service = null;
         $this->search = null;

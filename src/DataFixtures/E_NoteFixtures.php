@@ -13,18 +13,18 @@ use Doctrine\Persistence\ObjectManager;
  */
 class E_NoteFixtures extends Fixture
 {
-    private $manager;
+    private $em;
     private $supportGroupRepo;
     private $faker;
 
-    public function __construct(EntityManagerInterface $manager, SupportGroupRepository $supportGroupRepo)
+    public function __construct(EntityManagerInterface $em, SupportGroupRepository $supportGroupRepo)
     {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->supportGroupRepo = $supportGroupRepo;
         $this->faker = \Faker\Factory::create('fr_FR');
     }
 
-    public function load(ObjectManager $manager): void
+    public function load(ObjectManager $em): void
     {
         foreach ($this->supportGroupRepo->findAll() as $support) {
             for ($i = 0; $i < mt_rand(1, 3); ++$i) {
@@ -39,9 +39,9 @@ class E_NoteFixtures extends Fixture
                     ->setUpdatedAt(new \DateTime())
                     ->setUpdatedBy($support->getReferent());
 
-                $this->manager->persist($note);
+                $this->em->persist($note);
             }
         }
-        $this->manager->flush();
+        $this->em->flush();
     }
 }

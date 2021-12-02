@@ -19,20 +19,20 @@ class CreateIndicatorsCommand extends Command
     protected static $defaultName = 'app:indicator:create-all';
     protected static $defaultDescription = 'Create all daily indicators.';
 
-    protected $manager;
+    protected $em;
     protected $indicatorRepo;
     protected $indicators;
 
-    public function __construct(EntityManagerInterface $manager, IndicatorRepository $indicatorRepo, IndicatorsService $indicators)
+    public function __construct(EntityManagerInterface $em, IndicatorRepository $indicatorRepo, IndicatorsService $indicators)
     {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->repoIndicator = $indicatorRepo;
         $this->indicators = $indicators;
 
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription(self::$defaultDescription)
@@ -40,7 +40,7 @@ class CreateIndicatorsCommand extends Command
         ;
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
         $start = $input->getOption('start');
@@ -56,12 +56,12 @@ class CreateIndicatorsCommand extends Command
             $io->text($date->format('Y-m-d'));
             $indicator = $this->indicators->createIndicator($date);
             if (!$this->repoIndicator->findOneBy(['date' => $date])) {
-                $this->manager->persist($indicator);
+                $this->em->persist($indicator);
                 ++$count;
             }
             $date = $date->modify('+1 day');
         }
-        $this->manager->flush();
+        $this->em->flush();
 
         $io->success("The indicators are create !\n  ".$count);
 

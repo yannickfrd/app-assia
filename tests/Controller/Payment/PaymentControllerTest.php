@@ -4,7 +4,8 @@ namespace App\Tests\Controller\Payment;
 
 use App\Entity\Support\Payment;
 use App\Tests\AppTestTrait;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
@@ -13,14 +14,16 @@ use Symfony\Component\HttpFoundation\Response;
 
 class PaymentControllerTest extends WebTestCase
 {
-    use FixturesTrait;
     use AppTestTrait;
 
     /** @var KernelBrowser */
     protected $client;
 
+    /** @var AbstractDatabaseTool */
+    protected $databaseTool;
+
     /** @var array */
-    protected $data;
+    protected $fixtures;
 
     /** @var SupportGroup */
     protected $supportGroup;
@@ -30,7 +33,14 @@ class PaymentControllerTest extends WebTestCase
 
     protected function setUp(): void
     {
-        $this->data = $this->loadFixtureFiles([
+        parent::setUp();
+
+        $this->client = $this->createClient();
+
+        /* @var AbstractDatabaseTool */
+        $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
+
+        $this->fixtures = $this->databaseTool->loadAliceFixture([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
@@ -38,13 +48,13 @@ class PaymentControllerTest extends WebTestCase
             dirname(__DIR__).'/../DataFixturesTest/PaymentFixturesTest.yaml',
         ]);
 
-        $this->supportGroup = $this->data['supportGroup1'];
-        $this->payment = $this->data['payment1'];
+        $this->supportGroup = $this->fixtures['supportGroup1'];
+        $this->payment = $this->fixtures['payment1'];
     }
 
     public function testSearchPaymentsIsSuccessful()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $this->client->request('GET', '/payments');
 
@@ -63,7 +73,7 @@ class PaymentControllerTest extends WebTestCase
 
     public function testExportPaymentsIsSuccessful()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $this->client->request('GET', '/payments');
 
@@ -79,7 +89,7 @@ class PaymentControllerTest extends WebTestCase
         $this->client->submitForm('export', [], 'GET');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertContains('spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
+        $this->assertStringContainsString('spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
 
         $this->client->request('GET', '/payments');
 
@@ -95,24 +105,37 @@ class PaymentControllerTest extends WebTestCase
         $this->client->submitForm('export-accounting', [], 'GET');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertContains('spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
+        $this->assertStringContainsString('spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
     }
 
     public function testExportDeltaPaymentsIsSuccessful()
     {
-        $this->createLogin($this->data['userSuperAdmin']);
+        $this->createLogin($this->fixtures['userSuperAdmin']);
 
         $this->client->request('GET', '/payments');
 
         $this->client->submitForm('export-delta', [], 'GET');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertContains('spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
+        $this->assertStringContainsString('spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
+    }
+
+    public function testShowPaymentIndicatorsIsUp()
+    {
+        $this->createLogin($this->fixtures['userRoleUser']);
+
+        $this->client->request('GET', '/payment/indicators');
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+
+        $this->client->submitForm('search');
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
 
     public function testViewSupportListPaymentsIsUp()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $id = $this->supportGroup->getId();
         $this->client->request('GET', "/support/$id/payments");
@@ -123,7 +146,7 @@ class PaymentControllerTest extends WebTestCase
 
     public function testExportSupportPaymentsIsSuccessful()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $id = $this->supportGroup->getId();
         $this->client->request('GET', "/support/$id/payments");
@@ -131,12 +154,12 @@ class PaymentControllerTest extends WebTestCase
         $this->client->submitForm('export', [], 'GET');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertContains('spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
+        $this->assertStringContainsString('spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
     }
 
     public function testCreatePaymentIsSuccessful()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $id = $this->supportGroup->getId();
         /** @var Crawler */
@@ -171,7 +194,7 @@ class PaymentControllerTest extends WebTestCase
 
     public function testUpdatePaymentIsSuccessful()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $id = $this->payment->getId();
         $supportId = $this->supportGroup->getId();
@@ -205,7 +228,7 @@ class PaymentControllerTest extends WebTestCase
 
     public function testGetPaymentIsSuccessful()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $id = $this->payment->getId();
         $this->client->request('GET', "/payment/$id/get");
@@ -217,7 +240,7 @@ class PaymentControllerTest extends WebTestCase
 
     public function testDeletePaymentIsSuccessful()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $id = $this->payment->getId();
         $this->client->request('GET', "/payment/$id/delete");
@@ -228,21 +251,21 @@ class PaymentControllerTest extends WebTestCase
 
     public function testExportPaymentToPdfIsSuccessful()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $id = $this->payment->getId();
         $this->client->request('GET', "/payment/$id/export/pdf");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertContains('application/pdf', $this->client->getResponse()->headers->get('content-type'));
+        $this->assertStringContainsString('application/pdf', $this->client->getResponse()->headers->get('content-type'));
     }
 
     public function testSendPaymentByEmailIsSuccessful()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         // Fail
-        $id = $this->data['payment2']->getId();
+        $id = $this->fixtures['payment2']->getId();
         $this->client->request('GET', "/payment/$id/send/pdf");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -259,28 +282,12 @@ class PaymentControllerTest extends WebTestCase
         $this->assertSame('Le reçu du paiement a été envoyé par email.', $content['msg']);
     }
 
-    public function testShowPaymentIndicatorsIsUp()
-    {
-        $this->createLogin($this->data['userRoleUser']);
-
-        $this->client->request('GET', '/payment/indicators');
-
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-
-        $this->client->submitForm('export', [
-            'service' => [
-                'referents' => [],
-            ],
-        ]);
-
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-    }
-
     protected function tearDown(): void
     {
         parent::tearDown();
+
         $this->client = null;
-        $this->data = null;
+        $this->fixtures = null;
 
         $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
         $cache->clear();

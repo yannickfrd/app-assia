@@ -22,12 +22,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class ServiceController extends AbstractController
 {
     private $serviceRepo;
-    private $manager;
+    private $em;
 
-    public function __construct(ServiceRepository $serviceRepo, EntityManagerInterface $manager)
+    public function __construct(ServiceRepository $serviceRepo, EntityManagerInterface $em)
     {
         $this->serviceRepo = $serviceRepo;
-        $this->manager = $manager;
+        $this->em = $em;
     }
 
     /**
@@ -63,8 +63,8 @@ class ServiceController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->manager->persist($service);
-            $this->manager->flush();
+            $this->em->persist($service);
+            $this->em->flush();
 
             $this->addFlash('success', 'Le service est créé.');
 
@@ -100,7 +100,7 @@ class ServiceController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->denyAccessUnlessGranted('EDIT', $service);
 
-            $this->manager->flush();
+            $this->em->flush();
 
             $this->addFlash('success', 'Les modifications sont enregistrées.');
         }
@@ -138,7 +138,7 @@ class ServiceController extends AbstractController
             $this->addFlash('warning', 'Le service "'.$service->getName().'" est désactivé.');
         }
 
-        $this->manager->flush();
+        $this->em->flush();
 
         return $this->redirectToRoute('service_edit', ['id' => $service->getId()]);
     }
@@ -146,7 +146,7 @@ class ServiceController extends AbstractController
     /**
      * Exporte les données.
      */
-    protected function exportData(ServiceSearch $search)
+    protected function exportData(ServiceSearch $search): Response
     {
         $services = $this->serviceRepo->findServicesToExport($search);
 

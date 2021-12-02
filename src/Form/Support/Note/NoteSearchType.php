@@ -27,7 +27,7 @@ class NoteSearchType extends AbstractType
         $this->user = $security->getUser();
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $this->setFormData($builder);
         $builder
@@ -96,7 +96,7 @@ class NoteSearchType extends AbstractType
         });
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => NoteSearch::class,
@@ -107,7 +107,7 @@ class NoteSearchType extends AbstractType
         ]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return '';
     }

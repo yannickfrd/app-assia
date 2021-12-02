@@ -11,16 +11,16 @@ use App\Repository\Organization\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserManager
 {
-    private $manager;
+    private $em;
     private $flashbag;
 
-    public function __construct(EntityManagerInterface $manager, FlashBagInterface $flashbag)
+    public function __construct(EntityManagerInterface $em, FlashBagInterface $flashbag)
     {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->flashbag = $flashbag;
     }
 
@@ -32,8 +32,8 @@ class UserManager
         $user->setToken(bin2hex(random_bytes(32)))
             ->setTokenCreatedAt(new \DateTime());
 
-        $this->manager->persist($user);
-        $this->manager->flush();
+        $this->em->persist($user);
+        $this->em->flush();
 
         $this->discache($user);
 
@@ -50,7 +50,7 @@ class UserManager
         $user->setToken(bin2hex(random_bytes(32)))
             ->setTokenCreatedAt(new \DateTime());
 
-        $this->manager->flush();
+        $this->em->flush();
 
         if ($userNotification->newUser($user)) {
             $this->flashbag->add('success', 'Un e-mail a été envoyé à l\'utilisateur. Le lien est valide durant 24 heures.');
@@ -62,12 +62,12 @@ class UserManager
     /**
      * Met à jour le mot de passe.
      */
-    public function updatePassword(User $user, UserPasswordEncoderInterface $encoder, string $password): void
+    public function updatePassword(User $user, UserPasswordHasherInterface $passwordHasher, string $password): void
     {
-        $hashPassword = $encoder->encodePassword($user, $password);
+        $hashPassword = $passwordHasher->hashPassword($user, $password);
         $user->setPassword($hashPassword);
 
-        $this->manager->flush();
+        $this->em->flush();
 
         $this->flashbag->add('success', 'Votre mot de passe est mis à jour !');
     }
@@ -75,13 +75,13 @@ class UserManager
     /**
      * Met à jour les coordonnées de l'utilisateur connecté.
      */
-    public function updateCurrentUserInfo(User $user, UserChangeInfo $userChangeInfo)
+    public function updateCurrentUserInfo(User $user, UserChangeInfo $userChangeInfo): void
     {
         $user->setEmail($userChangeInfo->getEmail())
             ->setPhone1($userChangeInfo->getPhone1())
             ->setPhone2($userChangeInfo->getPhone2());
 
-        $this->manager->flush();
+        $this->em->flush();
 
         $this->flashbag->add('success', 'Les modifications sont enregistrées.');
     }
@@ -112,45 +112,45 @@ class UserManager
     /**
      * Crée le mot de passe si le token est toujours valide.
      */
-    public function createPasswordWithToken(User $user, UserPasswordEncoderInterface $encoder, UserResetPassword $userResetPassword)
+    public function createPasswordWithToken(User $user, UserPasswordHasherInterface $passwordHasher, UserResetPassword $userResetPassword): void
     {
         if ($this->isValidTokenDate($user, 24 * 60 * 60)) { // 24 heures
-            $this->setPassword($user, $encoder, $userResetPassword->getPassword());
+            $this->setPassword($user, $passwordHasher, $userResetPassword->getPassword());
 
-            return $this->flashbag->add('success', 'Votre mot de passe est créé !');
+            $this->flashbag->add('success', 'Votre mot de passe est créé !');
+        } else {
+            $this->flashbag->add('danger', 'Le lien de création est périmé.');
         }
-
-        return $this->flashbag->add('danger', 'Le lien de création est périmé.');
     }
 
     /**
      * Met à jour le mot de passe si le token est toujours valide.
      */
-    public function updatePasswordWithToken(User $user, UserPasswordEncoderInterface $encoder, UserResetPassword $userResetPassword)
+    public function updatePasswordWithToken(User $user, UserPasswordHasherInterface $passwordHasher, UserResetPassword $userResetPassword): void
     {
         if ($this->isValidTokenDate($user, 10 * 60)) { // 10 minutes
             // Met à jour le nouveau mot de passe et supprime le token
-            $this->setPassword($user, $encoder, $userResetPassword->getPassword());
+            $this->setPassword($user, $passwordHasher, $userResetPassword->getPassword());
 
             $user->setFailureLoginCount(0);
 
-            $this->manager->flush();
+            $this->em->flush();
 
-            return $this->flashbag->add('success', 'Votre mot de passe est réinitialisé !');
+            $this->flashbag->add('success', 'Votre mot de passe est réinitialisé !');
+        } else {
+            $this->flashbag->add('danger', 'Le lien de réinitialisation est périmé.');
         }
-
-        return $this->flashbag->add('danger', 'Le lien de réinitialisation est périmé.');
     }
 
     /**
      * Envoie l'email de réinitialisation du mot de passe.
      */
-    public function sendEmailToReinitPassword(User $user, UserNotification $userNotification)
+    public function sendEmailToReinitPassword(User $user, UserNotification $userNotification): array
     {
         $user->setToken(bin2hex(random_bytes(32))) // Enregistre le token dans la base
             ->setTokenCreatedAt(new \DateTime());
 
-        $this->manager->flush();
+        $this->em->flush();
 
         $message = $userNotification->reinitPassword($user); // Envoie l'email
 
@@ -159,19 +159,19 @@ class UserManager
         return $message;
     }
 
-    protected function setPassword(User $user, UserPasswordEncoderInterface $encoder, string $plainPassword): void
+    protected function setPassword(User $user, UserPasswordHasherInterface $passwordHasher, string $plainPassword): void
     {
         $user->setToken(null)
             ->setTokenCreatedAt(null)
-            ->setPassword($encoder->encodePassword($user, $plainPassword));
+            ->setPassword($passwordHasher->hashPassword($user, $plainPassword));
 
-        $this->manager->flush();
+        $this->em->flush();
     }
 
     /**
      * Vérifie si le token n'est pas périmé par rapport à sa date.
      */
-    protected function isValidTokenDate(User $user, int $delay)
+    protected function isValidTokenDate(User $user, int $delay): bool
     {
         // Calcule l'intervalle entre le moment de demande de réinitialisation et maintenant
         $interval = date_timestamp_get(new \DateTime()) - date_timestamp_get($user->getTokenCreatedAt());

@@ -43,7 +43,7 @@ services:
     App\DataFixtures\Processor\UserProcessor:
         tags: [{ name: fidry_alice_data_fixtures.processor }]
         arguments:
-            - "@security.user_password_encoder.generic"
+            - "@security.user_password_hasher"
 
     App\EventListener\ExceptionListener:
         tags:
@@ -121,18 +121,11 @@ services:
         arguments:
             $url: "%env(SISIAO_URL)%"
 
-    # App\Twig\AppExtension:
-    #     lazy: true
-
     Twig\CacheExtension\CacheProviderInterface:
         class: Twig\CacheExtension\CacheProvider\PsrCacheAdapter
 
     Twig\CacheExtension\CacheStrategyInterface:
         class: Twig\CacheExtension\CacheStrategy\LifetimeCacheStrategy
-
-    Twig\CacheExtension\Extension:
-        tags:
-            - { name: twig.extension }
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

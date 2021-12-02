@@ -11,6 +11,7 @@ use App\Form\Organization\User\UserSearchType;
 use Symfony\Component\HttpFoundation\Response;
 use App\Repository\Organization\UserRepository;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -71,7 +72,7 @@ class UserController extends AbstractController
      *
      * @Route("/user/username_exists/{username}", name="username_exists", methods="GET")
      */
-    public function usernameExists(string $username = ''): Response
+    public function usernameExists(string $username = ''): JsonResponse
     {
         $user = $this->userRepo->findOneBy(['username' => $username]);
 
@@ -81,7 +82,7 @@ class UserController extends AbstractController
     /**
      * Exporte les données.
      */
-    protected function exportData(UserSearch $search)
+    protected function exportData(UserSearch $search): Response
     {
         $users = $this->userRepo->findUsersToExport($search);
 

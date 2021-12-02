@@ -9,11 +9,11 @@ use App\Entity\Support\SupportGroup;
 use App\Entity\Traits\ContactEntityTrait;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use App\Entity\Traits\DisableEntityTrait;
-use App\Service\Phone;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -25,7 +25,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *  message="Ce nom d'utilisateur existe déjà."
  * )
  */
-class User implements UserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use ContactEntityTrait;
     use CreatedUpdatedEntityTrait;
@@ -242,7 +242,7 @@ class User implements UserInterface
         $this->rdvs2 = new ArrayCollection();
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return (string) $this->id;
     }
@@ -250,6 +250,11 @@ class User implements UserInterface
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getUserIdentifier(): ?string
+    {
+        return $this->username;
     }
 
     public function getUsername(): ?string
@@ -334,12 +339,21 @@ class User implements UserInterface
         return substr($this->firstname, 0, 1).substr($this->lastname, 0, 1);
     }
 
+    /**
+     * @see UserInterface
+     */
     public function eraseCredentials()
     {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 
-    public function getSalt()
+    /**
+     * @see UserInterface
+     */
+    public function getSalt(): ?string
     {
+        return null;
     }
 
     public function getStatus(): ?int
@@ -426,9 +440,11 @@ class User implements UserInterface
         return $this;
     }
 
-    public function setLastActivityAt(\DateTimeInterface $lastActivityAt)
+    public function setLastActivityAt(\DateTimeInterface $lastActivityAt): self
     {
         $this->lastActivityAt = $lastActivityAt;
+
+        return $this;
     }
 
     public function getLastActivityAt(): ?\DateTimeInterface
@@ -442,9 +458,9 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection<SupportGroup>
+     * @return Collection<SupportGroup>|SupportGroup[]|null
      */
-    public function getSupports()
+    public function getSupports(): ?Collection
     {
         return $this->supports;
     }
@@ -473,9 +489,9 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection<ServiceUser>
+     * @return Collection<ServiceUser>|ServiceUser[]|null
      */
-    public function getServiceUser()
+    public function getServiceUser(): ?Collection
     {
         return $this->serviceUser;
     }
@@ -504,9 +520,9 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection<Service>
+     * @return Collection<Service>|Service[]|null
      */
-    public function getServices()
+    public function getServices(): ?Collection
     {
         $services = new ArrayCollection();
 
@@ -518,9 +534,9 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection<UserConnection>
+     * @return Collection<UserConnection>|UserConnection[]|null
      */
-    public function getUserConnections()
+    public function getUserConnections(): ?Collection
     {
         return $this->userConnections;
     }
@@ -573,9 +589,9 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection<Referent>
+     * @return Collection<SupportGroup>|SupportGroup[]|null
      */
-    public function getReferentSupport()
+    public function getReferentSupport(): ?Collection
     {
         return $this->referentSupport;
     }
@@ -604,9 +620,9 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection<SupportGroup>
+     * @return Collection<SupportGroup>|SupportGroup[]|null
      */
-    public function getReferent2Support()
+    public function getReferent2Support(): ?Collection
     {
         return $this->referent2Support;
     }
@@ -635,9 +651,9 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection<Note>
+     * @return Collection<Note>|Note[]|null
      */
-    public function getNotes()
+    public function getNotes(): ?Collection
     {
         return $this->notes;
     }
@@ -666,9 +682,9 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection<Rdv>
+     * @return Collection<Rdv>|Rdv[]|null
      */
-    public function getRdvs()
+    public function getRdvs(): ?Collection
     {
         return $this->rdvs;
     }
@@ -697,9 +713,9 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection<Document>
+     * @return Collection<Document>|Document[]|null
      */
-    public function getDocuments()
+    public function getDocuments(): ?Collection
     {
         return $this->documents;
     }
@@ -728,9 +744,9 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection<Device>
+     * @return Collection<UserDevice>|UserDevice[]|null
      */
-    public function getUserDevices()
+    public function getUserDevices(): ?Collection
     {
         return $this->userDevices;
     }
@@ -759,9 +775,9 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|Rdv[]
+     * @return Collection<Rdv>|Rdv[]|null
      */
-    public function getRdvs2(): Collection
+    public function getRdvs2(): ?Collection
     {
         return $this->rdvs2;
     }

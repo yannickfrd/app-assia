@@ -1,6 +1,6 @@
 App\Entity\Organization\Place:
   place1:
-    name: Logement 666
+    name: Logement test
     nbPlaces: 6
     startDate: <date_create("2010-01-01")>
     # endDate: <date_create("2020-01-01")>

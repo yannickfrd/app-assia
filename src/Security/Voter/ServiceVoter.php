@@ -10,20 +10,21 @@ class ServiceVoter extends Voter
 {
     use VoterTrait;
 
+    /** @var User */
     protected $user;
+    
+    /** @var Service */
     protected $service;
 
-    protected function supports($attribute, $subject)
+    protected function supports($attribute, $subject): bool
     {
         return in_array($attribute, ['VIEW', 'EDIT', 'DISABLE'])
             && $subject instanceof \App\Entity\Organization\Service;
     }
 
-    protected function voteOnAttribute($attribute, $service, TokenInterface $token)
+    protected function voteOnAttribute($attribute, $service, TokenInterface $token): bool
     {
-        /** @var User */
         $this->user = $token->getUser();
-        /** @var Service */
         $this->service = $service;
 
         if (!$this->user) {
@@ -45,7 +46,7 @@ class ServiceVoter extends Voter
         return false;
     }
 
-    protected function canEdit()
+    protected function canEdit(): bool
     {
         if ($this->isAdminOfService($this->service)
             || $this->isGranted('ROLE_SUPER_ADMIN')) {

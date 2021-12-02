@@ -27,7 +27,7 @@ class ServiceDeviceReferentSearchType extends AbstractType
         $this->currentUser = $currentUser;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $dataClass = $builder->getDataClass();
         $attr = $builder->getOption('attr');
@@ -126,14 +126,14 @@ class ServiceDeviceReferentSearchType extends AbstractType
         }
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'inherit_data' => true,
         ]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return '';
     }

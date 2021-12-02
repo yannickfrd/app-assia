@@ -15,7 +15,7 @@ class ResponseListener
         $this->renderer = $renderer;
     }
 
-    public function onKernelResponse(ResponseEvent $event)
+    public function onKernelResponse(ResponseEvent $event): ?Response
     {
         $request = $event->getRequest();
         $response = $event->getResponse();
@@ -25,6 +25,8 @@ class ResponseListener
         if ($response->getContent() && ('prod' != $server->get('APP_VERSION') || '127.0.0.1:8000' === $server->get('SERVER_NAME'))) {
             return $this->addPopUp($response);
         }
+
+        return null;
     }
 
     public function addPopUp(Response $response): Response

@@ -17,7 +17,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class OccupancySearchType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) {
             $this->setData($event->getData());
@@ -61,7 +61,7 @@ class OccupancySearchType extends AbstractType
     }
 
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => OccupancySearch::class,
@@ -72,7 +72,7 @@ class OccupancySearchType extends AbstractType
         ]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return '';
     }

@@ -135,7 +135,7 @@ class EvaluationGroup
     /**
      * @ORM\PreFlush
      */
-    public function preFlush()
+    public function preFlush(): void
     {
         if ($this->supportGroup) {
             $this->supportGroup->setUpdatedAt(new \DateTime());
@@ -226,7 +226,7 @@ class EvaluationGroup
 
     public function setEvalSocialGroup(EvalSocialGroup $evalSocialGroup): self
     {
-        if ($evalSocialGroup->getId() || false === $this->objectIsEmpty($evalSocialGroup)) {
+        if ($evalSocialGroup->getId() || false === $this->isEmptyObject($evalSocialGroup)) {
             $this->evalSocialGroup = $evalSocialGroup;
         }
 
@@ -245,7 +245,7 @@ class EvaluationGroup
 
     public function setEvalFamilyGroup(EvalFamilyGroup $evalFamilyGroup): self
     {
-        if ($evalFamilyGroup->getId() || false === $this->objectIsEmpty($evalFamilyGroup)) {
+        if ($evalFamilyGroup->getId() || false === $this->isEmptyObject($evalFamilyGroup)) {
             $this->evalFamilyGroup = $evalFamilyGroup;
         }
         // set the owning side of the relation if necessary
@@ -263,7 +263,7 @@ class EvaluationGroup
 
     public function setEvalHousingGroup(EvalHousingGroup $evalHousingGroup): self
     {
-        if ($evalHousingGroup->getId() || false === $this->objectIsEmpty($evalHousingGroup)) {
+        if ($evalHousingGroup->getId() || false === $this->isEmptyObject($evalHousingGroup)) {
             $this->evalHousingGroup = $evalHousingGroup;
         }
         // set the owning side of the relation if necessary
@@ -292,9 +292,9 @@ class EvaluationGroup
     }
 
     /**
-     * @return Collection<EvaluationPerson>
+     * @return Collection<EvaluationPerson>|EvaluationPerson[]|null
      */
-    public function getEvaluationPeople()
+    public function getEvaluationPeople(): ?Collection
     {
         return $this->evaluationPeople;
     }
@@ -341,7 +341,7 @@ class EvaluationGroup
 
     public function setEvalHotelLifeGroup(EvalHotelLifeGroup $evalHotelLifeGroup): self
     {
-        if ($evalHotelLifeGroup->getId() || false === $this->objectIsEmpty($evalHotelLifeGroup)) {
+        if ($evalHotelLifeGroup->getId() || false === $this->isEmptyObject($evalHotelLifeGroup)) {
             $this->evalHotelLifeGroup = $evalHotelLifeGroup;
         }
         // set the owning side of the relation if necessary
@@ -352,7 +352,7 @@ class EvaluationGroup
         return $this;
     }
 
-    protected function objectIsEmpty(object $originRequest)
+    protected function isEmptyObject(object $originRequest): bool
     {
         foreach ((array) $originRequest as $value) {
             if ($value) {

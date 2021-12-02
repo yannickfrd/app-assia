@@ -2,15 +2,15 @@
 
 namespace App\Service\Note;
 
+use App\Entity\Support\SupportGroup;
+use App\Form\Model\Support\NoteSearch;
+use App\Form\Model\Support\SupportNoteSearch;
+use App\Repository\Support\NoteRepository;
+use App\Security\CurrentUserService;
 use App\Service\Pagination;
 use Psr\Cache\CacheItemInterface;
-use App\Entity\Support\SupportGroup;
-use App\Security\CurrentUserService;
-use App\Form\Model\Support\NoteSearch;
-use App\Repository\Support\NoteRepository;
-use App\Form\Model\Support\SupportNoteSearch;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\HttpFoundation\Request;
 
 class NotePaginator
 {
@@ -30,7 +30,7 @@ class NotePaginator
     /**
      * Donne les rendez-vous du suivi.
      */
-    public function paginateSupportNotes(SupportGroup $supportGroup, Request $request, SupportNoteSearch $search)
+    public function paginateSupportNotes(SupportGroup $supportGroup, Request $request, SupportNoteSearch $search): object
     {
         // Si filtre ou tri utilisé, n'utilise pas le cache.
         if ($request->query->count() > 0 || $search->getNoteId()) {
@@ -48,7 +48,7 @@ class NotePaginator
         );
     }
 
-    public function paginateNotes(Request $request, NoteSearch $search)
+    public function paginateNotes(Request $request, NoteSearch $search): object
     {
         return $this->pagination->paginate(
             $this->noteRepo->findNotesQuery($search, $this->currentUser),

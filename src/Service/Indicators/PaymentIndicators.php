@@ -16,7 +16,10 @@ class PaymentIndicators
     {
     }
 
-    public function getIndicators(array $payments, PaymentSearch $search)
+    /**
+     * @param Payment[] $payments
+     */
+    public function getIndicators(array $payments, PaymentSearch $search): array
     {
         switch ($search->getDateType()) {
             case 1:

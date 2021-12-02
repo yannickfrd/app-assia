@@ -23,8 +23,8 @@ use App\Form\Utils\Choices;
 use App\Form\Utils\EvaluationChoices;
 use App\Notification\ExceptionNotification;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -35,7 +35,7 @@ class SiSiaoEvaluationImporter extends SiSiaoRequest
 {
     use SiSiaoClientTrait;
 
-    protected $manager;
+    protected $em;
     protected $user;
     protected $flashBag;
     protected $exceptionNotification;
@@ -59,16 +59,16 @@ class SiSiaoEvaluationImporter extends SiSiaoRequest
 
     public function __construct(
         HttpClientInterface $client,
-        SessionInterface $session,
-        EntityManagerInterface $manager,
+        RequestStack $request,
+        EntityManagerInterface $em,
         Security $security,
         FlashBagInterface $flashBag,
         ExceptionNotification $exceptionNotification,
         string $url
     ) {
-        parent::__construct($client, $session, $url);
+        parent::__construct($client, $request, $url);
 
-        $this->manager = $manager;
+        $this->em = $em;
         $this->user = $security->getUser();
         $this->flashBag = $flashBag;
         $this->exceptionNotification = $exceptionNotification;
@@ -137,7 +137,7 @@ class SiSiaoEvaluationImporter extends SiSiaoRequest
             $this->createInitEvalGroup($supportGroup, $evaluationGroup);
         }
 
-        $this->manager->flush();
+        $this->em->flush();
 
         $this->flashBag->add('success', "L'évaluation sociale a été ".($this->evaluationGroup ? 'actualisée.' : 'importée.'));
 
@@ -164,7 +164,7 @@ class SiSiaoEvaluationImporter extends SiSiaoRequest
             ->setSupportGroup($supportGroup)
             ->setDate(new \DateTime());
 
-            $this->manager->persist($evaluationGroup);
+            $this->em->persist($evaluationGroup);
         }
 
         /** @var int */
@@ -210,7 +210,7 @@ class SiSiaoEvaluationImporter extends SiSiaoRequest
             ->setCommentEvalFamilyGroup($sitFamille->commentaires)
             ->setEvaluationGroup($evaluationGroup);
 
-            $this->manager->persist($evalFamilyGroup);
+            $this->em->persist($evalFamilyGroup);
         }
 
         $evalFamilyGroup
@@ -239,7 +239,7 @@ class SiSiaoEvaluationImporter extends SiSiaoRequest
                 // ->setCommentEvalSocialGroup(null)
                 ->setEvaluationGroup($evaluationGroup);
 
-            $this->manager->persist($evalSocialGroup);
+            $this->em->persist($evalSocialGroup);
         }
 
         $evalSocialGroup
@@ -271,7 +271,7 @@ class SiSiaoEvaluationImporter extends SiSiaoRequest
             $evalBudgetGroup = (new EvalBudgetGroup())
             ->setEvaluationGroup($evaluationGroup);
 
-            $this->manager->persist($evalBudgetGroup);
+            $this->em->persist($evalBudgetGroup);
         }
 
         $evalBudgetGroup
@@ -300,7 +300,7 @@ class SiSiaoEvaluationImporter extends SiSiaoRequest
                 ->setCommentEvalHousing($sitLogement ? $sitLogement->commentaireSituationLogement : null)
                 ->setEvaluationGroup($evaluationGroup);
 
-            $this->manager->persist($evalHousingGroup);
+            $this->em->persist($evalHousingGroup);
         }
 
         $evalHousingGroup->setExpulsionInProgress($this->findInArray($sitSociale->expulsion, SiSiaoItems::YES_NO));
@@ -349,6 +349,8 @@ class SiSiaoEvaluationImporter extends SiSiaoRequest
                 ->setDomiciliationCity($sitFamille->ville)
                 ->setDomiciliationZipcode($sitFamille->codepostal);
         }
+
+        $this->em->persist($evalHousingGroup);
 
         $evaluationGroup->setEvalHousingGroup($evalHousingGroup);
 
@@ -403,7 +405,7 @@ class SiSiaoEvaluationImporter extends SiSiaoRequest
             ->setDebtsGroupAmt($evalBudgetGroup->getDebtsGroupAmt())
             ->setSupportGroup($supportGroup);
 
-        $this->manager->persist($initEvalGroup);
+        $this->em->persist($initEvalGroup);
 
         $evaluationGroup->setInitEvalGroup($initEvalGroup);
 
@@ -417,7 +419,7 @@ class SiSiaoEvaluationImporter extends SiSiaoRequest
                 ->setEvaluationGroup($evaluationGroup)
                 ->setSupportPerson($supportPerson);
 
-            $this->manager->persist($evaluationPerson);
+            $this->em->persist($evaluationPerson);
         }
 
         $this->createOrEditEvalSocialPerson($evaluationPerson, $personne);
@@ -454,7 +456,7 @@ class SiSiaoEvaluationImporter extends SiSiaoRequest
                 // ->setCommentEvalSocialPerson(null)
                 ->setEvaluationPerson($evaluationPerson);
 
-            $this->manager->persist($evalSocialPerson);
+            $this->em->persist($evalSocialPerson);
         }
 
         $evalSocialPerson
@@ -502,7 +504,7 @@ class SiSiaoEvaluationImporter extends SiSiaoRequest
                 // ->setProtectiveMeasureType(null)
                 ->setEvaluationPerson($evaluationPerson);
 
-            $this->manager->persist($evalFamilyPerson);
+            $this->em->persist($evalFamilyPerson);
         }
 
         $evalFamilyPerson
@@ -530,7 +532,7 @@ class SiSiaoEvaluationImporter extends SiSiaoRequest
                 ->setEvaluationPerson($evaluationPerson)
                 ->setCommentEvalAdmPerson($sitAdm->commentaires);
 
-            $this->manager->persist($evalAdmPerson);
+            $this->em->persist($evalAdmPerson);
         }
 
         $evalAdmPerson
@@ -571,7 +573,7 @@ class SiSiaoEvaluationImporter extends SiSiaoRequest
                 ->setCommentEvalProf($diagSocial->commentaires)
                 ->setEvaluationPerson($evaluationPerson);
 
-            $this->manager->persist($evalProfPerson);
+            $this->em->persist($evalProfPerson);
         }
 
         $evalProfPerson
@@ -626,7 +628,7 @@ class SiSiaoEvaluationImporter extends SiSiaoRequest
                     .$diagSocial->commentairesSituationBudgetaire."\n")
                 ->setEvaluationPerson($evaluationPerson);
 
-            $this->manager->persist($evalBudgetPerson);
+            $this->em->persist($evalBudgetPerson);
         }
 
         $evalBudgetPerson
@@ -800,7 +802,7 @@ class SiSiaoEvaluationImporter extends SiSiaoRequest
             $this->setResourcesInit($evalBudgetPerson, $initEvalPerson);
         }
 
-        $this->manager->persist($initEvalPerson);
+        $this->em->persist($initEvalPerson);
 
         $evaluationPerson->setInitEvalPerson($initEvalPerson);
 

@@ -91,7 +91,7 @@ class PlaceGroup
         $this->placePeople = new ArrayCollection();
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return (string) $this->id;
     }
@@ -206,9 +206,9 @@ class PlaceGroup
     }
 
     /**
-     * @return Collection<PlacePerson>
+     * @return Collection<PlacePerson>|PlacePerson[]|null
      */
-    public function getPlacePeople()
+    public function getPlacePeople(): ?Collection
     {
         return $this->placePeople;
     }

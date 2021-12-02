@@ -20,21 +20,21 @@ class UpdateSoundexNamePersonCommand extends Command
 
     protected static $defaultName = 'app:person:update_soundex_name';
 
-    protected $manager;
+    protected $em;
     protected $personRepo;
     protected $soundexFr;
 
-    public function __construct(EntityManagerInterface $manager, PersonRepository $personRepo, SoundexFr $soundexFr)
+    public function __construct(EntityManagerInterface $em, PersonRepository $personRepo, SoundexFr $soundexFr)
     {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->personRepo = $personRepo;
         $this->soundexFr = $soundexFr;
-        $this->disableListeners($this->manager);
+        $this->disableListeners($this->em);
 
         parent::__construct();
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
@@ -47,7 +47,7 @@ class UpdateSoundexNamePersonCommand extends Command
             ++$count;
         }
 
-        $this->manager->flush();
+        $this->em->flush();
 
         $io->success("The soundex names of people are update !\n  ".$count.' / '.count($people));
 

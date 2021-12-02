@@ -102,7 +102,7 @@ class ExportPDF
         return $response;
     }
 
-    protected function getFileName()
+    protected function getFileName(): string
     {
         $slug = $this->slugger->slug($this->title.($this->infoAdd ? '-'.$this->infoAdd : ''));
 

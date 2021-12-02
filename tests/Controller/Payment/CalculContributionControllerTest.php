@@ -2,23 +2,27 @@
 
 namespace App\Tests\Controller\Payment;
 
-use App\Entity\Support\Payment;
 use App\Tests\AppTestTrait;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use App\Entity\Support\Payment;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 
 class CalculContributionControllerTest extends WebTestCase
 {
-    use FixturesTrait;
     use AppTestTrait;
 
     /** @var KernelBrowser */
     protected $client;
 
+    /** @var AbstractDatabaseTool */
+    protected $databaseTool;
+
     /** @var array */
-    protected $data;
+    protected $fixtures;
 
     /** @var SupportGroup */
     protected $supportGroup;
@@ -28,7 +32,14 @@ class CalculContributionControllerTest extends WebTestCase
 
     protected function setUp(): void
     {
-        $this->data = $this->loadFixtureFiles([
+        parent::setUp();
+
+        $this->client = $this->createClient();
+
+        /** @var AbstractDatabaseTool */
+        $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
+
+        $this->fixtures = $this->databaseTool->loadAliceFixture([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
@@ -36,12 +47,12 @@ class CalculContributionControllerTest extends WebTestCase
             dirname(__DIR__).'/../DataFixturesTest/EvaluationFixturesTest.yaml',
         ]);
 
-        $this->supportGroup = $this->data['supportGroupWithEval'];
+        $this->supportGroup = $this->fixtures['supportGroupWithEval'];
     }
 
     public function testCalculContribution()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $id = $this->supportGroup->getId();
         $this->client->request('GET', "/support/$id/contribution/calcul");
@@ -49,5 +60,16 @@ class CalculContributionControllerTest extends WebTestCase
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('get_contribution', $content['action']);
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        $this->client = null;
+        $this->fixtures = null;
+
+        $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
+        $cache->clear();
     }
 }

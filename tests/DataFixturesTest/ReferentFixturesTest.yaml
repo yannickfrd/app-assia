@@ -1,6 +1,6 @@
 App\Entity\Organization\Referent:
   referent1:
-    name: Reférent 666
+    name: Reférent test
     type: <numberBetween(1, 12)>
     socialWorker: <fr_FR:firstName()>.<fr_FR:lastName()>
     email: <fr_FR:email()>

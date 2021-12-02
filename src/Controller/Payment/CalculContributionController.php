@@ -4,12 +4,13 @@ namespace App\Controller\Payment;
 
 use App\Entity\Support\Payment;
 use App\Form\Support\Payment\PaymentType;
-use App\Service\Payment\ContributionCalculator;
 use App\Service\SupportGroup\SupportManager;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Service\Payment\ContributionCalculator;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CalculContributionController extends AbstractController
 {
@@ -27,7 +28,7 @@ class CalculContributionController extends AbstractController
      *
      * @Route("/support/{id}/contribution/calcul", name="support_payment_calcul", methods="GET|POST")
      */
-    public function calculContribution(int $id, Request $request): Response
+    public function calculContribution(int $id, Request $request): JsonResponse
     {
         $supportGroup = $this->supportManager->getSupportGroup($id);
 

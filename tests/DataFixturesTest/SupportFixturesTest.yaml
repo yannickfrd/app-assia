@@ -5,6 +5,7 @@ App\Entity\Support\SupportGroup:
     agreement: true
     referent: "@userRoleUser"
     service: "@service1"
+    subService: "@subService1"
     device: "@device1"
     peopleGroup: "@peopleGroup1"
     createdAt: <dateTimeBetween("-2 years", "now")>

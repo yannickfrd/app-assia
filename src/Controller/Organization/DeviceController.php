@@ -19,12 +19,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class DeviceController extends AbstractController
 {
     private $deviceRepo;
-    private $manager;
+    private $em;
 
-    public function __construct(DeviceRepository $deviceRepo, EntityManagerInterface $manager)
+    public function __construct(DeviceRepository $deviceRepo, EntityManagerInterface $em)
     {
         $this->deviceRepo = $deviceRepo;
-        $this->manager = $manager;
+        $this->em = $em;
     }
 
     /**
@@ -56,8 +56,8 @@ class DeviceController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->manager->persist($device);
-            $this->manager->flush();
+            $this->em->persist($device);
+            $this->em->flush();
 
             $this->addFlash('success', 'Le dispositif est créé.');
         }
@@ -79,7 +79,7 @@ class DeviceController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->manager->flush();
+            $this->em->flush();
 
             $this->addFlash('success', 'Les modifications sont enregistrées.');
         }
@@ -107,7 +107,7 @@ class DeviceController extends AbstractController
             $this->addFlash('warning', 'Le dispositif est désactivé.');
         }
 
-        $this->manager->flush();
+        $this->em->flush();
 
         return $this->redirectToRoute('admin_device_edit', ['id' => $device->getId()]);
     }

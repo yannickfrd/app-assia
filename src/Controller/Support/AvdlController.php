@@ -43,8 +43,6 @@ class AvdlController extends AbstractController
      */
     protected function exportData(AvdlSupportSearch $search, SupportPersonRepository $supportPersonRepo)
     {
-        set_time_limit(10 * 60);
-
         $supports = $supportPersonRepo->findSupportsOfServiceToExport($search, Service::SERVICE_TYPE_AVDL);
 
         if (!$supports) {

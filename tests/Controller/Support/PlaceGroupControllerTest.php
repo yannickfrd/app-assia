@@ -2,26 +2,28 @@
 
 namespace App\Tests\Controller\Support;
 
+use App\Tests\AppTestTrait;
 use App\Entity\Support\PlaceGroup;
 use App\Entity\Support\SupportGroup;
-use App\Tests\AppTestTrait;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\HttpFoundation\Response;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 
 class PlaceGroupControllerTest extends WebTestCase
 {
-    use FixturesTrait;
     use AppTestTrait;
 
     /** @var KernelBrowser */
     protected $client;
 
+    /** @var AbstractDatabaseTool */
+    protected $databaseTool;
+    
     /** @var array */
-    protected $data;
+    protected $fixtures;
 
     /** @var SupportGroup */
     protected $supportGroup;
@@ -31,7 +33,14 @@ class PlaceGroupControllerTest extends WebTestCase
 
     protected function setUp(): void
     {
-        $this->data = $this->loadFixtureFiles([
+        parent::setUp();
+
+        $this->client = $this->createClient();
+
+        /** @var AbstractDatabaseTool */
+        $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
+
+        $this->fixtures = $this->databaseTool->loadAliceFixture([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
@@ -40,10 +49,10 @@ class PlaceGroupControllerTest extends WebTestCase
             dirname(__DIR__).'/../DataFixturesTest/PlaceGroupFixturesTest.yaml',
         ]);
 
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
-        $this->supportGroup = $this->data['supportGroup1'];
-        $this->placeGroup = $this->data['plGroup1'];
+        $this->supportGroup = $this->fixtures['supportGroup1'];
+        $this->placeGroup = $this->fixtures['plGroup1'];
     }
 
     public function testListSupportPlacesIsUp()
@@ -106,7 +115,7 @@ class PlaceGroupControllerTest extends WebTestCase
 
     public function testAdPersonToPlaceIsSuccessful()
     {
-        $placePersonId = $this->data['plPerson1']->getId();
+        $placePersonId = $this->fixtures['plPerson1']->getId();
         $this->client->request('GET', "/support/place-person/$placePersonId/delete");
 
         $placeGroupId = $this->placeGroup->getId();
@@ -135,7 +144,7 @@ class PlaceGroupControllerTest extends WebTestCase
 
     public function testDeletePlacePersonIsSuccessful()
     {
-        $id = $this->data['plPerson1']->getId();
+        $id = $this->fixtures['plPerson1']->getId();
         $this->client->request('GET', "/support/place-person/$id/delete");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -145,8 +154,9 @@ class PlaceGroupControllerTest extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
+        
         $this->client = null;
-        $this->data = null;
+        $this->fixtures = null;
 
         $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
         $cache->clear();

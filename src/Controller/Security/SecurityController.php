@@ -23,8 +23,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
@@ -39,10 +39,10 @@ class SecurityController extends AbstractController
     /**
      * @Route("/admin/registration", name="security_registration", methods="GET|POST")
      */
-    public function registration(Request $request, UserPasswordEncoderInterface $encoder, UserNotification $userNotification): Response
+    public function registration(Request $request, UserPasswordHasherInterface $passwordHasher, UserNotification $userNotification): Response
     {
         $user = new User();
-        $user->setPassword($encoder->encodePassword($user, bin2hex(random_bytes(8))));
+        $user->setPassword($passwordHasher->hashPassword($user, bin2hex(random_bytes(8))));
 
         $form = $this->createForm(SecurityUserType::class, $user)
             ->handleRequest($request);
@@ -85,10 +85,11 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('home');
         }
 
-        $form = $this->createForm(LoginType::class, ['_username' => $authenticationUtils->getLastUsername()]);
+        $form = $this->createForm(LoginType::class, ['username' => $authenticationUtils->getLastUsername()]);
 
         return $this->render('app/admin/security/login.html.twig', [
             'form' => $form->createView(),
+            'lastusername' => $authenticationUtils->getLastUsername(),
             'error' => $authenticationUtils->getLastAuthenticationError(),
         ]);
     }
@@ -114,13 +115,13 @@ class SecurityController extends AbstractController
      *
      * @Route("/login/init_password", name="security_init_password", methods="GET|POST")
      */
-    public function initPassword(Request $request, UserPasswordEncoderInterface $encoder): Response
+    public function initPassword(Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
         $form = $this->createForm(InitPasswordType::class, $userInitPassword = new UserInitPassword())
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->userManager->updatePassword($this->getUser(), $encoder, $userInitPassword->getPassword());
+            $this->userManager->updatePassword($this->getUser(), $passwordHasher, $userInitPassword->getPassword());
 
             return $this->redirectToRoute('home');
         }
@@ -135,7 +136,7 @@ class SecurityController extends AbstractController
      *
      * @Route("/my_profile", name="my_profile", methods="GET|POST")
      */
-    public function showCurrentUser(Request $request, UserPasswordEncoderInterface $encoder, SupportGroupRepository $supportRepo, ServiceRepository $serviceRepo): Response
+    public function showCurrentUser(Request $request, UserPasswordHasherInterface $passwordHasher, SupportGroupRepository $supportRepo, ServiceRepository $serviceRepo): Response
     {
         $userChangeInfo = (new UserChangeInfo())
             ->setEmail($this->getUser()->getEmail())
@@ -155,7 +156,7 @@ class SecurityController extends AbstractController
         }
 
         if ($formPassword->isSubmitted() && $formPassword->isValid()) {
-            $this->userManager->updatePassword($this->getUser(), $encoder, $userChangePassword->getNewPassword());
+            $this->userManager->updatePassword($this->getUser(), $passwordHasher, $userChangePassword->getNewPassword());
 
             return $this->redirectToRoute('home');
         }
@@ -174,13 +175,13 @@ class SecurityController extends AbstractController
     /**
      * @Route("/admin/user/{id}", name="security_user", methods="GET|POST")
      */
-    public function editUser(User $user, Request $request, EntityManagerInterface $manager)
+    public function editUser(User $user, Request $request, EntityManagerInterface $em): Response
     {
         $form = $this->createForm(SecurityUserType::class, $user)
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $manager->flush();
+            $em->flush();
 
             $this->userManager->discache($user);
 
@@ -197,7 +198,7 @@ class SecurityController extends AbstractController
      *
      * @Route("/admin/user/{id}/disable", name="security_user_disable", methods="GET")
      */
-    public function disableUser(User $user, EntityManagerInterface $manager): Response
+    public function disableUser(User $user, EntityManagerInterface $em): Response
     {
         $this->denyAccessUnlessGranted('DISABLE', $user);
 
@@ -218,7 +219,7 @@ class SecurityController extends AbstractController
 
         $this->userManager->discache($user);
 
-        $manager->flush();
+        $em->flush();
 
         return $this->redirectToRoute('security_user', ['id' => $user->getId()]);
     }
@@ -262,7 +263,7 @@ class SecurityController extends AbstractController
      *
      * @Route("/login/reinit_password/{token}", name="security_reinit_password", methods="GET|POST")
      */
-    public function reinitPassword(Request $request, UserRepository $userRepo, UserPasswordEncoderInterface $encoder, string $token = null): Response
+    public function reinitPassword(Request $request, UserRepository $userRepo, UserPasswordHasherInterface $passwordHasher, string $token = null): Response
     {
         $form = $this->createForm(ReinitPasswordType::class, $userResetPassword = new UserResetPassword())
             ->handleRequest($request);
@@ -272,7 +273,7 @@ class SecurityController extends AbstractController
         if ($form->isSubmitted()) {
             if ($user) {
                 if ($form->isValid()) {
-                    $this->userManager->updatePasswordWithToken($user, $encoder, $userResetPassword);
+                    $this->userManager->updatePasswordWithToken($user, $passwordHasher, $userResetPassword);
 
                     return $this->redirectToRoute('security_login');
                 }
@@ -291,7 +292,7 @@ class SecurityController extends AbstractController
      *
      * @Route("/login/create_password/{token}", name="security_create_password", methods="GET|POST")
      */
-    public function createPassword(Request $request, UserRepository $userRepo, UserPasswordEncoderInterface $encoder, string $token = null): Response
+    public function createPassword(Request $request, UserRepository $userRepo, UserPasswordHasherInterface $passwordHasher, string $token = null): Response
     {
         // Redirection vers la page d'accueil si l'utilisateur est déjà connecté
         if ($this->getUser()) {
@@ -312,7 +313,7 @@ class SecurityController extends AbstractController
             // Vérifie si l'utilisateur existe avec le même token.
             $user = $this->userManager->userWithTokenExists($userRepo, $userResetPassword, $token);
             if ($form->isValid() && $user) {
-                $this->userManager->createPasswordWithToken($user, $encoder, $userResetPassword);
+                $this->userManager->createPasswordWithToken($user, $passwordHasher, $userResetPassword);
 
                 return $this->redirectToRoute('security_login');
             } else {
@@ -326,7 +327,7 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/deconnexion", name="security_logout")
+     * @Route("/logout", name="security_logout")
      */
     public function logout(): void
     {

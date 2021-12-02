@@ -11,7 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SupportsByUserSearchType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('service', ServiceDeviceReferentSearchType::class, [
@@ -21,7 +21,7 @@ class SupportsByUserSearchType extends AbstractType
             ->add('send', HiddenType::class);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => SupportsByUserSearch::class,
@@ -32,7 +32,7 @@ class SupportsByUserSearchType extends AbstractType
         ]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return '';
     }

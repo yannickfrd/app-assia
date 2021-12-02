@@ -10,11 +10,18 @@ class DocumentVoter extends Voter
 {
     use VoterTrait;
 
+    /** @var User */
     protected $user;
+    
     protected $userId;
-    protected $document;
 
-    protected function supports($attribute, $subject)
+    /** @var Document */
+    protected $document;
+    
+    /** @var SupportGroup */
+    protected $supportGroup;
+
+    protected function supports($attribute, $subject): bool
     {
         return in_array($attribute, ['VIEW', 'EDIT', 'DELETE'])
             && $subject instanceof \App\Entity\Support\Document;
@@ -25,7 +32,6 @@ class DocumentVoter extends Voter
         /** @var User */
         $this->user = $token->getUser();
         $this->userId = $this->user->getId();
-        /** @var Document */
         $this->document = $document;
         $this->supportGroup = $this->document->getSupportGroup();
 

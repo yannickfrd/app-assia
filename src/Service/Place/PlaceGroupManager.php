@@ -55,7 +55,7 @@ class PlaceGroupManager
     /**
      * Met à jour l'adresse du suivi via l'adresse du groupe de places.
      */
-    protected function updateLocationSupportGroup(SupportGroup $supportGroup, Place $place)
+    protected function updateLocationSupportGroup(SupportGroup $supportGroup, Place $place): void
     {
         $supportGroup
             ->setAddress($place->getAddress())

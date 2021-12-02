@@ -10,7 +10,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=PaymentRepository::class)
- * @ORM\Table(name="contribution")
  * @ORM\HasLifecycleCallbacks
  */
 class Payment
@@ -240,7 +239,7 @@ class Payment
     /**
      * @ORM\PreFlush
      */
-    public function preFlush()
+    public function preFlush(): void
     {
         $this->setStillToPayAmt($this->getToPayAmt() - $this->getPaidAmt());
 

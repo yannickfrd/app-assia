@@ -27,7 +27,7 @@ class RdvSearchType extends AbstractType
         $this->user = $security->getUser();
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $this->setFormData($builder);
         $builder
@@ -86,7 +86,7 @@ class RdvSearchType extends AbstractType
         });
     }
     
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => RdvSearch::class,
@@ -97,7 +97,7 @@ class RdvSearchType extends AbstractType
         ]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return '';
     }

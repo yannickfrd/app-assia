@@ -11,8 +11,9 @@
                 {{ form_start(form) }}
                     {% include "model/_msgFlash.html.twig" %}
                     {% if error %}
+                        {{ dump(error) }}
                         <div class="alert alert-danger alert-dismissible mb-3 fade show" role="alert">
-                            {{ error.message|trans(error.messageData, "security")|raw }}
+                            {{ error.messageKey|trans(error.messageData, "security")|raw }}
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -23,14 +24,14 @@
                         <div class="input-group mb-2">
                             <div class="input-group-prepend">
                                 <div class="input-group-text"><span class="fa fa-user"></span></div>
-                            </div>{{ form_label(form._username) }}
-                            {{ form_widget(form._username) }}
+                            </div>{{ form_label(form.username) }}
+                            {{ form_widget(form.username) }}
                         </div>
                     </div>
                     <div class="my-3">
                         <div class="input-group js-password-group">
-                            {{ form_label(form._password) }}
-                            {{ form_widget(form._password, {'attr': {'class': 'js-password' }}) }}
+                            {{ form_label(form.password) }}
+                            {{ form_widget(form.password, {'attr': {'class': 'js-password' }}) }}
                             <div class="input-group-append">
                                 <span class="input-group-text"><span class="js-show-password fa fa-eye"></span></span>
                             </div>

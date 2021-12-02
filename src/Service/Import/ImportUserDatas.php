@@ -11,12 +11,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 class ImportUserDatas extends ImportDatas
 {
-    protected $manager;
+    protected $em;
     /** @var Request */
     protected $request;
     protected $userNotification;
@@ -26,22 +26,22 @@ class ImportUserDatas extends ImportDatas
     protected $field;
 
     protected $userRepo;
-    protected $passwordEncoder;
+    protected $passwordHasher;
 
     protected $users = [];
     protected $existUsers = [];
 
     public function __construct(
-        EntityManagerInterface $manager,
+        EntityManagerInterface $em,
         UserNotification $userNotification,
         UserRepository $userRepo,
-        UserPasswordEncoderInterface $passwordEncoder,
+        UserPasswordHasherInterface $passwordHasher,
         SluggerInterface $slugger
     ) {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->userNotification = $userNotification;
         $this->UserRepo = $userRepo;
-        $this->passwordEncoder = $passwordEncoder;
+        $this->passwordHasher = $passwordHasher;
         $this->slugger = $slugger;
     }
 
@@ -64,7 +64,7 @@ class ImportUserDatas extends ImportDatas
             ++$i;
         }
 
-        $this->manager->flush();
+        $this->em->flush();
 
         // Envoie des emails.
         foreach ($this->users as $user) {
@@ -92,7 +92,7 @@ class ImportUserDatas extends ImportDatas
             ->setFirstName($firstname)
             ->setLastName($lastname)
             ->setUsername($this->getUsername($firstname, $lastname))
-            ->setPassword($this->passwordEncoder->encodePassword($user, bin2hex(random_bytes(8))))
+            ->setPassword($this->passwordHasher->hashPassword($user, bin2hex(random_bytes(8))))
             ->setStatus($status)
             ->setRoles($role)
             ->setEmail($this->field['Email'])
@@ -108,14 +108,14 @@ class ImportUserDatas extends ImportDatas
             return $userExists;
         }
 
-        $this->manager->persist($user);
+        $this->em->persist($user);
 
         foreach ($services as $service) {
             $serviceUser = (new ServiceUser())
                 ->setUser($user)
                 ->setService($service);
 
-            $this->manager->persist($serviceUser);
+            $this->em->persist($serviceUser);
         }
 
         $this->users[] = $user;
@@ -143,7 +143,7 @@ class ImportUserDatas extends ImportDatas
     /**
      * Vérifie si l'utilisateur existe déjà dans la base de données.
      */
-    protected function userExists(User $user)
+    protected function userExists(User $user): ?User
     {
         return $this->UserRepo->findOneBy([
             'username' => $user->getUsername(),

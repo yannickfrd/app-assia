@@ -35,6 +35,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -100,7 +101,7 @@ class SupportController extends AbstractController
      * @Route("/group/{id}/new_support", name="group_new_support", methods="GET")
      * @Route("support/switch_service", name="support_switch_service", methods="POST")
      */
-    public function newSupportGroupAjax(PeopleGroup $peopleGroup = null, Request $request, SupportPersonRepository $supportPersonRepo)
+    public function newSupportGroupAjax(PeopleGroup $peopleGroup = null, Request $request, SupportPersonRepository $supportPersonRepo): JsonResponse
     {
         $form = $this->createForm(NewSupportGroupType::class, new SupportGroup())
             ->handleRequest($request);
@@ -404,10 +405,8 @@ class SupportController extends AbstractController
     /**
      * Exporte les données.
      */
-    protected function exportData(SupportSearch $search)
+    protected function exportData(SupportSearch $search): Response
     {
-        set_time_limit(10 * 60);
-
         /** @var SupportPersonRepository $supportPersonRepo */
         $supportPersonRepo = $this->em->getRepository(SupportPerson::class);
 

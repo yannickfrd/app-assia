@@ -10,22 +10,25 @@ class ExportVoter extends Voter
 {
     use VoterTrait;
 
+    /** @var User */
     protected $user;
+    
     protected $userId;
+
+    /** @var Export */
     protected $export;
 
-    protected function supports($attribute, $subject)
+    protected function supports($attribute, $subject): bool
     {
         return in_array($attribute, ['GET', 'VIEW', 'DELETE'])
             && $subject instanceof Export;
     }
 
-    protected function voteOnAttribute($attribute, $export, TokenInterface $token)
+    protected function voteOnAttribute($attribute, $export, TokenInterface $token): bool
     {
         /** @var User */
         $this->user = $token->getUser();
         $this->userId = $this->user->getId();
-        /** @var Export */
         $this->export = $export;
 
         if (!$this->user) {
@@ -47,7 +50,7 @@ class ExportVoter extends Voter
         return false;
     }
 
-    protected function canView()
+    protected function canView(): bool
     {
         if ($this->userId === $this->export->getCreatedBy()->getId()
          || $this->isGranted('ROLE_SUPER_ADMIN')
@@ -58,7 +61,7 @@ class ExportVoter extends Voter
         return false;
     }
 
-    protected function canDelete()
+    protected function canDelete(): bool
     {
         return $this->canView();
     }

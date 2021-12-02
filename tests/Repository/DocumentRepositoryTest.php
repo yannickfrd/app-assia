@@ -2,23 +2,22 @@
 
 namespace App\Tests\Repository;
 
-use App\Entity\Organization\User;
 use App\Entity\Support\Document;
+use App\Entity\Organization\User;
 use App\Entity\Support\SupportGroup;
 use App\Form\Model\Support\DocumentSearch;
 use App\Form\Model\Support\SupportDocumentSearch;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 
 class DocumentRepositoryTest extends WebTestCase
 {
-    use FixturesTrait;
-
     /** @var \Doctrine\ORM\EntityManager */
     private $entityManager;
 
     /** @var DocumentRepository */
-    protected $repo;
+    protected $documentRepo;
 
     /** @var SupportGroup */
     protected $supportGroup;
@@ -30,8 +29,11 @@ class DocumentRepositoryTest extends WebTestCase
     protected $search;
 
     protected function setUp(): void
-    {
-        $data = $this->loadFixtureFiles([
+    {        
+        /** @var AbstractDatabaseTool */
+        $databaseTool = $this->getContainer()->get(DatabaseToolCollection::class)->get();
+
+        $fixtures = $databaseTool->loadAliceFixture([
             dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/DataFixturesTest/ServiceFixturesTest.yaml',
             dirname(__DIR__).'/DataFixturesTest/PersonFixturesTest.yaml',
@@ -46,10 +48,10 @@ class DocumentRepositoryTest extends WebTestCase
             ->getManager();
 
         /* @var DocumentRepository */
-        $this->repo = $this->entityManager->getRepository(Document::class);
+        $this->documentRepo = $this->entityManager->getRepository(Document::class);
 
-        $this->supportGroup = $data['supportGroup1'];
-        $this->user = $data['userRoleUser'];
+        $this->supportGroup = $fixtures['supportGroup1'];
+        $this->user = $fixtures['userRoleUser'];
         $this->search = (new SupportDocumentSearch())
             ->setName('Document')
             ->setType(1);
@@ -57,46 +59,46 @@ class DocumentRepositoryTest extends WebTestCase
 
     public function testCount()
     {
-        $this->assertGreaterThanOrEqual(2, $this->repo->count([]));
+        $this->assertGreaterThanOrEqual(2, $this->documentRepo->count([]));
     }
 
     public function testFindDocumentsQueryWithoutFilters()
     {
-        $query = $this->repo->findDocumentsQuery(new DocumentSearch());
+        $query = $this->documentRepo->findDocumentsQuery(new DocumentSearch());
         $this->assertGreaterThanOrEqual(5, count($query->getResult()));
     }
 
     public function testFindSupportDocumentsQueryWithoutFilters()
     {
-        $query = $this->repo->findSupportDocumentsQuery($this->supportGroup, new SupportDocumentSearch());
+        $query = $this->documentRepo->findSupportDocumentsQuery($this->supportGroup, new SupportDocumentSearch());
         $this->assertGreaterThanOrEqual(5, count($query->getResult()));
     }
 
     public function testFindSupportDocumentsQueryWithFilters()
     {
-        $query = $this->repo->findSupportDocumentsQuery($this->supportGroup, $this->search);
+        $query = $this->documentRepo->findSupportDocumentsQuery($this->supportGroup, $this->search);
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 
     public function testFindSupportsDocumentsQueryWithFilterByContent()
     {
-        $query = $this->repo->findSupportDocumentsQuery($this->supportGroup, $this->search->setName('Description'));
+        $query = $this->documentRepo->findSupportDocumentsQuery($this->supportGroup, $this->search->setName('Description'));
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 
     public function testCountDocumentsWithoutCriteria()
     {
-        $this->assertGreaterThanOrEqual(5, $this->repo->countDocuments());
+        $this->assertGreaterThanOrEqual(5, $this->documentRepo->countDocuments());
     }
 
     public function testCountDocumentsWithCriteria()
     {
-        $this->assertGreaterThanOrEqual(5, $this->repo->countDocuments(['user' => $this->user]));
+        $this->assertGreaterThanOrEqual(5, $this->documentRepo->countDocuments(['user' => $this->user]));
     }
 
     public function testSumSizeAllDocuments()
     {
-        $this->assertGreaterThan(200000 * 5, $this->repo->sumSizeAllDocuments());
+        $this->assertGreaterThan(200000 * 5, $this->documentRepo->sumSizeAllDocuments());
     }
 
     protected function tearDown(): void
@@ -104,7 +106,7 @@ class DocumentRepositoryTest extends WebTestCase
         parent::tearDown();
         $this->entityManager->close();
         $this->entityManager = null;
-        $this->repo = null;
+        $this->documentRepo = null;
         $this->supportGroup = null;
         $this->user = null;
         $this->search = null;

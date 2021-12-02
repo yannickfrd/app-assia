@@ -2,44 +2,54 @@
 
 namespace App\Tests\Controller\Support;
 
-use App\Entity\Support\SupportGroup;
 use App\Tests\AppTestTrait;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use App\Entity\Support\SupportGroup;
+use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\HttpFoundation\Response;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 
 class HotelControllerTest extends WebTestCase
 {
-    use FixturesTrait;
     use AppTestTrait;
 
     /** @var KernelBrowser */
     protected $client;
 
+    /** @var AbstractDatabaseTool */
+    protected $databaseTool;
+    
     /** @var array */
-    protected $data;
+    protected $fixtures;
 
     /** @var SupportGroup */
     protected $supportGroup;
 
     protected function setUp(): void
     {
-        $this->data = $this->loadFixtureFiles([
+        parent::setUp();
+
+        $this->client = $this->createClient();
+
+        /** @var AbstractDatabaseTool */
+        $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
+
+        $this->fixtures = $this->databaseTool->loadAliceFixture([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/HotelSupportFixturesTest.yaml',
         ]);
 
-        $this->supportGroup = $this->data['supportGrpHotel1'];
+        $this->supportGroup = $this->fixtures['supportGrpHotel1'];
     }
 
     public function testSearchHotelSupportsIsSuccessful()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         // Page is up
         $this->client->request('GET', '/hotel-supports');
@@ -58,7 +68,7 @@ class HotelControllerTest extends WebTestCase
 
     public function testExportHotelSupportsIsSuccessful()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $this->client->request('GET', '/hotel-supports');
 
@@ -75,19 +85,19 @@ class HotelControllerTest extends WebTestCase
         $this->client->submitForm('export', [], 'GET');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertContains('.spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
+        $this->assertStringContainsString('.spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
     }
 
     public function testCreateHotelSupportGroupIsSuccessful()
     {
-        $user = $this->data['userRoleUser'];
+        $user = $this->fixtures['userRoleUser'];
         $this->createLogin($user);
 
-        $id = $this->data['peopleGroup3']->getId();
+        $id = $this->fixtures['peopleGroup3']->getId();
         $this->client->request('POST', "/group/$id/support/new", [
             'support' => [
-                'service' => $this->data['servicePash'],
-                'device' => $this->data['deviceHotel']->getCode(),
+                'service' => $this->fixtures['servicePash'],
+                'device' => $this->fixtures['deviceHotel']->getCode(),
                 'referent' => $user,
             ],
         ]);
@@ -95,13 +105,13 @@ class HotelControllerTest extends WebTestCase
         $now = new \DateTime();
         $this->client->submitForm('send', [
             'support' => [
-                'service' => $this->data['servicePash'],
-                'device' => $this->data['deviceHotel']->getCode(),
+                'service' => $this->fixtures['servicePash'],
+                'device' => $this->fixtures['deviceHotel']->getCode(),
                 'status' => SupportGroup::STATUS_IN_PROGRESS,
                 'referent' => $user,
                 'originRequest' => [
                     'orientationDate' => $now->format('Y-m-d'),
-                    'organization' => $this->data['siao95'],
+                    'organization' => $this->fixtures['siao95'],
                     'comment' => 'XXX',
                 ],
                 'hotelSupport' => [
@@ -118,10 +128,10 @@ class HotelControllerTest extends WebTestCase
 
     public function testEditHotelSupportGroupIsSuccessful()
     {
-        $user = $this->data['userRoleUser'];
-        $this->createLogin($this->data['userRoleUser']);
+        $user = $this->fixtures['userRoleUser'];
+        $this->createLogin($this->fixtures['userRoleUser']);
 
-        $id = $this->data['supportGrpHotel1']->getId();
+        $id = $this->fixtures['supportGrpHotel1']->getId();
         $this->client->request('GET', "/support/$id/edit");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -130,14 +140,14 @@ class HotelControllerTest extends WebTestCase
         $now = new \DateTime();
         $this->client->submitForm('send', [
             'support' => [
-                'service' => $this->data['servicePash'],
-                'subService' => $this->data['subServicePash'],
-                'device' => $this->data['deviceHotel']->getCode(),
+                'service' => $this->fixtures['servicePash'],
+                'subService' => $this->fixtures['subServicePash'],
+                'device' => $this->fixtures['deviceHotel']->getCode(),
                 'status' => SupportGroup::STATUS_IN_PROGRESS,
                 'referent' => $user,
                 'originRequest' => [
                     'orientationDate' => $now->format('Y-m-d'),
-                    'organization' => $this->data['siao95'],
+                    'organization' => $this->fixtures['siao95'],
                     'comment' => 'XXX',
                 ],
                 'hotelSupport' => [
@@ -168,8 +178,9 @@ class HotelControllerTest extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
+        
         $this->client = null;
-        $this->data = null;
+        $this->fixtures = null;
 
         $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
         $cache->clear();

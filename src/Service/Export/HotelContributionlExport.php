@@ -17,8 +17,10 @@ class HotelContributionlExport extends ExportExcel
 
     /**
      * Exporte les données.
+     *
+     * @return StreamedResponse|Response|string
      */
-    public function exportData($payments)
+    public function exportData(array $payments)
     {
         $arrayData[] = array_keys($this->getDatas($payments[0]));
 
@@ -49,9 +51,9 @@ class HotelContributionlExport extends ExportExcel
             'Période concernée' => $payment->getStartDate() ? $payment->getStartDate()->format('m/Y') : null,
             'ID PAF (interne)' => $payment->getId(),
             'ID groupe SI-SIAO' => $supportGroup->getPeopleGroup()->getSiSiaoId(),
-            'Nom ménage' => $person->getLastname(),
-            'Prénom' => $person->getFirstname(),
-            'Date de naissance' => $this->formatDate($person->getBirthdate()),
+            'Nom ménage' => $person ? $person->getLastname() : null,
+            'Prénom' => $person ? $person->getFirstname() : null,
+            'Date de naissance' => $person ? $this->formatDate($person->getBirthdate()) : null,
             'Montant PAF' => (string) $payment->getToPayAmt(),
             'PAF à zéro' => $payment->getNoContribToString().($payment->getNoContribReason() ? ' ('.$payment->getNoContribReasonToString().')' : ''),
             'SIAO prescripteur nuitée' => $organization ? $organization->getName() : null,

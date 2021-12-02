@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Tests\Controller;
+namespace App\Tests\Controller\Organization;
 
 use App\Tests\AppTestTrait;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
 class ServiceControllerTest extends WebTestCase
 {
-    use FixturesTrait;
     use AppTestTrait;
 
     /** @var KernelBrowser */
@@ -17,12 +17,18 @@ class ServiceControllerTest extends WebTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
+
+        $this->client = $this->createClient();
+
+        /** @var AbstractDatabaseTool */
+        $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
     }
 
     public function testSearchServicesIsSuccessful()
     {
-        $data = $this->loadFixtureFiles($this->getFixtureFiles());
-        $this->createLogin($data['userRoleUser']);
+        $fixtures = $this->databaseTool->loadAliceFixture($this->getFixtureFiles());
+        $this->createLogin($fixtures['userRoleUser']);
 
         $this->client->request('GET', '/services');
 
@@ -30,10 +36,10 @@ class ServiceControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Services');
 
         $this->client->submitForm('search', [
-            'name' => 'CHRS XXX',
+            'name' => 'CHRS Cergy',
             'city' => 'Pontoise',
             'phone' => '01 00 00 00 00',
-            'pole' => $data['pole1']->getId(),
+            'pole' => $fixtures['pole1']->getId(),
         ], 'GET');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -42,21 +48,21 @@ class ServiceControllerTest extends WebTestCase
 
     public function testExportServicesIsSuccessful()
     {
-        $data = $this->loadFixtureFiles($this->getFixtureFiles());
-        $this->createLogin($data['userRoleUser']);
+        $fixtures = $this->databaseTool->loadAliceFixture($this->getFixtureFiles());
+        $this->createLogin($fixtures['userRoleUser']);
 
         $this->client->request('GET', '/services');
 
         $this->client->submitForm('export', [], 'GET');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertContains('.spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
+        $this->assertStringContainsString('.spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
     }
 
     public function testCreateNewServiceIsSuccessful()
     {
-        $data = $this->loadFixtureFiles($this->getFixtureFiles());
-        $this->createLogin($data['userSuperAdmin']);
+        $fixtures = $this->databaseTool->loadAliceFixture($this->getFixtureFiles());
+        $this->createLogin($fixtures['userSuperAdmin']);
 
         $this->client->request('GET', '/service/new');
 
@@ -67,7 +73,7 @@ class ServiceControllerTest extends WebTestCase
             'service[name]' => 'Service test',
             'service[location][city]' => 'Pontoise',
             'service[phone1]' => '01 00 00 00 00',
-            'service[pole]' => $data['pole1'],
+            'service[pole]' => $fixtures['pole1'],
         ]);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -76,13 +82,13 @@ class ServiceControllerTest extends WebTestCase
 
     public function testEditServiceInSuperAdminIsUp()
     {
-        $data = $this->loadFixtureFiles(array_merge($this->getFixtureFiles(), [
+        $fixtures = $this->databaseTool->loadAliceFixture(array_merge($this->getFixtureFiles(), [
             dirname(__DIR__).'/../DataFixturesTest/PlaceFixturesTest.yaml',
         ]));
 
-        $this->createLogin($data['userSuperAdmin']);
+        $this->createLogin($fixtures['userSuperAdmin']);
 
-        $service = $data['service1'];
+        $service = $fixtures['service1'];
         $id = $service->getId();
         $this->client->request('GET', "/service/$id");
 
@@ -92,13 +98,13 @@ class ServiceControllerTest extends WebTestCase
 
     public function testEditServiceIsSuccessful()
     {
-        $data = $this->loadFixtureFiles(array_merge($this->getFixtureFiles(), [
+        $fixtures = $this->databaseTool->loadAliceFixture(array_merge($this->getFixtureFiles(), [
             dirname(__DIR__).'/../DataFixturesTest/PlaceFixturesTest.yaml',
         ]));
 
-        $this->createLogin($data['userAdmin']);
+        $this->createLogin($fixtures['userAdmin']);
 
-        $service = $data['service1'];
+        $service = $fixtures['service1'];
         $id = $service->getId();
         $this->client->request('GET', "/service/$id");
 
@@ -115,11 +121,11 @@ class ServiceControllerTest extends WebTestCase
 
     public function testDisableService()
     {
-        $data = $this->loadFixtureFiles($this->getFixtureFiles());
+        $fixtures = $this->databaseTool->loadAliceFixture($this->getFixtureFiles());
 
-        $this->createLogin($data['userSuperAdmin']);
+        $this->createLogin($fixtures['userSuperAdmin']);
 
-        $id = $data['service1']->getId();
+        $id = $fixtures['service1']->getId();
         $this->client->request('GET', "/admin/service/$id/disable");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -142,7 +148,8 @@ class ServiceControllerTest extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
+
         $this->client = null;
-        $data = null;
+        $fixtures = null;
     }
 }

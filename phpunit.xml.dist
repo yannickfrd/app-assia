@@ -2,25 +2,19 @@
 
 <!-- https://phpunit.readthedocs.io/en/latest/configuration.html -->
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/6.5/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
          backupGlobals="false"
          colors="true"
-         bootstrap="config/bootstrap.php"
+         bootstrap="tests/bootstrap.php"
+         convertDeprecationsToExceptions="false"
 >
     <php>
+        <ini name="display_errors" value="1" />
         <ini name="error_reporting" value="-1" />
         <server name="APP_ENV" value="test" force="true" />
-        <env name="APP_DEBUG" value="0"/>
-        <env name="APP_SECRET" value="5a79a1c866efef9ca1800f971d689f3e"/>
         <server name="SHELL_VERBOSITY" value="-1" />
         <server name="SYMFONY_PHPUNIT_REMOVE" value="" />
-        <server name="SYMFONY_PHPUNIT_VERSION" value="7.5" />
-        <server name="KERNEL_CLASS" value="App\Kernel"/>
-        <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled"/>
-
-        <!-- ###+ doctrine/doctrine-bundle ### -->
-        <!-- <env name="DATABASE_URL" value="sqlite:///%kernel.cache_dir%/test.db"/> -->
-        <!-- ###- doctrine/doctrine-bundle ### --> 
+        <server name="SYMFONY_PHPUNIT_VERSION" value="9.5" />
     </php>
 
     <testsuites>
@@ -29,19 +23,20 @@
         </testsuite>
     </testsuites>
 
-    <filter>
-        <whitelist>
-            <directory>src</directory>
-        </whitelist>
-    </filter>
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">src</directory>
+        </include>
+    </coverage>
 
     <listeners>
         <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
     </listeners>
 
+    <!-- Run `composer require symfony/panther` before enabling this extension -->
+    <!--
     <extensions>
-        <extension class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension"/>
         <extension class="Symfony\Component\Panther\ServerExtension" />
     </extensions>
-
+    -->
 </phpunit>

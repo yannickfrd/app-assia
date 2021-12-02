@@ -2,23 +2,24 @@
 
 namespace App\Service\SupportGroup;
 
-use App\Entity\Evaluation\EvaluationGroup;
-use App\Entity\Evaluation\EvaluationPerson;
-use App\Entity\Evaluation\InitEvalGroup;
-use App\Entity\Organization\Service;
 use App\Entity\Support\Document;
+use App\Entity\Organization\Service;
 use App\Entity\Support\SupportGroup;
-use App\Repository\Evaluation\EvaluationGroupRepository;
-use App\Repository\Evaluation\EvaluationPersonRepository;
-use App\Repository\Support\DocumentRepository;
+use App\Entity\Evaluation\InitEvalGroup;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Evaluation\EvaluationGroup;
 use App\Repository\Support\NoteRepository;
+use App\Entity\Evaluation\EvaluationPerson;
+use Doctrine\Common\Collections\Collection;
+use App\Repository\Support\DocumentRepository;
 use App\Repository\Support\SupportGroupRepository;
 use App\Repository\Support\SupportPersonRepository;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\Evaluation\EvaluationGroupRepository;
+use App\Repository\Evaluation\EvaluationPersonRepository;
 
 class SupportDuplicator
 {
-    private $manager;
+    private $em;
 
     private $supportGroupRepo;
     private $supportPersonRepo;
@@ -33,7 +34,7 @@ class SupportDuplicator
     private $evaluationGroup = null;
 
     public function __construct(
-        EntityManagerInterface $manager,
+        EntityManagerInterface $em,
         SupportGroupRepository $supportGroupRepo,
         SupportPersonRepository $supportPersonRepo,
         EvaluationGroupRepository $evaluationGroupRepo,
@@ -41,7 +42,7 @@ class SupportDuplicator
         NoteRepository $noteRepo,
         DocumentRepository $documentRepo
     ) {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->supportGroupRepo = $supportGroupRepo;
         $this->supportPersonRepo = $supportPersonRepo;
         $this->evaluationGroupRepo = $evaluationGroupRepo;
@@ -63,10 +64,10 @@ class SupportDuplicator
                         ->setEvaluationGroup($supportGroup->getEvaluationsGroup()->last())
                         ->setSupportPerson($supportPerson);
 
-                    $this->manager->persist($evaluationPerson);
+                    $this->em->persist($evaluationPerson);
                 }
             }
-            $this->manager->flush();
+            $this->em->flush();
 
             return $this->evaluationGroup;
         }
@@ -89,7 +90,7 @@ class SupportDuplicator
         $this->duplicateDocuments($supportGroup, $lastSupportGroup);
         $this->duplicateNote($supportGroup, $lastSupportGroup);
 
-        $this->manager->flush();
+        $this->em->flush();
 
         return $supportGroup;
     }
@@ -128,9 +129,9 @@ class SupportDuplicator
     /**
      * Check if the new document exists already in the support.
      *
-     * @param Collection<Document> $documents
+     * @param Collection<Document>|Document[] $documents
      */
-    private function documentExists(Document $newDocument, $documents)
+    private function documentExists(Document $newDocument, ?array $documents): bool
     {
         foreach ($documents as $document) {
             if ($newDocument->getInternalFileName() === $document->getInternalFileName()) {

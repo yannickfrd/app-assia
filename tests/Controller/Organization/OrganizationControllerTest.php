@@ -1,39 +1,48 @@
 <?php
 
-namespace App\Tests\Controller;
+namespace App\Tests\Controller\Organization;
 
-use App\Entity\Organization\Organization;
 use App\Tests\AppTestTrait;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use App\Entity\Organization\Organization;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\HttpFoundation\Response;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 
 class OrganizationControllerTest extends WebTestCase
 {
-    use FixturesTrait;
     use AppTestTrait;
 
     /** @var KernelBrowser */
     protected $client;
 
+    /** @var AbstractDatabaseTool */
+    protected $databaseTool;
+
     /** @var array */
-    protected $data;
+    protected $fixtures;
 
     /** @var Organization */
     protected $organization;
 
     protected function setUp(): void
     {
-        $this->data = $this->loadFixtureFiles([
+        parent::setUp();
+
+        $this->client = $this->createClient();
+
+        /** @var AbstractDatabaseTool */
+        $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
+
+        $this->fixtures = $this->databaseTool->loadAliceFixture([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/OrganizationFixturesTest.yaml',
         ]);
 
-        $this->createLogin($this->data['userAdmin']);
+        $this->createLogin($this->fixtures['userAdmin']);
 
-        $this->organization = $this->data['organization1'];
+        $this->organization = $this->fixtures['organization1'];
     }
 
     public function testListOrganizationsIsUp()
@@ -90,7 +99,8 @@ class OrganizationControllerTest extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
+        
         $this->client = null;
-        $this->data = null;
+        $this->fixtures = null;
     }
 }

@@ -18,20 +18,20 @@ class FileUploader
 {
     public const IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png'];
 
-    protected $manager;
+    protected $em;
     protected $targetDirectory;
     protected $normalizer;
     protected $optimizer;
     protected $slugger;
 
     public function __construct(
-        EntityManagerInterface $manager,
+        EntityManagerInterface $em,
         NormalizerInterface $normalizer,
         ImageOptimizer $optimizer,
         SluggerInterface $slugger,
         string $targetDirectory
         ) {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->optimizer = $optimizer;
         $this->normalizer = $normalizer;
         $this->slugger = $slugger;
@@ -67,12 +67,12 @@ class FileUploader
                 ->setPeopleGroup($peopleGroup)
                 ->setSupportGroup($supportGroup);
 
-            $this->manager->persist($document);
+            $this->em->persist($document);
 
             $documents[] = $document;
         }
 
-        $this->manager->flush();
+        $this->em->flush();
 
         $data = [];
         $names = [];

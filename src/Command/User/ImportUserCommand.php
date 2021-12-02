@@ -19,28 +19,28 @@ class ImportUserCommand extends Command
 {
     protected static $defaultName = 'app:user:import';
 
-    protected $manager;
+    protected $em;
     protected $serviceRepo;
     protected $importUserDatas;
 
     public function __construct(
-        EntityManagerInterface $manager,
+        EntityManagerInterface $em,
         ServiceRepository $serviceRepo,
         ImportUserDatas $importUserDatas
     ) {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->serviceRepo = $serviceRepo;
         $this->importUserDatas = $importUserDatas;
 
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Import users.');
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 

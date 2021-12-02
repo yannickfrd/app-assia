@@ -13,13 +13,13 @@ class UserVoter extends Voter
     /** @var User */
     protected $user;
 
-    protected function supports($attribute, $subject)
+    protected function supports($attribute, $subject): bool
     {
         return in_array($attribute, ['VIEW', 'EDIT', 'DISABLE'])
             && $subject instanceof \App\Entity\Organization\User;
     }
 
-    protected function voteOnAttribute($attribute, $user, TokenInterface $token)
+    protected function voteOnAttribute($attribute, $user, TokenInterface $token): bool
     {
         /** @var User */
         $this->user = $token->getUser();
@@ -44,7 +44,7 @@ class UserVoter extends Voter
         return false;
     }
 
-    protected function canEdit(User $user)
+    protected function canEdit(User $user): bool
     {
         if ($this->userId === $user->getId()
             || $this->isAdminUser($user)
@@ -56,7 +56,7 @@ class UserVoter extends Voter
         return false;
     }
 
-    protected function canDisable(User $user)
+    protected function canDisable(User $user): bool
     {
         if ($this->isAdminUser($user)
             || $this->isGranted('ROLE_SUPER_ADMIN')) {

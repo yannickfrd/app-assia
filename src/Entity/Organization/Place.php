@@ -156,7 +156,7 @@ class Place
         $this->placeGroups = new ArrayCollection();
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return (string) $this->id;
     }
@@ -340,9 +340,9 @@ class Place
     }
 
     /**
-     * @return Collection<PlaceGroup>
+     * @return Collection<PlaceGroup>|PlaceGroup[]|null
      */
-    public function getPlaceGroups()
+    public function getPlaceGroups(): ?Collection
     {
         return $this->placeGroups;
     }

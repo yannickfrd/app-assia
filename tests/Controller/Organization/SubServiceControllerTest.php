@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Tests\Controller;
+namespace App\Tests\Controller\Organization;
 
 use App\Tests\AppTestTrait;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Response;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 
 class SubServiceControllerTest extends WebTestCase
 {
-    use FixturesTrait;
     use AppTestTrait;
 
     /** @var KernelBrowser */
@@ -18,14 +18,20 @@ class SubServiceControllerTest extends WebTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
+
+        $this->client = $this->createClient();
+
+        /** @var AbstractDatabaseTool */
+        $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
     }
 
     public function testCreateNewSubServiceIsSuccessful()
     {
-        $data = $this->loadFixtureFiles($this->getFixtureFiles());
-        $this->createLogin($data['userAdmin']);
+        $fixtures = $this->databaseTool->loadAliceFixture($this->getFixtureFiles());
+        $this->createLogin($fixtures['userAdmin']);
 
-        $id = $data['service1']->getId();
+        $id = $fixtures['service1']->getId();
         $this->client->request('GET', "/service/$id/sub-service/new");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -42,17 +48,17 @@ class SubServiceControllerTest extends WebTestCase
 
     public function testEditSubServiceIsSuccessful()
     {
-        $data = $this->loadFixtureFiles(array_merge($this->getFixtureFiles(), [
+        $fixtures = $this->databaseTool->loadAliceFixture(array_merge($this->getFixtureFiles(), [
             dirname(__DIR__).'/../DataFixturesTest/PlaceFixturesTest.yaml',
         ]));
 
-        $this->createLogin($data['userAdmin']);
+        $this->createLogin($fixtures['userAdmin']);
 
-        $id = $data['subService1']->getId();
+        $id = $fixtures['subService1']->getId();
         $this->client->request('GET', "/sub-service/$id");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', $data['subService1']->getName());
+        $this->assertSelectorTextContains('h1', $fixtures['subService1']->getName());
 
         $this->client->submitForm('send', []);
 
@@ -62,10 +68,10 @@ class SubServiceControllerTest extends WebTestCase
 
     public function testDisableSubService()
     {
-        $data = $this->loadFixtureFiles($this->getFixtureFiles());
-        $this->createLogin($data['userSuperAdmin']);
+        $fixtures = $this->databaseTool->loadAliceFixture($this->getFixtureFiles());
+        $this->createLogin($fixtures['userSuperAdmin']);
 
-        $id = $data['subService1']->getId();
+        $id = $fixtures['subService1']->getId();
         $this->client->request('GET', "/sub-service/$id/disable");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -88,7 +94,8 @@ class SubServiceControllerTest extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
+        
         $this->client = null;
-        $data = null;
+        $fixtures = null;
     }
 }

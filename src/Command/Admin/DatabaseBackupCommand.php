@@ -26,7 +26,7 @@ class DatabaseBackupCommand extends Command
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Create a backup of database.')
@@ -35,7 +35,7 @@ class DatabaseBackupCommand extends Command
         ;
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
         $path = $input->getOption('path');

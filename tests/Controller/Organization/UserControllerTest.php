@@ -1,40 +1,50 @@
 <?php
 
-namespace App\Tests\Controller;
+namespace App\Tests\Controller\Organization;
 
-use App\Entity\Organization\User;
 use App\Tests\AppTestTrait;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use App\Entity\Organization\User;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Response;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 
 class UserControllerTest extends WebTestCase
 {
-    use FixturesTrait;
     use AppTestTrait;
 
     /** @var KernelBrowser */
     protected $client;
 
+    /** @var AbstractDatabaseTool */
+    protected $databaseTool;
+
     /** @var array */
-    protected $data;
+    protected $fixtures;
 
     /** @var User */
     protected $user;
 
     protected function setUp(): void
     {
-        $this->data = $this->loadFixtureFiles([
+        parent::setUp();
+
+        $this->client = $this->createClient();
+
+        /** @var AbstractDatabaseTool */
+        $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
+
+        $this->fixtures = $this->databaseTool->loadAliceFixture([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
         ]);
 
-        $this->user = $this->data['userRoleUser'];
+        $this->user = $this->fixtures['userRoleUser'];
     }
 
     public function testSearchUsersPageIsSuccessful()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $this->client->request('GET', '/directory/users');
 
@@ -46,7 +56,7 @@ class UserControllerTest extends WebTestCase
             'firstname' => 'Role',
             'status' => 6,
             'phone' => '01 00 00 00 00',
-            'service[services]' => [$this->data['service1']],
+            'service[services]' => [$this->fixtures['service1']],
         ], 'GET');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -55,19 +65,19 @@ class UserControllerTest extends WebTestCase
 
     public function testExportUsersIsSuccessful()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $this->client->request('GET', '/directory/users');
 
         $this->client->submitForm('export', [], 'GET');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertContains('spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
+        $this->assertStringContainsString('spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
     }
 
     public function testAdminListUsersIsUp()
     {
-        $this->createLogin($this->data['userSuperAdmin']);
+        $this->createLogin($this->fixtures['userSuperAdmin']);
 
         $this->client->request('GET', '/admin/users');
 
@@ -77,12 +87,12 @@ class UserControllerTest extends WebTestCase
         $this->client->submitForm('export', [], 'GET');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertContains('spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
+        $this->assertStringContainsString('spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
     }
 
     public function testUsernameExistsIsTrue()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $this->client->request('GET', '/user/username_exists/r.super_admin');
 
@@ -92,7 +102,7 @@ class UserControllerTest extends WebTestCase
 
     public function testUsernameExistsIsFalse()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $this->client->request('GET', '/user/username_exists/xxx');
 
@@ -104,7 +114,8 @@ class UserControllerTest extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
+        
         $this->client = null;
-        $this->data = null;
+        $this->fixtures = null;
     }
 }

@@ -59,7 +59,7 @@ App\Entity\Organization\User:
 
 App\Entity\Organization\Service:
   service1:
-    name: CHRS XXX
+    name: CHRS Cergy
     type: 1
     email: chrs@mail.fr
     city: Pontoise

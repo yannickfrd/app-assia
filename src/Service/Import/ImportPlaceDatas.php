@@ -13,7 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class ImportPlaceDatas extends ImportDatas
 {
-    protected $manager;
+    protected $em;
 
     protected $items = [];
     protected $placeRepo;
@@ -21,9 +21,9 @@ class ImportPlaceDatas extends ImportDatas
     protected $field;
     protected $subServices = [];
 
-    public function __construct(EntityManagerInterface $manager, PlaceRepository $placeRepo, SubServiceRepository $subServiceRepo)
+    public function __construct(EntityManagerInterface $em, PlaceRepository $placeRepo, SubServiceRepository $subServiceRepo)
     {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->placeRepo = $placeRepo;
         $this->subServiceRepo = $subServiceRepo;
     }
@@ -46,7 +46,7 @@ class ImportPlaceDatas extends ImportDatas
             ++$i;
         }
 
-        $this->manager->flush();
+        $this->em->flush();
 
         return $this->items;
     }
@@ -77,13 +77,13 @@ class ImportPlaceDatas extends ImportDatas
 
             $this->updateLocation($place);
 
-            $this->manager->persist($place);
+            $this->em->persist($place);
         }
 
         return $place;
     }
 
-    protected function cleanString(string $string)
+    protected function cleanString(string $string): string
     {
         $string = strtr($string, [
             'à' => 'a',
@@ -98,7 +98,7 @@ class ImportPlaceDatas extends ImportDatas
         return $string;
     }
 
-    protected function updateLocation(Place $place)
+    protected function updateLocation(Place $place): void
     {
         $valueSearch = $place->getAddress().'+'.$place->getCity();
         $valueSearch = $this->cleanString($valueSearch);

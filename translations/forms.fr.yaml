@@ -7,7 +7,7 @@ place:
   configuration.help: Diffus ou regroupé
   type.help: Chambre, T1, T2, T3...
 placeGroup:
-  help: Indiquer le groupe places
+  help: Indiquez le groupe de places.
   startDate: Date d'entrée
 Add person to support: Ajouter la personne au suivi en cours.
 Address: Adresse
@@ -53,6 +53,7 @@ hotelName: Nom de l'hôtel
 Lastname: Nom
 Lessor: Bailleur/Propriétaire
 Location: Lieu
+Login: Login
 logo path: Chemin du logo
 Month: Mois
 Name: Nom

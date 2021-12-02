@@ -3,22 +3,21 @@
 namespace App\Tests\Repository;
 
 use App\Entity\Organization\Pole;
-use App\Entity\Organization\Service;
 use App\Entity\Organization\User;
+use App\Entity\Organization\Service;
 use App\Form\Model\Organization\ServiceSearch;
 use App\Repository\Organization\ServiceRepository;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 
 class ServiceRepositoryTest extends WebTestCase
 {
-    use FixturesTrait;
-
     /** @var \Doctrine\ORM\EntityManager */
     private $entityManager;
 
     /** @var ServiceRepository */
-    protected $repo;
+    protected $serviceRepo;
 
     /** @var Service */
     protected $service;
@@ -34,7 +33,10 @@ class ServiceRepositoryTest extends WebTestCase
 
     protected function setUp(): void
     {
-        $data = $this->loadFixtureFiles([
+        /** @var AbstractDatabaseTool */
+        $databaseTool = $this->getContainer()->get(DatabaseToolCollection::class)->get();
+
+        $fixtures = $databaseTool->loadAliceFixture([           
             dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/DataFixturesTest/ServiceFixturesTest.yaml',
         ]);
@@ -45,13 +47,13 @@ class ServiceRepositoryTest extends WebTestCase
             ->get('doctrine')
             ->getManager();
 
-        $this->repo = $this->entityManager->getRepository(Service::class);
+        $this->serviceRepo = $this->entityManager->getRepository(Service::class);
 
-        $this->service = $data['service1'];
-        $this->pole = $data['pole1'];
-        $this->user = $data['userRoleUser'];
+        $this->service = $fixtures['service1'];
+        $this->pole = $fixtures['pole1'];
+        $this->user = $fixtures['userRoleUser'];
         $this->search = (new ServiceSearch())
-            ->setName('CHRS XXX')
+            ->setName('CHRS Cergy')
             ->setEmail('chrs@mail.fr')
             ->setCity('Pontoise')
             ->setPole($this->pole)
@@ -60,24 +62,24 @@ class ServiceRepositoryTest extends WebTestCase
 
     public function testCount()
     {
-        $this->assertGreaterThanOrEqual(5, $this->repo->count([]));
+        $this->assertGreaterThanOrEqual(5, $this->serviceRepo->count([]));
     }
 
     public function testFindAllServicesQueryWithoutFilters()
     {
-        $query = $this->repo->findServicesQuery(new ServiceSearch());
+        $query = $this->serviceRepo->findServicesQuery(new ServiceSearch());
         $this->assertGreaterThanOrEqual(5, count($query->getResult()));
     }
 
     public function testFindAllServicesQueryWithFilters()
     {
-        $query = $this->repo->findServicesQuery($this->search);
+        $query = $this->serviceRepo->findServicesQuery($this->search);
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 
     public function testFindServicesToExportWithFilters()
     {
-        $this->assertGreaterThanOrEqual(1, count($this->repo->findServicesToExport($this->search)));
+        $this->assertGreaterThanOrEqual(1, count($this->serviceRepo->findServicesToExport($this->search)));
     }
 
     // public function testGetServicesOfUserQueryBuilder()
@@ -86,12 +88,12 @@ class ServiceRepositoryTest extends WebTestCase
 
     public function testFindAllServicesOfUser()
     {
-        $this->assertGreaterThanOrEqual(1, count($this->repo->findServicesOfUser($this->user)));
+        $this->assertGreaterThanOrEqual(1, count($this->serviceRepo->findServicesOfUser($this->user)));
     }
 
     public function testGetFullService()
     {
-        $this->assertNotNull($this->repo->getFullService($this->service->getId()));
+        $this->assertNotNull($this->serviceRepo->getFullService($this->service->getId()));
     }
 
     protected function tearDown(): void
@@ -99,7 +101,7 @@ class ServiceRepositoryTest extends WebTestCase
         parent::tearDown();
         $this->entityManager->close();
         $this->entityManager = null;
-        $this->repo = null;
+        $this->serviceRepo = null;
         $this->service = null;
         $this->pole = null;
         $this->user = null;

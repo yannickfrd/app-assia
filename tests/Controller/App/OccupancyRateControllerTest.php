@@ -4,25 +4,34 @@
 namespace App\Tests\Controller\App;
 
 use App\Tests\AppTestTrait;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Response;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 
 class OccupancyRateControllerTest extends WebTestCase
 {
-    use FixturesTrait;
     use AppTestTrait;
 
     /** @var KernelBrowser */
     protected $client;
 
+    /** @var AbstractDatabaseTool */
+    protected $databaseTool;
+    
     /** @var array */
-    protected $data;
-
+    protected $fixtures;
     protected function setUp(): void
     {
-        $this->data = $this->loadFixtureFiles([
+        parent::setUp();
+        
+        $this->client = $this->createClient();
+
+        /** @var AbstractDatabaseTool */
+        $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
+
+        $this->fixtures = $this->databaseTool->loadAliceFixture([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
@@ -34,7 +43,7 @@ class OccupancyRateControllerTest extends WebTestCase
 
     public function testPageOccupancyByDeviceIsUp()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $this->client->request('GET', '/occupancy/devices');
 
@@ -44,7 +53,7 @@ class OccupancyRateControllerTest extends WebTestCase
 
     public function testPageOccupancyByServiceIsUp()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $this->client->request('GET', '/occupancy/services');
 
@@ -54,18 +63,18 @@ class OccupancyRateControllerTest extends WebTestCase
 
     public function testPageOccupancyBySubServiceIsUp()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
-        $id = $this->data['service1']->getId();
+        $id = $this->fixtures['service1']->getId();
         $this->client->request('GET', "/occupancy/service/$id/sub_services");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'CHRS XXX');
+        $this->assertSelectorTextContains('h1', 'CHRS Cergy');
     }
 
     public function testPageOccupancyByPlaceIsUp()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $this->client->request('GET', '/occupancy/places');
 
@@ -75,9 +84,9 @@ class OccupancyRateControllerTest extends WebTestCase
 
     public function testPageOccupancySubServicesByPlaceIsUp()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
-        $subService = $this->data['subService1'];
+        $subService = $this->fixtures['subService1'];
         $id = $subService->getId();
         $this->client->request('GET', "/occupancy/sub_services/$id/places");
 
@@ -88,7 +97,8 @@ class OccupancyRateControllerTest extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
+        
         $this->client = null;
-        $this->data = null;
+        $this->fixtures = null;
     }
 }

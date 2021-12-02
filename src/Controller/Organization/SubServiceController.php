@@ -15,11 +15,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SubServiceController extends AbstractController
 {
-    private $manager;
+    private $em;
 
-    public function __construct(EntityManagerInterface $manager)
+    public function __construct(EntityManagerInterface $em)
     {
-        $this->manager = $manager;
+        $this->em = $em;
     }
 
     /**
@@ -37,8 +37,8 @@ class SubServiceController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $subService->setService($service);
 
-            $this->manager->persist($subService);
-            $this->manager->flush();
+            $this->em->persist($subService);
+            $this->em->flush();
 
             $this->addFlash('success', 'Le sous-service est créé.');
 
@@ -68,7 +68,7 @@ class SubServiceController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->denyAccessUnlessGranted('EDIT', $subService->getService());
 
-            $this->manager->flush();
+            $this->em->flush();
 
             $this->discache($subService->getService());
 
@@ -110,7 +110,7 @@ class SubServiceController extends AbstractController
 
         $this->discache($subService->getService());
 
-        $this->manager->flush();
+        $this->em->flush();
 
         return $this->redirectToRoute('service_edit', ['id' => $subService->getService()->getId()]);
     }

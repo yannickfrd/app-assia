@@ -2,9 +2,10 @@
 
 namespace App\Repository\Admin;
 
+use Doctrine\ORM\Query;
 use App\Entity\Admin\Indicator;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Indicator|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,7 +20,7 @@ class IndicatorRepository extends ServiceEntityRepository
         parent::__construct($registry, Indicator::class);
     }
 
-    public function findIndicatorsQuery()
+    public function findIndicatorsQuery(): Query
     {
         return $this->createQueryBuilder('i')
             ->orderBy('i.date', 'DESC')

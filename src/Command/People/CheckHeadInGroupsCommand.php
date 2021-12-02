@@ -23,20 +23,20 @@ class CheckHeadInGroupsCommand extends Command
     protected static $defaultDescription = 'Check head in groups';
 
     protected $peopleGroupRepo;
-    protected $manager;
+    protected $em;
     protected $peopleGroupChecker;
 
-    public function __construct(PeopleGroupRepository $peopleGroupRepo, EntityManagerInterface $manager, PeopleGroupChecker $peopleGroupChecker)
+    public function __construct(PeopleGroupRepository $peopleGroupRepo, EntityManagerInterface $em, PeopleGroupChecker $peopleGroupChecker)
     {
         $this->peopleGroupRepo = $peopleGroupRepo;
-        $this->manager = $manager;
+        $this->em = $em;
         $this->peopleGroupChecker = $peopleGroupChecker;
-        $this->disableListeners($this->manager);
+        $this->disableListeners($this->em);
 
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription(self::$defaultDescription)
@@ -44,7 +44,7 @@ class CheckHeadInGroupsCommand extends Command
         ;
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
         $limit = $input->getOption('limit');
@@ -66,7 +66,7 @@ class CheckHeadInGroupsCommand extends Command
             }
         }
 
-        $this->manager->flush();
+        $this->em->flush();
 
         $io->success('The headers in peopleGroup are checked !'.
             "\n  ".$count.' / '.count($peopleGroups).' are invalids.');

@@ -33,7 +33,7 @@ class NewSupportGroupType extends AbstractType
         $this->currentUser = $currentUser;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $this->setFormData($builder);
 
@@ -87,7 +87,7 @@ class NewSupportGroupType extends AbstractType
         });
     }
 
-    protected function addFieldsAfterSubmitService(FormInterface $form, Service $service)
+    protected function addFieldsAfterSubmitService(FormInterface $form, Service $service): void
     {
         $optionsReferent = $this->optionsReferent($service);
 
@@ -110,7 +110,7 @@ class NewSupportGroupType extends AbstractType
             ->add('referent2', EntityType::class, $optionsReferent);
     }
 
-    protected function addPlaceField(FormInterface $form, Service $service)
+    protected function addPlaceField(FormInterface $form, Service $service): void
     {
         $subService = $form->getData();
 
@@ -127,7 +127,7 @@ class NewSupportGroupType extends AbstractType
             ]);
     }
 
-    protected function getSubServiceBuilder(FormInterface $form, Service $service)
+    protected function getSubServiceBuilder(FormInterface $form, Service $service): FormBuilderInterface
     {
         return $form->getConfig()->getFormFactory()->createNamedBuilder(
             'subService',
@@ -158,7 +158,7 @@ class NewSupportGroupType extends AbstractType
         ];
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => SupportGroup::class,
@@ -166,7 +166,7 @@ class NewSupportGroupType extends AbstractType
         ]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'support';
     }

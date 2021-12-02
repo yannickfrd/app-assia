@@ -12,11 +12,11 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class EvaluationCreator
 {
-    private $manager;
+    private $em;
 
-    public function __construct(EntityManagerInterface $manager)
+    public function __construct(EntityManagerInterface $em)
     {
-        $this->manager = $manager;
+        $this->em = $em;
     }
 
     /**
@@ -31,20 +31,20 @@ class EvaluationCreator
         if (!$supportGroup->getInitEvalGroup()) {
             $initEvalGroup = (new InitEvalGroup())->setSupportGroup($supportGroup);
 
-            $this->manager->persist($initEvalGroup);
+            $this->em->persist($initEvalGroup);
 
             $supportGroup->setInitEvalGroup($initEvalGroup);
         }
 
         $evaluationGroup->setInitEvalGroup($supportGroup->getInitEvalGroup());
 
-        $this->manager->persist($evaluationGroup);
+        $this->em->persist($evaluationGroup);
 
         foreach ($supportGroup->getSupportPeople() as $supportPerson) {
             $this->createEvaluationPerson($supportPerson, $evaluationGroup);
         }
 
-        $this->manager->flush();
+        $this->em->flush();
 
         return $evaluationGroup;
     }
@@ -61,14 +61,14 @@ class EvaluationCreator
         if (!$supportPerson->getInitEvalPerson()) {
             $initEvalPerson = (new InitEvalPerson())->setSupportPerson($supportPerson);
 
-            $this->manager->persist($initEvalPerson);
+            $this->em->persist($initEvalPerson);
 
             $supportPerson->setInitEvalPerson($initEvalPerson);
         }
 
         $evaluationPerson->setInitEvalPerson($supportPerson->getInitEvalPerson());
 
-        $this->manager->persist($evaluationPerson);
+        $this->em->persist($evaluationPerson);
 
         return $evaluationPerson;
     }

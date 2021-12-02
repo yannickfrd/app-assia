@@ -105,7 +105,7 @@ class DocumentRepository extends ServiceEntityRepository
     /**
      * Return all selected documents by id.
      *
-     * @return Documents[]
+     * @return Documents[]|null
      */
     public function findDocumentsById(array $ids, SupportGroup $supportGroup): array
     {
@@ -123,7 +123,7 @@ class DocumentRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Document[]
+     * @return Document[]|null
      */
     public function findSoftDeletedDocuments(\DateTime $date): array
     {

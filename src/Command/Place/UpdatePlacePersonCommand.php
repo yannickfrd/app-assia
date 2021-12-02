@@ -22,18 +22,18 @@ class UpdatePlacePersonCommand extends Command
     protected static $defaultDescription = 'Update the supportPerson item in the AccommpdationPerson entities.';
 
     protected $placeGroupRepo;
-    protected $manager;
+    protected $em;
 
-    public function __construct(PlaceGroupRepository $placeGroupRepo, EntityManagerInterface $manager)
+    public function __construct(PlaceGroupRepository $placeGroupRepo, EntityManagerInterface $em)
     {
         $this->placeGroupRepo = $placeGroupRepo;
-        $this->manager = $manager;
-        $this->disableListeners($this->manager);
+        $this->em = $em;
+        $this->disableListeners($this->em);
 
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription(self::$defaultDescription)
@@ -41,7 +41,7 @@ class UpdatePlacePersonCommand extends Command
         ;
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
         $limit = $input->getOption('limit');
@@ -64,7 +64,7 @@ class UpdatePlacePersonCommand extends Command
                 }
             }
         }
-        $this->manager->flush();
+        $this->em->flush();
 
         $io->success("Update PlacePerson entities is successfull !\n  ".$countUpdate.' / '.$nbPlacePeople);
 

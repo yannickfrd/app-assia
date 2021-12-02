@@ -43,8 +43,6 @@ class HotelSupportController extends AbstractController
      */
     protected function exportData(HotelSupportSearch $search, SupportPersonRepository $supportPersonRepo)
     {
-        set_time_limit(10 * 60);
-
         $supports = $supportPersonRepo->findSupportsOfServiceToExport($search, Service::SERVICE_TYPE_HOTEL);
 
         if (!$supports) {

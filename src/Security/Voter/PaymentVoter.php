@@ -10,11 +10,18 @@ class PaymentVoter extends Voter
 {
     use VoterTrait;
 
+    /** @var User */
     protected $user;
+    
     protected $userId;
-    protected $payment;
 
-    protected function supports($attribute, $subject)
+    /** @var Payment */
+    protected $payment;
+    
+    /** @var SupportGroup */
+    protected $supportGroup;
+    
+    protected function supports($attribute, $subject): bool
     {
         return in_array($attribute, ['VIEW', 'EDIT', 'DELETE'])
             && $subject instanceof \App\Entity\Support\Payment;
@@ -25,7 +32,6 @@ class PaymentVoter extends Voter
         /** @var User */
         $this->user = $token->getUser();
         $this->userId = $this->user->getId();
-        /** @var Payment */
         $this->payment = $payment;
         $this->supportGroup = $this->payment->getSupportGroup();
 

@@ -83,7 +83,7 @@ class Pole
         $this->services = new ArrayCollection();
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return (string) $this->id;
     }
@@ -142,9 +142,9 @@ class Pole
     }
 
     /**
-     * @return Collection<Service>
+     * @return Collection<Service>|Service[]|ull
      */
-    public function getServices()
+    public function getServices(): ?Collection
     {
         return $this->services;
     }

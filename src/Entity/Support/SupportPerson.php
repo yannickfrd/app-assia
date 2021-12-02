@@ -288,9 +288,9 @@ class SupportPerson
     }
 
     /**
-     * @return Collection<Note>
+     * @return Collection<Note>|Note[]|null
      */
-    public function getNotes()
+    public function getNotes(): ?Collection
     {
         return $this->notes;
     }
@@ -319,9 +319,9 @@ class SupportPerson
     }
 
     /**
-     * @return Collection<EvaluationPerson>
+     * @return Collection<EvaluationPerson>|EvaluationPerson[]|null
      */
-    public function getEvaluationsPerson()
+    public function getEvaluationsPerson(): ?Collection
     {
         return $this->evaluationsPerson;
     }
@@ -367,9 +367,9 @@ class SupportPerson
     }
 
     /**
-     * @return Collection<PlacePerson>
+     * @return Collection<PlacePerson>|PlacePerson[]|null
      */
-    public function getPlacesPerson()
+    public function getPlacesPerson(): ?Collection
     {
         return $this->placesPerson;
     }

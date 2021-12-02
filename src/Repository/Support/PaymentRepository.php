@@ -184,7 +184,7 @@ class PaymentRepository extends ServiceEntityRepository
      *
      * @param PaymentSearch|SupportPaymentSearch $search
      */
-    protected function filter($query, $search)
+    protected function filter(Querybuilder $query, $search): QueryBuilder
     {
         if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             $query->andWhere('sg.service IN (:services)')

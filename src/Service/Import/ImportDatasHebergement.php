@@ -446,7 +446,7 @@ class ImportDatasHebergement extends ImportDatas
         'Autre' => 97,
     ];
 
-    protected $manager;
+    protected $em;
     protected $importNotification;
 
     protected $subServiceRepo;
@@ -483,14 +483,14 @@ class ImportDatasHebergement extends ImportDatas
     protected $role;
 
     public function __construct(
-        EntityManagerInterface $manager,
+        EntityManagerInterface $em,
         ImportNotification $importNotification,
         SubServiceRepository $subServiceRepo,
         DeviceRepository $deviceRepo,
         PlaceRepository $placeRepo,
         PersonRepository $personRepo)
     {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->importNotification = $importNotification;
         $this->subServiceRepo = $subServiceRepo;
         $this->deviceRepo = $deviceRepo;
@@ -553,12 +553,12 @@ class ImportDatasHebergement extends ImportDatas
         // dump($this->existPeople);
         // dump($this->duplicatedPeople);
         // dd($this->items);
-        $this->manager->flush();
+        $this->em->flush();
 
         return $this->items;
     }
 
-    protected function getPerson()
+    protected function getPerson(): Person
     {
         $person = (new Person())
                 ->setLastname($this->field['Nom ménage'])
@@ -571,7 +571,7 @@ class ImportDatasHebergement extends ImportDatas
         return $person;
     }
 
-    protected function checkGroupExists(int $typology)
+    protected function checkGroupExists(int $typology): void
     {
         // Si le groupe n'existe pas encore, on le crée ainsi que le suivi et l'évaluation sociale.
         if (false === $this->groupExists()) {
@@ -604,7 +604,7 @@ class ImportDatasHebergement extends ImportDatas
         }
     }
 
-    protected function groupExists()
+    protected function groupExists(): bool
     {
         $groupExists = false;
         // Vérifie si le groupe de la personne existe déjà.
@@ -651,7 +651,7 @@ class ImportDatasHebergement extends ImportDatas
                     ->setCreatedBy($this->user)
                     ->setUpdatedBy($this->user);
 
-        $this->manager->persist($peopleGroup);
+        $this->em->persist($peopleGroup);
 
         return $peopleGroup;
     }
@@ -676,7 +676,7 @@ class ImportDatasHebergement extends ImportDatas
                     ->setUpdatedBy($this->user)
                     ->setComment(null);
 
-        $this->manager->persist($supportGroup);
+        $this->em->persist($supportGroup);
 
         $this->createOriginRequest($supportGroup);
 
@@ -698,7 +698,7 @@ class ImportDatasHebergement extends ImportDatas
             ->setComment($this->field['Commentaire pré-admission'])
             ->setSupportGroup($supportGroup);
 
-        $this->manager->persist($originRequest);
+        $this->em->persist($originRequest);
 
         return $originRequest;
     }
@@ -766,7 +766,7 @@ class ImportDatasHebergement extends ImportDatas
             ->setCreatedBy($this->user)
             ->setUpdatedBy($this->user);
 
-        $this->manager->persist($evaluationGroup);
+        $this->em->persist($evaluationGroup);
 
         $this->createEvalSocialGroup($evaluationGroup);
         $this->createEvalFamilyGroup($evaluationGroup);
@@ -786,7 +786,7 @@ class ImportDatasHebergement extends ImportDatas
             ->setDebtsGroupAmt(null)
             ->setSupportGroup($supportGroup);
 
-        $this->manager->persist($initEvalGroup);
+        $this->em->persist($initEvalGroup);
 
         return $initEvalGroup;
     }
@@ -802,7 +802,7 @@ class ImportDatasHebergement extends ImportDatas
                 ->setCommentEvalFamilyGroup($this->field['Commentaire situation familiale'])
                 ->setEvaluationGroup($evaluationGroup);
 
-        $this->manager->persist($evalFamilyGroup);
+        $this->em->persist($evalFamilyGroup);
 
         return $evalFamilyGroup;
     }
@@ -819,12 +819,12 @@ class ImportDatasHebergement extends ImportDatas
                 ->setCommentEvalSocialGroup($this->field['Commentaire situation résidentielle'])
                 ->setEvaluationGroup($evaluationGroup);
 
-        $this->manager->persist($evalSocialGroup);
+        $this->em->persist($evalSocialGroup);
 
         return $evalSocialGroup;
     }
 
-    protected function getWanderingTime($time)
+    protected function getWanderingTime($time): int
     {
         if ($time <= 0.25) {
             return 1;
@@ -855,7 +855,7 @@ class ImportDatasHebergement extends ImportDatas
             ->setBudgetBalanceAmt((float) $this->field['Total ressources ménage'])
             ->setEvaluationGroup($evaluationGroup);
 
-        $this->manager->persist($evalBudgetGroup);
+        $this->em->persist($evalBudgetGroup);
 
         return $evalBudgetGroup;
     }
@@ -872,7 +872,7 @@ class ImportDatasHebergement extends ImportDatas
         ->setCommentEvalHousing($this->field['Modalité de sortie vers le logement'] ? 'Modalité de sortie vers le logement : '.$this->field['Modalité de sortie vers le logement'] : null)
         ->setEvaluationGroup($evaluationGroup);
 
-        $this->manager->persist($evalHousingGroup);
+        $this->em->persist($evalHousingGroup);
 
         return $evalHousingGroup;
     }
@@ -895,7 +895,7 @@ class ImportDatasHebergement extends ImportDatas
                 }
             }
             if (false === $duplicatedPerson) {
-                $this->manager->persist($this->person);
+                $this->em->persist($this->person);
                 $this->person->addRolesPerson($this->createRolePerson($peopleGroup));
                 $this->people[] = $this->person;
             }
@@ -921,7 +921,7 @@ class ImportDatasHebergement extends ImportDatas
                  ->setPerson($this->person)
                  ->setPeopleGroup($peopleGroup);
 
-        $this->manager->persist($rolePerson);
+        $this->em->persist($rolePerson);
 
         return $rolePerson;
     }
@@ -943,7 +943,7 @@ class ImportDatasHebergement extends ImportDatas
                     ->setCreatedBy($this->user)
                     ->setUpdatedBy($this->user);
 
-        $this->manager->persist($supportPerson);
+        $this->em->persist($supportPerson);
 
         return $supportPerson;
     }
@@ -957,7 +957,7 @@ class ImportDatasHebergement extends ImportDatas
             ->setCreatedBy($this->user)
             ->setUpdatedBy($this->user);
 
-        $this->manager->persist($evaluationPerson);
+        $this->em->persist($evaluationPerson);
 
         $this->createEvalSocialPerson($evaluationPerson);
         $this->createEvalAdmPerson($evaluationPerson);
@@ -998,12 +998,12 @@ class ImportDatasHebergement extends ImportDatas
 
         $initEvalPerson = $this->updateResourceType($initEvalPerson, $this->field['Autres ressources (entrée)']);
 
-        $this->manager->persist($initEvalPerson);
+        $this->em->persist($initEvalPerson);
 
         return $initEvalPerson;
     }
 
-    protected function createEvalSocialPerson(EvaluationPerson $evaluationPerson)
+    protected function createEvalSocialPerson(EvaluationPerson $evaluationPerson): EvalSocialPerson
     {
         $comment = '';
 
@@ -1028,7 +1028,9 @@ class ImportDatasHebergement extends ImportDatas
             ->setCommentEvalSocialPerson($comment)
             ->setEvaluationPerson($evaluationPerson);
 
-        $this->manager->persist($evalSocialPerson);
+        $this->em->persist($evalSocialPerson);
+
+        return $evalSocialPerson;
     }
 
     protected function createEvalFamilyPerson(EvaluationPerson $evaluationPerson): ?EvalFamilyPerson
@@ -1044,7 +1046,7 @@ class ImportDatasHebergement extends ImportDatas
             ->setProtectiveMeasureType($this->findInArray($this->field['Mesure de protection'], self::PROTECTIVE_MEASURE_TYPE))
             ->setEvaluationPerson($evaluationPerson);
 
-        $this->manager->persist($evalFamilyPerson);
+        $this->em->persist($evalFamilyPerson);
 
         return $evalFamilyPerson;
     }
@@ -1064,7 +1066,7 @@ class ImportDatasHebergement extends ImportDatas
             ->setAsylumBackground($this->findInArray($this->field['Parcours asile'], self::YES_NO))
             ->setCommentEvalAdmPerson(97 === $this->findInArray($this->field['Situation administrative'], self::PAPER_TYPE) ? $this->field['Situation administrative'] : null);
 
-        $this->manager->persist($evalAdmPerson);
+        $this->em->persist($evalAdmPerson);
 
         return $evalAdmPerson;
     }
@@ -1081,7 +1083,7 @@ class ImportDatasHebergement extends ImportDatas
             ->setContractType($this->findInArray($this->field['Emploi'], self::CONTRACT_TYPE))
             ->setEvaluationPerson($evaluationPerson);
 
-        $this->manager->persist($evalProfPerson);
+        $this->em->persist($evalProfPerson);
 
         return $evalProfPerson;
     }
@@ -1110,7 +1112,7 @@ class ImportDatasHebergement extends ImportDatas
 
         $evalBudgetPerson = $this->updateResourceType($evalBudgetPerson, $this->field['Autres ressources']);
 
-        $this->manager->persist($evalBudgetPerson);
+        $this->em->persist($evalBudgetPerson);
 
         return $evalBudgetPerson;
     }
@@ -1136,7 +1138,7 @@ class ImportDatasHebergement extends ImportDatas
             ->setActivityBonus(strstr($resourceType, 'Prime d\'activité') ? Choices::YES : 0);
     }
 
-    protected function getRoleAndGender(int $typology)
+    protected function getRoleAndGender(int $typology): void
     {
         $this->gender = Choices::NO_INFORMATION;
         $this->head = false;
@@ -1191,12 +1193,12 @@ class ImportDatasHebergement extends ImportDatas
             ->setComment(null)
             ->setPeopleGroup($peopleGroup);
 
-        $this->manager->persist($referent);
+        $this->em->persist($referent);
 
         return $referent;
     }
 
-    protected function getTypeReferent()
+    protected function getTypeReferent(): int
     {
         $referent = $this->field['Référent social'];
 
@@ -1257,7 +1259,7 @@ class ImportDatasHebergement extends ImportDatas
                 ->setZipcode($this->service->getZipcode());
         }
 
-        $this->manager->persist($place);
+        $this->em->persist($place);
 
         return $place;
     }
@@ -1274,7 +1276,7 @@ class ImportDatasHebergement extends ImportDatas
             ->setCreatedBy($this->user)
             ->setUpdatedBy($this->user);
 
-        $this->manager->persist($placeGroup);
+        $this->em->persist($placeGroup);
 
         return $placeGroup;
     }
@@ -1291,7 +1293,7 @@ class ImportDatasHebergement extends ImportDatas
             ->setCreatedBy($this->user)
             ->setUpdatedBy($this->user);
 
-        $this->manager->persist($placePerson);
+        $this->em->persist($placePerson);
 
         return $placePerson;
     }

@@ -2,9 +2,9 @@
 
 namespace App\EventDispatcher\Support;
 
-use App\Form\Utils\Choices;
 use App\Entity\Support\SupportGroup;
 use App\Event\Support\SupportGroupEvent;
+use App\Form\Utils\Choices;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
@@ -17,7 +17,7 @@ class SupportCheckerSubscriber implements EventSubscriberInterface
         $this->flashbag = $flashbag;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             'support.view' => 'checkSupportGroup',
@@ -40,7 +40,7 @@ class SupportCheckerSubscriber implements EventSubscriberInterface
     /**
      *  Vérifie que le nombre de personnes suivies correspond à la composition familiale du groupe.
      */
-    private function checkNbPeople(SupportGroup $supportGroup, int $nbActiveSupportPeople)
+    private function checkNbPeople(SupportGroup $supportGroup, int $nbActiveSupportPeople): void
     {
         $nbSupportPeople = $supportGroup->getSupportPeople()->count();
         $nbPeople = $supportGroup->getPeopleGroup()->getNbPeople();
@@ -54,13 +54,16 @@ class SupportCheckerSubscriber implements EventSubscriberInterface
         }
     }
 
-    private function checkStartDate(SupportGroup $supportGroup)
+    private function checkStartDate(SupportGroup $supportGroup): void
     {
         if (SupportGroup::STATUS_IN_PROGRESS === $supportGroup->getStatus() && null === $supportGroup->getStartDate()) {
             $this->flashbag->add('warning', "Attention, la date de début d'accompagnement n'est pas renseignée.");
         }
     }
 
+    /**
+     * @return mixed
+     */
     private function checkPlaceGroup(SupportGroup $supportGroup, int $nbActiveSupportPeople)
     {
         if ($supportGroup->getDevice() && Choices::YES === $supportGroup->getDevice()->getPlace()) {

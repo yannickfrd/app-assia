@@ -2,24 +2,23 @@
 
 namespace App\Entity\Support;
 
-use App\Entity\Support\Note;
-use App\Entity\People\Person;
-use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Organization\User;
-use App\Entity\People\PeopleGroup;
+use App\Entity\Evaluation\EvaluationGroup;
+use App\Entity\Evaluation\InitEvalGroup;
 use App\Entity\Organization\Device;
 use App\Entity\Organization\Service;
-use Gedmo\Mapping\Annotation as Gedmo;
 use App\Entity\Organization\SubService;
-use App\Entity\Evaluation\InitEvalGroup;
-use App\Entity\Evaluation\EvaluationGroup;
-use App\Entity\Traits\LocationEntityTrait;
-use Doctrine\Common\Collections\Collection;
-use App\Entity\Traits\GeoLocationEntityTrait;
+use App\Entity\Organization\User;
+use App\Entity\People\PeopleGroup;
+use App\Entity\People\Person;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
+use App\Entity\Traits\GeoLocationEntityTrait;
+use App\Entity\Traits\LocationEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -339,7 +338,7 @@ class SupportGroup
         $this->payments = new ArrayCollection();
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return (string) $this->id;
     }
@@ -576,9 +575,9 @@ class SupportGroup
     }
 
     /**
-     * @return Collection<SupportPerson>
+     * @return Collection<SupportPerson>|SupportPerson[]|null
      */
-    public function getSupportPeople()
+    public function getSupportPeople(): ?Collection
     {
         return $this->supportPeople;
     }
@@ -643,9 +642,9 @@ class SupportGroup
     }
 
     /**
-     * @return Collection<Note>
+     * @return Collection<Note>|Note[]|null
      */
-    public function getNotes()
+    public function getNotes(): ?Collection
     {
         return $this->notes;
     }
@@ -674,9 +673,9 @@ class SupportGroup
     }
 
     /**
-     * @return Collection<Rdv>
+     * @return Collection<Rdv>|Rdv[]|null
      */
-    public function getRdvs()
+    public function getRdvs(): ?Collection
     {
         return $this->rdvs;
     }
@@ -705,9 +704,9 @@ class SupportGroup
     }
 
     /**
-     * @return Collection<Document>
+     * @return Collection<Document>|Document[]|null
      */
-    public function getDocuments()
+    public function getDocuments(): ?Collection
     {
         return $this->documents;
     }
@@ -736,9 +735,9 @@ class SupportGroup
     }
 
     /**
-     * @return Collection<PlaceGroup>
+     * @return Collection<PlaceGroup>|PlaceGroup[]|null
      */
-    public function getPlaceGroups()
+    public function getPlaceGroups(): ?Collection
     {
         return $this->placeGroups;
     }
@@ -767,9 +766,9 @@ class SupportGroup
     }
 
     /**
-     * @return Collection<EvaluationGroup>
+     * @return Collection<EvaluationGroup>|EvaluationGroup[]|null
      */
-    public function getEvaluationsGroup()
+    public function getEvaluationsGroup(): ?Collection
     {
         return $this->evaluationsGroup;
     }
@@ -833,7 +832,7 @@ class SupportGroup
         return $this;
     }
 
-    protected function objectIsEmpty(object $originRequest)
+    protected function objectIsEmpty(object $originRequest): bool
     {
         foreach ((array) $originRequest as $value) {
             if ($value) {
@@ -845,9 +844,9 @@ class SupportGroup
     }
 
     /**
-     * @return Collection<Payment>
+     * @return Collection<Payment>|Payment[]|null
      */
-    public function getPayments()
+    public function getPayments(): ?Collection
     {
         return $this->payments;
     }
@@ -936,7 +935,7 @@ class SupportGroup
     /**
      * Donne le demandeur principal du suivi.
      */
-    public function getHeader(): Person
+    public function getHeader(): ?Person
     {
         foreach ($this->getSupportPeople() as $supportPerson) {
             if (true === $supportPerson->getHead()) {
@@ -944,6 +943,10 @@ class SupportGroup
             }
         }
 
-        return $this->getSupportPeople()->first()->getPerson();
+        if ($supportPerson = $this->getSupportPeople()->first()) {
+            return $supportPerson->getPerson();
+        }
+
+        return null;
     }
 }

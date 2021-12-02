@@ -2,44 +2,46 @@
 
 namespace App\Controller\Payment;
 
-use App\Controller\Traits\ErrorMessageTrait;
-use App\Entity\Organization\User;
-use App\Entity\Support\Payment;
-use App\Entity\Support\SupportGroup;
-use App\Event\Payment\PaymentEvent;
-use App\Form\Model\Support\PaymentSearch;
-use App\Form\Model\Support\SupportPaymentSearch;
-use App\Form\Support\Payment\PaymentSearchType;
-use App\Form\Support\Payment\PaymentType;
-use App\Form\Support\Payment\SupportPaymentSearchType;
-use App\Repository\Support\PaymentRepository;
-use App\Service\Export\HotelContributionlExport;
-use App\Service\Export\PaymentAccountingExport;
-use App\Service\Export\PaymentFullExport;
-use App\Service\Indicators\PaymentIndicators;
-use App\Service\Normalisation;
 use App\Service\Pagination;
-use App\Service\SupportGroup\SupportManager;
-use Doctrine\Common\Collections\ArrayCollection;
+use App\Service\Normalisation;
+use App\Entity\Support\Payment;
+use App\Entity\Organization\User;
+use App\Event\Payment\PaymentEvent;
+use App\Entity\Support\SupportGroup;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use App\Form\Model\Support\PaymentSearch;
+use App\Form\Support\Payment\PaymentType;
+use App\Service\Export\PaymentFullExport;
+use App\Controller\Traits\ErrorMessageTrait;
+use App\Service\SupportGroup\SupportManager;
+use App\Repository\Support\PaymentRepository;
+use App\Service\Indicators\PaymentIndicators;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Form\Support\Payment\PaymentSearchType;
+use App\Service\Export\PaymentAccountingExport;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Form\Model\Support\SupportPaymentSearch;
+use App\Service\Export\HotelContributionlExport;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Form\Support\Payment\SupportPaymentSearchType;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class PaymentController extends AbstractController
 {
     use ErrorMessageTrait;
 
-    private $manager;
+    private $em;
     private $paymentRepo;
 
-    public function __construct(EntityManagerInterface $manager, PaymentRepository $paymentRepo)
+    public function __construct(EntityManagerInterface $em, PaymentRepository $paymentRepo)
     {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->paymentRepo = $paymentRepo;
     }
 
@@ -125,7 +127,7 @@ class PaymentController extends AbstractController
         NormalizerInterface $normalizer,
         Normalisation $normalisation,
         EventDispatcherInterface $dispatcher
-    ): Response {
+    ): JsonResponse {
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
         $form = $this->createForm(PaymentType::class, $payment = new Payment())
@@ -134,8 +136,8 @@ class PaymentController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $payment->setSupportGroup($supportGroup);
 
-            $this->manager->persist($payment);
-            $this->manager->flush();
+            $this->em->persist($payment);
+            $this->em->flush();
 
             $dispatcher->dispatch(new PaymentEvent($payment, $supportGroup), 'payment.after_create');
 
@@ -159,7 +161,7 @@ class PaymentController extends AbstractController
      *
      * @Route("/payment/{id}/get", name="payment_get", methods="GET")
      */
-    public function getPayment(Payment $payment, NormalizerInterface $normalizer): Response
+    public function getPayment(Payment $payment, NormalizerInterface $normalizer): JsonResponse
     {
         $this->denyAccessUnlessGranted('VIEW', $payment);
 
@@ -184,14 +186,14 @@ class PaymentController extends AbstractController
         NormalizerInterface $normalizer,
         Normalisation $normalisation,
         EventDispatcherInterface $dispatcher
-    ): Response {
+    ): JsonResponse {
         $this->denyAccessUnlessGranted('EDIT', $payment);
 
         $form = $this->createForm(PaymentType::class, $payment)
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->manager->flush();
+            $this->em->flush();
 
             $dispatcher->dispatch(new PaymentEvent($payment), 'payment.after_update');
 
@@ -215,12 +217,12 @@ class PaymentController extends AbstractController
      *
      * @Route("/payment/{id}/delete", name="payment_delete", methods="GET")
      */
-    public function deletePayment(Payment $payment, EventDispatcherInterface $dispatcher): Response
+    public function deletePayment(Payment $payment, EventDispatcherInterface $dispatcher): JsonResponse
     {
         $this->denyAccessUnlessGranted('DELETE', $payment);
 
-        $this->manager->remove($payment);
-        $this->manager->flush();
+        $this->em->remove($payment);
+        $this->em->flush();
 
         $dispatcher->dispatch(new PaymentEvent($payment), 'payment.after_update');
 
@@ -262,8 +264,9 @@ class PaymentController extends AbstractController
      * Exporte les données.
      *
      * @param PaymentSearch|SupportPaymentSearch $search
+     * @return Response|RedirectResponse
      */
-    protected function exportFullData($search, $supportGroup = null, UrlGeneratorInterface $router = null)
+    protected function exportFullData($search, $supportGroup = null, UrlGeneratorInterface $router = null): Response
     {
         $payments = $this->paymentRepo->findPaymentsToExport($search, $supportGroup);
 
@@ -278,8 +281,9 @@ class PaymentController extends AbstractController
 
     /**
      * Exporte les données.
+     * @return Response|RedirectResponse
      */
-    protected function exportAccountingData(PaymentSearch $search, UrlGeneratorInterface $router = null)
+    protected function exportAccountingData(PaymentSearch $search, UrlGeneratorInterface $router = null): Response
     {
         $payments = $this->paymentRepo->findPaymentsToExport($search);
 
@@ -294,8 +298,9 @@ class PaymentController extends AbstractController
 
     /**
      * Exporte les données.
+     * @return Response|RedirectResponse
      */
-    protected function exportDeltaData(PaymentSearch $search, UrlGeneratorInterface $router = null)
+    protected function exportDeltaData(PaymentSearch $search, UrlGeneratorInterface $router = null): Response
     {
         $payments = $this->paymentRepo->findHotelContributionsToExport($search);
 
@@ -308,7 +313,7 @@ class PaymentController extends AbstractController
         return (new HotelContributionlExport($router))->exportData($payments);
     }
 
-    protected function getPaymentSearch()
+    protected function getPaymentSearch(): PaymentSearch
     {
         $today = new \DateTime('today');
         $search = (new PaymentSearch())

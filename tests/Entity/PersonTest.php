@@ -4,12 +4,12 @@ namespace App\Tests\Entity;
 
 use App\Entity\People\Person;
 use App\Tests\Entity\AssertHasErrorsTrait;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 
 class PersonTest extends WebTestCase
 {
-    use FixturesTrait;
     use AssertHasErrorsTrait;
 
     /** @var Person */
@@ -17,11 +17,6 @@ class PersonTest extends WebTestCase
 
     protected function setUp(): void
     {
-        $this->loadFixtureFiles([
-            dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/DataFixturesTest/PersonFixturesTest.yaml',
-        ]);
-
         $faker = \Faker\Factory::create('fr_FR');
 
         $this->person = (new Person())
@@ -64,6 +59,14 @@ class PersonTest extends WebTestCase
 
     public function testPersonExists()
     {
+        /** @var AbstractDatabaseTool */
+        $databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
+        
+        $databaseTool->loadAliceFixture([
+            dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
+            dirname(__DIR__).'/DataFixturesTest/PersonFixturesTest.yaml',
+        ]);
+
         $person = $this->person
             ->setFirstname('John')
             ->setLastname('Doe')

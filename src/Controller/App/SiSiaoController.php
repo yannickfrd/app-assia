@@ -33,7 +33,7 @@ class SiSiaoController extends AbstractController
     }
 
     /**
-     * @Route("/api-sisiao/login", name="api_sisiao_login", methods={"GET", "POST"})
+     * @Route("/api-sisiao/login", name="api_sisiao_login", methods="GET|POST")
      */
     public function login(Request $request): Response
     {

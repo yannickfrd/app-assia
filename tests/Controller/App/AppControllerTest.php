@@ -3,32 +3,45 @@
 namespace App\Tests\Controller\App;
 
 use App\Tests\AppTestTrait;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
 class AppControllerTest extends WebTestCase
 {
-    use FixturesTrait;
     use AppTestTrait;
 
     /** @var KernelBrowser */
     protected $client;
 
+    /** @var AbstractDatabaseTool */
+    protected $databaseTool;
+
     /** @var array */
-    protected $data;
+    protected $fixtures;
 
     protected function setUp(): void
     {
-        $this->data = $this->loadFixtureFiles([
+        parent::setUp();
+
+        $this->client = $this->createClient();
+
+        $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
+    }
+
+    protected function loadFixtures(): void
+    {
+        $this->fixtures = $this->databaseTool->loadAliceFixture([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
         ]);
     }
 
     public function testHomepageIsUp()
     {
-        $this->client = static::createClient();
+        $this->loadFixtures();
+
         $this->client->followRedirects(true);
 
         $this->client->request('GET', '/');
@@ -39,23 +52,21 @@ class AppControllerTest extends WebTestCase
 
     public function testAccessHomePageInRoleSuperAdmin()
     {
-        $this->client = static::createClient();
-        $this->client->followRedirects(true);
+        $this->loadFixtures();
 
-        $user = $this->data['userSuperAdmin'];
+        $this->createLogin($this->fixtures['userSuperAdmin']);
 
-        $this->client->request('POST', '/login', [
-            '_username' => $user->getUsername(),
-            '_password' => $user->getPlainPassword(),
-            '_csrf_token' => $this->client->getContainer()->get('security.csrf.token_manager')->getToken('authenticate'),
-        ]);
+        $this->client->request('GET', '/home');
 
-        $this->assertSelectorExists('.alert.alert-success');
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('h1', 'Tableau de bord');
     }
 
     public function testAccessHomePageInRoleAdmin()
     {
-        $this->createLogin($this->data['userAdmin']);
+        $this->loadFixtures();
+
+        $this->createLogin($this->fixtures['userAdmin']);
 
         $this->client->request('GET', '/home');
 
@@ -65,7 +76,9 @@ class AppControllerTest extends WebTestCase
 
     public function testAccessHomePageInRoleUser()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->loadFixtures();
+
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $this->client->request('GET', '/home');
 
@@ -75,7 +88,9 @@ class AppControllerTest extends WebTestCase
 
     public function testAccessToLoginPage()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->loadFixtures();
+
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $this->client->request('GET', '/login');
 
@@ -85,7 +100,9 @@ class AppControllerTest extends WebTestCase
 
     public function testPageServiceDashboardInRoleUser()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->loadFixtures();
+
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $this->client->request('GET', '/dashboard/supports_by_user');
 
@@ -95,14 +112,14 @@ class AppControllerTest extends WebTestCase
 
     public function testPageServiceDashboardInRoleAdmin()
     {
-        $this->data = $this->loadFixtureFiles([
+        $this->fixtures = $this->databaseTool->loadAliceFixture([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/SupportFixturesTest.yaml',
         ]);
 
-        $this->createLogin($this->data['userAdmin']);
+        $this->createLogin($this->fixtures['userAdmin']);
 
         $this->client->request('GET', '/dashboard/supports_by_user');
 
@@ -111,7 +128,7 @@ class AppControllerTest extends WebTestCase
 
         $this->client->submitForm('search', [
             'service' => [
-                'services' => $this->data['service1'],
+                'services' => $this->fixtures['service1'],
             ],
             'send' => true,
         ], 'GET');
@@ -121,7 +138,9 @@ class AppControllerTest extends WebTestCase
 
     public function testPageAdminIsUp()
     {
-        $this->createLogin($this->data['userAdmin']);
+        $this->loadFixtures();
+
+        $this->createLogin($this->fixtures['userAdmin']);
 
         $this->client->request('GET', '/admin');
 
@@ -131,7 +150,9 @@ class AppControllerTest extends WebTestCase
 
     public function testPageManagingIsUp()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->loadFixtures();
+
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $this->client->request('GET', '/managing');
 
@@ -141,7 +162,9 @@ class AppControllerTest extends WebTestCase
 
     public function testCacheClearIsSuccessful()
     {
-        $this->createLogin($this->data['userSuperAdmin']);
+        $this->loadFixtures();
+
+        $this->createLogin($this->fixtures['userSuperAdmin']);
 
         $this->client->request('GET', '/admin/cache/clear');
 
@@ -152,7 +175,8 @@ class AppControllerTest extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
+
         $this->client = null;
-        $this->data = null;
+        $this->fixtures = null;
     }
 }

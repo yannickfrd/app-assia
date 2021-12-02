@@ -19,27 +19,27 @@ class UpdateGenderPersonCommand extends Command
 
     protected static $defaultName = 'app:person:update_gender';
 
-    protected $manager;
-    protected $repo;
+    protected $em;
+    protected $personRepo;
 
-    public function __construct(EntityManagerInterface $manager, PersonRepository $repo)
+    public function __construct(EntityManagerInterface $em, PersonRepository $personRepo)
     {
-        $this->manager = $manager;
-        $this->repo = $repo;
-        $this->disableListeners($this->manager);
+        $this->em = $em;
+        $this->personRepo = $personRepo;
+        $this->disableListeners($this->em);
 
         parent::__construct();
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
-        $people = $this->repo->findBy(['gender' => 99]);
+        $people = $this->personRepo->findBy(['gender' => 99]);
         $count = 0;
 
         foreach ($people as $person) {
-            $otherPerson = $this->repo->findOnePersonByFirstname($person->getFirstname());
+            $otherPerson = $this->personRepo->findOnePersonByFirstname($person->getFirstname());
 
             if ($otherPerson) {
                 $person->setGender($otherPerson->getGender());
@@ -47,7 +47,7 @@ class UpdateGenderPersonCommand extends Command
             }
         }
 
-        $this->manager->flush();
+        $this->em->flush();
 
         $io->success("The gender of people is update !\n  ".$count.' / '.count($people));
 

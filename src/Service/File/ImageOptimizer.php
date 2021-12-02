@@ -25,7 +25,7 @@ class ImageOptimizer
         $this->init();
     }
 
-    private function init()
+    private function init(): void
     {
         try {
             $this->tinify->setKey($this->tinifyKey);
@@ -45,14 +45,12 @@ class ImageOptimizer
 
     /**
      * Compresse l'image.
-     *
-     * @return int|false
      */
-    public function compressImage(string $file)
+    public function compressImage(string $file): ?int
     {
         try {
             $source = \Tinify\fromFile($file);
-            $source->toFile($file);
+            return $source->toFile($file);
         } catch (\Exception $e) {
             return false;
         }

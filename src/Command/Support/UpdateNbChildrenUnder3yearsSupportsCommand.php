@@ -21,19 +21,19 @@ class UpdateNbChildrenUnder3yearsSupportsCommand extends Command
     protected static $defaultDescription = 'Update the number of children under 3 years in supports';
 
     protected $supportGroupRepo;
-    protected $manager;
+    protected $em;
     protected $stopwatch;
 
-    public function __construct(SupportGroupRepository $supportGroupRepo, EntityManagerInterface $manager, Stopwatch $stopwatch)
+    public function __construct(SupportGroupRepository $supportGroupRepo, EntityManagerInterface $em, Stopwatch $stopwatch)
     {
         $this->supportGroupRepo = $supportGroupRepo;
-        $this->manager = $manager;
+        $this->em = $em;
         $this->stopwatch = $stopwatch;
 
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription(self::$defaultDescription)
@@ -41,7 +41,7 @@ class UpdateNbChildrenUnder3yearsSupportsCommand extends Command
         ;
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
         $limit = $input->getOption('limit');
@@ -72,7 +72,7 @@ class UpdateNbChildrenUnder3yearsSupportsCommand extends Command
                 $supportGroup->setNbChildrenUnder3years($nbChildrenUnder3years);
             }
         }
-        $this->manager->flush();
+        $this->em->flush();
 
         $io->success('The number of children under 3 years in supports are update !'
             ."\n ".$count.' / '.count($supports)

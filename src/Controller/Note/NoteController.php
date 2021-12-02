@@ -2,39 +2,40 @@
 
 namespace App\Controller\Note;
 
-use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Support\Note;
-use App\Entity\Support\SupportGroup;
 use App\Event\Note\NoteEvent;
-use App\Form\Model\Support\NoteSearch;
-use App\Form\Model\Support\SupportNoteSearch;
-use App\Form\Support\Note\NoteSearchType;
-use App\Form\Support\Note\NoteType;
-use App\Form\Support\Note\SupportNoteSearchType;
-use App\Repository\Support\NoteRepository;
-use App\Repository\Support\SupportGroupRepository;
-use App\Service\Evaluation\EvaluationExporter;
 use App\Service\Note\NoteExporter;
+use App\Form\Support\Note\NoteType;
 use App\Service\Note\NotePaginator;
-use App\Service\SupportGroup\SupportCollections;
-use App\Service\SupportGroup\SupportManager;
+use App\Entity\Support\SupportGroup;
+use App\Form\Model\Support\NoteSearch;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use App\Form\Support\Note\NoteSearchType;
+use App\Repository\Support\NoteRepository;
+use App\Controller\Traits\ErrorMessageTrait;
+use App\Service\SupportGroup\SupportManager;
+use App\Form\Model\Support\SupportNoteSearch;
 use Symfony\Component\HttpFoundation\Request;
+use App\Service\Evaluation\EvaluationExporter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Form\Support\Note\SupportNoteSearchType;
+use App\Service\SupportGroup\SupportCollections;
+use App\Repository\Support\SupportGroupRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class NoteController extends AbstractController
 {
     use ErrorMessageTrait;
 
-    private $manager;
+    private $em;
 
-    public function __construct(EntityManagerInterface $manager)
+    public function __construct(EntityManagerInterface $em)
     {
-        $this->manager = $manager;
+        $this->em = $em;
     }
 
     /**
@@ -95,7 +96,7 @@ class NoteController extends AbstractController
      *
      * @Route("/support/{id}/note/new", name="support_note_new", methods="POST")
      */
-    public function createSupportNote(SupportGroup $supportGroup, Request $request, EventDispatcherInterface $dispatcher): Response
+    public function createSupportNote(SupportGroup $supportGroup, Request $request, EventDispatcherInterface $dispatcher): JsonResponse
     {
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
@@ -105,8 +106,8 @@ class NoteController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $note->setSupportGroup($supportGroup);
 
-            $this->manager->persist($note);
-            $this->manager->flush();
+            $this->em->persist($note);
+            $this->em->flush();
 
             $dispatcher->dispatch(new NoteEvent($note, $supportGroup), 'note.after_create');
 
@@ -129,13 +130,13 @@ class NoteController extends AbstractController
      * @Route("/note/{id}/edit", name="note_edit", methods="POST")
      * @IsGranted("EDIT", subject="note")
      */
-    public function editNote(Note $note, Request $request, EventDispatcherInterface $dispatcher): Response
+    public function editNote(Note $note, Request $request, EventDispatcherInterface $dispatcher): JsonResponse
     {
         $form = $this->createForm(NoteType::class, $note)
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->manager->flush();
+            $this->em->flush();
 
             $dispatcher->dispatch(new NoteEvent($note), 'note.after_update');
 
@@ -158,12 +159,12 @@ class NoteController extends AbstractController
      * @Route("/note/{id}/delete", name="note_delete", methods="GET")
      * @IsGranted("DELETE", subject="note")
      */
-    public function deleteNote(Note $note, EventDispatcherInterface $dispatcher): Response
+    public function deleteNote(Note $note, EventDispatcherInterface $dispatcher): JsonResponse
     {
         $noteId = $note->getId();
 
-        $this->manager->remove($note);
-        $this->manager->flush();
+        $this->em->remove($note);
+        $this->em->flush();
 
         $dispatcher->dispatch(new NoteEvent($note), 'note.after_update');
 
@@ -219,8 +220,8 @@ class NoteController extends AbstractController
             return $this->redirectToRoute('support_view', ['id' => $id]);
         }
 
-        $this->manager->persist($note);
-        $this->manager->flush();
+        $this->em->persist($note);
+        $this->em->flush();
 
         $dispatcher->dispatch(new NoteEvent($note), 'note.after_create');
 

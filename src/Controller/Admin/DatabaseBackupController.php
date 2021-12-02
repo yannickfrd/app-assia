@@ -19,12 +19,12 @@ class DatabaseBackupController extends AbstractController
 {
     use ErrorMessageTrait;
 
-    protected $manager;
+    protected $em;
     protected $databaseBackupRepo;
 
-    public function __construct(EntityManagerInterface $manager, DatabaseBackupRepository $databaseBackupRepo)
+    public function __construct(EntityManagerInterface $em, DatabaseBackupRepository $databaseBackupRepo)
     {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->databaseBackupRepo = $databaseBackupRepo;
     }
 
@@ -56,8 +56,8 @@ class DatabaseBackupController extends AbstractController
             ->setFileName($backupDatas['fileName'])
             ->setPath($backupDatas['path']);
 
-        $this->manager->persist($databaseBackup);
-        $this->manager->flush();
+        $this->em->persist($databaseBackup);
+        $this->em->flush();
 
         $this->addFlash('success', 'La sauvegarde de la base de données est créée.');
 
@@ -93,8 +93,8 @@ class DatabaseBackupController extends AbstractController
             unlink($databaseBackup->getPath());
         }
 
-        $this->manager->remove($databaseBackup);
-        $this->manager->flush();
+        $this->em->remove($databaseBackup);
+        $this->em->flush();
 
         $this->addFlash('warning', 'La sauvegarde de la base de données est supprimée.');
 

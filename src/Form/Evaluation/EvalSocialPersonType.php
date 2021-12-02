@@ -15,7 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class EvalSocialPersonType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         /** @var SupportPerson */
         $supportPerson = $options['attr']['supportPerson'];
@@ -144,7 +144,7 @@ class EvalSocialPersonType extends AbstractType
             ]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => EvalSocialPerson::class,

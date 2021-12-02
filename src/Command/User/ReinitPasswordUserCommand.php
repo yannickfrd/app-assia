@@ -2,13 +2,13 @@
 
 namespace App\Command\User;
 
-use App\Repository\Organization\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
+use App\Repository\Organization\UserRepository;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
  * Commande pour réinitialiser les mot de passe des utilisateurs (uniquement en mode développement).
@@ -18,25 +18,25 @@ class ReinitPasswordUserCommand extends Command
     protected static $defaultName = 'app:user:reinit_password';
     protected static $defaultDescription = 'Reinit password users in development environnement.';
 
-    protected $manager;
+    protected $em;
     protected $userRepo;
-    protected $encoder;
+    protected $passwordHasher;
 
-    public function __construct(EntityManagerInterface $manager, UserRepository $userRepo, UserPasswordEncoderInterface $encoder)
+    public function __construct(EntityManagerInterface $em, UserRepository $userRepo, UserPasswordHasherInterface $passwordHasher)
     {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->userRepo = $userRepo;
-        $this->encoder = $encoder;
+        $this->passwordHasher = $passwordHasher;
 
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription(self::$defaultDescription);
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
@@ -52,12 +52,12 @@ class ReinitPasswordUserCommand extends Command
 
         foreach ($users as $user) {
             if (!in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
-                $user->setPassword($this->encoder->encodePassword($user, 'test'));
+                $user->setPassword($this->passwordHasher->hashPassword($user, 'test'));
                 ++$count;
             }
             ++$nbUsers;
         }
-        $this->manager->flush();
+        $this->em->flush();
 
         $io->success("Reinit password users is successfull !\n  ".$count.' / '.$nbUsers);
 

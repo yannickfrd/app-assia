@@ -17,20 +17,20 @@ class CreateDailyIndicatorsCommand extends Command
 {
     protected static $defaultName = 'app:indicator:create-last-day';
 
-    protected $manager;
+    protected $em;
     protected $indicatorRepo;
     protected $indicators;
 
-    public function __construct(EntityManagerInterface $manager, IndicatorRepository $indicatorRepo, IndicatorsService $indicators)
+    public function __construct(EntityManagerInterface $em, IndicatorRepository $indicatorRepo, IndicatorsService $indicators)
     {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->repoIndicator = $indicatorRepo;
         $this->indicators = $indicators;
 
         parent::__construct();
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
@@ -44,8 +44,8 @@ class CreateDailyIndicatorsCommand extends Command
             return Command::FAILURE;
         }
 
-        $this->manager->persist($indicator);
-        $this->manager->flush();
+        $this->em->persist($indicator);
+        $this->em->flush();
 
         $io->success('The daily indicators are create !');
 

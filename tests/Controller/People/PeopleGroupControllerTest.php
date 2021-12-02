@@ -2,42 +2,52 @@
 
 namespace App\Tests\Controller\People;
 
-use App\Entity\People\PeopleGroup;
 use App\Service\Grammar;
 use App\Tests\AppTestTrait;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use App\Entity\People\PeopleGroup;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 
 class PeopleGroupControllerTest extends WebTestCase
 {
-    use FixturesTrait;
     use AppTestTrait;
 
     /** @var KernelBrowser */
     protected $client;
 
+    /** @var AbstractDatabaseTool */
+    protected $databaseTool;
+    
     /** @var array */
-    protected $data;
+    protected $fixtures;
 
     /** @var PeopleGroup */
     protected $peopleGroup;
 
     protected function setUp(): void
     {
-        $this->data = $this->loadFixtureFiles([
+        parent::setUp();
+        
+        $this->client = $this->createClient();
+
+        /** @var AbstractDatabaseTool */
+        $this->databaseTool = $this->getContainer()->get(DatabaseToolCollection::class)->get();
+
+        $this->fixtures = $this->databaseTool->loadAliceFixture([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
         ]);
 
-        $this->peopleGroup = $this->data['peopleGroup1'];
+        $this->peopleGroup = $this->fixtures['peopleGroup1'];
     }
 
     public function testEditPeopleGroupIsSuccessful()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $id = $this->peopleGroup->getId();
         $this->client->request('GET', "/group/$id");
@@ -59,7 +69,7 @@ class PeopleGroupControllerTest extends WebTestCase
 
     public function testDeletePeopleGroupWithRoleUser()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $id = $this->peopleGroup->getId();
         $this->client->request('GET', "/group/$id/delete");
@@ -69,7 +79,7 @@ class PeopleGroupControllerTest extends WebTestCase
 
     public function testDeletePeopleGroupWithRoleAdmin()
     {
-        $this->createLogin($this->data['userAdmin']);
+        $this->createLogin($this->fixtures['userAdmin']);
 
         $id = $this->peopleGroup->getId();
         $this->client->request('GET', "/group/$id/delete");
@@ -79,7 +89,7 @@ class PeopleGroupControllerTest extends WebTestCase
 
     public function testAddPersonToGroupIsSuccessful()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $id = $this->peopleGroup->getId();
         /** @var Crawler */
@@ -87,14 +97,14 @@ class PeopleGroupControllerTest extends WebTestCase
         $csrfToken = $crawler->filter('#role_person__token')->attr('value');
 
         // Fail
-        $personId = $this->data['person1']->getId();
+        $personId = $this->fixtures['person1']->getId();
         $this->client->request('POST', "/group/$id/add_person/$personId");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('.alert.alert-danger', 'Une erreur s\'est produite.');
 
         // Success
-        $person = $this->data['person5'];
+        $person = $this->fixtures['person5'];
         $personId = $person->getId();
         $this->client->request('POST', "/group/$id/add_person/$personId", [
             'role_person' => [
@@ -109,7 +119,7 @@ class PeopleGroupControllerTest extends WebTestCase
 
     public function testRemovePersonInGroupIsSuccessful()
     {
-        $this->createLogin($this->data['userAdmin']);
+        $this->createLogin($this->fixtures['userAdmin']);
 
         $id = $this->peopleGroup->getId();
         /** @var Crawler */
@@ -117,7 +127,7 @@ class PeopleGroupControllerTest extends WebTestCase
         $url = $crawler->filter('button[data-action="remove"]')->last()->attr('data-url');
 
         // Fail
-        $id = $this->data['rolePerson2']->getId();
+        $id = $this->fixtures['rolePerson2']->getId();
         $this->client->request('GET', "/role_person/$id/remove/token");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -133,7 +143,8 @@ class PeopleGroupControllerTest extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
+        
         $this->client = null;
-        $this->data = null;
+        $this->fixtures = null;
     }
 }

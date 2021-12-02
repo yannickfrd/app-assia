@@ -1,5 +1,5 @@
 security:
-    encoders:
+    password_hashers:
         App\Entity\Organization\User:
             algorithm: auto
 
@@ -10,25 +10,24 @@ security:
             entity:
                 class: App\Entity\Organization\User
                 property: username
+
+    enable_authenticator_manager: true
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
-            anonymous: true
-
             provider: app_user_provider
+            custom_authenticator: App\Security\AppAuthenticator
+            user_checker: App\Security\BadPasswordUserChecker
 
-            guard:
-                authenticators:
-                    - App\Security\LoginFormAuthenticator
+            # allow authentication using a form or HTTP basic
+            form_login: ~
+            http_basic: ~
 
-            # form_login:
-            #     login_path: security_login
-            #     check_path: security_login
-            #     csrf_token_generator: security.csrf.token_manager
-            #     default_target_path: security_after_login
-            #     always_use_default_target_path: true
+            # configure the form authentication as the entry point for unauthenticated users
+            entry_point: form_login
 
             logout:
                 path: security_logout

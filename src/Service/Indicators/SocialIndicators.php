@@ -9,8 +9,8 @@ use App\Entity\People\PeopleGroup;
 use App\Entity\People\Person;
 use App\Entity\People\RolePerson;
 use App\Entity\Support\SupportPerson;
-use App\Form\Utils\Choices;
 use App\Form\Utils\EvaluationChoices;
+use Doctrine\Common\Collections\Collection;
 
 class SocialIndicators
 {
@@ -26,7 +26,10 @@ class SocialIndicators
     {
     }
 
-    public function getResults($supportPeople)
+    /**
+     * @param SupportPerson[] $supportPeople
+     */
+    public function getResults(array $supportPeople): array
     {
         $datas = [];
 
@@ -89,7 +92,7 @@ class SocialIndicators
         return $datas;
     }
 
-    protected function initVar(array $values)
+    protected function initVar(array $values): array
     {
         $array = [];
         foreach ($values as $key => $value) {
@@ -103,7 +106,7 @@ class SocialIndicators
         return $array;
     }
 
-    protected function updateVar(SupportPerson $supportPerson, int $var = null, array $varDatas)
+    protected function updateVar(SupportPerson $supportPerson, int $var = null, array $varDatas): array
     {
         if (null === $var) {
             $var = 99;

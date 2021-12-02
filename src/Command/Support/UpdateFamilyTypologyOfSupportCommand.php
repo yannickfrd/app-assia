@@ -24,20 +24,20 @@ class UpdateFamilyTypologyOfSupportCommand extends Command
     protected static $defaultDescription = 'Update family typology and number of people in support';
 
     protected $supportGroupRepo;
-    protected $manager;
+    protected $em;
     protected $stopwatch;
 
-    public function __construct(SupportGroupRepository $supportGroupRepo, EntityManagerInterface $manager, Stopwatch $stopwatch)
+    public function __construct(SupportGroupRepository $supportGroupRepo, EntityManagerInterface $em, Stopwatch $stopwatch)
     {
         $this->supportGroupRepo = $supportGroupRepo;
-        $this->manager = $manager;
+        $this->em = $em;
         $this->stopwatch = $stopwatch;
-        $this->disableListeners($this->manager);
+        $this->disableListeners($this->em);
 
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription(self::$defaultDescription)
@@ -45,7 +45,7 @@ class UpdateFamilyTypologyOfSupportCommand extends Command
         ;
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
         $limit = $input->getOption('limit');
@@ -87,7 +87,7 @@ class UpdateFamilyTypologyOfSupportCommand extends Command
             }
         }
 
-        $this->manager->flush();
+        $this->em->flush();
 
         $io->success('The typology family of supports are update !'
             ."\n  ".$count.' / '.count($supports)

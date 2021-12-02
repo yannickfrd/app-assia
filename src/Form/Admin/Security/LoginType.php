@@ -9,20 +9,20 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class LoginType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('_username', null, [
+            ->add('username', null, [
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => ['placeholder' => 'Login'],
             ])
-            ->add('_password', PasswordType::class, [
+            ->add('password', PasswordType::class, [
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => ['placeholder' => 'Password'],
             ]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'csrf_field_name' => '_csrf_token',
@@ -31,7 +31,7 @@ class LoginType extends AbstractType
         ]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return '';
     }

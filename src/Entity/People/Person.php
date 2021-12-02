@@ -169,7 +169,7 @@ class Person
         $this->placePeople = new ArrayCollection();
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return (string) $this->id;
         // return $this->lastname.' '.$this->firstname;
@@ -309,9 +309,9 @@ class Person
     }
 
     /**
-     * @return Collection<RolePerson>
+     * @return Collection<RolePerson>|RolePerson[]|null
      */
-    public function getRolesPerson()
+    public function getRolesPerson(): ?Collection
     {
         return $this->rolesPerson;
     }
@@ -340,9 +340,9 @@ class Person
     }
 
     /**
-     * @return Collection<SupportPerson>
+     * @return Collection<SupportPerson>|SupportPerson[]|null
      */
-    public function getSupports()
+    public function getSupports(): ?Collection
     {
         return $this->supports;
     }
@@ -371,9 +371,9 @@ class Person
     }
 
     /**
-     * @return Collection<Person>
+     * @return Collection<PlacePerson>|PlacePerson[]|null
      */
-    public function getPlacePeople()
+    public function getPlacePeople(): ?Collection
     {
         return $this->placePeople;
     }

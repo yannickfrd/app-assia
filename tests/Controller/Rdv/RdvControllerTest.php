@@ -4,22 +4,25 @@ namespace App\Tests\Controller\Rdv;
 
 use App\Entity\Support\Rdv;
 use App\Tests\AppTestTrait;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 
 class RdvControllerTest extends WebTestCase
 {
-    use FixturesTrait;
     use AppTestTrait;
 
     /** @var KernelBrowser */
     protected $client;
 
+    /** @var AbstractDatabaseTool */
+    protected $databaseTool;
+    
     /** @var array */
-    protected $data;
+    protected $fixtures;
 
     /** @var SupportGroup */
     protected $supportGroup;
@@ -29,7 +32,14 @@ class RdvControllerTest extends WebTestCase
 
     protected function setUp(): void
     {
-        $this->data = $this->loadFixtureFiles([
+        parent::setUp();
+
+        $this->client = $this->createClient();
+
+        /** @var AbstractDatabaseTool */
+        $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
+
+        $this->fixtures = $this->databaseTool->loadAliceFixture([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
@@ -37,10 +47,10 @@ class RdvControllerTest extends WebTestCase
             dirname(__DIR__).'/../DataFixturesTest/RdvFixturesTest.yaml',
         ]);
 
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
-        $this->supportGroup = $this->data['supportGroup1'];
-        $this->rdv = $this->data['rdv1'];
+        $this->supportGroup = $this->fixtures['supportGroup1'];
+        $this->rdv = $this->fixtures['rdv1'];
     }
 
     public function testSearchRdvsIsSuccessful()
@@ -53,7 +63,7 @@ class RdvControllerTest extends WebTestCase
 
         // Search is successful
         $this->client->submitForm('search', [
-            'title' => 'RDV 666',
+            'title' => 'RDV test',
             'date[start]' => '2020-01-01',
             'date[end]' => (new \DateTime())->format('Y-m-d'),
         ]);
@@ -78,7 +88,7 @@ class RdvControllerTest extends WebTestCase
         $this->client->submitForm('export', [], 'GET');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertContains('spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
+        $this->assertStringContainsString('spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
     }
 
     public function testViewSupportListRdvsIsUp()
@@ -106,7 +116,7 @@ class RdvControllerTest extends WebTestCase
         // Success
         $this->client->request('POST', '/rdv/new', [
             'rdv' => [
-                'title' => 'Rdv test',
+                'title' => 'RDV test',
                 'start' => $now->format('Y-m-d\TH:00'),
                 'end' => (clone $now)->modify('+1 hour')->format('Y-m-d\TH:00'),
                 '_token' => $csrfToken,
@@ -116,7 +126,7 @@ class RdvControllerTest extends WebTestCase
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('create', $content['action']);
-        $this->assertSame('Rdv test', $content['rdv']['title']);
+        $this->assertSame('RDV test', $content['rdv']['title']);
     }
 
     public function testCreateNewSupportRdvIsSuccessful()
@@ -137,7 +147,7 @@ class RdvControllerTest extends WebTestCase
         // Success
         $this->client->request('POST', "/support/$id/rdv/new", [
             'rdv' => [
-                'title' => 'Rdv test',
+                'title' => 'RDV test',
                 'start' => $now->format('Y-m-d\TH:00'),
                 'end' => (clone $now)->modify('+1 hour')->format('Y-m-d\TH:00'),
                 '_token' => $csrfToken,
@@ -147,7 +157,7 @@ class RdvControllerTest extends WebTestCase
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('create', $content['action']);
-        $this->assertSame('Rdv test', $content['rdv']['title']);
+        $this->assertSame('RDV test', $content['rdv']['title']);
     }
 
     public function testGetRdv()
@@ -201,7 +211,8 @@ class RdvControllerTest extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
+        
         $this->client = null;
-        $this->data = null;
+        $this->fixtures = null;
     }
 }

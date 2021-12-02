@@ -12,16 +12,16 @@ use Symfony\Component\Security\Core\Security;
 class ExportPersister
 {
     private $security;
-    private $manager;
+    private $em;
     private $exportNotification;
 
     public function __construct(
         Security $security,
-        EntityManagerInterface $manager,
+        EntityManagerInterface $em,
         ExportNotification $exportNotification
     ) {
         $this->security = $security;
-        $this->manager = $manager;
+        $this->em = $em;
         $this->exportNotification = $exportNotification;
     }
 
@@ -34,13 +34,13 @@ class ExportPersister
             ->setTitle('Export des suivis')
             ->setFileName($file)
             ->setSize(filesize($file))
-            ->setUsedMemory(round(memory_get_usage() / 1000 / 1000))
+            ->setUsedMemory(round(memory_get_usage() / 1_000_000))
             ->setNbResults(count($supports))
 
             ->setComment($this->getCommentExport($search));
 
-        $this->manager->persist($export);
-        $this->manager->flush();
+        $this->em->persist($export);
+        $this->em->flush();
 
         /** @var User */
         $user = $this->security->getUser();

@@ -24,20 +24,20 @@ class UpdateFamilyTypologyOfGroupCommand extends Command
     protected static $defaultDescription = 'Update the family typology in groups';
 
     protected $peopleGroupRepo;
-    protected $manager;
+    protected $em;
     protected $peopleGroupManager;
 
-    public function __construct(PeopleGroupRepository $peopleGroupRepo, EntityManagerInterface $manager, PeopleGroupManager $peopleGroupManager)
+    public function __construct(PeopleGroupRepository $peopleGroupRepo, EntityManagerInterface $em, PeopleGroupManager $peopleGroupManager)
     {
         $this->peopleGroupRepo = $peopleGroupRepo;
-        $this->manager = $manager;
+        $this->em = $em;
         $this->peopleGroupManager = $peopleGroupManager;
-        $this->disableListeners($this->manager);
+        $this->disableListeners($this->em);
 
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription(self::$defaultDescription)
@@ -45,7 +45,7 @@ class UpdateFamilyTypologyOfGroupCommand extends Command
         ;
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
         $limit = $input->getOption('limit');
@@ -93,7 +93,7 @@ class UpdateFamilyTypologyOfGroupCommand extends Command
             }
         }
 
-        $this->manager->flush();
+        $this->em->flush();
 
         $io->success("The typology family of peopleGroup are updated !\n  ".$count.' / '.count($peopleGroups));
 

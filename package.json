@@ -28,7 +28,7 @@
         "inspector": "^0.5.0",
         "jquery": "^3.6.0",
         "jquery-mask-plugin": "^1.14.16",
-        "maildev": "^1.1.0",
+        "mailhog": "^4.16.0",
         "nodemailer": "^6.6.3",
         "open": "^7.4.2",
         "popover": "^2.4.1",

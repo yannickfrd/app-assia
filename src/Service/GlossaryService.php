@@ -65,7 +65,7 @@ class GlossaryService
         $this->normalizer = $normalizer;
     }
 
-    public function getAll()
+    public function getAll(): array
     {
         foreach ($this->getEntities() as $entitie) {
             $reflectionClass = new \ReflectionClass($entitie);
@@ -138,7 +138,7 @@ class GlossaryService
         ];
     }
 
-    public function methodExists(string $value, array $methods)
+    public function methodExists(string $value, array $methods): bool
     {
         foreach ($methods as $method) {
             if ($value === $method->getShortName()) {

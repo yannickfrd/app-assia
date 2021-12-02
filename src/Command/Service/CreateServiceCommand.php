@@ -21,28 +21,28 @@ class CreateServiceCommand extends Command
 {
     protected static $defaultName = 'app:service:create';
 
-    protected $manager;
+    protected $em;
     protected $poleRepo;
     protected $deviceRepo;
 
     public function __construct(
-        EntityManagerInterface $manager,
+        EntityManagerInterface $em,
         PoleRepository $poleRepo,
         DeviceRepository $deviceRepo
     ) {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->poleRepo = $poleRepo;
         $this->deviceRepo = $deviceRepo;
 
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Create a new service.');
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
@@ -89,17 +89,17 @@ class CreateServiceCommand extends Command
             ->setPhone1($phone)
             ->setEmail($email);
 
-        $this->manager->persist($service);
+        $this->em->persist($service);
 
         foreach ($devices as $device) {
             $serviceDevice = (new ServiceDevice())
                 ->setDevice($this->deviceRepo->findOneBy(['name' => $device]))
                 ->setService($service);
 
-            $this->manager->persist($serviceDevice);
+            $this->em->persist($serviceDevice);
         }
 
-        $this->manager->flush();
+        $this->em->flush();
 
         $io->success("The service {$service->getName()} is create !");
 

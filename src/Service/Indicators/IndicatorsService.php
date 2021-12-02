@@ -89,6 +89,7 @@ class IndicatorsService
 
     /**
      * Donne les indicateurs des services.
+     * @param Service[] $services
      */
     public function getServicesIndicators(array $services): array
     {

@@ -16,7 +16,7 @@ use Doctrine\Persistence\ObjectManager;
  */
 class C_PeopleFixtures extends Fixture
 {
-    private $manager;
+    private $em;
     private $userRepository;
     private $faker;
 
@@ -33,14 +33,14 @@ class C_PeopleFixtures extends Fixture
     private $birthdate;
     private $sex;
 
-    public function __construct(EntityManagerInterface $manager, UserRepository $userRepository)
+    public function __construct(EntityManagerInterface $em, UserRepository $userRepository)
     {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->userRepository = $userRepository;
         $this->faker = \Faker\Factory::create('fr_FR');
     }
 
-    public function load(ObjectManager $manager): void
+    public function load(ObjectManager $em): void
     {
         foreach ($this->userRepository->findAll() as $user) {
             $this->user = $user;
@@ -56,7 +56,7 @@ class C_PeopleFixtures extends Fixture
                 }
             }
         }
-        $this->manager->flush();
+        $this->em->flush();
     }
 
     // Définit la typologie familiale et le nombre de personnes
@@ -92,7 +92,7 @@ class C_PeopleFixtures extends Fixture
             ->setUpdatedAt($this->updatedAt)
             ->setUpdatedBy($this->user);
 
-        $this->manager->persist($peopleGroup);
+        $this->em->persist($peopleGroup);
 
         return $peopleGroup;
     }
@@ -156,7 +156,7 @@ class C_PeopleFixtures extends Fixture
             ->setCreatedBy($this->user)
             ->setUpdatedBy($this->user);
 
-        $this->manager->persist($person);
+        $this->em->persist($person);
 
         $rolePerson = (new RolePerson())
             ->setHead($this->head)
@@ -165,7 +165,7 @@ class C_PeopleFixtures extends Fixture
             ->setPerson($person)
             ->setCreatedAt($this->createdAt);
 
-        $this->manager->persist($rolePerson);
+        $this->em->persist($rolePerson);
 
         return $person;
     }

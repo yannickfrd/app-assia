@@ -11,22 +11,25 @@ class PoleVoter extends Voter
 {
     use VoterTrait;
 
+    /** @var User */
     protected $user;
+    
     protected $userId;
-    protected $pole;
 
-    protected function supports($attribute, $subject)
+    /** @var Pole */
+    protected $pole;
+    
+    protected function supports($attribute, $subject): bool
     {
         return in_array($attribute, ['VIEW', 'EDIT', 'DISABLE'])
             && $subject instanceof \App\Entity\Organization\Pole;
     }
 
-    protected function voteOnAttribute($attribute, $pole, TokenInterface $token)
+    protected function voteOnAttribute($attribute, $pole, TokenInterface $token): bool
     {
         /** @var User */
         $this->user = $token->getUser();
         $this->userId = $this->user->getId();
-        /** @var Pole */
         $this->pole = $pole;
 
         if (!$this->user) {
@@ -48,7 +51,7 @@ class PoleVoter extends Voter
         return false;
     }
 
-    protected function canEdit()
+    protected function canEdit(): bool
     {
         if ($this->isGranted('ROLE_SUPER_ADMIN')) {
             return true;

@@ -65,7 +65,7 @@ class SubService
         $this->places = new ArrayCollection();
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return (string) $this->id;
     }
@@ -100,9 +100,9 @@ class SubService
     }
 
     /**
-     * @return Collection<SupportGroup>
+     * @return Collection<SupportGroup>|SupportGroup[]|null
      */
-    public function getSupportGroups()
+    public function getSupportGroups(): ?Collection
     {
         return $this->supportGroups;
     }
@@ -155,9 +155,9 @@ class SubService
     }
 
     /**
-     * @return Collection<Place>
+     * @return Collection<Place>|Place[]|null
      */
-    public function getPlaces()
+    public function getPlaces(): ?Collection
     {
         return $this->places;
     }

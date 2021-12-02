@@ -25,19 +25,19 @@ class UpdateEvalBudgetCommand extends Command
     protected static $defaultDescription = 'Fix invalid datas in evaluation budget.';
 
     protected $evaluationGroupRepo;
-    protected $manager;
+    protected $em;
     protected int $count = 0;
 
-    public function __construct(EvaluationGroupRepository $evaluationGroupRepo, EntityManagerInterface $manager)
+    public function __construct(EvaluationGroupRepository $evaluationGroupRepo, EntityManagerInterface $em)
     {
         $this->evaluationGroupRepo = $evaluationGroupRepo;
-        $this->manager = $manager;
-        $this->disableListeners($this->manager);
+        $this->em = $em;
+        $this->disableListeners($this->em);
 
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription(self::$defaultDescription)
@@ -45,7 +45,7 @@ class UpdateEvalBudgetCommand extends Command
         ;
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
         $limit = $input->getOption('limit');
@@ -73,7 +73,7 @@ class UpdateEvalBudgetCommand extends Command
                 $evaluation->getInitEvalGroup()->setResourcesGroupAmt($initResourcesGroupAmt);
             }
         }
-        $this->manager->flush();
+        $this->em->flush();
 
         $io->success("The evaluation budget are update !\n ".$this->count.' / '.count($evaluations));
 
@@ -85,7 +85,7 @@ class UpdateEvalBudgetCommand extends Command
      *
      * @param EvalBudgetPerson|InitEvalPerson $evalObject
      */
-    protected function updateEvalObject(object $evalObject)
+    protected function updateEvalObject(object $evalObject): void
     {
         $variables = [
             'resources' => EvalBudgetPerson::RESOURCES_TYPE,
@@ -103,7 +103,7 @@ class UpdateEvalBudgetCommand extends Command
      *
      * @param EvalBudgetPerson|InitEvalPerson $evalObject
      */
-    protected function updateVariables(object $evalObject, string $name, array $values)
+    protected function updateVariables(object $evalObject, string $name, array $values): void
     {
         if (!method_exists($evalObject, 'get'.$name)) {
             return;

@@ -22,18 +22,18 @@ class UpdateLocationSupportsCommand extends Command
     protected static $defaultDescription = 'Update location in supports';
 
     protected $supportGroupRepo;
-    protected $manager;
+    protected $em;
 
-    public function __construct(SupportGroupRepository $supportGroupRepo, EntityManagerInterface $manager)
+    public function __construct(SupportGroupRepository $supportGroupRepo, EntityManagerInterface $em)
     {
         $this->supportGroupRepo = $supportGroupRepo;
-        $this->manager = $manager;
-        $this->disableListeners($this->manager);
+        $this->em = $em;
+        $this->disableListeners($this->em);
 
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription(self::$defaultDescription)
@@ -41,7 +41,7 @@ class UpdateLocationSupportsCommand extends Command
         ;
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
         $limit = $input->getOption('limit');
@@ -79,7 +79,7 @@ class UpdateLocationSupportsCommand extends Command
             }
         }
 
-        $this->manager->flush();
+        $this->em->flush();
 
         $io->success("The address of supports are update ! \n ".$count.' / '.count($supports));
 

@@ -12,21 +12,23 @@ class PlaceVoter extends Voter
 
     /** @var User */
     protected $user;
+
     protected $userId;
+
+    /** @var Place */
     protected $place;
-    
-    protected function supports($attribute, $subject)
+
+    protected function supports($attribute, $subject): bool
     {
         return in_array($attribute, ['VIEW', 'EDIT', 'DELETE', 'DISABLE'])
         && $subject instanceof \App\Entity\Organization\Place;
     }
-    
-    protected function voteOnAttribute($attribute, $place, TokenInterface $token)
+
+    protected function voteOnAttribute($attribute, $place, TokenInterface $token): bool
     {
-        /** @var User */
+        /* @var User */
         $this->user = $token->getUser();
         $this->userId = $this->user->getId();
-        /** @var Place */
         $this->place = $place;
 
         if (!$this->user) {
@@ -51,7 +53,7 @@ class PlaceVoter extends Voter
         return false;
     }
 
-    protected function canView()
+    protected function canView(): bool
     {
         if ($this->isUserOfService($this->place->getService())
             || $this->isGranted('ROLE_SUPER_ADMIN')) {
@@ -61,7 +63,7 @@ class PlaceVoter extends Voter
         return false;
     }
 
-    protected function canEdit()
+    protected function canEdit(): bool
     {
         if ($this->isAdminOfService($this->place->getService())
             || $this->isGranted('ROLE_SUPER_ADMIN')
@@ -72,7 +74,7 @@ class PlaceVoter extends Voter
         return false;
     }
 
-    protected function canDelete()
+    protected function canDelete(): bool
     {
         return $this->canEdit();
     }

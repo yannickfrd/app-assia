@@ -13,6 +13,7 @@ use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -58,7 +59,7 @@ class ExportController extends AbstractController
      *
      * @Route("/export/count_results", name="export_count_results", methods="POST")
      */
-    public function countNbResults(Request $request, SupportPersonRepository $supportPersonRepo): Response
+    public function countNbResults(Request $request, SupportPersonRepository $supportPersonRepo): JsonResponse
     {
         $form = $this->createForm(ExportSearchType::class, $search = new ExportSearch())
             ->handleRequest($request);
@@ -96,7 +97,7 @@ class ExportController extends AbstractController
      *
      * @Route("/export/{id}/delete", name="export_delete", methods="GET")
      */
-    public function deleteExport(?Export $export, EntityManagerInterface $manager): Response
+    public function deleteExport(?Export $export, EntityManagerInterface $em): Response
     {
         try {
             $this->denyAccessUnlessGranted('DELETE', $export);
@@ -105,8 +106,8 @@ class ExportController extends AbstractController
                 unlink($export->getFileName());
             }
 
-            $manager->remove($export);
-            $manager->flush();
+            $em->remove($export);
+            $em->flush();
 
             $this->addFlash('warning', 'Le fichier d\'export est supprimé.');
         } catch (\Throwable $th) {

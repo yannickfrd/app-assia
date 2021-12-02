@@ -1,6 +1,6 @@
 App\Entity\Support\Note:
   note1:
-    title: Note 666
+    title: Note test
     content: Contenu de la note
     type: 1
     status: 1

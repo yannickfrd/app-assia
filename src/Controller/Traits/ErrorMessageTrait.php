@@ -5,6 +5,7 @@ namespace App\Controller\Traits;
 use App\Service\Normalisation;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 trait ErrorMessageTrait
 {
@@ -15,7 +16,7 @@ trait ErrorMessageTrait
         FormInterface $form = null,
         Normalisation $normalisation = null,
         array $translationFiles = ['forms']
-    ): Response {
+    ): JsonResponse {
         $msg = [];
 
         if ($form) {

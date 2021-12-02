@@ -9,7 +9,6 @@ use App\Repository\Support\NoteRepository;
 use App\Service\ExportPDF;
 use App\Service\ExportWord;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Twig\Environment;
 
@@ -28,10 +27,7 @@ class NoteExporter
         $this->appEnv = $appEnv;
     }
 
-    /**
-     * @return Response|StreamedResponse
-     */
-    public function exportAllNotes(SupportGroup $supportGroup, SupportNoteSearch $search)
+    public function exportAllNotes(SupportGroup $supportGroup, SupportNoteSearch $search): StreamedResponse
     {
         $notes = $this->noteRepo->findNotesOfSupport($supportGroup->getId(), $search);
 
@@ -52,10 +48,7 @@ class NoteExporter
         return $this->exportWord->download($this->appEnv);
     }
 
-    /**
-     * @return Response|StreamedResponse
-     */
-    public function exportOneNote(Request $request, Note $note, SupportGroup $supportGroup)
+    public function exportOneNote(Request $request, Note $note, SupportGroup $supportGroup): StreamedResponse
     {
         $export = 'note_export_word' === $request->attributes->get('_route') ? $this->exportWord : new ExportPDF();
 

@@ -1,15 +1,14 @@
 # config/packages/doctrine.yaml
 doctrine:
     dbal:
-        # configure these for your database server
-        driver: 'pdo_mysql'
-        server_version: '5.7'
+        driver: "pdo_mysql"
+        server_version: "%env(DB_SERVER_VERSION)%"
         charset: utf8mb4
         default_table_options:
             default_timezone: Europe/Paris
             charset: utf8mb4
             collate: utf8mb4_unicode_ci
-        url: '%env(resolve:DATABASE_URL)%'
+        url: "%env(resolve:DATABASE_URL)%"
     orm:
         auto_generate_proxy_classes: true
         naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
@@ -18,21 +17,10 @@ doctrine:
             App:
                 is_bundle: false
                 type: annotation
-                dir: '%kernel.project_dir%/src/Entity'
+                dir: "%kernel.project_dir%/src/Entity"
                 prefix: 'App\Entity'
                 alias: App
         filters:
             softdeleteable:
                 class: Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter
                 enabled: true
-
-# Read the documentation: https://symfony.com/doc/current/bundles/StofDoctrineExtensionsBundle/index.html
-# See the official DoctrineExtensions documentation for more details: https://github.com/Atlantic18/DoctrineExtensions/tree/master/doc/
-stof_doctrine_extensions:
-    default_locale: fr_FR
-    orm:
-        default:
-            timestampable: true
-            blameable: true
-            softdeleteable: true
-            # sluggable: true

@@ -17,8 +17,9 @@ class PaymentAccountingExport extends ExportExcel
 
     /**
      * Exporte les données.
+     * @return StreamedResponse|Response|string
      */
-    public function exportData($payments)
+    public function exportData(array $payments)
     {
         $arrayData[] = array_keys($this->getDatas($payments[0]));
 

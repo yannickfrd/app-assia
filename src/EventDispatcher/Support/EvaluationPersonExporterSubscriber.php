@@ -30,7 +30,7 @@ class EvaluationPersonExporterSubscriber implements EventSubscriberInterface
         $this->exportPersister = $exportPersister;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             'evaluation_person.export' => 'exportEvaluationPeople',
@@ -39,8 +39,6 @@ class EvaluationPersonExporterSubscriber implements EventSubscriberInterface
 
     public function exportEvaluationPeople(EvaluationPersonExportEvent $event)
     {
-        set_time_limit(60 * 60);
-
         $request = $event->getRequest();
 
         $form = $this->formFactory->create(ExportSearchType::class, $search = new ExportSearch())

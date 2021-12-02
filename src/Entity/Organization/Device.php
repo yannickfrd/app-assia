@@ -156,7 +156,7 @@ class Device
         $this->userDevices = new ArrayCollection();
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return (string) $this->id;
     }
@@ -302,9 +302,9 @@ class Device
     }
 
     /**
-     * @return Collection<Device>
+     * @return Collection<Device>|Device[]|null
      */
-    public function getServiceDevices()
+    public function getServiceDevices(): ?Collection
     {
         return $this->serviceDevices;
     }
@@ -333,9 +333,9 @@ class Device
     }
 
     /**
-     * @return Collection<Place>
+     * @return Collection<Place>|Place[]|null
      */
-    public function getPlaces()
+    public function getPlaces(): ?Collection
     {
         return $this->places;
     }
@@ -364,9 +364,9 @@ class Device
     }
 
     /**
-     * @return Collection<SupportGroup>
+     * @return Collection<SupportGroup>|SupportGroup[]|null
      */
-    public function getSupportGroup()
+    public function getSupportGroup(): ?Collection
     {
         return $this->supportGroup;
     }
@@ -395,9 +395,9 @@ class Device
     }
 
     /**
-     * @return Collection<Device>
+     * @return Collection<UserDevice>|UserDevice[]|null
      */
-    public function getUserDevices()
+    public function getUserDevices(): ?Collection
     {
         return $this->userDevices;
     }

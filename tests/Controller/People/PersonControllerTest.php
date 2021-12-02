@@ -2,25 +2,28 @@
 
 namespace App\Tests\Controller\People;
 
-use App\Entity\People\Person;
 use App\Tests\AppTestTrait;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use App\Entity\People\Person;
+use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\HttpFoundation\Response;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 
 class PersonControllerTest extends WebTestCase
 {
-    use FixturesTrait;
     use AppTestTrait;
 
     /** @var KernelBrowser */
     protected $client;
 
+    /** @var AbstractDatabaseTool */
+    protected $databaseTool;
+
     /** @var array */
-    protected $data;
+    protected $fixtures;
 
     protected $userAdmin;
 
@@ -29,18 +32,29 @@ class PersonControllerTest extends WebTestCase
 
     protected function setUp(): void
     {
-        $this->data = $this->loadFixtureFiles([
+        parent::setUp();
+        
+        $this->client = $this->createClient();
+
+        /** @var AbstractDatabaseTool */
+        $this->databaseTool = $this->getContainer()->get(DatabaseToolCollection::class)->get();
+    }
+
+    private function loadFixtures(): void
+    {
+        $this->fixtures = $this->databaseTool->loadAliceFixture([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
         ]);
 
-        $this->userAdmin = $this->data['userAdmin'];
-        $this->user = $this->data['userRoleUser'];
-        $this->person = $this->data['person1'];
+        $this->userAdmin = $this->fixtures['userAdmin'];
+        $this->user = $this->fixtures['userRoleUser'];
+        $this->person = $this->fixtures['person1'];
     }
 
     public function testPeoplePageIsUp()
     {
+        $this->loadFixtures();
         $this->createLogin($this->user);
 
         $this->client->request('GET', '/people');
@@ -51,6 +65,7 @@ class PersonControllerTest extends WebTestCase
 
     public function testSearchInPeoplePageIsSuccessful()
     {
+        $this->loadFixtures();
         $this->createLogin($this->user);
 
         $this->client->request('POST', '/people/search', [
@@ -65,9 +80,10 @@ class PersonControllerTest extends WebTestCase
 
     public function testAddPersonToGroupIsUp()
     {
+        $this->loadFixtures();
         $this->createLogin($this->user);
 
-        $id = $this->data['peopleGroup1']->getId();
+        $id = $this->fixtures['peopleGroup1']->getId();
         $this->client->request('GET', "/group/$id/search_person");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -76,8 +92,9 @@ class PersonControllerTest extends WebTestCase
 
     public function testNewPersonIsUp()
     {
+        $this->loadFixtures();
         $this->createLogin($this->user);
-
+        
         $this->client->request('GET', '/person/new');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -86,6 +103,7 @@ class PersonControllerTest extends WebTestCase
 
     public function testCreateNewPersonIsFailed()
     {
+        $this->loadFixtures();
         $this->createLogin($this->user);
 
         $this->client->request('GET', '/person/new');
@@ -102,6 +120,7 @@ class PersonControllerTest extends WebTestCase
 
     public function testCreatePersonWhoExistsIsFailed()
     {
+        $this->loadFixtures();
         $this->createLogin($this->user);
 
         $this->client->request('GET', '/person/new');
@@ -123,9 +142,10 @@ class PersonControllerTest extends WebTestCase
 
     public function testNewPersonInGroupIsUp()
     {
+        $this->loadFixtures();
         $this->createLogin($this->user);
 
-        $id = $this->data['peopleGroup1']->getId();
+        $id = $this->fixtures['peopleGroup1']->getId();
         $this->client->request('GET', "/group/$id/person/new");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -135,6 +155,7 @@ class PersonControllerTest extends WebTestCase
 
     public function testCreateNewPersonIsSuccessful()
     {
+        $this->loadFixtures();
         $this->createLogin($this->user);
 
         $this->client->request('GET', '/person/new');
@@ -156,9 +177,10 @@ class PersonControllerTest extends WebTestCase
 
     public function testAddPersonToGroupIsFailed()
     {
+        $this->loadFixtures();
         $this->createLogin($this->user);
 
-        $id = $this->data['peopleGroup1']->getId();
+        $id = $this->fixtures['peopleGroup1']->getId();
         $this->client->request('GET', "/group/$id/person/new");
 
         $this->client->submitForm('send', [
@@ -174,9 +196,10 @@ class PersonControllerTest extends WebTestCase
 
     public function testAddSamePersonInGroupIsFailed()
     {
+        $this->loadFixtures();
         $this->createLogin($this->user);
 
-        $id = $this->data['peopleGroup1']->getId();
+        $id = $this->fixtures['peopleGroup1']->getId();
         $this->client->request('GET', "/group/$id/person/new");
 
         $this->client->submitForm('send', [
@@ -193,9 +216,10 @@ class PersonControllerTest extends WebTestCase
 
     public function testAddPersonToGroupIsSuccessful()
     {
+        $this->loadFixtures();
         $this->createLogin($this->user);
 
-        $id = $this->data['peopleGroup1']->getId();
+        $id = $this->fixtures['peopleGroup1']->getId();
         $this->client->request('GET', "/group/$id/person/new");
 
         $this->client->submitForm('send', [
@@ -213,9 +237,10 @@ class PersonControllerTest extends WebTestCase
 
     public function testEditPersonInGroupIsUp()
     {
+        $this->loadFixtures();
         $this->createLogin($this->user);
 
-        $id = $this->data['peopleGroup1']->getId();
+        $id = $this->fixtures['peopleGroup1']->getId();
         $personId = $this->person->getId();
         $slug = $this->person->getSlug();
         $this->client->request('GET', "/group/$id/person/$personId-$slug");
@@ -226,9 +251,10 @@ class PersonControllerTest extends WebTestCase
 
     public function testShowPersonIsUp()
     {
+        $this->loadFixtures();
         $this->createLogin($this->user);
 
-        $id = $this->data['person1']->getId();
+        $id = $this->fixtures['person1']->getId();
         $this->client->request('GET', "/person/$id");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -237,16 +263,17 @@ class PersonControllerTest extends WebTestCase
 
     public function testShowPersonWithEdition()
     {
-        $this->data = $this->loadFixtureFiles([
+        $this->fixtures = $this->databaseTool->loadAliceFixture([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/SupportFixturesTest.yaml',
         ]);
 
+        $this->user = $this->fixtures['userRoleUser'];
         $this->createLogin($this->user);
 
-        $id = $this->data['person1']->getId();
+        $id = $this->fixtures['person1']->getId();
         $this->client->request('GET', "/person/$id");
 
         $this->assertSelectorExists('#updatePerson');
@@ -254,16 +281,16 @@ class PersonControllerTest extends WebTestCase
 
     public function testShowPersonWithoutEdition()
     {
-        $this->data = $this->loadFixtureFiles([
+        $this->fixtures = $this->databaseTool->loadAliceFixture([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/SupportFixturesTest.yaml',
         ]);
 
-        $this->createLogin($this->data['user5']);
+        $this->createLogin($this->fixtures['user5']);
 
-        $id = $this->data['person1']->getId();
+        $id = $this->fixtures['person1']->getId();
         $this->client->request('GET', "/person/$id");
 
         $this->assertSelectorNotExists('#updatePerson');
@@ -271,9 +298,10 @@ class PersonControllerTest extends WebTestCase
 
     public function testEditPersonIsFailed()
     {
+        $this->loadFixtures();
         $this->createLogin($this->user);
 
-        $id = $this->data['person1']->getId();
+        $id = $this->fixtures['person1']->getId();
         $this->client->request('POST', "/person/$id/edit", [
             'person' => [
                 'firstname' => 'Johnny',
@@ -288,16 +316,16 @@ class PersonControllerTest extends WebTestCase
 
     public function testEditPersonIsSuccessful()
     {
-        $this->data = $this->loadFixtureFiles([
+        $fixtures = $this->databaseTool->loadAliceFixture([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/SupportFixturesTest.yaml',
         ]);
 
-        $this->createLogin($this->user);
+        $this->createLogin($fixtures['userRoleUser']);
 
-        $id = $this->data['person1']->getId();
+        $id = $fixtures['person1']->getId();
         /** @var Crawler */
         $crawler = $this->client->request('GET', "/person/$id");
         $csrfToken = $crawler->filter('#person__token')->attr('value');
@@ -319,9 +347,10 @@ class PersonControllerTest extends WebTestCase
 
     public function testAddNewGroupToPersonIsSuccessful()
     {
+        $this->loadFixtures();
         $this->createLogin($this->user);
 
-        $id = $this->data['person1']->getId();
+        $id = $this->fixtures['person1']->getId();
         $this->client->request('POST', "/person/$id/new_group");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -349,6 +378,7 @@ class PersonControllerTest extends WebTestCase
 
     public function testSearchPersonWithResults()
     {
+        $this->loadFixtures();
         $this->createLogin($this->user);
 
         // 0 result
@@ -373,9 +403,10 @@ class PersonControllerTest extends WebTestCase
 
     public function testDeletePersonWithRoleUser()
     {
+        $this->loadFixtures();
         $this->createLogin($this->user);
 
-        $id = $this->data['person1']->getId();
+        $id = $this->fixtures['person1']->getId();
         $this->client->request('GET', "/person/$id/delete");
 
         $this->assertSame(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
@@ -383,9 +414,10 @@ class PersonControllerTest extends WebTestCase
 
     public function testDeletePersonWithRoleAdmin()
     {
+        $this->loadFixtures();
         $this->createLogin($this->userAdmin);
 
-        $id = $this->data['person1']->getId();
+        $id = $this->fixtures['person1']->getId();
         $this->client->request('GET', "/person/$id/delete");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -394,6 +426,7 @@ class PersonControllerTest extends WebTestCase
 
     public function testDuplicatePeoplePageIsUp()
     {
+        $this->loadFixtures();
         $this->createLogin($this->userAdmin);
 
         $this->client->request('GET', '/duplicated_people');
@@ -405,8 +438,9 @@ class PersonControllerTest extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
+        
         $this->client = null;
-        $this->data = null;
+        $this->fixtures = null;
 
         $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
         $cache->clear();

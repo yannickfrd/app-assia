@@ -30,11 +30,11 @@ class DocumentEndToEndTest extends PantherTestCase
         $this->assertSelectorTextContains('h1', 'Suivi');
 
         $crawler = $this->goToSupportDocumentPage($crawler);
-        $crawler = $this->deleteDocumentInModal($crawler);
         $crawler = $this->addFile($crawler);
         $crawler = $this->editDocument($crawler);
         $crawler = $this->downloadDocument($crawler);
         $crawler = $this->downloadAllDocuments($crawler);
+        $crawler = $this->deleteDocumentInModal($crawler);
         $crawler = $this->deleteDocument($crawler);
     }
 
@@ -96,7 +96,7 @@ class DocumentEndToEndTest extends PantherTestCase
         $this->outputMsg('Edit a document');
 
         $this->client->waitFor('button[name="document_update"]');
-            
+
         /** @var Crawler */
         $crawler = $this->client->submitForm('document_update', [
             'document[name]' => $this->faker->sentence(mt_rand(3, 5), true),

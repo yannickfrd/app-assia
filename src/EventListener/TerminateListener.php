@@ -15,19 +15,19 @@ class TerminateListener
     use DoctrineTrait;
 
     private $security;
-    private $manager;
+    private $em;
     private $dispatcher;
 
-    public function __construct(Security $security, EntityManagerInterface $manager, EventDispatcherInterface $dispatcher)
+    public function __construct(Security $security, EntityManagerInterface $em, EventDispatcherInterface $dispatcher)
     {
         $this->security = $security;
-        $this->manager = $manager;
+        $this->em = $em;
         $this->dispatcher = $dispatcher;
     }
 
-    public function onKernelTerminate(TerminateEvent $event)
+    public function onKernelTerminate(TerminateEvent $event): void
     {
-        if (!$event->isMasterRequest()) {
+        if (!$event->isMainRequest()) {
             return;
         }
 
@@ -48,10 +48,10 @@ class TerminateListener
         /** @var User */
         $user = $this->security->getUser();
 
-        if ($this->manager->isOpen() && $user && !$user->isActiveNow()) {
+        if ($this->em->isOpen() && $user && !$user->isActiveNow()) {
             $user->setLastActivityAt(new \DateTime());
-            $this->disableListeners($this->manager);
-            $this->manager->flush();
+            $this->disableListeners($this->em);
+            $this->em->flush();
         }
     }
 }

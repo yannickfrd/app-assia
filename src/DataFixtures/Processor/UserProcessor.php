@@ -4,18 +4,15 @@ namespace App\DataFixtures\Processor;
 
 use App\Entity\Organization\User;
 use Fidry\AliceDataFixtures\ProcessorInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserProcessor implements ProcessorInterface
 {
-    /**
-     * @var UserPasswordEncoderInterface
-     */
-    private $passwordEncoder;
+    private $passwordHasher;
 
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(UserPasswordHasherInterface $passwordHasher)
     {
-        $this->passwordEncoder = $passwordEncoder;
+        $this->passwordHasher = $passwordHasher;
     }
 
     /**
@@ -31,7 +28,7 @@ class UserProcessor implements ProcessorInterface
         }
 
         /** @var User $object */
-        $object->setPassword($this->passwordEncoder->encodePassword($object, $object->getPlainPassword()));
+        $object->setPassword($this->passwordHasher->hashPassword($object, $object->getPlainPassword()));
     }
 
     /**

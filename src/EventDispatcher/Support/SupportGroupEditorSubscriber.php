@@ -39,7 +39,7 @@ class SupportGroupEditorSubscriber implements EventSubscriberInterface
         $this->cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             'support.before_create' => [
@@ -74,7 +74,7 @@ class SupportGroupEditorSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function update(SupportGroupEvent $event)
+    public function update(SupportGroupEvent $event): void
     {
         $supportGroup = $event->getSupportGroup();
 

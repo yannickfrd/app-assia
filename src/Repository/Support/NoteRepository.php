@@ -85,7 +85,7 @@ class NoteRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Note[]
+     * @return Note[]|null
      */
     public function findNotesOfSupport(int $supportGroupId, SupportNoteSearch $search): array
     {

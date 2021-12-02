@@ -4,12 +4,10 @@ namespace App\Tests\Entity;
 
 use App\Entity\Organization\User;
 use App\Tests\Entity\AssertHasErrorsTrait;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class UserTest extends WebTestCase
 {
-    use FixturesTrait;
     use AssertHasErrorsTrait;
 
     /** @var \Doctrine\ORM\EntityManager */
@@ -20,10 +18,6 @@ class UserTest extends WebTestCase
 
     protected function setUp(): void
     {
-        $this->loadFixtureFiles([
-            dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
-        ]);
-
         $faker = \Faker\Factory::create('fr_FR');
 
         $firstname = $faker->firstname();

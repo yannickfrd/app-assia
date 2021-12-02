@@ -17,7 +17,7 @@ use Doctrine\Persistence\ObjectManager;
  */
 class AppFixtures extends Fixture
 {
-    private $manager;
+    private $em;
 
     public const ORGANIZATION = [
         'ESPERER 95',
@@ -100,13 +100,13 @@ class AppFixtures extends Fixture
     public $devices = [];
     public $services = [];
 
-    public function __construct(EntityManagerInterface $manager)
+    public function __construct(EntityManagerInterface $em)
     {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->faker = \Faker\Factory::create('fr_FR');
     }
 
-    public function load(ObjectManager $manager): void
+    public function load(ObjectManager $em): void
     {
         // Créé les dispositifs
         $this->createDevices();
@@ -121,16 +121,16 @@ class AppFixtures extends Fixture
             $this->createService($serviceArray);
         }
 
-        $this->manager->flush();
+        $this->em->flush();
     }
 
-    public function createOrganizations()
+    public function createOrganizations(): void
     {
         foreach (self::ORGANIZATION as $value) {
             $organization = (new Organization())
                 ->setName($value);
 
-            $this->manager->persist($organization);
+            $this->em->persist($organization);
 
             if (null === $this->organization) {
                 $this->organization = $organization;
@@ -146,7 +146,7 @@ class AppFixtures extends Fixture
             ->setColor('dark')
             ->setCreatedAt(new \DateTime());
 
-        $this->manager->persist($pole);
+        $this->em->persist($pole);
 
         $this->poles[$key] = $pole;
 
@@ -160,7 +160,7 @@ class AppFixtures extends Fixture
             ->setPlace(true)
             ->setPole($this->poles[$arrayService['pole']]);
 
-        $this->manager->persist($service);
+        $this->em->persist($service);
 
         $this->services[] = $service;
 
@@ -178,7 +178,7 @@ class AppFixtures extends Fixture
                 ->setService($service)
                 ->setDevice($device);
 
-            $this->manager->persist($serviceDevice);
+            $this->em->persist($serviceDevice);
 
             $this->createPlaces($service, $device);
         }
@@ -195,7 +195,7 @@ class AppFixtures extends Fixture
                 ->setStartDate($this->faker->dateTimeBetween('-5years', '-12months'))
                 ->setCity('Cergy-Pontoise');
 
-            $this->manager->persist($place);
+            $this->em->persist($place);
         }
     }
 
@@ -206,20 +206,20 @@ class AppFixtures extends Fixture
                 ->setCode($key)
                 ->setName($name);
 
-            $this->manager->persist($device);
+            $this->em->persist($device);
 
             $this->devices[$key] = $device;
         }
     }
 
-    public static function getDateTimeBeetwen($startEnd, $endDate = 'now')
+    public static function getDateTimeBeetwen($startEnd, $endDate = 'now'): \DateTime
     {
         $faker = \Faker\Factory::create('fr_FR');
 
         return $faker->dateTimeBetween($startEnd, $endDate, $timezone = null);
     }
 
-    public static function getStartDate($date)
+    public static function getStartDate($date): string
     {
         $interval = (new \DateTime())->diff($date);
         $days = $interval->days;

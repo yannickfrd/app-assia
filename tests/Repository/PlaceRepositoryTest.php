@@ -6,18 +6,18 @@ use App\Entity\Organization\Place;
 use App\Entity\Organization\Pole;
 use App\Entity\Organization\Service;
 use App\Form\Model\Organization\PlaceSearch;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use App\Repository\Organization\PlaceRepository;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class PlaceRepositoryTest extends WebTestCase
 {
-    use FixturesTrait;
-
     /** @var \Doctrine\ORM\EntityManager */
     private $entityManager;
 
     /** @var PlaceRepository */
-    protected $repo;
+    protected $placeRepo;
 
     /** @var Place */
     protected $place;
@@ -33,7 +33,10 @@ class PlaceRepositoryTest extends WebTestCase
 
     protected function setUp(): void
     {
-        $data = $this->loadFixtureFiles([
+        /** @var AbstractDatabaseTool */
+        $databaseTool = $this->getContainer()->get(DatabaseToolCollection::class)->get();
+
+        $fixtures = $databaseTool->loadAliceFixture([
             dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/DataFixturesTest/ServiceFixturesTest.yaml',
             dirname(__DIR__).'/DataFixturesTest/PlaceFixturesTest.yaml',
@@ -45,10 +48,9 @@ class PlaceRepositoryTest extends WebTestCase
             ->get('doctrine')
             ->getManager();
 
-        /* @var PlaceRepository */
-        $this->repo = $this->entityManager->getRepository(Place::class);
+        $this->placeRepo = $this->entityManager->getRepository(Place::class);
 
-        $this->service = $data['service1'];
+        $this->service = $fixtures['service1'];
         $this->search = (new PlaceSearch())
             ->setName('Logement')
             ->setNbPlaces(6)
@@ -60,35 +62,35 @@ class PlaceRepositoryTest extends WebTestCase
 
     public function testCount()
     {
-        $this->assertGreaterThanOrEqual(5, $this->repo->count([]));
+        $this->assertGreaterThanOrEqual(5, $this->placeRepo->count([]));
     }
 
     public function testFindAllPlacesQueryWithoutFilters()
     {
-        $query = $this->repo->findPlacesQuery(new PlaceSearch());
+        $query = $this->placeRepo->findPlacesQuery(new PlaceSearch());
         $this->assertGreaterThanOrEqual(5, count($query->getResult()));
     }
 
     public function testFindAllPlacesQueryWithFilters()
     {
-        $query = $this->repo->findPlacesQuery($this->search);
+        $query = $this->placeRepo->findPlacesQuery($this->search);
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 
     public function testFindPlacesToExportQueryWithFilters()
     {
-        $this->assertGreaterThanOrEqual(1, $this->repo->findPlacesToExport($this->search));
+        $this->assertGreaterThanOrEqual(1, $this->placeRepo->findPlacesToExport($this->search));
     }
 
     public function testGetPlacesQueryBuilder()
     {
-        $query = $this->repo->getPlacesQueryBuilder($this->service);
+        $query = $this->placeRepo->getPlacesQueryBuilder($this->service);
         $this->assertGreaterThanOrEqual(1, count($query->getQuery()->getResult()));
     }
 
     public function testfindPlacesOfService()
     {
-        $this->assertGreaterThanOrEqual(1, $this->repo->findPlacesOfService($this->service));
+        $this->assertGreaterThanOrEqual(1, $this->placeRepo->findPlacesOfService($this->service));
     }
 
     protected function tearDown(): void
@@ -96,7 +98,7 @@ class PlaceRepositoryTest extends WebTestCase
         parent::tearDown();
         $this->entityManager->close();
         $this->entityManager = null;
-        $this->repo = null;
+        $this->placeRepo = null;
         $this->service = null;
         $this->search = null;
     }

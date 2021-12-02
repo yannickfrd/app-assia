@@ -129,7 +129,7 @@ class ExportExcel
     /**
      * Export the file.
      *
-     * @return StreamedResponse|Response
+     * @return StreamedResponse|Response|string
      */
     public function exportFile(bool $asynch = false)
     {
@@ -174,7 +174,7 @@ class ExportExcel
         $this->sheet->getStyle('A1:'.$this->highestColumn.'1')->getFont()->setBold(true);
     }
 
-    protected function getPath(string $path, string $filename)
+    protected function getPath(string $path, string $filename): string
     {
         $file = $path.$filename;
         // $zipFile = $file.'.zip';
@@ -197,7 +197,7 @@ class ExportExcel
     /**
      * @return StreamedResponse|Response
      */
-    protected function getResponse(string $filename)
+    protected function getResponse(string $filename): Response
     {
         $response = new StreamedResponse();
 
@@ -419,7 +419,7 @@ class ExportExcel
     /**
      * Formatte une date.
      *
-     * @return mixed
+     * @return bool|float|null
      */
     public function formatDate(?\DateTime $date)
     {
@@ -429,7 +429,7 @@ class ExportExcel
     /**
      * Formatte une date et une heure.
      *
-     * @return mixed
+     * @return bool|float|null
      */
     public function formatDatetime(?\DateTime $date)
     {

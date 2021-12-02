@@ -22,18 +22,18 @@ class UpdateSupportsGeoAPICommand extends Command
     protected static $defaultDescription = 'Update location in supports with API adresse.data.gouv.fr';
 
     protected $supportGroupRepo;
-    protected $manager;
+    protected $em;
 
-    public function __construct(SupportGroupRepository $supportGroupRepo, EntityManagerInterface $manager)
+    public function __construct(SupportGroupRepository $supportGroupRepo, EntityManagerInterface $em)
     {
         $this->supportGroupRepo = $supportGroupRepo;
-        $this->manager = $manager;
-        $this->disableListeners($this->manager);
+        $this->em = $em;
+        $this->disableListeners($this->em);
 
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription(self::$defaultDescription)
@@ -41,7 +41,7 @@ class UpdateSupportsGeoAPICommand extends Command
         ;
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
         $limit = $input->getOption('limit');
@@ -69,7 +69,7 @@ class UpdateSupportsGeoAPICommand extends Command
                             ->setLon($feature->geometry->coordinates[0])
                             ->setLat($feature->geometry->coordinates[1]);
                     }
-                    $this->manager->flush();
+                    $this->em->flush();
                     ++$count;
                 }
             }
@@ -80,7 +80,7 @@ class UpdateSupportsGeoAPICommand extends Command
         return Command::SUCCESS;
     }
 
-    protected function cleanString(string $string)
+    protected function cleanString(string $string): string
     {
         $string = strtr($string, [
             'à' => 'a',

@@ -1,6 +1,6 @@
 App\Entity\Organization\Service:
   service1:
-    name: CHRS XXX
+    name: CHRS Cergy
     type: 1
     pole: "@pole1"
     email: chrs@app-assia.org

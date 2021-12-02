@@ -4,12 +4,10 @@ namespace App\Tests\Entity;
 
 use App\Entity\Support\Note;
 use App\Tests\Entity\AssertHasErrorsTrait;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class NoteTest extends WebTestCase
 {
-    use FixturesTrait;
     use AssertHasErrorsTrait;
 
     /** @var Note */
@@ -20,7 +18,7 @@ class NoteTest extends WebTestCase
         $faker = \Faker\Factory::create('fr_FR');
 
         $this->note = (new Note())
-            ->setTitle('Note 666')
+            ->setTitle('Note test')
             ->setContent($faker->paragraphs(6, true))
             ->setType(1)
             ->setStatus(1);

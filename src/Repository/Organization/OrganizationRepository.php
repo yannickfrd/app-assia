@@ -52,7 +52,7 @@ class OrganizationRepository extends ServiceEntityRepository
     /**
      * Compte le nombre d'organismes prescripteurs rattachés au service.
      */
-    public function countOrganizationsInService(Service $service)
+    public function countOrganizationsInService(Service $service): ?int
     {
         return $this->createQueryBuilder('o')->select('o')
             ->join('o.services', 's')->select('COUNT(s.id)')

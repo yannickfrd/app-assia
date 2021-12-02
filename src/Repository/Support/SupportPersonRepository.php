@@ -421,7 +421,7 @@ class SupportPersonRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return SupportPerson[]
+     * @return SupportPerson[]|null
      */
     public function findPeopleInSupport(SupportGroup $supportGroup): array
     {
@@ -436,7 +436,7 @@ class SupportPersonRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return SupportPerson[]
+     * @return SupportPerson[]|null
      */
     public function findPeopleNotInPlaceGroup(PlaceGroup $placeGroup): array
     {

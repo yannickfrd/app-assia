@@ -19,15 +19,15 @@ class SupportPeopleAdder
 {
     use SupportPersonCreator;
 
-    private $manager;
+    private $em;
     /** @var EvaluationGroupRepository */
     private $evaluationRepo;
     private $flashbag;
 
-    public function __construct(EntityManagerInterface $manager, FlashBagInterface $flashbag)
+    public function __construct(EntityManagerInterface $em, FlashBagInterface $flashbag)
     {
-        $this->manager = $manager;
-        $this->evaluationRepo = $manager->getRepository(EvaluationGroup::class);
+        $this->em = $em;
+        $this->evaluationRepo = $em->getRepository(EvaluationGroup::class);
         $this->flashbag = $flashbag;
     }
 
@@ -43,14 +43,14 @@ class SupportPeopleAdder
 
         $supportPerson = $this->createSupportPerson($supportGroup, $rolePerson);
 
-        $this->manager->persist($supportPerson);
+        $this->em->persist($supportPerson);
 
         $supportGroup->addSupportPerson($supportPerson);
 
         $this->createPlacePerson($supportGroup, $supportPerson);
         $this->createEvaluationPerson($supportGroup, $supportPerson);
 
-        $this->manager->flush();
+        $this->em->flush();
 
         $this->flashbag->add('success', $person->getFullname().' est ajouté'.Grammar::gender($person->getGender()).' au suivi en cours.');
 
@@ -75,7 +75,7 @@ class SupportPeopleAdder
                 ->setSupportPerson($supportPerson)
                 ->setPerson($supportPerson->getPerson());
 
-        $this->manager->persist($placePerson);
+        $this->em->persist($placePerson);
 
         return $placePerson;
     }
@@ -92,7 +92,7 @@ class SupportPeopleAdder
             ->setEvaluationGroup($evaluationGroup)
             ->setSupportPerson($supportPerson);
 
-        $this->manager->persist($evaluationPerson);
+        $this->em->persist($evaluationPerson);
 
         return $evaluationPerson;
     }

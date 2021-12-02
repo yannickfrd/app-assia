@@ -12,23 +12,23 @@ use Symfony\Component\HttpFoundation\Request;
 
 class RdvPaginator
 {
-    private $repo;
+    private $rdvRepo;
     private $pagination;
 
-    public function __construct(RdvRepository $repo, Pagination $pagination)
+    public function __construct(RdvRepository $rdvRepo, Pagination $pagination)
     {
-        $this->repo = $repo;
+        $this->rdvRepo = $rdvRepo;
         $this->pagination = $pagination;
     }
 
     /**
      * Donne les rendez-vous du suivi.
      */
-    public function getRdvs(SupportGroup $supportGroup, Request $request, SupportRdvSearch $search)
+    public function getRdvs(SupportGroup $supportGroup, Request $request, SupportRdvSearch $search): object
     {
         // Si filtre ou tri utilisé, n'utilise pas le cache.
         if ($request->query->count() > 0) {
-            return $this->pagination->paginate($this->repo->findRdvsQueryOfSupport($supportGroup->getId(), $search), $request);
+            return $this->pagination->paginate($this->rdvRepo->findRdvsQueryOfSupport($supportGroup->getId(), $search), $request);
         }
 
         // Sinon, récupère les rendez-vous en cache.
@@ -37,7 +37,7 @@ class RdvPaginator
             function (CacheItemInterface $item) use ($supportGroup, $search, $request) {
                 $item->expiresAfter(\DateInterval::createFromDateString('7 days'));
 
-                return $this->pagination->paginate($this->repo->findRdvsQueryOfSupport($supportGroup->getId(), $search), $request);
+                return $this->pagination->paginate($this->rdvRepo->findRdvsQueryOfSupport($supportGroup->getId(), $search), $request);
             }
         );
     }

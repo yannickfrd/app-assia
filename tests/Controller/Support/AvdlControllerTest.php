@@ -6,40 +6,50 @@ use App\Tests\AppTestTrait;
 use App\Entity\Support\SupportGroup;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 
 class AvdlControllerTest extends WebTestCase
 {
-    use FixturesTrait;
     use AppTestTrait;
 
     /** @var KernelBrowser */
     protected $client;
 
+    /** @var AbstractDatabaseTool */
+    protected $databaseTool;
+    
     /** @var array */
-    protected $data;
+    protected $fixtures;
 
     /** @var SupportGroup */
     protected $supportGroup;
 
     protected function setUp(): void
     {
-        $this->data = $this->loadFixtureFiles([
+        parent::setUp();
+
+        $this->client = $this->createClient();
+
+        /** @var AbstractDatabaseTool */
+        $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
+
+        $this->fixtures = $this->databaseTool->loadAliceFixture([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/AvdlSupportFixturesTest.yaml',
         ]);
 
-        $this->supportGroup = $this->data['supportGrpAvdl1'];
+        $this->supportGroup = $this->fixtures['supportGrpAvdl1'];
     }
 
     public function testSearchAvdlSupportsIsSuccessful()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $this->client->request('GET', '/avdl-supports');
 
@@ -59,7 +69,7 @@ class AvdlControllerTest extends WebTestCase
 
     public function testExportAvdlSupportsIsSuccessful()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $this->client->request('GET', '/avdl-supports');
 
@@ -76,19 +86,19 @@ class AvdlControllerTest extends WebTestCase
         $this->client->submitForm('export', [], 'GET');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertContains('.spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
+        $this->assertStringContainsString('.spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
     }
 
     public function testCreateAvdlSupportGroupIsSuccessful()
     {
-        $user = $this->data['userRoleUser'];
+        $user = $this->fixtures['userRoleUser'];
         $this->createLogin($user);
 
-        $id = $this->data['peopleGroup3']->getId();
+        $id = $this->fixtures['peopleGroup3']->getId();
         $this->client->request('POST', "/group/$id/support/new", [
             'support' => [
-                'service' => $this->data['serviceAvdl'],
-                'device' => $this->data['deviceAvdl']->getCode(),
+                'service' => $this->fixtures['serviceAvdl'],
+                'device' => $this->fixtures['deviceAvdl']->getCode(),
                 'referent' => $user,
             ],
         ]);
@@ -96,13 +106,13 @@ class AvdlControllerTest extends WebTestCase
         $now = new \DateTime();
         $this->client->submitForm('send', [
             'support' => [
-                'service' => $this->data['serviceAvdl'],
-                'device' => $this->data['deviceAvdl']->getCode(),
+                'service' => $this->fixtures['serviceAvdl'],
+                'device' => $this->fixtures['deviceAvdl']->getCode(),
                 'status' => SupportGroup::STATUS_IN_PROGRESS,
                 'referent' => $user,
                 'originRequest' => [
                     'orientationDate' => $now->format('Y-m-d'),
-                    'organization' => $this->data['comedDalo'],
+                    'organization' => $this->fixtures['comedDalo'],
                 ],
                 'avdl' => [
                     'diagStartDate' => '2020-01-01',
@@ -120,10 +130,10 @@ class AvdlControllerTest extends WebTestCase
 
     public function testEditAvdlSupportGroupIsSuccessful()
     {
-        $user = $this->data['userRoleUser'];
-        $this->createLogin($this->data['userRoleUser']);
+        $user = $this->fixtures['userRoleUser'];
+        $this->createLogin($this->fixtures['userRoleUser']);
 
-        $id = $this->data['supportGrpAvdl1']->getId();
+        $id = $this->fixtures['supportGrpAvdl1']->getId();
         $this->client->request('GET', "/support/$id/edit");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -132,13 +142,13 @@ class AvdlControllerTest extends WebTestCase
         $now = new \DateTime();
         $this->client->submitForm('send', [
             'support' => [
-                'service' => $this->data['serviceAvdl'],
-                'device' => $this->data['deviceAvdl']->getCode(),
+                'service' => $this->fixtures['serviceAvdl'],
+                'device' => $this->fixtures['deviceAvdl']->getCode(),
                 'status' => SupportGroup::STATUS_IN_PROGRESS,
                 'referent' => $user,
                 'originRequest' => [
                     'orientationDate' => $now->format('Y-m-d'),
-                    'organization' => $this->data['comedDalo'],
+                    'organization' => $this->fixtures['comedDalo'],
                     'comment' => 'XXX',
                 ],
                 'avdl' => [
@@ -167,8 +177,9 @@ class AvdlControllerTest extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
+        
         $this->client = null;
-        $this->data = null;
+        $this->fixtures = null;
 
         $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
         $cache->clear();

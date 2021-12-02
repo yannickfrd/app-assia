@@ -18,7 +18,7 @@ class PeopleGroupSubscriber implements EventSubscriberInterface
         $this->peopleGroupChecker = $peopleGroupChecker;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             'people_group.before_update' => [

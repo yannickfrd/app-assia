@@ -2,38 +2,39 @@
 
 namespace App\Controller\Evaluation;
 
-use App\Controller\Traits\ErrorMessageTrait;
-use App\Entity\Evaluation\EvaluationGroup;
-use App\Event\Evaluation\EvaluationEvent;
-use App\Form\Evaluation\EvaluationGroupType;
-use App\Repository\Evaluation\EvaluationGroupRepository;
-use App\Repository\Support\SupportGroupRepository;
-use App\Service\Evaluation\EvaluationCreator;
-use App\Service\Evaluation\EvaluationExporter;
 use App\Service\Normalisation;
-use App\Service\SupportGroup\SupportManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use App\Event\Evaluation\EvaluationEvent;
+use App\Entity\Evaluation\EvaluationGroup;
+use App\Controller\Traits\ErrorMessageTrait;
+use App\Form\Evaluation\EvaluationGroupType;
+use App\Service\SupportGroup\SupportManager;
+use App\Service\Evaluation\EvaluationCreator;
 use Symfony\Component\HttpFoundation\Request;
+use App\Service\Evaluation\EvaluationExporter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\Support\SupportGroupRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use App\Repository\Evaluation\EvaluationGroupRepository;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class EvaluationController extends AbstractController
 {
     use ErrorMessageTrait;
 
-    private $manager;
+    private $em;
     private $supportGroupRepo;
     private $evaluationRepo;
 
     public function __construct(
-        EntityManagerInterface $manager,
+        EntityManagerInterface $em,
         SupportGroupRepository $supportGroupRepo,
         EvaluationGroupRepository $evaluationRepo
     ) {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->supportGroupRepo = $supportGroupRepo;
         $this->evaluationRepo = $evaluationRepo;
     }
@@ -86,7 +87,7 @@ class EvaluationController extends AbstractController
      *
      * @Route("/support/{id}/evaluation/edit", name="support_evaluation_edit", methods="POST")
      */
-    public function editEvaluation(int $id, Request $request, EventDispatcherInterface $dispatcher, Normalisation $normalisation): Response
+    public function editEvaluation(int $id, Request $request, EventDispatcherInterface $dispatcher, Normalisation $normalisation): JsonResponse
     {
         if (null === $evaluationGroup = $this->evaluationRepo->findEvaluationOfSupport($id)) {
             throw $this->createAccessDeniedException();
@@ -100,8 +101,8 @@ class EvaluationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $dispatcher->dispatch(new EvaluationEvent($evaluationGroup), 'evaluation.before_update');
 
-            $this->manager->persist($evaluationGroup);
-            $this->manager->flush();
+            $this->em->persist($evaluationGroup);
+            $this->em->flush();
 
             $dispatcher->dispatch(new EvaluationEvent($evaluationGroup), 'evaluation.after_update');
 
@@ -134,8 +135,8 @@ class EvaluationController extends AbstractController
             $evaluationPerson->getInitEvalPerson()->setSupportPerson(null);
         }
 
-        $this->manager->remove($evaluationGroup);
-        $this->manager->flush();
+        $this->em->remove($evaluationGroup);
+        $this->em->flush();
 
         $this->addFlash('warning', "L'évaluation sociale est supprimée.");
 

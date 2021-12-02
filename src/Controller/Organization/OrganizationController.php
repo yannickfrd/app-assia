@@ -14,12 +14,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class OrganizationController extends AbstractController
 {
-    private $manager;
+    private $em;
     private $organizationRepo;
 
-    public function __construct(EntityManagerInterface $manager, OrganizationRepository $organizationRepo)
+    public function __construct(EntityManagerInterface $em, OrganizationRepository $organizationRepo)
     {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->organizationRepo = $organizationRepo;
     }
 
@@ -46,8 +46,8 @@ class OrganizationController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->manager->persist($organization);
-            $this->manager->flush();
+            $this->em->persist($organization);
+            $this->em->flush();
 
             $this->addFlash('success', 'Le dispositif est créé.');
 
@@ -70,7 +70,7 @@ class OrganizationController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->manager->flush();
+            $this->em->flush();
 
             $this->addFlash('success', 'Les modifications sont enregistrées.');
         }

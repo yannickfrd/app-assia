@@ -22,28 +22,28 @@ class ImportPlaceCommand extends Command
 
     protected static $defaultName = 'app:place:import';
 
-    protected $manager;
+    protected $em;
     protected $serviceRepo;
     protected $importPlaceDatas;
 
     public function __construct(
-        EntityManagerInterface $manager,
+        EntityManagerInterface $em,
         ServiceRepository $serviceRepo,
         ImportPlaceDatas $importPlaceDatas
     ) {
-        $this->manager = $manager;
+        $this->em = $em;
         $this->serviceRepo = $serviceRepo;
         $this->importPlaceDatas = $importPlaceDatas;
 
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Import places.');
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 

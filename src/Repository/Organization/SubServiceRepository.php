@@ -8,6 +8,7 @@ use App\Form\Model\Admin\OccupancySearch;
 use App\Repository\Traits\QueryTrait;
 use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -32,7 +33,7 @@ class SubServiceRepository extends ServiceEntityRepository
      *
      * @return SubService[]|null
      */
-    public function findSubServicesOfService(Service $service)
+    public function findSubServicesOfService(Service $service): ?array
     {
         return $this->createQueryBuilder('ss')
             ->select('PARTIAL ss.{id, name, phone1, email, disabledAt}')
@@ -52,9 +53,9 @@ class SubServiceRepository extends ServiceEntityRepository
     /**
      * Donne tous les sous-services du service.
      *
-     * @return mixed
+     * @return SubService[]|null
      */
-    public function getSubServicesOfService(Service $service)
+    public function getSubServicesOfService(Service $service): ?array
     {
         return $this->getSubServicesOfServiceQueryBuilder($service)
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
@@ -105,7 +106,10 @@ class SubServiceRepository extends ServiceEntityRepository
         return $query->orderBy('ss.name', 'ASC');
     }
 
-    public function findSubServicesWithPlace(OccupancySearch $search, CurrentUserService $currentUser, ?Service $service = null)
+    /**
+     * @return SubService[]|null
+     */
+    public function findSubServicesWithPlace(OccupancySearch $search, CurrentUserService $currentUser, ?Service $service = null): ?array
     {
         $query = $this->createQueryBuilder('ss')->select('ss')
             ->leftJoin('ss.service', 's')->addSelect('s')
@@ -134,33 +138,4 @@ class SubServiceRepository extends ServiceEntityRepository
             ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
-
-    // /**
-    //  * @return SubService[] Returns an array of SubService objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?SubService
-    {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

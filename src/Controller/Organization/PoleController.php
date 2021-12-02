@@ -16,12 +16,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class PoleController extends AbstractController
 {
     private $poleRepo;
-    private $manager;
+    private $em;
 
-    public function __construct(PoleRepository $poleRepo, EntityManagerInterface $manager)
+    public function __construct(PoleRepository $poleRepo, EntityManagerInterface $em)
     {
         $this->poleRepo = $poleRepo;
-        $this->manager = $manager;
+        $this->em = $em;
     }
 
     /**
@@ -48,8 +48,8 @@ class PoleController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->manager->persist($pole);
-            $this->manager->flush();
+            $this->em->persist($pole);
+            $this->em->flush();
 
             $this->addFlash('success', 'Le pôle est créé.');
 
@@ -74,7 +74,7 @@ class PoleController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->manager->flush();
+            $this->em->flush();
 
             $this->addFlash('success', 'Les modifications sont enregistrées.');
         }

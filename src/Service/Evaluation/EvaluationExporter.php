@@ -67,7 +67,7 @@ class EvaluationExporter
             ->setSupportGroup($supportGroup);
     }
 
-    private function getContent(SupportGroup $supportGroup, EvaluationGroup $evaluation, string $exportType, string $pathImage = null, string $fullnameSupport = null)
+    private function getContent(SupportGroup $supportGroup, EvaluationGroup $evaluation, string $exportType, string $pathImage = null, string $fullnameSupport = null): string
     {
         $organization = $supportGroup->getService()->getPole()->getOrganization()->getName();
 
@@ -84,7 +84,7 @@ class EvaluationExporter
         ]);
     }
 
-    private function getEvaluation(SupportGroup $supportGroup)
+    private function getEvaluation(SupportGroup $supportGroup): ?EvaluationGroup
     {
         return $this->supportCollections->getEvaluation($supportGroup);
     }

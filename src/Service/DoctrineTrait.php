@@ -6,18 +6,18 @@ use Doctrine\ORM\EntityManagerInterface;
 
 trait DoctrineTrait
 {
-    public function disableListeners(EntityManagerInterface $manager)
+    public function disableListeners(EntityManagerInterface $em): void
     {
-        $listenersType = $manager->getEventManager()->getListeners();
+        $listenersType = $em->getEventManager()->getListeners();
         foreach ($listenersType as $listenerType) {
             foreach ($listenerType as $listener) {
-                $manager->getEventManager()->removeEventListener(['onFlush', 'onFlush'], $listener);
+                $em->getEventManager()->removeEventListener(['onFlush', 'onFlush'], $listener);
             }
         }
     }
 
-    public function disableFilter(EntityManagerInterface $manager, $filter)
+    public function disableFilter(EntityManagerInterface $em, $filter): void
     {
-        $manager->getFilters()->disable($filter);
+        $em->getFilters()->disable($filter);
     }
 }

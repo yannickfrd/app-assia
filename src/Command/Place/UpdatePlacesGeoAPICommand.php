@@ -19,24 +19,24 @@ class UpdatePlacesGeoAPICommand extends Command
 
     protected static $defaultName = 'app:place:update_geo_api';
 
-    protected $repo;
-    protected $manager;
+    protected $placeRepo;
+    protected $em;
 
-    public function __construct(PlaceRepository $repo, EntityManagerInterface $manager)
+    public function __construct(PlaceRepository $placeRepo, EntityManagerInterface $em)
     {
-        $this->repo = $repo;
-        $this->manager = $manager;
-        $this->disableListeners($this->manager);
+        $this->placeRepo = $placeRepo;
+        $this->em = $em;
+        $this->disableListeners($this->em);
 
         parent::__construct();
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
         $count = 0;
-        $places = $this->repo->findAll();
+        $places = $this->placeRepo->findAll();
         foreach ($places as $place) {
             if (null === $place->getLocationId() && $count < 10) {
                 $valueSearch = $place->getAddress().'+'.$place->getCity();
@@ -57,7 +57,7 @@ class UpdatePlacesGeoAPICommand extends Command
                             ->setLon($feature->geometry->coordinates[0])
                             ->setLat($feature->geometry->coordinates[1]);
                     }
-                    $this->manager->flush();
+                    $this->em->flush();
                     ++$count;
                 }
             }
@@ -68,7 +68,7 @@ class UpdatePlacesGeoAPICommand extends Command
         return Command::SUCCESS;
     }
 
-    protected function cleanString(string $string)
+    protected function cleanString(string $string): string
     {
         $string = strtr($string, [
             'à' => 'a',

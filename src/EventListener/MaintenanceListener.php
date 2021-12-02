@@ -17,7 +17,7 @@ class MaintenanceListener
         $this->maintenance = $maintenance;
     }
 
-    public function onKernelRequest(RequestEvent $event)
+    public function onKernelRequest(RequestEvent $event): void
     {
         if ($this->maintenance) {
             $event->setResponse(

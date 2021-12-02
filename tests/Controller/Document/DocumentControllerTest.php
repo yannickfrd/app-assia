@@ -4,7 +4,8 @@ namespace App\Tests\Controller\Document;
 
 use App\Entity\Support\Document;
 use App\Tests\AppTestTrait;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -12,14 +13,16 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DocumentControllerTest extends WebTestCase
 {
-    use FixturesTrait;
     use AppTestTrait;
 
     /** @var KernelBrowser */
     protected $client;
 
+    /** @var AbstractDatabaseTool */
+    protected $databaseTool;
+
     /** @var array */
-    protected $data;
+    protected $fixtures;
 
     /** @var SupportGroup */
     protected $supportGroup;
@@ -29,7 +32,14 @@ class DocumentControllerTest extends WebTestCase
 
     protected function setUp(): void
     {
-        $this->data = $this->loadFixtureFiles([
+        parent::setUp();
+        
+        $this->client = $this->createClient();
+
+        /** @var AbstractDatabaseTool */
+        $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
+
+        $this->fixtures = $this->databaseTool->loadAliceFixture([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
@@ -37,14 +47,14 @@ class DocumentControllerTest extends WebTestCase
             dirname(__DIR__).'/../DataFixturesTest/DocumentFixturesTest.yaml',
         ]);
 
-        $this->supportGroup = $this->data['supportGroup1'];
-        $this->document = $this->data['document1'];
+        $this->supportGroup = $this->fixtures['supportGroup1'];
+        $this->document = $this->fixtures['document1'];
         $this->documentsDirectory = dirname(__DIR__).'/../../public/uploads/documents/';
     }
 
     public function testSearchDocumentsISuccessful()
     {
-        $this->createLogin($this->data['userSuperAdmin']);
+        $this->createLogin($this->fixtures['userSuperAdmin']);
 
         $this->client->request('GET', '/admin/documents');
 
@@ -63,7 +73,7 @@ class DocumentControllerTest extends WebTestCase
 
     public function tesSearchSupportDocumentsIsSuccessful()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $id = $this->supportGroup->getId();
         $this->client->request('GET', "/support/$id/documents");
@@ -82,7 +92,7 @@ class DocumentControllerTest extends WebTestCase
 
     public function testCreateNewDocumentIsSuccessful()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         // Fail
         $id = $this->supportGroup->getId();
@@ -99,8 +109,8 @@ class DocumentControllerTest extends WebTestCase
 
         $this->assertSame('success', $content['alert']);
 
-        $repo = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository(Document::class);
-        $document = $repo->find($content['data'][0]['id']);
+        $documentRepo = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository(Document::class);
+        $document = $documentRepo->find($content['data'][0]['id']);
         $file = $this->documentsDirectory.$document->getCreatedAt()->format('Y/m/d/').$document->getPeopleGroup()->getId().'/'.$document->getInternalFileName();
         if (file_exists($file)) {
             unlink($file);
@@ -109,7 +119,7 @@ class DocumentControllerTest extends WebTestCase
 
     public function testDownloadDocumentIsSuccessful()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $id = $this->document->getId();
 
@@ -134,7 +144,7 @@ class DocumentControllerTest extends WebTestCase
 
     public function testDownloadDocumentsIsSuccessful()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $newFile = $this->moveFile();
 
@@ -157,7 +167,7 @@ class DocumentControllerTest extends WebTestCase
 
     public function testEditDocumentIsSuccessful()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $id = $this->document->getId();
 
@@ -191,7 +201,7 @@ class DocumentControllerTest extends WebTestCase
 
     public function testDeleteDocumentIsSuccessful()
     {
-        $this->createLogin($this->data['userRoleUser']);
+        $this->createLogin($this->fixtures['userRoleUser']);
 
         $id = $this->document->getId();
         $this->client->request('GET', "/document/$id/delete");
@@ -241,7 +251,8 @@ class DocumentControllerTest extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
+
         $this->client = null;
-        $this->data = null;
+        $this->fixtures = null;
     }
 }

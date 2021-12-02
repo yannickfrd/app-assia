@@ -96,7 +96,10 @@ class SupportsByUserIndicators
         ];
     }
 
-    protected function getInitDevicesUser($devices)
+    /**
+     * @param Device[] $devices
+     */
+    protected function getInitDevicesUser(array $devices): array
     {
         $initDevicesUser = [];
 

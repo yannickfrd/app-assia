@@ -25,9 +25,9 @@ class PeopleGroupCollections
     }
 
     /**
-     * @return Collection<SupportGroup>
+     * @return SupportGroup[]|null
      */
-    public function getSupports(PeopleGroup $peopleGroup)
+    public function getSupports(PeopleGroup $peopleGroup): ?array
     {
         return $this->cache->get(PeopleGroup::CACHE_GROUP_SUPPORTS_KEY.$peopleGroup->getId(), function (CacheItemInterface $item) use ($peopleGroup) {
             $item->expiresAfter(\DateInterval::createFromDateString('30 days'));
@@ -37,9 +37,9 @@ class PeopleGroupCollections
     }
 
     /**
-     * @return Collection<User>
+     * @return User[]|null
      */
-    public function getReferents(PeopleGroup $peopleGroup)
+    public function getReferents(PeopleGroup $peopleGroup): ?array
     {
         return $this->cache->get(PeopleGroup::CACHE_GROUP_REFERENTS_KEY.$peopleGroup->getId(), function (CacheItemInterface $item) use ($peopleGroup) {
             $item->expiresAfter(\DateInterval::createFromDateString('30 days'));
