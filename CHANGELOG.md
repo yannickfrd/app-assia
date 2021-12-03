@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+## Version 3.5.3 - 03/12/2021
+Refactor all repositories
+* Rename 'query' var to 'qb' var
+* Indentation
+
 ## Version 3.5.2 - 03/12/2021
 Add device codes
 * [Device] Add device codes

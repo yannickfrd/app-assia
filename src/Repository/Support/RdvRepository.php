@@ -34,12 +34,14 @@ class RdvRepository extends ServiceEntityRepository
      */
     public function findRdvsQuery(RdvSearch $search, ?CurrentUserService $currentUser = null): Query
     {
-        $query = $this->getRdvsQuery();
+        $qb = $this->getRdvsQuery();
 
-        $query = $this->filter($query, $search, $currentUser);
+        $qb = $this->filter($qb, $search, $currentUser);
 
-        return $query->orderBy('r.start', 'ASC')
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        return $qb
+            ->orderBy('r.start', 'ASC')
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
 
     /**
@@ -61,7 +63,8 @@ class RdvRepository extends ServiceEntityRepository
             ->where('r.id = :id')
             ->setParameter('id', $id)
 
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
     }
 
@@ -70,13 +73,15 @@ class RdvRepository extends ServiceEntityRepository
      */
     public function findRdvsToExport(RdvSearch $search): ?array
     {
-        $query = $this->getRdvsQuery()
+        $qb = $this->getRdvsQuery()
             ->leftJoin('r.updatedBy', 'u2')->addSelect('PARTIAL u2.{id, firstname, lastname}');
 
-        $query = $this->filter($query, $search);
+        $qb = $this->filter($qb, $search);
 
-        return $query->orderBy('r.createdBy', 'DESC')
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+        return $qb
+            ->orderBy('r.createdBy', 'DESC')
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -92,42 +97,42 @@ class RdvRepository extends ServiceEntityRepository
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}');
     }
 
-    protected function filter($query, RdvSearch $search, CurrentUserService $currentUser = null): QueryBuilder
+    protected function filter(QueryBuilder $qb, RdvSearch $search, CurrentUserService $currentUser = null): QueryBuilder
     {
         if ($currentUser && !$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
-            $query->where('r.createdBy IN (:user)')
+            $qb->where('r.createdBy IN (:user)')
                 ->setParameter('user', $currentUser->getUser());
-            $query->orWhere('sg.service IN (:services)')
+            $qb->orWhere('sg.service IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
         }
 
         if ($search->getId()) {
-            return $query->andWhere('r.id = :id')
+            return $qb->andWhere('r.id = :id')
                 ->setParameter('id', $search->getId());
         }
 
         if ($search->getTitle()) {
-            $query->andWhere('r.title LIKE :title')
+            $qb->andWhere('r.title LIKE :title')
                 ->setParameter('title', '%'.$search->getTitle().'%');
         }
 
         if ($search->getFullname()) {
-            $query->andWhere("CONCAT(p.lastname,' ' ,p.firstname) LIKE :fullname")
+            $qb->andWhere("CONCAT(p.lastname,' ' ,p.firstname) LIKE :fullname")
                 ->setParameter('fullname', '%'.$search->getFullname().'%');
         }
 
         if ($search->getStart()) {
-            $query->andWhere('r.start >= :start')
+            $qb->andWhere('r.start >= :start')
                 ->setParameter('start', $search->getStart());
         }
         if ($search->getEnd()) {
-            $query->andWhere('r.start <= :end')
+            $qb->andWhere('r.start <= :end')
                 ->setParameter('end', $search->getEnd());
         }
 
-        $query = $this->addOrganizationFilters($query, $search);
+        $qb = $this->addOrganizationFilters($qb, $search);
 
-        return $query;
+        return $qb;
     }
 
     /**
@@ -135,7 +140,7 @@ class RdvRepository extends ServiceEntityRepository
      */
     public function findRdvsQueryOfSupport(int $supportGroupId, SupportRdvSearch $search): Query
     {
-        $query = $this->createQueryBuilder('r')->select('r')
+        $qb = $this->createQueryBuilder('r')->select('r')
             ->leftJoin('r.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
             ->leftJoin('r.supportGroup', 'sg')->addSelect('sg')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
@@ -144,21 +149,23 @@ class RdvRepository extends ServiceEntityRepository
             ->setParameter('supportGroup', $supportGroupId);
 
         if ($search->getTitle()) {
-            $query->andWhere('r.title LIKE :title')
+            $qb->andWhere('r.title LIKE :title')
                 ->setParameter('title', '%'.$search->getTitle().'%');
         }
 
         if ($search->getStart()) {
-            $query->andWhere('r.start >= :start')
+            $qb->andWhere('r.start >= :start')
                 ->setParameter('start', $search->getStart());
         }
         if ($search->getEnd()) {
-            $query->andWhere('r.start <= :end')
+            $qb->andWhere('r.start <= :end')
                 ->setParameter('end', $search->getEnd());
         }
 
-        return $query->orderBy('r.start', 'DESC')
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        return $qb
+            ->orderBy('r.start', 'DESC')
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
 
     public function findLastRdvOfSupport(int $supportGroupId): ?Rdv
@@ -173,7 +180,8 @@ class RdvRepository extends ServiceEntityRepository
             ->setMaxResults(1)
             ->orderBy('r.start', 'DESC')
 
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
     }
 
@@ -189,7 +197,8 @@ class RdvRepository extends ServiceEntityRepository
             ->setMaxResults(1)
             ->orderBy('r.start', 'ASC')
 
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
     }
 
@@ -200,7 +209,7 @@ class RdvRepository extends ServiceEntityRepository
      */
     public function findRdvsBetween(\Datetime $start, \Datetime $end, SupportGroup $supportGroup = null, User $user = null): ?array
     {
-        $query = $this->createQueryBuilder('r')->select('r')
+        $qb = $this->createQueryBuilder('r')->select('r')
             ->leftJoin('r.createdBy', 'u')->addSelect('u')
             ->leftJoin('r.supportGroup', 's')->addSelect('s')
 
@@ -208,13 +217,14 @@ class RdvRepository extends ServiceEntityRepository
             ->andWhere('r.start <= :end')->setParameter('end', $end);
 
         if ($supportGroup) {
-            $query->andWhere('r.supportGroup = :supportGroup')->setParameter('supportGroup', $supportGroup);
+            $qb->andWhere('r.supportGroup = :supportGroup')->setParameter('supportGroup', $supportGroup);
         } else {
-            $query->andWhere('r.createdBy = :user')
+            $qb->andWhere('r.createdBy = :user')
                 ->setParameter('user', $user);
         }
 
-        return $query->orderBy('r.start', 'ASC')
+        return $qb
+            ->orderBy('r.start', 'ASC')
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
@@ -261,7 +271,8 @@ class RdvRepository extends ServiceEntityRepository
 
             ->setMaxResults($maxResults)
 
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -270,40 +281,41 @@ class RdvRepository extends ServiceEntityRepository
      */
     public function countRdvs(array $criteria = null): int
     {
-        $query = $this->createQueryBuilder('rdv')->select('COUNT(rdv.id)');
+        $qb = $this->createQueryBuilder('rdv')->select('COUNT(rdv.id)');
 
         if ($criteria) {
-            $query = $query->leftJoin('rdv.supportGroup', 'sg');
+            $qb->leftJoin('rdv.supportGroup', 'sg');
 
             foreach ($criteria as $key => $value) {
                 if ('service' === $key) {
-                    $query = $this->addOrWhere($query, 'sg.service', $value);
+                    $qb = $this->addOrWhere($qb, 'sg.service', $value);
                 }
                 if ('subService' === $key) {
-                    $query = $this->addOrWhere($query, 'sg.subService', $value);
+                    $qb = $this->addOrWhere($qb, 'sg.subService', $value);
                 }
                 if ('device' === $key) {
-                    $query = $this->addOrWhere($query, 'sg.device', $value);
+                    $qb = $this->addOrWhere($qb, 'sg.device', $value);
                 }
                 if ('status' === $key) {
-                    $query = $this->addOrWhere($query, 'sg.status', $value);
+                    $qb = $this->addOrWhere($qb, 'sg.status', $value);
                 }
                 if ('startDate' === $key) {
-                    $query = $query->andWhere('rdv.createdAt >= :startDate')
+                    $qb->andWhere('rdv.createdAt >= :startDate')
                         ->setParameter('startDate', $value);
                 }
                 if ('endDate' === $key) {
-                    $query = $query->andWhere('rdv.createdAt <= :endDate')
+                    $qb->andWhere('rdv.createdAt <= :endDate')
                         ->setParameter('endDate', $value);
                 }
                 if ('createdBy' === $key) {
-                    $query = $query->andWhere('rdv.createdBy = :createdBy')
+                    $qb->andWhere('rdv.createdBy = :createdBy')
                         ->setParameter('createdBy', $value);
                 }
             }
         }
 
-        return $query->getQuery()
+        return $qb
+            ->getQuery()
             ->getSingleScalarResult();
     }
 }

@@ -119,22 +119,23 @@ class EvaluationGroupRepository extends ServiceEntityRepository
      */
     public function countEvaluations(array $criteria = null): int
     {
-        $query = $this->createQueryBuilder('e')->select('COUNT(e.id)');
+        $qb = $this->createQueryBuilder('e')->select('COUNT(e.id)');
 
         if ($criteria) {
             foreach ($criteria as $key => $value) {
                 if ('startDate' === $key) {
-                    $query = $query->andWhere('e.createdAt >= :startDate')
+                    $qb->andWhere('e.createdAt >= :startDate')
                             ->setParameter('startDate', $value);
                 }
                 if ('endDate' === $key) {
-                    $query = $query->andWhere('e.createdAt <= :endDate')
+                    $qb->andWhere('e.createdAt <= :endDate')
                             ->setParameter('endDate', $value);
                 }
             }
         }
 
-        return $query->getQuery()
+        return $qb
+            ->getQuery()
             ->getSingleScalarResult();
     }
 

@@ -26,9 +26,8 @@ class PoleRepository extends ServiceEntityRepository
      */
     public function findPolesQuery(): Query
     {
-        $query = $this->createQueryBuilder('p')->select('p');
-
-        return $query->orderBy('p.name', 'ASC')
+        return $this->createQueryBuilder('p')->select('p')
+            ->orderBy('p.name', 'ASC')
             ->getQuery();
     }
 
@@ -37,7 +36,7 @@ class PoleRepository extends ServiceEntityRepository
      */
     public function getPoleQueryBuilder(): QueryBuilder
     {
-        return $this->createQueryBuilder('p')->select('PARTIAL p.{id, name}')
+        return $this->createQueryBuilder('p')->select('p')
             ->where('p.disabledAt IS NULL')
             ->orderBy('p.name', 'ASC');
     }

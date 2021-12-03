@@ -67,20 +67,20 @@ class PersonRepositoryTest extends WebTestCase
 
     public function testFindAllPeopleQueryWithoutFilters()
     {
-        $query = $this->personRepo->findPeopleQuery(new PersonSearch());
-        $this->assertGreaterThanOrEqual(5, count($query->getResult()));
+        $qb = $this->personRepo->findPeopleQuery(new PersonSearch());
+        $this->assertGreaterThanOrEqual(5, count($qb->getResult()));
     }
 
     public function testFindAllPeopleQueryWithFilters()
     {
-        $query = $this->personRepo->findPeopleQuery($this->search);
-        $this->assertGreaterThanOrEqual(1, count($query->getResult()));
+        $qb = $this->personRepo->findPeopleQuery($this->search);
+        $this->assertGreaterThanOrEqual(1, count($qb->getResult()));
     }
 
     public function testFindAllPeopleQueryWithSearch()
     {
-        $query = $this->personRepo->findPeopleQuery(new PersonSearch(), 'John');
-        $this->assertGreaterThanOrEqual(1, count($query->getResult()));
+        $qb = $this->personRepo->findPeopleQuery(new PersonSearch(), 'John');
+        $this->assertGreaterThanOrEqual(1, count($qb->getResult()));
     }
 
     public function testFindPeopleToExport()

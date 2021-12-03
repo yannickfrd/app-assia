@@ -26,25 +26,26 @@ class ReferentRepository extends ServiceEntityRepository
      */
     public function findReferentsQuery($supportGroupId, $search): Query
     {
-        $query = $this->createQueryBuilder('ref')
+        $qb = $this->createQueryBuilder('ref')
             ->andWhere('ref.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroupId);
 
         if ($search->getName()) {
-            $query->andWhere('ref.name LIKE :name')
+            $qb->andWhere('ref.name LIKE :name')
                 ->setParameter('name', '%'.$search->getName().'%');
         }
         if ($search->getSocialWorker()) {
-            $query->andWhere('ref.socialWorker LIKE :socialWorker')
+            $qb->andWhere('ref.socialWorker LIKE :socialWorker')
                 ->setParameter('socialWorker', '%'.$search->getSocialWorker().'%');
         }
         if ($search->getType()) {
-            $query->andWhere('ref.type = :type')
+            $qb->andWhere('ref.type = :type')
                 ->setParameter('type', $search->getType());
         }
-        $query = $query->orderBy('ref.createdAt', 'DESC');
 
-        return $query->getQuery();
+        return $qb
+            ->orderBy('ref.createdAt', 'DESC')
+            ->getQuery();
     }
 
     public function findReferentsOfPeopleGroup(PeopleGroup $peopleGroup): ?array

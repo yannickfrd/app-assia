@@ -29,6 +29,7 @@ class DatabaseBackupRepository extends ServiceEntityRepository
             ->leftJoin('b.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
 
             ->orderBy('b.createdAt', 'DESC')
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
 }

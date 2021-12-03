@@ -42,13 +42,14 @@ class SupportPersonRepository extends ServiceEntityRepository
      */
     public function findSupportsQuery(SupportSearch $search): Query
     {
-        $query = $this->getSupportsQuery();
+        $qb = $this->getSupportsQuery();
 
         if ($search) {
-            $query = $this->filters($query, $search);
+            $qb = $this->filters($qb, $search);
         }
 
-        return $query->orderBy('sg.updatedAt', 'DESC')
+        return $qb
+            ->orderBy('sg.updatedAt', 'DESC')
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
@@ -60,17 +61,19 @@ class SupportPersonRepository extends ServiceEntityRepository
      */
     public function findSupportsToExport(?SupportSearch $search = null): ?array
     {
-        $query = $this->getSupportsQuery()
+        $qb = $this->getSupportsQuery()
             ->leftJoin('sp.placesPerson', 'pp')->addSelect('pp')
             ->leftJoin('pp.placeGroup', 'pg')->addSelect('pg')
             ->leftJoin('pg.place', 'pl')->addSelect('pl');
 
         if ($search) {
-            $query = $this->filters($query, $search);
+            $qb = $this->filters($qb, $search);
         }
 
-        return $query->orderBy('sp.startDate', 'DESC')
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+        return $qb
+            ->orderBy('sp.startDate', 'DESC')
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -81,7 +84,7 @@ class SupportPersonRepository extends ServiceEntityRepository
      */
     public function findSupportsOfServiceToExport($search = null, int $serviceType): ?array
     {
-        $query = $this->getSupportsOfServiceQuery()
+        $qb = $this->getSupportsOfServiceQuery()
             ->leftJoin('sg.placeGroups', 'pg')->addSelect('PARTIAL pg.{id, place}')
             ->leftJoin('pg.place', 'pl')->addSelect('PARTIAL pl.{id, name}')
 
@@ -89,11 +92,13 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->setParameter('type', $serviceType);
 
         if ($search) {
-            $query = $this->filters($query, $search);
+            $qb = $this->filters($qb, $search);
         }
 
-        return $query->orderBy('sp.startDate', 'DESC')
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+        return $qb
+            ->orderBy('sp.startDate', 'DESC')
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -102,26 +107,27 @@ class SupportPersonRepository extends ServiceEntityRepository
      */
     public function findAvdlSupportsQuery(AvdlSupportSearch $search): Query
     {
-        $query = $this->getSupportsQuery()
+        $qb = $this->getSupportsQuery()
             ->leftJoin('sg.avdl', 'avdl')->addSelect('avdl')
 
             ->where('s.type = :type')
             ->setParameter('type', Service::SERVICE_TYPE_AVDL);
 
-        $query = $this->filters($query, $search);
+        $qb = $this->filters($qb, $search);
 
         if (AvdlSupportSearch::DIAG === $search->getDiagOrSupport()) {
-            $query->andWhere('avdl.diagStartDate IS NOT NULL');
+            $qb->andWhere('avdl.diagStartDate IS NOT NULL');
         }
         if (AvdlSupportSearch::SUPPORT === $search->getDiagOrSupport()) {
-            $query->andWhere('avdl.supportStartDate IS NOT NULL');
+            $qb->andWhere('avdl.supportStartDate IS NOT NULL');
         }
         if ($search->getSupportType()) {
-            $query->andWhere('avdl.supportType IN (:supportType)')
+            $qb->andWhere('avdl.supportType IN (:supportType)')
             ->setParameter('supportType', $search->getSupportType());
         }
 
-        return $query->orderBy('sg.updatedAt', 'DESC')
+        return $qb
+            ->orderBy('sg.updatedAt', 'DESC')
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
@@ -131,7 +137,7 @@ class SupportPersonRepository extends ServiceEntityRepository
      */
     public function findHotelSupportsQuery(HotelSupportSearch $search): Query
     {
-        $query = $this->getSupportsQuery()
+        $qb = $this->getSupportsQuery()
             ->leftJoin('sg.hotelSupport', 'hs')->addSelect('hs')
             ->leftJoin('sg.placeGroups', 'pg')->addSelect('PARTIAL pg.{id, place}')
             ->leftJoin('pg.place', 'pl')->addSelect('PARTIAL pl.{id, name}')
@@ -139,18 +145,19 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->where('s.type = :type')
             ->setParameter('type', Service::SERVICE_TYPE_HOTEL);
 
-        $query = $this->filters($query, $search);
+        $qb = $this->filters($qb, $search);
 
         if ($search->getHotels()) {
-            $query = $this->addOrWhere($query, 'pg.place', $search->getHotels());
+            $qb = $this->addOrWhere($qb, 'pg.place', $search->getHotels());
         }
 
         if ($search->getLevelSupport()) {
-            $query->andWhere('hs.levelSupport IN (:levelSupport)')
+            $qb->andWhere('hs.levelSupport IN (:levelSupport)')
             ->setParameter('levelSupport', $search->getLevelSupport());
         }
 
-        return $query->orderBy('sg.updatedAt', 'DESC')
+        return $qb
+            ->orderBy('sg.updatedAt', 'DESC')
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
@@ -173,7 +180,8 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->setParameter('person', $person)
 
             ->orderBy('sp.startDate', 'DESC')
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -184,7 +192,7 @@ class SupportPersonRepository extends ServiceEntityRepository
      */
     public function findSupportsFullToExport($search = null): ?array
     {
-        $query = $this->getSupportsQuery()
+        $qb = $this->getSupportsQuery()
             ->leftJoin('sp.placesPerson', 'pp')->addSelect('pp')
             ->leftJoin('pp.placeGroup', 'pg')->addSelect('pg')
             ->leftJoin('pg.place', 'pl')->addSelect('pl')
@@ -210,11 +218,12 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->leftJoin('eg.evalHousingGroup', 'evalHousingGroup')->addSelect('evalHousingGroup')
             ->leftJoin('eg.evalSocialGroup', 'evalSocialGroup')->addSelect('evalSocialGroup');
 
-        return $this->filters($query, $search)
+        return $this->filters($qb, $search)
 
             ->setMaxResults(9999)
             ->orderBy('sp.startDate', 'DESC')
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -223,10 +232,10 @@ class SupportPersonRepository extends ServiceEntityRepository
      */
     public function countSupportsToExport($search = null): int
     {
-        $query = $this->getSupportsQuery()
+        $qb = $this->getSupportsQuery()
             ->select('COUNT(sp.id)');
 
-        return $this->filters($query, $search)
+        return $this->filters($qb, $search)
 
             ->getQuery()
             ->getSingleScalarResult();
@@ -237,7 +246,7 @@ class SupportPersonRepository extends ServiceEntityRepository
      */
     public function findLastSupport(SupportPerson $supportPerson): ?SupportPerson
     {
-        $query = $this->createQueryBuilder('sp')->select('sp')
+        $qb = $this->createQueryBuilder('sp')->select('sp')
             ->leftJoin('sp.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id}')
 
@@ -247,11 +256,11 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->setParameter('supportPerson', $supportPerson);
 
         if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
-            $query->andWhere('sg.service IN (:services)')
+            $qb->andWhere('sg.service IN (:services)')
                 ->setParameter('services', $this->currentUser->getServices());
         }
 
-        return $query
+        return $qb
             ->orderBy('sp.updatedAt', 'DESC')
             ->setMaxResults(1)
 
@@ -288,15 +297,15 @@ class SupportPersonRepository extends ServiceEntityRepository
     /**
      * Filtre la recherche.
      */
-    protected function filters(QueryBuilder $query, $search): QueryBuilder
+    protected function filters(QueryBuilder $qb, $search): QueryBuilder
     {
         if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
-            $query->andWhere('s.id IN (:services)')
+            $qb->andWhere('s.id IN (:services)')
                 ->setParameter('services', $this->currentUser->getServices());
         }
 
         if ($search->getHead()) {
-            $query->andWhere('sp.head = :head')
+            $qb->andWhere('sp.head = :head')
                 ->setParameter('head', $search->getHead());
         }
 
@@ -304,63 +313,63 @@ class SupportPersonRepository extends ServiceEntityRepository
             $date = \DateTime::createFromFormat('d/m/Y', $search->getFullname()) ?? false;
             $int = ((int) $search->getFullname());
             if ($date) {
-                $query->andWhere('p.birthdate = :birthdate')
+                $qb->andWhere('p.birthdate = :birthdate')
                     ->setParameter('birthdate', $date->format('Y-m-d'));
             } elseif ($int > 0) {
-                $query->andWhere('g.siSiaoId = :id')
+                $qb->andWhere('g.siSiaoId = :id')
                     ->setParameter('id', $int);
             } else {
-                $query->andWhere("CONCAT(p.lastname,' ' ,p.firstname) LIKE :fullname")
+                $qb->andWhere("CONCAT(p.lastname,' ' ,p.firstname) LIKE :fullname")
                     ->setParameter('fullname', '%'.$search->getFullname().'%');
             }
         }
 
-        $query = $this->addOrganizationFilters($query, $search);
+        $qb = $this->addOrganizationFilters($qb, $search);
 
         if ($search->getStatus()) {
-            $query = $this->addOrWhere($query, 'sg.status', $search->getStatus());
+            $qb = $this->addOrWhere($qb, 'sg.status', $search->getStatus());
         }
 
         $supportDates = $search->getSupportDates();
 
         if (1 === $supportDates) {
             if ($search->getStart()) {
-                $query->andWhere('sp.startDate >= :start')
+                $qb->andWhere('sp.startDate >= :start')
                     ->setParameter('start', $search->getStart());
             }
             if ($search->getEnd()) {
-                $query->andWhere('sp.startDate <= :end')
+                $qb->andWhere('sp.startDate <= :end')
                     ->setParameter('end', $search->getEnd());
             }
         }
         if (2 === $supportDates) {
             if ($search->getStart()) {
                 if ($search->getStart()) {
-                    $query->andWhere('sp.endDate >= :start')
+                    $qb->andWhere('sp.endDate >= :start')
                         ->setParameter('start', $search->getStart());
                 }
                 if ($search->getEnd()) {
-                    $query->andWhere('sp.endDate <= :end')
+                    $qb->andWhere('sp.endDate <= :end')
                         ->setParameter('end', $search->getEnd());
                 }
             }
         }
         if (3 === $supportDates || !$supportDates) {
             if ($search->getStart()) {
-                $query->andWhere('sp.endDate >= :start OR sp.endDate IS NULL')
+                $qb->andWhere('sp.endDate >= :start OR sp.endDate IS NULL')
                     ->setParameter('start', $search->getStart());
             }
             if ($search->getEnd()) {
-                $query->andWhere('sp.startDate <= :end')
+                $qb->andWhere('sp.startDate <= :end')
                     ->setParameter('end', $search->getEnd());
             }
         }
 
         if ($search->getFamilyTypologies()) {
-            $query = $this->addOrWhere($query, 'g.familyTypology', $search->getFamilyTypologies());
+            $qb = $this->addOrWhere($qb, 'g.familyTypology', $search->getFamilyTypologies());
         }
 
-        return $query;
+        return $qb;
     }
 
     /**
@@ -368,55 +377,57 @@ class SupportPersonRepository extends ServiceEntityRepository
      */
     public function countSupportsOfPeople(PeopleGroup $peopleGroup): int
     {
-        $query = $this->createQueryBuilder('sp')->select('count(sp.id)')
+        $qb = $this->createQueryBuilder('sp')->select('count(sp.id)')
             ->leftJoin('sp.supportGroup', 'sg');
 
-        $query = $this->addOrWhere($query, 'sp.person', $peopleGroup->getPeople());
+        $qb = $this->addOrWhere($qb, 'sp.person', $peopleGroup->getPeople());
 
         if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
-            $query = $query->andWhere('sg.service IN (:services)')
+            $qb->andWhere('sg.service IN (:services)')
                 ->setParameter('services', $this->currentUser->getServices());
         }
 
-        return $query->getQuery()
+        return $qb
+            ->getQuery()
             ->getSingleScalarResult();
     }
 
     public function countSupportPeople(array $criteria = null): int
     {
-        $query = $this->createQueryBuilder('sp')->select('COUNT(sp.id)')
+        $qb = $this->createQueryBuilder('sp')->select('COUNT(sp.id)')
             ->leftJoin('sp.supportGroup', 'sg');
 
         if ($criteria) {
             foreach ($criteria as $key => $value) {
                 if ('service' === $key) {
-                    $query->andWhere('sg.service = :service')
+                    $qb->andWhere('sg.service = :service')
                         ->setParameter('service', $value);
                 }
                 if ('subService' === $key) {
-                    $query->andWhere('sg.subService = :subService')
+                    $qb->andWhere('sg.subService = :subService')
                         ->setParameter('subService', $value);
                 }
                 if ('device' === $key) {
-                    $query->andWhere('sg.device = :device')
+                    $qb->andWhere('sg.device = :device')
                         ->setParameter('device', $value);
                 }
                 if ('status' === $key) {
-                    $query->andWhere('sp.status = :status')
+                    $qb->andWhere('sp.status = :status')
                         ->setParameter('status', $value);
                 }
                 if ('startDate' === $key) {
-                    $query = $query->andWhere('sp.createdAt >= :startDate')
+                    $qb->andWhere('sp.createdAt >= :startDate')
                             ->setParameter('startDate', $value);
                 }
                 if ('endDate' === $key) {
-                    $query = $query->andWhere('sp.createdAt <= :endDate')
+                    $qb->andWhere('sp.createdAt <= :endDate')
                             ->setParameter('endDate', $value);
                 }
             }
         }
 
-        return (int) $query->getQuery()
+        return (int) $qb
+            ->getQuery()
             ->getSingleScalarResult();
     }
 

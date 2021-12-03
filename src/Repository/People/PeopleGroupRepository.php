@@ -37,7 +37,8 @@ class PeopleGroupRepository extends ServiceEntityRepository
             ->addOrderBy('r.head', 'DESC')
             ->addOrderBy('p.birthdate', 'ASC')
 
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
     }
 
@@ -46,26 +47,27 @@ class PeopleGroupRepository extends ServiceEntityRepository
      */
     public function countGroups(array $criteria = null): int
     {
-        $query = $this->createQueryBuilder('g')->select('COUNT(g.id)');
+        $qb = $this->createQueryBuilder('g')->select('COUNT(g.id)');
 
         if ($criteria) {
             foreach ($criteria as $key => $value) {
                 if ('startDate' === $key) {
-                    $query = $query->andWhere('g.createdAt >= :startDate')
+                    $qb->andWhere('g.createdAt >= :startDate')
                         ->setParameter('startDate', $value);
                 }
                 if ('endDate' === $key) {
-                    $query = $query->andWhere('g.createdAt <= :endDate')
+                    $qb->andWhere('g.createdAt <= :endDate')
                         ->setParameter('endDate', $value);
                 }
                 if ('createdBy' === $key) {
-                    $query = $query->andWhere('g.createdBy = :createdBy')
+                    $qb->andWhere('g.createdBy = :createdBy')
                         ->setParameter('createdBy', $value);
                 }
             }
         }
 
-        return $query->getQuery()
+        return $qb
+            ->getQuery()
             ->getSingleScalarResult();
     }
 }

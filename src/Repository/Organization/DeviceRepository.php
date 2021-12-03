@@ -35,35 +35,36 @@ class DeviceRepository extends ServiceEntityRepository
      */
     public function findDevicesQuery(CurrentUserService $currentUser, DeviceSearch $search): Query
     {
-        $query = $this->createQueryBuilder('d')->select('d')
+        $qb = $this->createQueryBuilder('d')->select('d')
             ->leftJoin('d.serviceDevices', 'sd')->addSelect('sd')
             ->leftJoin('sd.service', 's')->addSelect('PARTIAL s.{id, name}')
             ->leftJoin('s.pole', 'p')->addSelect('PARTIAL p.{id, name}');
 
         if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
-            $query = $query->andWhere('sd.service IN (:services)')
+            $qb->andWhere('sd.service IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
         }
 
         if ($search->getName()) {
-            $query->andWhere('d.name LIKE :name')
+            $qb->andWhere('d.name LIKE :name')
                 ->setParameter('name', '%'.$search->getName().'%');
         }
         if ($search->getService()) {
-            $query->andWhere('sd.service = :service')
+            $qb->andWhere('sd.service = :service')
                 ->setParameter('service', $search->getService());
         }
         if ($search->getPole()) {
-            $query->andWhere('s.pole = :pole')
+            $qb->andWhere('s.pole = :pole')
                 ->setParameter('pole', $search->getPole());
         }
         if (Choices::DISABLED === $search->getDisabled()) {
-            $query->andWhere('d.disabledAt IS NOT NULL');
+            $qb->andWhere('d.disabledAt IS NOT NULL');
         } elseif (Choices::ACTIVE === $search->getDisabled()) {
-            $query->andWhere('d.disabledAt IS NULL');
+            $qb->andWhere('d.disabledAt IS NULL');
         }
 
-        return $query->orderBy('d.name', 'ASC')
+        return $qb
+            ->orderBy('d.name', 'ASC')
             ->getQuery();
     }
 
@@ -83,7 +84,8 @@ class DeviceRepository extends ServiceEntityRepository
 
             ->orderBy('d.name', 'ASC')
 
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -107,27 +109,27 @@ class DeviceRepository extends ServiceEntityRepository
      */
     public function getDevicesOfUserQueryBuilder(CurrentUserService $currentUser, Service $service = null, string $dataClass = null): QueryBuilder
     {
-        $query = $this->createQueryBuilder('d')->select('d')
+        $qb = $this->createQueryBuilder('d')->select('d')
             ->leftJoin('d.serviceDevices', 'sd')->addSelect('sd')
             ->leftJoin('sd.service', 's')->addSelect('PARTIAL s.{id, name, type}');
 
         if ($dataClass) {
-            $query = $this->filterByServiceType($query, $dataClass);
+            $qb = $this->filterByServiceType($qb, $dataClass);
         }
 
         if ($service) {
-            $query = $query->andWhere('sd.service = :service')
+            $qb->andWhere('sd.service = :service')
                 ->setParameter('service', $service);
         }
 
         if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
-            $query = $query->andWhere('sd.service IN (:services)')
+            $qb->andWhere('sd.service IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
         }
 
-        $query = $query->andWhere('d.disabledAt IS NULL');
-
-        return $query->orderBy('d.name', 'ASC');
+        return $qb
+            ->andWhere('d.disabledAt IS NULL')
+            ->orderBy('d.name', 'ASC');
     }
 
     /**
@@ -135,7 +137,7 @@ class DeviceRepository extends ServiceEntityRepository
      */
     public function findDevicesWithPlace(OccupancySearch $search, CurrentUserService $currentUser, Service $service = null): ?array
     {
-        $query = $this->createQueryBuilder('d')->select('d')
+        $qb = $this->createQueryBuilder('d')->select('d')
             ->leftJoin('d.places', 'pl')->addSelect('PARTIAL pl.{id, name, startDate, endDate, nbPlaces, service}')
 
             ->where('d.disabledAt IS NULL')
@@ -143,22 +145,23 @@ class DeviceRepository extends ServiceEntityRepository
             ->andWhere('pl.startDate < :end')->setParameter('end', $search->getEnd());
 
         // if ($search->getPole()) {
-        //     $query = $query->andWhere('s.pole = :pole')
+        //     $qb->andWhere('s.pole = :pole')
         //         ->setParameter('pole', $search->getPole());
         // }
 
         if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
-            $query = $query->andWhere('pl.service IN (:services)')
+            $qb->andWhere('pl.service IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
         }
         if ($service) {
-            $query = $query->andWhere('pl.service = :service')
+            $qb->andWhere('pl.service = :service')
                 ->setParameter('service', $service);
         }
 
-        return $query
+        return $qb
             ->orderBy('d.name', 'ASC')
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -167,20 +170,21 @@ class DeviceRepository extends ServiceEntityRepository
      */
     public function findDevicesForDashboard(CurrentUserService $currentUser, SupportsByUserSearch $search): ?array
     {
-        $query = $this->createQueryBuilder('d')->select('PARTIAL d.{id, name, coefficient}')
+        $qb = $this->createQueryBuilder('d')->select('PARTIAL d.{id, name, coefficient}')
             ->leftJoin('d.serviceDevices', 'sd')->addSelect('sd')
             ->leftJoin('sd.service', 's')->addSelect('PARTIAL s.{id, name}')
 
             ->where('d.disabledAt IS NULL');
 
         if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
-            $query = $query->andWhere('sd.service IN (:services)')
+            $qb->andWhere('sd.service IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
         }
 
-        return $query
+        return $qb
             ->orderBy('d.name', 'ASC')
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 }

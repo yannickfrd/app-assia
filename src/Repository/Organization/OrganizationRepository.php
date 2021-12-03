@@ -27,9 +27,8 @@ class OrganizationRepository extends ServiceEntityRepository
      */
     public function findOrganizationsQuery(): Query
     {
-        $query = $this->createQueryBuilder('o')->select('o');
-
-        return $query->orderBy('o.name', 'ASC')
+        return $this->createQueryBuilder('o')->select('o')
+            ->orderBy('o.name', 'ASC')
             ->getQuery();
     }
 
@@ -38,15 +37,15 @@ class OrganizationRepository extends ServiceEntityRepository
      */
     public function getOrganizationsQueryBuilder(Service $service = null): QueryBuilder
     {
-        $query = $this->createQueryBuilder('o')->select('PARTIAL o.{id, name}');
+        $qb = $this->createQueryBuilder('o')->select('PARTIAL o.{id, name}');
 
         if ($service && $this->countOrganizationsInService($service)) {
-            $query = $query->leftJoin('o.services', 's')->addSelect('PARTIAL s.{id, name}')
+            $qb->leftJoin('o.services', 's')->addSelect('PARTIAL s.{id, name}')
                 ->where('s.id = :service')
                 ->setParameter('service', $service);
         }
 
-        return $query->orderBy('o.name', 'ASC');
+        return $qb->orderBy('o.name', 'ASC');
     }
 
     /**

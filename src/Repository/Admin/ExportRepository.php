@@ -37,6 +37,7 @@ class ExportRepository extends ServiceEntityRepository
             ->setParameter('user', $this->currentUser->getUser())
 
             ->orderBy('e.createdAt', 'DESC')
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
 }

@@ -44,7 +44,8 @@ class PlaceGroupRepository extends ServiceEntityRepository
             ->andWhere('pg.id = :id')
             ->setParameter('id', $id)
 
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
     }
 
@@ -55,7 +56,7 @@ class PlaceGroupRepository extends ServiceEntityRepository
      */
     public function findAllPlace(Place $place, $maxResults = 10): Paginator
     {
-        $query = $this->createQueryBuilder('pg')->select('pg')
+        $qb = $this->createQueryBuilder('pg')->select('pg')
             ->leftJoin('pg.placePeople', 'pp')->addSelect('PARTIAL pg.{id}')
             ->leftJoin('pg.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, startDate, endDate}')
             ->leftJoin('pg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, familyTypology}')
@@ -70,8 +71,9 @@ class PlaceGroupRepository extends ServiceEntityRepository
 
             ->setMaxResults($maxResults)
 
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
 
-        return new Paginator($query);
+        return new Paginator($qb);
     }
 }

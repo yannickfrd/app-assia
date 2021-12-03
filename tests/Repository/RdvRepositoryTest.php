@@ -80,26 +80,26 @@ class RdvRepositoryTest extends WebTestCase
 
     public function testFindAllRdvsQueryWithoutFilters()
     {
-        $query = $this->rdvRepo->findRdvsQuery(new RdvSearch());
-        $this->assertGreaterThanOrEqual(5, count($query->getResult()));
+        $qb = $this->rdvRepo->findRdvsQuery(new RdvSearch());
+        $this->assertGreaterThanOrEqual(5, count($qb->getResult()));
     }
 
     public function testFindAllRdvsQueryWithFilters()
     {
-        $query = $this->rdvRepo->findRdvsQuery($this->search);
-        $this->assertGreaterThanOrEqual(1, count($query->getResult()));
+        $qb = $this->rdvRepo->findRdvsQuery($this->search);
+        $this->assertGreaterThanOrEqual(1, count($qb->getResult()));
     }
 
     public function testFindAllRdvsQueryOfSupportWithoutFilters()
     {
-        $query = $this->rdvRepo->findRdvsQueryOfSupport($this->supportGroup->getId(), new SupportRdvSearch());
-        $this->assertGreaterThanOrEqual(1, count($query->getResult()));
+        $qb = $this->rdvRepo->findRdvsQueryOfSupport($this->supportGroup->getId(), new SupportRdvSearch());
+        $this->assertGreaterThanOrEqual(1, count($qb->getResult()));
     }
 
     public function testFindAllRdvsQueryOfSupportWithFilters()
     {
-        $query = $this->rdvRepo->findRdvsQueryOfSupport($this->supportGroup->getId(), $this->supportRdvSearch);
-        $this->assertGreaterThanOrEqual(1, count($query->getResult()));
+        $qb = $this->rdvRepo->findRdvsQueryOfSupport($this->supportGroup->getId(), $this->supportRdvSearch);
+        $this->assertGreaterThanOrEqual(1, count($qb->getResult()));
     }
 
     // public function testindRdvsBetween() {}

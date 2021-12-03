@@ -3,13 +3,13 @@
 namespace App\Tests\Repository;
 
 use App\Entity\Organization\Pole;
-use App\Entity\Organization\User;
 use App\Entity\Organization\Service;
+use App\Entity\Organization\User;
 use App\Form\Model\Organization\ServiceSearch;
 use App\Repository\Organization\ServiceRepository;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ServiceRepositoryTest extends WebTestCase
 {
@@ -36,7 +36,7 @@ class ServiceRepositoryTest extends WebTestCase
         /** @var AbstractDatabaseTool */
         $databaseTool = $this->getContainer()->get(DatabaseToolCollection::class)->get();
 
-        $fixtures = $databaseTool->loadAliceFixture([           
+        $fixtures = $databaseTool->loadAliceFixture([
             dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
             dirname(__DIR__).'/DataFixturesTest/ServiceFixturesTest.yaml',
         ]);
@@ -67,14 +67,14 @@ class ServiceRepositoryTest extends WebTestCase
 
     public function testFindAllServicesQueryWithoutFilters()
     {
-        $query = $this->serviceRepo->findServicesQuery(new ServiceSearch());
-        $this->assertGreaterThanOrEqual(5, count($query->getResult()));
+        $qb = $this->serviceRepo->findServicesQuery(new ServiceSearch());
+        $this->assertGreaterThanOrEqual(5, count($qb->getResult()));
     }
 
     public function testFindAllServicesQueryWithFilters()
     {
-        $query = $this->serviceRepo->findServicesQuery($this->search);
-        $this->assertGreaterThanOrEqual(1, count($query->getResult()));
+        $qb = $this->serviceRepo->findServicesQuery($this->search);
+        $this->assertGreaterThanOrEqual(1, count($qb->getResult()));
     }
 
     public function testFindServicesToExportWithFilters()

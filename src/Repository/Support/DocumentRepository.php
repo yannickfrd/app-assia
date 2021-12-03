@@ -33,7 +33,7 @@ class DocumentRepository extends ServiceEntityRepository
      */
     public function findDocumentsQuery(DocumentSearch $search, CurrentUserService $currentUser = null): Query
     {
-        $query = $this->createQueryBuilder('d')->select('d')
+        $qb = $this->createQueryBuilder('d')->select('d')
             ->leftJoin('d.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
             ->join('d.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
             ->join('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
@@ -42,33 +42,31 @@ class DocumentRepository extends ServiceEntityRepository
             ->join('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}');
 
         if ($currentUser && !$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
-            $query->where('d.createdBy IN (:user)')
+            $qb->where('d.createdBy IN (:user)')
                 ->setParameter('user', $currentUser->getUser());
-            $query->orWhere('sg.service IN (:services)')
+            $qb->orWhere('sg.service IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
         }
 
         if ($search->getId()) {
-            $query->andWhere('d.id = :id')
+            $qb->andWhere('d.id = :id')
                 ->setParameter('id', $search->getId());
         }
 
         if ($search->getStart()) {
-            $query->andWhere('d.start >= :start')
+            $qb->andWhere('d.start >= :start')
                 ->setParameter('start', $search->getStart());
         }
         if ($search->getEnd()) {
-            $query->andWhere('d.start <= :end')
+            $qb->andWhere('d.start <= :end')
                 ->setParameter('end', $search->getEnd());
         }
 
-        $query = $this->addOrganizationFilters($query, $search);
+        $qb = $this->addOrganizationFilters($qb, $search);
 
-        $query = $this->filters($query, $search);
-
-        $query->orderBy('d.createdAt', 'DESC');
-
-        return $query->getQuery()
+        return $qb = $this->filters($qb, $search)
+            ->orderBy('d.createdAt', 'DESC')
+            ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
 
@@ -77,7 +75,7 @@ class DocumentRepository extends ServiceEntityRepository
      */
     public function findSupportDocumentsQuery(SupportGroup $supportGroup, SupportDocumentSearch $search): Query
     {
-        $query = $this->createQueryBuilder('d')->select('d')
+        $qb = $this->createQueryBuilder('d')->select('d')
             // ->leftJoin('d.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, service}')
             ->leftJoin('d.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
 
@@ -85,21 +83,23 @@ class DocumentRepository extends ServiceEntityRepository
             ->setParameter('supportGroup', $supportGroup);
 
         // if ($user && !in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
-        //     $query->andWhere('sg.service IN (:services)')
+        //     $qb->andWhere('sg.service IN (:services)')
         //         ->setParameter('services', $user->getServices());
         // }
 
         if ($search->getName()) {
-            $query->andWhere('d.name LIKE :name OR d.content LIKE :name')
+            $qb->andWhere('d.name LIKE :name OR d.content LIKE :name')
                 ->setParameter('name', '%'.$search->getName().'%');
         }
         if ($search->getType()) {
-            $query->andWhere('d.type = :type')
+            $qb->andWhere('d.type = :type')
                 ->setParameter('type', $search->getType());
         }
-        $query = $query->orderBy('d.createdAt', 'DESC');
 
-        return $query->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        return $qb
+            ->orderBy('d.createdAt', 'DESC')
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
 
     /**
@@ -118,7 +118,8 @@ class DocumentRepository extends ServiceEntityRepository
             ->andWhere('d.id IN (:ids)')
             ->setParameter('ids', $ids)
 
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -136,62 +137,64 @@ class DocumentRepository extends ServiceEntityRepository
 
     public function countDocuments(array $criteria = null): int
     {
-        $query = $this->createQueryBuilder('d')->select('COUNT(d.id)');
+        $qb = $this->createQueryBuilder('d')->select('COUNT(d.id)');
 
         if ($criteria) {
-            $query = $query->leftJoin('d.supportGroup', 'sg');
+            $qb->leftJoin('d.supportGroup', 'sg');
 
             foreach ($criteria as $key => $value) {
                 if ('service' === $key) {
-                    $query = $this->addOrWhere($query, 'sg.service', $value);
+                    $qb = $this->addOrWhere($qb, 'sg.service', $value);
                 }
                 if ('subService' === $key) {
-                    $query = $this->addOrWhere($query, 'sg.subService', $value);
+                    $qb = $this->addOrWhere($qb, 'sg.subService', $value);
                 }
                 if ('device' === $key) {
-                    $query = $this->addOrWhere($query, 'sg.device', $value);
+                    $qb = $this->addOrWhere($qb, 'sg.device', $value);
                 }
                 if ('status' === $key) {
-                    $query = $this->addOrWhere($query, 'sg.status', $value);
+                    $qb = $this->addOrWhere($qb, 'sg.status', $value);
                 }
                 if ('startDate' === $key) {
-                    $query = $query->andWhere('d.createdAt >= :startDate')
+                    $qb->andWhere('d.createdAt >= :startDate')
                         ->setParameter('startDate', $value);
                 }
                 if ('endDate' === $key) {
-                    $query = $query->andWhere('d.createdAt <= :endDate')
+                    $qb->andWhere('d.createdAt <= :endDate')
                         ->setParameter('endDate', $value);
                 }
                 if ('createdBy' === $key) {
-                    $query = $query->andWhere('d.createdBy = :createdBy')
+                    $qb->andWhere('d.createdBy = :createdBy')
                         ->setParameter('createdBy', $value);
                 }
             }
         }
 
-        return $query->getQuery()
+        return $qb
+            ->getQuery()
             ->getSingleScalarResult();
     }
 
     public function sumSizeAllDocuments(array $criteria = null): int
     {
-        $query = $this->createQueryBuilder('d')->select('SUM(d.size)');
+        $qb = $this->createQueryBuilder('d')->select('SUM(d.size)');
 
-        return $query->getQuery()
+        return $qb
+            ->getQuery()
             ->getSingleScalarResult();
     }
 
-    protected function filters($query, $search): QueryBuilder
+    protected function filters(QueryBuilder $qb, $search): QueryBuilder
     {
         if ($search->getName()) {
-            $query->andWhere('d.name LIKE :name OR d.content LIKE :name')
+            $qb->andWhere('d.name LIKE :name OR d.content LIKE :name')
                 ->setParameter('name', '%'.$search->getName().'%');
         }
         if ($search->getType()) {
-            $query->andWhere('d.type = :type')
+            $qb->andWhere('d.type = :type')
                 ->setParameter('type', $search->getType());
         }
 
-        return $query;
+        return $qb;
     }
 }

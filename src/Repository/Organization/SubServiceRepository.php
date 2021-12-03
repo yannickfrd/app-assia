@@ -46,7 +46,8 @@ class SubServiceRepository extends ServiceEntityRepository
 
             ->orderBy('ss.name', 'ASC')
 
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -58,7 +59,8 @@ class SubServiceRepository extends ServiceEntityRepository
     public function getSubServicesOfService(Service $service): ?array
     {
         return $this->getSubServicesOfServiceQueryBuilder($service)
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -83,27 +85,27 @@ class SubServiceRepository extends ServiceEntityRepository
      */
     public function getSubServicesOfUserQueryBuilder(CurrentUserService $currentUser, Service $service = null, string $dataClass = null): QueryBuilder
     {
-        $query = $this->createQueryBuilder('ss')->select('PARTIAL ss.{id, name}')
+        $qb = $this->createQueryBuilder('ss')->select('PARTIAL ss.{id, name}')
             ->leftJoin('ss.service', 's')->addSelect('PARTIAL s.{id, name, type}')
 
         ->where('ss.disabledAt IS NULL')
         ->andWhere('s.disabledAt IS NULL');
 
         if ($dataClass) {
-            $query = $this->filterByServiceType($query, $dataClass);
+            $qb = $this->filterByServiceType($qb, $dataClass);
         }
 
         if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
-            $query = $query->andWhere('s.id IN (:services)')
+            $qb->andWhere('s.id IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
         }
 
         if ($service) {
-            $query = $query->andWhere('s.id = :service')
+            $qb->andWhere('s.id = :service')
                 ->setParameter('service', $service);
         }
 
-        return $query->orderBy('ss.name', 'ASC');
+        return $qb->orderBy('ss.name', 'ASC');
     }
 
     /**
@@ -111,7 +113,7 @@ class SubServiceRepository extends ServiceEntityRepository
      */
     public function findSubServicesWithPlace(OccupancySearch $search, CurrentUserService $currentUser, ?Service $service = null): ?array
     {
-        $query = $this->createQueryBuilder('ss')->select('ss')
+        $qb = $this->createQueryBuilder('ss')->select('ss')
             ->leftJoin('ss.service', 's')->addSelect('s')
             ->leftJoin('ss.places', 'pl')->addSelect('PARTIAL pl.{id, name, startDate, endDate, nbPlaces}')
 
@@ -120,22 +122,23 @@ class SubServiceRepository extends ServiceEntityRepository
             ->andWhere('pl.startDate < :end')->setParameter('end', $search->getEnd());
 
         if ($search->getPole()) {
-            $query = $query->andWhere('s.pole = :pole')
+            $qb->andWhere('s.pole = :pole')
                 ->setParameter('pole', $search->getPole());
         }
 
         if ($service) {
-            $query = $query->andWhere('ss.service = :service')
+            $qb->andWhere('ss.service = :service')
                 ->setParameter('service', $service);
         }
         if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
-            $query = $query->andWhere('s.id IN (:services)')
+            $qb->andWhere('s.id IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
         }
 
-        return $query
+        return $qb
             ->orderBy('ss.name', 'ASC')
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 }

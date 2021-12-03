@@ -36,19 +36,21 @@ class PlaceRepository extends ServiceEntityRepository
      */
     public function findPlacesQuery(PlaceSearch $search = null, CurrentUserService $currentUser = null): Query
     {
-        $query = $this->getPlacesAlterQueryBuilder();
+        $qb = $this->getPlacesAlterQueryBuilder();
 
         if ($currentUser && !$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
-            $query = $query->andWhere('pl.service IN (:services)')
+            $qb->andWhere('pl.service IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
         }
 
         if ($search) {
-            $query = $this->filter($query, $search);
+            $qb = $this->filter($qb, $search);
         }
 
-        return $query->orderBy('pl.name', 'ASC')
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        return $qb
+            ->orderBy('pl.name', 'ASC')
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
 
     /**
@@ -58,14 +60,16 @@ class PlaceRepository extends ServiceEntityRepository
      */
     public function findPlacesToExport(PlaceSearch $search = null): ?array
     {
-        $query = $this->getPlacesAlterQueryBuilder();
+        $qb = $this->getPlacesAlterQueryBuilder();
 
         if ($search) {
-            $query = $this->filter($query, $search);
+            $qb = $this->filter($qb, $search);
         }
 
-        return $query->orderBy('pl.name', 'DESC')
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+        return $qb
+            ->orderBy('pl.name', 'DESC')
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -74,19 +78,20 @@ class PlaceRepository extends ServiceEntityRepository
      */
     public function getPlacesQueryBuilder(?Service $service = null, ?SubService $subService = null): QueryBuilder
     {
-        $query = $this->createQueryBuilder('pl')->select('pl')
+        $qb = $this->createQueryBuilder('pl')->select('pl')
 
             ->where('pl.disabledAt IS NULL');
 
         if ($subService) {
-            $query->andWhere('pl.subService = :subService')
+            $qb->andWhere('pl.subService = :subService')
             ->setParameter('subService', $subService);
         } else {
-            $query->andWhere('pl.service = :service')
+            $qb->andWhere('pl.service = :service')
             ->setParameter('service', $service);
         }
 
-        return $query->andWhere('pl.endDate IS NULL')
+        return $qb
+            ->andWhere('pl.endDate IS NULL')
             ->orWhere('pl.endDate > :date')
             ->setParameter('date', new \Datetime())
 
@@ -122,7 +127,8 @@ class PlaceRepository extends ServiceEntityRepository
 
             ->orderBy('pl.name', 'ASC')
 
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -141,7 +147,8 @@ class PlaceRepository extends ServiceEntityRepository
 
             ->orderBy('pl.name', 'ASC')
 
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -152,7 +159,7 @@ class PlaceRepository extends ServiceEntityRepository
      */
     public function findPlacesForOccupancy(OccupancySearch $search, $currentUser, Service $service = null, SubService $subService = null): ?array
     {
-        $query = $this->createQueryBuilder('pl')->select('pl')
+        $qb = $this->createQueryBuilder('pl')->select('pl')
             ->innerJoin('pl.service', 's')->addSelect('PARTIAL s.{id, name}')
             ->leftJoin('pl.subService', 'ss')->addSelect('PARTIAL ss.{id, name}')
             ->innerJoin('pl.device', 'd')->addSelect('PARTIAL d.{id, name}')
@@ -161,28 +168,29 @@ class PlaceRepository extends ServiceEntityRepository
             ->andWhere('pl.startDate < :end')->setParameter('end', $search->getEnd());
 
         if ($search->getPole()) {
-            $query = $query->andWhere('s.pole = :pole')
+            $qb->andWhere('s.pole = :pole')
                 ->setParameter('pole', $search->getPole());
         }
 
         if ($service) {
-            $query->andWhere('pl.service = :service')
+            $qb->andWhere('pl.service = :service')
                 ->setParameter('service', $service);
         }
         if ($subService) {
-            $query->andWhere('pl.subService = :subService')
+            $qb->andWhere('pl.subService = :subService')
                 ->setParameter('subService', $subService);
         }
         if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
-            $query = $query->andWhere('pl.service IN (:services)')
+            $qb->andWhere('pl.service IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
         }
 
-        return $query
+        return $qb
             ->addOrderBy('pl.service', 'ASC')
             ->addOrderBy('pl.name', 'ASC')
 
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -193,11 +201,14 @@ class PlaceRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('pl')->select('PARTIAL pl.{id, rentAmt}')
             ->leftJoin('pl.placeGroups', 'pg')->addSelect('PARTIAL pg.{id, supportGroup}')
+
             ->andWhere('pg.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroup)
+
             ->orderBy('pg.startDate', 'DESC')
             ->setMaxResults(1)
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
     }
 
@@ -216,18 +227,18 @@ class PlaceRepository extends ServiceEntityRepository
     /**
      * Filtre la recherche.
      */
-    protected function filter($query, PlaceSearch $search): QueryBuilder
+    protected function filter(QueryBuilder $qb, PlaceSearch $search): QueryBuilder
     {
         if ($search->getName()) {
-            $query->andWhere('pl.name LIKE :name')
+            $qb->andWhere('pl.name LIKE :name')
                 ->setParameter('name', '%'.$search->getName().'%');
         }
         if ($search->getCity()) {
-            $query->andWhere('pl.city LIKE :city')
+            $qb->andWhere('pl.city LIKE :city')
                 ->setParameter('city', '%'.$search->getCity().'%');
         }
         if ($search->getNbPlaces()) {
-            $query->andWhere('pl.nbPlaces = :nbPlaces')
+            $qb->andWhere('pl.nbPlaces = :nbPlaces')
                 ->setParameter('nbPlaces', $search->getNbPlaces());
         }
 
@@ -235,48 +246,48 @@ class PlaceRepository extends ServiceEntityRepository
 
         if (1 === $supportDates) {
             if ($search->getStart()) {
-                $query->andWhere('pl.startDate >= :start')
+                $qb->andWhere('pl.startDate >= :start')
                     ->setParameter('start', $search->getStart());
             }
             if ($search->getEnd()) {
-                $query->andWhere('pl.startDate <= :end')
+                $qb->andWhere('pl.startDate <= :end')
                     ->setParameter('end', $search->getEnd());
             }
         }
         if (2 === $supportDates) {
             if ($search->getStart()) {
                 if ($search->getStart()) {
-                    $query->andWhere('pl.endDate >= :start')
+                    $qb->andWhere('pl.endDate >= :start')
                         ->setParameter('start', $search->getStart());
                 }
                 if ($search->getEnd()) {
-                    $query->andWhere('pl.endDate <= :end')
+                    $qb->andWhere('pl.endDate <= :end')
                         ->setParameter('end', $search->getEnd());
                 }
             }
         }
         if (3 === $supportDates || !$supportDates) {
             if ($search->getStart()) {
-                $query->andWhere('pl.endDate >= :start OR pl.endDate IS NULL')
+                $qb->andWhere('pl.endDate >= :start OR pl.endDate IS NULL')
                     ->setParameter('start', $search->getStart());
             }
             if ($search->getEnd()) {
-                $query->andWhere('pl.startDate <= :end')
+                $qb->andWhere('pl.startDate <= :end')
                     ->setParameter('end', $search->getEnd());
             }
         }
 
         if (Choices::DISABLED === $search->getDisabled()) {
-            $query->andWhere('pl.disabledAt IS NOT NULL');
+            $qb->andWhere('pl.disabledAt IS NOT NULL');
         } elseif (Choices::ACTIVE === $search->getDisabled()) {
-            $query->andWhere('pl.disabledAt IS NULL');
+            $qb->andWhere('pl.disabledAt IS NULL');
         }
 
-        $query = $this->addPolesFilter($query, $search);
-        $query = $this->addServicesFilter($query, $search);
-        $query = $this->addSubServicesFilter($query, $search, 'ss.id');
-        $query = $this->addDevicesFilter($query, $search, 'd.id');
+        $qb = $this->addPolesFilter($qb, $search);
+        $qb = $this->addServicesFilter($qb, $search);
+        $qb = $this->addSubServicesFilter($qb, $search, 'ss.id');
+        $qb = $this->addDevicesFilter($qb, $search, 'd.id');
 
-        return $query;
+        return $qb;
     }
 }

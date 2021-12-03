@@ -67,14 +67,14 @@ class PlaceRepositoryTest extends WebTestCase
 
     public function testFindAllPlacesQueryWithoutFilters()
     {
-        $query = $this->placeRepo->findPlacesQuery(new PlaceSearch());
-        $this->assertGreaterThanOrEqual(5, count($query->getResult()));
+        $qb = $this->placeRepo->findPlacesQuery(new PlaceSearch());
+        $this->assertGreaterThanOrEqual(5, count($qb->getResult()));
     }
 
     public function testFindAllPlacesQueryWithFilters()
     {
-        $query = $this->placeRepo->findPlacesQuery($this->search);
-        $this->assertGreaterThanOrEqual(1, count($query->getResult()));
+        $qb = $this->placeRepo->findPlacesQuery($this->search);
+        $this->assertGreaterThanOrEqual(1, count($qb->getResult()));
     }
 
     public function testFindPlacesToExportQueryWithFilters()
@@ -84,8 +84,8 @@ class PlaceRepositoryTest extends WebTestCase
 
     public function testGetPlacesQueryBuilder()
     {
-        $query = $this->placeRepo->getPlacesQueryBuilder($this->service);
-        $this->assertGreaterThanOrEqual(1, count($query->getQuery()->getResult()));
+        $qb = $this->placeRepo->getPlacesQueryBuilder($this->service);
+        $this->assertGreaterThanOrEqual(1, count($qb->getQuery()->getResult()));
     }
 
     public function testfindPlacesOfService()

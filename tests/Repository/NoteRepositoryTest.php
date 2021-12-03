@@ -64,26 +64,26 @@ class NoteRepositoryTest extends WebTestCase
 
     public function testFindAllNotesQueryWithoutFilters()
     {
-        $query = $this->noteRepo->findNotesQuery(new NoteSearch());
-        $this->assertGreaterThanOrEqual(5, count($query->getResult()));
+        $qb = $this->noteRepo->findNotesQuery(new NoteSearch());
+        $this->assertGreaterThanOrEqual(5, count($qb->getResult()));
     }
 
     public function testFindAllNotesOfSupportQueryWithoutFilters()
     {
-        $query = $this->noteRepo->findNotesOfSupportQuery($this->supportGroup->getId(), new SupportNoteSearch());
-        $this->assertGreaterThanOrEqual(5, count($query->getResult()));
+        $qb = $this->noteRepo->findNotesOfSupportQuery($this->supportGroup->getId(), new SupportNoteSearch());
+        $this->assertGreaterThanOrEqual(5, count($qb->getResult()));
     }
 
     public function testFindAllNotesOfSupportQueryWithFilters()
     {
-        $query = $this->noteRepo->findNotesOfSupportQuery($this->supportGroup->getId(), $this->search);
-        $this->assertGreaterThanOrEqual(1, count($query->getResult()));
+        $qb = $this->noteRepo->findNotesOfSupportQuery($this->supportGroup->getId(), $this->search);
+        $this->assertGreaterThanOrEqual(1, count($qb->getResult()));
     }
 
     public function testFindAllNotesOfSupportQueryWithFilterByTitle()
     {
-        $query = $this->noteRepo->findNotesOfSupportQuery($this->supportGroup->getId(), $this->search->setContent('Note test'));
-        $this->assertGreaterThanOrEqual(1, count($query->getResult()));
+        $qb = $this->noteRepo->findNotesOfSupportQuery($this->supportGroup->getId(), $this->search->setContent('Note test'));
+        $this->assertGreaterThanOrEqual(1, count($qb->getResult()));
     }
 
     public function testFindAllNotesOfUser()

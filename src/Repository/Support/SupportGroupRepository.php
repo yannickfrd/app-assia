@@ -39,9 +39,10 @@ class SupportGroupRepository extends ServiceEntityRepository
      */
     public function findSupportById(int $id): ?SupportGroup
     {
-        $query = $this->getsupportQuery();
+        $qb = $this->getsupportQuery();
 
-        return $query->andWhere('sg.id = :id')
+        return $qb
+            ->andWhere('sg.id = :id')
             ->setParameter('id', $id)
 
             ->getQuery()
@@ -127,7 +128,8 @@ class SupportGroupRepository extends ServiceEntityRepository
 
             ->setMaxResults($maxResults)
 
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -148,7 +150,8 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->andWhere('sp.head = TRUE')
 
             ->orderBy('p.lastname', 'ASC')
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -157,7 +160,7 @@ class SupportGroupRepository extends ServiceEntityRepository
      */
     public function findSupportsBetween(\Datetime $start, \Datetime $end, SupportsInMonthSearch $search = null): Query
     {
-        $query = $this->createQueryBuilder('sg')->select('sg')
+        $qb = $this->createQueryBuilder('sg')->select('sg')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
             ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
@@ -171,13 +174,14 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->andWhere('sp.head = TRUE');
 
         if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
-            $query = $query->andWhere('s.id IN (:services)')
+            $qb->andWhere('s.id IN (:services)')
                 ->setParameter('services', $this->currentUser->getServices());
         }
 
-        $query = $this->addOrganizationFilters($query, $search);
+        $qb = $this->addOrganizationFilters($qb, $search);
 
-        return $query->orderBy('sg.startDate', 'DESC')
+        return $qb
+            ->orderBy('sg.startDate', 'DESC')
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
@@ -189,26 +193,25 @@ class SupportGroupRepository extends ServiceEntityRepository
      */
     public function findSupportsForDashboard(SupportsByUserSearch $search): ?array
     {
-        $query = $this->createQueryBuilder('sg')->select('PARTIAL sg.{id, status, startDate, referent, service, device, coefficient}')
+        $qb = $this->createQueryBuilder('sg')->select('PARTIAL sg.{id, status, startDate, referent, service, device, coefficient}')
             ->leftJoin('sg.referent', 'u')->addSelect('PARTIAL u.{id}')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
             ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}');
 
         if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
-            $query = $query->where('s.id IN (:services)')
+            $qb->where('s.id IN (:services)')
                 ->setParameter('services', $this->currentUser->getServices());
         }
 
-        $query = $this->addOrganizationFilters($query, $search);
+        $qb = $this->addOrganizationFilters($qb, $search);
 
-        $query = $query->andWhere('sg.status = :status')
+        return $qb
+            ->andWhere('sg.status = :status')
             ->setParameter('status', 2)
 
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
-
-        return $query;
     }
 
     /**
@@ -228,7 +231,8 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->setParameter('peopleGroup', $peopleGroup)
 
             ->orderBy('sg.startDate', 'DESC')
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -237,7 +241,7 @@ class SupportGroupRepository extends ServiceEntityRepository
      */
     public function findLastSupport(SupportGroup $supportGroup): ?SupportGroup
     {
-        $query = $this->createQueryBuilder('sg')->select('sg')
+        $qb = $this->createQueryBuilder('sg')->select('sg')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id}')
 
             ->andWhere('sg.peopleGroup = :peopleGroup')
@@ -246,11 +250,11 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->setParameter('supportGroup', $supportGroup);
 
         if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
-            $query->andWhere('sg.service IN (:services)')
+            $qb->andWhere('sg.service IN (:services)')
                 ->setParameter('services', $this->currentUser->getServices());
         }
 
-        return $query
+        return $qb
             ->orderBy('sg.updatedAt', 'DESC')
             ->setMaxResults(1)
 
@@ -258,7 +262,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
 
-        // $paginator = new Paginator($query);
+        // $paginator = new Paginator($qb);
         // foreach ($paginator->getIterator() as $supportGroup) {
         //     return $supportGroup;
         // }
@@ -266,45 +270,45 @@ class SupportGroupRepository extends ServiceEntityRepository
 
     public function countSupports(array $criteria = null): int
     {
-        $query = $this->createQueryBuilder('sg')->select('COUNT(sg.id)');
+        $qb = $this->createQueryBuilder('sg')->select('COUNT(sg.id)');
 
         if ($criteria) {
             $dateFilter = $criteria['filterDateBy'] ?? 'createdAt';
 
             foreach ($criteria as $key => $value) {
                 if ('service' === $key) {
-                    $query = $this->addOrWhere($query, 'sg.service', $value);
+                    $qb = $this->addOrWhere($qb, 'sg.service', $value);
                 }
                 if ('subService' === $key) {
-                    $query = $this->addOrWhere($query, 'sg.subService', $value);
+                    $qb = $this->addOrWhere($qb, 'sg.subService', $value);
                 }
                 if ('device' === $key) {
-                    $query = $this->addOrWhere($query, 'sg.device', $value);
+                    $qb = $this->addOrWhere($qb, 'sg.device', $value);
                 }
                 if ('status' === $key) {
-                    $query = $this->addOrWhere($query, 'sg.status', $value);
+                    $qb = $this->addOrWhere($qb, 'sg.status', $value);
                 }
                 if ('user' === $key) {
-                    $query = $query->andWhere('sg.referent = :user')
+                    $qb->andWhere('sg.referent = :user')
                         ->setParameter('user', $value);
                 }
                 if ('startDate' === $key) {
-                    $query = $query->andWhere("sg.$dateFilter >= :startDate")
+                    $qb->andWhere("sg.$dateFilter >= :startDate")
                         ->setParameter('startDate', $value);
                 }
                 if ('endDate' === $key) {
-                    $query = $query->andWhere("sg.$dateFilter <= :endDate")
+                    $qb->andWhere("sg.$dateFilter <= :endDate")
                         ->setParameter('endDate', $value);
                 }
                 if ('siaoRequest' === $key) {
-                    $query = $query->leftJoin('sg.evaluationsGroup', 'e')
+                    $qb->leftJoin('sg.evaluationsGroup', 'e')
                         ->leftJoin('e.evalHousingGroup', 'ehg')
 
                         ->andWhere('ehg.siaoRequest = :siaoRequest')
                         ->setParameter('siaoRequest', $value);
                 }
                 if ('socialHousingRequest' === $key) {
-                    $query = $query->leftJoin('sg.evaluationsGroup', 'e')
+                    $qb->leftJoin('sg.evaluationsGroup', 'e')
                         ->leftJoin('e.evalHousingGroup', 'ehg')
 
                         ->andWhere('ehg.socialHousingRequest = :socialHousingRequest')
@@ -313,7 +317,8 @@ class SupportGroupRepository extends ServiceEntityRepository
             }
         }
 
-        return $query->getQuery()
+        return $qb
+            ->getQuery()
             ->getSingleScalarResult();
     }
 
@@ -322,38 +327,39 @@ class SupportGroupRepository extends ServiceEntityRepository
      */
     public function avgTimeSupport(array $criteria = null): ?float
     {
-        $query = $this->createQueryBuilder('sg');
+        $qb = $this->createQueryBuilder('sg');
 
         if ($criteria) {
             foreach ($criteria as $key => $value) {
                 if ('service' === $key) {
-                    $query->andWhere('sg.service = :service')
+                    $qb->andWhere('sg.service = :service')
                         ->setParameter('service', $value);
                 }
                 if ('subService' === $key) {
-                    $query->andWhere('sg.subService = :subService')
+                    $qb->andWhere('sg.subService = :subService')
                         ->setParameter('subService', $value);
                 }
                 if ('device' === $key) {
-                    $query->andWhere('sg.device = :device')
+                    $qb->andWhere('sg.device = :device')
                         ->setParameter('device', $value);
                 }
                 if ('status' === $key) {
-                    $query->andWhere('sg.status = :status')
+                    $qb->andWhere('sg.status = :status')
                         ->setParameter('status', $value);
                 }
             }
         }
 
         $today = (new \DateTime())->format('Y-m-d');
-        // $expr = $query->expr();
+        // $expr = $qb->expr();
         // $diff = $expr->diff('sg.startDate', $today);
         // $avg = $expr->avg($diff);
-        // $query = $query->select($avg);
-        $query->select('avg(date_diff(:today, sg.startDate)) as avgTimeSupport')
+        // $qb->select($avg);
+        $qb->select('avg(date_diff(:today, sg.startDate)) as avgTimeSupport')
             ->setParameter(':today', $today);
 
-        $result = $query->getQuery()
+        $result = $qb
+            ->getQuery()
             ->getSingleScalarResult();
 
         return round($result);
@@ -364,34 +370,34 @@ class SupportGroupRepository extends ServiceEntityRepository
      */
     public function avgSupportsByUser(array $criteria = null): ?float
     {
-        $query = $this->createQueryBuilder('sg')->select('count(sg.referent)')
+        $qb = $this->createQueryBuilder('sg')->select('count(sg.referent)')
             ->where('sg.referent IS NOT NULL');
 
         if ($criteria) {
             foreach ($criteria as $key => $value) {
                 if ('service' === $key) {
-                    $query->andWhere('sg.service = :service')
+                    $qb->andWhere('sg.service = :service')
                         ->setParameter('service', $value);
                 }
                 if ('subService' === $key) {
-                    $query->andWhere('sg.subService = :subService')
+                    $qb->andWhere('sg.subService = :subService')
                         ->setParameter('subService', $value);
                 }
                 if ('device' === $key) {
-                    $query->andWhere('sg.device = :device')
+                    $qb->andWhere('sg.device = :device')
                         ->setParameter('device', $value);
                 }
                 if ('status' === $key) {
-                    $query->andWhere('sg.status = :status')
+                    $qb->andWhere('sg.status = :status')
                         ->setParameter('status', $value);
                 }
             }
         }
 
-        $query = $query->addGroupBy('sg.referent')
-            ->getQuery();
-
-        $result = $query->getScalarResult();
+        $result = $qb
+            ->addGroupBy('sg.referent')
+            ->getQuery()
+            ->getScalarResult();
 
         $sum = 0;
         $i = 0;

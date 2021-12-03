@@ -43,7 +43,8 @@ class UserRepository extends ServiceEntityRepository
             ->setParameter('username', $username);
         }
 
-        return $qb->getQuery()
+        return $qb
+            ->getQuery()
             ->getOneOrNullResult();
     }
 
@@ -90,7 +91,7 @@ class UserRepository extends ServiceEntityRepository
         $qb = $this->queryUsers();
 
         if (!in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
-            $qb = $qb->leftJoin('u.serviceUser', 'r')
+            $qb->leftJoin('u.serviceUser', 'r')
                 ->andWhere('r.service IN (:services)')
                 ->setParameter('services', $user->getServices());
         }
@@ -144,9 +145,9 @@ class UserRepository extends ServiceEntityRepository
         $qb = $this->addServicesFilter($qb, $search);
 
         if ($user && in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
-            $qb = $qb->orderBy('u.lastActivityAt', 'DESC');
+            $qb->orderBy('u.lastActivityAt', 'DESC');
         } else {
-            $qb = $qb->orderBy('u.lastname', 'ASC');
+            $qb->orderBy('u.lastname', 'ASC');
         }
 
         return $qb;
@@ -213,7 +214,7 @@ class UserRepository extends ServiceEntityRepository
 
         if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             if ($currentUser->hasRole('ROLE_ADMIN')) {
-                $qb = $qb->leftJoin('u.serviceUser', 'r')
+                $qb->leftJoin('u.serviceUser', 'r')
                     ->andWhere('r.service IN (:services)')
                     ->setParameter('services', $currentUser->getServices());
             } else {
@@ -222,7 +223,8 @@ class UserRepository extends ServiceEntityRepository
             }
         }
 
-        return $qb->orderBy('u.lastname', 'ASC')
+        return $qb
+            ->orderBy('u.lastname', 'ASC')
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
@@ -256,11 +258,11 @@ class UserRepository extends ServiceEntityRepository
             $qb = $this->filterByServiceType($qb, $dataClass);
         }
         if ($service) {
-            $qb = $qb->andWhere('su.service = :service')
+            $qb->andWhere('su.service = :service')
                 ->setParameter('service', $service);
         }
         if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
-            $qb = $qb->leftJoin('u.serviceUser', 'r')
+            $qb->leftJoin('u.serviceUser', 'r')
                 ->andWhere('r.service IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
         }
@@ -315,13 +317,14 @@ class UserRepository extends ServiceEntityRepository
         if ($criteria) {
             foreach ($criteria as $key => $value) {
                 if ('status' === $key) {
-                    $qb = $qb->andWhere('u.status = :status')
+                    $qb->andWhere('u.status = :status')
                         ->setParameter('status', $value);
                 }
             }
         }
 
-        return $qb->getQuery()
+        return $qb
+            ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
@@ -335,21 +338,22 @@ class UserRepository extends ServiceEntityRepository
             ->where('u.disabledAt IS NULL');
 
         if ($criteria) {
-            $qb = $qb->leftJoin('u.serviceUser', 'su');
+            $qb->leftJoin('u.serviceUser', 'su');
 
             foreach ($criteria as $key => $value) {
                 if ('service' === $key) {
-                    $qb = $qb->andWhere('su.service = :service')
+                    $qb->andWhere('su.service = :service')
                         ->setParameter('service', $value);
                 }
                 if ('status' === $key) {
-                    $qb = $qb->andWhere('u.status = :status')
+                    $qb->andWhere('u.status = :status')
                         ->setParameter('status', $value);
                 }
             }
         }
 
-        return $qb->getQuery()
+        return $qb
+            ->getQuery()
             ->getSingleScalarResult();
     }
 

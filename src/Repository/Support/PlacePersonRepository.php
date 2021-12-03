@@ -38,7 +38,8 @@ class PlacePersonRepository extends ServiceEntityRepository
             ->andWhere('pp.id = :id')
             ->setParameter('id', $id)
 
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
     }
 
@@ -49,7 +50,7 @@ class PlacePersonRepository extends ServiceEntityRepository
      */
     public function findPlacePeople(OccupancySearch $search, CurrentUserService $currentUser, Service $service = null, SubService $subService = null): ?array
     {
-        $query = $this->createQueryBuilder('pp')->select('pp')
+        $qb = $this->createQueryBuilder('pp')->select('pp')
             ->leftJoin('pp.placeGroup', 'pg')->addSelect('PARTIAL pg.{id, place}')
             ->leftJoin('pg.place', 'pl')->addSelect('pl')
             ->leftJoin('pl.service', 's')->addSelect('PARTIAL s.{id}')
@@ -61,20 +62,21 @@ class PlacePersonRepository extends ServiceEntityRepository
             ->setParameter('end', $search->getEnd());
 
         if ($service) {
-            $query = $query->andWhere('pl.service = :service')
+            $qb->andWhere('pl.service = :service')
                 ->setParameter('service', $service);
         }
         if ($subService) {
-            $query->andWhere('pl.subService = :subService')
+            $qb->andWhere('pl.subService = :subService')
                 ->setParameter('subService', $subService);
         }
         if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
-            $query = $query->andWhere('s.id IN (:services)')
+            $qb->andWhere('s.id IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
         }
 
-        return $query
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+        return $qb
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 }

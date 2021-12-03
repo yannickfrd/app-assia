@@ -64,26 +64,26 @@ class DocumentRepositoryTest extends WebTestCase
 
     public function testFindDocumentsQueryWithoutFilters()
     {
-        $query = $this->documentRepo->findDocumentsQuery(new DocumentSearch());
-        $this->assertGreaterThanOrEqual(5, count($query->getResult()));
+        $qb = $this->documentRepo->findDocumentsQuery(new DocumentSearch());
+        $this->assertGreaterThanOrEqual(5, count($qb->getResult()));
     }
 
     public function testFindSupportDocumentsQueryWithoutFilters()
     {
-        $query = $this->documentRepo->findSupportDocumentsQuery($this->supportGroup, new SupportDocumentSearch());
-        $this->assertGreaterThanOrEqual(5, count($query->getResult()));
+        $qb = $this->documentRepo->findSupportDocumentsQuery($this->supportGroup, new SupportDocumentSearch());
+        $this->assertGreaterThanOrEqual(5, count($qb->getResult()));
     }
 
     public function testFindSupportDocumentsQueryWithFilters()
     {
-        $query = $this->documentRepo->findSupportDocumentsQuery($this->supportGroup, $this->search);
-        $this->assertGreaterThanOrEqual(1, count($query->getResult()));
+        $qb = $this->documentRepo->findSupportDocumentsQuery($this->supportGroup, $this->search);
+        $this->assertGreaterThanOrEqual(1, count($qb->getResult()));
     }
 
     public function testFindSupportsDocumentsQueryWithFilterByContent()
     {
-        $query = $this->documentRepo->findSupportDocumentsQuery($this->supportGroup, $this->search->setName('Description'));
-        $this->assertGreaterThanOrEqual(1, count($query->getResult()));
+        $qb = $this->documentRepo->findSupportDocumentsQuery($this->supportGroup, $this->search->setName('Description'));
+        $this->assertGreaterThanOrEqual(1, count($qb->getResult()));
     }
 
     public function testCountDocumentsWithoutCriteria()

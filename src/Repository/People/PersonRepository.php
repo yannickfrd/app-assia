@@ -36,7 +36,8 @@ class PersonRepository extends ServiceEntityRepository
             ->andWhere('p.id = :id')
             ->setParameter('id', $id)
 
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
     }
 
@@ -45,39 +46,40 @@ class PersonRepository extends ServiceEntityRepository
      */
     public function findPeopleQuery(PersonSearch $personSearch, string $searchQuery = null, int $maxResult = 20): Query
     {
-        $query = $this->createQueryBuilder('p')->select('p');
+        $qb = $this->createQueryBuilder('p')->select('p');
 
         if ($searchQuery) {
-            $query->where("CONCAT(p.lastname,' ' , p.firstname) LIKE :search")
+            $qb->where("CONCAT(p.lastname,' ' , p.firstname) LIKE :search")
                 ->setParameter('search', '%'.$searchQuery.'%');
         }
 
         if ($personSearch->getSiSiaoId()) {
-            $query->leftJoin('p.rolesPerson', 'r')->addSelect('PARTIAL r.{id}')
+            $qb->leftJoin('p.rolesPerson', 'r')->addSelect('PARTIAL r.{id}')
                 ->leftJoin('r.peopleGroup', 'g')->addSelect('PARTIAL g.{id, siSiaoId}')
 
                 ->andWhere('g.siSiaoId = :siSiaoId')
                 ->setParameter('siSiaoId', $personSearch->getSiSiaoId());
         }
         if ($personSearch->getFirstname()) {
-            $query->andWhere('p.firstname LIKE :firstname')
+            $qb->andWhere('p.firstname LIKE :firstname')
                 ->setParameter('firstname', $personSearch->getFirstname().'%');
         }
         if ($personSearch->getLastname()) {
-            $query->andWhere('p.lastname LIKE :lastname')
+            $qb->andWhere('p.lastname LIKE :lastname')
                 ->setParameter('lastname', $personSearch->getLastname().'%');
         }
 
         if ($personSearch->getBirthdate()) {
-            $query->andWhere('p.birthdate = :birthdate')
+            $qb->andWhere('p.birthdate = :birthdate')
                 ->setParameter('birthdate', $personSearch->getBirthdate());
         }
 
         if ($maxResult) {
-            $query->setMaxResults($maxResult);
+            $qb->setMaxResults($maxResult);
         }
 
-        return $query->addOrderBy('p.lastname', 'ASC')
+        return $qb
+            ->addOrderBy('p.lastname', 'ASC')
             ->addOrderBy('p.firstname', 'ASC')
             ->getQuery();
     }
@@ -89,9 +91,9 @@ class PersonRepository extends ServiceEntityRepository
      */
     public function findPeopleToExport(PersonSearch $personSearch): ?array
     {
-        $query = $this->findPeopleQuery($personSearch);
+        $qb = $this->findPeopleQuery($personSearch);
 
-        return $query->getResult();
+        return $qb->getResult();
     }
 
     /**
@@ -130,26 +132,27 @@ class PersonRepository extends ServiceEntityRepository
      */
     public function countPeople(array $criteria = null): int
     {
-        $query = $this->createQueryBuilder('p')->select('COUNT(p.id)');
+        $qb = $this->createQueryBuilder('p')->select('COUNT(p.id)');
 
         if ($criteria) {
             foreach ($criteria as $key => $value) {
                 if ('startDate' === $key) {
-                    $query = $query->andWhere('p.createdAt >= :startDate')
+                    $qb->andWhere('p.createdAt >= :startDate')
                             ->setParameter('startDate', $value);
                 }
                 if ('endDate' === $key) {
-                    $query = $query->andWhere('p.createdAt <= :endDate')
+                    $qb->andWhere('p.createdAt <= :endDate')
                             ->setParameter('endDate', $value);
                 }
                 if ('createdBy' === $key) {
-                    $query = $query->andWhere('p.createdBy = :createdBy')
+                    $qb->andWhere('p.createdBy = :createdBy')
                         ->setParameter('createdBy', $value);
                 }
             }
         }
 
-        return $query->getQuery()
+        return $qb
+            ->getQuery()
             ->getSingleScalarResult();
     }
 
@@ -158,38 +161,39 @@ class PersonRepository extends ServiceEntityRepository
      */
     public function findDuplicatedPeople(DuplicatedPeopleSearch $search): ?array
     {
-        $query = $this->createQueryBuilder('p')->select('p');
+        $qb = $this->createQueryBuilder('p')->select('p');
 
         if ($search->getLastname()) {
-            $query->addGroupBy('p.lastname');
+            $qb->addGroupBy('p.lastname');
         }
         if ($search->getFirstname()) {
-            $query->addGroupBy('p.firstname');
+            $qb->addGroupBy('p.firstname');
         }
         if ($search->getBirthdate()) {
-            $query->addGroupBy('p.birthdate');
+            $qb->addGroupBy('p.birthdate');
         }
 
-        return $query->having('COUNT(p.id) > 1')
-
+        return $qb
+            ->having('COUNT(p.id) > 1')
             ->getQuery()
             ->getResult();
     }
 
     public function findOnePersonByFirstname(string $firstname = null, bool $genderIsNotNull = true): ?Person
     {
-        $query = $this->createQueryBuilder('p')->select('p');
+        $qb = $this->createQueryBuilder('p')->select('p');
 
         if ($firstname) {
-            $query->andWhere('p.firstname = :firstname')
+            $qb->andWhere('p.firstname = :firstname')
             ->setParameter('firstname', $firstname);
         }
         if ($genderIsNotNull) {
-            $query->andWhere('p.gender != :gender')
+            $qb->andWhere('p.gender != :gender')
             ->setParameter('gender', 99);
         }
 
-        return $query->setMaxResults(1)
+        return $qb
+            ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
     }

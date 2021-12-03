@@ -24,22 +24,23 @@ class UserConnectionRepository extends ServiceEntityRepository
      */
     public function countConnections(array $criteria = null): int
     {
-        $query = $this->createQueryBuilder('c')->select('COUNT(c.id)');
+        $qb = $this->createQueryBuilder('c')->select('COUNT(c.id)');
 
         if ($criteria) {
             foreach ($criteria as $key => $value) {
                 if ('startDate' === $key) {
-                    $query = $query->andWhere('c.connectionAt >= :startDate')
+                    $qb->andWhere('c.connectionAt >= :startDate')
                             ->setParameter('startDate', $value);
                 }
                 if ('endDate' === $key) {
-                    $query = $query->andWhere('c.connectionAt <= :endDate')
+                    $qb->andWhere('c.connectionAt <= :endDate')
                             ->setParameter('endDate', $value);
                 }
             }
         }
 
-        return $query->getQuery()
+        return $qb
+            ->getQuery()
             ->getSingleScalarResult();
     }
 }

@@ -13,88 +13,88 @@ trait QueryTrait
     /**
      * Add service, sub-service, device and referent filters.
      */
-    protected function addOrganizationFilters(QueryBuilder $query, object $search): QueryBuilder
+    protected function addOrganizationFilters(QueryBuilder $qb, object $search): QueryBuilder
     {
-        $query = $this->addPolesFilter($query, $search);
-        $query = $this->addServicesFilter($query, $search);
-        $query = $this->addSubServicesFilter($query, $search);
-        $query = $this->addDevicesFilter($query, $search);
-        $query = $this->addReferentsFilter($query, $search);
+        $qb = $this->addPolesFilter($qb, $search);
+        $qb = $this->addServicesFilter($qb, $search);
+        $qb = $this->addSubServicesFilter($qb, $search);
+        $qb = $this->addDevicesFilter($qb, $search);
+        $qb = $this->addReferentsFilter($qb, $search);
 
-        return $query;
+        return $qb;
     }
 
-    protected function addPolesFilter(QueryBuilder $query, object $search, string $x = 's.pole'): QueryBuilder
+    protected function addPolesFilter(QueryBuilder $qb, object $search, string $x = 's.pole'): QueryBuilder
     {
         if ($search->getPoles() && count($search->getPoles()) > 0) {
-            $query = $this->addOrWhere($query, $x, $search->getPoles());
+            $qb = $this->addOrWhere($qb, $x, $search->getPoles());
         }
 
-        return $query;
+        return $qb;
     }
 
-    protected function addServicesFilter(QueryBuilder $query, object $search, string $x = 's.id'): QueryBuilder
+    protected function addServicesFilter(QueryBuilder $qb, object $search, string $x = 's.id'): QueryBuilder
     {
         if ($search->getServices() && count($search->getServices()) > 0) {
-            $query = $this->addOrWhere($query, $x, $search->getServices());
+            $qb = $this->addOrWhere($qb, $x, $search->getServices());
         }
 
-        return $query;
+        return $qb;
     }
 
-    protected function addSubServicesFilter(QueryBuilder $query, object $search, string $x = 'sg.subService'): QueryBuilder
+    protected function addSubServicesFilter(QueryBuilder $qb, object $search, string $x = 'sg.subService'): QueryBuilder
     {
         if ($search->getSubServices() && count($search->getSubServices()) > 0) {
-            $query = $this->addOrWhere($query, $x, $search->getSubServices());
+            $qb = $this->addOrWhere($qb, $x, $search->getSubServices());
         }
 
-        return $query;
+        return $qb;
     }
 
-    protected function addDevicesFilter(QueryBuilder $query, object $search, string $x = 'sg.device'): QueryBuilder
+    protected function addDevicesFilter(QueryBuilder $qb, object $search, string $x = 'sg.device'): QueryBuilder
     {
         if ($search->getDevices() && count($search->getDevices()) > 0) {
-            $query = $this->addOrWhere($query, $x, $search->getDevices());
+            $qb = $this->addOrWhere($qb, $x, $search->getDevices());
         }
 
-        return $query;
+        return $qb;
     }
 
-    protected function addReferentsFilter(QueryBuilder $query, object $search, string $x = 'sg.referent'): QueryBuilder
+    protected function addReferentsFilter(QueryBuilder $qb, object $search, string $x = 'sg.referent'): QueryBuilder
     {
         if ($search->getReferents() && count($search->getReferents()) > 0) {
-            $query = $this->addOrWhere($query, $x, $search->getReferents());
+            $qb = $this->addOrWhere($qb, $x, $search->getReferents());
         }
 
-        return $query;
+        return $qb;
     }
 
-    protected function filterByServiceType(QueryBuilder $query, string $dataClass = null): QueryBuilder
+    protected function filterByServiceType(QueryBuilder $qb, string $dataClass = null): QueryBuilder
     {
         if (HotelSupportSearch::class === $dataClass) {
-            $query->andWhere('s.type = :type')
+            $qb->andWhere('s.type = :type')
                 ->setParameter('type', Service::SERVICE_TYPE_HOTEL);
         }
         if (AvdlSupportSearch::class === $dataClass) {
-            $query->andWhere('s.type = :type')
+            $qb->andWhere('s.type = :type')
                 ->setParameter('type', Service::SERVICE_TYPE_AVDL);
         }
 
-        return $query;
+        return $qb;
     }
 
     /**
      * @param array|ArrayCollection $values
      */
-    protected function addOrWhere(QueryBuilder $query, string $x, $values): QueryBuilder
+    protected function addOrWhere(QueryBuilder $qb, string $x, $values): QueryBuilder
     {
-        $expr = $query->expr();
+        $expr = $qb->expr();
         $orX = $expr->orX();
         foreach ($values as $value) {
             $orX->add($expr->eq($x, $value));
-            $query->andWhere($orX);
+            $qb->andWhere($orX);
         }
 
-        return $query;
+        return $qb;
     }
 }

@@ -58,15 +58,17 @@ class PaymentRepository extends ServiceEntityRepository
      */
     public function findPaymentsQuery(?PaymentSearch $search = null): Query
     {
-        $query = $this->getPaymentQuery()
+        $qb = $this->getPaymentQuery()
             ->andWhere('sp.head = TRUE');
 
         if ($search) {
-            $query = $this->filter($query, $search);
+            $qb = $this->filter($qb, $search);
         }
 
-        return $query->orderBy('p.startDate', 'DESC')
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        return $qb
+            ->orderBy('p.startDate', 'DESC')
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
 
     /**
@@ -76,7 +78,7 @@ class PaymentRepository extends ServiceEntityRepository
      */
     public function findPaymentsBetween(\Datetime $start, \Datetime $end, array $supportsId): ?array
     {
-        $query = $this->createQueryBuilder('p')->select('p')
+        $qb = $this->createQueryBuilder('p')->select('p')
             ->leftJoin('p.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
 
             ->andWhere('p.supportGroup IN (:supportsId)')
@@ -87,7 +89,8 @@ class PaymentRepository extends ServiceEntityRepository
             ->andWhere('p.startDate <= :end')
             ->setParameter('end', $end);
 
-        return $query->getQuery()
+        return $qb
+            ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
@@ -101,19 +104,21 @@ class PaymentRepository extends ServiceEntityRepository
      */
     public function findPaymentsToExport($search, SupportGroup $supportGroup = null): ?array
     {
-        $query = $this->getPaymentQuery()
+        $qb = $this->getPaymentQuery()
             ->leftJoin('sg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, siSiaoId}')
             ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}');
 
         if ($supportGroup) {
-            $query->where('p.supportGroup = :supportGroup')
+            $qb->where('p.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroup);
         }
 
-        $query = $this->filter($query, $search);
+        $qb = $this->filter($qb, $search);
 
-        return $query->orderBy('p.startDate', 'DESC')
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+        return $qb
+            ->orderBy('p.startDate', 'DESC')
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -126,20 +131,22 @@ class PaymentRepository extends ServiceEntityRepository
      */
     public function findHotelContributionsToExport($search, SupportGroup $supportGroup = null): ?array
     {
-        $query = $this->getPaymentQuery()
+        $qb = $this->getPaymentQuery()
             ->leftJoin('sg.originRequest', 'or')->addSelect('PARTIAL or.{id}')
             ->leftJoin('or.organization', 'orga')->addSelect('PARTIAL orga.{id, name}')
             ->leftJoin('sg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, siSiaoId}');
 
         if ($supportGroup) {
-            $query->where('p.supportGroup = :supportGroup')
+            $qb->where('p.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroup);
         }
 
-        $query = $this->filter($query, $search);
+        $qb = $this->filter($qb, $search);
 
-        return $query->orderBy('p.startDate', 'DESC')
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+        return $qb
+            ->orderBy('p.startDate', 'DESC')
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -150,17 +157,19 @@ class PaymentRepository extends ServiceEntityRepository
      */
     public function findPaymentsForIndicators(PaymentSearch $search = null): ?array
     {
-        $query = $this->createQueryBuilder('p')->select('p')
+        $qb = $this->createQueryBuilder('p')->select('p')
             ->leftJoin('p.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, service, device}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, role, head, person}')
             ->leftJoin('sp.person', 'person')->addSelect('PARTIAL person.{id, firstname, lastname}')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}');
 
         if ($search) {
-            $query = $this->filter($query, $search);
+            $qb = $this->filter($qb, $search);
         }
 
-        return $query->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+        return $qb
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -184,20 +193,20 @@ class PaymentRepository extends ServiceEntityRepository
      *
      * @param PaymentSearch|SupportPaymentSearch $search
      */
-    protected function filter(Querybuilder $query, $search): QueryBuilder
+    protected function filter(Querybuilder $qb, $search): QueryBuilder
     {
         if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
-            $query->andWhere('sg.service IN (:services)')
+            $qb->andWhere('sg.service IN (:services)')
                 ->setParameter('services', $this->currentUser->getServices());
         }
 
         // if ($search->getId()) {
-        //     $query->andWhere('p.id = :id')
+        //     $qb->andWhere('p.id = :id')
         //         ->setParameter('id', $search->getId());
         // }
 
         if ($search->getType()) {
-            $query->andWhere('p.type IN (:type)')
+            $qb->andWhere('p.type IN (:type)')
                 ->setParameter('type', $search->getType());
         }
 
@@ -208,34 +217,34 @@ class PaymentRepository extends ServiceEntityRepository
                 $dateType = 'createdAt';
             }
             if ($search->getStart()) {
-                $query->andWhere('p.'.$dateType.' >= :start')
+                $qb->andWhere('p.'.$dateType.' >= :start')
                 ->setParameter('start', $search->getStart());
             }
             if ($search->getEnd()) {
-                $query->andWhere('p.'.$dateType.' <= :end')
+                $qb->andWhere('p.'.$dateType.' <= :end')
                 ->setParameter('end', $search->getEnd());
             }
         } elseif (2 === $search->getDateType()) {
             if ($search->getStart()) {
-                $query->andWhere('p.endDate >= :start')
+                $qb->andWhere('p.endDate >= :start')
                     ->setParameter('start', $search->getStart());
             }
             if ($search->getEnd()) {
-                $query->andWhere('p.startDate <= :end')
+                $qb->andWhere('p.startDate <= :end')
                     ->setParameter('end', $search->getEnd());
             }
         }
 
         if ($search instanceof PaymentSearch) {
             if ($search->getFullname()) {
-                $query->andWhere("CONCAT(person.lastname,' ' ,person.firstname) LIKE :fullname")
+                $qb->andWhere("CONCAT(person.lastname,' ' ,person.firstname) LIKE :fullname")
                 ->setParameter('fullname', '%'.$search->getFullname().'%');
             }
 
-            $query = $this->addOrganizationFilters($query, $search);
+            $qb = $this->addOrganizationFilters($qb, $search);
         }
 
-        return $query;
+        return $qb;
     }
 
     /**
@@ -243,26 +252,26 @@ class PaymentRepository extends ServiceEntityRepository
      */
     public function findPaymentsOfSupportQuery(int $supportGroupId, SupportPaymentSearch $search): Query
     {
-        $query = $this->createQueryBuilder('p')->select('p')
+        $qb = $this->createQueryBuilder('p')->select('p')
             ->andWhere('p.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroupId);
 
         if ($search->getType()) {
-            $query->andWhere('p.type IN (:type)')
+            $qb->andWhere('p.type IN (:type)')
                 ->setParameter('type', $search->getType());
         }
         if ($search->getStart()) {
-            $query->andWhere('p.startDate >= :start')
+            $qb->andWhere('p.startDate >= :start')
                 ->setParameter('start', $search->getStart());
         }
         if ($search->getEnd()) {
-            $query->andWhere('p.startDate <= :end')
+            $qb->andWhere('p.startDate <= :end')
                 ->setParameter('end', $search->getEnd());
         }
 
-        $query = $query->orderBy('p.createdAt', 'DESC');
-
-        return $query->getQuery();
+        return $qb
+            ->orderBy('p.createdAt', 'DESC')
+            ->getQuery();
     }
 
     /**
@@ -270,40 +279,41 @@ class PaymentRepository extends ServiceEntityRepository
      */
     public function countPayments(array $criteria = null): int
     {
-        $query = $this->createQueryBuilder('p')->select('COUNT(p.id)');
+        $qb = $this->createQueryBuilder('p')->select('COUNT(p.id)');
 
         if ($criteria) {
-            $query = $query->leftJoin('p.supportGroup', 'sg');
+            $qb->leftJoin('p.supportGroup', 'sg');
 
             foreach ($criteria as $key => $value) {
                 if ('service' === $key) {
-                    $query = $this->addOrWhere($query, 'sg.service', $value);
+                    $qb = $this->addOrWhere($qb, 'sg.service', $value);
                 }
                 if ('subService' === $key) {
-                    $query = $this->addOrWhere($query, 'sg.subService', $value);
+                    $qb = $this->addOrWhere($qb, 'sg.subService', $value);
                 }
                 if ('device' === $key) {
-                    $query = $this->addOrWhere($query, 'sg.device', $value);
+                    $qb = $this->addOrWhere($qb, 'sg.device', $value);
                 }
                 if ('status' === $key) {
-                    $query = $this->addOrWhere($query, 'sg.status', $value);
+                    $qb = $this->addOrWhere($qb, 'sg.status', $value);
                 }
                 if ('startDate' === $key) {
-                    $query = $query->andWhere('p.createdAt >= :startDate')
+                    $qb->andWhere('p.createdAt >= :startDate')
                         ->setParameter('startDate', $value);
                 }
                 if ('endDate' === $key) {
-                    $query = $query->andWhere('p.createdAt <= :endDate')
+                    $qb->andWhere('p.createdAt <= :endDate')
                         ->setParameter('endDate', $value);
                 }
                 if ('createdBy' === $key) {
-                    $query = $query->andWhere('p.createdBy = :createdBy')
+                    $qb->andWhere('p.createdBy = :createdBy')
                         ->setParameter('createdBy', $value);
                 }
             }
         }
 
-        return $query->getQuery()
+        return $qb
+            ->getQuery()
             ->getSingleScalarResult();
     }
 
