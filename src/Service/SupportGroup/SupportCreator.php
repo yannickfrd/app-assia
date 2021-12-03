@@ -35,7 +35,7 @@ class SupportCreator
     {
         $supportGroup = (new SupportGroup())->setPeopleGroup($peopleGroup);
 
-        $serviceId = $request->request->get('support')['service'];
+        $serviceId = $request->request->get('support') ? $request->request->get('support')['service'] : null;
 
         if ((int) $serviceId) {
             $service = $this->em->getRepository(Service::class)->find($serviceId);

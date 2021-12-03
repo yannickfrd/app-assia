@@ -94,7 +94,7 @@ class HotelControllerTest extends WebTestCase
         $this->createLogin($user);
 
         $id = $this->fixtures['peopleGroup3']->getId();
-        $this->client->request('POST', "/group/$id/support/new", [
+        $this->client->request('POST', "/people-group/$id/new-support", [
             'support' => [
                 'service' => $this->fixtures['servicePash'],
                 'device' => $this->fixtures['deviceHotel']->getCode(),

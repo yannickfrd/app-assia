@@ -178,6 +178,7 @@ class EvalHousingGroup
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("export")
      */
     private $syploId;
 
@@ -197,6 +198,7 @@ class EvalHousingGroup
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("export")
      */
     private $daloId;
 

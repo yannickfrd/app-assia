@@ -224,7 +224,7 @@ class SiSiaoControllerTest extends WebTestCase
 
     private function createSupport()
     {
-        $this->client->request('POST', '/group/1/support/new', [
+        $this->client->request('POST', '/people-group/1/new-support', [
             'support' => [
                 'service' => $service = $this->fixtures['service1'],
                 'device' => $device = $this->fixtures['device1']->getCode(),

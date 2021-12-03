@@ -130,9 +130,14 @@ class EvaluationController extends AbstractController
 
         $this->denyAccessUnlessGranted('DELETE', $supportGroup);
 
-        $evaluationGroup->getInitEvalGroup()->setSupportGroup(null);
+        if ($initEvalGroup = $evaluationGroup->getInitEvalGroup()) {
+            $initEvalGroup->setSupportGroup(null);
+        }
+
         foreach ($evaluationGroup->getEvaluationPeople() as $evaluationPerson) {
-            $evaluationPerson->getInitEvalPerson()->setSupportPerson(null);
+            if ($initEvalPerson = $evaluationPerson->getInitEvalPerson()) {
+                $initEvalPerson->setSupportPerson(null);
+            }
         }
 
         $this->em->remove($evaluationGroup);

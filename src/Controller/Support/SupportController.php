@@ -74,11 +74,17 @@ class SupportController extends AbstractController
     /**
      * Nouveau suivi social.
      *
-     * @Route("/group/{id}/support/new", name="support_new", methods="GET|POST")
+     * @Route("/people-group/{id}/new-support", name="people_group_new_support", methods="GET|POST")
      */
     public function newSupportGroup(PeopleGroup $peopleGroup, Request $request, SupportCreator $supportCreator): Response
     {
         $supportGroup = $supportCreator->getNewSupportGroup($peopleGroup, $request);
+
+        if (null === $supportGroup->getService()) {
+            $this->addFlash('danger', "Une erreur s'est produite : le nom du service doit être renseigné.");
+
+            return $this->redirectToRoute('people_group_show', ['id' => $peopleGroup->getId()]);
+        }
 
         $form = $this->createForm(SupportGroupType::class, $supportGroup)
             ->handleRequest($request);
@@ -101,7 +107,7 @@ class SupportController extends AbstractController
      * @Route("/group/{id}/new_support", name="group_new_support", methods="GET")
      * @Route("support/switch_service", name="support_switch_service", methods="POST")
      */
-    public function newSupportGroupAjax(PeopleGroup $peopleGroup = null, Request $request, SupportPersonRepository $supportPersonRepo): JsonResponse
+    public function newSupportGroupAjax(?PeopleGroup $peopleGroup = null, Request $request, SupportPersonRepository $supportPersonRepo): JsonResponse
     {
         $form = $this->createForm(NewSupportGroupType::class, new SupportGroup())
             ->handleRequest($request);
@@ -345,7 +351,11 @@ class SupportController extends AbstractController
         Pagination $pagination
     ): Response {
         $search = new SupportsInMonthSearch();
-        if (User::STATUS_SOCIAL_WORKER === $this->getUser()->getStatus()) {
+
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if (User::STATUS_SOCIAL_WORKER === $user->getStatus()) {
             $usersCollection = new ArrayCollection();
             $usersCollection->add($this->getUser());
             $search->setReferents($usersCollection);

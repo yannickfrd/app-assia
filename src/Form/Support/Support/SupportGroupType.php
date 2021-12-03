@@ -39,11 +39,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SupportGroupType extends AbstractType
 {
-    private $currentUser;
+    private $currentUserService;
 
-    public function __construct(CurrentUserService $currentUser)
+    public function __construct(CurrentUserService $currentUserService)
     {
-        $this->currentUser = $currentUser;
+        $this->currentUserService = $currentUserService;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -53,7 +53,7 @@ class SupportGroupType extends AbstractType
                 'class' => Service::class,
                 'choice_label' => 'name',
                 'query_builder' => function (ServiceRepository $repo) {
-                    return $repo->getServicesOfUserQueryBuilder($this->currentUser);
+                    return $repo->getServicesOfUserQueryBuilder($this->currentUserService);
                 },
                 'placeholder' => 'placeholder.select',
             ])
@@ -153,33 +153,34 @@ class SupportGroupType extends AbstractType
             $form = $event->getForm();
             $supportGroup = $event->getData();
             $service = $supportGroup->getService();
-            $subService = $supportGroup->getSubService();
 
-            $formModifier($form, $service, $subService);
+            $formModifier($form, $supportGroup);
 
             $this->addSupportFields($form, $service);
         });
 
         $builder->get('service')->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) use ($formModifier) {
             $form = $event->getForm();
-            $service = $form->getData();
+            $supportGroup = $form->getParent()->getData();
 
-            $formModifier($form->getParent(), $service);
+            $formModifier($form->getParent(), $supportGroup);
         });
     }
 
     protected function formModifier(): Closure
     {
-        return function (FormInterface $form, ?Service $service = null, ?SubService $subService = null) {
+        return function (FormInterface $form, SupportGroup $supportGroup) {
+            $service = $supportGroup->getService();
+            $subService = $supportGroup->getSubService();
+
             $serviceType = $service ? $service->getType() : null;
-            $optionsReferent = $this->optionsReferent($service);
 
             $form
                 ->add('subService', EntityType::class, [
                     'class' => SubService::class,
                     'choice_label' => 'name',
                     'query_builder' => function (SubServiceRepository $repo) use ($service) {
-                        return $repo->getSubServicesOfUserQueryBuilder($this->currentUser, $service);
+                        return $repo->getSubServicesOfUserQueryBuilder($this->currentUserService, $service);
                     },
                     'placeholder' => 'placeholder.select',
                     'required' => false,
@@ -189,11 +190,11 @@ class SupportGroupType extends AbstractType
                     'choice_value' => 'code',
                     'choice_label' => 'name',
                     'query_builder' => function (DeviceRepository $repo) use ($service) {
-                        return $repo->getDevicesOfUserQueryBuilder($this->currentUser, $service);
+                        return $repo->getDevicesOfUserQueryBuilder($this->currentUserService, $service);
                     },
                     'placeholder' => 'placeholder.select',
                 ])
-                ->add('referent', EntityType::class, $optionsReferent)
+                ->add('referent', EntityType::class, $optionsReferent = $this->optionsReferent($supportGroup))
                 ->add('referent2', EntityType::class, $optionsReferent)
                 ->add('originRequest', OriginRequestType::class, [
                     'attr' => ['service' => $service],
@@ -281,13 +282,17 @@ class SupportGroupType extends AbstractType
     /**
      * Retourne les options du champ Référent.
      */
-    protected function optionsReferent(?Service $service = null): array
+    protected function optionsReferent(SupportGroup $supportGroup): array
     {
         return [
             'class' => User::class,
             'choice_label' => 'fullname',
-            'query_builder' => function (UserRepository $repo) use ($service) {
-                return $repo->getUsersQueryBuilder($service, $this->currentUser->getUser());
+            'query_builder' => function (UserRepository $repo) use ($supportGroup) {
+                return $repo->getSupportReferentsQueryBuilder(
+                    $supportGroup->getService(),
+                    $this->currentUserService->getUser(),
+                    $supportGroup->getReferent()
+                );
             },
             'placeholder' => 'placeholder.select',
             'required' => false,

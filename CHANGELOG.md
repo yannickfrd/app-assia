@@ -1,8 +1,27 @@
 CHANGELOG
 =========
 
+## Version 3.5.1 - 03/12/2021
+Fix bugs and errors, factoring
+* [SupportGroupType] Fix filter in list of active referents
+* [EvaluationController] Fix error to delete evaluation if initEval is null
+* [SiSiaoGroupImporter] Fix error if 'composition' is null
+* [SupportSearchType] Rename placeholder 'fullname'
+* [HotelSupportService] Check if service use coefficient before to set coeff
+* [HotelContributionlExport] Fix invalid value 'PASH'
+* [AppController] Delete @IsGranted('ROLE_USER') annotations
+* Add 'syploId' and 'daloId' columns in fullExport
+* Edit search person (add SI-SIAO ID)
+* Fix error in new Support if service is null
+* Refactor UserRepository
+* Update route 'people_group_new_support' in tests
+## Version 3.5.0 - 02/12/2021
+Create feature to check and fix people in evaluation (#78)
+* Edit feature when evaluation is updated
+* Create feature to fix people in evaluation
+* Create command to check and fix people in evaluation
 ## Version 3.4.0 - 02/12/2021
-Update app to symfony 5.4
+Update app to symfony 5.4 (#77)
 * Update PHP dependencies
 * Update JS dependencies
 * Update to the new Authentication system
@@ -13,7 +32,6 @@ Update app to symfony 5.4
 * Add/Update return types in PHP classes 
 * Fix error typo 'suppport' to 'support'
 * Update README (add tests)
-
 ## Version 3.3.0 - 26/11/2021
 New feature : create SI-SIAO login page with redirection to previous page
 * [SiSiaoController] Create SI-SIAO login page with redirection to previous page

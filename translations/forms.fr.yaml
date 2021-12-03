@@ -70,6 +70,7 @@ placeholder:
   device: -- Dispositif --
   disabled: -- Statut --
   familtyTypology: -- Typologie familiale --
+  name_or_id: Nom, prénom ou ID SI-SIAO
   gender: -- Sexe --
   nbSupports: Nb de suivis
   person: -- Personne --

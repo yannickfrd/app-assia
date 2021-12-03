@@ -5,6 +5,7 @@ namespace App\Service\SupportGroup;
 use App\Entity\Organization\Device;
 use App\Entity\Support\HotelSupport;
 use App\Entity\Support\SupportGroup;
+use App\Form\Utils\Choices;
 
 class HotelSupportService
 {
@@ -17,7 +18,8 @@ class HotelSupportService
 
         $supportGroup->setStatus($this->getStatus($supportGroup));
 
-        if ($hotelSupport && Device::HOTEL_SUPPORT === $supportGroup->getDevice()->getCode()) {
+        if (Choices::YES === $supportGroup->getService()->getCoefficient() && $hotelSupport
+            && Device::HOTEL_SUPPORT === $supportGroup->getDevice()->getCode()) {
             $supportGroup->setCoefficient($this->getCoeffSupport($hotelSupport));
         }
 

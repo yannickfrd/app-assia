@@ -28,7 +28,6 @@ class AppController extends AbstractController
      *
      * @Route("/home", name="home", methods="GET")
      * @Route("/", name="index", methods="GET")
-     * @IsGranted("ROLE_USER")
      */
     public function home(IndicatorsService $indicators): Response
     {
@@ -56,7 +55,6 @@ class AppController extends AbstractController
      * Page de gestion du ou des services.
      *
      * @Route("/managing", name="managing", methods="GET")
-     * @IsGranted("ROLE_USER")
      */
     public function managing(): Response
     {

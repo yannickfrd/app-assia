@@ -2,35 +2,35 @@
 
 namespace App\Controller\Payment;
 
-use App\Service\Pagination;
-use App\Service\Normalisation;
-use App\Entity\Support\Payment;
-use App\Entity\Organization\User;
-use App\Event\Payment\PaymentEvent;
-use App\Entity\Support\SupportGroup;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Form\Model\Support\PaymentSearch;
-use App\Form\Support\Payment\PaymentType;
-use App\Service\Export\PaymentFullExport;
 use App\Controller\Traits\ErrorMessageTrait;
-use App\Service\SupportGroup\SupportManager;
+use App\Entity\Organization\User;
+use App\Entity\Support\Payment;
+use App\Entity\Support\SupportGroup;
+use App\Event\Payment\PaymentEvent;
+use App\Form\Model\Support\PaymentSearch;
+use App\Form\Model\Support\SupportPaymentSearch;
+use App\Form\Support\Payment\PaymentSearchType;
+use App\Form\Support\Payment\PaymentType;
+use App\Form\Support\Payment\SupportPaymentSearchType;
 use App\Repository\Support\PaymentRepository;
+use App\Service\Export\HotelContributionlExport;
+use App\Service\Export\PaymentAccountingExport;
+use App\Service\Export\PaymentFullExport;
 use App\Service\Indicators\PaymentIndicators;
+use App\Service\Normalisation;
+use App\Service\Pagination;
+use App\Service\SupportGroup\SupportManager;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Form\Support\Payment\PaymentSearchType;
-use App\Service\Export\PaymentAccountingExport;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Form\Model\Support\SupportPaymentSearch;
-use App\Service\Export\HotelContributionlExport;
-use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use App\Form\Support\Payment\SupportPaymentSearchType;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class PaymentController extends AbstractController
 {
@@ -264,6 +264,7 @@ class PaymentController extends AbstractController
      * Exporte les données.
      *
      * @param PaymentSearch|SupportPaymentSearch $search
+     *
      * @return Response|RedirectResponse
      */
     protected function exportFullData($search, $supportGroup = null, UrlGeneratorInterface $router = null): Response
@@ -281,6 +282,7 @@ class PaymentController extends AbstractController
 
     /**
      * Exporte les données.
+     *
      * @return Response|RedirectResponse
      */
     protected function exportAccountingData(PaymentSearch $search, UrlGeneratorInterface $router = null): Response
@@ -298,6 +300,7 @@ class PaymentController extends AbstractController
 
     /**
      * Exporte les données.
+     *
      * @return Response|RedirectResponse
      */
     protected function exportDeltaData(PaymentSearch $search, UrlGeneratorInterface $router = null): Response
@@ -321,7 +324,10 @@ class PaymentController extends AbstractController
             ->setStart(new \DateTime($today->format('Y').'-01-01'))
             ->setEnd($today);
 
-        if (User::STATUS_SOCIAL_WORKER === $this->getUser()->getStatus()) {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if (User::STATUS_SOCIAL_WORKER === $user->getStatus()) {
             $usersCollection = new ArrayCollection();
             $usersCollection->add($this->getUser());
             $search->setReferents($usersCollection);

@@ -22,7 +22,7 @@ class SupportSearchType extends AbstractType
         $builder
             ->add('fullname', null, [
                 'attr' => [
-                    'placeholder' => 'Nom et/ou prénom',
+                    'placeholder' => 'placeholder.name_or_id',
                     'class' => 'w-max-170',
                 ],
             ])

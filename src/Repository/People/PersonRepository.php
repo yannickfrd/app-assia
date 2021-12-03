@@ -101,19 +101,24 @@ class PersonRepository extends ServiceEntityRepository
      */
     public function findPeopleByResearch(string $search = null): ?array
     {
-        $query = $this->createQueryBuilder('p')->select('p');
+        $qb = $this->createQueryBuilder('p')
+            ->leftJoin('p.rolesPerson', 'r')->addSelect('PARTIAL r.{id}')
+            ->leftJoin('r.peopleGroup', 'g')->addSelect('PARTIAL g.{id, siSiaoId}');
 
         $date = \DateTime::createFromFormat('d-m-Y', $search) ?? false;
 
         if ($date) {
-            $query->where('p.birthdate = :birthdate')
+            $qb->where('p.birthdate = :birthdate')
                 ->setParameter('birthdate', $date->format('Y-m-d'));
+        } elseif (ctype_digit($search)) {
+            $qb->where('g.siSiaoId = :siSiaoId')
+                ->setParameter('siSiaoId', $search);
         } else {
-            $query->where("CONCAT(p.lastname,' ' , p.firstname) LIKE :search OR CONCAT(p.firstname,' ' , p.lastname) LIKE :search")
+            $qb->where("CONCAT(p.lastname,' ' , p.firstname) LIKE :search OR CONCAT(p.firstname,' ' , p.lastname) LIKE :search")
                 ->setParameter('search', '%'.$search.'%');
         }
 
-        return $query
+        return $qb
             ->orderBy('p.lastname, p.firstname', 'ASC')
             ->setMaxResults(10)
             ->getQuery()

@@ -33,17 +33,17 @@ class UserRepository extends ServiceEntityRepository
      */
     public function findUser(string $username): ?User
     {
-        $query = $this->createQueryBuilder('u')->select('u');
+        $qb = $this->createQueryBuilder('u')->select('u');
 
         if (1 === $this->count(['email' => $username])) {
-            $query->where('u.email = :email')
+            $qb->where('u.email = :email')
             ->setParameter('email', $username);
         } else {
-            $query->where('u.username = :username')
+            $qb->where('u.username = :username')
             ->setParameter('username', $username);
         }
 
-        return $query->getQuery()
+        return $qb->getQuery()
             ->getOneOrNullResult();
     }
 
@@ -65,7 +65,8 @@ class UserRepository extends ServiceEntityRepository
             ->andWhere('u.id = :id')
             ->setParameter('id', $id)
 
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
     }
 
@@ -74,10 +75,11 @@ class UserRepository extends ServiceEntityRepository
      */
     public function findUsersQuery(UserSearch $search, ?User $user = null): Query
     {
-        $query = $this->queryUsers();
+        $qb = $this->queryUsers();
 
-        return $this->filters($query, $search, $user)
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        return $this->filters($qb, $search, $user)
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
 
     /**
@@ -85,16 +87,17 @@ class UserRepository extends ServiceEntityRepository
      */
     public function findUsersAdminQuery(UserSearch $search, User $user): Query
     {
-        $query = $this->queryUsers();
+        $qb = $this->queryUsers();
 
         if (!in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
-            $query = $query->leftJoin('u.serviceUser', 'r')
+            $qb = $qb->leftJoin('u.serviceUser', 'r')
                 ->andWhere('r.service IN (:services)')
                 ->setParameter('services', $user->getServices());
         }
 
-        return $this->filters($query, $search, $user)
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        return $this->filters($qb, $search, $user)
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
 
     /**
@@ -112,41 +115,41 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Filtre les utilisateurs.
      */
-    protected function filters(QueryBuilder $query, UserSearch $search, ?User $user = null): QueryBuilder
+    protected function filters(QueryBuilder $qb, UserSearch $search, ?User $user = null): QueryBuilder
     {
         if ($search->getFirstname()) {
-            $query->andWhere('u.firstname LIKE :firstname')
+            $qb->andWhere('u.firstname LIKE :firstname')
                 ->setParameter('firstname', '%'.$search->getFirstname().'%');
         }
         if ($search->getLastname()) {
-            $query->andWhere('u.lastname LIKE :lastname')
+            $qb->andWhere('u.lastname LIKE :lastname')
                 ->setParameter('lastname', '%'.$search->getLastname().'%');
         }
         if ($search->getPhone()) {
-            $query->andWhere('u.phone1 LIKE :phone')
+            $qb->andWhere('u.phone1 LIKE :phone')
                 ->setParameter('phone', '%'.$search->getPhone().'%');
         }
 
         if (Choices::DISABLED === $search->getDisabled()) {
-            $query->andWhere('u.disabledAt IS NOT NULL');
+            $qb->andWhere('u.disabledAt IS NOT NULL');
         } elseif (Choices::ACTIVE === $search->getDisabled() || null === $search->getDisabled()) {
-            $query->andWhere('u.disabledAt IS NULL');
+            $qb->andWhere('u.disabledAt IS NULL');
         }
 
         if ($search->getStatus()) {
-            $query = $this->addOrWhere($query, 'u.status', $search->getStatus());
+            $qb = $this->addOrWhere($qb, 'u.status', $search->getStatus());
         }
 
-        $query = $this->addPolesFilter($query, $search, 'p.id');
-        $query = $this->addServicesFilter($query, $search);
+        $qb = $this->addPolesFilter($qb, $search, 'p.id');
+        $qb = $this->addServicesFilter($qb, $search);
 
         if ($user && in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
-            $query = $query->orderBy('u.lastActivityAt', 'DESC');
+            $qb = $qb->orderBy('u.lastActivityAt', 'DESC');
         } else {
-            $query = $query->orderBy('u.lastname', 'ASC');
+            $qb = $qb->orderBy('u.lastname', 'ASC');
         }
 
-        return $query;
+        return $qb;
     }
 
     /**
@@ -156,27 +159,27 @@ class UserRepository extends ServiceEntityRepository
      */
     public function findUsersToExport(UserSearch $search): ?array
     {
-        $query = $this->findUsersQuery($search);
-
-        return $query->getResult();
+        return $this->findUsersQuery($search)
+            ->getResult();
     }
 
     /**
-     * Donne la liste des utilisateurs.
+     * Donne la liste des référents possibles dans la page d'édition du suivi.
      */
-    public function getUsersQueryBuilder(Service $service = null, User $user = null): QueryBuilder
+    public function getSupportReferentsQueryBuilder(Service $service = null, User $currentUser, User $referent = null): QueryBuilder
     {
-        return $this->createQueryBuilder('u')->select('PARTIAL u.{id, firstname, lastname}')
-            ->leftJoin('u.serviceUser', 'r')
+        $users = [];
+        $users[] = $currentUser->getId();
+        
+        if ($referent) {
+            $users[] = $referent->getId();
+        }
 
-            ->where('u.status IN (:status)')
-            ->setParameter('status', [1, 2, 3])
-            ->andWhere('r.service = :services')
-            ->setParameter('services', $service)
-            ->orWhere('u.id = :user')
-            ->setParameter('user', $user)
-
-            ->orderBy('u.lastname', 'ASC');
+        return $this->getReferentsQueryBuilder()
+            ->andWhere('su.service = :service')
+            ->setParameter('service', $service)
+            ->orWhere('u.id IN (:users)')
+            ->setParameter('users', $users);
     }
 
     /**
@@ -184,12 +187,11 @@ class UserRepository extends ServiceEntityRepository
      */
     public function getUsersForCalendarQueryBuilder(User $user): QueryBuilder
     {
-        $query = $this->createQueryBuilder('u')->select('PARTIAL u.{id, firstname, lastname}')
-            ->leftJoin('u.serviceUser', 'r');
+        return $this->createQueryBuilder('u')->select('PARTIAL u.{id, firstname, lastname}')
+            ->leftJoin('u.serviceUser', 'r')
 
-        return $query->andWhere('r.service IN (:services)')
+            ->andWhere('r.service IN (:services)')
             ->setParameter('services', $user->getServices())
-
             ->orWhere('u.id = :user')
             ->setParameter('user', $user)
 
@@ -203,7 +205,7 @@ class UserRepository extends ServiceEntityRepository
      */
     public function findUsersOfServices(CurrentUserService $currentUser): ?array
     {
-        $query = $this->createQueryBuilder('u')->select('PARTIAL u.{id, firstname, lastname, disabledAt}')
+        $qb = $this->createQueryBuilder('u')->select('PARTIAL u.{id, firstname, lastname, disabledAt}')
             ->leftJoin('u.userDevices', 'ud')->addSelect('ud')
             ->leftJoin('ud.device', 'd')->addSelect('PARTIAL d.{id, name}')
 
@@ -211,17 +213,18 @@ class UserRepository extends ServiceEntityRepository
 
         if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
             if ($currentUser->hasRole('ROLE_ADMIN')) {
-                $query = $query->leftJoin('u.serviceUser', 'r')
+                $qb = $qb->leftJoin('u.serviceUser', 'r')
                     ->andWhere('r.service IN (:services)')
                     ->setParameter('services', $currentUser->getServices());
             } else {
-                $query->andWhere('u.id = :user')
+                $qb->andWhere('u.id = :user')
                 ->setParameter('user', $currentUser->getUser());
             }
         }
 
-        return $query->orderBy('u.lastname', 'ASC')
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+        return $qb->orderBy('u.lastname', 'ASC')
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -232,13 +235,13 @@ class UserRepository extends ServiceEntityRepository
      */
     public function getUsersOfService(Service $service): ?array
     {
-        $query = $this->getReferentsQueryBuilder();
+        return $this->getReferentsQueryBuilder()
 
-        return $query->andWhere('su.service = :service')
+            ->andWhere('su.service = :service')
             ->setParameter('service', $service)
 
-            ->orderBy('u.lastname', 'ASC')
-            ->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -247,35 +250,35 @@ class UserRepository extends ServiceEntityRepository
      */
     public function getReferentsOfServicesQueryBuilder(CurrentUserService $currentUser, Service $service = null, string $dataClass = null): QueryBuilder
     {
-        $query = $this->getReferentsQueryBuilder()
-            ->leftJoin('su.service', 's')->addSelect('PARTIAL s.{id, name, type}');
+        $qb = $this->getReferentsQueryBuilder();
 
         if ($dataClass) {
-            $query = $this->filterByServiceType($query, $dataClass);
+            $qb = $this->filterByServiceType($qb, $dataClass);
         }
         if ($service) {
-            $query = $query->andWhere('su.service = :service')
+            $qb = $qb->andWhere('su.service = :service')
                 ->setParameter('service', $service);
         }
-
         if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
-            $query = $query->leftJoin('u.serviceUser', 'r')
+            $qb = $qb->leftJoin('u.serviceUser', 'r')
                 ->andWhere('r.service IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
         }
 
-        return $query->orderBy('u.lastname', 'ASC');
+        return $qb;
     }
 
     private function getReferentsQueryBuilder(): QueryBuilder
     {
-        return $this->createQueryBuilder('u')
-            ->select('PARTIAL u.{id, firstname, lastname, disabledAt}')
+        return $this->createQueryBuilder('u')->select('u')
             ->leftJoin('u.serviceUser', 'su')->addSelect('su')
+            ->leftJoin('su.service', 's')->addSelect('s')
 
             ->andWhere('u.disabledAt IS NULL')
             ->andWhere('u.status IN (:status)')
-            ->setParameter('status', User::REFERENTS_STATUS);
+            ->setParameter('status', User::REFERENTS_STATUS)
+
+            ->orderBy('u.lastname', 'ASC');
     }
 
     /**
@@ -306,19 +309,19 @@ class UserRepository extends ServiceEntityRepository
      */
     public function findUsers(array $criteria = null): ?array
     {
-        $query = $this->createQueryBuilder('u')
+        $qb = $this->createQueryBuilder('u')
         ->andWhere('u.disabledAt IS NULL');
 
         if ($criteria) {
             foreach ($criteria as $key => $value) {
                 if ('status' === $key) {
-                    $query = $query->andWhere('u.status = :status')
+                    $qb = $qb->andWhere('u.status = :status')
                         ->setParameter('status', $value);
                 }
             }
         }
 
-        return $query->getQuery()
+        return $qb->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
@@ -328,25 +331,25 @@ class UserRepository extends ServiceEntityRepository
      */
     public function countUsers(array $criteria = null): int
     {
-        $query = $this->createQueryBuilder('u')->select('COUNT(u.id)')
+        $qb = $this->createQueryBuilder('u')->select('COUNT(u.id)')
             ->where('u.disabledAt IS NULL');
 
         if ($criteria) {
-            $query = $query->leftJoin('u.serviceUser', 'su');
+            $qb = $qb->leftJoin('u.serviceUser', 'su');
 
             foreach ($criteria as $key => $value) {
                 if ('service' === $key) {
-                    $query = $query->andWhere('su.service = :service')
+                    $qb = $qb->andWhere('su.service = :service')
                         ->setParameter('service', $value);
                 }
                 if ('status' === $key) {
-                    $query = $query->andWhere('u.status = :status')
+                    $qb = $qb->andWhere('u.status = :status')
                         ->setParameter('status', $value);
                 }
             }
         }
 
-        return $query->getQuery()
+        return $qb->getQuery()
             ->getSingleScalarResult();
     }
 

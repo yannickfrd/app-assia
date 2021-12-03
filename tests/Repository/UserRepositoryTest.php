@@ -3,14 +3,14 @@
 namespace App\Tests\Repository;
 
 use App\Entity\Organization\Pole;
-use App\Entity\Organization\User;
 use App\Entity\Organization\Service;
+use App\Entity\Organization\User;
 use App\Form\Model\Organization\UserSearch;
 use App\Repository\Organization\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class UserRepositoryTest extends WebTestCase
 {
@@ -34,7 +34,7 @@ class UserRepositoryTest extends WebTestCase
         /** @var AbstractDatabaseTool */
         $databaseTool = $this->getContainer()->get(DatabaseToolCollection::class)->get();
 
-        $fixtures = $databaseTool->loadAliceFixture([            
+        $fixtures = $databaseTool->loadAliceFixture([
             dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
         ]);
 
@@ -107,9 +107,9 @@ class UserRepositoryTest extends WebTestCase
      * Méthodes non testables.
      */
 
-    // public function testGetUsersQueryBuilder()
+    // public function testGetSupportReferentsQueryBuilder()
     // {
-    //     $this->assertNotNull($this->userRepo->getUsersQueryBuilder();
+    //     $this->assertNotNull($this->userRepo->getSupportReferentsQueryBuilder();
     // }
 
     // public function testGetAllUsersOfServicesQueryBuilder()

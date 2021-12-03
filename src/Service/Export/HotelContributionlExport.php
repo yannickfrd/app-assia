@@ -57,7 +57,7 @@ class HotelContributionlExport extends ExportExcel
             'Montant PAF' => (string) $payment->getToPayAmt(),
             'PAF à zéro' => $payment->getNoContribToString().($payment->getNoContribReason() ? ' ('.$payment->getNoContribReasonToString().')' : ''),
             'SIAO prescripteur nuitée' => $organization ? $organization->getName() : null,
-            'PASH' => 'PASH 95',
+            'PASH' => $supportGroup->getService()->getName(),
             'Commentaire' => $payment->getComment(),
         ];
     }

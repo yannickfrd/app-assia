@@ -26,11 +26,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class NewSupportGroupType extends AbstractType
 {
-    private $currentUser;
+    private $currentUserService;
 
-    public function __construct(CurrentUserService $currentUser)
+    public function __construct(CurrentUserService $currentUserService)
     {
-        $this->currentUser = $currentUser;
+        $this->currentUserService = $currentUserService;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -42,7 +42,7 @@ class NewSupportGroupType extends AbstractType
                 'class' => Service::class,
                 'choice_label' => 'name',
                 'query_builder' => function (ServiceRepository $repo) {
-                    return $repo->getServicesOfUserQueryBuilder($this->currentUser);
+                    return $repo->getServicesOfUserQueryBuilder($this->currentUserService);
                 },
                 'placeholder' => 'placeholder.select',
             ])
@@ -83,7 +83,7 @@ class NewSupportGroupType extends AbstractType
         return $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             /** @var SupportGroup $supportGroup */
             $supportGroup = $event->getData();
-            $supportGroup->setReferent($this->currentUser->getUser());
+            $supportGroup->setReferent($this->currentUserService->getUser());
         });
     }
 
@@ -102,7 +102,7 @@ class NewSupportGroupType extends AbstractType
                 'class' => Device::class,
                 'choice_label' => 'name',
                 'query_builder' => function (DeviceRepository $repo) use ($service) {
-                    return $repo->getDevicesOfUserQueryBuilder($this->currentUser, $service);
+                    return $repo->getDevicesOfUserQueryBuilder($this->currentUserService, $service);
                 },
                 'placeholder' => 'placeholder.select',
             ])
@@ -151,7 +151,7 @@ class NewSupportGroupType extends AbstractType
             'class' => User::class,
             'choice_label' => 'fullname',
             'query_builder' => function (UserRepository $repo) use ($service) {
-                return $repo->getUsersQueryBuilder($service, $this->currentUser->getUser());
+                return $repo->getSupportReferentsQueryBuilder($service, $this->currentUserService->getUser());
             },
             'placeholder' => 'placeholder.select',
             'required' => false,

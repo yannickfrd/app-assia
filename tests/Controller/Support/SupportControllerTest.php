@@ -112,7 +112,7 @@ class SupportControllerTest extends WebTestCase
         $this->createLogin($this->fixtures['userRoleUser']);
 
         $id = $this->fixtures['peopleGroup2']->getId();
-        $this->client->request('POST', "/group/$id/support/new", [
+        $this->client->request('POST', "/people-group/$id/new-support", [
             'support' => ['service' => $this->fixtures['service1']->getId()],
         ]);
 
@@ -127,7 +127,7 @@ class SupportControllerTest extends WebTestCase
         $this->createLogin($user = $this->fixtures['userRoleUser']);
 
         $id = $this->fixtures['peopleGroup2']->getId();
-        $this->client->request('POST', "/group/$id/support/new", [
+        $this->client->request('POST', "/people-group/$id/new-support", [
             'support' => [
                 'service' => $this->fixtures['service1'],
                 'device' => $this->fixtures['device1']->getCode(),
@@ -167,7 +167,7 @@ class SupportControllerTest extends WebTestCase
         $this->createLogin($this->fixtures['userRoleUser']);
 
         $id = $this->fixtures['peopleGroup2']->getId();
-        $this->client->request('POST', "/group/$id/support/new", [
+        $this->client->request('POST', "/people-group/$id/new-support", [
             'support' => ['service' => $this->fixtures['service1']->getId()],
         ]);
 
@@ -192,7 +192,7 @@ class SupportControllerTest extends WebTestCase
         $this->createLogin($this->fixtures['userRoleUser']);
 
         $id = $this->fixtures['peopleGroup1']->getId();
-        $this->client->request('POST', "/group/$id/support/new", [
+        $this->client->request('POST', "/people-group/$id/new-support", [
             'support' => ['service' => $this->fixtures['service1']->getId()],
         ]);
 

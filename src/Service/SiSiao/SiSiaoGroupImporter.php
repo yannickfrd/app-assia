@@ -105,7 +105,7 @@ class SiSiaoGroupImporter extends SiSiaoRequest
             $this->flashBag->add('warning', 'Ce groupe existe déjà.');
         } else {
             $peopleGroup = (new PeopleGroup())
-            ->setFamilyTypology($this->findInArray($this->ficheGroupe->composition, SiSiaoItems::FAMILY_TYPOLOGY))
+            ->setFamilyTypology($this->findInArray($this->ficheGroupe->composition, SiSiaoItems::FAMILY_TYPOLOGY) ?? 9)
             ->setNbPeople(count($this->ficheGroupe->personnes))
             ->setSiSiaoId($this->ficheGroupe->id)
             ->setSiSiaoImport(true)
@@ -191,10 +191,11 @@ class SiSiaoGroupImporter extends SiSiaoRequest
         if ($personne->age < 18) {
             return RolePerson::ROLE_CHILD; // Enfant
         }
-        if (in_array($this->ficheGroupe->composition->id, [10, 20])) {
+
+        if ($this->findInArray($this->ficheGroupe->composition, [10, 20])) {
             return 5; // Personne isolée
         }
-        if (in_array($this->ficheGroupe->composition->id, [40, 50])) {
+        if ($this->findInArray($this->ficheGroupe->composition, [40, 50])) {
             return 4; // Parent isolé
         }
 
