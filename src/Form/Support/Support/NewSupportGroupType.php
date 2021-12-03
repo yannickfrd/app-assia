@@ -47,7 +47,10 @@ class NewSupportGroupType extends AbstractType
                 'placeholder' => 'placeholder.select',
             ])
             ->add('subService', ChoiceType::class)
-            ->add('device', ChoiceType::class, ['placeholder' => 'placeholder.select'])
+            ->add('device', ChoiceType::class, [
+                'choice_value' => 'code',
+                'placeholder' => 'placeholder.select',
+            ])
             ->add('cloneSupport', CheckboxType::class, [
                 'label_attr' => ['class' => 'custom-control-label'],
                 'attr' => ['class' => 'custom-control-input checkbox'],
@@ -101,6 +104,7 @@ class NewSupportGroupType extends AbstractType
             ->add('device', EntityType::class, [
                 'class' => Device::class,
                 'choice_label' => 'name',
+                'choice_value' => 'code',
                 'query_builder' => function (DeviceRepository $repo) use ($service) {
                     return $repo->getDevicesOfUserQueryBuilder($this->currentUserService, $service);
                 },

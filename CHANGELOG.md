@@ -1,8 +1,14 @@
 CHANGELOG
 =========
 
+## Version 3.5.2 - 03/12/2021
+Add device codes
+* [Device] Add device codes
+* [NewSupportGroupType] Add choice_value 'code'
+* [DeviceRepository] Edit getDevicesOfUserQueryBuilder method
+* [Service] Add service types
 ## Version 3.5.1 - 03/12/2021
-Fix bugs and errors, factoring
+Fix bugs and errors, factoring (#79)
 * [SupportGroupType] Fix filter in list of active referents
 * [EvaluationController] Fix error to delete evaluation if initEval is null
 * [SiSiaoGroupImporter] Fix error if 'composition' is null

@@ -11,7 +11,6 @@ use App\Form\Utils\Choices;
 use App\Repository\Traits\QueryTrait;
 use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -108,7 +107,7 @@ class DeviceRepository extends ServiceEntityRepository
      */
     public function getDevicesOfUserQueryBuilder(CurrentUserService $currentUser, Service $service = null, string $dataClass = null): QueryBuilder
     {
-        $query = $this->createQueryBuilder('d')->select('PARTIAL d.{id, name, code, coefficient, place, disabledAt}')
+        $query = $this->createQueryBuilder('d')->select('d')
             ->leftJoin('d.serviceDevices', 'sd')->addSelect('sd')
             ->leftJoin('sd.service', 's')->addSelect('PARTIAL s.{id, name, type}');
 

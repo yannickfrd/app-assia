@@ -2,19 +2,18 @@
 
 namespace App\Entity\Organization;
 
-use App\Form\Utils\Choices;
-use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Traits\ContactEntityTrait;
-use App\Entity\Traits\DisableEntityTrait;
-use App\Entity\Organization\ServiceDevice;
-use App\Entity\Traits\LocationEntityTrait;
-use Doctrine\Common\Collections\Collection;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
+use App\Entity\Traits\DisableEntityTrait;
+use App\Entity\Traits\LocationEntityTrait;
+use App\Form\Utils\Choices;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Organization\ServiceRepository")
@@ -40,10 +39,14 @@ class Service
     public const SERVICE_TYPE_HOTEL = 3;
 
     public const SERVICE_TYPE = [
-        1 => 'Hébergement/Logement',
+        1 => 'Accompagnement social',
         2 => 'AVDL',
         3 => 'Accompagnement hôtel',
-        4 => 'Socio-judiciaire',
+        4 => 'Asile',
+        5 => 'Socio-judiciaire',
+        6 => 'Socio-médical',
+        7 => 'IAE',
+        97 => 'Autre',
     ];
 
     public const SUPPORT_ACCESS = [
