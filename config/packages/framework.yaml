@@ -8,10 +8,11 @@ framework:
     session:
         enabled: true
         handler_id: session.handler.native_file
+        save_path: "%kernel.project_dir%/var/sessions/%kernel.environment%"
         # cookie_httponly: true
         cookie_secure: true
         cookie_samesite: lax
-        gc_maxlifetime: 28800
+        gc_maxlifetime: 10800
 
     validation: { enable_annotations: true }
 
@@ -20,7 +21,7 @@ framework:
     php_errors:
         log: true
 
-    ide: "vscode"
+    ide: "%env(resolve:CODE_EDITOR)%"
 
     http_client:
         default_options:
