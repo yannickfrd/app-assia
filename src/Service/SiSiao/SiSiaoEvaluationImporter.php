@@ -31,10 +31,8 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 /**
  * Class to import evaluation from API SI-SIAO.
  */
-class SiSiaoEvaluationImporter extends SiSiaoRequest
+class SiSiaoEvaluationImporter extends SiSiaoClient
 {
-    use SiSiaoClientTrait;
-
     protected $em;
     protected $user;
     protected $flashBag;
@@ -59,14 +57,14 @@ class SiSiaoEvaluationImporter extends SiSiaoRequest
 
     public function __construct(
         HttpClientInterface $client,
-        RequestStack $request,
+        RequestStack $requestStack,
         EntityManagerInterface $em,
         Security $security,
         FlashBagInterface $flashBag,
         ExceptionNotification $exceptionNotification,
         string $url
     ) {
-        parent::__construct($client, $request, $url);
+        parent::__construct($client, $requestStack, $url);
 
         $this->em = $em;
         $this->user = $security->getUser();
@@ -215,8 +213,7 @@ class SiSiaoEvaluationImporter extends SiSiaoRequest
 
         $evalFamilyGroup
             ->setFamlReunification($this->findInArray($sitFamille->regroupementFamilial, SiSiaoItems::FAML_REUNIFICATION))
-            ->setNbPeopleReunification($sitFamille->regroupementNombrePersonnes)
-            ->setPmiFollowUp($this->findInArray($dp->suiviPMI, SiSiaoItems::YES_NO));
+            ->setNbPeopleReunification($sitFamille->regroupementNombrePersonnes);
 
         $evaluationGroup->setEvalFamilyGroup($evalFamilyGroup);
 
@@ -499,9 +496,6 @@ class SiSiaoEvaluationImporter extends SiSiaoRequest
     {
         if (!$evalFamilyPerson = $evaluationPerson->getEvalFamilyPerson()) {
             $evalFamilyPerson = (new EvalFamilyPerson())
-                // ->setChildcareSchoolType(null)
-                // ->setProtectiveMeasure(null)
-                // ->setProtectiveMeasureType(null)
                 ->setEvaluationPerson($evaluationPerson);
 
             $this->em->persist($evalFamilyPerson);
@@ -511,7 +505,11 @@ class SiSiaoEvaluationImporter extends SiSiaoRequest
             ->setMaritalStatus($this->findInArray($personne->situation, SiSiaoItems::MARITAL_STATUS))
             ->setUnbornChild($this->findInArray($personne->grossesse, SiSiaoItems::YES_NO))
             ->setExpDateChildbirth($this->convertDate($personne->dateTerme))
-            ->setPregnancyType($this->findInArray($personne->typeGrossesse, SiSiaoItems::PREGNANCY_TYPE));
+            ->setPregnancyType($this->findInArray($personne->typeGrossesse, SiSiaoItems::PREGNANCY_TYPE))
+            // ->setChildcareSchoolType(null)
+            // ->setProtectiveMeasure(null)
+            // ->setProtectiveMeasureType(null)
+            ->setPmiFollowUp($this->findInArray($personne->suiviPMI, SiSiaoItems::YES_NO));
 
         $evaluationPerson->setEvalFamilyPerson($evalFamilyPerson);
 

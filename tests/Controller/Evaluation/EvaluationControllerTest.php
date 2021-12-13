@@ -34,7 +34,7 @@ class EvaluationControllerTest extends WebTestCase
 
         $this->client = $this->createClient();
 
-        /** @var AbstractDatabaseTool */
+        /* @var AbstractDatabaseTool */
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
 
         $this->fixtures = $this->databaseTool->loadAliceFixture([
@@ -57,7 +57,7 @@ class EvaluationControllerTest extends WebTestCase
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Évaluation sociale');
-        $this->assertSelectorTextContains('.small.text-secondary', 'Évaluation créée le');
+        $this->assertSelectorTextContains('.small.text-secondary', 'Créée le');
     }
 
     public function testCreateEvaluationIsRedirect()

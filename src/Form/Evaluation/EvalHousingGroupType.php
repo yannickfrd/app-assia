@@ -2,15 +2,16 @@
 
 namespace App\Form\Evaluation;
 
-use App\Form\Utils\Choices;
+use App\Entity\Evaluation\EvalHousingGroup;
 use App\Entity\Organization\Service;
+use App\Form\Utils\Choices;
 use App\Form\Utils\EvaluationChoices;
 use Symfony\Component\Form\AbstractType;
-use App\Entity\Evaluation\EvalHousingGroup;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class EvalHousingGroupType extends AbstractType
 {
@@ -240,11 +241,11 @@ class EvalHousingGroupType extends AbstractType
                     'required' => false,
                 ])
                 ->add('expulsionComment')
-                ->add('fsl')
-                ->add('fslEligibility')
-                ->add('cafEligibility')
-                ->add('otherHelps')
-                ->add('hepsPrecision');
+                ->add('fsl', HiddenType::class)
+                ->add('fslEligibility', HiddenType::class)
+                ->add('cafEligibility', HiddenType::class)
+                ->add('otherHelps', HiddenType::class)
+                ->add('hepsPrecision', HiddenType::class);
         }
     }
 

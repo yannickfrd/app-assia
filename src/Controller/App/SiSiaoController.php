@@ -6,9 +6,10 @@ use App\Entity\Support\SupportGroup;
 use App\Event\Evaluation\EvaluationEvent;
 use App\Form\Admin\Security\SiSiaoLoginType;
 use App\Form\Model\SiSiao\SiSiaoLogin;
+use App\Service\SiSiao\SiSiaoClient;
 use App\Service\SiSiao\SiSiaoEvaluationImporter;
+use App\Service\SiSiao\SiSiaoGlossary;
 use App\Service\SiSiao\SiSiaoGroupImporter;
-use App\Service\SiSiao\SiSiaoRequest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -23,12 +24,12 @@ class SiSiaoController extends AbstractController
 {
     use TargetPathTrait;
 
-    protected $siSiaoRequest;
+    protected $siSiaoClient;
     protected $translator;
 
-    public function __construct(SiSiaoRequest $siSiaoRequest, TranslatorInterface $translator)
+    public function __construct(SiSiaoClient $siSiaoClient, TranslatorInterface $translator)
     {
-        $this->siSiaoRequest = $siSiaoRequest;
+        $this->siSiaoClient = $siSiaoClient;
         $this->translator = $translator;
     }
 
@@ -45,7 +46,7 @@ class SiSiaoController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $response = $this->siSiaoRequest->login($siSiaoLogin);
+            $response = $this->siSiaoClient->login($siSiaoLogin);
 
             if ($response['isConnected']) {
                 $this->addFlash('success', 'si_siao.login_successfully');
@@ -70,7 +71,7 @@ class SiSiaoController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $response = $this->siSiaoRequest->login($siSiaoLogin);
+            $response = $this->siSiaoClient->login($siSiaoLogin);
 
             if ($response['isConnected']) {
                 return $this->json([
@@ -92,7 +93,7 @@ class SiSiaoController extends AbstractController
      */
     public function checkConnection(): JsonResponse
     {
-        if (false === $this->siSiaoRequest->isConnected()) {
+        if (false === $this->siSiaoClient->isConnected()) {
             return $this->json(['isConnected' => false]);
         }
 
@@ -111,7 +112,7 @@ class SiSiaoController extends AbstractController
     public function searchGroup(int $id): JsonResponse
     {
         return $this->json([
-            'people' => $this->siSiaoRequest->findPeople($id),
+            'people' => $this->siSiaoClient->findPeople($id),
         ]);
     }
 
@@ -122,7 +123,7 @@ class SiSiaoController extends AbstractController
      */
     public function showGroup(int $id): JsonResponse
     {
-        $data = $this->siSiaoRequest->findGroupById($id);
+        $data = $this->siSiaoClient->findGroupById($id);
 
         if (is_array($data) && 'success' === $data['alert']) {
             return $this->json([
@@ -183,7 +184,7 @@ class SiSiaoController extends AbstractController
      */
     public function getUser(): JsonResponse
     {
-        return $this->json($this->siSiaoRequest->getUser());
+        return $this->json($this->siSiaoClient->getUser());
     }
 
     /**
@@ -191,7 +192,7 @@ class SiSiaoController extends AbstractController
      */
     public function logout(): JsonResponse
     {
-        $this->siSiaoRequest->logout();
+        $this->siSiaoClient->logout();
 
         return $this->json([
             'alert' => 'success',
@@ -205,9 +206,9 @@ class SiSiaoController extends AbstractController
      * @Route("/api-sisiao/referentiels", name="api_sisiao_referentiels", methods="GET")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
-    public function getReferentiels(): Response
+    public function getReferentiels(SiSiaoGlossary $siSiaoGlossary): Response
     {
-        return new Response($this->siSiaoRequest->getReferentielsToString());
+        return new Response($siSiaoGlossary->getReferentielsToString());
     }
 
     // /**
@@ -215,7 +216,7 @@ class SiSiaoController extends AbstractController
     //  */
     // public function updateEvaluation(int $id): JsonResponse
     // {
-    //     return $this->json($this->siSiaoRequest->updateEvaluation($id));
+    //     return $this->json($this->siSiaoClient->updateEvaluation($id));
     // }
 
     // /**
@@ -223,7 +224,7 @@ class SiSiaoController extends AbstractController
     //  */
     // public function updateSiaoRequest(int $id): JsonResponse
     // {
-    //     return $this->json($this->siSiaoRequest->updateSiaoRequest($id));
+    //     return $this->json($this->siSiaoClient->updateSiaoRequest($id));
     // }
 
     // /**
@@ -234,6 +235,6 @@ class SiSiaoController extends AbstractController
     //  */
     // public function dumpGroup(int $id): JsonResponse
     // {
-    //     return $this->json($this->siSiaoRequest->dumpGroupById($id));
+    //     return $this->json($this->siSiaoClient->dumpGroupById($id));
     // }
 }

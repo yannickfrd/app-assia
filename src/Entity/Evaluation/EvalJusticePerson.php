@@ -3,13 +3,18 @@
 namespace App\Entity\Evaluation;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Evaluation\EvalJusticePersonRepository")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class EvalJusticePerson
 {
+    use SoftDeleteableEntity;
+
     public const JUSTICE_STATUS = [
         1 => 'Contrainte pénale',
         2 => 'Contrôle judiciaire (CJ)', // Sursis probatoire

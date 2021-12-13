@@ -2,16 +2,16 @@
 
 namespace App\Form\Evaluation;
 
-use App\Form\Utils\Choices;
+use App\Entity\Evaluation\EvalFamilyPerson;
 use App\Entity\People\RolePerson;
 use App\Entity\Support\SupportPerson;
+use App\Form\Utils\Choices;
 use App\Form\Utils\EvaluationChoices;
 use Symfony\Component\Form\AbstractType;
-use App\Entity\Evaluation\EvalFamilyPerson;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class EvalFamilyPersonType extends AbstractType
 {
@@ -27,6 +27,13 @@ class EvalFamilyPersonType extends AbstractType
         }
 
         $builder
+            ->add('pmiFollowUp', ChoiceType::class, [
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+                // 'help' => 'pmiFollowUp.help',
+            ])
+            ->add('pmiName')
             ->add('commentEvalFamilyPerson', null, [
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
@@ -34,7 +41,22 @@ class EvalFamilyPersonType extends AbstractType
                     'class' => 'justify',
                     'placeholder' => 'evalFamilyPerson.comment',
                 ],
-            ]);
+            ])
+            ->add('unbornChild', ChoiceType::class, [
+                'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
+            ->add('expDateChildbirth', DateType::class, [
+                'widget' => 'single_text',
+                'required' => false,
+            ])
+            ->add('pregnancyType', ChoiceType::class, [
+                'choices' => Choices::getChoices(EvalFamilyPerson::PREGNANCY_TYPE),
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
+        ;
     }
 
     protected function addAdultFields(FormBuilderInterface $builder)
@@ -50,20 +72,6 @@ class EvalFamilyPersonType extends AbstractType
             ])
             ->add('noConciliationOrder', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
-                'placeholder' => 'placeholder.select',
-                'required' => false,
-            ])
-            ->add('unbornChild', ChoiceType::class, [
-                'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
-                'placeholder' => 'placeholder.select',
-                'required' => false,
-            ])
-            ->add('expDateChildbirth', DateType::class, [
-                'widget' => 'single_text',
-                'required' => false,
-            ])
-            ->add('pregnancyType', ChoiceType::class, [
-                'choices' => Choices::getChoices(EvalFamilyPerson::PREGNANCY_TYPE),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])

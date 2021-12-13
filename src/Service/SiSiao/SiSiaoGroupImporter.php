@@ -17,10 +17,8 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 /**
  * Class to import group and people from API SI-SIAO.
  */
-class SiSiaoGroupImporter extends SiSiaoRequest
+class SiSiaoGroupImporter extends SiSiaoClient
 {
-    use SiSiaoClientTrait;
-
     protected $em;
     protected $user;
     protected $personRepo;
@@ -33,7 +31,7 @@ class SiSiaoGroupImporter extends SiSiaoRequest
 
     public function __construct(
         HttpClientInterface $client,
-        RequestStack $request,
+        RequestStack $requestStack,
         EntityManagerInterface $em,
         Security $security,
         PersonRepository $personRepo,
@@ -42,7 +40,7 @@ class SiSiaoGroupImporter extends SiSiaoRequest
         ExceptionNotification $exceptionNotification,
         string $url
     ) {
-        parent::__construct($client, $request, $url);
+        parent::__construct($client, $requestStack, $url);
 
         $this->em = $em;
         $this->user = $security->getUser();

@@ -2,24 +2,27 @@
 
 namespace App\Entity\Organization;
 
-use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Support\OriginRequest;
-use Doctrine\Common\Collections\Collection;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Organization\OrganizationRepository")
  * @UniqueEntity(
  *     fields={"name"},
  *     message="Cet organisme existe déjà !")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class Organization
 {
     use CreatedUpdatedEntityTrait;
-
+    use SoftDeleteableEntity;
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

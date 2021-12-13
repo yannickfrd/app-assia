@@ -1,10 +1,48 @@
 CHANGELOG
 =========
 
+## Version 3.6.0 - 13/12/2021
+* [EvalAdminPerson] Add new ASYLUM_STATUS items
+* [EvalAdminPersonType] Add 'asylumBackground' and 'asylumStatus' to important fields
+* [_evaluationAccordion] Edit button to reduce accordion
+* [evaluationEdit] Edit button to save
+* [Evaluation] Add AGDREF ID in evaluation
+* [evaluationEdit] Add shortcuts to export evaluation in PDF/Word in view
+* Rename const 'COEFFICIENT_DEFAULT' to 'DEFAULT_COEFFICIENT
+* Edit block to export evaluation
+* Create migration to rename 'contribution' to 'payment' table
+* Edit .gitignore to add 'migrations' folder
+* [EvaluationFamilyPerson] Add 'pmiFollowUp' 'pmiName' fields
+* [EvaluationFamilyPerson] Create Command to update pmi info
+* [SiSiao] Refactor classes and update tests
+* [Evaluation] Update 'testCreateEvaluationIsSuccessful' test
+* [Entity] Add SoftDeleteable to all entities
+* [Composer] Update PHP dependencies to symfony 5.4.1
+* [SiSiao] change SessionInterface to RequestStack in constructor
+* [EvaluationFamilyPerson] Create Command to update pmi info
+* [SiSiao] Refactor classes and update tests
+* [Evaluation] Update 'testCreateEvaluationIsSuccessful' test
+* [Entity] Add SoftDeleteable to all entities
+* [migration] Add migration file
+* [SiSiao] change SessionInterface to RequestStack in constructor
+
+## Version 3.5.5 - 04/12/2021
+Edit framework config (session and ide) (#83)
+* Move the sessions in 'var/session/' directory
+* Add a var env 'CODE_EDITOR' for ide
+
+## Version 3.5.4 - 04/12/2021
+Fix errors (#82)
+* Fix error composer.lock
+* Delete dump in login.html.twig
 ## Version 3.5.3 - 03/12/2021
-Refactor all repositories
+Refactor all repositories  (#81)
 * Rename 'query' var to 'qb' var
 * Indentation
+
+* [evaluation] Reset not displayed fields before to save
+* Edit field filters in evaluationFamily
+* Edit field filters in evaluationSocial
 
 ## Version 3.5.2 - 03/12/2021
 Add device codes

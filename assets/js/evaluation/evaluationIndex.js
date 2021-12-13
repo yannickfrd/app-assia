@@ -4,6 +4,7 @@ import EvaluationBudget from './evaluationBudget'
 import ImportantFields from './importantFields'
 import changeChecker from '../utils/form/changeChecker'
 import '../utils/accordionChevron'
+import  '../utils/maskNumber'
 import AutoSizer from '../utils/form/autoSizer'
 import StopWatch from '../utils/stopWatch'
 
@@ -16,5 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
     new ImportantFields()
     new changeChecker('evaluation')
     new AutoSizer('textarea')
+    
     stopWatch.stop()
 })

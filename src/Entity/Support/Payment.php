@@ -6,15 +6,19 @@ use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use App\Form\Utils\Choices;
 use App\Repository\Support\PaymentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=PaymentRepository::class)
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class Payment
 {
     use CreatedUpdatedEntityTrait;
+    use SoftDeleteableEntity;
 
     public const CONTRIBUTION = 1;
     public const RENT = 2;

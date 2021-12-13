@@ -4,13 +4,18 @@ namespace App\Entity\Evaluation;
 
 use App\Form\Utils\EvaluationChoices;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Evaluation\EvalProfPersonRepository")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class EvalProfPerson
 {
+    use SoftDeleteableEntity;
+
     public const SCHOOL_LEVEL = [
         1 => 'Savoir de base non acquis, illettrisme',
         2 => 'Avant 3ème',

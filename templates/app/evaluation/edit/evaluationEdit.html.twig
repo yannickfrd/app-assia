@@ -27,8 +27,9 @@
 		{% include "model/_msgFlash.html.twig" %}
 		<div id="js-msg-flash-content"></div>
 
-		<div class="row my-3 align-items-center" data-edit-mode="{{ EDIT_MODE ? 'true' : 'false' }}">
-			<div class="col-md-12 my-1 small text-secondary">Évaluation créée le {{ evaluationGroup.createdAt|date("d/m/Y à H:i") }}
+		<div class="row mb-3 align-items-center">
+			<div class="col-md-6 my-2 small text-secondary" data-edit-mode="{{ EDIT_MODE ? 'true' : 'false' }}">
+				Créée le {{ evaluationGroup.createdAt|date("d/m/Y à H:i") }}
 				<span id="evaluation-updateAt">
 					{% if evaluationGroup.updatedAt != evaluationGroup.createdAt %}
 						(modifiée le {{ evaluationGroup.updatedAt|date("d/m/Y à H:i") }}
@@ -36,8 +37,10 @@
 					{% endif %}
 				</span>
 			</div>
+			<div class="col-md-6">
+				{% include "app/evaluation/_export_evaluation.html.twig" %}
+			</div>
 		</div>
-
 		<div class="mb-4">
 			{% include "app/evaluation/edit/_initEvaluation.html.twig" with {accordion_id: "init_eval"} %}
 			{% include "app/evaluation/edit/_evaluationBackground.html.twig" with {accordion_id: "eval_background"} %}
@@ -84,8 +87,7 @@
 				<div class="mb-4 float-right">
 					<button type="submit" name="send" class="btn btn-{{ theme_color }} shadow" 
 						data-url="{{ path('support_evaluation_edit', {'id': support.id}) }}">
-						<i class="fas fa-save mr-2"></i>{% if EDIT_MODE %}Mettre à jour{% else %}Enregistrer{% endif %}
-					</button>
+						<i class="fas fa-save mr-2"></i>Enregistrer</button>
 				</div>
 			</div>
 		</div>

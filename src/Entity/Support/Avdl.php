@@ -2,15 +2,19 @@
 
 namespace App\Entity\Support;
 
-use App\Repository\Support\AvdlRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 
 /**
  * @ORM\Entity(repositoryClass=AvdlRepository::class)
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class Avdl
 {
+    use SoftDeleteableEntity;
+
     public const DIAG_TYPE = [
         1 => 'Léger',
         2 => 'Approfondi',

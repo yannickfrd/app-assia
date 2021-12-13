@@ -109,7 +109,7 @@ services:
         arguments:
             $tinifyKey: "%env(TINIFY_KEY)%"
 
-    App\Service\SiSiao\SiSiaoRequest:
+    App\Service\SiSiao\SiSiaoClient:
         arguments:
             $url: "%env(SISIAO_URL)%"
 
@@ -118,6 +118,10 @@ services:
             $url: "%env(SISIAO_URL)%"
 
     App\Service\SiSiao\SiSiaoEvaluationImporter:
+        arguments:
+            $url: "%env(SISIAO_URL)%"
+
+    App\Service\SiSiao\SiSiaoGlossary:
         arguments:
             $url: "%env(SISIAO_URL)%"
 

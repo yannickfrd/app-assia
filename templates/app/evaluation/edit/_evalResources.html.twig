@@ -36,9 +36,7 @@
                         {% for ressKey, ressValue in ressources %}
                             <tr class="d-table-row" data-parent-select="{{ key }}_{{ entity }}_resourcesType"
                                 data-value="{{ ressKey }}" data-sp-id="{{ support_person_id }}">
-                                <td scope="row">
-                                    <div class="d-none">{{ form_widget(attribute(evalBudgetPerson.resources, ressKey)) }}</div>
-                                </td>
+                                <td scope="row">{{ form_widget(attribute(evalBudgetPerson.resources, ressKey)) }}</td>
                                 <td class="align-middle">{{ not loop.last ? ressValue : 
                                     form_widget(evalBudgetPerson.resources.ressourceOtherPrecision) }}
                                 </td>

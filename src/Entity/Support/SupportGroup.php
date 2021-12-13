@@ -108,7 +108,7 @@ class SupportGroup
         99 => 'Inconnue',
     ];
 
-    public const COEFFICIENT_DEFAULT = 1;
+    public const DEFAULT_COEFFICIENT = 1;
     public const COEFFICIENT_DOUBLE = 2;
     public const COEFFICIENT_HALF = 0.5;
     public const COEFFICIENT_THIRD = 0.3;
@@ -172,7 +172,7 @@ class SupportGroup
      * maxMessage="Le coefficient ne peut être supérieur à {{ limit }}")
      * @Groups("export")
      */
-    private $coefficient = self::COEFFICIENT_DEFAULT;
+    private $coefficient = self::DEFAULT_COEFFICIENT;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)

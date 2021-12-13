@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
- * Corrige les incorrences dans la situation budgétaire de l'évaluation.
+ * Corrige les incohérences dans la situation budgétaire de l'évaluation.
  */
 class UpdateEvalBudgetCommand extends Command
 {

@@ -4,13 +4,18 @@ namespace App\Entity\Evaluation;
 
 use App\Form\Utils\EvaluationChoices;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Evaluation\EvalFamilyGroupRepository")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class EvalFamilyGroup
 {
+    use SoftDeleteableEntity;
+
     public const FAML_REUNIFICATION = [
         1 => 'Oui',
         2 => 'Non',

@@ -4,13 +4,18 @@ namespace App\Entity\Evaluation;
 
 use App\Form\Utils\EvaluationChoices;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Evaluation\EvalSocialPersonRepository")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class EvalSocialPerson
 {
+    use SoftDeleteableEntity;
+
     public const SOCIAL_SECURITY = [
         6 => 'ACS',
         5 => 'AME',

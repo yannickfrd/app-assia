@@ -5,13 +5,18 @@ namespace App\Entity\Evaluation;
 use App\Entity\Support\SupportGroup;
 use App\Form\Utils\EvaluationChoices;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Evaluation\InitEvalGroupRepository")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class InitEvalGroup
 {
+    use SoftDeleteableEntity;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

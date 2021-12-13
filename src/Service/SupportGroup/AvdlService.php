@@ -105,6 +105,6 @@ class AvdlService
             return SupportGroup::COEFFICIENT_DOUBLE;
         }
         // Sinon par défaut : coeff. 1
-        return SupportGroup::COEFFICIENT_DEFAULT;
+        return SupportGroup::DEFAULT_COEFFICIENT;
     }
 }

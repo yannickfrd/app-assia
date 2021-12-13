@@ -4,15 +4,19 @@ namespace App\Entity\Support;
 
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Support\NoteRepository")
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class Note
 {
     use CreatedUpdatedEntityTrait;
+    use SoftDeleteableEntity;
 
     public const TYPE_NOTE = 1;
     public const TYPE_REPORT = 2;

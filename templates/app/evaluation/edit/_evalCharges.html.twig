@@ -34,9 +34,7 @@
                         {% for chargeKey, chargeValue in charges %}
                         <tr class="d-table-row" data-parent-select="{{ key }}_{{ entity }}_chargesType" 
                             data-value="{{ chargeKey }}">
-                            <td scope="row">
-                                <div class="d-none">{{ form_widget(attribute(evalBudgetPerson, chargeKey)) }}</div>
-                            </td>
+                            <td scope="row">{{ form_widget(attribute(evalBudgetPerson, chargeKey)) }}</td>
                             <td class="align-middle">{{ not loop.last ? chargeValue : 
                                 form_widget(evalBudgetPerson.chargeOtherPrecision) }}
                             </td>

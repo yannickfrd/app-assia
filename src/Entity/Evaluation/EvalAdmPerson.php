@@ -4,13 +4,18 @@ namespace App\Entity\Evaluation;
 
 use App\Form\Utils\EvaluationChoices;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Evaluation\EvalAdmPersonRepository")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class EvalAdmPerson
 {
+    use SoftDeleteableEntity;
+
     public const NATIONALITY = [
         1 => 'France',
         2 => 'Union-Européenne',
@@ -36,10 +41,14 @@ class EvalAdmPerson
 
     public const ASYLUM_STATUS = [
         1 => "Débouté du droit d'asile",
-        2 => "Demandeur d'asile",
+        6 => "Demande d'asile - Procédure accélérée",
+        2 => "Demande d'asile - Procédure normale",
+        7 => 'Procédure Dublin',
+        8 => 'Procédure Schengen',
         3 => 'Protection subsidiaire',
+        9 => 'Recours CNDA',
         5 => 'Récépissé asile',
-        4 => 'Réfugié',
+        4 => 'Réfugié statutaire',
         97 => 'Autre',
         99 => 'Non évalué',
     ];

@@ -24,7 +24,7 @@ class Device
 {
     use CreatedUpdatedEntityTrait;
     use DisableEntityTrait;
-
+    
     public const CODES = [
         9 => '10 000 LA BA',
         13 => '10 000 LA BD',
