@@ -132,16 +132,6 @@ class EvaluationGroup
         $this->setInitEvalGroup(new InitEvalGroup());
     }
 
-    /**
-     * @ORM\PreFlush
-     */
-    public function preFlush(): void
-    {
-        if ($this->supportGroup) {
-            $this->supportGroup->setUpdatedAt(new \DateTime());
-        }
-    }
-
     public function getId(): ?int
     {
         return $this->id;

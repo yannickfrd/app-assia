@@ -2,16 +2,17 @@
 
 namespace App\Command\Support;
 
-use App\Entity\People\RolePerson;
-use App\Repository\Support\SupportGroupRepository;
 use App\Service\DoctrineTrait;
+use App\Entity\People\RolePerson;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Stopwatch\Stopwatch;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Style\SymfonyStyle;
+use App\Repository\Support\SupportGroupRepository;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Commande pour mettre à jour le nombre de personnes par suivi (TEMPORAIRE, A SUPPRIMER).
@@ -41,6 +42,7 @@ class UpdateFamilyTypologyOfSupportCommand extends Command
     {
         $this
             ->setDescription(self::$defaultDescription)
+            ->addArgument('fix', InputArgument::OPTIONAL, 'Fix the problem')
             ->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Query limit', 1000)
         ;
     }
@@ -49,11 +51,16 @@ class UpdateFamilyTypologyOfSupportCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $limit = $input->getOption('limit');
+        $arg = $input->getArgument('fix');
 
         $this->stopwatch->start('command');
 
         $supports = $this->supportGroupRepo->findBy([], ['updatedAt' => 'DESC'], $limit);
+        $nbSupports = count($supports);
         $count = 0;
+
+        $io->createProgressBar();
+        $io->progressStart($nbSupports);
 
         foreach ($supports as $supportGroup) {
             $peopleGroup = $supportGroup->getPeopleGroup();
@@ -85,12 +92,19 @@ class UpdateFamilyTypologyOfSupportCommand extends Command
                 $supportGroup->setNbPeople($nbSupportPeople);
                 ++$count;
             }
+            
+            $io->progressAdvance();
         }
 
-        $this->em->flush();
+
+        if ('fix' === $arg) {
+            $this->em->flush();
+        }
+
+        $io->progressFinish();
 
         $io->success('The typology family of supports are update !'
-            ."\n  ".$count.' / '.count($supports)
+            ."\n  ".$count.' / '.$nbSupports
             ."\n  ".number_format($this->stopwatch->start('command')->getDuration(), 0, ',', ' ').' ms');
 
         return Command::SUCCESS;

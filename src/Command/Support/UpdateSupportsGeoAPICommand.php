@@ -6,6 +6,7 @@ use App\Repository\Support\SupportGroupRepository;
 use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -47,10 +48,14 @@ class UpdateSupportsGeoAPICommand extends Command
         $limit = $input->getOption('limit');
 
         $supports = $this->supportGroupRepo->findBy([], ['updatedAt' => 'DESC'], $limit);
+        $nbSupports = count($supports);
         $count = 0;
 
+        $io->createProgressBar();
+        $io->progressStart($nbSupports);
+
         foreach ($supports as $support) {
-            if (null === $support->getLocationId() && $count < 10) {
+            if (null === $support->getLocationId() && $support->getAddress()) {
                 $valueSearch = $support->getAddress().'+'.$support->getCity();
                 $valueSearch = $this->cleanString($valueSearch);
                 $geo = '&lat=49.04&lon=2.04';
@@ -69,13 +74,18 @@ class UpdateSupportsGeoAPICommand extends Command
                             ->setLon($feature->geometry->coordinates[0])
                             ->setLat($feature->geometry->coordinates[1]);
                     }
-                    $this->em->flush();
                     ++$count;
                 }
             }
+            
+            $io->progressAdvance();
         }
 
-        $io->success("The address of supports are update ! \n ".$count.' / '.count($supports));
+        $this->em->flush();
+
+        $io->progressFinish();
+
+        $io->success("The address of supports are update ! \n ".$count.' / '.$nbSupports);
 
         return Command::SUCCESS;
     }

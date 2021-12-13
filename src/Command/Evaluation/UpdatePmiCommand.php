@@ -28,6 +28,7 @@ class UpdatePmiCommand extends Command
     {
         $this->evaluationGroupRepo = $evaluationGroupRepo;
         $this->em = $em;
+        $this->disableListeners($this->em);
 
         parent::__construct();
     }
@@ -61,9 +62,12 @@ class UpdatePmiCommand extends Command
                 }
                 ++$count;
             }
+            
             $io->progressAdvance();
         }
         $this->em->flush();
+
+        $io->progressFinish();
 
         $io->success("The PMI informations are update !\n ".$count.' / '.$nbEvaluations);
 

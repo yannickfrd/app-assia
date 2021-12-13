@@ -6,6 +6,7 @@ use App\Repository\Support\PlaceGroupRepository;
 use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -37,6 +38,7 @@ class UpdatePlacePersonCommand extends Command
     {
         $this
             ->setDescription(self::$defaultDescription)
+            ->addArgument('fix', InputArgument::OPTIONAL, 'Fix the problem')
             ->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Query limit', 1000)
         ;
     }
@@ -45,17 +47,19 @@ class UpdatePlacePersonCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $limit = $input->getOption('limit');
-
-        $nbPlacePeople = 0;
-        $countUpdate = 0;
+        $arg = $input->getArgument('fix');
 
         $placeGroups = $this->placeGroupRepo->findBy([], ['updatedAt' => 'DESC'], $limit);
+        $nbPlaceGroups = count($placeGroups);
+        $countUpdate = 0;
+
+        $io->createProgressBar();
+        $io->progressStart($nbPlaceGroups);
 
         foreach ($placeGroups as $placeGroup) {
             $supportGroup = $placeGroup->getSupportGroup();
 
             foreach ($placeGroup->getPlacePeople() as $placePerson) {
-                ++$nbPlacePeople;
                 foreach ($supportGroup->getSupportPeople() as $supportPerson) {
                     if (null === $placePerson->getSupportPerson() && $placePerson->getPerson()->getId() === $supportPerson->getPerson()->getId()) {
                         $placePerson->setSupportPerson($supportPerson);
@@ -63,10 +67,17 @@ class UpdatePlacePersonCommand extends Command
                     }
                 }
             }
-        }
-        $this->em->flush();
 
-        $io->success("Update PlacePerson entities is successfull !\n  ".$countUpdate.' / '.$nbPlacePeople);
+            $io->progressAdvance();
+        }
+        
+        if ('fix' === $arg) {
+            $this->em->flush();
+        }
+        
+        $io->progressFinish();
+
+        $io->success("Update PlacePerson entities is successfull !\n  ".$countUpdate.' / '.$nbPlaceGroups);
 
         return Command::SUCCESS;
     }

@@ -7,6 +7,7 @@ use App\Service\DoctrineTrait;
 use App\Service\People\PeopleGroupChecker;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -40,6 +41,7 @@ class CheckHeadInGroupsCommand extends Command
     {
         $this
             ->setDescription(self::$defaultDescription)
+            ->addArgument('fix', InputArgument::OPTIONAL, 'Fix the problem')
             ->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Query limit', 1000)
         ;
     }
@@ -48,9 +50,14 @@ class CheckHeadInGroupsCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $limit = $input->getOption('limit');
+        $arg = $input->getArgument('fix');
 
         $peopleGroups = $this->peopleGroupRepo->findBy([], ['updatedAt' => 'DESC'], $limit);
+        $nbpeopleGroups = count($peopleGroups);
         $count = 0;
+
+        $io->createProgressBar();
+        $io->progressStart($nbpeopleGroups);
 
         foreach ($peopleGroups as $peopleGroup) {
             $countHeads = 0;
@@ -64,12 +71,18 @@ class CheckHeadInGroupsCommand extends Command
                 $this->peopleGroupChecker->checkValidHeader($peopleGroup);
                 ++$count;
             }
+
+            $io->progressAdvance();
         }
 
-        $this->em->flush();
+        if ('fix' === $arg) {
+            $this->em->flush();
+        }
+
+        $io->progressFinish();
 
         $io->success('The headers in peopleGroup are checked !'.
-            "\n  ".$count.' / '.count($peopleGroups).' are invalids.');
+            "\n  ".$count.' / '.$nbpeopleGroups.' are invalids.');
 
         return Command::SUCCESS;
     }

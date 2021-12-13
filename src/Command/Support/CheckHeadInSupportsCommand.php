@@ -7,6 +7,7 @@ use App\Service\DoctrineTrait;
 use App\Service\SupportGroup\SupportChecker;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -40,6 +41,7 @@ class CheckHeadInSupportsCommand extends Command
     {
         $this
             ->setDescription(self::$defaultDescription)
+            ->addArgument('fix', InputArgument::OPTIONAL, 'Fix the problem')
             ->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Query limit', 1000)
         ;
     }
@@ -48,9 +50,14 @@ class CheckHeadInSupportsCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $limit = $input->getOption('limit');
+        $arg = $input->getArgument('fix');
 
         $supports = $this->supportGroupRepo->findBy([], ['updatedAt' => 'DESC'], $limit);
+        $nbSupports = count($supports);
         $count = 0;
+
+        $io->createProgressBar();
+        $io->progressStart($nbSupports);
 
         foreach ($supports as $support) {
             $countHeads = 0;
@@ -59,16 +66,22 @@ class CheckHeadInSupportsCommand extends Command
                     ++$countHeads;
                 }
             }
-            if (1 != $countHeads) {
-                echo $support->getId()." => $countHeads DP\n";
+            if (1 !== $countHeads) {
+                $io->warning($support->getId()." => $countHeads DP");
                 $this->supportChecker->checkValidHeader($support);
                 ++$count;
             }
+
+            $io->progressAdvance();
         }
 
-        $this->em->flush();
+        if ('fix' === $arg) {
+            $this->em->flush();
+        }
 
-        $io->success("The headers in support are checked !\n  ".$count.' / '.count($supports).' are invalids.');
+        $io->progressFinish();
+
+        $io->success("The headers in support are checked !\n  ".$count.' / '.$nbSupports.' are invalids.');
 
         return Command::SUCCESS;
     }

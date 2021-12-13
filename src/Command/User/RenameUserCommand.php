@@ -3,30 +3,33 @@
 namespace App\Command\User;
 
 use App\Repository\Organization\UserRepository;
+use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
- * Commande pour réinitialiser les mot de passe des utilisateurs (uniquement en mode développement).
+ * Commande pour changer le nom des utilisateurs (uniquement en mode développement).
  */
-class ReinitPasswordUserCommand extends Command
+class RenameUserCommand extends Command
 {
-    protected static $defaultName = 'app:user:reinit_password';
-    protected static $defaultDescription = 'Reinit password users in development environnement.';
+    use DoctrineTrait;
+
+    protected static $defaultName = 'app:user:rename';
+    protected static $defaultDescription = 'Rename users in development environnement.';
 
     protected $em;
     protected $userRepo;
-    protected $passwordHasher;
+    protected $faker;
 
-    public function __construct(EntityManagerInterface $em, UserRepository $userRepo, UserPasswordHasherInterface $passwordHasher)
+    public function __construct(EntityManagerInterface $em, UserRepository $userRepo)
     {
         $this->em = $em;
         $this->userRepo = $userRepo;
-        $this->passwordHasher = $passwordHasher;
+        $this->faker = \Faker\Factory::create('fr_FR');
+        $this->disableListeners($this->em);
 
         parent::__construct();
     }
@@ -40,24 +43,21 @@ class ReinitPasswordUserCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        if ('dev' != $_SERVER['APP_ENV'] || 'localhost' != $_SERVER['DB_HOST']) {
-            $io->error('Environnement invalid ');
-
-            return Command::FAILURE;
-        }
-
         $users = $this->userRepo->findBy(['disabledAt' => null]);
         $nbUsers = count($users);
-        $count = 0;
 
         $io->createProgressBar();
         $io->progressStart($nbUsers);
 
+        if ('dev' != $_SERVER['APP_ENV'] || 'localhost' != $_SERVER['DB_HOST']) {
+            $io->error('Environnement invalid');
+
+            return Command::FAILURE;
+        }
+
         foreach ($users as $user) {
-            if (!in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
-                $user->setPassword($this->passwordHasher->hashPassword($user, 'test'));
-                ++$count;
-            }
+            $user->setLastname($this->faker->lastName)
+                ->setFirstname($this->faker->firstName());
 
             $io->progressAdvance();
         }
@@ -66,7 +66,8 @@ class ReinitPasswordUserCommand extends Command
 
         $io->progressFinish();
 
-        $io->success("Reinit password users is successfull !\n  ".$count.' / '.$nbUsers);
+        $io->success('Change name of people is successfull !'
+            ."\n  ".$nbUsers.' users modified.');
 
         return Command::SUCCESS;
     }

@@ -50,11 +50,15 @@ class CheckEvaluationPeopleCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $limit = $input->getOption('limit');
         $arg = $input->getArgument('fix');
+
+        $evaluations = $this->em->getRepository(EvaluationGroup::class)->findBy([], ['updatedAt' => 'DESC'], $limit);
+        $nbEvaluations = count($evaluations);
         $count = 0;
 
-        try {
-            $evaluations = $this->em->getRepository(EvaluationGroup::class)->findBy([], ['updatedAt' => 'DESC'], $limit);
+        $io->createProgressBar();
+        $io->progressStart($nbEvaluations);
 
+        try {
             foreach ($evaluations as $evaluationGroup) {
                 $supportGroup = $evaluationGroup->getSupportGroup();
                 $supportPeople = $supportGroup->getSupportPeople();
@@ -83,15 +87,21 @@ class CheckEvaluationPeopleCommand extends Command
                         }
                     }
                 }
+                
+                $io->progressAdvance();
             }
         } catch (\Throwable $th) {
             $io->error($th->getMessage());
             exit;
         }
 
-        $this->em->flush();
+        if ('fix' === $arg) {
+            $this->em->flush();
+        }
 
-        $io->success("The people in evaluation are checked :\n ".$count.' / '.count($evaluations).' are invalids');
+        $io->progressFinish();
+
+        $io->success("The people in evaluation are checked :\n ".$count.' / '.$nbEvaluations.' are invalids');
 
         return Command::SUCCESS;
     }

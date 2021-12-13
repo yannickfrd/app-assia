@@ -9,6 +9,7 @@ use App\Repository\Evaluation\EvaluationGroupRepository;
 use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -41,6 +42,7 @@ class UpdateEvalBudgetCommand extends Command
     {
         $this
             ->setDescription(self::$defaultDescription)
+            ->addArgument('fix', InputArgument::OPTIONAL, 'Fix the problem')
             ->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Query limit', 1000)
         ;
     }
@@ -49,13 +51,19 @@ class UpdateEvalBudgetCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $limit = $input->getOption('limit');
+        $arg = $input->getArgument('fix');
 
         $evaluations = $this->evaluationGroupRepo->findBy([], ['updatedAt' => 'DESC'], $limit);
+        $nbEvaluations = count($evaluations);
 
-        foreach ($evaluations as $evaluation) {
+        $io->createProgressBar();
+        $io->progressStart($nbEvaluations);
+
+        foreach ($evaluations as $evaluationGroup) {
             $resourcesGroupAmt = 0;
             $initResourcesGroupAmt = 0;
-            foreach ($evaluation->getEvaluationPeople() as $evaluationPerson) {
+
+            foreach ($evaluationGroup->getEvaluationPeople() as $evaluationPerson) {
                 $evalBudgetPerson = $evaluationPerson->getEvalBudgetPerson();
                 if ($evalBudgetPerson) {
                     $this->updateEvalObject($evalBudgetPerson);
@@ -67,15 +75,22 @@ class UpdateEvalBudgetCommand extends Command
                     $initResourcesGroupAmt += $initEvalPerson->getResourcesAmt();
                 }
             }
-            $evalBudgetGroup = $evaluation->getEvalBudgetGroup();
+            $evalBudgetGroup = $evaluationGroup->getEvalBudgetGroup();
             if ($evalBudgetGroup) {
                 $evalBudgetGroup->setResourcesGroupAmt($resourcesGroupAmt);
-                $evaluation->getInitEvalGroup()->setResourcesGroupAmt($initResourcesGroupAmt);
+                $evaluationGroup->getInitEvalGroup()->setResourcesGroupAmt($initResourcesGroupAmt);
             }
+            
+            $io->progressAdvance();
         }
-        $this->em->flush();
 
-        $io->success("The evaluation budget are update !\n ".$this->count.' / '.count($evaluations));
+        if ('fix' === $arg) {
+            $this->em->flush();
+        }
+
+        $io->progressFinish();
+
+        $io->success("The evaluation budget are update !\n ".$this->count.' / '.$nbEvaluations);
 
         return Command::SUCCESS;
     }

@@ -2,16 +2,17 @@
 
 namespace App\Command\People;
 
-use App\Entity\People\RolePerson;
-use App\Repository\People\PeopleGroupRepository;
 use App\Service\DoctrineTrait;
-use App\Service\People\PeopleGroupManager;
+use App\Entity\People\RolePerson;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Service\People\PeopleGroupManager;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
+use App\Repository\People\PeopleGroupRepository;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Commande pour mettre à jour la typologie familiale des groupes de personnes.
@@ -41,6 +42,7 @@ class UpdateFamilyTypologyOfGroupCommand extends Command
     {
         $this
             ->setDescription(self::$defaultDescription)
+            ->addArgument('fix', InputArgument::OPTIONAL, 'Fix the problem')
             ->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Query limit', 1000)
         ;
     }
@@ -49,9 +51,14 @@ class UpdateFamilyTypologyOfGroupCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $limit = $input->getOption('limit');
+        $arg = $input->getArgument('fix');
 
         $peopleGroups = $this->peopleGroupRepo->findBy([], ['updatedAt' => 'DESC'], $limit);
+        $nbPeopleGroups = count($peopleGroups);
         $count = 0;
+
+        $io->createProgressBar();
+        $io->progressStart($nbPeopleGroups);
 
         foreach ($peopleGroups as $peopleGroup) {
             $nbRolePeople = $peopleGroup->getRolePeople()->count();
@@ -91,11 +98,17 @@ class UpdateFamilyTypologyOfGroupCommand extends Command
                     ++$count;
                 }
             }
+            
+            $io->progressAdvance();
         }
 
-        $this->em->flush();
+        if ('fix' === $arg) {
+            $this->em->flush();
+        }
 
-        $io->success("The typology family of peopleGroup are updated !\n  ".$count.' / '.count($peopleGroups));
+        $io->progressFinish();
+
+        $io->success("The typology family of peopleGroup are updated !\n  ".$count.' / '.$nbPeopleGroups);
 
         return Command::SUCCESS;
     }

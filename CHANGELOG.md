@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+## Version 3.6.1 - 13/12/2021
+Refactore commands
+* [Command] Add ProgressBar, Arguments and Options
+
 ## Version 3.6.0 - 13/12/2021
 * [EvalAdminPerson] Add new ASYLUM_STATUS items
 * [EvalAdminPersonType] Add 'asylumBackground' and 'asylumStatus' to important fields
