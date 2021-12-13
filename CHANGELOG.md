@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+## Version 3.6.2 - 13/12/2021
+Edit all multi-selelct in FormType 
+* [FormType] Add 'size' = 1 for all multi selects
+* [SecurityUserType] Add JS select2 for user roles
+
 ## Version 3.6.1 - 13/12/2021
 Refactore commands
 * [Command] Add ProgressBar, Arguments and Options

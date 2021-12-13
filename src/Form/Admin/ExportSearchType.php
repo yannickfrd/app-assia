@@ -29,6 +29,7 @@ class ExportSearchType extends AbstractType
                 'choices' => Choices::getChoices(PeopleGroup::FAMILY_TYPOLOGY),
                 'attr' => [
                     'class' => 'multi-select',
+                    'size' => 1,
                     'data-select2-id' => 'typology',
                 ],
                 'placeholder' => 'placeholder.familtyTypology',

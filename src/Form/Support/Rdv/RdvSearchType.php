@@ -57,6 +57,7 @@ class RdvSearchType extends AbstractType
                 'choices' => Choices::getChoices(Rdv::STATUS),
                 'attr' => [
                     'class' => 'multi-select',
+                    'size' => 1,
                     'data-select2-id' => 'status',
                 ],
                 'placeholder' => 'placeholder.status',

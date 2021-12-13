@@ -52,6 +52,7 @@ class PaymentSearchType extends AbstractType
                 'multiple' => true,
                 'attr' => [
                     'class' => 'multi-select',
+                    'size' => 1,
                     'data-select2-id' => 'payment-type',
                 ],
                 'choices' => Choices::getchoices(Payment::TYPES),
