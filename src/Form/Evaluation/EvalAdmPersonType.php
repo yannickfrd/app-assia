@@ -50,7 +50,6 @@ class EvalAdmPersonType extends AbstractType
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
                 'attr' => [
                     'data-important' => 'true',
-                    'data-twin-field' => 'asylumBackground',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
