@@ -4,6 +4,7 @@ import Loader from '../utils/loader'
 import DateFormater from '../utils/date/dateFormater'
 import { Modal } from 'bootstrap'
 import ParametersUrl from '../utils/parametersUrl'
+import Google from "../api/googleApi/google";
 
 export default class Calendar {
 
@@ -221,14 +222,20 @@ export default class Calendar {
     requestSaveRdv(e) {
         e.preventDefault()
 
-        if (this.modalRdvElt.querySelector('#rdv_title').value === '') {
-            return new MessageFlash('danger', 'La rdv est vide.')
-        }
+        // if (this.modalRdvElt.querySelector('#rdv_title').value === '') {
+        //     return new MessageFlash('danger', 'La rdv est vide.')
+        // }
 
         if (!this.loader.isActive()) {
             this.updateDatetimes()
-            this.loader.on()
-            this.ajax.send('POST', this.formRdvElt.getAttribute('action'), this.responseAjax.bind(this), new FormData(this.formRdvElt))
+
+            if (this.formRdvElt.elements['rdv_googleCalendar'].checked) {
+                new Google()
+            }
+            // if (this.formRdvElt.elements)
+
+            // this.loader.on()
+            // this.ajax.send('POST', this.formRdvElt.getAttribute('action'), this.responseAjax.bind(this), new FormData(this.formRdvElt))
         }
     }
 

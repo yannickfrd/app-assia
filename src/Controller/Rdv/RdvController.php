@@ -4,6 +4,7 @@ namespace App\Controller\Rdv;
 
 use App\Entity\Support\Rdv;
 use App\Event\Rdv\RdvEvent;
+use App\Service\GoogleApi\GoogleAgenda;
 use App\Service\Pagination;
 use App\Form\Support\Rdv\RdvType;
 use App\Service\Export\RdvExport;
@@ -16,6 +17,7 @@ use App\Repository\Support\RdvRepository;
 use App\Controller\Traits\ErrorMessageTrait;
 use App\Form\Model\Support\SupportRdvSearch;
 use App\Service\SupportGroup\SupportManager;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use App\Form\Support\Rdv\SupportRdvSearchType;
 use Symfony\Component\HttpFoundation\Response;

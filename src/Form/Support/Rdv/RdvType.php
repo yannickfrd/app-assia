@@ -10,6 +10,7 @@ use App\Repository\Organization\UserRepository;
 use App\Repository\Support\SupportGroupRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -60,7 +61,13 @@ class RdvType extends AbstractType
                     'rows' => 5,
                     'placeholder' => 'rdv.placeholder.content',
                 ],
-            ]);
+            ])
+            ->add('googleCalendar', CheckboxType::class, [
+                'label' => 'Envoyer sur Google Agenda.',
+                'required' => false,
+                'mapped' => false,
+            ])
+        ;
         // ->add('user', EntityType::class, [
             //     'class' => User::class,
             //     'choice_label' => 'fullname',
