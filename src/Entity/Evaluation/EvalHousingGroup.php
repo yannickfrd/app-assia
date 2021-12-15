@@ -435,9 +435,8 @@ class EvalHousingGroup
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
-     * @Groups("export")
      */
-    private $housingAccessType;
+    private $housingAccessType; // TO DELETE ?
 
     /**
      * @ORM\Column(type="date", nullable=true)

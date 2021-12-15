@@ -211,11 +211,6 @@ class EvalHousingGroupType extends AbstractType
                     'placeholder' => 'placeholder.select',
                     'required' => false,
                 ])
-                ->add('housingAccessType', ChoiceType::class, [
-                    'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
-                    'placeholder' => 'placeholder.select',
-                    'required' => false,
-                ])
                 ->add('housingArrivalDate', DateType::class, [
                     'widget' => 'single_text',
                     'required' => false,

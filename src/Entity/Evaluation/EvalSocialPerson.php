@@ -120,10 +120,7 @@ class EvalSocialPerson
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $childWelfareBackground;
-
-    /** @Groups("export") */
-    private $childWelfareBackgroundToString;
+    private $childWelfareBackground; // TO DELETE ?
 
     /**
      * @ORM\Column(type="smallint", nullable=true)

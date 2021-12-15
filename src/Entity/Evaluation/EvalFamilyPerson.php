@@ -164,9 +164,7 @@ class EvalFamilyPerson
      */
     private $schoolZipcode;
 
-    /**
-     * @Groups("export")
-     */
+    /** @Groups("export") */
     private $schoolDept;
 
     /**
@@ -205,6 +203,9 @@ class EvalFamilyPerson
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $pmiFollowUp;
+
+    /** @Groups("export") */
+    private $pmiFollowUpToString;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -467,9 +468,6 @@ class EvalFamilyPerson
         return $this->pmiFollowUp;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getPmiFollowUpToString(): ?string
     {
         return $this->pmiFollowUp ? EvaluationChoices::YES_NO_IN_PROGRESS[$this->pmiFollowUp] : null;

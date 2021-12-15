@@ -1,16 +1,29 @@
 CHANGELOG
 =========
+## Version 3.6.5 - 15/12/2021
+Fix bugs
+* [AutoLogout] Fix invalid url to logout
+## Version 3.6.4 - 15/12/2021
+Update feature evaluation  (#89)
+* [EvaluationController] Add check if number of people in evaluation is invalid in 'showEvaluation'
+* [Evaluation] Delete button to fix number of people in evaluation
+## Version 3.6.3 - 15/12/2021
+[Entities] Edit annotations 'export' groups (#88)
 
 ## Version 3.6.2 - 13/12/2021
-Edit all multi-selelct in FormType 
+Edit all multi-selelct in FormType (#87)
 * [FormType] Add 'size' = 1 for all multi selects
 * [SecurityUserType] Add JS select2 for user roles
 
+* [_evaluationJustice.html] Fix error : renale 'nb_adults' to 'nb_people' var
 ## Version 3.6.1 - 13/12/2021
-Refactore commands
+* [EvalAdmPersonType] Delete 'data-twin-field' to 'asylumBackground' field (#86)
+
+Refacto commands (#85)
 * [Command] Add ProgressBar, Arguments and Options
 
 ## Version 3.6.0 - 13/12/2021
+Edit feat evaluation (#84)
 * [EvalAdminPerson] Add new ASYLUM_STATUS items
 * [EvalAdminPersonType] Add 'asylumBackground' and 'asylumStatus' to important fields
 * [_evaluationAccordion] Edit button to reduce accordion

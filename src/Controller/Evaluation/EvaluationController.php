@@ -74,6 +74,10 @@ class EvaluationController extends AbstractController
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
+        if ($evaluationGroup->getEvaluationPeople()->count() !== $supportGroup->getSupportPeople()->count()) {
+            return $this->redirectToRoute('evaluation_fix_people', ['id' => $evaluationGroup->getId()]);
+        }
+
         $form = $this->createForm(EvaluationGroupType::class, $evaluationGroup)
             ->handleRequest($request);
 
