@@ -4,13 +4,18 @@ namespace App\Entity\Evaluation;
 
 use App\Form\Utils\EvaluationChoices;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Evaluation\EvalHousingGroupRepository")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class EvalHousingGroup
 {
+    use SoftDeleteableEntity;
+
     public const HOUSING_STATUS = [
         001 => 'A la rue / abri de fortune',
         004 => 'Camp / Bidonville',
@@ -430,9 +435,8 @@ class EvalHousingGroup
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
-     * @Groups("export")
      */
-    private $housingAccessType;
+    private $housingAccessType; // TO DELETE ?
 
     /**
      * @ORM\Column(type="date", nullable=true)

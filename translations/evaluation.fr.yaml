@@ -13,6 +13,7 @@ initEvalGroup:
 
 # Administratif
 Adm: Administratif
+Agdref id: Numéro AGDREF
 Arrival date: Date d'arrivée en France
 Asylum background: Parcours asile
 Asylum status: Statut lié à l'asile

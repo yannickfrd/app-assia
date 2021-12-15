@@ -1,10 +1,70 @@
 CHANGELOG
 =========
+## Version 3.6.5 - 15/12/2021
+Fix bugs
+* [AutoLogout] Fix invalid url to logout
+## Version 3.6.4 - 15/12/2021
+Update feature evaluation  (#89)
+* [EvaluationController] Add check if number of people in evaluation is invalid in 'showEvaluation'
+* [Evaluation] Delete button to fix number of people in evaluation
+## Version 3.6.3 - 15/12/2021
+[Entities] Edit annotations 'export' groups (#88)
 
+## Version 3.6.2 - 13/12/2021
+Edit all multi-selelct in FormType (#87)
+* [FormType] Add 'size' = 1 for all multi selects
+* [SecurityUserType] Add JS select2 for user roles
+
+* [_evaluationJustice.html] Fix error : renale 'nb_adults' to 'nb_people' var
+## Version 3.6.1 - 13/12/2021
+* [EvalAdmPersonType] Delete 'data-twin-field' to 'asylumBackground' field (#86)
+
+Refacto commands (#85)
+* [Command] Add ProgressBar, Arguments and Options
+
+## Version 3.6.0 - 13/12/2021
+Edit feat evaluation (#84)
+* [EvalAdminPerson] Add new ASYLUM_STATUS items
+* [EvalAdminPersonType] Add 'asylumBackground' and 'asylumStatus' to important fields
+* [_evaluationAccordion] Edit button to reduce accordion
+* [evaluationEdit] Edit button to save
+* [Evaluation] Add AGDREF ID in evaluation
+* [evaluationEdit] Add shortcuts to export evaluation in PDF/Word in view
+* Rename const 'COEFFICIENT_DEFAULT' to 'DEFAULT_COEFFICIENT
+* Edit block to export evaluation
+* Create migration to rename 'contribution' to 'payment' table
+* Edit .gitignore to add 'migrations' folder
+* [EvaluationFamilyPerson] Add 'pmiFollowUp' 'pmiName' fields
+* [EvaluationFamilyPerson] Create Command to update pmi info
+* [SiSiao] Refactor classes and update tests
+* [Evaluation] Update 'testCreateEvaluationIsSuccessful' test
+* [Entity] Add SoftDeleteable to all entities
+* [Composer] Update PHP dependencies to symfony 5.4.1
+* [SiSiao] change SessionInterface to RequestStack in constructor
+* [EvaluationFamilyPerson] Create Command to update pmi info
+* [SiSiao] Refactor classes and update tests
+* [Evaluation] Update 'testCreateEvaluationIsSuccessful' test
+* [Entity] Add SoftDeleteable to all entities
+* [migration] Add migration file
+* [SiSiao] change SessionInterface to RequestStack in constructor
+
+## Version 3.5.5 - 04/12/2021
+Edit framework config (session and ide) (#83)
+* Move the sessions in 'var/session/' directory
+* Add a var env 'CODE_EDITOR' for ide
+
+## Version 3.5.4 - 04/12/2021
+Fix errors (#82)
+* Fix error composer.lock
+* Delete dump in login.html.twig
 ## Version 3.5.3 - 03/12/2021
-Refactor all repositories
+Refactor all repositories  (#81)
 * Rename 'query' var to 'qb' var
 * Indentation
+
+* [evaluation] Reset not displayed fields before to save
+* Edit field filters in evaluationFamily
+* Edit field filters in evaluationSocial
 
 ## Version 3.5.2 - 03/12/2021
 Add device codes

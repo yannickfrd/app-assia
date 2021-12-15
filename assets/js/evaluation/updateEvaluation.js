@@ -31,10 +31,22 @@ export default class UpdateEvaluation {
      */
     save(e) {
         e.preventDefault()
+
         if (this.loader.isActive()) {
             return null
         }
+
+        this.resetNotDisplayedFields()
+
         this.sendRequest()
+    }
+
+    resetNotDisplayedFields() {
+        this.formElt.querySelectorAll('div.d-none select, div.d-none input').forEach(fieldElt => {
+            if ('hidden' != fieldElt.type && !['', '0'].includes(fieldElt.value)) {
+                fieldElt.value = ''
+            }
+        })
     }
 
     sendRequest() {

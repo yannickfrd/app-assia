@@ -2,14 +2,14 @@
 
 namespace App\Form\Type;
 
-use App\Entity\Evaluation\EvalBudgetPerson;
 use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use App\Entity\Evaluation\EvalBudgetPerson;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 class ResourcesType extends AbstractType
 {
@@ -44,7 +44,7 @@ class ResourcesType extends AbstractType
 
         foreach (EvalBudgetPerson::RESOURCES_TYPE as $key => $value) {
             $builder
-            ->add($key, IntegerType::class, [
+            ->add($key, HiddenType::class, [
                 'attr' => [
                     'data-twin-field' => $key,
                 ],

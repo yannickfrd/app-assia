@@ -8,6 +8,7 @@ use App\Service\SoundexFr;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -19,6 +20,7 @@ class UpdateSoundexNamePersonCommand extends Command
     use DoctrineTrait;
 
     protected static $defaultName = 'app:person:update_soundex_name';
+    protected static $defaultDescription = 'Update the soundex name of people.';
 
     protected $em;
     protected $personRepo;
@@ -34,22 +36,37 @@ class UpdateSoundexNamePersonCommand extends Command
         parent::__construct();
     }
 
+    protected function configure(): void
+    {
+        $this
+            ->setDescription(self::$defaultDescription)
+            ->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Query limit', 1000)
+        ;
+    }
+
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+        $limit = $input->getOption('limit');
 
-        $count = 0;
-        $people = $this->personRepo->findAll();
+        $people = $this->personRepo->findBy([], ['updatedAt' => 'DESC'], $limit);
+        $nbPeople = count($people);
+
+        $io->createProgressBar();
+        $io->progressStart($nbPeople);
 
         foreach ($people as $person) {
             $person->setSoundexFirstname($this->soundexFr->get2($person->getFirstname()));
             $person->setSoundexLastname($this->soundexFr->get2($person->getLastname()));
-            ++$count;
+
+            $io->progressAdvance();
         }
 
         $this->em->flush();
 
-        $io->success("The soundex names of people are update !\n  ".$count.' / '.count($people));
+        $io->progressFinish();
+
+        $io->success("The soundex names of people are update !\n  ".$nbPeople);
 
         return Command::SUCCESS;
     }

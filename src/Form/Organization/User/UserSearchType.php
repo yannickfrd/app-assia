@@ -36,6 +36,7 @@ class UserSearchType extends AbstractType
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'class' => 'multi-select',
+                    'size' => 1,
                     'data-select2-id' => 'status',
                 ],
                 'required' => false,

@@ -33,7 +33,7 @@ yarn-error.log
 ###< uploaded files ###
 
 ###> migration files ###
-/migrations/*
+# /migrations/*
 ###< migration files ###
 
 ###> secrets keys ###

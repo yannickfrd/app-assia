@@ -156,9 +156,7 @@
 													{% for debtKey, debtValue in debts %}
 														<tr class="d-table-row" data-parent-select="{{ key }}_{{ entity }}_debtsType"
 															data-value="{{ debtKey }}">
-															<td scope="row"><div class="d-none">
-																{{ form_widget(attribute(evalBudgetPerson, debtKey)) }}</div>
-															</td>
+															<td scope="row">{{ form_widget(attribute(evalBudgetPerson, debtKey)) }}</td>
 															<td class="align-middle">{{ not loop.last ? debtValue : 
 																form_widget(evalBudgetPerson.debtOtherPrecision) }}
 															</td>

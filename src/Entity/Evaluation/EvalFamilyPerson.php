@@ -4,13 +4,18 @@ namespace App\Entity\Evaluation;
 
 use App\Form\Utils\EvaluationChoices;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Evaluation\EvalFamilyPersonRepository")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class EvalFamilyPerson
 {
+    use SoftDeleteableEntity;
+
     public const MARITAL_STATUS = [
         1 => 'Célibataire',
         2 => 'Concubin·e / Vie maritale',
@@ -159,9 +164,7 @@ class EvalFamilyPerson
      */
     private $schoolZipcode;
 
-    /**
-     * @Groups("export")
-     */
+    /** @Groups("export") */
     private $schoolDept;
 
     /**
@@ -195,6 +198,19 @@ class EvalFamilyPerson
 
     /** @Groups("export") */
     private $protectiveMeasureTypeToString;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $pmiFollowUp;
+
+    /** @Groups("export") */
+    private $pmiFollowUpToString;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $pmiName;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -443,6 +459,35 @@ class EvalFamilyPerson
     public function setProtectiveMeasureType(?int $protectiveMeasureType): self
     {
         $this->protectiveMeasureType = $protectiveMeasureType;
+
+        return $this;
+    }
+
+    public function getPmiFollowUp(): ?int
+    {
+        return $this->pmiFollowUp;
+    }
+
+    public function getPmiFollowUpToString(): ?string
+    {
+        return $this->pmiFollowUp ? EvaluationChoices::YES_NO_IN_PROGRESS[$this->pmiFollowUp] : null;
+    }
+
+    public function setPmiFollowUp(?int $pmiFollowUp): self
+    {
+        $this->pmiFollowUp = $pmiFollowUp;
+
+        return $this;
+    }
+
+    public function getPmiName(): ?string
+    {
+        return $this->pmiName;
+    }
+
+    public function setPmiName(?string $pmiName): self
+    {
+        $this->pmiName = $pmiName;
 
         return $this;
     }

@@ -6,14 +6,18 @@ use App\Entity\Organization\User;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Support\RdvRepository")
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class Rdv
 {
     use CreatedUpdatedEntityTrait;
+    use SoftDeleteableEntity;
 
     public const STATUS = [
         1 => 'Présent',

@@ -4,13 +4,18 @@ namespace App\Entity\Evaluation;
 
 use App\Form\Utils\EvaluationChoices;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Evaluation\EvalFamilyGroupRepository")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class EvalFamilyGroup
 {
+    use SoftDeleteableEntity;
+
     public const FAML_REUNIFICATION = [
         1 => 'Oui',
         2 => 'Non',
@@ -27,20 +32,21 @@ class EvalFamilyGroup
      */
     private $id;
 
-    // /**
-    //  * @ORM\Column(type="smallint", nullable=true)
-    //  */
-    // private $nbDependentChildren; // TO DELETE
-
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $childrenBehind;
 
+    /** @Groups("export") */
+    private $childrenBehindToString;
+
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $famlReunification;
+
+    /** @Groups("export") */
+    private $famlReunificationToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -51,7 +57,7 @@ class EvalFamilyGroup
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $pmiFollowUp;
+    private $pmiFollowUp; // To DELETE
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -74,18 +80,6 @@ class EvalFamilyGroup
         return $this->id;
     }
 
-    // public function getNbDependentChildren(): ?int
-    // {
-    //     return $this->nbDependentChildren;
-    // }
-
-    // public function setNbDependentChildren(?int $nbDependentChildren): self
-    // {
-    //     $this->nbDependentChildren = $nbDependentChildren;
-
-    //     return $this;
-    // }
-
     public function getChildrenBehind(): ?int
     {
         return $this->childrenBehind;
@@ -98,9 +92,6 @@ class EvalFamilyGroup
         return $this;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getChildrenBehindToString(): ?string
     {
         return $this->childrenBehind ? EvaluationChoices::YES_NO[$this->childrenBehind] : null;
@@ -118,9 +109,6 @@ class EvalFamilyGroup
         return $this;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getFamlReunificationToString(): ?string
     {
         return $this->famlReunification ? self::FAML_REUNIFICATION[$this->famlReunification] : null;
@@ -155,9 +143,6 @@ class EvalFamilyGroup
         return $this->pmiFollowUp;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getPmiFollowUpToString(): ?string
     {
         return $this->pmiFollowUp ? EvaluationChoices::YES_NO_IN_PROGRESS[$this->pmiFollowUp] : null;

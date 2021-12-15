@@ -4,13 +4,18 @@ namespace App\Entity\Evaluation;
 
 use App\Form\Utils\EvaluationChoices;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Evaluation\EvalAdmPersonRepository")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class EvalAdmPerson
 {
+    use SoftDeleteableEntity;
+
     public const NATIONALITY = [
         1 => 'France',
         2 => 'Union-Européenne',
@@ -36,10 +41,14 @@ class EvalAdmPerson
 
     public const ASYLUM_STATUS = [
         1 => "Débouté du droit d'asile",
-        2 => "Demandeur d'asile",
+        6 => "Demande d'asile - Procédure accélérée",
+        2 => "Demande d'asile - Procédure normale",
+        7 => 'Procédure Dublin',
+        8 => 'Procédure Schengen',
         3 => 'Protection subsidiaire',
+        9 => 'Recours CNDA',
         5 => 'Récépissé asile',
-        4 => 'Réfugié',
+        4 => 'Réfugié statutaire',
         97 => 'Autre',
         99 => 'Non évalué',
     ];
@@ -57,12 +66,18 @@ class EvalAdmPerson
     private $nationality;
 
     /**
+     * @Groups("export")
+     */
+    private $nationalityToString;
+
+    /**
      * @ORM\Column(type="date", nullable=true)
      */
     private $arrivalDate;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
+     * @Groups("export")
      */
     private $country;
 
@@ -72,9 +87,19 @@ class EvalAdmPerson
     private $paper;
 
     /**
+     * @Groups("export")
+     */
+    private $paperToString;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $paperType;
+
+    /**
+     * @Groups("export")
+     */
+    private $paperTypeToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -82,9 +107,25 @@ class EvalAdmPerson
     private $asylumBackground;
 
     /**
+     * @Groups("export")
+     */
+    private $asylumBackgroundToString;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $asylumStatus;
+
+    /**
+     * @Groups("export")
+     */
+    private $asylumStatusToString;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("export")
+     */
+    private $AgdrefId;
 
     /**
      * @ORM\Column(type="date", nullable=true)
@@ -107,6 +148,11 @@ class EvalAdmPerson
     private $workRight;
 
     /**
+     * @Groups("export")
+     */
+    private $workRightToString;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $commentEvalAdmPerson;
@@ -116,11 +162,6 @@ class EvalAdmPerson
      * @ORM\JoinColumn(nullable=false)
      */
     private $evaluationPerson;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $AgdrefId;
 
     public function getId(): ?int
     {
@@ -132,9 +173,6 @@ class EvalAdmPerson
         return $this->nationality;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getNationalityToString(): ?string
     {
         return $this->nationality ? self::NATIONALITY[$this->nationality] : null;
@@ -176,9 +214,6 @@ class EvalAdmPerson
         return $this->paper;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getPaperToString(): ?string
     {
         return $this->paper ? EvaluationChoices::YES_NO_IN_PROGRESS[$this->paper] : null;
@@ -196,9 +231,6 @@ class EvalAdmPerson
         return $this->paperType;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getPaperTypeToString(): ?string
     {
         return $this->paperType ? self::PAPER_TYPE[$this->paperType] : null;
@@ -216,9 +248,6 @@ class EvalAdmPerson
         return $this->asylumBackground;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getAsylumBackgroundToString(): ?string
     {
         return $this->asylumBackground ? EvaluationChoices::YES_NO[$this->asylumBackground] : null;
@@ -236,9 +265,6 @@ class EvalAdmPerson
         return $this->asylumStatus;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getAsylumStatusToString(): ?string
     {
         return $this->asylumStatus ? self::ASYLUM_STATUS[$this->asylumStatus] : null;
@@ -247,6 +273,18 @@ class EvalAdmPerson
     public function setAsylumStatus(?int $asylumStatus): self
     {
         $this->asylumStatus = $asylumStatus;
+
+        return $this;
+    }
+
+    public function getAgdrefId(): ?string
+    {
+        return $this->AgdrefId;
+    }
+
+    public function setAgdrefId(?string $AgdrefId): self
+    {
+        $this->AgdrefId = $AgdrefId;
 
         return $this;
     }
@@ -292,9 +330,6 @@ class EvalAdmPerson
         return $this->workRight;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getWorkRightToString(): ?string
     {
         return $this->workRight ? EvaluationChoices::YES_NO_IN_PROGRESS[$this->workRight] : null;
@@ -327,18 +362,6 @@ class EvalAdmPerson
     public function setEvaluationPerson(EvaluationPerson $evaluationPerson): self
     {
         $this->evaluationPerson = $evaluationPerson;
-
-        return $this;
-    }
-
-    public function getAgdrefId(): ?string
-    {
-        return $this->AgdrefId;
-    }
-
-    public function setAgdrefId(?string $AgdrefId): self
-    {
-        $this->AgdrefId = $AgdrefId;
 
         return $this;
     }

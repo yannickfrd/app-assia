@@ -40,10 +40,11 @@
 							{{ form_row(evalPerson.evalAdmPerson.workRight) }}</div>
 					</div>
 					<div class="row" data-parent-field="{{ prefix }}_nationality" data-options="2|3|4">
-						<div class="col-md-6">
-							{{ form_row(evalPerson.evalAdmPerson.asylumBackground) }}</div>
+						<div class="col-md-6">{{ form_row(evalPerson.evalAdmPerson.asylumBackground) }}</div>
 						<div class="col-md-6" data-parent-field="{{ prefix }}_asylumBackground" data-options="1">
 							{{ form_row(evalPerson.evalAdmPerson.asylumStatus) }}</div>
+						<div class="col-md-6" data-parent-field="{{ prefix }}_asylumBackground" data-options="1">
+							{{ form_row(evalPerson.evalAdmPerson.AgdrefId) }}</div>
 					</div>
 					<div class="row mt-2">
 						<div class="col-md-12">{{ form_widget(evalPerson.evalAdmPerson.commentEvalAdmPerson) }}</div>

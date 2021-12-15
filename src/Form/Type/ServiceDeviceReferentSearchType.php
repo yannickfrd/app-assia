@@ -47,6 +47,7 @@ class ServiceDeviceReferentSearchType extends AbstractType
                     'placeholder' => 'placeholder.pole',
                     'attr' => [
                         'class' => 'multi-select w-min-150 w-max-200',
+                        'size' => 1,
                         'data-select2-id' => 'poles',
                     ],
                     'required' => false,
@@ -65,6 +66,7 @@ class ServiceDeviceReferentSearchType extends AbstractType
                     'placeholder' => 'placeholder.service',
                     'attr' => [
                         'class' => 'multi-select w-min-150 w-max-200',
+                        'size' => 1,
                         'data-select2-id' => 'services',
                     ],
                     'required' => false,
@@ -83,6 +85,7 @@ class ServiceDeviceReferentSearchType extends AbstractType
                     'placeholder' => 'placeholder.subService',
                     'attr' => [
                         'class' => 'multi-select w-min-160 w-max-200',
+                        'size' => 1,
                         'data-select2-id' => 'sub-services',
                     ],
                     'required' => false,
@@ -101,6 +104,7 @@ class ServiceDeviceReferentSearchType extends AbstractType
                     'placeholder' => 'placeholder.device',
                     'attr' => [
                         'class' => 'multi-select w-min-150 w-max-200',
+                        'size' => 1,
                         'data-select2-id' => 'devices',
                     ],
                     'required' => false,
@@ -119,6 +123,7 @@ class ServiceDeviceReferentSearchType extends AbstractType
                     'placeholder' => 'placeholder.referent',
                     'attr' => [
                         'class' => 'multi-select w-min-150 w-max-220',
+                        'size' => 1,
                         'data-select2-id' => 'referents',
                     ],
                     'required' => false,

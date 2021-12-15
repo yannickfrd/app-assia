@@ -4,13 +4,18 @@ namespace App\Entity\Support;
 
 use App\Entity\Organization\Organization;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Organization\OriginRequestRepository")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class OriginRequest
 {
+    use SoftDeleteableEntity;
+
     public const RESULT_PRE_ADMISSION = [
         1 => 'En cours',
         2 => 'Admis',

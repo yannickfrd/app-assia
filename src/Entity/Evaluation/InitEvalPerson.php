@@ -7,15 +7,20 @@ use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use App\Entity\Traits\ResourcesEntityTrait;
 use App\Form\Utils\EvaluationChoices;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Evaluation\InitEvalPersonRepository")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class InitEvalPerson
 {
     use CreatedUpdatedEntityTrait; // A supprimer après test
     use ResourcesEntityTrait;
+    use SoftDeleteableEntity;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

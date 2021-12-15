@@ -58,7 +58,7 @@ App\Entity\Evaluation\EvalBudgetGroup:
 
 App\Entity\Evaluation\EvalFamilyGroup:
   evalFamilyGroup1:
-    pmiFollowUp: 2
+    # pmiFollowUp: 2
     famlReunification: 2
     commentEvalFamilyGroup: XXX
     evaluationGroup: "@evaluationGroup1"

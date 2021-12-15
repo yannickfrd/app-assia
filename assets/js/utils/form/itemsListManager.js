@@ -79,10 +79,10 @@ export default class ItemsListManager {
      */
     initTrElts() {
         this.trElts.forEach(trElt => {
-            const inputNumberElt = trElt.querySelector('input[type="number"]')
+            const inputHiddenElt = trElt.querySelector('input[type="hidden"]')
             const inputTextElt = trElt.querySelector('input[type="text"]')
-            if (!inputNumberElt.value) {
-                inputNumberElt.value = 0
+            if (!inputHiddenElt.value) {
+                inputHiddenElt.value = 0
             }
             if (inputTextElt && !inputTextElt.dataset.edit) {
                 inputTextElt.dataset.edit = 1
@@ -109,7 +109,7 @@ export default class ItemsListManager {
      */
     removeTr(trElt) {
         trElt.querySelectorAll('input').forEach(inputElt => {
-            inputElt.getAttribute('type') === 'number' ? inputElt.value = 0 : inputElt.value = null
+            inputElt.getAttribute('type') === 'hidden' ? inputElt.value = 0 : inputElt.value = null
         })
         trElt.classList.replace('d-table-row', 'd-none')
     }

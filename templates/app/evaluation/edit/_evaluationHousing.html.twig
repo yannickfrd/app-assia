@@ -125,11 +125,7 @@
 										{% for hsgHelpKey, hsgHelpValue in housingHelps %}
 											<tr class="d-table-row" data-parent-select="evalHousingGroup_hsgHelps" 
 												data-value="{{ hsgHelpKey }}">
-												<td scope="row">
-													<div class="d-none">
-														{{ form_widget(attribute(form.evalHousingGroup, hsgHelpKey)) }}
-													</div>
-												</td>
+												<td scope="row">{{ form_widget(attribute(form.evalHousingGroup, hsgHelpKey)) }}</td>
 												<td class="align-middle">{{ hsgHelpValue }}</td>
 												<td class="align-middle text-right">
 													<button class="btn btn-danger" data-action="remove">

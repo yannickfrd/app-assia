@@ -6,13 +6,18 @@ use App\Entity\Evaluation\EvalHousingGroup;
 use App\Form\Utils\Choices;
 use App\Repository\Support\HotelSupportRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=HotelSupportRepository::class)
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class HotelSupport
 {
+    use SoftDeleteableEntity;
+
     public const STATUS = [
         2 => 'En cours', // Inclusion effective
         4 => 'Terminé', // Fin d\'accompagnement

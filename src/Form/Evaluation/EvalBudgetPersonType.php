@@ -2,16 +2,17 @@
 
 namespace App\Form\Evaluation;
 
-use App\Form\Utils\Choices;
+use App\Entity\Evaluation\EvalBudgetPerson;
 use App\Form\Type\ResourcesType;
+use App\Form\Utils\Choices;
 use App\Form\Utils\EvaluationChoices;
 use Symfony\Component\Form\AbstractType;
-use App\Entity\Evaluation\EvalBudgetPerson;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class EvalBudgetPersonType extends AbstractType
 {
@@ -57,7 +58,7 @@ class EvalBudgetPersonType extends AbstractType
 
         foreach (EvalBudgetPerson::CHARGES_TYPE as $key => $value) {
             $builder
-            ->add($key)
+            ->add($key, HiddenType::class)
             ->add($key.'Amt', MoneyType::class, [
                 'attr' => [
                     'class' => 'text-right',
@@ -90,7 +91,7 @@ class EvalBudgetPersonType extends AbstractType
             ]);
 
         foreach (EvalBudgetPerson::DEBTS_TYPE as $key => $value) {
-            $builder->add($key);
+            $builder->add($key, HiddenType::class);
         }
 
         $builder

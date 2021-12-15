@@ -67,7 +67,11 @@ class SecurityUserType extends AbstractType
                 'label' => 'user.roles',
                 'choices' => $this->getRoles(),
                 'multiple' => true,
-                'attr' => ['class' => 'h-max-76'],
+                'attr' => [
+                    'class' => 'multi-select',
+                    'size' => 1,
+                    'data-select2-id' => 'role',
+            ],
                 'placeholder' => 'placeholder.select',
             ])
             // ->add('password', PasswordType::class, [

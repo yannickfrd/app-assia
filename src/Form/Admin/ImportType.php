@@ -25,6 +25,7 @@ class ImportType extends AbstractType
                 'placeholder' => 'placeholder.service',
                 'attr' => [
                     'class' => 'multi-select w-min-150',
+                    'size' => 1,
                     'data-select2-id' => 'services',
                 ],
                 'required' => true,

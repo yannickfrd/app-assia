@@ -36,7 +36,11 @@ class UpdateGenderPersonCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         $people = $this->personRepo->findBy(['gender' => 99]);
+        $nbPeople = count($people);
         $count = 0;
+
+        $io->createProgressBar();
+        $io->progressStart($nbPeople);
 
         foreach ($people as $person) {
             $otherPerson = $this->personRepo->findOnePersonByFirstname($person->getFirstname());
@@ -45,9 +49,13 @@ class UpdateGenderPersonCommand extends Command
                 $person->setGender($otherPerson->getGender());
                 ++$count;
             }
+            
+            $io->progressAdvance();
         }
 
         $this->em->flush();
+
+        $io->progressFinish();
 
         $io->success("The gender of people is update !\n  ".$count.' / '.count($people));
 

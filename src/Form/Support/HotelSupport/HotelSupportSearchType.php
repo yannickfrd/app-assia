@@ -24,6 +24,7 @@ class HotelSupportSearchType extends AbstractType
                 'choices' => Choices::getChoices(HotelSupport::STATUS),
                 'attr' => [
                     'class' => 'multi-select',
+                    'size' => 1,
                     'data-select2-id' => 'status',
                 ],
                 'placeholder' => 'placeholder.status',
@@ -39,6 +40,7 @@ class HotelSupportSearchType extends AbstractType
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'class' => 'multi-select w-min-150 w-max-180',
+                    'size' => 1,
                     'data-select2-id' => 'hotels',
                 ],
                 'required' => false,
@@ -49,6 +51,7 @@ class HotelSupportSearchType extends AbstractType
                 'choices' => Choices::getChoices(HotelSupport::SUPPORT_LEVELS),
                 'attr' => [
                     'class' => 'multi-select w-min-120',
+                    'size' => 1,
                     'data-select2-id' => 'levelSupport',
                 ],
                 'required' => false,
@@ -65,6 +68,7 @@ class HotelSupportSearchType extends AbstractType
                 'choices' => Choices::getChoices(HotelSupport::END_SUPPORT_REASONS),
                 'attr' => [
                     'class' => 'multi-select w-min-120',
+                    'size' => 1,
                     'data-select2-id' => 'endSupportReasons',
                 ],
                 'required' => false,

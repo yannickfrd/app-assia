@@ -2,12 +2,12 @@
 
 namespace App\Tests\Controller\App;
 
-use App\Tests\AppTestTrait;
 use App\Entity\Support\SupportGroup;
-use Symfony\Component\HttpFoundation\Response;
+use App\Tests\AppTestTrait;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Symfony\Component\HttpFoundation\Response;
 
 class SiSiaoControllerTest extends WebTestCase
 {
@@ -224,9 +224,9 @@ class SiSiaoControllerTest extends WebTestCase
 
     private function createSupport()
     {
-        $this->client->request('POST', '/people-group/1/new-support', [
+        $crawler = $this->client->request('POST', '/people-group/1/new-support', [
             'support' => [
-                'service' => $service = $this->fixtures['service1'],
+                'service' => $service = $this->fixtures['service1']->getId(),
                 'device' => $device = $this->fixtures['device1']->getCode(),
             ],
         ]);
@@ -238,6 +238,7 @@ class SiSiaoControllerTest extends WebTestCase
                 'status' => SupportGroup::STATUS_IN_PROGRESS,
                 'startDate' => (new \DateTime())->format('Y-m-d'),
                 'agreement' => true,
+                '_token' => $crawler->filter('#support__token')->attr('value'),
             ],
         ]);
 
