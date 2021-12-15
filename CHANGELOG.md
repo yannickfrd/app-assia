@@ -1,7 +1,10 @@
 CHANGELOG
 =========
+## Version 3.6.5 - 15/12/2021
+Fix bugs
+* [AutoLogout] Fix invalid url to logout
 ## Version 3.6.4 - 15/12/2021
-Update feature evaluation
+Update feature evaluation  (#89)
 * [EvaluationController] Add check if number of people in evaluation is invalid in 'showEvaluation'
 * [Evaluation] Delete button to fix number of people in evaluation
 ## Version 3.6.3 - 15/12/2021
