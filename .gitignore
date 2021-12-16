@@ -50,3 +50,9 @@ yarn-error.log
 /phpunit.xml
 .phpunit.result.cache
 ###< phpunit/phpunit ###
+
+
+###> ide/ide ###
+.idea
+###< ide/ide ###
+
