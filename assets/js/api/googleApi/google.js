@@ -20,7 +20,7 @@
 
 import Ajax from "../../utils/ajax";
 
-    export default class Google {
+export default class Google {
     constructor() {
         this.ajax = new Ajax
         // this.client = null
@@ -30,7 +30,7 @@ import Ajax from "../../utils/ajax";
         this.modalRdvElt = document.getElementById('modal-rdv')
         this.formRdvElt = this.modalRdvElt.querySelector('form[name=rdv]')
         this.checkboxGoogleElt = this.formRdvElt.elements['rdv_googleCalendar']
-        this.urlCreateClientGoogle = this.checkboxGoogleElt.dataset.clientgoogle
+        this.urlCreateClientGoogle = this.checkboxGoogleElt.dataset['clientGoogle']
 
         this.init()
     }

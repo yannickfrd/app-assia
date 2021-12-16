@@ -2,11 +2,6 @@
 
 namespace App\Service\GoogleApi;
 
-use Google\Service\Calendar;
-use Google_Client;
-use Google_Exception;
-use Google_Service_Calendar;
-use Symfony\Component\HttpFoundation\InputBag;
 
 class GoogleAgenda
 {
@@ -16,9 +11,6 @@ class GoogleAgenda
 
     protected $client = null;
 
-    /**
-     * @throws Google_Exception
-     */
     public function __construct()
     {
         $this->client = $this->getClient();
@@ -42,10 +34,8 @@ class GoogleAgenda
 
     /**
      * Returns an authorized API client.
-     * @return Google_Client the authorized client object
-     * @throws Google_Exception
      */
-    private function getClient(): Google_Client
+    private function getClient()
     {
         $client = new Google_Client();
         $client->setAuthConfig(__DIR__ . '\client_secret.json');

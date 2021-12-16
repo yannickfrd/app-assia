@@ -19,6 +19,7 @@ class RdvGoogleCalendarController extends AbstractController
     public function createClientGoogleCalendar(GoogleAgenda $googleAgenda): JsonResponse
     {
         $url = $googleAgenda->sync();
+        dd($url);
 //        return $this->redirect($url);
         return $this->json(['url' => $url]);
     }
