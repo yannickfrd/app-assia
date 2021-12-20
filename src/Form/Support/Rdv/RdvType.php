@@ -8,6 +8,7 @@ use App\Entity\Support\SupportGroup;
 use App\Form\Utils\Choices;
 use App\Repository\Organization\UserRepository;
 use App\Repository\Support\SupportGroupRepository;
+use App\Service\GoogleApi\ApiGoogleCalendar;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -19,13 +20,12 @@ use Symfony\Component\Security\Core\Security;
 
 class RdvType extends AbstractType
 {
-    private $security;
-    private $supportGroupRepo;
+    /** @var ApiGoogleCalendar */
+    private $gapi;
 
-    public function __construct(Security $security, SupportGroupRepository $supportGroupRepo)
+    public function __construct(Security $security, SupportGroupRepository $supportGroupRepo, ApiGoogleCalendar $gapi)
     {
-        $this->security = $security;
-        $this->supportGroupRepo = $supportGroupRepo;
+        $this->gapi = $gapi;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -64,8 +64,16 @@ class RdvType extends AbstractType
             ])
             ->add('googleCalendar', CheckboxType::class, [
                 'label' => 'Envoyer sur Google Agenda.',
+                'label_attr' => [
+                    'class' => 'custom-control-label'
+                ],
+                'attr'=> [
+                    'class' => 'custom-control-input checkbox'
+                ],
                 'required' => false,
                 'mapped' => false,
+//                'data' => true
+                'data' => $this->gapi->getOnSessionIsChecked()// Regarde en session, si le user a déjà ckecké cette option
             ])
         ;
         // ->add('user', EntityType::class, [

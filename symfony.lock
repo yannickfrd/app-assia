@@ -154,7 +154,7 @@
         "version": "v4.13.0"
     },
     "firebase/php-jwt": {
-        "version": "v3.0.0"
+        "version": "v5.5.1"
     },
     "friendsofphp/php-cs-fixer": {
         "version": "2.2",
@@ -178,7 +178,7 @@
         "version": "v2.4.39"
     },
     "google/apiclient": {
-        "version": "2.0",
+        "version": "2.12",
         "recipe": {
             "repo": "github.com/symfony/recipes-contrib",
             "branch": "master",
@@ -190,22 +190,19 @@
         ]
     },
     "google/apiclient-services": {
-        "version": "v0.224.1"
+        "version": "v0.225.0"
     },
     "google/auth": {
-        "version": "v0.8"
+        "version": "v1.18.0"
     },
     "guzzlehttp/guzzle": {
-        "version": "6.2.0"
+        "version": "7.4.1"
+    },
+    "guzzlehttp/promises": {
+        "version": "1.5.1"
     },
     "guzzlehttp/psr7": {
-        "version": "1.2.3"
-    },
-    "guzzlehttp/ringphp": {
-        "version": "1.1.1"
-    },
-    "guzzlehttp/streams": {
-        "version": "3.0.0"
+        "version": "2.1.0"
     },
     "hautelook/alice-bundle": {
         "version": "2.9",
@@ -279,6 +276,9 @@
     "ocramius/proxy-manager": {
         "version": "2.2.3"
     },
+    "paragonie/constant_time_encoding": {
+        "version": "v2.4.0"
+    },
     "paragonie/sodium_compat": {
         "version": "v1.12.2"
     },
@@ -328,7 +328,7 @@
         "version": "0.17.0"
     },
     "phpseclib/phpseclib": {
-        "version": "2.0.35"
+        "version": "3.0.12"
     },
     "phpspec/prophecy": {
         "version": "1.14.0"
@@ -395,8 +395,8 @@
     "psr/simple-cache": {
         "version": "1.0.1"
     },
-    "react/promise": {
-        "version": "v2.8.0"
+    "ralouphie/getallheaders": {
+        "version": "3.0.3"
     },
     "sabberworm/php-css-parser": {
         "version": "8.3.1"

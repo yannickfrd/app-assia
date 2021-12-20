@@ -41,7 +41,7 @@ class CalendarController extends AbstractController
                 $calendar->getFirstMonday(),
                 $calendar->getLastday(),
                 null,
-                $this->getUser(),
+                $this->getUser()
             ),
         ]);
     }

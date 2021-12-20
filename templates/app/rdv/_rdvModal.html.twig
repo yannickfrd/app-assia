@@ -80,14 +80,17 @@
                     <div class="col-md-12">{{ form_widget(form.content) }}</div>
                 </div>
                 <div class="form-group row">
-                    <div class="col-md-12">
-                        {{ form_widget(form.googleCalendar, {'attr': {'data-client-google': path('create_client_google_calendar')} }) }}
+                    <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-1"
+                         title="Enregistrer le rendez-vous sur ClientGoogleCalendar Agenda">
+
+                        <div class="col-md-12">{{ form_widget(form.googleCalendar,
+                                { attr: {'data-client-google': path('auth_google_calendar')} })
+                            }}</div>
                     </div>
                 </div>
                 {{ form_row(form._token) }}
             </div>
             <div class="modal-footer d-flex justify-content-between">
-                <a href="{{ path('create_client_google_calendar') }}" class="btn btn-dark">Google api</a>
                 <div class="float-left">
                     <button id="modal-btn-delete" class="mr-3 btn btn-danger" data-placement="bottom"
                         title="Supprimer le rendez-vous"><span class="fas fa-trash-alt"></span><span class="d-none d-md-inline ml-2">Supprimer</span></button>

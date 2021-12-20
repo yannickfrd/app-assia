@@ -4,7 +4,7 @@ import Loader from '../utils/loader'
 import DateFormater from '../utils/date/dateFormater'
 import { Modal } from 'bootstrap'
 import ParametersUrl from '../utils/parametersUrl'
-import Google from "../api/googleApi/google";
+import ClientGoogleCalendar from "../api/googleApi/clientGoogleCalendar";
 
 export default class Calendar {
 
@@ -44,6 +44,8 @@ export default class Calendar {
 
         this.showWeekendsItem = localStorage.getItem('agenda.show_weekends')
         this.fullWidthItem = localStorage.getItem('agenda.full_width')
+
+        this.googleCalendarCheckbox = this.formRdvElt.elements['rdv_googleCalendar'].checked
 
         this.init()
     }
@@ -222,20 +224,20 @@ export default class Calendar {
     requestSaveRdv(e) {
         e.preventDefault()
 
-        // if (this.modalRdvElt.querySelector('#rdv_title').value === '') {
-        //     return new MessageFlash('danger', 'La rdv est vide.')
-        // }
+        if (this.modalRdvElt.querySelector('#rdv_title').value === '') {
+            return new MessageFlash('danger', 'La rdv est vide.')
+        }
 
         if (!this.loader.isActive()) {
             this.updateDatetimes()
 
             if (this.formRdvElt.elements['rdv_googleCalendar'].checked) {
-                new Google()
+                this.googleCalendarCheckbox = this.formRdvElt.elements['rdv_googleCalendar'].checked
+                // new Google()
             }
-            // if (this.formRdvElt.elements)
 
-            // this.loader.on()
-            // this.ajax.send('POST', this.formRdvElt.getAttribute('action'), this.responseAjax.bind(this), new FormData(this.formRdvElt))
+            this.loader.on()
+            this.ajax.send('POST', this.formRdvElt.getAttribute('action'), this.responseAjax.bind(this), new FormData(this.formRdvElt))
         }
     }
 
@@ -254,6 +256,7 @@ export default class Calendar {
      * @param {Object} data 
      */
     responseAjax(data) {
+        console.log(data)
         if (data.action) {
             switch (data.action) {
                 case 'show':
@@ -352,6 +355,10 @@ export default class Calendar {
         }
 
         rdvElt.addEventListener('click', this.requestGetRdv.bind(this, rdvElt))
+
+        if (this.googleCalendarCheckbox) {
+            new ClientGoogleCalendar(rdv.id)
+        }
     }
 
     /**
