@@ -56,6 +56,10 @@ class ApiGoogleCalendar
     public function insertGoogleApiToken(String $authCode=''): string
     {
         $accessToken = $this->getToken($authCode);
+        if (null === $this->client->setAccessToken($accessToken)) {
+            $this->session->remove(self::SESSION_CLIENT_TOKEN);
+        }
+
         $this->client->setAccessToken($accessToken);
 
         $service = new Google_Service_Calendar($this->client);
@@ -67,8 +71,9 @@ class ApiGoogleCalendar
         $insert = $service->events->insert($calendarId, $event, $optionsParams);
 
         $iCalUID = $insert->getICalUID();
-        $eventid = $insert->getId();
+        $googleEventId = $insert->getId();
 
+        $this->setEventOnRdv($googleEventId);
 
         return $insert->htmlLink;
     }
@@ -149,9 +154,7 @@ class ApiGoogleCalendar
      */
     private function getEvent(): Google_Service_Calendar_Event
     {
-        $rdvId = $this->session->get('clientRdvId');
-        /** @var Rdv $rdv */
-        $rdv = $this->em->getRepository(Rdv::class)->find($rdvId);
+        $rdv = $this->getRdv();
         $timeZone = $rdv->getStart()->getTimezone()->getName();
 
         return new Google_Service_Calendar_Event([
@@ -187,6 +190,28 @@ class ApiGoogleCalendar
                 ),
             ),
         ]);
+    }
+
+    /**
+     * Set l'id de l'event dans le rdv actuel,
+     * pour une future update ou delete
+     */
+    private function setEventOnRdv($setGoogleEventId): void
+    {
+        $rdv =($this->getRdv())->setGoogleEventId((string)$setGoogleEventId);
+
+        $this->em->persist($rdv);
+        $this->em->flush();
+    }
+
+    /**
+     * Retourne le rdv actuel en fonction de l'id enregistré en session
+     * @return Rdv
+     */
+    private function getRdv(): Rdv
+    {
+        $rdvId = $this->session->get('clientRdvId');
+        return $this->em->getRepository(Rdv::class)->find($rdvId);
     }
 
 }

@@ -83,6 +83,11 @@ class Rdv
     private $user;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $googleEventId;
+
+    /**
      * @ORM\PreFlush
      */
     public function preFlush()
@@ -194,6 +199,18 @@ class Rdv
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getGoogleEventId(): ?string
+    {
+        return $this->googleEventId;
+    }
+
+    public function setGoogleEventId(?string $googleEventId): self
+    {
+        $this->googleEventId = $googleEventId;
 
         return $this;
     }
