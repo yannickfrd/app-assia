@@ -26,6 +26,7 @@ class Service
 {
     use ContactEntityTrait;
     use LocationEntityTrait;
+    use TagTrait;
     use CreatedUpdatedEntityTrait;
     use DisableEntityTrait;
 
@@ -33,6 +34,7 @@ class Service
     public const CACHE_SERVICE_PLACES_KEY = 'service.places';
     public const CACHE_SERVICE_SUBSERVICES_KEY = 'service.sub_services';
     public const CACHE_SERVICE_USERS_KEY = 'service.users';
+    public const CACHE_SERVICE_TAGS_KEY = 'service.tags';
 
     public const SERVICE_TYPE_HEB = 1;
     public const SERVICE_TYPE_AVDL = 2;
@@ -202,6 +204,13 @@ class Service
      */
     private $subServices;
 
+    /**
+     * @var Collection|Tag[]|null
+     * @ORM\ManyToMany(targetEntity=Tag::class, inversedBy="services")
+     * @ORM\OrderBy({"name": "ASC"})
+     */
+    private $tags;
+
     public function __construct()
     {
         $this->serviceUser = new ArrayCollection();
@@ -210,6 +219,7 @@ class Service
         $this->places = new ArrayCollection();
         $this->organizations = new ArrayCollection();
         $this->subServices = new ArrayCollection();
+        $this->tags = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -371,6 +381,11 @@ class Service
     public function getPlace(): ?int
     {
         return $this->place;
+    }
+
+    public function getServiceTypeDefault(): array
+    {
+        return self::SERVICE_TYPE;
     }
 
     public function setPlace(?int $place): self

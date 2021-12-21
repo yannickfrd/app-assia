@@ -2,29 +2,25 @@
 
 namespace App\Form\Support\Rdv;
 
-use App\Entity\Organization\User;
+use App\Entity\Organization\Tag;
 use App\Entity\Support\Rdv;
-use App\Entity\Support\SupportGroup;
 use App\Form\Utils\Choices;
-use App\Repository\Organization\UserRepository;
-use App\Repository\Support\SupportGroupRepository;
+use App\Repository\Organization\TagRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Security;
 
 class RdvType extends AbstractType
 {
-    private $security;
-    private $supportGroupRepo;
+    /** @var TagRepository */
+    private $tagRepo;
 
-    public function __construct(Security $security, SupportGroupRepository $supportGroupRepo)
+    public function __construct(TagRepository $tagRepo)
     {
-        $this->security = $security;
-        $this->supportGroupRepo = $supportGroupRepo;
+        $this->tagRepo = $tagRepo;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -56,29 +52,27 @@ class RdvType extends AbstractType
             ])
             ->add('content', null, [
                 'attr' => [
-                    // "class" => "d-none",
                     'rows' => 5,
                     'placeholder' => 'rdv.placeholder.content',
                 ],
-            ]);
-        // ->add('user', EntityType::class, [
-            //     'class' => User::class,
-            //     'choice_label' => 'fullname',
-            //         'query_builder' => function (UserRepository $repo) {
-            //             return $repo->getUsersForCalendarQueryBuilder($this->security->getUser());
-            //         },
-            //     'placeholder' => 'placeholder.user',
-            //     'required' => true,
-            // ])
-            // ->add('supportGroup', EntityType::class, [
-            //         'class' => SupportGroup::class,
-            //         'choices' => $this->supportGroupRepo->getSupportsOfUserQueryBuilder($this->security->getUser()),
-            //         'choice_label' => function (SupportGroup $supportGroup) {
-            //             return $supportGroup->getSupportPeople()->first()->getPerson()->getFullname();
-            //         },
-            //         'placeholder' => 'placeholder.support',
-            //         'required' => false,
-            // ]);
+            ])
+            ->add('tags', EntityType::class, [
+                'class' => Tag::class,
+                'label' => false,
+                'multiple' => true,
+                'expanded' => false,
+                'required' => false,
+                'by_reference' => false,
+                'choices' => $options['data']->getSupportGroup() ?
+                    $this->tagRepo->getTagsWithOrWithoutService($options['data']->getSupportGroup()->getService()) :
+                    $this->tagRepo->findAllWithPartialLoadGetResult(),
+                'choice_label' => 'name',
+                'attr' => [
+                    'data-select2-id' => 'tags',
+                    'size' => 1,
+                ],
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

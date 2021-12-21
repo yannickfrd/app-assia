@@ -1,0 +1,103 @@
+{% extends "base.html.twig" %}
+
+{% set title = "Étiquettes" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+
+    <section class="mt-0 mb-4">
+
+        <div class="container">
+            <h1 class="h2 mb-3">{{ title }}</h1>
+            {% include "model/_msgFlash.html.twig" %}
+        </div>
+
+        {% include "app/organization/tag/_search_tags.html.twig" %}
+
+        <div class="container mt-4">
+
+            {% if is_granted("ROLE_SUPER_ADMIN") %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <a href="{{ path('admin_tag_new') }}" class="btn btn-{{ theme_color }} btn-sm mb-3 shadow">
+                            <span class="fas fa-plus-square mr-2"></span>Ajouter une nouvelle étiquette</a>
+                    </div>
+                </div>
+            {% endif %}
+   
+            <div class="row">
+                <div class="col-md-6 count align-middle my-2">
+                    <span class="align-middle">Résultat : {{ tags.getTotalItemCount|number }}<!--
+                    --> étiquette{% if tags.getTotalItemCount > 1 %}s{% endif %}.</span>
+                </div>
+                <div class="col-md-6">
+                    <div class="navigation">{{ knp_pagination_render(tags) }}</div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                    <thead>
+                    <tr>
+                        <th scope="col" class="align-middle th-w-20"></th>
+                        <th scope="col" class="align-middle th-w-120">
+                            {{ knp_pagination_sortable(tags, "Nom de l'étiquette", "t.name") }}
+                        </th>
+                        <th scope="col" class="align-middle th-w-80">
+                            {{ knp_pagination_sortable(tags, "Date de création", "t.createdAt") }}
+                        </th>
+                        <th scope="col" class="align-middle th-w-80">Crée par</th>
+                        <th scope="col" class="align-middle th-w-80">
+                            {{ knp_pagination_sortable(tags, "Date de mise à jour", "t.updatedAt") }}
+                        </th>
+                        <th scope="col" class="align-middle th-w-80">Modifié par</th>
+                        <th scope="col" class="align-middle th-w-20"></th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {% for tag in tags %}
+                        <tr>
+                            <td scope="row" class="align-middle text-center">
+                                {% if is_granted("ROLE_SUPER_ADMIN") %}
+                                    <a href="{{ path('admin_tag_edit', {'id': tag.id}) }}"
+                                       class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip"
+                                       data-placement="bottom" title="Voir la fiche de l'étiquette">
+                                        <span class="fas fa-eye"></span>
+                                    </a>
+                                {% endif %}
+                            </td>
+                            <td class="align-middle">{{ tag.name }}</td>
+                            <td class="align-middle">{{ tag.createdAt|date("d/m/Y") }}</td>
+                            <td class="align-middle">{{ tag.createdBy ? tag.createdBy.fullname }}</td>
+                            <td class="align-middle">{{ tag.updatedAt|date("d/m/Y") }}</td>
+                            <td class="align-middle">{{ tag.updatedBy ? tag.updatedBy.fullname }}</td>
+                            <td class="align-middle text-center">
+                                {% if is_granted("ROLE_SUPER_ADMIN") %}
+                                    <a href="{{ path('admin_tag_delete', {'id': tag.id} ) }}" role="button"
+                                       class="btn btn-danger" onclick="return window.confirm(
+                                           'Êtes-vous vraiment sûr de vouloir supprimer cette étiquette ?'
+                                       );">
+                                        <span class="fas fa-trash-alt"></span>
+                                    </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="navigation">{{ knp_pagination_render(tags) }}</div>
+            {% if is_granted("ROLE_SUPER_ADMIN") %}
+                <a href="{{ path('admin_tag_new') }}" class="btn btn-{{ theme_color }} btn-sm mb-2 shadow">
+                    <span class="fas fa-plus-square mr-2"></span>Ajouter une nouvelle étiquette</a>
+            {% endif %}
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags("search") }}
+{% endblock javascripts %}

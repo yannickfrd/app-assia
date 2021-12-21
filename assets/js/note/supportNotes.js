@@ -5,6 +5,8 @@ import AutoSaver from '../utils/form/autoSaver'
 import ParametersUrl from '../utils/parametersUrl'
 import { Modal } from 'bootstrap'
 import CkEditor from '../utils/ckEditor'
+import TagView from '../tag/tagView'
+import 'select2'
 
 export default class SupportNotes {
 
@@ -12,12 +14,12 @@ export default class SupportNotes {
         this.loader = new Loader()
         this.ajax = new Ajax()
         this.parametersUrl = new ParametersUrl()
-        
+
         this.CkEditor = new CkEditor('#editor')
-        
+
         this.newNoteBtnElt = document.getElementById('js-new-note')
         this.noteElts = document.querySelectorAll('div[data-note-id]')
-        
+
         this.noteModal = new Modal(document.getElementById('note-modal'), {
             backdrop: 'static',
             keyboard: false,
@@ -30,7 +32,7 @@ export default class SupportNotes {
         this.exportWordBtnElt = this.noteModalElt.querySelector('#export-note-word')
         this.exportPdfBtnElt = this.noteModalElt.querySelector('#export-note-pdf')
         this.deleteBtnElt = this.noteModalElt.querySelector('#modal-btn-delete')
-        
+
         this.confirmModal = new Modal(document.getElementById('confirm-modal'))
         this.confirmModalElt = document.getElementById('confirm-modal')
 
@@ -41,12 +43,18 @@ export default class SupportNotes {
         this.containerNotesElt = document.getElementById('container-notes')
         this.supportId = this.containerNotesElt.dataset.support
         this.data = null
+        this.tagView = new TagView(this.themeColor)
 
         this.init()
         this.autoSaver = new AutoSaver(this.autoSaveNote.bind(this), this.CkEditor.getEditorElt(), 60, 20)
     }
 
     init() {
+        $(`select[data-select2-id='tags']`).select2({
+            width: '100%',
+            placeholder: ' -- Étiquettes --'
+        })
+
         this.noteElts.forEach(noteElt => {
             noteElt.addEventListener('click', () => this.showNote(noteElt))
         })
@@ -95,18 +103,23 @@ export default class SupportNotes {
         this.noteModalElt.querySelector('#note_title').value = ''
         this.noteModalElt.querySelector('#note_type').value = 1
         this.noteModalElt.querySelector('#note_status').value = 1
+        $('#note_tags').val(null).trigger('change')
+
         this.CkEditor.setData('')
         this.data = ''
         this.deleteBtnElt.classList.replace('d-block', 'd-none')
         this.exportWordBtnElt.classList.replace('d-block', 'd-none')
         this.exportPdfBtnElt.classList.replace('d-block', 'd-none')
         this.autoSaver.init()
+
+        const inputPlaceholder = document.querySelectorAll('input[placeholder=" -- Étiquettes --"]')
+        inputPlaceholder.forEach(sel => sel.style.width = '100%')
     }
 
 
     /**
      * Donne la note sélectionnée dans le formulaire modal.
-     * @param {HTMLElement} noteElt 
+     * @param {HTMLElement} noteElt
      */
     showNote(noteElt) {
         this.initNoteModal(noteElt)
@@ -121,11 +134,40 @@ export default class SupportNotes {
         this.data = this.CkEditor.getData()
 
         this.noteModal.show()
+
+        this.initTagSelect(noteElt)
+    }
+
+    /**
+     * Permet d'initialiser les valeurs dans le select2
+     * @param {Object} noteElt
+     */
+    initTagSelect(noteElt){
+        const noteTags = $('#note_tags')
+
+        const badges = noteElt.querySelectorAll('#tags-list span[data-tag-id]')
+        const tagOptions = this.noteModalElt.querySelectorAll('option')
+
+        noteTags.val(null).trigger('change');
+        const listTagId = []
+        badges.forEach(tag => {
+            tagOptions.forEach(option => {
+                if (option.value === tag.dataset.tag){
+                    listTagId.push(option.value)
+                }
+            })
+        })
+        if (listTagId.length > 0){
+            noteTags.val(listTagId).trigger('change')
+        } else {
+            const inputPlaceholder = document.querySelectorAll('input[placeholder=" -- Étiquettes --"]')
+            inputPlaceholder.forEach(sel => sel.style.width = '100%')
+        }
     }
 
     /**
      * Donne la note sélectionnée dans le formulaire modal.
-     * @param {HTMLElement} noteElt 
+     * @param {HTMLElement} noteElt
      */
     initNoteModal(noteElt) {
         this.noteElt = noteElt
@@ -148,18 +190,31 @@ export default class SupportNotes {
     }
 
     /**
+     * Permet de créer les spans représentant les tags
+     * @param {Object} note
+     */
+    initTagList(note){
+        const tags = JSON.parse(note.tags)
+        const tagsList = document.getElementById('tags-list')
+
+        tagsList.querySelectorAll('span[data-tag-id]').forEach(badge => badge.remove())
+
+        this.tagView.collectionTagsView(tags).forEach(tag => tagsList.appendChild(tag))
+    }
+
+    /**
      * Envoie la requête ajax pour sauvegarder la note.
      */
     requestToSave() {
         if (true === this.loader.isActive()) {
-            return   
+            return
         }
 
         if (this.CkEditor.getData() === '') {
             return new MessageFlash('danger', 'Veuillez rédiger la note avant d\'enregistrer.')
         }
 
-        if (this.CkEditor.getData() != this.data) {
+        if (this.CkEditor.getData() !== this.data) {
             this.noteContentElt.textContent = this.CkEditor.getData()
         }
 
@@ -213,7 +268,7 @@ export default class SupportNotes {
      * Vérifie si des modifications ont été apportées avant la fermeture de la modal.
      */
     tryCloseModal() {
-        if (this.CkEditor.getData() == this.data) {
+        if (this.CkEditor.getData() === this.data) {
             return this.noteModal.hide()
         }
 
@@ -225,7 +280,7 @@ export default class SupportNotes {
 
     /**
      * Réponse du serveur.
-     * @param {Object} response 
+     * @param response
      */
     responseAjax(response) {
         if (!response.action) {
@@ -242,7 +297,7 @@ export default class SupportNotes {
                 this.updateNote(note)
                 break
             case 'delete':
-                this.deleteNote(note)
+                this.deleteNote()
                 break
         }
 
@@ -254,9 +309,19 @@ export default class SupportNotes {
 
     /**
      * Crée la note dans le container.
-     * @param {Object} note 
+     * @param {Object} note
      */
     createNote(note) {
+        const responseTags = JSON.parse(note.tags)
+        let listTags = ''
+
+        if (responseTags.length > 0){
+            responseTags.forEach(tag => {
+                listTags += `<span class="tag badge bg-${this.themeColor} text-light mr-1" 
+                            data-tag="${tag.id}" data-name="${tag.name}">${tag.name}</span>`
+            })
+        }
+
         const noteElt = document.createElement('div')
         noteElt.className = 'col-sm-12 col-lg-6 mb-4 reveal'
         noteElt.dataset.noteId = note.id
@@ -267,6 +332,7 @@ export default class SupportNotes {
                     <span data-note-type="1">${note.typeToString}</span> (<span data-note-status="1">${note.statusToString}</span>)
                     <span class="small text-secondary" data-note-created="true">${note.editionToString}</span>
                     <span class="small text-secondary" data-note-updated="true"></span>
+                    <div class="mt-2 tags-list">${listTags}</div>
                 </div>
                 <div class='card-body note-content cursor-pointer' data-placement='bottom' title='Voir la note'>
                     <div class='card-text'>${this.CkEditor.getData()}</div>
@@ -283,7 +349,7 @@ export default class SupportNotes {
 
         this.initNoteModal(noteElt)
         this.data = this.CkEditor.getData()
-        
+
         // Créé l'animation d'apparition
         setTimeout(() => {
             noteElt.classList.add('reveal-on')
@@ -294,7 +360,7 @@ export default class SupportNotes {
 
     /**
      * Met à jour la note dans le container.
-     * @param {Object} note 
+     * @param {Object} note
      */
     updateNote(note) {
         this.titleNoteElt.textContent = this.noteModalElt.querySelector('#note_title').value
@@ -310,6 +376,8 @@ export default class SupportNotes {
         noteStatusElt.dataset.noteStatus = this.noteModalElt.querySelector('#note_status').value
 
         this.noteElt.querySelector('[data-note-updated]').textContent = note.editionToString
+
+        this.initTagList(note)
     }
 
     deleteNote() {
@@ -320,7 +388,7 @@ export default class SupportNotes {
 
     /**
      * Met à jour le compteur du nombre de notes.
-     * @param {Number} nb 
+     * @param {Number} nb
      */
     updateCountNotes(nb) {
         const nbNotes = this.containerNotesElt.querySelectorAll('.card').length
@@ -333,5 +401,15 @@ export default class SupportNotes {
             return this.searchSupportNotesElt.classList.remove('d-none')
         }
         return this.searchSupportNotesElt.classList.add('d-none')
+    }
+
+    tagCreate(tag) {
+        let span = document.createElement('span')
+        span.setAttribute('data-tag', tag.id)
+        span.setAttribute('data-name', tag.name)
+        span.classList.add('tag', 'badge', 'bg-'+this.themeColor, 'text-light', 'mr-1')
+        span.innerText = ' ' + tag.name + ' '
+
+        return span
     }
 }

@@ -52,6 +52,7 @@ class Payment
 
     public const PAYMENT_TYPES = [
         1 => 'Virement',
+        2 => 'Test',
         3 => 'Chèque',
         4 => 'Espèce',
         99 => 'Non renseigné',

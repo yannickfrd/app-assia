@@ -2,12 +2,12 @@
 
 namespace App\Form\Organization\SubService;
 
-use App\Entity\Organization\User;
 use App\Entity\Organization\SubService;
-use Symfony\Component\Form\AbstractType;
+use App\Entity\Organization\User;
 use App\Repository\Organization\UserRepository;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SubServiceType extends AbstractType

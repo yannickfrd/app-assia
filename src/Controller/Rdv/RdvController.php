@@ -2,29 +2,30 @@
 
 namespace App\Controller\Rdv;
 
+use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Support\Rdv;
 use App\Event\Rdv\RdvEvent;
-use App\Service\Pagination;
-use App\Form\Support\Rdv\RdvType;
-use App\Service\Export\RdvExport;
-use App\Service\Rdv\RdvPaginator;
-use App\Security\CurrentUserService;
 use App\Form\Model\Support\RdvSearch;
-use App\Form\Support\Rdv\RdvSearchType;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\Support\RdvRepository;
-use App\Controller\Traits\ErrorMessageTrait;
 use App\Form\Model\Support\SupportRdvSearch;
-use App\Service\SupportGroup\SupportManager;
-use Symfony\Component\HttpFoundation\Request;
+use App\Form\Support\Rdv\RdvSearchType;
+use App\Form\Support\Rdv\RdvType;
 use App\Form\Support\Rdv\SupportRdvSearchType;
+use App\Repository\Support\RdvRepository;
+use App\Repository\Support\SupportGroupRepository;
+use App\Security\CurrentUserService;
+use App\Service\Export\RdvExport;
+use App\Service\Pagination;
+use App\Service\Rdv\RdvPaginator;
+use App\Service\SupportGroup\SupportManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Repository\Support\SupportGroupRepository;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class RdvController extends AbstractController
 {
@@ -72,7 +73,9 @@ class RdvController extends AbstractController
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
-        $formSearch = $this->createForm(SupportRdvSearchType::class, $search = new SupportRdvSearch())
+        $formSearch = $this->createForm(SupportRdvSearchType::class, $search = new SupportRdvSearch(), [
+            'service' => $supportGroup->getService(),
+        ])
             ->handleRequest($request);
 
         return $this->render('app/rdv/supportRdvs.html.twig', [
@@ -113,7 +116,8 @@ class RdvController extends AbstractController
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        $form = $this->createForm(RdvType::class, $rdv = new Rdv())
+        $rdv = (new Rdv())->setSupportGroup($supportGroup);
+        $form = $this->createForm(RdvType::class, $rdv)
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -135,7 +139,7 @@ class RdvController extends AbstractController
      *
      * @Route("/rdv/{id}/get", name="rdv_get", methods="GET")
      */
-    public function getRdv($id): JsonResponse
+    public function getRdv($id, SerializerInterface $serializer): JsonResponse
     {
         $rdv = $this->rdvRepo->findRdv($id);
 
@@ -159,6 +163,8 @@ class RdvController extends AbstractController
                 'updatedBy' => $rdv->getUpdatedBy()->getFullname(),
                 'updatedAt' => $rdv->getUpdatedAt()->format('d/m/Y à H:i'),
                 'canEdit' => $this->isGranted('EDIT', $rdv),
+                'tags' => $serializer->serialize($rdv->getTags(), 'json', ['groups' => 'show_tag']),
+                'tagIds' => $rdv->getTagsIdsToString(),
             ],
         ]);
     }
@@ -230,6 +236,7 @@ class RdvController extends AbstractController
                 'title' => $rdv->getTitle(),
                 'day' => $rdv->getStart()->format('Y-m-d'),
                 'start' => $rdv->getStart()->format('H:i'),
+                'tagsIds' => $rdv->getTagsIdsToString(),
             ],
         ];
     }

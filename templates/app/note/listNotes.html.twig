@@ -36,6 +36,7 @@
                             <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(notes, "Nom du suivi", "p.lastname") }}</th>
                             <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(notes, "Type", "n.type") }}</th>
                             <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(notes, "Statut", "n.status") }}</th>
+                            <th scope="col" class="align-middle th-w-100">Étiquette(s)</th>
                             <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(notes, "Date de création", "n.createdAt") }}</th>
                             <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(notes, "Créé par", "u.lastname") }}</th>
                             <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(notes, "Date de modification", "n.updatedAt") }}</th>
@@ -56,9 +57,10 @@
                                 {{ note.title }}{% if note.title %} : {% endif %}</span>
                                 {{ note.content|u.truncate(200, " [...]", false)|striptags|raw }}
                             </td>
-                            <td class="align-middle">{{ note.supportGroup.supportPeople|filter(s => s.head == true)|first.person.fullname }}</td>
+                            <td class="align-middle">{{ note.supportGroup.header.fullname }}</td>
                             <td class="align-middle">{{ note.typeToString }}</td>
                             <td class="align-middle">{{ note.statusToString }}</td>
+                            <td class="align-middle">{{ note.tagsToString }}</td>
                             <td class="align-middle">{{ note.createdAt|date("d/m/Y") }}</td>
                             <td class="align-middle">{{ note.createdBy ? note.createdBy.fullname }}</td>
                             <td class="align-middle">{{ note.updatedAt|date("d/m/Y") }}</td>
@@ -78,7 +80,7 @@
                     </tbody>
                 </table>
             </div>
-            
+
             <div class="navigation">{{ knp_pagination_render(notes) }}</div>
 
         </div>

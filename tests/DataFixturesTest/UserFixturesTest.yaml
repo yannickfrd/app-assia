@@ -70,6 +70,7 @@ App\Entity\Organization\Service:
     pole: "@pole1"
     createdAt: <date_create()>
     updatedAt: <date_create()>
+
   service2:
     name: Autre service
     type: 2

@@ -17,24 +17,23 @@ export default class Search {
         this.btnExportElt = document.getElementById('js-btn-export')
         this.btnClearElt = this.formSearch.querySelector('button[type="reset"]')
         this.firstInput = this.formSearch.querySelector('input')
-        
+
         this.init()
     }
 
     init() {
         if (this.btnSearchElt) {
             this.btnSearchElt.addEventListener('click', e => {
-            this.loader.inLoading = false
-            if (this.loader.isActive()) {
-                    e.preventDefault()
-                }
-            this.loader.on(); 
-        })   
+                this.loader.inLoading = false
+                if (this.loader.isActive()) {
+                        e.preventDefault()
+                    }
+                this.loader.on();
+            })
         }
 
-
         this.btnClearElt.addEventListener('click', e => {
-            this.loader.off(); 
+            this.loader.off();
             e.preventDefault()
             this.clearSearch()
         })

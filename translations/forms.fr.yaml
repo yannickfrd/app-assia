@@ -345,3 +345,9 @@ si_siao:
 si_siao_id.placeholder: ID groupe SI-SIAO
 Si siao search: Recherche SI-SIAO
 Si siao import: Importer l'évaluation sociale présente dans le SI-SIAO.
+
+#TAGS
+tag:
+  label: Étiquettes
+  name: Nom
+  placeholder: Saisir le nom d'une étiquette ...

@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Form\Organization\Tag;
+
+use App\Entity\Organization\Tag;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+class TagType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('name', null, [
+                'attr' => ['placeholder' => 'tag.placeholder'],
+            ])
+        ;
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'data_class' => Tag::class,
+            'translation_domain' => 'forms',
+        ]);
+    }
+}

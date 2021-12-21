@@ -137,7 +137,7 @@
                         <tbody>
                             {% for support in supports  %}
                                 {# {% cache "referentSupport" ~ support.id support.updatedAt.timestamp %} #}
-                                {% set person = (support.supportPeople|filter(s => s.head == true)|first).person %}
+                                {% set person = support.header %}
                                 <tr>
                                     <td scope="row" class="align-middle">
                                         <a href="{{ path('support_edit', {'id':support.id}) }}"

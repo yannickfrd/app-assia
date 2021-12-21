@@ -1,4 +1,4 @@
-<div id="note-modal" class="modal modal-fullscreen fade" tabindex="-1" role="dialog" 
+<div id="note-modal" class="modal modal-fullscreen fade" tabindex="-1" role="dialog"
     aria-labelledby="modalNoteLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-fullscreen modal-xl" role="document">
         <div class="modal-content">
@@ -22,18 +22,34 @@
                     <label class="col-form-label d-none d-sm-block col-sm-2 required" for="note_status">Statut</label>
                     <div class="col-6 col-sm-4">{{ form_widget(form.status) }}</div>
                 </div>
+                <div class="row mb-3">
+                    <label class="col-form-label d-none d-sm-block col-sm-2" for="note_tags">Étiquettes</label>
+                    <div class="col-sm-10">
+                        <div class="d-flex input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text" title="Étiquettes"
+                                    data-toggle="tooltip" data-placement="bottom">
+                                    <span class="fas fa-tag text-black-50"></span>
+                                </div>
+                            </div>
+                            <div class="flex-fill pl-0">
+                                {{ form_widget(form.tags) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer d-flex justify-content-between">
                 <div class="d-flex float-left">
-                    <button id="modal-btn-delete" class="btn btn-danger d-none mr-2 mr-md-3" data-toggle="tooltip" 
+                    <button id="modal-btn-delete" class="btn btn-danger d-none mr-2 mr-md-3" data-toggle="tooltip"
                         data-placement="bottom" title="Supprimer la note"><span class="fas fa-trash-alt"></span>
                         <span class="d-none d-md-inline ml-2">Supprimer</span>
                     </button>
-                    <a id="export-note-word" class="btn btn-{{ theme_color }} d-none mr-1" 
+                    <a id="export-note-word" class="btn btn-{{ theme_color }} d-none mr-1"
                         data-toggle="tooltip" data-placement="bottom" title="Exporter la note au format Word">
                         <span class="fas fa-file-word bg-primary fa-lg"></span><span class="d-none d-lg-inline ml-2">Word</span>
                     </a>
-                    <a id="export-note-pdf" class="btn btn-{{ theme_color }} d-none" 
+                    <a id="export-note-pdf" class="btn btn-{{ theme_color }} d-none"
                         data-toggle="tooltip" data-placement="bottom" title="Exporter la note au format PDF">
                         <span class="fas fa-file-pdf bg-danger fa-lg"></span><span class="d-none d-lg-inline ml-2">PDF</span>
                     </a>

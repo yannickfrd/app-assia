@@ -2,6 +2,9 @@
 
 namespace App\Form\Model\Support\Traits;
 
+use App\Entity\Organization\Tag;
+use Doctrine\Common\Collections\ArrayCollection;
+
 trait NoteSearchTrait
 {
     /**
@@ -18,6 +21,23 @@ trait NoteSearchTrait
      * @var int|null
      */
     private $status;
+
+    /**
+     * @var ArrayCollection|null
+     */
+    private $tags;
+
+    public function getTags(): ?ArrayCollection
+    {
+        return $this->tags;
+    }
+
+    public function setTags(?ArrayCollection $tags): self
+    {
+        $this->tags = $tags;
+
+        return $this;
+    }
 
     public function getContent(): ?string
     {

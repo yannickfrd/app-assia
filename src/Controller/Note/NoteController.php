@@ -2,40 +2,43 @@
 
 namespace App\Controller\Note;
 
-use App\Entity\Support\Note;
-use App\Event\Note\NoteEvent;
-use App\Service\Note\NoteExporter;
-use App\Form\Support\Note\NoteType;
-use App\Service\Note\NotePaginator;
-use App\Entity\Support\SupportGroup;
-use App\Form\Model\Support\NoteSearch;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Form\Support\Note\NoteSearchType;
-use App\Repository\Support\NoteRepository;
 use App\Controller\Traits\ErrorMessageTrait;
-use App\Service\SupportGroup\SupportManager;
+use App\Entity\Support\Note;
+use App\Entity\Support\SupportGroup;
+use App\Event\Note\NoteEvent;
+use App\Form\Model\Support\NoteSearch;
 use App\Form\Model\Support\SupportNoteSearch;
-use Symfony\Component\HttpFoundation\Request;
+use App\Form\Support\Note\NoteSearchType;
+use App\Form\Support\Note\NoteType;
+use App\Form\Support\Note\SupportNoteSearchType;
+use App\Repository\Support\NoteRepository;
+use App\Repository\Support\SupportGroupRepository;
 use App\Service\Evaluation\EvaluationExporter;
+use App\Service\Note\NoteExporter;
+use App\Service\Note\NotePaginator;
+use App\Service\SupportGroup\SupportCollections;
+use App\Service\SupportGroup\SupportManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Form\Support\Note\SupportNoteSearchType;
-use App\Service\SupportGroup\SupportCollections;
-use App\Repository\Support\SupportGroupRepository;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class NoteController extends AbstractController
 {
     use ErrorMessageTrait;
 
     private $em;
+    private $serializer;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, SerializerInterface $serializer)
     {
         $this->em = $em;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -73,10 +76,13 @@ class NoteController extends AbstractController
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
-        $formSearch = $this->createForm(SupportNoteSearchType::class, $search = new SupportNoteSearch())
+        $formSearch = $this->createForm(SupportNoteSearchType::class, $search = new SupportNoteSearch(), [
+            'service' => $supportGroup->getService(),
+        ])
             ->handleRequest($request);
 
-        $form = $this->createForm(NoteType::class, new Note());
+        $note = (new Note())->setSupportGroup($supportGroup);
+        $form = $this->createForm(NoteType::class, $note);
 
         if ($search->getExport()) {
             return $noteExporter->exportAllNotes($supportGroup, $search);
@@ -100,7 +106,8 @@ class NoteController extends AbstractController
     {
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        $form = $this->createForm(NoteType::class, $note = new Note())
+        $note = (new Note())->setSupportGroup($supportGroup);
+        $form = $this->createForm(NoteType::class, $note)
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -238,6 +245,7 @@ class NoteController extends AbstractController
             'typeToString' => $note->getTypeToString(),
             'statusToString' => $note->getStatusToString(),
             'editionToString' => '(modifié le '.$note->getUpdatedAt()->format('d/m/Y à H:i').' par '.$note->getUpdatedBy()->getFullname().')',
+            'tags' => $this->serializer->serialize($note->getTags(), 'json', ['groups' => 'show_tag']),
         ];
     }
 }

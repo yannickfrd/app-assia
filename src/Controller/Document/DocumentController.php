@@ -2,32 +2,32 @@
 
 namespace App\Controller\Document;
 
-use App\Service\Pagination;
-use App\Service\Normalisation;
-use App\Entity\Support\Document;
-use App\Service\File\Downloader;
-use App\Service\File\FileUploader;
-use App\Entity\Support\SupportGroup;
-use App\Security\CurrentUserService;
-use App\Service\File\FileDownloader;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Form\Support\Document\ActionType;
-use App\Form\Model\Support\DocumentSearch;
-use App\Form\Support\Document\DocumentType;
 use App\Controller\Traits\ErrorMessageTrait;
-use App\Service\SupportGroup\SupportManager;
-use Symfony\Component\HttpFoundation\Request;
-use App\Repository\Support\DocumentRepository;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\Support\Document;
+use App\Entity\Support\SupportGroup;
+use App\Form\Model\Support\DocumentSearch;
 use App\Form\Model\Support\SupportDocumentSearch;
+use App\Form\Support\Document\ActionType;
 use App\Form\Support\Document\DocumentSearchType;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Form\Support\Document\DocumentType;
 use App\Form\Support\Document\DropzoneDocumentType;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use App\Form\Support\Document\SupportDocumentSearchType;
+use App\Repository\Support\DocumentRepository;
+use App\Security\CurrentUserService;
+use App\Service\File\Downloader;
+use App\Service\File\FileDownloader;
+use App\Service\File\FileUploader;
+use App\Service\Pagination;
+use App\Service\SupportGroup\SupportManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class DocumentController extends AbstractController
 {
@@ -49,7 +49,7 @@ class DocumentController extends AbstractController
      *
      * @Route("/admin/documents", name="documents", methods="GET|POST")
      */
-    public function viewListDocuments(Request $request, Pagination $pagination, CurrentUserService $currentUser): Response
+    public function showListDocuments(Request $request, Pagination $pagination, CurrentUserService $currentUser): Response
     {
         $form = $this->createForm(DocumentSearchType::class, $search = new DocumentSearch())
             ->handleRequest($request);
@@ -65,14 +65,21 @@ class DocumentController extends AbstractController
      *
      * @Route("/support/{id}/documents", name="support_documents", methods="GET|POST")
      */
-    public function listSupportDocuments(int $id, SupportManager $supportManager, Request $request, Pagination $pagination): Response
-    {
+    public function listSupportDocuments(
+        int $id,
+        SupportManager $supportManager,
+        Request $request,
+        Pagination $pagination
+    ): Response {
         $this->denyAccessUnlessGranted('VIEW', $supportGroup = $supportManager->getSupportGroup($id));
 
-        $formSearch = $this->createForm(SupportDocumentSearchType::class, $search = new SupportDocumentSearch())
-            ->handleRequest($request);
+        $formSearch = $this->createForm(SupportDocumentSearchType::class, $search = new SupportDocumentSearch(), [
+            'service' => $supportGroup->getService(),
+        ]);
+        $formSearch->handleRequest($request);
 
-        $documentForm = $this->createForm(DocumentType::class, new Document());
+        $documentForm = $this->createForm(DocumentType::class, (new Document())->setSupportGroup($supportGroup));
+
         $dropzoneForm = $this->createForm(DropzoneDocumentType::class, null, [
             'action' => $this->generateUrl('document_new', ['id' => $supportGroup->getId()]),
         ]);
@@ -86,7 +93,10 @@ class DocumentController extends AbstractController
             'documentForm' => $documentForm->createView(),
             'dropzoneForm' => $dropzoneForm->createView(),
             'actionForm' => $actionForm->createView(),
-            'documents' => $pagination->paginate($this->documentRepo->findSupportDocumentsQuery($supportGroup, $search), $request),
+            'documents' => $pagination->paginate(
+                $this->documentRepo->findSupportDocumentsQuery($supportGroup, $search),
+                $request
+            ),
         ]);
     }
 
@@ -166,7 +176,7 @@ class DocumentController extends AbstractController
      * @Route("/document/{id}/edit", name="document_edit", methods="POST")
      * @IsGranted("EDIT", subject="document")
      */
-    public function editDocument(Document $document, Request $request, Normalisation $normalisation): JsonResponse
+    public function editDocument(Document $document, Request $request, NormalizerInterface $normalizer): JsonResponse
     {
         $form = $this->createForm(DocumentType::class, $document)
             ->handleRequest($request);
@@ -180,11 +190,11 @@ class DocumentController extends AbstractController
                 'action' => 'update',
                 'alert' => 'success',
                 'msg' => 'Les informations du document "'.$document->getName().'" sont mises à jour.',
-                'data' => $normalisation->normalizer->normalize($document, null, ['groups' => ['get', 'view']]),
+                'data' => $normalizer->normalize($document, null, ['groups' => ['show_document', 'show_tag', 'view']]),
             ]);
         }
 
-        return $this->getErrorMessage($form, $normalisation);
+        return $this->getErrorMessage($form);
     }
 
     /**

@@ -2,34 +2,42 @@
 
 namespace App\Form\Support\Rdv;
 
-use App\Entity\Support\Rdv;
-use App\Form\Utils\Choices;
-use App\Form\Type\ServiceDeviceReferentSearchType;
+use App\Entity\Organization\Tag;
 use App\Entity\Organization\User;
-use App\Form\Type\DateSearchType;
+use App\Entity\Support\Rdv;
 use App\Form\Model\Support\RdvSearch;
+use App\Form\Type\DateSearchType;
+use App\Form\Type\ServiceDeviceReferentSearchType;
+use App\Form\Utils\Choices;
+use App\Repository\Organization\TagRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Security\Core\Security;
-use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Security\Core\Security;
 
 class RdvSearchType extends AbstractType
 {
     /** @var User */
     private $user;
 
-    public function __construct(Security $security)
+    /** @var TagRepository */
+    private $tagRepo;
+
+    public function __construct(Security $security, TagRepository $tagRepo)
     {
         $this->user = $security->getUser();
+        $this->tagRepo = $tagRepo;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $this->setFormData($builder);
+
         $builder
             ->add('id', null, [
                 'label_attr' => ['class' => 'sr-only'],
@@ -69,10 +77,25 @@ class RdvSearchType extends AbstractType
             ->add('service', ServiceDeviceReferentSearchType::class, [
                 'data_class' => RdvSearch::class,
             ])
-            ->add('export');
+            ->add('export')
+            ->add('tags', EntityType::class, [
+                'class' => Tag::class,
+                'multiple' => true,
+                'expanded' => false,
+                'required' => false,
+                'by_reference' => false,
+                'choices' => $this->tagRepo->getTagsWithOrWithoutService($options['service']),
+                'choice_label' => 'name',
+                'label_attr' => ['class' => 'sr-only'],
+                'attr' => [
+                    'class' => 'multi-select w-min-160 w-max-180',
+                    'data-select2-id' => 'search-tags',
+                    'size' => 1,
+                ],
+            ])
+        ;
     }
 
-    
     private function setFormData(FormBuilderInterface $builder): FormBuilderInterface
     {
         return $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
@@ -86,7 +109,7 @@ class RdvSearchType extends AbstractType
             }
         });
     }
-    
+
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
@@ -95,6 +118,7 @@ class RdvSearchType extends AbstractType
             'translation_domain' => 'forms',
             'allow_extra_fields' => true,
             'csrf_protection' => false,
+            'service' => null,
         ]);
     }
 

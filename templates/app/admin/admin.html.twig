@@ -38,7 +38,7 @@
 
 
                 {% if is_granted("ROLE_SUPER_ADMIN") %}
-                
+
                     <hr class="my-3">
 
                     <h2 class="h5">Services, pôles et dispositifs</h2>
@@ -51,9 +51,12 @@
                         </li>
                         <li class="mb-2 text-{{ theme_color }}">
                             <a class="text-dark" href="{{ path("admin_device_new") }}">Créer un dispositif</a>
-                        </li class="mb-2">
+                        </li>
                         <li class="mb-2 text-{{ theme_color }}">
                             <a class="text-dark" href="{{ path("admin_devices") }}">Gérer les dispositifs</a>
+                        </li>
+                        <li class="mb-2 text-{{ theme_color }}">
+                            <a class="text-dark" href="{{ path("tags") }}">Gérer les étiquettes</a>
                         </li>
                     </ul>
 
@@ -80,7 +83,7 @@
                         <a class="text-dark" href="{{ path("export") }}">Exporter les données</a>
                     </li>
                 </ul>
-                
+
                 <hr class="my-3">
 
                 {% if is_granted("ROLE_SUPER_ADMIN") %}
@@ -98,7 +101,7 @@
                     <ul>
                         <li class="mb-2 text-{{ theme_color }}">
                             <a class="text-dark" href="{{ path("database_backups") }}">Sauvegarder et exporter la base de données</a>
-                        </li>   
+                        </li>
                     </ul>
 
                     <hr class="my-3">
@@ -126,7 +129,7 @@
                     </ul>
 
                     <hr class="my-3">
-                    
+
                     <h2 class="h5">Glossaire</h2>
                     <ul>
                         <li class="mb-2 text-{{ theme_color }}">

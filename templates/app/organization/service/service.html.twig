@@ -15,7 +15,7 @@
     <div class="container">
 
         {{ form_start(form) }}
-        
+
         <section>
             <h1 class="h2 mb-3">{{ title }}</h1>
             {% if EDIT_MODE %}
@@ -33,10 +33,10 @@
                     <li class="breadcrumb-item active" aria-current="page">Fiche service</li>
                 </ol>
             </nav>
-            
+
             {% include "model/_msgFlash.html.twig" %}
             <div id="js-msg-flash-content"></div>
-            
+
             <hr>
 
             <div class="form-group row">
@@ -106,21 +106,24 @@
             {% endif %}
         </section>
 
+        {% if EDIT_MODE %}
+            {% include "app/organization/service/_serviceSubServices.html.twig" with {accordion_id: "sub_services"} %}
+        {% endif %}
+
         {% include "app/organization/service/_serviceDevices.html.twig" with {accordion_id: "devices"} %}
 
         {{ form_row(form._token) }}
         {{ form_end(form, {"render_rest": false}) }}
 
-        {% if EDIT_MODE == true %}
-			{% include "app/organization/service/_serviceSubServices.html.twig" with {accordion_id: "sub_services"} %}
-        {% endif %}
         {% if is_granted_edit_service %}
             {% if form.organizations is defined and is_granted("ROLE_SUPER_ADMIN") %}
         		{% include "app/organization/service/_serviceOrganizations.html.twig" with {accordion_id: "organizations"} %}
             {% endif %}
         {% endif %}
+
         {% if EDIT_MODE %}
         	{% include "app/organization/service/_servicePlaces.html.twig" with {accordion_id: "places"} %}
+            {% include "app/organization/service/_service_tags.html.twig" with {accordion_id: "tags"} %}
         	{% include "app/organization/service/_serviceUsers.html.twig" with {accordion_id: "users"} %}
         {% endif %}
     </div>

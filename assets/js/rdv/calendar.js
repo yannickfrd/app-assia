@@ -4,6 +4,7 @@ import Loader from '../utils/loader'
 import DateFormater from '../utils/date/dateFormater'
 import { Modal } from 'bootstrap'
 import ParametersUrl from '../utils/parametersUrl'
+import 'select2'
 
 export default class Calendar {
 
@@ -94,12 +95,14 @@ export default class Calendar {
         }
 
         this.showWeekendCheckbox.addEventListener('click', () => this.hideWeekends())
-        
+
         // Si l'ID d'une suivi est en pramètre, affiche le rendez-vous
         const rdvElt = document.getElementById('rdv-' + this.parametersUrl.get('rdv_id'))
         if (rdvElt) {
             rdvElt.click()
         }
+
+        $(`select[data-select2-id='tags']`).select2({width: '100%', placeholder: ' -- Étiquettes --'})
     }
 
     /**
@@ -109,7 +112,7 @@ export default class Calendar {
         if (this.fullWidthCheckbox.checked) {
             this.calendarContainer.classList.replace('container', 'container-fluid');
             localStorage.setItem('agenda.full_width', true);
-        } else {   
+        } else {
             this.calendarContainer.classList.replace('container-fluid', 'container');
             localStorage.setItem('agenda.full_width', false);
         }
@@ -130,7 +133,7 @@ export default class Calendar {
 
     /**
      * Réinialise le formulaire modal de rdv.
-     * @param {Event} e 
+     * @param {Event} e
      */
     resetData(e) {
         e.preventDefault()
@@ -162,6 +165,9 @@ export default class Calendar {
 
         if (e.target.className && e.target.className.search('calendar-event') != 0) {
             this.modalElt.show()
+            const rdvTags = $('#rdv_tags')
+            rdvTags.val(null).trigger('change');
+            this.modalRdvElt.querySelector('span.select2 ul li input.select2-search__field').style.width = '100%'
         }
     }
 
@@ -205,7 +211,7 @@ export default class Calendar {
 
     /**
      * Requête pour obtenir le RDV sélectionné dans le formulaire modal.
-     * @param {HTMLElement} rdvElt 
+     * @param {HTMLElement} rdvElt
      */
     requestGetRdv(rdvElt) {
         this.loader.on()
@@ -216,7 +222,7 @@ export default class Calendar {
 
     /**
      * Requête pour sauvegarder le RDV.
-     * @param {Event} e 
+     * @param {Event} e
      */
     requestSaveRdv(e) {
         e.preventDefault()
@@ -244,7 +250,7 @@ export default class Calendar {
 
     /**
      * Donne la réponse à la requête Ajax.
-     * @param {Object} data 
+     * @param {Object} data
      */
     responseAjax(data) {
         if (data.action) {
@@ -272,7 +278,7 @@ export default class Calendar {
 
     /**
      * Affiche le RDV dans le formulaire modal.
-     * @param {Object} rdv 
+     * @param {Object} rdv
      */
     showRdv(rdv) {
         this.modalRdvElt.querySelector('form').action = '/rdv/' + this.rdvId + '/edit'
@@ -289,7 +295,7 @@ export default class Calendar {
         this.modalRdvElt.querySelector('#rdv_content').value = rdv.content ? rdv.content : ''
 
         this.infoRdvElt.innerHTML = this.getInfoRdvElt(rdv)
-        
+
         const title = 'RDV' + (rdv.fullnameSupport ? ' | ' + rdv.fullnameSupport : '')
         this.rdvTitleElt.textContent = title
 
@@ -300,18 +306,58 @@ export default class Calendar {
         }
 
         if (rdv.canEdit) {
-            this.btnDeleteElt.href = `/rdv/${this.rdvId}/delete` 
+            this.btnDeleteElt.href = `/rdv/${this.rdvId}/delete`
             this.btnDeleteElt.classList.remove('d-none')
             this.btnSaveElt.classList.remove('d-none')
         } else {
             this.btnDeleteElt.classList.add('d-none')
             this.btnSaveElt.classList.add('d-none')
         }
-        
+
         this.modalElt.show()
+
+        this.initTagSelect(this.rdvElt, rdv)
     }
 
-    /**  
+    /**
+     * Select 2
+     * Permet d'initialiser les valeurs dans le select
+     * @param rdvElt
+     * @param tags
+     */
+    initTagSelect(rdvElt, tags){
+        const rdvTags = $('#rdv_tags')
+        const tagOptions = this.modalRdvElt.querySelectorAll('select#rdv_tags option')
+        const haveValues = () => {
+            if (null !== tags.tagIds){
+                rdvElt.dataset.tags = tags.tagIds
+            }
+            return rdvElt.dataset.tags !== 'undefined'
+        }
+
+        if (haveValues()){
+            const tags = rdvElt.dataset.tags.split('|')
+
+            rdvTags.val(null).trigger('change');
+            let listTagId = []
+            tags.forEach(tag => {
+                tagOptions.forEach(option => {
+                    if (option.value === tag){
+                        listTagId.push(option.value)
+                    }
+                })
+            })
+            if (listTagId.length > 0){
+                rdvTags.val(listTagId).trigger('change')
+            } else {
+                this.modalRdvElt.querySelector('form input.select2-search__field').style.width = '100%'
+            }
+        } else {
+            this.modalRdvElt.querySelector('form input.select2-search__field').style.width = '100%'
+        }
+    }
+
+    /**
      * Donnes les informations sur l'enregistrement (date de création, créateur...).
      * @param {Object} rdv
      */
@@ -325,7 +371,7 @@ export default class Calendar {
 
     /**
      * Crée le RDV dans le container du jour de l'agenda.
-     * @param {Object} rdv 
+     * @param {Object} rdv
      */
     createRdv(rdv) {
         const rdvElt = document.createElement('div')
@@ -349,7 +395,7 @@ export default class Calendar {
 
     /**
      * Met à jour le RDV dans l'agenda.
-     * @param {Object} rdv 
+     * @param {Object} rdv
      */
     updateRdv(rdv) {
         this.rdvElt.remove()
@@ -368,7 +414,7 @@ export default class Calendar {
 
     /**
      * Tri les événements du jour.
-     * @param {HTMLElement} dayElt 
+     * @param {HTMLElement} dayElt
      */
     sortDayBlock(dayElt) {
 
@@ -383,7 +429,7 @@ export default class Calendar {
 
     /**
      * Cache les RDV en fonction de la hauteur du container.
-     * @param {HTMLElement} dayElt 
+     * @param {HTMLElement} dayElt
      */
     hideRdvElts(dayElt) {
 

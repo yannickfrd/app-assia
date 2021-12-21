@@ -2,20 +2,22 @@
 
 namespace App\Form\Organization\Service;
 
-use App\Form\Utils\Choices;
-use App\Form\Type\LocationType;
 use App\Entity\Organization\Pole;
-use App\Entity\Organization\User;
 use App\Entity\Organization\Service;
-use Symfony\Component\Form\AbstractType;
+use App\Entity\Organization\Tag;
+use App\Entity\Organization\User;
+use App\Form\Type\LocationType;
+use App\Form\Utils\Choices;
+use App\Repository\Organization\TagRepository;
 use App\Repository\Organization\UserRepository;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ServiceType extends AbstractType
 {
@@ -161,8 +163,9 @@ class ServiceType extends AbstractType
             // ])
             ->add('location', LocationType::class, [
                 'data_class' => Service::class,
-                'attr' => ['seachLabel' => 'Adresse du service'],
-            ]);
+                'attr' => ['searchLabel' => 'Adresse du service'],
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

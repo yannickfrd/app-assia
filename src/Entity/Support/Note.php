@@ -2,7 +2,9 @@
 
 namespace App\Entity\Support;
 
+use App\Entity\Organization\TagTrait;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
@@ -16,6 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Note
 {
     use CreatedUpdatedEntityTrait;
+    use TagTrait;
     use SoftDeleteableEntity;
 
     public const TYPE_NOTE = 1;
@@ -84,6 +87,11 @@ class Note
      * @ORM\ManyToOne(targetEntity="App\Entity\Support\SupportPerson", inversedBy="notes")
      */
     private $supportPerson;
+
+    public function __construct()
+    {
+        $this->tags = new ArrayCollection();
+    }
 
     /**
      * @ORM\PreFlush

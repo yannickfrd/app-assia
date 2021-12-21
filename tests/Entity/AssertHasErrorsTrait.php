@@ -3,6 +3,7 @@
 namespace App\Tests\Entity;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Validator\ConstraintViolation;
 
 trait AssertHasErrorsTrait
 {

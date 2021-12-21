@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Organization\Tag;
 use App\Entity\Support\Document;
 use App\Repository\Support\SupportGroupRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -30,7 +31,8 @@ class E_DocumentFixtures extends Fixture
     public function load(ObjectManager $em): void
     {
         foreach ($this->supportGroupRepo->findAll() as $support) {
-            for ($i = 0; $i < mt_rand(6, 10); ++$i) {
+            for ($i = 0; $i < 20; ++$i) {
+
                 $createdAt = AppFixtures::getDateTimeBeetwen('-12 months', 'now');
 
                 $document = (new Document())

@@ -25,8 +25,8 @@ export default class Rdvs {
                     this.modalConfirmElt.dataset.url = btnDeleteElt.dataset.url
                 })
             }
-        })  
-        
+        })
+
         this.modalConfirmElt.addEventListener('click', e => {
             e.preventDefault()
             this.ajax.send('GET', this.modalConfirmElt.dataset.url, this.responseAjax.bind(this))
@@ -35,7 +35,7 @@ export default class Rdvs {
 
     /**
      * Réponse du serveur.
-     * @param {Object} response 
+     * @param {Object} response
      */
     responseAjax(response) {
         if (response.action) {
@@ -51,7 +51,7 @@ export default class Rdvs {
 
     /**
      * Supprime la ligne du rendez-vous.
-     * @param {Object} rdv 
+     * @param {Object} rdv
      */
     deleteRdv(rdv) {
         document.getElementById('rdv-' + rdv.id).remove()

@@ -35,13 +35,14 @@
 							<th scope="row" class="align-middle th-w-20"></th>
 							<th scope="col" class="align-middle th-w-150">{{ knp_pagination_sortable(documents, "Nom du document", "d.name") }}</th>
 							<th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(documents, "Catégorie", "d.type") }}</th>
+							<th scope="col" class="align-middle th-w-100">Étiquette(s)</th>
 							<th scope="col" class="align-middle th-w-150">{{ knp_pagination_sortable(documents, "Description", "d.content") }}</th>
 							<th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(documents, "Taille", "d.size") }}</th>
 							<th scope="col" class="align-middle th-w-60">Type</th>
-							<th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(documents, "Créé le", "d.createdAt") }}</th>
-							<th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(documents, "Créé par", "d.createdBy") }}</th>
+							<th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(documents, "Ajouté le", "d.createdAt") }}</th>
+							<th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(documents, "Ajouté par", "d.createdBy") }}</th>
 							<th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(documents, "Nom du suivi", "p.lastname") }}</th>
-							<th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(documents, "Service", "s.name") }}</th>
+							<th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(documents, "Service", "s.name") }}</th>
 						</tr>
 					</thead>
 					<tbody id="container-documents">
@@ -49,26 +50,27 @@
 						{% set support = document.supportGroup %}
 							<tr>
 								<td scope="row" class="align-middle text-center">
-								{% if support %}
+									{% if support %}
 										<a href="{{ path('support_documents', {'id':document.supportGroup.id, 'documentId':document.id}) }}"
 											class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" data-placement="bottom"
 											title="Voir le suivi"><span class="fas fa-eye"></span>
 										</a>
-								{% endif %}
+									{% endif %}
 								</td>
-								<td scope="row" class="align-middle text-center">
-									<a href="{{ path('document_download', {'id': document.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow my-1" 
+								<td class="align-middle text-center">
+									<a href="{{ path('document_download', {'id': document.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow my-1"
 										data-toggle="tooltip" data-placement="bottom" title="Télécharger le document"><span class="fas fa-file-download"></span>
 									</a>
 								</td>
 								<td class="align-middle">{{ document.name }}</td>
 								<td class="align-middle" data-value="{{ document.type }}">{{ document.typeToString }}</td>
+								<td class="align-middle">{{ document.tagsToString }}</td>
 								<td class="align-middle">{{ document.content }}</td>
 								<td class="align-middle text-right">{{ (document.size / 1000000)|round(2) }} Mo</td>
 								<td class="align-middle">{{ document.fileType }}</td>
 								<td class="align-middle">{{ document.createdAt|date("d/m/Y H:i") }}</td>
 								<td class="align-middle">{{ document.createdBy ? document.createdBy.fullname }}</td>
-                            	<td class="align-middle">{{ support ? support.supportPeople|filter(s => s.head == true)|first.person.fullname }}</td>
+                            	<td class="align-middle">{{ support ? support.header.fullname }}</td>
                             	<td class="align-middle">{{ support ? support.service.name }}</td>
 							</tr>
 						{% endfor %}

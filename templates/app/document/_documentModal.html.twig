@@ -4,24 +4,38 @@
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             {{ form_start(documentForm, {
-                'action': path('document_edit', {'id': '__id__'}), 
-                'attr': {'data-url': path('document_edit', {'id': '__id__'})} 
+                'action': path('document_edit', {'id': '__id__'}),
+                'attr': {'data-url': path('document_edit', {'id': '__id__'})}
             }) }}
             <div class="modal-body pb-0">
                 {{ form_row(documentForm.name) }}
-                {{ form_row(documentForm.type) }}
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <div class="d-flex input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text" title="Étiquettes"
+                                    data-toggle="tooltip" data-placement="bottom">
+                                    <span class="fas fa-tag text-black-50"></span>
+                                </div>
+                            </div>
+                            <div class="flex-fill pl-0">
+                                {{ form_widget(documentForm.tags) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 {{ form_row(documentForm.content) }}
             </div>
             <div class="modal-footer d-flex justify-content-between">
                 <div class="float-left">
                     <button type="button" class="mr-3 btn btn-danger shadow d-block" data-action="delete"
                         data-url-document-delete="{{ path('document_delete', {'id': '__id__'}) }}"
-                        data-toggle="tooltip" data-placement="bottom" title="Supprimer le document"><span 
+                        data-toggle="tooltip" data-placement="bottom" title="Supprimer le document"><span
                         class="fas fa-trash-alt"></span><span class="d-none d-md-inline ml-2">Supprimer</span></button>
                 </div>
                 <div class="float-right">
                     <button type="button" class="btn btn-secondary shadow" data-dismiss="modal">Fermer</button>
-                    <button type="submit" name="document_update" class="btn btn-{{ theme_color }} shadow" 
+                    <button type="submit" name="document_update" class="btn btn-{{ theme_color }} shadow"
                         data-action="update"><span class="fas fa-save mr-2"></span>Mettre à jour</button>
                 </div>
             </div>

@@ -18,6 +18,7 @@ const items = {
     'payment-type': 'Type',
     'support-type': 'Type d\'acc.',
     'levelSupport': 'Niveau d\'intervention',
+    'search-tags': 'Étiquettes',
 };
 
 for (let i in items) {

@@ -220,4 +220,20 @@ class ServiceRepository extends ServiceEntityRepository
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
+
+    /**
+     * Permet de récupérer les tags d'un service.
+     */
+    public function findTagsByServiceId(int $serviceId): array
+    {
+        return $this->createQueryBuilder('s')
+            ->select('t.id, t.name, t.createdAt, u.id as createdBy')
+            ->innerJoin('s.tags', 't')
+            ->innerJoin('t.createdBy', 'u')
+            ->andWhere('s.id = :serviceId')
+            ->setParameter('serviceId', $serviceId)
+            ->orderBy('t.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }
