@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 class GoogleCalendarApiService
 {
     private const SESSION_CLIENT_ID = 'clientRdvId';
-    private const SESSION_CLIENT_AUTH = 'clientAuthGoogle';
+//    private const SESSION_CLIENT_AUTH = 'clientAuthGoogle';
     private const SESSION_CLIENT_TOKEN = 'clientTokenGoogle';
     private const SESSION_CLIENT_REFRESH_TOKEN = 'clientRefreshTokenGoogle';
 
@@ -82,9 +82,9 @@ class GoogleCalendarApiService
         $newEvent = $this->createEvent($rdv);
         $newEvent->setId($getEvent->getId());
 
-        $updatedEvent = $service->events->update('primary', $getEvent->getId(), $newEvent);
+        $updateResponse = $service->events->update('primary', $getEvent->getId(), $newEvent);
 
-        return ($updatedEvent->getStatus() === 'confirmed');
+        return ($updateResponse->getStatus() === 'confirmed');
     }
 
     /**
@@ -168,22 +168,24 @@ class GoogleCalendarApiService
             }
 
             if ($client->isAccessTokenExpired()) {
-                $client->refreshToken($this->session->get(self::SESSION_CLIENT_TOKEN));
+                $client->refreshToken($this->session->get(self::SESSION_CLIENT_REFRESH_TOKEN));
                 $this->session->set(self::SESSION_CLIENT_TOKEN, $client->getAccessToken());
             }
 
             return $accessToken;
         }
 
-        if ($this->session->has(self::SESSION_CLIENT_TOKEN)) {
-            if (!array_key_exists('error', $this->session->get(self::SESSION_CLIENT_TOKEN))) {
-                $accessToken = $this->session->get(self::SESSION_CLIENT_TOKEN);
-            }
+        if (
+            $this->session->has(self::SESSION_CLIENT_TOKEN) &&
+            array_key_exists('error', $this->session->get(self::SESSION_CLIENT_TOKEN))
+        ) {
+            $client->refreshToken($this->session->get(self::SESSION_CLIENT_REFRESH_TOKEN));
+            $this->session->set(self::SESSION_CLIENT_TOKEN, $client->getAccessToken());
 
-            $this->session->remove(self::SESSION_CLIENT_TOKEN);
+            return $client->getAccessToken();
         }
 
-        return $accessToken;
+        return $this->session->get(self::SESSION_CLIENT_TOKEN);
     }
 
     /**
@@ -192,11 +194,8 @@ class GoogleCalendarApiService
      */
     public function getOnSessionIsChecked(): bool
     {
-        if (!$this->session->has('clientGoogleChecked')) {
-            return false;
-        }
-
-        return $this->session->get('clientGoogleChecked');
+        return (!$this->session->has('clientGoogleChecked')) ? false
+            : $this->session->get('clientGoogleChecked');
     }
 
     /**
@@ -262,7 +261,7 @@ class GoogleCalendarApiService
      */
     private function setEventOnRdv(string $GoogleEventId): void
     {
-        $rdv =($this->getRdv())->setGoogleEventId((string)$GoogleEventId);
+        $rdv = ($this->getRdv())->setGoogleEventId($GoogleEventId);
 
         $this->em->persist($rdv);
         $this->em->flush();
@@ -274,8 +273,7 @@ class GoogleCalendarApiService
      */
     private function getRdv(): Rdv
     {
-        $rdvId = $this->session->get(self::SESSION_CLIENT_ID);
-        return $this->em->getRepository(Rdv::class)->find($rdvId);
+        return $this->em->getRepository(Rdv::class)->find($this->session->get(self::SESSION_CLIENT_ID));
     }
 
 }

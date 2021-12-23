@@ -12,11 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class GoogleCalendarController extends AbstractController
 {
-    /**
-     * GoogleCalendarApiService
-     * $gapiService
-     * @var GoogleCalendarApiService
-     */
+    /** @var GoogleCalendarApiService */
     private $gapiService;
 
     public function __construct(GoogleCalendarApiService $gapiService)
@@ -26,6 +22,7 @@ class GoogleCalendarController extends AbstractController
 
     /**
      * @Route("/auth-google-calendar", name="auth_google_calendar", methods={"GET"})
+     * @throws Exception
      */
     public function authClientGoogleCalendar(Request $request): JsonResponse
     {
@@ -39,19 +36,18 @@ class GoogleCalendarController extends AbstractController
 
     /**
      * @Route("/add-event-google-calendar", name="add_event_google_calendar")
+     * @throws Exception
      */
-    public function addEventGoogleAgenda(Request $request): RedirectResponse
+    public function addEventGoogleCalendar(Request $request): RedirectResponse
     {
         $authCode = $request->query->get('code');
 
         if (!empty($authCode)) {
             $urlResponse = $this->gapiService->insertGoogleApiToken($authCode);
 
-            if (empty($urlResponse)) {
-                return $this->redirect($this->gapiService->getAuthUrl());
-            }
-
-            return $this->redirect($urlResponse);
+            return (empty($urlResponse)) ?
+                $this->redirect($this->gapiService->getAuthUrl()) :
+                $this->redirect($urlResponse);
         }
 
         return $this->redirect($this->gapiService->getAuthUrl());
@@ -59,8 +55,9 @@ class GoogleCalendarController extends AbstractController
 
     /**
      * @Route("/google-event/{rdvId}/update-event-google-calendar", name="update_event_google_calendar", methods={"PUT"})
+     * @throws Exception
      */
-    public function updateEventGoogleAgenda(int $rdvId): JsonResponse
+    public function updateEventGoogleCalendar(int $rdvId): JsonResponse
     {
         $updating = $this->gapiService->update($rdvId);
 
@@ -80,11 +77,11 @@ class GoogleCalendarController extends AbstractController
     }
 
     /**
-     * @Route("/google-event/{googleEventId}/delete", name="delete_event_google_calendar", methods={"DELETE"})
+     * @Route("/google-event/{googleEventId}/delete-event-google-calendar", name="delete_event_google_calendar", methods={"DELETE"})
      * @param string $googleEventId
      * @return JsonResponse
      */
-    public function deleteGoogleEvent(string $googleEventId): JsonResponse
+    public function deleteEventGoogleCalendar(string $googleEventId): JsonResponse
     {
         try {
             $this->gapiService->deleteEvent($googleEventId);
