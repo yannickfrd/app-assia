@@ -3,6 +3,7 @@
 namespace App\Entity\Traits;
 
 use App\Entity\Evaluation\EvalBudgetPerson;
+use App\Entity\Evaluation\Resource;
 use App\Form\Utils\Choices;
 
 trait ResourcesEntityTrait
@@ -10,19 +11,54 @@ trait ResourcesEntityTrait
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $resources;
+    private $resource;
+
+    /** @Groups("export") */
+    private $resourceToString;
 
     /** @Groups("export") */
     private $resourcesToString;
-
-    /** @Groups("export") */
-    private $resourcesTypesToString;
 
     /**
      * @ORM\Column(type="float", nullable=true)
      * @Groups("export")
      */
     private $resourcesAmt;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
+     */
+    private $salaryAmt;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
+     */
+    private $unemplBenefitAmt; // ARE
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
+     */
+    private $dailyAllowanceAmt; // IJ
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
+     */
+    private $minimumIncomeAmt; // RSA
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     * @Groups("export")
+     */
+    private $familyAllowanceAmt; // AF
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $unemplBenefit; // ARE
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -33,11 +69,6 @@ trait ResourcesEntityTrait
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $disChildAllowance; // AEEH
-
-    /**
-     * @ORM\Column(type="smallint", nullable=true)
-     */
-    private $unemplBenefit; // ARE
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -146,12 +177,6 @@ trait ResourcesEntityTrait
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
-     */
-    private $unemplBenefitAmt; // ARE
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
      */
     private $asylumAllowanceAmt; // ADA
 
@@ -172,12 +197,6 @@ trait ResourcesEntityTrait
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
-     */
-    private $familyAllowanceAmt; // AF
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
      */
     private $solidarityAllowanceAmt; // ASS
 
@@ -193,12 +212,6 @@ trait ResourcesEntityTrait
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
-     */
-    private $dailyAllowanceAmt; // IJ
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
      */
     private $maintenanceAmt; // Pension alimentaire
 
@@ -211,18 +224,6 @@ trait ResourcesEntityTrait
      * @ORM\Column(type="float", nullable=true)
      */
     private $pensionBenefitAmt; // Retraite
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
-     */
-    private $minimumIncomeAmt; // RSA
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
-     */
-    private $salaryAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
@@ -244,19 +245,19 @@ trait ResourcesEntityTrait
      */
     private $ressourceOtherAmt;
 
-    public function getResources(): ?int
+    public function getResource(): ?int
     {
-        return $this->resources;
+        return $this->resource;
     }
 
-    public function getResourcesToString(): ?string
+    public function getResourceToString(): ?string
     {
-        return $this->resources ? EvalBudgetPerson::RESOURCES[$this->resources] : null;
+        return $this->resource ? EvalBudgetPerson::RESOURCES[$this->resource] : null;
     }
 
-    public function setResources(?int $resources): self
+    public function setResource(?int $resource): self
     {
-        $this->resources = $resources;
+        $this->resource = $resource;
 
         return $this;
     }
@@ -668,7 +669,7 @@ trait ResourcesEntityTrait
 
     public function getUnemplBenefitAmt(): ?float
     {
-        return $this->unemplBenefitAmt;
+        return $this->findOneResourceAmt(Resource::ARE);
     }
 
     public function setUnemplBenefitAmt(?float $unemplBenefitAmt): self
@@ -704,7 +705,7 @@ trait ResourcesEntityTrait
 
     public function getFamilyAllowanceAmt(): ?float
     {
-        return $this->familyAllowanceAmt;
+        return $this->findOneResourceAmt(Resource::AF);
     }
 
     public function setFamilyAllowanceAmt(?float $familyAllowanceAmt): self
@@ -788,7 +789,7 @@ trait ResourcesEntityTrait
 
     public function getMinimumIncomeAmt(): ?float
     {
-        return $this->minimumIncomeAmt;
+        return $this->findOneResourceAmt(Resource::RSA);
     }
 
     public function setMinimumIncomeAmt(?float $minimumIncomeAmt): self
@@ -800,7 +801,7 @@ trait ResourcesEntityTrait
 
     public function getSalaryAmt(): ?float
     {
-        return $this->salaryAmt;
+        return $this->findOneResourceAmt(Resource::SALARY);
     }
 
     public function setSalaryAmt(?float $salaryAmt): self
@@ -872,7 +873,7 @@ trait ResourcesEntityTrait
 
     public function getDailyAllowanceAmt(): ?float
     {
-        return $this->dailyAllowanceAmt;
+        return $this->findOneResourceAmt(Resource::IJ);
     }
 
     public function setDailyAllowanceAmt(?float $dailyAllowanceAmt): self
@@ -894,26 +895,47 @@ trait ResourcesEntityTrait
         return $this;
     }
 
-    public function resourcesTypes(): array
+    public function getResourcesToArray(): array
     {
-        $array = [];
+        if (!$this->resources) {
+            return [];
+        }
 
-        foreach (EvalBudgetPerson::RESOURCES_MIN_TYPE as $key => $value) {
-            $method = 'get'.ucfirst($key);
-            if (Choices::YES === $this->$method()) {
-                $array[$key] = $value;
+        $resources = [];
+
+        foreach ($this->resources as $resource) {
+            $resources[] = Resource::RESOURCES[$resource->getType()].
+                (Resource::OTHER === $resource->getType() && $resource->getComment() ? ' ('.$resource->getComment().')' : '');
+        }
+
+        return $resources;
+    }
+
+    public function getResourcesToString(): ?string
+    {
+        return join(', ', $this->getResourcesToArray());
+    }
+
+    /**
+     * @param array|int $types
+     */
+    protected function findOneResourceAmt($values): float
+    {
+        $amount = 0;
+
+        if (!is_array($values)) {
+            $types = [];
+            $types[] = $values;
+        } else {
+            $types = $values;
+        }
+
+        foreach ($this->resources as $resource) {
+            if (in_array($resource->getType(), $types)) {
+                $amount += $resource->getAmount();
             }
         }
 
-        if ($this->ressourceOther && $this->ressourceOtherPrecision) {
-            $array['ressourceOther'] = $array['ressourceOther'].' ('.$this->ressourceOtherPrecision.')';
-        }
-
-        return $array;
-    }
-
-    public function getResourcesTypesToString(): ?string
-    {
-        return join(', ', $this->resourcesTypes());
+        return $amount;
     }
 }

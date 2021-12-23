@@ -7,49 +7,39 @@
 {% block card_body %}
 
     <div class="row">
-        <div class="col-md-12 accordion" id="accordion-eval_social">
+        <div class="col-md-12 accordion" id="accordion_evalSocial">
 			{{ utils.loopSupportPeople(accordion_id, evaluationPeople, support, theme_color) }}
 
-			{% for key, evalPerson in evaluationPeople %}
-                {% set supportPerson = evalPerson.vars.value.supportPerson %}
-				{% set prefix = "evaluation_evaluationPeople_" ~ key ~ "_evalSocialPerson" %}
-                <div id="collapse-eval_social-{{ key }}" class="collapse {% if loop.first %}show{% endif %} my-3"
-                    aria-labelledby="heading-eval_social-{{ key }}" data-parent="#accordion-eval_social" 
-                    data-sp-id="{{ supportPerson.id }}">
+			{% for key, form_eval_person in evaluationPeople %}
+                {% set supportPerson = form_eval_person.vars.value.supportPerson %}
+                {% set form_eval_social_person = form_eval_person.evalSocialPerson %}
+				{% set prefixId = "evaluation_evaluationPeople_" ~ key ~ "_evalSocialPerson" %}
+                <div id="collapse_{{ prefixId }}" class="collapse {% if loop.first %}show{% endif %} my-3"
+                    aria-labelledby="heading_{{ prefixId }}" data-parent="#accordion_evalSocial">
                     <div class="row mb-3">
-                        <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.rightSocialSecurity) }}</div>
-                        <div class="col-md-6" data-parent-field="{{ prefix }}_rightSocialSecurity" data-options="1|3">
-                            {{ form_row(evalPerson.evalSocialPerson.socialSecurity) }}</div>
+                        <div class="col-md-6">{{ form_row(form_eval_social_person.rightSocialSecurity) }}</div>
+                        <div class="col-md-6" data-parent-field="{{ prefixId }}_rightSocialSecurity" data-options="1|3">
+                            {{ form_row(form_eval_social_person.socialSecurity) }}</div>
                     </div>
-                    <div class="row" data-parent-field="{{ prefix }}_rightSocialSecurity" data-options="1|3">
-                        <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.endRightsSocialSecurityDate) }}</div>
-                        <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.socialSecurityOffice) }}</div>
+                    <div class="row" data-parent-field="{{ prefixId }}_rightSocialSecurity" data-options="1|3">
+                        <div class="col-md-6">{{ form_row(form_eval_social_person.endRightsSocialSecurityDate) }}</div>
+                        <div class="col-md-6">{{ form_row(form_eval_social_person.socialSecurityOffice) }}</div>
                     </div>
 
                     {% set healthProblemsType = constant("App\\Entity\\Evaluation\\EvalSocialPerson::HEALTH_PROBLEMS_TYPE") %}
                     
                     <div class="row mb-3">
-                        <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.healthProblem) }}</div>
-                        <div class="col-md-6" data-parent-field="{{ prefix }}_healthProblem" data-options="1">
+                        <div class="col-md-6">{{ form_row(form_eval_social_person.healthProblem) }}</div>
+                        <div class="col-md-6" data-parent-field="{{ prefixId }}_healthProblem" data-options="1">
                             <div class="row">
-                                <div class="col-form-label col-sm-4">Type de problématiques de santé</div>
-                                <div class="col-sm-8">
-                                    <select id="{{ key }}_evalSocialPerson_healthProblemType"
-                                        name="{{ key }}_evalSocialPerson_healthProblemType" class="form-control">
-                                        <option class="default" value="">-- Ajouter --</option>
-                                        {% for healthKey, healthValue in healthProblemsType %}
-                                            <option value="{{ healthKey }}">{{ healthValue }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                <div class="col-md-12 mt-3">
-                                    <div class="table-responsive" data-parent-field="{{ prefix }}_healthProblem" data-options="1">
+                                <div class="col-md-12">{{ form_row(form_eval_social_person.healthProblemType) }}</div>
+                                <div class="col-md-12">
+                                    <div class="table-responsive" data-parent-field="{{ prefixId }}_healthProblem" data-options="1">
                                         <table class="table table-sm table-hover text-dark">
                                             <tbody>
                                                 {% for healthKey, healthValue in healthProblemsType %}
-                                                    <tr class="d-table-row" data-parent-select="{{ key }}_evalSocialPerson_healthProblemType" 
-                                                        data-value="{{ healthKey }}">
-                                                        <td scope="row">{{ form_widget(attribute(evalPerson.evalSocialPerson, healthKey)) }}</td>
+                                                    <tr data-parent-select="{{ prefixId }}_healthProblemType" data-value="{{ healthKey }}">
+                                                        <td scope="row">{{ form_widget(attribute(form_eval_social_person, healthKey)) }}</td>
                                                         <td class="align-middle">{{ healthValue }}</td>
                                                         <td class="align-middle text-right">
                                                             <button class="btn btn-danger" data-action="remove">
@@ -66,54 +56,54 @@
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-md-6" data-parent-field="{{ prefix }}_healthProblem" data-options="1">
-                            {{ form_row(evalPerson.evalSocialPerson.medicalFollowUp) }}</div>
-                        <div class="col-md-6" data-parent-field="{{ prefix }}_medicalFollowUp" data-options="1">
-                            {{ form_row(evalPerson.evalSocialPerson.homeCareSupport) }}</div>
-                        <div class="col-md-6" data-parent-field="{{ prefix }}_homeCareSupport" data-options="1">
-                            {{ form_row(evalPerson.evalSocialPerson.homeCareSupportType) }}</div>
+                        <div class="col-md-6" data-parent-field="{{ prefixId }}_healthProblem" data-options="1">
+                            {{ form_row(form_eval_social_person.medicalFollowUp) }}</div>
+                        <div class="col-md-6" data-parent-field="{{ prefixId }}_medicalFollowUp" data-options="1">
+                            {{ form_row(form_eval_social_person.homeCareSupport) }}</div>
+                        <div class="col-md-6" data-parent-field="{{ prefixId }}_homeCareSupport" data-options="1">
+                            {{ form_row(form_eval_social_person.homeCareSupportType) }}</div>
                     </div>
                     <hr class="my-3"/>
 
                     {% if nb_children > 0 %}
 			            {% if SERVICE_TYPE_HOTEL and supportPerson.head %}
                             <div class="row mb-3">
-                                <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.infoCrip) }}</div>
-                                <div class="col-md-6" data-parent-field="{{ prefix }}_infoCrip" data-options="1">
-                                    {{ form_row(evalPerson.evalSocialPerson.infoCripDate) }}</div>
-                                <div class="col-md-6" data-parent-field="{{ prefix }}_infoCrip" data-options="1">
-                                    {{ form_row(evalPerson.evalSocialPerson.infoCripByService) }}</div>
-                                <div class="col-md-6" data-parent-field="{{ prefix }}_infoCrip" data-options="1">
-                                    {{ form_row(evalPerson.evalSocialPerson.infoCripComment) }}</div>
+                                <div class="col-md-6">{{ form_row(form_eval_social_person.infoCrip) }}</div>
+                                <div class="col-md-6" data-parent-field="{{ prefixId }}_infoCrip" data-options="1">
+                                    {{ form_row(form_eval_social_person.infoCripDate) }}</div>
+                                <div class="col-md-6" data-parent-field="{{ prefixId }}_infoCrip" data-options="1">
+                                    {{ form_row(form_eval_social_person.infoCripByService) }}</div>
+                                <div class="col-md-6" data-parent-field="{{ prefixId }}_infoCrip" data-options="1">
+                                    {{ form_row(form_eval_social_person.infoCripComment) }}</div>
                             </div>
                         {% endif %}
                         <div class="row mb-3">
-                            <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.aseFollowUp) }}</div>
-                            <div class="col-md-6" data-parent-field="{{ prefix }}_aseFollowUp" data-options="1">
-                                {{ form_row(evalPerson.evalSocialPerson.aseMeasureType) }}</div>
-                            <div class="col-md-12" data-parent-field="{{ prefix }}_aseFollowUp" data-options="1">
-                                {{ form_widget(evalPerson.evalSocialPerson.aseComment) }}</div>
+                            <div class="col-md-6">{{ form_row(form_eval_social_person.aseFollowUp) }}</div>
+                            <div class="col-md-6" data-parent-field="{{ prefixId }}_aseFollowUp" data-options="1">
+                                {{ form_row(form_eval_social_person.aseMeasureType) }}</div>
+                            <div class="col-md-12" data-parent-field="{{ prefixId }}_aseFollowUp" data-options="1">
+                                {{ form_widget(form_eval_social_person.aseComment) }}</div>
                         </div>
                         <hr class="my-3"/>
                     {% endif %}
                     {% if ROLE_CHILD != supportPerson.role %}
                         <div class="row mb-3">
-                            <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.familyBreakdown) }}</div>
-                            <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.friendshipBreakdown) }}</div>
+                            <div class="col-md-6">{{ form_row(form_eval_social_person.familyBreakdown) }}</div>
+                            <div class="col-md-6">{{ form_row(form_eval_social_person.friendshipBreakdown) }}</div>
                         </div>
                     {% endif %}
                         <div class="row mb-3">
-                            <div class="col-md-6">{{ form_row(evalPerson.evalSocialPerson.violenceVictim) }}</div>
+                            <div class="col-md-6">{{ form_row(form_eval_social_person.violenceVictim) }}</div>
                             {% if ROLE_CHILD != supportPerson.role %}
-                                <div class="col-md-6" data-parent-field="{{ prefix }}_violenceVictim" data-options="1">
-                                    {{ form_row(evalPerson.evalSocialPerson.domViolenceVictim) }}</div>
+                                <div class="col-md-6" data-parent-field="{{ prefixId }}_violenceVictim" data-options="1">
+                                    {{ form_row(form_eval_social_person.domViolenceVictim) }}</div>
                             {% endif %}
                         </div>
                         <hr class="my-3"/>
                     <div class="row mb-3">
-                        {{ form_label(evalPerson.evalSocialPerson.commentEvalSocialPerson) }}
+                        {{ form_label(form_eval_social_person.commentEvalSocialPerson) }}
                         <div class="col-md-12">
-                            {{ form_widget(evalPerson.evalSocialPerson.commentEvalSocialPerson) }}
+                            {{ form_widget(form_eval_social_person.commentEvalSocialPerson) }}
                         </div>
                     </div>
                 </div>

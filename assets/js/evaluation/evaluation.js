@@ -18,12 +18,12 @@ export default class evaluation {
             new FieldDisplayer(elt)
         })        
         
-        new ItemsListManager('evalHousingGroup_hsgHelps')
+        new ItemsListManager('evaluation_evalHousingGroup_hsgHelps')
         new SearchLocation('domiciliation_location')
         
-        document.getElementById('accordion-init_eval').querySelectorAll('button[data-person-key]').forEach(personElt => {
+        document.getElementById('accordion_initEval').querySelectorAll('button[data-person-key]').forEach(personElt => {
             const key = personElt.dataset.personKey
-            new ItemsListManager(`${key}_evalSocialPerson_healthProblemType`)
+            new ItemsListManager(`evaluation_evaluationPeople_${key}_evalSocialPerson_healthProblemType`)
             new SearchLocation(`school_location_${key}`, 'city')
         })
         

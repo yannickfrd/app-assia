@@ -20,7 +20,7 @@ class EvalProfPersonType extends AbstractType
                 'choices' => Choices::getChoices(EvalProfPerson::PROF_STATUS),
                 'attr' => [
                     'data-important' => 'true',
-                    'data-twin-field' => 'profStatus',
+                    'data-twin-field' => 'true',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
@@ -29,7 +29,7 @@ class EvalProfPersonType extends AbstractType
             ->add('contractType', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalProfPerson::CONTRACT_TYPE),
                 'attr' => [
-                    'data-twin-field' => 'contractType',
+                    'data-twin-field' => 'true',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,

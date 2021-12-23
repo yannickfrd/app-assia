@@ -20,7 +20,7 @@ class InitEvalGroupType extends AbstractType
                 'choices' => Choices::getChoices(EvalHousingGroup::HOUSING_STATUS),
                 'attr' => [
                     'data-important' => 'true',
-                    'data-twin-field' => 'housingStatus',
+                    'data-twin-field' => 'true',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
@@ -30,7 +30,7 @@ class InitEvalGroupType extends AbstractType
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS_NC),
                 'attr' => [
                     'data-important' => 'true',
-                    'data-twin-field' => 'siaoRequest',
+                    'data-twin-field' => 'true',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
@@ -39,7 +39,7 @@ class InitEvalGroupType extends AbstractType
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS_NC),
                 'attr' => [
                     'data-important' => 'true',
-                    'data-twin-field' => 'socialHousingRequest',
+                    'data-twin-field' => 'true',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,

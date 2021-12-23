@@ -1,28 +1,28 @@
 {% extends "app/evaluation/edit/model/_evaluationAccordion.html.twig" %}
 
-{% set prefix = "evaluation_evalHousingGroup" %}
+{% set prefixId = "evaluation_evalHousingGroup" %}
 
 {% block card_title %}Logement - Hébergement{{ parent() }}{% endblock %}
 
 {% block card_body %}
 
-	<div data-sp-id="g-{{ form.vars.value.supportGroup.id }}">
+	<div>
 		{% if support.service.place != YES and false == SERVICE_TYPE_HOTEL %}
 		{% set housingStatusOptions = "200|201|202|203|204|205|206|207|300|301|302|303|304" %}
 			<div class="mb-3">
 				<div class="row">
 					<div class="col-md-6">{{ form_row(form.evalHousingGroup.housingStatus) }}</div>
-					<div class="col-md-6" data-parent-field="{{ prefix }}_housingStatus" 
+					<div class="col-md-6" data-parent-field="{{ prefixId }}_housingStatus" 
 					data-options="{{ housingStatusOptions }}">
 						{{ form_row(form.evalHousingGroup.housingArrivalDate) }}</div>
 				</div>
-				<div class="row" data-parent-field="{{ prefix }}_housingStatus" 
+				<div class="row" data-parent-field="{{ prefixId }}_housingStatus" 
 					data-options="{{ housingStatusOptions }}">
 					<div class="col-md-6">{{ form_row(form.evalHousingGroup.expulsionInProgress) }}</div>
-					<div class="col-md-6"  data-parent-field="{{ prefix }}_expulsionInProgress" 
+					<div class="col-md-6"  data-parent-field="{{ prefixId }}_expulsionInProgress" 
 						data-options="1">{{ form_row(form.evalHousingGroup.publicForce) }}</div>
 				</div>
-				<div class="row" data-parent-field="{{ prefix }}_expulsionInProgress" data-options="1">
+				<div class="row" data-parent-field="{{ prefixId }}_expulsionInProgress" data-options="1">
 					<div class="col-md-6">{{ form_row(form.evalHousingGroup.publicForceDate) }}</div>
 					<div class="col-md-6">{{ form_row(form.evalHousingGroup.expulsionComment) }}</div>
 				</div>
@@ -33,7 +33,7 @@
 			<div class="row">
 				<div class="col-md-6">{{ form_row(form.evalHousingGroup.siaoRequest) }}</div>
 			</div>
-			<div class="row" data-parent-field="{{ prefix }}_siaoRequest" data-options="1">
+			<div class="row" data-parent-field="{{ prefixId }}_siaoRequest" data-options="1">
 				<div class="col-md-6">{{ form_row(form.evalHousingGroup.siaoRequestDate) }}</div>
 				<div class="col-md-6">{{ form_row(form.evalHousingGroup.siaoUpdatedRequestDate) }}</div>
 				<div class="col-md-6">{{ form_row(form.evalHousingGroup.siaoRequestDept) }}</div>
@@ -45,7 +45,7 @@
 			<div class="row">
 				<div class="col-md-6">{{ form_row(form.evalHousingGroup.socialHousingRequest) }}</div>
 			</div>
-			<div class="row" data-parent-field="{{ prefix }}_socialHousingRequest" data-options="1">
+			<div class="row" data-parent-field="{{ prefixId }}_socialHousingRequest" data-options="1">
 				<div class="col-md-6" >{{ form_row(form.evalHousingGroup.socialHousingRequestId) }}</div>
 				<div class="col-md-6">{{ form_row(form.evalHousingGroup.socialHousingRequestDate) }}</div>
 				<div class="col-md-6">{{ form_row(form.evalHousingGroup.socialHousingUpdatedRequestDate) }}</div>
@@ -55,11 +55,11 @@
 			</div>
 		</div>
 		<hr class="my-4"/>
-		<div class="mb-3" data-parent-field="{{ prefix }}_socialHousingRequest" data-options="1">
+		<div class="mb-3" data-parent-field="{{ prefixId }}_socialHousingRequest" data-options="1">
 			<div class="row" >
 				<div class="col-md-6">{{ form_row(form.evalHousingGroup.syplo) }}</div>
 			</div>
-			<div class="row" data-parent-field="{{ prefix }}_syplo" data-options="1">
+			<div class="row" data-parent-field="{{ prefixId }}_syplo" data-options="1">
 				<div class="col-md-6">{{ form_row(form.evalHousingGroup.syploId) }}</div>
 				<div class="col-md-6">{{ form_row(form.evalHousingGroup.syploDate) }}</div>
 			</div>
@@ -69,19 +69,19 @@
 			<div class="row">
 				<div class="col-md-6">{{ form_row(form.evalHousingGroup.daloAction) }}</div>
 			</div>
-			<div class="row" data-parent-field="{{ prefix }}_daloAction" data-options="1">
+			<div class="row" data-parent-field="{{ prefixId }}_daloAction" data-options="1">
 				<div class="col-md-6" >{{ form_row(form.evalHousingGroup.daloType) }}</div>
 				<div class="col-md-6">{{ form_row(form.evalHousingGroup.daloRecordDate) }}</div>
 				<div class="col-md-6">{{ form_row(form.evalHousingGroup.daloId) }}</div>
 				<div class="col-md-6">{{ form_row(form.evalHousingGroup.daloDecisionDate) }}</div>
 				<div class="col-md-6">{{ form_row(form.evalHousingGroup.daloTribunalAction) }}</div>
-				<div class="col-md-6" data-parent-field="{{ prefix }}_daloTribunalAction" data-options="1">
+				<div class="col-md-6" data-parent-field="{{ prefixId }}_daloTribunalAction" data-options="1">
 					{{ form_row(form.evalHousingGroup.daloTribunalActionDate) }}</div>
 			</div>
 		</div>
 		{# <div class="row mb-3">
 			<div class="col-md-6">{{ form_row(form.evalHousingGroup.collectiveAgreementHousing) }}</div>
-			<div class="col-md-6" data-parent-field="{{ prefix }}_collectiveAgreementHousing" data-options="1">
+			<div class="col-md-6" data-parent-field="{{ prefixId }}_collectiveAgreementHousing" data-options="1">
 				{{ form_row(form.evalHousingGroup.collectiveAgreementHousingDate) }}</div>
 		</div> #}
 		<hr class="my-4"/>
@@ -89,7 +89,7 @@
 			<div class="row ">
 				<div class="col-md-6">{{ form_row(form.evalHousingGroup.hsgActionEligibility) }}</div>
 			</div>
-			<div class="row" data-parent-field="{{ prefix }}_hsgActionEligibility" data-options="1">
+			<div class="row" data-parent-field="{{ prefixId }}_hsgActionEligibility" data-options="1">
 				<div class="col-md-6">{{ form_row(form.evalHousingGroup.hsgActionRecord) }}</div>
 				<div class="col-md-6">{{ form_row(form.evalHousingGroup.hsgActionDate) }}</div>
 				<div class="col-md-6">{{ form_row(form.evalHousingGroup.hsgActionDept) }}</div>
@@ -99,32 +99,23 @@
 		<hr class="my-4"/>
 		<div class="row mb-3">
 			<div class="col-md-6">{{ form_row(form.evalHousingGroup.housingExperience) }}</div>
-			<div class="col-md-6" data-parent-field="{{ prefix }}_housingExperience" data-options="1">
+			<div class="col-md-6" data-parent-field="{{ prefixId }}_housingExperience" data-options="1">
 				{{ form_row(form.evalHousingGroup.housingExpeComment) }}</div>
 		</div>
 
 		{% if support.service.place != YES and false == SERVICE_TYPE_HOTEL %}
 			{% set housingHelps = constant("App\\Entity\\Evaluation\\EvalHousingGroup::HOUSING_HELPS") %}
-			<div class="row mb-3" data-parent-field="{{ prefix }}_housingStatus" 
+			<div class="row mb-3" data-parent-field="{{ prefixId }}_housingStatus" 
 				data-options="{{ housingStatusOptions }}">
 				<div class="col-md-6">
 					<div class="row">
-						<div class="col-form-label col-sm-4">Type d'aides liées au logement</div>
-						<div class="col-sm-8">
-							<select id="evalHousingGroup_hsgHelps" name="evalHousingGroup_hsgHelps" class="form-control">
-								<option class="default" value="">-- Ajouter --</option>
-								{% for hsgHelpKey, hsgHelpValue in housingHelps %}
-									<option value="{{ hsgHelpKey }}">{{ hsgHelpValue }}</option>
-								{% endfor %}
-							</select>
-						</div>
-						<div class="col-md-12 mt-3">
+						<div class="col-md-12">{{ form_row(form.evalHousingGroup.hsgHelps) }}</div>
+						<div class="col-md-12">
 							<div class="table-responsive">
 								<table class="table table-sm table-hover text-dark">
 									<tbody>
 										{% for hsgHelpKey, hsgHelpValue in housingHelps %}
-											<tr class="d-table-row" data-parent-select="evalHousingGroup_hsgHelps" 
-												data-value="{{ hsgHelpKey }}">
+											<tr data-parent-select="{{ prefixId }}_hsgHelps" data-value="{{ hsgHelpKey }}">
 												<td scope="row">{{ form_widget(attribute(form.evalHousingGroup, hsgHelpKey)) }}</td>
 												<td class="align-middle">{{ hsgHelpValue }}</td>
 												<td class="align-middle text-right">
@@ -148,7 +139,7 @@
 			<div class="row">
 				<div class="col-md-6">{{ form_row(form.evalHousingGroup.domiciliation) }}</div>
 			</div>
-			<div data-parent-field="{{ prefix }}_domiciliation" data-options="1">
+			<div data-parent-field="{{ prefixId }}_domiciliation" data-options="1">
 				<div class="row">
 					<div class="col-md-6">{{ form_row(form.evalHousingGroup.domiciliationType) }}</div>
 					<div class="col-md-6">{{ form_row(form.evalHousingGroup.domiciliationComment) }}</div>

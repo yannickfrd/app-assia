@@ -1,12 +1,28 @@
 CHANGELOG
 =========
+## Version 3.7.0 - 23/12/2021
+Feat resource, charge and debt collections (#94)
+* Create InitResource, Resource, Charge and Debt entities
+* Create AbstractFinance entity class
+* Create migration file
+* Create FormType for resources, charges and debts
+* Update evaluation repositories
+* Update twig views (edit, view et export evaluation
+* Update/Refacto JS evaluation classes
+* Update evaluation exports to Excel
+* Update contribution calculator system
+* Update import SI-SIAO
+* Update fixtures and functional tests
+
 ## Version 3.6.5 - 15/12/2021
 Fix bugs
 * [AutoLogout] Fix invalid url to logout
+
 ## Version 3.6.4 - 15/12/2021
 Update feature evaluation  (#89)
 * [EvaluationController] Add check if number of people in evaluation is invalid in 'showEvaluation'
 * [Evaluation] Delete button to fix number of people in evaluation
+
 ## Version 3.6.3 - 15/12/2021
 [Entities] Edit annotations 'export' groups (#88)
 
@@ -16,6 +32,7 @@ Edit all multi-selelct in FormType (#87)
 * [SecurityUserType] Add JS select2 for user roles
 
 * [_evaluationJustice.html] Fix error : renale 'nb_adults' to 'nb_people' var
+
 ## Version 3.6.1 - 13/12/2021
 * [EvalAdmPersonType] Delete 'data-twin-field' to 'asylumBackground' field (#86)
 

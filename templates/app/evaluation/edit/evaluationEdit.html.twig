@@ -42,21 +42,21 @@
 			</div>
 		</div>
 		<div class="mb-4">
-			{% include "app/evaluation/edit/_initEvaluation.html.twig" with {accordion_id: "init_eval"} %}
-			{% include "app/evaluation/edit/_evaluationBackground.html.twig" with {accordion_id: "eval_background"} %}
+			{% include "app/evaluation/edit/_initEvaluation.html.twig" with {accordion_id: "initEval"} %}
+			{% include "app/evaluation/edit/_evaluationBackground.html.twig" with {accordion_id: "evalBackground"} %}
 			{% if support.service.justice == YES %}
-				{% include "app/evaluation/edit/_evaluationJustice.html.twig" with {accordion_id: "eval_justice"} %}
+				{% include "app/evaluation/edit/_evaluationJustice.html.twig" with {accordion_id: "evalJustice"} %}
 			{% endif %}
-			{% include "app/evaluation/edit/_evaluationAdm.html.twig" with {accordion_id: "eval_adm"} %}
-			{% include "app/evaluation/edit/_evaluationFamily.html.twig" with {accordion_id: "eval_family"} %}
-			{% include "app/evaluation/edit/_evaluationSocial.html.twig" with {accordion_id: "eval_social"} %}
-			{% include "app/evaluation/edit/_evaluationProf.html.twig" with {accordion_id: "eval_prof"} %}
-			{% include "app/evaluation/edit/_evaluationBudget.html.twig" with {accordion_id: "eval_budget"} %}
-			{% include "app/evaluation/edit/_evaluationHousing.html.twig" with {accordion_id: "eval_housing"} %}
+			{% include "app/evaluation/edit/_evaluationAdm.html.twig" with {accordion_id: "evalAdm"} %}
+			{% include "app/evaluation/edit/_evaluationFamily.html.twig" with {accordion_id: "evalFamily"} %}
+			{% include "app/evaluation/edit/_evaluationSocial.html.twig" with {accordion_id: "evalSocial"} %}
+			{% include "app/evaluation/edit/_evaluationProf.html.twig" with {accordion_id: "evalProf"} %}
+			{% include "app/evaluation/edit/_evaluationBudget.html.twig" with {accordion_id: "evalBudget"} %}
+			{% include "app/evaluation/edit/_evaluationHousing.html.twig" with {accordion_id: "evalHousing"} %}
 			{% if SERVICE_TYPE_HOTEL %}
-				{% include "app/evaluation/edit/_evaluationHotelLife.html.twig" with {accordion_id: "eval_hotel_life"} %}
+				{% include "app/evaluation/edit/_evaluationHotelLife.html.twig" with {accordion_id: "evalHotelLife"} %}
 			{% endif %}
-			{% include "app/evaluation/edit/_evaluationConclusion.html.twig" with {accordion_id: "eval_conclusion"} %}
+			{% include "app/evaluation/edit/_evaluationConclusion.html.twig" with {accordion_id: "evalConclusion"} %}
 		</div>
 
 		<div class="row mb-3">

@@ -2,6 +2,9 @@
 
 namespace App\Service\SiSiao;
 
+use App\Entity\Evaluation\AbstractFinance;
+use App\Entity\Evaluation\Charge;
+use App\Entity\Evaluation\Debt;
 use App\Entity\Evaluation\EvalAdmPerson;
 use App\Entity\Evaluation\EvalBudgetGroup;
 use App\Entity\Evaluation\EvalBudgetPerson;
@@ -15,6 +18,8 @@ use App\Entity\Evaluation\EvaluationGroup;
 use App\Entity\Evaluation\EvaluationPerson;
 use App\Entity\Evaluation\InitEvalGroup;
 use App\Entity\Evaluation\InitEvalPerson;
+use App\Entity\Evaluation\InitResource;
+use App\Entity\Evaluation\Resource as EvaResource;
 use App\Entity\People\Person;
 use App\Entity\Support\HotelSupport;
 use App\Entity\Support\SupportGroup;
@@ -22,6 +27,7 @@ use App\Entity\Support\SupportPerson;
 use App\Form\Utils\Choices;
 use App\Form\Utils\EvaluationChoices;
 use App\Notification\ExceptionNotification;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
@@ -52,8 +58,6 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
     protected $chargesGroupAmt = 0;
     /** @var float */
     protected $debtsGroupAmt = 0;
-    /** @var float */
-    protected $monthlyRepaymentAmt = 0;
 
     public function __construct(
         HttpClientInterface $client,
@@ -275,8 +279,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
             ->setResourcesGroupAmt($this->resourcesGroupAmt)
             ->setChargesGroupAmt($this->chargesGroupAmt)
             ->setDebtsGroupAmt($this->debtsGroupAmt)
-            ->setMonthlyRepaymentAmt($this->monthlyRepaymentAmt)
-            ->setBudgetBalanceAmt($this->resourcesGroupAmt - $this->chargesGroupAmt - $this->monthlyRepaymentAmt);
+            ->setBudgetBalanceAmt($this->resourcesGroupAmt - $this->chargesGroupAmt);
 
         $evaluationGroup->setEvalBudgetGroup($evalBudgetGroup);
 
@@ -635,48 +638,43 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
             ->setSettlementPlan($this->findInArray($diagSocial->apurementDette, SiSiaoItems::YES_NO_BOOL))
             ->setMoratorium($this->findInArray($diagSocial->moratoire, SiSiaoItems::YES_NO_BOOL))
             ->setChargeComment($diagSocial->commentaireCharge)
-            ->setMonthlyRepaymentAmt($diagSocial->remboursementDettes)
+            // ->setMonthlyRepaymentAmt($diagSocial->remboursementDettes)
             ->setDebtComment($diagSocial->commentairesSituationBudgetaire);
 
-        $this->setResources($evalBudgetPerson, $diagSocial);
-        $this->setCharges($evalBudgetPerson, $diagSocial);
-        $this->setDebts($evalBudgetPerson, $diagSocial);
-        $this->monthlyRepaymentAmt += $diagSocial->remboursementDettes;
+        $this->createResources($evalBudgetPerson, $diagSocial);
+        $this->createCharges($evalBudgetPerson, $diagSocial);
+        $this->createDebts($evalBudgetPerson, $diagSocial);
 
         $evaluationPerson->setEvalBudgetPerson($evalBudgetPerson);
 
         return $evalBudgetPerson;
     }
 
-    protected function setResources(EvalBudgetPerson $evalBudgetPerson, object $diagSocial): EvalBudgetPerson
+    protected function createResources(EvalBudgetPerson $evalBudgetPerson, object $diagSocial): EvalBudgetPerson
     {
         $ressources = $this->get("ressourcePersonnes/diagnosticSocial/{$diagSocial->id}");
-        $count = 0;
         $sumAmt = 0;
 
         foreach ($ressources as $ressource) {
-            ++$count;
-            $resourceValue = $this->findInArray($ressource->typeRessource, SiSiaoItems::TYPE_RESOURCES);
-            $amt = $ressource->montant;
-            $sumAmt += $amt;
-            $setMethod = 'set'.ucfirst($resourceValue);
-            $setAmtMethod = $setMethod.'Amt';
+            if (!$newResource = $this->financeExists($evalBudgetPerson->getResources(), $ressource->typeRessource->id)) {
+                $newResource = (new EvaResource());
+            }
 
-            if (method_exists($evalBudgetPerson, $setMethod)) {
-                $evalBudgetPerson->$setMethod(1);
-            }
-            if (method_exists($evalBudgetPerson, $setAmtMethod)) {
-                $evalBudgetPerson->$setAmtMethod($amt);
-            }
-            if (1000 === $ressource->typeRessource->id) {
-                $evalBudgetPerson->setRessourceOtherPrecision($ressource->commentaire);
-            }
+            $newResource
+                ->setEvalBudgetPerson($evalBudgetPerson)
+                ->setType($this->findInArray($ressource->typeRessource, SiSiaoItems::RESOURCES))
+                ->setAmount($ressource->montant)
+                // ->setEnDate(null)
+                ->setComment($ressource->commentaire);
+
+            $this->em->persist($newResource);
+
+            $sumAmt += $ressource->montant;
         }
 
-        $evalBudgetPerson = $this->setEmptyEvalBudgetItems($evalBudgetPerson, EvalBudgetPerson::RESOURCES_TYPE);
-
         $evalBudgetPerson
-            ->setResources($count > 0 ? Choices::YES : (true === $diagSocial->sansRessource ? Choices::NO : null))
+            ->setResource(count($ressources) > 0 ?
+                Choices::YES : (true === $diagSocial->sansRessource ? Choices::NO : null))
             ->setResourcesAmt($sumAmt);
 
         $this->resourcesGroupAmt += $sumAmt;
@@ -684,35 +682,43 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         return $evalBudgetPerson;
     }
 
-    protected function setCharges(EvalBudgetPerson $evalBudgetPerson, object $diagSocial): EvalBudgetPerson
+    protected function createCharges(EvalBudgetPerson $evalBudgetPerson, object $diagSocial): EvalBudgetPerson
     {
         $charges = $this->get("chargePersonnes/diagnosticSocial/{$diagSocial->id}");
-        $count = 0;
         $sumAmt = 0;
 
         foreach ($charges as $charge) {
-            ++$count;
-            $chargeValue = $this->findInArray($charge->typeCharge, SiSiaoItems::TYPE_CHARGES);
-            $amt = $charge->montant;
-            $sumAmt += $amt;
-            $setMethod = 'set'.ucfirst($chargeValue);
-            $setAmtMethod = $setMethod.'Amt';
+            if (!$newCharge = $this->financeExists($evalBudgetPerson->getCharges(), $charge->typeCharge->id)) {
+                $newCharge = (new Charge());
+            }
 
-            if (method_exists($evalBudgetPerson, $setMethod)) {
-                $evalBudgetPerson->$setMethod(1);
-            }
-            if (method_exists($evalBudgetPerson, $setAmtMethod)) {
-                $evalBudgetPerson->$setAmtMethod($amt);
-            }
-            if (1000 === $charge->typeCharge->id) {
-                $evalBudgetPerson->setChargeOtherPrecision($charge->commentaire);
-            }
+            $newCharge
+                ->setEvalBudgetPerson($evalBudgetPerson)
+                ->setType($this->findInArray($charge->typeCharge, SiSiaoItems::CHARGES))
+                ->setAmount($charge->montant)
+                ->setComment($charge->commentaire);
+
+            $this->em->persist($newCharge);
+
+            $sumAmt += $charge->montant;
         }
 
-        $evalBudgetPerson = $this->setEmptyEvalBudgetItems($evalBudgetPerson, EvalBudgetPerson::CHARGES_TYPE);
+        if ($diagSocial->remboursementDettes > 0) {
+            if (!$newCharge = $this->financeExists($evalBudgetPerson->getCharges(), Charge::REPAYMENT_DEBT)) {
+                $newCharge = (new Charge());
+            }
+
+            $newCharge
+                ->setEvalBudgetPerson($evalBudgetPerson)
+                ->setType(Charge::REPAYMENT_DEBT)
+                ->setAmount($diagSocial->remboursementDettes);
+
+            $this->em->persist($newCharge);
+        }
 
         $evalBudgetPerson
-            ->setCharges($count > 0 ? Choices::YES : (true === $diagSocial->sansCharge ? Choices::NO : null))
+            ->setCharge(count($charges) > 0 ?
+                Choices::YES : (true === $diagSocial->sansCharge ? Choices::NO : null))
             ->setChargesAmt($sumAmt);
 
         $this->chargesGroupAmt += $sumAmt;
@@ -720,30 +726,29 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         return $evalBudgetPerson;
     }
 
-    protected function setDebts(EvalBudgetPerson $evalBudgetPerson, object $diagSocial): EvalBudgetPerson
+    protected function createDebts(EvalBudgetPerson $evalBudgetPerson, object $diagSocial): EvalBudgetPerson
     {
         $dettes = $this->get("dettePersonnes/diagnosticSocial/{$diagSocial->id}");
-        $count = 0;
         $sumAmt = 0;
 
         foreach ($dettes as $dette) {
-            ++$count;
-            $debtValue = $this->findInArray($dette->typeDette, SiSiaoItems::TYPE_DEBTS);
-            $amt = $dette->montant;
-            $sumAmt += $amt;
-            $setMethod = 'set'.ucfirst($debtValue);
+            if (!$newDebt = $this->financeExists($evalBudgetPerson->getDebts(), $dette->typeDette->id)) {
+                $newDebt = (new Debt());
+            }
 
-            if (method_exists($evalBudgetPerson, $setMethod)) {
-                $evalBudgetPerson->$setMethod(1);
-            }
-            if (1000 === $dette->typeDette->id) {
-                $evalBudgetPerson->setDebtOtherPrecision($dette->commentaire);
-            }
+            $newDebt
+                ->setEvalBudgetPerson($evalBudgetPerson)
+                ->setType($this->findInArray($dette->typeDette, SiSiaoItems::DEBTS))
+                ->setAmount($dette->montant)
+                ->setComment($dette->commentaire);
+
+            $this->em->persist($newDebt);
+
+            $sumAmt += $dette->montant;
         }
 
-        $evalBudgetPerson = $this->setEmptyEvalBudgetItems($evalBudgetPerson, EvalBudgetPerson::DEBTS_TYPE);
-
-        $evalBudgetPerson->setDebts($count > 0 ? Choices::YES : (true === $diagSocial->sansDette ? Choices::NO : null))
+        $evalBudgetPerson->setDebt(count($dettes) > 0 ?
+            Choices::YES : (true === $diagSocial->sansDette ? Choices::NO : null))
             ->setDebtsAmt($sumAmt);
 
         $this->debtsGroupAmt += $sumAmt;
@@ -752,19 +757,19 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
     }
 
     /**
-     * Set the empty resources, charges and debts values to 0.
+     * @param Collection<EvaResource>|Collection<Charge>|Collection<Debts> $finances
+     *
+     * @return EvaResource|Charge|Debt
      */
-    protected function setEmptyEvalBudgetItems(EvalBudgetPerson $evalBudgetPerson, array $values): EvalBudgetPerson
+    protected function financeExists(Collection $finances, int $type): ?AbstractFinance
     {
-        foreach ($values as $key => $value) {
-            $getMethod = 'get'.ucfirst($key);
-            $setMethod = 'set'.ucfirst($key);
-            if (method_exists($evalBudgetPerson, $getMethod) && null === $evalBudgetPerson->$getMethod()) {
-                $evalBudgetPerson->$setMethod(0);
+        foreach ($finances as $finance) {
+            if ($finance->getType() === $type) {
+                return $finance;
             }
         }
 
-        return $evalBudgetPerson;
+        return null;
     }
 
     protected function createInitEvalPerson(SupportPerson $supportPerson, EvaluationPerson $evaluationPerson): ?InitEvalPerson
@@ -791,13 +796,13 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
 
         if ($evalBudgetPerson) {
             $initEvalPerson
-                ->setResources($evalBudgetPerson->getResources())
+                ->setResource($evalBudgetPerson->getResource())
                 ->setResourcesAmt($evalBudgetPerson->getResourcesAmt())
                 ->setRessourceOtherPrecision($evalBudgetPerson->getRessourceOtherPrecision())
-                ->setDebts($evalBudgetPerson->getDebts())
+                ->setDebt($evalBudgetPerson->getDebt())
                 ->setDebtsAmt($evalBudgetPerson->getDebtsAmt());
 
-            $this->setResourcesInit($evalBudgetPerson, $initEvalPerson);
+            $this->createInitResources($evalBudgetPerson, $initEvalPerson);
         }
 
         $this->em->persist($initEvalPerson);
@@ -810,21 +815,16 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
     /**
      * Dupplique les ressources de la situation budgétaire dans la situation initiale.
      */
-    protected function setResourcesInit(EvalBudgetPerson $evalBudgetPerson, InitEvalPerson $initEvalPerson): InitEvalPerson
+    protected function createInitResources(EvalBudgetPerson $evalBudgetPerson, InitEvalPerson $initEvalPerson): InitEvalPerson
     {
-        foreach (EvalBudgetPerson::RESOURCES_TYPE as $key => $value) {
-            $getMethod = 'get'.ucfirst($key);
-            $setMethod = 'set'.ucfirst($key);
-            if (Choices::YES === $evalBudgetPerson->$getMethod()) {
-                $getAmtMethod = $getMethod.'Amt';
-                if (method_exists($initEvalPerson, $getMethod)) {
-                    $initEvalPerson->$setMethod($evalBudgetPerson->$getMethod());
-                }
-                if (method_exists($initEvalPerson, $getAmtMethod)) {
-                    $setAmtMethod = 'set'.ucfirst($key).'Amt';
-                    $initEvalPerson->$setAmtMethod($evalBudgetPerson->$getAmtMethod());
-                }
-            }
+        foreach ($evalBudgetPerson->getResources() as $resource) {
+            $initResource = (new InitResource())
+                ->setInitEvalPerson($initEvalPerson)
+                ->setType($resource->getType())
+                ->setAmount($resource->getAmount())
+                ->setComment($resource->getComment());
+
+            $this->em->persist($initResource);
         }
 
         return $initEvalPerson;

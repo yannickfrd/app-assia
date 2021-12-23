@@ -7,21 +7,20 @@
 {% block card_body %}
 
     <div class="row">
-        <div class="col-md-12 accordion" id="accordion-eval_prof">
+        <div class="col-md-12 accordion" id="accordion_evalProf">
 			{{ utils.loopSupportPeople(accordion_id, people_over_16, support, theme_color) }}
 
             {% for key, evalPerson in people_over_16 %}
-            	{% set prefix = "evaluation_evaluationPeople_" ~ key ~ "_evalProfPerson" %}
-                <div id="collapse-eval_prof-{{ key }}" class="collapse {% if loop.first %}show{% endif %} my-3"
-                    aria-labelledby="heading-eval_prof-{{ key }}" data-parent="#accordion-eval_prof" 
-                    data-sp-id="{{ evalPerson.vars.value.supportPerson.id }}">
+            	{% set prefixId= "evaluation_evaluationPeople_" ~ key ~ "_evalProfPerson" %}
+                <div id="collapse_{{ prefixId }}" class="collapse {% if loop.first %}show{% endif %} my-3"
+                    aria-labelledby="heading_{{ prefixId }}" data-parent="#accordion_evalProf">
                     <div class="row">
                         <div class="col-md-6">{{ form_row(evalPerson.evalProfPerson.profStatus) }}</div>
-                        <div class="col-md-6" data-parent-field="{{ prefix }}_profStatus" 
+                        <div class="col-md-6" data-parent-field="{{ prefixId }}_profStatus" 
                             data-options="2|3|8|97">
                             {{ form_row(evalPerson.evalProfPerson.jobCenterId) }}</div>
                     </div>
-                    <div class="row mb-3" data-parent-field="{{ prefix }}_profStatus" 
+                    <div class="row mb-3" data-parent-field="{{ prefixId }}_profStatus" 
                         data-options="3|5|8">
                         <div class="col-md-6" >{{ form_row(evalPerson.evalProfPerson.contractType) }}</div>
                         <div class="col-md-6">{{ form_row(evalPerson.evalProfPerson.jobType) }}</div>
@@ -32,20 +31,20 @@
                         <div class="col-md-6">{{ form_row(evalPerson.evalProfPerson.workPlace) }}</div>
                         <div class="col-md-6">{{ form_row(evalPerson.evalProfPerson.employerName) }}</div>
                     </div>
-                    <div class="row mb-3" data-parent-field="{{ prefix }}_profStatus" data-options="1|2|3|6|8|97">
+                    <div class="row mb-3" data-parent-field="{{ prefixId }}_profStatus" data-options="1|2|3|6|8|97">
                         <div class="col-md-6">{{ form_row(evalPerson.evalProfPerson.transportMeansType) }}</div>
-                        <div class="col-md-6" data-parent-field="{{ prefix }}_transportMeansType" data-options="1|2|97">
+                        <div class="col-md-6" data-parent-field="{{ prefixId }}_transportMeansType" data-options="1|2|97">
                             {{ form_row(evalPerson.evalProfPerson.transportMeans) }}</div>
                     </div>
-                    <div class="row mb-3" data-parent-field="{{ prefix }}_profStatus" data-options="1|2|3|4|8|9|97">
+                    <div class="row mb-3" data-parent-field="{{ prefixId }}_profStatus" data-options="1|2|3|4|8|9|97">
                         <div class="col-md-6" title="Reconnaissance de la qualité de travailleur handicapé">
                             {{ form_row(evalPerson.evalProfPerson.rqth) }}</div>
-                        <div class="col-md-6" data-parent-field="{{ prefix }}_rqth" data-options="1">
+                        <div class="col-md-6" data-parent-field="{{ prefixId }}_rqth" data-options="1">
                             {{ form_row(evalPerson.evalProfPerson.endRqthDate) }}</div>
                     </div>
                      <div class="row mb-3">
                         <div class="col-md-6">{{ form_row(evalPerson.evalProfPerson.schoolLevel) }}</div>
-                        <div class="col-md-6"data-parent-field="{{ prefix }}_profStatus" data-options="1|2|3|4|8|9|97">
+                        <div class="col-md-6"data-parent-field="{{ prefixId }}_profStatus" data-options="1|2|3|4|8|9|97">
                             {{ form_row(evalPerson.evalProfPerson.profExperience) }}</div>
                     </div>
                     <div class="row mb-3">

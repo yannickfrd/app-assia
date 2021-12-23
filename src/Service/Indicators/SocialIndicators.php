@@ -10,7 +10,6 @@ use App\Entity\People\Person;
 use App\Entity\People\RolePerson;
 use App\Entity\Support\SupportPerson;
 use App\Form\Utils\EvaluationChoices;
-use Doctrine\Common\Collections\Collection;
 
 class SocialIndicators
 {
@@ -71,8 +70,8 @@ class SocialIndicators
             $this->profStatusDatas = $this->updateVar($supportPerson, $evalProfPerson->getProfStatus(), $this->profStatusDatas);
             $this->contractTypeDatas = $this->updateVar($supportPerson, $evalProfPerson->getContractType(), $this->contractTypeDatas);
 
-            $this->resourcesDatas = $this->updateVar($supportPerson, $evalBudgetPerson->getResources(), $this->resourcesDatas);
-            $this->chargesDatas = $this->updateVar($supportPerson, $evalBudgetPerson->getCharges(), $this->chargesDatas);
+            $this->resourcesDatas = $this->updateVar($supportPerson, $evalBudgetPerson->getResource(), $this->resourcesDatas);
+            $this->chargesDatas = $this->updateVar($supportPerson, $evalBudgetPerson->getCharge(), $this->chargesDatas);
 
             if ($supportPerson->getHead()) {
                 ++$this->nbGroups;

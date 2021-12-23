@@ -386,56 +386,53 @@ class SiSiaoItems
         90 => 8, // Stagiaire
     ];
 
-    // TYPE_RESSOURCES
-    public const TYPE_RESOURCES = [
-        80 => 'disAdultAllowance', // AAH
-        130 => 'asylumAllowance', // Allocation pour demandeur d'asile
-        30 => 'unemplBenefit', // Allocations chômage
-        100 => 'familyAllowance', // Allocations familliales
-        110 => 'tempWaitingAllowance', // Allocation temporaire d'attente
-        90 => 'solidarityAllowance', // ASS
-        1000 => 'ressourceOther', // Autres ressources
-        180 => 'scholarships', // Bourses
-        140 => 'minimumIncome', // En attente RSA
-        40 => 'paidTraining', // Formation
-        120 => 'youthGuarantee', // Garantie jeune
-        170 => 'dailyAllowance', // Indemnités journalières
-        150 => null, // Non renseigné
-        50 => 'activityBonus', // Prime d'activité
-        160 => null, // Refus de répondre
-        10 => 'salary', // Ressources d'activité
-        20 => 'pensionBenefit', // Retraite
-        70 => 'minimumIncome', // RSA Majoré
-        60 => 'minimumIncome', // RSA Socle
+    public const RESOURCES = [
+        10 => 10, // Ressources d'activité
+        20 => 20, // Retraite
+        30 => 30,  // Allocations chômage
+        40 => 40, // Formation
+        50 => 50, // Prime d'activité
+        60 => 60, // RSA Socle
+        70 => 70, // RSA Majoré
+        80 => 80, // AAH
+        90 => 90, // ASS
+        100 => 100, // Allocations familliales
+        // 110 => 1000, // Allocation temporaire d'attente
+        120 => 120, // Garantie jeune
+        130 => 130, // Allocation pour demandeur d'asile
+        140 => 60, // En attente RSA
+        // 150 => null, // Non renseigné
+        // 160 => null, // Refus de répondre
+        170 => 170, // Indemnités journalières
+        180 => 180, // Bourses
+        1000 => 1000, // Autres ressources
     ];
 
-    // TYPE_CHARGES
-    public const TYPE_CHARGES = [
-        50 => 'insurance', // Assurance
-        1000 => 'chargeOther', // Autres charges
-        40 => 'water', // Eau
-        20 => 'electricityGas', // EDF
-        90 => 'childcare', // Garde enfant(s)
-        30 => 'electricityGas', // GDF
-        70 => 'taxes', // Impôts
-        10 => 'rent', // Loyer
-        60 => 'mutual', // Mutuelle
-        120 => null, // Non renseigné
-        100 => 'alimony', // Pension alimentaire
-        110 => 'phone', // Téléphone
-        80 => 'transport', // Transports
+    public const CHARGES = [
+        10 => 10, // Loyer
+        20 => 20, // EDF
+        30 => 30, // GDF
+        40 => 40, // Eau
+        50 => 50, // Assurance
+        60 => 60, // Mutuelle
+        70 => 70, // Impôts
+        80 => 80, // Transports
+        90 => 90, // Garde enfant(s)
+        100 => 100, // Pension alimentaire
+        110 => 110, // Téléphone
+        // 120 => 120, //  Non renseigné
+        1000 => 1000, // Autres charges
     ];
 
-    // TYPE_DETTES
-    public const TYPE_DEBTS = [
-        50 => 'debtFines', // Amendes
-        1000 => 'debtOther', // Autres dettes
-        70 => 'debtBankOverdrafts', // Découverts bancaires
-        20 => 'debtConsrCredit', // Dettes de crédits à la consommation
-        30 => 'debtMortgage', // Dettes de crédits immobiliers
-        10 => 'debtRental', // Dettes locatives
-        40 => null, // Pension alimentaire non réglée
-        60 => 'debtTaxDelays', // Retards d'impôts
+    public const DEBTS = [
+        10 => 10, // Dettes locatives
+        20 => 20, // Dettes de crédits à la consommation
+        30 => 30, // Dettes de crédits immobiliers
+        40 => 40,  // Pension alimentaire non réglée
+        50 => 50, // Amendes
+        60 => 60, // Retards d'impôts
+        70 => 70, // Découverts bancaires
+        1000 => 1000, // Autres dettes
     ];
 
     // EVOLUTIONS_BUDGETAIRES

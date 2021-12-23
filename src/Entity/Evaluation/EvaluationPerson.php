@@ -2,11 +2,12 @@
 
 namespace App\Entity\Evaluation;
 
-use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Support\SupportPerson;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
-use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Evaluation\EvaluationPersonRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
