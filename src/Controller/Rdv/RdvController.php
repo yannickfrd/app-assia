@@ -4,7 +4,6 @@ namespace App\Controller\Rdv;
 
 use App\Entity\Support\Rdv;
 use App\Event\Rdv\RdvEvent;
-use App\Service\GoogleApi\GoogleAgenda;
 use App\Service\Pagination;
 use App\Form\Support\Rdv\RdvType;
 use App\Service\Export\RdvExport;
@@ -17,7 +16,6 @@ use App\Repository\Support\RdvRepository;
 use App\Controller\Traits\ErrorMessageTrait;
 use App\Form\Model\Support\SupportRdvSearch;
 use App\Service\SupportGroup\SupportManager;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use App\Form\Support\Rdv\SupportRdvSearchType;
 use Symfony\Component\HttpFoundation\Response;
@@ -207,15 +205,16 @@ class RdvController extends AbstractController
     public function deleteRdv(Rdv $rdv, EventDispatcherInterface $dispatcher): JsonResponse
     {
         $id = $rdv->getId();
+        $googleEventId = $rdv->getGoogleEventId();
 
-        $this->em->remove($rdv);
-        $this->em->flush();
-
-        $dispatcher->dispatch(new RdvEvent($rdv), 'rdv.after_update');
+//        $this->em->remove($rdv);
+//        $this->em->flush();
+//
+//        $dispatcher->dispatch(new RdvEvent($rdv), 'rdv.after_update');
 
         return $this->json([
             'action' => 'delete',
-            'rdv' => ['id' => $id],
+            'rdv' => ['id' => $id, 'googleEventId' => $googleEventId],
             'alert' => 'warning',
             'msg' => 'Le RDV est supprimé.',
         ]);

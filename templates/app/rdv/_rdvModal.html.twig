@@ -93,11 +93,14 @@
             <div class="modal-footer d-flex justify-content-between">
                 <div class="float-left">
                     <button id="modal-btn-delete" class="mr-3 btn btn-danger" data-placement="bottom"
+                            data-delete-google-event="{{ path('delete_event_google_calendar', {googleEventId: '__id__'}) }}"
                         title="Supprimer le rendez-vous"><span class="fas fa-trash-alt"></span><span class="d-none d-md-inline ml-2">Supprimer</span></button>
                 </div>
                 <div class="float-right">
                     <button type="button" id="js-btn-cancel" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                    <button type="submit" id="js-btn-save" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>Enregistrer</button>
+                    <button type="submit" id="js-btn-save" class="btn btn-{{ theme_color }} shadow"
+                            data-update-google-event="{{ path('update_event_google_calendar', {rdvId: '__id__'}) }}">
+                        <span class="fas fa-save mr-2"></span>Enregistrer</button>
                 </div>
             </div>
 

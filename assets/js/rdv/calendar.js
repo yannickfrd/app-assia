@@ -45,6 +45,7 @@ export default class Calendar {
         this.showWeekendsItem = localStorage.getItem('agenda.show_weekends')
         this.fullWidthItem = localStorage.getItem('agenda.full_width')
 
+        this.clientGoogleCalendar = new ClientGoogleCalendar()
         this.googleCalendarCheckbox = this.formRdvElt.elements['rdv_googleCalendar'].checked
 
         this.init()
@@ -263,10 +264,10 @@ export default class Calendar {
                     this.showRdv(data.rdv);
                     break;
                 case 'create':
-                    this.createRdv(data.rdv);
+                    this.createRdv(data.rdv, data.action);
                     break;
                 case 'update':
-                    this.updateRdv(data.rdv);
+                    this.updateRdv(data.rdv, data.action);
                     break;
                 case 'delete':
                     this.deleteRdv(data.rdv);
@@ -335,9 +336,10 @@ export default class Calendar {
 
     /**
      * Crée le RDV dans le container du jour de l'agenda.
-     * @param {Object} rdv 
+     * @param {Object} rdv
+     * @param {string} action
      */
-    createRdv(rdv) {
+    createRdv(rdv, action) {
         const rdvElt = document.createElement('div')
         rdvElt.className = `calendar-event bg-${this.themeColor} text-light`
         rdvElt.id = `rdv-${rdv.id}`
@@ -357,27 +359,31 @@ export default class Calendar {
         rdvElt.addEventListener('click', this.requestGetRdv.bind(this, rdvElt))
 
         if (this.googleCalendarCheckbox) {
-            new ClientGoogleCalendar(rdv.id)
+            this.clientGoogleCalendar.createUpdateEvent(rdv.id, action)
         }
     }
 
     /**
      * Met à jour le RDV dans l'agenda.
-     * @param {Object} rdv 
+     * @param {Object} rdv
+     * @param {string} action
      */
-    updateRdv(rdv) {
+    updateRdv(rdv, action) {
         this.rdvElt.remove()
-        this.createRdv(rdv)
+        this.createRdv(rdv, action)
     }
 
     /**
      * Supprime le RDV dans l'agenda.
      */
-    deleteRdv() {
-        const rdvElt = document.getElementById('rdv-' + this.rdvId)
-        const dayElt = rdvElt.parentNode
-        rdvElt.remove()
-        this.hideRdvElts(dayElt)
+    deleteRdv(rdv) {
+        // const rdvElt = document.getElementById('rdv-' + this.rdvId)
+        // const dayElt = rdvElt.parentNode
+        // rdvElt.remove()
+        // this.hideRdvElts(dayElt)
+
+        console.log(rdv)
+        this.clientGoogleCalendar.deleteEvent(rdv.googleEventId)
     }
 
     /**

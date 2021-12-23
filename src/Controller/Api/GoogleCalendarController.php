@@ -2,7 +2,8 @@
 
 namespace App\Controller\Api;
 
-use App\Service\GoogleApi\ApiGoogleCalendar;
+use App\Service\GoogleApi\GoogleCalendarApiService;
+use Google\Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,12 +12,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class GoogleCalendarController extends AbstractController
 {
-    /** @var ApiGoogleCalendar */
-    private $gapi;
+    /**
+     * GoogleCalendarApiService
+     * $gapiService
+     * @var GoogleCalendarApiService
+     */
+    private $gapiService;
 
-    public function __construct(ApiGoogleCalendar $gapi)
+    public function __construct(GoogleCalendarApiService $gapiService)
     {
-        $this->gapi = $gapi;
+        $this->gapiService = $gapiService;
     }
 
     /**
@@ -24,28 +29,82 @@ class GoogleCalendarController extends AbstractController
      */
     public function authClientGoogleCalendar(Request $request): JsonResponse
     {
-        $this->gapi->setOnSessionCheckedAndRdvId($request->query->get('rdv_id'));
+        $this->gapiService->setOnSessionCheckedAndRdvId($request->query->get('rdv_id'));
 
-        return $this->json($this->gapi->getAuthUrl());
+        return $this->json([
+            'action' => 'create',
+            'url' => $this->gapiService->getAuthUrl()
+        ]);
     }
 
     /**
      * @Route("/add-event-google-calendar", name="add_event_google_calendar")
      */
-    public function getResponseGoogleAgenda(Request $request): RedirectResponse
+    public function addEventGoogleAgenda(Request $request): RedirectResponse
     {
         $authCode = $request->query->get('code');
 
         if (!empty($authCode)) {
-            $urlResponse = $this->gapi->insertGoogleApiToken($authCode);
+            $urlResponse = $this->gapiService->insertGoogleApiToken($authCode);
 
             if (empty($urlResponse)) {
-                return $this->redirect($this->gapi->getAuthUrl());
+                return $this->redirect($this->gapiService->getAuthUrl());
             }
 
             return $this->redirect($urlResponse);
         }
 
-        return $this->redirect($this->gapi->getAuthUrl());
+        return $this->redirect($this->gapiService->getAuthUrl());
+    }
+
+    /**
+     * @Route("/google-event/{rdvId}/update-event-google-calendar", name="update_event_google_calendar", methods={"PUT"})
+     */
+    public function updateEventGoogleAgenda(int $rdvId): JsonResponse
+    {
+        $updating = $this->gapiService->update($rdvId);
+
+        if (!$updating) {
+            return $this->json([
+                'action' => 'delete',
+                'alert' => 'warning',
+                'msg' => 'Le RDV n\'a pas été mise à jour sur Google Agenda.',
+            ]);
+        }
+
+        return $this->json([
+            'action' => 'delete',
+            'alert' => 'success',
+            'msg' => 'Le RDV a bien été mise à jour sur Google Agenda.',
+        ]);
+    }
+
+    /**
+     * @Route("/google-event/{googleEventId}/delete", name="delete_event_google_calendar", methods={"DELETE"})
+     * @param string $googleEventId
+     * @return JsonResponse
+     */
+    public function deleteGoogleEvent(string $googleEventId): JsonResponse
+    {
+        try {
+            $this->gapiService->deleteEvent($googleEventId);
+        } catch (Exception $e) {
+            $getErrors = json_decode($e->getMessage(), false);
+
+            if (0 < count($getErrors->error->errors)) {
+                $messError = $getErrors->error->message;
+                return $this->json([
+                    'action' => 'delete',
+                    'alert' => 'warning',
+                    'msg' => 'Une erreur s\'est produite avec Google Agenda: "' . $messError . '".',
+                ]);
+            }
+        }
+
+        return $this->json([
+            'action' => 'delete',
+            'alert' => 'success',
+            'msg' => 'Le RDV a bien été supprimé sur Google Agenda.',
+        ]);
     }
 }

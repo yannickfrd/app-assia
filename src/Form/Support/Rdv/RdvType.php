@@ -8,7 +8,7 @@ use App\Entity\Support\SupportGroup;
 use App\Form\Utils\Choices;
 use App\Repository\Organization\UserRepository;
 use App\Repository\Support\SupportGroupRepository;
-use App\Service\GoogleApi\ApiGoogleCalendar;
+use App\Service\GoogleApi\GoogleCalendarApiService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -20,10 +20,10 @@ use Symfony\Component\Security\Core\Security;
 
 class RdvType extends AbstractType
 {
-    /** @var ApiGoogleCalendar */
+    /** @var GoogleCalendarApiService */
     private $gapi;
 
-    public function __construct(Security $security, SupportGroupRepository $supportGroupRepo, ApiGoogleCalendar $gapi)
+    public function __construct(Security $security, SupportGroupRepository $supportGroupRepo, GoogleCalendarApiService $gapi)
     {
         $this->gapi = $gapi;
     }
