@@ -72,8 +72,19 @@ class RdvType extends AbstractType
                 ],
                 'required' => false,
                 'mapped' => false,
-//                'data' => true
                 'data' => $this->gapi->getOnSessionIsChecked()// Regarde en session, si le user a déjà ckecké cette option
+            ])
+            ->add('outlookCalendar', CheckboxType::class, [
+                'label' => 'Envoyer sur Outlook Agenda.',
+                'label_attr' => [
+                    'class' => 'custom-control-label'
+                ],
+                'attr'=> [
+                    'class' => 'custom-control-input checkbox'
+                ],
+                'required' => false,
+                'mapped' => false,
+                'data' => false// Regarde en session, si le user a déjà ckecké cette option
             ])
         ;
         // ->add('user', EntityType::class, [
