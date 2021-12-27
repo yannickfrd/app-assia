@@ -3,6 +3,7 @@
 namespace App\Service\GoogleApi;
 
 use App\Entity\Support\Rdv;
+use App\Entity\Support\SupportGroup;
 use Doctrine\ORM\EntityManagerInterface;
 use Google\Exception;
 use Google_Client;
@@ -225,15 +226,23 @@ class GoogleCalendarApiService
      */
     private function createEvent(Rdv $rdv=null): Google_Service_Calendar_Event
     {
+        $leadApplicant = '';
         if (!$rdv) {
             $rdv = $this->getRdv();
+
+            $pattern = '/' . $rdv->getSupportGroup()->getHeader()->getFullname() . '/';
+            preg_match($pattern, $rdv->getTitle(), $matches);
+
+            if (!empty($matches)) {
+                $leadApplicant .= ' | ' . $rdv->getSupportGroup()->getHeader()->getFullname();
+            }
         }
 
         $timeZone = $rdv->getStart()->getTimezone()->getName();
         $status = $rdv->getStatus() ? '<br><strong>Statut : </strong>' . $rdv->getStatus() : '';
 
         return new Google_Service_Calendar_Event([
-            'summary' => $rdv->getTitle(),
+            'summary' => $rdv->getTitle() . $leadApplicant,
             'location' => $rdv->getLocation(),
             'description' => $rdv->getContent() .
                 '<br><strong>Créé par : </strong>' . $rdv->getCreatedBy()->getFullname() .
