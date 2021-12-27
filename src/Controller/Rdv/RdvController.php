@@ -93,8 +93,8 @@ class RdvController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-//            $this->em->persist($rdv);
-//            $this->em->flush();
+            $this->em->persist($rdv);
+            $this->em->flush();
 
             return $this->json($this->getDataNewRdv($rdv));
         }
