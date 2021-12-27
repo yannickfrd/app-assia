@@ -10,12 +10,6 @@ export default class ClientGoogleCalendar {
         this.formRdvElt = this.modalRdvElt.querySelector('form[name=rdv]')
         this.googleCalendarCheckbox = this.formRdvElt.elements['rdv_googleCalendar']
         this.urlCreateClientGoogle = this.googleCalendarCheckbox.dataset['clientGoogle']
-
-        this.init()
-    }
-
-    init() {
-        // this.ajax.send('GET', this.urlCreateClientGoogle + '?rdv_id=' + this.rdvId, this.responseAjax.bind(this))
     }
 
     /**
@@ -42,7 +36,6 @@ export default class ClientGoogleCalendar {
      */
     deleteEvent(googleEventId) {
         if (googleEventId) {
-            console.log(googleEventId)
             const url = this.btnDeleteRdvElt.dataset['deleteGoogleEvent'].replace('__id__', googleEventId)
             this.ajax.send('DELETE', url, this.responseAjax.bind(this))
         }
@@ -53,7 +46,6 @@ export default class ClientGoogleCalendar {
      * @param data
      */
     responseAjax(data) {
-        console.log(data)
         switch (data.action) {
             case 'create':
                 window.open(data.url, '_blank')

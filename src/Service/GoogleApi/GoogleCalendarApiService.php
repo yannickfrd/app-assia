@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 class GoogleCalendarApiService
 {
     private const SESSION_CLIENT_ID = 'clientRdvId';
-//    private const SESSION_CLIENT_AUTH = 'clientAuthGoogle';
     private const SESSION_CLIENT_TOKEN = 'clientTokenGoogle';
     private const SESSION_CLIENT_REFRESH_TOKEN = 'clientRefreshTokenGoogle';
 
@@ -37,6 +36,7 @@ class GoogleCalendarApiService
     {
         $client = $this->getClientDefault();
         $client->setPrompt('select_account');
+
         return $client->createAuthUrl();
     }
 
@@ -48,8 +48,7 @@ class GoogleCalendarApiService
      */
     public function insertGoogleApiToken(String $authCode): string
     {
-        $client = $this->getClient($authCode);
-        $service = new Google_Service_Calendar($client);
+        $service = $this->createServiceCalendar();
 
         $calendarId = 'primary';
         $optionsParams = [];
@@ -70,19 +69,19 @@ class GoogleCalendarApiService
     {
         /** @var Rdv $rdv */
         $rdv = $this->em->getRepository(Rdv::class)->find($rdvId);
-        $client = $this->getClient();
-        $service = new Google_Service_Calendar($client);
+
+        $service = $this->createServiceCalendar();
 
         $getEvent = $service->events->get('primary', $rdv->getGoogleEventId());
-        if (!$service->events->get('primary', $rdv->getGoogleEventId())->count()) {
+        if (!$getEvent->count()) {
             return false;
         }
 
         // Hydration
-        $newEvent = $this->createEvent($rdv);
-        $newEvent->setId($getEvent->getId());
+        $event = $this->createEvent($rdv);
+        $event->setId($getEvent->getId());
 
-        $updateResponse = $service->events->update('primary', $getEvent->getId(), $newEvent);
+        $updateResponse = $service->events->update('primary', $getEvent->getId(), $event);
 
         return ($updateResponse->getStatus() === 'confirmed');
     }
@@ -94,9 +93,19 @@ class GoogleCalendarApiService
      */
     public function deleteEvent(string $googleEventId): void
     {
-        $client = $this->getClient();
-        $service = new Google_Service_Calendar($client);
+        $service = $this->createServiceCalendar();
         $service->events->delete('primary', $googleEventId);
+    }
+
+
+    /**
+     * Create a new Calendar Service
+     * @return Google_Service_Calendar
+     * @throws Exception
+     */
+    private function createServiceCalendar(): Google_Service_Calendar
+    {
+        return new Google_Service_Calendar($this->getClient());
     }
 
     /**

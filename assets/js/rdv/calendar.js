@@ -377,12 +377,11 @@ export default class Calendar {
      * Supprime le RDV dans l'agenda.
      */
     deleteRdv(rdv) {
-        // const rdvElt = document.getElementById('rdv-' + this.rdvId)
-        // const dayElt = rdvElt.parentNode
-        // rdvElt.remove()
-        // this.hideRdvElts(dayElt)
+        const rdvElt = document.getElementById('rdv-' + this.rdvId)
+        const dayElt = rdvElt.parentNode
+        rdvElt.remove()
+        this.hideRdvElts(dayElt)
 
-        console.log(rdv)
         this.clientGoogleCalendar.deleteEvent(rdv.googleEventId)
     }
 

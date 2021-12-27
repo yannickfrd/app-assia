@@ -207,10 +207,10 @@ class RdvController extends AbstractController
         $id = $rdv->getId();
         $googleEventId = $rdv->getGoogleEventId();
 
-//        $this->em->remove($rdv);
-//        $this->em->flush();
-//
-//        $dispatcher->dispatch(new RdvEvent($rdv), 'rdv.after_update');
+        $this->em->remove($rdv);
+        $this->em->flush();
+
+        $dispatcher->dispatch(new RdvEvent($rdv), 'rdv.after_update');
 
         return $this->json([
             'action' => 'delete',
