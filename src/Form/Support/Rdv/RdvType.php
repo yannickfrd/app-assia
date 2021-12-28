@@ -2,30 +2,30 @@
 
 namespace App\Form\Support\Rdv;
 
-use App\Entity\Organization\User;
 use App\Entity\Support\Rdv;
-use App\Entity\Support\SupportGroup;
 use App\Form\Utils\Choices;
-use App\Repository\Organization\UserRepository;
-use App\Repository\Support\SupportGroupRepository;
-use App\Service\GoogleApi\GoogleCalendarApiService;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Service\Api\GoogleApi\GoogleCalendarApiService;
+use App\Service\Api\OutlookApi\OutlookCalendarApiService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Security;
 
 class RdvType extends AbstractType
 {
-    /** @var GoogleCalendarApiService */
-    private $gapi;
 
-    public function __construct(Security $security, SupportGroupRepository $supportGroupRepo, GoogleCalendarApiService $gapi)
+    /** @var GoogleCalendarApiService */
+    private $googleCalendarApiService;
+
+    /** @var OutlookCalendarApiService */
+    private $outlookCalendarApiService;
+
+    public function __construct(GoogleCalendarApiService $googleCalendarApiService, OutlookCalendarApiService $outlookCalendarApiService)
     {
-        $this->gapi = $gapi;
+        $this->outlookCalendarApiService = $outlookCalendarApiService;
+        $this->googleCalendarApiService = $googleCalendarApiService;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -72,7 +72,8 @@ class RdvType extends AbstractType
                 ],
                 'required' => false,
                 'mapped' => false,
-                'data' => $this->gapi->getOnSessionIsChecked()// Regarde en session, si le user a déjà ckecké cette option
+//                'data' => $this->gapi->getOnSessionIsChecked()// Regarde en session, si le user a déjà ckecké cette option
+                'data' => $this->googleCalendarApiService->optionOnSessionIsChecked()// Regarde en session, si le user a déjà ckecké cette option
             ])
             ->add('outlookCalendar', CheckboxType::class, [
                 'label' => 'Envoyer sur Outlook Agenda.',
@@ -84,7 +85,7 @@ class RdvType extends AbstractType
                 ],
                 'required' => false,
                 'mapped' => false,
-                'data' => false// Regarde en session, si le user a déjà ckecké cette option
+                'data' => $this->outlookCalendarApiService->optionOnSessionIsChecked()// Regarde en session, si le user a déjà ckecké cette option
             ])
         ;
         // ->add('user', EntityType::class, [

@@ -5,6 +5,7 @@ import DateFormater from '../utils/date/dateFormater'
 import { Modal } from 'bootstrap'
 import ParametersUrl from '../utils/parametersUrl'
 import ClientGoogleCalendar from "../api/googleApi/clientGoogleCalendar";
+import ClientOutlookCalendar from "../api/outlookApi/clientOutlookCalendar";
 
 export default class Calendar {
 
@@ -46,7 +47,7 @@ export default class Calendar {
         this.fullWidthItem = localStorage.getItem('agenda.full_width')
 
         this.clientGoogleCalendar = new ClientGoogleCalendar()
-        this.googleCalendarCheckbox = this.formRdvElt.elements['rdv_googleCalendar'].checked
+        this.clientOutlookCalendar = new ClientOutlookCalendar()
 
         this.init()
     }
@@ -358,9 +359,8 @@ export default class Calendar {
 
         rdvElt.addEventListener('click', this.requestGetRdv.bind(this, rdvElt))
 
-        if (this.googleCalendarCheckbox) {
-            this.clientGoogleCalendar.createUpdateEvent(rdv.id, action)
-        }
+        this.clientGoogleCalendar.createUpdateEvent(rdv.id, action)
+        this.clientOutlookCalendar.createEvent(rdv.id, action)
     }
 
     /**

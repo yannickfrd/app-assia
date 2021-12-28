@@ -1,33 +1,43 @@
-import Ajax from "../../utils/ajax";
 import MessageFlash from "../../utils/messageFlash";
+import ApiCalendar from "../ApiCalendar";
 
-export default class ClientGoogleCalendar {
+export default class ClientGoogleCalendar extends ApiCalendar {
     constructor() {
-        this.ajax = new Ajax
-        this.modalRdvElt = document.getElementById('modal-rdv')
-        this.btnDeleteRdvElt = this.modalRdvElt.querySelector('button#modal-btn-delete')
-        this.btnSaveRdvElt = this.modalRdvElt.querySelector('button#js-btn-save')
-        this.formRdvElt = this.modalRdvElt.querySelector('form[name=rdv]')
-        this.googleCalendarCheckbox = this.formRdvElt.elements['rdv_googleCalendar']
-        this.urlCreateClientGoogle = this.googleCalendarCheckbox.dataset['clientGoogle']
+        super();
+
+        this.init()
+    }
+
+    init() {
+        console.log(this.googleCheckboxIsChecked)
+        this.googleCalendarCheckbox.addEventListener('change', () => {
+            this.googleCheckboxIsChecked = this.googleCalendarCheckbox.checked
+            console.log(this.googleCheckboxIsChecked)
+        })
     }
 
     /**
      * Create a new event on Google Calendar
      * @param {number} rdvId
-     * @param {string} createUpdate
+     * @param {string} action
      */
-    createUpdateEvent(rdvId, createUpdate) {
-        switch (createUpdate) {
-            case 'create':
-                const createUrl = this.urlCreateClientGoogle + '?rdv_id=' + rdvId
-                this.ajax.send('GET', createUrl, this.responseAjax.bind(this))
-                break
-            case 'update':
-                const updateUrl = this.btnSaveRdvElt.dataset['updateGoogleEvent'].replace('__id__', rdvId);
-                this.ajax.send('PUT', updateUrl, this.responseAjax.bind(this))
-                break
-        }
+    createUpdateEvent(rdvId, action) {
+
+            switch (action) {
+                case 'create':
+                    if (this.googleCheckboxIsChecked) {
+                        const createUrl = this.urlCreateClientGoogle + '?rdv_id=' + rdvId;
+                        this.ajax.send('GET', createUrl, this.responseAjax.bind(this));
+                    }
+                    break;
+                case 'update':
+                    const updateUrl = this.btnSaveRdvElt.dataset['updateGoogleEvent']
+                        .replace('__checked__', Number(this.googleCheckboxIsChecked))
+                        .replace('__id__', rdvId);
+                    console.log(updateUrl)
+                    this.ajax.send('PUT', updateUrl, this.responseAjax.bind(this));
+                    break;
+            }
     }
 
     /**

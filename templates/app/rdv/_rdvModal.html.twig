@@ -105,7 +105,11 @@
                 <div class="float-right">
                     <button type="button" id="js-btn-cancel" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
                     <button type="submit" id="js-btn-save" class="btn btn-{{ theme_color }} shadow"
-                            data-update-google-event="{{ path('update_event_google_calendar', {rdvId: '__id__'}) }}">
+                            data-update-google-event="{{ path('update_event_google_calendar', {
+                                checked: '__checked__',
+                                rdvId: '__id__'
+                            }) }}"
+                    >
                         <span class="fas fa-save mr-2"></span>Enregistrer</button>
                 </div>
             </div>
