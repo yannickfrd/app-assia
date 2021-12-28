@@ -2,7 +2,7 @@
 
 namespace App\Controller\Api;
 
-use App\Service\GoogleApi\GoogleCalendarApiService;
+use App\Service\Api\GoogleApi\GoogleCalendarApiService;
 use Google\Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -54,23 +54,33 @@ class GoogleCalendarController extends AbstractController
     }
 
     /**
-     * @Route("/google-event/{rdvId}/update-event-google-calendar", name="update_event_google_calendar", methods={"PUT"})
+     * @Route("/google-event/{checked}/{rdvId}/update-event-google-calendar", name="update_event_google_calendar", methods={"PUT"})
      * @throws Exception
      */
-    public function updateEventGoogleCalendar(int $rdvId): JsonResponse
+    public function updateEventGoogleCalendar(bool $checked, int $rdvId): JsonResponse
     {
+        if (!$checked) {
+            $this->gapiService->removeChecked();
+
+            return $this->json([
+                'action' => 'update',
+                'alert' => 'success',
+                'msg' => 'L\'option "Google Agenda" a bien été désactivé.'
+            ]);
+        }
+
         $updating = $this->gapiService->update($rdvId);
 
         if (!$updating) {
             return $this->json([
-                'action' => 'delete',
-                'alert' => 'warning',
+                'action' => 'update',
+                'alert' => 'success',
                 'msg' => 'Le RDV n\'a pas été mise à jour sur Google Agenda.',
             ]);
         }
 
         return $this->json([
-            'action' => 'delete',
+            'action' => 'update',
             'alert' => 'success',
             'msg' => 'Le RDV a bien été mise à jour sur Google Agenda.',
         ]);
@@ -100,7 +110,7 @@ class GoogleCalendarController extends AbstractController
 
         return $this->json([
             'action' => 'delete',
-            'alert' => 'success',
+            'alert' => 'warning',
             'msg' => 'Le RDV a bien été supprimé sur Google Agenda.',
         ]);
     }
