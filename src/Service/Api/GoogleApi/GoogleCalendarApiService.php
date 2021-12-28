@@ -20,8 +20,8 @@ class GoogleCalendarApiService extends ApiCalendarServiceAbstract
     /** @var EntityManagerInterface */
     private $em;
 
-    public function __construct(SessionInterface $session, EntityManagerInterface $em) {
-        parent::__construct($session);
+    public function __construct(EntityManagerInterface $em) {
+//        parent::__construct($session);
         $this->em = $em;
     }
 
