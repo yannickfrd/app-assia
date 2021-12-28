@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Service\GoogleApi;
+namespace App\Service\Api\GoogleApi;
 
 use App\Entity\Support\Rdv;
-use App\Entity\Support\SupportGroup;
+use App\Service\Api\ApiCalendarServiceAbstract;
 use Doctrine\ORM\EntityManagerInterface;
 use Google\Exception;
 use Google_Client;
@@ -11,7 +11,7 @@ use Google_Service_Calendar;
 use Google_Service_Calendar_Event;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-class GoogleCalendarApiService
+class GoogleCalendarApiService extends ApiCalendarServiceAbstract
 {
     private const SESSION_CLIENT_ID = 'clientRdvId';
     private const SESSION_CLIENT_TOKEN = 'clientTokenGoogle';
@@ -20,12 +20,9 @@ class GoogleCalendarApiService
     /** @var EntityManagerInterface */
     private $em;
 
-    /** @var SessionInterface */
-    private $session;
-
-    public function __construct(EntityManagerInterface $em, SessionInterface $session) {
+    public function __construct(SessionInterface $session, EntityManagerInterface $em) {
+        parent::__construct($session);
         $this->em = $em;
-        $this->session = $session;
     }
 
     /**
@@ -199,23 +196,13 @@ class GoogleCalendarApiService
     }
 
     /**
-     * Checks in the session if the option is selected.
-     * @return bool
-     */
-    public function getOnSessionIsChecked(): bool
-    {
-        return (!$this->session->has('clientGoogleChecked')) ? false
-            : $this->session->get('clientGoogleChecked');
-    }
-
-    /**
      * Set the value of the option to true in the session,
      * because if it is passed through, it means that the user has selected the option.
      * @param $rdvId
      */
     public function setOnSessionCheckedAndRdvId($rdvId): void
     {
-        $this->session->set('clientGoogleChecked', true);
+        $this->session->set(parent::CLIENT_GOOGLE_CHECKED, true);
         $this->session->set(self::SESSION_CLIENT_ID, $rdvId);
     }
 
@@ -226,15 +213,17 @@ class GoogleCalendarApiService
      */
     private function createEvent(Rdv $rdv=null): Google_Service_Calendar_Event
     {
-        $leadApplicant = '';
         if (!$rdv) {
             $rdv = $this->getRdv();
+        }
 
+        $summary = $rdv->getTitle();
+        if ($rdv->getSupportGroup()) {
             $pattern = '/' . $rdv->getSupportGroup()->getHeader()->getFullname() . '/';
             preg_match($pattern, $rdv->getTitle(), $matches);
 
-            if (!empty($matches)) {
-                $leadApplicant .= ' | ' . $rdv->getSupportGroup()->getHeader()->getFullname();
+            if (empty($matches)) {
+                $summary .= ' | ' . $rdv->getSupportGroup()->getHeader()->getFullname();
             }
         }
 
@@ -242,7 +231,7 @@ class GoogleCalendarApiService
         $status = $rdv->getStatus() ? '<br><strong>Statut : </strong>' . $rdv->getStatus() : '';
 
         return new Google_Service_Calendar_Event([
-            'summary' => $rdv->getTitle() . $leadApplicant,
+            'summary' => $summary,
             'location' => $rdv->getLocation(),
             'description' => $rdv->getContent() .
                 '<br><strong>Créé par : </strong>' . $rdv->getCreatedBy()->getFullname() .
