@@ -63,7 +63,7 @@ class RdvType extends AbstractType
                 ],
             ])
             ->add('googleCalendar', CheckboxType::class, [
-                'label' => 'Envoyer sur Google Agenda.',
+                'label' => 'Envoyer sur Google Agenda',
                 'label_attr' => [
                     'class' => 'custom-control-label'
                 ],
@@ -76,7 +76,7 @@ class RdvType extends AbstractType
                 'data' => $this->googleCalendarApiService->optionOnSessionIsChecked()// Regarde en session, si le user a déjà ckecké cette option
             ])
             ->add('outlookCalendar', CheckboxType::class, [
-                'label' => 'Envoyer sur Outlook Agenda.',
+                'label' => 'Envoyer sur Outlook Agenda',
                 'label_attr' => [
                     'class' => 'custom-control-label'
                 ],
