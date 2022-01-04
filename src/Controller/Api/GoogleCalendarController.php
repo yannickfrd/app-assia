@@ -54,21 +54,11 @@ class GoogleCalendarController extends AbstractController
     }
 
     /**
-     * @Route("/google-event/{checked}/{rdvId}/update-event-google-calendar", name="update_event_google_calendar", methods={"PUT"})
+     * @Route("/google-event/{rdvId}/update-event-google-calendar", name="update_event_google_calendar", methods={"PUT"})
      * @throws Exception
      */
-    public function updateEventGoogleCalendar(bool $checked, int $rdvId): JsonResponse
+    public function updateEventGoogleCalendar(int $rdvId): JsonResponse
     {
-        if (!$checked) {
-            $this->gapiService->removeChecked();
-
-            return $this->json([
-                'action' => 'update',
-                'alert' => 'success',
-                'msg' => 'L\'option "Google Agenda" a bien été désactivé.'
-            ]);
-        }
-
         $updating = $this->gapiService->update($rdvId);
 
         if (!$updating) {

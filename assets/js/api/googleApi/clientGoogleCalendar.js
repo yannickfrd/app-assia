@@ -10,7 +10,10 @@ export default class ClientGoogleCalendar extends ApiCalendar {
 
     init() {
         this.googleCalendarCheckbox.addEventListener('change', () => {
-            localStorage.setItem('agenda.google', this.outlookCalendarCheckbox.checked)
+            localStorage.setItem('agenda.google', this.googleCalendarCheckbox.checked)
+            console.log(this.googleCalendarCheckbox.checked)
+            this.googleCheckboxIsChecked = this.googleCalendarCheckbox.checked
+            console.log(this.googleCalendarCheckbox.checked)
         })
 
         this.initCalendarCheckbox('google')
@@ -22,23 +25,21 @@ export default class ClientGoogleCalendar extends ApiCalendar {
      * @param {string} action
      */
     createUpdateEvent(rdvId, action) {
+        switch (action) {
+            case 'create':
+                console.log('create ' + this.googleCheckboxIsChecked, this.outlookCalendarCheckbox.checked)
+                if (this.googleCheckboxIsChecked) {
+                    const createUrl = this.urlCreateClientGoogle + '?rdv_id=' + rdvId
 
-            switch (action) {
-                case 'create':
-                    if (this.googleCheckboxIsChecked) {
-                        const createUrl = this.urlCreateClientGoogle + '?rdv_id=' + rdvId
+                    this.ajax.send('GET', createUrl, this.responseAjax.bind(this))
+                }
+                break;
+            case 'update':
+                const updateUrl = this.btnSaveRdvElt.dataset['updateGoogleEvent'].replace('__id__', rdvId)
 
-                        this.ajax.send('GET', createUrl, this.responseAjax.bind(this))
-                    }
-                    break;
-                case 'update':
-                    const updateUrl = this.btnSaveRdvElt.dataset['updateGoogleEvent']
-                        .replace('__checked__', Number(this.googleCheckboxIsChecked))
-                        .replace('__id__', rdvId)
-
-                    this.ajax.send('PUT', updateUrl, this.responseAjax.bind(this))
-                    break;
-            }
+                this.ajax.send('PUT', updateUrl, this.responseAjax.bind(this))
+                break;
+        }
     }
 
     /**

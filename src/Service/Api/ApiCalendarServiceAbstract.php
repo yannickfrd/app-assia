@@ -56,37 +56,6 @@ abstract class ApiCalendarServiceAbstract
     }
 
     /**
-     * Calls a method to check that it is checked, depending on the class that calls it.
-     * @return bool
-     */
-    public function optionOnSessionIsChecked(): bool
-    {
-        switch (static::class) {
-            case GoogleCalendarApiService::class:
-                return $this->verifyIsChecked(self::CLIENT_GOOGLE_CHECKED);
-            case OutlookCalendarApiService::class:
-                return $this->verifyIsChecked(self::CLIENT_OUTLOOK_CHECKED);
-        }
-
-        return false;
-    }
-
-    /**
-     * Deletes the option in session if it is unchecked.
-     */
-    public function removeChecked(): void
-    {
-        switch (static::class) {
-            case GoogleCalendarApiService::class:
-                $this->session->remove(self::CLIENT_GOOGLE_CHECKED);
-                break;
-            case OutlookCalendarApiService::class:
-                $this->session->remove(self::CLIENT_OUTLOOK_CHECKED);
-                break;
-        }
-    }
-
-    /**
      * Update th Rdv and set the event's Id Google|Outlook Calendar
      */
     protected function setEventOnRdv(string $eventId): void
@@ -135,16 +104,6 @@ abstract class ApiCalendarServiceAbstract
                 $this->session->set(self::OUTLOOK_RDV_ID, $rdvId);
                 break;
         }
-    }
-
-    /**
-     * Checks in the session if the option is selected with a key.
-     * @param string $sessionKey
-     * @return bool
-     */
-    private function verifyIsChecked(string $sessionKey): bool
-    {
-        return (!$this->session->has($sessionKey)) ? false : $this->session->get($sessionKey);
     }
 
     /**
