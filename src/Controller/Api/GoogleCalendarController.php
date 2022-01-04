@@ -43,7 +43,8 @@ class GoogleCalendarController extends AbstractController
         $authCode = $request->query->get('code');
 
         if (!empty($authCode)) {
-            $urlResponse = $this->gapiService->insertGoogleApiToken($authCode);
+            $this->gapiService->authClient($authCode);
+            $urlResponse = $this->gapiService->addRdv();
 
             return (empty($urlResponse)) ?
                 $this->redirect($this->gapiService->getAuthUrl()) :
