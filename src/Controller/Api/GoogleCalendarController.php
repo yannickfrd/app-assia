@@ -26,11 +26,11 @@ class GoogleCalendarController extends AbstractController
      */
     public function authClientGoogleCalendar(Request $request): JsonResponse
     {
-        $this->gapiService->setOnSessionCheckedAndRdvId($request->query->get('rdv_id'));
+        $this->gapiService->setOnSessionRdvId($request->query->get('rdv_id'));
 
         return $this->json([
             'action' => 'create',
-            'url' => $this->gapiService->getAuthUrl()
+            'url' => $this->gapiService->getAuthUrl(),
         ]);
     }
 

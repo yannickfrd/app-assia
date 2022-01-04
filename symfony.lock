@@ -245,6 +245,9 @@
     "markbaker/matrix": {
         "version": "1.2.0"
     },
+    "microsoft/microsoft-graph": {
+        "version": "1.47.0"
+    },
     "monolog/monolog": {
         "version": "1.24.0"
     },

@@ -88,6 +88,11 @@ class Rdv
     private $googleEventId;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $outlookEventId;
+
+    /**
      * @ORM\PreFlush
      */
     public function preFlush()
@@ -211,6 +216,18 @@ class Rdv
     public function setGoogleEventId(?string $googleEventId): self
     {
         $this->googleEventId = $googleEventId;
+
+        return $this;
+    }
+
+    public function getOutlookEventId(): ?string
+    {
+        return $this->outlookEventId;
+    }
+
+    public function setOutlookEventId(?string $outlookEventId): self
+    {
+        $this->outlookEventId = $outlookEventId;
 
         return $this;
     }

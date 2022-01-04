@@ -3,6 +3,7 @@
 namespace App\Entity\Traits;
 
 use App\Entity\Organization\User;
+use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Annotation\Groups;
 
