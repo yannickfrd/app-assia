@@ -10,8 +10,10 @@ export default class ClientGoogleCalendar extends ApiCalendar {
 
     init() {
         this.googleCalendarCheckbox.addEventListener('change', () => {
-            this.googleCheckboxIsChecked = this.googleCalendarCheckbox.checked
+            localStorage.setItem('agenda.google', this.outlookCalendarCheckbox.checked)
         })
+
+        this.initCalendarCheckbox('google')
     }
 
     /**

@@ -16,4 +16,16 @@ export default class ApiCalendar {
         this.outlookCheckboxIsChecked = this.outlookCalendarCheckbox.checked
         this.urlCreateClientOutlook = this.outlookCalendarCheckbox.dataset['clientOutlook']
     }
+
+    initCalendarCheckbox(key) {
+        const valLocalStorage = localStorage.getItem('agenda.' + key)
+        switch (key) {
+            case 'google':
+                this.googleCalendarCheckbox.checked = (null === valLocalStorage) ? false : JSON.parse(valLocalStorage)
+                break;
+            case 'outlook':
+                this.outlookCalendarCheckbox.checked = (null === valLocalStorage) ? false : JSON.parse(valLocalStorage)
+                break;
+        }
+    }
 }

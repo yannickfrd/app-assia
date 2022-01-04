@@ -9,8 +9,10 @@ export default class ClientOutlookCalendar extends ApiCalendar {
 
     init() {
         this.outlookCalendarCheckbox.addEventListener('change', () => {
-            this.outlookCheckboxIsChecked = this.outlookCalendarCheckbox.checked
+            localStorage.setItem('agenda.outlook', this.outlookCalendarCheckbox.checked)
         })
+
+        this.initCalendarCheckbox('outlook')
     }
 
     createEvent(rdvId) {
