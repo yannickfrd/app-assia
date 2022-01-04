@@ -28,4 +28,9 @@ export default class ApiCalendar {
                 break;
         }
     }
+
+    calendarIsChecked(key) {
+        const valLocalStorage = localStorage.getItem('agenda.' + key)
+        return (null === valLocalStorage) ? false : JSON.parse(valLocalStorage)
+    }
 }

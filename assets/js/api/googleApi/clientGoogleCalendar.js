@@ -5,18 +5,15 @@ export default class ClientGoogleCalendar extends ApiCalendar {
     constructor() {
         super();
 
+        this.initCalendarCheckbox('google')
         this.init()
     }
 
     init() {
         this.googleCalendarCheckbox.addEventListener('change', () => {
             localStorage.setItem('agenda.google', this.googleCalendarCheckbox.checked)
-            console.log(this.googleCalendarCheckbox.checked)
-            this.googleCheckboxIsChecked = this.googleCalendarCheckbox.checked
-            console.log(this.googleCalendarCheckbox.checked)
         })
 
-        this.initCalendarCheckbox('google')
     }
 
     /**
@@ -27,8 +24,7 @@ export default class ClientGoogleCalendar extends ApiCalendar {
     createUpdateEvent(rdvId, action) {
         switch (action) {
             case 'create':
-                console.log('create ' + this.googleCheckboxIsChecked, this.outlookCalendarCheckbox.checked)
-                if (this.googleCheckboxIsChecked) {
+                if (this.calendarIsChecked('google')) {
                     const createUrl = this.urlCreateClientGoogle + '?rdv_id=' + rdvId
 
                     this.ajax.send('GET', createUrl, this.responseAjax.bind(this))
