@@ -9,10 +9,8 @@ export default class ClientGoogleCalendar extends ApiCalendar {
     }
 
     init() {
-        console.log(this.googleCheckboxIsChecked)
         this.googleCalendarCheckbox.addEventListener('change', () => {
             this.googleCheckboxIsChecked = this.googleCalendarCheckbox.checked
-            console.log(this.googleCheckboxIsChecked)
         })
     }
 
@@ -26,16 +24,17 @@ export default class ClientGoogleCalendar extends ApiCalendar {
             switch (action) {
                 case 'create':
                     if (this.googleCheckboxIsChecked) {
-                        const createUrl = this.urlCreateClientGoogle + '?rdv_id=' + rdvId;
-                        this.ajax.send('GET', createUrl, this.responseAjax.bind(this));
+                        const createUrl = this.urlCreateClientGoogle + '?rdv_id=' + rdvId
+
+                        this.ajax.send('GET', createUrl, this.responseAjax.bind(this))
                     }
                     break;
                 case 'update':
                     const updateUrl = this.btnSaveRdvElt.dataset['updateGoogleEvent']
                         .replace('__checked__', Number(this.googleCheckboxIsChecked))
-                        .replace('__id__', rdvId);
-                    console.log(updateUrl)
-                    this.ajax.send('PUT', updateUrl, this.responseAjax.bind(this));
+                        .replace('__id__', rdvId)
+
+                    this.ajax.send('PUT', updateUrl, this.responseAjax.bind(this))
                     break;
             }
     }

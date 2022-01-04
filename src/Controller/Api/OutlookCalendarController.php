@@ -51,7 +51,7 @@ class OutlookCalendarController extends AbstractController
 
             return $this->redirect($urlResponse);
         }
-        
+
         return $this->redirect($this->gapiService->getAuthUrl());
     }
 //

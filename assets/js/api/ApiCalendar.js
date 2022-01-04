@@ -14,5 +14,6 @@ export default class ApiCalendar {
 
         this.outlookCalendarCheckbox = this.formRdvElt.elements['rdv_outlookCalendar']
         this.outlookCheckboxIsChecked = this.outlookCalendarCheckbox.checked
+        this.urlCreateClientOutlook = this.outlookCalendarCheckbox.dataset['clientOutlook']
     }
 }

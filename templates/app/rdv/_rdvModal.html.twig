@@ -91,7 +91,10 @@
                     </div>
                     <div class="col-md-6 custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-1"
                          title="Enregistrer le rendez-vous sur ClientGoogleCalendar Agenda">
-                        <div class="col-md-12">{{ form_widget(form.outlookCalendar) }}</div>
+                        <div class="col-md-12">{{ form_widget(
+                                form.outlookCalendar,
+                                { attr: { 'data-client-outlook': path('auth_outlook_calendar') } }
+                            ) }}</div>
                     </div>
                 </div>
                 {{ form_row(form._token) }}

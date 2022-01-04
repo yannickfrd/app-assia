@@ -360,7 +360,7 @@ export default class Calendar {
         rdvElt.addEventListener('click', this.requestGetRdv.bind(this, rdvElt))
 
         this.clientGoogleCalendar.createUpdateEvent(rdv.id, action)
-        this.clientOutlookCalendar.createEvent(rdv.id, action)
+        this.clientOutlookCalendar.createEvent(rdv.id)
     }
 
     /**
