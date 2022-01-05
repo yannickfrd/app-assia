@@ -81,9 +81,10 @@ abstract class ApiCalendarServiceAbstract
      * @param $rdvId
      * @return Rdv
      */
-    protected function getRdv($rdvId=null): Rdv
+    protected function getRdv($rdvId = null): Rdv
     {
-        return $this->em->getRepository(Rdv::class)->find($rdvId);
+        $id = $rdvId ?? $this->session->get(self::GOOGLE_RDV_ID);
+        return $this->em->getRepository(Rdv::class)->find($id);
     }
 
 
@@ -113,7 +114,7 @@ abstract class ApiCalendarServiceAbstract
      * @param string|null $rdvStatus
      * @return string
      */
-    protected function createBodyEvent(string $rdvContent, User $rdvCreatedBy=null, string $rdvStatus=null): string
+    protected function createBodyEvent(string $rdvContent, User $rdvCreatedBy = null, string $rdvStatus=null): string
     {
         $body = $rdvContent;
         $status = $rdvStatus ? '<br><strong>Statut : </strong>' . $rdvStatus : '';

@@ -5,6 +5,7 @@ namespace App\Service\Api\GoogleApi;
 use App\Entity\Support\Rdv;
 use App\Service\Api\ApiCalendarServiceAbstract;
 use Google\Exception;
+use Google\Service\Apigee\GoogleApiHttpBody;
 use Google_Client;
 use Google_Service_Calendar;
 use Google_Service_Calendar_Event;
@@ -73,17 +74,22 @@ class GoogleCalendarApiService extends ApiCalendarServiceAbstract
     /**
      * Update an event on primary calendar
      * @param int $rdvId
-     * @return bool
+     * @return bool|string
      * @throws Exception
      */
-    public function update(int $rdvId): bool
+    public function update(int $rdvId)
     {
         /** @var Rdv $rdv */
         $rdv = $this->em->getRepository(Rdv::class)->find($rdvId);
 
-        $service = $this->createServiceCalendar();
+        if (null === $rdv->getGoogleEventId()) {
+            $this->session->set(self::GOOGLE_RDV_ID, $rdvId);
+            return $this->addRdv();
+        }
 
+        $service = $this->createServiceCalendar();
         $getEvent = $service->events->get('primary', $rdv->getGoogleEventId());
+
         if (!$getEvent->count()) {
             return false;
         }
@@ -129,6 +135,7 @@ class GoogleCalendarApiService extends ApiCalendarServiceAbstract
         $client = new Google_Client();
         $client->setAuthConfig(__DIR__ . '\client_secret.json');
         $client->setApplicationName('app-assia');
+//        $client->setPrompt('select_account');
         $client->addScope(Google_Service_Calendar::CALENDAR);
         $client->setRedirectUri('https://' . $_SERVER['HTTP_HOST'] . '/add-event-google-calendar');
         $client->setAccessType('offline');
@@ -226,8 +233,7 @@ class GoogleCalendarApiService extends ApiCalendarServiceAbstract
     private function createEvent(Rdv $rdv = null): Google_Service_Calendar_Event
     {
         if (!$rdv) {
-//            $rdv = $this->getRdv();
-            $rdv = $this->getRdv1();
+            $rdv = $this->getRdv();
         }
 
         $summary = $rdv->getTitle();
@@ -287,13 +293,13 @@ class GoogleCalendarApiService extends ApiCalendarServiceAbstract
 //        $this->em->flush();
 //    }
 
-    /**
-     * Returns the current Rdv recorded in session according to the id
-     * @return Rdv
-     */
-    private function getRdv1(): Rdv
-    {
-        return $this->em->getRepository(Rdv::class)->find($this->session->get(parent::GOOGLE_RDV_ID));
-    }
+//    /**
+//     * Returns the current Rdv recorded in session according to the id
+//     * @return Rdv
+//     */
+//    private function getRdv1(): Rdv
+//    {
+//        return $this->em->getRepository(Rdv::class)->find($this->session->get(parent::GOOGLE_RDV_ID));
+//    }
 
 }

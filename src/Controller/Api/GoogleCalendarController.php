@@ -44,7 +44,7 @@ class GoogleCalendarController extends AbstractController
 
         if (!empty($authCode)) {
             $this->gapiService->authClient($authCode);
-            $urlResponse = $this->gapiService->addRdv();
+            $urlResponse = $this->gapiService->addRdv(true);
 
             return (empty($urlResponse)) ?
                 $this->redirect($this->gapiService->getAuthUrl()) :
@@ -65,8 +65,15 @@ class GoogleCalendarController extends AbstractController
         if (!$updating) {
             return $this->json([
                 'action' => 'update',
-                'alert' => 'success',
+                'alert' => 'danger',
                 'msg' => 'Le RDV n\'a pas été mise à jour sur Google Agenda.',
+            ]);
+        }
+
+        if (is_string($updating)) {
+            return $this->json([
+                'action' => 'create',
+                'url' => $updating,
             ]);
         }
 
