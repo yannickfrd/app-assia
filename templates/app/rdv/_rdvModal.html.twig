@@ -83,7 +83,7 @@
                     <div class="col-md-6 custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-1"
                          title="Enregistrer le rendez-vous sur ClientGoogleCalendar Agenda">
 
-                        <div class="col-md-12">
+                        <div class="calendar col-md-12">
                             {{ form_widget(
                                 form.googleCalendar,
                                 { attr: {'data-client-google': path('auth_google_calendar')} }
@@ -91,9 +91,15 @@
                     </div>
                     <div class="col-md-6 custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-1"
                          title="Enregistrer le rendez-vous sur ClientGoogleCalendar Agenda">
-                        <div class="col-md-12">{{ form_widget(
+                        <div class="calendar col-md-12"
+{#                             data-api-update-event="{{ path('update_outlook_event_calendar', { rdvId: '__id__' }) }}"#}
+                        >{{ form_widget(
                                 form.outlookCalendar,
-                                { attr: { 'data-client-outlook': path('auth_outlook_calendar') } }
+                                { attr: {
+                                    'data-api-create-event': path('auth_outlook_calendar'),
+                                    'data-api-update-event': path('update_outlook_event_calendar', { rdvId: '__id__' }),
+                                    'data-api-delete-event': path('delete_outlook_event_calendar', { eventId: '__id__' })
+                                } }
                             ) }}</div>
                     </div>
                 </div>
@@ -109,6 +115,7 @@
                     <button type="button" id="js-btn-cancel" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
                     <button type="submit" id="js-btn-save" class="btn btn-{{ theme_color }} shadow"
                             data-update-google-event="{{ path('update_event_google_calendar', { rdvId: '__id__' }) }}"
+                            data-update-outlook-event="{{ path('update_outlook_event_calendar', { rdvId: '__id__' }) }}"
                     >
                         <span class="fas fa-save mr-2"></span>Enregistrer</button>
                 </div>

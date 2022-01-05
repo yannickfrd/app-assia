@@ -1,4 +1,5 @@
 import Ajax from "../utils/ajax";
+import MessageFlash from "../utils/messageFlash";
 
 export default class ApiCalendar {
     constructor() {
@@ -32,5 +33,55 @@ export default class ApiCalendar {
     calendarIsChecked(key) {
         const valLocalStorage = localStorage.getItem('agenda.' + key)
         return (null === valLocalStorage) ? false : JSON.parse(valLocalStorage)
+    }
+
+    execute(action, rdvId = null, eventId = null) {
+
+
+        this.modalRdvElt.querySelectorAll('.api-calendar').forEach(elt => {
+            if (elt.checked) {
+                let url = ''
+                let method = 'GET'
+
+                switch (action) {
+                    case 'create':
+                        url = elt.dataset['apiCreateEvent'] + '?rdv_id=' + rdvId
+                        // const createUrl = elt.dataset['apiCreateEvent'] + '?rdv_id=' + rdvId
+                        // this.ajax.send('GET', createUrl, this.responseAjax.bind(this))
+                        break;
+                    case 'update':
+                        url = elt.dataset['apiUpdateEvent'].replace('__id__', rdvId)
+                        method = 'PUT'
+                        // const updateUrl = elt.dataset['apiUpdateEvent'].replace('__id__', rdvId)
+                        // this.ajax.send('PUT', updateUrl, this.responseAjax.bind(this))
+                        break;
+                    case 'delete':
+                        url = elt.dataset['apiDeleteEvent'].replace('__id__', eventId)
+                        method = 'DELETE'
+                        // const deleteUrl = elt.dataset['apiDeleteEvent'].replace('__id__', eventId)
+                        // this.ajax.send('DELETE', deleteUrl, this.responseAjax.bind(this))
+                        break;
+                }
+                this.ajax.send(method, url, this.responseAjax.bind(this))
+            }
+        })
+    }
+
+    /**
+     * Get the answer back
+     * @param data
+     */
+    responseAjax(data) {
+        switch (data.action) {
+            case 'create':
+                window.open(data.url, '_blank')
+                break
+            case 'delete':
+                new MessageFlash(data.alert, data.msg)
+                break
+            case 'update':
+                new MessageFlash(data.alert, data.msg)
+                break
+        }
     }
 }

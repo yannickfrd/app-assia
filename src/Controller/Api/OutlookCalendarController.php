@@ -52,9 +52,52 @@ class OutlookCalendarController extends AbstractController
             return $this->redirect($urlResponse);
         }
 
-        return $this->redirect($this->gapiService->getAuthUrl());
+        return $this->redirect($this->outApiService->getAuthUrl());
     }
-//
+
+    /**
+     * @Route("/outlook-event-calendar/{rdvId}/update", name="update_outlook_event_calendar", methods={"PUT"})
+     * @param int $rdvId
+     * @return JsonResponse
+     */
+    public function updateEventOutlookCalendar(int $rdvId): JsonResponse
+    {
+
+        $updated = $this->outApiService->update($rdvId);
+
+        if (!$updated) {
+            return $this->json([
+                'action' => 'update',
+                'alert' => 'danger',
+                'msg' => 'Le RDV n\'a pas été mise à jour sur Outlook Agenda.',
+            ]);
+        }
+
+        if (is_string($updated)) {
+            return $this->json([
+                'action' => 'create',
+                'url' => $updated,
+            ]);
+        }
+
+        return $this->json([
+            'action' => 'update',
+            'alert' => 'success',
+            'msg' => 'Le RDV a bien été mise à jour sur Outlook Agenda.',
+        ]);
+    }
+
+    /**
+     * @Route("/outlook-event-calendar/{eventId}/delete", name="delete_outlook_event_calendar", methods={"DELETE"})
+     * @param int $eventId
+     * @return JsonResponse
+     */
+    public function deleteEventOutlookCalendar(int $eventId): JsonResponse
+    {
+//        dd($eventId);
+        return $this->json([]);
+    }
+
 //    /**
 //     * @Route("/google-event/{checked}/{rdvId}/update-event-google-calendar", name="update_event_google_calendar", methods={"PUT"})
 //     * @throws Exception

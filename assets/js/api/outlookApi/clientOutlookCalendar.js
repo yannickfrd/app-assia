@@ -19,7 +19,8 @@ export default class ClientOutlookCalendar extends ApiCalendar {
         if (this.outlookCheckboxIsChecked) {
             const createUrl = this.urlCreateClientOutlook + '?rdv_id=' + rdvId;
 
-            this.ajax.send('GET', createUrl, this.responseAjax.bind(this))
+            console.log(createUrl)
+            // this.ajax.send('GET', createUrl, this.responseAjax.bind(this))
         }
     }
 

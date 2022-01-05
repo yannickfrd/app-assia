@@ -60,9 +60,9 @@ class GoogleCalendarController extends AbstractController
      */
     public function updateEventGoogleCalendar(int $rdvId): JsonResponse
     {
-        $updating = $this->gapiService->update($rdvId);
+        $updated = $this->gapiService->update($rdvId);
 
-        if (!$updating) {
+        if (!$updated) {
             return $this->json([
                 'action' => 'update',
                 'alert' => 'danger',
@@ -70,10 +70,10 @@ class GoogleCalendarController extends AbstractController
             ]);
         }
 
-        if (is_string($updating)) {
+        if (is_string($updated)) {
             return $this->json([
                 'action' => 'create',
-                'url' => $updating,
+                'url' => $updated,
             ]);
         }
 

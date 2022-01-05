@@ -22,20 +22,20 @@ export default class ClientGoogleCalendar extends ApiCalendar {
      * @param {string} action
      */
     createUpdateEvent(rdvId, action) {
-        switch (action) {
-            case 'create':
-                if (this.calendarIsChecked('google')) {
-                    const createUrl = this.urlCreateClientGoogle + '?rdv_id=' + rdvId
-
-                    this.ajax.send('GET', createUrl, this.responseAjax.bind(this))
-                }
-                break;
-            case 'update':
-                const updateUrl = this.btnSaveRdvElt.dataset['updateGoogleEvent'].replace('__id__', rdvId)
-
-                this.ajax.send('PUT', updateUrl, this.responseAjax.bind(this))
-                break;
-        }
+        // switch (action) {
+        //     case 'create':
+        //         if (this.calendarIsChecked('google')) {
+        //             const createUrl = this.urlCreateClientGoogle + '?rdv_id=' + rdvId
+        //
+        //             this.ajax.send('GET', createUrl, this.responseAjax.bind(this))
+        //         }
+        //         break;
+        //     case 'update':
+        //         const updateUrl = this.btnSaveRdvElt.dataset['updateGoogleEvent'].replace('__id__', rdvId)
+        //
+        //         this.ajax.send('PUT', updateUrl, this.responseAjax.bind(this))
+        //         break;
+        // }
     }
 
     /**
@@ -43,10 +43,10 @@ export default class ClientGoogleCalendar extends ApiCalendar {
      * @param {string} googleEventId
      */
     deleteEvent(googleEventId) {
-        if (googleEventId) {
-            const url = this.btnDeleteRdvElt.dataset['deleteGoogleEvent'].replace('__id__', googleEventId)
-            this.ajax.send('DELETE', url, this.responseAjax.bind(this))
-        }
+        // if (googleEventId) {
+        //     const url = this.btnDeleteRdvElt.dataset['deleteGoogleEvent'].replace('__id__', googleEventId)
+        //     this.ajax.send('DELETE', url, this.responseAjax.bind(this))
+        // }
     }
 
     /**

@@ -6,6 +6,7 @@ import { Modal } from 'bootstrap'
 import ParametersUrl from '../utils/parametersUrl'
 import ClientGoogleCalendar from "../api/googleApi/clientGoogleCalendar";
 import ClientOutlookCalendar from "../api/outlookApi/clientOutlookCalendar";
+import ApiCalendar from "../api/ApiCalendar";
 
 export default class Calendar {
 
@@ -359,8 +360,9 @@ export default class Calendar {
 
         rdvElt.addEventListener('click', this.requestGetRdv.bind(this, rdvElt))
 
-        this.clientGoogleCalendar.createUpdateEvent(rdv.id, action)
-        this.clientOutlookCalendar.createEvent(rdv.id)
+        // this.clientGoogleCalendar.createUpdateEvent(rdv.id, action)
+        // this.clientOutlookCalendar.createEvent(rdv.id)
+        new ApiCalendar().execute(action, rdv.id)
     }
 
     /**

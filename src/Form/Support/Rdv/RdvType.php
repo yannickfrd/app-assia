@@ -53,7 +53,7 @@ class RdvType extends AbstractType
                     'class' => 'custom-control-label'
                 ],
                 'attr'=> [
-                    'class' => 'custom-control-input checkbox'
+                    'class' => 'custom-control-input checkbox api-calendar'
                 ],
                 'required' => false,
                 'mapped' => false,
@@ -64,7 +64,7 @@ class RdvType extends AbstractType
                     'class' => 'custom-control-label'
                 ],
                 'attr'=> [
-                    'class' => 'custom-control-input checkbox'
+                    'class' => 'custom-control-input checkbox api-calendar'
                 ],
                 'required' => false,
                 'mapped' => false,

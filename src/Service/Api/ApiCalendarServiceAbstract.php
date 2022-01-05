@@ -60,8 +60,9 @@ abstract class ApiCalendarServiceAbstract
      */
     protected function setEventOnRdv(string $key, string $eventId): void
     {
+        $setEventId = 'set' . ucfirst(strtolower($key)) . 'EventId';
         $rdv = $this->getRdv($this->session->get(strtolower($key) . 'RdvId'))
-            ->setGoogleEventId($eventId);
+            ->$setEventId($eventId);
 
         $this->em->persist($rdv);
         $this->em->flush();
@@ -93,12 +94,12 @@ abstract class ApiCalendarServiceAbstract
 
     /**
      * Create a Body for Google's or Outlook's event
-     * @param string $rdvContent
+     * @param string|null $rdvContent
      * @param User|null $rdvCreatedBy
      * @param string|null $rdvStatus
      * @return string
      */
-    protected function createBodyEvent(string $rdvContent, User $rdvCreatedBy = null, string $rdvStatus=null): string
+    protected function createBodyEvent(string $rdvContent = null, User $rdvCreatedBy = null, string $rdvStatus = null): string
     {
         $body = $rdvContent;
         $status = $rdvStatus ? '<br><strong>Statut : </strong>' . $rdvStatus : '';

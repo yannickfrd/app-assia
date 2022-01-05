@@ -199,6 +199,58 @@ class OutlookCalendarApiService extends ApiCalendarServiceAbstract
     }
 
     /**
+     * @param int $rdvId
+     * @return false|string|null
+     * @throws GraphException
+     * @throws GuzzleException
+     */
+    public function update(int $rdvId)
+    {
+        /** @var Rdv $rdv */
+        $rdv = $this->em->getRepository(Rdv::class)->find($rdvId);
+
+        if (null === $rdv->getOutlookEventId()) {
+            $this->session->set(self::OUTLOOK_RDV_ID, $rdvId);
+            return $this->addRdv();
+        }
+
+        if (!$this->eventExist($rdv->getOutlookEventId())) {
+            return false;
+        }
+
+        $graph = (new Graph())->setAccessToken($this->session->get(self::SESSION_ACCESS_TOKEN_OUTLOOK));
+
+        $this->session->set(self::OUTLOOK_RDV_ID, $rdvId);
+
+        $update = $graph->createRequest('PATCh', '/me/events/' . $rdv->getOutlookEventId())
+            ->attachBody($this->createEvent())
+            ->setReturnType(Event::class)
+            ->execute()
+        ;
+
+        return $update->getWebLink();
+    }
+
+    /**
+     * Check if the event exists in the Outlook Calendar.
+     * @param string $eventId
+     * @return bool
+     * @throws GraphException
+     * @throws GuzzleException
+     */
+    private function eventExist(string $eventId): bool
+    {
+        $graph = (new Graph())->setAccessToken($this->session->get(self::SESSION_ACCESS_TOKEN_OUTLOOK));
+
+        $event = $graph->createRequest('GET', '/me/events/' . $eventId)
+            ->setReturnType(Event::class)
+            ->execute()
+        ;
+
+        return isset($event);
+    }
+
+    /**
      * Create Outlook event
      * @return Event
      */
@@ -224,7 +276,11 @@ class OutlookCalendarApiService extends ApiCalendarServiceAbstract
         if ($rdv->getLocation()) { // Set if the Rdv has a location
             $event->setLocation((new Location())->setDisplayName($rdv->getLocation()));
         }
+        if ($rdv->getOutlookEventId()) { // set if the Rdv has a EventId
+            $event->setId($rdv->getOutlookEventId());
+        }
 
         return $event;
     }
+
 }
