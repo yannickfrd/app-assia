@@ -42,10 +42,11 @@ class GoogleCalendarApiService extends ApiCalendarServiceAbstract
 
     /**
      * Create new event on primary calendar
+     * @param bool $edit
      * @return string
      * @throws Exception
      */
-    public function addRdv(): string
+    public function addRdv(bool $edit=false): string
     {
         $service = $this->createServiceCalendar();
 
@@ -55,7 +56,21 @@ class GoogleCalendarApiService extends ApiCalendarServiceAbstract
 
         $this->setEventOnRdv($event->getId());
 
-        return $event->htmlLink;
+        return $edit ? $this->getEditLink($event->htmlLink) : $event->htmlLink;
+    }
+
+    /**
+     * Get "eId" from link
+     * @param string $showLink
+     * @return string
+     */
+    private function getEditLink(string $showLink): string
+    {
+        $arrayShowLink = explode("/", $showLink);
+        $lastShowLink = end($arrayShowLink);
+        $arrayEid = explode("eid=", $lastShowLink);
+
+        return "https://calendar.google.com/calendar/u/0/r/eventedit/" . end($arrayEid);
     }
 
     /**
