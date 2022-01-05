@@ -46,11 +46,11 @@ class DocumentType extends AbstractType
                 'expanded' => false,
                 'required' => false,
                 'by_reference' => false,
-                'choices' => $this->tagRepo->getTagsWithOrWithoutService($supportGroup->getService()),
+                'choices' => $this->tagRepo->getTagsByService($supportGroup->getService(), 'document'),
                 'choice_label' => 'name',
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
-                    'data-select2-id' => 'tags',
+                    'placeholder' => 'placeholder.tags',
                     'size' => 1,
                 ],
             ])

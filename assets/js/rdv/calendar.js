@@ -2,9 +2,9 @@ import Ajax from '../utils/ajax'
 import MessageFlash from '../utils/messageFlash'
 import Loader from '../utils/loader'
 import DateFormater from '../utils/date/dateFormater'
-import { Modal } from 'bootstrap'
+import {Modal} from 'bootstrap'
 import ParametersUrl from '../utils/parametersUrl'
-import 'select2'
+import SelectManager from '../utils/form/SelectManager'
 
 export default class Calendar {
 
@@ -44,6 +44,8 @@ export default class Calendar {
 
         this.showWeekendsItem = localStorage.getItem('agenda.show_weekends')
         this.fullWidthItem = localStorage.getItem('agenda.full_width')
+
+        this.SelectManager = new SelectManager('#rdv_tags', {name: 'onModal', elementId: this.modalRdvElt.id})
 
         this.init()
     }
@@ -101,8 +103,6 @@ export default class Calendar {
         if (rdvElt) {
             rdvElt.click()
         }
-
-        $(`select[data-select2-id='tags']`).select2({width: '100%', placeholder: ' -- Étiquettes --'})
     }
 
     /**
@@ -139,8 +139,7 @@ export default class Calendar {
         e.preventDefault()
         if (this.supportElt) {
             this.modalRdvElt.querySelector('form').action = '/support/' + this.supportElt.dataset.support + '/rdv/new'
-            const fullname = this.supportPeopleElt.querySelector('.btn').textContent
-            this.modalRdvElt.querySelector('#rdv_title').value = fullname
+            this.modalRdvElt.querySelector('#rdv_title').value = this.supportPeopleElt.querySelector('.btn').textContent
         } else {
             this.modalRdvElt.querySelector('form').action = '/rdv/new'
             this.modalRdvElt.querySelector('#rdv_title').value = ''
@@ -163,11 +162,11 @@ export default class Calendar {
         this.btnDeleteElt.classList.add('d-none')
         this.btnSaveElt.classList.remove('d-none')
 
-        if (e.target.className && e.target.className.search('calendar-event') != 0) {
+        if (e.target.className && e.target.className.search('calendar-event') !== 0) {
+            this.SelectManager.clearSelect()
             this.modalElt.show()
             const rdvTags = $('#rdv_tags')
             rdvTags.val(null).trigger('change');
-            this.modalRdvElt.querySelector('span.select2 ul li input.select2-search__field').style.width = '100%'
         }
     }
 
@@ -301,8 +300,7 @@ export default class Calendar {
 
         if (rdv.supportId) {
             const href = this.rdvTitleElt.dataset.url.replace('__id__', rdv.supportId)
-            const aElt = `<a href="${href}" class="text-${this.themeColor}" title="Accéder au suivi">${title}</a>`
-            this.rdvTitleElt.innerHTML = aElt
+            this.rdvTitleElt.innerHTML = `<a href="${href}" class="text-${this.themeColor}" title="Accéder au suivi">${title}</a>`
         }
 
         if (rdv.canEdit) {
@@ -316,45 +314,26 @@ export default class Calendar {
 
         this.modalElt.show()
 
-        this.initTagSelect(this.rdvElt, rdv)
+        this.initTagSelect(rdv)
     }
 
     /**
-     * Select 2
-     * Permet d'initialiser les valeurs dans le select
-     * @param rdvElt
-     * @param tags
+     * Permet d'initialiser les valeurs dans le select multiple.
+     * @param {Object} rdv
      */
-    initTagSelect(rdvElt, tags){
-        const rdvTags = $('#rdv_tags')
+    initTagSelect(rdv){
+        const tags = JSON.parse(rdv.tags)
         const tagOptions = this.modalRdvElt.querySelectorAll('select#rdv_tags option')
-        const haveValues = () => {
-            if (null !== tags.tagIds){
-                rdvElt.dataset.tags = tags.tagIds
-            }
-            return rdvElt.dataset.tags !== 'undefined'
-        }
 
-        if (haveValues()){
-            const tags = rdvElt.dataset.tags.split('|')
-
-            rdvTags.val(null).trigger('change');
-            let listTagId = []
-            tags.forEach(tag => {
-                tagOptions.forEach(option => {
-                    if (option.value === tag){
-                        listTagId.push(option.value)
-                    }
-                })
+        const listTagId = []
+        tags.forEach(tag => {
+            tagOptions.forEach(option => {
+                if (parseInt(option.value) === parseInt(tag.id)){
+                    listTagId.push(option.value)
+                }
             })
-            if (listTagId.length > 0){
-                rdvTags.val(listTagId).trigger('change')
-            } else {
-                this.modalRdvElt.querySelector('form input.select2-search__field').style.width = '100%'
-            }
-        } else {
-            this.modalRdvElt.querySelector('form input.select2-search__field').style.width = '100%'
-        }
+        })
+        this.SelectManager.showOptionsFromArray(listTagId)
     }
 
     /**

@@ -43,16 +43,16 @@ class DocumentSearchType extends AbstractType
                 'class' => Tag::class,
                 'multiple' => true,
                 'expanded' => false,
-                'required' => false,
                 'by_reference' => false,
-                'choices' => $this->tagRepo->findAllWithPartialLoadGetResult(),
+                'choices' => $this->tagRepo->findAllTags('document'),
                 'choice_label' => 'name',
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
-                    'class' => 'multi-select w-min-160 w-max-180',
+                    'class' => 'multi-select w-min-200 w-max-220',
+                    'placeholder' => 'placeholder.tags',
                     'size' => 1,
-                    'data-select2-id' => 'search-tags',
                 ],
+                'required' => false,
             ])
         ;
     }

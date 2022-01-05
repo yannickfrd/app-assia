@@ -74,15 +74,12 @@ trait QueryTrait
         return $qb;
     }
 
-    protected function addTagsFilter(QueryBuilder $qb, object $search, ?string $join = null): QueryBuilder
+    protected function addTagsFilter(QueryBuilder $qb, object $search, string $join): QueryBuilder
     {
         if ($search->getTags() && count($search->getTags()) > 0) {
-            $qb->andWhere('t.id IN (:tags)')
+            $qb->leftJoin($join, 't2')
+                ->andWhere('t2.id IN (:tags)')
                 ->setParameter('tags', $search->getTags());
-
-            if ($join) {
-                $qb->leftJoin($join, 't2')->addSelect('PARTIAL t2.{id, name}');
-            }
         }
 
         return $qb;

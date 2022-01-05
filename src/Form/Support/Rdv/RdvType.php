@@ -25,6 +25,10 @@ class RdvType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        /** @var Rdv $rdv */
+        $rdv = $options['data'];
+        $supportGroup = $rdv->getSupportGroup();
+
         $builder
             ->add('title', null, [
                 'attr' => [
@@ -61,16 +65,17 @@ class RdvType extends AbstractType
                 'label' => false,
                 'multiple' => true,
                 'expanded' => false,
-                'required' => false,
                 'by_reference' => false,
-                'choices' => $options['data']->getSupportGroup() ?
-                    $this->tagRepo->getTagsWithOrWithoutService($options['data']->getSupportGroup()->getService()) :
-                    $this->tagRepo->findAllWithPartialLoadGetResult(),
+                'choices' => $supportGroup ?
+                $this->tagRepo->getTagsByService($supportGroup->getService(), 'rdv') :
+                $this->tagRepo->findAllTags('rdv'),
                 'choice_label' => 'name',
                 'attr' => [
-                    'data-select2-id' => 'tags',
+                    'class' => 'multi-select',
+                    'placeholder' => 'placeholder.tags',
                     'size' => 1,
                 ],
+                'required' => false,
             ])
         ;
     }

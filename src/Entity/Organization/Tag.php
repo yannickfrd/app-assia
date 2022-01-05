@@ -17,6 +17,26 @@ class Tag
 {
     use CreatedUpdatedEntityTrait;
 
+    public const COLORS = [
+        'primary' => 'Primaire',
+        'secondary' => 'Secondaire',
+        'primary' => 'Bleu',
+        'success' => 'Vert',
+        'warning' => 'Jaune',
+        'orange2' => 'Orange',
+        'danger' => 'Rouge',
+        'brown' => 'Marron',
+    ];
+
+    public const DEFAULT_COLOR = 'secondary';
+
+    public const CATEGORIES = [
+        'document' => 'Document',
+        'note' => 'Note',
+        'rdv' => 'Rendez-vous',
+        'support' => 'Suivi',
+    ];
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -36,6 +56,17 @@ class Tag
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $code;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     * @Groups("show_tag")
+     */
+    private $color;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $categories;
 
     /**
      * @ORM\ManyToMany(targetEntity=Service::class, mappedBy="tags")
@@ -77,6 +108,52 @@ class Tag
     public function setCode(?int $code): self
     {
         $this->code = $code;
+
+        return $this;
+    }
+
+    public function getColor(): ?string
+    {
+        return $this->color ?? self::DEFAULT_COLOR;
+    }
+
+    public function setColor(?string $color): self
+    {
+        $this->color = $color;
+
+        return $this;
+    }
+
+    public function getColorToString(): ?string
+    {
+        return $this->color ? self::COLORS[$this->color] : null;
+    }
+
+    public function getCategories(): ?array
+    {
+        return explode('|', $this->categories);
+    }
+
+    public function getCategoriesToString(): ?string
+    {
+        if (!$this->categories) {
+            return null;
+        }
+
+        $categories = [];
+
+        foreach (explode('|', $this->categories) as $categorie) {
+            $categories[] = self::CATEGORIES[$categorie];
+        }
+
+        return join(', ', $categories);
+    }
+
+    public function setCategories($categories): self
+    {
+        if ($categories) {
+            $this->categories = join('|', $categories);
+        }
 
         return $this;
     }

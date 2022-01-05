@@ -2,12 +2,13 @@
 
 namespace App\Tests\Controller;
 
-use App\Entity\Organization\Tag;
 use App\Tests\AppTestTrait;
-use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use App\Entity\Organization\Tag;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Response;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 
 class TagControllerTest extends WebTestCase
 {
@@ -16,8 +17,11 @@ class TagControllerTest extends WebTestCase
     /** @var KernelBrowser */
     protected $client;
 
+    /** @var AbstractDatabaseTool */
+    private $databaseTool;
+
     /** @var array */
-    private $data;
+    private $fixtures;
 
     /** @var Tag */
     private $tag;
@@ -28,7 +32,7 @@ class TagControllerTest extends WebTestCase
 
         $this->client = $this->createClient();
 
-        /* @var AbstractDatabaseTool */
+        /** @var AbstractDatabaseTool */
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
 
         $this->fixtures = $this->databaseTool->loadAliceFixture([

@@ -67,10 +67,9 @@
 							</span>
 
 							<div class="mt-2 tags-list">
-								{% for key, tag in note.tagsToArray %}
-									<span class="tag badge bg-{{ theme_color }} text-light"
-										  data-tag="{{ key }}" data-name="{{ tag }}">{{ tag }}
-									</span>
+								{% for tag in note.tags %}
+									<span class="badge bg-{{ tag.color }} text-light" 
+										data-tag-id="{{ tag.id }}">{{ tag.name }}</span>
 								{% endfor %}
 							</div>
 

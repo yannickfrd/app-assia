@@ -89,16 +89,16 @@ class NoteSearchType extends AbstractType
                 'class' => Tag::class,
                 'multiple' => true,
                 'expanded' => false,
-                'required' => false,
                 'by_reference' => false,
-                'choices' => $this->tagRepo->findAllWithPartialLoadGetResult(),
+                'choices' => $this->tagRepo->findAllTags('note'),
                 'choice_label' => 'name',
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
-                    'class' => 'multi-select w-min-160 w-max-180',
-                    'data-select2-id' => 'search-tags',
+                    'class' => 'multi-select w-min-180 w-max-220',
+                    'placeholder' => 'placeholder.tags',
                     'size' => 1,
                 ],
+                'required' => false,
             ])
         ;
     }

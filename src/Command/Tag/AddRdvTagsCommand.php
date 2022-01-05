@@ -52,13 +52,18 @@ class AddRdvTagsCommand extends Command // TEMPORAIRE A SUPPRIMER
         $io->progressStart($nbRdvs);
 
         foreach ($rdvRepo->findAll() as $rdv) {
-            $rdv->addTag($tags[mt_rand(0, $nbTags - 1)]);
+            $tag = $tags[mt_rand(0, $nbTags - 1)];
+
+            if (!$rdv->getTags()->contains($tag)) {
+                $rdv->addTag($tag);
+            }
+
             $io->progressAdvance();
         }
 
         $this->em->flush();
 
-        $io->success('This command was successfully completed !!');
+        $io->success('The rdv tags are added !!');
 
         return Command::SUCCESS;
     }

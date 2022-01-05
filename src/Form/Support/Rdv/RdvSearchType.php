@@ -65,10 +65,9 @@ class RdvSearchType extends AbstractType
                 'choices' => Choices::getChoices(Rdv::STATUS),
                 'attr' => [
                     'class' => 'multi-select',
+                    'placeholder' => 'placeholder.status',
                     'size' => 1,
-                    'data-select2-id' => 'status',
                 ],
-                'placeholder' => 'placeholder.status',
                 'required' => false,
             ])
             ->add('date', DateSearchType::class, [
@@ -82,16 +81,16 @@ class RdvSearchType extends AbstractType
                 'class' => Tag::class,
                 'multiple' => true,
                 'expanded' => false,
-                'required' => false,
                 'by_reference' => false,
-                'choices' => $this->tagRepo->getTagsWithOrWithoutService($options['service']),
+                'choices' => $this->tagRepo->getTagsByService($options['service'], 'rdv'),
                 'choice_label' => 'name',
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
-                    'class' => 'multi-select w-min-160 w-max-180',
-                    'data-select2-id' => 'search-tags',
+                    'class' => 'multi-select w-min-200 w-max-220',
+                    'placeholder' => 'placeholder.tags',
                     'size' => 1,
                 ],
+                'required' => false,
             ])
         ;
     }

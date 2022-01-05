@@ -44,6 +44,13 @@
                         <th scope="col" class="align-middle th-w-120">
                             {{ knp_pagination_sortable(tags, "Nom de l'étiquette", "t.name") }}
                         </th>
+                        <th scope="col" class="align-middle th-w-20">
+                            {{ knp_pagination_sortable(tags, "Code", "t.code") }}
+                        </th>
+                        <th scope="col" class="align-middle th-w-80">
+                            {{ knp_pagination_sortable(tags, "Couleur", "t.color") }}
+                        </th>
+                        <th scope="col" class="align-middle th-w-80">Catégorie(s)</th>
                         <th scope="col" class="align-middle th-w-80">
                             {{ knp_pagination_sortable(tags, "Date de création", "t.createdAt") }}
                         </th>
@@ -69,6 +76,14 @@
                                 {% endif %}
                             </td>
                             <td class="align-middle">{{ tag.name }}</td>
+                            <td class="align-middle">{{ tag.code }}</td>
+                            <td class="align-middle">{{ tag.colorToString }}</td>
+                            <td class="align-middle">{{ tag.categoriesToString }}</td>
+                            {# <td class="align-middle">
+                                {% for categorie in tag.categories %}
+                                    {{ categorie|trans({}, "form") }}
+                                {% endfor %}
+                            </td> #}
                             <td class="align-middle">{{ tag.createdAt|date("d/m/Y") }}</td>
                             <td class="align-middle">{{ tag.createdBy ? tag.createdBy.fullname }}</td>
                             <td class="align-middle">{{ tag.updatedAt|date("d/m/Y") }}</td>

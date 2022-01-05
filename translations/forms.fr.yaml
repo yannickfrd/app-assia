@@ -65,11 +65,14 @@ organization.name: Organisme
 placeholder:
   action: -- Action --
   comment: Écrire un commentaire...
+  categories: -- Catégories --
+  color: -- Couleur --
   date: -- Date --
   dateType: -- Type de date --
   device: -- Dispositif --
   disabled: -- Statut --
   familtyTypology: -- Typologie familiale --
+  hotels: -- Hôtels --
   name_or_id: Nom, prénom ou ID SI-SIAO
   gender: -- Sexe --
   nbSupports: Nb de suivis
@@ -81,6 +84,9 @@ placeholder:
   service: -- Service --
   status: -- Statut --
   support: -- Suivi --
+  supportLevels: -- Niveaux d'intervention --
+  supportType: -- Type d'accompagnement --
+  tags: -- Tags --
   type: -- Type --
   user: -- Utilisateur --
 Password: Mot de passe
@@ -348,6 +354,5 @@ Si siao import: Importer l'évaluation sociale présente dans le SI-SIAO.
 
 #TAGS
 tag:
-  label: Étiquettes
   name: Nom
-  placeholder: Saisir le nom d'une étiquette ...
+  placeholder: Étiquettes

@@ -30,10 +30,10 @@ class ServiceTagType extends AbstractType
                 'multiple' => true,
                 'expanded' => false,
                 'by_reference' => false,
-                'choices' => $this->tagRepo->findAllWithPartialLoadGetResult(),
+                'choices' => $this->tagRepo->findAllTags(),
                 'attr' => [
-                    'class' => 'multi-select w-min-150',
-                    'data-select2-id' => 'tags',
+                    'class' => 'multi-select',
+                    'placeholder' => 'placeholder.tags',
                     'size' => 1,
                 ],
             ])
@@ -44,6 +44,7 @@ class ServiceTagType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Service::class,
+            'translation_domain' => 'forms',
         ]);
     }
 }

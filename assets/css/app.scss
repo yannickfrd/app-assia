@@ -1,4 +1,6 @@
 @import "./bootstrap-custom";
+@import "./table";
+@import "./_select2";
 
 html {
     scroll-behavior: smooth;
@@ -260,11 +262,11 @@ th.required:after {
 }
 
 .w-min-180 {
-    min-width: 180px;
+    min-width: 180px !important;
 }
 
 .w-min-200 {
-    min-width: 200px;
+    min-width: 200px !important;
 }
 
 .h-max-38 {
@@ -317,20 +319,6 @@ th.required:after {
 .text-del {
     text-decoration: line-through;
 }
-
-.select2-container--default .select2-selection--multiple {
-    border-color: $input-border-color !important;
-}
-
-.input-group .select2-container--default .select2-selection--multiple {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-}
-
-.select2-container--default .select2-selection--multiple .select2-selection__choice {
-    background-color: var(--light) !important;
-}
-
 
 #results_search {
     position: absolute;
@@ -571,7 +559,7 @@ button.btn-outline-secondary a:hover {
     transition-delay: .3s;
 }
 
-#accordion-parent-tags #card-tags span.tag {
+#card-tags span.tag {
     font-size: .85rem;
     font-weight: normal;
 }

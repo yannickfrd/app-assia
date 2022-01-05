@@ -11,16 +11,13 @@
                 {{ form_row(documentForm.name) }}
                 <div class="row mb-3">
                     <div class="col-12">
-                        <div class="d-flex input-group">
+                        <div class="input-group">
                             <div class="input-group-prepend">
-                                <div class="input-group-text" title="Étiquettes"
-                                    data-toggle="tooltip" data-placement="bottom">
-                                    <span class="fas fa-tag text-black-50"></span>
+                                <div class="input-group-text" title="Étiquettes" data-toggle="tooltip" data-placement="bottom">
+                                    <i class="fas fa-tag text-black-50"></i>
                                 </div>
                             </div>
-                            <div class="flex-fill pl-0">
-                                {{ form_widget(documentForm.tags) }}
-                            </div>
+                            {{ form_widget(documentForm.tags) }}
                         </div>
                     </div>
                 </div>

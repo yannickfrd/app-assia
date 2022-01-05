@@ -18,24 +18,6 @@ class AddDocumentTagsCommand extends Command // TEMPORAIRE A SUPPRIMER
 
     protected static $defaultName = 'app:document:add_tags';
 
-    public const TYPE = [
-        2 => 'Administratif',
-        10 => 'Dettes',
-        9 => 'Emploi',
-        1 => 'Identité/Etat civil',
-        4 => 'Impôts',
-        6 => 'Logement',
-        8 => 'Orientation',
-        5 => 'Redevance',
-        3 => 'Ressources',
-        7 => 'Santé',
-        11 => 'Demande de logement',
-        12 => 'Demande SIAO',
-        13 => 'Enfance',
-        14 => 'Hôtel',
-        97 => 'Autre',
-    ];
-
     /** @var EntityManagerInterface */
     private $em;
 
@@ -50,42 +32,10 @@ class AddDocumentTagsCommand extends Command // TEMPORAIRE A SUPPRIMER
         $this->disableListeners($this->em);
     }
 
-    protected function configure(): void
-    {
-        $this
-            ->setDescription('Create a default tags on Tag entity.')
-            ->setDescription('This command generate tags by default in the Tag entity. No arguments.')
-        ;
-    }
-
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->io = new SymfonyStyle($input, $output);
 
-        $this->tagsGenerate();
-
-        $this->documentUpdate();
-
-        $this->io->success('This command was successfully completed !!');
-
-        return Command::SUCCESS;
-    }
-
-    public function tagsGenerate(): void
-    {
-        $tagRepo = $this->em->getRepository(Tag::class);
-
-        foreach (self::TYPE as $value) {
-            if (null === $tagRepo->findOneBy(['name' => $value])) {
-                $tag = (new Tag())->setName($value);
-                $this->em->persist($tag);
-            }
-        }
-        $this->em->flush();
-    }
-
-    public function documentUpdate(): void
-    {
         $tagRepo = $this->em->getRepository(Tag::class);
         /** @var DocumentRepository */
         $documentRepo = $this->em->getRepository(Document::class);
@@ -94,17 +44,29 @@ class AddDocumentTagsCommand extends Command // TEMPORAIRE A SUPPRIMER
 
         $this->io->progressStart($nbDocumentWithType);
 
-        foreach (self::TYPE as $key => $value) {
+        foreach ($tagRepo->findAll() as $tag) {
             /** @var Document $documents */
-            $documents = $documentRepo->findBy(['type' => $key]);
+            $documents = $documentRepo->findBy(['type' => $tag->getCode()]);
             /** @var Tag $tag */
-            $tag = $tagRepo->findOneBy(['name' => $value]);
+            $tag = $tagRepo->findOneBy(['name' => $tag->getName()]);
 
             foreach ($documents as $document) {
+
+
+                
                 $document->addTag($tag);
                 $this->io->progressAdvance();
             }
         }
+
         $this->em->flush();
+
+        $this->io->success('The document tags are added !!');
+
+        return Command::SUCCESS;
+    }
+
+    public function documentUpdate(): void
+    {
     }
 }

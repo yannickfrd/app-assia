@@ -87,20 +87,17 @@ class DocumentRepository extends ServiceEntityRepository
             ->where('d.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroup);
 
-        $this->addTagsFilter($qb, $search);
-
         if ($search->getName()) {
             $qb->andWhere('d.name LIKE :name OR d.content LIKE :name')
-                ->setParameter('name', '%'.$search->getName().'%');
+            ->setParameter('name', '%'.$search->getName().'%');
         }
-        if ($search->getTags() && $search->getTags()->count() > 0) {
-            $qb->addSelect('t');
-        }
+
+        $this->addTagsFilter($qb, $search, 'd.tags');
 
         return $qb
             ->orderBy('d.createdAt', 'DESC')
             ->getQuery()
-            // ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
         ;
     }
 

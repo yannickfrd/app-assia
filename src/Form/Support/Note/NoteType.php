@@ -54,10 +54,10 @@ class NoteType extends AbstractType
                 'expanded' => false,
                 'required' => false,
                 'by_reference' => false,
-                'choices' => $this->tagRepo->getTagsWithOrWithoutService($supportGroup->getService()),
+                'choices' => $this->tagRepo->getTagsByService($supportGroup->getService(), 'note'),
                 'choice_label' => 'name',
                 'attr' => [
-                    'data-select2-id' => 'tags',
+                    'placeholder' => 'placeholder.tags',
                     'size' => 1,
                 ],
             ])

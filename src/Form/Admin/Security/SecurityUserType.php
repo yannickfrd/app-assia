@@ -69,25 +69,10 @@ class SecurityUserType extends AbstractType
                 'multiple' => true,
                 'attr' => [
                     'class' => 'multi-select',
+                    'placeholder' => 'placeholder.select',
                     'size' => 1,
-                    'data-select2-id' => 'role',
-            ],
-                'placeholder' => 'placeholder.select',
+                ],
             ])
-            // ->add('password', PasswordType::class, [
-            //     'attr' => [
-            //         'class' => 'js-password',
-            //         'placeholder' => 'Password',
-            //     ],
-            //     'help' => 'user.password.help',
-            // ])
-            // ->add('confirmPassword', PasswordType::class, [
-            //     'attr' => [
-            //         'class' => 'js-password',
-            //         'placeholder' => 'Confirm password',
-            //     ],
-            //     'help' => 'user.confirmPassword.help',
-            // ])
             ->add('serviceUser', CollectionType::class, [
                 'entry_type' => ServiceUserType::class,
                 'allow_add' => true,
@@ -111,7 +96,8 @@ class SecurityUserType extends AbstractType
                 'entry_options' => [
                     'attr' => ['class' => 'form-inline'],
                 ],
-            ]);
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

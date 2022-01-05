@@ -1,13 +1,14 @@
+import SelectManager from './form/SelectManager'
 import Loader from './loader'
 import MessageFlash from './messageFlash'
 
 /**
  * Classe pour les différents pages de recherche.
  */
-export default class Search {
+export default class SearchManager {
 
     constructor(formId) {
-        this.loader = new Loader();
+        this.loader = new Loader()
         this.formSearch = document.getElementById(formId)
         this.inputElts = this.formSearch.querySelectorAll('input')
         this.checkboxElts = this.formSearch.querySelectorAll('input[type="checkbox"]')
@@ -17,23 +18,28 @@ export default class Search {
         this.btnExportElt = document.getElementById('js-btn-export')
         this.btnClearElt = this.formSearch.querySelector('button[type="reset"]')
         this.firstInput = this.formSearch.querySelector('input')
+        this.selectManagers = []
 
         this.init()
     }
 
     init() {
+        document.querySelectorAll('select[multiple]').forEach(selectElt => {
+            this.selectManagers.push(new SelectManager('#' + selectElt.id))
+        })
+
         if (this.btnSearchElt) {
             this.btnSearchElt.addEventListener('click', e => {
                 this.loader.inLoading = false
                 if (this.loader.isActive()) {
                         e.preventDefault()
                     }
-                this.loader.on();
+                this.loader.on()
             })
         }
 
         this.btnClearElt.addEventListener('click', e => {
-            this.loader.off();
+            this.loader.off()
             e.preventDefault()
             this.clearSearch()
         })
@@ -43,7 +49,7 @@ export default class Search {
                 if (this.loader.inLoading) {
                     e.preventDefault()
                 } else {
-                    new MessageFlash('success', 'L\'export est en cours de préparation. Merci de patienter...', 10);
+                    new MessageFlash('success', 'L\'export est en cours de préparation. Merci de patienter...', 10)
                     this.loader.inLoading = true
                     setTimeout(() => {
                         this.loader.inLoading = false
@@ -77,14 +83,8 @@ export default class Search {
             }
         })
 
-        this.formSearch.querySelectorAll('.select2-container').forEach(containerElt => {
-            const removeElts = containerElt.querySelectorAll('.select2-selection__choice__remove')
-            removeElts.forEach(removeElt => {
-                removeElt.click()
-            })
-            if (removeElts.length > 0) {
-                containerElt.querySelector('input').click()
-            }
+        this.selectManagers.forEach(selectManager => {
+            selectManager.clearSelect()
         })
 
         if (this.resultsElt) {

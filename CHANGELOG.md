@@ -1,6 +1,19 @@
 CHANGELOG
 =========
-## Version 3.7.0 - 23/12/2021
+
+## Version 3.8.1 - 05/01/2021
+Create a select manager (JS) and update tag feature
+* [SelectManager] Create a JS class to manage multi-select (select2)
+* [Tag] Update and create new Commands to add tags
+* [Tag] Add 'color' and 'categories' variables to Tag entity
+* [Tag] Refacto repositories
+* [SelectManager] Refactor multi-selects
+* [Search] Refactor SearchManager
+* [Selelct2] Edit style css
+* Update JS dependencies (@ttskch/select2-bootstrap4-theme)
+* Fix bugs
+
+## Version 3.8.0 - 23/12/2021
 Feat resource, charge and debt collections (#94)
 * Create InitResource, Resource, Charge and Debt entities
 * Create AbstractFinance entity class
@@ -14,8 +27,24 @@ Feat resource, charge and debt collections (#94)
 * Update import SI-SIAO
 * Update fixtures and functional tests
 
+## Version 3.7.0 - 21/12/2021
+Feature system tags (yannickfrd) (#93)
+* Create Tag entity and TagRepository
+* Create system to create, read, update and delete tags (admin user)
+* [ServiceTagController] Create system to add/remove tags to services
+* Create system to add/remove tags to documents
+* Create system to add/remove tags to notes
+* Create system to add/remove tags to rdvs
+* Add system to search documents, notes and rdvs by tags
+* Create command to create tags and tags in documents
+* Create TagFixtures
+* Create unit and functional tests
+* [FileUploader] Edit Group 'get' to 'show_document'
+* [Service] Add TagTrait
+Co-authored-by: yannickfarade <yannick.farade@esperer-95.org>
+
 ## Version 3.6.5 - 15/12/2021
-Fix bugs
+Fix bugs (#90)
 * [AutoLogout] Fix invalid url to logout
 
 ## Version 3.6.4 - 15/12/2021
@@ -27,7 +56,7 @@ Update feature evaluation  (#89)
 [Entities] Edit annotations 'export' groups (#88)
 
 ## Version 3.6.2 - 13/12/2021
-Edit all multi-selelct in FormType (#87)
+Edit all multi-select in FormType (#87)
 * [FormType] Add 'size' = 1 for all multi selects
 * [SecurityUserType] Add JS select2 for user roles
 

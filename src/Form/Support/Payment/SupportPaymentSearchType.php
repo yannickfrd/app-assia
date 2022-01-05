@@ -18,14 +18,12 @@ class SupportPaymentSearchType extends AbstractType
     {
         $builder
             ->add('type', ChoiceType::class, [
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
+                'label_attr' => ['class' => 'sr-only'],
                 'multiple' => true,
                 'attr' => [
                     'class' => 'multi-select',
+                    'placeholder' => 'placeholder.type',
                     'size' => 1,
-                    'data-select2-id' => 'payment-type',
                 ],
                 'choices' => Choices::getchoices(Payment::TYPES),
                 'required' => false,

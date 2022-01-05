@@ -24,10 +24,9 @@ class HotelSupportSearchType extends AbstractType
                 'choices' => Choices::getChoices(HotelSupport::STATUS),
                 'attr' => [
                     'class' => 'multi-select',
+                    'placeholder' => 'placeholder.status',
                     'size' => 1,
-                    'data-select2-id' => 'status',
                 ],
-                'placeholder' => 'placeholder.status',
                 'required' => false,
             ])
             ->add('hotels', EntityType::class, [
@@ -40,8 +39,8 @@ class HotelSupportSearchType extends AbstractType
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'class' => 'multi-select w-min-150 w-max-180',
+                    'placeholder' => 'placeholder.hotels',
                     'size' => 1,
-                    'data-select2-id' => 'hotels',
                 ],
                 'required' => false,
             ])
@@ -51,8 +50,8 @@ class HotelSupportSearchType extends AbstractType
                 'choices' => Choices::getChoices(HotelSupport::SUPPORT_LEVELS),
                 'attr' => [
                     'class' => 'multi-select w-min-120',
+                    'placeholder' => 'placeholder.supportLevels',
                     'size' => 1,
-                    'data-select2-id' => 'levelSupport',
                 ],
                 'required' => false,
             ])
@@ -68,8 +67,8 @@ class HotelSupportSearchType extends AbstractType
                 'choices' => Choices::getChoices(HotelSupport::END_SUPPORT_REASONS),
                 'attr' => [
                     'class' => 'multi-select w-min-120',
+                    'placeholder' => 'placeholder.endSupportReasons',
                     'size' => 1,
-                    'data-select2-id' => 'endSupportReasons',
                 ],
                 'required' => false,
             ]);

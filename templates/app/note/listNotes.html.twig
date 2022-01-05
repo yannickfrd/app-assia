@@ -32,15 +32,23 @@
                     <thead>
                         <tr>
                             <th scope="col" class="align-middle th-w-20"></th>
-                            <th scope="col" class="align-middle th-w-150">{{ knp_pagination_sortable(notes, "Note", "n.title") }}</th>
-                            <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(notes, "Nom du suivi", "p.lastname") }}</th>
-                            <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(notes, "Type", "n.type") }}</th>
-                            <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(notes, "Statut", "n.status") }}</th>
+                            <th scope="col" class="align-middle">
+                                {{ knp_pagination_sortable(notes, "Note", "n.title") }}</th>
+                            <th scope="col" class="align-middle th-w-100">
+                                {{ knp_pagination_sortable(notes, "Nom du suivi", "p.lastname") }}</th>
+                            <th scope="col" class="align-middle th-w-100">
+                                {{ knp_pagination_sortable(notes, "Type", "n.type") }}</th>
+                            <th scope="col" class="align-middle th-w-100">
+                                {{ knp_pagination_sortable(notes, "Statut", "n.status") }}</th>
                             <th scope="col" class="align-middle th-w-100">Étiquette(s)</th>
-                            <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(notes, "Date de création", "n.createdAt") }}</th>
-                            <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(notes, "Créé par", "u.lastname") }}</th>
-                            <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(notes, "Date de modification", "n.updatedAt") }}</th>
-                            <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(notes, "Modifié par", "u2.lastname") }}</th>
+                            <th scope="col" class="align-middle th-date">
+                                {{ knp_pagination_sortable(notes, "Date de création", "n.createdAt") }}</th>
+                            <th scope="col" class="align-middle th-w-120">
+                                {{ knp_pagination_sortable(notes, "Créé par", "u.lastname") }}</th>
+                            <th scope="col" class="align-middle th-date">
+                                {{ knp_pagination_sortable(notes, "Date de modification", "n.updatedAt") }}</th>
+                            <th scope="col" class="align-middle th-w-120">
+                                {{ knp_pagination_sortable(notes, "Modifié par", "u2.lastname") }}</th>
                             <th scope="col" class="align-middle th-w-80"></th>
                         </tr>
                     </thead>
@@ -49,8 +57,8 @@
                         <tr id="note-{{ note.id }}">
                             <td scope="row" class="align-middle text-center ">
                                 <a href="{{ path('support_notes', {'id':note.supportGroup.id, 'noteId':note.id}) }}"
-                                    class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" data-placement="bottom"
-                                    title="Voir la note sociale"><span class="fas fa-eye"></span>
+                                    class="btn btn-{{ theme_color }} btn-sm shadow" title="Voir la note sociale"
+                                    data-toggle="tooltip" data-placement="bottom"><span class="fas fa-eye"></span>
                                 </a>
                             </td>
                             <td class="align-middle justify"><span class="font-weight-bold">
@@ -60,19 +68,25 @@
                             <td class="align-middle">{{ note.supportGroup.header.fullname }}</td>
                             <td class="align-middle">{{ note.typeToString }}</td>
                             <td class="align-middle">{{ note.statusToString }}</td>
-                            <td class="align-middle">{{ note.tagsToString }}</td>
+                            <td class="align-middle">
+                                {% for tag in note.tags %}
+									<span class="badge bg-{{ tag.color }} text-light">{{ tag.name }}</span>
+                                {% endfor %}
+                            </td>
                             <td class="align-middle">{{ note.createdAt|date("d/m/Y") }}</td>
                             <td class="align-middle">{{ note.createdBy ? note.createdBy.fullname }}</td>
                             <td class="align-middle">{{ note.updatedAt|date("d/m/Y") }}</td>
                             <td class="align-middle">{{ note.updatedBy ? note.updatedBy.fullname }}</td>
                             <th scope="row" class="align-middle text-center p-1">
                                 <a href="{{ path('note_export_word', {'id':note.id}) }}"
-                                    class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-toggle="tooltip" data-placement="bottom"
-                                    title="Exporter la note au format Word"><span class="fas fa-file-word bg-primary fa-lg"><span class="sr-only">Word</span></span>
-                                </a>
+                                    class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" title="Exporter la note au format Word"
+                                    data-toggle="tooltip" data-placement="bottom"><i class="fas fa-file-word bg-primary fa-lg"></i>
+                                    <span class="sr-only">Word</span>
+                                </a><br/>
                                 <a href="{{ path('note_export_pdf', {'id':note.id}) }}"
-                                    class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-toggle="tooltip" data-placement="bottom"
-                                    title="Exporter la note au format PDF"><span class="fas fa-file-pdf bg-danger fa-lg"><span class="sr-only">PDF</span></span>
+                                    class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" title="Exporter la note au format PDF"
+                                    data-toggle="tooltip" data-placement="bottom"><i class="fas fa-file-pdf bg-danger fa-lg"></i>
+                                    <span class="sr-only">PDF</span>
                                 </a>
                             </th>
                         </tr>

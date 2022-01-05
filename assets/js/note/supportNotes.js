@@ -5,8 +5,8 @@ import AutoSaver from '../utils/form/autoSaver'
 import ParametersUrl from '../utils/parametersUrl'
 import { Modal } from 'bootstrap'
 import CkEditor from '../utils/ckEditor'
-import TagView from '../tag/tagView'
-import 'select2'
+import TagsManager from '../tag/TagsManager'
+import SelectManager from '../utils/form/SelectManager'
 
 export default class SupportNotes {
 
@@ -43,18 +43,15 @@ export default class SupportNotes {
         this.containerNotesElt = document.getElementById('container-notes')
         this.supportId = this.containerNotesElt.dataset.support
         this.data = null
-        this.tagView = new TagView(this.themeColor)
+        
+        this.tagsManager = new TagsManager()
+        this.SelectManager = new SelectManager('#note_tags', {name: 'onModal', elementId: this.noteModalElt.id})
 
         this.init()
         this.autoSaver = new AutoSaver(this.autoSaveNote.bind(this), this.CkEditor.getEditorElt(), 60, 20)
     }
 
     init() {
-        $(`select[data-select2-id='tags']`).select2({
-            width: '100%',
-            placeholder: ' -- Étiquettes --'
-        })
-
         this.noteElts.forEach(noteElt => {
             noteElt.addEventListener('click', () => this.showNote(noteElt))
         })
@@ -97,13 +94,13 @@ export default class SupportNotes {
      * Affiche un formulaire modal vierge.
      */
     showNewNote() {
+        this.SelectManager.clearSelect()
         this.noteModal.show()
 
         this.noteModalElt.querySelector('form').action = '/support/' + this.supportId + '/note/new'
         this.noteModalElt.querySelector('#note_title').value = ''
         this.noteModalElt.querySelector('#note_type').value = 1
         this.noteModalElt.querySelector('#note_status').value = 1
-        $('#note_tags').val(null).trigger('change')
 
         this.CkEditor.setData('')
         this.data = ''
@@ -135,34 +132,19 @@ export default class SupportNotes {
 
         this.noteModal.show()
 
-        this.initTagSelect(noteElt)
+        this.updateTagsSelect(noteElt)
     }
 
     /**
-     * Permet d'initialiser les valeurs dans le select2
+     * Permet d'initialiser les valeurs dans le multi-select
      * @param {Object} noteElt
      */
-    initTagSelect(noteElt){
-        const noteTags = $('#note_tags')
+    updateTagsSelect(noteElt){
+        const tagElts = noteElt.querySelectorAll('.tags-list span')
+        const tagOptionElts = this.noteModalElt.querySelectorAll('option')
+        const tagsIds = this.tagsManager.getTagIds(tagElts, tagOptionElts)
 
-        const badges = noteElt.querySelectorAll('#tags-list span[data-tag-id]')
-        const tagOptions = this.noteModalElt.querySelectorAll('option')
-
-        noteTags.val(null).trigger('change');
-        const listTagId = []
-        badges.forEach(tag => {
-            tagOptions.forEach(option => {
-                if (option.value === tag.dataset.tag){
-                    listTagId.push(option.value)
-                }
-            })
-        })
-        if (listTagId.length > 0){
-            noteTags.val(listTagId).trigger('change')
-        } else {
-            const inputPlaceholder = document.querySelectorAll('input[placeholder=" -- Étiquettes --"]')
-            inputPlaceholder.forEach(sel => sel.style.width = '100%')
-        }
+        this.SelectManager.showOptionsFromArray(tagsIds)
     }
 
     /**
@@ -193,13 +175,8 @@ export default class SupportNotes {
      * Permet de créer les spans représentant les tags
      * @param {Object} note
      */
-    initTagList(note){
-        const tags = JSON.parse(note.tags)
-        const tagsList = document.getElementById('tags-list')
-
-        tagsList.querySelectorAll('span[data-tag-id]').forEach(badge => badge.remove())
-
-        this.tagView.collectionTagsView(tags).forEach(tag => tagsList.appendChild(tag))
+    updateTagsList(note){
+        this.tagsManager.updateTagsContainer(this.noteElt.querySelector('.tags-list'), JSON.parse(note.tags))
     }
 
     /**
@@ -317,8 +294,8 @@ export default class SupportNotes {
 
         if (responseTags.length > 0){
             responseTags.forEach(tag => {
-                listTags += `<span class="tag badge bg-${this.themeColor} text-light mr-1" 
-                            data-tag="${tag.id}" data-name="${tag.name}">${tag.name}</span>`
+                listTags += `<span class="badge bg-${tag.color} text-light mr-1" 
+                            data-tag-id="${tag.id}">${tag.name}</span>`
             })
         }
 
@@ -377,7 +354,7 @@ export default class SupportNotes {
 
         this.noteElt.querySelector('[data-note-updated]').textContent = note.editionToString
 
-        this.initTagList(note)
+        this.updateTagsList(note)
     }
 
     deleteNote() {
@@ -401,15 +378,5 @@ export default class SupportNotes {
             return this.searchSupportNotesElt.classList.remove('d-none')
         }
         return this.searchSupportNotesElt.classList.add('d-none')
-    }
-
-    tagCreate(tag) {
-        let span = document.createElement('span')
-        span.setAttribute('data-tag', tag.id)
-        span.setAttribute('data-name', tag.name)
-        span.classList.add('tag', 'badge', 'bg-'+this.themeColor, 'text-light', 'mr-1')
-        span.innerText = ' ' + tag.name + ' '
-
-        return span
     }
 }

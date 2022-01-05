@@ -2,7 +2,7 @@ import MessageFlash from '../utils/messageFlash'
 import Loader from '../utils/loader'
 import Ajax from '../utils/ajax'
 import Tag from './model/Tag'
-import 'select2'
+import SelectManager from '../utils/form/SelectManager'
 
 export default class TagService {
     constructor() {
@@ -16,6 +16,7 @@ export default class TagService {
         this.listBadge = document.getElementById('tags-list')
         this.formTags = document.forms['service_tag']
         this.selectTags = document.getElementById('service_tag_tags')
+        this.SelectManager = new SelectManager('#service_tag_tags', {name: 'onCollapse', elementId: 'collapse_tags'})
 
         this.init()
     }
@@ -24,15 +25,14 @@ export default class TagService {
         this.tagsIds = () => {
             const tagsIds = []
             this.listBadge.querySelectorAll('span[data-tag-id]').forEach(span => {
-                tagsIds.push(span.dataset.tag)
+                tagsIds.push(span.dataset.tagId)
             })
 
             return tagsIds
         }
 
-        this.initTagMultiSelect()
         this.initTagsTemp()
-        this.updateListOptions()
+        this.SelectManager.clearOptionsList(this.tagsTemp)
 
         this.formTags.addEventListener('submit', this.add.bind(this))
 
@@ -46,18 +46,6 @@ export default class TagService {
                 })
             })
         }
-    }
-    
-    initTagMultiSelect() {
-        $('#collapse-tags').on('shown.bs.collapse', () => {
-            $(`select[data-select2-id='tags']`).select2({
-                placeholder: ' -- Étiquettes --',
-                width: '100%',
-                'language': {
-                    'noResults': () => 'Aucun résultat.'
-                },
-            })
-        })
     }
 
     /**
@@ -75,12 +63,13 @@ export default class TagService {
         }
 
         if (formData.has('service_tag[tags][]')) { // S'il n'est pas vide
-            formData.forEach(optionId => {
+            formData.getAll('service_tag[tags][]').forEach(optionId => {
                 const options = document.getElementById('service_tag_tags').options
-                options.forEach(tag => {
-                    if (optionId === tag.getAttribute('value')) {
+
+                Array.from(options).forEach( tag => {
+                    if (parseInt(optionId) === parseInt(tag.getAttribute('value'))) {
                         this.countAddingTag++
-                        this.tagsTemp.push(new Tag(optionId, tag.innerText, tag.getAttribute('data-select2-id')))
+                        this.tagsTemp.push(new Tag(optionId, tag.innerText, tag.dataset.multiSelect))
                     }
                 })
             })
@@ -137,36 +126,23 @@ export default class TagService {
      * @param {Object} response 
      */
     deleteTag(response) {
-        if ('success' != response.alert) {
+        if ('success' !== response.alert) {
             return new MessageFlash(response.alert, response.msg)
         }
 
         const tag = document.querySelector(`#tags-list span[data-tag-id="${response.data.tagId}"]`)
-        
+
         if (tag) {
+            this.SelectManager.addOption(tag.dataset.tagId, tag.dataset.tagName)
             tag.remove()
-        }  
+        }
     }
 
     initTagsTemp() {
+        this.tagsTemp = []
         this.listBadge.querySelectorAll('span[data-tag-id]').forEach(tag => {
-            this.tagsTemp.push(new Tag(tag.dataset.tag, tag.dataset.name))
+            this.tagsTemp.push(new Tag(tag.dataset.tagId, tag.dataset.tagName))
         })
-    }
-
-    /**
-     * Désactive les options de la liste des tags en fonction des tags déjà ajoutés
-     */
-    updateListOptions() {
-        this.tagsTemp.forEach(tag => {
-            this.formTags.querySelectorAll('select#service_tag_tags option').forEach(option => {
-                if (parseInt(option.value) === parseInt(tag.id)) {
-                    option.remove()
-                }
-            })
-        })
-
-        $(`select[data-select2-id='tags']`).val('').trigger('change')
     }
 
     /**
@@ -178,7 +154,7 @@ export default class TagService {
         } else {
             data.forEach(tag => this.createTag(tag))
         }
-        this.updateListOptions()
+        this.SelectManager.clearOptionsList(this.tagsTemp)
     }
 
     /**
@@ -198,10 +174,9 @@ export default class TagService {
      */
     createTag(tag) {
         const tagSpanElt = document.createElement('span')
+        tagSpanElt.classList.add('badge', 'bg-' + this.colorTheme, 'text-light', 'mr-1', 'tag')
         tagSpanElt.dataset.tagId = tag.id
         tagSpanElt.dataset.tagName = tag.name
-        tagSpanElt.setAttribute('data-tag-name', tag.name)
-        tagSpanElt.classList.add('badge', 'bg-' + this.colorTheme, 'text-light', 'mr-1', 'tag')
         tagSpanElt.innerText = ' ' + tag.name + ' '
 
         // Bouton de suppression

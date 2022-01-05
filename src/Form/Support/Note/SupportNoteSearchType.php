@@ -68,12 +68,12 @@ class SupportNoteSearchType extends AbstractType
                 'expanded' => false,
                 'required' => false,
                 'by_reference' => false,
-                'choices' => $this->tagRepo->getTagsWithOrWithoutService($service),
+                'choices' => $this->tagRepo->getTagsByService($service, 'note'),
                 'choice_label' => 'name',
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
-                    'class' => 'multi-select w-min-160 w-max-180',
-                    'data-select2-id' => 'search-tags',
+                    'class' => 'multi-select w-min-200 w-max-220',
+                    'placeholder' => 'placeholder.tags',
                     'size' => 1,
                 ],
             ])

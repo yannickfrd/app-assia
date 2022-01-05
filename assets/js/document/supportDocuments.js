@@ -5,8 +5,8 @@ import Ajax from '../utils/ajax'
 import Dropzone from '../utils/file/dropzone'
 import CheckboxSelector from '../utils/form/checkboxSelector'
 import DateFormater from '../utils/date/dateFormater'
-import 'select2'
-import TagView from "../tag/tagView";
+import TagsManager from '../tag/TagsManager'
+import SelectManager from '../utils/form/SelectManager'
 
 /**
  * Classe de gestion des documents.
@@ -17,6 +17,9 @@ export default class SupportDocuments {
         this.loader = new Loader()
         this.ajax = new Ajax(this.loader, 60)
         this.checkboxSelector = new CheckboxSelector()
+
+        this.tagsManager = new TagsManager()
+        this.SelectManager = new SelectManager('#document_tags', {name: 'onModal', elementId: 'document-modal'})
 
         this.dropzoneModalElt = new Modal(document.getElementById('dropzone-modal'))
         this.dropzoneFormElt = document.querySelector('form[name="dropzone_document"]')
@@ -35,7 +38,7 @@ export default class SupportDocuments {
 
         this.themeColor = document.getElementById('header').dataset.color
         this.countDocumentsElt = document.getElementById('count-documents')
-
+        
         this.init()
     }
 
@@ -52,17 +55,6 @@ export default class SupportDocuments {
             this.ajax.send('GET', this.confirmDeleteBtnElt.dataset.url, this.responseAjax.bind(this))
         })
         document.getElementById('action-validate').addEventListener('click', e => this.onValidateAction(e))
-
-        this.initSelect2()
-    }
-
-    initSelect2(){
-        $(`select[data-select2-id='tags']`).select2({
-            width: '100%',
-            placeholder: ' -- Étiquettes --'
-        })
-        // const inputPlaceholder = document.querySelector('input[placeholder="'+ tagPlaceholder +'"]')
-        // inputPlaceholder.style.width = '100%'
     }
 
     /**
@@ -173,34 +165,19 @@ export default class SupportDocuments {
         this.deleteBtnElt.dataset.documentId = id
         this.documentModalElt.show()
 
-        this.initTagSelect(documentTrElt)
+        this.updateTagsSelect(documentTrElt)
     }
 
     /**
-     * Select 2
-     * Permet d'initialiser les valeurs dans le select
-     * @param documentTrElt
+     * Permet d'initialiser les valeurs dans le multi-select
+     * @param {HTMLTableRowElement} documentTrElt
      */
-    initTagSelect(documentTrElt){
-        const documentTags = $('#document_tags')
-        const tags = documentTrElt.querySelector('td[data-document="tags"]').dataset.tags.split('|')
-        const tagOptions = this.documentFormElt.querySelectorAll('select#document_tags option')
+    updateTagsSelect(documentTrElt) {
+        const tagElts = documentTrElt.querySelectorAll('td[data-document="tags"] span')
+        const tagOptionElts = this.documentFormElt.querySelectorAll('select#document_tags option')
+        const tagsIds = this.tagsManager.getTagIds(tagElts, tagOptionElts)
 
-        documentTags.val(null).trigger('change');
-        const listTagId = []
-        tags.forEach(tag => {
-            tagOptions.forEach(option => {
-                if (option.value === tag){
-                    listTagId.push(option.value)
-                }
-            })
-        })
-        if (listTagId.length > 0){
-            documentTags.val(listTagId).trigger('change')
-        } else {
-            const parentElt = this.documentFormElt.querySelector('select#document_tags').parentElement
-            parentElt.querySelector('span.select2 ul li input.select2-search__field').style.width = '100%'
-        }
+        this.SelectManager.showOptionsFromArray(tagsIds)
     }
 
     /**
@@ -244,7 +221,6 @@ export default class SupportDocuments {
                 break
             case 'download':
                 return this.getFile(response.data)
-                break
         }
         new MessageFlash(response.alert, response.msg)
         this.loader.off()
@@ -272,29 +248,13 @@ export default class SupportDocuments {
      * @param {Object} data
      */
     updateDocumentTr(data) {
-        const dataTags = () => {
-            const tagView = new TagView()
-            return tagView.collectionTagsToArray(data.tags)
-        }
         const documentTrElt = document.querySelector(`tr[data-document-id="${data.id}"]`)
-        const tdTags = documentTrElt.querySelector('td[data-document="tags"]')
-        
-        tdTags.dataset.tags = ''
-        tdTags.textContent = ''
-
-        for (let i = 0; i < dataTags().length; i++) {
-            if (i+1 !== dataTags().length){
-                tdTags.dataset.tags += dataTags()[i].id + '/'
-                tdTags.textContent += dataTags()[i].name + ', '
-            } else {
-                tdTags.dataset.tags += dataTags()[i].id
-                tdTags.textContent += dataTags()[i].name
-            }
-        }
-        
+            
         documentTrElt.querySelector('td[data-document="name"]').textContent = data.name
         documentTrElt.querySelector('td[data-document="content"]').textContent = data.content
         
+        this.tagsManager.updateTagsContainer(documentTrElt.querySelector('td[data-document="tags"]'), data.tags)
+
         this.documentModalElt.hide()
     }
     /**
@@ -338,7 +298,7 @@ export default class SupportDocuments {
                 </a>
             </td>
             <td class="align-middle cursor-pointer" data-document="name">${data.name}</td>
-            <td class="align-middle cursor-pointer" data-document="tags" data-tags></td>
+            <td class="align-middle cursor-pointer" data-document="tags"></td>
             <td class="align-middle cursor-pointer" data-document="content">${data.content ?? ''}</td>
             <td class="align-middle text-right">${((Math.floor(data.size / 10000) / 100).toLocaleString('fr') + ' Mo')}</td>
             <td class="align-middle" data-document="extension">${data.fileType}</td>

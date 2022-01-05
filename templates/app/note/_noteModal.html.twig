@@ -25,16 +25,13 @@
                 <div class="row mb-3">
                     <label class="col-form-label d-none d-sm-block col-sm-2" for="note_tags">Étiquettes</label>
                     <div class="col-sm-10">
-                        <div class="d-flex input-group">
+                        <div class="input-group">
                             <div class="input-group-prepend">
-                                <div class="input-group-text" title="Étiquettes"
-                                    data-toggle="tooltip" data-placement="bottom">
-                                    <span class="fas fa-tag text-black-50"></span>
+                                <div class="input-group-text" title="Étiquettes" data-toggle="tooltip" data-placement="bottom">
+                                    <i class="fas fa-tag text-black-50"></i>
                                 </div>
                             </div>
-                            <div class="flex-fill pl-0">
-                                {{ form_widget(form.tags) }}
-                            </div>
+                            {{ form_widget(form.tags) }}
                         </div>
                     </div>
                 </div>
