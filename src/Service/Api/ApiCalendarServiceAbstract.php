@@ -4,11 +4,9 @@ namespace App\Service\Api;
 
 use App\Entity\Organization\User;
 use App\Entity\Support\Rdv;
-use App\Service\Api\OutlookApi\OutlookCalendarApiService;
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use App\Service\Api\GoogleApi\GoogleCalendarApiService;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 abstract class ApiCalendarServiceAbstract
@@ -16,7 +14,7 @@ abstract class ApiCalendarServiceAbstract
     protected const CLIENT_GOOGLE_CHECKED = 'clientGoogleChecked';
     protected const CLIENT_OUTLOOK_CHECKED = 'clientOutlookChecked';
 
-    protected const GOOGLE_RDV_ID = 'outlookRdvId';
+    protected const GOOGLE_RDV_ID = 'googleRdvId';
     protected const OUTLOOK_RDV_ID = 'outlookRdvId';
 
     /** @var SessionInterface */
@@ -57,22 +55,15 @@ abstract class ApiCalendarServiceAbstract
 
     /**
      * Update th Rdv and set the event's Id Google|Outlook Calendar
+     * @param string $key
+     * @param string $eventId
      */
-    protected function setEventOnRdv(string $eventId): void
+    protected function setEventOnRdv(string $key, string $eventId): void
     {
-        switch (static::class) {
-            case GoogleCalendarApiService::class:
-                $rdv = $this->getRdv($this->session->get(self::GOOGLE_RDV_ID))
-                    ->setGoogleEventId($eventId);
-                $this->em->persist($rdv);
-                break;
-            case OutlookCalendarApiService::class:
-                $rdv = $this->getRdv($this->session->get(self::OUTLOOK_RDV_ID))
-                    ->setOutlookEventId($eventId);
-                $this->em->persist($rdv);
-                break;
-        }
+        $rdv = $this->getRdv($this->session->get(strtolower($key) . 'RdvId'))
+            ->setGoogleEventId($eventId);
 
+        $this->em->persist($rdv);
         $this->em->flush();
     }
 
@@ -91,20 +82,13 @@ abstract class ApiCalendarServiceAbstract
     /**
      * Set the value of the option to true in the session,
      * because if it is passed through, it means that the user has selected the option.
+     * @param string $key
      * @param string $rdvId
      */
-    public function setOnSessionRdvId(string $rdvId): void
+    public function setOnSessionRdvId(string $key, string $rdvId): void
     {
-        switch (static::class) {
-            case GoogleCalendarApiService::class:
-                $this->session->set(self::CLIENT_GOOGLE_CHECKED, true);
-                $this->session->set(self::GOOGLE_RDV_ID, $rdvId);
-                break;
-            case OutlookCalendarApiService::class:
-                $this->session->set(self::CLIENT_OUTLOOK_CHECKED, true);
-                $this->session->set(self::OUTLOOK_RDV_ID, $rdvId);
-                break;
-        }
+        $this->session->set('client' . ucfirst(strtolower($key)) . 'Checked', true);
+        $this->session->set(strtolower($key) . 'RdvId', $rdvId);
     }
 
     /**

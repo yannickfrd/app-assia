@@ -179,7 +179,7 @@ class OutlookCalendarApiService extends ApiCalendarServiceAbstract
         ;
 
         // save event's id in the Rdv selected
-        $this->setEventOnRdv($responseEvent->getId());
+        $this->setEventOnRdv('outlook', $responseEvent->getId());
 
         return $responseEvent->getWebLink();
 //        $user = $graph

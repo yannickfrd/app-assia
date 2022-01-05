@@ -52,7 +52,7 @@ class GoogleCalendarApiService extends ApiCalendarServiceAbstract
         $optionsParams = [];
         $event = $service->events->insert($calendarId, $this->createEvent(), $optionsParams);
 
-        $this->setEventOnRdv($event->getId());
+        $this->setEventOnRdv('google', $event->getId());
 
         return $edit ? $this->getEditLink($event->htmlLink) : $event->htmlLink;
     }

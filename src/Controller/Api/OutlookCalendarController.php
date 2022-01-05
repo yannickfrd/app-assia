@@ -29,7 +29,7 @@ class OutlookCalendarController extends AbstractController
      */
     public function authClientOutlookCalendar(Request $request): JsonResponse
     {
-        $this->outApiService->setOnSessionRdvId($request->query->get('rdv_id'));
+        $this->outApiService->setOnSessionRdvId('outlook', $request->query->get('rdv_id'));
 
         return $this->json([
             'action' => 'create',
