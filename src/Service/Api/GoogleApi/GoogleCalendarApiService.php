@@ -21,10 +21,7 @@ class GoogleCalendarApiService extends ApiCalendarServiceAbstract
      */
     public function getAuthUrl(): string
     {
-        $client = $this->getClientDefault();
-        $client->setPrompt('select_account');
-
-        return $client->createAuthUrl();
+        return $this->getClientDefault()->createAuthUrl();
     }
 
     /**
@@ -135,7 +132,6 @@ class GoogleCalendarApiService extends ApiCalendarServiceAbstract
         $client->addScope(Google_Service_Calendar::CALENDAR);
         $client->setRedirectUri('https://' . $_SERVER['HTTP_HOST'] . '/add-event-google-calendar');
         $client->setAccessType('offline');
-        $client->setApprovalPrompt("none");
         $client->setIncludeGrantedScopes(true);
 
         return $client;
@@ -155,7 +151,7 @@ class GoogleCalendarApiService extends ApiCalendarServiceAbstract
             $accessToken = $this->session->get(self::SESSION_ACCESS_TOKEN_GOOGLE);
             $client->setAccessToken($accessToken);
 
-            if (!$client->isAccessTokenExpired()) {
+            if ($client->isAccessTokenExpired()) {
                 $client->refreshToken($this->session->get(self::SESSION_REFRESH_TOKEN_GOOGLE));
                 $this->session->set(self::SESSION_ACCESS_TOKEN_GOOGLE, $client->getAccessToken());
             }
