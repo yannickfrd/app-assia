@@ -19,7 +19,7 @@ export default class SupportDocuments {
         this.checkboxSelector = new CheckboxSelector()
 
         this.tagsManager = new TagsManager()
-        this.SelectManager = new SelectManager('#document_tags', {name: 'onModal', elementId: 'document-modal'})
+        this.selectManager = new SelectManager('#document_tags', {name: 'onModal', elementId: 'document-modal'})
 
         this.dropzoneModalElt = new Modal(document.getElementById('dropzone-modal'))
         this.dropzoneFormElt = document.querySelector('form[name="dropzone_document"]')
@@ -177,7 +177,7 @@ export default class SupportDocuments {
         const tagOptionElts = this.documentFormElt.querySelectorAll('select#document_tags option')
         const tagsIds = this.tagsManager.getTagIds(tagElts, tagOptionElts)
 
-        this.SelectManager.showOptionsFromArray(tagsIds)
+        this.selectManager.showOptionsFromArray(tagsIds)
     }
 
     /**

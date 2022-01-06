@@ -1,8 +1,14 @@
 CHANGELOG
 =========
 
+## Version 3.8.2 - 06/01/2021
+Fix multi select feature
+* [SelectManager.js] Rename 'selectManager' object
+* [SelectManager.js] Add default placeholder in options
+* [Select2] Edit css font-size selections 
+
 ## Version 3.8.1 - 05/01/2021
-Create a select manager (JS) and update tag feature
+Create a select manager (JS) and update tag feature (#95)
 * [SelectManager] Create a JS class to manage multi-select (select2)
 * [Tag] Update and create new Commands to add tags
 * [Tag] Add 'color' and 'categories' variables to Tag entity

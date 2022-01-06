@@ -45,7 +45,7 @@ export default class Calendar {
         this.showWeekendsItem = localStorage.getItem('agenda.show_weekends')
         this.fullWidthItem = localStorage.getItem('agenda.full_width')
 
-        this.SelectManager = new SelectManager('#rdv_tags', {name: 'onModal', elementId: this.modalRdvElt.id})
+        this.selectManager = new SelectManager('#rdv_tags', {name: 'onModal', elementId: this.modalRdvElt.id})
 
         this.init()
     }
@@ -163,7 +163,7 @@ export default class Calendar {
         this.btnSaveElt.classList.remove('d-none')
 
         if (e.target.className && e.target.className.search('calendar-event') !== 0) {
-            this.SelectManager.clearSelect()
+            this.selectManager.clearSelect()
             this.modalElt.show()
             const rdvTags = $('#rdv_tags')
             rdvTags.val(null).trigger('change');
@@ -333,7 +333,7 @@ export default class Calendar {
                 }
             })
         })
-        this.SelectManager.showOptionsFromArray(listTagId)
+        this.selectManager.showOptionsFromArray(listTagId)
     }
 
     /**

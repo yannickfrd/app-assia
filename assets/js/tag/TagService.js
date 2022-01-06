@@ -16,7 +16,7 @@ export default class TagService {
         this.listBadge = document.getElementById('tags-list')
         this.formTags = document.forms['service_tag']
         this.selectTags = document.getElementById('service_tag_tags')
-        this.SelectManager = new SelectManager('#service_tag_tags', {name: 'onCollapse', elementId: 'collapse_tags'})
+        this.selectManager = new SelectManager('#service_tag_tags', {name: 'onCollapse', elementId: 'collapse_tags'})
 
         this.init()
     }
@@ -32,7 +32,7 @@ export default class TagService {
         }
 
         this.initTagsTemp()
-        this.SelectManager.clearOptionsList(this.tagsTemp)
+        this.selectManager.clearOptionsList(this.tagsTemp)
 
         this.formTags.addEventListener('submit', this.add.bind(this))
 
@@ -133,7 +133,7 @@ export default class TagService {
         const tag = document.querySelector(`#tags-list span[data-tag-id="${response.data.tagId}"]`)
 
         if (tag) {
-            this.SelectManager.addOption(tag.dataset.tagId, tag.dataset.tagName)
+            this.selectManager.addOption(tag.dataset.tagId, tag.dataset.tagName)
             tag.remove()
         }
     }
@@ -154,7 +154,7 @@ export default class TagService {
         } else {
             data.forEach(tag => this.createTag(tag))
         }
-        this.SelectManager.clearOptionsList(this.tagsTemp)
+        this.selectManager.clearOptionsList(this.tagsTemp)
     }
 
     /**

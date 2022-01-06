@@ -43,7 +43,7 @@ export default class SelectManager {
      */
     getDefaultOptions() {
         return {
-            placeholder: ' ' + this.selectElt.getAttribute('placeholder'),
+            placeholder: ' ' + (this.selectElt.getAttribute('placeholder') ?? '-- Sélectionner --'),
             allowClear: true,
             width: 'resolve',
             'language': {

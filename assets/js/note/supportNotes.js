@@ -45,7 +45,7 @@ export default class SupportNotes {
         this.data = null
         
         this.tagsManager = new TagsManager()
-        this.SelectManager = new SelectManager('#note_tags', {name: 'onModal', elementId: this.noteModalElt.id})
+        this.selectManager = new SelectManager('#note_tags', {name: 'onModal', elementId: this.noteModalElt.id})
 
         this.init()
         this.autoSaver = new AutoSaver(this.autoSaveNote.bind(this), this.CkEditor.getEditorElt(), 60, 20)
@@ -94,7 +94,7 @@ export default class SupportNotes {
      * Affiche un formulaire modal vierge.
      */
     showNewNote() {
-        this.SelectManager.clearSelect()
+        this.selectManager.clearSelect()
         this.noteModal.show()
 
         this.noteModalElt.querySelector('form').action = '/support/' + this.supportId + '/note/new'
@@ -144,7 +144,7 @@ export default class SupportNotes {
         const tagOptionElts = this.noteModalElt.querySelectorAll('option')
         const tagsIds = this.tagsManager.getTagIds(tagElts, tagOptionElts)
 
-        this.SelectManager.showOptionsFromArray(tagsIds)
+        this.selectManager.showOptionsFromArray(tagsIds)
     }
 
     /**
