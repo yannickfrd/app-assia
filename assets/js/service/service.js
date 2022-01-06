@@ -1,6 +1,6 @@
 import DeleteTr from '../utils/deleteTr'
 import changeChecker from '../utils/form/changeChecker'
-import AddCollectionWidget from '../utils/addCollectionWidget'
+import WidgetCollectionManager from '../utils/form/WidgetCollectionManager'
 import FieldDisplayer from '../utils/form/fieldDisplayer'
 import SearchLocation from '../utils/searchLocation'
 import TagService from '../tag/TagService'
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     new DeleteTr('function-table')
     new changeChecker('service') // form name
-    new AddCollectionWidget()
+    new WidgetCollectionManager()
     new SearchLocation('service_location')
     new TagService()
 })

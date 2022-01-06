@@ -30,7 +30,6 @@ export default class SelectCollectionManager {
      * Ajoute un élément prototypé dans la liste.
      */
     addElt(focusFirst = true, callbackNewElt = false) {
-        (this.selectElt.id)
         this.listElt = document.getElementById(this.selectElt.id + '_list')
         // Try to find the counter of the list or use the length of the list
         const counter = parseInt(this.listElt.dataset.itemsCounter || this.listElt.children().length) 

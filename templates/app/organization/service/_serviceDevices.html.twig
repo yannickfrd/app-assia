@@ -14,16 +14,23 @@
 							<th scope="col" class="align-middle th-w-20"></th>
 						</tr>
 					</thead>
-					<tbody id="serviceDevices-fields-list"
-						data-prototype="<td class='align-middle'>{{ form_widget(form.serviceDevices.vars.prototype.device)|e }}</td>"
-						data-widget-tags="<tr></tr>" data-widget-counter="{{ form.serviceDevices|length }}">
+
+					{% set service_device_prototype %}
+						<td class="align-middle">{{ form_widget(form.serviceDevices.vars.prototype.device) }}</td>
+						<td class="align-middle">
+							<button class="btn btn-danger" data-action="remove"><i class="fas fa-trash-alt"></i></button>
+						</td>
+					{% endset %}
+
+					<tbody id="serviceDevices-fields-list" data-prototype="{{ service_device_prototype|e|spaceless }}" 
+						data-container-tag="tr" data-widget-counter="{{ form.serviceDevices|length }}">
 						{% for serviceDevice in form.serviceDevices %}
-						<tr id="{{ serviceDevice.vars.id }}">
-							<td>{{ form_widget(serviceDevice.device) }}</td>
-							<td class="align-middle">
-								<button class="btn btn-danger" data-action="remove"><span class="fas fa-trash-alt"></span></button>
-							</td>
-						</tr>
+							<tr id="{{ serviceDevice.vars.id }}">
+								<td>{{ form_widget(serviceDevice.device) }}</td>
+								<td class="align-middle">
+									<button class="btn btn-danger" data-action="remove"><i class="fas fa-trash-alt"></i></button>
+								</td>
+							</tr>
 						{% endfor %}
 					</tbody>
 				</table>
@@ -33,13 +40,13 @@
 
 	{% if is_granted_edit_service %}
 		<div class="my-2">
-			<button type="button" class="add-another-collection-widget btn btn-{{ theme_color }}"
-				data-list-selector="#serviceDevices-fields-list"><span class="fas fa-plus-square mr-2"></span>Ajouter un dispositif</button>
+			<button type="button" class="btn btn-{{ theme_color }}" data-add-widget="device"
+				data-list-selector="#serviceDevices-fields-list"><i class="fas fa-plus-square mr-2"></i>Ajouter un dispositif</button>
 		</div>
 		<div class="row">
 			<div class="col-md-12">
 				<div class="float-right mb-2">
-					<button type="submit" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>Enregistrer</button>
+					<button type="submit" class="btn btn-{{ theme_color }} shadow"><i class="fas fa-save mr-2"></i>Enregistrer</button>
 				</div>
 			</div>
 		</div>
