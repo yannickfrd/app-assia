@@ -89,13 +89,23 @@ class OutlookCalendarController extends AbstractController
 
     /**
      * @Route("/outlook-event-calendar/{eventId}/delete", name="delete_outlook_event_calendar", methods={"DELETE"})
-     * @param int $eventId
+     * @param string $eventId
      * @return JsonResponse
      */
-    public function deleteEventOutlookCalendar(int $eventId): JsonResponse
+    public function deleteEventOutlookCalendar(string $eventId): JsonResponse
     {
-//        dd($eventId);
-        return $this->json([]);
+        if (!$this->outApiService->delete($eventId)) {
+            return $this->json([
+                'action' => 'delete',
+                'alert' => 'warning',
+                'msg' => 'Une erreur s\'est produite avec Outlook Agenda.',
+            ]);
+        }
+
+        return $this->json([
+            'action' => 'delete',
+            'alert' => 'warning',
+        ]);
     }
 
 //    /**

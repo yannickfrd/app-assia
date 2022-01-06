@@ -70,7 +70,7 @@ class OutlookCalendarApiService extends ApiCalendarServiceAbstract
     /**
      * @param string $authCode
      */
-    public function authClient(string $authCode): void
+    public function authClient(string $authCode)
     {
         $params = [
             'client_id'=> $this->outlookClientId,
@@ -99,6 +99,7 @@ class OutlookCalendarApiService extends ApiCalendarServiceAbstract
         $client = $this->getClient($tokenToArray);
 //        dd($client, $client->toArray());
 
+        return $client;
     }
 
     /**
@@ -129,37 +130,33 @@ class OutlookCalendarApiService extends ApiCalendarServiceAbstract
             'https://graph.microsoft.com/v1.0/me', [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $tokenToArray['access_token'],
-//                    'Authorization' => 'Bearer ' . self::SESSION_ACCESS_TOKEN_OUTLOOK,
-//                    'Authorization' => 'Bearer ' . self::SESSION_ID_TOKEN_OUTLOOK,
                     'Content-Type' => 'application/json',
                 ]
             ]);
 
-        $this->saveClient($client);
+//        $this->saveClient($client);
 
-        return $client;
+        return $client->toArray();
     }
 
-//    private function refreshToken()
-//    {
-//        $params = [
-//            'client_id'=> $this->outlookClientId,
-//            'scope'=> 'user.read user.read.all openid profile email calendars.readwrite offline_access',
-//            'refresh_token'=> $this->session->get(self::SESSION_REFRESH_TOKEN_OUTLOOK),
-//            'redirect_uri'=> $this->redirectUri,
-//            'grant_type'=> 'refresh_token',
-//            'client_secret'=> $this->outlookClientSecret,
-//        ];
-//        $response = $this->httpClient->request('POST',
-//            'https://login.microsoftonline.com/common/oauth2/v2.0/token', [
-//                'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
-//                'body' => $params,
-//            ]);
-//
-//        return $response;
-//
-////        $this->saveToken($response->toArray());
-//    }
+    private function refreshToken(): void
+    {
+        $params = [
+            'client_id'=> $this->outlookClientId,
+            'scope'=> 'openid profile email offline_access user.read.all calendars.readwrite',
+            'refresh_token'=> $this->session->get(self::SESSION_REFRESH_TOKEN_OUTLOOK),
+            'redirect_uri'=> $this->redirectUri,
+            'grant_type'=> 'refresh_token',
+            'client_secret'=> $this->outlookClientSecret,
+        ];
+        $response = $this->httpClient->request('POST',
+            'https://login.microsoftonline.com/common/oauth2/v2.0/token', [
+                'headers' => ['Content-Type' => 'application/x-www-form-urlencoded',],
+                'body' => $params,
+            ]);
+
+        $this->saveToken($response->toArray());
+    }
 
     /**
      *
@@ -169,9 +166,9 @@ class OutlookCalendarApiService extends ApiCalendarServiceAbstract
      */
     public function addRdv(): string
     {
-        $graph = new Graph();
-        $graph->setAccessToken($this->session->get(self::SESSION_ACCESS_TOKEN_OUTLOOK));
+        $this->refreshToken();
 
+        $graph = (new Graph())->setAccessToken($this->session->get(self::SESSION_ACCESS_TOKEN_OUTLOOK));
         $responseEvent = $graph->createRequest('POST', '/me/calendar/events')
             ->attachBody($this->createEvent())
             ->setReturnType(Event::class)
@@ -229,6 +226,22 @@ class OutlookCalendarApiService extends ApiCalendarServiceAbstract
         ;
 
         return $update->getWebLink();
+    }
+
+    public function delete(string $eventId)
+    {
+        $graph = (new Graph())->setAccessToken($this->session->get(self::SESSION_ACCESS_TOKEN_OUTLOOK));
+
+        if (!$this->eventExist($eventId)) {
+            return false;
+        }
+
+        $del = $graph->createRequest('DELETE', '/me/events/' . $eventId)
+            ->setReturnType(Event::class)
+            ->execute()
+        ;
+
+        return isset($del);
     }
 
     /**

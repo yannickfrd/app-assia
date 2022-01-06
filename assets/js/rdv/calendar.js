@@ -248,6 +248,7 @@ export default class Calendar {
      * Requête pour supprimer le RDV.
      */
     requestDeleteRdv() {
+        console.log('link '+ this.btnDeleteElt.href)
         if (window.confirm('Voulez-vous vraiment supprimer ce rendez-vous ?')) {
             this.loader.on()
             this.ajax.send('GET', this.btnDeleteElt.href, this.responseAjax.bind(this))
@@ -379,12 +380,13 @@ export default class Calendar {
      * Supprime le RDV dans l'agenda.
      */
     deleteRdv(rdv) {
-        const rdvElt = document.getElementById('rdv-' + this.rdvId)
-        const dayElt = rdvElt.parentNode
-        rdvElt.remove()
-        this.hideRdvElts(dayElt)
+        // const rdvElt = document.getElementById('rdv-' + this.rdvId)
+        // const dayElt = rdvElt.parentNode
+        // rdvElt.remove()
+        // this.hideRdvElts(dayElt)
 
-        this.clientGoogleCalendar.deleteEvent(rdv.googleEventId)
+        // this.clientGoogleCalendar.deleteEvent(rdv.googleEventId)
+        new ApiCalendar().execute('delete', rdv.id, rdv.eventId)
     }
 
     /**

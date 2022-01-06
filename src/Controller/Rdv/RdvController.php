@@ -205,16 +205,21 @@ class RdvController extends AbstractController
     public function deleteRdv(Rdv $rdv, EventDispatcherInterface $dispatcher): JsonResponse
     {
         $id = $rdv->getId();
-        $googleEventId = $rdv->getGoogleEventId();
 
-        $this->em->remove($rdv);
-        $this->em->flush();
+//        $this->em->remove($rdv);
+//        $this->em->flush();
 
-        $dispatcher->dispatch(new RdvEvent($rdv), 'rdv.after_update');
+//        $dispatcher->dispatch(new RdvEvent($rdv), 'rdv.after_update');
 
         return $this->json([
             'action' => 'delete',
-            'rdv' => ['id' => $id, 'googleEventId' => $googleEventId],
+            'rdv' => [
+                'id' => $id,
+                'eventId' => [
+                    'google' => $rdv->getGoogleEventId(),
+                    'outlook' => $rdv->getOutlookEventId()
+                ]
+            ],
             'alert' => 'warning',
             'msg' => 'Le RDV est supprimé.',
         ]);
