@@ -4,8 +4,6 @@ import Loader from '../utils/loader'
 import DateFormater from '../utils/date/dateFormater'
 import { Modal } from 'bootstrap'
 import ParametersUrl from '../utils/parametersUrl'
-import ClientGoogleCalendar from "../api/googleApi/clientGoogleCalendar";
-import ClientOutlookCalendar from "../api/outlookApi/clientOutlookCalendar";
 import ApiCalendar from "../api/ApiCalendar";
 
 export default class Calendar {
@@ -15,6 +13,7 @@ export default class Calendar {
         this.ajax = new Ajax(this.loader)
         this.parametersUrl = new ParametersUrl()
         this.modalElt = new Modal(document.getElementById('modal-rdv'))
+        this.apiClendar = new ApiCalendar()
 
         this.calendarContainer = document.getElementById('calendar-container')
         this.newRdvBtn = document.getElementById('js-new-rdv')
@@ -47,8 +46,6 @@ export default class Calendar {
         this.showWeekendsItem = localStorage.getItem('agenda.show_weekends')
         this.fullWidthItem = localStorage.getItem('agenda.full_width')
 
-        this.clientGoogleCalendar = new ClientGoogleCalendar()
-        this.clientOutlookCalendar = new ClientOutlookCalendar()
 
         this.init()
     }
@@ -248,7 +245,6 @@ export default class Calendar {
      * Requête pour supprimer le RDV.
      */
     requestDeleteRdv() {
-        console.log('link '+ this.btnDeleteElt.href)
         if (window.confirm('Voulez-vous vraiment supprimer ce rendez-vous ?')) {
             this.loader.on()
             this.ajax.send('GET', this.btnDeleteElt.href, this.responseAjax.bind(this))
@@ -260,7 +256,6 @@ export default class Calendar {
      * @param {Object} data 
      */
     responseAjax(data) {
-        console.log(data)
         if (data.action) {
             switch (data.action) {
                 case 'show':
@@ -361,9 +356,7 @@ export default class Calendar {
 
         rdvElt.addEventListener('click', this.requestGetRdv.bind(this, rdvElt))
 
-        // this.clientGoogleCalendar.createUpdateEvent(rdv.id, action)
-        // this.clientOutlookCalendar.createEvent(rdv.id)
-        new ApiCalendar().execute(action, rdv.id)
+        this.apiClendar.execute(action, rdv.id)
     }
 
     /**
@@ -380,13 +373,12 @@ export default class Calendar {
      * Supprime le RDV dans l'agenda.
      */
     deleteRdv(rdv) {
-        // const rdvElt = document.getElementById('rdv-' + this.rdvId)
-        // const dayElt = rdvElt.parentNode
-        // rdvElt.remove()
-        // this.hideRdvElts(dayElt)
+        const rdvElt = document.getElementById('rdv-' + this.rdvId)
+        const dayElt = rdvElt.parentNode
+        rdvElt.remove()
+        this.hideRdvElts(dayElt)
 
-        // this.clientGoogleCalendar.deleteEvent(rdv.googleEventId)
-        new ApiCalendar().execute('delete', rdv.id, rdv.eventId)
+        this.apiClendar.execute('delete', rdv.id, rdv.eventId)
     }
 
     /**

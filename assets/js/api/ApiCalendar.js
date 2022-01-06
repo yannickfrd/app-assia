@@ -4,40 +4,49 @@ import MessageFlash from "../utils/messageFlash";
 export default class ApiCalendar {
     constructor() {
         this.ajax = new Ajax
-        this.modalRdvElt = document.getElementById('modal-rdv')
-        this.btnDeleteRdvElt = this.modalRdvElt.querySelector('button#modal-btn-delete')
-        this.btnSaveRdvElt = this.modalRdvElt.querySelector('button#js-btn-save')
-        this.formRdvElt = this.modalRdvElt.querySelector('form[name=rdv]')
 
         this.googleCalendarCheckbox = this.formRdvElt.elements['rdv_googleCalendar']
-        this.googleCheckboxIsChecked = this.googleCalendarCheckbox.checked
-        this.urlCreateClientGoogle = this.googleCalendarCheckbox.dataset['clientGoogle']
-
         this.outlookCalendarCheckbox = this.formRdvElt.elements['rdv_outlookCalendar']
-        this.outlookCheckboxIsChecked = this.outlookCalendarCheckbox.checked
-        this.urlCreateClientOutlook = this.outlookCalendarCheckbox.dataset['clientOutlook']
+
+        this.modalRdvElt = document.getElementById('modal-rdv')
+        this.btnDeleteRdvElt = this.modalRdvElt.querySelector('button#modal-btn-delete')
+        this.formRdvElt = this.modalRdvElt.querySelector('form[name=rdv]')
+        this.listApiCalendarCheckbox = this.modalRdvElt.querySelectorAll('.api-calendar')
+
+        this.init()
     }
 
-    initCalendarCheckbox(key) {
-        const valLocalStorage = localStorage.getItem('agenda.' + key)
-        switch (key) {
-            case 'google':
-                this.googleCalendarCheckbox.checked = (null === valLocalStorage) ? false : JSON.parse(valLocalStorage)
-                break;
-            case 'outlook':
-                this.outlookCalendarCheckbox.checked = (null === valLocalStorage) ? false : JSON.parse(valLocalStorage)
-                break;
-        }
+    init() {
+        this.listApiCalendarCheckbox.forEach(elt => {
+            const apiName = elt.dataset['apiName']
+            const storageKey = 'agenda.' + apiName
+            const valLocalStorage = localStorage.getItem(storageKey)
+
+            elt.checked = (null === valLocalStorage) ? false : JSON.parse(valLocalStorage)
+
+            this.calendarIsChecked()
+            elt.addEventListener('change', e => localStorage.setItem(storageKey, e.currentTarget.checked))
+        })
     }
 
+    /**
+     * Not used but maybe later
+     * @param {string} key
+     * @returns {boolean}
+     */
     calendarIsChecked(key) {
         const valLocalStorage = localStorage.getItem('agenda.' + key)
         return (null === valLocalStorage) ? false : JSON.parse(valLocalStorage)
     }
 
+    /**
+     * Executes the requested actions
+     * @param {string} action
+     * @param {number|null} rdvId
+     * @param {string|null} eventId
+     */
     execute(action, rdvId = null, eventId = null) {
-
-        this.modalRdvElt.querySelectorAll('.api-calendar').forEach(elt => {
+        this.listApiCalendarCheckbox.forEach(elt => {
             if (elt.checked) {
                 let url = ''
                 let method = 'GET'

@@ -44,7 +44,7 @@ class GoogleCalendarController extends AbstractController
 
         if (!empty($authCode)) {
             $this->gapiService->authClient($authCode);
-            $urlResponse = $this->gapiService->addRdv(true);
+            $urlResponse = $this->gapiService->addRdv();
 
             return (empty($urlResponse)) ?
                 $this->redirect($this->gapiService->getAuthUrl()) :
@@ -85,14 +85,14 @@ class GoogleCalendarController extends AbstractController
     }
 
     /**
-     * @Route("/google-event/{googleEventId}/delete-event-google-calendar", name="delete_event_google_calendar", methods={"DELETE"})
-     * @param string $googleEventId
+     * @Route("/google-event/{eventId}/delete-event-google-calendar", name="delete_event_google_calendar", methods={"DELETE"})
+     * @param string $eventId
      * @return JsonResponse
      */
-    public function deleteEventGoogleCalendar(string $googleEventId): JsonResponse
+    public function deleteEventGoogleCalendar(string $eventId): JsonResponse
     {
         try {
-            $this->gapiService->deleteEvent($googleEventId);
+            $this->gapiService->deleteEvent($eventId);
         } catch (Exception $e) {
             $getErrors = json_decode($e->getMessage(), false);
 

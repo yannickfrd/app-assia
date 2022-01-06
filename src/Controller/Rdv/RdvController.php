@@ -206,10 +206,10 @@ class RdvController extends AbstractController
     {
         $id = $rdv->getId();
 
-//        $this->em->remove($rdv);
-//        $this->em->flush();
+        $this->em->remove($rdv);
+        $this->em->flush();
 
-//        $dispatcher->dispatch(new RdvEvent($rdv), 'rdv.after_update');
+        $dispatcher->dispatch(new RdvEvent($rdv), 'rdv.after_update');
 
         return $this->json([
             'action' => 'delete',

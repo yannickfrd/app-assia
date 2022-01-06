@@ -94,7 +94,8 @@ class OutlookCalendarController extends AbstractController
      */
     public function deleteEventOutlookCalendar(string $eventId): JsonResponse
     {
-        if (!$this->outApiService->delete($eventId)) {
+        $delete = $this->outApiService->delete($eventId);
+        if (!$delete) {
             return $this->json([
                 'action' => 'delete',
                 'alert' => 'warning',
@@ -105,68 +106,7 @@ class OutlookCalendarController extends AbstractController
         return $this->json([
             'action' => 'delete',
             'alert' => 'warning',
+            'msg' => 'Le RDV a bien été supprimé sur Outlook Agenda.',
         ]);
     }
-
-//    /**
-//     * @Route("/google-event/{checked}/{rdvId}/update-event-google-calendar", name="update_event_google_calendar", methods={"PUT"})
-//     * @throws Exception
-//     */
-//    public function updateEventGoogleCalendar(bool $checked, int $rdvId): JsonResponse
-//    {
-//        if (!$checked) {
-//            $this->gapiService->removeChecked();
-//
-//            return $this->json([
-//                'action' => 'update',
-//                'alert' => 'success',
-//                'msg' => 'L\'option "Google Agenda" a bien été désactivé.'
-//            ]);
-//        }
-//
-//        $updating = $this->gapiService->update($rdvId);
-//
-//        if (!$updating) {
-//            return $this->json([
-//                'action' => 'update',
-//                'alert' => 'success',
-//                'msg' => 'Le RDV n\'a pas été mise à jour sur Google Agenda.',
-//            ]);
-//        }
-//
-//        return $this->json([
-//            'action' => 'update',
-//            'alert' => 'success',
-//            'msg' => 'Le RDV a bien été mise à jour sur Google Agenda.',
-//        ]);
-//    }
-//
-//    /**
-//     * @Route("/google-event/{googleEventId}/delete-event-google-calendar", name="delete_event_google_calendar", methods={"DELETE"})
-//     * @param string $googleEventId
-//     * @return JsonResponse
-//     */
-//    public function deleteEventGoogleCalendar(string $googleEventId): JsonResponse
-//    {
-//        try {
-//            $this->gapiService->deleteEvent($googleEventId);
-//        } catch (Exception $e) {
-//            $getErrors = json_decode($e->getMessage(), false);
-//
-//            if (0 < count($getErrors->error->errors)) {
-//                $messError = $getErrors->error->message;
-//                return $this->json([
-//                    'action' => 'delete',
-//                    'alert' => 'warning',
-//                    'msg' => 'Une erreur s\'est produite avec Google Agenda: "' . $messError . '".',
-//                ]);
-//            }
-//        }
-//
-//        return $this->json([
-//            'action' => 'delete',
-//            'alert' => 'warning',
-//            'msg' => 'Le RDV a bien été supprimé sur Google Agenda.',
-//        ]);
-//    }
 }

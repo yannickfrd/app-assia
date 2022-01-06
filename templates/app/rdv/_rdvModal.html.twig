@@ -84,18 +84,18 @@
                          title="Enregistrer le rendez-vous sur ClientGoogleCalendar Agenda">
 
                         <div class="calendar col-md-12">
-                            {{ form_widget(
-                                form.googleCalendar,
-                                { attr: {'data-client-google': path('auth_google_calendar')} }
+                            {{ form_widget(form.googleCalendar, { attr: {
+                                    'data-api-name': 'google',
+                                    'data-api-create-event': path('auth_google_calendar'),
+                                    'data-api-update-event': path('update_event_google_calendar', { rdvId: '__id__' }),
+                                    'data-api-delete-event': path('delete_event_google_calendar', { eventId: '__id__' })
+                                } }
                             ) }}</div>
                     </div>
                     <div class="col-md-6 custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-1"
                          title="Enregistrer le rendez-vous sur ClientGoogleCalendar Agenda">
-                        <div class="calendar col-md-12"
-{#                             data-api-update-event="{{ path('update_outlook_event_calendar', { rdvId: '__id__' }) }}"#}
-                        >{{ form_widget(
-                                form.outlookCalendar,
-                                { attr: {
+                        <div class="calendar col-md-12">{{ form_widget(form.outlookCalendar, { attr: {
+                                    'data-api-name': 'outlook',
                                     'data-api-create-event': path('auth_outlook_calendar'),
                                     'data-api-update-event': path('update_outlook_event_calendar', { rdvId: '__id__' }),
                                     'data-api-delete-event': path('delete_outlook_event_calendar', { eventId: '__id__' })
@@ -108,15 +108,13 @@
             <div class="modal-footer d-flex justify-content-between">
                 <div class="float-left">
                     <button id="modal-btn-delete" class="mr-3 btn btn-danger" data-placement="bottom"
-                            data-delete-google-event="{{ path('delete_event_google_calendar', {googleEventId: '__id__'}) }}"
-                        title="Supprimer le rendez-vous"><span class="fas fa-trash-alt"></span><span class="d-none d-md-inline ml-2">Supprimer</span></button>
+                        title="Supprimer le rendez-vous"><span class="fas fa-trash-alt"></span>
+                        <span class="d-none d-md-inline ml-2">Supprimer</span>
+                    </button>
                 </div>
                 <div class="float-right">
                     <button type="button" id="js-btn-cancel" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                    <button type="submit" id="js-btn-save" class="btn btn-{{ theme_color }} shadow"
-                            data-update-google-event="{{ path('update_event_google_calendar', { rdvId: '__id__' }) }}"
-                            data-update-outlook-event="{{ path('update_outlook_event_calendar', { rdvId: '__id__' }) }}"
-                    >
+                    <button type="submit" id="js-btn-save" class="btn btn-{{ theme_color }} shadow">
                         <span class="fas fa-save mr-2"></span>Enregistrer</button>
                 </div>
             </div>

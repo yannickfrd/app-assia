@@ -14,6 +14,11 @@ use Microsoft\Graph\Model\EventType;
 use Microsoft\Graph\Model\ItemBody;
 use Microsoft\Graph\Model\Location;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
@@ -69,15 +74,18 @@ class OutlookCalendarApiService extends ApiCalendarServiceAbstract
 
     /**
      * @param string $authCode
+     * @return array
+     * @throws ClientExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws TransportExceptionInterface
      */
     public function authClient(string $authCode)
     {
         $params = [
             'client_id'=> $this->outlookClientId,
-//            'scope'=> 'user.read user.read.all mail.read calendar.read',
-//            'user.read user.read.all openid profile email calendars.readwrite offline_access',
             'openid profile email offline_access user.read.all calendars.readwrite',
-//            'scope'=> 'mail.read',
             'code'=> $authCode,
             'redirect_uri'=> $this->redirectUri,
             'grant_type'=> 'authorization_code',
@@ -90,16 +98,9 @@ class OutlookCalendarApiService extends ApiCalendarServiceAbstract
         ]);
 
         $tokenToArray = $response->toArray();
-
-
-//        dd($tokenToArray);
-
         $this->saveToken($response->toArray());
 
-        $client = $this->getClient($tokenToArray);
-//        dd($client, $client->toArray());
-
-        return $client;
+        return $this->getClient($tokenToArray);
     }
 
     /**
@@ -116,6 +117,11 @@ class OutlookCalendarApiService extends ApiCalendarServiceAbstract
     /**
      * Save or replace the client Outlook on session
      * @param ResponseInterface $client
+     * @throws ClientExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws TransportExceptionInterface
      */
     private function saveClient(ResponseInterface $client): void
     {
@@ -123,9 +129,7 @@ class OutlookCalendarApiService extends ApiCalendarServiceAbstract
     }
 
     private function getClient(array $tokenToArray)
-    {// le token n'est pas pris en session.
-//        $this->refreshToken();
-
+    {
         $client = $this->httpClient->request('GET',
             'https://graph.microsoft.com/v1.0/me', [
                 'headers' => [
@@ -133,8 +137,6 @@ class OutlookCalendarApiService extends ApiCalendarServiceAbstract
                     'Content-Type' => 'application/json',
                 ]
             ]);
-
-//        $this->saveClient($client);
 
         return $client->toArray();
     }
@@ -151,7 +153,11 @@ class OutlookCalendarApiService extends ApiCalendarServiceAbstract
         ];
         $response = $this->httpClient->request('POST',
             'https://login.microsoftonline.com/common/oauth2/v2.0/token', [
-                'headers' => ['Content-Type' => 'application/x-www-form-urlencoded',],
+                'headers' => [
+                    'Content-Type' => 'application/x-www-form-urlencoded',
+                    'Accept-Encoding' => 'gzip, deflate, br',
+                    'Connection' => 'keep-alive'
+                    ],
                 'body' => $params,
             ]);
 
@@ -179,20 +185,6 @@ class OutlookCalendarApiService extends ApiCalendarServiceAbstract
         $this->setEventOnRdv('outlook', $responseEvent->getId());
 
         return $responseEvent->getWebLink();
-//        $user = $graph
-//            ->createRequest('GET', '/me')
-//            ->setReturnType(User::class)
-//            ->execute();
-
-//        $calendars = $graph->createRequest('GET', '/me/calendar')
-//            ->setReturnType(Calendar::class)
-//            ->execute()
-//        ;
-
-//        $events = $graph->createRequest('GET', '/me/events')
-//            ->setReturnType(Event::class)
-//            ->execute()
-//        ;
     }
 
     /**
@@ -203,6 +195,8 @@ class OutlookCalendarApiService extends ApiCalendarServiceAbstract
      */
     public function update(int $rdvId)
     {
+        $this->refreshToken();
+
         /** @var Rdv $rdv */
         $rdv = $this->em->getRepository(Rdv::class)->find($rdvId);
 
@@ -228,14 +222,15 @@ class OutlookCalendarApiService extends ApiCalendarServiceAbstract
         return $update->getWebLink();
     }
 
-    public function delete(string $eventId)
+    public function delete(string $eventId): bool
     {
-        $graph = (new Graph())->setAccessToken($this->session->get(self::SESSION_ACCESS_TOKEN_OUTLOOK));
+        $this->refreshToken();
 
         if (!$this->eventExist($eventId)) {
             return false;
         }
 
+        $graph = (new Graph())->setAccessToken($this->session->get(self::SESSION_ACCESS_TOKEN_OUTLOOK));
         $del = $graph->createRequest('DELETE', '/me/events/' . $eventId)
             ->setReturnType(Event::class)
             ->execute()
