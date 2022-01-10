@@ -191,7 +191,7 @@ class OutlookCalendarApiService extends ApiCalendarServiceAbstract
 
         $this->session->set('outlookRdvId', $rdvId);
 
-        if (null === $rdv->getOutlookEventId() || !$this->eventExist($rdv->getOutlookEventId())) {
+        if (null === $rdv->getOutlookEventId() || !$this->eventExists($rdv->getOutlookEventId())) {
             return $this->addRdv();
         }
 
@@ -201,7 +201,7 @@ class OutlookCalendarApiService extends ApiCalendarServiceAbstract
             ->setReturnType(Event::class)
             ->execute();
 
-        return $update->getWebLink();
+        return isset($update);
     }
 
     /**
@@ -220,7 +220,7 @@ class OutlookCalendarApiService extends ApiCalendarServiceAbstract
     {
         $this->refreshToken();
 
-        if (!$this->eventExist($eventId)) {
+        if (!$this->eventExists($eventId)) {
             return false;
         }
 
@@ -239,7 +239,7 @@ class OutlookCalendarApiService extends ApiCalendarServiceAbstract
      * @return bool
      * @throws GuzzleException
      */
-    private function eventExist(string $eventId): bool
+    private function eventExists(string $eventId): bool
     {
         $graph = (new Graph())->setAccessToken($this->session->get(self::SESSION_ACCESS_TOKEN_OUTLOOK));
 

@@ -96,6 +96,9 @@ abstract class ApiCalendarServiceAbstract
      */
     protected function createBodyEvent(string $rdvContent = null, User $rdvCreatedBy = null, string $rdvStatus = null): string
     {
+        if ("ook" === null) {
+            return false;
+        }
         $body = $rdvContent;
         $status = $rdvStatus ? '<br><strong>Statut : </strong>' . $rdvStatus : '';
         if ($rdvCreatedBy) {
@@ -127,12 +130,14 @@ abstract class ApiCalendarServiceAbstract
     protected function createTitleEvent(Rdv $rdv): string
     {
         $title = $rdv->getTitle();
+        $fullName = $rdv->getSupportGroup()->getHeader()->getFullname();
+
         if ($rdv->getSupportGroup()) {
-            $pattern = '/' . $rdv->getSupportGroup()->getHeader()->getFullname() . '/';
+            $pattern = '/' . $fullName . '/';
             preg_match($pattern, $rdv->getTitle(), $matches);
 
             if (empty($matches)) {
-                $title .= ' | ' . $rdv->getSupportGroup()->getHeader()->getFullname();
+                $title .= ' | ' . $fullName;
             }
         }
 

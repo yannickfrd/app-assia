@@ -68,7 +68,6 @@ class OutlookCalendarController extends AbstractController
      */
     public function updateEventOutlookCalendar(int $rdvId): JsonResponse
     {
-
         $updated = $this->outApiService->update($rdvId);
 
         if (!$updated) {
@@ -76,13 +75,6 @@ class OutlookCalendarController extends AbstractController
                 'action' => 'update',
                 'alert' => 'danger',
                 'msg' => 'Le RDV n\'a pas été mise à jour sur Outlook Agenda.',
-            ]);
-        }
-
-        if (is_string($updated)) {
-            return $this->json([
-                'action' => 'create',
-                'url' => $updated,
             ]);
         }
 
