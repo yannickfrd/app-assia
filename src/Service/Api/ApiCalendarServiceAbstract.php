@@ -11,12 +11,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 abstract class ApiCalendarServiceAbstract
 {
-    protected const CLIENT_GOOGLE_CHECKED = 'clientGoogleChecked';
-    protected const CLIENT_OUTLOOK_CHECKED = 'clientOutlookChecked';
-
-    protected const GOOGLE_RDV_ID = 'googleRdvId';
-    protected const OUTLOOK_RDV_ID = 'outlookRdvId';
-
     /** @var SessionInterface */
     protected $session;
 
@@ -54,14 +48,14 @@ abstract class ApiCalendarServiceAbstract
     }
 
     /**
-     * Update th Rdv and set the event's Id Google|Outlook Calendar
+     * Update th Rdv and set the event's Id Google|Outlook Calendar.
      * @param string $key
      * @param string $eventId
      */
     protected function setEventOnRdv(string $key, string $eventId): void
     {
         $setEventId = 'set' . ucfirst(strtolower($key)) . 'EventId';
-        $rdv = $this->getRdv($this->session->get(strtolower($key) . 'RdvId'))
+        $rdv = $this->getRdv($key, $this->session->get(strtolower($key) . 'RdvId'))
             ->$setEventId($eventId);
 
         $this->em->persist($rdv);
@@ -69,13 +63,14 @@ abstract class ApiCalendarServiceAbstract
     }
 
     /**
-     * Returns the current Rdv recorded in session according to the id
-     * @param $rdvId
+     * Returns the current Rdv recorded in session according to the id.
+     * @param string $key
+     * @param null $rdvId
      * @return Rdv
      */
-    protected function getRdv($rdvId = null): Rdv
+    protected function getRdv(string $key, $rdvId = null): Rdv
     {
-        $id = $rdvId ?? $this->session->get(self::GOOGLE_RDV_ID);
+        $id = $rdvId ?? $this->session->get(strtolower($key) . 'RdvId');
         return $this->em->getRepository(Rdv::class)->find($id);
     }
 
@@ -93,7 +88,7 @@ abstract class ApiCalendarServiceAbstract
     }
 
     /**
-     * Create a Body for Google's or Outlook's event
+     * Create a Body for Google's or Outlook's event.
      * @param string|null $rdvContent
      * @param User|null $rdvCreatedBy
      * @param string|null $rdvStatus
@@ -112,20 +107,20 @@ abstract class ApiCalendarServiceAbstract
     }
 
     /**
-     * Create an array with a \DateTime and a timeZone for Google's or Outlook's event
+     * Create an array with a \DateTime and a timeZone for Google's or Outlook's event.
      * @param DateTimeInterface $dateTime
      * @return array
      */
     protected function createDateEvent(DateTimeInterface $dateTime): array
     {
         return [
-            'dateTime' => $dateTime,
+            'dateTime' => $dateTime->format('c'),
             'timeZone' => $dateTime->getTimezone()->getName()
         ];
     }
 
     /**
-     * Create a Title for Google's or Outlook's event
+     * Create a Title for Google's or Outlook's event.
      * @param Rdv $rdv
      * @return string
      */

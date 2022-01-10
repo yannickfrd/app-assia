@@ -20,12 +20,9 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class OutlookCalendarApiService extends ApiCalendarServiceAbstract
 {
-    private const SESSION_CLIENT_OUTLOOK = 'outlookClient';
-
     private const SESSION_ID_TOKEN_OUTLOOK = 'outlookIdToken';
     private const SESSION_REFRESH_TOKEN_OUTLOOK = 'outlookRefreshToken';
     private const SESSION_ACCESS_TOKEN_OUTLOOK = 'outlookAccessToken';
@@ -67,12 +64,12 @@ class OutlookCalendarApiService extends ApiCalendarServiceAbstract
             $this->redirectUri,
             'query',
             'openid profile email offline_access user.read.all calendars.readwrite'
-//            'user.read user.read.all openid profile email calendars.readwrite.shared offline_access'
 //            ,'consent'
         );
     }
 
     /**
+     * Authentication
      * @param string $authCode
      * @return array
      * @throws ClientExceptionInterface
@@ -81,7 +78,7 @@ class OutlookCalendarApiService extends ApiCalendarServiceAbstract
      * @throws ServerExceptionInterface
      * @throws TransportExceptionInterface
      */
-    public function authClient(string $authCode)
+    public function authClient(string $authCode): array
     {
         $params = [
             'client_id'=> $this->outlookClientId,
@@ -114,21 +111,7 @@ class OutlookCalendarApiService extends ApiCalendarServiceAbstract
         $this->session->set(self::SESSION_REFRESH_TOKEN_OUTLOOK, $tokenToArray['refresh_token']);
     }
 
-    /**
-     * Save or replace the client Outlook on session
-     * @param ResponseInterface $client
-     * @throws ClientExceptionInterface
-     * @throws DecodingExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws TransportExceptionInterface
-     */
-    private function saveClient(ResponseInterface $client): void
-    {
-        $this->session->set(self::SESSION_CLIENT_OUTLOOK, $client->toArray());
-    }
-
-    private function getClient(array $tokenToArray)
+    private function getClient(array $tokenToArray): array
     {
         $client = $this->httpClient->request('GET',
             'https://graph.microsoft.com/v1.0/me', [
@@ -141,6 +124,13 @@ class OutlookCalendarApiService extends ApiCalendarServiceAbstract
         return $client->toArray();
     }
 
+    /**
+     * @throws ClientExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws TransportExceptionInterface
+     */
     private function refreshToken(): void
     {
         $params = [
@@ -165,21 +155,20 @@ class OutlookCalendarApiService extends ApiCalendarServiceAbstract
     }
 
     /**
-     *
+     * Creating an event in the Outlook calendar.
      * @return string
      * @throws GuzzleException
      * @throws GraphException
      */
     public function addRdv(): string
     {
-        $this->refreshToken();
+//        $this->refreshToken();
 
         $graph = (new Graph())->setAccessToken($this->session->get(self::SESSION_ACCESS_TOKEN_OUTLOOK));
         $responseEvent = $graph->createRequest('POST', '/me/calendar/events')
             ->attachBody($this->createEvent())
             ->setReturnType(Event::class)
-            ->execute()
-        ;
+            ->execute();
 
         // save event's id in the Rdv selected
         $this->setEventOnRdv('outlook', $responseEvent->getId());
@@ -195,33 +184,38 @@ class OutlookCalendarApiService extends ApiCalendarServiceAbstract
      */
     public function update(int $rdvId)
     {
-        $this->refreshToken();
+//        $this->refreshToken();
 
         /** @var Rdv $rdv */
         $rdv = $this->em->getRepository(Rdv::class)->find($rdvId);
 
-        if (null === $rdv->getOutlookEventId()) {
-            $this->session->set(self::OUTLOOK_RDV_ID, $rdvId);
+        $this->session->set('outlookRdvId', $rdvId);
+
+        if (null === $rdv->getOutlookEventId() || !$this->eventExist($rdv->getOutlookEventId())) {
             return $this->addRdv();
         }
 
-        if (!$this->eventExist($rdv->getOutlookEventId())) {
-            return false;
-        }
-
         $graph = (new Graph())->setAccessToken($this->session->get(self::SESSION_ACCESS_TOKEN_OUTLOOK));
-
-        $this->session->set(self::OUTLOOK_RDV_ID, $rdvId);
-
         $update = $graph->createRequest('PATCh', '/me/events/' . $rdv->getOutlookEventId())
             ->attachBody($this->createEvent())
             ->setReturnType(Event::class)
-            ->execute()
-        ;
+            ->execute();
 
         return $update->getWebLink();
     }
 
+    /**
+     * Deleting an event in the Outlook calendar.
+     * @param string $eventId
+     * @return bool
+     * @throws ClientExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws GraphException
+     * @throws GuzzleException
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws TransportExceptionInterface
+     */
     public function delete(string $eventId): bool
     {
         $this->refreshToken();
@@ -243,29 +237,34 @@ class OutlookCalendarApiService extends ApiCalendarServiceAbstract
      * Check if the event exists in the Outlook Calendar.
      * @param string $eventId
      * @return bool
-     * @throws GraphException
      * @throws GuzzleException
      */
     private function eventExist(string $eventId): bool
     {
         $graph = (new Graph())->setAccessToken($this->session->get(self::SESSION_ACCESS_TOKEN_OUTLOOK));
 
-        $event = $graph->createRequest('GET', '/me/events/' . $eventId)
-            ->setReturnType(Event::class)
-            ->execute()
-        ;
+        try {
+            $event = $graph->createRequest('GET', '/me/events/' . $eventId)
+                ->setReturnType(Event::class)
+                ->execute();
+        } catch (\Exception $e) {
+            if (404 === $e->getCode()) {
+                return false;
+            }
+        }
 
         return isset($event);
     }
 
+
+
     /**
-     * Create Outlook event
+     * Create Outlook event.
      * @return Event
      */
     private function createEvent(): Event
     {
-        /** @var Rdv $rdv */
-        $rdv = $this->em->getRepository(Rdv::class)->find($this->session->get(parent::OUTLOOK_RDV_ID));
+        $rdv = $this->getRdv('outlook');
 
         $event = (new Event())
             ->setSubject($this->createTitleEvent($rdv))
@@ -276,7 +275,7 @@ class OutlookCalendarApiService extends ApiCalendarServiceAbstract
                 'content' => $this->createBodyEvent(
                     $rdv->getContent(),
                     $rdv->getCreatedBy(),
-                    $rdv->getStatus()
+                    $rdv->getStatusToString()
                 ),
                 'contentType' => new BodyType('html')
             ]));

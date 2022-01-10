@@ -5,9 +5,6 @@ export default class ApiCalendar {
     constructor() {
         this.ajax = new Ajax
 
-        this.googleCalendarCheckbox = this.formRdvElt.elements['rdv_googleCalendar']
-        this.outlookCalendarCheckbox = this.formRdvElt.elements['rdv_outlookCalendar']
-
         this.modalRdvElt = document.getElementById('modal-rdv')
         this.btnDeleteRdvElt = this.modalRdvElt.querySelector('button#modal-btn-delete')
         this.formRdvElt = this.modalRdvElt.querySelector('form[name=rdv]')

@@ -3,18 +3,22 @@
 namespace App\Controller\Api;
 
 use App\Service\Api\OutlookApi\OutlookCalendarApiService;
+use GuzzleHttp\Exception\GuzzleException;
+use Microsoft\Graph\Exception\GraphException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class OutlookCalendarController extends AbstractController
 {
-    /**
-     * @var OutlookCalendarApiService
-     */
+    /** @var OutlookCalendarApiService */
     private $outApiService;
 
     public function __construct(OutlookCalendarApiService $outApiService)
@@ -59,6 +63,8 @@ class OutlookCalendarController extends AbstractController
      * @Route("/outlook-event-calendar/{rdvId}/update", name="update_outlook_event_calendar", methods={"PUT"})
      * @param int $rdvId
      * @return JsonResponse
+     * @throws GuzzleException
+     * @throws GraphException
      */
     public function updateEventOutlookCalendar(int $rdvId): JsonResponse
     {
@@ -91,6 +97,13 @@ class OutlookCalendarController extends AbstractController
      * @Route("/outlook-event-calendar/{eventId}/delete", name="delete_outlook_event_calendar", methods={"DELETE"})
      * @param string $eventId
      * @return JsonResponse
+     * @throws GraphException
+     * @throws GuzzleException
+     * @throws ClientExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws TransportExceptionInterface
      */
     public function deleteEventOutlookCalendar(string $eventId): JsonResponse
     {
