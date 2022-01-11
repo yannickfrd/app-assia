@@ -262,13 +262,13 @@ export default class Calendar {
                     this.showRdv(data.rdv);
                     break;
                 case 'create':
-                    this.createRdv(data.rdv, data.action);
+                    this.createRdv(data.rdv, data.action, data.apiUrls);
                     break;
                 case 'update':
-                    this.updateRdv(data.rdv, data.action);
+                    this.updateRdv(data.rdv, data.action, data.apiUrls);
                     break;
                 case 'delete':
-                    this.deleteRdv(data.rdv);
+                    this.deleteRdv(data.rdv, data.apiUrls);
                     break;
             }
         }
@@ -336,8 +336,9 @@ export default class Calendar {
      * Crée le RDV dans le container du jour de l'agenda.
      * @param {Object} rdv
      * @param {string} action
+     * @param {Object} apiUrls
      */
-    createRdv(rdv, action) {
+    createRdv(rdv, action, apiUrls) {
         const rdvElt = document.createElement('div')
         rdvElt.className = `calendar-event bg-${this.themeColor} text-light`
         rdvElt.id = `rdv-${rdv.id}`
@@ -356,29 +357,32 @@ export default class Calendar {
 
         rdvElt.addEventListener('click', this.requestGetRdv.bind(this, rdvElt))
 
-        this.apiClendar.execute(action, rdv.id)
+        this.apiClendar.execute(action, apiUrls, rdv.id)
     }
 
     /**
      * Met à jour le RDV dans l'agenda.
      * @param {Object} rdv
      * @param {string} action
+     * @param {Object} apiUrls
      */
-    updateRdv(rdv, action) {
+    updateRdv(rdv, action, apiUrls) {
         this.rdvElt.remove()
-        this.createRdv(rdv, action)
+        this.createRdv(rdv, action, apiUrls)
     }
 
     /**
      * Supprime le RDV dans l'agenda.
+     * @param {Object} rdv
+     * @param {Object} apiUrls
      */
-    deleteRdv(rdv) {
+    deleteRdv(rdv, apiUrls) {
         const rdvElt = document.getElementById('rdv-' + this.rdvId)
         const dayElt = rdvElt.parentNode
         rdvElt.remove()
         this.hideRdvElts(dayElt)
 
-        this.apiClendar.execute('delete', rdv.id, rdv.eventId)
+        this.apiClendar.execute('delete', apiUrls, rdv.id, rdv.eventId)
     }
 
     /**

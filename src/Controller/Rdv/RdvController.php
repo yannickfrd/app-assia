@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class RdvController extends AbstractController
 {
@@ -124,7 +125,10 @@ class RdvController extends AbstractController
 
             $dispatcher->dispatch(new RdvEvent($rdv), 'rdv.after_create');
 
-            return $this->json($this->getDataNewRdv($rdv));
+            return $this->json(array_merge(
+                $this->getDataNewRdv($rdv),
+                ['apiUrls' => $this->getApiSelected('create', (array)$request->request->get('rdv'))]
+            ));
         }
 
         return $this->getErrorMessage($form);
@@ -190,6 +194,7 @@ class RdvController extends AbstractController
                     'day' => $rdv->getStart()->format('Y-m-d'),
                     'start' => $rdv->getStart()->format('H:i'),
                 ],
+                'apiUrls' => $this->getApiSelected('update', (array)$request->request->get('rdv'))
             ]);
         }
 
@@ -222,6 +227,7 @@ class RdvController extends AbstractController
             ],
             'alert' => 'warning',
             'msg' => 'Le RDV est supprimé.',
+            'apiUrls' => $this->getApiSelected('delete')
         ]);
     }
 
@@ -238,6 +244,34 @@ class RdvController extends AbstractController
                 'start' => $rdv->getStart()->format('H:i'),
             ],
         ];
+    }
+
+    private function getApiSelected(string $action, array $requestRdv = []): array
+    {
+        $params = [];
+        $urls = [];
+
+        switch ($action) {
+            case 'update':
+                $params['rdvId'] = '__id__';
+                break;
+            case 'delete':
+                $params['eventId'] = '__id__';
+                $requestRdv = [
+                    'googleCalendar' => true,
+                    'outlookCalendar' => true
+                ];
+                break;
+        }
+
+        if (isset($requestRdv['googleCalendar']) && (bool)$requestRdv['googleCalendar']) {
+            $urls['google'] = $this->generateUrl($action . '_event_google_calendar', $params);
+        }
+        if (isset($requestRdv['outlookCalendar']) && (bool)$requestRdv['outlookCalendar']) {
+            $urls['outlook'] = $this->generateUrl($action . '_event_outlook_calendar', $params);
+        }
+;
+        return $urls;
     }
 
     /**

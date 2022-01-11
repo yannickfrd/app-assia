@@ -21,10 +21,10 @@ class GoogleCalendarController extends AbstractController
     }
 
     /**
-     * @Route("/auth-google-calendar", name="auth_google_calendar", methods={"GET"})
+     * @Route("/google-calendar/event/create", name="create_event_google_calendar", methods={"GET"})
      * @throws Exception
      */
-    public function authClientGoogleCalendar(Request $request): JsonResponse
+    public function createEventGoogleCalendar(Request $request): JsonResponse
     {
         $this->gapiService->setOnSessionRdvId('google', $request->query->get('rdv_id'));
 
@@ -35,6 +35,7 @@ class GoogleCalendarController extends AbstractController
     }
 
     /**
+     * Callback function
      * @Route("/add-event-google-calendar", name="add_event_google_calendar")
      * @throws Exception
      */
@@ -55,7 +56,7 @@ class GoogleCalendarController extends AbstractController
     }
 
     /**
-     * @Route("/google-event/{rdvId}/update-event-google-calendar", name="update_event_google_calendar", methods={"PUT"})
+     * @Route("/google-calendar/event/update/{rdvId}", name="update_event_google_calendar", methods={"PUT"})
      * @throws Exception
      */
     public function updateEventGoogleCalendar(int $rdvId): JsonResponse
@@ -85,7 +86,7 @@ class GoogleCalendarController extends AbstractController
     }
 
     /**
-     * @Route("/google-event/{eventId}/delete-event-google-calendar", name="delete_event_google_calendar", methods={"DELETE"})
+     * @Route("/google-calendar/event/delete/{eventId}", name="delete_event_google_calendar", methods={"DELETE"})
      * @param string $eventId
      * @return JsonResponse
      */

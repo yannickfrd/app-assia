@@ -85,22 +85,18 @@
 
                         <div class="calendar col-md-12">
                             {{ form_widget(form.googleCalendar, { attr: {
-                                    'data-api-name': 'google',
-                                    'data-api-create-event': path('auth_google_calendar'),
-                                    'data-api-update-event': path('update_event_google_calendar', { rdvId: '__id__' }),
-                                    'data-api-delete-event': path('delete_event_google_calendar', { eventId: '__id__' })
+                                    'data-api-name': 'google'
                                 } }
-                            ) }}</div>
+                            ) }}
+                        </div>
                     </div>
                     <div class="col-md-6 custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-1"
                          title="Enregistrer le rendez-vous sur ClientGoogleCalendar Agenda">
                         <div class="calendar col-md-12">{{ form_widget(form.outlookCalendar, { attr: {
-                                    'data-api-name': 'outlook',
-                                    'data-api-create-event': path('auth_outlook_calendar'),
-                                    'data-api-update-event': path('update_outlook_event_calendar', { rdvId: '__id__' }),
-                                    'data-api-delete-event': path('delete_outlook_event_calendar', { eventId: '__id__' })
+                                    'data-api-name': 'outlook'
                                 } }
-                            ) }}</div>
+                            ) }}
+                        </div>
                     </div>
                 </div>
                 {{ form_row(form._token) }}

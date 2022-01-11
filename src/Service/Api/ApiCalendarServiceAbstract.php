@@ -96,11 +96,9 @@ abstract class ApiCalendarServiceAbstract
      */
     protected function createBodyEvent(string $rdvContent = null, User $rdvCreatedBy = null, string $rdvStatus = null): string
     {
-        if ("ook" === null) {
-            return false;
-        }
         $body = $rdvContent;
         $status = $rdvStatus ? '<br><strong>Statut : </strong>' . $rdvStatus : '';
+
         if ($rdvCreatedBy) {
             $body .= '<br><strong>Créé par : </strong>' .
                 $this->em->getRepository(User::class)->find($rdvCreatedBy)->getFullname();
@@ -133,8 +131,7 @@ abstract class ApiCalendarServiceAbstract
         $fullName = $rdv->getSupportGroup()->getHeader()->getFullname();
 
         if ($rdv->getSupportGroup()) {
-            $pattern = '/' . $fullName . '/';
-            preg_match($pattern, $rdv->getTitle(), $matches);
+            preg_match('/' . $fullName . '/', $rdv->getTitle(), $matches);
 
             if (empty($matches)) {
                 $title .= ' | ' . $fullName;
