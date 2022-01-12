@@ -187,7 +187,7 @@ class OutlookCalendarApiService extends ApiCalendarServiceAbstract
 //        $this->refreshToken();
 
         /** @var Rdv $rdv */
-        $rdv = $this->em->getRepository(Rdv::class)->find($rdvId);
+        $rdv = $this->em->getRepository(Rdv::class)->findRdv($rdvId);
 
         $this->session->set('outlookRdvId', $rdvId);
 

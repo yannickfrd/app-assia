@@ -357,7 +357,7 @@ export default class Calendar {
 
         rdvElt.addEventListener('click', this.requestGetRdv.bind(this, rdvElt))
 
-        this.apiClendar.execute(action, apiUrls, rdv.id)
+        this.apiClendar.execute(action, apiUrls)
     }
 
     /**
@@ -382,7 +382,7 @@ export default class Calendar {
         rdvElt.remove()
         this.hideRdvElts(dayElt)
 
-        this.apiClendar.execute('delete', apiUrls, rdv.id, rdv.eventId)
+        this.apiClendar.execute('delete', apiUrls)
     }
 
     /**

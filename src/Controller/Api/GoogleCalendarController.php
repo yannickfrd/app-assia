@@ -26,7 +26,7 @@ class GoogleCalendarController extends AbstractController
      */
     public function createEventGoogleCalendar(Request $request): JsonResponse
     {
-        $this->gapiService->setOnSessionRdvId('google', $request->query->get('rdv_id'));
+        $this->gapiService->setOnSessionRdvId('google', $request->query->get('rdvId'));
 
         return $this->json([
             'action' => 'create',

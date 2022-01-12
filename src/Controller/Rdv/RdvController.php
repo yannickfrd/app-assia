@@ -25,7 +25,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class RdvController extends AbstractController
 {
@@ -97,7 +96,7 @@ class RdvController extends AbstractController
             $this->em->persist($rdv);
             $this->em->flush();
 
-            return $this->json($this->getDataNewRdv($rdv));
+            return $this->json($this->getDataNewRdv($rdv, (array)$request->request->get('rdv')));
         }
 
         return $this->getErrorMessage($form);
@@ -126,8 +125,7 @@ class RdvController extends AbstractController
             $dispatcher->dispatch(new RdvEvent($rdv), 'rdv.after_create');
 
             return $this->json(array_merge(
-                $this->getDataNewRdv($rdv),
-                ['apiUrls' => $this->getApiSelected('create', (array)$request->request->get('rdv'))]
+                $this->getDataNewRdv($rdv, (array)$request->request->get('rdv'))
             ));
         }
 
@@ -194,7 +192,7 @@ class RdvController extends AbstractController
                     'day' => $rdv->getStart()->format('Y-m-d'),
                     'start' => $rdv->getStart()->format('H:i'),
                 ],
-                'apiUrls' => $this->getApiSelected('update', (array)$request->request->get('rdv'))
+                'apiUrls' => $this->getApiSelected('update', $rdv->getId(), (array)$request->request->get('rdv'))
             ]);
         }
 
@@ -216,22 +214,21 @@ class RdvController extends AbstractController
 
         $dispatcher->dispatch(new RdvEvent($rdv), 'rdv.after_update');
 
+        $eventIds = [
+            'google' => $rdv->getGoogleEventId(),
+            'outlook' => $rdv->getOutlookEventId()
+        ];
+
         return $this->json([
             'action' => 'delete',
-            'rdv' => [
-                'id' => $id,
-                'eventId' => [
-                    'google' => $rdv->getGoogleEventId(),
-                    'outlook' => $rdv->getOutlookEventId()
-                ]
-            ],
+            'rdv' => ['id' => $id],
             'alert' => 'warning',
             'msg' => 'Le RDV est supprimé.',
-            'apiUrls' => $this->getApiSelected('delete')
+            'apiUrls' => $this->getApiSelected('delete', $id, [], $eventIds)
         ]);
     }
 
-    private function getDataNewRdv(Rdv $rdv): array
+    private function getDataNewRdv(Rdv $rdv, array $requestRdv): array
     {
         return [
             'action' => 'create',
@@ -243,25 +240,40 @@ class RdvController extends AbstractController
                 'day' => $rdv->getStart()->format('Y-m-d'),
                 'start' => $rdv->getStart()->format('H:i'),
             ],
+            'apiUrls' => $this->getApiSelected('create', $rdv->getId(), $requestRdv)
         ];
     }
 
-    private function getApiSelected(string $action, array $requestRdv = []): array
+    /**
+     * Creation of urls according to the selected api.
+     * @param string $action
+     * @param $id
+     * @param array $requestRdv
+     * @param array $eventIds
+     * @return array
+     */
+    private function getApiSelected(string $action, $id, array $requestRdv = [], array $eventIds = []): array
     {
         $params = [];
         $urls = [];
 
         switch ($action) {
             case 'update':
-                $params['rdvId'] = '__id__';
+            case 'create':
+                $params['rdvId'] = $id;
                 break;
             case 'delete':
-                $params['eventId'] = '__id__';
-                $requestRdv = [
-                    'googleCalendar' => true,
-                    'outlookCalendar' => true
-                ];
-                break;
+                foreach ($eventIds as $apiName => $eventId) {
+                    if (null !== $eventId) {
+                        $urls[$apiName] = $this->generateUrl(
+                            $action . '_event_' . $apiName . '_calendar', [
+                                'eventId' => $eventId
+                            ]
+                        );
+                    }
+                }
+
+                return $urls;
         }
 
         if (isset($requestRdv['googleCalendar']) && (bool)$requestRdv['googleCalendar']) {
@@ -270,14 +282,14 @@ class RdvController extends AbstractController
         if (isset($requestRdv['outlookCalendar']) && (bool)$requestRdv['outlookCalendar']) {
             $urls['outlook'] = $this->generateUrl($action . '_event_outlook_calendar', $params);
         }
-;
+
         return $urls;
     }
 
     /**
      * Exporte les données.
      */
-    private function exportData(RdvSearch $search): Response
+    private function exportData(RdvSearch $search)
     {
         $rdvs = $this->rdvRepo->findRdvsToExport($search);
 

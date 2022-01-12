@@ -29,25 +29,19 @@ export default class ApiCalendar {
      * Executes the requested actions
      * @param {string} action
      * @param {Object} apiUrls
-     * @param {number|null} rdvId
-     * @param {string|null} eventId
      */
-    execute(action, apiUrls, rdvId = null, eventId = null) {
+    execute(action, apiUrls) {
         for (const [apiName, apiUrl] of Object.entries(apiUrls)) {
-            let url = ''
+            let url = apiUrl
             let method = 'GET'
 
             switch (action) {
-                case 'create':
-                    url = apiUrl + '?rdv_id=' + rdvId
-                    break;
                 case 'update':
-                    url = apiUrl.replace('__id__', rdvId)
                     method = 'PUT'
                     break;
                 case 'delete':
-                    if (null !== eventId[apiName] && this.calendarIsChecked(apiName)) {
-                        url = apiUrl.replace('__id__', eventId[apiName]);
+                    if (!this.calendarIsChecked(apiName)) {
+                        url = false;
                     }
                     method = 'DELETE'
                     break;

@@ -71,7 +71,7 @@ abstract class ApiCalendarServiceAbstract
     protected function getRdv(string $key, $rdvId = null): Rdv
     {
         $id = $rdvId ?? $this->session->get(strtolower($key) . 'RdvId');
-        return $this->em->getRepository(Rdv::class)->find($id);
+        return $this->em->getRepository(Rdv::class)->findRdv($id);
     }
 
 
