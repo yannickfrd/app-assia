@@ -105,8 +105,8 @@ class EvaluationGroup
     public function __clone()
     {
         $now = new \DateTime();
-        $this->setCreatedAt($now);
-        $this->setUpdatedAt($now);
+        $this->setCreatedAt($now)
+            ->setUpdatedAt($now);
 
         $newEvaluationPeople = new ArrayCollection();
 

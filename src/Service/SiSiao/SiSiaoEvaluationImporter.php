@@ -121,11 +121,9 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         $evaluationGroup = $this->createOrEditEvaluationGroup($supportGroup);
 
         foreach ($supportGroup->getSupportPeople() as $supportPerson) {
-            $person = $supportPerson->getPerson();
-            $personne = $this->matchPerson($person);
+            $personne = $this->matchPerson($supportPerson->getPerson());
             if ($personne) {
-                $evaluationPerson = $this->createOrEditEvaluationPerson($evaluationGroup, $supportPerson, $personne);
-                $evaluationGroup->addEvaluationPerson($evaluationPerson);
+                $this->createOrEditEvaluationPerson($evaluationGroup, $supportPerson, $personne);
             }
         }
 
@@ -411,10 +409,12 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
 
     protected function createOrEditEvaluationPerson(EvaluationGroup $evaluationGroup, SupportPerson $supportPerson, object $personne): EvaluationPerson
     {
-        if (!$evaluationPerson = $supportPerson->getEvaluationsPerson()->first()) {
+        if (!$evaluationPerson = $supportPerson->getEvaluations()->first()) {
             $evaluationPerson = (new EvaluationPerson())
                 ->setEvaluationGroup($evaluationGroup)
                 ->setSupportPerson($supportPerson);
+
+            $evaluationGroup->addEvaluationPerson($evaluationPerson);
 
             $this->em->persist($evaluationPerson);
         }

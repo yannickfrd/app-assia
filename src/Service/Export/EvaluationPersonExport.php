@@ -130,7 +130,7 @@ class EvaluationPersonExport extends ExportExcel
     protected function getFullDatas(SupportPerson $supportPerson): array
     {
         $this->datas = $this->getSupportPersonDatas($supportPerson, $this->anonymized);
-        $evaluations = $supportPerson->getEvaluationsPerson();
+        $evaluations = $supportPerson->getEvaluations();
         $supportGroup = $supportPerson->getSupportGroup();
         $evaluationPerson = $evaluations[$evaluations->count() - 1] ?? $this->evaluationPerson;
         $evaluationGroup = $evaluationPerson->getEvaluationGroup() ?? $this->evaluationGroup;

@@ -31,7 +31,6 @@ class CheckEvaluationPeopleCommand extends Command
     {
         $this->em = $em;
         $this->evaluationManager = $evaluationManager;
-        $this->disableListeners($this->em);
 
         parent::__construct();
     }
@@ -42,14 +41,20 @@ class CheckEvaluationPeopleCommand extends Command
             ->setDescription(self::$defaultDescription)
             ->addArgument('fix', InputArgument::OPTIONAL, 'Fix the problem (add or remove people in evaluation)')
             ->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Query limit', 1000)
+            ->addOption('doctrine-listeners', 'dl', InputOption::VALUE_OPTIONAL, 'Query limit', true)
         ;
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $limit = $input->getOption('limit');
         $arg = $input->getArgument('fix');
+        $limit = $input->getOption('limit');
+        $doctrineListeners = $input->getOption('doctrine-listeners');
+
+        if (false === $doctrineListeners) {
+            $this->disableListeners($this->em);
+        }
 
         $evaluations = $this->em->getRepository(EvaluationGroup::class)->findBy([], ['updatedAt' => 'DESC'], $limit);
         $nbEvaluations = count($evaluations);
@@ -59,6 +64,7 @@ class CheckEvaluationPeopleCommand extends Command
         $io->progressStart($nbEvaluations);
 
         try {
+            /** @var EvaluationGroup[] $evaluations */
             foreach ($evaluations as $evaluationGroup) {
                 $supportGroup = $evaluationGroup->getSupportGroup();
                 $supportPeople = $supportGroup->getSupportPeople();
@@ -67,27 +73,33 @@ class CheckEvaluationPeopleCommand extends Command
                 $nbEvaluationPeople = $evaluationPeople->count();
 
                 if ($nbEvaluationPeople != $nbSupportPeople) {
-                    echo "\n- SupportId {$supportGroup->getId()}: $nbSupportPeople supportPeople vs $nbEvaluationPeople evaluationPeople \n";
+                    echo PHP_EOL."* SupportId {$supportGroup->getId()}: $nbSupportPeople supportPeople vs $nbEvaluationPeople evaluationPeople".PHP_EOL;
+
                     ++$count;
 
-                    if ('fix' != $arg) {
+                    if ('fix' !== $arg) {
                         continue;
                     }
 
                     foreach ($supportPeople as $supportPerson) {
                         if (false === $this->evaluationManager->personIsInEvaluation($supportPerson, $evaluationGroup)) {
                             $this->evaluationManager->createEvaluationPerson($supportPerson, $evaluationGroup);
-                            echo "  => Create evaluationPerson with supportPersonId {$supportPerson->getId()}\n";
+                            echo "  => Create evaluationPerson with supportPersonId {$supportPerson->getId()} ".PHP_EOL;
                         }
                     }
+                    $supportPeopleIds = [];
                     foreach ($evaluationPeople as $evaluationPerson) {
-                        if (false === $this->evaluationManager->personIsInSupport($evaluationPerson, $supportGroup)) {
+                        $supportPersonId = $evaluationPerson->getSupportPerson()->getId();
+                        if (false === $this->evaluationManager->personIsInSupport($evaluationPerson, $supportGroup)
+                            || in_array($supportPersonId, $supportPeopleIds)) {
                             $this->em->remove($evaluationPerson);
-                            echo "  => Delete evaluationPerson with id {$evaluationPerson->getId()}\n";
+                            $evaluationGroup->removeEvaluationPerson($evaluationPerson);
+                            echo "  => Delete evaluationPerson with id {$evaluationPerson->getId()}".PHP_EOL;
                         }
+                        $supportPeopleIds[] = $supportPersonId;
                     }
                 }
-                
+
                 $io->progressAdvance();
             }
         } catch (\Throwable $th) {
@@ -101,7 +113,7 @@ class CheckEvaluationPeopleCommand extends Command
 
         $io->progressFinish();
 
-        $io->success("The people in evaluation are checked :\n ".$count.' / '.$nbEvaluations.' are invalids');
+        $io->success('People in evaluation are checked :'.PHP_EOL.$count.' / '.$nbEvaluations.' are invalids');
 
         return Command::SUCCESS;
     }

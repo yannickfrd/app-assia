@@ -202,7 +202,7 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->leftJoin('sg.hotelSupport', 'hs')->addSelect('hs')
             ->leftJoin('sg.avdl', 'avdl')->addSelect('avdl')
 
-            ->leftJoin('sp.evaluationsPerson', 'ep')->addSelect('PARTIAL ep.{id}')
+            ->leftJoin('sp.evaluations', 'ep')->addSelect('PARTIAL ep.{id}')
             ->leftJoin('ep.initEvalPerson', 'initEvalPerson')->addSelect('initEvalPerson')
             ->leftJoin('ep.evalJusticePerson', 'evalJusticePerson')->addSelect('evalJusticePerson')
             ->leftJoin('ep.evalAdmPerson', 'evalAdmPerson')->addSelect('evalAdmPerson')

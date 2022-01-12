@@ -118,7 +118,7 @@ class SupportPerson
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Evaluation\EvaluationPerson", mappedBy="supportPerson", cascade={"persist", "remove"})
      */
-    private $evaluationsPerson;
+    private $evaluations;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\InitEvalPerson", mappedBy="supportPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
@@ -133,7 +133,7 @@ class SupportPerson
     public function __construct()
     {
         $this->notes = new ArrayCollection();
-        $this->evaluationsPerson = new ArrayCollection();
+        $this->evaluations = new ArrayCollection();
         $this->placesPerson = new ArrayCollection();
     }
 
@@ -295,54 +295,31 @@ class SupportPerson
         return $this->notes;
     }
 
-    public function addNote(Note $note): self
-    {
-        if (!$this->notes->contains($note)) {
-            $this->notes[] = $note;
-            $note->setSupportPerson($this);
-        }
-
-        return $this;
-    }
-
-    public function removeNote(Note $note): self
-    {
-        if ($this->notes->contains($note)) {
-            $this->notes->removeElement($note);
-            // set the owning side to null (unless already changed)
-            if ($note->getSupportPerson() === $this) {
-                $note->setSupportPerson(null);
-            }
-        }
-
-        return $this;
-    }
-
     /**
      * @return Collection<EvaluationPerson>|EvaluationPerson[]|null
      */
-    public function getEvaluationsPerson(): ?Collection
+    public function getEvaluations(): ?Collection
     {
-        return $this->evaluationsPerson;
+        return $this->evaluations;
     }
 
-    public function addEvaluationsPerson(EvaluationPerson $evaluationsPerson): self
+    public function addEvaluationPerson(EvaluationPerson $evaluationPerson): self
     {
-        if (!$this->evaluationsPerson->contains($evaluationsPerson)) {
-            $this->evaluationsPerson[] = $evaluationsPerson;
-            $evaluationsPerson->setSupportPerson($this);
+        if (!$this->evaluations->contains($evaluationPerson)) {
+            $this->evaluations[] = $evaluationPerson;
+            $evaluationPerson->setSupportPerson($this);
         }
 
         return $this;
     }
 
-    public function removeEvaluationsPerson(EvaluationPerson $evaluationsPerson): self
+    public function removeEvaluationPerson(EvaluationPerson $evaluationPerson): self
     {
-        if ($this->evaluationsPerson->contains($evaluationsPerson)) {
-            $this->evaluationsPerson->removeElement($evaluationsPerson);
+        if ($this->evaluations->contains($evaluationPerson)) {
+            $this->evaluations->removeElement($evaluationPerson);
             // set the owning side to null (unless already changed)
-            if ($evaluationsPerson->getSupportPerson() === $this) {
-                $evaluationsPerson->setSupportPerson(null);
+            if ($evaluationPerson->getSupportPerson() === $this) {
+                $evaluationPerson->setSupportPerson(null);
             }
         }
 
