@@ -60,7 +60,7 @@ class SocialIndicators
                 $this->roleDatas,
             );
 
-            $evaluations = $supportPerson->getEvaluationsPerson();
+            $evaluations = $supportPerson->getEvaluations();
             /** @var EvaluationPerson */
             $evaluationPerson = $evaluations ? $evaluations[($evaluations->count()) - 1] : new EvaluationPerson();
 

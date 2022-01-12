@@ -14,7 +14,7 @@ use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
  */
 class EvaluationPerson
 {
-    use CreatedUpdatedEntityTrait;  // A supprimer après test
+    use CreatedUpdatedEntityTrait;
     use SoftDeleteableEntity;
 
     /**
@@ -31,7 +31,7 @@ class EvaluationPerson
     private $evaluationGroup;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Support\SupportPerson", inversedBy="evaluationsPerson")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Support\SupportPerson", inversedBy="evaluations")
      * @ORM\JoinColumn(nullable=true)
      */
     private $supportPerson;
@@ -73,6 +73,10 @@ class EvaluationPerson
 
     public function __clone()
     {
+        $now = new \DateTime();
+        $this->setCreatedAt($now)
+            ->setUpdatedAt($now);
+
         if ($this->evalAdmPerson) {
             $this->setEvalAdmPerson(clone $this->evalAdmPerson);
         }

@@ -21,8 +21,7 @@ trait EvaluationPersonDataTrait
     protected function getEvaluationPersonDatas(SupportPerson $supportPerson): array
     {
         $this->datas = $this->getSupportPersonDatas($supportPerson, $this->anonymized);
-        $evaluations = $supportPerson->getEvaluationsPerson();
-        /** @var EvaluationPerson $evaluationPerson */
+        $evaluations = $supportPerson->getEvaluations();
         $evaluationPerson = $evaluations[$evaluations->count() - 1] ?? $this->evaluationPerson;
         /** @var EvaluationGroup $evaluationGroup */
         $evaluationGroup = $evaluationPerson->getEvaluationGroup() ?? $this->evaluationGroup;
