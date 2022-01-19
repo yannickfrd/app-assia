@@ -2,6 +2,7 @@
 
 namespace App\Controller\App;
 
+use App\Entity\Organization\User;
 use App\Form\Admin\SupportsByUserSearchType;
 use App\Form\Model\Support\SupportsByUserSearch;
 use App\Service\GlossaryService;
@@ -31,12 +32,15 @@ class AppController extends AbstractController
      */
     public function home(IndicatorsService $indicators): Response
     {
+        /** @var User $user */
+        $user = $this->getUser();
+
         return $this->render('app/admin/home/dashboard.html.twig', [
             'indicators' => $this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getIndicators() : null,
-            'servicesIndicators' => $indicators->getServicesIndicators($indicators->getUserServices($this->getUser())),
-            'supports' => !$this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getUserSupports($this->getUser()) : null,
-            'notes' => !$this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getUserNotes($this->getUser()) : null,
-            'rdvs' => !$this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getUserRdvs($this->getUser()) : null,
+            'servicesIndicators' => $indicators->getServicesIndicators($indicators->getUserServices($user)),
+            'supports' => !$this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getUserSupports($user) : null,
+            'notes' => !$this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getUserNotes($user) : null,
+            'rdvs' => !$this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getUserRdvs($user) : null,
         ]);
     }
 

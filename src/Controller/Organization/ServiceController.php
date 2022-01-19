@@ -14,6 +14,7 @@ use App\Repository\Organization\TagRepository;
 use App\Repository\Organization\UserRepository;
 use App\Service\Export\ServiceExport;
 use App\Service\Pagination;
+use App\Service\Service\ServiceManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -59,9 +60,9 @@ class ServiceController extends AbstractController
      * @Route("/service/new", name="service_new", methods="GET|POST")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
-    public function newService(Request $request): Response
+    public function newService(Request $request, ServiceManager $serviceManager): Response
     {
-        $form = $this->createForm(ServiceType::class, $service = new Service())
+        $form = $this->createForm(ServiceType::class, $service = $serviceManager->createService())
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -91,9 +92,10 @@ class ServiceController extends AbstractController
         SubServiceRepository $subServiceRepo,
         UserRepository $userRepo,
         PlaceRepository $placeRepo,
-        TagRepository $tagRepo
+        TagRepository $tagRepo,
+        ServiceManager $serviceManager
     ): Response {
-        $service = $this->serviceRepo->getFullService($id);
+        $service = $serviceManager->getFullService($id);
 
         $this->denyAccessUnlessGranted('VIEW', $service);
 

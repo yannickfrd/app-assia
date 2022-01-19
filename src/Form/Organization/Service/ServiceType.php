@@ -4,6 +4,7 @@ namespace App\Form\Organization\Service;
 
 use App\Entity\Organization\Pole;
 use App\Entity\Organization\Service;
+use App\Entity\Organization\ServiceSetting;
 use App\Entity\Organization\Tag;
 use App\Entity\Organization\User;
 use App\Form\Type\LocationType;
@@ -12,9 +13,12 @@ use App\Repository\Organization\TagRepository;
 use App\Repository\Organization\UserRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -165,6 +169,7 @@ class ServiceType extends AbstractType
                 'data_class' => Service::class,
                 'attr' => ['searchLabel' => 'Adresse du service'],
             ])
+            ->add('setting', ServiceSettingType::class)
         ;
     }
 

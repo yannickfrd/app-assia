@@ -228,6 +228,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $rdvs2;
 
+    /**
+     * @ORM\OneToOne(targetEntity=UserSetting::class, cascade={"persist", "remove"})
+     */
+    private $setting;
+
     public function __construct()
     {
         $this->supports = new ArrayCollection();
@@ -800,6 +805,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $rdvs2->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSetting(): ?UserSetting
+    {
+        return $this->setting;
+    }
+
+    public function setSetting(?UserSetting $setting): self
+    {
+        $this->setting = $setting;
 
         return $this;
     }

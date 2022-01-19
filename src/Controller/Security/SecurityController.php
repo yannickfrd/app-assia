@@ -14,6 +14,7 @@ use App\Form\Model\Security\UserChangePassword;
 use App\Form\Model\Security\UserInitPassword;
 use App\Form\Model\Security\UserResetPassword;
 use App\Form\Organization\User\UserChangeInfoType;
+use App\Form\Organization\User\UserSettingType;
 use App\Notification\UserNotification;
 use App\Repository\Organization\ServiceRepository;
 use App\Repository\Organization\UserRepository;
@@ -136,12 +137,23 @@ class SecurityController extends AbstractController
      *
      * @Route("/my_profile", name="my_profile", methods="GET|POST")
      */
-    public function showCurrentUser(Request $request, UserPasswordHasherInterface $passwordHasher, SupportGroupRepository $supportRepo, ServiceRepository $serviceRepo): Response
-    {
+    public function showCurrentUser(
+        Request $request,
+        UserPasswordHasherInterface $passwordHasher,
+        SupportGroupRepository $supportRepo,
+        ServiceRepository $serviceRepo
+    ): Response {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $setting = $user->getSetting() ?? $this->userManager->getUserSetting($user);
+        $formSetting = $this->createForm(UserSettingType::class, $setting)
+            ->handleRequest($request);
+
         $userChangeInfo = (new UserChangeInfo())
-            ->setEmail($this->getUser()->getEmail())
-            ->setPhone1($this->getUser()->getPhone1())
-            ->setPhone2($this->getUser()->getPhone2());
+            ->setEmail($user->getEmail())
+            ->setPhone1($user->getPhone1())
+            ->setPhone2($user->getPhone2());
 
         $form = $this->createForm(UserChangeInfoType::class, $userChangeInfo)
             ->handleRequest($request);
@@ -151,12 +163,16 @@ class SecurityController extends AbstractController
         $formPassword = $this->createForm(ChangePasswordType::class, $userChangePassword);
         $formPassword->handleRequest($request);
 
+        if ($formSetting->isSubmitted() && $formSetting->isValid()) {
+            $this->userManager->updateSetting($user->setSetting($setting));
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->userManager->updateCurrentUserInfo($this->getUser(), $userChangeInfo);
+            $this->userManager->updateCurrentUserInfo($user, $userChangeInfo);
         }
 
         if ($formPassword->isSubmitted() && $formPassword->isValid()) {
-            $this->userManager->updatePassword($this->getUser(), $passwordHasher, $userChangePassword->getNewPassword());
+            $this->userManager->updatePassword($user, $passwordHasher, $userChangePassword->getNewPassword());
 
             return $this->redirectToRoute('home');
         }
@@ -167,8 +183,9 @@ class SecurityController extends AbstractController
         return $this->render('app/organization/user/user.html.twig', [
             'form' => $form->createView(),
             'formPassword' => $formPassword->createView(),
-            'supports' => $supportRepo->findSupportsOfUser($this->getUser()),
-            'services' => $serviceRepo->findServicesOfUser($this->getUser()),
+            'formSetting' => $formSetting->createView(),
+            'supports' => $supportRepo->findSupportsOfUser($user),
+            'services' => $serviceRepo->findServicesOfUser($user),
         ]);
     }
 

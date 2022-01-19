@@ -211,6 +211,11 @@ class Service
      */
     private $tags;
 
+    /**
+     * @ORM\OneToOne(targetEntity=ServiceSetting::class, cascade={"persist", "remove"})
+     */
+    private $setting;
+
     public function __construct()
     {
         $this->serviceUser = new ArrayCollection();
@@ -678,6 +683,18 @@ class Service
                 $subService->setService(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSetting(): ?ServiceSetting
+    {
+        return $this->setting;
+    }
+
+    public function setSetting(?ServiceSetting $setting): self
+    {
+        $this->setting = $setting;
 
         return $this;
     }

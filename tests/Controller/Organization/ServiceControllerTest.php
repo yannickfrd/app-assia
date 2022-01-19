@@ -82,8 +82,7 @@ class ServiceControllerTest extends WebTestCase
             'service[pole]' => $fixtures['pole1'],
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorExists('.alert.alert-success');
+        $this->assertResponseIsSuccessful('Le service est créé.');
     }
 
     public function testEditServiceInSuperAdminIsUp()
@@ -121,8 +120,7 @@ class ServiceControllerTest extends WebTestCase
             'service[name]' => 'Service test edit',
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorExists('.alert.alert-success');
+        $this->assertResponseIsSuccessful('Les modifications sont enregistrées.');
     }
 
     public function testDisableService()

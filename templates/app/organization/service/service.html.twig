@@ -112,19 +112,34 @@
 
         {% include "app/organization/service/_serviceDevices.html.twig" with {accordion_id: "devices"} %}
 
-        {{ form_row(form._token) }}
-        {{ form_end(form, {"render_rest": false}) }}
 
         {% if is_granted_edit_service %}
             {% if form.organizations is defined and is_granted("ROLE_SUPER_ADMIN") %}
-        		{% include "app/organization/service/_serviceOrganizations.html.twig" with {accordion_id: "organizations"} %}
+                {% include "app/organization/service/_serviceOrganizations.html.twig" with {accordion_id: "organizations"} %}
             {% endif %}
         {% endif %}
 
         {% if EDIT_MODE %}
-        	{% include "app/organization/service/_servicePlaces.html.twig" with {accordion_id: "places"} %}
+            {% include "app/organization/service/_servicePlaces.html.twig" with {accordion_id: "places"} %}
+            {% include "app/organization/service/_serviceUsers.html.twig" with {accordion_id: "users"} %}
+        {% endif %}
+
+        {% if is_granted("ROLE_ADMIN") %}
+            {% include "app/organization/service/_serviceSettings.html.twig" with {accordion_id: "settings"} %}
+        {% endif %}
+
+        {{ form_row(form._token) }}
+        {{ form_end(form, {"render_rest": false}) }}
+
+
+        {% if is_granted_edit_service %}
+            {% if form.organizations is defined and is_granted("ROLE_SUPER_ADMIN") %}
+                {% include "app/organization/service/_serviceOrganizations.html.twig" with {accordion_id: "organizations"} %}
+            {% endif %}
+        {% endif %}
+
+        {% if EDIT_MODE %}
             {% include "app/organization/service/_service_tags.html.twig" with {accordion_id: "tags"} %}
-        	{% include "app/organization/service/_serviceUsers.html.twig" with {accordion_id: "users"} %}
         {% endif %}
     </div>
 

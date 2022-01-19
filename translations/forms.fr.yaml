@@ -356,3 +356,23 @@ Si siao import: Importer l'évaluation sociale présente dans le SI-SIAO.
 tag:
   name: Nom
   placeholder: Étiquettes
+
+#SETTINGS
+Organization name: Nom de l'organisation
+Weekly alert: Rappel hebdomadaire
+Daily alert: Rappel quotidien
+Soft deletion delay: Délai d'archivage
+Hard deletion delay: Délai de suppression
+
+setting:
+  soft_deletion_delay:
+    service_help: Nombre de mois avant l'archivage.
+    label: Délai minimum d'archivage
+    placeholder: "Exemple : 24 mois"
+    help: Par mois.
+    error.expiry_delai: La valeur du champ, ne peut pas être inférieur à
+  hard_deletion_delay:
+    service_help: Nombre de mois avant la suppression définitive à partir de la fin du délai d'archivage.
+    label: Délai minimum de suppression
+    placeholder: "Exemple : 24 mois"
+    help: Nombre de mois à partir de la fin du délai d'archivage.

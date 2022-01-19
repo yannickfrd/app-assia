@@ -193,6 +193,7 @@ class ServiceRepository extends ServiceEntityRepository
     public function getFullService(int $id): ?Service
     {
         return $this->createQueryBuilder('s')->select('s')
+            ->leftJoin('s.setting', 'setting')->addSelect('setting')
             ->leftJoin('s.pole', 'p')->addSelect('PARTIAL p.{id, name}')
             ->leftJoin('s.chief', 'chief')->addSelect('PARTIAL chief.{id, firstname, lastname, status, phone1, email}')
             ->leftJoin('s.serviceDevices', 'sd')->addSelect('sd')

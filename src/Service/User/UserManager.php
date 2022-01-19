@@ -2,8 +2,11 @@
 
 namespace App\Service\User;
 
+use App\Entity\Admin\Setting;
+use App\Entity\Organization\ServiceSetting;
 use App\Entity\Organization\User;
 use App\Entity\Organization\Service;
+use App\Entity\Organization\UserSetting;
 use App\Notification\UserNotification;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Model\Security\UserChangeInfo;
@@ -30,7 +33,8 @@ class UserManager
     public function createUser(User $user, UserNotification $userNotification): void
     {
         $user->setToken(bin2hex(random_bytes(32)))
-            ->setTokenCreatedAt(new \DateTime());
+            ->setTokenCreatedAt(new \DateTime())
+            ->setSetting($user->getSetting() ?? $this->getUserSetting($user));
 
         $this->em->persist($user);
         $this->em->flush();
@@ -40,6 +44,30 @@ class UserManager
         $userNotification->newUser($user);
 
         $this->flashbag->add('success', 'Le compte de '.$user->getFirstname().' est créé. Un e-mail lui a été envoyé.');
+    }
+
+    /**
+     * @param User $user
+     */
+    public function getUserSetting(User $user): UserSetting
+    {
+        // If the user has no service, we get the application's config.
+        if (!$user->getServices() || !$user->getServices()->first() || !$user->getServices()->first()->getSetting()) {
+//            dd($this->em->getRepository(Setting::class)->findOneBy([]));
+            return $this->hydrateUserSetting($this->em->getRepository(Setting::class)->findOneBy([]));
+        }
+
+        return $this->hydrateUserSetting($user->getServices()->first()->getSetting());
+    }
+
+    /**
+     * @param Setting|ServiceSetting $setting
+     */
+    private function hydrateUserSetting($setting): ?UserSetting
+    {
+        return (new UserSetting())
+            ->setDailyAlert($setting ? $setting->getDailyAlert() : false)
+            ->setWeeklyAlert($setting ? $setting->getWeeklyAlert() : false);
     }
 
     /**
@@ -84,6 +112,16 @@ class UserManager
         $this->em->flush();
 
         $this->flashbag->add('success', 'Les modifications sont enregistrées.');
+    }
+
+    /**
+     * @param User $user
+     */
+    public function updateSetting(User $user): void
+    {
+        $this->em->flush();
+
+        $this->flashbag->add('success', 'Les paramètres sont bien enregistrés');
     }
 
     /**
