@@ -2,26 +2,22 @@
 
 namespace App\Security;
 
-use Exception;
+use App\Repository\Organization\UserRepository;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Security;
-use function PHPUnit\Framework\throwException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
-use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
-use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
-use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
-
-use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
+use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
+use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 class AppAuthenticator extends AbstractLoginFormAuthenticator
 {
@@ -31,21 +27,28 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
     public const HOME_ROUTE = 'home';
 
     private UrlGeneratorInterface $urlGenerator;
+    private UserRepository $userRepo;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator)
+    public function __construct(UrlGeneratorInterface $urlGenerator, UserRepository $userRepo)
     {
         $this->urlGenerator = $urlGenerator;
+        $this->userRepo = $userRepo;
     }
 
-    public function authenticate(Request $request): PassportInterface
+    public function authenticate(Request $request): Passport
     {
-        $username = $request->request->get('username');
+        $username = $request->request->get('username', '');
+
+        if (strpos($username, '@')) {
+            $user = $this->userRepo->findUser($username);
+            $username = $user ? $user->getUsername() : $username;
+        }
 
         $request->getSession()->set(Security::LAST_USERNAME, $username);
-        
+
         return new Passport(
             new UserBadge($username),
-            new PasswordCredentials($request->request->get('password')),
+            new PasswordCredentials($request->request->get('password', '')),
             [
                 new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),
             ]
@@ -56,7 +59,7 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
     {
         return new RedirectResponse($this->urlGenerator->generate(self::HOME_ROUTE));
     }
-    
+
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
         /** @var Session $session */
@@ -74,7 +77,7 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
     private function getErrorMessage(AuthenticationException $exception): string
     {
         if ($exception instanceof InvalidCsrfTokenException) {
-            return  'Le token est invalide.<br/> Veuillez actualiser la page.';
+            return 'Le token est invalide.<br/> Veuillez actualiser la page.';
         }
 
         if ('blocked_user' === $exception->getMessageKey()) {
