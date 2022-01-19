@@ -18,6 +18,7 @@ Create a select manager (JS) and update tag feature (#95)
 * [Selelct2] Edit style css
 * Update JS dependencies (@ttskch/select2-bootstrap4-theme)
 * Fix bugs
+Co-authored-by: yannickfarade <yannick.farade@esperer-95.org>
 
 ## Version 3.8.0 - 23/12/2021
 Feat resource, charge and debt collections (#94)
@@ -48,6 +49,24 @@ Feature system tags (yannickfrd) (#93)
 * [FileUploader] Edit Group 'get' to 'show_document'
 * [Service] Add TagTrait
 Co-authored-by: yannickfarade <yannick.farade@esperer-95.org>
+
+## Version 3.6.8 - 19/01/2022
+Fix authentication problem with email
+* [AppAuthenticator] Add find User by email
+* [Security] Delete old CustomAuthenticator
+* Fix raw flash messages
+
+## Version 3.6.7 - 19/01/2022
+Fix full data export for occupancy rate (#99)
+* [SupportPersonDataTrait] Edit value of endDatePlace (if one is null)
+* [occupancyByService] Fix footer in view (add <td> nbPlaces)
+
+## Version 3.6.6 - 12/01/2022
+Fix duplication people in evaluation (#98)
+* Fix duplication evaluation people after import SI-SIAO and last evaluation
+* [EvaluationController] Edit condition to fix people in evaluation
+* [CheckEvaluationPeopleCommand] Add condition if person is duplicate in the same evaluation
+* [CheckEvaluationPeopleCommand] Add option to active/disable doctrine listeners
 
 ## Version 3.6.5 - 15/12/2021
 Fix bugs (#90)
