@@ -8,33 +8,28 @@ use App\Entity\People\PeopleGroup;
 use App\Entity\People\Person;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Support\SupportPerson;
-use App\Repository\People\PeopleGroupRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
 /*
  * @codeCoverageIgnore
  */
-class D_SupportFixtures extends Fixture
+class SupportFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
-    private $em;
-    private $peopleGroupRepo;
+    private $objectManager;
 
-    public function __construct(EntityManagerInterface $em, PeopleGroupRepository $peopleGroupRepo)
+    public function load(ObjectManager $objectManager): void
     {
-        $this->em = $em;
-        $this->peopleGroupRepo = $peopleGroupRepo;
-    }
+        $this->objectManager = $objectManager;
 
-    public function load(ObjectManager $em): void
-    {
-        foreach ($this->peopleGroupRepo->findAll() as $peopleGroup) {
+        foreach ($objectManager->getRepository(PeopleGroup::class)->findAll() as $peopleGroup) {
             for ($i = 1; $i <= 1; ++$i) {
                 $this->createSupportGroup($peopleGroup, $i);
             }
         }
-        $this->em->flush();
+        $objectManager->flush();
     }
 
     private function createSupportGroup(PeopleGroup $peopleGroup, int $k): ?SupportGroup
@@ -83,7 +78,7 @@ class D_SupportFixtures extends Fixture
             ->setDevice($device)
         ;
 
-        $this->em->persist($supportGroup);
+        $this->objectManager->persist($supportGroup);
 
         foreach ($peopleGroup->getPeople() as $person) {
             $this->createSupportPerson($supportGroup, $person);
@@ -107,8 +102,20 @@ class D_SupportFixtures extends Fixture
             ->setPerson($person)
             ->setSupportGroup($supportGroup);
 
-        $this->em->persist($supportPerson);
+        $this->objectManager->persist($supportPerson);
 
         return $supportPerson;
+    }
+
+    public function getDependencies(): array
+    {
+        return [
+            PeopleFixtures::class,
+        ];
+    }
+
+    public static function getGroups(): array
+    {
+        return ['support', 'evaluation', 'note', 'rdv', 'document', 'payment', 'tag'];
     }
 }

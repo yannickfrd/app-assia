@@ -1,6 +1,14 @@
 CHANGELOG
 =========
 
+## Version 3.8.3 - 20/01/2021
+Update Fixturesq
+* Add dependencies
+* Add groups
+* Create TagFixtures
+* Create EvaluationFixtures
+* Refactor all fixtures
+
 ## Version 3.8.2 - 06/01/2021
 Fix multi select feature
 * [SelectManager.js] Rename 'selectManager' object
