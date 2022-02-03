@@ -19,8 +19,8 @@ class SiSiaoItems
         'NON' => Choices::NO,
         'EN_COURS' => EvaluationChoices::IN_PROGRESS,
         'A_FAIRE' => 98,
-        'NON_RENSEIGNE' => Choices::NO_INFORMATION,
-        'NR' => Choices::NO_INFORMATION,
+        'NON_RENSEIGNE' => null,
+        'NR' => null,
     ];
 
     public const YES_NO_STRING_TO_BOOL = [
@@ -36,7 +36,7 @@ class SiSiaoItems
     public const GENDERS = [
         'FEMME' => Person::GENDER_FEMALE,
         'HOMME' => Person::GENDER_MALE,
-        '' => Choices::NO_INFORMATION,
+        '' => null,
     ];
 
     // SITUATION_DEMANDES
@@ -121,10 +121,10 @@ class SiSiaoItems
         70 => 6, // 2 ans - 5 ans
         80 => 7, // 5 ans – 10 ans
         90 => 8, // Plus de 10 ans
-        100 => 99, // NSP
-        110 => 99, // Non Renseigné
-        120 => 99, // Refus de répondre
-        130 => 99, // Prochainement en demande
+        100 => null, // NSP
+        110 => null, // Non Renseigné
+        120 => null, // Refus de répondre
+        130 => null, // Prochainement en demande
     ];
 
     // COMPOSITIONS
@@ -150,7 +150,7 @@ class SiSiaoItems
         100 => 3, // Enfant / Mineur en famille
         90 => 3, // Enfant / Mineur isolé
         20 => 2, // Marié(e)
-        1 => 99, // Non renseignée
+        1 => null, // Non renseignée
         30 => 1, // Pacsé(e)
         60 => 4, // Séparé
         80 => 4, // Veuf
@@ -165,7 +165,7 @@ class SiSiaoItems
         100 => 97, // Enfant / Mineur en famille
         90 => 97, // Enfant / Mineur isolé
         20 => 4, // Marié(e)
-        1 => 99, // Non renseignée
+        1 => null, // Non renseignée
         30 => 5, // Pacsé(e)
         60 => 6, // Séparé
         80 => 7, // Veuf
@@ -201,7 +201,7 @@ class SiSiaoItems
         25 => 704, // Retour dans le pays d'origine
         26 => 600, // Hospitalisation
         27 => 500, // Incarcération
-        28 => 99, // Information non renseignée
+        28 => null, // Information non renseignée
         29 => 601, // Sortie vers une unité de lits halte soins santé
         30 => 97, // Sortie vers les ACT (Appartement de Coordination Thérapeutique) ****
         31 => 97, // La personne a trouvé une autre solution
@@ -233,35 +233,35 @@ class SiSiaoItems
         'UE' => 2,
         'HORS_UE' => 3,
         'APATRIDE' => 4,
-        'NR' => Choices::NO_INFORMATION,
+        'NR' => null,
     ];
 
-    // papieridentite
-
-    // // PAPIER_IDENTITES
-    // public const PAPER = [
-    //     50 => Choices::YES, // Carte de résident
-    //     40 => Choices::YES, // Carte de séjour temporaire
-    //     10 => Choices::YES, // CNI
-    //     70 => null, // Déclaration de perte ****
-    //     80 => Choices::YES, // Papiers étrangers
-    //     20 => Choices::YES, // Passeport
-    //     30 => Choices::YES, // Récépissé Asile ****
-    //     60 => Choices::YES, // Récépissé de renouvellement de titre
-    //     90 => Choices::YES, // Titulaire d'un titre de séjour
-    // ];
-
     // PAPIER_IDENTITES
+    public const PAPER = [
+        110 => Choices::YES, // Autorisations provisoires de séjour
+        40 => Choices::YES, // Carte de résident
+        60 => Choices::YES, // Carte de séjour temporaire
+        10 => Choices::YES, // Demandeur d'asile
+        120 => Choices::YES, // Document de circulation pour mineur étranger
+        90 => Choices::YES, // Français
+        50 => null, // Non renseignée
+        48 => Choices::YES, // Récépissé de demande de titre de séjour (1ère demande + renouvellement)
+        81 => Choices::NO, // Situation administrative non régularisée
+        100 => Choices::YES, // UE
+    ];
+
+    // DROIT_SEJOURS
     public const PAPER_TYPE = [
-        50 => 20, // Carte de résident
-        40 => 21, // Carte de séjour temporaire
-        10 => 01, // CNI
-        70 => null, // Déclaration de perte ****
-        80 => 03, // Papiers étrangers
-        20 => 02, // Passeport
-        30 => 30, // Récépissé Asile ****
-        60 => 31, // Récépissé de renouvellement de titre
-        90 => 21, // Titulaire d'un titre de séjour
+        110 => 22, // Autorisations provisoires de séjour
+        40 => 20, // Carte de résident
+        60 => 21, // Carte de séjour temporaire
+        10 => 10, // Demandeur d'asile
+        120 => 40, // Document de circulation pour mineur étranger
+        90 => 01, // Français
+        50 => null, // Non renseignée
+        48 => 30, // Récépissé de demande de titre de séjour (1ère demande + renouvellement)
+        81 => 97, // Situation administrative non régularisée
+        100 => 03, // UE
     ];
 
     // DROIT_SEJOURS
@@ -279,35 +279,35 @@ class SiSiaoItems
         80 => null, // Situation administrative régulière
     ];
 
-    // DROIT_SEJOURS
-    public const PAPER_TYPE_ASYLUM_STATUS = [
-        70 => null, // Autre
-        20 => null, // Bénéficiaire protection internationale/réfugié
-        40 => 20, // Carte de résident
-        60 => 21, // Carte de séjour temporaire
-        30 => null, // Débouté du droit d'asile
-        10 => null, // Demandeur d'asile
-        50 => null, // Non renseignée
-        48 => 30, // Récépissé première demande de titre de séjour
-        47 => 31, // Récépissé renouvellement titre
-        81 => null, // Situation administrative non régularisée
-        80 => null, // Situation administrative régulière
-    ];
+    // // DROIT_SEJOURS
+    // public const PAPER_TYPE_ASYLUM_STATUS = [
+    //     70 => null, // Autre
+    //     20 => null, // Bénéficiaire protection internationale/réfugié
+    //     40 => 20, // Carte de résident
+    //     60 => 21, // Carte de séjour temporaire
+    //     30 => null, // Débouté du droit d'asile
+    //     10 => null, // Demandeur d'asile
+    //     50 => null, // Non renseignée
+    //     48 => 30, // Récépissé première demande de titre de séjour
+    //     47 => 31, // Récépissé renouvellement titre
+    //     81 => null, // Situation administrative non régularisée
+    //     80 => null, // Situation administrative régulière
+    // ];
 
-    // DROIT_SEJOURS
-    public const ASYLUM_STATUS = [
-        70 => null, // Autre
-        20 => 4, // Bénéficiaire protection internationale/réfugié
-        40 => null, // Carte de résident
-        60 => null, // Carte de séjour temporaire
-        30 => 1, // Débouté du droit d'asile
-        10 => 2, // Demandeur d'asile
-        50 => null, // Non renseignée
-        48 => null, // Récépissé première demande de titre de séjour
-        47 => null, // Récépissé renouvellement titre
-        81 => null, // Situation administrative non régularisée
-        80 => null, // Situation administrative régulière
-    ];
+    // // DROIT_SEJOURS
+    // public const ASYLUM_STATUS = [
+    //     70 => null, // Autre
+    //     20 => 4, // Bénéficiaire protection internationale/réfugié
+    //     40 => null, // Carte de résident
+    //     60 => null, // Carte de séjour temporaire
+    //     30 => 1, // Débouté du droit d'asile
+    //     10 => 2, // Demandeur d'asile
+    //     50 => null, // Non renseignée
+    //     48 => null, // Récépissé première demande de titre de séjour
+    //     47 => null, // Récépissé renouvellement titre
+    //     81 => null, // Situation administrative non régularisée
+    //     80 => null, // Situation administrative régulière
+    // ];
 
     // TYPE_HEBERGEMENT_ENFANT
     public const CHILD_TO_HOST = [
@@ -323,7 +323,7 @@ class SiSiaoItems
         4 => 4, // En cours
         3 => 3, // Envisagé
         2 => 2, // Non
-        1 => 99, // Non renseigné
+        1 => null, // Non renseigné
     ];
 
     // DROIT_OUVERT_SECURITE_SOCIALES
@@ -355,9 +355,9 @@ class SiSiaoItems
         60 => 97, // Régime agricole
         70 => 97, // Couverture sociale européenne
         200 => 97, // Autre
-        190 => 99, // NSP
+        190 => null, // NSP
         80 => null, // Sans couverture sociale
-        1 => 99, // Non renseigné
+        1 => null, // Non renseigné
     ];
 
     // Animaux
@@ -381,7 +381,7 @@ class SiSiaoItems
         50 => 3, // Contrat aidé
         40 => 6, // Fonctionnaire
         60 => 7, // Intérim
-        10 => 99, // Non renseignée
+        10 => null, // Non renseignée
         70 => 97, // Saisonnier
         90 => 8, // Stagiaire
     ];
@@ -543,7 +543,7 @@ class SiSiaoItems
 
     // TYPES_ETABLISSEMENT_UN
     public const TYPES_ETABLISSEMENT_UN = [
-        2000 => 99, // Non renseigné
+        2000 => null, // Non renseigné
         2001 => 10, // Non renseigné (Hébergement) - Hébergement
         100 => 10, // Hôtels - Hébergement
         200 => 10, // Résidence Hôtelière à Vocation Sociale (RHVS) - Hébergement

@@ -58,6 +58,13 @@ Feature system tags (yannickfrd) (#93)
 * [Service] Add TagTrait
 Co-authored-by: yannickfarade <yannick.farade@esperer-95.org>
 
+## Version 3.6.9 - 03/02/2022
+Fix problem importe after update SI-SIAO version
+* [SiSIaoEvaluationImporter] Fix problem import evaluation after update SI-SIAO
+* [SupportGroup] Edit subscribed events order after create
+* [SiSiaoEvaluationImporter] Fix ASE informations and wished cities
+* [SiSiaoItems] Change value 99 (no information) to null
+
 ## Version 3.6.8 - 19/01/2022
 Fix authentication problem with email
 * [AppAuthenticator] Add find User by email
