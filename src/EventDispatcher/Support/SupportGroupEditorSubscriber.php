@@ -47,8 +47,8 @@ class SupportGroupEditorSubscriber implements EventSubscriberInterface
                 ['updateNbPeople', 0],
             ],
             'support.after_create' => [
-                ['clone', 0],
                 ['discache', -50],
+                ['clone', -100],
             ],
             'support.before_update' => [
                 ['update', 50],

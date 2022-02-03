@@ -31,6 +31,7 @@ class EvalAdmPerson
         21 => 'Carte de séjour temporaire',
         01 => 'CNI française',
         40 => 'DCEM (Doc. circulation pour étranger mineur)',
+        10 => "Demande d'asile",
         03 => 'Papiers étrangers',
         02 => 'Passeport',
         30 => 'Récépissé première demande',
