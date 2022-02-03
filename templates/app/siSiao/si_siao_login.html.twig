@@ -23,7 +23,7 @@
                 {{ form_row(form._token) }}
                 {{ form_end(form) }}
 
-                <a href="{{ app.request.headers.get('referer') }}" class="btn btn-lg btn-secondary btn-block shadow mb-4">Annuler</button>
+                <a href="{{ target_path }}" class="btn btn-lg btn-secondary btn-block shadow mb-4">Annuler</button>
                 <a href="https://sisiao.social.gouv.fr" target="_blank" class="text-{{ theme_color }} mb-4">Mot de passe SI-SIAO oublié ?</a>
             
             </div>
