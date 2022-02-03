@@ -1,8 +1,13 @@
 CHANGELOG
 =========
 
+## Version 3.6.10 - 03/02/2022
+Fix error if role person is null and edit referer header call
+* [SiSiaoController] Edit 'referer' header call
+* [SiSiaoGroupImporter] Fix if role is null
+
 ## Version 3.6.9 - 03/02/2022
-Fix problem importe after update SI-SIAO version
+Fix problem import after update SI-SIAO version
 * [SiSIaoEvaluationImporter] Fix problem import evaluation after update SI-SIAO
 * [SupportGroup] Edit subscribed events order after create
 * [SiSiaoEvaluationImporter] Fix ASE informations and wished cities

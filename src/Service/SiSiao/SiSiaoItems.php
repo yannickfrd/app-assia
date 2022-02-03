@@ -150,7 +150,7 @@ class SiSiaoItems
         100 => 3, // Enfant / Mineur en famille
         90 => 3, // Enfant / Mineur isolé
         20 => 2, // Marié(e)
-        1 => null, // Non renseignée
+        1 => 99, // Non renseignée
         30 => 1, // Pacsé(e)
         60 => 4, // Séparé
         80 => 4, // Veuf
