@@ -56,13 +56,13 @@ class B_UserFixtures extends Fixture
     protected function createSuperAdmin(): void
     {
         $user = new User();
-        $user->setUsername('r.madelaine')
-            ->setFirstName('Romain')
-            ->setLastName('Madelaine')
+        $user->setUsername('y.farade')
+            ->setFirstName('Yannick')
+            ->setLastName('Farade')
             ->setStatus(6)
             ->setRoles(['ROLE_SUPER_ADMIN'])
-            ->setPassword($this->passwordHasher->hashPassword($user, 'Test123'))
-            ->setEmail('romain.madelaine@app-assia.org')
+            ->setPassword($this->passwordHasher->hashPassword($user, 'azerty'))
+            ->setEmail('yannick.farade@app-assia.org')
             ->setLoginCount(1);
 
         $this->em->persist($user);
@@ -75,7 +75,7 @@ class B_UserFixtures extends Fixture
             ->setFirstName('Test')
             ->setLastName('Test')
             ->setStatus(1)
-            ->setPassword($this->passwordEncoder->encodePassword($user, 'test123'))
+            ->setPassword($this->passwordHasher->hashPassword($user, 'test123'))
             ->setEmail('test@app-assia.org')
             ->setLoginCount(0);
 
