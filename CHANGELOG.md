@@ -1,8 +1,15 @@
 CHANGELOG
 =========
+## Version 3.x.x - 17/02/2021
+Update voters : a user of same service can edit note, rdv, document and payment
+* [NoteVoter] Edit canEdit method
+* [RdvVoter] Edit canEdit method
+* [DocumentVoter] Edit canEdit method
+* [NoteControllerTest][RdvControllerTest][DocumentControllerTest] Update functional tests
+* Refactoring
 
 ## Version 3.8.3 - 20/01/2021
-Update Fixturesq
+Update Fixtures
 * Add dependencies
 * Add groups
 * Create TagFixtures

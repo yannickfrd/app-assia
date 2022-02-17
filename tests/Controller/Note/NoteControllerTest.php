@@ -41,20 +41,6 @@ class NoteControllerTest extends WebTestCase
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
     }
 
-    protected function loadFixtures(): void
-    {
-        $this->fixtures = $this->databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/SupportFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/NoteFixturesTest.yaml',
-        ]);
-
-        $this->supportGroup = $this->fixtures['supportGroup1'];
-        $this->note = $this->fixtures['note1'];
-    }
-
     public function testSearchNotesIsSuccessful()
     {
         $this->loadFixtures();
@@ -186,6 +172,26 @@ class NoteControllerTest extends WebTestCase
         $this->assertSame('update', $content['action']);
     }
 
+    public function testUpdateNoteWithOtherUserIsSuccessful()
+    {
+        $this->loadFixtures();
+        $this->createLogin($this->fixtures['user4']);
+
+        $crawler = $this->client->request('GET', '/support/1/notes');
+
+        $this->client->request('POST', '/note/1/edit', [
+            'note' => [
+                'title' => 'Note test update',
+                'content' => 'Contenu de la note',
+                '_token' => $crawler->filter('#note__token')->attr('value'),
+            ],
+        ]);
+
+        $this->assertResponseIsSuccessful();
+        $content = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertSame('update', $content['action']);
+    }
+
     public function testDeleteNote()
     {
         $this->loadFixtures();
@@ -254,6 +260,20 @@ class NoteControllerTest extends WebTestCase
         $this->client->request('GET', "/support/$id/note/new_evaluation");
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h3.card-title', 'Grille d\'évaluation sociale');
+    }
+
+    protected function loadFixtures(): void
+    {
+        $this->fixtures = $this->databaseTool->loadAliceFixture([
+            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
+            dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
+            dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
+            dirname(__DIR__).'/../DataFixturesTest/SupportFixturesTest.yaml',
+            dirname(__DIR__).'/../DataFixturesTest/NoteFixturesTest.yaml',
+        ]);
+
+        $this->supportGroup = $this->fixtures['supportGroup1'];
+        $this->note = $this->fixtures['note1'];
     }
 
     protected function tearDown(): void
