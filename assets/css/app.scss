@@ -1,4 +1,6 @@
 @import "./bootstrap-custom";
+@import "./table";
+@import "./_select2";
 
 html {
     scroll-behavior: smooth;
@@ -260,11 +262,11 @@ th.required:after {
 }
 
 .w-min-180 {
-    min-width: 180px;
+    min-width: 180px !important;
 }
 
 .w-min-200 {
-    min-width: 200px;
+    min-width: 200px !important;
 }
 
 .h-max-38 {
@@ -316,10 +318,6 @@ th.required:after {
 
 .text-del {
     text-decoration: line-through;
-}
-
-.select2-container--default .select2-selection--multiple .select2-selection__choice {
-    background-color: var(--light) !important;
 }
 
 #results_search {
@@ -447,8 +445,8 @@ th.required:after {
 }
 
 .editor-fullscreen {
-    height: calc(100vh - 280px) !important;
-    max-height: calc(100vh - 280px) !important;
+    height: calc(100vh - 333.6px) !important;
+    max-height: calc(100vh - 333.6px) !important;
 }
 
 /* Gestion de dépassement des notes */
@@ -514,7 +512,7 @@ button.btn-outline-secondary a:hover {
     width: 100%;
     height: 4px;
     background: #ddd;
-    border-radius: 0px 0px 4px 4px;
+    border-radius: 0 0 4px 4px;
     z-index: 9;
 }
 
@@ -523,7 +521,7 @@ button.btn-outline-secondary a:hover {
     bottom: -1px;
     left: -1px;
     height: 5px;
-    border-radius: 0px 0px 2px 2px;
+    border-radius: 0 0 2px 2px;
     z-index: 10;
     animation: timeline 10s ease forwards;
 }
@@ -559,6 +557,11 @@ button.btn-outline-secondary a:hover {
 
 .reveal-4 {
     transition-delay: .3s;
+}
+
+#card-tags span.tag {
+    font-size: .85rem;
+    font-weight: normal;
 }
 
 @media (prefers-reduced-motion: reduce) {

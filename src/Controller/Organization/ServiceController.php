@@ -6,12 +6,15 @@ use App\Entity\Organization\Service;
 use App\Form\Model\Organization\ServiceSearch;
 use App\Form\Organization\Service\ServiceSearchType;
 use App\Form\Organization\Service\ServiceType;
+use App\Form\Organization\Tag\ServiceTagType;
 use App\Repository\Organization\PlaceRepository;
 use App\Repository\Organization\ServiceRepository;
 use App\Repository\Organization\SubServiceRepository;
+use App\Repository\Organization\TagRepository;
 use App\Repository\Organization\UserRepository;
 use App\Service\Export\ServiceExport;
 use App\Service\Pagination;
+use App\Service\Service\ServiceManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -57,9 +60,9 @@ class ServiceController extends AbstractController
      * @Route("/service/new", name="service_new", methods="GET|POST")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
-    public function newService(Request $request): Response
+    public function newService(Request $request, ServiceManager $serviceManager): Response
     {
-        $form = $this->createForm(ServiceType::class, $service = new Service())
+        $form = $this->createForm(ServiceType::class, $service = $serviceManager->createService())
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -88,11 +91,15 @@ class ServiceController extends AbstractController
         Request $request,
         SubServiceRepository $subServiceRepo,
         UserRepository $userRepo,
-        PlaceRepository $placeRepo
+        PlaceRepository $placeRepo,
+        TagRepository $tagRepo,
+        ServiceManager $serviceManager
     ): Response {
-        $service = $this->serviceRepo->getFullService($id);
+        $service = $serviceManager->getFullService($id);
 
         $this->denyAccessUnlessGranted('VIEW', $service);
+
+        $formTags = $this->createForm(ServiceTagType::class, $service);
 
         $form = $this->createForm(ServiceType::class, $service)
             ->handleRequest($request);
@@ -112,12 +119,16 @@ class ServiceController extends AbstractController
             $nbPlaces += $place->getNbPlaces();
         }
 
+        $tags = $tagRepo->findTagByService($service);
+
         return $this->render('app/organization/service/service.html.twig', [
             'form' => $form->createView(),
             'subServices' => $subServiceRepo->findSubServicesOfService($service),
             'users' => $userRepo->findUsersOfService($service),
             'places' => $places,
             'nbPlaces' => $nbPlaces,
+            'form_tags' => $formTags->createView(),
+            'service_tags' => $tags,
         ]);
     }
 

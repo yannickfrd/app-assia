@@ -38,12 +38,6 @@
                                 <td class="text-right">{{ evalBudgetGroup.contributionAmt|amount }}</td>
                             </tr>
                         {% endif %}
-                        {% if evalBudgetGroup.debtsGroupAmt and evalBudgetGroup.monthlyRepaymentAmt > 0 %}
-                            <tr>
-                                <td scope="row">Remboursement mensuel des dettes</td>
-                                <td class="text-right">{{ evalBudgetGroup.monthlyRepaymentAmt|amount }}</td>
-                            </tr>
-                        {% endif %}
                     </tbody>
                     <tfoot>
                         <tr class="font-weight-bold">
@@ -73,13 +67,13 @@
                 </div>
             {% endif %}
             <div class="row">
-                    {{ evalBudget.resources == YES and evalBudget.resourcesAmt > 0 ? "" : 
-                        view_div.get(evalBudget.resourcesToString, "Resources", "evaluation") }}
-                    {# {{ evalBudget.charges == YES and evalBudget.chargesAmt > 0 ? '' : 
-                        view_div.get(evalBudget.chargesToString, "Charges", "evaluation") }} #}
+                    {{ evalBudget.resource == YES and evalBudget.resourcesAmt > 0 ? "" : 
+                        view_div.get(evalBudget.resourceToString, "Resources", "evaluation") }}
+                    {# {{ evalBudget.charge == YES and evalBudget.chargesAmt > 0 ? '' : 
+                        view_div.get(evalBudget.chargeToString, "Charges", "evaluation") }} #}
             </div>
             <div class="row">
-                {% if evalBudget.resources == YES %}
+                {% if evalBudget.resource == YES %}
                     <div class="col-md-6">
                         <table class="table table-sm table-bordered table-hover">
                             <thead>
@@ -89,15 +83,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for key, value in constant("RESOURCES_TYPE", evalBudget) %}
-                                    {% if attribute(evalBudget, key) %}
-                                        <tr>
-                                            <td scope="row">{{ not loop.last ? value : (attribute(evalBudget, key ~ 'Precision') ? 
-                                                attribute(evalBudget, key ~ 'Precision') : "Autre(s) ressource(s)") }}</td>
-                                                {% set amt = attribute(evalBudget, key ~ 'Amt') %}
-                                            <td class="text-right">{{ amt > 0 ? amt|amount }}</td>
-                                        </tr>
-                                    {% endif %}
+                                {% for resource in evalBudget.resources %}
+                                    <tr>
+                                        <td scope="row">{{ resource.type == 1000 and resource.comment ? 
+                                            resource.comment : resource.typeToString  }}</td>
+                                        <td class="text-right">{{ resource.amount > 0 ? resource.amount|amount }}</td>
+                                    </tr>
                                 {% endfor %}
                             </tbody>
                             <tfoot>
@@ -122,7 +113,7 @@
                     </div>
                 {% endif %}
 
-                {% if evalBudget.charges == YES %}
+                {% if evalBudget.charge == YES %}
                     <div class="col-md-6">
                         <table class="table table-sm table-bordered table-hover">
                             <thead>
@@ -132,14 +123,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for key, value in constant("CHARGES_TYPE", evalBudget) %}
-                                    {% if attribute(evalBudget, key) %}
-                                        <tr>
-                                            <td scope="row">{{ not loop.last ? value : (attribute(evalBudget, key ~ 'Precision') ? 
-                                                attribute(evalBudget, key ~ 'Precision') : "Autre(s) charge(s)") }}</td>
-                                            <td class="text-right">{{ attribute(evalBudget, key ~ 'Amt')|amount }}</td>
-                                        </tr>
-                                    {% endif %}
+                                {% for charge in evalBudget.charges %}
+                                    <tr>
+                                        <td scope="row">{{ charge.type == 1000 and charge.comment ? 
+                                            charge.comment : charge.typeToString  }}</td>
+                                        <td class="text-right">{{ charge.amount > 0 ? charge.amount|amount }}</td>
+                                    </tr>
                                 {% endfor %}
                             </tbody>
                             <tfoot>
@@ -162,12 +151,11 @@
             <div class="row">
                 {{ view_div.get(evalBudget.incomeTaxToString, "Income tax", "evaluation") }}
             </div>
-            {% if evalBudget.debts %}
+            {% if evalBudget.debt == YES %}
                 <div class="row mb-2">
-                    {{ view_div.get(evalBudget.debtsToString ~ (evalBudget.debtsTypes ? 
-                        " (" ~ evalBudget.debtsTypesToString|lower ~ ")"), "Debts", "evaluation") }}
+                    {{ view_div.get(evalBudget.debtToString ~ (evalBudget.debts|length > 0 ? 
+                        " (" ~ evalBudget.debtsToString|lower ~ ")"), "Debts", "evaluation") }}
                     {{ view_div.get(evalBudget.debtsAmt|amount(0), "Debts amt", "evaluation") }}
-                    {{ view_div.get(evalBudget.monthlyRepaymentAmt|amount(2), "Monthly repayment amt", "evaluation") }}
                 </div>
                 <div class="row mb-2">
                     {{ view_div.get(evalBudget.debtComment, "Debt comment", "evaluation") }}

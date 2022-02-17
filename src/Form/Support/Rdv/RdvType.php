@@ -15,6 +15,10 @@ class RdvType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        /** @var Rdv $rdv */
+        $rdv = $options['data'];
+        $supportGroup = $rdv->getSupportGroup();
+
         $builder
             ->add('title', null, [
                 'attr' => [
@@ -42,34 +46,41 @@ class RdvType extends AbstractType
             ])
             ->add('content', null, [
                 'attr' => [
-                    // "class" => "d-none",
                     'rows' => 5,
                     'placeholder' => 'rdv.placeholder.content',
                 ],
             ])
-            ->add('googleCalendar', CheckboxType::class, [
+            ->add('tags', EntityType::class, [
+                'class' => Tag::class,
+                'label' => false,
+                'multiple' => true,
+                'expanded' => false,
+                'by_reference' => false,
+                'choices' => $supportGroup ?
+                $this->tagRepo->getTagsByService($supportGroup->getService(), 'rdv') :
+                $this->tagRepo->findAllTags('rdv'),
+                'choice_label' => 'name',
+                'attr' => [
+                    'class' => 'multi-select',
+                    'placeholder' => 'placeholder.tags',
+                    'size' => 1,
+                ],
+                'required' => false,
+            ])
+            ->add('_googleCalendar', CheckboxType::class, [
                 'label' => 'Envoyer sur Google Agenda',
-                'label_attr' => [
-                    'class' => 'custom-control-label'
-                ],
-                'attr'=> [
-                    'class' => 'custom-control-input checkbox api-calendar'
-                ],
-                'required' => false,
+                'label_attr' => ['class' => 'custom-control-label'],
+                'attr' => ['class' => 'custom-control-input checkbox api-calendar'],
                 'mapped' => false,
+                'required' => false,
             ])
-            ->add('outlookCalendar', CheckboxType::class, [
+            ->add('_outlookCalendar', CheckboxType::class, [
                 'label' => 'Envoyer sur Outlook Agenda',
-                'label_attr' => [
-                    'class' => 'custom-control-label'
-                ],
-                'attr'=> [
-                    'class' => 'custom-control-input checkbox api-calendar'
-                ],
-                'required' => false,
+                'label_attr' => ['class' => 'custom-control-label'],
+                'attr' => ['class' => 'custom-control-input checkbox api-calendar'],
                 'mapped' => false,
+                'required' => false,
             ])
-        ;
         // ->add('user', EntityType::class, [
             //     'class' => User::class,
             //     'choice_label' => 'fullname',
@@ -88,6 +99,7 @@ class RdvType extends AbstractType
             //         'placeholder' => 'placeholder.support',
             //         'required' => false,
             // ]);
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

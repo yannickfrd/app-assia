@@ -66,7 +66,6 @@ class EvaluationSubscriber implements EventSubscriberInterface
         $resourcesGroupAmt = 0;
         $chargesGroupAmt = 0;
         $debtsGroupAmt = 0;
-        $monthlyRepaymentAmt = 0;
         // Ressources et dettes initiales
         $initResourcesGroupAmt = 0;
         $initDebtsGroupAmt = 0;
@@ -77,7 +76,6 @@ class EvaluationSubscriber implements EventSubscriberInterface
                 $resourcesGroupAmt += $evalBudgetPerson->getResourcesAmt();
                 $chargesGroupAmt += $evalBudgetPerson->getChargesAmt();
                 $debtsGroupAmt += $evalBudgetPerson->getDebtsAmt();
-                $monthlyRepaymentAmt += $evalBudgetPerson->getMonthlyRepaymentAmt();
             }
 
             $initEvalPerson = $evaluationPerson->getInitEvalPerson();
@@ -91,8 +89,8 @@ class EvaluationSubscriber implements EventSubscriberInterface
         $evalBudgetGroup->setResourcesGroupAmt($resourcesGroupAmt);
         $evalBudgetGroup->setChargesGroupAmt($chargesGroupAmt);
         $evalBudgetGroup->setDebtsGroupAmt($debtsGroupAmt);
-        $evalBudgetGroup->setMonthlyRepaymentAmt($monthlyRepaymentAmt);
-        $evalBudgetGroup->setBudgetBalanceAmt($resourcesGroupAmt - $chargesGroupAmt - $evalBudgetGroup->getContributionAmt() - $monthlyRepaymentAmt);
+        $budgetBalanceAmt = $resourcesGroupAmt - $chargesGroupAmt - $evalBudgetGroup->getContributionAmt();
+        $evalBudgetGroup->setBudgetBalanceAmt($budgetBalanceAmt);
         // Ressources et dettes initiales
         $evaluationGroup->getInitEvalGroup()->setResourcesGroupAmt($initResourcesGroupAmt);
         $evaluationGroup->getInitEvalGroup()->setDebtsGroupAmt($initDebtsGroupAmt);

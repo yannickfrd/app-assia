@@ -4,6 +4,8 @@ namespace App\Entity\Evaluation;
 
 use App\Entity\Traits\ResourcesEntityTrait;
 use App\Form\Utils\EvaluationChoices;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
@@ -26,81 +28,6 @@ class EvalBudgetPerson
         99 => 'Non évalué',
     ];
 
-    public const RESOURCES_TYPE = [
-        'salary' => 'Salaire',
-        'activityBonus' => 'Prime d\'activité',
-        'unemplBenefit' => 'Allocation chômage (ARE)',
-        'minimumIncome' => 'RSA',
-        'familyAllowance' => 'Prestations familiales (AF)',
-        'disAdultAllowance' => 'Allocation adulte handicapé (AAH)',
-        'disChildAllowance' => 'Allocation d\'éducation de l\'enfant handicapé (AEEH)',
-        'asf' => 'Allocation de soutien familial (ASF)',
-        'solidarityAllowance' => 'Allocation de solidarité spécifique (ASS)',
-        'asylumAllowance' => 'Allocation pour demandeur d\'asile (ADA)',
-        // 'tempWaitingAllowance' => 'Allocation temporaire d\'attente (ATA)', // To delete
-        'scholarships' => 'Bourse',
-        'familySupplement' => 'Complément familial',
-        'paidTraining' => 'Formation rémunérée',
-        'youthGuarantee' => 'Garantie jeunes',
-        'dailyAllowance' => 'Indemnités journalières (IJ)',
-        'maintenance' => 'Pension alimentaire',
-        'disabilityPension' => 'Pension d\'invalidité',
-        'paje' => 'Prestation d\'accueil du jeune enfant (PAJE)',
-        'pensionBenefit' => 'Retraite',
-        'ressourceOther' => 'Autre ressource',
-    ];
-
-    public const RESOURCES_MIN_TYPE = [
-        'salary' => 'Salaire',
-        'activityBonus' => 'Prime d\'activité',
-        'unemplBenefit' => 'ARE',
-        'minimumIncome' => 'RSA',
-        'familyAllowance' => 'AF',
-        'disAdultAllowance' => 'AAH',
-        'disChildAllowance' => 'AEEH',
-        'asf' => 'ASF',
-        'solidarityAllowance' => 'ASS',
-        'asylumAllowance' => 'ADA',
-        // 'tempWaitingAllowance' => 'ATA', // To delete
-        'scholarships' => 'Bourse',
-        'familySupplement' => 'Complément familial',
-        'paidTraining' => 'Formation',
-        'youthGuarantee' => 'Garantie jeunes',
-        'dailyAllowance' => 'IJ',
-        'maintenance' => 'Pension alimentaire',
-        'disabilityPension' => 'Pension d\'invalidité',
-        'paje' => 'PAJE',
-        'pensionBenefit' => 'Retraite',
-        'ressourceOther' => 'Autre',
-    ];
-
-    public const CHARGES_TYPE = [
-        'insurance' => 'Assurance(s)',
-        'canteen' => 'Cantine',
-        'consumerCredit' => 'Crédit(s) à la consommation',
-        'water' => 'Eau',
-        'electricityGas' => 'Electricité / Gaz',
-        'childcare' => 'Garde d\'enfant(s)',
-        'taxes' => 'Impôts',
-        'rent' => 'Loyer',
-        'mutual' => 'Mutuelle(s)',
-        'alimony' => 'Pension alimentaire',
-        'phone' => 'Téléphone',
-        'transport' => 'Transport',
-        'chargeOther' => 'Autre charge',
-    ];
-
-    public const DEBTS_TYPE = [
-        'debtRental' => 'Dettes locatives',
-        'debtConsrCredit' => 'Dette de crédits à la consommation',
-        'debtMortgage' => 'Dettes de crédits immobiliers',
-        'debtFines' => 'Amendes',
-        'debtHealth' => 'Dettes de santé (hôpital)',
-        'debtTaxDelays' => 'Retards d\'impôts',
-        'debtBankOverdrafts' => 'Découverts bancaires',
-        'debtOther' => 'Autres dettes',
-    ];
-
     public const SETTLEMENT_PLAN = [
         1 => 'Proposé',
         2 => 'Accepté',
@@ -121,6 +48,9 @@ class EvalBudgetPerson
      */
     private $incomeTax;
 
+    /** @Groups("export") */
+    private $incomeTaxToString;
+
     /**
      * @ORM\Column(type="float", nullable=true)
      */
@@ -139,7 +69,13 @@ class EvalBudgetPerson
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $charges;
+    private $charge;
+
+    /** @Groups("export") */
+    private $chargeToString;
+
+    /** @Groups("export") */
+    private $chargesToString;
 
     /**
      * @ORM\Column(type="float", nullable=true)
@@ -289,7 +225,13 @@ class EvalBudgetPerson
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $debts;
+    private $debt;
+
+    /** @Groups("export") */
+    private $debtToString;
+
+    /** @Groups("export") */
+    private $debtsToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -349,14 +291,16 @@ class EvalBudgetPerson
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
      */
-    private $monthlyRepaymentAmt;
+    private $monthlyRepaymentAmt; // A supprimer
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $overIndebtRecord;
+
+    /** @Groups("export") */
+    private $overIndebtRecordToString;
 
     /**
      * @ORM\Column(type="date", nullable=true)
@@ -368,10 +312,16 @@ class EvalBudgetPerson
      */
     private $settlementPlan;
 
+    /** @Groups("export") */
+    private $settlementPlanToString;
+
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $moratorium;
+
+    /** @Groups("export") */
+    private $moratoriumToString;
 
     /**
      * @ORM\Column(type="date", nullable=true)
@@ -384,10 +334,38 @@ class EvalBudgetPerson
     private $commentEvalBudget;
 
     /**
+     * @var Collection|resource[]|null
+     * @ORM\OneToMany(targetEntity=Resource::class, mappedBy="evalBudgetPerson", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OrderBy({"amount": "DESC"})
+     */
+    private $resources;
+
+    /**
+     * @var Collection|Charge[]|null
+     * @ORM\OneToMany(targetEntity=Charge::class, mappedBy="evalBudgetPerson", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OrderBy({"amount": "DESC"})
+     */
+    private $charges;
+
+    /**
+     * @var Collection|Debt[]|null
+     * @ORM\OneToMany(targetEntity=Debt::class, mappedBy="evalBudgetPerson", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OrderBy({"amount": "DESC"})
+     */
+    private $debts;
+
+    /**
      * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvaluationPerson", inversedBy="evalBudgetPerson", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      */
     private $evaluationPerson;
+
+    public function __construct()
+    {
+        $this->resources = new ArrayCollection();
+        $this->charges = new ArrayCollection();
+        $this->debts = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -399,9 +377,6 @@ class EvalBudgetPerson
         return $this->incomeTax;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getIncomeTaxToString(): ?string
     {
         return $this->incomeTax ? EvaluationChoices::YES_NO[$this->incomeTax] : null;
@@ -450,47 +425,42 @@ class EvalBudgetPerson
         return $this;
     }
 
-    public function getCharges(): ?int
+    public function getCharge(): ?int
     {
-        return $this->charges;
+        return $this->charge;
     }
 
-    /**
-     * @Groups("export")
-     */
-    public function getChargesToString(): ?string
+    public function getChargeToString(): ?string
     {
-        return $this->charges ? EvaluationChoices::YES_NO[$this->charges] : null;
+        return $this->charge ? EvaluationChoices::YES_NO[$this->charge] : null;
     }
 
-    public function setCharges(?int $charges): self
+    public function setCharge(?int $charge): self
     {
-        $this->charges = $charges;
+        $this->charge = $charge;
 
         return $this;
     }
 
-    public function chargesTypes(): array
+    public function getChargesToArray(): array
     {
-        $array = [];
-
-        foreach (EvalBudgetPerson::CHARGES_TYPE as $key => $value) {
-            $method = 'get'.ucfirst($key);
-            if (EvaluationChoices::YES === $this->$method()) {
-                $array[$key] = $value;
-            }
+        if (!$this->charges) {
+            return [];
         }
 
-        if ($this->chargeOther && $this->chargeOtherPrecision) {
-            $array['chargeOther'] = $array['chargeOther'].' ('.$this->chargeOtherPrecision.')';
+        $charges = [];
+
+        foreach ($this->charges as $charge) {
+            $charges[] = Charge::CHARGES[$charge->getType()].
+                (Charge::OTHER === $charge->getType() && $charge->getComment() ? ' ('.$charge->getComment().')' : '');
         }
 
-        return $array;
+        return $charges;
     }
 
-    public function getChargesTypesToString(): ?string
+    public function getChargesToString(): ?string
     {
-        return join(', ', $this->chargesTypes());
+        return join(', ', $this->getChargesToArray());
     }
 
     public function getChargesAmt(): ?float
@@ -901,47 +871,42 @@ class EvalBudgetPerson
         return $this;
     }
 
-    public function getDebts(): ?int
+    public function getDebt(): ?int
     {
-        return $this->debts;
+        return $this->debt;
     }
 
-    public function setDebts(?int $debts): self
+    public function getDebtToString(): ?string
     {
-        $this->debts = $debts;
+        return $this->debt ? EvaluationChoices::YES_NO[$this->debt] : null;
+    }
+
+    public function setDebt(?int $debt): self
+    {
+        $this->debt = $debt;
 
         return $this;
     }
 
-    public function debtsTypes(): array
+    public function getDebtsToArray(): array
     {
-        $array = [];
-
-        foreach (self::DEBTS_TYPE as $key => $value) {
-            $method = 'get'.ucfirst($key);
-            if (EvaluationChoices::YES === $this->$method()) {
-                $array[$key] = $value;
-            }
+        if (!$this->debts) {
+            return [];
         }
 
-        if ($this->debtOther && $this->debtOtherPrecision) {
-            $array['debtOther'] = $array['debtOther'].' ('.$this->debtOtherPrecision.')';
+        $debts = [];
+
+        foreach ($this->debts as $debt) {
+            $debts[] = Debt::DEBTS[$debt->getType()].
+                (Debt::OTHER === $debt->getType() && $debt->getComment() ? ' ('.$debt->getComment().')' : '');
         }
 
-        return $array;
+        return $debts;
     }
 
-    public function getDebtsTypesToString(): ?string
-    {
-        return join(', ', $this->debtsTypes());
-    }
-
-    /**
-     * @Groups("export")
-     */
     public function getDebtsToString(): ?string
     {
-        return $this->debts ? EvaluationChoices::YES_NO[$this->debts] : null;
+        return join(', ', $this->getDebtsToArray());
     }
 
     public function getDebtRental(): ?int
@@ -949,9 +914,6 @@ class EvalBudgetPerson
         return $this->debtRental;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getDebtRentalToString(): ?string
     {
         return $this->debtRental ? EvaluationChoices::YES_NO_BOOLEAN[$this->debtRental] : null;
@@ -1119,12 +1081,12 @@ class EvalBudgetPerson
         return $this;
     }
 
-    public function getMonthlyRepaymentAmt(): ?float
+    public function getMonthlyRepaymentAmt(): ?float // A supprimer
     {
         return $this->monthlyRepaymentAmt;
     }
 
-    public function setMonthlyRepaymentAmt(?float $monthlyRepaymentAmt): self
+    public function setMonthlyRepaymentAmt(?float $monthlyRepaymentAmt): self // A supprimer
     {
         $this->monthlyRepaymentAmt = $monthlyRepaymentAmt;
 
@@ -1136,9 +1098,6 @@ class EvalBudgetPerson
         return $this->overIndebtRecord;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getOverIndebtRecordToString(): ?string
     {
         return $this->overIndebtRecord ? EvaluationChoices::YES_NO_IN_PROGRESS[$this->overIndebtRecord] : null;
@@ -1168,9 +1127,6 @@ class EvalBudgetPerson
         return $this->settlementPlan;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getSettlementPlanToString(): ?string
     {
         return $this->settlementPlan ? self::SETTLEMENT_PLAN[$this->settlementPlan] : null;
@@ -1188,9 +1144,6 @@ class EvalBudgetPerson
         return $this->moratorium;
     }
 
-    /**
-     * @Groups("export")
-     */
     public function getMoratoriumToString(): ?string
     {
         return $this->moratorium ? EvaluationChoices::YES_NO_IN_PROGRESS[$this->moratorium] : null;
@@ -1235,6 +1188,96 @@ class EvalBudgetPerson
     public function setEvaluationPerson(EvaluationPerson $evaluationPerson): self
     {
         $this->evaluationPerson = $evaluationPerson;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<Resource>|Resource[]|null
+     */
+    public function getResources(): ?Collection
+    {
+        return $this->resources;
+    }
+
+    public function addResource(Resource $resource): self
+    {
+        if (!$this->resources->contains($resource)) {
+            $this->resources[] = $resource;
+            $resource->setEvalBudgetPerson($this);
+        }
+
+        return $this;
+    }
+
+    public function removeResource(Resource $resource): self
+    {
+        if ($this->resources->removeElement($resource)) {
+            // set the owning side to null (unless already changed)
+            if ($resource->getEvalBudgetPerson() === $this) {
+                $resource->setEvalBudgetPerson(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Charge[]|null
+     */
+    public function getCharges(): ?Collection
+    {
+        return $this->charges;
+    }
+
+    public function addCharge(Charge $charge): self
+    {
+        if (!$this->charges->contains($charge)) {
+            $this->charges[] = $charge;
+            $charge->setEvalBudgetPerson($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCharge(Charge $charge): self
+    {
+        if ($this->charges->removeElement($charge)) {
+            // set the owning side to null (unless already changed)
+            if ($charge->getEvalBudgetPerson() === $this) {
+                $charge->setEvalBudgetPerson(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Debt[]|null
+     */
+    public function getDebts(): ?Collection
+    {
+        return $this->debts;
+    }
+
+    public function addDebt(Debt $debt): self
+    {
+        if (!$this->debts->contains($debt)) {
+            $this->debts[] = $debt;
+            $debt->setEvalBudgetPerson($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDebt(Debt $debt): self
+    {
+        if ($this->debts->removeElement($debt)) {
+            // set the owning side to null (unless already changed)
+            if ($debt->getEvalBudgetPerson() === $this) {
+                $debt->setEvalBudgetPerson(null);
+            }
+        }
 
         return $this;
     }

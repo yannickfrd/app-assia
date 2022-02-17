@@ -20,7 +20,7 @@
 
             {{ form_start(form) }}
 
-            <h2 class="h4 my-4">Coordonnées</h1>
+            <h2 class="h4 my-4">Coordonnées</h2>
             <div class="form-group row mb-2">
                 {{ view_div.get(app.user.firstname, 'Firstname') }}
                 {{ view_div.get(app.user.lastname, 'Lastname') }}
@@ -56,7 +56,7 @@
 
             {{ form_start(formPassword) }}
 
-            <h2 class="h4 my-4">Modification du mot de passe</h1>
+            <h2 class="h4 my-4">Modification du mot de passe</h2>
             <div class="form-group row mb-2">
                 <div class="col-md-6">
                     <div class="form-group row">
@@ -137,7 +137,7 @@
                         <tbody>
                             {% for support in supports  %}
                                 {# {% cache "referentSupport" ~ support.id support.updatedAt.timestamp %} #}
-                                {% set person = (support.supportPeople|filter(s => s.head == true)|first).person %}
+                                {% set person = support.header %}
                                 <tr>
                                     <td scope="row" class="align-middle">
                                         <a href="{{ path('support_edit', {'id':support.id}) }}"
@@ -203,6 +203,30 @@
                     </table>
                 </div>
             {% endif %}
+        </section>
+
+        <hr>
+
+        <section>
+            {{ form_start(formSetting) }}
+            <h2 class="h4 my-4">Paramètres</h2>
+
+            <div class="row">
+                <div class="col-md-12"><h3 class="h6 mb-3">Rappels</h3></div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-6 custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-0">{{ form_row(formSetting.weeklyAlert) }}</div>
+                <div class="col-md-6 custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-0">{{ form_row(formSetting.dailyAlert) }}</div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-12">
+                    <div class="float-right">
+                        <button type="submit" id="send3" name="send3" class="btn btn-{{ theme_color }} shadow">Enregistrer</button>
+                    </div>
+                </div>
+            </div>
+            {{ form_end(formSetting) }}
         </section>
 
     </div>

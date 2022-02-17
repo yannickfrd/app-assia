@@ -5,6 +5,7 @@ namespace App\Form\Model\Support;
 use App\Entity\Support\Document;
 use App\Form\Model\Traits\DateSearchTrait;
 use App\Form\Model\Organization\ReferentServiceDeviceSearchTrait;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class DocumentSearch
 {
@@ -17,8 +18,20 @@ class DocumentSearch
     /** @var string|null */
     private $name;
 
-    /** @var int|null */
-    private $type;
+    /** @var ArrayCollection|null */
+    private $tags;
+
+    public function getTags(): ?ArrayCollection
+    {
+        return $this->tags;
+    }
+
+    public function setTags(?ArrayCollection $tags): self
+    {
+        $this->tags = $tags;
+
+        return $this;
+    }
 
     public function getId(): ?int
     {
@@ -42,22 +55,5 @@ class DocumentSearch
         $this->name = $name;
 
         return $this;
-    }
-
-    public function getType(): ?int
-    {
-        return $this->type;
-    }
-
-    public function setType(?int $type): self
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    public function getTypeString()
-    {
-        return Document::TYPE[$this->type];
     }
 }

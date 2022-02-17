@@ -3,27 +3,20 @@ import Username from './username'
 import SeePassword from './seePassword'
 import DeleteTr from '../utils/deleteTr'
 import changeChecker from '../utils/form/changeChecker'
-import AddCollectionWidget from '../utils/addCollectionWidget'
+import WidgetCollectionManager from '../utils/form/WidgetCollectionManager'
 import '../utils/maskPhone'
-import 'select2'
+import SelectManager from '../utils/form/SelectManager'
 
 document.addEventListener('DOMContentLoaded', () => {
-    // let username = new Username('security_user')
     new Username('user')
     new SeePassword()
     new DeleteTr('function-table')
     new changeChecker('user') // form name
+    new SelectManager('#user_roles')
 
-    const addCollectionWidget = new AddCollectionWidget()
+    const widgetCollectionManager = new WidgetCollectionManager()
 
-    if (parseInt(document.querySelectorAll('#serviceUser-fields-list>tr').length) === 0) {
-        addCollectionWidget.addElt(document.querySelector('.add-another-collection-widget'))
+    if (parseInt(document.querySelector('#serviceUser-fields-list').children.length) === 0) {
+        widgetCollectionManager.addElt(document.querySelector('button[data-add-widget]'))
     }
-})
-
-$('select[data-select2-id="role"]').select2({
-    placeholder: '  -- Rôle --',
-    'language': {
-        'noResults': () => '<span class="text-secondary">Aucun résultat.</span>'
-    },
 })

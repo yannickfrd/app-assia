@@ -1,5 +1,5 @@
 import FormValidator from '../utils/form/formValidator'
-import ItemsListManager from '../utils/form/itemsListManager'
+import SelectCollectionManager from '../utils/form/SelectCollectionManager'
 import ContributionCalcul from '../payment/contributionCalcul'
 
 /**
@@ -10,25 +10,12 @@ export default class evaluationBudget {
     constructor() {
         this.formValidator = new FormValidator()
 
-        this.prefix = 'evaluation_'
-
-        this.evalBudgetElt = document.getElementById('accordion-parent-eval_budget')
-
+        this.evalBudgetElt = document.getElementById('accordion_parent_evalBudget')
         this.resourcesGroupAmtElt = document.getElementById('resourcesGroupAmt')
         this.chargesGroupAmtElt = document.getElementById('chargesGroupAmt')
-        this.debtsGroupAmtElt = document.getElementById('debtsGroupAmt')
-        this.repaymentGroupAmtElt = document.getElementById('repaymentGroupAmt')
-        this.budgetBalanceGroupAmtElt = document.getElementById('budgetBalanceGroupAmt')
-
-        this.evalBudgetResourcesAmtElts = this.evalBudgetElt.querySelectorAll('input[data-amount="resourcesAmt"]')
-        this.evalBudgetChargesAmtElts = this.evalBudgetElt.querySelectorAll('input[data-amount="chargesAmt"]')
-        this.evalBudgetDebtsAmtElts = this.evalBudgetElt.querySelectorAll('input[data-amount="debtsAmt"]')
-        this.evalBudgetRepaymentAmtElts = this.evalBudgetElt.querySelectorAll('input[data-amount="repaymentAmt"]')
-        this.evalBudgetBudgetBalancAmtElts = this.evalBudgetElt.querySelectorAll('input[data-amount="budgetBalanceAmt"]')
-
-        this.resourcesAmtElts = document.querySelectorAll('input[data-twin-field="resourcesAmt"]')
-
-        this.NO = 2
+        this.resourcesAmtElts = document.querySelectorAll('input[data-amount="resourcesAmt"]')
+        this.no = 2
+        this.other = 1000
 
         this.init()
     }
@@ -36,9 +23,8 @@ export default class evaluationBudget {
     init() {
         this.evalBudgetGroup()
 
-        const prefix = this.prefix + 'evaluationPeople_'
-        this.initEvalPerson(prefix)
-        this.evalBudgetPerson(prefix)
+        this.initEvalPerson()
+        this.evalBudgetPerson()
 
         document.querySelectorAll('input[data-amount]').forEach(amountElt => {
             amountElt.addEventListener('input', () => this.formValidator.checkAmount(amountElt, 0, 999999))
@@ -54,100 +40,93 @@ export default class evaluationBudget {
      * Evaluation budgétaire.
      */
     evalBudgetGroup() {
-        this.editAmtPers('resources')
-        this.editAmtPers('charges')
-        this.editAmtPers('debts')
-        this.editAmtPers('repayment')
+        this.updateAmtPers('resource')
+        this.updateAmtPers('charge')
+        this.updateAmtPers('debt')
     }
 
     /**
      * Evaluation situation initiale individuelle.
-     * @param {String} prefix 
      */
-    initEvalPerson(prefix) {
-        document.getElementById('accordion-init_eval').querySelectorAll('button[data-person-key]')
-            .forEach(personElt => {
-                const key = personElt.dataset.personKey
-                new ItemsListManager(`${key}_initEvalPerson_resourcesType`,
-                    this.updateSumAmt.bind(this, 'init_eval', 'initEvalPerson', key, 'resources'))
-                this.editAmt(prefix, 'init_eval', 'initEvalPerson', key, 'resources')
-                this.changeSelectToNo(prefix, 'eval_budget', key, 'initEvalPerson', 'resources')
-            })
+    initEvalPerson() {
+        const personElts = document.getElementById('accordion_initEval').querySelectorAll('button[data-person-key]')
+            
+        personElts.forEach(personElt => {
+            const key = personElt.dataset.personKey
+            const id = `evaluation_evaluationPeople_${key}_initEvalPerson_resource`
+            this.updateAmt(id, 'initEval')
+            this.switchSelectToNo(id)
+            new SelectCollectionManager(
+                id + 'Type',
+                this.afterAddItem.bind(this, id),
+                this.afterRemoveItem.bind(this, id),
+            ).init()
+        })
     }
 
     /**
      * Evaluation budgétaire individuelle.
-     * @param {String} prefix 
      */
-    evalBudgetPerson(prefix) {
-        const entity = 'evalBudgetPerson'
-        document.getElementById('accordion-eval_budget').querySelectorAll('button[data-person-key]')
-            .forEach(personElt => {
-                const key = personElt.dataset.personKey
-                new ItemsListManager(`${key}_evalBudgetPerson_resourcesType`,
-                    this.updateSumAmt.bind(this, 'eval_budget', entity, key, 'resources'))
-                new ItemsListManager(`${key}_evalBudgetPerson_chargesType`,
-                    this.updateSumAmt.bind(this, 'eval_budget', entity, key, 'charges'))
-                new ItemsListManager(`${key}_evalBudgetPerson_debtsType`)
-                this.editAmt(prefix, 'eval_budget', entity, key, 'resources')
-                this.editAmt(prefix, 'eval_budget', entity, key, 'charges')
-                this.changeSelectToNo(prefix, 'eval_budget', key, entity, 'resources')
-                this.changeSelectToNo(prefix, 'eval_budget', key, entity, 'charges')
+    evalBudgetPerson() {
+        const personElts = document.getElementById('accordion_evalBudget').querySelectorAll('button[data-person-key]')
+        
+        personElts.forEach(personElt => {
+            const key = personElt.dataset.personKey
+            const types = ['resource', 'charge', 'debt']
+
+            types.forEach(type => {
+                const id = `evaluation_evaluationPeople_${key}_evalBudgetPerson_${type}`
+                this.updateAmt(id)
+                this.switchSelectToNo(id)
+                new SelectCollectionManager(
+                    id + 'Type',
+                    this.afterAddItem.bind(this, id),
+                    this.afterRemoveItem.bind(this, id),
+                ).init()
             })
+        })
     }
 
     /**
-     * Si changement des ressources à 'Non', alors efface tous les types de ressources saisies de la personne.
-     * @param {String} prefix 
-     * @param {String} collapseId 
-     * @param {Number} key 
-     * @param {String} entity 
+     * Si changement des ressources à 'Non', alors supprime les différentes ressources de la personne.
+     * @param {string} id 
      */
-    changeSelectToNo(prefix, collapseId, key, entity, type) {
-        const resourceInput = document.getElementById(`${prefix}${key}_${entity}${type === 'resources' ? '_resources' : ''}_${type}`)
-        if (!resourceInput) {
+    switchSelectToNo(id) {
+        const resourceInputElt = document.getElementById(id)
+        if (!resourceInputElt) {
             return null
         }
-        
-        resourceInput.addEventListener('change', () => {
-            if (this.NO != parseInt(resourceInput.value)) {
+        resourceInputElt.addEventListener('change', () => {
+            if (parseInt(resourceInputElt.value) !== this.no) {
                 return null   
             }
 
-            document.querySelectorAll(`tr[data-parent-select="${key}_${entity}_${type}Type"]`).forEach(trElt => {
-                trElt.querySelectorAll('input').forEach(inputElt => {
-                    inputElt.getAttribute('type') === 'number' ? inputElt.value = 0 : inputElt.value = null
-                })
-                trElt.classList.replace('d-table-row', 'd-none')
-            })
-            const sumAmtElt = document.getElementById(`${prefix}${key}_${entity}${type === 'resources' ? '_resources' : ''}_${type}Amt`)
+            const trElts = document.querySelectorAll(`div[data-parent-field="${resourceInputElt.id}"] table tbody tr`)
+            trElts.forEach(trElt => trElt.remove())
+
+            const sumAmtElt = document.getElementById(id + 'sAmt')
             sumAmtElt.value = 0
-            
+
+            const type = id.split('_').pop()
             this.updateAmtGroup(type)
         })
     }
 
     /**
      * Met à jour la somme des montants après la saisie d'un input.
-     * @param {String} prefix 
-     * @param {String} collapseId 
-     * @param {String} entity 
-     * @param {Numbert} key 
-     * @param {String} type 
+     * @param {id} id 
      */
-    editAmt(prefix, collapseId, entity, key, type) {
-        const inputElts = document.getElementById(`collapse-${collapseId}-${key}`)
-            .querySelectorAll(`input[data-amount="${type}"]`)
-        const amtElt = document.getElementById(`${prefix}${key}_${entity}${type === 'resources' ? '_resources' : ''}_${type}Amt`)
+    updateAmt(id) {
+        const type = id.split('_').pop()
+        const inputElts = this.getInputElts(id)
+        const sumAmtElt = document.getElementById(id + 'sAmt')
+        
         inputElts.forEach(inputElt => {
             inputElt.addEventListener('input', () => {
-                amtElt.value = this.getSumAmts(inputElts)
-                amtElt.classList.remove('border-warning')
+                sumAmtElt.value = this.getSumAmts(inputElts)
+                sumAmtElt.classList.remove('border-warning')
                 this.updateAmtGroup(type)
             })
-        })
-
-        inputElts.forEach(inputElt => {
             inputElt.addEventListener('focusout', () => {
                 this.resourcesAmtElts.forEach(ressourcesAmtElt => {
                     ressourcesAmtElt.click()
@@ -155,11 +134,11 @@ export default class evaluationBudget {
             })
         })
 
-        if (amtElt) {
-            amtElt.addEventListener('click', () => {
-                const sumAmts = this.getSumAmts(inputElts)
-                if (sumAmts != 0) {
-                    amtElt.value = sumAmts
+        if (sumAmtElt) {
+            sumAmtElt.addEventListener('click', () => {
+                const sumAmts = this.getSumAmts(this.getInputElts(id))
+                if (sumAmts !== 0) {
+                    sumAmtElt.value = sumAmts
                     this.updateAmtGroup(type)
                 }
             })
@@ -167,8 +146,18 @@ export default class evaluationBudget {
     }
 
     /**
+     * @param {string} id 
+     * @returns {NodeList}
+     */
+    getInputElts(id) {
+        const type = id.split('_').pop()
+        const collapseId = 'collapse_' + id.replace('_' + type, '')
+        return document.getElementById(collapseId).querySelectorAll(`input[data-amount="${type}"]`)
+    }
+
+    /**
      * Retourne la somme des montants.
-     * @param {Array} inputElts 
+     * @param {NodeList} inputElts 
      */
     getSumAmts(inputElts) {
         let sumAmts = 0
@@ -185,23 +174,22 @@ export default class evaluationBudget {
 
     /**
      * Met à jour la somme des montants de la personne.
-     * @param {String} collapseId 
-     * @param {String} entity 
-     * @param {Number} key 
-     * @param {String} type 
+     * @param {string} id 
      */
-    updateSumAmt(collapseId, entity, key, type) {
-        const inputElts = document.getElementById(`collapse-${collapseId}-${key}`).querySelectorAll(`input[data-amount="${type}"]`)
-        const sumAmtElt = document.getElementById(`evaluation_evaluationPeople_${key}_${entity}${type === 'resources' ? '_resources' : ''}_${type}Amt`)
+    updateSumAmt(id) {
+        const type = id.split('_').pop()
+        const collapseId = 'collapse_' + id.replace(('_' + type), '')
+        const inputElts = document.getElementById(collapseId).querySelectorAll(`input[data-amount="${type}"]`)
+        const sumAmtElt = document.getElementById(id + 'sAmt')
         sumAmtElt.value = this.getSumAmts(inputElts)
         this.updateAmtGroup(type)
     }
 
     /**
      * Met à jour le montant total du groupe lors d'une modification des montants individuels.
-     * @param {String} type 
+     * @param {string} type 
      */
-    editAmtPers(type) {
+    updateAmtPers(type) {
         this.amtElts(type).forEach(amountElt => {
             amountElt.addEventListener('input', () => this.updateAmtGroup(type))
         })
@@ -209,7 +197,7 @@ export default class evaluationBudget {
 
     /**
      * Met à jour le montant total du groupe (resources, charges ou dettes).
-     * @param {String} type 
+     * @param {string} type 
      */
     updateAmtGroup(type) {
         let sumAmts = 0
@@ -220,7 +208,7 @@ export default class evaluationBudget {
             }
         })
 
-        const groupAmtElt = this.groupAmtElt(type)
+        const groupAmtElt = document.getElementById(`${type}sGroupAmt`)
         groupAmtElt.textContent = sumAmts.toLocaleString(undefined, {minimumFractionDigits: 2}) + ' €'
         groupAmtElt.dataset.value = Math.round(sumAmts * 100) / 100
         this.updateBudgetBalanceAmt()
@@ -232,52 +220,62 @@ export default class evaluationBudget {
     updateBudgetBalanceAmt() {
         const budgetBalanceGroupAmt = Math.round(parseFloat(
             this.resourcesGroupAmtElt.dataset.value
-            - this.chargesGroupAmtElt.dataset.value
-            - this.repaymentGroupAmtElt.dataset.value) * 100) / 100;
+            - this.chargesGroupAmtElt.dataset.value) * 100) / 100;
         
-        this.budgetBalanceGroupAmtElt.textContent = budgetBalanceGroupAmt.toLocaleString(undefined, {minimumFractionDigits: 2}) + ' €'
+        document.getElementById('budgetBalanceGroupAmt').textContent =
+            budgetBalanceGroupAmt.toLocaleString(undefined, { minimumFractionDigits: 2 }) + ' €'
     }
-   
+
+
     /**
-     * 
-     * @param {String} type 
+     * @param {string} type 
      */
-    groupAmtElt(type) {
-        switch (type) {
-            case 'resources':
-                return this.resourcesGroupAmtElt
-                break
-            case 'charges':
-                return this.chargesGroupAmtElt
-                break
-            case 'debts':
-                return this.debtsGroupAmtElt
-                break
-            case 'repayment':
-                return this.repaymentGroupAmtElt
-                break
+    amtElts(type) {
+        return this.evalBudgetElt.querySelectorAll(`input[data-amount="${type}sAmt"]`)
+    }
+
+    /**
+     * After to add element into a collection².
+     * @param {string} id 
+     */
+    afterAddItem(id) {
+        this.updateAmt(id)
+        
+        const newTrElt = document.getElementById(id + 'Type_list').lastChild
+        const typeinputElt = newTrElt.querySelector('input[type="hidden"]')
+        const amountInputElt = newTrElt.querySelector('input[data-amount]')
+        const splitId = amountInputElt.id.split('_')
+
+        amountInputElt.dataset.twinField = splitId[2] + '_' + splitId[4] + '_' + typeinputElt.value + '_' + splitId.pop()
+        amountInputElt.addEventListener('change', () => this.onChangeField(amountInputElt))
+
+        if (parseInt(typeinputElt.value) ===  this.other) {
+            const commentInputElt = newTrElt.querySelector('input[type="text"]')
+            const splitId = commentInputElt.id.split('_')
+
+            commentInputElt.dataset.twinField = splitId[2] + '_' + splitId[4] + '_' + typeinputElt.value + '_' + splitId.pop()
+            commentInputElt.addEventListener('change', () => this.onChangeField(commentInputElt))
         }
     }
 
     /**
-     * 
-     * @param {String} type 
+     * @param {HTMLElement} fieldElt 
      */
-    amtElts(type) {
-        switch (type) {
-            case 'resources':
-                return this.evalBudgetResourcesAmtElts
-                break
-            case 'charges':
-                return this.evalBudgetChargesAmtElts
-                break
-            case 'debts':
-                return this.evalBudgetDebtsAmtElts
-                break
-            case 'repayment':
-                return this.evalBudgetRepaymentAmtElts
-                break
-        }
+    onChangeField(fieldElt) {
+        const twinField = fieldElt.dataset.twinField
+        document.querySelectorAll(`[data-twin-field="${twinField}"]`).forEach(twinElt => {
+            if (twinElt.id !== fieldElt.id && !twinElt.value) {
+                twinElt.value = fieldElt.value
+            }
+        })
+    }
+    
+    /**
+     * After to remove element into a collection.
+     * @param {string} id 
+     */
+    afterRemoveItem(id) {
+        this.updateSumAmt(id)
     }
 
     /**

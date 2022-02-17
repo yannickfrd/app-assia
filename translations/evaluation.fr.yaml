@@ -1,5 +1,7 @@
 Init eval: Entrée
-placeholder.select: -- Sélectionner --
+placeholder:
+  select: -- Sélectionner --
+  add: -- Ajouter --
 initEvalPerson.comment: Écrire un commentaire relatif à la situation initiale de la personne
 backgroundPeople: Parcours de vie
 backgroundPeople.placeholder: Présenter le parcours de vie / historique du ménage
@@ -36,6 +38,9 @@ evalAdmPerson:
 evalBudgetPerson:
   endRightsDate.help: Date de fin des prestations ou des allocations
   comment: Écrire un commentaire relatif à la situation budgétaire (démarches en cours, évolution de la situation...)
+debt.comment.placeholder: Autre(s) dette(s)
+charge.comment.placeholder: Autre(s) charge(s)
+resource.comment.placeholder: Autre(s) ressource(s)
 Activity bonus amt: Montant Prime d'activité
 Activity bonus: Prime d'activité
 Alimony amt: Montant Pension alimentaire
@@ -47,18 +52,21 @@ Asylum allowance amt: Montant ADA
 Asylum allowance: ADA
 Budget balance amt: Montant reste à vivre
 Budget: Budget
+Charge: Charge(s)
 Charge comment: Commentaire sur les charges
 Charge other amt: Montant autre charge
 Charge other precision: Précision Autre charge
 Charge other: Autre charge
+Charge type: Type de charge(s)
 Charges amt: Montant total des charges
 Charges group amt: Montant total charges du groupe
-Charges: Charges
+Charges: Type de charge(s)
 Childcare amt: Montant garde enfant(s)
 Childcare: Garde d'enfant(s)
 Contribution amt: Montant de la participation financière
 Daily allowance: Indemnités journalières
 Daily allowance amt: Montant indemnités journalières
+Debt: Dette(s)
 Debt amt: Montant total des dettes
 Debt bank old amt: Montant découverts bancaires
 Debt bank overdrafts: Découverts bancaires
@@ -78,9 +86,10 @@ Debt tax delays amt: Montant retards d'impôts
 Debt tax delays: Retards d'impôts
 Debt unpaid maint amt: Montant pension alimentaire non réglée
 Debt unpaid maint: Pension alimentaire non réglée
+Debt type: Type de dette(s)
 Debts amt: Montant des dettes
 Debts group amt: Montant total dettes du groupe
-Debts: Dettes
+Debts: Type de dette(s)
 Dis adult allowance amt: Montant AAH
 Dis adult allowance: AAH
 Dis child allowance amt: Montant AAEH
@@ -105,13 +114,9 @@ Maintenance amt: Montant pension alimentaire
 Maintenance: Pension alimentaire
 Minimum income amt: Montant RSA
 Minimum income: RSA
-Monthly repayment amt: Montant du remboursement mensuel
 Moratorium: Moratoire
 Mutual amt: Montant mutuelle(s)
 Mutual: Mutuelle(s)
-Other charge(s)...: Autre(s) charge(s)...
-Other debt(s)...: Autre(s) dette(s)...
-Other ressource(s)...: Autre(s) ressource(s)
 Over indebt record date: Date de dépôt du dossier
 Over indebt record: Dossier de surendettement
 Paid training amt: Montant formation rémunérée
@@ -124,11 +129,12 @@ Phone amt: Montant téléphone
 Phone: Téléphone
 Rent amt: Montant loyer
 Rent: Loyer
+Resource: Ressource(s)
 Resources amt: Montant total des ressources
 Resources comment: Commentaire sur les ressources
 Resources group amt: Montant total ressources du groupe
-Resources types: Types de ressources
-Resources: Ressources
+Resource type: Type de ressource(s)
+Resources: Type de ressource(s)
 Ressource other amt: Montant autre ressource
 Ressource other precision: Précision autres revenus
 Ressource other: Autre ressource
@@ -151,6 +157,54 @@ Water amt: Montant Eau
 Water: Eau
 Youth guarantee amt: Montant Garantie jeunes
 Youth guarantee: Garantie jeunes
+
+# Resources
+salary: Salaire
+activityBonus: "Prime d'activité"
+unemplBenefit: "Allocation chômage (ARE)"
+minimumIncome: RSA
+familyAllowance: "Prestations familiales (AF)"
+disAdultAllowance: "Allocation adulte handicapé (AAH)"
+disChildAllowance: "Allocation d'éducation de l'enfant handicapé (AEEH)"
+asf: "Allocation de soutien familial (ASF)"
+solidarityAllowance: "Allocation de solidarité spécifique (ASS)"
+asylumAllowance: "Allocation pour demandeur d'asile (ADA)"
+scholarships: Bourse
+familySupplement: "Complément familial"
+paidTraining: "Formation rémunérée"
+youthGuarantee: "Garantie jeunes"
+dailyAllowance: "Indemnités journalières (IJ)"
+maintenance: "Pension alimentaire"
+disabilityPension: "Pension d'invalidité"
+paje: "Prestation d'accueil du jeune enfant (PAJE)"
+pensionBenefit: Retraite
+ressourceOther: "Autre ressource"
+
+# Charges
+insurance: Assurance(s)
+canteen: Cantine
+consumerCredit: "Crédit(s) à la consommation"
+water: Eau
+electricityGas: "Electricité - Gaz"
+childcare: "Garde d'enfant(s)"
+taxes: Impôts
+rent: Loyer
+mutual: Mutuelle(s)
+alimony: "Pension alimentaire"
+phone: Téléphone
+transport: Transport
+chargeOther: Autre charge
+
+# Debts
+debtRental: "Dettes locatives"
+debtConsrCredit: "Dette de crédits à la consommation"
+debtMortgage: "Dettes de crédits immobiliers"
+debtFines: Amendes
+debtHealth: "Dettes de santé (hôpital)"
+debtTaxDelays: "Retards d'impôts"
+debtBankOverdrafts: "Découverts bancaires"
+debtEnergy: "Dette d'énergie"
+debtOther: "Autres dettes"
 
 # Family
 Caf id: Numéro CAF
@@ -255,6 +309,7 @@ Hsg action dept: Département
 Hsg action eligibility: Eligibilité Action Logement
 Hsg action record id: Numéro d'enregistrement
 Hsg action record: Demande déposée Action Logement
+Hsg helps: Aides liées au logement
 Other helps: Autre(s) aide(s)
 Public force date: Date du concours de la Force Publique
 Public force: Concours de la Force Publique
@@ -303,6 +358,7 @@ End rights social security date: Date de fin de droits à la Sécurité sociale
 Family breakdown: Rupture des liens familiaux
 Friendship breakdown: Rupture des liens amicaux
 Health problem: Problématique de santé
+Health problem type: Type de problématiques de santé
 Mental health problem: Problématique de santé mentale
 Physical health problem: Problématique de santé physique
 Reason request: Motif de la prise en charge

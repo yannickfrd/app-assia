@@ -2,18 +2,19 @@
 
 namespace App\Entity\Evaluation;
 
-use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Support\SupportPerson;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
-use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Evaluation\EvaluationPersonRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class EvaluationPerson
 {
-    use CreatedUpdatedEntityTrait;  // A supprimer après test
+    use CreatedUpdatedEntityTrait;
     use SoftDeleteableEntity;
 
     /**
@@ -30,7 +31,7 @@ class EvaluationPerson
     private $evaluationGroup;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Support\SupportPerson", inversedBy="evaluationsPerson")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Support\SupportPerson", inversedBy="evaluations")
      * @ORM\JoinColumn(nullable=true)
      */
     private $supportPerson;
@@ -72,6 +73,10 @@ class EvaluationPerson
 
     public function __clone()
     {
+        $now = new \DateTime();
+        $this->setCreatedAt($now)
+            ->setUpdatedAt($now);
+
         if ($this->evalAdmPerson) {
             $this->setEvalAdmPerson(clone $this->evalAdmPerson);
         }

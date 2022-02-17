@@ -197,6 +197,6 @@ class SiSiaoGroupImporter extends SiSiaoClient
             return 4; // Parent isolé
         }
 
-        return $this->findInArray($personne->situation->id, SiSiaoItems::ROLE);
+        return $this->findInArray($personne->situation->id, SiSiaoItems::ROLE) ?? 99;
     }
 }

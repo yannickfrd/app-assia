@@ -2,7 +2,7 @@
 Application d’Accompagnement Social et Solidaire Inter-Associative
 
 ## Version
-3.6.4 15/12/2021
+3.8.2 19/01/2022
 
 ## Author
 Romain MADELAINE
@@ -28,31 +28,25 @@ https://demo.app-assia.org
 git clone https://github.com/RomMad/app-assia.git <folder>
 ```
 
-### 2. Create .env file
-Go in the project directory and copy the ".env.local" to ".env":
-```bash
-copy .env.local .env
-```
-
-### 3. Install all PHP dependencies with Composer
+### 2. Install all PHP dependencies with Composer
 ```bash
 composer install
 ```
 
-### 4. Create database and make migration
+### 3. Create database and make migration
 ```bash
 php bin/console doctrine:database:create
 php bin/console make:migration
 php bin/console doctrine:migrations:migrate
 ```
 
-### 5. Load data fixtures
+### 4. Load data fixtures
 Doctrine fixtures:
 ```bash
 php bin/console doctrine:fixtures:load
 ```
 
-### 6. Install all JS dependencies and build assets (SCSS, JS)
+### 5. Install all JS dependencies and build assets (SCSS, JS)
 You can use Npm:
 ```bash
 npm install
@@ -64,26 +58,26 @@ yarn install
 yarn run build
 ```
 
-### 7. Clear cache
+### 6. Clear cache
 ```bash
 php bin/console cache:clear
 ```
 
-### 8. Run server
+### 7. Run server
 ```bash
 symfony serve
 ```
 If you don't have the Symfony binary installed, run `php -S localhost:8000 -t public/`
 
-### 9. Create a new user or use a test user
+### 8. Create a new user or use a test user
 You can create a new user with this command:
 ```bash
 php bin/console app:user:create
 ```
 
 Or you can also to log to the app with the test user:
-- Login: user_test
-- Password: test123
+- Login: john_doe
+- Password: password
 
 And go to "https://127.0.0.1:8000/"
 

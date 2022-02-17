@@ -52,9 +52,8 @@ class EvalBudgetGroup
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups("export")
      */
-    private $monthlyRepaymentAmt;
+    private $monthlyRepaymentAmt; // A supprimer
 
     /**
      * @ORM\Column(type="float", nullable=true)
@@ -154,12 +153,12 @@ class EvalBudgetGroup
         return $this;
     }
 
-    public function getMonthlyRepaymentAmt(): ?float
+    public function getMonthlyRepaymentAmt(): ?float // A supprimer
     {
         return $this->monthlyRepaymentAmt;
     }
 
-    public function setMonthlyRepaymentAmt(?float $monthlyRepaymentAmt): self
+    public function setMonthlyRepaymentAmt(?float $monthlyRepaymentAmt): self  // A supprimer
     {
         $this->monthlyRepaymentAmt = $monthlyRepaymentAmt;
 

@@ -6,6 +6,8 @@ use App\Entity\Support\SupportPerson;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use App\Entity\Traits\ResourcesEntityTrait;
 use App\Form\Utils\EvaluationChoices;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
@@ -61,7 +63,7 @@ class InitEvalPerson
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $debts;
+    private $debt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
@@ -88,6 +90,18 @@ class InitEvalPerson
      * @ORM\Column(type="text", nullable=true)
      */
     private $comment;
+
+    /**
+     * @var Collection|InitResource[]|null
+     * @ORM\OneToMany(targetEntity=InitResource::class, mappedBy="initEvalPerson", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OrderBy({"amount": "DESC"})
+     */
+    private $resources;
+
+    public function __construct()
+    {
+        $this->resources = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -254,22 +268,22 @@ class InitEvalPerson
         return $this;
     }
 
-    public function getDebts(): ?int
+    public function getDebt(): ?int
     {
-        return $this->debts;
+        return $this->debt;
     }
 
     /**
      * @Groups("export")
      */
-    public function getDebtsToString(): ?string
+    public function getDebtToString(): ?string
     {
-        return $this->debts ? EvaluationChoices::YES_NO[$this->debts] : null;
+        return $this->debt ? EvaluationChoices::YES_NO[$this->debt] : null;
     }
 
-    public function setDebts(?int $debts): self
+    public function setDebt(?int $debt): self
     {
-        $this->debts = $debts;
+        $this->debt = $debt;
 
         return $this;
     }
@@ -306,6 +320,36 @@ class InitEvalPerson
     public function setComment(?string $comment): self
     {
         $this->comment = $comment;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|InitResource[]
+     */
+    public function getResources(): Collection
+    {
+        return $this->resources;
+    }
+
+    public function addResource(InitResource $resource): self
+    {
+        if (!$this->resources->contains($resource)) {
+            $this->resources[] = $resource;
+            $resource->setInitEvalPerson($this);
+        }
+
+        return $this;
+    }
+
+    public function removeResource(InitResource $resource): self
+    {
+        if ($this->resources->removeElement($resource)) {
+            // set the owning side to null (unless already changed)
+            if ($resource->getInitEvalPerson() === $this) {
+                $resource->setInitEvalPerson(null);
+            }
+        }
 
         return $this;
     }

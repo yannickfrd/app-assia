@@ -1,7 +1,8 @@
 import UpdateEvaluation from './updateEvaluation'
 import Evaluation from './evaluation'
 import EvaluationBudget from './evaluationBudget'
-import ImportantFields from './importantFields'
+import ImportantFieldsChecker from '../utils/form/ImportantFieldsChecker'
+import TwinFieldsChecker from './TwinFieldsChecker'
 import changeChecker from '../utils/form/changeChecker'
 import '../utils/accordionChevron'
 import  '../utils/maskNumber'
@@ -13,8 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
     stopWatch.start()
     new UpdateEvaluation()
     new Evaluation()
+    new ImportantFieldsChecker('section.accordion') // A instancier après  Evaluation
+    new TwinFieldsChecker()
     new EvaluationBudget()
-    new ImportantFields()
     new changeChecker('evaluation')
     new AutoSizer('textarea')
     

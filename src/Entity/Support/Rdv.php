@@ -2,12 +2,14 @@
 
 namespace App\Entity\Support;
 
+use App\Entity\Organization\TagTrait;
 use App\Entity\Organization\User;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Support\RdvRepository")
@@ -16,6 +18,7 @@ use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
  */
 class Rdv
 {
+    use TagTrait;
     use CreatedUpdatedEntityTrait;
     use SoftDeleteableEntity;
 
@@ -92,14 +95,9 @@ class Rdv
      */
     private $outlookEventId;
 
-    /**
-     * @ORM\PreFlush
-     */
-    public function preFlush()
+    public function __construct()
     {
-        if ($this->supportGroup) {
-            $this->supportGroup->setUpdatedAt(new \DateTime());
-        }
+        $this->tags = new ArrayCollection();
     }
 
     public function getId(): ?int

@@ -51,12 +51,17 @@ class EvaluationGroupRepository extends ServiceEntityRepository
             ->leftJoin('eg.evalFamilyGroup', 'evalFamilyGroup')->addSelect('evalFamilyGroup')
             ->leftJoin('eg.evalHousingGroup', 'evalHousingGroup')->addSelect('evalHousingGroup')
 
-            ->leftJoin('ep.initEvalPerson', 'initEvalPerson')->addSelect('initEvalPerson')
+            ->leftJoin('ep.initEvalPerson', 'iep')->addSelect('iep')
             ->leftJoin('ep.evalAdmPerson', 'evalAdmPerson')->addSelect('evalAdmPerson')
-            ->leftJoin('ep.evalBudgetPerson', 'evalBudgetPerson')->addSelect('evalBudgetPerson')
+            ->leftJoin('ep.evalBudgetPerson', 'ebp')->addSelect('ebp')
             ->leftJoin('ep.evalFamilyPerson', 'evalFamilyPerson')->addSelect('evalFamilyPerson')
             ->leftJoin('ep.evalProfPerson', 'evalProfPerson')->addSelect('evalProfPerson')
             ->leftJoin('ep.evalSocialPerson', 'evalSocialPerson')->addSelect('evalSocialPerson')
+
+            ->leftJoin('iep.resources', 'initResources')->addSelect('initResources')
+            ->leftJoin('ebp.resources', 'resources')->addSelect('resources')
+            ->leftJoin('ebp.charges', 'charges')->addSelect('charges')
+            ->leftJoin('ebp.debts', 'debts')->addSelect('debts')
 
             ->leftJoin('ep.evalJusticePerson', 'ejp')->addSelect('ejp')
             ->leftJoin('eg.evalHotelLifeGroup', 'ehlg')->addSelect('ehlg')
@@ -87,6 +92,8 @@ class EvaluationGroupRepository extends ServiceEntityRepository
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, birthdate}')
             ->leftJoin('eg.evalBudgetGroup', 'ebg')->addSelect('PARTIAL ebg.{id}')
             ->leftJoin('ep.evalBudgetPerson', 'ebp')->addSelect('ebp')
+            ->leftJoin('ebp.resources', 'resources')->addSelect('resources')
+            ->leftJoin('ebp.charges', 'charges')->addSelect('charges')
 
             ->andWhere('eg.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroup)

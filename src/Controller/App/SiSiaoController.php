@@ -59,6 +59,7 @@ class SiSiaoController extends AbstractController
 
         return $this->render('app/siSiao/si_siao_login.html.twig', [
             'form' => $form->createView(),
+            'target_path' => $this->getTargetPath($request->getSession(), 'main'),
         ]);
     }
 
@@ -159,7 +160,6 @@ class SiSiaoController extends AbstractController
      */
     public function importEvaluation(
         SupportGroup $supportGroup,
-        Request $request,
         SiSiaoEvaluationImporter $siSiaoEvalImporter,
         EventDispatcherInterface $dispatcher
     ): Response {
@@ -173,7 +173,7 @@ class SiSiaoController extends AbstractController
             $dispatcher->dispatch(new EvaluationEvent($evaluationGroup), 'evaluation.after_update');
         }
 
-        return $this->redirect($request->headers->get('referer'));
+        return $this->redirectToRoute('support_evaluation_view', ['id' => $supportGroup->getId()]);
     }
 
     /**
@@ -227,14 +227,14 @@ class SiSiaoController extends AbstractController
     //     return $this->json($this->siSiaoClient->updateSiaoRequest($id));
     // }
 
-    // /**
-    //  * Search group by id in API SI-SIAO.
-    //  *
-    //  * @Route("/api-sisiao/dump-group/{id}", name="api_sisiao_dump_group", methods="GET")
-    //  * @IsGranted("ROLE_SUPER_ADMIN")
-    //  */
-    // public function dumpGroup(int $id): JsonResponse
-    // {
-    //     return $this->json($this->siSiaoClient->dumpGroupById($id));
-    // }
+    /**
+     * Search group by id in API SI-SIAO.
+     *
+     * @Route("/api-sisiao/dump-group/{id}", name="api_sisiao_dump_group", methods="GET")
+     * @IsGranted("ROLE_SUPER_ADMIN")
+     */
+    public function dumpGroup(int $id): JsonResponse
+    {
+        return $this->json($this->siSiaoClient->dumpGroupById($id));
+    }
 }

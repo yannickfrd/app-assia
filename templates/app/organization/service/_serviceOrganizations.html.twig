@@ -14,14 +14,21 @@
 							<th scope="col" class="align-middle th-w-20"></th>
 						</tr>
 					</thead>
-					<tbody id="organizations-fields-list"
-						data-prototype="<td class='align-middle'>{{ form_widget(form.organizations.vars.prototype.organization)|e }}</td>"
-						data-widget-tags="<tr></tr>" data-widget-counter="{{ form.organizations|length }}">
+				
+					{% set organization_prototype %}
+						<td class="align-middle">{{ form_widget(form.organizations.vars.prototype.organization)|e) }}</td>
+						<td class="align-middle">
+							<button class="btn btn-danger" data-action="remove"><i class="fas fa-trash-alt"></i></button>
+						</td>
+					{% endset %}
+
+					<tbody id="organizations-fields-list" data-prototype="{{ organization_prototype|e|spaceless }}" 
+                		data-container-tag="tr" data-widget-counter="{{ form.organizations|length }}">
 						{% for organization in form.organizations %}
 							<tr id="{{ organization.vars.id }}">
 								<td>{{ form_widget(organization.name) }}</td>
 								<td class="align-middle">
-									<button class="btn btn-danger" data-action="remove"><span class="fas fa-trash-alt"></span></button>
+									<button class="btn btn-danger" data-action="remove"><i class="fas fa-trash-alt"></i></button>
 								</td>
 							</tr>
 						{% endfor %}
@@ -31,14 +38,14 @@
 		</div>
 	</div>
 	<div class="my-2">
-		<button type="button" class="add-another-collection-widget btn btn-{{ theme_color }}"
-			data-list-selector="#organizations-fields-list"><span class="fas fa-plus-square mr-2"></span>Ajouter un prescripteur</button>
+		<button type="button" class="btn btn-{{ theme_color }}" data-add-widget="organization"
+			data-list-selector="#organizations-fields-list"><i class="fas fa-plus-square mr-2"></i>Ajouter un prescripteur</button>
 	</div>
 
 	<div class="row">
 		<div class="col-md-12">
 			<div class="float-right mb-2">
-				<button type="submit" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>Enregistrer</button>
+				<button type="submit" class="btn btn-{{ theme_color }} shadow"><i class="fas fa-save mr-2"></i>Enregistrer</button>
 			</div>
 		</div>
 	</div>

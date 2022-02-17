@@ -2,6 +2,7 @@
 
 namespace App\Controller\Rdv;
 
+use App\Entity\Organization\User;
 use App\Entity\Support\Rdv;
 use App\Form\Support\Rdv\RdvType;
 use App\Repository\Support\RdvRepository;
@@ -32,7 +33,8 @@ class CalendarController extends AbstractController
      */
     public function showCalendar(int $year = null, int $month = null): Response
     {
-        $form = $this->createForm(RdvType::class, (new Rdv())->setUser($this->getUser()));
+        $rdv = (new Rdv())->setUser($this->getUser());
+        $form = $this->createForm(RdvType::class, $rdv);
 
         return $this->render('app/rdv/calendar.html.twig', [
             'calendar' => $calendar = new Calendar($year, $month),
@@ -63,7 +65,9 @@ class CalendarController extends AbstractController
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
-        $form = $this->createForm(RdvType::class, (new Rdv())->setUser($this->getUser()));
+        /** @var User $user */
+        $user = $this->getUser();
+        $form = $this->createForm(RdvType::class, (new Rdv())->setUser($user)->setSupportGroup($supportGroup));
 
         return $this->render('app/rdv/calendar.html.twig', [
             'support' => $supportGroup,

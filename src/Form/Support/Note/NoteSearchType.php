@@ -2,13 +2,16 @@
 
 namespace App\Form\Support\Note;
 
+use App\Entity\Organization\Tag;
 use App\Entity\Organization\User;
 use App\Entity\Support\Note;
 use App\Form\Model\Support\NoteSearch;
 use App\Form\Type\DateSearchType;
 use App\Form\Type\ServiceDeviceReferentSearchType;
 use App\Form\Utils\Choices;
+use App\Repository\Organization\TagRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -22,9 +25,13 @@ class NoteSearchType extends AbstractType
     /** @var User */
     private $user;
 
-    public function __construct(Security $security)
+    /** @var TagRepository */
+    private $tagRepo;
+
+    public function __construct(Security $security, TagRepository $tagRepo)
     {
         $this->user = $security->getUser();
+        $this->tagRepo = $tagRepo;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -53,9 +60,7 @@ class NoteSearchType extends AbstractType
                 ],
             ])
             ->add('type', ChoiceType::class, [
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
+                'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getchoices(Note::TYPE),
                 'attr' => [
                     'class' => 'w-max-160',
@@ -79,7 +84,23 @@ class NoteSearchType extends AbstractType
             ])
             ->add('service', ServiceDeviceReferentSearchType::class, [
                 'data_class' => NoteSearch::class,
-            ]);
+            ])
+            ->add('tags', EntityType::class, [
+                'class' => Tag::class,
+                'multiple' => true,
+                'expanded' => false,
+                'by_reference' => false,
+                'choices' => $this->tagRepo->findAllTags('note'),
+                'choice_label' => 'name',
+                'label_attr' => ['class' => 'sr-only'],
+                'attr' => [
+                    'class' => 'multi-select w-min-180 w-max-220',
+                    'placeholder' => 'placeholder.tags',
+                    'size' => 1,
+                ],
+                'required' => false,
+            ])
+        ;
     }
 
     private function setFormData(FormBuilderInterface $builder): FormBuilderInterface

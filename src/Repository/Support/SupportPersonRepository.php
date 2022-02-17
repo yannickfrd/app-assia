@@ -202,21 +202,27 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->leftJoin('sg.hotelSupport', 'hs')->addSelect('hs')
             ->leftJoin('sg.avdl', 'avdl')->addSelect('avdl')
 
-            ->leftJoin('sp.evaluationsPerson', 'ep')->addSelect('PARTIAL ep.{id}')
-            ->leftJoin('ep.initEvalPerson', 'initEvalPerson')->addSelect('initEvalPerson')
+            ->leftJoin('sp.evaluations', 'ep')->addSelect('PARTIAL ep.{id}')
+            ->leftJoin('ep.initEvalPerson', 'iep')->addSelect('iep')
             ->leftJoin('ep.evalJusticePerson', 'evalJusticePerson')->addSelect('evalJusticePerson')
             ->leftJoin('ep.evalAdmPerson', 'evalAdmPerson')->addSelect('evalAdmPerson')
-            ->leftJoin('ep.evalBudgetPerson', 'evalBudgetPerson')->addSelect('evalBudgetPerson')
+            ->leftJoin('ep.evalBudgetPerson', 'ebp')->addSelect('ebp')
             ->leftJoin('ep.evalFamilyPerson', 'evalFamilyPerson')->addSelect('evalFamilyPerson')
             ->leftJoin('ep.evalProfPerson', 'evalProfPerson')->addSelect('evalProfPerson')
             ->leftJoin('ep.evalSocialPerson', 'evalSocialPerson')->addSelect('evalSocialPerson')
+
+            ->leftJoin('iep.resources', 'initResources')->addSelect('initResources')
+            ->leftJoin('ebp.resources', 'resources')->addSelect('resources')
+            ->leftJoin('ebp.charges', 'charges')->addSelect('charges')
+            ->leftJoin('ebp.debts', 'debts')->addSelect('debts')
 
             ->leftJoin('ep.evaluationGroup', 'eg')->addSelect('PARTIAL eg.{id}')
             ->leftJoin('eg.initEvalGroup', 'initEvalGroup')->addSelect('initEvalGroup')
             ->leftJoin('eg.evalBudgetGroup', 'evalBudgetGroup')->addSelect('evalBudgetGroup')
             ->leftJoin('eg.evalFamilyGroup', 'evalFamilyGroup')->addSelect('evalFamilyGroup')
             ->leftJoin('eg.evalHousingGroup', 'evalHousingGroup')->addSelect('evalHousingGroup')
-            ->leftJoin('eg.evalSocialGroup', 'evalSocialGroup')->addSelect('evalSocialGroup');
+            ->leftJoin('eg.evalSocialGroup', 'evalSocialGroup')->addSelect('evalSocialGroup')
+        ;
 
         return $this->filters($qb, $search)
 

@@ -3,6 +3,9 @@
 namespace App\Command\Evaluation;
 
 use App\Entity\Evaluation\EvalBudgetPerson;
+use App\Entity\Evaluation\Charge;
+use App\Entity\Evaluation\Debt;
+use App\Entity\Evaluation\Resource;
 use App\Entity\Evaluation\InitEvalPerson;
 use App\Form\Utils\Choices;
 use App\Repository\Evaluation\EvaluationGroupRepository;
@@ -80,7 +83,7 @@ class UpdateEvalBudgetCommand extends Command
                 $evalBudgetGroup->setResourcesGroupAmt($resourcesGroupAmt);
                 $evaluationGroup->getInitEvalGroup()->setResourcesGroupAmt($initResourcesGroupAmt);
             }
-            
+
             $io->progressAdvance();
         }
 
@@ -103,9 +106,9 @@ class UpdateEvalBudgetCommand extends Command
     protected function updateEvalObject(object $evalObject): void
     {
         $variables = [
-            'resources' => EvalBudgetPerson::RESOURCES_TYPE,
-            'charges' => EvalBudgetPerson::CHARGES_TYPE,
-            'debts' => EvalBudgetPerson::DEBTS_TYPE,
+            'resources' => Resource::RESOURCES,
+            'charges' => Charge::CHARGES,
+            'debts' => Debt::DEBTS,
         ];
 
         foreach ($variables as $key => $values) {

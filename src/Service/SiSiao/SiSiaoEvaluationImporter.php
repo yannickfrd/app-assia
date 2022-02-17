@@ -2,6 +2,9 @@
 
 namespace App\Service\SiSiao;
 
+use App\Entity\Evaluation\AbstractFinance;
+use App\Entity\Evaluation\Charge;
+use App\Entity\Evaluation\Debt;
 use App\Entity\Evaluation\EvalAdmPerson;
 use App\Entity\Evaluation\EvalBudgetGroup;
 use App\Entity\Evaluation\EvalBudgetPerson;
@@ -15,6 +18,8 @@ use App\Entity\Evaluation\EvaluationGroup;
 use App\Entity\Evaluation\EvaluationPerson;
 use App\Entity\Evaluation\InitEvalGroup;
 use App\Entity\Evaluation\InitEvalPerson;
+use App\Entity\Evaluation\InitResource;
+use App\Entity\Evaluation\Resource as EvaResource;
 use App\Entity\People\Person;
 use App\Entity\Support\HotelSupport;
 use App\Entity\Support\SupportGroup;
@@ -22,6 +27,7 @@ use App\Entity\Support\SupportPerson;
 use App\Form\Utils\Choices;
 use App\Form\Utils\EvaluationChoices;
 use App\Notification\ExceptionNotification;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
@@ -52,8 +58,6 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
     protected $chargesGroupAmt = 0;
     /** @var float */
     protected $debtsGroupAmt = 0;
-    /** @var float */
-    protected $monthlyRepaymentAmt = 0;
 
     public function __construct(
         HttpClientInterface $client,
@@ -121,11 +125,9 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         $evaluationGroup = $this->createOrEditEvaluationGroup($supportGroup);
 
         foreach ($supportGroup->getSupportPeople() as $supportPerson) {
-            $person = $supportPerson->getPerson();
-            $personne = $this->matchPerson($person);
+            $personne = $this->matchPerson($supportPerson->getPerson());
             if ($personne) {
-                $evaluationPerson = $this->createOrEditEvaluationPerson($evaluationGroup, $supportPerson, $personne);
-                $evaluationGroup->addEvaluationPerson($evaluationPerson);
+                $this->createOrEditEvaluationPerson($evaluationGroup, $supportPerson, $personne);
             }
         }
 
@@ -159,24 +161,21 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
     {
         if (!$evaluationGroup = $this->evaluationGroup) {
             $evaluationGroup = (new EvaluationGroup())
-            ->setSupportGroup($supportGroup)
-            ->setDate(new \DateTime());
+                ->setSupportGroup($supportGroup)
+                ->setDate(new \DateTime())
+            ;
 
             $this->em->persist($evaluationGroup);
         }
 
-        /** @var int */
-        $diagSocialId = $this->ficheGroupe->demandeurprincipal->diagnosticSocial->id;
         /** @var object */
         $sitSociale = $this->ficheGroupe->situationsociale;
-        /** @var object */
-        $sitLogement = $this->get('situationParRapportAuLogement/getByDiagnosticSocialId?diagnosticSocialId='.$diagSocialId);
         /** @var object */
         $demandeSiao = $this->get("demandeInsertion/getLastDemandeEnCours?idFiche={$this->id}");
 
         $this->createOrEditEvalSocialGroup($evaluationGroup, $sitSociale, $demandeSiao);
-        $this->createOrEditEvalFamilyGroup($evaluationGroup, $this->ficheGroupe->situationfamille);
-        $this->createOrEditEvalHousingGroup($evaluationGroup, $sitSociale, $sitLogement, $demandeSiao);
+        $this->createOrEditEvalFamilyGroup($evaluationGroup);
+        $this->createOrEditEvalHousingGroup($evaluationGroup, $sitSociale, $demandeSiao);
         $this->editHotelSupport($supportGroup->getHotelSupport());
 
         return $evaluationGroup;
@@ -193,27 +192,26 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         return $hotelSupport;
     }
 
-    protected function createOrEditEvalFamilyGroup(EvaluationGroup $evaluationGroup, ?object $sitFamille = null): ?EvalFamilyGroup
+    protected function createOrEditEvalFamilyGroup(EvaluationGroup $evaluationGroup): ?EvalFamilyGroup
     {
-        /** @var object */
-        $dp = $this->ficheGroupe->demandeurprincipal;
-
-        if (!$sitFamille) {
+        if (!$sitFamille = $this->ficheGroupe->situationfamille) {
             return null;
         }
 
         if (!$evalFamilyGroup = $evaluationGroup->getEvalFamilyGroup()) {
             $evalFamilyGroup = (new EvalFamilyGroup())
-            // ->setChildrenBehind(null)
-            ->setCommentEvalFamilyGroup($sitFamille->commentaires)
-            ->setEvaluationGroup($evaluationGroup);
+                // ->setChildrenBehind(null)
+                ->setCommentEvalFamilyGroup($sitFamille->commentaires)
+                ->setEvaluationGroup($evaluationGroup)
+            ;
 
             $this->em->persist($evalFamilyGroup);
         }
 
         $evalFamilyGroup
             ->setFamlReunification($this->findInArray($sitFamille->regroupementFamilial, SiSiaoItems::FAML_REUNIFICATION))
-            ->setNbPeopleReunification($sitFamille->regroupementNombrePersonnes);
+            ->setNbPeopleReunification($sitFamille->regroupementNombrePersonnes)
+        ;
 
         $evaluationGroup->setEvalFamilyGroup($evalFamilyGroup);
 
@@ -242,9 +240,10 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         $evalSocialGroup
             ->setReasonRequest($this->findInArray($demandeSiao && is_object($demandeSiao) ? $demandeSiao->motifDemande :
                 $sitSociale->motifdemande, SiSiaoItems::REASON_REQUEST))
-            ->setWanderingTime($this->findInArray($sitSociale->dureederrance, SiSiaoItems::WANDERING_TIME))
+            // ->setWanderingTime($this->findInArray($sitSociale->dureederrance, SiSiaoItems::WANDERING_TIME))
             ->setAnimal(count($animaux) > 0 ? Choices::YES : Choices::NO)
-            ->setAnimalType($this->getAnimalType());
+            ->setAnimalType($this->getAnimalType())
+        ;
 
         $evaluationGroup->setEvalSocialGroup($evalSocialGroup);
 
@@ -265,8 +264,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
     protected function createOrEditEvalBudgetGroup(EvaluationGroup $evaluationGroup): EvalBudgetGroup
     {
         if (!$evalBudgetGroup = $evaluationGroup->getEvalBudgetGroup()) {
-            $evalBudgetGroup = (new EvalBudgetGroup())
-            ->setEvaluationGroup($evaluationGroup);
+            $evalBudgetGroup = (new EvalBudgetGroup())->setEvaluationGroup($evaluationGroup);
 
             $this->em->persist($evalBudgetGroup);
         }
@@ -275,8 +273,8 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
             ->setResourcesGroupAmt($this->resourcesGroupAmt)
             ->setChargesGroupAmt($this->chargesGroupAmt)
             ->setDebtsGroupAmt($this->debtsGroupAmt)
-            ->setMonthlyRepaymentAmt($this->monthlyRepaymentAmt)
-            ->setBudgetBalanceAmt($this->resourcesGroupAmt - $this->chargesGroupAmt - $this->monthlyRepaymentAmt);
+            ->setBudgetBalanceAmt($this->resourcesGroupAmt - $this->chargesGroupAmt)
+        ;
 
         $evaluationGroup->setEvalBudgetGroup($evalBudgetGroup);
 
@@ -286,16 +284,16 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
     /**
      * @param object|array|null $demandeSiao
      */
-    protected function createOrEditEvalHousingGroup(
-        EvaluationGroup $evaluationGroup,
-        ?object $sitSociale = null,
-        ?object $sitLogement = null,
-        $demandeSiao = null
-    ): EvalHousingGroup {
+    protected function createOrEditEvalHousingGroup(EvaluationGroup $evaluationGroup,
+        ?object $sitSociale = null, $demandeSiao = null): EvalHousingGroup
+    {
+        /** @var object */
+        $sitLogement = $this->get("situationParRapportAuLogement/getByFicheId?ficheId={$this->id}");
         if (!$evalHousingGroup = $evaluationGroup->getEvalHousingGroup()) {
             $evalHousingGroup = (new EvalHousingGroup())
                 ->setCommentEvalHousing($sitLogement ? $sitLogement->commentaireSituationLogement : null)
-                ->setEvaluationGroup($evaluationGroup);
+                ->setEvaluationGroup($evaluationGroup)
+            ;
 
             $this->em->persist($evalHousingGroup);
         }
@@ -306,7 +304,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
             $evalHousingGroup
                 ->setSiaoRequest($demandeSiao ? Choices::YES : Choices::NO)
                 ->setSocialHousingRequest($this->findInArray($sitLogement->demandeLogementSocial, SiSiaoItems::YES_NO))
-                ->setSocialHousingRequestId($sitLogement->numeroUniqueLogementDocial)
+                ->setSocialHousingRequestId($this->getSocialHousingRequestId($sitLogement->numerosUniqueLogementSocial))
                 ->setSocialHousingRequestDate($this->convertDate($sitLogement->dateDemandeLogementSocial))
                 ->setSocialHousingUpdatedRequestDate($this->convertDate($sitLogement->daterenouvellementLogementSocial))
                 ->setCitiesWishes($this->getCitiesWishes($sitLogement->communesDemandeLogementSocial))
@@ -325,7 +323,8 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
                 ->setHsgActionEligibility(true === $sitLogement->cotisationEntreprise ? Choices::YES : Choices::NO)
                 ->setHsgActionRecord(true === $sitLogement->demandeDeposeeEmployeur ? Choices::YES : Choices::NO)
                 ->setHsgActionRecordId($sitLogement->organismeCollecteur ? $sitLogement->organismeCollecteur->libelle : null)
-                ->setHousingExperience($this->findInArray($sitLogement->experienceLogementAutonome, SiSiaoItems::YES_NO));
+                ->setHousingExperience($this->findInArray($sitLogement->experienceLogementAutonome, SiSiaoItems::YES_NO))
+            ;
         }
 
         if ($demandeSiao && is_object($demandeSiao)) {
@@ -334,7 +333,8 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
                 ->setSiaoRequestDate($this->convertDate($demandeSiao->dateTransmissionInitialeSiao))
                 ->setSiaoUpdatedRequestDate($this->convertDate($demandeSiao->dateTransmissionSiao))
                 ->setSiaoRequestDept($this->findInArray($demandeSiao->siao->territoire->codeDepartement, SiSiaoItems::DEPARTMENTS))
-                ->setSiaoRecommendation($this->getSiaoRecommendation($demandeSiao->preconisations));
+                ->setSiaoRecommendation($this->getSiaoRecommendation($demandeSiao->preconisations))
+            ;
         }
 
         $sitFamille = $this->ficheGroupe->situationfamille;
@@ -344,7 +344,8 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
                 ->setDomiciliation($sitFamille->ville ? Choices::YES : Choices::NO)
                 ->setDomiciliationAddress($sitFamille->libelleVoie)
                 ->setDomiciliationCity($sitFamille->ville)
-                ->setDomiciliationZipcode($sitFamille->codepostal);
+                ->setDomiciliationZipcode($sitFamille->codepostal)
+            ;
         }
 
         $this->em->persist($evalHousingGroup);
@@ -354,15 +355,24 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         return $evalHousingGroup;
     }
 
-    protected function getCitiesWishes(?array $communes): ?string
+    protected function getSocialHousingRequestId(array $numerosUniqueLogementSocial): ?string
     {
-        $citiesWishes = '';
-
-        foreach ($communes as $commune) {
-            $citiesWishes .= $commune->nom.', ';
+        foreach ($numerosUniqueLogementSocial as $numeroUniqueLogementSocial) {
+            return $numeroUniqueLogementSocial->numeroUnique;
         }
 
-        return $citiesWishes;
+        return null;
+    }
+
+    protected function getCitiesWishes(?array $communes): ?string
+    {
+        $citiesWishes = [];
+
+        foreach ($communes as $commune) {
+            $citiesWishes[] = $commune->nom;
+        }
+
+        return join(', ', $citiesWishes);
     }
 
     protected function getSiaoRecommendation(?array $preconisations): ?int
@@ -400,7 +410,8 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
             ->setSocialHousingRequest($evalHousingGroup->getSocialHousingRequest())
             ->setResourcesGroupAmt($evalBudgetGroup->getResourcesGroupAmt())
             ->setDebtsGroupAmt($evalBudgetGroup->getDebtsGroupAmt())
-            ->setSupportGroup($supportGroup);
+            ->setSupportGroup($supportGroup)
+        ;
 
         $this->em->persist($initEvalGroup);
 
@@ -411,10 +422,13 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
 
     protected function createOrEditEvaluationPerson(EvaluationGroup $evaluationGroup, SupportPerson $supportPerson, object $personne): EvaluationPerson
     {
-        if (!$evaluationPerson = $supportPerson->getEvaluationsPerson()->first()) {
+        if (!$evaluationPerson = $supportPerson->getEvaluations()->first()) {
             $evaluationPerson = (new EvaluationPerson())
                 ->setEvaluationGroup($evaluationGroup)
-                ->setSupportPerson($supportPerson);
+                ->setSupportPerson($supportPerson)
+            ;
+
+            $evaluationGroup->addEvaluationPerson($evaluationPerson);
 
             $this->em->persist($evaluationPerson);
         }
@@ -445,21 +459,26 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
 
         if (!$evalSocialPerson = $evaluationPerson->getEvalSocialPerson()) {
             $evalSocialPerson = (new EvalSocialPerson())
-                // ->setChildWelfareBackground(null)
-                // ->setMentalHealthProblem(null)
-                // ->setAddictionProblem(null)
-                // ->setHomeCareSupport(null)
-                // ->setHomeCareSupportType(null)
                 // ->setCommentEvalSocialPerson(null)
-                ->setEvaluationPerson($evaluationPerson);
+                ->setEvaluationPerson($evaluationPerson)
+            ;
 
             $this->em->persist($evalSocialPerson);
         }
 
         $evalSocialPerson
-                ->setRightSocialSecurity($this->findInArray($sitAdm->droisecuritesociale, SiSiaoItems::YES_NO))
-                ->setSocialSecurity($this->getSocialSecurity($sitAdm->typeDroitSecuriteSociale))
-                ->setSocialSecurityOffice($sitAdm->nomcaisse);
+            // ->setChildWelfareBackground(null)
+            // ->setMentalHealthProblem(null)
+            // ->setAddictionProblem(null)
+            // ->setHomeCareSupport(null)
+            // ->setHomeCareSupportType(null)
+            ->setRightSocialSecurity($this->findInArray($sitAdm->droisecuritesociale, SiSiaoItems::YES_NO))
+            ->setSocialSecurity($this->getSocialSecurity($sitAdm->typeDroitSecuriteSociale))
+            ->setSocialSecurityOffice($sitAdm->nomcaisse)
+            ->setAseFollowUp($this->findInArray($personne->priseEnChargeASE, SiSiaoItems::YES_NO))
+            ->setAseComment($this->findInArray($personne->etatAse, SiSiaoItems::ASE_STATUS).'. '.
+                (null !== $personne->departementAse ? $personne->departementAse->libelle : null))
+        ;
 
         if ($evaluationPerson->getSupportPerson()->getHead()) {
             /** @var object */
@@ -473,9 +492,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
                 ->setWheelchair($this->findInArray($sitSocial->fauteuilRoulant, SiSiaoItems::YES_NO_STRING_TO_BOOL))
                 ->setViolenceVictim($this->ficheGroupe->victimeviolence)
                 ->setDomViolenceVictim($this->findInArray($this->ficheGroupe->typevictime, SiSiaoItems::DOM_VIOLENCE_VICTIM))
-                ->setAseFollowUp($this->findInArray($sitSocial->priseEnChargeASE, SiSiaoItems::YES_NO))
-                ->setAseComment($this->findInArray($sitSocial->etatAse, SiSiaoItems::ASE_STATUS).'. '.
-                    (null !== $sitSocial->departementAse ? $sitSocial->departementAse->libelle : null));
+            ;
         }
 
         $evaluationPerson->setEvalSocialPerson($evalSocialPerson);
@@ -509,7 +526,8 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
             // ->setChildcareSchoolType(null)
             // ->setProtectiveMeasure(null)
             // ->setProtectiveMeasureType(null)
-            ->setPmiFollowUp($this->findInArray($personne->suiviPMI, SiSiaoItems::YES_NO));
+            ->setPmiFollowUp($this->findInArray($personne->suiviPMI, SiSiaoItems::YES_NO))
+        ;
 
         $evaluationPerson->setEvalFamilyPerson($evalFamilyPerson);
 
@@ -535,29 +553,21 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
 
         $evalAdmPerson
             ->setNationality($this->findInArray($sitAdm->nationalite, SiSiaoItems::NATIONALITY))
-            ->setCountry($sitAdm->pays ? $sitAdm->pays->libelle : null)
+            // ->setCountry($sitAdm->pays ? $sitAdm->pays->libelle : null)
+            ->setPaper($this->findInArray($sitAdm->droitsejour, SiSiaoItems::PAPER))
+            ->setPaperType($this->findInArray($sitAdm->droitsejour, SiSiaoItems::PAPER_TYPE))
             ->setArrivalDate($this->convertDate($sitAdm->dateEntreeFrance))
             ->setEndValidPermitDate($this->convertDate($sitAdm->dateFinValiditeTitreSejour))
             ->setRenewalPermitDate($this->convertDate($sitAdm->dateRenouvellementTitreSejour))
             ->setNbRenewals($sitAdm->nombreRenouvellementTitreSejour)
-            ->setPaper($this->findInArray($sitAdm->papieridentite, SiSiaoItems::YES_NO))
-            ->setPaperType($this->getPaperType($sitAdm))
-            ->setAsylumBackground($this->findInArray($sitAdm->droitsejour, SiSiaoItems::ASYLUM_BACKGROUND))
             ->setWorkRight($sitAdm->droitTravaillerTitreSejour)
-            ->setAgdrefId($sitAdm->numeroAgdref);
+            ->setAsylumBackground($this->findInArray($sitAdm->droitsejour, SiSiaoItems::ASYLUM_BACKGROUND))
+            ->setAgdrefId($sitAdm->numeroAgdref)
+        ;
 
         $evaluationPerson->setEvalAdmPerson($evalAdmPerson);
 
         return $evalAdmPerson;
-    }
-
-    protected function getPaperType(object $sitAdm): ?int
-    {
-        if ($sitAdm->typepapieridentite) {
-            return $this->findInArray($sitAdm->typepapieridentite, SiSiaoItems::PAPER_TYPE);
-        }
-
-        return $this->findInArray($sitAdm->droitsejour, SiSiaoItems::PAPER_TYPE_ASYLUM_STATUS);
     }
 
     protected function createOrEditEvalProfPerson(EvaluationPerson $evaluationPerson, object $personne, object $diagSocial): ?EvalProfPerson
@@ -585,7 +595,8 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
             ->setWorkPlace($diagSocial->communeEmploi.
                 ($diagSocial->departementEmploi ? ' ('.$diagSocial->departementEmploi.')' : null))
             ->setRqth($this->findInArray($diagSocial->rqth, SiSiaoItems::YES_NO))
-            ->setTransportMeansType(true === $diagSocial->moyenLocomotion ? 1 : null);
+            ->setTransportMeansType(true === $diagSocial->moyenLocomotion ? 1 : null)
+        ;
 
         $evaluationPerson->setEvalProfPerson($evalProfPerson);
 
@@ -635,48 +646,44 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
             ->setSettlementPlan($this->findInArray($diagSocial->apurementDette, SiSiaoItems::YES_NO_BOOL))
             ->setMoratorium($this->findInArray($diagSocial->moratoire, SiSiaoItems::YES_NO_BOOL))
             ->setChargeComment($diagSocial->commentaireCharge)
-            ->setMonthlyRepaymentAmt($diagSocial->remboursementDettes)
-            ->setDebtComment($diagSocial->commentairesSituationBudgetaire);
+            // ->setMonthlyRepaymentAmt($diagSocial->remboursementDettes)
+            ->setDebtComment($diagSocial->commentairesSituationBudgetaire)
+        ;
 
-        $this->setResources($evalBudgetPerson, $diagSocial);
-        $this->setCharges($evalBudgetPerson, $diagSocial);
-        $this->setDebts($evalBudgetPerson, $diagSocial);
-        $this->monthlyRepaymentAmt += $diagSocial->remboursementDettes;
+        $this->createResources($evalBudgetPerson, $diagSocial);
+        $this->createCharges($evalBudgetPerson, $diagSocial);
+        $this->createDebts($evalBudgetPerson, $diagSocial);
 
         $evaluationPerson->setEvalBudgetPerson($evalBudgetPerson);
 
         return $evalBudgetPerson;
     }
 
-    protected function setResources(EvalBudgetPerson $evalBudgetPerson, object $diagSocial): EvalBudgetPerson
+    protected function createResources(EvalBudgetPerson $evalBudgetPerson, object $diagSocial): EvalBudgetPerson
     {
         $ressources = $this->get("ressourcePersonnes/diagnosticSocial/{$diagSocial->id}");
-        $count = 0;
         $sumAmt = 0;
 
         foreach ($ressources as $ressource) {
-            ++$count;
-            $resourceValue = $this->findInArray($ressource->typeRessource, SiSiaoItems::TYPE_RESOURCES);
-            $amt = $ressource->montant;
-            $sumAmt += $amt;
-            $setMethod = 'set'.ucfirst($resourceValue);
-            $setAmtMethod = $setMethod.'Amt';
+            if (!$newResource = $this->financeExists($evalBudgetPerson->getResources(), $ressource->typeRessource->id)) {
+                $newResource = (new EvaResource());
+            }
 
-            if (method_exists($evalBudgetPerson, $setMethod)) {
-                $evalBudgetPerson->$setMethod(1);
-            }
-            if (method_exists($evalBudgetPerson, $setAmtMethod)) {
-                $evalBudgetPerson->$setAmtMethod($amt);
-            }
-            if (1000 === $ressource->typeRessource->id) {
-                $evalBudgetPerson->setRessourceOtherPrecision($ressource->commentaire);
-            }
+            $newResource
+                ->setEvalBudgetPerson($evalBudgetPerson)
+                ->setType($this->findInArray($ressource->typeRessource, SiSiaoItems::RESOURCES))
+                ->setAmount($ressource->montant)
+                // ->setEnDate(null)
+                ->setComment($ressource->commentaire);
+
+            $this->em->persist($newResource);
+
+            $sumAmt += $ressource->montant;
         }
 
-        $evalBudgetPerson = $this->setEmptyEvalBudgetItems($evalBudgetPerson, EvalBudgetPerson::RESOURCES_TYPE);
-
         $evalBudgetPerson
-            ->setResources($count > 0 ? Choices::YES : (true === $diagSocial->sansRessource ? Choices::NO : null))
+            ->setResource(count($ressources) > 0 ?
+                Choices::YES : (true === $diagSocial->sansRessource ? Choices::NO : null))
             ->setResourcesAmt($sumAmt);
 
         $this->resourcesGroupAmt += $sumAmt;
@@ -684,35 +691,43 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         return $evalBudgetPerson;
     }
 
-    protected function setCharges(EvalBudgetPerson $evalBudgetPerson, object $diagSocial): EvalBudgetPerson
+    protected function createCharges(EvalBudgetPerson $evalBudgetPerson, object $diagSocial): EvalBudgetPerson
     {
         $charges = $this->get("chargePersonnes/diagnosticSocial/{$diagSocial->id}");
-        $count = 0;
         $sumAmt = 0;
 
         foreach ($charges as $charge) {
-            ++$count;
-            $chargeValue = $this->findInArray($charge->typeCharge, SiSiaoItems::TYPE_CHARGES);
-            $amt = $charge->montant;
-            $sumAmt += $amt;
-            $setMethod = 'set'.ucfirst($chargeValue);
-            $setAmtMethod = $setMethod.'Amt';
+            if (!$newCharge = $this->financeExists($evalBudgetPerson->getCharges(), $charge->typeCharge->id)) {
+                $newCharge = (new Charge());
+            }
 
-            if (method_exists($evalBudgetPerson, $setMethod)) {
-                $evalBudgetPerson->$setMethod(1);
-            }
-            if (method_exists($evalBudgetPerson, $setAmtMethod)) {
-                $evalBudgetPerson->$setAmtMethod($amt);
-            }
-            if (1000 === $charge->typeCharge->id) {
-                $evalBudgetPerson->setChargeOtherPrecision($charge->commentaire);
-            }
+            $newCharge
+                ->setEvalBudgetPerson($evalBudgetPerson)
+                ->setType($this->findInArray($charge->typeCharge, SiSiaoItems::CHARGES))
+                ->setAmount($charge->montant)
+                ->setComment($charge->commentaire);
+
+            $this->em->persist($newCharge);
+
+            $sumAmt += $charge->montant;
         }
 
-        $evalBudgetPerson = $this->setEmptyEvalBudgetItems($evalBudgetPerson, EvalBudgetPerson::CHARGES_TYPE);
+        if ($diagSocial->remboursementDettes > 0) {
+            if (!$newCharge = $this->financeExists($evalBudgetPerson->getCharges(), Charge::REPAYMENT_DEBT)) {
+                $newCharge = (new Charge());
+            }
+
+            $newCharge
+                ->setEvalBudgetPerson($evalBudgetPerson)
+                ->setType(Charge::REPAYMENT_DEBT)
+                ->setAmount($diagSocial->remboursementDettes);
+
+            $this->em->persist($newCharge);
+        }
 
         $evalBudgetPerson
-            ->setCharges($count > 0 ? Choices::YES : (true === $diagSocial->sansCharge ? Choices::NO : null))
+            ->setCharge(count($charges) > 0 ?
+                Choices::YES : (true === $diagSocial->sansCharge ? Choices::NO : null))
             ->setChargesAmt($sumAmt);
 
         $this->chargesGroupAmt += $sumAmt;
@@ -720,30 +735,29 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         return $evalBudgetPerson;
     }
 
-    protected function setDebts(EvalBudgetPerson $evalBudgetPerson, object $diagSocial): EvalBudgetPerson
+    protected function createDebts(EvalBudgetPerson $evalBudgetPerson, object $diagSocial): EvalBudgetPerson
     {
         $dettes = $this->get("dettePersonnes/diagnosticSocial/{$diagSocial->id}");
-        $count = 0;
         $sumAmt = 0;
 
         foreach ($dettes as $dette) {
-            ++$count;
-            $debtValue = $this->findInArray($dette->typeDette, SiSiaoItems::TYPE_DEBTS);
-            $amt = $dette->montant;
-            $sumAmt += $amt;
-            $setMethod = 'set'.ucfirst($debtValue);
+            if (!$newDebt = $this->financeExists($evalBudgetPerson->getDebts(), $dette->typeDette->id)) {
+                $newDebt = (new Debt());
+            }
 
-            if (method_exists($evalBudgetPerson, $setMethod)) {
-                $evalBudgetPerson->$setMethod(1);
-            }
-            if (1000 === $dette->typeDette->id) {
-                $evalBudgetPerson->setDebtOtherPrecision($dette->commentaire);
-            }
+            $newDebt
+                ->setEvalBudgetPerson($evalBudgetPerson)
+                ->setType($this->findInArray($dette->typeDette, SiSiaoItems::DEBTS))
+                ->setAmount($dette->montant)
+                ->setComment($dette->commentaire);
+
+            $this->em->persist($newDebt);
+
+            $sumAmt += $dette->montant;
         }
 
-        $evalBudgetPerson = $this->setEmptyEvalBudgetItems($evalBudgetPerson, EvalBudgetPerson::DEBTS_TYPE);
-
-        $evalBudgetPerson->setDebts($count > 0 ? Choices::YES : (true === $diagSocial->sansDette ? Choices::NO : null))
+        $evalBudgetPerson->setDebt(count($dettes) > 0 ?
+            Choices::YES : (true === $diagSocial->sansDette ? Choices::NO : null))
             ->setDebtsAmt($sumAmt);
 
         $this->debtsGroupAmt += $sumAmt;
@@ -752,19 +766,19 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
     }
 
     /**
-     * Set the empty resources, charges and debts values to 0.
+     * @param Collection<EvaResource>|Collection<Charge>|Collection<Debts> $finances
+     *
+     * @return EvaResource|Charge|Debt
      */
-    protected function setEmptyEvalBudgetItems(EvalBudgetPerson $evalBudgetPerson, array $values): EvalBudgetPerson
+    protected function financeExists(Collection $finances, int $type): ?AbstractFinance
     {
-        foreach ($values as $key => $value) {
-            $getMethod = 'get'.ucfirst($key);
-            $setMethod = 'set'.ucfirst($key);
-            if (method_exists($evalBudgetPerson, $getMethod) && null === $evalBudgetPerson->$getMethod()) {
-                $evalBudgetPerson->$setMethod(0);
+        foreach ($finances as $finance) {
+            if ($finance->getType() === $type) {
+                return $finance;
             }
         }
 
-        return $evalBudgetPerson;
+        return null;
     }
 
     protected function createInitEvalPerson(SupportPerson $supportPerson, EvaluationPerson $evaluationPerson): ?InitEvalPerson
@@ -781,23 +795,26 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
             ->setSocialSecurity($evalSocialPerson->getSocialSecurity())
             ->setFamilyBreakdown($evalSocialPerson->getFamilyBreakdown())
             ->setFriendshipBreakdown($evalSocialPerson->getFriendshipBreakdown())
-            ->setSupportPerson($supportPerson);
+            ->setSupportPerson($supportPerson)
+        ;
 
         if ($evalProfPerson) {
             $initEvalPerson
                 ->setProfStatus($evalProfPerson->getProfStatus())
-                ->setContractType($evalProfPerson->getContractType());
+                ->setContractType($evalProfPerson->getContractType())
+            ;
         }
 
         if ($evalBudgetPerson) {
             $initEvalPerson
-                ->setResources($evalBudgetPerson->getResources())
+                ->setResource($evalBudgetPerson->getResource())
                 ->setResourcesAmt($evalBudgetPerson->getResourcesAmt())
                 ->setRessourceOtherPrecision($evalBudgetPerson->getRessourceOtherPrecision())
-                ->setDebts($evalBudgetPerson->getDebts())
-                ->setDebtsAmt($evalBudgetPerson->getDebtsAmt());
+                ->setDebt($evalBudgetPerson->getDebt())
+                ->setDebtsAmt($evalBudgetPerson->getDebtsAmt())
+            ;
 
-            $this->setResourcesInit($evalBudgetPerson, $initEvalPerson);
+            $this->createInitResources($evalBudgetPerson, $initEvalPerson);
         }
 
         $this->em->persist($initEvalPerson);
@@ -810,21 +827,16 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
     /**
      * Dupplique les ressources de la situation budgétaire dans la situation initiale.
      */
-    protected function setResourcesInit(EvalBudgetPerson $evalBudgetPerson, InitEvalPerson $initEvalPerson): InitEvalPerson
+    protected function createInitResources(EvalBudgetPerson $evalBudgetPerson, InitEvalPerson $initEvalPerson): InitEvalPerson
     {
-        foreach (EvalBudgetPerson::RESOURCES_TYPE as $key => $value) {
-            $getMethod = 'get'.ucfirst($key);
-            $setMethod = 'set'.ucfirst($key);
-            if (Choices::YES === $evalBudgetPerson->$getMethod()) {
-                $getAmtMethod = $getMethod.'Amt';
-                if (method_exists($initEvalPerson, $getMethod)) {
-                    $initEvalPerson->$setMethod($evalBudgetPerson->$getMethod());
-                }
-                if (method_exists($initEvalPerson, $getAmtMethod)) {
-                    $setAmtMethod = 'set'.ucfirst($key).'Amt';
-                    $initEvalPerson->$setAmtMethod($evalBudgetPerson->$getAmtMethod());
-                }
-            }
+        foreach ($evalBudgetPerson->getResources() as $resource) {
+            $initResource = (new InitResource())
+                ->setInitEvalPerson($initEvalPerson)
+                ->setType($resource->getType())
+                ->setAmount($resource->getAmount())
+                ->setComment($resource->getComment());
+
+            $this->em->persist($initResource);
         }
 
         return $initEvalPerson;

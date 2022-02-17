@@ -43,10 +43,11 @@ Encore
     .addEntry('placeGroup', './assets/js/place/placeGroup.js')
     .addEntry('rdvs', './assets/js/rdv/rdvsIndex.js')
     .addEntry('referent', './assets/js/referent/referent.js')
-    .addEntry('search', './assets/js/search.js')
+    .addEntry('search', './assets/js/searchIndex.js')
     .addEntry('service', './assets/js/service/service.js')
     .addEntry('support', './assets/js/support/support.js')
     .addEntry('securityUser', './assets/js/security/securityUser.js')
+    .addEntry('tag', './assets/js/tag/tagIndex.js')
     .addEntry('user', './assets/js/user/user.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.

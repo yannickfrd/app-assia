@@ -3,10 +3,11 @@
 namespace App\Tests\Controller\Organization;
 
 use App\Tests\AppTestTrait;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Response;
 
 class ServiceControllerTest extends WebTestCase
 {
@@ -15,13 +16,18 @@ class ServiceControllerTest extends WebTestCase
     /** @var KernelBrowser */
     protected $client;
 
+    /** @var AbstractDatabaseTool */
+    protected $databaseTool;
+
+    /** @var array */
+    protected $fixtures;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->client = $this->createClient();
 
-        /** @var AbstractDatabaseTool */
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
     }
 
@@ -76,8 +82,7 @@ class ServiceControllerTest extends WebTestCase
             'service[pole]' => $fixtures['pole1'],
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorExists('.alert.alert-success');
+        $this->assertResponseIsSuccessful('Le service est créé.');
     }
 
     public function testEditServiceInSuperAdminIsUp()
@@ -115,8 +120,7 @@ class ServiceControllerTest extends WebTestCase
             'service[name]' => 'Service test edit',
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorExists('.alert.alert-success');
+        $this->assertResponseIsSuccessful('Les modifications sont enregistrées.');
     }
 
     public function testDisableService()
@@ -137,7 +141,7 @@ class ServiceControllerTest extends WebTestCase
         $this->assertSelectorTextContains('.alert.alert-success', 'est ré-activé');
     }
 
-    protected function getFixtureFiles()
+    protected function getFixtureFiles(): array
     {
         return [
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',

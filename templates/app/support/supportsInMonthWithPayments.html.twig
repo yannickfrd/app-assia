@@ -61,7 +61,7 @@
                     </thead>
                     <tbody>
                         {% for support in supports %}
-                            {% set person = (support.supportPeople|filter(s => s.head == true)|first).person %}
+                            {% set person = support.header %}
                             <tr>
                                 <th scope="row" class="align-middle">
                                     <a href="{{ path('support_payments', {'id':support.id}) }}"

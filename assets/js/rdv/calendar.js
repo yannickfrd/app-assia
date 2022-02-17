@@ -2,9 +2,10 @@ import Ajax from '../utils/ajax'
 import MessageFlash from '../utils/messageFlash'
 import Loader from '../utils/loader'
 import DateFormater from '../utils/date/dateFormater'
-import { Modal } from 'bootstrap'
+import {Modal} from 'bootstrap'
 import ParametersUrl from '../utils/parametersUrl'
-import ApiCalendar from "../api/ApiCalendar";
+import SelectManager from '../utils/form/SelectManager'
+import ApiCalendar from '../api/ApiCalendar';
 
 export default class Calendar {
 
@@ -46,7 +47,8 @@ export default class Calendar {
         this.showWeekendsItem = localStorage.getItem('agenda.show_weekends')
         this.fullWidthItem = localStorage.getItem('agenda.full_width')
 
-
+        this.selectManager = new SelectManager('#rdv_tags', { name: 'onModal', elementId: this.modalRdvElt.id })
+        
         this.init()
     }
 
@@ -97,7 +99,7 @@ export default class Calendar {
         }
 
         this.showWeekendCheckbox.addEventListener('click', () => this.hideWeekends())
-        
+
         // Si l'ID d'une suivi est en pramètre, affiche le rendez-vous
         const rdvElt = document.getElementById('rdv-' + this.parametersUrl.get('rdv_id'))
         if (rdvElt) {
@@ -112,7 +114,7 @@ export default class Calendar {
         if (this.fullWidthCheckbox.checked) {
             this.calendarContainer.classList.replace('container', 'container-fluid');
             localStorage.setItem('agenda.full_width', true);
-        } else {   
+        } else {
             this.calendarContainer.classList.replace('container-fluid', 'container');
             localStorage.setItem('agenda.full_width', false);
         }
@@ -133,14 +135,13 @@ export default class Calendar {
 
     /**
      * Réinialise le formulaire modal de rdv.
-     * @param {Event} e 
+     * @param {Event} e
      */
     resetData(e) {
         e.preventDefault()
         if (this.supportElt) {
             this.modalRdvElt.querySelector('form').action = '/support/' + this.supportElt.dataset.support + '/rdv/new'
-            const fullname = this.supportPeopleElt.querySelector('.btn').textContent
-            this.modalRdvElt.querySelector('#rdv_title').value = fullname
+            this.modalRdvElt.querySelector('#rdv_title').value = this.supportPeopleElt.querySelector('.btn').textContent
         } else {
             this.modalRdvElt.querySelector('form').action = '/rdv/new'
             this.modalRdvElt.querySelector('#rdv_title').value = ''
@@ -163,8 +164,11 @@ export default class Calendar {
         this.btnDeleteElt.classList.add('d-none')
         this.btnSaveElt.classList.remove('d-none')
 
-        if (e.target.className && e.target.className.search('calendar-event') != 0) {
+        if (e.target.className && e.target.className.search('calendar-event') !== 0) {
+            this.selectManager.clearSelect()
             this.modalElt.show()
+            const rdvTags = $('#rdv_tags')
+            rdvTags.val(null).trigger('change');
         }
     }
 
@@ -208,7 +212,7 @@ export default class Calendar {
 
     /**
      * Requête pour obtenir le RDV sélectionné dans le formulaire modal.
-     * @param {HTMLElement} rdvElt 
+     * @param {HTMLElement} rdvElt
      */
     requestGetRdv(rdvElt) {
         this.loader.on()
@@ -219,7 +223,7 @@ export default class Calendar {
 
     /**
      * Requête pour sauvegarder le RDV.
-     * @param {Event} e 
+     * @param {Event} e
      */
     requestSaveRdv(e) {
         e.preventDefault()
@@ -253,7 +257,7 @@ export default class Calendar {
 
     /**
      * Donne la réponse à la requête Ajax.
-     * @param {Object} data 
+     * @param {Object} data
      */
     responseAjax(data) {
         if (data.action) {
@@ -281,7 +285,7 @@ export default class Calendar {
 
     /**
      * Affiche le RDV dans le formulaire modal.
-     * @param {Object} rdv 
+     * @param {Object} rdv
      */
     showRdv(rdv) {
         this.modalRdvElt.querySelector('form').action = '/rdv/' + this.rdvId + '/edit'
@@ -298,29 +302,49 @@ export default class Calendar {
         this.modalRdvElt.querySelector('#rdv_content').value = rdv.content ? rdv.content : ''
 
         this.infoRdvElt.innerHTML = this.getInfoRdvElt(rdv)
-        
+
         const title = 'RDV' + (rdv.fullnameSupport ? ' | ' + rdv.fullnameSupport : '')
         this.rdvTitleElt.textContent = title
 
         if (rdv.supportId) {
             const href = this.rdvTitleElt.dataset.url.replace('__id__', rdv.supportId)
-            const aElt = `<a href="${href}" class="text-${this.themeColor}" title="Accéder au suivi">${title}</a>`
-            this.rdvTitleElt.innerHTML = aElt
+            this.rdvTitleElt.innerHTML = `<a href="${href}" class="text-${this.themeColor}" title="Accéder au suivi">${title}</a>`
         }
 
         if (rdv.canEdit) {
-            this.btnDeleteElt.href = `/rdv/${this.rdvId}/delete` 
+            this.btnDeleteElt.href = `/rdv/${this.rdvId}/delete`
             this.btnDeleteElt.classList.remove('d-none')
             this.btnSaveElt.classList.remove('d-none')
         } else {
             this.btnDeleteElt.classList.add('d-none')
             this.btnSaveElt.classList.add('d-none')
         }
-        
+
         this.modalElt.show()
+
+        this.initTagSelect(rdv)
     }
 
-    /**  
+    /**
+     * Permet d'initialiser les valeurs dans le select multiple.
+     * @param {Object} rdv
+     */
+    initTagSelect(rdv){
+        const tags = JSON.parse(rdv.tags)
+        const tagOptions = this.modalRdvElt.querySelectorAll('select#rdv_tags option')
+
+        const listTagId = []
+        tags.forEach(tag => {
+            tagOptions.forEach(option => {
+                if (parseInt(option.value) === parseInt(tag.id)){
+                    listTagId.push(option.value)
+                }
+            })
+        })
+        this.selectManager.showOptionsFromArray(listTagId)
+    }
+
+    /**
      * Donnes les informations sur l'enregistrement (date de création, créateur...).
      * @param {Object} rdv
      */
@@ -383,7 +407,7 @@ export default class Calendar {
 
     /**
      * Tri les événements du jour.
-     * @param {HTMLElement} dayElt 
+     * @param {HTMLElement} dayElt
      */
     sortDayBlock(dayElt) {
 
@@ -398,7 +422,7 @@ export default class Calendar {
 
     /**
      * Cache les RDV en fonction de la hauteur du container.
-     * @param {HTMLElement} dayElt 
+     * @param {HTMLElement} dayElt
      */
     hideRdvElts(dayElt) {
 

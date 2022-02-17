@@ -2,18 +2,25 @@
 
 namespace App\Form\Support\Document;
 
-use App\Entity\Support\Document;
+use App\Entity\Organization\Tag;
 use App\Form\Model\Support\DocumentSearch;
 use App\Form\Type\DateSearchType;
 use App\Form\Type\ServiceDeviceReferentSearchType;
-use App\Form\Utils\Choices;
+use App\Repository\Organization\TagRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DocumentSearchType extends AbstractType
 {
+    private $tagRepo;
+
+    public function __construct(TagRepository $tagRepo)
+    {
+        $this->tagRepo = $tagRepo;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -26,20 +33,28 @@ class DocumentSearchType extends AbstractType
             ->add('name', null, [
                 'attr' => ['placeholder' => 'Search'],
             ])
-            ->add('type', ChoiceType::class, [
-                'label_attr' => ['class' => 'sr-only'],
-                'choices' => Choices::getchoices(Document::TYPE),
-                'attr' => ['class' => 'w-max-160'],
-                'placeholder' => 'document.category.placeholder',
-                'required' => false,
-            ])
             ->add('date', DateSearchType::class, [
                 'data_class' => DocumentSearch::class,
             ])
             ->add('service', ServiceDeviceReferentSearchType::class, [
                 'data_class' => DocumentSearch::class,
-            ]);
-        // ->add('export');
+            ])
+            ->add('tags', EntityType::class, [
+                'class' => Tag::class,
+                'multiple' => true,
+                'expanded' => false,
+                'by_reference' => false,
+                'choices' => $this->tagRepo->findAllTags('document'),
+                'choice_label' => 'name',
+                'label_attr' => ['class' => 'sr-only'],
+                'attr' => [
+                    'class' => 'multi-select w-min-200 w-max-220',
+                    'placeholder' => 'placeholder.tags',
+                    'size' => 1,
+                ],
+                'required' => false,
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

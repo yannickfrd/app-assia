@@ -52,7 +52,6 @@ App\Entity\Evaluation\EvalBudgetGroup:
     resourcesGroupAmt: 1100
     chargesGroupAmt: 500
     debtsGroupAmt: 10000
-    monthlyRepaymentAmt: 200
     budgetBalanceAmt: 400
     evaluationGroup: "@evaluationGroup1"
 
@@ -121,14 +120,12 @@ App\Entity\Evaluation\InitEvalPerson:
     friendshipBreakdown: 2
     profStatus: 1
     contractType: 1
-    resources: 1
+    resource: 1
     resourcesAmt: 1100
-    salary: 1
-    salaryAmt: 1000
     ressourceOther: 1
     ressourceOtherPrecision: Aide famille
     ressourceOtherAmt: 100
-    debts: 1
+    debt: 1
     debtsAmt: 10000
     comment: XXX
     supportPerson: "@supportPersonWithEval"
@@ -144,14 +141,9 @@ App\Entity\Evaluation\EvalAdmPerson:
 
 App\Entity\Evaluation\EvalBudgetPerson:
   evalBudgetPerson1:
-    resources: 1
+    resource: 1
     resourcesAmt: 1100
-    salary: 1
-    salaryAmt: 1000
-    ressourceOther: 1
-    ressourceOtherPrecision: Aide famille
-    ressourceOtherAmt: 100
-    debts: 1
+    debt: 1
     debtsAmt: 10000
     commentEvalBudget: XXX
     evaluationPerson: "@evaluationPerson1"
@@ -186,3 +178,31 @@ App\Entity\Evaluation\EvalSocialPerson:
     healthProblem: 1
     commentEvalSocialPerson: XXX
     evaluationPerson: "@evaluationPerson1"
+
+App\Entity\Evaluation\InitResource:
+  initRessource1:
+    type: 20
+    amount: 1100
+    initEvalPerson: "@initEvalPerson1"
+
+App\Entity\Evaluation\Resource:
+  ressource1:
+    type: 20
+    amount: 1000
+    evalBudgetPerson: "@evalBudgetPerson1"
+  ressource2:
+    type: 1000
+    amount: 100
+    evalBudgetPerson: "@evalBudgetPerson1"
+
+App\Entity\Evaluation\Charge:
+  charge1:
+    type: 10
+    amount: 600
+    evalBudgetPerson: "@evalBudgetPerson1"
+
+App\Entity\Evaluation\Debt:
+  debt1:
+    type: 10
+    amount: 10000
+    evalBudgetPerson: "@evalBudgetPerson1"

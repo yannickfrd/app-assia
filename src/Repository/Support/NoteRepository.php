@@ -33,6 +33,7 @@ class NoteRepository extends ServiceEntityRepository
     public function findNotesQuery(NoteSearch $search, ?CurrentUserService $currentUser = null): Query
     {
         $qb = $this->createQueryBuilder('n')->select('n')
+            ->leftJoin('n.tags', 't')->addSelect('PARTIAL t.{id, name}')
             ->leftJoin('n.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
             ->leftJoin('n.updatedBy', 'u2')->addSelect('PARTIAL u2.{id, firstname, lastname}')
             ->join('n.supportGroup', 'sg')->addSelect('sg')
@@ -52,6 +53,7 @@ class NoteRepository extends ServiceEntityRepository
         }
 
         $qb = $this->addOrganizationFilters($qb, $search);
+        $qb = $this->addTagsFilter($qb, $search, 'n.tags');
 
         if ($search->getContent()) {
             $qb->andWhere('n.title LIKE :content OR n.content LIKE :content')
@@ -65,12 +67,10 @@ class NoteRepository extends ServiceEntityRepository
             $qb->andWhere('n.type = :type')
                 ->setParameter('type', $search->getType());
         }
-
         if ($search->getFullname()) {
             $qb->andWhere("CONCAT(p.lastname,' ' ,p.firstname) LIKE :fullname")
                 ->setParameter('fullname', '%'.$search->getFullname().'%');
         }
-
         if ($search->getStart()) {
             $qb->andWhere('n.createdAt >= :start')
                 ->setParameter('start', $search->getStart());
@@ -83,7 +83,8 @@ class NoteRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('n.updatedAt', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+        ;
     }
 
     /**
@@ -101,6 +102,7 @@ class NoteRepository extends ServiceEntityRepository
     public function findNotesOfSupportQuery(int $supportGroupId, SupportNoteSearch $search): Query
     {
         $qb = $this->createQueryBuilder('n')
+            ->leftJoin('n.tags', 't')->addSelect('t')
             ->leftJoin('n.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
             ->leftJoin('n.updatedBy', 'u2')->addSelect('PARTIAL u2.{id, firstname, lastname}')
 
@@ -123,10 +125,14 @@ class NoteRepository extends ServiceEntityRepository
             $qb->andWhere('n.type = :type')
                 ->setParameter('type', $search->getType());
         }
+
+        $this->addTagsFilter($qb, $search, 'n.tags');
+
         return $qb
             ->orderBy('n.updatedAt', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+        ;
     }
 
     /**

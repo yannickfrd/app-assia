@@ -19,8 +19,8 @@ trait SupportPersonDataTrait
         $namePlaces = [];
 
         foreach ($supportPerson->getPlacesPerson() as $placePerson) {
-            $startPlaces[] = $placePerson->getStartDate() ?? null;
-            $endPlaces[] = $placePerson->getEndDate() ?? null;
+            $startPlaces[] = $placePerson->getStartDate();
+            $endPlaces[] = $placePerson->getEndDate();
             $placePerson->getEndReason() ? $endReasonPlaces[] = $placePerson->getEndReasonToString() : null;
             $place = $placePerson->getPlaceGroup()->getPlace();
             $namePlaces[] = (string) $place->getName().' ';
@@ -58,18 +58,12 @@ trait SupportPersonDataTrait
             'Référent social' => $supportGroup->getReferent() ? $supportGroup->getReferent()->getFullname() : null,
             'Référent social suppléant' => $supportGroup->getReferent2() ? $supportGroup->getReferent2()->getFullname() : null,
             'Date début hébergement' => $startPlaces ? $this->formatDate(min($startPlaces)) : null,
-            'Date fin hébergement' => $endPlaces ? $this->formatDate(max($endPlaces)) : null,
+            'Date fin hébergement' => $endPlaces ? $this->formatDate($this->getEndDate($endPlaces)) : null,
             'Motif fin hébergement' => join(', ', $endReasonPlaces),
             'Nom du logement/ hébergement' => (string) join(', ', $namePlaces),
             'Adresse' => $anonymized ? 'XXX' : $supportGroup->getAddress(),
             'Ville' => $supportGroup->getCity(),
             'Département' => (string) $supportGroup->getDept(),
-            // 'Statut suivi (groupe)' => $supportGroup->getStatusToString(),
-            // 'Date début suivi (groupe)' => $this->formatDate($supportGroup->getStartDate()),
-            // 'Date fin théorique suivi (groupe)' => $this->formatDate($supportGroup->getTheoreticalEndDate()),
-            // 'Date fin suivi (groupe)' => $this->formatDate($supportGroup->getEndDate()),
-            // 'Situation à la fin (groupe)' => $supportGroup->getEndStatusToString(),
-            // 'Commentaire situation à la fin (groupe)' => $anonymized ? 'XXX' : $supportGroup->getEndStatusComment(),
             'Prescripteur/ orienteur' => $originRequest->getOrganization() ? $originRequest->getOrganization()->getName() : null,
             'Précision prescripteur/ orienteur' => $originRequest->getOrganizationComment(),
             'Date orientation' => $this->formatDate($originRequest->getOrientationDate()),
@@ -79,5 +73,19 @@ trait SupportPersonDataTrait
         ];
 
         return $datas;
+    }
+
+    /**
+     * @param \DateTimeInterface[] $dates
+     */
+    protected function getEndDate(array $dates): ?\DateTimeInterface
+    {
+        if (!$dates) {
+            return null;
+        }
+
+        $minDate = min($dates);
+
+        return null === $minDate ? $minDate : max($dates);
     }
 }

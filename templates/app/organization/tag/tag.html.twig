@@ -1,0 +1,67 @@
+{% extends "base.html.twig" %}
+
+
+{% set tag = form.vars.value %}
+{% set EDIT_MODE = tag.id != null %}
+{% set title = EDIT_MODE ? "Étiquette " ~ tag.name : "Nouvelle étiquette" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+        <div class="container">
+
+        <h1 class="h2 mb-3">{{ title }}</h1>
+        {% if EDIT_MODE %}
+            <div class="small text-secondary">
+                <p> Créé le {{ tag.createdAt|date("d/m/Y à H:i") }}
+                    {{ tag.createdBy ? " par " ~ tag.createdBy.fullname }}
+                    (modifié le {{ tag.updatedAt|date("d/m/Y à H:i") }}<!--
+                    -->{{ tag.createdBy ? " par " ~ tag.updatedBy.fullname }})
+                </p>
+            </div>
+        {% else %}
+            <div class="mb-4"></div>
+        {% endif %}
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
+                    href="{{ path('tags') }}">Liste des étiquettes</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Fiche étiquette</li>
+            </ol>
+        </nav>
+
+        <hr>
+
+        <section>
+            {% include "model/_msgFlash.html.twig" %}
+            <div id="js-msg-flash-content"></div>
+
+            {{ form_start(form) }}
+
+            <div class="form-group row">
+                <div class="col-md-6">{{ form_row(form.name) }}</div>
+                <div class="col-md-6">{{ form_row(form.code) }}</div>
+                <div class="col-md-6">{{ form_row(form.color) }}</div>
+                <div class="col-md-6">{{ form_row(form.categories) }}</div>
+            </div>
+
+            {{ form_row(form._token) }}
+            <div class="form-group row">
+                <div class="col-md-12">
+                    <div class="mb-4 float-right">
+                        <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">
+                            <span class="fas fa-save mr-2"></span>
+                            {% if EDIT_MODE %}Mettre à jour{% else %}Enregistrer{% endif %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {{ form_end(form, {"render_rest": false}) }}
+        </section>
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags("tag") }}
+{% endblock javascripts %}

@@ -1,21 +1,112 @@
 CHANGELOG
 =========
+
+## Version 3.8.3 - 20/01/2021
+Update Fixturesq
+* Add dependencies
+* Add groups
+* Create TagFixtures
+* Create EvaluationFixtures
+* Refactor all fixtures
+
+## Version 3.8.2 - 06/01/2021
+Fix multi select feature
+* [SelectManager.js] Rename 'selectManager' object
+* [SelectManager.js] Add default placeholder in options
+* [Select2] Edit css font-size selections 
+
+## Version 3.8.1 - 05/01/2021
+Create a select manager (JS) and update tag feature (#95)
+* [SelectManager] Create a JS class to manage multi-select (select2)
+* [Tag] Update and create new Commands to add tags
+* [Tag] Add 'color' and 'categories' variables to Tag entity
+* [Tag] Refacto repositories
+* [SelectManager] Refactor multi-selects
+* [Search] Refactor SearchManager
+* [Selelct2] Edit style css
+* Update JS dependencies (@ttskch/select2-bootstrap4-theme)
+* Fix bugs
+Co-authored-by: yannickfarade <yannick.farade@esperer-95.org>
+
+## Version 3.8.0 - 23/12/2021
+Feat resource, charge and debt collections (#94)
+* Create InitResource, Resource, Charge and Debt entities
+* Create AbstractFinance entity class
+* Create migration file
+* Create FormType for resources, charges and debts
+* Update evaluation repositories
+* Update twig views (edit, view et export evaluation
+* Update/Refacto JS evaluation classes
+* Update evaluation exports to Excel
+* Update contribution calculator system
+* Update import SI-SIAO
+* Update fixtures and functional tests
+
+## Version 3.7.0 - 21/12/2021
+Feature system tags (yannickfrd) (#93)
+* Create Tag entity and TagRepository
+* Create system to create, read, update and delete tags (admin user)
+* [ServiceTagController] Create system to add/remove tags to services
+* Create system to add/remove tags to documents
+* Create system to add/remove tags to notes
+* Create system to add/remove tags to rdvs
+* Add system to search documents, notes and rdvs by tags
+* Create command to create tags and tags in documents
+* Create TagFixtures
+* Create unit and functional tests
+* [FileUploader] Edit Group 'get' to 'show_document'
+* [Service] Add TagTrait
+Co-authored-by: yannickfarade <yannick.farade@esperer-95.org>
+
+## Version 3.6.10 - 03/02/2022
+Fix error if role person is null and edit referer header call
+* [SiSiaoController] Edit 'referer' header call
+* [SiSiaoGroupImporter] Fix if role is null
+
+## Version 3.6.9 - 03/02/2022
+Fix problem import after update SI-SIAO version
+* [SiSIaoEvaluationImporter] Fix problem import evaluation after update SI-SIAO
+* [SupportGroup] Edit subscribed events order after create
+* [SiSiaoEvaluationImporter] Fix ASE informations and wished cities
+* [SiSiaoItems] Change value 99 (no information) to null
+
+## Version 3.6.8 - 19/01/2022
+Fix authentication problem with email
+* [AppAuthenticator] Add find User by email
+* [Security] Delete old CustomAuthenticator
+* Fix raw flash messages
+
+## Version 3.6.7 - 19/01/2022
+Fix full data export for occupancy rate (#99)
+* [SupportPersonDataTrait] Edit value of endDatePlace (if one is null)
+* [occupancyByService] Fix footer in view (add <td> nbPlaces)
+
+## Version 3.6.6 - 12/01/2022
+Fix duplication people in evaluation (#98)
+* Fix duplication evaluation people after import SI-SIAO and last evaluation
+* [EvaluationController] Edit condition to fix people in evaluation
+* [CheckEvaluationPeopleCommand] Add condition if person is duplicate in the same evaluation
+* [CheckEvaluationPeopleCommand] Add option to active/disable doctrine listeners
+
 ## Version 3.6.5 - 15/12/2021
-Fix bugs
+Fix bugs (#90)
 * [AutoLogout] Fix invalid url to logout
+
 ## Version 3.6.4 - 15/12/2021
 Update feature evaluation  (#89)
 * [EvaluationController] Add check if number of people in evaluation is invalid in 'showEvaluation'
 * [Evaluation] Delete button to fix number of people in evaluation
+
 ## Version 3.6.3 - 15/12/2021
 [Entities] Edit annotations 'export' groups (#88)
 
 ## Version 3.6.2 - 13/12/2021
-Edit all multi-selelct in FormType (#87)
+Edit all multi-select in FormType (#87)
 * [FormType] Add 'size' = 1 for all multi selects
 * [SecurityUserType] Add JS select2 for user roles
 
 * [_evaluationJustice.html] Fix error : renale 'nb_adults' to 'nb_people' var
+
 ## Version 3.6.1 - 13/12/2021
 * [EvalAdmPersonType] Delete 'data-twin-field' to 'asylumBackground' field (#86)
 

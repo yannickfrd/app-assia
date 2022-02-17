@@ -77,7 +77,7 @@ class FileUploader
         $data = [];
         $names = [];
         foreach ($documents as $document) {
-            $data[] = $this->normalizer->normalize($document, 'json', ['groups' => ['get', 'view']]);
+            $data[] = $this->normalizer->normalize($document, 'json', ['groups' => ['show_document', 'view']]);
             $names[] = $document->getName();
         }
 

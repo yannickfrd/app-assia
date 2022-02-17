@@ -251,7 +251,7 @@ class PaymentController extends AbstractController
 
         $datas = $indicators->getIndicators(
             $this->paymentRepo->findPaymentsForIndicators($search),
-            $search,
+            $search
         );
 
         return $this->render('app/payment/paymentIndicators.html.twig', [

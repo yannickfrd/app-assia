@@ -10,7 +10,6 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\HttpFoundation\Response;
 
 class EvaluationControllerTest extends WebTestCase
 {
@@ -55,7 +54,7 @@ class EvaluationControllerTest extends WebTestCase
         $id = $this->supportGroup->getId();
         $this->client->request('GET', "/support/$id/evaluation/new");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Évaluation sociale');
         $this->assertSelectorTextContains('.small.text-secondary', 'Créée le');
     }
@@ -68,15 +67,15 @@ class EvaluationControllerTest extends WebTestCase
         /** @var Crawler */
         $crawler = $this->client->request('GET', "/support/$id/evaluation/new");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Évaluation sociale');
-        $this->assertSelectorExists('button#heading-init_eval-0');
+        $this->assertSelectorExists('button#heading_evaluation_evaluationPeople_0_initEvalPerson');
 
         $csrfToken = $crawler->filter('#evaluation__token')->attr('value');
 
         $this->client->request('POST', "/support/$id/evaluation/edit", $this->getEvaluationData($csrfToken));
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('success', $content['alert']);
     }
@@ -88,9 +87,9 @@ class EvaluationControllerTest extends WebTestCase
         $id = $this->fixtures['supportGroupWithEval']->getId();
         $this->client->request('GET', "/support/$id/evaluation/view");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Évaluation sociale');
-        $this->assertSelectorExists('button#heading-init_eval-0');
+        $this->assertSelectorExists('button#heading_evaluation_evaluationPeople_0_initEvalPerson');
     }
 
     public function testShowEvaluationIsRedirect()
@@ -100,9 +99,9 @@ class EvaluationControllerTest extends WebTestCase
         $id = $this->supportGroup->getId();
         $this->client->request('GET', "/support/$id/evaluation/view");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Évaluation sociale');
-        $this->assertSelectorExists('button#heading-init_eval-0');
+        $this->assertSelectorExists('button#heading_evaluation_evaluationPeople_0_initEvalPerson');
     }
 
     public function testEditEvaluationIsSuccessful()
@@ -117,14 +116,14 @@ class EvaluationControllerTest extends WebTestCase
         // Fail
         $this->client->request('POST', "/support/$id/evaluation/edit");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('danger', $content['alert']);
 
         // Success
         $this->client->request('POST', "/support/$id/evaluation/edit", $this->getEvaluationData($csrfToken));
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('success', $content['alert']);
     }
@@ -137,24 +136,24 @@ class EvaluationControllerTest extends WebTestCase
         $id = $this->supportGroup->getId();
         $this->client->request('GET', "/support/$id/evaluation/export/pdf");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('.alert.alert-warning', 'Il n\'y a pas d\'évaluation sociale créée pour ce suivi.');
 
         // Success export to PDF
         $id = $this->fixtures['supportGroupWithEval']->getId();
         $this->client->request('GET', "/support/$id/evaluation/export/pdf");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSame('application/pdf', $this->client->getResponse()->headers->get('content-type'));
 
         // Success export to Word
         $this->client->request('GET', "/support/$id/evaluation/export/word");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSame('application/vnd.ms-word', $this->client->getResponse()->headers->get('content-type'));
     }
 
-    protected function getEvaluationData(string $csrfToken)
+    protected function getEvaluationData(string $csrfToken): array
     {
         return [
             'evaluation' => [
@@ -209,18 +208,20 @@ class EvaluationControllerTest extends WebTestCase
                             'friendshipBreakdown' => 1,
                             'profStatus' => 1,
                             'contractType' => 1,
-                            'resources' => [
-                                'resources' => 1,
-                                'resourcesAmt' => 1100,
-                                'salary' => 1,
-                                'salaryAmt' => 1000,
-                                'ressourceOther' => 1,
-                                'ressourceOtherPrecision' => 'Aide famille',
-                                'ressourceOtherAmt' => 100,
-                            ],
-                            'debts' => 1,
-                            'debtsAmt' => 1000,
+                            'resource' => 1,
+                            'resourcesAmt' => 1100,
                             'comment' => 'XXX',
+                            'resources' => [
+                                0 => [
+                                    'type' => 10, // salaire
+                                    'amount' => 1000,
+                                ],
+                                1 => [
+                                    'type' => 1000, // autre
+                                    'amount' => 100,
+                                    'comment' => 'Aide famille',
+                                ],
+                            ],
                         ],
                         'evalAdmPerson' => [
                             'nationality' => 1,
@@ -230,18 +231,40 @@ class EvaluationControllerTest extends WebTestCase
                             'commentEvalAdmPerson' => 'XXX',
                         ],
                         'evalBudgetPerson' => [
-                            'resources' => [
-                                'resources' => 1,
-                                'resourcesAmt' => 1100,
-                                'salary' => 1,
-                                'salaryAmt' => 1000,
-                                'ressourceOther' => 1,
-                                'ressourceOtherPrecision' => 'Aide famille',
-                                'ressourceOtherAmt' => 100,
-                            ],
-                            'debts' => 1,
-                            'debtsAmt' => 1000,
+                            'resource' => 1,
+                            'resourcesAmt' => 1100,
+                            'charge' => 1,
+                            'chargesAmt' => 113,
+                            'debt' => 1,
+                            'debtsAmt' => 3450,
                             'commentEvalBudget' => 'XXX',
+                            'resources' => [
+                                0 => [
+                                    'type' => 10, // salaire
+                                    'amount' => 1000,
+                                ],
+                                1 => [
+                                    'type' => 1000, // autre
+                                    'amount' => 100,
+                                    'comment' => 'Aide famille',
+                                ],
+                            ],
+                            'charges' => [
+                                0 => [
+                                    'type' => 50, // assurance
+                                    'amount' => 48,
+                                ],
+                                1 => [
+                                    'type' => 80, // transport
+                                    'amount' => 65,
+                                ],
+                            ],
+                            'debts' => [
+                                0 => [
+                                    'type' => 10, // dettes locatives
+                                    'amount' => 3450,
+                                ],
+                            ],
                         ],
                         'evalFamilyPerson' => [
                             'maritalStatus' => 1,

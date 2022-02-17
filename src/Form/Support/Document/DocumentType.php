@@ -2,10 +2,12 @@
 
 namespace App\Form\Support\Document;
 
+use App\Entity\Organization\Tag;
 use App\Entity\Support\Document;
-use App\Form\Utils\Choices;
+use App\Entity\Support\SupportGroup;
+use App\Repository\Organization\TagRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -13,8 +15,19 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DocumentType extends AbstractType
 {
+    /** @var TagRepository */
+    private $tagRepo;
+
+    public function __construct(TagRepository $tagRepo)
+    {
+        $this->tagRepo = $tagRepo;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        /** @var SupportGroup */
+        $supportGroup = $options['data']->getSupportGroup();
+
         $builder
             ->add('name', TextType::class, [
                 'label_attr' => ['class' => 'sr-only'],
@@ -27,11 +40,21 @@ class DocumentType extends AbstractType
                     'placeholder' => 'document.content.placeholder',
                 ],
             ])
-            ->add('type', ChoiceType::class, [
+            ->add('tags', EntityType::class, [
+                'class' => Tag::class,
+                'multiple' => true,
+                'expanded' => false,
+                'required' => false,
+                'by_reference' => false,
+                'choices' => $this->tagRepo->getTagsByService($supportGroup->getService(), 'document'),
+                'choice_label' => 'name',
                 'label_attr' => ['class' => 'sr-only'],
-                'choices' => Choices::getchoices(Document::TYPE),
-                'placeholder' => 'document.category.placeholder',
-            ]);
+                'attr' => [
+                    'placeholder' => 'placeholder.tags',
+                    'size' => 1,
+                ],
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

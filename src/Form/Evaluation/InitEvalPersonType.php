@@ -2,32 +2,32 @@
 
 namespace App\Form\Evaluation;
 
-use App\Form\Utils\Choices;
-use App\Form\Type\ResourcesType;
-use App\Form\Utils\EvaluationChoices;
 use App\Entity\Evaluation\EvalAdmPerson;
-use Symfony\Component\Form\AbstractType;
+use App\Entity\Evaluation\EvalBudgetPerson;
 use App\Entity\Evaluation\EvalProfPerson;
-use App\Entity\Evaluation\InitEvalPerson;
 use App\Entity\Evaluation\EvalSocialPerson;
+use App\Entity\Evaluation\InitEvalPerson;
+use App\Entity\Evaluation\Resource;
+use App\Entity\People\Person;
+use App\Form\Utils\Choices;
+use App\Form\Utils\EvaluationChoices;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class InitEvalPersonType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        /** @var Person */
-        $person = $options['attr']['person'];
-
         $builder
             ->add('paper', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS),
                 'attr' => [
                     'data-important' => 'true',
-                    'data-twin-field' => 'paper',
+                    'data-twin-field' => 'true',
                 ],
                 'placeholder' => 'placeholder.select',
                 'help' => 'evalAdmPerson.paper.help',
@@ -37,7 +37,7 @@ class InitEvalPersonType extends AbstractType
                 'choices' => Choices::getChoices(EvalAdmPerson::PAPER_TYPE),
                 'attr' => [
                     'data-important' => 'true',
-                    'data-twin-field' => 'paperType',
+                    'data-twin-field' => 'true',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
@@ -46,7 +46,7 @@ class InitEvalPersonType extends AbstractType
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS),
                 'attr' => [
                     'data-important' => 'true',
-                    'data-twin-field' => 'rightSocialSecurity',
+                    'data-twin-field' => 'true',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
@@ -55,7 +55,7 @@ class InitEvalPersonType extends AbstractType
                 'choices' => Choices::getChoices(EvalSocialPerson::SOCIAL_SECURITY),
                 'attr' => [
                     'data-important' => 'true',
-                    'data-twin-field' => 'socialSecurity',
+                    'data-twin-field' => 'true',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
@@ -67,7 +67,11 @@ class InitEvalPersonType extends AbstractType
                     'class' => 'justify',
                     'placeholder' => 'initEvalPerson.comment',
                 ],
-            ]);
+            ])
+        ;
+
+        /** @var Person $person */
+        $person = $options['attr']['person'];
 
         if ($person->getAge() < 16) {
             return;
@@ -77,7 +81,7 @@ class InitEvalPersonType extends AbstractType
             ->add('familyBreakdown', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO_PARTIAL),
                 'attr' => [
-                    'data-twin-field' => 'familyBreakdown',
+                    'data-twin-field' => 'true',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
@@ -85,7 +89,7 @@ class InitEvalPersonType extends AbstractType
             ->add('friendshipBreakdown', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO_PARTIAL),
                 'attr' => [
-                    'data-twin-field' => 'friendshipBreakdown',
+                    'data-twin-field' => 'true',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
@@ -94,7 +98,7 @@ class InitEvalPersonType extends AbstractType
                 'choices' => Choices::getChoices(EvalProfPerson::PROF_STATUS),
                 'attr' => [
                     'data-important' => 'true',
-                    'data-twin-field' => 'profStatus',
+                    'data-twin-field' => 'true',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
@@ -103,19 +107,49 @@ class InitEvalPersonType extends AbstractType
                 'choices' => Choices::getChoices(EvalProfPerson::CONTRACT_TYPE),
                 'attr' => [
                     'data-important' => 'true',
-                    'data-twin-field' => 'contractType',
+                    'data-twin-field' => 'true',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
-
-            ->add('resources', ResourcesType::class)
-
-            ->add('debts', ChoiceType::class, [
+            ->add('resource', ChoiceType::class, [
+                'choices' => Choices::getChoices(EvalBudgetPerson::RESOURCES),
+                'attr' => [
+                    'data-twin-field' => 'true',
+                    'data-important' => 'true',
+                ],
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
+            ->add('resourceType', ChoiceType::class, [
+                'choices' => Choices::getChoices(Resource::RESOURCES),
+                'attr' => ['data-twin-field' => 'true'],
+                'placeholder' => 'placeholder.add',
+                'mapped' => false,
+                'required' => false,
+            ])
+            ->add('resourcesAmt', MoneyType::class, [
+                'attr' => [
+                    'class' => 'text-right',
+                    'data-amount' => 'resourcesAmt',
+                    'data-important' => 'true',
+                    'data-twin-field' => 'true',
+                    'placeholder' => 'Amount',
+                ],
+            ])
+            ->add('resources', CollectionType::class, [
+                'entry_type' => InitResourceType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'delete_empty' => true,
+                'prototype' => true,
+                'by_reference' => false,
+            ])
+            ->add('debt', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
                 'attr' => [
                     'data-important' => 'true',
-                    'data-twin-field' => 'debts',
+                    'data-twin-field' => 'true',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
@@ -124,10 +158,11 @@ class InitEvalPersonType extends AbstractType
                 'attr' => [
                     'class' => 'text-right',
                     'data-amount' => 'debtsAmt',
-                    'data-twin-field' => 'debtsAmt',
+                    'data-twin-field' => 'true',
                     'placeholder' => 'Amount',
                 ],
-            ]);
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

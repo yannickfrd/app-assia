@@ -21,9 +21,8 @@
                     <div class="form-group col-auto my-1 pr-1 pl-0 d-inline-flex">
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <div class="input-group-text" data-toggle="tooltip" data-placement="bottom"
-                                    title="Date">
-                                    <span class=" far fa-calendar text-black-50"></span>
+                                <div class="input-group-text" title="Date" data-toggle="tooltip" 
+                                    data-placement="bottom"><i class="far fa-calendar text-black-50"></i>
                                 </div>
                             </div>
                             <label class="sr-only required" for="date">Date</label>
@@ -33,9 +32,8 @@
                     <div class="form-group col-auto my-1 pr-1 pl-0 d-inline-flex">
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <div class="input-group-text" data-toggle="tooltip" data-placement="bottom"
-                                    title="Heure de début">
-                                    <span class=" far fa-clock text-black-50"></span>
+                                <div class="input-group-text" title="Heure de début" data-toggle="tooltip" 
+                                    data-placement="bottom"><i class="far fa-clock text-black-50"></i>
                                 </div>
                             </div>
                             <label class="sr-only required" for="start">Début</label>
@@ -46,9 +44,8 @@
                         </div>
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <div class="input-group-text" data-toggle="tooltip" data-placement="bottom"
-                                    title="Heure de fin">
-                                    <span class=" far fa-clock text-black-50"></span>
+                                <div class="input-group-text" title="Heure de fin" data-toggle="tooltip" 
+                                    data-placement="bottom"><i class="far fa-clock text-black-50"></i>
                                 </div>
                             </div>
                             <label class="sr-only required" for="end">Fin</label>
@@ -57,50 +54,56 @@
                     </div>
                     <div class="form-group col-auto my-1 pr-1 pl-0 d-inline-flex">{{ form_widget(form.status) }}</div>
                 </div>
-                <div class="form-group row">
+                <div class="row mb-3">
                     <div class="col-12 col-lg-6 d-none">{{ form_widget(form.start) }}</div>
                     <div class="col-12 col-lg-6 d-none">{{ form_widget(form.end) }}</div>
                     <div class="col-12">
                         <div class="input-group" id="rdv_search_location">
                             <div class="input-group-prepend">
-                                <div class="input-group-text" data-toggle="tooltip" data-placement="bottom"
-                                    title="Localisation">
-                                    <span class=" fas fa-map-marker-alt text-black-50"></span>
+                                <div class="input-group-text" title="Localisation" data-toggle="tooltip" 
+                                    data-placement="bottom"><i class="fas fa-map-marker-alt text-black-50"></i>
                                 </div>
                             </div>{{ form_widget(form.location) }}
                         </div>
                     </div>
-                    <div class="col-12 col-lg-6"></div>
                 </div>
-                {# <div class="form-group row">
-                    <div class="col-12 col-lg-6">{{ form_widget(form.user) }}</div>
-                    <div class="col-12 col-lg-6">{{ form_widget(form.supportGroup) }}</div>
-                </div> #}
-                <div class="form-group row">
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text" title="Étiquettes" data-toggle="tooltip" data-placement="bottom">
+                                    <i class="fas fa-tag text-black-50"></i>
+                                </div>
+                            </div>
+                            {{ form_widget(form.tags) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
                     <div class="col-md-12">{{ form_widget(form.content) }}</div>
                 </div>
                 <div class="form-group row">
-                    <div class="col-md-6 custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-1"
+                    <div class="col-md-6 custom-control custom-checkbox custom-checkbox-{{ theme_color }}"
                          title="Enregistrer le rendez-vous sur ClientGoogleCalendar Agenda">
-
                         <div class="calendar col-md-12">
-                            {{ form_widget(form.googleCalendar, { attr: {
-                                    'data-api-name': 'google',
-                                    'data-api-create-event': path('auth_google_calendar'),
-                                    'data-api-update-event': path('update_event_google_calendar', { rdvId: '__id__' }),
-                                    'data-api-delete-event': path('delete_event_google_calendar', { eventId: '__id__' })
-                                } }
-                            ) }}</div>
+                            {{ form_widget(form._googleCalendar, {attr: {
+                                'data-api-name': 'google',
+                                'data-api-create-event': path('auth_google_calendar'),
+                                'data-api-update-event': path('update_event_google_calendar', {rdvId: '__id__' }),
+                                'data-api-delete-event': path('delete_event_google_calendar', {eventId: '__id__' })
+                            } }) }}
+                        </div>
                     </div>
-                    <div class="col-md-6 custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-1"
+                    <div class="col-md-6 custom-control custom-checkbox custom-checkbox-{{ theme_color }}"
                          title="Enregistrer le rendez-vous sur ClientGoogleCalendar Agenda">
-                        <div class="calendar col-md-12">{{ form_widget(form.outlookCalendar, { attr: {
-                                    'data-api-name': 'outlook',
-                                    'data-api-create-event': path('auth_outlook_calendar'),
-                                    'data-api-update-event': path('update_outlook_event_calendar', { rdvId: '__id__' }),
-                                    'data-api-delete-event': path('delete_outlook_event_calendar', { eventId: '__id__' })
-                                } }
-                            ) }}</div>
+                        <div class="calendar col-md-12">
+                            {{ form_widget(_form.outlookCalendar, {attr: {
+                                'data-api-name': 'outlook',
+                                'data-api-create-event': path('auth_outlook_calendar'),
+                                'data-api-update-event': path('update_outlook_event_calendar', {rdvId: '__id__' }),
+                                'data-api-delete-event': path('delete_outlook_event_calendar', {eventId: '__id__' })
+                            } }) }}
+                        </div>
                     </div>
                 </div>
                 {{ form_row(form._token) }}

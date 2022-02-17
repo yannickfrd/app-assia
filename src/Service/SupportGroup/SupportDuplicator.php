@@ -2,20 +2,20 @@
 
 namespace App\Service\SupportGroup;
 
-use App\Entity\Support\Document;
-use App\Entity\Organization\Service;
-use App\Entity\Support\SupportGroup;
-use App\Entity\Evaluation\InitEvalGroup;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Evaluation\EvaluationGroup;
-use App\Repository\Support\NoteRepository;
 use App\Entity\Evaluation\EvaluationPerson;
-use Doctrine\Common\Collections\Collection;
-use App\Repository\Support\DocumentRepository;
-use App\Repository\Support\SupportGroupRepository;
-use App\Repository\Support\SupportPersonRepository;
+use App\Entity\Evaluation\InitEvalGroup;
+use App\Entity\Organization\Service;
+use App\Entity\Support\Document;
+use App\Entity\Support\SupportGroup;
 use App\Repository\Evaluation\EvaluationGroupRepository;
 use App\Repository\Evaluation\EvaluationPersonRepository;
+use App\Repository\Support\DocumentRepository;
+use App\Repository\Support\NoteRepository;
+use App\Repository\Support\SupportGroupRepository;
+use App\Repository\Support\SupportPersonRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityManagerInterface;
 
 class SupportDuplicator
 {
@@ -59,7 +59,7 @@ class SupportDuplicator
         }
         if ($this->duplicateSupportPeople($supportGroup)) {
             foreach ($supportGroup->getSupportPeople() as $supportPerson) {
-                if ($this->evaluationGroup && 0 === $supportPerson->getEvaluationsPerson()->count()) {
+                if ($this->evaluationGroup && 0 === $supportPerson->getEvaluations()->count()) {
                     $evaluationPerson = (new EvaluationPerson())
                         ->setEvaluationGroup($supportGroup->getEvaluationsGroup()->last())
                         ->setSupportPerson($supportPerson);
@@ -98,15 +98,19 @@ class SupportDuplicator
     private function duplicateEvaluation(SupportGroup $newSupportGroup, SupportGroup $lastSupportGroup): void
     {
         $lastEvaluation = $this->evaluationGroupRepo->findEvaluationOfSupport($lastSupportGroup->getId());
+        $now = new \Datetime();
 
         if ($lastEvaluation && 0 === $newSupportGroup->getEvaluationsGroup()->count()) {
             $evaluationGroup = (clone $lastEvaluation)->setSupportGroup($newSupportGroup);
+
             $newSupportGroup->getEvaluationsGroup()->add($evaluationGroup);
             // Change the supportPerson in every evaluationPerson
             foreach ($evaluationGroup->getEvaluationPeople() as $evaluationPerson) {
                 foreach ($newSupportGroup->getSupportPeople() as $newSupportPerson) {
                     if ($evaluationPerson->getSupportPerson()->getPerson()->getId() === $newSupportPerson->getPerson()->getId()) {
                         $evaluationPerson->setSupportPerson($newSupportPerson);
+
+                        $newSupportPerson->addEvaluationPerson($evaluationPerson);
                     }
                 }
             }
@@ -169,16 +173,11 @@ class SupportDuplicator
                 $this->evaluationGroup = $supportGroup->getEvaluationsGroup()->last();
             }
 
-            if ($lastEvaluationPerson && 0 === $supportPerson->getEvaluationsPerson()->count()) {
+            if ($lastEvaluationPerson && 0 === $supportPerson->getEvaluations()->count()) {
                 $evaluationPerson = (clone $lastEvaluationPerson)->setSupportPerson($supportPerson);
-                $supportPerson->getEvaluationsPerson()->add($evaluationPerson);
                 $evaluationPerson->setEvaluationGroup($this->evaluationGroup);
 
-                // if ($lastEvaluationPerson->getInitEvalPerson()) {
-                //     $intiEvalPerson = clone $lastEvaluationPerson->getInitEvalPerson();
-                //     $intiEvalPerson->setSupportPerson($supportPerson);
-                //     $evaluationPerson->setInitEvalPerson($intiEvalPerson);
-                // }
+                $supportPerson->addEvaluationPerson($evaluationPerson);
             }
         }
 
@@ -186,7 +185,6 @@ class SupportDuplicator
             $this->evaluationGroup->setSupportGroup($this->supportGroup);
             $supportGroup->addEvaluationGroup($this->evaluationGroup);
         }
-        // dd($this->evaluationGroup);
 
         return $supportGroup;
     }

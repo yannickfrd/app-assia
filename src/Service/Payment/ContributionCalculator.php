@@ -2,15 +2,16 @@
 
 namespace App\Service\Payment;
 
-use App\Entity\Evaluation\EvalBudgetPerson;
+use App\Entity\Evaluation\Charge;
 use App\Entity\Evaluation\EvaluationGroup;
+use App\Entity\Evaluation\Resource;
 use App\Entity\Organization\Device;
 use App\Entity\Organization\Service;
 use App\Entity\Support\Payment;
 use App\Entity\Support\SupportGroup;
-use App\Form\Utils\Choices;
 use App\Repository\Evaluation\EvaluationGroupRepository;
 use App\Repository\Organization\PlaceRepository;
+use Doctrine\Common\Collections\Collection;
 
 class ContributionCalculator
 {
@@ -125,7 +126,7 @@ class ContributionCalculator
         $nbConsumUnits = $this->getNbConsumUnits();
 
         /** @var float Budget du ménage (ressources - charges) */
-        $budgetBalanceAmt = $this->getBudgetBalanceAmt(HotelContributionCalculator::RESOURCES_TYPE, HotelContributionCalculator::CHARGES_TYPE);
+        $budgetBalanceAmt = $this->getBudgetBalanceAmt(HotelContributionCalculator::RESOURCES, HotelContributionCalculator::CHARGES);
 
         /** @var float Montant de la participation financière */
         $theoricalContribAmt = round($budgetBalanceAmt * $this->contributionRate, 0, PHP_ROUND_HALF_DOWN);
@@ -179,8 +180,8 @@ class ContributionCalculator
     }
 
     protected function getBudgetBalanceAmt(
-        array $resourcesTypes = EvalBudgetPerson::RESOURCES_TYPE,
-        array $chargesTypes = EvalBudgetPerson::CHARGES_TYPE
+        array $resourceTypes = Resource::RESOURCES,
+        array $chargeTypes = Charge::CHARGES
     ): float {
         $evaluationGroup = $this->evaluationRepo->findEvaluationBudget($this->supportGroup);
 
@@ -202,8 +203,8 @@ class ContributionCalculator
 
                 $evalBudgetPerson = $evaluationPerson->getEvalBudgetPerson();
                 if ($evalBudgetPerson) {
-                    $resourcesGroupAmt += $this->getSumAmt($evalBudgetPerson, $resourcesTypes);
-                    $chargesGroupAmt += $this->getSumAmt($evalBudgetPerson, $chargesTypes) + $evalBudgetPerson->getMonthlyRepaymentAmt();
+                    $resourcesGroupAmt += $this->getSumAmt($evalBudgetPerson->getResources(), $resourceTypes);
+                    $chargesGroupAmt += $this->getSumAmt($evalBudgetPerson->getCharges(), $chargeTypes) + $evalBudgetPerson->getMonthlyRepaymentAmt();
                 }
             }
         }
@@ -223,18 +224,20 @@ class ContributionCalculator
         return $resourcesGroupAmt - $chargesGroupAmt;
     }
 
-    protected function getSumAmt(?EvalBudgetPerson $evalBudgetPerson, array $values): float
+    /**
+     * @param Collection<resource>|Collection<Charge>|Collection<Debts>|null $finances
+     */
+    protected function getSumAmt(?Collection $finances = null, array $values): float
     {
-        if (null === $evalBudgetPerson) {
+        if (!$finances) {
             return 0;
         }
 
         $sumAmt = 0;
-        foreach ($values as $key => $value) {
-            $getRessMethod = 'get'.ucfirst($key);
-            if (Choices::YES === $evalBudgetPerson->$getRessMethod()) {
-                $getRessAmtMethod = $getRessMethod.'Amt';
-                $sumAmt += $evalBudgetPerson->$getRessAmtMethod();
+
+        foreach ($finances as $finance) {
+            if (array_key_exists($finance->getType(), $values)) {
+                $sumAmt += $finance->getAmount();
             }
         }
 
@@ -267,8 +270,10 @@ class ContributionCalculator
             ));
         }
         if (!$this->payment->getEndDate()) {
+            /** @var \Datetime */
+            $startDate = $this->payment->getStartDate();
             $this->payment->setEndDate(min(
-               (clone $this->payment->getStartDate())->modify('last day of this month'),
+               clone $startDate->modify('last day of this month'),
                ($this->supportGroup->getEndDate() ?? (new \DateTime()))
             ));
             if ($this->payment->getEndDate() < $this->payment->getStartDate()) {

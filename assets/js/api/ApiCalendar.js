@@ -33,6 +33,7 @@ export default class ApiCalendar {
      */
     calendarIsChecked(key) {
         const valLocalStorage = localStorage.getItem('agenda.' + key)
+
         return (null === valLocalStorage) ? false : JSON.parse(valLocalStorage)
     }
 
@@ -70,7 +71,6 @@ export default class ApiCalendar {
                 }
 
                 if (url) {
-                    console.log(method, url);
                     this.ajax.send(method, url, this.responseAjax.bind(this))
                 }
             }
@@ -79,7 +79,7 @@ export default class ApiCalendar {
 
     /**
      * Get the answer back
-     * @param data
+     * @param {Object} data
      */
     responseAjax(data) {
         switch (data.action) {

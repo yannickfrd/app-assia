@@ -12,12 +12,12 @@
 		{% include "app/support/_partials/_nav_support.html.twig" %}
 
 		<div class="row mb-2">
-			<div id="js-search-support-notes" class="col-md-12 {{ nbNotes == 0 ? 'd-none' }}">
+			<div id="js-search-support-notes" class="col-md-12">
 				{% include "app/note/_searchSupportNotes.html.twig" %}
 			</div>
 		</div>
-		<div class="row">
-			<div class="col-md-6 mb-3">
+		<div class="row mb-3">
+			<div class="col-md-12">
 				<button id="js-new-note" class="btn btn-{{ theme_color }} btn-sm shadow mr-2"
 					data-toggle="tooltip" data-placement="bottom" title="Créer une nouvelle note">
 					<span class="fas fa-plus-square mr-2"></span>Nouvelle note</button>
@@ -27,7 +27,23 @@
 					{{ nbTotalNotes ? " sur " ~ nbTotalNotes }}</span>
 				</div>
 			</div>
-			<div class="col-md-6">
+		</div>
+		
+		<div class="row">
+			<div class="col-md-7 mb-2">
+				{% if notes.getTotalItemCount %}
+					<span class="btn btn-outline-secondary btn-sm m-1 px-2 shadow-sm">
+						{{ knp_pagination_sortable(notes, "Titre", "n.title") }}
+					</span>
+					<span class="btn btn-outline-secondary btn-sm m-1 px-2 shadow-sm">
+						{{ knp_pagination_sortable(notes, "Date de création", "n.createdAt") }}
+					</span>
+					<span class="btn btn-outline-secondary btn-sm m-1 px-2 shadow-sm">
+						{{ knp_pagination_sortable(notes, "Date de mise à jour", "n.updatedAt") }}
+					</span>
+				{% endif %}
+			</div>
+			<div class="col-md-5">
 				<div class="navigation">{{ knp_pagination_render(notes) }}</div>
 			</div>
 		</div>
@@ -37,7 +53,7 @@
 				<div class="col-sm-12 col-lg-6 mb-4 reveal" data-note-id="{{ note.id }}">
 					<div class="card h-100 shadow">
 						<div class="card-header">
-							<h3 class="card-title h5 text-{{ theme_color }} cursor-pointer" 
+							<h3 class="card-title h5 text-{{ theme_color }} cursor-pointer"
 								data-placement="bottom" title="Voir la note">{{ note.title }}</h3>
 							<span data-note-type={{ note.type }}>{{ note.typeToString }}</span>
 							(<span data-note-status={{ note.status }}>{{ note.statusToString }}</span>)
@@ -45,12 +61,20 @@
 								| Créé le {{ note.createdAt|date("d/m/Y à H:i") }} par {{ note.createdBy.fullname }}
 							</span>
 							<span class="small text-secondary" data-note-updated="true">
-								{% if note.updatedAt != note.createdAt %} 
+								{% if note.updatedAt != note.createdAt and note.updatedBy %}
 									(modifié le {{ note.updatedAt|date("d/m/Y à H:i") }} par {{ note.updatedBy.fullname }})
 								{% endif %}
 							</span>
+
+							<div class="mt-2 tags-list">
+								{% for tag in note.tags %}
+									<span class="badge bg-{{ tag.color }} text-light" 
+										data-tag-id="{{ tag.id }}">{{ tag.name }}</span>
+								{% endfor %}
+							</div>
+
 						</div>
-						<div class="card-body note-content cursor-pointer" data-toggle="tooltip" 
+						<div class="card-body note-content cursor-pointer" data-toggle="tooltip"
 							data-placement="bottom" title="Voir la note">
 							<div class="card-text">{{ note.content|raw }}</div><span class="note-fadeout"></span>
 						</div>
@@ -62,7 +86,7 @@
 				</div>
 			{% endfor %}
 		</div>
-		
+
 		<div class="navigation">{{ knp_pagination_render(notes) }}</div>
 
 	</div>

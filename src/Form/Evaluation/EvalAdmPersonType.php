@@ -30,7 +30,7 @@ class EvalAdmPersonType extends AbstractType
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS),
                 'attr' => [
                     'data-important' => 'true',
-                    'data-twin-field' => 'paper',
+                    'data-twin-field' => 'true',
                 ],
                 'placeholder' => 'placeholder.select',
                 'help' => 'evalAdmPerson.paper.help',
@@ -40,7 +40,7 @@ class EvalAdmPersonType extends AbstractType
                 'choices' => Choices::getChoices(EvalAdmPerson::PAPER_TYPE),
                 'attr' => [
                     'data-important' => 'true',
-                    'data-twin-field' => 'paperType',
+                    'data-twin-field' => 'true',
                 ],
                 'placeholder' => 'placeholder.select',
                 'help' => 'evalAdmPerson.paperType.help',
@@ -58,7 +58,7 @@ class EvalAdmPersonType extends AbstractType
                 'choices' => Choices::getChoices(EvalAdmPerson::ASYLUM_STATUS),
                 'attr' => [
                     'data-important' => 'true',
-                    'data-twin-field' => 'asylumStatus',
+                    'data-twin-field' => 'true',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
