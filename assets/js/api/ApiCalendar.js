@@ -21,58 +21,36 @@ export default class ApiCalendar {
 
             elt.checked = (null === valLocalStorage) ? false : JSON.parse(valLocalStorage)
 
-            this.calendarIsChecked()
             elt.addEventListener('change', e => localStorage.setItem(storageKey, e.currentTarget.checked))
         })
     }
 
     /**
-     * Not used but maybe later
-     * @param {string} key
-     * @returns {boolean}
-     */
-    calendarIsChecked(key) {
-        const valLocalStorage = localStorage.getItem('agenda.' + key)
-
-        return (null === valLocalStorage) ? false : JSON.parse(valLocalStorage)
-    }
-
-    /**
      * Executes the requested actions
      * @param {string} action
-     * @param {number|null} rdvId
-     * @param {string|null} eventId
+     * @param {Object} apiUrls
      */
-    execute(action, rdvId = null, eventId = null) {
-        this.listApiCalendarCheckbox.forEach(elt => {
-            if (elt.checked) {
-                let url = ''
-                let method = 'GET'
+    execute(action, apiUrls) {
+        for (const [apiName, apiUrl] of Object.entries(apiUrls)) {
+            let url = apiUrl
+            let method = 'GET'
 
-                switch (action) {
-                    case 'create':
-                        url = elt.dataset['apiCreateEvent'] + '?rdv_id=' + rdvId
-                        break;
-                    case 'update':
-                        url = elt.dataset['apiUpdateEvent'].replace('__id__', rdvId)
-                        method = 'PUT'
-                        break;
-                    case 'delete':
-                        if (elt.name === 'rdv[_outlookCalendar]' && null !== eventId.outlook) {
-                            url = elt.dataset['apiDeleteEvent'].replace('__id__', eventId.outlook);
-                        }
-                        if (elt.name === 'rdv[_googleCalendar]' && null !== eventId.google) {
-                            url = elt.dataset['apiDeleteEvent'].replace('__id__', eventId.google);
-                        }
-                        method = 'DELETE'
-                        break;
-                }
-
-                if (url) {
-                    this.ajax.send(method, url, this.responseAjax.bind(this))
-                }
+            switch (action) {
+                case 'update':
+                    method = 'PUT'
+                    break;
+                case 'delete':
+                    if (!this.calendarIsChecked(apiName)) {
+                        url = false;
+                    }
+                    method = 'DELETE'
+                    break;
             }
-        })
+
+            if (url) {
+                this.ajax.send(method, url, this.responseAjax.bind(this))
+            }
+        }
     }
 
     /**
@@ -91,5 +69,15 @@ export default class ApiCalendar {
                 new MessageFlash(data.alert, data.msg)
                 break
         }
+    }
+
+    /**
+     * @param {string} key
+     * @returns {boolean}
+     */
+    calendarIsChecked(key) {
+        const valLocalStorage = localStorage.getItem('agenda.' + key)
+        
+        return (null === valLocalStorage) ? false : JSON.parse(valLocalStorage)
     }
 }

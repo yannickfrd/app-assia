@@ -67,8 +67,8 @@ class RdvType extends AbstractType
                 'expanded' => false,
                 'by_reference' => false,
                 'choices' => $supportGroup ?
-                $this->tagRepo->getTagsByService($supportGroup->getService(), 'rdv') :
-                $this->tagRepo->findAllTags('rdv'),
+                    $this->tagRepo->getTagsByService($supportGroup->getService(), 'rdv') :
+                    $this->tagRepo->findAllTags('rdv'),
                 'choice_label' => 'name',
                 'attr' => [
                     'class' => 'multi-select',

@@ -27,13 +27,13 @@ class OutlookCalendarController extends AbstractController
     }
 
     /**
-     * @Route("/auth-outlook-calendar", name="auth_outlook_calendar", methods={"GET"})
+     * @Route("/outlook-calendar/event/create", name="create_event_outlook_calendar", methods={"GET"})
      * @param Request $request
      * @return JsonResponse
      */
-    public function authClientOutlookCalendar(Request $request): JsonResponse
+    public function createEventClientOutlookCalendar(Request $request): JsonResponse
     {
-        $this->outApiService->setOnSessionRdvId('outlook', $request->query->get('rdv_id'));
+        $this->outApiService->setOnSessionRdvId('outlook', $request->query->get('rdvId'));
 
         return $this->json([
             'action' => 'create',
@@ -42,6 +42,7 @@ class OutlookCalendarController extends AbstractController
     }
 
     /**
+     * Callback function
      * @Route("/add-event-outlook-calendar", name="add_event_outlook_calendar")
      */
     public function addEventOutlookCalendar(Request $request): RedirectResponse
@@ -60,7 +61,7 @@ class OutlookCalendarController extends AbstractController
     }
 
     /**
-     * @Route("/outlook-event-calendar/{rdvId}/update", name="update_outlook_event_calendar", methods={"PUT"})
+     * @Route("/outlook-calendar/event/update/{rdvId}", name="update_event_outlook_calendar", methods={"PUT"})
      * @param int $rdvId
      * @return JsonResponse
      * @throws GuzzleException
@@ -86,7 +87,7 @@ class OutlookCalendarController extends AbstractController
     }
 
     /**
-     * @Route("/outlook-event-calendar/{eventId}/delete", name="delete_outlook_event_calendar", methods={"DELETE"})
+     * @Route("/outlook-calendar/event/delete/{eventId}", name="delete_event_outlook_calendar", methods={"DELETE"})
      * @param string $eventId
      * @return JsonResponse
      * @throws GraphException

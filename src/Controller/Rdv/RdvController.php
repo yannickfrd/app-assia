@@ -99,7 +99,7 @@ class RdvController extends AbstractController
             $this->em->persist($rdv);
             $this->em->flush();
 
-            return $this->json($this->getDataNewRdv($rdv));
+            return $this->json($this->getDataNewRdv($rdv, (array) $request->request->get('rdv')));
         }
 
         return $this->getErrorMessage($form);
@@ -128,7 +128,9 @@ class RdvController extends AbstractController
 
             $dispatcher->dispatch(new RdvEvent($rdv), 'rdv.after_create');
 
-            return $this->json($this->getDataNewRdv($rdv));
+            return $this->json(array_merge(
+                $this->getDataNewRdv($rdv, (array) $request->request->get('rdv'))
+            ));
         }
 
         return $this->getErrorMessage($form);
@@ -196,6 +198,7 @@ class RdvController extends AbstractController
                     'day' => $rdv->getStart()->format('Y-m-d'),
                     'start' => $rdv->getStart()->format('H:i'),
                 ],
+                'apiUrls' => $this->getApiSelected('update', $rdv->getId(), (array) $request->request->get('rdv')),
             ]);
         }
 
@@ -210,7 +213,7 @@ class RdvController extends AbstractController
      */
     public function deleteRdv(Rdv $rdv, EventDispatcherInterface $dispatcher): JsonResponse
     {
-        $id = $rdv->getId();
+        $rdvId = $rdv->getId();
 
         $this->em->remove($rdv);
         $this->em->flush();
@@ -219,19 +222,17 @@ class RdvController extends AbstractController
 
         return $this->json([
             'action' => 'delete',
-            'rdv' => [
-                'id' => $id,
-                'eventId' => [
-                    'google' => $rdv->getGoogleEventId(),
-                    'outlook' => $rdv->getOutlookEventId()
-                ]
-            ],
+            'rdv' => ['id' => $rdvId],
             'alert' => 'warning',
             'msg' => 'Le RDV est supprimé.',
+            'apiUrls' => $this->getApiSelected('delete', $rdvId, [], [
+                'google' => $rdv->getGoogleEventId(),
+                'outlook' => $rdv->getOutlookEventId(),
+            ]),
         ]);
     }
 
-    private function getDataNewRdv(Rdv $rdv): array
+    private function getDataNewRdv(Rdv $rdv, array $requestRdv): array
     {
         return [
             'action' => 'create',
@@ -244,13 +245,53 @@ class RdvController extends AbstractController
                 'start' => $rdv->getStart()->format('H:i'),
                 'tagsIds' => $rdv->getTagsIdsToString(),
             ],
+            'apiUrls' => $this->getApiSelected('create', $rdv->getId(), $requestRdv),
         ];
+    }
+
+    /**
+     * Creation of urls according to the selected api.
+     *
+     * @param $id
+     */
+    private function getApiSelected(string $action, $id, array $requestRdv = [], array $eventIds = []): array
+    {
+        $params = [];
+        $urls = [];
+
+        switch ($action) {
+            case 'update':
+            case 'create':
+                $params['rdvId'] = $id;
+                break;
+            case 'delete':
+                foreach ($eventIds as $apiName => $eventId) {
+                    if (null !== $eventId) {
+                        $urls[$apiName] = $this->generateUrl(
+                            $action.'_event_'.$apiName.'_calendar', [
+                                'eventId' => $eventId,
+                            ]
+                        );
+                    }
+                }
+
+                return $urls;
+        }
+
+        if (isset($requestRdv['_googleCalendar']) && (bool) $requestRdv['_googleCalendar']) {
+            $urls['google'] = $this->generateUrl($action.'_event_google_calendar', $params);
+        }
+        if (isset($requestRdv['_outlookCalendar']) && (bool) $requestRdv['_outlookCalendar']) {
+            $urls['outlook'] = $this->generateUrl($action.'_event_outlook_calendar', $params);
+        }
+
+        return $urls;
     }
 
     /**
      * Exporte les données.
      */
-    private function exportData(RdvSearch $search): Response
+    private function exportData(RdvSearch $search)
     {
         $rdvs = $this->rdvRepo->findRdvsToExport($search);
 

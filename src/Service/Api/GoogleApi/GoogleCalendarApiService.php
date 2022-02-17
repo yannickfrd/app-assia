@@ -79,7 +79,7 @@ class GoogleCalendarApiService extends ApiCalendarServiceAbstract
     public function update(int $rdvId)
     {
         /** @var Rdv $rdv */
-        $rdv = $this->em->getRepository(Rdv::class)->find($rdvId);
+        $rdv = $this->em->getRepository(Rdv::class)->findRdv($rdvId);
 
         if (null === $rdv->getGoogleEventId()) {
             $this->session->set('googleRdvId', $rdvId);
