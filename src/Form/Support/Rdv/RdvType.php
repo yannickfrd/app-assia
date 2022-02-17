@@ -4,15 +4,25 @@ namespace App\Form\Support\Rdv;
 
 use App\Entity\Support\Rdv;
 use App\Form\Utils\Choices;
+use App\Entity\Organization\Tag;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use App\Repository\Organization\TagRepository;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
 class RdvType extends AbstractType
 {
+    private $tagRepo;
+
+    public function __construct(TagRepository $tagRepo)
+    {
+        $this->tagRepo = $tagRepo;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         /** @var Rdv $rdv */

@@ -58,12 +58,10 @@ export default class ApiCalendar {
                         method = 'PUT'
                         break;
                     case 'delete':
-                        if (elt.name === 'rdv[outlookCalendar]' && null !== eventId.outlook) {
-                            console.log('outlook')
+                        if (elt.name === 'rdv[_outlookCalendar]' && null !== eventId.outlook) {
                             url = elt.dataset['apiDeleteEvent'].replace('__id__', eventId.outlook);
                         }
-                        if (elt.name === 'rdv[googleCalendar]' && null !== eventId.google) {
-                            console.log('google')
+                        if (elt.name === 'rdv[_googleCalendar]' && null !== eventId.google) {
                             url = elt.dataset['apiDeleteEvent'].replace('__id__', eventId.google);
                         }
                         method = 'DELETE'

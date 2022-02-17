@@ -235,9 +235,8 @@ export default class Calendar {
         if (!this.loader.isActive()) {
             this.updateDatetimes()
 
-            if (this.formRdvElt.elements['rdv_googleCalendar'].checked) {
-                this.googleCalendarCheckbox = this.formRdvElt.elements['rdv_googleCalendar'].checked
-                // new Google()
+            if (this.formRdvElt.elements['rdv__googleCalendar'].checked) {
+                this.googleCalendarCheckbox = this.formRdvElt.elements['rdv__googleCalendar'].checked
             }
 
             this.loader.on()
