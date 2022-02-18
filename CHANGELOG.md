@@ -1,5 +1,11 @@
 CHANGELOG
 =========
+
+## Version 3.x.x - 17/02/2021
+Update the verification when creating a new supportGroup
+* [SupportCreator] Can create a new support with ended status even if the group have an other support in progress
+* [SupportControllerTest] Add test
+
 ## Version 3.x.x - 17/02/2021
 Update voters : a user of same service can edit note, rdv, document and payment
 * [NoteVoter] Edit canEdit method
