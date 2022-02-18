@@ -63,7 +63,7 @@
         "dbrekelmans/bdi": "^1.0",
         "doctrine/doctrine-fixtures-bundle": "^3.3",
         "easycorp/easy-deploy-bundle": "^1.0",
-        "friendsofphp/php-cs-fixer": "^2.18",
+        "friendsofphp/php-cs-fixer": "^3.5.0",
         "fzaninotto/faker": "^1.9",
         "hautelook/alice-bundle": "^2.9",
         "liip/test-fixtures-bundle": "^2.1",
