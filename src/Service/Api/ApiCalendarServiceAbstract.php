@@ -87,7 +87,7 @@ abstract class ApiCalendarServiceAbstract
      */
     protected function createBodyEvent(string $rdvContent = null, User $rdvCreatedBy = null, string $rdvStatus = null): string
     {
-        $body = $rdvContent;
+        $body = $rdvContent.'<br>';
         $status = $rdvStatus ? '<br><strong>Statut : </strong>'.$rdvStatus : '';
 
         if ($rdvCreatedBy) {
