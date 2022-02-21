@@ -43,9 +43,8 @@ class CreateAllTagsCommand extends Command // TEMPORAIRE A SUPPRIMER
     public function __construct(EntityManagerInterface $em)
     {
         parent::__construct();
+
         $this->em = $em;
-        $this->em->getFilters()->disable('softdeleteable');
-        $this->disableListeners($this->em);
     }
 
     protected function configure(): void
@@ -58,6 +57,9 @@ class CreateAllTagsCommand extends Command // TEMPORAIRE A SUPPRIMER
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->io = new SymfonyStyle($input, $output);
+
+        $this->em->getFilters()->disable('softdeleteable');
+        $this->disableListeners($this->em);
 
         $tagRepo = $this->em->getRepository(Tag::class);
 

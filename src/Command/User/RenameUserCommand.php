@@ -50,7 +50,7 @@ class RenameUserCommand extends Command
         $io->progressStart($nbUsers);
 
         if ('dev' != $_SERVER['APP_ENV'] || 'localhost' != $_SERVER['DB_HOST']) {
-            $io->error('Environnement invalid');
+            $io->error('Invalid environnement!');
 
             return Command::FAILURE;
         }
@@ -66,7 +66,7 @@ class RenameUserCommand extends Command
 
         $io->progressFinish();
 
-        $io->success('Change name of people is successfull !'
+        $io->success('Change name of people is successful !'
             ."\n  ".$nbUsers.' users modified.');
 
         return Command::SUCCESS;

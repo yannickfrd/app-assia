@@ -54,7 +54,7 @@ class RenamePeopleCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         if ('dev' != $_SERVER['APP_ENV'] || 'localhost' != $_SERVER['DB_HOST']) {
-            $io->error('Environnement invalid');
+            $io->error('Invalid environnement!');
 
             return Command::FAILURE;
         }
@@ -87,7 +87,7 @@ class RenamePeopleCommand extends Command
 
         $this->stopwatch->stop('command');
 
-        $io->success('Change name of people is successfull !'
+        $io->success('Change name of people is successful !'
             ."\n  ".$nbPeople.' people modified.'
             ."\n  ".number_format($this->stopwatch->start('command')->getDuration(), 0, ',', ' ').' ms');
 

@@ -25,14 +25,16 @@ class AddServiceTagsCommand extends Command // TEMPORAIRE A SUPPRIMER
     public function __construct(EntityManagerInterface $em)
     {
         parent::__construct();
+
         $this->em = $em;
-        $this->em->getFilters()->disable('softdeleteable');
-        $this->disableListeners($this->em);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+
+        $this->em->getFilters()->disable('softdeleteable');
+        $this->disableListeners($this->em);
 
         /** @var TagRepository */
         $tagRepo = $this->em->getRepository(Tag::class);
