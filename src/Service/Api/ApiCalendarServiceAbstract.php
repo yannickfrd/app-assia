@@ -49,13 +49,11 @@ abstract class ApiCalendarServiceAbstract
 
     /**
      * Update th Rdv and set the event's Id Google|Outlook Calendar.
-     * @param string $key
-     * @param string $eventId
      */
     protected function setEventOnRdv(string $key, string $eventId): void
     {
-        $setEventId = 'set' . ucfirst(strtolower($key)) . 'EventId';
-        $rdv = $this->getRdv($key, $this->session->get(strtolower($key) . 'RdvId'))
+        $setEventId = 'set'.ucfirst(strtolower($key)).'EventId';
+        $rdv = $this->getRdv($key, $this->session->get(strtolower($key).'RdvId'))
             ->$setEventId($eventId);
 
         $this->em->persist($rdv);
@@ -64,81 +62,70 @@ abstract class ApiCalendarServiceAbstract
 
     /**
      * Returns the current Rdv recorded in session according to the id.
-     * @param string $key
+     *
      * @param null $rdvId
-     * @return Rdv
      */
     protected function getRdv(string $key, $rdvId = null): Rdv
     {
-        $id = $rdvId ?? $this->session->get(strtolower($key) . 'RdvId');
+        $id = $rdvId ?? $this->session->get(strtolower($key).'RdvId');
+
         return $this->em->getRepository(Rdv::class)->findRdv($id);
     }
-
 
     /**
      * Set the value of the option to true in the session,
      * because if it is passed through, it means that the user has selected the option.
-     * @param string $key
-     * @param string $rdvId
      */
     public function setOnSessionRdvId(string $key, string $rdvId): void
     {
-        $this->session->set('client' . ucfirst(strtolower($key)) . 'Checked', true);
-        $this->session->set(strtolower($key) . 'RdvId', $rdvId);
+        $this->session->set('client'.ucfirst(strtolower($key)).'Checked', true);
+        $this->session->set(strtolower($key).'RdvId', $rdvId);
     }
 
     /**
      * Create a Body for Google's or Outlook's event.
-     * @param string|null $rdvContent
-     * @param User|null $rdvCreatedBy
-     * @param string|null $rdvStatus
-     * @return string
      */
     protected function createBodyEvent(string $rdvContent = null, User $rdvCreatedBy = null, string $rdvStatus = null): string
     {
         $body = $rdvContent;
-        $status = $rdvStatus ? '<br><strong>Statut : </strong>' . $rdvStatus : '';
+        $status = $rdvStatus ? '<br><strong>Statut : </strong>'.$rdvStatus : '';
 
         if ($rdvCreatedBy) {
-            $body .= '<br><strong>Créé par : </strong>' .
+            $body .= '<br><strong>Créé par : </strong>'.
                 $this->em->getRepository(User::class)->find($rdvCreatedBy)->getFullname();
         }
 
-        return $body . $status;
+        return $body.$status;
     }
 
     /**
      * Create an array with a \DateTime and a timeZone for Google's or Outlook's event.
-     * @param DateTimeInterface $dateTime
-     * @return array
      */
     protected function createDateEvent(DateTimeInterface $dateTime): array
     {
         return [
             'dateTime' => $dateTime->format('c'),
-            'timeZone' => $dateTime->getTimezone()->getName()
+            'timeZone' => $dateTime->getTimezone()->getName(),
         ];
     }
 
     /**
      * Create a Title for Google's or Outlook's event.
-     * @param Rdv $rdv
-     * @return string
      */
     protected function createTitleEvent(Rdv $rdv): string
     {
         $title = $rdv->getTitle();
-        $fullName = $rdv->getSupportGroup()->getHeader()->getFullname();
 
         if ($rdv->getSupportGroup()) {
-            preg_match('/' . $fullName . '/', $rdv->getTitle(), $matches);
+            $fullName = $rdv->getSupportGroup()->getHeader()->getFullname();
+
+            preg_match('/'.$fullName.'/', $rdv->getTitle(), $matches);
 
             if (empty($matches)) {
-                $title .= ' | ' . $fullName;
+                $title .= ' | '.$fullName;
             }
         }
 
         return $title;
     }
-
 }
