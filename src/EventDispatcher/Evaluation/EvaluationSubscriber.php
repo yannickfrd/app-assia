@@ -67,7 +67,7 @@ class EvaluationSubscriber implements EventSubscriberInterface
         $chargesGroupAmt = 0;
         $debtsGroupAmt = 0;
         // Ressources et dettes initiales
-        $initResourcesGroupAmt = 0;
+        $evalInitResourcesGroupAmt = 0;
         $initDebtsGroupAmt = 0;
 
         foreach ($evaluationGroup->getEvaluationPeople() as $evaluationPerson) {
@@ -78,10 +78,10 @@ class EvaluationSubscriber implements EventSubscriberInterface
                 $debtsGroupAmt += $evalBudgetPerson->getDebtsAmt();
             }
 
-            $initEvalPerson = $evaluationPerson->getInitEvalPerson();
-            if ($initEvalPerson) {
-                $initResourcesGroupAmt += $initEvalPerson->getResourcesAmt();
-                $initDebtsGroupAmt += $initEvalPerson->getDebtsAmt();
+            $evalInitPerson = $evaluationPerson->getEvalInitPerson();
+            if ($evalInitPerson) {
+                $evalInitResourcesGroupAmt += $evalInitPerson->getResourcesAmt();
+                $initDebtsGroupAmt += $evalInitPerson->getDebtsAmt();
             }
         }
 
@@ -92,7 +92,7 @@ class EvaluationSubscriber implements EventSubscriberInterface
         $budgetBalanceAmt = $resourcesGroupAmt - $chargesGroupAmt - $evalBudgetGroup->getContributionAmt();
         $evalBudgetGroup->setBudgetBalanceAmt($budgetBalanceAmt);
         // Ressources et dettes initiales
-        $evaluationGroup->getInitEvalGroup()->setResourcesGroupAmt($initResourcesGroupAmt);
-        $evaluationGroup->getInitEvalGroup()->setDebtsGroupAmt($initDebtsGroupAmt);
+        $evaluationGroup->getEvalInitGroup()->setResourcesGroupAmt($evalInitResourcesGroupAmt);
+        $evaluationGroup->getEvalInitGroup()->setDebtsGroupAmt($initDebtsGroupAmt);
     }
 }

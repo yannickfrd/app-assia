@@ -8,14 +8,14 @@ use App\Entity\Evaluation\EvalBudgetPerson;
 use App\Entity\Evaluation\EvalFamilyGroup;
 use App\Entity\Evaluation\EvalFamilyPerson;
 use App\Entity\Evaluation\EvalHousingGroup;
+use App\Entity\Evaluation\EvalInitGroup;
+use App\Entity\Evaluation\EvalInitPerson;
 use App\Entity\Evaluation\EvalJusticePerson;
 use App\Entity\Evaluation\EvalProfPerson;
 use App\Entity\Evaluation\EvalSocialGroup;
 use App\Entity\Evaluation\EvalSocialPerson;
 use App\Entity\Evaluation\EvaluationGroup;
 use App\Entity\Evaluation\EvaluationPerson;
-use App\Entity\Evaluation\InitEvalGroup;
-use App\Entity\Evaluation\InitEvalPerson;
 use App\Entity\Support\Avdl;
 use App\Entity\Support\HotelSupport;
 use App\Entity\Support\OriginRequest;
@@ -39,8 +39,8 @@ class EvaluationPersonExport extends ExportExcel
 
     protected $originRequest;
 
-    protected $initEvalGroup;
-    protected $initEvalPerson;
+    protected $evalInitGroup;
+    protected $evalInitPerson;
 
     protected $evaluationPerson;
     protected $evalJusticePerson;
@@ -66,8 +66,8 @@ class EvaluationPersonExport extends ExportExcel
 
         $this->originRequest = new OriginRequest();
 
-        $this->initEvalGroup = new InitEvalGroup();
-        $this->initEvalPerson = new InitEvalPerson();
+        $this->evalInitGroup = new EvalInitGroup();
+        $this->evalInitPerson = new EvalInitPerson();
 
         $this->evaluationGroup = new EvaluationGroup();
         $this->evalBudgetGroup = new EvalBudgetGroup();
@@ -96,6 +96,7 @@ class EvaluationPersonExport extends ExportExcel
      */
     public function exportData(array $supports, ExportSearch $search, bool $asynch = true)
     {
+        $this->logger->info('Nb results: '.count($supports));
         $this->logger->info('Used memory after database query: '.number_format(memory_get_usage(), 0, ',', ' '));
 
         $this->anonymized = $search->getAnonymized();
@@ -150,9 +151,8 @@ class EvaluationPersonExport extends ExportExcel
             'ID évaluation personne' => $evaluationPerson->getId(),
         ]);
 
-        $this->add($evaluationGroup->getInitEvalGroup() ?? $this->initEvalGroup, 'initEval');
-        $this->add($evaluationGroup->getInitEvalGroup() ?? $this->initEvalGroup, 'initEval');
-        $this->add($evaluationPerson->getInitEvalPerson() ?? $this->initEvalPerson, 'initEval');
+        $this->add($evaluationGroup->getEvalInitGroup() ?? $this->evalInitGroup, 'evalInit');
+        $this->add($evaluationPerson->getEvalInitPerson() ?? $this->evalInitPerson, 'evalInit');
         $this->add($evaluationPerson->getEvalJusticePerson() ?? $this->evalJusticePerson, 'justice');
         $this->add($evaluationGroup->getEvalSocialGroup() ?? $this->evalSocialGroup, 'social');
         $this->add($evaluationPerson->getEvalSocialPerson() ?? $this->evalSocialPerson, 'social');

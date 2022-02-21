@@ -3,7 +3,7 @@
 namespace App\Entity\Support;
 
 use App\Entity\Evaluation\EvaluationPerson;
-use App\Entity\Evaluation\InitEvalPerson;
+use App\Entity\Evaluation\EvalInitPerson;
 use App\Entity\People\Person;
 use App\Entity\People\RolePerson;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
@@ -121,9 +121,9 @@ class SupportPerson
     private $evaluations;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\InitEvalPerson", mappedBy="supportPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvalInitPerson", mappedBy="supportPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      */
-    private $initEvalPerson;
+    private $evalInitPerson;
 
     /**
      * @ORM\OneToMany(targetEntity=PlacePerson::class, mappedBy="supportPerson", cascade={"persist", "remove"})
@@ -326,18 +326,18 @@ class SupportPerson
         return $this;
     }
 
-    public function getInitEvalPerson(): ?InitEvalPerson
+    public function getEvalInitPerson(): ?EvalInitPerson
     {
-        return $this->initEvalPerson;
+        return $this->evalInitPerson;
     }
 
-    public function setInitEvalPerson(?InitEvalPerson $initEvalPerson): self
+    public function setEvalInitPerson(?EvalInitPerson $evalInitPerson): self
     {
-        $this->initEvalPerson = $initEvalPerson;
+        $this->evalInitPerson = $evalInitPerson;
 
         // set the owning side of the relation if necessary
-        if ($this !== $initEvalPerson->getSupportPerson()) {
-            $initEvalPerson->setSupportPerson($this);
+        if ($this !== $evalInitPerson->getSupportPerson()) {
+            $evalInitPerson->setSupportPerson($this);
         }
 
         return $this;

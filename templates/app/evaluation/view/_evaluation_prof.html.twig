@@ -1,0 +1,44 @@
+{% import 'macros/viewDiv.html.twig' as view_div %}
+
+<hr/>
+<section>
+    <div class="d-flex mb-3">
+        <h2 class="h4">Emploi</h2>
+        <span class="align-content-center"><a href="{{ path('support_evaluation_view', {'id': support.id }) }}" 
+            class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
+        </span>
+    </div>
+
+    {% set eval_people_prof = people_over_16|filter(e => e.evalProfPerson) %}
+    {% set nb_people_prof = eval_people_prof|length %}
+    {% for eval_person in eval_people_prof %}
+        {% set eval_prof = eval_person.evalProfPerson %}
+        <div class="my-3">
+            {% if nb_people_prof > 1 %}
+                <div class="row mb-2">
+                    <div class="col-md-12 font-weight-bold"><span class="text-underline">{{ eval_person.supportPerson.person.fullname }}</span> :</div>
+                </div>
+            {% endif %}
+            <div class="row mb-2">
+                {{ view_div.get(eval_prof.profStatus ? eval_prof.profStatusToString ~ (eval_prof.contractType ? ' (' 
+                    ~ eval_prof.contractTypeToString ~ ')'), 'Prof status', 'evaluation') }}
+                {{ view_div.get(eval_prof.jobCenterId, 'Job center id', 'evaluation') }}
+                {{ view_div.get(eval_prof.jobType, 'Job type', 'evaluation') }}
+                {{ view_div.get(eval_prof.contractEndDate ? eval_prof.contractEndDate|date('d/m/Y'), 'Contract end date', 'evaluation') }}
+                {{ view_div.get(eval_prof.workingHours ? eval_prof.workingHours ~ (eval_prof.nbWorkingHours ? ' (nb d\'heures : ' 
+                    ~ eval_prof.nbWorkingHours ~ ')'), 'Working hours', 'evaluation') }}
+                {{ view_div.get(eval_prof.employerName ? eval_prof.employerName ~ (eval_prof.workPlace ? ' | ' 
+                    ~ eval_prof.workPlace), 'Employer name', 'evaluation') }}
+                {{ view_div.get(eval_prof.transportMeansType ? eval_prof.transportMeansTypeToString ~ (eval_prof.transportMeans ? ' (' 
+                    ~ eval_prof.transportMeans ~ ')'), 'Transport means type', 'evaluation') }}
+                {{ view_div.get(eval_prof.rqth in [YES, IN_PROGRESS] ? eval_prof.rqthToString ~ (eval_prof.endRqthDate ? ' (fin de validité : ' 
+                    ~ eval_prof.endRqthDate|date('d/m/Y') ~ ')'), 'Rqth', 'evaluation') }}
+                {{ view_div.get(eval_prof.schoolLevelToString, 'School level', 'evaluation') }}
+                {{ view_div.get(eval_prof.profExperienceToString, 'Prof experience', 'evaluation') }}
+            </div>
+            <div class="row my-2">
+                <div class="col-md-12 justify">{{ eval_prof.commentEvalProf|nl2br }}</div>
+            </div>
+        </div>
+    {% endfor %}
+</section>

@@ -2,16 +2,18 @@
 
 namespace App\Service\Payment;
 
-use App\Entity\Evaluation\Charge;
-use App\Entity\Evaluation\EvaluationGroup;
+use App\Entity\Support\Payment;
 use App\Entity\Evaluation\Resource;
 use App\Entity\Organization\Device;
 use App\Entity\Organization\Service;
-use App\Entity\Support\Payment;
 use App\Entity\Support\SupportGroup;
-use App\Repository\Evaluation\EvaluationGroupRepository;
-use App\Repository\Organization\PlaceRepository;
+use App\Entity\Evaluation\EvalBudgetDebt;
+use App\Entity\Evaluation\EvaluationGroup;
+use App\Entity\Evaluation\EvalBudgetCharge;
 use Doctrine\Common\Collections\Collection;
+use App\Entity\Evaluation\EvalBudgetResource;
+use App\Repository\Organization\PlaceRepository;
+use App\Repository\Evaluation\EvaluationGroupRepository;
 
 class ContributionCalculator
 {
@@ -181,7 +183,7 @@ class ContributionCalculator
 
     protected function getBudgetBalanceAmt(
         array $resourceTypes = Resource::RESOURCES,
-        array $chargeTypes = Charge::CHARGES
+        array $chargeTypes = EvalBudgetCharge::CHARGES
     ): float {
         $evaluationGroup = $this->evaluationRepo->findEvaluationBudget($this->supportGroup);
 
@@ -203,8 +205,8 @@ class ContributionCalculator
 
                 $evalBudgetPerson = $evaluationPerson->getEvalBudgetPerson();
                 if ($evalBudgetPerson) {
-                    $resourcesGroupAmt += $this->getSumAmt($evalBudgetPerson->getResources(), $resourceTypes);
-                    $chargesGroupAmt += $this->getSumAmt($evalBudgetPerson->getCharges(), $chargeTypes) + $evalBudgetPerson->getMonthlyRepaymentAmt();
+                    $resourcesGroupAmt += $this->getSumAmt($evalBudgetPerson->getEvalBudgetResources(), $resourceTypes);
+                    $chargesGroupAmt += $this->getSumAmt($evalBudgetPerson->getEvalBudgetCharges(), $chargeTypes) + $evalBudgetPerson->getMonthlyRepaymentAmt();
                 }
             }
         }
@@ -225,7 +227,7 @@ class ContributionCalculator
     }
 
     /**
-     * @param Collection<resource>|Collection<Charge>|Collection<Debts>|null $finances
+     * @param Collection<EvalBudgetResource>|Collection<EvalBudgetCharge>|Collection<EvalBudgetDebt>|null $finances
      */
     protected function getSumAmt(?Collection $finances = null, array $values): float
     {

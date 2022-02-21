@@ -81,7 +81,7 @@ class EvaluationController extends AbstractController
         $form = $this->createForm(EvaluationGroupType::class, $evaluationGroup)
             ->handleRequest($request);
 
-        return $this->render('app/evaluation/edit/evaluationEdit.html.twig', [
+        return $this->render('app/evaluation/edit/evaluation_edit.html.twig', [
             'support' => $supportGroup,
             'form' => $form->createView(),
         ]);
@@ -134,13 +134,13 @@ class EvaluationController extends AbstractController
 
         $this->denyAccessUnlessGranted('DELETE', $supportGroup);
 
-        if ($initEvalGroup = $evaluationGroup->getInitEvalGroup()) {
-            $initEvalGroup->setSupportGroup(null);
+        if ($evalInitGroup = $evaluationGroup->getEvalInitGroup()) {
+            $evalInitGroup->setSupportGroup(null);
         }
 
         foreach ($evaluationGroup->getEvaluationPeople() as $evaluationPerson) {
-            if ($initEvalPerson = $evaluationPerson->getInitEvalPerson()) {
-                $initEvalPerson->setSupportPerson(null);
+            if ($evalInitPerson = $evaluationPerson->getEvalInitPerson()) {
+                $evalInitPerson->setSupportPerson(null);
             }
         }
 

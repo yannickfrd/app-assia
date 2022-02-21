@@ -71,7 +71,7 @@ class EvaluationExporter
     {
         $organization = $supportGroup->getService()->getPole()->getOrganization()->getName();
 
-        return $this->renderer->render('app/evaluation/export/evaluationExport.html.twig', [
+        return $this->renderer->render('app/evaluation/export/evaluation_export.html.twig', [
             'type' => $exportType,
             'support' => $supportGroup,
             'referents' => $this->supportCollections->getReferents($supportGroup),

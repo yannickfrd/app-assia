@@ -1,0 +1,149 @@
+{% extends 'app/evaluation/edit/model/_evaluation_accordion.html.twig' %}
+
+{% import 'macros/loopSupportPeople.html.twig' as utils %}
+
+{% block card_title %}Budget{{ parent() }}{% endblock %}
+
+{% block card_body %}
+	{% set eval_budget_group = evaluation_group.evalBudgetGroup %}
+	<div class="row mb-4">
+		<div class="col-md-6">
+			<div class="row">
+				<div class="col-md-12">
+					<table class="table table-bordered table-striped">
+						<thead>
+							<tr>
+								<th scope="col">Budget du ménage</th>
+								<th class="text-right">Montant mensuel</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td scope="row">Total des ressources</td>
+								<td class="text-right">
+									{% set resources_group_amt = eval_budget_group ? eval_budget_group.resourcesGroupAmt : 0 %}
+									<span id="resourcesGroupAmt" data-value="{{ resources_group_amt }}">{{ resources_group_amt|amount(2) }}</span>
+								</td>
+							</tr>
+							<tr>
+								<td scope="row">Total des charges</td>
+								<td class="text-right">
+									{% set charges_group_amt = eval_budget_group ? eval_budget_group.chargesGroupAmt : 0 %}
+									<span id="chargesGroupAmt" data-value="{{ charges_group_amt }}">{{ charges_group_amt|amount(2) }}</span>
+								</td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr class="font-weight-bold">
+								<td scope="row">Reste à vivre</td>
+								<td class="text-right">
+									{% set budget_balance_amt = eval_budget_group ? eval_budget_group.budgetBalanceAmt : 0 %}
+									<span id="budgetBalanceGroupAmt" data-value="{{ budget_balance_amt }}">{{ budget_balance_amt|amount(2) }}</span>
+								</td>
+							</tr>
+							<tr>
+								<td scope="row">Montant total des dettes</td>
+								<td class="text-right">
+									{% set debts_group_amt = eval_budget_group ? eval_budget_group.debtsGroupAmt : 0 %}
+									<span id="debtsGroupAmt" data-value="{{ debts_group_amt }}">{{ debts_group_amt|amount(2) }}</span>
+								</td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="row">
+				<div class="col-md-12">{{ form_row(form.evalBudgetGroup.cafId) }}</div>
+				<div class="col-md-12" data-parent-field="evaluation_evalBudgetGroup_cafId">
+					{{ form_row(form.evalBudgetGroup.cafAttachment) }}</div>
+			</div>	
+			{% if support.device and support.device.contributionType in [1, 3] %}
+				<div class="row my-3">
+					<div class="col-md-12" title="Le montant fixé sera pris en compte pour le calcul d'une nouvelle redevance.">
+						{{ form_row(form.evalBudgetGroup.contributionAmt) }}</div>
+					<div class="col-md-12 text-center">
+					    <button id="calcul-contribution-btn" class="btn btn-secondary" 
+                            title="Calculer le montant de la participation financière" data-toggle="tooltip" data-placement="bottom" 
+                            data-url="{{ path('support_payment_calcul', {'id': support.id}) }}">
+                            <span class="fas fa-sync mr-2"></span>Calculer PAF</button>
+						<button id="show-calcul-contribution-btn" class="btn btn-{{ theme_color }} d-none" 
+                            title="Voir le détail du montant à régler" data-toggle="tooltip" data-placement="bottom">
+                            <span class="fas fa-eye mr-2"></span>Voir le détail</button>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12" >{{ form_row(form.evalBudgetGroup.commentEvalBudget) }}</div>
+				</div>
+			{% endif %}
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12 accordion" id="accordion_evalBudget">
+			{{ utils.loopSupportPeople(accordion_id, people_over_16, support, theme_color) }}
+
+			{% for key, form_eval_person in people_over_16 %}
+				{% set form_eval_budget_person = form_eval_person.evalBudgetPerson %}
+				{% set support_person_id = form_eval_person.vars.value.supportPerson.id %}
+				{% set prefix_id = 'evaluation_evaluationPeople_' ~ key ~ '_evalBudgetPerson' %}
+				{% set entity = 'evalBudgetPerson' %}
+
+				<div id="collapse_{{ prefix_id }}" class="collapse {% if loop.first %}show{% endif %} my-3"
+					aria-labelledby="heading_{{ prefix_id }}" data-parent="#accordion_evalBudget" 
+					data-sp-id="{{ support_person_id }}">
+					<div class="row">
+						{% include 'app/evaluation/edit/_eval_budget_resources.html.twig' %}
+						{% include 'app/evaluation/edit/_eval_budget_charges.html.twig' %}
+					</div>
+					<div class="row mb-3">
+						<div class="col-md-6" data-parent-field="{{ prefix_id }}_resource" data-options="1|3">
+							{{ form_row(form_eval_budget_person.endRightsDate) }}</div>
+					</div>
+					<div class="mb-3">
+						<div class="row">
+							<div class="col-md-6">{{ form_row(form_eval_budget_person.incomeTax) }}</div>
+						</div>
+						<div class="row" data-parent-field="{{ prefix_id }}_incomeTax" data-options="1">
+							<div class="col-md-6">{{ form_row(form_eval_budget_person.incomeN1Amt) }}</div>
+							<div class="col-md-6">{{ form_row(form_eval_budget_person.incomeN2Amt) }}</div>
+						</div>
+					</div>
+
+					<hr>
+
+					<div class="mb-3">
+						<div class="row">
+							{% include 'app/evaluation/edit/_eval_budget_debts.html.twig' %}
+							<div class="col-md-6" class="row" data-parent-field="{{ prefix_id }}_debt" data-options="1">
+								<div class="row">
+									<div class="col-md-12">{{ form_row(form_eval_budget_person.debtComment) }}</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div data-parent-field="{{ prefix_id }}_debt"  data-options="1">
+						<div class="row mb-3">
+							<div class="col-md-6">{{ form_row(form_eval_budget_person.overIndebtRecord) }}</div>
+							<div class="col-md-6" data-parent-field="{{ prefix_id }}_overIndebtRecord" data-options="1">
+								{{ form_row(form_eval_budget_person.overIndebtRecordDate) }}</div>
+						</div>
+						<div class="row mb-3">
+							<div class="col-md-6">{{ form_row(form_eval_budget_person.settlementPlan) }}</div>
+							<div class="col-md-6">{{ form_row(form_eval_budget_person.moratorium) }}</div>
+						</div>
+					</div>
+					<div class="row mb-3">
+						<div class="col-md-12">
+							{{ form_label(form_eval_budget_person.commentEvalBudget) }}
+							{{ form_widget(form_eval_budget_person.commentEvalBudget) }}
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+	{{ parent() }}
+{% endblock %}

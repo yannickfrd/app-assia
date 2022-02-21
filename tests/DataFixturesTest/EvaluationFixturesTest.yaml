@@ -37,11 +37,11 @@ App\Entity\Evaluation\EvaluationPerson:
   evaluationPerson1:
     evaluationGroup: "@evaluationGroup1"
     supportPerson: "@supportPersonWithEval"
-    initEvalPerson: "@initEvalPerson1"
+    evalInitPerson: "@evalInitPerson1"
 
 # Evaluation group
-App\Entity\Evaluation\InitEvalGroup:
-  initEvalGroup1:
+App\Entity\Evaluation\EvalInitGroup:
+  evalInitGroup1:
     siaoRequest: 1
     socialHousingRequest: 2
     supportGroup: "@supportGroupWithEval"
@@ -110,8 +110,8 @@ App\Entity\Evaluation\EvalHousingGroup:
     evaluationGroup: "@evaluationGroup1"
 
 ## Evaluation person
-App\Entity\Evaluation\InitEvalPerson:
-  initEvalPerson1:
+App\Entity\Evaluation\EvalInitPerson:
+  evalInitPerson1:
     paper: 1
     paperType: 1
     rightSocialSecurity: 1
@@ -179,30 +179,30 @@ App\Entity\Evaluation\EvalSocialPerson:
     commentEvalSocialPerson: XXX
     evaluationPerson: "@evaluationPerson1"
 
-App\Entity\Evaluation\InitResource:
-  initRessource1:
+App\Entity\Evaluation\EvalInitResource:
+  evalInitResource1:
     type: 20
     amount: 1100
-    initEvalPerson: "@initEvalPerson1"
+    evalInitPerson: "@evalInitPerson1"
 
-App\Entity\Evaluation\Resource:
-  ressource1:
+App\Entity\Evaluation\EvalBudgetResource:
+  evalBudgetRessource1:
     type: 20
     amount: 1000
     evalBudgetPerson: "@evalBudgetPerson1"
-  ressource2:
+  evalBudgetRessource2:
     type: 1000
     amount: 100
     evalBudgetPerson: "@evalBudgetPerson1"
 
-App\Entity\Evaluation\Charge:
-  charge1:
+App\Entity\Evaluation\EvalBudgetCharge:
+  evalBudgetCharge1:
     type: 10
     amount: 600
     evalBudgetPerson: "@evalBudgetPerson1"
 
-App\Entity\Evaluation\Debt:
-  debt1:
+App\Entity\Evaluation\EvalBudgetDebt:
+  evalBudgetDebt1:
     type: 10
     amount: 10000
     evalBudgetPerson: "@evalBudgetPerson1"

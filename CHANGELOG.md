@@ -1,6 +1,18 @@
 CHANGELOG
 =========
 
+## Version 3.x.x - 21/02/2021
+Edit feature resource, charge and debt collections
+* Rename entities : Resource to EvalBudgetResource, Charge to EvalBudgetCharge, Debt to EvalBudgetDebt and create Resource
+ entity
+* Refactor ResourceEntityTrait
+* Edit translation file (resources)
+* Rename 'InitEvalPerson' entity to 'EvalInitPerson' and 'InitEvalGroup' to 'EvalInitGroup'
+* [Evaluation] apply twig conventions (snake_case for files and variables)
+* [Evaluation] Fix bug with window.confirm
+* Edit full export with evaluation
+* Edit command to create resources, charges and debts
+
 ## Version 3.x.x - 17/02/2021
 Update the verification when creating a new supportGroup
 * [SupportCreator] Can create a new support with ended status even if the group have an other support in progress

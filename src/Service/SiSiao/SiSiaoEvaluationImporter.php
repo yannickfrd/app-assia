@@ -3,22 +3,23 @@
 namespace App\Service\SiSiao;
 
 use App\Entity\Evaluation\AbstractFinance;
-use App\Entity\Evaluation\Charge;
-use App\Entity\Evaluation\Debt;
 use App\Entity\Evaluation\EvalAdmPerson;
+use App\Entity\Evaluation\EvalBudgetCharge;
+use App\Entity\Evaluation\EvalBudgetDebt;
 use App\Entity\Evaluation\EvalBudgetGroup;
 use App\Entity\Evaluation\EvalBudgetPerson;
+use App\Entity\Evaluation\EvalBudgetResource;
 use App\Entity\Evaluation\EvalFamilyGroup;
 use App\Entity\Evaluation\EvalFamilyPerson;
 use App\Entity\Evaluation\EvalHousingGroup;
+use App\Entity\Evaluation\EvalInitResource;
 use App\Entity\Evaluation\EvalProfPerson;
 use App\Entity\Evaluation\EvalSocialGroup;
 use App\Entity\Evaluation\EvalSocialPerson;
 use App\Entity\Evaluation\EvaluationGroup;
 use App\Entity\Evaluation\EvaluationPerson;
-use App\Entity\Evaluation\InitEvalGroup;
-use App\Entity\Evaluation\InitEvalPerson;
-use App\Entity\Evaluation\InitResource;
+use App\Entity\Evaluation\EvalInitGroup;
+use App\Entity\Evaluation\EvalInitPerson;
 use App\Entity\Evaluation\Resource as EvaResource;
 use App\Entity\People\Person;
 use App\Entity\Support\HotelSupport;
@@ -133,8 +134,8 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
 
         $this->createOrEditEvalBudgetGroup($evaluationGroup);
 
-        if (!$evaluationGroup->getInitEvalGroup()) {
-            $this->createInitEvalGroup($supportGroup, $evaluationGroup);
+        if (!$evaluationGroup->getEvalInitGroup()) {
+            $this->createEvalInitGroup($supportGroup, $evaluationGroup);
         }
 
         $this->em->flush();
@@ -399,12 +400,12 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         return null;
     }
 
-    protected function createInitEvalGroup(SupportGroup $supportGroup, EvaluationGroup $evaluationGroup): InitEvalGroup
+    protected function createEvalInitGroup(SupportGroup $supportGroup, EvaluationGroup $evaluationGroup): EvalInitGroup
     {
         $evalHousingGroup = $evaluationGroup->getEvalHousingGroup();
         $evalBudgetGroup = $evaluationGroup->getEvalBudgetGroup();
 
-        $initEvalGroup = (new InitEvalGroup())
+        $evalInitGroup = (new EvalInitGroup())
             ->setHousingStatus($evalHousingGroup->getHousingStatus())
             ->setSiaoRequest($evalHousingGroup->getSiaoRequest())
             ->setSocialHousingRequest($evalHousingGroup->getSocialHousingRequest())
@@ -413,11 +414,11 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
             ->setSupportGroup($supportGroup)
         ;
 
-        $this->em->persist($initEvalGroup);
+        $this->em->persist($evalInitGroup);
 
-        $evaluationGroup->setInitEvalGroup($initEvalGroup);
+        $evaluationGroup->setEvalInitGroup($evalInitGroup);
 
-        return $initEvalGroup;
+        return $evalInitGroup;
     }
 
     protected function createOrEditEvaluationPerson(EvaluationGroup $evaluationGroup, SupportPerson $supportPerson, object $personne): EvaluationPerson
@@ -445,8 +446,8 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
             $this->createOrEditEvalBudgetPerson($evaluationPerson, $personne, $diagSocial);
         }
 
-        if (!$evaluationPerson->getInitEvalPerson()) {
-            $this->createInitEvalPerson($supportPerson, $evaluationPerson);
+        if (!$evaluationPerson->getEvalInitPerson()) {
+            $this->createEvalInitPerson($supportPerson, $evaluationPerson);
         }
 
         return $evaluationPerson;
@@ -665,18 +666,18 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         $sumAmt = 0;
 
         foreach ($ressources as $ressource) {
-            if (!$newResource = $this->financeExists($evalBudgetPerson->getResources(), $ressource->typeRessource->id)) {
-                $newResource = (new EvaResource());
+            if (!$newEvalBudgetResource = $this->financeExists($evalBudgetPerson->getEvalBudgetResources(), $ressource->typeRessource->id)) {
+                $newEvalBudgetResource = (new EvalBudgetResource());
             }
 
-            $newResource
+            $newEvalBudgetResource
                 ->setEvalBudgetPerson($evalBudgetPerson)
                 ->setType($this->findInArray($ressource->typeRessource, SiSiaoItems::RESOURCES))
                 ->setAmount($ressource->montant)
                 // ->setEnDate(null)
                 ->setComment($ressource->commentaire);
 
-            $this->em->persist($newResource);
+            $this->em->persist($newEvalBudgetResource);
 
             $sumAmt += $ressource->montant;
         }
@@ -697,32 +698,32 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         $sumAmt = 0;
 
         foreach ($charges as $charge) {
-            if (!$newCharge = $this->financeExists($evalBudgetPerson->getCharges(), $charge->typeCharge->id)) {
-                $newCharge = (new Charge());
+            if (!$newEvalBudgetCharge = $this->financeExists($evalBudgetPerson->getEvalBudgetCharges(), $charge->typeCharge->id)) {
+                $newEvalBudgetCharge = (new EvalBudgetCharge());
             }
 
-            $newCharge
+            $newEvalBudgetCharge
                 ->setEvalBudgetPerson($evalBudgetPerson)
                 ->setType($this->findInArray($charge->typeCharge, SiSiaoItems::CHARGES))
                 ->setAmount($charge->montant)
                 ->setComment($charge->commentaire);
 
-            $this->em->persist($newCharge);
+            $this->em->persist($newEvalBudgetCharge);
 
             $sumAmt += $charge->montant;
         }
 
         if ($diagSocial->remboursementDettes > 0) {
-            if (!$newCharge = $this->financeExists($evalBudgetPerson->getCharges(), Charge::REPAYMENT_DEBT)) {
-                $newCharge = (new Charge());
+            if (!$newEvalBudgetCharge = $this->financeExists($evalBudgetPerson->getEvalBudgetCharges(), EvalBudgetCharge::REPAYMENT_DEBT)) {
+                $newEvalBudgetCharge = (new EvalBudgetCharge());
             }
 
-            $newCharge
+            $newEvalBudgetCharge
                 ->setEvalBudgetPerson($evalBudgetPerson)
-                ->setType(Charge::REPAYMENT_DEBT)
+                ->setType(EvalBudgetCharge::REPAYMENT_DEBT)
                 ->setAmount($diagSocial->remboursementDettes);
 
-            $this->em->persist($newCharge);
+            $this->em->persist($newEvalBudgetCharge);
         }
 
         $evalBudgetPerson
@@ -741,17 +742,17 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         $sumAmt = 0;
 
         foreach ($dettes as $dette) {
-            if (!$newDebt = $this->financeExists($evalBudgetPerson->getDebts(), $dette->typeDette->id)) {
-                $newDebt = (new Debt());
+            if (!$newEvalBudgetDebt = $this->financeExists($evalBudgetPerson->getEvalBudgetDebts(), $dette->typeDette->id)) {
+                $newEvalBudgetDebt = (new EvalBudgetDebt());
             }
 
-            $newDebt
+            $newEvalBudgetDebt
                 ->setEvalBudgetPerson($evalBudgetPerson)
                 ->setType($this->findInArray($dette->typeDette, SiSiaoItems::DEBTS))
                 ->setAmount($dette->montant)
                 ->setComment($dette->commentaire);
 
-            $this->em->persist($newDebt);
+            $this->em->persist($newEvalBudgetDebt);
 
             $sumAmt += $dette->montant;
         }
@@ -766,7 +767,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
     }
 
     /**
-     * @param Collection<EvaResource>|Collection<Charge>|Collection<Debts> $finances
+     * @param Collection<EvaResource>|Collection<EvalBudgeCharge>|Collection<Debts> $finances
      *
      * @return EvaResource|Charge|Debt
      */
@@ -781,14 +782,14 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         return null;
     }
 
-    protected function createInitEvalPerson(SupportPerson $supportPerson, EvaluationPerson $evaluationPerson): ?InitEvalPerson
+    protected function createEvalInitPerson(SupportPerson $supportPerson, EvaluationPerson $evaluationPerson): ?EvalInitPerson
     {
         $evalAdmPerson = $evaluationPerson->getEvalAdmPerson();
         $evalSocialPerson = $evaluationPerson->getEvalSocialPerson();
         $evalProfPerson = $evaluationPerson->getEvalProfPerson();
         $evalBudgetPerson = $evaluationPerson->getEvalBudgetPerson();
 
-        $initEvalPerson = (new InitEvalPerson())
+        $evalInitPerson = (new EvalInitPerson())
             ->setPaper($evalAdmPerson->getPaper())
             ->setPaperType($evalAdmPerson->getPaperType())
             ->setRightSocialSecurity($evalSocialPerson->getRightSocialSecurity())
@@ -799,14 +800,14 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         ;
 
         if ($evalProfPerson) {
-            $initEvalPerson
+            $evalInitPerson
                 ->setProfStatus($evalProfPerson->getProfStatus())
                 ->setContractType($evalProfPerson->getContractType())
             ;
         }
 
         if ($evalBudgetPerson) {
-            $initEvalPerson
+            $evalInitPerson
                 ->setResource($evalBudgetPerson->getResource())
                 ->setResourcesAmt($evalBudgetPerson->getResourcesAmt())
                 ->setRessourceOtherPrecision($evalBudgetPerson->getRessourceOtherPrecision())
@@ -814,31 +815,31 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
                 ->setDebtsAmt($evalBudgetPerson->getDebtsAmt())
             ;
 
-            $this->createInitResources($evalBudgetPerson, $initEvalPerson);
+            $this->createEvalInitResources($evalBudgetPerson, $evalInitPerson);
         }
 
-        $this->em->persist($initEvalPerson);
+        $this->em->persist($evalInitPerson);
 
-        $evaluationPerson->setInitEvalPerson($initEvalPerson);
+        $evaluationPerson->setEvalInitPerson($evalInitPerson);
 
-        return $initEvalPerson;
+        return $evalInitPerson;
     }
 
     /**
      * Dupplique les ressources de la situation budgétaire dans la situation initiale.
      */
-    protected function createInitResources(EvalBudgetPerson $evalBudgetPerson, InitEvalPerson $initEvalPerson): InitEvalPerson
+    protected function createEvalInitResources(EvalBudgetPerson $evalBudgetPerson, EvalInitPerson $evalInitPerson): EvalInitPerson
     {
-        foreach ($evalBudgetPerson->getResources() as $resource) {
-            $initResource = (new InitResource())
-                ->setInitEvalPerson($initEvalPerson)
-                ->setType($resource->getType())
-                ->setAmount($resource->getAmount())
-                ->setComment($resource->getComment());
+        foreach ($evalBudgetPerson->getEvalBudgetResources() as $evalBudgetResource) {
+            $evalInitResource = (new EvalInitResource())
+                ->setEvalInitPerson($evalInitPerson)
+                ->setType($evalBudgetResource->getType())
+                ->setAmount($evalBudgetResource->getAmount())
+                ->setComment($evalBudgetResource->getComment());
 
-            $this->em->persist($initResource);
+            $this->em->persist($evalInitResource);
         }
 
-        return $initEvalPerson;
+        return $evalInitPerson;
     }
 }

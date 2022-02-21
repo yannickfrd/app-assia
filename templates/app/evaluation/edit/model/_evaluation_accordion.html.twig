@@ -1,0 +1,20 @@
+{% extends 'model/_accordion.html.twig' %}
+
+{% block card_title %}
+	<span class="badge badge-pill badge-warning fade-out ml-2 small" data-toggle="tooltip" data-placement="bottom" 
+		title="Nombre d'informations importantes non-renseignées dans le bloc"></span>	
+{% endblock %}
+
+{% block card_body %}
+	<div class="row">
+		<div class="col-md-12">
+			<div class="float-right">
+				<button role="button" class="btn btn-sm btn-secondary shadow" title="Réduire le bloc" data-btn="reduce"
+					data-toggle="collapse" data-target="#collapse_{{ accordion_id }}" aria-expanded="true" 
+					aria-controls="collapse_{{ accordion_id }}"><i class="fas fa-compress-alt mr-1"></i></span>Réduire</button>
+				<button type="submit" class="btn btn-sm btn-{{ theme_color }} shadow" title="Sauvegarder l'évaluation sociale"><span 
+					class="fas fa-save mr-2"></span>Enregistrer</button>
+			</div>
+		</div>
+	</div>	
+{% endblock %}

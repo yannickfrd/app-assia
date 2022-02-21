@@ -1,0 +1,81 @@
+{% import 'macros/viewDiv.html.twig' as view_div %}
+
+<hr/>
+<section>
+    <div class="d-flex mb-3">
+        <h2 class="h4">Social - Santé</h2>
+        <span class="align-content-center"><a href="{{ path('support_evaluation_view', {'id': support.id }) }}" 
+            class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
+        </span>
+    </div>
+
+    {% set eval_people_social = eval_people|filter(e => e.evalSocialPerson) %}
+    {% set nb_people_social = eval_people_social|length %}
+    {% for eval_person in eval_people_social %}
+        {% set eval_social = eval_person.evalSocialPerson %}
+        {% if eval_social.rightSocialSecurity or eval_social.healthProblem == YES or eval_social.aseFollowUp == YES or eval_social.commentEvalSocialPerson  %}
+            <div class="my-3">
+                {% if nb_people_social > 1 %}
+                    <div class="row mb-2">
+                        <div class="col-md-12 font-weight-bold"><span class="text-underline">{{ eval_person.supportPerson.person.fullname }}</span> :</div>
+                    </div>
+                {% endif %}
+                <div class="row mb-2">
+                    {{ view_div.get(eval_social.rightSocialSecurity in [1, 3] ? eval_social.rightSocialSecurityToString ~ ' - ' 
+                        ~ eval_social.socialSecurityToString ~ (eval_social.endRightsSocialSecurityDate ? ' (fin de validité : ' 
+                        ~ eval_social.endRightsSocialSecurityDate|date('d/m/Y') ~ ')') 
+                        : eval_social.rightSocialSecurityToString , 'Right social security', 'evaluation') }}
+                    {{ view_div.get(eval_social.socialSecurityOffice, 'Social security office', 'evaluation') }}
+                </div>
+                <div class="row mb-2">
+                    {{ view_div.get(eval_social.infoCrip == YES ? eval_social.infoCripToString 
+                        ~ (eval_social.infoCripDate ? ' (le ' ~ eval_social.infoCripDate|date('d/m/Y')
+                        ~ (eval_social.infoCripByService == YES ? ' par le service') ~ ')'), 'Info crip', 'evaluation') }}
+                    {{ view_div.get(eval_social.infoCripComment) }}
+                </div>
+                <div class="row mb-2">
+                    {{ view_div.get(eval_social.aseFollowUp == YES ? eval_social.aseFollowUpToString 
+                        ~ (eval_social.aseMeasureType ? ' (Mesure ' ~ eval_social.aseMeasureTypeToString ~ ')'), 'Ase follow up', 'evaluation') }}
+                    {{ view_div.get(eval_social.aseComment) }}
+                </div>
+                {% if eval_social.familyBreakdown == YES or eval_social.friendshipBreakdown == YES %}
+                    <div class="row mb-2">
+                        {{ view_div.get(eval_social.familyBreakdownToString, 'Family breakdown', 'evaluation') }}
+                        {{ view_div.get(eval_social.friendshipBreakdownToString, 'Friendship breakdown', 'evaluation') }}
+                    </div>
+                {% endif %}
+                {% if eval_social.healthProblem == YES %}
+                    <div class="row mb-2">
+                        {{ view_div.get(eval_social.healthProblemToString ~ (eval_social.healthProblemTypes ? 
+                            ' (' ~ eval_social.healthProblemTypes|join(', ') ~ ')'), 'Health problem', 'evaluation') }}
+                    </div>
+                {% endif %}
+                <div class="row mb-2">
+                    {{ view_div.get(eval_social.medicalFollowUp == YES ? eval_social.medicalFollowUpToString, 'Medical follow up', 'evaluation') }}
+                    {{ view_div.get(eval_social.homeCareSupport == YES ? eval_social.homeCareSupportToString ~ (eval_social.homeCareSupportType ? ' - ' 
+                        ~ eval_social.homeCareSupportTypeToString), 'Home care support', 'evaluation') }}
+                    {{ view_div.get(eval_social.violenceVictim == YES ? eval_social.violenceVictimToString ~ (eval_social.domViolenceVictim == YES ? 
+                        ' (Violence conjugale)'), 'Violence victim', 'evaluation') }}
+                </div>
+                {% if eval_social.commentEvalSocialPerson %}
+                    <div class="row mb-2">
+                        <div class="col-md-12 justify">{{ eval_social.commentEvalSocialPerson|nl2br }}</div>
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% endfor %}
+
+    {% if evaluation.evalSocialGroup %}
+        {% set eval_social = evaluation.evalSocialGroup %}
+        <div class="row mb-2">
+            {{ view_div.get(eval_social.reasonRequestToString, 'Reason request', 'evaluation') }}
+            {{ view_div.get(eval_social.wanderingTimeToString, 'Wandering time', 'evaluation') }}
+            {{ view_div.get(eval_social.animal == YES ? eval_social.animalToString 
+                ~ (eval_social.animalType ? ' (' ~ eval_social.animalType ~ ')' ), 'Animal', 'evaluation') }}
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-12 justify">{{ evaluation.evalSocialGroup.commentEvalSocialGroup|nl2br }}</div>
+        </div>
+    {% endif %}
+</section>

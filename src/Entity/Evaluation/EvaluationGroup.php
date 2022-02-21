@@ -88,9 +88,9 @@ class EvaluationGroup
     private $evalBudgetGroup;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Evaluation\InitEvalGroup", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Evaluation\EvalInitGroup", cascade={"persist"})
      */
-    private $initEvalGroup;
+    private $evalInitGroup;
 
     /**
      * @ORM\OneToOne(targetEntity=EvalHotelLifeGroup::class, mappedBy="evaluationGroup", cascade={"persist", "remove"})
@@ -129,7 +129,7 @@ class EvaluationGroup
         if ($this->evalSocialGroup) {
             $this->setEvalSocialGroup(clone $this->evalSocialGroup);
         }
-        $this->setInitEvalGroup(new InitEvalGroup());
+        $this->setEvalInitGroup(new EvalInitGroup());
     }
 
     public function getId(): ?int
@@ -312,14 +312,14 @@ class EvaluationGroup
         return $this;
     }
 
-    public function getInitEvalGroup(): ?InitEvalGroup
+    public function getEvalInitGroup(): ?EvalInitGroup
     {
-        return $this->initEvalGroup;
+        return $this->evalInitGroup;
     }
 
-    public function setInitEvalGroup(?InitEvalGroup $initEvalGroup): self
+    public function setEvalInitGroup(?EvalInitGroup $evalInitGroup): self
     {
-        $this->initEvalGroup = $initEvalGroup;
+        $this->evalInitGroup = $evalInitGroup;
 
         return $this;
     }

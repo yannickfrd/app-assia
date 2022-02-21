@@ -8,13 +8,14 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=ResourceRepository::class)
  */
-class Resource extends AbstractFinance
+class Resource
 {
     public const SALARY = 10;
     public const ARE = 30;
     public const IJ = 170;
     public const RSA = [60, 70];
     public const AF = 100;
+    public const OTHER = 1000;
 
     public const RESOURCES = [
         10 => 'Salaire', // 1 salary
@@ -27,7 +28,6 @@ class Resource extends AbstractFinance
         85 => 'Allocation d\'éducation de l\'enfant handicapé (AEEH)', // 7 disChildAllowance
         101 => 'Allocation de soutien familial (ASF)', // 8 asf
         90 => 'Allocation de solidarité spécifique (ASS)', //9 solidarityAllowance
-        // 110 => 'Allocation temporaire d\'attente',
         130 => 'Allocation pour demandeur d\'asile (ADA)', // 10 asylumAllowance
         180 => 'Bourse', // 11 scholarships
         102 => 'Complément familial', //12 familySupplement
@@ -66,40 +66,64 @@ class Resource extends AbstractFinance
     ];
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
      */
-    protected $endDate;
+    private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=EvalBudgetPerson::class, inversedBy="resources")
+     * @ORM\Column(type="string", length=255)
      */
-    private $evalBudgetPerson;
+    private $name;
 
-    public function getEndDate(): ?\DateTimeInterface
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $code;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $type;
+
+    public function getId(): ?int
     {
-        return $this->endDate;
+        return $this->id;
     }
 
-    public function setEndDate(?\DateTimeInterface $endDate): self
+    public function getName(): ?string
     {
-        $this->endDate = $endDate;
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
 
         return $this;
     }
 
-    public function getTypeToString(): ?string
+    public function getCode(): ?int
     {
-        return $this->type ? self::RESOURCES[$this->type] : null;
+        return $this->code;
     }
 
-    public function getEvalBudgetPerson(): ?EvalBudgetPerson
+    public function setCode(int $code): self
     {
-        return $this->evalBudgetPerson;
+        $this->code = $code;
+
+        return $this;
     }
 
-    public function setEvalBudgetPerson(?EvalBudgetPerson $evalBudgetPerson): self
+    public function getType(): ?int
     {
-        $this->evalBudgetPerson = $evalBudgetPerson;
+        return $this->type;
+    }
+
+    public function setType(?int $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }

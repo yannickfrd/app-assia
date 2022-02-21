@@ -158,7 +158,7 @@ class EvalHousingGroupType extends AbstractType
                 'widget' => 'single_text',
                 'required' => false,
             ])
-            ->add('domiciliationSearch', null, [
+            ->add('_domiciliationSearch', null, [
                 'label' => ' ',
                 'attr' => [
                     'class' => 'js-search',
@@ -236,7 +236,7 @@ class EvalHousingGroupType extends AbstractType
                     'required' => false,
                 ])
                 ->add('expulsionComment')
-                ->add('hsgHelps', ChoiceType::class, [
+                ->add('_hsgHelps', ChoiceType::class, [
                     'choices' => Choices::getChoices(EvalHousingGroup::HOUSING_HELPS),
                     'placeholder' => 'placeholder.add',
                     'mapped' => false,

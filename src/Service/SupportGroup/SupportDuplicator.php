@@ -4,7 +4,7 @@ namespace App\Service\SupportGroup;
 
 use App\Entity\Evaluation\EvaluationGroup;
 use App\Entity\Evaluation\EvaluationPerson;
-use App\Entity\Evaluation\InitEvalGroup;
+use App\Entity\Evaluation\EvalInitGroup;
 use App\Entity\Organization\Service;
 use App\Entity\Support\Document;
 use App\Entity\Support\SupportGroup;
@@ -196,10 +196,10 @@ class SupportDuplicator
     {
         $newEvaluationGroup = new EvaluationGroup();
         $newEvaluationGroup->setDate(new \DateTime())
-            ->setInitEvalGroup(new InitEvalGroup());
+            ->setEvalInitGroup(new EvalInitGroup());
 
-        // if ($evaluationGroup->getInitEvalGroup()) {
-        //     $newEvaluationGroup->setInitEvalGroup(clone $evaluationGroup->getInitEvalGroup());
+        // if ($evaluationGroup->getEvalInitGroup()) {
+        //     $newEvaluationGroup->setEvalInitGroup(clone $evaluationGroup->getEvalInitGroup());
         // }
         if ($evaluationGroup->getEvalBudgetGroup()) {
             $newEvaluationGroup->setEvalBudgetGroup(clone $evaluationGroup->getEvalBudgetGroup());

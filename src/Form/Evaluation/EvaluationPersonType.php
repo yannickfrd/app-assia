@@ -23,7 +23,7 @@ class EvaluationPersonType extends AbstractType
             $person = $supportPerson->getPerson();
 
             $form
-                ->add('initEvalPerson', InitEvalPersonType::class, [
+                ->add('evalInitPerson', EvalInitPersonType::class, [
                     'attr' => ['person' => $person],
                 ])
                 ->add('evalAdmPerson', EvalAdmPersonType::class)

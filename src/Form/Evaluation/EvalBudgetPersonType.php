@@ -2,8 +2,8 @@
 
 namespace App\Form\Evaluation;
 
-use App\Entity\Evaluation\Charge;
-use App\Entity\Evaluation\Debt;
+use App\Entity\Evaluation\EvalBudgetCharge;
+use App\Entity\Evaluation\EvalBudgetDebt;
 use App\Entity\Evaluation\EvalBudgetPerson;
 use App\Entity\Evaluation\Resource;
 use App\Form\Utils\Choices;
@@ -74,7 +74,7 @@ class EvalBudgetPersonType extends AbstractType
                 'required' => false,
             ])
             ->add('chargeType', ChoiceType::class, [
-                'choices' => Choices::getChoices(Charge::CHARGES),
+                'choices' => Choices::getChoices(EvalBudgetCharge::CHARGES),
                 'placeholder' => 'placeholder.add',
                 'mapped' => false,
                 'required' => false,
@@ -99,7 +99,7 @@ class EvalBudgetPersonType extends AbstractType
                 'required' => false,
             ])
             ->add('debtType', ChoiceType::class, [
-                'choices' => Choices::getChoices(Debt::DEBTS),
+                'choices' => Choices::getChoices(EvalBudgetDebt::DEBTS),
                 'placeholder' => 'placeholder.add',
                 'mapped' => false,
                 'required' => false,
@@ -149,9 +149,9 @@ class EvalBudgetPersonType extends AbstractType
         ;
 
         $finances = [
-            'resources' => ResourceType::class,
-            'charges' => ChargeType::class,
-            'debts' => DebtType::class,
+            'evalBudgetResources' => EvalBudgetResourceType::class,
+            'evalBudgetCharges' => EvalBudgetChargeType::class,
+            'evalBudgetDebts' => EvalBudgetDebtType::class,
         ];
 
         foreach ($finances as $childName => $className) {

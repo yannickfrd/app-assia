@@ -1,0 +1,75 @@
+{% import 'macros/viewDiv.html.twig' as view_div %}
+
+<hr/>
+<section>
+    <div class="d-flex mb-3">
+        <h2 class="h4">Identité - Papier</h2>
+        <span class="align-content-center"><a href="{{ path('support_evaluation_view', {'id': support.id }) }}" 
+            class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
+        </span>
+    </div>
+    {% set eval_adults_admin = eval_adults|filter(e => e.evalAdmPerson) %}
+    {% set nb_adults_admin = eval_adults_admin|length %}
+    {% for eval_person in eval_adults_admin %}
+        {% set eval_adm = eval_person.evalAdmPerson %}
+        <div class="my-3">
+            {% if nb_adults_admin > 1 %}
+                <div class="row mb-2">
+                    <div class="col-md-12 font-weight-bold"><span class="text-underline">{{ eval_person.supportPerson.person.fullname }}</span> :</div>
+                </div>
+            {% endif %}
+            <div class="row">
+                {{ view_div.get(eval_adm.nationality ? eval_adm.nationalityToString ~ (eval_adm.country ? ' (' 
+                    ~ eval_adm.country ~ ')'), 'Nationality', 'evaluation') }}
+                {{ view_div.get(eval_adm.arrivalDate ? eval_adm.arrivalDate|date('d/m/Y'), 'Arrival date', 'evaluation') }}
+                {{ view_div.get(eval_adm.paper == YES and eval_adm.paperType ? eval_adm.paperTypeToString : eval_adm.paperToString, 'Paper', 'evaluation') }}
+                {{ view_div.get(eval_adm.asylumBackground == YES ? (eval_adm.asylumStatus ? eval_adm.asylumStatusToString : 
+                    eval_adm.asylumBackgroundToString), 'Asylum background', 'evaluation') }}
+                {{ view_div.get(eval_adm.renewalPermitDate ? eval_adm.renewalPermitDate|date('d/m/Y') 
+                    ~ (eval_adm.nbRenewals ? ' (' ~ eval_adm.nbRenewals ~ ' renouvellement(s))'), 'Renewal permit date', 'evaluation') }}
+                {{ view_div.get(eval_adm.endValidPermitDate ? eval_adm.endValidPermitDate|date('d/m/Y'), 'End valid permit date', 'evaluation') }}
+                {{ view_div.get(eval_adm.workRightToString, 'Work right', 'evaluation') }}
+            </div>
+            <div class="row my-2">
+                <div class="col-md-12 justify">{{ eval_adm.commentEvalAdmPerson|nl2br }}</div>
+            </div>
+        </div>
+    {% endfor %}
+
+    {% if eval_children|filter(e => e.evalAdmPerson)|length > 0 %}
+        {% set nb_asylum_children = eval_children|filter(e => e.evalAdmPerson and e.evalAdmPerson.asylumBackground == YES)|length %}
+        <div class="row my-3">
+            <div class="col-md-12 table-responsive">
+                <table class="table table-sm table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th class="w-min-150" scope="col" >Enfants</th>
+                            <th class="w-min-150">Nationalité</th>
+                            <th class="w-min-120">Papier</th>
+                            {% if nb_asylum_children > 0 %}
+                                <th class="w-min-120">Asile</th>
+                            {% endif %}
+                            <th>Commentaire</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for eval_person in eval_children %}
+                            {% set eval_adm = eval_person.evalAdmPerson %}
+                            {% if eval_adm %}
+                                <tr>
+                                    <td class="align-middle" scope="row">{{ eval_person.supportPerson.person.fullname }}</td>
+                                    <td class="align-middle">{{ eval_adm.nationalityToString ~ (eval_adm.country ? ' (' ~ eval_adm.country ~ ')') }}</td>
+                                    <td class="align-middle">{{ eval_adm.paper == YES ? eval_adm.paperType ? eval_adm.paperTypeToString ~ (eval_adm.endValidPermitDate ? ' (fin de validité : ' ~ eval_adm.endValidPermitDate|date('d/m/Y') ~ ')') : eval_adm.paperToString }}</td>
+                                    {% if nb_asylum_children > 0 %}
+                                        <td class="align-middle">{{ eval_adm.asylumBackground == YES ? eval_adm.asylumStatus ? eval_adm.asylumStatusToString : eval_adm.asylumBackgroundToString }}</td>
+                                    {% endif %}
+                                    <td class="align-middle">{{ eval_adm.commentEvalAdmPerson }}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+</section>

@@ -23,7 +23,7 @@ export default class evaluationBudget {
     init() {
         this.evalBudgetGroup()
 
-        this.initEvalPerson()
+        this.evalInitPerson()
         this.evalBudgetPerson()
 
         document.querySelectorAll('input[data-amount]').forEach(amountElt => {
@@ -48,13 +48,13 @@ export default class evaluationBudget {
     /**
      * Evaluation situation initiale individuelle.
      */
-    initEvalPerson() {
-        const personElts = document.getElementById('accordion_initEval').querySelectorAll('button[data-person-key]')
+    evalInitPerson() {
+        const personElts = document.getElementById('accordion_eval_init').querySelectorAll('button[data-person-key]')
             
         personElts.forEach(personElt => {
             const key = personElt.dataset.personKey
-            const id = `evaluation_evaluationPeople_${key}_initEvalPerson_resource`
-            this.updateAmt(id, 'initEval')
+            const id = `evaluation_evaluationPeople_${key}_evalInitPerson_resource`
+            this.updateAmt(id, 'eval_init')
             this.switchSelectToNo(id)
             new SelectCollectionManager(
                 id + 'Type',

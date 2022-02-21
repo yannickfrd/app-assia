@@ -73,7 +73,7 @@ class IndicatorController extends AbstractController
 
         $supports = $supportPersonRepo->findSupportsFullToExport($search);
 
-        return $this->render('app/evaluation/socialIndicators.html.twig', [
+        return $this->render('app/evaluation/social_indicators.html.twig', [
             'search' => $search,
             'form' => $form->createView(),
             'datas' => $socialIndicators->getResults($supports),

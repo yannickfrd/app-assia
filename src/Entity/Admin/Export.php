@@ -12,6 +12,9 @@ class Export
 {
     use CreatedUpdatedEntityTrait;
 
+    public const STATUS_IN_PROGRESS = 0;
+    public const STATUS_TERMINATE = 1;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -30,7 +33,7 @@ class Export
     private $comment;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $fileName;
 
@@ -48,6 +51,11 @@ class Export
      * @ORM\Column(type="integer", nullable=true)
      */
     private $nbResults;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $status;
 
     public function getId(): ?int
     {
@@ -122,6 +130,18 @@ class Export
     public function setNbResults(?int $nbResults): self
     {
         $this->nbResults = $nbResults;
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?int $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

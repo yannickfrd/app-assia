@@ -1,9 +1,0 @@
-{% import "macros/viewTextArea.html.twig" as view_text %}
-
-<hr/>
-<h2 class="h3" style="{{ style_h2 }}">Vie à l'hôtel</h2>
-{% if evalHotelLife.food %}<br/>{{ view_text.get(evalHotelLife.food, "Food", "evaluation", type) }}{% endif %}
-{% if evalHotelLife.clothing %}<br/>{{ view_text.get(evalHotelLife.clothing, "Clothing", "evaluation", type) }}{% endif %}
-{% if evalHotelLife.roomMaintenance %}<br/>{{ view_text.get(evalHotelLife.roomMaintenance, "Room maintenance", "evaluation", type) }}{% endif %}
-{% if evalHotelLife.otherHotelLife %}<br/>{{ view_text.get(evalHotelLife.otherHotelLife, "Other hotel life", "evaluation", type) }}{% endif %}
-{% if evalHotelLife.commentHotelLife %}<br/>{{ view_text.get(evalHotelLife.commentHotelLife, "Comment hotel life", "evaluation", type) }}{% endif %}

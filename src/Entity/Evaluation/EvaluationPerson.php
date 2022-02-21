@@ -67,9 +67,9 @@ class EvaluationPerson
     private $evalJusticePerson;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Evaluation\InitEvalPerson", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Evaluation\EvalInitPerson", cascade={"persist"})
      */
-    private $initEvalPerson;
+    private $evalInitPerson;
 
     public function __clone()
     {
@@ -96,7 +96,7 @@ class EvaluationPerson
             $this->setEvalSocialPerson(clone $this->evalSocialPerson);
         }
 
-        $this->setInitEvalPerson(new InitEvalPerson());
+        $this->setEvalInitPerson(new EvalInitPerson());
     }
 
     public function getId(): ?int
@@ -230,14 +230,14 @@ class EvaluationPerson
         return $this;
     }
 
-    public function getInitEvalPerson(): ?InitEvalPerson
+    public function getEvalInitPerson(): ?EvalInitPerson
     {
-        return $this->initEvalPerson;
+        return $this->evalInitPerson;
     }
 
-    public function setInitEvalPerson(?InitEvalPerson $initEvalPerson): self
+    public function setEvalInitPerson(?EvalInitPerson $evalInitPerson): self
     {
-        $this->initEvalPerson = $initEvalPerson;
+        $this->evalInitPerson = $evalInitPerson;
 
         return $this;
     }

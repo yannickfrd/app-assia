@@ -103,25 +103,25 @@
 			<div class="col-md-12">
 				<div class="float-left d-flex">
 					{% if is_granted("DELETE", support) %}
-						{% set textAlert = "'Tous les éléments rattachés au suivi vont être supprimés (évaluation sociale, RDVs, notes, documents...)." ~ 
-							" Êtes-vous vraiment sûr de vouloir supprimer ce suivi social ?'" %}
+						{% set alert_text = '"Tous les éléments rattachés au suivi vont être supprimés (évaluation sociale, RDVs, notes, documents...).' ~ 
+							' Êtes-vous vraiment sûr de vouloir supprimer ce suivi social ?"' %}
 						<a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('support_delete', {'id': support.id}) }}" 
 							title="Supprimer le suivi social" data-toggle="tooltip" data-placement="bottom" 
-							onclick="if(window.confirm({{ textAlert }})){return true;}else{return false;}"><i class="fas fa-trash-alt mr-2"></i>
+							onclick="if(window.confirm({{ alert_text }})){return true;}else{return false;}"><i class="fas fa-trash-alt mr-2"></i>
 							<span class="d-none d-sm-inline">Supprimer</span></a>
 					{% endif %}
 					{% if null == evaluation %}
-						{% set textAlert = "'Êtes-vous vraiment sûr de vouloir récupérer l`évaluation sociale du SI-SIAO ?'" %}
+						{% set alert_text = '"Êtes-vous vraiment sûr de vouloir récupérer l\'évaluation sociale du SI-SIAO ?"' %}
 						<a class="btn btn-{{ theme_color }} d-block mr-3" href="{{ path('api_sisiao_support_import_evaluation', {'id': support.id}) }}" 
 							title="Importer l'évaluation sociale du SI-SIAO" data-toggle="tooltip" data-placement="bottom" 
-							onclick="if(window.confirm({{ textAlert }})){return true;}else{return false;}"><i class="fas fa-cloud-download-alt mr-2"></i>
+							onclick="if(window.confirm({{ alert_text }})){return true;}else{return false;}"><i class="fas fa-cloud-download-alt mr-2"></i>
 							<span class="d-none d-sm-inline">Import SI-SIAO</span></a>
 					{% endif %}
 					{% if is_granted("ROLE_ADMIN") %}	
-						{% set textAlert = "'Êtes-vous vraiment sûr de vouloir récupérer les informations du précédent suivi social ?'" %}
+						{% set alert_text = "'Êtes-vous vraiment sûr de vouloir récupérer les informations du précédent suivi social ?'" %}
 						<a class="btn btn-{{ theme_color }} d-block mr-3" href="{{ path('support_clone', {'id': support.id}) }}" 
 							title="Récupérer les éléments du précédent suivi social" data-toggle="tooltip" data-placement="bottom" 
-							onclick="if(window.confirm({{ textAlert }})){return true;}else{return false;}"><i class="fas fa-clone mr-2"></i>
+							onclick="if(window.confirm({{ alert_text }})){return true;}else{return false;}"><i class="fas fa-clone mr-2"></i>
 							<span class="d-none d-sm-inline">Copier suivi</span></a>
 					{% endif %}
 				</div>
@@ -160,7 +160,7 @@
 					{% include "app/evaluation/_export_evaluation.html.twig" %}
 				</div>
 			</div>
-			{% include "app/evaluation/view/_evaluationView.html.twig" %}
+			{% include "app/evaluation/view/_evaluation_view.html.twig" %}
 		{% endif %}
 
 	</div>
