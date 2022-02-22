@@ -164,7 +164,7 @@ export default class Ajax {
         console.error(error.message)
 
         if (error.message === '403 Forbidden access') {
-            return new MessageFlash('danger', 'Vous n\'avez pas les droits pour effectuer cette action. \nIl est nécessaire d\'être référent du suivi ou administrateur.')
+            return new MessageFlash('danger', 'Accès refusé. Vous n\'avez pas les droits pour effectuer cette action.')
         }
 
         new MessageFlash('danger', `Une erreur s'est produite (${error.message}).`)

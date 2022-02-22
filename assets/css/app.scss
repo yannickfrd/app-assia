@@ -253,6 +253,10 @@ th.required:after {
     min-width: 120px;
 }
 
+.w-min-140 {
+    min-width: 140px;
+}
+
 .w-min-150 {
     min-width: 150px;
 }
@@ -562,6 +566,10 @@ button.btn-outline-secondary a:hover {
 #card-tags span.tag {
     font-size: .85rem;
     font-weight: normal;
+}
+
+#support_navbar a.btn {
+    min-width: 140px;
 }
 
 @media (prefers-reduced-motion: reduce) {

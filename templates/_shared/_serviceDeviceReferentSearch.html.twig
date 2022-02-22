@@ -1,15 +1,15 @@
 {% if poles is not defined and is_granted("ROLE_SUPER_ADMIN") %}
-    <div class="form-group col-auto my-1 px-1">{{ form_widget(form.service.poles) }}</div>
+    <div class="col-auto my-1 px-1">{{ form_widget(form.service.poles) }}</div>
 {% endif %}
 {% if form.service.services.vars.choices|length > 1 %}
-    <div class="form-group col-auto my-1 px-1">{{ form_widget(form.service.services) }}</div>
+    <div class="col-auto my-1 px-1">{{ form_widget(form.service.services) }}</div>
 {% endif %}
 {% if form.service.subServices.vars.choices|length > 1 %}
-    <div class="form-group col-auto my-1 px-1">{{ form_widget(form.service.subServices) }}</div>
+    <div class="col-auto my-1 px-1">{{ form_widget(form.service.subServices) }}</div>
 {% endif %}
 {% if form.service.devices.vars.choices|length > 1 %}
-    <div class="form-group col-auto my-1 px-1">{{ form_widget(form.service.devices) }}</div>
+    <div class="col-auto my-1 px-1">{{ form_widget(form.service.devices) }}</div>
 {% endif %}   
-{% if referents is not defined %}
-    <div class="form-group col-auto my-1 px-1">{{ form_widget(form.service.referents) }}</div>
+{% if referents is not defined and form.service.referents is defined %}
+    <div class="col-auto my-1 px-1">{{ form_widget(form.service.referents) }}</div>
 {% endif %} 

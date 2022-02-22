@@ -212,15 +212,16 @@ class SupportController extends AbstractController
 
         $dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support.view');
 
-        return $this->render('app/support/supportGroupView.html.twig', [
+        return $this->render('app/support/support_group_view.html.twig', [
             'support' => $supportGroup,
             'referents' => $supportCollections->getReferents($supportGroup),
-            'nbNotes' => $supportCollections->getNbNotes($supportGroup),
-            'nbRdvs' => $nbRdvs = $supportCollections->getNbRdvs($supportGroup),
-            'nbDocuments' => $supportCollections->getNbDocuments($supportGroup),
-            'nbPayments' => $supportCollections->getNbPayments($supportGroup),
-            'lastRdv' => $nbRdvs ? $supportCollections->getLastRdvs($supportGroup) : null,
-            'nextRdv' => $nbRdvs ? $supportCollections->getNextRdvs($supportGroup) : null,
+            'count_rdvs' => $nbRdvs = $supportCollections->getNbRdvs($supportGroup),
+            'count_tasks' => $supportCollections->getNbTasks($supportGroup),
+            'count_notes' => $supportCollections->getNbNotes($supportGroup),
+            'count_documents' => $supportCollections->getNbDocuments($supportGroup),
+            'count_payments' => $supportCollections->getNbPayments($supportGroup),
+            'last_rdv' => $nbRdvs ? $supportCollections->getLastRdvs($supportGroup) : null,
+            'next_rdv' => $nbRdvs ? $supportCollections->getNextRdvs($supportGroup) : null,
             'evaluation' => $supportCollections->getEvaluation($supportGroup),
         ]);
     }

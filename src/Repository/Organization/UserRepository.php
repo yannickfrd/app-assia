@@ -2,8 +2,10 @@
 
 namespace App\Repository\Organization;
 
+use App\Entity\Event\Alert;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\User;
+use App\Entity\Support\SupportGroup;
 use App\Form\Model\Organization\UserSearch;
 use App\Form\Utils\Choices;
 use App\Repository\Traits\QueryTrait;
@@ -171,7 +173,7 @@ class UserRepository extends ServiceEntityRepository
     {
         $users = [];
         $users[] = $currentUser->getId();
-        
+
         if ($referent) {
             $users[] = $referent->getId();
         }
@@ -355,6 +357,70 @@ class UserRepository extends ServiceEntityRepository
         return $qb
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    /**
+     * Donne les utilisateurs avec leur suivis actifs et leur évaluations sociales.
+     *
+     * @return User[]
+     */
+    public function findUsersWithActiveSupportsAndEval(): array
+    {
+        return $this->createQueryBuilder('u')
+            ->leftJoin('u.setting', 's')->addSelect('s')
+            ->leftJoin('u.referentSupport', 'sg')->addSelect('PARTIAL sg.{id, status}')
+            ->leftJoin('sg.evaluationsGroup', 'eg')->addSelect('PARTIAL eg.{id}')
+            ->leftJoin('eg.evaluationPeople', 'ep')->addSelect('PARTIAL ep.{id}')
+
+            ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
+            ->leftJoin('sp.person', 'p')->addSelect('p')
+            ->leftJoin('ep.supportPerson', 'sp2')->addSelect('sp2')
+            ->leftJoin('sp2.person', 'p2')->addSelect('p2')
+
+            ->leftJoin('ep.evalAdmPerson', 'eap')->addSelect('PARTIAL eap.{id, endValidPermitDate}')
+            ->leftJoin('ep.evalSocialPerson', 'esp')->addSelect('PARTIAL esp.{id, endRightsSocialSecurityDate}')
+            ->leftJoin('ep.evalBudgetPerson', 'ebp')->addSelect('PARTIAL ebp.{id, endRightsDate}')
+            ->leftJoin('ep.evalProfPerson', 'epp')->addSelect('PARTIAL epp.{id, endRqthDate}')
+            ->leftJoin('eg.evalHousingGroup', 'ehg')->addSelect('PARTIAL ehg.{id, siaoUpdatedRequestDate, 
+                socialHousingUpdatedRequestDate, endDomiciliationDate}')
+
+            ->andWhere('u.disabledAt IS NULL')
+            ->andWhere('u.status IN (:user_status)')
+            ->setParameter('user_status', User::REFERENTS_STATUS)
+            ->andWhere('sg.status = :support_status')
+            ->setParameter(':support_status', SupportGroup::STATUS_IN_PROGRESS)
+
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult()
+        ;
+    }
+
+    /**
+     * Donne les utilisateurs qui ont des tâches avec des alertes.
+     *
+     * @return User[]|null
+     */
+    public function getUsersWithAlerts(\DateTime $date): ?array
+    {
+        return $this->createQueryBuilder('u')
+            ->leftJoin('u.setting', 's')->addSelect('s')
+            ->leftJoin('u.tasks', 't')->addSelect('t')
+            ->leftJoin('t.alerts', 'a')->addSelect('a')
+            ->leftJoin('t.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
+            ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id}')
+            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
+
+            ->where('a.sended <> TRUE')
+            ->andWhere('a.date < :date')
+            ->setParameter(':date', $date)
+            ->andWhere('a.type = :type')
+            ->setParameter('type', Alert::EMAIL_TYPE)
+
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult()
+        ;
     }
 
     /**

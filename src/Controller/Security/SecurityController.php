@@ -16,9 +16,7 @@ use App\Form\Model\Security\UserResetPassword;
 use App\Form\Organization\User\UserChangeInfoType;
 use App\Form\Organization\User\UserSettingType;
 use App\Notification\UserNotification;
-use App\Repository\Organization\ServiceRepository;
 use App\Repository\Organization\UserRepository;
-use App\Repository\Support\SupportGroupRepository;
 use App\Service\User\UserManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -137,12 +135,8 @@ class SecurityController extends AbstractController
      *
      * @Route("/my_profile", name="my_profile", methods="GET|POST")
      */
-    public function showCurrentUser(
-        Request $request,
-        UserPasswordHasherInterface $passwordHasher,
-        SupportGroupRepository $supportRepo,
-        ServiceRepository $serviceRepo
-    ): Response {
+    public function showCurrentUser(Request $request, UserPasswordHasherInterface $passwordHasher): Response
+    {
         /** @var User $user */
         $user = $this->getUser();
 
@@ -153,15 +147,16 @@ class SecurityController extends AbstractController
         $userChangeInfo = (new UserChangeInfo())
             ->setEmail($user->getEmail())
             ->setPhone1($user->getPhone1())
-            ->setPhone2($user->getPhone2());
+            ->setPhone2($user->getPhone2())
+        ;
 
-        $form = $this->createForm(UserChangeInfoType::class, $userChangeInfo)
+        $form = $this->createForm(UserChangeInfoType::class, $userChangeInfo, ['user' => $user])
             ->handleRequest($request);
 
         $userChangePassword = new UserChangePassword();
 
-        $formPassword = $this->createForm(ChangePasswordType::class, $userChangePassword);
-        $formPassword->handleRequest($request);
+        $formPassword = $this->createForm(ChangePasswordType::class, $userChangePassword)
+            ->handleRequest($request);
 
         if ($formSetting->isSubmitted() && $formSetting->isValid()) {
             $this->userManager->updateSetting($user->setSetting($setting));
@@ -181,11 +176,9 @@ class SecurityController extends AbstractController
         }
 
         return $this->render('app/organization/user/user.html.twig', [
-            'form' => $form->createView(),
-            'formPassword' => $formPassword->createView(),
-            'formSetting' => $formSetting->createView(),
-            'supports' => $supportRepo->findSupportsOfUser($user),
-            'services' => $serviceRepo->findServicesOfUser($user),
+            'form_user' => $form->createView(),
+            'form_password' => $formPassword->createView(),
+            'form_setting' => $formSetting->createView(),
         ]);
     }
 

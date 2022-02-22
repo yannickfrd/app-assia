@@ -17,7 +17,7 @@ class SubServiceType extends AbstractType
         $builder
             ->add('name', null, [
                 'attr' => [
-                    'placeholder' => 'subService.name',
+                    'placeholder' => 'sub_service.name',
                 ],
             ])
             ->add('phone1', null, [
@@ -31,7 +31,7 @@ class SubServiceType extends AbstractType
                 ],
             ])
             ->add('chief', EntityType::class, [
-                'label' => 'subService.chief',
+                'label' => 'sub_service.chief',
                 'class' => User::class,
                 'choice_label' => 'fullname',
                 'query_builder' => function (UserRepository $repo) {

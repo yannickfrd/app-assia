@@ -1,8 +1,19 @@
 CHANGELOG
 =========
 
-## Version 3.x.x - 21/02/2021
-Edit feature resource, charge and debt collections
+## Version 3.9.0 - 22/02/2022
+Create the task/alert feature (#117)
+* Create Task and Alert entities
+* Create CRUD for Task
+* Create Twig views
+* Create TagManager.js and TagForm.js with Ajax request
+* Create command to create auto tasks with alert from evaluation informations
+* Create command to send email about task alerts to users
+* Create unit and functional tests for Task feature
+* Refactoring
+
+## Version 3.8.6 - 21/02/2022
+Edit feature resource, charge and debt collections (#119)
 * Rename entities : Resource to EvalBudgetResource, Charge to EvalBudgetCharge, Debt to EvalBudgetDebt and create Resource
  entity
 * Refactor ResourceEntityTrait
@@ -13,34 +24,72 @@ Edit feature resource, charge and debt collections
 * Edit full export with evaluation
 * Edit command to create resources, charges and debts
 
-## Version 3.x.x - 17/02/2021
-Update the verification when creating a new supportGroup
-* [SupportCreator] Can create a new support with ended status even if the group have an other support in progress
-* [SupportControllerTest] Add test
+## Version 3.8.6 - 17/02/2022
+Update dependencies (PHP, JS) (#118)
+Updating phpcs fixer to v3.5.0 (#107)
 
-## Version 3.x.x - 17/02/2021
-Update voters : a user of same service can edit note, rdv, document and payment
+## Version 3.8.5 - 17/02/2022
+Update voters : a user of same service can edit note, rdv, document and payment (#113)
 * [NoteVoter] Edit canEdit method
 * [RdvVoter] Edit canEdit method
 * [DocumentVoter] Edit canEdit method
 * [NoteControllerTest][RdvControllerTest][DocumentControllerTest] Update functional tests
 * Refactoring
+## Version 3.8.4 - 17/02/2022
+Update the verification when creating a new supportGroup (#112)
+* [SupportCreator] Can create a new support with ended status even if the group have an other support in progress
+* [SupportControllerTest] Add test
+## Version 3.6.10 - 03/02/2022
+Fix error if role person is null and edit referer header call (#110)
+* [SiSiaoController] Edit 'referer' header call
+* [SiSiaoGroupImporter] Fix if role is null
 
-## Version 3.8.3 - 20/01/2021
-Update Fixtures
+## Version 3.6.9 - 03/02/2022
+Fix problem import after update SI-SIAO version (#109)
+* [SiSIaoEvaluationImporter] Fix problem import evaluation after update SI-SIAO
+* [SupportGroup] Edit subscribed events order after create
+* [SiSiaoEvaluationImporter] Fix ASE informations and wished cities
+* [SiSiaoItems] Change value 99 (no information) to null
+
+## Version 3.8.3 - 20/01/2022
+Update Fixtures (#104)
 * Add dependencies
 * Add groups
 * Create TagFixtures
 * Create EvaluationFixtures
 * Refactor all fixtures
 
-## Version 3.8.2 - 06/01/2021
-Fix multi select feature
+## Version 3.6.10 - 19/01/2022
+Edit dot env (#103)
+
+## Version 3.6.9 - 19/01/2022
+Fix authentication problem with email (#102)
+* [AppAuthenticator] Add find User by email
+* [Security] Delete old CustomAuthenticator
+* Fix raw flash messages
+
+## Version 3.6.8 - 19/01/2022
+Add settings for app and services and users (#101)
+
+## Version 3.6.7 - 19/01/2022
+Fix full data export for occupancy rate (#99)
+* [SupportPersonDataTrait] Edit value of endDatePlace (if one is null)
+* [occupancyByService] Fix footer in view (add <td> nbPlaces)
+
+## Version 3.6.6 - 12/01/2022
+Fix duplication people in evaluation (#98)
+* Fix duplication evaluation people after import SI-SIAO and last evaluation
+* [EvaluationController] Edit condition to fix people in evaluation
+* [CheckEvaluationPeopleCommand] Add condition if person is duplicate in the same evaluation
+* [CheckEvaluationPeopleCommand] Add option to active/disable doctrine listeners
+
+## Version 3.8.2 - 06/01/2022
+Fix multi select feature (#96)
 * [SelectManager.js] Rename 'selectManager' object
 * [SelectManager.js] Add default placeholder in options
 * [Select2] Edit css font-size selections 
 
-## Version 3.8.1 - 05/01/2021
+## Version 3.8.1 - 05/01/2022
 Create a select manager (JS) and update tag feature (#95)
 * [SelectManager] Create a JS class to manage multi-select (select2)
 * [Tag] Update and create new Commands to add tags
@@ -83,36 +132,6 @@ Feature system tags (yannickfrd) (#93)
 * [Service] Add TagTrait
 Co-authored-by: yannickfarade <yannick.farade@esperer-95.org>
 
-## Version 3.6.10 - 03/02/2022
-Fix error if role person is null and edit referer header call
-* [SiSiaoController] Edit 'referer' header call
-* [SiSiaoGroupImporter] Fix if role is null
-
-## Version 3.6.9 - 03/02/2022
-Fix problem import after update SI-SIAO version
-* [SiSIaoEvaluationImporter] Fix problem import evaluation after update SI-SIAO
-* [SupportGroup] Edit subscribed events order after create
-* [SiSiaoEvaluationImporter] Fix ASE informations and wished cities
-* [SiSiaoItems] Change value 99 (no information) to null
-
-## Version 3.6.8 - 19/01/2022
-Fix authentication problem with email
-* [AppAuthenticator] Add find User by email
-* [Security] Delete old CustomAuthenticator
-* Fix raw flash messages
-
-## Version 3.6.7 - 19/01/2022
-Fix full data export for occupancy rate (#99)
-* [SupportPersonDataTrait] Edit value of endDatePlace (if one is null)
-* [occupancyByService] Fix footer in view (add <td> nbPlaces)
-
-## Version 3.6.6 - 12/01/2022
-Fix duplication people in evaluation (#98)
-* Fix duplication evaluation people after import SI-SIAO and last evaluation
-* [EvaluationController] Edit condition to fix people in evaluation
-* [CheckEvaluationPeopleCommand] Add condition if person is duplicate in the same evaluation
-* [CheckEvaluationPeopleCommand] Add option to active/disable doctrine listeners
-
 ## Version 3.6.5 - 15/12/2021
 Fix bugs (#90)
 * [AutoLogout] Fix invalid url to logout
@@ -131,7 +150,6 @@ Edit all multi-select in FormType (#87)
 * [SecurityUserType] Add JS select2 for user roles
 
 * [_evaluationJustice.html] Fix error : renale 'nb_adults' to 'nb_people' var
-
 ## Version 3.6.1 - 13/12/2021
 * [EvalAdmPersonType] Delete 'data-twin-field' to 'asylumBackground' field (#86)
 

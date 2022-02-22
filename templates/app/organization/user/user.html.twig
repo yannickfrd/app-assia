@@ -1,40 +1,37 @@
-{% extends "base.html.twig" %}
-{% import 'macros/viewDiv.html.twig' as view_div %}
+{% extends 'base.html.twig' %}
 
-{% block title %}{{ app.user.fullname }}{% endblock %}
+{% set title = app.user.fullname %}
+
+{% block title %}{{ title }}{% endblock %}
 
 {% block body %}
 
     <div class="container">
 
-        <h1 class="h2 mb-3">{{ app.user.fullname }}</h1>
-        <div class="small text-secondary">
-            <p> Dernière connexion le {{ app.user.lastLogin|date("d/m/Y à H:i") }}</p>
-        </div>
+        <h1 class="h2 mb-3">{{ title }}</h1>
 
         <hr>
 
         <section>
-            {% include "model/_msgFlash.html.twig" %}
-            <div id="js-msg-flash-content"></div>
+            {% include 'model/_msgFlash.html.twig' %}
 
-            {{ form_start(form) }}
+            {{ form_start(form_user) }}
 
             <h2 class="h4 my-4">Coordonnées</h2>
-            <div class="form-group row mb-2">
-                {{ view_div.get(app.user.firstname, 'Firstname') }}
-                {{ view_div.get(app.user.lastname, 'Lastname') }}
-                {{ view_div.get(app.user.username, 'Login') }}
-                {{ view_div.get(app.user.statusToString, 'Status') }}
+            <div class="row mb-3 mb-2">
+                <div class="col-md-6">{{ form_row(form_user.firstname) }}</div>
+                <div class="col-md-6">{{ form_row(form_user.lastname) }}</div>
+                <div class="col-md-6">{{ form_row(form_user.username) }}</div>
+                <div class="col-md-6">{{ form_row(form_user.status) }}</div>
             </div>
-            <div class="form-group row mb-2">
-                <div class="col-md-6">{{ form_row(form.email) }}</div>
+            <div class="row mb-3 mb-2">
+                <div class="col-md-6">{{ form_row(form_user.email) }}</div>
             </div>
-            <div class="form-group row mb-2">
-                <div class="col-md-6">{{ form_row(form.phone1) }}</div>
-                <div class="col-md-6">{{ form_row(form.phone2) }}</div>
+            <div class="row mb-3 mb-2">
+                <div class="col-md-6">{{ form_row(form_user.phone1) }}</div>
+                <div class="col-md-6">{{ form_row(form_user.phone2) }}</div>
             </div>
-            <div class="form-group row">
+            <div class="row mb-3">
                 <div class="col-md-12">
                     <div class="mb-4 float-right">
                     <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">Mettre à jour</button>
@@ -42,198 +39,24 @@
                 </div>
             </div>
 
-            {{ form_row(form._token) }}
-            {{ form_end(form, {"render_rest": false}) }}
+            {{ form_row(form_user._token) }}
+            {{ form_end(form_user) }}
 
         </section>
 
         <hr>
 
-        <section>
-
-            {% include "model/_msgFlash.html.twig" %}
-            <div id="js-msg-flash-content"></div>
-
-            {{ form_start(formPassword) }}
-
-            <h2 class="h4 my-4">Modification du mot de passe</h2>
-            <div class="form-group row mb-2">
-                <div class="col-md-6">
-                    <div class="form-group row">
-                        {{ form_label(formPassword.oldPassword) }}
-                        <div class="col-8">
-                            <div class="input-group js-password-group">
-                                {{ form_widget(formPassword.oldPassword) }}
-                                <div class="input-group-append">
-                                    <span class="input-group-text"><span
-                                            class="fa fa-eye js-show-password"></span></span>
-                                </div>{{ form_help(formPassword.oldPassword) }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group row mb-2">
-                <div class="col-md-6">
-                    <div class="form-group row">
-                        {{ form_label(formPassword.newPassword) }}
-                        <div class="col-8">
-                            <div class="input-group js-password-group">
-                                {{ form_widget(formPassword.newPassword) }}
-                                <div class="input-group-append">
-                                    <span class="input-group-text"><span
-                                            class="fa fa-eye js-show-password"></span></span>
-                                </div>{{ form_help(formPassword.newPassword) }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group row">
-                        {{ form_label(formPassword.confirmNewPassword) }}
-                        <div class="col-8">
-                            <div class="input-group js-password-group">
-                                {{ form_widget(formPassword.confirmNewPassword) }}
-                                <div class="input-group-append">
-                                    <span class="input-group-text"><span
-                                            class="fa fa-eye js-show-password"></span></span>
-                                </div>{{ form_help(formPassword.confirmNewPassword) }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group row">
-                <div class="col-md-12">
-                    <div class="mb-4 float-right">
-                        <button type="submit" id="send2" name="send2" class="btn btn-{{ theme_color }} shadow">Mettre à jour</button>
-                    </div>
-                </div>
-            </div>
-
-            {{ form_row(formPassword._token) }}
-            {{ form_end(formPassword, {"render_rest": false}) }}
-        </section>
-
-
-        {% if app.user.status == constant("STATUS_SOCIAL_WORKER", app.user) %}
-            <hr>
-            <section>
-                <h2 class="h4 my-4">Suivis sociaux en cours</h2>
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover text-dark">
-                        <thead>
-                            <tr>
-                                <th scope="col" class="align-middle th-w-20"></th>
-                                <th scope="col" class="align-middle th-w-150">Nom et Prénom</th>
-                                <th scope="col" class="align-middle th-w-100">Typologie familiale</th>
-                                <th scope="col" class="align-middle th-w-100">Statut</th>
-                                <th scope="col" class="align-middle th-date">Date de début</th>
-                                <th scope="col" class="align-middle th-date">Date de fin</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            {% for support in supports  %}
-                                {# {% cache "referentSupport" ~ support.id support.updatedAt.timestamp %} #}
-                                {% set person = support.header %}
-                                <tr>
-                                    <td scope="row" class="align-middle">
-                                        <a href="{{ path('support_edit', {'id':support.id}) }}"
-                                            class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" data-placement="bottom"
-                                            title="Voir le suivi social"><span class="fas fa-eye"></span>
-                                        </a>
-                                    </td>
-                                    <td class="align-middle"> {{ person ? person.fullname }}</td>
-                                    <td class="align-middle">{{ support.peopleGroup.familyTypologyToString }}
-                                        {{ support.peopleGroup.nbPeople ? ' ' ~ support.peopleGroup.nbPeople ~ ' personnes' }}
-                                    </td>
-                                    <td class="align-middle">{{ support.statusToString }}</td>
-                                    <td class="align-middle">{{ support.startDate ? support.startDate|date("d/m/Y") }}</td>
-                                    <td class="align-middle">{{ support.endDate ? support.endDate|date("d/m/Y") }}</td>
-                                </tr>
-                                {# {% endcache %} #}
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                <a href="{{ path('new_support_search_person') }}" class="m-2 btn btn-{{ theme_color }} btn-sm">
-                    <span class="fas fa-plus-square mr-2"></span>Créer un nouveau suivi</a>
-                <br/>
-
-            </section>
-        {% endif %}
+        {% include 'app/organization/user/_user_password.html.twig' %}
 
         <hr>
 
-        <section>
-            <h2 class="h4 my-4">Services rattachés</h2>
-            {% if app.user.services %}
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover text-dark">
-                        <thead>
-                            <tr>
-                                <th scope="col" class="align-middle th-w-20"></th>
-                                <th scope="col" class="align-middle th-w-140">Nom du service</th>
-                                <th scope="col" class="align-middle th-w-140">Email</th>
-                                <th scope="col" class="align-middle th-w-140">Téléphone</th>
-                                <th scope="col" class="align-middle th-w-140">Pôle</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for service in services %}
-                                <tr>
-                                    <th scope="row" class="align-middle">
-                                        {% if is_granted("EDIT", service) %}
-                                            <a href="{{ path('service_edit', {'id':service.id}) }}"
-                                                class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" data-placement="bottom"
-                                                title="Voir la fiche du service">
-                                                <span class="fas fa-eye"></span>
-                                            </a>
-                                        {% endif %}
-                                    </th>
-                                    <td class="align-middle">{{ service.name }}</td>
-                                    <td class="align-middle">{{ service.email }}</td>
-                                    <td class="align-middle">{{ service.phone1}}</td>
-                                    <td class="align-middle">{{ service.pole.name }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            {% endif %}
-        </section>
-
-        <hr>
-
-        <section>
-            {{ form_start(formSetting) }}
-            <h2 class="h4 my-4">Paramètres</h2>
-
-            <div class="row">
-                <div class="col-md-12"><h3 class="h6 mb-3">Rappels</h3></div>
-            </div>
-
-            <div class="form-group row">
-                <div class="col-md-6 custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-0">{{ form_row(formSetting.weeklyAlert) }}</div>
-                <div class="col-md-6 custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-0">{{ form_row(formSetting.dailyAlert) }}</div>
-            </div>
-            <div class="form-group row">
-                <div class="col-md-12">
-                    <div class="float-right">
-                        <button type="submit" id="send3" name="send3" class="btn btn-{{ theme_color }} shadow">Enregistrer</button>
-                    </div>
-                </div>
-            </div>
-            {{ form_end(formSetting) }}
-        </section>
+        {% include 'app/organization/user/_user_setting.html.twig' %}
 
     </div>
 
 {% endblock %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags("login") }}
-    {{ encore_entry_script_tags("user") }}
+    {{ encore_entry_script_tags('login') }}
+    {{ encore_entry_script_tags('user') }}
 {% endblock javascripts %}

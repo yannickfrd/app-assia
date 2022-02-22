@@ -7,6 +7,7 @@ use App\Entity\Organization\Service;
 use App\Entity\Organization\ServiceSetting;
 use App\Repository\Organization\ServiceRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use ReflectionObject;
 
 class ServiceManager
 {
@@ -20,7 +21,7 @@ class ServiceManager
 
     public function createService(): Service
     {
-        return (new Service())->setSetting($this->hydrateServiceSetting(new ServiceSetting()));
+        return (new Service())->setSetting($this->hydrateServiceSetting());
     }
 
     public function getFullService(int $id): Service
@@ -30,25 +31,28 @@ class ServiceManager
 
         $service = $serviceRepo->getFullService($id);
 
-        if (!$service) { // If service don't exist, return new service
-            return $this->createService();
+        if (!$service->getSetting()) {
+            $service->setSetting($this->hydrateServiceSetting());
         }
 
-        // If the service does not contain any parameters, we get those of the application.
-        return ($service->getSetting())
-            ? $service
-            : $service->setSetting($this->hydrateServiceSetting(new ServiceSetting()));
+        return $service;
     }
 
-    private function hydrateServiceSetting(ServiceSetting $serviceSetting): ServiceSetting
+    private function hydrateServiceSetting(): ServiceSetting
     {
         $defaultSetting = $this->em->getRepository(Setting::class)->findOneBy([]) ?? new Setting();
+        $serviceSetting = new ServiceSetting();
 
-        $serviceSetting
-            ->setWeeklyAlert($defaultSetting->getWeeklyAlert())
-            ->setDailyAlert($defaultSetting->getDailyAlert())
-            ->setSoftDeletionDelay($defaultSetting->getSoftDeletionDelay())
-            ->setHardDeletionDelay($defaultSetting->getHardDeletionDelay());
+        $reflectionServiceSetting = new ReflectionObject($serviceSetting);
+
+        foreach ((new ReflectionObject($defaultSetting))->getProperties() as $reflectionProperty) {
+            $propertyName = $reflectionProperty->getName();
+            $getMethod = 'get'.ucfirst($propertyName);
+            $setMethod = 'set'.ucfirst($propertyName);
+            if ($reflectionServiceSetting->hasMethod($setMethod)) {
+                $serviceSetting->$setMethod($defaultSetting->$getMethod());
+            }
+        }
 
         return $serviceSetting;
     }

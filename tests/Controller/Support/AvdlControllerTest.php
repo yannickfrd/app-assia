@@ -124,7 +124,6 @@ class AvdlControllerTest extends WebTestCase
         ]);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        // dump($this->client->getResponse()->getContent());
         $this->assertSelectorTextContains('.alert.alert-success', 'Le suivi social est créé.');
     }
 

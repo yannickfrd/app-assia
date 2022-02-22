@@ -66,7 +66,7 @@ class ServiceIndicator
         $this->user = $security->getUser();
 
         $this->repoIndicator = $indicatorRepo;
-        $this->UserRepo = $userRepo;
+        $this->userRepo = $userRepo;
         $this->serviceRepo = $serviceRepo;
         $this->peopleGroupRepo = $peopleGroupRepo;
         $this->supportGroupRepo = $supportGroupRepo;
@@ -149,7 +149,7 @@ class ServiceIndicator
 
         return [
             'name' => $service->getName(),
-            'nbSocialWorkers' => $this->UserRepo->countUsers([
+            'nbSocialWorkers' => $this->userRepo->countUsers([
                 'service' => [$service],
                 'status' => [1],
             ]),

@@ -1,12 +1,12 @@
 {% extends "model/_supportSearch.html.twig" %}
 
 {% block search_form %}    
-    <div class="form-group col-auto my-1 px-1">{{ form_row(form_search.type) }}</div>
-    <div class="form-group col-auto my-1 px-1">{{ form_row(form_search.dateType) }}</div>
-    <div class="form-group col-auto my-1 px-1 d-inline-flex" data-toggle="tooltip" data-placement="bottom"
+    <div class="col-auto my-1 px-1">{{ form_row(form_search.type) }}</div>
+    <div class="col-auto my-1 px-1">{{ form_row(form_search.dateType) }}</div>
+    <div class="col-auto my-1 px-1 d-inline-flex" data-toggle="tooltip" data-placement="bottom"
         title="Date de début"><span class="my-2 px-1">Entre</span>{{ form_widget(form_search.date.start) }}
     </div>
-    <div class="form-group col-auto my-1 px-1 d-inline-flex" data-toggle="tooltip" data-placement="bottom"
+    <div class="col-auto my-1 px-1 d-inline-flex" data-toggle="tooltip" data-placement="bottom"
         title="Date de fin"><span class="my-2 pr-2">et</span>{{ form_widget(form_search.date.end) }}
     </div>
 {% endblock %}

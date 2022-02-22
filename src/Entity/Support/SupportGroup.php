@@ -2,8 +2,9 @@
 
 namespace App\Entity\Support;
 
-use App\Entity\Evaluation\EvaluationGroup;
 use App\Entity\Evaluation\EvalInitGroup;
+use App\Entity\Evaluation\EvaluationGroup;
+use App\Entity\Event\Task;
 use App\Entity\Organization\Device;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\SubService;
@@ -45,6 +46,8 @@ class SupportGroup
     public const CACHE_SUPPORT_NB_PAYMENTS_KEY = 'support.payments_count';
     public const CACHE_SUPPORT_LAST_RDV_KEY = 'support.last_rdv';
     public const CACHE_SUPPORT_NEXT_RDV_KEY = 'support.next_rdv';
+    public const CACHE_SUPPORT_TASKS_KEY = 'support.tasks';
+    public const CACHE_SUPPORT_NB_TASKS_KEY = 'support.tasks_count';
 
     public const STATUS_IN_PROGRESS = 2;
     public const STATUS_ENDED = 4;
@@ -118,18 +121,17 @@ class SupportGroup
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("show_support_group")
      */
     private $id;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("export")
      */
     private $startDate;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("export")
      */
     private $theoreticalEndDate;
 
@@ -227,7 +229,7 @@ class SupportGroup
      * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User", inversedBy="supports")
      * @MaxDepth(1)
      */
-    private $createdBy; // NE PAS SUPPRIMER
+    protected $createdBy; // NE PAS SUPPRIMER
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\People\PeopleGroup", inversedBy="supports")
@@ -238,13 +240,14 @@ class SupportGroup
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Support\SupportPerson", mappedBy="supportGroup", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @Groups("show_support_person")
      * @MaxDepth(1)
      */
     private $supportPeople;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Organization\Service", inversedBy="supportGroup")
-     * @Groups("export")
+     * @Groups({"export", "show_service"})
      */
     private $service;
 
@@ -271,6 +274,13 @@ class SupportGroup
      * @MaxDepth(1)
      */
     private $rdvs;
+
+    /**
+     * @var Collection<Task>
+     * @ORM\OneToMany(targetEntity=Task::class, mappedBy="supportGroup", cascade={"remove"})
+     * @MaxDepth(1)
+     */
+    private $tasks;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Support\Document", mappedBy="supportGroup", cascade={"persist", "remove"})
@@ -332,6 +342,7 @@ class SupportGroup
         $this->supportPeople = new ArrayCollection();
         $this->notes = new ArrayCollection();
         $this->rdvs = new ArrayCollection();
+        $this->tasks = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->placeGroups = new ArrayCollection();
         $this->evaluationsGroup = new ArrayCollection();
@@ -605,6 +616,9 @@ class SupportGroup
         return $this;
     }
 
+    /**
+     * @Groups({"export", "show_service"})
+     */
     public function getService(): ?Service
     {
         return $this->service;
@@ -701,6 +715,27 @@ class SupportGroup
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<Task>|Task[]|null
+     */
+    public function getTasks(): ?Collection
+    {
+        return $this->tasks;
+    }
+
+    public function countActiveTasks(): ?int
+    {
+        $count = 0;
+
+        foreach ($this->tasks as $task) {
+            if (Task::TASK_IS_NOT_DONE === $task->getStatus()) {
+                ++$count;
+            }
+        }
+
+        return $count;
     }
 
     /**
@@ -934,6 +969,8 @@ class SupportGroup
 
     /**
      * Donne le demandeur principal du suivi.
+     *
+     * @Groups("show_support_group")
      */
     public function getHeader(): ?Person
     {

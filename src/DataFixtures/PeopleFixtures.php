@@ -169,6 +169,6 @@ class PeopleFixtures extends Fixture implements DependentFixtureInterface, Fixtu
 
     public static function getGroups(): array
     {
-        return ['people', 'support', 'evaluation', 'note', 'rdv', 'document', 'payment', 'tag'];
+        return ['people', 'support', 'evaluation', 'note', 'rdv' , 'task', 'document', 'payment', 'tag'];
     }
 }

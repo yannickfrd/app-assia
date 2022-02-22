@@ -6,17 +6,17 @@
             {{ form_start(form) }}
 
             <div class="modal-body pb-0">
-                <div class="form-group row">
+                <div class="row mb-3">
                     <div class="col-12" id="modalNoteLabel">{{ form_widget(form.title) }}</div>
                 </div>
-                <div class="form-group row">
+                <div class="row mb-3">
                     <div class="col-md-12">
                         <div id="toolbar-container" class="shadow-sm"></div>
                         <div id="editor" name="note[editor]" class="editor-fullscreen bg-white border shadow-sm"></div>
                         {{ form_widget(form.content) }}
                     </div>
                 </div>
-                <div class="form-group row">
+                <div class="row mb-3">
                     <label class="col-form-label d-none d-sm-block col-sm-2 required" for="note_type">Type</label>
                     <div class="col-6 col-sm-4">{{ form_widget(form.type) }}</div>
                     <label class="col-form-label d-none d-sm-block col-sm-2 required" for="note_status">Statut</label>

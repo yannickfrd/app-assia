@@ -1,0 +1,25 @@
+{% extends 'model/_supportSearch.html.twig' %}
+
+{% form_theme form_search 'bootstrap_4_layout.html.twig' %}
+
+{% block search_form %}
+    <div class="col-auto my-1 px-1 d-inline-flex" title="Recherche" 
+        data-toggle="tooltip" data-placement="bottom">{{ form_widget(form_search.title) }}
+    </div>
+    <div class="col-auto my-1 px-1 d-inline-flex" title="Statut" 
+        data-toggle="tooltip" data-placement="bottom">{{ form_widget(form_search.status) }}
+    </div>
+    <div class="col-auto my-1 px-1 d-inline-flex" title="Priorité" 
+        data-toggle="tooltip" data-placement="bottom">{{ form_widget(form_search.level) }}
+    </div>
+    <div class="col-auto my-1 px-1">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <div class="input-group-text" title="Étiquettes" data-toggle="tooltip" data-placement="bottom">
+                    <i class="fas fa-tag text-black-50"></i>
+                </div>
+            </div>
+            {{ form_widget(form_search.tags, {attr: {class: 'w-min-200'}}) }}
+        </div>
+    </div>
+{% endblock %}

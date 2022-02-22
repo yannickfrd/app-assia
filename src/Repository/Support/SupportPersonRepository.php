@@ -3,6 +3,7 @@
 namespace App\Repository\Support;
 
 use App\Entity\Organization\Service;
+use App\Entity\Organization\User;
 use App\Entity\People\PeopleGroup;
 use App\Entity\People\Person;
 use App\Entity\Support\PlaceGroup;
@@ -452,14 +453,33 @@ class SupportPersonRepository extends ServiceEntityRepository
      */
     public function findPeopleInSupport(SupportGroup $supportGroup): array
     {
+        return $this->findPeopleInSupportqueryBuilder($supportGroup)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return QueryBuilder|null
+     */
+    public function findPeopleInSupportqueryBuilder(SupportGroup $supportGroup): QueryBuilder
+    {
         return $this->createQueryBuilder('sp')->select('sp')
             ->leftJoin('sp.person', 'p')->addSelect('p')
 
             ->where('sp.supportGroup = :supportGroup')
-            ->setParameter('supportGroup', $supportGroup)
+            ->setParameter('supportGroup', $supportGroup);
+    }
 
-            ->getQuery()
-            ->getResult();
+    /**
+     * @return QueryBuilder|null
+     */
+    public function findPeopleInSupportByIdqueryBuilder(int $supportGroupId): QueryBuilder
+    {
+        return $this->createQueryBuilder('sp')->select('PARTIAL sp.{id, supportGroup}')
+            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, lastname, firstname}')
+
+            ->where('sp.supportGroup = :supportGroup')
+            ->setParameter('supportGroup', $supportGroupId);
     }
 
     /**
@@ -490,5 +510,48 @@ class SupportPersonRepository extends ServiceEntityRepository
         }
 
         return false;
+    }
+
+    /**
+     * Donne tous les suivis sociaux de l'utilisateur.
+     */
+    public function getSupportsOfUserQueryBuilder(User $user, $maxResult = null): QueryBuilder
+    {
+        return $this->createQueryBuilder('sp')->select('sp, sp.id, p.firstname, p.lastname')
+            ->leftJoin('sp.supportGroup', 'sg')->addSelect(('PARTIAL sg.{id, referent, status}'))
+            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
+
+            ->andWhere('sg.referent = :referent')
+            ->setParameter('referent', $user)
+            ->andWhere('sg.status = :status')
+            ->setParameter('status', SupportGroup::STATUS_IN_PROGRESS)
+            ->andWhere('sp.head = TRUE')
+
+            ->orderBy('p.lastname', 'ASC')
+            ->setMaxResults($maxResult);
+    }
+
+    /**
+     * Donne tous les suivis individuel de l'utilisateur selon le groupe.
+     */
+    public function getPeopleOfSupportQueryBuilder(User $user, int $supportGroupId): QueryBuilder
+    {
+        return $this->createQueryBuilder('sp')->select('sp, sp.id, p.firstname, p.lastname')
+            ->leftJoin('sp.supportGroup', 'sg')->addSelect(('PARTIAL sg.{id, referent, status}'))
+            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
+
+            ->andWhere('sg.referent = :referent')
+            ->setParameter('referent', $user)
+            ->andWhere('sg.id = :id_supportGroup')
+            ->setParameter('id_supportGroup', $supportGroupId)
+
+            ->orderBy('p.lastname', 'ASC');
+    }
+
+    public function getPeopleOfSupport(User $user, int $supportGroupId)
+    {
+        return $this->getPeopleOfSupportQueryBuilder($user, $supportGroupId)
+            ->getQuery()
+            ->getArrayResult();
     }
 }

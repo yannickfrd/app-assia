@@ -1,46 +1,51 @@
 {% set people_group = support.peopleGroup %}
-{% set SERVICE_TYPE_HOTEL = constant("App\\Entity\\Organization\\Service::SERVICE_TYPE_HOTEL") %}
+{% set SERVICE_TYPE_HOTEL = constant('App\\Entity\\Organization\\Service::SERVICE_TYPE_HOTEL') %}
 
 <section class="m-0">
 	<div class="d-md-flex justify-content-md-between mb-2">
 		<h1 class="h2">Suivi<span class="fas fa-angle-right fa-xs mx-1"></span>{{ title }}</h1>
 		<div id="support" data-support="{{ support.id }}">
 			<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_view', {'id': support.id}) }}" 
-				data-toggle="tooltip" data-placement="bottom" title="Page d'accueil du suivi">
+				title="Page d'accueil du suivi" data-toggle="tooltip" data-placement="bottom" >
 				<span class="fas fa-home"></span><span class="sr-only">Page d'accueil du suivi</span>
 			</a>
-			{% if support.device and support.device.place == YES %}
+			{% if support.device.place == YES %}
 				<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_places', {'id': support.id}) }}" 
-					data-toggle="tooltip" data-placement="bottom" title="{% if support.service.type == SERVICE_TYPE_HOTEL %}Prises en charge hôtelelières{% else %}Modalités d'hébergement{% endif %}">
+					title="Prise(s) en charge hébergement"
+					data-toggle="tooltip" data-placement="bottom">
 					<span class="fas fa-bed"></span><span class="sr-only">Hébergement</span>
 				</a>
 			{% endif %}
-			{% if support.device and support.device.contribution == YES %}
-				<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_payments', {'id': support.id}) }}" 
-					data-toggle="tooltip" data-placement="bottom" title="Paiements (redevances, PF, caution...)">
-					<span class="fas fa-euro-sign px-1"></span><span class="sr-only">Paiements</span>
-				</a>
-			{% endif %}
 			<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_evaluation_view', {'id': support.id}) }}" 
-				data-toggle="tooltip" data-placement="bottom" title="Evaluation sociale">
+				title="Evaluation sociale" data-toggle="tooltip" data-placement="bottom">
 				<span class="fas fa-clipboard"></span><span class="sr-only">Évaluation</span>
 			</a>
 			<a href="{{ path('support_calendar_show', {'id': support.id}) }}" class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" 
-				data-toggle="tooltip" data-placement="bottom" title="Rendez-vous">
+				title="Rendez-vous" data-toggle="tooltip" data-placement="bottom">
 				<span class="far fa-calendar-alt"></span><span class="sr-only">Agenda</span>
 			</a>
+			<a href="{{ path('support_task_index', {'id': support.id}) }}" class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" 
+				title="Tâches" data-toggle="tooltip" data-placement="bottom">
+				<span class="fa fa-tasks"></span><span class="sr-only">Tâches</span>
+			</a>
 			<a href="{{ path('support_notes', {'id': support.id}) }}" class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" 
-				data-toggle="tooltip" data-placement="bottom" title="Notes sociales">
+				title="Notes sociales" data-toggle="tooltip" data-placement="bottom">
 				<span class="fas fa-edit"></span><span class="sr-only">Notes</span>
 			</a>
 			<a href="{{ path('support_documents', {'id': support.id}) }}" class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" 
-				data-toggle="tooltip" data-placement="bottom" title="Documents administratifs">
+				title="Documents administratifs" data-toggle="tooltip" data-placement="bottom">
 				<span class="fas fa-file-upload"></span><span class="sr-only">Documents</span>
 			</a>
+			{% if support.device.contribution == YES %}
+				<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_payments', {'id': support.id}) }}" 
+					title="Paiements" data-toggle="tooltip" data-placement="bottom">
+					<span class="fas fa-euro-sign px-1"></span><span class="sr-only">Paiements</span>
+				</a>
+			{% endif %}
 		</div>
 	</div>
 	
-	{% include "model/_msgFlash.html.twig" %}
+	{% include 'model/_msgFlash.html.twig' %}
 
 	<nav aria-label="breadcrumb">
 		<ol class="breadcrumb">
@@ -57,8 +62,8 @@
 	</nav>
 	<div id="js-support-people">
 		{% if support.supportPeople %}
-			{% for support_person in support.supportPeople|filter(s => s.status == support.status) %}
-				<a href="{{ path("group_person_show", {"id": people_group.id, "person_id": support_person.person.id, "slug": support_person.person.slug}) }}" 
+			{% for support_person in support.supportPeople%}
+				<a href="{{ path('group_person_show', {'id': people_group.id, 'person_id': support_person.person.id, 'slug': support_person.person.slug}) }}" 
 					class="btn btn-outline-{{ theme_color }} btn-sm rounded-pill small mb-2">{{ support_person.person.fullname }}</a>
 			{% endfor %}
 		{% endif %}

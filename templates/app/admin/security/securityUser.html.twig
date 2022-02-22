@@ -50,7 +50,7 @@
                 </div>
             {% endif %}
             {% if user.id %}
-                <div class="form-group row mb-4">
+                <div class="row mb-3 mb-4">
                     <div class="col-md-12">
                         <div class="float-left d-flex">
                             <a class="mr-3 btn btn-{{ disabled ? 'success' : 'danger' }} d-block" 
@@ -115,7 +115,7 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group row mb-4">
+            <div class="row mb-3 mb-4">
                 <div class="col-md-12">
                     <button type="button" class="btn btn-{{ theme_color }}" data-add-widget="service"
                         data-list-selector="#serviceUser-fields-list"><i class="fas fa-plus-square mr-2"></i>Ajouter un
@@ -128,7 +128,7 @@
             </div>
         </section>
 
-        {% if user.id and user.status == constant("STATUS_SOCIAL_WORKER", app.user) %}
+        {% if user.id and user.status == constant("STATUS_SOCIAL_WORKER", user) %}
             <hr>
             <section id="supports-by-device">
                 <h2 class="h4 mb-4">Nombre théorique de suivis par dispositif</h2>
@@ -169,7 +169,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group row mb-4">
+                <div class="row mb-3 mb-4">
                     <div class="col-md-12">
                         <button type="button" class="btn btn-{{ theme_color }}"
                             data-add-widget="device" data-list-selector="#userDevices-fields-list">

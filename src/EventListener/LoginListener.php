@@ -7,10 +7,7 @@ use App\Entity\Organization\User;
 use App\Entity\Organization\UserConnection;
 use App\Form\Utils\Choices;
 use App\Repository\Organization\UserConnectionRepository;
-use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 

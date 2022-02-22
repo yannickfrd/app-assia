@@ -2,6 +2,11 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Evaluation\EvalAdmPerson;
+use App\Entity\Evaluation\EvalBudgetPerson;
+use App\Entity\Evaluation\EvalHousingGroup;
+use App\Entity\Evaluation\EvalProfPerson;
+use App\Entity\Evaluation\EvalSocialPerson;
 use App\Entity\Evaluation\EvaluationGroup;
 use App\Entity\Evaluation\EvaluationPerson;
 use App\Entity\Support\SupportGroup;
@@ -41,6 +46,7 @@ class EvaluationFixtures extends Fixture implements DependentFixtureInterface, F
             ->setSupportGroup($supportGroup)
             ->setCreatedAt($supportGroup->getCreatedAt())
             ->setCreatedBy($supportGroup->getCreatedBy())
+            ->setEvalHousingGroup($this->createHousingGroupEvaluation())
         ;
 
         $this->objectManager->persist($evaluationGroup);
@@ -56,11 +62,55 @@ class EvaluationFixtures extends Fixture implements DependentFixtureInterface, F
     {
         $evaluationPerson = (new EvaluationPerson())
             ->setSupportPerson($supportPerson)
-            ->setEvaluationGroup($evaluationGroup);
+            ->setEvaluationGroup($evaluationGroup)
+            ->setEvalAdmPerson($this->createAdmEvaluation())
+            ->setEvalProfPerson($this->createProfEvaluation())
+            ->setEvalSocialPerson($this->createSocialEvaluation())
+            ->setEvalBudgetPerson($this->createBudgetEvaluation())
+        ;
 
         $this->objectManager->persist($evaluationPerson);
 
         return $evaluationPerson;
+    }
+
+    private function createAdmEvaluation(): EvalAdmPerson
+    {
+        return (new EvalAdmPerson())
+            ->setEndValidPermitDate(AppFixtures::getDateTimeBeetwen('-3 months', '+ 1 year'))
+        ;
+    }
+
+    private function createBudgetEvaluation(): EvalBudgetPerson
+    {
+        return (new EvalBudgetPerson())
+            ->setEndRightsDate(AppFixtures::getDateTimeBeetwen('-3 months', '+ 1 year'))
+        ;
+    }
+
+    private function createSocialEvaluation(): EvalSocialPerson
+    {
+        return (new EvalSocialPerson())
+        ->setEndRightsSocialSecurityDate(AppFixtures::getDateTimeBeetwen('-3 months', '+ 1 year'))
+        ;
+    }
+
+    private function createProfEvaluation(): EvalProfPerson
+    {
+        return (new EvalProfPerson())
+            ->setEndRqthDate(AppFixtures::getDateTimeBeetwen('-3 months', '+ 1 year'))
+        ;
+    }
+
+    private function createHousingGroupEvaluation(): EvalHousingGroup
+    {
+        $evalHousingGroup = (new EvalHousingGroup())
+            ->setEndDomiciliationDate(AppFixtures::getDateTimeBeetwen('-3 months', '+ 1 year'))
+            ->setSiaoUpdatedRequestDate(AppFixtures::getDateTimeBeetwen('-3 months', 'now'))
+            ->setSocialHousingRequestDate(AppFixtures::getDateTimeBeetwen('-12 months', 'now'))
+        ;
+
+        return $evalHousingGroup;
     }
 
     public function getDependencies(): array

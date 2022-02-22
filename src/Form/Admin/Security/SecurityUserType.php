@@ -83,7 +83,7 @@ class SecurityUserType extends AbstractType
                 'label_attr' => ['class' => 'sr-only'],
                 'entry_options' => [
                     'attr' => ['class' => 'form-inline'],
-                ],
+                ],  
             ])
             ->add('userDevices', CollectionType::class, [
                 'entry_type' => UserDeviceType::class,

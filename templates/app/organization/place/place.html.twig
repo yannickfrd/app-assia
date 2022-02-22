@@ -40,22 +40,22 @@
 
             {{ form_start(form) }}
 
-            <div class="form-group row">
+            <div class="row mb-3">
                 <div class="col-md-6">{{ form_row(form.name) }}</div>
             </div>
-            <div class="form-group row">
+            <div class="row mb-3">
                 <div class="col-md-6">{{ form_row(form.service) }}</div>
                 <div class="col-md-6">{{ form_row(form.subService) }}</div>
             </div>
-            <div class="form-group row">
+            <div class="row mb-3">
                 <div class="col-md-6">{{ form_row(form.device) }}</div>
                 <div class="col-md-6">{{ form_row(form.nbPlaces) }}</div>
             </div>
-            <div class="form-group row">
+            <div class="row mb-3">
                 <div class="col-md-6">{{ form_row(form.startDate) }}</div>
                 <div class="col-md-6">{{ form_row(form.endDate) }}</div>
             </div>
-            <div class="form-group row" id="place_location">
+            <div class="row mb-3" id="place_location">
                 <div class="col-md-6">{{ form_row(form.location.search) }}</div>
                 <div class="col-md-6">{{ form_row(form.location.address) }}</div>
                 <div class="col-md-6">{{ form_row(form.location.city) }}</div>
@@ -65,7 +65,7 @@
                 {{ form_row(form.location.lat) }}
                 {{ form_row(form.location.lon) }}
             </div>
-            <div class="form-group row">
+            <div class="row mb-3">
                 <div class="col-md-6">{{ form_row(form.placeType) }}</div>
                 <div class="col-md-6">{{ form_row(form.configuration) }}</div>
                 <div class="col-md-6">{{ form_row(form.individualCollective) }}</div>
@@ -73,16 +73,16 @@
                 <div class="col-md-6">{{ form_row(form.lessor) }}</div>
             </div>
             {% if place.service.contributionType in [2, 3] %}
-                <div class="form-group row">
+                <div class="row mb-3">
                     <div class="col-md-6">{{ form_row(form.rentAmt) }}</div>
                 </div>
             {% endif %}
-            <div class="form-group row">
+            <div class="row mb-3">
                 <div class="col-md-12">{{ form_widget(form.comment) }}</div>
             </div>
 
             {% if is_granted("EDIT", place.service) %}
-                <div class="form-group row">
+                <div class="row mb-3">
                     <div class="col-md-12">
                         {% if EDIT_MODE and is_granted("DELETE", place) %}
                             <div class="float-left d-flex">

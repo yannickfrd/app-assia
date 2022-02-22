@@ -2,6 +2,7 @@
 
 namespace App\Entity\Organization;
 
+use App\Entity\Event\Task;
 use App\Entity\Support\Document;
 use App\Entity\Support\Note;
 use App\Entity\Support\Rdv;
@@ -36,6 +37,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public const CACHE_USER_SUPPORTS_KEY = 'user.supports'; // Suivis de l'utilisateur
     public const CACHE_USER_NOTES_KEY = 'user.notes'; // Notes de l'utilisateur
     public const CACHE_USER_RDVS_KEY = 'user.rdvs'; // Rendez-vous de l'utilisateur
+    public const CACHE_USER_TASKS_KEY = 'user.tasks'; // Tâches de l'utilisateur
 
     public const STATUS_SOCIAL_WORKER = 1;
     public const STATUS_COORDO = 2;
@@ -76,6 +78,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("show_user")
      */
     private $id;
 
@@ -134,7 +137,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $firstname;
 
     /**
-     * @Groups({"export", "view"})
+     * @Groups({"export", "view", "show_user"})
      */
     private $fullname;
 
@@ -229,6 +232,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $rdvs2;
 
     /**
+     * @ORM\ManyToMany(targetEntity=Task::class, mappedBy="users")
+     */
+    private $tasks;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Task::class, mappedBy="createdBy")
+     */
+    private $tasksCreated;
+    /**
      * @ORM\OneToOne(targetEntity=UserSetting::class, cascade={"persist", "remove"})
      */
     private $setting;
@@ -245,6 +257,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->documents = new ArrayCollection();
         $this->userDevices = new ArrayCollection();
         $this->rdvs2 = new ArrayCollection();
+        $this->tasks = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -347,7 +360,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
@@ -807,6 +820,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<Task>|Task[]|null
+     */
+    public function getTasks(): ?Collection
+    {
+        return $this->tasks;
     }
 
     public function getSetting(): ?UserSetting

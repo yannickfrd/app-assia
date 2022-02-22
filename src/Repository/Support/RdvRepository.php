@@ -37,7 +37,7 @@ class RdvRepository extends ServiceEntityRepository
         $qb = $this->getRdvsQuery();
 
         return $qb = $this->filter($qb, $search, $currentUser)
-        
+
             ->orderBy('r.start', 'ASC')
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
@@ -102,11 +102,13 @@ class RdvRepository extends ServiceEntityRepository
     protected function filter(QueryBuilder $qb, RdvSearch $search, CurrentUserService $currentUser = null): QueryBuilder
     {
         if ($currentUser && !$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
-            $qb->where('r.createdBy IN (:user)')
+            $qb->where('r.createdBy = :user')
                 ->setParameter('user', $currentUser->getUser());
             $qb->orWhere('sg.service IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
         }
+
+        $qb->andWhere('sg.id IS NULL OR sp.head = TRUE');
 
         if ($search->getId()) {
             return $qb->andWhere('r.id = :id')
@@ -262,18 +264,18 @@ class RdvRepository extends ServiceEntityRepository
      *
      * @return Rdv[]|null
      */
-    public function findRdvsOfUser(User $user, int $maxResults = 1000): ?array
+    public function findRdvsOfUser(User $user, int $maxResults = 100): ?array
     {
-        return $this->createQueryBuilder('rdv')->addSelect('rdv')
+        return $this->createQueryBuilder('rdv')
             ->leftJoin('rdv.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, head, role}')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
 
-            ->andWhere('rdv.createdBy = :createdBy')
-            ->setParameter('createdBy', $user)
+            ->where('rdv.createdBy = :user')
+            ->setParameter('user', $user)
+            ->andWhere('sg.id IS NULL OR sp.head = TRUE')
             ->andWhere('rdv.start >= :start')
             ->setParameter('start', (new \DateTime())->modify('-1 hour'))
-            // ->andWhere('sp.head = TRUE')
 
             ->orderBy('rdv.start', 'DESC')
 

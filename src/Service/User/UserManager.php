@@ -3,15 +3,15 @@
 namespace App\Service\User;
 
 use App\Entity\Admin\Setting;
+use App\Entity\Organization\Service;
 use App\Entity\Organization\ServiceSetting;
 use App\Entity\Organization\User;
-use App\Entity\Organization\Service;
 use App\Entity\Organization\UserSetting;
-use App\Notification\UserNotification;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Model\Security\UserChangeInfo;
 use App\Form\Model\Security\UserResetPassword;
+use App\Notification\UserNotification;
 use App\Repository\Organization\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -46,14 +46,10 @@ class UserManager
         $this->flashbag->add('success', 'Le compte de '.$user->getFirstname().' est créé. Un e-mail lui a été envoyé.');
     }
 
-    /**
-     * @param User $user
-     */
     public function getUserSetting(User $user): UserSetting
     {
         // If the user has no service, we get the application's config.
         if (!$user->getServices() || !$user->getServices()->first() || !$user->getServices()->first()->getSetting()) {
-//            dd($this->em->getRepository(Setting::class)->findOneBy([]));
             return $this->hydrateUserSetting($this->em->getRepository(Setting::class)->findOneBy([]));
         }
 
@@ -114,14 +110,11 @@ class UserManager
         $this->flashbag->add('success', 'Les modifications sont enregistrées.');
     }
 
-    /**
-     * @param User $user
-     */
-    public function updateSetting(User $user): void
+    public function updateSetting(): void
     {
         $this->em->flush();
 
-        $this->flashbag->add('success', 'Les paramètres sont bien enregistrés');
+        $this->flashbag->add('success', 'Les paramètres sont bien enregistrés.');
     }
 
     /**

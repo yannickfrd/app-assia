@@ -10,8 +10,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Setting
 {
+    use TaskSettingTrait;
+    use DeletionSettingTrait;
+
     public const DEFAULT_SOFT_DELETION_DELAY = 24;
     public const DEFAULT_HARD_DELETION_DELAY = 12;
+    public const DEFAULT_AUTO_ALERT_DELAY = 1;
 
     /**
      * @ORM\Id
@@ -25,25 +29,17 @@ class Setting
      */
     private $organizationName;
 
-    /**
+    /*
      * @ORM\Column(type="integer", nullable=true)
+     * @Assert\Range(min=0, max=12)
      */
-    private $softDeletionDelay = self::DEFAULT_SOFT_DELETION_DELAY;
+    private $delayToUpdateSiaoRequest = 3;
 
-    /**
+    /*
      * @ORM\Column(type="integer", nullable=true)
+     * @Assert\Range(min=0, max=24)
      */
-    private $hardDeletionDelay = self::DEFAULT_SOFT_DELETION_DELAY;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $weeklyAlert = false;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $dailyAlert = false;
+    private $delayToUpdateSocialHousingRequest = 12;
 
     public function getId(): ?int
     {
@@ -62,50 +58,26 @@ class Setting
         return $this;
     }
 
-    public function getSoftDeletionDelay(): ?int
+    public function getDelayToUpdateSiaoRequest(): ?int
     {
-        return $this->softDeletionDelay;
+        return $this->delayToUpdateSiaoRequest;
     }
 
-    public function setSoftDeletionDelay(?int $softDeletionDelay): self
+    public function setDelayToUpdateSiaoRequest(int $delayToUpdateSiaoRequest): self
     {
-        $this->softDeletionDelay = $softDeletionDelay;
+        $this->delayToUpdateSiaoRequest = $delayToUpdateSiaoRequest;
 
         return $this;
     }
 
-    public function getHardDeletionDelay(): ?int
+    public function getDelayToUpdateSocialHousingRequest(): ?int
     {
-        return $this->hardDeletionDelay;
+        return $this->delayToUpdateSocialHousingRequest;
     }
 
-    public function setHardDeletionDelay(?int $hardDeletionDelay): self
+    public function setDelayToUpdateSocialHousingRequest(int $delayToUpdateSocialHousingRequest): self
     {
-        $this->hardDeletionDelay = $hardDeletionDelay;
-
-        return $this;
-    }
-
-    public function getWeeklyAlert(): bool
-    {
-        return $this->weeklyAlert;
-    }
-
-    public function setWeeklyAlert(bool $weeklyAlert): self
-    {
-        $this->weeklyAlert = $weeklyAlert;
-
-        return $this;
-    }
-
-    public function getDailyAlert(): bool
-    {
-        return $this->dailyAlert;
-    }
-
-    public function setDailyAlert(bool $dailyAlert): self
-    {
-        $this->dailyAlert = $dailyAlert;
+        $this->delayToUpdateSocialHousingRequest = $delayToUpdateSocialHousingRequest;
 
         return $this;
     }

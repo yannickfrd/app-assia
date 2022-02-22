@@ -47,7 +47,7 @@ class ServiceController extends AbstractController
             return $this->exportData($search);
         }
 
-        return $this->render('app/organization/service/listServices.html.twig', [
+        return $this->render('app/organization/service/service_index.html.twig', [
             'serviceSearch' => $search,
             'form' => $form->createView(),
             'services' => $pagination->paginate($this->serviceRepo->findServicesQuery($search, $this->getUser()), $request) ?? null,
@@ -123,10 +123,10 @@ class ServiceController extends AbstractController
 
         return $this->render('app/organization/service/service.html.twig', [
             'form' => $form->createView(),
-            'subServices' => $subServiceRepo->findSubServicesOfService($service),
+            'sub_services' => $subServiceRepo->findSubServicesOfService($service),
             'users' => $userRepo->findUsersOfService($service),
             'places' => $places,
-            'nbPlaces' => $nbPlaces,
+            'nb_places' => $nbPlaces,
             'form_tags' => $formTags->createView(),
             'service_tags' => $tags,
         ]);

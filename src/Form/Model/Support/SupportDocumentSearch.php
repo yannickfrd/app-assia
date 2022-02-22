@@ -11,7 +11,7 @@ class SupportDocumentSearch
     private $name;
 
     /** @var ArrayCollection|null */
-    private $tags;
+    protected $tags;
 
     public function getName(): ?string
     {

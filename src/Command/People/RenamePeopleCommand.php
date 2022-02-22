@@ -53,8 +53,8 @@ class RenamePeopleCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        if ('dev' != $_SERVER['APP_ENV'] || 'localhost' != $_SERVER['DB_HOST']) {
-            $io->error('Invalid environnement!');
+        if ('dev' !== $_SERVER['APP_ENV'] || 'localhost' !== $_SERVER['DB_HOST']) {
+            $io->error('Environnement is invalid!');
 
             return Command::FAILURE;
         }

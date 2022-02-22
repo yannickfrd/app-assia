@@ -116,6 +116,6 @@ class SupportFixtures extends Fixture implements DependentFixtureInterface, Fixt
 
     public static function getGroups(): array
     {
-        return ['support', 'evaluation', 'note', 'rdv', 'document', 'payment', 'tag'];
+        return ['support', 'evaluation', 'note', 'rdv' , 'task', 'document', 'payment', 'tag'];
     }
 }

@@ -110,15 +110,15 @@
             </div>
         </div>
         <div class="mt-3 mb-4">
-            <div class="form-group row">
+            <div class="row mb-3">
                 <div class="col-md-6">{{ form_row(form.familyTypology) }}</div>
                 <div class="col-md-6">{{ form_row(form.nbPeople) }}</div>
                 <div class="col-md-6">{{ form_row(form.siSiaoId) }}</div>
             </div>
-            <div class="form-group row">
+            <div class="row mb-3">
                 <div class="col-md-12">{{ form_widget(form.comment) }}</div>
             </div>
-            <div class="form-group row">
+            <div class="row mb-3">
                 <div class="col-md-12">
                     {% if is_granted_ROLE_ADMIN %}
                         <div class="float-left d-flex">

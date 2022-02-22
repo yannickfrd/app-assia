@@ -80,11 +80,11 @@ export default class SearchLocation {
         const valueSearch = this.searchElt.value.replace(' ', '+')
         const geo = `&lat=${this.lat}&lon=${this.lon}` // Donne une priorité géographique
         let url = 'https://api-adresse.data.gouv.fr/search/?q='
-       
+
         if (this.codeDepartement) {
             return 'https://geo.api.gouv.fr/communes?nom=' + valueSearch + '&codeDepartement=' + this.codeDepartement + '&limit=' + this.limit
         }
-        
+
         if (this.locationType === 'city') {
             url = url + valueSearch + '&type=municipality' + '&autocomplete=1' + '&limit=' + this.limit
         }
@@ -187,8 +187,9 @@ export default class SearchLocation {
             return this.cityElt.value = result.nom
         }
         this.searchElt.value = result.properties.label
-        this.cityElt.value = result.properties.city
-
+        if (result.properties.city && this.cityElt) {
+            this.cityElt.value = result.properties.city
+        }
         if (this.zipcodeElt) {
             this.zipcodeElt.value = result.properties.postcode
         }
