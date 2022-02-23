@@ -125,12 +125,6 @@ services:
         arguments:
             $url: "%env(SISIAO_URL)%"
 
-    Twig\CacheExtension\CacheProviderInterface:
-        class: Twig\CacheExtension\CacheProvider\PsrCacheAdapter
-
-    Twig\CacheExtension\CacheStrategyInterface:
-        class: Twig\CacheExtension\CacheStrategy\LifetimeCacheStrategy
-
     App\Service\Api\OutlookApi\OutlookCalendarApiService:
         arguments:
             $outlookClientSecret: "%env(OUTLOOK_CLIENT_SECRET)%"

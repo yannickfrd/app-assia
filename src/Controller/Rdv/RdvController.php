@@ -251,8 +251,6 @@ class RdvController extends AbstractController
 
     /**
      * Creation of urls according to the selected api.
-     *
-     * @param $id
      */
     private function getApiSelected(string $action, $id, array $requestRdv = [], array $eventIds = []): array
     {
@@ -274,7 +272,6 @@ class RdvController extends AbstractController
                         );
                     }
                 }
-
                 return $urls;
         }
 
