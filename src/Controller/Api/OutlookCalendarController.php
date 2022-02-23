@@ -28,8 +28,6 @@ class OutlookCalendarController extends AbstractController
 
     /**
      * @Route("/outlook-calendar/event/create", name="create_event_outlook_calendar", methods={"GET"})
-     * @param Request $request
-     * @return JsonResponse
      */
     public function createEventClientOutlookCalendar(Request $request): JsonResponse
     {
@@ -62,8 +60,7 @@ class OutlookCalendarController extends AbstractController
 
     /**
      * @Route("/outlook-calendar/event/update/{rdvId}", name="update_event_outlook_calendar", methods={"PUT"})
-     * @param int $rdvId
-     * @return JsonResponse
+     *
      * @throws GuzzleException
      * @throws GraphException
      */
@@ -88,8 +85,7 @@ class OutlookCalendarController extends AbstractController
 
     /**
      * @Route("/outlook-calendar/event/delete/{eventId}", name="delete_event_outlook_calendar", methods={"DELETE"})
-     * @param string $eventId
-     * @return JsonResponse
+     *
      * @throws GraphException
      * @throws GuzzleException
      * @throws ClientExceptionInterface

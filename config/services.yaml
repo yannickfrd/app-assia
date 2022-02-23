@@ -10,8 +10,6 @@ parameters:
     downloads_directory: "%kernel.project_dir%/public/downloads/"
     app_env: "%env(APP_ENV)%"
     admin_email: "%env(ADMIN_EMAIL)%"
-    outlook_client_secret: "%env(OUTLOOK_CLIENT_SECRET)%"
-    outlook_client_id: "%env(OUTLOOK_CLIENT_ID)%"
 
 services:
     # default configuration for services in *this* file
@@ -21,8 +19,6 @@ services:
         bind:
             $adminEmail: "%admin_email%"
             $appEnv: "%app_env%"
-            $outlookClientSecret: "%outlook_client_secret%"
-            $outlookClientId: "%outlook_client_id%"
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -134,6 +130,17 @@ services:
 
     Twig\CacheExtension\CacheStrategyInterface:
         class: Twig\CacheExtension\CacheStrategy\LifetimeCacheStrategy
+
+    App\Service\Api\OutlookApi\OutlookCalendarApiService:
+        arguments:
+            $outlookClientSecret: "%env(OUTLOOK_CLIENT_SECRET)%"
+            $outlookClientId: "%env(OUTLOOK_CLIENT_ID)%"
+
+    App\Service\Api\GoogleApi\GoogleCalendarApiService:
+        arguments:
+            $googleClientSecret: "%env(GOOGLE_CLIENT_SECRET)%"
+            $googleClientId: "%env(GOOGLE_CLIENT_ID)%"
+            $googleProjectId: "%env(GOOGLE_PROJECT_ID)%"
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
