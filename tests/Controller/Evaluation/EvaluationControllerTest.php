@@ -69,7 +69,7 @@ class EvaluationControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Évaluation sociale');
-        $this->assertSelectorExists('button#heading_evaluation_evaluationPeople_0_initEvalPerson');
+        $this->assertSelectorExists('button#heading_evaluation_evaluationPeople_0_evalInitPerson');
 
         $csrfToken = $crawler->filter('#evaluation__token')->attr('value');
 
@@ -89,7 +89,7 @@ class EvaluationControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Évaluation sociale');
-        $this->assertSelectorExists('button#heading_evaluation_evaluationPeople_0_initEvalPerson');
+        $this->assertSelectorExists('button#heading_evaluation_evaluationPeople_0_evalInitPerson');
     }
 
     public function testShowEvaluationIsRedirect()
@@ -101,7 +101,7 @@ class EvaluationControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Évaluation sociale');
-        $this->assertSelectorExists('button#heading_evaluation_evaluationPeople_0_initEvalPerson');
+        $this->assertSelectorExists('button#heading_evaluation_evaluationPeople_0_evalInitPerson');
     }
 
     public function testEditEvaluationIsSuccessful()
@@ -157,7 +157,7 @@ class EvaluationControllerTest extends WebTestCase
     {
         return [
             'evaluation' => [
-                'initEvalGroup' => [
+                'evalInitGroup' => [
                     'siaoRequest' => 1,
                     'socialHousingRequest' => 2,
                 ],
@@ -199,7 +199,7 @@ class EvaluationControllerTest extends WebTestCase
                 ],
                 'evaluationPeople' => [
                     0 => [
-                        'initEvalPerson' => [
+                        'evalInitPerson' => [
                             'paper' => 1,
                             'paperType' => 1,
                             'rightSocialSecurity' => 1,
@@ -211,7 +211,7 @@ class EvaluationControllerTest extends WebTestCase
                             'resource' => 1,
                             'resourcesAmt' => 1100,
                             'comment' => 'XXX',
-                            'resources' => [
+                            'evalBudgetResources' => [
                                 0 => [
                                     'type' => 10, // salaire
                                     'amount' => 1000,
@@ -238,7 +238,7 @@ class EvaluationControllerTest extends WebTestCase
                             'debt' => 1,
                             'debtsAmt' => 3450,
                             'commentEvalBudget' => 'XXX',
-                            'resources' => [
+                            'evalBudgetResources' => [
                                 0 => [
                                     'type' => 10, // salaire
                                     'amount' => 1000,
@@ -249,7 +249,7 @@ class EvaluationControllerTest extends WebTestCase
                                     'comment' => 'Aide famille',
                                 ],
                             ],
-                            'charges' => [
+                            'evalBudgetCharges' => [
                                 0 => [
                                     'type' => 50, // assurance
                                     'amount' => 48,
@@ -259,7 +259,7 @@ class EvaluationControllerTest extends WebTestCase
                                     'amount' => 65,
                                 ],
                             ],
-                            'debts' => [
+                            'evalBudgetDebts' => [
                                 0 => [
                                     'type' => 10, // dettes locatives
                                     'amount' => 3450,

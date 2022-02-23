@@ -13,8 +13,8 @@ use App\Entity\Evaluation\EvalSocialGroup;
 use App\Entity\Evaluation\EvalSocialPerson;
 use App\Entity\Evaluation\EvaluationGroup;
 use App\Entity\Evaluation\EvaluationPerson;
-use App\Entity\Evaluation\InitEvalGroup;
-use App\Entity\Evaluation\InitEvalPerson;
+use App\Entity\Evaluation\EvalInitGroup;
+use App\Entity\Evaluation\EvalInitPerson;
 use App\Entity\Organization\Device;
 use App\Entity\Organization\Place;
 use App\Entity\Organization\Referent;
@@ -758,7 +758,7 @@ class ImportDatasHebergement extends ImportDatas
 
         $evaluationGroup = (new EvaluationGroup())
             ->setSupportGroup($supportGroup)
-            ->setInitEvalGroup($this->createInitEvalGroup($supportGroup))
+            ->setEvalInitGroup($this->createEvalInitGroup($supportGroup))
             ->setDate($supportGroup->getCreatedAt())
             ->setConclusion($conclusion)
             ->setCreatedAt($supportGroup->getCreatedAt())
@@ -776,9 +776,9 @@ class ImportDatasHebergement extends ImportDatas
         return $evaluationGroup;
     }
 
-    protected function createInitEvalGroup(SupportGroup $supportGroup): InitEvalGroup
+    protected function createEvalInitGroup(SupportGroup $supportGroup): EvalInitGroup
     {
-        $initEvalGroup = (new InitEvalGroup())
+        $evalInitGroup = (new EvalInitGroup())
             ->setHousingStatus($this->findInArray($this->field['Situation résidentielle (avant entrée)'], self::HOUSING_STATUS))
             ->setSiaoRequest($this->findInArray($this->field['Demande SIAO active'], self::YES_NO))
             ->setSocialHousingRequest($this->findInArray($this->field['Demande logement social (entrée)'], self::YES_NO))
@@ -786,9 +786,9 @@ class ImportDatasHebergement extends ImportDatas
             ->setDebtsGroupAmt(null)
             ->setSupportGroup($supportGroup);
 
-        $this->em->persist($initEvalGroup);
+        $this->em->persist($evalInitGroup);
 
-        return $initEvalGroup;
+        return $evalInitGroup;
     }
 
     protected function createEvalFamilyGroup(EvaluationGroup $evaluationGroup): ?EvalFamilyGroup
@@ -953,7 +953,7 @@ class ImportDatasHebergement extends ImportDatas
         $evaluationPerson = (new EvaluationPerson())
             ->setEvaluationGroup($evaluationGroup)
             ->setSupportPerson($supportPerson)
-            ->setInitEvalPerson($this->createInitEvalPerson($supportPerson))
+            ->setEvalInitPerson($this->createEvalInitPerson($supportPerson))
             ->setCreatedBy($this->user)
             ->setUpdatedBy($this->user);
 
@@ -968,9 +968,9 @@ class ImportDatasHebergement extends ImportDatas
         return $evaluationPerson;
     }
 
-    protected function createInitEvalPerson(SupportPerson $supportPerson): ?InitEvalPerson
+    protected function createEvalInitPerson(SupportPerson $supportPerson): ?EvalInitPerson
     {
-        $initEvalPerson = (new InitEvalPerson())
+        $evalInitPerson = (new EvalInitPerson())
             ->setPaper($this->findInArray($this->field['Situation administrative (entrée)'], self::PAPER))
             ->setPaperType($this->findInArray($this->field['Situation administrative (entrée)'], self::PAPER_TYPE))
             ->setRightSocialSecurity($this->findInArray($this->field['Couverture maladie (entrée)'], self::RIGHT_SOCIAL_SECURITY))
@@ -979,7 +979,7 @@ class ImportDatasHebergement extends ImportDatas
             ->setFriendshipBreakdown($this->findInArray($this->field['Rupture liens familiaux et amicaux'], self::YES_NO))
             ->setProfStatus($this->findInArray($this->field['Emploi (entrée)'], self::PROF_STATUS))
             ->setContractType($this->findInArray($this->field['Emploi (entrée)'], self::CONTRACT_TYPE))
-            ->setResources($this->findInArray($this->field['Ressources (entrée)'], self::YES_NO))
+            ->setResource($this->findInArray($this->field['Ressources (entrée)'], self::YES_NO))
             ->setResourcesAmt((float) $this->field['Montant ressources (entrée)'])
             ->setUnemplBenefit('Oui' === $this->field['ARE (entrée)'] ? Choices::YES : 0)
             ->setMinimumIncome('Oui' === $this->field['RSA (entrée)'] ? Choices::YES : 0)
@@ -996,11 +996,11 @@ class ImportDatasHebergement extends ImportDatas
             ->setComment($this->field['Commentaire situation à l\'entrée'])
             ->setSupportPerson($supportPerson);
 
-        $initEvalPerson = $this->updateResourceType($initEvalPerson, $this->field['Autres ressources (entrée)']);
+        $evalInitPerson = $this->updateResourceType($evalInitPerson, $this->field['Autres ressources (entrée)']);
 
-        $this->em->persist($initEvalPerson);
+        $this->em->persist($evalInitPerson);
 
-        return $initEvalPerson;
+        return $evalInitPerson;
     }
 
     protected function createEvalSocialPerson(EvaluationPerson $evaluationPerson): EvalSocialPerson
@@ -1095,7 +1095,7 @@ class ImportDatasHebergement extends ImportDatas
         }
 
         $evalBudgetPerson = (new EvalBudgetPerson())
-            ->setResources($this->findInArray($this->field['Ressources'], self::YES_NO))
+            ->setResource($this->findInArray($this->field['Ressources'], self::YES_NO))
             ->setResourcesAmt((float) $this->field['Montant ressources'])
             ->setUnemplBenefit('Oui' === $this->field['ARE'] ? Choices::YES : 0)
             ->setMinimumIncome('Oui' === $this->field['RSA'] ? Choices::YES : 0)
@@ -1118,7 +1118,7 @@ class ImportDatasHebergement extends ImportDatas
     }
 
     /**
-     * @param EvalBudgetPerson|InitEvalPerson $evalBudgetPerson
+     * @param EvalBudgetPerson|EvalInitPerson $evalBudgetPerson
      */
     protected function updateResourceType(object $evalBudgetPerson, string $resourceType): object
     {

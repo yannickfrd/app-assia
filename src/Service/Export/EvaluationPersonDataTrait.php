@@ -10,7 +10,6 @@ use App\Entity\Evaluation\EvalHousingGroup;
 use App\Entity\Evaluation\EvalProfPerson;
 use App\Entity\Evaluation\EvalSocialPerson;
 use App\Entity\Evaluation\EvaluationGroup;
-use App\Entity\Evaluation\EvaluationPerson;
 use App\Entity\Support\SupportPerson;
 use App\Form\Utils\Choices;
 
@@ -26,8 +25,8 @@ trait EvaluationPersonDataTrait
         /** @var EvaluationGroup $evaluationGroup */
         $evaluationGroup = $evaluationPerson->getEvaluationGroup() ?? $this->evaluationGroup;
 
-        // $initEvalGroup = $evaluationGroup->getInitEvalGroup() ?? $this->initEvalGroup;
-        // $initEvalPerson = $evaluationPerson->getInitEvalPerson() ?? $this->initEvalPerson;
+        // $evalInitGroup = $evaluationGroup->getEvalInitGroup() ?? $this->evalInitGroup;
+        // $evalInitPerson = $evaluationPerson->getEvalInitPerson() ?? $this->evalInitPerson;
         // $evalJusticePerson = $evaluationPerson->getEvalJusticePerson() ?? $this->evalJusticePerson;
         // $evalSocialGroup = $evaluationGroup->getEvalSocialGroup() ?? $this->evalSocialGroup;
         /** @var EvalSocialPerson $evalSocialPerson */
@@ -50,27 +49,27 @@ trait EvaluationPersonDataTrait
             'Situation matrimoniale' => $evalFamilyPerson->getMaritalStatusToString(),
             'Enfant à naître' => $evalFamilyPerson->getUnbornChildToString(),
             'Date terme grossesse' => $this->formatDate($evalFamilyPerson->getExpDateChildbirth()),
-            // 'Situation résidentielle (avant entrée)' => $initEvalGroup->getHousingStatusToString(),
+            // 'Situation résidentielle (avant entrée)' => $evalInitGroup->getHousingStatusToString(),
             // 'Raison principale de la demande' => $evalSocialGroup->getReasonRequestToString(),
             // 'Durée d\'errance' => $evalSocialGroup->getWanderingTimeToString(),
             // 'Rupture liens familiaux' => $evalSocialPerson->getFamilyBreakdownToString(),
             // 'Rupture liens amicaux' => $evalSocialPerson->getFriendshipBreakdownToString(),
 
             // init
-            // 'Papier (entrée)' => Choices::YES === $initEvalPerson->getPaper() ?
-            //  $initEvalPerson->getPaperTypeToString() : $initEvalPerson->getPaperToString(),
-            // 'Ressource (entrée)' => $initEvalPerson->getResourceToString(),
-            // 'Type ressources (entrée)' => join(', ', $this->getResourcesToString($initEvalPerson)),
-            // 'Montant ressources (entrée)' => $initEvalPerson->getResourcesAmt(),
-            // // 'Montant salaire (entrée)' => $initEvalPerson->getSalaryAmt(),
-            // // 'Montant ARE (entrée)' => $initEvalPerson->getUnemplBenefitAmt(),
-            // // 'Montant RSA (entrée)' => $initEvalPerson->getMinimumIncomeAmt(),
-            // 'Emploi (entrée)' => $initEvalPerson->getProfStatusToString(),
-            // 'Montant total ressources ménage (entrée)' => $initEvalGroup->getResourcesGroupAmt(),
-            // 'Couverture maladie (entrée)' => Choices::YES === $initEvalPerson->getRightSocialSecurity() ?
-            //     $initEvalPerson->getSocialSecurityToString() : $initEvalPerson->getRightSocialSecurityToString(),
-            // 'Demande de logement social (entrée)' => $initEvalGroup->getSocialHousingRequestToString(),
-            // 'Demande SIAO (entrée)' => $initEvalGroup->getSiaoRequestToString(),
+            // 'Papier (entrée)' => Choices::YES === $evalInitPerson->getPaper() ?
+            //  $evalInitPerson->getPaperTypeToString() : $evalInitPerson->getPaperToString(),
+            // 'Ressource (entrée)' => $evalInitPerson->getResourceToString(),
+            // 'Type ressources (entrée)' => join(', ', $this->getEvalBudgetResourcesToString($evalInitPerson)),
+            // 'Montant ressources (entrée)' => $evalInitPerson->getResourcesAmt(),
+            // // 'Montant salaire (entrée)' => $evalInitPerson->getSalaryAmt(),
+            // // 'Montant ARE (entrée)' => $evalInitPerson->getUnemplBenefitAmt(),
+            // // 'Montant RSA (entrée)' => $evalInitPerson->getMinimumIncomeAmt(),
+            // 'Emploi (entrée)' => $evalInitPerson->getProfStatusToString(),
+            // 'Montant total ressources ménage (entrée)' => $evalInitGroup->getResourcesGroupAmt(),
+            // 'Couverture maladie (entrée)' => Choices::YES === $evalInitPerson->getRightSocialSecurity() ?
+            //     $evalInitPerson->getSocialSecurityToString() : $evalInitPerson->getRightSocialSecurityToString(),
+            // 'Demande de logement social (entrée)' => $evalInitGroup->getSocialHousingRequestToString(),
+            // 'Demande SIAO (entrée)' => $evalInitGroup->getSiaoRequestToString(),
 
             // Admin
             'Nationalité' => $evalAdmPerson->getNationalityToString(),
@@ -88,11 +87,11 @@ trait EvaluationPersonDataTrait
             // 'Montant salaire' => $evalBudgetPerson->getSalaryAmt(),
             // 'Montant ARE' => $evalBudgetPerson->getUnemplBenefitAmt(),
             // 'Montant RSA' => $evalBudgetPerson->getMinimumIncomeAmt(),
-            'Type de ressources' => $evalBudgetPerson->getResourcesToString(),
+            'Type de ressources' => $evalBudgetPerson->getEvalBudgetResourcesToString(),
             'Montant charges' => $evalBudgetPerson->getChargesAmt(),
-            'Type de charges' => $evalBudgetPerson->getChargesToString(),
+            'Type de charges' => $evalBudgetPerson->getEvalBudgetChargesToString(),
             'Montant dettes' => $evalBudgetPerson->getDebtsAmt(),
-            'Type de dettes' => $evalBudgetPerson->getDebtsToString(),
+            'Type de dettes' => $evalBudgetPerson->getEvalBudgetDebtsToString(),
 
             // Prof
             'Emploi' => $evalProfPerson->getProfStatusToString(),

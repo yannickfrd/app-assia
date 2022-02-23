@@ -1,0 +1,16 @@
+{% import 'macros/viewParagraph.html.twig' as view_p %}
+{% import 'macros/viewTextArea.html.twig' as view_text %}
+
+<hr/>
+<h2 style="{{ style_h2 }}">Situation judiciaire</h2>
+{% for eval_person in evaluation.evaluationPeople %}
+    {% set eval_justice = eval_person.evalJusticePerson %}
+    {% if eval_justice %}
+        {% if nb_people > 1 %}
+            <p style="{{ style_h3 }}"><u>{{ eval_person.supportPerson.person.fullname }}</u> :</p>
+        {% endif %}
+        {{ view_p.get(eval_justice.justiceStatusToString, 'Justice status', 'evaluation') }}
+        {{ view_p.get(eval_justice.justiceActToString, 'Justice act', 'evaluation') }}
+        {{ view_text.get(eval_justice.commentEvalJustice, null, null, type) }}
+    {% endif %}
+{% endfor %}

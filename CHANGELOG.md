@@ -1,8 +1,33 @@
 CHANGELOG
 =========
 
+## Version 3.x.x - 21/02/2021
+Edit feature resource, charge and debt collections
+* Rename entities : Resource to EvalBudgetResource, Charge to EvalBudgetCharge, Debt to EvalBudgetDebt and create Resource
+ entity
+* Refactor ResourceEntityTrait
+* Edit translation file (resources)
+* Rename 'InitEvalPerson' entity to 'EvalInitPerson' and 'InitEvalGroup' to 'EvalInitGroup'
+* [Evaluation] apply twig conventions (snake_case for files and variables)
+* [Evaluation] Fix bug with window.confirm
+* Edit full export with evaluation
+* Edit command to create resources, charges and debts
+
+## Version 3.x.x - 17/02/2021
+Update the verification when creating a new supportGroup
+* [SupportCreator] Can create a new support with ended status even if the group have an other support in progress
+* [SupportControllerTest] Add test
+
+## Version 3.x.x - 17/02/2021
+Update voters : a user of same service can edit note, rdv, document and payment
+* [NoteVoter] Edit canEdit method
+* [RdvVoter] Edit canEdit method
+* [DocumentVoter] Edit canEdit method
+* [NoteControllerTest][RdvControllerTest][DocumentControllerTest] Update functional tests
+* Refactoring
+
 ## Version 3.8.3 - 20/01/2021
-Update Fixturesq
+Update Fixtures
 * Add dependencies
 * Add groups
 * Create TagFixtures

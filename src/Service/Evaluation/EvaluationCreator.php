@@ -4,8 +4,8 @@ namespace App\Service\Evaluation;
 
 use App\Entity\Evaluation\EvaluationGroup;
 use App\Entity\Evaluation\EvaluationPerson;
-use App\Entity\Evaluation\InitEvalGroup;
-use App\Entity\Evaluation\InitEvalPerson;
+use App\Entity\Evaluation\EvalInitGroup;
+use App\Entity\Evaluation\EvalInitPerson;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Support\SupportPerson;
 use Doctrine\ORM\EntityManagerInterface;
@@ -28,15 +28,15 @@ class EvaluationCreator
             ->setSupportGroup($supportGroup)
             ->setDate(new \DateTime());
 
-        if (!$supportGroup->getInitEvalGroup()) {
-            $initEvalGroup = (new InitEvalGroup())->setSupportGroup($supportGroup);
+        if (!$supportGroup->getEvalInitGroup()) {
+            $evalInitGroup = (new EvalInitGroup())->setSupportGroup($supportGroup);
 
-            $this->em->persist($initEvalGroup);
+            $this->em->persist($evalInitGroup);
 
-            $supportGroup->setInitEvalGroup($initEvalGroup);
+            $supportGroup->setEvalInitGroup($evalInitGroup);
         }
 
-        $evaluationGroup->setInitEvalGroup($supportGroup->getInitEvalGroup());
+        $evaluationGroup->setEvalInitGroup($supportGroup->getEvalInitGroup());
 
         $this->em->persist($evaluationGroup);
 
@@ -58,15 +58,15 @@ class EvaluationCreator
             ->setEvaluationGroup($evaluationGroup)
             ->setSupportPerson($supportPerson);
 
-        if (!$supportPerson->getInitEvalPerson()) {
-            $initEvalPerson = (new InitEvalPerson())->setSupportPerson($supportPerson);
+        if (!$supportPerson->getEvalInitPerson()) {
+            $evalInitPerson = (new EvalInitPerson())->setSupportPerson($supportPerson);
 
-            $this->em->persist($initEvalPerson);
+            $this->em->persist($evalInitPerson);
 
-            $supportPerson->setInitEvalPerson($initEvalPerson);
+            $supportPerson->setEvalInitPerson($evalInitPerson);
         }
 
-        $evaluationPerson->setInitEvalPerson($supportPerson->getInitEvalPerson());
+        $evaluationPerson->setEvalInitPerson($supportPerson->getEvalInitPerson());
 
         $this->em->persist($evaluationPerson);
 

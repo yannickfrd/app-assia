@@ -3,6 +3,7 @@
 namespace App\Tests\Controller\Document;
 
 use App\Entity\Support\Document;
+use App\Entity\Support\SupportGroup;
 use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
@@ -36,7 +37,7 @@ class DocumentControllerTest extends WebTestCase
 
         $this->client = $this->createClient();
 
-        /* @var AbstractDatabaseTool */
+        /** @var AbstractDatabaseTool */
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
 
         $this->fixtures = $this->databaseTool->loadAliceFixture([
@@ -62,7 +63,6 @@ class DocumentControllerTest extends WebTestCase
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Documents');
 
-        /** @var Crawler */
         $crawler = $this->client->submitForm('search', [
             'name' => 'Document',
             // 'tags' => ['1'],

@@ -28,6 +28,8 @@ class SupportPersonRepository extends ServiceEntityRepository
 {
     use QueryTrait;
 
+    public const EXPORT_LIMIT = 15_000;
+
     private $currentUser;
 
     public function __construct(ManagerRegistry $registry, CurrentUserService $currentUser)
@@ -61,7 +63,7 @@ class SupportPersonRepository extends ServiceEntityRepository
      */
     public function findSupportsToExport(?SupportSearch $search = null): ?array
     {
-        $qb = $this->getSupportsQuery()
+        $qb = $this->getSupportsQuery(true)
             ->leftJoin('sp.placesPerson', 'pp')->addSelect('pp')
             ->leftJoin('pp.placeGroup', 'pg')->addSelect('pg')
             ->leftJoin('pg.place', 'pl')->addSelect('pl');
@@ -143,7 +145,8 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->leftJoin('pg.place', 'pl')->addSelect('PARTIAL pl.{id, name}')
 
             ->where('s.type = :type')
-            ->setParameter('type', Service::SERVICE_TYPE_HOTEL);
+            ->setParameter('type', Service::SERVICE_TYPE_HOTEL)
+        ;
 
         $qb = $this->filters($qb, $search);
 
@@ -159,7 +162,8 @@ class SupportPersonRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('sg.updatedAt', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+        ;
     }
 
     /**
@@ -190,12 +194,12 @@ class SupportPersonRepository extends ServiceEntityRepository
      *
      * @return SupportPerson[]|null
      */
-    public function findSupportsFullToExport($search = null): ?array
+    public function findSupportsFullToExport($search = null, $limit = 99_999): ?array
     {
         $qb = $this->getSupportsQuery()
             ->leftJoin('sp.placesPerson', 'pp')->addSelect('pp')
-            ->leftJoin('pp.placeGroup', 'pg')->addSelect('pg')
-            ->leftJoin('pg.place', 'pl')->addSelect('pl')
+            ->leftJoin('pp.placeGroup', 'pg')->addSelect('PARTIAL pg.{id}')
+            ->leftJoin('pg.place', 'pl')->addSelect('PARTIAL pl.{id, name}')
 
             ->leftJoin('g.referents', 'ref')->addSelect('PARTIAL ref.{id, name, type}')
 
@@ -203,34 +207,35 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->leftJoin('sg.avdl', 'avdl')->addSelect('avdl')
 
             ->leftJoin('sp.evaluations', 'ep')->addSelect('PARTIAL ep.{id}')
-            ->leftJoin('ep.initEvalPerson', 'iep')->addSelect('iep')
-            ->leftJoin('ep.evalJusticePerson', 'evalJusticePerson')->addSelect('evalJusticePerson')
-            ->leftJoin('ep.evalAdmPerson', 'evalAdmPerson')->addSelect('evalAdmPerson')
+            ->leftJoin('ep.evalInitPerson', 'eip')->addSelect('eip')
+            ->leftJoin('ep.evalJusticePerson', 'ejp')->addSelect('ejp')
+            ->leftJoin('ep.evalAdmPerson', 'eap')->addSelect('eap')
             ->leftJoin('ep.evalBudgetPerson', 'ebp')->addSelect('ebp')
-            ->leftJoin('ep.evalFamilyPerson', 'evalFamilyPerson')->addSelect('evalFamilyPerson')
-            ->leftJoin('ep.evalProfPerson', 'evalProfPerson')->addSelect('evalProfPerson')
-            ->leftJoin('ep.evalSocialPerson', 'evalSocialPerson')->addSelect('evalSocialPerson')
+            ->leftJoin('ep.evalFamilyPerson', 'efp')->addSelect('efp')
+            ->leftJoin('ep.evalProfPerson', 'epf')->addSelect('epf')
+            ->leftJoin('ep.evalSocialPerson', 'esp')->addSelect('esp')
 
-            ->leftJoin('iep.resources', 'initResources')->addSelect('initResources')
-            ->leftJoin('ebp.resources', 'resources')->addSelect('resources')
-            ->leftJoin('ebp.charges', 'charges')->addSelect('charges')
-            ->leftJoin('ebp.debts', 'debts')->addSelect('debts')
+            ->leftJoin('eip.evalBudgetResources', 'eir')->addSelect('eir')
+            ->leftJoin('ebp.evalBudgetResources', 'ebr')->addSelect('ebr')
+            ->leftJoin('ebp.evalBudgetCharges', 'ebc')->addSelect('ebc')
+            ->leftJoin('ebp.evalBudgetDebts', 'ebd')->addSelect('ebd')
 
             ->leftJoin('ep.evaluationGroup', 'eg')->addSelect('PARTIAL eg.{id}')
-            ->leftJoin('eg.initEvalGroup', 'initEvalGroup')->addSelect('initEvalGroup')
-            ->leftJoin('eg.evalBudgetGroup', 'evalBudgetGroup')->addSelect('evalBudgetGroup')
-            ->leftJoin('eg.evalFamilyGroup', 'evalFamilyGroup')->addSelect('evalFamilyGroup')
-            ->leftJoin('eg.evalHousingGroup', 'evalHousingGroup')->addSelect('evalHousingGroup')
-            ->leftJoin('eg.evalSocialGroup', 'evalSocialGroup')->addSelect('evalSocialGroup')
+            ->leftJoin('eg.evalInitGroup', 'eig')->addSelect('eig')
+            ->leftJoin('eg.evalBudgetGroup', 'ebg')->addSelect('ebg')
+            ->leftJoin('eg.evalFamilyGroup', 'efg')->addSelect('efg')
+            ->leftJoin('eg.evalHousingGroup', 'ehg')->addSelect('ehg')
+            ->leftJoin('eg.evalSocialGroup', 'esg')->addSelect('esg')
         ;
 
         return $this->filters($qb, $search)
 
-            ->setMaxResults(9999)
+            ->setMaxResults($limit)
             ->orderBy('sp.startDate', 'DESC')
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getResult();
+            ->getResult()
+        ;
     }
 
     /**
@@ -239,12 +244,12 @@ class SupportPersonRepository extends ServiceEntityRepository
     public function countSupportsToExport($search = null): int
     {
         $qb = $this->getSupportsQuery()
-            ->select('COUNT(sp.id)');
+            ->select('count(DISTINCT sp.id)');
 
         return $this->filters($qb, $search)
-
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getSingleScalarResult()
+        ;
     }
 
     /**
@@ -272,7 +277,8 @@ class SupportPersonRepository extends ServiceEntityRepository
 
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getOneOrNullResult();
+            ->getOneOrNullResult()
+        ;
     }
 
     /**
@@ -280,7 +286,9 @@ class SupportPersonRepository extends ServiceEntityRepository
      */
     protected function getSupportsQuery(): QueryBuilder
     {
-        return $this->createQueryBuilder('sp')->select('sp')
+        return $this->createQueryBuilder('sp')
+        //     $qb->select('DISTINCT sp')
+        //         ->groupBy('sp.id');
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, birthdate, gender}')
             ->leftJoin('sp.supportGroup', 'sg')->addSelect('sg')
             ->leftJoin('sg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople, siSiaoId}')
@@ -290,14 +298,16 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
             ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')
             ->leftJoin('sg.originRequest', 'origin')->addSelect('origin')
-            ->leftJoin('origin.organization', 'orga')->addSelect('PARTIAL orga.{id, name}');
+            ->leftJoin('origin.organization', 'orga')->addSelect('PARTIAL orga.{id, name}')
+        ;
     }
 
     protected function getSupportsOfServiceQuery(): QueryBuilder
     {
         return $this->getSupportsQuery()
             ->leftJoin('sg.avdl', 'avdl')->addSelect('avdl')
-            ->leftJoin('sg.hotelSupport', 'hs')->addSelect('hs');
+            ->leftJoin('sg.hotelSupport', 'hs')->addSelect('hs')
+        ;
     }
 
     /**

@@ -84,7 +84,7 @@ class EvalSocialPersonType extends AbstractType
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
-            ->add('healthProblemType', ChoiceType::class, [
+            ->add('_healthProblemType', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalSocialPerson::HEALTH_PROBLEMS_TYPE),
                 'placeholder' => 'placeholder.add',
                 'mapped' => false,

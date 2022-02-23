@@ -3,6 +3,7 @@
 namespace App\Tests\Controller\Payment;
 
 use App\Entity\Support\Payment;
+use App\Entity\Support\SupportGroup;
 use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
@@ -222,6 +223,31 @@ class PaymentControllerTest extends WebTestCase
         ]);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $content = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertSame('update', $content['action']);
+    }
+
+    public function testUpdatePaymentWithOtherUserIsSuccessful()
+    {
+        $this->createLogin($this->fixtures['user4']);
+
+        $id = $this->payment->getId();
+        $crawler = $this->client->request('GET', '/support/1/payments');
+        $this->assertResponseIsSuccessful();
+
+        $this->client->request('POST', "/payment/$id/edit", [
+            'payment' => [
+                'startDate' => '2021-01-01',
+                'endDate' => '2021-01-31',
+                'type' => Payment::CONTRIBUTION,
+                'ressourcesAmt' => 1000,
+                'toPayAmt' => 100,
+                '_token' => $crawler->filter('#payment__token')->attr('value'),
+            ],
+        ]);
+
+
+        $this->assertResponseIsSuccessful();
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('update', $content['action']);
     }

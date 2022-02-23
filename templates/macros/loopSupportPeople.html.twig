@@ -2,14 +2,14 @@
 {% macro loopSupportPeople(entity_name, people, support, theme_color = "dark") %}
     <div class="mb-4">
         {% for key, eval_person in people %}
-            {% set prefixId = "evaluation_evaluationPeople_" ~ key ~ "_" ~ entity_name ~ "Person" %}
+            {% set prefix_id = "evaluation_evaluationPeople_" ~ key ~ "_" ~ entity_name ~ "Person" %}
             {% set supportPerson = eval_person.vars.value.supportPerson %}
             {% set active = supportPerson.status == support.status %}
-            <button type="button" id="heading_{{ prefixId }}" class="btn btn-outline-{{ active ? theme_color : 'secondary' }} 
+            <button type="button" id="heading_{{ prefix_id }}" class="btn btn-outline-{{ active ? theme_color : 'secondary' }} 
                 {{ active == false ? 'delete' }} {{ loop.first ? 'active' }} mb-2" 
                 title="{{ supportPerson.roleToString }} - {{ supportPerson.person.age }} an(s)" 
-                data-toggle="collapse" data-target="#collapse_{{ prefixId }}" aria-expanded="false" 
-                aria-controls="collapse_{{ prefixId }}" data-person-key="{{ key }}">{{ supportPerson.person.fullname }}
+                data-toggle="collapse" data-target="#collapse_{{ prefix_id }}" aria-expanded="false" 
+                aria-controls="collapse_{{ prefix_id }}" data-person-key="{{ key }}">{{ supportPerson.person.fullname }}
             </button>
         {% endfor %}
     </div>

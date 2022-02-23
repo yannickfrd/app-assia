@@ -2,7 +2,9 @@
 
 namespace App\Security\Voter;
 
+use App\Entity\Organization\User;
 use App\Entity\Support\Rdv;
+use App\Entity\Support\SupportGroup;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -12,22 +14,22 @@ class RdvVoter extends Voter
 
     /** @var User */
     protected $user;
-    
+
     protected $userId;
 
     /** @var Rdv */
     protected $rdv;
-    
+
     /** @var SupportGroup */
     protected $supportGroup;
-    
-    protected function supports($attribute, $subject): bool
+
+    protected function supports(string $attribute, $subject): bool
     {
         return in_array($attribute, ['VIEW', 'EDIT', 'DELETE'])
             && $subject instanceof \App\Entity\Support\Rdv;
     }
 
-    protected function voteOnAttribute($attribute, $rdv, TokenInterface $token): bool
+    protected function voteOnAttribute(string $attribute, $rdv, TokenInterface $token): bool
     {
         /** @var User */
         $this->user = $token->getUser();
@@ -42,13 +44,10 @@ class RdvVoter extends Voter
         switch ($attribute) {
             case 'VIEW':
                 return $this->canView();
-                break;
             case 'EDIT':
                 return $this->canEdit();
-                break;
             case 'DELETE':
                 return $this->canDelete();
-                break;
         }
 
         return false;
@@ -68,19 +67,12 @@ class RdvVoter extends Voter
 
     protected function canEdit(): bool
     {
-        if ($this->isCreatorOrReferent()
-            || ($this->supportGroup && $this->isAdminOfService($this->supportGroup->getService()))
-            || $this->isGranted('ROLE_SUPER_ADMIN')
-        ) {
-            return true;
-        }
-
-        return false;
+        return $this->canView();
     }
 
     protected function canDelete(): bool
     {
-        return $this->canEdit();
+        return $this->canView();
     }
 
     protected function isCreatorOrReferent(): bool

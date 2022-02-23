@@ -50,8 +50,8 @@ class SupportCreator
      */
     public function create(SupportGroup $supportGroup, ?Form $form): ?SupportGroup
     {
-        // Vérfie si un suivi est déjà en cours pour ce ménage dans ce service.
-        if ($this->activeSupportExists($supportGroup)) {
+        // Vérifie si un suivi est déjà en cours pour ce ménage dans ce service.
+        if (SupportGroup::STATUS_ENDED !== $supportGroup->getStatus() && $this->activeSupportExists($supportGroup)) {
             $this->flashBag->add('danger', 'Attention, un suivi social est déjà en cours pour '.(
                 count($supportGroup->getPeopleGroup()->getPeople()) > 1 ? 'ce ménage.' : 'cette personne.'
             ));

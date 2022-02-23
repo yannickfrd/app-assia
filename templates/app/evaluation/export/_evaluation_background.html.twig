@@ -1,0 +1,5 @@
+{% import 'macros/viewTextArea.html.twig' as view_text %}
+
+<hr/>
+<h2 style="{{ style_h2 }}">Parcours de vie</h2>
+{{ view_text.get(evaluation.backgroundPeople, null, null, type) }}

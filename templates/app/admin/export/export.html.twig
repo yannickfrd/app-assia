@@ -1,4 +1,4 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
 
 {% block title %}Export des données{% endblock %}
 
@@ -11,13 +11,13 @@
         <hr/>
 
         <section>
-            {% include "model/_msgFlash.html.twig" %}
+            {% include 'model/_msgFlash.html.twig' %}
             <div id="js-msg-flash-content"></div>
             
             <div id="form-search">
                 {{ form_start(form) }}
                 <div class="row mb-3">
-                    {% if is_granted("ROLE_SUPER_ADMIN") %}
+                    {% if is_granted('ROLE_SUPER_ADMIN') %}
                         <div class="col-md-6">{{ form_row(form.service.poles) }}</div>
                     {% endif %}
                     <div class="col-md-6">{{ form_row(form.service.services) }}</div>
@@ -42,7 +42,7 @@
                 </div>
 
                 <div class="mb-4">
-                    {% include "app/admin/export/_optionsExport.html.twig" with {accordion_id: "optionsExport"} %}
+                    {% include 'app/admin/export/_optionsExport.html.twig' with {accordion_id: 'optionsExport'} %}
                 </div>
 
                 {# <div class="row mb-3">
@@ -89,7 +89,7 @@
                         </div>
                         <div class="mb-4 float-right">
                             <button type="reset" id="reset" name="reset" class="btn btn-secondary ml-2 shadow" data-toggle="tooltip" data-placement="bottom"
-                                title="Effacer les filtres"><span class="fas fa-eraser"></span><span class="sr-only">Effacer</span>
+                                title="Effacer les filtres"><i class="fas fa-eraser"></i><span class="sr-only">Effacer</span>
                             </button>
                             <button type="submit" id="count" name="count" data-url="{{ path('export_count_results') }}" 
                                 class="btn btn-{{ theme_color }} shadow">Calculer</button>
@@ -98,11 +98,11 @@
                         </div>
                     </div>
                 </div>
-                {{ form_end(form, {"render_rest": false}) }}
+                {{ form_end(form, {'render_rest': false}) }}
             </div>
             
             <div>
-                <a href="{{ absolute_url("documentation/models/modele-export.xlsx") }}" 
+                <a href="{{ absolute_url('documentation/models/modele-export.xlsx') }}" 
                     class="text-{{ theme_color }}"><i class="fas fa-file-download mr-1"></i>
                     Télécharger le modèle vierge Excel de traitement statistique.</a>
             </div>
@@ -129,31 +129,42 @@
                             <thead>
                                 <tr>
                                     <th scope="row" class="align-middle th-w-20"></th>
-                                    <th scope="col" class="align-middle th-w-140">{{ knp_pagination_sortable(exports, "Nom de l'export", "e.title") }}</th>
-                                    <th scope="col" class="align-middle">{{ knp_pagination_sortable(exports, "Description", "e.comment") }}</th>
-                                    <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(exports, "Nb de résultats", "e.nbResults") }}</th>
-                                    <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(exports, "Taille", "e.size") }}</th>
-                                    <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(exports, "Créé le", "e.createdAt") }}</th>
+                                    <th scope="col" class="align-middle th-w-140">{{ knp_pagination_sortable(exports, 'Nom de l\'export', 'e.title') }}</th>
+                                    <th scope="col" class="align-middle">{{ knp_pagination_sortable(exports, 'Description', 'e.comment') }}</th>
+                                    <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(exports, 'Nb de résultats', 'e.nbResults') }}</th>
+                                    <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(exports, 'Taille', 'e.size') }}</th>
+                                    <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(exports, 'Créé le', 'e.createdAt') }}</th>
                                     <th scope="col" class="align-middle th-w-20"></th>
                                 </tr>
                             </thead>
                             <tbody id="container-exports">
                                 {% for export in exports %}
-                                    <tr id="export-{{ export.id }}" class="js-export">
+                                    <tr id="export-{{ export.id }}">
                                         <td scope="row" class="align-middle text-center">
-                                            <a href="{{ path('export_get', {'id': export.id }) }}" class="btn btn-{{ theme_color }} btn-sm shadow my-1" 
-                                                data-toggle="tooltip" data-placement="bottom" title="Télécharger l'export"><span class="fas fa-file-download"></span>
-                                            </a>
-                                        </td>
-                                        <td class="js-export-title">{{ export.title }}</td>
-                                        <td class="js-export-comment">{{ export.comment|raw }}</td>
-                                        <td class="js-export-nbResults text-right">{{ export.nbResults|number }}</td>
-                                        <td class="js-export-size text-right">{{ (export.size / 1000)|round }} Ko</td>
-                                        <td class="js-export-createdAt">{{ export.createdAt|date("d/m/Y H:i") }}</td>
+                                            {% if export.status %}
+                                                <a href="{{ path('export_get', {'id': export.id }) }}" class="btn btn-{{ theme_color }} btn-sm shadow my-1" 
+                                                    title="Télécharger l'export" data-toggle="tooltip" data-placement="bottom"><i class="fas fa-file-download"></i>
+                                                </a>
+                                            {% else %}
+                                                <i class="fas fa-spinner text-{{ theme_color }}" title="Export est en cours de préparation"
+                                                    data-toggle="tooltip" data-placement="right"></i>                                                   
+                                            {% endif %}
+                                            </td>
+                                        <td class="align-middle">{{ export.title }}</td>
+                                        <td class="align-middle">{{ export.comment|raw }}</td>
+                                        <td class="align-middle text-right">{{ export.nbResults|number }}</td>
+                                        <td class="align-middle text-right">
+                                            {% if export.size %}
+                                                {{ (export.size / 1000)|round }} Ko
+                                            {% else %}
+                                                <i class="fas fa-spinner text-{{ theme_color }}">
+                                            {% endif %}
+                                        </td>  
+                                        <td class="align-middle">{{ export.createdAt|date('d/m/Y H:i') }}</td>
                                         <td class="align-middle text-center">
-                                            <a href="{{ path('export_delete', {'id': export.id}) }}" class="js-delete btn btn-danger btn-sm shadow my-1"
+                                            <a href="{{ path('export_delete', {'id': export.id}) }}" class="btn btn-danger btn-sm shadow my-1"
                                                 onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer cet export ?')){return true;}else{return false;}">
-                                                <span class="fas fa-trash-alt"></span>
+                                                <i class="fas fa-trash-alt"></i>
                                             </a>
                                         </td>
                                     </tr>
@@ -173,6 +184,6 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags("search") }}
-    {{ encore_entry_script_tags("export") }}
+    {{ encore_entry_script_tags('search') }}
+    {{ encore_entry_script_tags('export') }}
 {% endblock javascripts %}

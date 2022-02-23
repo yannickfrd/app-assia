@@ -3,7 +3,7 @@
 namespace App\Entity\Support;
 
 use App\Entity\Evaluation\EvaluationGroup;
-use App\Entity\Evaluation\InitEvalGroup;
+use App\Entity\Evaluation\EvalInitGroup;
 use App\Entity\Organization\Device;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\SubService;
@@ -291,10 +291,10 @@ class SupportGroup
     private $evaluationsGroup;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\InitEvalGroup", mappedBy="supportGroup", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvalInitGroup", mappedBy="supportGroup", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      * @MaxDepth(1)
      */
-    private $initEvalGroup;
+    private $evalInitGroup;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Support\OriginRequest", mappedBy="supportGroup", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
@@ -796,18 +796,18 @@ class SupportGroup
         return $this;
     }
 
-    public function getInitEvalGroup(): ?InitEvalGroup
+    public function getEvalInitGroup(): ?EvalInitGroup
     {
-        return $this->initEvalGroup;
+        return $this->evalInitGroup;
     }
 
-    public function setInitEvalGroup(InitEvalGroup $initEvalGroup): self
+    public function setEvalInitGroup(EvalInitGroup $evalInitGroup): self
     {
-        $this->initEvalGroup = $initEvalGroup;
+        $this->evalInitGroup = $evalInitGroup;
 
         // set the owning side of the relation if necessary
-        if ($this !== $initEvalGroup->getSupportGroup()) {
-            $initEvalGroup->setSupportGroup($this);
+        if ($this !== $evalInitGroup->getSupportGroup()) {
+            $evalInitGroup->setSupportGroup($this);
         }
 
         return $this;

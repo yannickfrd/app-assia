@@ -1,17 +1,17 @@
-Init eval: Entrée
+Eval init: Entrée
 placeholder:
-  select: -- Sélectionner --
-  add: -- Ajouter --
-initEvalPerson.comment: Écrire un commentaire relatif à la situation initiale de la personne
+    select: -- Sélectionner --
+    add: -- Ajouter --
+evalInitPerson.comment: Écrire un commentaire relatif à la situation initiale de la personne
 backgroundPeople: Parcours de vie
 backgroundPeople.placeholder: Présenter le parcours de vie / historique du ménage
 Comment: Commentaire
 conclusion: Conclusion
 conclusion.placeholder: Synthèse et/ou conclusion de la situation (autonomie, axes de travail, objectifs...)
 
-initEvalGroup:
-  housingStatus.help: Situation résidentielle avant le début du suivi.
-  comment: Écrire un commentaire relatif à la situation initiale du groupe
+evalInitGroup:
+    housingStatus.help: Situation résidentielle avant le début du suivi.
+    comment: Écrire un commentaire relatif à la situation initiale du groupe
 
 # Administratif
 Adm: Administratif
@@ -30,22 +30,24 @@ Renewal permit date: Date d'obtention du titre
 Resid permit request: Demande de titre de séjour
 Work right: Autorisation de travail
 evalAdmPerson:
-  comment: Écrire un commentaire relatif à la situation administrative de la personne (démarches en cours, évolution de la situation, papier d'identité secondaire...).
-  paper.help: Carte d'identité, passport, titre de séjour, récépissé...
-  paperType.help: Si plusieurs papiers, sélectionner ici le titre principal et préciser le secondaire en commentaire ci-dessous.
+    comment: Écrire un commentaire relatif à la situation administrative de la personne (démarches en cours, évolution de la situation, papier d'identité secondaire...).
+    paper.help: Carte d'identité, passport, titre de séjour, récépissé...
+    paperType.help: Si plusieurs papiers, sélectionner ici le titre principal et préciser le secondaire en commentaire ci-dessous.
 
 # Budget
 evalBudgetPerson:
-  endRightsDate.help: Date de fin des prestations ou des allocations
-  comment: Écrire un commentaire relatif à la situation budgétaire (démarches en cours, évolution de la situation...)
+    endRightsDate.help: Date de fin des prestations ou des allocations
+    comment: Écrire un commentaire relatif à la situation budgétaire (démarches en cours, évolution de la situation...)
 debt.comment.placeholder: Autre(s) dette(s)
 charge.comment.placeholder: Autre(s) charge(s)
 resource.comment.placeholder: Autre(s) ressource(s)
 Activity bonus amt: Montant Prime d'activité
 Activity bonus: Prime d'activité
+Af amt: Montant allocations familiales
 Alimony amt: Montant Pension alimentaire
 Alimony: Pension alimentaire
 Amount: Montant
+Are amt: Montant ARE
 Asf amt: Montant ASF
 Asf: ASF
 Asylum allowance amt: Montant ADA
@@ -60,7 +62,7 @@ Charge other: Autre charge
 Charge type: Type de charge(s)
 Charges amt: Montant total des charges
 Charges group amt: Montant total charges du groupe
-Charges: Type de charge(s)
+Eval budget charges: Type de charge(s)
 Childcare amt: Montant garde enfant(s)
 Childcare: Garde d'enfant(s)
 Contribution amt: Montant de la participation financière
@@ -89,7 +91,7 @@ Debt unpaid maint: Pension alimentaire non réglée
 Debt type: Type de dette(s)
 Debts amt: Montant des dettes
 Debts group amt: Montant total dettes du groupe
-Debts: Type de dette(s)
+Eval budget debts: Type de dette(s)
 Dis adult allowance amt: Montant AAH
 Dis adult allowance: AAH
 Dis child allowance amt: Montant AAEH
@@ -103,6 +105,7 @@ Family allowance amt: Montant allocations familiales
 Family allowance: Allocations familiales
 Family supplement: Complément familial
 Family supplement amt: Montant complément familial
+Ij amt: Montant indemnités journalières
 Income tax: Impôt sur le revenu (n-1 ou n-2)
 Income n1 amt: Revenu fiscal n-1
 Income n2 amt: Revenu fiscal n-2
@@ -127,6 +130,7 @@ Pension benefit amt: Montant retraire
 Pension benefit: Retraite
 Phone amt: Montant téléphone
 Phone: Téléphone
+Rsa amt: Montant RSA
 Rent amt: Montant loyer
 Rent: Loyer
 Resource: Ressource(s)
@@ -134,11 +138,12 @@ Resources amt: Montant total des ressources
 Resources comment: Commentaire sur les ressources
 Resources group amt: Montant total ressources du groupe
 Resource type: Type de ressource(s)
-Resources: Type de ressource(s)
+Eval budget resources: Type de ressource(s)
 Ressource other amt: Montant autre ressource
 Ressource other precision: Précision autres revenus
 Ressource other: Autre ressource
 Salary amt: Montant salaire
+Salaries amt: Montant salaire(s)
 Salary: Salaire
 Scholarships: Bourse
 Scholarships amt: Montant bourse
@@ -213,9 +218,9 @@ Child dependance: À charge
 Child to host: À héberger
 schoolChildCarePrecision.help: Nom de l'école, classe, date de début de scolarité...
 school:
-  address: Adresse école ou garde (auto)
-  city: Ville école ou garde (auto)
-  zipcode: Code postal école ou garde (auto)
+    address: Adresse école ou garde (auto)
+    city: Ville école ou garde (auto)
+    zipcode: Code postal école ou garde (auto)
 School child care precision: Précision sur l'école ou la garde
 Childcare or school: École/garde
 Childcare school type: Type de garde ou école
@@ -266,8 +271,8 @@ evalProfPerson.comment: Écrire un commentaire relatif à la situation professio
 
 # Housing
 evalHousingGroup:
-  housingWishes.help: T1, T2, T3, T4, T5...
-  comment: Écrire un commentaire relatif à la situation liée au logement et à l'hébergement (démarches en cours, évolution de la situation...)
+    housingWishes.help: T1, T2, T3, T4, T5...
+    comment: Écrire un commentaire relatif à la situation liée au logement et à l'hébergement (démarches en cours, évolution de la situation...)
 Caf eligibility: Eligibilité CAF
 Cities wishes: Communes ou départements souhaités
 Collective agreement housing date: Date de labellisation Accord Collectif
@@ -340,8 +345,8 @@ Info crip date: Date de transmission IP
 Info crip by service: IP transmise par le service
 Info crip comment: Commentaire IP
 evalSocialPerson:
-  aseFollowUp.help: Aide sociale à l'enfance, PJJ…
-  comment: Écrire un commentaire relatif à la situation sociale de la personne (évolution de la situation...)
+    aseFollowUp.help: Aide sociale à l'enfance, PJJ…
+    comment: Écrire un commentaire relatif à la situation sociale de la personne (évolution de la situation...)
 Addiction problem: Problématique d'addiction
 Animal type: Type d'animal
 Animal: Présence d'un animal
@@ -374,10 +379,10 @@ Wheelchair: Personne en fauteuil roulant
 evalSocialGroup.comment: Écrire un commentaire relatif à la situation sociale du groupe
 
 location:
-  search:
-    address.placeholder: Saisir une adresse ou une ville...
-    city.placeholder: Saisir une ville...
-  department.help: Département ou code postal
+    search:
+        address.placeholder: Saisir une adresse ou une ville...
+        city.placeholder: Saisir une ville...
+    department.help: Département ou code postal
 
 ## Vie à l'hôtel
 Food: Alimentation

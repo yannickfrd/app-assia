@@ -207,6 +207,28 @@ class SupportControllerTest extends WebTestCase
         $this->assertSelectorTextContains('.alert.alert-danger', 'Attention, un suivi social est déjà en cours');
     }
 
+    public function testCreateEndedSupportWithOtherSupportInProgressIsSuccessful()
+    {
+        $this->loadFixtures();
+
+        $this->createLogin($this->fixtures['userRoleUser']);
+
+        $id = $this->fixtures['peopleGroup1']->getId();
+        $this->client->request('POST', "/people-group/$id/new-support", [
+            'support' => ['service' => $this->fixtures['service1']->getId()],
+        ]);
+
+        $this->client->submitForm('send', [
+            'support[service]' => $this->fixtures['service1'],
+            'support[device]' => $this->fixtures['device1']->getCode(),
+            'support[status]' => SupportGroup::STATUS_ENDED,
+            'support[agreement]' => true,
+        ]);
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('.alert.alert-success', 'Le suivi social est créé');
+    }
+
     public function testEditSupportGroupIsSuccessful()
     {
         $this->loadFixtures();

@@ -22,10 +22,10 @@ export default class TwinFieldsChecker {
             fieldElt.addEventListener('change', () => this.onChangeField(fieldElt))
         })
 
-        this.initResourceTypeFields()
+        this.evalInitResourceTypeFields()
     }
     
-    initResourceTypeFields() {
+    evalInitResourceTypeFields() {
         const nbPeople = document.querySelectorAll('#accordion_evalBudget button[data-person-key]').length
         for (let i = 0; i < nbPeople; i++) {
             document.querySelectorAll(`select[data-twin-field="${i}_resourceType"]`).forEach(selectElt => {

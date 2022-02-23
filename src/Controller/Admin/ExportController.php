@@ -35,12 +35,22 @@ class ExportController extends AbstractController
      * @Route("/export", name="export", methods="GET|POST")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function export(Request $request, Pagination $pagination): Response
+    public function export(Request $request, Pagination $pagination, SupportPersonRepository $supportPersonRepo): Response
     {
-        $form = $this->createForm(ExportSearchType::class, new ExportSearch())
+        $form = $this->createForm(ExportSearchType::class, $search = new ExportSearch())
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($supportPersonRepo->countSupportsToExport($search) > SupportPersonRepository::EXPORT_LIMIT) {
+                return $this->json([
+                        'alert' => 'danger',
+                        'type' => 'count',
+                        'count' => $count = $supportPersonRepo->countSupportsToExport($search),
+                        'msg' => 'Le nombre de résultats ('.number_format($count, 0, '', ' ').') est supérieur  à la 
+                            limite autorisée ('.number_format(SupportPersonRepository::EXPORT_LIMIT, 0, '', ' ').').',
+                ]);
+            }
+
             return $this->json([
                 'alert' => 'success',
                 'type' => 'export',

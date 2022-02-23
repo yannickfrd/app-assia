@@ -12,14 +12,18 @@ $finder = PhpCsFixer\Finder::create()
     ->notPath('public/index.php')
 ;
 
-return PhpCsFixer\Config::create()
+$config = new PhpCsFixer\Config();
+$config
+    ->setRiskyAllowed(true)
     ->setRules([
         '@PSR1' => true,
         '@PSR2' => true,
         '@Symfony' => true,
         'array_syntax' => ['syntax' => 'short'],
-     // 'single_quote' => false
+        // 'single_quote' => false
     ])
     ->setFinder($finder)
     ->setCacheFile(__DIR__.'/var/.php_cs.cache')
 ;
+
+return $config;
