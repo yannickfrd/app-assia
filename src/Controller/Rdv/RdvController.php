@@ -13,6 +13,7 @@ use App\Form\Support\Rdv\SupportRdvSearchType;
 use App\Repository\Support\RdvRepository;
 use App\Repository\Support\SupportGroupRepository;
 use App\Security\CurrentUserService;
+use App\Service\Api\ApiCalendarRouter;
 use App\Service\Export\RdvExport;
 use App\Service\Pagination;
 use App\Service\Rdv\RdvPaginator;
@@ -33,11 +34,14 @@ class RdvController extends AbstractController
 
     private $em;
     private $rdvRepo;
+    /** @var ApiCalendarRouter */
+    private $calendarRouter;
 
-    public function __construct(EntityManagerInterface $em, RdvRepository $rdvRepo)
+    public function __construct(EntityManagerInterface $em, RdvRepository $rdvRepo, ApiCalendarRouter $calendarRouter)
     {
         $this->em = $em;
         $this->rdvRepo = $rdvRepo;
+        $this->calendarRouter = $calendarRouter;
     }
 
     /**
@@ -67,8 +71,12 @@ class RdvController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function viewSupportListRdvs(int $id, SupportManager $supportManager, Request $request, RdvPaginator $rdvPaginator): Response
-    {
+    public function viewSupportListRdvs(
+        int $id,
+        SupportManager $supportManager,
+        Request $request,
+        RdvPaginator $rdvPaginator
+    ): Response {
         $supportGroup = $supportManager->getSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
@@ -110,8 +118,12 @@ class RdvController extends AbstractController
      *
      * @Route("/support/{id}/rdv/new", name="support_rdv_new", methods="POST")
      */
-    public function createSupportRdv(int $id, SupportGroupRepository $supportGroupRepo, Request $request, EventDispatcherInterface $dispatcher): JsonResponse
-    {
+    public function createSupportRdv(
+        int $id,
+        SupportGroupRepository $supportGroupRepo,
+        Request $request,
+        EventDispatcherInterface $dispatcher
+    ): JsonResponse {
         $supportGroup = $supportGroupRepo->findSupportById($id);
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
@@ -198,7 +210,11 @@ class RdvController extends AbstractController
                     'day' => $rdv->getStart()->format('Y-m-d'),
                     'start' => $rdv->getStart()->format('H:i'),
                 ],
-                'apiUrls' => $this->getApiSelected('update', $rdv->getId(), (array) $request->request->get('rdv')),
+                'apiUrls' => $this->calendarRouter->getUrls(
+                    'update',
+                    $rdv->getId(),
+                    (array) $request->request->get('rdv')
+                ),
             ]);
         }
 
@@ -225,7 +241,7 @@ class RdvController extends AbstractController
             'rdv' => ['id' => $rdvId],
             'alert' => 'warning',
             'msg' => 'Le RDV est supprimé.',
-            'apiUrls' => $this->getApiSelected('delete', $rdvId, [], [
+            'apiUrls' => $this->calendarRouter->getUrls('delete', $rdvId, [], [
                 'google' => $rdv->getGoogleEventId(),
                 'outlook' => $rdv->getOutlookEventId(),
             ]),
@@ -245,44 +261,8 @@ class RdvController extends AbstractController
                 'start' => $rdv->getStart()->format('H:i'),
                 'tagsIds' => $rdv->getTagsIdsToString(),
             ],
-            'apiUrls' => $this->getApiSelected('create', $rdv->getId(), $requestRdv),
+            'apiUrls' => $this->calendarRouter->getUrls('create', $rdv->getId(), $requestRdv),
         ];
-    }
-
-    /**
-     * Creation of urls according to the selected api.
-     */
-    private function getApiSelected(string $action, $id, array $requestRdv = [], array $eventIds = []): array
-    {
-        $params = [];
-        $urls = [];
-
-        switch ($action) {
-            case 'update':
-            case 'create':
-                $params['rdvId'] = $id;
-                break;
-            case 'delete':
-                foreach ($eventIds as $apiName => $eventId) {
-                    if (null !== $eventId) {
-                        $urls[$apiName] = $this->generateUrl(
-                            $action.'_event_'.$apiName.'_calendar', [
-                                'eventId' => $eventId,
-                            ]
-                        );
-                    }
-                }
-                return $urls;
-        }
-
-        if (isset($requestRdv['_googleCalendar']) && (bool) $requestRdv['_googleCalendar']) {
-            $urls['google'] = $this->generateUrl($action.'_event_google_calendar', $params);
-        }
-        if (isset($requestRdv['_outlookCalendar']) && (bool) $requestRdv['_outlookCalendar']) {
-            $urls['outlook'] = $this->generateUrl($action.'_event_outlook_calendar', $params);
-        }
-
-        return $urls;
     }
 
     /**
