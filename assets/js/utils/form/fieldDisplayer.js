@@ -8,6 +8,7 @@ export default class FieldDisplayer {
     constructor(elt) {
         this.elt = elt
         this.parentFieldElt = document.getElementById(elt.dataset.parentField)
+        this.optionSelected = null
         this.init()
     }
 
@@ -18,22 +19,16 @@ export default class FieldDisplayer {
 
         switch (this.parentFieldElt.type) {
             case 'select-one':
-                this.checkSelect();
-                this.parentFieldElt.addEventListener('click', () => this.checkSelect())
-                this.parentFieldElt.addEventListener('change', () => this.checkSelect())
-                break
+                return this.initSelect()
             case 'date':
-                this.checkInput()
                 this.parentFieldElt.addEventListener('change', () => this.checkInput())
-                break
+                return this.checkInput()
             case 'text':
-                this.checkInput()
                 this.parentFieldElt.addEventListener('input', () => this.checkInput())
-                break
+                return this.checkInput()
             case 'checkbox':
-                this.checkbox()
                 this.parentFieldElt.addEventListener('change', () => this.checkbox())
-                break
+                return this.checkbox()
         }
     }
 
@@ -48,6 +43,20 @@ export default class FieldDisplayer {
             default:
                 this.checkInput()
         }
+    }
+    
+    initSelect() {
+        this.checkSelect()
+        this.parentFieldElt.addEventListener('click', () => this.checkSelect())
+        this.parentFieldElt.addEventListener('change', () => this.checkSelect())
+
+        // this.select2 = $('#' + this.parentFieldElt.id)
+        // if (this.select2) {
+        //     this.select2.on('select2:select', e => { 
+        //         this.optionSelected = e.params.data.id;
+        //         this.checkSelect()
+        //     })       
+        // }
     }
 
     /**
@@ -65,7 +74,7 @@ export default class FieldDisplayer {
             isVisible = true
         } else {
             options.split('|').forEach(option => {
-                if (option === this.parentFieldElt.value) {
+                if (option === this.parentFieldElt.value || option === this.optionSelected) {
                     isVisible = true
                 }
             })
