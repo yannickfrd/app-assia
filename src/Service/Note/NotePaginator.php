@@ -16,14 +16,14 @@ class NotePaginator
 {
     public const NB_ITEMS = 10;
 
-    private $noteRepo;
     private $pagination;
+    private $noteRepo;
     private $currentUser;
 
-    public function __construct(NoteRepository $noteRepo, Pagination $pagination, CurrentUserService $currentUser)
+    public function __construct(Pagination $pagination, NoteRepository $noteRepo, CurrentUserService $currentUser)
     {
-        $this->noteRepo = $noteRepo;
         $this->pagination = $pagination;
+        $this->noteRepo = $noteRepo;
         $this->currentUser = $currentUser;
     }
 
@@ -34,7 +34,11 @@ class NotePaginator
     {
         // Si filtre ou tri utilisé, n'utilise pas le cache.
         if ($request->query->count() > 0 || $search->getNoteId()) {
-            return $this->pagination->paginate($this->noteRepo->findNotesOfSupportQuery($supportGroup->getId(), $search), $request, self::NB_ITEMS);
+            return $this->pagination->paginate(
+                $this->noteRepo->findNotesOfSupportQuery($supportGroup->getId(), $search),
+                $request,
+                self::NB_ITEMS
+            );
         }
 
         // Sinon, récupère les notes en cache.
@@ -43,7 +47,11 @@ class NotePaginator
             function (CacheItemInterface $item) use ($supportGroup, $search, $request) {
                 $item->expiresAfter(\DateInterval::createFromDateString('7 days'));
 
-                return $this->pagination->paginate($this->noteRepo->findNotesOfSupportQuery($supportGroup->getId(), $search), $request, self::NB_ITEMS);
+                return $this->pagination->paginate(
+                    $this->noteRepo->findNotesOfSupportQuery($supportGroup->getId(), $search),
+                    $request,
+                    self::NB_ITEMS
+                );
             }
         );
     }

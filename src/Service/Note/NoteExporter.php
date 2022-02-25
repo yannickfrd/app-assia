@@ -27,14 +27,15 @@ class NoteExporter
         $this->appEnv = $appEnv;
     }
 
-    public function exportAllNotes(SupportGroup $supportGroup, SupportNoteSearch $search): StreamedResponse
+    public function exportAll(SupportGroup $supportGroup, SupportNoteSearch $search): StreamedResponse
     {
         $notes = $this->noteRepo->findNotesOfSupport($supportGroup->getId(), $search);
 
         $content = '';
         foreach ($notes as $note) {
             $content .= '<p style="text-align:center"><strong style="font-size: 18px;">--- '.
-            $note->getTitle().' ---</strong><br/><small style="font-size: 12px; color: gray;">'.
+            htmlspecialchars($note->getTitle(), \ENT_COMPAT | \ENT_HTML5).
+                ' ---</strong><br/><small style="font-size: 12px; color: gray;">'.
             $note->getCreatedAt()->format('d/m/Y').'</small></p>'.
             $note->getContent().'<br/>';
         }
@@ -48,7 +49,7 @@ class NoteExporter
         return $this->exportWord->download($this->appEnv);
     }
 
-    public function exportOneNote(Request $request, Note $note, SupportGroup $supportGroup): StreamedResponse
+    public function exportOne(Request $request, Note $note, SupportGroup $supportGroup): StreamedResponse
     {
         $export = 'note_export_word' === $request->attributes->get('_route') ? $this->exportWord : new ExportPDF();
 

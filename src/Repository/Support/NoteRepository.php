@@ -39,6 +39,7 @@ class NoteRepository extends ServiceEntityRepository
             ->join('n.supportGroup', 'sg')->addSelect('sg')
             ->join('sg.supportPeople', 'sp')->addSelect('sp')
             ->join('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
+            ->join('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')
             ->join('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
             ->join('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
 

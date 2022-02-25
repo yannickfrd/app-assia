@@ -8,11 +8,11 @@ use App\Entity\Support\Note;
 use App\Entity\Support\Rdv;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Traits\ContactEntityTrait;
-use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use App\Entity\Traits\DisableEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -29,7 +29,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use ContactEntityTrait;
-    use CreatedUpdatedEntityTrait;
     use DisableEntityTrait;
 
     public const CACHE_INDICATORS_KEY = 'stats.users'; // Indicateurs de tous les utilisateurs
@@ -195,6 +194,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $tokenCreatedAt;
+
+    /**
+     * @var \DateTime
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime", nullable=true)
+     * @Groups("view")
+     */
+    protected $createdAt;
+
+    /**
+     * @var User
+     * @Gedmo\Blameable(on="create")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User")
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     */
+    protected $createdBy;
+
+    /**
+     * @var \DateTime
+     * @Gedmo\Timestampable(on="create", on="update")
+     * @ORM\Column(type="datetime", nullable=true)
+     * @Groups("view")
+     */
+    protected $updatedAt;
+
+    /**
+     * @var User
+     * @Gedmo\Blameable(on="create", on="update")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User")
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     */
+    protected $updatedBy;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Support\SupportGroup", mappedBy="referent")
@@ -475,6 +506,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->getLastActivityAt() > new \DateTime('5 minutes ago');
     }
 
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(?string $token): self
+    {
+        $this->token = $token;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): self
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getUpdatedBy(): ?User
+    {
+        return $this->updatedBy;
+    }
+
+    public function setUpdatedBy(?User $updatedBy): self
+    {
+        $this->updatedBy = $updatedBy;
+
+        return $this;
+    }
+
     /**
      * @return Collection<SupportGroup>|SupportGroup[]|null
      */
@@ -578,18 +669,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $userConnection->setUser(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getToken(): ?string
-    {
-        return $this->token;
-    }
-
-    public function setToken(?string $token): self
-    {
-        $this->token = $token;
 
         return $this;
     }

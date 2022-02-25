@@ -1,6 +1,6 @@
-{% extends "model/_supportSearch.html.twig" %}
+{% extends 'model/_supportSearch.html.twig' %}
 
-{% form_theme form_search "bootstrap_4_layout.html.twig" %}
+{% form_theme form_search 'bootstrap_4_layout.html.twig' %}
 
 {% block search_form %}
     <div class="col-auto my-1 px-1">{{ form_row(form_search.content) }}</div>
@@ -20,7 +20,7 @@
 
 {% block form_search_export %}
     <button id="js-btn-export" name="export" value="true" class="btn btn-primary ml-2 shadow"
-        data-toggle="tooltip" data-placement="bottom" title=" Exporter les notes dans un document Word"><span
-        class="fas fa-file-word"></span><span class="sr-only">Exporter</span>
+        title=" Exporter les notes dans un document Word" data-toggle="tooltip" data-placement="bottom">
+            <i class="fas fa-file-word"></i><span class="sr-only">Exporter</span>
     </button>
 {% endblock %}

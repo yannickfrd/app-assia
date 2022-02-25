@@ -1,3 +1,10 @@
+# Note
+note:
+  created_successfully: "La note « %note_title% » a bien été créée."
+  updated_successfully: "La note « %note_title% » a bien été modifiée."
+  deleted_successfully: "La note « %note_title% » a bien été supprimée."
+  no_evaluation_created: Il n'y a pas d'évaluation sociale créée pour ce suivi.
+
 # Task
 task:
   created_successfully: "La tâche « %task_title% » a bien été créée."

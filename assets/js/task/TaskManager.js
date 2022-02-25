@@ -23,7 +23,6 @@ export default class TaskManager {
         this.supportId = divSupportElt ? divSupportElt.dataset.support : null
         this.themeColor = document.getElementById('header').dataset.color
         this.counterTasksElt = document.getElementById('count_tasks')
-        this.btnNewTaskElt = document.getElementById('js_new_task')
         this.btnConfirmDeleteElt = document.querySelector('button#modal-confirm')
 
         this.taskForm = new TaskForm(this)
@@ -32,7 +31,7 @@ export default class TaskManager {
     }
 
     init() {
-        this.btnNewTaskElt.addEventListener('click', () => this.taskForm.resetForm())
+        document.getElementById('js_new_task').addEventListener('click', () => this.taskForm.resetForm())
 
         document.querySelectorAll('button[data-action="edit_task"]').forEach(btnElt => {
             btnElt.addEventListener('click', () => this.requestShowTask(btnElt))

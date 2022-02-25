@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% set title = 'Notes' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+
+    <section class="mt-0">
+
+        <div class="container-fluid mt-4">
+            <h1 class="h2 mb-3">{{ title }}</h1>
+            {% include 'model/_msgFlash.html.twig' %}
+        </div>
+
+        {% include 'app/note/_note_form_search.html.twig' %}
+
+        <div class="container-fluid mt-4">
+
+            <div class="row align-items-baseline">
+                <div class="col-md-4 count align-middle mb-2">
+                    <span class="align-middle">Résultat : {{ notes.getTotalItemCount|number }}</span>
+                </div>
+                <div class="col-md-8">
+                    <div class="navigation">{{ knp_pagination_render(notes) }}</div>
+                </div>
+            </div>
+
+            {% include 'app/note/_note_table.html.twig' %}
+
+        </div>
+
+    </section>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('search') }}
+{% endblock javascripts %}

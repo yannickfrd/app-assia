@@ -36,7 +36,7 @@ Encore
     .addEntry('home', './assets/js/home/home.js')
     .addEntry('listPeople', './assets/js/listPeople/listPeople.js')
     .addEntry('login', './assets/js/security/login.js')
-    .addEntry('note', './assets/js/note/note.js')
+    .addEntry('note', './assets/js/note/note-index.js')
     .addEntry('occupancy', './assets/js/app/occupancy.js')
     .addEntry('person', './assets/js/person/person.js')
     .addEntry('place', './assets/js/place/place.js')
