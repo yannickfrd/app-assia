@@ -4,11 +4,11 @@ namespace App\Controller\Api;
 
 use App\Service\Api\GoogleApi\GoogleCalendarApiService;
 use Google\Exception;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class GoogleCalendarController extends AbstractController
 {
@@ -22,6 +22,7 @@ class GoogleCalendarController extends AbstractController
 
     /**
      * @Route("/google-calendar/event/create", name="create_event_google_calendar", methods={"GET"})
+     *
      * @throws Exception
      */
     public function createEventGoogleCalendar(Request $request): JsonResponse
@@ -35,7 +36,8 @@ class GoogleCalendarController extends AbstractController
     }
 
     /**
-     * Callback function
+     * Callback function.
+     *
      * @Route("/add-event-google-calendar", name="add_event_google_calendar")
      * @throws Exception
      */
@@ -57,6 +59,7 @@ class GoogleCalendarController extends AbstractController
 
     /**
      * @Route("/google-calendar/event/update/{rdvId}", name="update_event_google_calendar", methods={"PUT"})
+     *
      * @throws Exception
      */
     public function updateEventGoogleCalendar(int $rdvId): JsonResponse
@@ -87,8 +90,6 @@ class GoogleCalendarController extends AbstractController
 
     /**
      * @Route("/google-calendar/event/delete/{eventId}", name="delete_event_google_calendar", methods={"DELETE"})
-     * @param string $eventId
-     * @return JsonResponse
      */
     public function deleteEventGoogleCalendar(string $eventId): JsonResponse
     {
@@ -99,10 +100,11 @@ class GoogleCalendarController extends AbstractController
 
             if (0 < count($getErrors->error->errors)) {
                 $messError = $getErrors->error->message;
+
                 return $this->json([
                     'action' => 'delete',
                     'alert' => 'warning',
-                    'msg' => 'Une erreur s\'est produite avec Google Agenda: "' . $messError . '".',
+                    'msg' => 'Une erreur s\'est produite avec Google Agenda: "'.$messError.'".',
                 ]);
             }
         }

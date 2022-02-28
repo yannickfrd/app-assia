@@ -107,7 +107,15 @@ class RdvController extends AbstractController
             $this->em->persist($rdv);
             $this->em->flush();
 
-            return $this->json($this->getDataNewRdv($rdv, (array) $request->request->get('rdv')));
+            return $this->json([
+                'action' => 'create',
+                'alert' => 'success',
+                'msg' => 'Le RDV est enregistré.',
+                'rdv' => $rdv,
+                'apiUrls' => $this->calendarRouter->getUrls(
+                    'create', $rdv->getId(), (array) $request->request->get('rdv')
+                ),
+            ], 200, [], ['groups' => 'show_rdv']);
         }
 
         return $this->getErrorMessage($form);
@@ -140,9 +148,23 @@ class RdvController extends AbstractController
 
             $dispatcher->dispatch(new RdvEvent($rdv), 'rdv.after_create');
 
-            return $this->json(array_merge(
-                $this->getDataNewRdv($rdv, (array) $request->request->get('rdv'))
-            ));
+            return $this->json([
+                'action' => 'create',
+                'alert' => 'success',
+                'msg' => 'Le RDV est enregistré.',
+                'rdv' => $rdv,
+                'apiUrls' => $this->calendarRouter->getUrls(
+                    'create', $rdv->getId(), (array) $request->request->get('rdv')
+                ),
+            ], 200, [], ['groups' => 'show_rdv']);
+
+//            return $this->json(array_merge(
+//                $this->getDataNewRdv(
+//                    $serializer->serialize($rdv, 'json', ['groups' => 'show_rdv']),
+//                    $rdv->getId(),
+//                    (array) $request->request->get('rdv')
+//                )
+//            ));
         }
 
         return $this->getErrorMessage($form);
@@ -248,22 +270,16 @@ class RdvController extends AbstractController
         ]);
     }
 
-    private function getDataNewRdv(Rdv $rdv, array $requestRdv): array
-    {
-        return [
-            'action' => 'create',
-            'alert' => 'success',
-            'msg' => 'Le RDV est enregistré.',
-            'rdv' => [
-                'id' => $rdv->getId(),
-                'title' => $rdv->getTitle(),
-                'day' => $rdv->getStart()->format('Y-m-d'),
-                'start' => $rdv->getStart()->format('H:i'),
-                'tagsIds' => $rdv->getTagsIdsToString(),
-            ],
-            'apiUrls' => $this->calendarRouter->getUrls('create', $rdv->getId(), $requestRdv),
-        ];
-    }
+//    private function getDataNewRdv(string $rdv, int $rdvId, array $requestRdv): array
+//    {
+//        return [
+//            'action' => 'create',
+//            'alert' => 'success',
+//            'msg' => 'Le RDV est enregistré.',
+//            'rdv' => $rdv,
+//            'apiUrls' => $this->calendarRouter->getUrls('create', $rdvId, $requestRdv),
+//        ];
+//    }
 
     /**
      * Exporte les données.

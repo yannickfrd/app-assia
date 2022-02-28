@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -33,45 +34,53 @@ class Rdv
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("show_rdv")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=false)
      * @Assert\NotBlank()
+     * @Groups("show_rdv")
      */
     private $title;
 
     /**
      * @ORM\Column(type="datetime")
      * @Assert\NotNull()
+     * @Groups("show_rdv")
      */
     private $start;
 
     /**
      * @ORM\Column(type="datetime")
      * @Assert\NotNull()
+     * @Groups("show_rdv")
      */
     private $end;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
+     * @Groups("show_rdv")
      */
     private $status;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("show_rdv")
      */
     private $location;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups("show_rdv")
      */
     private $content;
 
     /**
      * @Gedmo\Blameable(on="create")
      * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User", inversedBy="rdvs")
+     * @Groups("show_rdv")
      */
     private $createdBy; // NE PAS SUPPRIMER
 

@@ -14,7 +14,7 @@ export default class Calendar {
         this.ajax = new Ajax(this.loader)
         this.parametersUrl = new ParametersUrl()
         this.modalElt = new Modal(document.getElementById('modal-rdv'))
-        this.apiClendar = new ApiCalendar()
+        this.apiCalendar = new ApiCalendar()
 
         this.calendarContainer = document.getElementById('calendar-container')
         this.newRdvBtn = document.getElementById('js-new-rdv')
@@ -349,7 +349,7 @@ export default class Calendar {
      */
     getInfoRdvElt(rdv) {
         let htmlContent = `Créé le ${rdv.createdAt} par ${rdv.createdBy}`
-        if (rdv.createdAt != rdv.updatedAt) {
+        if (rdv.createdAt !== rdv.updatedAt) {
             htmlContent = htmlContent + `<br/> (modifié le ${rdv.updatedAt} par ${rdv.updatedBy})`
         }
         return htmlContent
@@ -369,8 +369,15 @@ export default class Calendar {
 
         const title = this.modalRdvElt.querySelector('#rdv_title').value
 
-        rdvElt.innerHTML = rdv.start + ' ' + title
-        const dayElt = document.getElementById(rdv.day)
+        const rdvTime = () => {
+            const rdvDate = new Date(rdv.start)
+            const min = rdvDate.getMinutes().toString().length === 1 ? '0' + rdvDate.getMinutes() : rdvDate.getMinutes()
+
+            return rdvDate.getHours() + ':' + min
+        }
+
+        rdvElt.innerHTML = rdv.day ? rdv.start + ' ' + title : rdvTime() + ' ' + rdv.title
+        const dayElt = rdv.day ? document.getElementById(rdv.day) : document.getElementById(rdv.start.substr(0, 10))
 
         if (dayElt) {
             dayElt.insertBefore(rdvElt, dayElt.lastChild)
@@ -380,7 +387,10 @@ export default class Calendar {
 
         rdvElt.addEventListener('click', this.requestGetRdv.bind(this, rdvElt))
 
-        this.apiClendar.execute(action, apiUrls)
+        if (action === 'create') {
+            this.apiCalendar.executeJs(rdv, apiUrls)
+        }
+        // this.apiCalendar.execute(action, apiUrls)
     }
 
     /**
@@ -405,7 +415,7 @@ export default class Calendar {
         rdvElt.remove()
         this.hideRdvElts(dayElt)
 
-        this.apiClendar.execute('delete', apiUrls)
+        // this.apiCalendar.execute('delete', apiUrls)
     }
 
     /**
