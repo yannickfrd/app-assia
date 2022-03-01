@@ -3,13 +3,13 @@
 namespace App\Service\Api\GoogleApi;
 
 use App\Entity\Support\Rdv;
-use App\Service\Api\ApiCalendarServiceAbstract;
+use App\Service\Api\AbstractApiCalendar;
 use Google\Exception;
 use Google_Client;
 use Google_Service_Calendar;
 use Google_Service_Calendar_Event;
 
-class GoogleCalendarApiService extends ApiCalendarServiceAbstract
+class GoogleCalendarApiService extends AbstractApiCalendar
 {
     private const SESSION_ACCESS_TOKEN_GOOGLE = 'clientTokenGoogle';
     private const SESSION_REFRESH_TOKEN_GOOGLE = 'clientRefreshTokenGoogle';

@@ -40,7 +40,8 @@ class OutlookCalendarController extends AbstractController
     }
 
     /**
-     * Callback function
+     * Callback function.
+     *
      * @Route("/add-event-outlook-calendar", name="add_event_outlook_calendar")
      */
     public function addEventOutlookCalendar(Request $request): RedirectResponse

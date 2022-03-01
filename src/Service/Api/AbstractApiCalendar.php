@@ -9,7 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-abstract class ApiCalendarServiceAbstract
+abstract class AbstractApiCalendar
 {
     /** @var SessionInterface */
     protected $session;

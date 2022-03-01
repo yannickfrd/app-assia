@@ -157,14 +157,6 @@ class RdvController extends AbstractController
                     'create', $rdv->getId(), (array) $request->request->get('rdv')
                 ),
             ], 200, [], ['groups' => 'show_rdv']);
-
-//            return $this->json(array_merge(
-//                $this->getDataNewRdv(
-//                    $serializer->serialize($rdv, 'json', ['groups' => 'show_rdv']),
-//                    $rdv->getId(),
-//                    (array) $request->request->get('rdv')
-//                )
-//            ));
         }
 
         return $this->getErrorMessage($form);
@@ -269,17 +261,6 @@ class RdvController extends AbstractController
             ]),
         ]);
     }
-
-//    private function getDataNewRdv(string $rdv, int $rdvId, array $requestRdv): array
-//    {
-//        return [
-//            'action' => 'create',
-//            'alert' => 'success',
-//            'msg' => 'Le RDV est enregistré.',
-//            'rdv' => $rdv,
-//            'apiUrls' => $this->calendarRouter->getUrls('create', $rdvId, $requestRdv),
-//        ];
-//    }
 
     /**
      * Exporte les données.

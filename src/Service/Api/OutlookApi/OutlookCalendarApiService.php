@@ -3,7 +3,7 @@
 namespace App\Service\Api\OutlookApi;
 
 use App\Entity\Support\Rdv;
-use App\Service\Api\ApiCalendarServiceAbstract;
+use App\Service\Api\AbstractApiCalendar;
 use GuzzleHttp\Exception\GuzzleException;
 use Microsoft\Graph\Exception\GraphException;
 use Microsoft\Graph\Graph;
@@ -21,7 +21,7 @@ use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-class OutlookCalendarApiService extends ApiCalendarServiceAbstract
+class OutlookCalendarApiService extends AbstractApiCalendar
 {
     private const SESSION_ID_TOKEN_OUTLOOK = 'outlookIdToken';
     private const SESSION_REFRESH_TOKEN_OUTLOOK = 'outlookRefreshToken';
