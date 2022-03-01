@@ -1,39 +1,46 @@
 
 export default class RdvModel {
-    _baseUrlGoogle = 'https://calendar.google.com/calendar/u/0/r/eventedit?'
-    _baseUrlOutlook = 'https://outlook.live.com/calendar/0/deeplink/compose?'
+    #baseUrlGoogle = 'https://calendar.google.com/calendar/u/0/r/eventedit?'
+    #baseUrlOutlook = 'https://outlook.live.com/calendar/0/deeplink/compose?'
 
-    _apiName;
-    _title;
-    _start;
-    _end;
-    _location;
-    _content;
+    #apiName
+    #title
+    #start
+    #end
+    #location
+    #content
+    #createdBy
+    #supportGroupName
 
+    /**
+     * @param {String} apiName
+     * @param {Object} rdvEntity
+     */
     constructor(apiName, rdvEntity) {
-        this._apiName = apiName;
+        this.#apiName = apiName
 
-        this._title = rdvEntity.title;
-        this._start = rdvEntity.start
-        this._end = rdvEntity.end
-        this._location = rdvEntity.location
-        this._content = rdvEntity.content
+        this.#title = rdvEntity.title
+        this.#start = rdvEntity.start
+        this.#end = rdvEntity.end
+        this.#location = rdvEntity.location
+        this.#content = rdvEntity.content
+        this.#createdBy = rdvEntity.createdBy.fullname
+        this.#supportGroupName = rdvEntity.supportGroup.header.fullname
     }
 
     get url() {
         const apiNameIsGoogle = this.apiName === 'google'
 
-        let url = this.apiName === 'google' ? this._baseUrlGoogle : this._baseUrlOutlook
+        let url = this.apiName === 'google' ? this.#baseUrlGoogle : this.#baseUrlOutlook
         url += apiNameIsGoogle
             ? 'text=' + encodeURI(this.title) + '&ctz=Europe/Paris'
             : 'subject=' + encodeURI(this.title)
 
-        if (this.content !== null) {
-            url += apiNameIsGoogle ? '&details=': '&body='
-            url += apiNameIsGoogle
-                ? encodeURIComponent(this._createBodyEvent())
-                : encodeURIComponent(this._createBodyEvent()).replaceAll('%0A', '%3Cbr%3E')
-        }
+        url += apiNameIsGoogle ? '&details=': '&body='
+        url += apiNameIsGoogle
+            ? encodeURIComponent(this.#createBodyEvent())
+            : encodeURIComponent(this.#createBodyEvent()).replaceAll('%0A', '%3Cbr%3E')
+
         if (this.location !== null) {
             url += '&location=' + encodeURI(this.location)
         }
@@ -41,70 +48,91 @@ export default class RdvModel {
             if (apiNameIsGoogle) {
                 url += '&dates='
                     + this.start.replaceAll('-', '').replace(':', '')
-                    + '/' + this.end.replaceAll('-', '').replace(':', '');
+                    + '/' + this.end.replaceAll('-', '').replace(':', '')
             } else {
                 url += '&startdt=' + this.start + '&enddt=' + this.end
             }
         }
 
-        return url;
+        return url
     }
 
-    _createBodyEvent() {
-        let content = '<p>' + this.content + '</p>'
+    #createBodyEvent() {
+        let body = this.content !== null ? '<p>' + this.content + '</p>' : ''
 
-        if (this.status !== '' && this.status !== undefined) {
-            content += '<br><strong>Statut : </strong>' + this.status
+        if (this.createdBy !== null && this.createdBy !== undefined) {
+            body += '<br><strong>Créé par : </strong>' + this.createdBy
         }
 
-        return content
+        if (this.supportGroupName !== null && this.supportGroupName !== undefined) {
+            body += '<br><strong>Nom du suivi : </strong>' + this.supportGroupName
+        }
+
+        return body
+    }
+
+
+    get supportGroupName() {
+        return this.#supportGroupName;
+    }
+
+    set supportGroupName(value) {
+        this.#supportGroupName = value;
+    }
+
+    get createdBy() {
+        return this.#createdBy
+    }
+
+    set createdBy(value) {
+        this.#createdBy = value
     }
 
     get start() {
-        return this._start;
+        return this.#start
     }
 
     set start(value) {
-        this._start = value;
+        this.#start = value
     }
 
     get end() {
-        return this._end;
+        return this.#end
     }
 
     set end(value) {
-        this._end = value;
+        this.#end = value
     }
 
     get location() {
-        return this._location;
+        return this.#location
     }
 
     set location(value) {
-        this._location = value;
+        this.#location = value
     }
 
     get content() {
-        return this._content;
+        return this.#content
     }
 
     set content(value) {
-        this._content = value;
+        this.#content = value
     }
 
     get apiName() {
-        return this._apiName;
+        return this.#apiName
     }
 
     set apiName(value) {
-        this._apiName = value;
+        this.#apiName = value
     }
 
     get title() {
-        return this._title;
+        return this.#title
     }
 
     set title(value) {
-        this._title = value;
+        this.#title = value
     }
 }

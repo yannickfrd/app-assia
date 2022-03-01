@@ -2,8 +2,8 @@
 
 namespace App\Entity\Support;
 
-use App\Entity\Evaluation\EvaluationGroup;
 use App\Entity\Evaluation\EvalInitGroup;
+use App\Entity\Evaluation\EvaluationGroup;
 use App\Entity\Organization\Device;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\SubService;
@@ -934,6 +934,8 @@ class SupportGroup
 
     /**
      * Donne le demandeur principal du suivi.
+     *
+     * @Groups("show_rdv")
      */
     public function getHeader(): ?Person
     {

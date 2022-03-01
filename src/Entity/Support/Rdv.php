@@ -86,6 +86,7 @@ class Rdv
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Support\SupportGroup", inversedBy="rdvs", fetch="EXTRA_LAZY")
+     * @Groups("show_rdv")
      */
     private $supportGroup;
 

@@ -209,6 +209,9 @@ class Person
         return strtolower((new AsciiSlugger())->slug($this->firstname.'-'.$this->lastname));
     }
 
+    /**
+     * @Groups("show_rdv")
+     */
     public function getFullname(): ?string
     {
         return $this->lastname.' '.$this->firstname;

@@ -134,7 +134,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $firstname;
 
     /**
-     * @Groups({"export", "view"})
+     * @Groups({"export", "view", "show_rdv"})
      */
     private $fullname;
 

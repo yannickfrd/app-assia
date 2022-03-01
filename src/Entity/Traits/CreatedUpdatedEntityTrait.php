@@ -22,6 +22,7 @@ trait CreatedUpdatedEntityTrait
      * @Gedmo\Blameable(on="create")
      * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User")
      * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     * @Groups("show_rdv")
      */
     private $createdBy;
 
