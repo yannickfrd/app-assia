@@ -3,9 +3,19 @@
  */
 export default class WidgetCollectionManager {
 
-    constructor() {
+    /**
+     * @param {CallableFunction} callbackAfterAdd
+     * @param {CallableFunction} callbackAfterRemove
+     * @param {number} limit 
+     * @param {number} delay 
+     */
+    constructor(callbackAfterAdd = null, callbackAfterRemove = null, limit = null, delay = 200) {
         this.btnElts = document.querySelectorAll('button[data-add-widget]')
-        this.list = null
+        this.listElt = null
+        this.callbackAfterAdd = callbackAfterAdd
+        this.callbackAfterRemove = callbackAfterRemove
+        this.limit = limit
+        this.delay = delay
         this.init()
     }
 
@@ -21,11 +31,19 @@ export default class WidgetCollectionManager {
     /**
      * Add a element from a prototype in a container.
      * @param {HTMLButtonElement} btnElt 
+     * @return {HTMLElement}
      */
     addElt(btnElt) {
         this.listElt = document.querySelector(btnElt.dataset.listSelector)
         // Try to find the counter of the list or use the length of the list
         const counter = parseInt(this.listElt.dataset.widgetCounter || this.listElt.children.length)
+        //Check the limit
+        if ((counter + 1) === this.limit) {
+            btnElt.classList.add('d-none')
+        }
+        if (this.limit && counter >= this.limit) {
+            return false
+        }
         // Grab the prototype template
         let prototypeString = this.listElt.dataset.prototype
         const containerTag = this.listElt.dataset.containerTag
@@ -40,6 +58,10 @@ export default class WidgetCollectionManager {
         this.addEventRemove(newElt)
         // Add item to the list
         this.listElt.appendChild(newElt)
+
+        if (this.callbackAfterAdd) this.callbackAfterAdd()
+
+        return newElt
     }
 
     /**
@@ -47,14 +69,17 @@ export default class WidgetCollectionManager {
      */
     addEventRemove(elt) {
         const btnElt = elt.querySelector('button[data-action="remove"]')
-
         if (btnElt) {
             btnElt.addEventListener('click', e => {
                 e.preventDefault()
                 elt.classList.add('fade-out')
+
                 setTimeout(() => {
                     elt.remove()
-                }, 200)
+                    this.listElt.dataset.widgetCounter -= 1
+                    this.btnElts.forEach(btnElt => btnElt.classList.remove('d-none'))
+                    if (this.callbackAfterRemove) this.callbackAfterRemove()
+                }, this.delay)
             })
         }
     }

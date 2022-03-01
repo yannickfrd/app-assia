@@ -19,7 +19,7 @@ class DocumentSearch
     private $name;
 
     /** @var ArrayCollection|null */
-    private $tags;
+    protected $tags;
 
     public function getTags(): ?ArrayCollection
     {

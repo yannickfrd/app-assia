@@ -11,14 +11,15 @@ use App\Entity\Support\SupportGroup;
 use App\Form\Utils\Choices;
 use App\Repository\Admin\IndicatorRepository;
 use App\Repository\Evaluation\EvaluationGroupRepository;
+use App\Repository\Event\TaskRepository;
 use App\Repository\Organization\ServiceRepository;
 use App\Repository\Organization\UserConnectionRepository;
 use App\Repository\Organization\UserRepository;
 use App\Repository\People\PeopleGroupRepository;
 use App\Repository\People\PersonRepository;
-use App\Repository\Support\PaymentRepository;
 use App\Repository\Support\DocumentRepository;
 use App\Repository\Support\NoteRepository;
+use App\Repository\Support\PaymentRepository;
 use App\Repository\Support\RdvRepository;
 use App\Repository\Support\SupportGroupRepository;
 use App\Repository\Support\SupportPersonRepository;
@@ -37,6 +38,7 @@ class IndicatorsService
     protected $evaluationRepo;
     protected $noteRepo;
     protected $rdvRepo;
+    protected $taskRepo;
     protected $documentRepo;
     protected $paymentRepo;
     protected $ConnectionRepo;
@@ -54,12 +56,13 @@ class IndicatorsService
         EvaluationGroupRepository $evaluationRepo,
         NoteRepository $noteRepo,
         RdvRepository $rdvRepo,
+        TaskRepository $taskRepo,
         DocumentRepository $documentRepo,
         PaymentRepository $paymentRepo,
         UserConnectionRepository $ConnectionRepo
     ) {
         $this->repoIndicator = $indicatorRepo;
-        $this->UserRepo = $userRepo;
+        $this->userRepo = $userRepo;
         $this->serviceRepo = $serviceRepo;
         $this->personRepo = $personRepo;
         $this->peopleGroupRepo = $peopleGroupRepo;
@@ -68,6 +71,7 @@ class IndicatorsService
         $this->evaluationRepo = $evaluationRepo;
         $this->noteRepo = $noteRepo;
         $this->rdvRepo = $rdvRepo;
+        $this->taskRepo = $taskRepo;
         $this->documentRepo = $documentRepo;
         $this->paymentRepo = $paymentRepo;
         $this->ConnectionRepo = $ConnectionRepo;
@@ -89,6 +93,7 @@ class IndicatorsService
 
     /**
      * Donne les indicateurs des services.
+     *
      * @param Service[] $services
      */
     public function getServicesIndicators(array $services): array
@@ -157,24 +162,6 @@ class IndicatorsService
         }
 
         return $datasDevices;
-    }
-
-    /**
-     * Donne les indicateurs de tous les utilisateurs.
-     */
-    public function getUsersIndicators(): array
-    {
-        return $this->cache->get(User::CACHE_INDICATORS_KEY, function (CacheItemInterface $item) {
-            $item->expiresAfter(\DateInterval::createFromDateString('30 minutes'));
-
-            $users = [];
-
-            foreach ($this->UserRepo->findUsers(['status' => 1]) as $user) {
-                $users[] = $this->getUserDatas($user);
-            }
-
-            return $users;
-        });
     }
 
     /**
@@ -363,25 +350,6 @@ class IndicatorsService
     }
 
     /**
-     * Donne les indicateurs d'un utilisateur.
-     */
-    protected function getUserDatas(User $user): array
-    {
-        return [
-            'id' => $user->getId(),
-            'name' => $user->getFullname(),
-            'nbActiveSupports' => $this->supportGroupRepo->count([
-                'referent' => $user,
-                'status' => SupportGroup::STATUS_IN_PROGRESS,
-            ]),
-            'nbNotes' => $this->noteRepo->count(['createdBy' => $user]),
-            'nbRvs' => $this->rdvRepo->count(['createdBy' => $user]),
-            'nbDocuments' => $this->documentRepo->count(['createdBy' => $user]),
-            'nbPayments' => $this->paymentRepo->count(['createdBy' => $user]),
-        ];
-    }
-
-    /**
      * Donne les services de l'utilisateur en cache.
      */
     public function getUserServices(User $user): ?array
@@ -399,7 +367,7 @@ class IndicatorsService
     public function getUserSupports(User $user): ?array
     {
         return $this->cache->get(User::CACHE_USER_SUPPORTS_KEY.$user->getId(), function (CacheItemInterface $item) use ($user) {
-            $item->expiresAfter(\DateInterval::createFromDateString('24 hours'));
+            $item->expiresAfter(\DateInterval::createFromDateString('1 day'));
 
             return $this->supportGroupRepo->findSupportsOfUser($user);
         });
@@ -411,7 +379,7 @@ class IndicatorsService
     public function getUserNotes(User $user): ?array
     {
         return $this->cache->get(User::CACHE_USER_NOTES_KEY.$user->getId(), function (CacheItemInterface $item) use ($user) {
-            $item->expiresAfter(\DateInterval::createFromDateString('24 hours'));
+            $item->expiresAfter(\DateInterval::createFromDateString('1 day'));
 
             return $this->noteRepo->findNotesOfUser($user, 10);
         });
@@ -423,9 +391,21 @@ class IndicatorsService
     public function getUserRdvs(User $user): ?array
     {
         return $this->cache->get(User::CACHE_USER_RDVS_KEY.$user->getId(), function (CacheItemInterface $item) use ($user) {
-            $item->expiresAfter(\DateInterval::createFromDateString('24 hours'));
+            $item->expiresAfter(\DateInterval::createFromDateString('1 day'));
 
             return $this->rdvRepo->findRdvsOfUser($user, 10);
+        });
+    }
+
+    /**
+     * Donne les événements de l'utilisateur en cache.
+     */
+    public function getUserTasks(User $user): array
+    {
+        return $this->cache->get(User::CACHE_USER_TASKS_KEY.$user->getId(), function (CacheItemInterface $item) use ($user) {
+            $item->expiresAfter(\DateInterval::createFromDateString('1 day'));
+
+            return $this->taskRepo->findActiveTasksOfUser($user, 20);
         });
     }
 }

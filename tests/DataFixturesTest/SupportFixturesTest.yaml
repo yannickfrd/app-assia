@@ -37,6 +37,7 @@ App\Entity\Support\SupportGroup:
     updatedAt: <dateTimeBetween($createdAt, "now")>
     updatedBy: $referent
 
+
 App\Entity\Support\SupportPerson:
   supportPerson1:
     startDate: "@supportGroup1->startDate"
@@ -46,6 +47,7 @@ App\Entity\Support\SupportPerson:
     updatedAt: "@supportGroup1->updatedAt"
     supportGroup: "@supportGroup1"
     person: "@person1"
+    # events: "@supportGroup1->events"
     head: "@rolePerson1->head"
     role: "@rolePerson1->role"
   supportPerson2:
@@ -55,6 +57,7 @@ App\Entity\Support\SupportPerson:
     createdAt: "@supportGroup1->createdAt"
     updatedAt: "@supportGroup1->updatedAt"
     supportGroup: "@supportGroup1"
+    # events: []
     person: "@person2"
     head: "@rolePerson2->head"
     role: "@rolePerson2->role"
@@ -65,9 +68,11 @@ App\Entity\Support\SupportPerson:
     createdAt: "@supportGroup2->createdAt"
     updatedAt: "@supportGroup2->updatedAt"
     supportGroup: "@supportGroup2"
+    # events: []
     person: "@person3"
     head: "@rolePerson3->head"
     role: "@rolePerson3->role"
+
 
 App\Entity\Organization\Organization:
   organization1:

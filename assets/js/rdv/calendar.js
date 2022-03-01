@@ -229,7 +229,7 @@ export default class Calendar {
         e.preventDefault()
 
         if (this.modalRdvElt.querySelector('#rdv_title').value === '') {
-            return new MessageFlash('danger', 'La rdv est vide.')
+            return new MessageFlash('danger', 'Le rdv est vide.')
         }
 
         if (!this.loader.isActive()) {

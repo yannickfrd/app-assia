@@ -25,7 +25,7 @@ trait NoteSearchTrait
     /**
      * @var ArrayCollection|null
      */
-    private $tags;
+    protected $tags;
 
     public function getTags(): ?ArrayCollection
     {

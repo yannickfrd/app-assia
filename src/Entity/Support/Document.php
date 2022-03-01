@@ -99,7 +99,7 @@ class Document
      * @Groups("show_document")
      * @MaxDepth(1)
      */
-    private $createdBy; // NE PAS SUPPRIMER
+    protected $createdBy; // NE PAS SUPPRIMER
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\People\PeopleGroup", inversedBy="documents")

@@ -10,15 +10,14 @@ export default class SelectManager {
      * @param {{name: string, elementId: string}} event
      * @param {Object} options
      */
-    constructor(selector,  event = {}, options = {}) {
+    constructor(selector, event = {}, options = {}) {
         this.options = options
         this.event = event
         this.selectElt = document.querySelector(selector)
-        
+
         if (this.selectElt === null) {
             return
         }
-
         this.select2 = $(selector)
         this.listSelectOptions = this.selectElt.options
 
@@ -26,17 +25,25 @@ export default class SelectManager {
     }
 
     init() {
-        // Permet de savoir si un objet est vide ou pas.
-        const isObjEmpty = (obj) => Object.keys(obj).length === 0
-
-        // Init les options du select2 si pas d'options en paramètre.
-        if (isObjEmpty(this.options)) { 
-            this.options = this.getDefaultOptions()
-        }
+        this.initOptions()
 
         this.switchEvent()
     }
 
+    initOptions() {
+        // Permet de savoir si un objet est vide ou pas.
+        const isObjEmpty = (obj) => Object.keys(obj).length === 0
+        const defaultOptions = this.getDefaultOptions()
+        // Init les options du select2 si pas d'options en paramètre.
+        if (isObjEmpty(this.options)) {
+            this.options = defaultOptions
+        } else {
+            for (let key in this.options) {
+                defaultOptions[key] = this.options[key]
+            }
+        }
+        this.options = defaultOptions;
+    }
     /**
      * Retourne les options par défaut du select2.
      * @returns {Object}
@@ -64,12 +71,20 @@ export default class SelectManager {
     }
 
     /**
+     * Met à jour la sélection.
+     */
+    updateSelect(values) {
+        this.clearSelect()
+        this.select2.val(values).trigger('change')
+    }
+
+    /**
      * Supprime les options du select en fonction d'un tableau contenant des ids.
      * @param {[{id: number}]} elts
      */
     clearOptionsList(elts) {
-        elts.forEach( element => {
-            Array.from(this.listSelectOptions).forEach( option => {
+        elts.forEach(element => {
+            Array.from(this.listSelectOptions).forEach(option => {
                 if (parseInt(option.value) === parseInt(element.id)) {
                     option.remove()
                 }
@@ -85,7 +100,7 @@ export default class SelectManager {
      */
     addOption(value, text) {
         const optionElt = this.createOption(value, text)
-        
+
         this.selectElt.add(optionElt, null)
     }
 
@@ -113,8 +128,8 @@ export default class SelectManager {
     showOptionsFromArray(arrayList) {
         if (arrayList.length !== 0) {
             return this.select2.val(arrayList).trigger('change')
-        } 
-        
+        }
+
         return this.clearSelect()
     }
 
@@ -141,7 +156,7 @@ export default class SelectManager {
     onCollapseEvent() {
         if (!this.event.elementId) {
             console.error(
-                'L\'id du collapse est maquant. Veuillez le renseigner dans les options. ' + 
+                'L\'id du collapse est maquant. Veuillez le renseigner dans les options. ' +
                 '"collapseId" doit être renseigné dans les options si l\'event "onCollapse" est appelé.'
             )
         }
@@ -155,7 +170,7 @@ export default class SelectManager {
     onModalEvent() {
         if (!this.event.elementId) {
             console.error(
-                'L\'id du modal est maquant. Veuillez le renseigner dans les options. ' + 
+                'L\'id du modal est maquant. Veuillez le renseigner dans les options. ' +
                 '"modalId" doit être renseigné dans les options si l\'event "onCollapse" est appelé."'
             )
         }
@@ -170,5 +185,12 @@ export default class SelectManager {
      */
     defaultEvent() {
         this.select2.select2(this.options)
+    }
+
+    checkSelect2Style() {
+        if (this.selectElt.nextElementSibling === null) return;
+        this.selectElt.nextElementSibling.querySelectorAll('.select2-search__field').forEach(select2Elt => {
+            select2Elt.style.width = '100%'
+        })
     }
 }

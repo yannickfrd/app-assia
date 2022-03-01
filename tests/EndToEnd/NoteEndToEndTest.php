@@ -53,7 +53,7 @@ class NoteEndToEndTest extends PantherTestCase
     {
         $this->outputMsg('Fail to create a note');
 
-        $form = $crawler->selectButton('js-new-note')->click();
+        $form = $crawler->filter('button[data-action="new_note"]')->click();
         sleep(1); //pop-up effect
 
         $form = $crawler->filter('button[data-action="save"]')->form([

@@ -32,7 +32,7 @@ class DocumentRepository extends ServiceEntityRepository
      */
     public function findDocumentsQuery(DocumentSearch $search, CurrentUserService $currentUser = null): Query
     {
-        $qb = $this->createQueryBuilder('d')->select('d')
+        $qb = $this->createQueryBuilder('d')
             ->leftJoin('d.tags', 't')->addSelect('t')
             ->leftJoin('d.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
             ->join('d.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
@@ -42,11 +42,13 @@ class DocumentRepository extends ServiceEntityRepository
             ->join('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}');
 
         if ($currentUser && !$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
-            $qb->where('d.createdBy IN (:user)')
+            $qb->where('d.createdBy = :user')
                 ->setParameter('user', $currentUser->getUser());
             $qb->orWhere('sg.service IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
         }
+
+        $qb->andWhere('sg.id IS NULL OR sp.head = TRUE');
 
         if ($search->getId()) {
             $qb->andWhere('d.id = :id')

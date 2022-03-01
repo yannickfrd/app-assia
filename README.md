@@ -2,7 +2,7 @@
 Application d’Accompagnement Social et Solidaire Inter-Associative
 
 ## Version
-3.8.2 19/01/2022
+3.9.0 22/02/2022
 
 ## Author
 Romain MADELAINE
@@ -96,7 +96,7 @@ php bin/phpunit tests/Controller;
 ```
 Or
 ```bash
-php bin/phpunit tests/Controller/App; php bin/phpunit tests/Controller/Admin; php bin/phpunit tests/Controller/Organization; php bin/phpunit tests/Controller/People; php bin/phpunit tests/Controller/Support; php bin/phpunit tests/Controller/Evaluation; php bin/phpunit tests/Controller/Note; php bin/phpunit tests/Controller/Rdv; php bin/phpunit tests/Controller/Document; php bin/phpunit tests/Controller/Payment; 
+php bin/phpunit tests/Controller/App; php bin/phpunit tests/Controller/Admin; php bin/phpunit tests/Controller/Organization; php bin/phpunit tests/Controller/People; php bin/phpunit tests/Controller/Support; php bin/phpunit tests/Controller/Evaluation; php bin/phpunit tests/Controller/Note; php bin/phpunit tests/Controller/Rdv; php bin/phpunit tests/Controller/Event; php bin/phpunit tests/Controller/Document; php bin/phpunit tests/Controller/Payment; 
 ```
 ### 4. EndToEnd tests
 ```bash

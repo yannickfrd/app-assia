@@ -25,9 +25,8 @@ class AddNoteTagsCommand extends Command // TEMPORAIRE A SUPPRIMER
     public function __construct(EntityManagerInterface $em)
     {
         parent::__construct();
+
         $this->em = $em;
-        $this->em->getFilters()->disable('softdeleteable');
-        $this->disableListeners($this->em);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -35,10 +34,13 @@ class AddNoteTagsCommand extends Command // TEMPORAIRE A SUPPRIMER
         $io = new SymfonyStyle($input, $output);
 
         if ('dev' !== $_SERVER['APP_ENV'] || 'localhost' !== $_SERVER['DB_HOST']) {
-            $io->error('Environnement invalid!');
+            $io->error('Invalid environnement!!');
 
             return Command::FAILURE;
         }
+
+        $this->em->getFilters()->disable('softdeleteable');
+        $this->disableListeners($this->em);
 
         /** @var TagRepository */
         $tagRepo = $this->em->getRepository(Tag::class);

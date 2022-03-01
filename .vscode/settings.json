@@ -1,0 +1,71 @@
+{
+    "workbench.colorTheme": "Monokai",
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "intelephense.environment.phpVersion": "7.4.25",
+    "intelephense.format.enable": true,
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "workbench.iconTheme": "vscode-icons",
+    "twig-language-2.formatting": false,
+    "twig-language-2.unformatted": true,
+    "editor.suggestSelection": "first",
+    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+    "files.autoSave": "afterDelay",
+    "beautify.config": "",
+    "[html]": {
+        "editor.suggest.insertMode": "replace"
+    },
+    "files.associations": {
+        "*.twig": "twig"
+    },
+    "emmet.includeLanguages": {
+        "twig": "html",
+        "javascript": "jacascriptreact"
+    },
+    "php.suggest.basic": false,
+    "beautify.ignore": "",
+    "explorer.confirmDragAndDrop": false,
+    "notebook.displayOrder": [],
+    "notebook.kernelProviderAssociations": [],
+    "beautify.language": {
+        "js": {
+            "type": [
+                "javascript",
+                "json",
+                "jsonc"
+            ],
+            "filename": [
+                ".jshintrc",
+                ".jsbeautifyrc"
+            ]
+        },
+        "css": [
+            "css",
+            "less",
+            "scss"
+        ],
+        "html": [
+            "htm",
+            "html"
+        ]
+    },
+    "terminal.integrated.shell.windows": "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "http.proxyAuthorization": null,
+    "php-cs-fixer.executablePath": "${extensionPath}/php-cs-fixer.phar",
+    "php-cs-fixer.onsave": false,
+    "php-cs-fixer.rules": {
+        "@PSR1": true,
+        "@PSR2": true,
+        "@Symfony": true,
+    },
+    "php-cs-fixer.config": "C:\\Romain\\Dev\\app-assia\\.php_cs.dist",
+    "php-cs-fixer.lastDownload": 1635944848030,
+    "[php]": {
+        "editor.defaultFormatter": "junstyle.php-cs-fixer",
+    },
+    "workbench.editorAssociations": {
+        "*.ipynb": "jupyter.notebook.ipynb"
+    },
+    "security.workspace.trust.untrustedFiles": "open",
+}

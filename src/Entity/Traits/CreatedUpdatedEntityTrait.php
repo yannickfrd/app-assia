@@ -15,7 +15,7 @@ trait CreatedUpdatedEntityTrait
      * @ORM\Column(type="datetime", nullable=true)
      * @Groups("view")
      */
-    private $createdAt;
+    protected $createdAt;
 
     /**
      * @var User
@@ -24,7 +24,7 @@ trait CreatedUpdatedEntityTrait
      * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      * @Groups("show_rdv")
      */
-    private $createdBy;
+    protected $createdBy;
 
     /**
      * @var \DateTime
@@ -32,7 +32,7 @@ trait CreatedUpdatedEntityTrait
      * @ORM\Column(type="datetime", nullable=true)
      * @Groups("view")
      */
-    private $updatedAt;
+    protected $updatedAt;
 
     /**
      * @var User
@@ -40,7 +40,7 @@ trait CreatedUpdatedEntityTrait
      * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User")
      * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      */
-    private $updatedBy;
+    protected $updatedBy;
 
     public function getCreatedAt(): ?\DateTimeInterface
     {

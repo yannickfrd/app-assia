@@ -112,7 +112,7 @@ trait EvaluationPersonDataTrait
 
             // Logement
             'Demande de logement social' => $evalHousingGroup->getSocialHousingRequestToString(),
-            'Date DLS' => $this->formatDate($evalHousingGroup->getSocialHousingRequestDate()),
+            'Date DLS' => $this->formatDate($evalHousingGroup->getSocialHousingUpdatedRequestDate()),
             'SYPLO' => $evalHousingGroup->getSyploToString(),
             'Date de labellisation SYPLO' => $this->formatDate($evalHousingGroup->getSyploDate()),
             'Demande SIAO' => $evalHousingGroup->getSiaoRequestToString(),

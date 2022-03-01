@@ -41,7 +41,7 @@ class ReinitPasswordUserCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         if ('dev' != $_SERVER['APP_ENV'] || 'localhost' != $_SERVER['DB_HOST']) {
-            $io->error('Environnement invalid ');
+            $io->error('Invalid environnement! ');
 
             return Command::FAILURE;
         }
@@ -66,7 +66,7 @@ class ReinitPasswordUserCommand extends Command
 
         $io->progressFinish();
 
-        $io->success("Reinit password users is successfull !\n  ".$count.' / '.$nbUsers);
+        $io->success("Reinit password users is successful !\n  ".$count.' / '.$nbUsers);
 
         return Command::SUCCESS;
     }

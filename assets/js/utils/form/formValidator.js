@@ -140,10 +140,10 @@ export default class FormValidator {
      * @param {HTMLElement} fieldElt 
      * @return {Boolean} 
      */
-    validField(fieldElt) {
+    validField(fieldElt, addClassIsValid = true) {
         this.removeInvalidFeedbackElt(this.getlabel(fieldElt))
         fieldElt.classList.remove('is-valid', 'is-invalid')
-        if (fieldElt.value) {
+        if (fieldElt.value && addClassIsValid === true) {
             fieldElt.classList.add('is-valid')
         }
         return true
@@ -250,7 +250,7 @@ export default class FormValidator {
      * @param {HTMLInputElement} inputElt 
      * @return {Boolean} 
      */
-    checkDate(inputElt, min = -(365 * 99), max = (365 * 99), msg = 'Date invalide.') {
+    checkDate(inputElt, min = -(365 * 99), max = (365 * 99), msg = 'Date invalide.', addClassIsValid = true) {
         const interval = Math.round((new Date(inputElt.value) - new Date()) / (24 * 3600 * 1000))
 
         if ((inputElt.value && !Number.isInteger(interval))
@@ -258,7 +258,7 @@ export default class FormValidator {
             return this.invalidField(inputElt, msg)
         }
 
-        return this.validField(inputElt)
+        return this.validField(inputElt, addClassIsValid)
     }
 
     /**

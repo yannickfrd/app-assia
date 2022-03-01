@@ -73,13 +73,14 @@ class Service
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"export", "show_service"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le nom du service ne doit pas être vide.")
-     * @Groups("export")
+     * @Groups({"export", "show_service"})
      */
     private $name;
 
@@ -209,7 +210,7 @@ class Service
      * @ORM\ManyToMany(targetEntity=Tag::class, inversedBy="services")
      * @ORM\OrderBy({"name": "ASC"})
      */
-    private $tags;
+    protected $tags;
 
     /**
      * @ORM\OneToOne(targetEntity=ServiceSetting::class, cascade={"persist", "remove"})

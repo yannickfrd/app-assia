@@ -155,7 +155,6 @@ class SupportControllerTest extends WebTestCase
             ],
         ]);
 
-        // dump($this->client->getResponse()->getContent());
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorExists('.alert.alert-success');
     }

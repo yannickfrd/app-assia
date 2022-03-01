@@ -2,6 +2,7 @@
 
 namespace App\Entity\Organization;
 
+use App\Entity\Admin\TaskSettingTrait;
 use App\Repository\Admin\SettingRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -10,6 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class UserSetting
 {
+    use TaskSettingTrait;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -17,42 +20,8 @@ class UserSetting
      */
     private $id;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $weeklyAlert = false;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $dailyAlert = false;
-
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getWeeklyAlert(): bool
-    {
-        return $this->weeklyAlert;
-    }
-
-    public function setWeeklyAlert(bool $weeklyAlert): self
-    {
-        $this->weeklyAlert = $weeklyAlert;
-
-        return $this;
-    }
-
-    public function getDailyAlert(): bool
-    {
-        return $this->dailyAlert;
-    }
-
-    public function setDailyAlert(bool $dailyAlert): self
-    {
-        $this->dailyAlert = $dailyAlert;
-
-        return $this;
     }
 }

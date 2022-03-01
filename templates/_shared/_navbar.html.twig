@@ -1,7 +1,7 @@
 <nav class="navbar fixed-top navbar-expand-xl navbar-light bg-{{ theme_color }} mb-0 shadow">
-    <a class="navbar-brand py-0 text-light" href="{{ path("home") }}">
+    <a class="navbar-brand py-0 text-light" href="{{ path('home') }}">
         {% if app.request.server.get('APP_VERSION') == "prod" %}
-            <img id="logo-site" src="{{ asset("images/logo_assia_white.png") }}" height="56" width="144" alt="Application Assia"
+            <img id="logo-site" src="{{ asset('images/logo_assia_white.png') }}" height="56" width="144" alt="Application Assia"
                 title="Application Assia">
         {% else %}
             <span class="fas fa-exclamation-triangle text-warning mr-2"></span>Assia version test
@@ -15,15 +15,16 @@
         <div class="collapse navbar-collapse" id="navbar">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link text-light" href="{{ path("home") }}">
+                    <a class="nav-link text-light" href="{{ path('home') }}">
                         <span class="fas fa-home mr-1"></span>Mon espace</a>
                 </li>
+                
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle text-light" id="navbarDropdownMenuSupports"
                         role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Suivis</a>
                     <div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownMenuSupports">
-                        <a class="dropdown-item" href="{{ path("supports") }}">Voir tous les suivis</a>
-                        <a class="dropdown-item" href="{{ path("new_support_search_person") }}">Créer un nouveau suivi</a>
+                        <a class="dropdown-item" href="{{ path('supports') }}">Voir tous les suivis</a>
+                        <a class="dropdown-item" href="{{ path('new_support_search_person') }}">Créer un nouveau suivi</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
@@ -31,34 +32,36 @@
                         role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Agenda
                     </a>
                     <div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownMenuCalendar">
-                        <a class="dropdown-item" href="{{ path("calendar") }}">Mon agenda</a>
-                        <a class="dropdown-item" href="{{ path("rdvs", {'date[start]': 'now'|date('Y-m-d') }) }}">
+                        <a class="dropdown-item" href="{{ path('calendar') }}">Mon agenda</a>
+                        <a class="dropdown-item" href="{{ path('rdvs', {'date[start]': 'now'|date('Y-m-d') }) }}">
                             Voir tous les rendez-vous</a>
+                        <a class="dropdown-item" href="{{ path('task_index') }}">Voir toutes les tâches</a>
+                        {# <a class="dropdown-item" href="{{ path('alerts_index') }}">Voir tous mes rappels</a> #}
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-light" href="{{ path("notes") }}">Notes</a>
+                    <a class="nav-link text-light" href="{{ path('note_index') }}">Notes</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle text-light" id="navbarDropdownMenuDirectory"
                         role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Répertoire
                     </a>
                     <div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownMenuDirectory">
-                        <a class="dropdown-item" href="{{ path("users") }}">Utilisateurs</a>
-                        <a class="dropdown-item" href="{{ path("services") }}">Services</a>
-                        <a class="dropdown-item" href="{{ path("poles") }}">Pôles</a>
+                        <a class="dropdown-item" href="{{ path('users') }}">Utilisateurs</a>
+                        <a class="dropdown-item" href="{{ path('services') }}">Services</a>
+                        <a class="dropdown-item" href="{{ path('poles') }}">Pôles</a>
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-light" href="{{ path("managing") }}">Gestion</a>
+                    <a class="nav-link text-light" href="{{ path('managing') }}">Gestion</a>
                 </li>
-                {% if is_granted("ROLE_ADMIN") %}
+                {% if is_granted('ROLE_ADMIN') %}
                     <li class="nav-item">
-                        <a class="nav-link text-light" href="{{ path("admin") }}">Admin</a>
+                        <a class="nav-link text-light" href="{{ path('admin') }}">Admin</a>
                     </li>
                 {% endif %}
             </ul>
-            <form action="{{ path("people") }}" method="get" class="form-inline mr-3 my-2 my-lg-0">
+            <form action="{{ path('people') }}" method="get" class="form-inline mr-3 my-2 my-lg-0">
                 <div class="position-relative">
                     <label for="search-person" class="sr-only col-form-label">Recherche d'une personne</label>
                     <input name="search-person" id="search-person" class="form-control mr-sm-2" type="text"
@@ -73,13 +76,13 @@
             </form>
             <div class="text-light text-right w-min-160">
                 <a id="user-name" class="text-light font-weight-bold" href="{{ path('my_profile') }}" data-toggle="popover"
-                    data-trigger="hover" data-placement="bottom" data-html="true"
-                    title="{{ app.user.firstname }} {{ app.user.lastname }}" data-content="Dernière connexion : {{ app.user.lastLogin|date(" d/m/Y H:i") }}
-                    <br/>Statut : {{ app.user.statusToString }}<br/>Services rattachés :<br/>- {{ app.session.get("userServices")|join("<br/>- ") }}">
+                    data-trigger="hover" data-placement="bottom" data-html="true" data-user-id="{{ app.user.id }}"
+                    title="{{ app.user.firstname }} {{ app.user.lastname }}" data-content="Dernière connexion : {{ app.user.lastLogin|date('d/m/Y H:i') }}
+                    <br/>Statut : {{ app.user.statusToString }}<br/>Services rattachés :<br/>- {{ app.session.get('userServices')|join('<br/>- ') }}">
                     <span class="fas fa-user mr-2"></span>{{ app.user.firstname }} {{ app.user.lastname|first }}.
                 </a>
                 <br/>
-                <a class="text-light" href="{{ path("security_logout") }}">Se déconnecter</a>
+                <a class="text-light" href="{{ path('security_logout') }}">Se déconnecter</a>
                 <p class="mb-0 text-light small" title="Après l'expiration de la session, vous serez automatiquement déconnecté." 
                     data-toggle="tooltip" data-placement="bottom">Session expire dans <span id="session-timer">...</span></p>
             </div>

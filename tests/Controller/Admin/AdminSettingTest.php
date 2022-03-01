@@ -42,17 +42,18 @@ class AdminSettingTest extends WebTestCase
         $this->assertSelectorExists('h2', 'Paramètres');
     }
 
-    public function testPurgeSettingsIsSuccessful(): void
+    public function testSettingPageIsUp(): void
     {
         $fixtures = $this->databaseTool->loadAliceFixture($this->getFixtureFiles());
         $this->createLogin($fixtures['userSuperAdmin']);
 
         $this->client->request('GET', '/admin/settings');
         $this->assertResponseIsSuccessful();
+        $this->assertSelectorExists('form[name="setting"]');
     }
 
     /** @dataProvider provideBadUser */
-    public function testPurgeSettingsIsSuccessfulWithBadUser(string $user): void
+    public function testSettingPageWithBadRoleUserIsForbidden(string $user): void
     {
         $fixtures = $this->databaseTool->loadAliceFixture($this->getFixtureFiles());
         $this->createLogin($fixtures[$user]);
@@ -61,17 +62,7 @@ class AdminSettingTest extends WebTestCase
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
 
-    public function testPurgeSettingsGetForm(): void
-    {
-        $fixtures = $this->databaseTool->loadAliceFixture($this->getFixtureFiles());
-        $this->createLogin($fixtures['userSuperAdmin']);
-
-        $this->client->request('GET', '/admin/settings');
-
-        $this->assertSelectorExists('form[name="setting"]');
-    }
-
-    public function testDeleteDataTimeIsSuccessful(): void
+    public function testEditSettingIsSuccessful(): void
     {
         $fixtures = $this->databaseTool->loadAliceFixture($this->getFixtureFiles());
         $this->createLogin($fixtures['userSuperAdmin']);
@@ -79,7 +70,7 @@ class AdminSettingTest extends WebTestCase
         $this->sendAdminSettingByDefault();
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('html', 'La configuration est bien enregistrée.');
+        $this->assertSelectorTextContains('.alert', 'La configuration est bien enregistrée.');
     }
 
     public function testServiceGetDefaultSetting(): void
@@ -94,8 +85,8 @@ class AdminSettingTest extends WebTestCase
 
         $form = $crawler->selectButton('send')->form()['service']['setting'];
 
-        $this->assertSame(6, (int) $form['softDeletionDelay']->getValue());
-        $this->assertSame(24, (int) $form['hardDeletionDelay']->getValue());
+        $this->assertSame(14, (int) $form['softDeletionDelay']->getValue());
+        $this->assertSame(18, (int) $form['hardDeletionDelay']->getValue());
 
         $this->assertCheckboxChecked($form['weeklyAlert']->getName());
         $this->assertCheckboxNotChecked($form['dailyAlert']->getName());
@@ -115,10 +106,12 @@ class AdminSettingTest extends WebTestCase
         $this->assertResponseIsSuccessful();
 
         $this->client->submitForm('send', [
-            'service[setting][softDeletionDelay]' => 24,
-            'service[setting][hardDeletionDelay]' => 36,
-            'service[setting][weeklyAlert]' => true,
-            'service[setting][dailyAlert]' => false,
+            'service[setting]' => [
+                'softDeletionDelay' => 24,
+                'hardDeletionDelay' => 36,
+                'weeklyAlert' => true,
+                'dailyAlert' => false,
+            ],
         ]);
         $this->assertResponseIsSuccessful();
 
@@ -134,14 +127,15 @@ class AdminSettingTest extends WebTestCase
     private function sendAdminSettingByDefault(): void
     {
         $this->client->request('GET', '/admin/settings');
-        $this->assertResponseIsSuccessful();
 
         $this->client->submitForm('send', [
-            'setting[organizationName]' => 'Assia Test',
-            'setting[softDeletionDelay]' => 6,
-            'setting[hardDeletionDelay]' => 24,
-            'setting[weeklyAlert]' => true,
-            'setting[dailyAlert]' => false,
+            'setting' => [
+                'organizationName' => 'Assia Test',
+                'softDeletionDelay' => 14,
+                'hardDeletionDelay' => 18,
+                'weeklyAlert' => true,
+                'dailyAlert' => false,
+            ],
         ]);
     }
 

@@ -77,7 +77,7 @@ class UpdatePlacePersonCommand extends Command
         
         $io->progressFinish();
 
-        $io->success("Update PlacePerson entities is successfull !\n  ".$countUpdate.' / '.$nbPlaceGroups);
+        $io->success("Update PlacePerson entities is successful !\n  ".$countUpdate.' / '.$nbPlaceGroups);
 
         return Command::SUCCESS;
     }

@@ -2,18 +2,20 @@
 
 namespace App\Entity\Support;
 
-use App\Entity\Evaluation\EvaluationPerson;
-use App\Entity\Evaluation\EvalInitPerson;
-use App\Entity\People\Person;
-use App\Entity\People\RolePerson;
-use App\Entity\Traits\CreatedUpdatedEntityTrait;
+use App\Entity\Event\Task;
 use App\Form\Utils\Choices;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\People\Person;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\People\RolePerson;
+use App\Entity\Support\SupportGroup;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use App\Entity\Evaluation\EvalInitPerson;
+use App\Entity\Evaluation\EvaluationPerson;
+use Doctrine\Common\Collections\Collection;
+use App\Entity\Traits\CreatedUpdatedEntityTrait;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -29,6 +31,7 @@ class SupportPerson
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"show_support_person"})
      */
     private $id;
 
@@ -101,6 +104,7 @@ class SupportPerson
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\People\Person", inversedBy="supports")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups("show_person")
      */
     private $person;
 
@@ -130,11 +134,22 @@ class SupportPerson
      */
     private $placesPerson;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Task::class, mappedBy="supportPeople")
+     */
+    private $tasks;
+
     public function __construct()
     {
         $this->notes = new ArrayCollection();
         $this->evaluations = new ArrayCollection();
         $this->placesPerson = new ArrayCollection();
+        $this->tasks = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->id;
     }
 
     public function getId(): ?int
@@ -372,5 +387,13 @@ class SupportPerson
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<Task>|Task[]|null
+     */
+    public function getTasks(): ?Collection
+    {
+        return $this->tasks;
     }
 }

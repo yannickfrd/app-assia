@@ -32,18 +32,21 @@ class NoteRepository extends ServiceEntityRepository
      */
     public function findNotesQuery(NoteSearch $search, ?CurrentUserService $currentUser = null): Query
     {
-        $qb = $this->createQueryBuilder('n')->select('n')
+        $qb = $this->createQueryBuilder('n')
             ->leftJoin('n.tags', 't')->addSelect('PARTIAL t.{id, name}')
             ->leftJoin('n.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
             ->leftJoin('n.updatedBy', 'u2')->addSelect('PARTIAL u2.{id, firstname, lastname}')
             ->join('n.supportGroup', 'sg')->addSelect('sg')
             ->join('sg.supportPeople', 'sp')->addSelect('sp')
             ->join('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
+            ->join('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')
             ->join('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
-            ->join('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}');
+            ->join('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
+
+            ->where('sg.id IS NULL OR sp.head = TRUE');
 
         if ($currentUser && !$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
-            $qb->where('sg.service IN (:services)')
+            $qb->andWhere('sg.service IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
         }
 
@@ -140,18 +143,16 @@ class NoteRepository extends ServiceEntityRepository
      *
      * @return Note[]|null
      */
-    public function findNotesOfUser(User $user, int $maxResults = 1000): ?array
+    public function findNotesOfUser(User $user, int $maxResults = 100): ?array
     {
         return $this->createQueryBuilder('n')
-            ->addSelect('PARTIAL n.{id, title, status, createdAt, updatedAt}')
-
             ->leftJoin('n.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, head, role}')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
 
             ->andWhere('n.createdBy = :user')
             ->setParameter('user', $user)
-            ->andWhere('sp.head = TRUE')
+            ->andWhere('sg.id IS NULL OR sp.head = TRUE')
 
             ->orderBy('n.updatedAt', 'DESC')
 

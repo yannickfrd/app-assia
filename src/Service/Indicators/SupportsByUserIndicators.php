@@ -23,14 +23,14 @@ class SupportsByUserIndicators
     ) {
         $this->currentUser = $currentUser;
         $this->deviceRepo = $deviceRepo;
-        $this->UserRepo = $userRepo;
+        $this->userRepo = $userRepo;
         $this->supportRepo = $supportRepo;
     }
 
     public function getSupportsbyDevice(SupportsByUserSearch $search)
     {
         $devices = $this->deviceRepo->findDevicesForDashboard($this->currentUser, $search);
-        $users = $this->UserRepo->findUsersOfServices($this->currentUser, $search);
+        $users = $this->userRepo->findUsersOfServices($this->currentUser, $search);
         $supports = $this->supportRepo->findSupportsForDashboard($search);
 
         $initDevicesUser = $this->getInitDevicesUser($devices);

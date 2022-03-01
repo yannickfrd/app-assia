@@ -27,13 +27,11 @@ class DeleteHardDocumentsCommand extends Command
 
     public function __construct(DocumentRepository $documentRepo, EntityManagerInterface $em, string $documentsDirectory)
     {
+        parent::__construct();
+
         $this->documentRepo = $documentRepo;
         $this->em = $em;
         $this->documentsDirectory = $documentsDirectory;
-        $this->disableListeners($this->em);
-        $this->em->getFilters()->disable('softdeleteable');
-
-        parent::__construct();
     }
 
     protected function configure(): void
@@ -49,6 +47,9 @@ class DeleteHardDocumentsCommand extends Command
 
         $nbMonths = $input->getArgument('nb_months') ?? 12;
         $date = (new \Datetime())->modify("-{$nbMonths} months");
+
+        $this->disableListeners($this->em);
+        $this->em->getFilters()->disable('softdeleteable');
 
         $documents = $this->documentRepo->findSoftDeletedDocuments($date);
         $count = 0;

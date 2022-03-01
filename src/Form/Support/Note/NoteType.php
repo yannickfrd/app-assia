@@ -36,9 +36,7 @@ class NoteType extends AbstractType
                 ],
             ])
             ->add('content', null, [
-                'attr' => [
-                    'class' => 'd-none',
-                ],
+                'attr' => ['class' => 'd-none'],
             ])
             ->add('type', ChoiceType::class, [
                 'choices' => Choices::getchoices(Note::TYPE),

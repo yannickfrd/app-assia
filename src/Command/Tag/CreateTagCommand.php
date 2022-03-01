@@ -27,9 +27,8 @@ class CreateTagCommand extends Command
     public function __construct(EntityManagerInterface $em)
     {
         parent::__construct();
+
         $this->em = $em;
-        $this->em->getFilters()->disable('softdeleteable');
-        $this->disableListeners($this->em);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -37,6 +36,9 @@ class CreateTagCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         $helper = $this->getHelper('question');
+
+        $this->em->getFilters()->disable('softdeleteable');
+        $this->disableListeners($this->em);
 
         /** @var ServiceRepository $serviceRepo */
         $serviceRepo = $this->em->getRepository(Service::class);

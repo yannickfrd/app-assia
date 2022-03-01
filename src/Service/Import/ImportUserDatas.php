@@ -40,7 +40,7 @@ class ImportUserDatas extends ImportDatas
     ) {
         $this->em = $em;
         $this->userNotification = $userNotification;
-        $this->UserRepo = $userRepo;
+        $this->userRepo = $userRepo;
         $this->passwordHasher = $passwordHasher;
         $this->slugger = $slugger;
     }
@@ -145,7 +145,7 @@ class ImportUserDatas extends ImportDatas
      */
     protected function userExists(User $user): ?User
     {
-        return $this->UserRepo->findOneBy([
+        return $this->userRepo->findOneBy([
             'username' => $user->getUsername(),
             // 'firstname' => $user->getFirstname(),
             // 'lastname' => $user->getLastname(),

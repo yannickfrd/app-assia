@@ -35,12 +35,13 @@ class AppController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
 
-        return $this->render('app/admin/home/dashboard.html.twig', [
+        return $this->render('app/home/dashboard.html.twig', [
             'indicators' => $this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getIndicators() : null,
-            'servicesIndicators' => $indicators->getServicesIndicators($indicators->getUserServices($user)),
-            'supports' => !$this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getUserSupports($user) : null,
-            'notes' => !$this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getUserNotes($user) : null,
-            'rdvs' => !$this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getUserRdvs($user) : null,
+            'services_indicators' => $indicators->getServicesIndicators($indicators->getUserServices($user)),
+            'supports' => $indicators->getUserSupports($user),
+            'notes' => $indicators->getUserNotes($user),
+            'rdvs' => $indicators->getUserRdvs($user),
+            'tasks' => $indicators->getUserTasks($user),
         ]);
     }
 

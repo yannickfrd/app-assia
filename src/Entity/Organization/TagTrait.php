@@ -14,7 +14,7 @@ trait TagTrait
      * @ORM\OrderBy({"name": "ASC"})
      * @Groups("show_tag")
      */
-    private $tags;
+    protected $tags;
 
     /**
      * @return Collection|Tag[]|null

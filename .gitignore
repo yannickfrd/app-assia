@@ -1,6 +1,6 @@
 ###> symfony/framework-bundle ###
 .env.local
-.env.test.local
+.env.*.local
 /php.ini.lnk
 /public/bundles/
 /backups/
