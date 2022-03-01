@@ -281,6 +281,9 @@ rdv:
     title: Ajouter un titre
   last: Dernier rendez-vous
   next: Prochain rendez-vous
+  label:
+    google: Ajouter à Google Agenda
+    outlook: Ajouter à Outlook Agenda
 
 # Adress
 location:
