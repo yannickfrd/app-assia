@@ -7,13 +7,17 @@ export default class RdvModel {
     _title;
     _start;
     _end;
-    _status;
     _location;
     _content;
 
-    constructor(apiName, title) {
+    constructor(apiName, rdvEntity) {
         this._apiName = apiName;
-        this._title = title;
+
+        this._title = rdvEntity.title;
+        this._start = rdvEntity.start
+        this._end = rdvEntity.end
+        this._location = rdvEntity.location
+        this._content = rdvEntity.content
     }
 
     get url() {
@@ -24,13 +28,13 @@ export default class RdvModel {
             ? 'text=' + encodeURI(this.title) + '&ctz=Europe/Paris'
             : 'subject=' + encodeURI(this.title)
 
-        if (this.content !== '') {
+        if (this.content !== null) {
             url += apiNameIsGoogle ? '&details=': '&body='
             url += apiNameIsGoogle
                 ? encodeURIComponent(this._createBodyEvent())
                 : encodeURIComponent(this._createBodyEvent()).replaceAll('%0A', '%3Cbr%3E')
         }
-        if (this.location !== '') {
+        if (this.location !== null) {
             url += '&location=' + encodeURI(this.location)
         }
         if (this.start !== '' && this.end !== '') {
@@ -48,7 +52,8 @@ export default class RdvModel {
 
     _createBodyEvent() {
         let content = '<p>' + this.content + '</p>'
-        if (this.status !== '') {
+
+        if (this.status !== '' && this.status !== undefined) {
             content += '<br><strong>Statut : </strong>' + this.status
         }
 
@@ -69,14 +74,6 @@ export default class RdvModel {
 
     set end(value) {
         this._end = value;
-    }
-
-    get status() {
-        return this._status;
-    }
-
-    set status(value) {
-        this._status = value;
     }
 
     get location() {

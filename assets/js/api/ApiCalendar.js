@@ -27,41 +27,13 @@ export default class ApiCalendar {
     }
 
     /**
-     * Retrieves the name of the status with its id.
-     * @param {number|String} id
-     * @returns {string}
-     */
-    getStatusNameById(id) {
-        return this.formRdvElt.querySelector('select[name="rdv[status]"] option[value="'+id+'"]').textContent
-    }
-
-    /**
-     * Make a hydration of the entity "RdvModel" with DataForm rdv.
-     * @param {String} apiName
-     * @param {Object} rdvEntity
-     * @returns {RdvModel}
-     */
-    formToRdvHydration(apiName, rdvEntity) {
-        let event = new RdvModel(apiName, rdvEntity.title);
-        event.start = rdvEntity.start
-        event.end = rdvEntity.end
-        event.content = rdvEntity.content
-        event.location = rdvEntity.location
-        event.status = rdvEntity.status ? this.getStatusNameById(rdvEntity.status) : '';
-
-        return event
-    }
-
-    /**
      * Allows to pre-fill the form automatically on Google and Outlook calendars.
      * And open a new tab.
      * @param {Object} rdv
      * @param {Object} api
      */
     executeJs(rdv, api) {
-        Object.keys(api).forEach(apiName => {
-            window.open(this.formToRdvHydration(apiName, rdv).url, '_blank')
-        })
+        Object.keys(api).forEach(apiName => window.open((new RdvModel(apiName, rdv)).url, '_blank'))
     }
 
     /**
