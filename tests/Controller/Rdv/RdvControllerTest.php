@@ -92,7 +92,7 @@ class RdvControllerTest extends WebTestCase
         $this->assertStringContainsString('spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
     }
 
-    public function testViewSupportListRdvsIsUp()
+    public function testShowSupportListRdvsIsUp()
     {
         $this->createLogin($this->fixtures['userRoleUser']);
         $id = $this->supportGroup->getId();

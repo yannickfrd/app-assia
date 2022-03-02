@@ -1,5 +1,5 @@
-{% import 'macros/viewParagraph.html.twig' as view_p %}
-{% import 'macros/viewTextArea.html.twig' as view_text %}
+{% import 'macros/p_view.html.twig' as p_view %}
+{% import 'macros/textarea_view.html.twig' as textarea_view %}
 
 <hr/>
 <h2 style="{{ style_h2 }}">Situation judiciaire</h2>
@@ -9,8 +9,8 @@
         {% if nb_people > 1 %}
             <p style="{{ style_h3 }}"><u>{{ eval_person.supportPerson.person.fullname }}</u> :</p>
         {% endif %}
-        {{ view_p.get(eval_justice.justiceStatusToString, 'Justice status', 'evaluation') }}
-        {{ view_p.get(eval_justice.justiceActToString, 'Justice act', 'evaluation') }}
-        {{ view_text.get(eval_justice.commentEvalJustice, null, null, type) }}
+        {{ p_view.get(eval_justice.justiceStatusToString, 'Justice status', 'evaluation') }}
+        {{ p_view.get(eval_justice.justiceActToString, 'Justice act', 'evaluation') }}
+        {{ textarea_view.get(eval_justice.commentEvalJustice, null, null, type) }}
     {% endif %}
 {% endfor %}

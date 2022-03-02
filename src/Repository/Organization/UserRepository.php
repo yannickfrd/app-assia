@@ -252,12 +252,12 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Donne la liste des utilisateurs pour les listes déroulantes.
      */
-    public function getReferentsOfServicesQueryBuilder(CurrentUserService $currentUser, Service $service = null, string $dataClass = null): QueryBuilder
+    public function getReferentsOfServicesQueryBuilder(CurrentUserService $currentUser, Service $service = null, string $className = null): QueryBuilder
     {
         $qb = $this->getReferentsQueryBuilder();
 
-        if ($dataClass) {
-            $qb = $this->filterByServiceType($qb, $dataClass);
+        if ($className) {
+            $qb = $this->filterByServiceType($qb, $className);
         }
         if ($service) {
             $qb->andWhere('su.service = :service')
@@ -282,7 +282,29 @@ class UserRepository extends ServiceEntityRepository
             ->andWhere('u.status IN (:status)')
             ->setParameter('status', User::REFERENTS_STATUS)
 
-            ->orderBy('u.lastname', 'ASC');
+            ->orderBy('u.lastname', 'ASC')
+        ;
+    }
+
+    /**
+     * Donne tous les utilisateurs liés à l'utilisateur courant (pour les listes déroulantes).
+     */
+    public function findUsersOfCurrentUserQueryBuilder(User $user, ?Service $service = null): QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->leftJoin('u.serviceUser', 'su')->addSelect('su')
+
+            ->andWhere('u.disabledAt IS NULL');
+
+        if ($service) {
+            $qb->andWhere('su.service = :service')
+                ->setParameter('service', $service);
+        } elseif (!in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
+            $qb->andWhere('su.service IN (:service)')
+                ->setParameter('service', $user->getServices());
+        }
+
+        return $qb->orderBy('u.lastname', 'ASC');
     }
 
     /**
@@ -303,7 +325,8 @@ class UserRepository extends ServiceEntityRepository
             ->orderBy('u.lastname', 'ASC')
 
             ->getQuery()
-            ->getResult();
+            ->getResult()
+        ;
     }
 
     /**

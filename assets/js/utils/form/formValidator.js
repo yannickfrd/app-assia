@@ -94,15 +94,11 @@ export default class FormValidator {
         const hasDatas = requiredField ? null : this.oneFieldIsFilled(elts)
         elts.forEach(elt => {
             const fieldElt = elt.querySelector('input, select')
-            if (!fieldElt.classList.contains('is-invalid')) {
-                if (this.isFilledField(fieldElt) || hasDatas === false) {
-                    this.validField(fieldElt)
-                } else {
-                    this.invalidField(fieldElt, 'Saisie obligatoire.')
-                    fieldElt.addEventListener('change', () => this.validField(fieldElt))
-                }
-            // } else {
-                // this.validField(fieldElt)
+            if (this.isFilledField(fieldElt) || hasDatas === false) {
+                this.validField(fieldElt)
+            } else {
+                this.invalidField(fieldElt, 'Saisie obligatoire.')
+                fieldElt.addEventListener('change', () => this.validField(fieldElt))
             }
         })
     }

@@ -24,10 +24,10 @@ export default class NoteForm {
         this.ckEditor = new CkEditor('#editor')
 
         this.formNoteElt = this.noteModalElt.querySelector('form[name=note]')
-        this.noteContentElt = this.noteModalElt.querySelector('#note_content')
-        this.exportWordBtnElt = this.noteModalElt.querySelector('#export-note-word')
-        this.exportPdfBtnElt = this.noteModalElt.querySelector('#export-note-pdf')
-        this.deleteBtnElt = this.noteModalElt.querySelector('#modal-btn-delete')
+        this.contentElt = this.noteModalElt.querySelector('#note_content')
+        this.btnExportWordElt = this.noteModalElt.querySelector('#export-note-word')
+        this.btnExportPdfElt = this.noteModalElt.querySelector('#export-note-pdf')
+        this.btnDeleteElt = this.noteModalElt.querySelector('#modal-btn-delete')
 
         this.autoSaveElt = document.getElementById('js-auto-save')
         
@@ -35,7 +35,7 @@ export default class NoteForm {
         this.tagsSelectManager = new SelectManager('#note_tags', {name: 'onModal', elementId: this.noteModalElt.id})
 
         this.init()
-        this.autoSaver = new AutoSaver(this.autoSave.bind(this), this.ckEditor.getEditorElt(), 60, 20)
+        this.autoSaver = new AutoSaver('#editor', this.autoSave.bind(this), 60, 20)
     }
 
     init() {
@@ -49,7 +49,7 @@ export default class NoteForm {
             this.tryCloseModal()
             this.autoSaver.clear()
         })
-        this.deleteBtnElt.addEventListener('click', e => {
+        this.btnDeleteElt.addEventListener('click', e => {
             e.preventDefault()
             this.requestToDelete()
         })
@@ -66,15 +66,15 @@ export default class NoteForm {
 
         this.noteModalElt.querySelector('form').action = `/support/${this.supportId}/note/new` 
         this.noteModalElt.querySelector('#note_title').value = ''
-        this.noteContentElt.textContent = ''
+        this.contentElt.textContent = ''
         this.noteModalElt.querySelector('#note_type').value = 1
         this.noteModalElt.querySelector('#note_status').value = 1
 
         this.ckEditor.setData('')
 
-        this.deleteBtnElt.classList.replace('d-block', 'd-none')
-        this.exportWordBtnElt.classList.replace('d-block', 'd-none')
-        this.exportPdfBtnElt.classList.replace('d-block', 'd-none')
+        this.btnDeleteElt.classList.add('d-none')
+        this.btnExportWordElt.classList.add('d-none')
+        this.btnExportPdfElt.classList.add('d-none')
 
         this.tagsSelectManager.clearSelect()
 
@@ -86,10 +86,13 @@ export default class NoteForm {
      */
     show(noteElt) {
         this.initModal(noteElt)
-
+        
         this.noteModalElt.querySelector('#note_title').value = noteElt.querySelector('.card-title').textContent
         this.noteModalElt.querySelector('#note_type').value = noteElt.querySelector('[data-note-type]').dataset.noteType
         this.noteModalElt.querySelector('#note_status').value = noteElt.querySelector('[data-note-status]').dataset.noteStatus
+
+        this.contentElt.textContent = noteElt.querySelector('.card-text').innerHTML
+        this.ckEditor.setData(this.contentElt.textContent)
 
         this.updateTagsSelect(noteElt)
 
@@ -101,23 +104,16 @@ export default class NoteForm {
      * @param {HTMLElement} noteElt
      */
     initModal(noteElt) {
-        this.noteElt = noteElt
-        this.contentNoteElt = noteElt.querySelector('.card-text')
-
-        const noteId = this.noteElt.dataset.noteId
+        const noteId = noteElt.dataset.noteId
         this.noteModalElt.querySelector('form').action = `/note/${noteId}/edit` 
 
-        this.deleteBtnElt.classList.replace('d-none', 'd-block')
-        this.deleteBtnElt.dataset.url = `/note/${noteId}/delete` 
+        this.btnDeleteElt.classList.remove('d-none')
+        this.btnDeleteElt.dataset.url = `/note/${noteId}/delete` 
 
-        this.exportWordBtnElt.classList.replace('d-none', 'd-block')
-        this.exportWordBtnElt.href = `/note/${noteId}/export/word`
-        this.exportPdfBtnElt.classList.replace('d-none', 'd-block')
-        this.exportPdfBtnElt.href = `/note/${noteId}/export/pdf`
-
-        const content  = this.contentNoteElt.innerHTML
-        this.noteContentElt.textContent = content
-        this.ckEditor.setData(content)
+        this.btnExportWordElt.classList.remove('d-none')
+        this.btnExportWordElt.href = `/note/${noteId}/export/word`
+        this.btnExportPdfElt.classList.remove('d-none')
+        this.btnExportPdfElt.href = `/note/${noteId}/export/pdf`
 
         this.autoSaver.init()
     }
@@ -147,8 +143,8 @@ export default class NoteForm {
             return new MessageFlash('danger', 'Veuillez rédiger la note avant d\'enregistrer.')
         }
 
-        if (this.ckEditor.getData() !== this.noteContentElt.textContent) {
-            this.noteContentElt.textContent = this.ckEditor.getData()
+        if (this.ckEditor.getData() !== this.contentElt.textContent) {
+            this.contentElt.textContent = this.ckEditor.getData()
         }
 
         if (!this.autoSaver.active) {
@@ -172,7 +168,7 @@ export default class NoteForm {
         switch (this.confirmModalElt.dataset.action) {
             case 'delete_note':
                 this.loader.on()
-                this.ajax.send('GET', this.deleteBtnElt.dataset.url, this.noteManager.responseAjax.bind(this.noteManager))
+                this.ajax.send('GET', this.btnDeleteElt.dataset.url, this.noteManager.responseAjax.bind(this.noteManager))
                 break;
             case 'hide_note_modal':
                 this.noteModal.hide()
@@ -201,7 +197,7 @@ export default class NoteForm {
      * Vérifie si des modifications ont été apportées avant la fermeture de la modal.
      */
     tryCloseModal() {
-        if (this.ckEditor.getData() === this.noteContentElt.textContent) {
+        if (this.ckEditor.getData() === this.contentElt.textContent) {
             return this.noteModal.hide()
         }
 

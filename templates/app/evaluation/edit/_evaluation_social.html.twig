@@ -1,6 +1,6 @@
 {% extends 'app/evaluation/edit/model/_evaluation_accordion.html.twig' %}
 
-{% import 'macros/loopSupportPeople.html.twig' as utils %}
+{% import 'macros/support_people_looper.html.twig' as support_people_looper %}
 
 {% block card_title %}Social - Santé{{ parent() }}{% endblock %}
 
@@ -8,7 +8,7 @@
 
     <div class="row">
         <div class="col-md-12 accordion" id="accordion_evalSocial">
-			{{ utils.loopSupportPeople(accordion_id, evaluation_people, support, theme_color) }}
+			{{ support_people_looper.loop(accordion_id, evaluation_people, support, theme_color) }}
 
 			{% for key, form_eval_person in evaluation_people %}
                 {% set support_person = form_eval_person.vars.value.supportPerson %}
@@ -86,7 +86,7 @@
                         </div>
                         <hr class="my-3"/>
                     {% endif %}
-                    {% if ROLE_CHILD != support_person.role %}
+                    {% if support_person.role != ROLE_CHILD %}
                         <div class="row mb-3">
                             <div class="col-md-6">{{ form_row(form_eval_social_person.familyBreakdown) }}</div>
                             <div class="col-md-6">{{ form_row(form_eval_social_person.friendshipBreakdown) }}</div>
@@ -94,7 +94,7 @@
                     {% endif %}
                         <div class="row mb-3">
                             <div class="col-md-6">{{ form_row(form_eval_social_person.violenceVictim) }}</div>
-                            {% if ROLE_CHILD != support_person.role %}
+                            {% if support_person.role != ROLE_CHILD %}
                                 <div class="col-md-6" data-parent-field="{{ prefix_id }}_violenceVictim" data-options="1">
                                     {{ form_row(form_eval_social_person.domViolenceVictim) }}</div>
                             {% endif %}

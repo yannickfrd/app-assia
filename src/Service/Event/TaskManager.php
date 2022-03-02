@@ -9,7 +9,7 @@ use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 class TaskManager
 {
-    public function deleteCacheItems(Task $task): void
+    public static function deleteCacheItems(Task $task): void
     {
         $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
 

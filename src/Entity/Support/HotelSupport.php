@@ -60,15 +60,16 @@ class HotelSupport
         5 => 'Veille sociale sans référent', // (0,3)
     ];
 
-    public const END_SUPPORT_REASONS = [
-        1 => 'Accès à une solution d\'hébgt/logt',
-        6 => 'Fin d\'intervention d\'urgence',
-        5 => 'Fin de prise en charge 115',
-        3 => 'Fin de prise en charge ASE',
-        2 => 'Non adhésion à l\'accompagnement',
-        4 => 'Départ vers un autre département',
+    public const END_REASONS = [
+        100 => 'Accès à une solution d\'hébgt/logt', // 1
+        500 => 'Fin d\'intervention d\'urgence', // 6
+        510 => 'Fin de prise en charge 115', // 5
+        520 => 'Fin de prise en charge ASE', // 3
+        200 => 'Non adhésion à l\'accompagnement', // 2
+        300 => 'Départ vers un autre département', // 4
+        240 => 'Séparation du couple',
         97 => 'Autre',
-        99 => 'Non évalué',
+        99 => 'Inconnu',
     ];
 
     public const RECOMMENDATIONS = EvalHousingGroup::SIAO_RECOMMENDATION;
@@ -171,10 +172,7 @@ class HotelSupport
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $endSupportReason;
-
-    /** @Groups("export") */
-    private $endSupportReasonToString;
+    private $endSupportReason;  // A supprimer
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -372,17 +370,12 @@ class HotelSupport
         return $this;
     }
 
-    public function getEndSupportReason(): ?int
+    public function getEndSupportReason(): ?int // A supprimer
     {
         return $this->endSupportReason;
     }
 
-    public function getEndSupportReasonToString(): ?string
-    {
-        return $this->endSupportReason ? self::END_SUPPORT_REASONS[$this->endSupportReason] : null;
-    }
-
-    public function setEndSupportReason(?int $endSupportReason): self
+    public function setEndSupportReason(?int $endSupportReason): self  // A supprimer
     {
         $this->endSupportReason = $endSupportReason;
 

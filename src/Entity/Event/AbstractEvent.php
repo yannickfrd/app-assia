@@ -3,9 +3,7 @@
 namespace App\Entity\Event;
 
 use App\Entity\Organization\User;
-use App\Entity\Event\Alert;
 use App\Entity\Support\SupportGroup;
-use App\Entity\Support\SupportPerson;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -243,37 +241,6 @@ abstract class AbstractEvent
         return $this;
     }
 
-    /**
-     * @return Collection<SupportPerson>|SupportPerson[]|null
-     */
-    public function getSupportPeople(): ?Collection
-    {
-        return $this->supportPeople;
-    }
-
-    public function addSupportPerson(SupportPerson $supportPerson): self
-    {
-        if (!$this->supportPeople->contains($supportPerson)) {
-            $this->supportPeople[] = $supportPerson;
-        }
-
-        return $this;
-    }
-
-    public function setSupportPeople(?Collection $supportPeople): self
-    {
-        $this->supportPeople = $supportPeople;
-
-        return $this;
-    }
-
-    public function removeSupportPerson(SupportPerson $supportPerson): self
-    {
-        $this->supportPeople->removeElement($supportPerson);
-
-        return $this;
-    }
-
     public function removeUser(User $user): self
     {
         $this->users->removeElement($user);
@@ -289,7 +256,6 @@ abstract class AbstractEvent
         return $this->alerts;
     }
 
-    
     public function removeAlert(Alert $alert): self
     {
         $this->alerts->removeElement($alert);
@@ -334,4 +300,35 @@ abstract class AbstractEvent
     {
         return $this->updatedAt ? $this->updatedAt->format($format) : '';
     }
+
+    // /**
+    //  * @return Collection<SupportPerson>|SupportPerson[]|null
+    //  */
+    // public function getSupportPeople(): ?Collection
+    // {
+    //     return $this->supportPeople;
+    // }
+
+    // public function addSupportPerson(SupportPerson $supportPerson): self
+    // {
+    //     if (!$this->supportPeople->contains($supportPerson)) {
+    //         $this->supportPeople[] = $supportPerson;
+    //     }
+
+    //     return $this;
+    // }
+
+    // public function setSupportPeople(?Collection $supportPeople): self
+    // {
+    //     $this->supportPeople = $supportPeople;
+
+    //     return $this;
+    // }
+
+    // public function removeSupportPerson(SupportPerson $supportPerson): self
+    // {
+    //     $this->supportPeople->removeElement($supportPerson);
+
+    //     return $this;
+    // }
 }

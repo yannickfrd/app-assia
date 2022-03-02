@@ -1,6 +1,6 @@
 {% extends 'app/evaluation/edit/model/_evaluation_accordion.html.twig' %}
 
-{% import 'macros/loopSupportPeople.html.twig' as utils %}
+{% import 'macros/support_people_looper.html.twig' as support_people_looper %}
 
 {% block card_title %}Famille{{ parent() }}{% endblock %}
 
@@ -8,16 +8,16 @@
 
     <div class="row mb-3">
         <div class="col-md-12 accordion" id="accordion_evalFamily">
-            {{ utils.loopSupportPeople(accordion_id, evaluation_people, support, theme_color) }}
+            {{ support_people_looper.loop(accordion_id, evaluation_people, support, theme_color) }}
 
             {% for key, eval_person in evaluation_people %}
                 {% set support_person = eval_person.vars.value.supportPerson %}
                 {% set person = support_person.person %}
                 {% set prefix_id = 'evaluation_evaluationPeople_' ~ key ~ '_evalFamilyPerson' %}
-                <div id="collapse_{{ prefix_id }}" class="collapse {% if loop.first %}shoEvalFw{% endif %} my-3"
+                <div id="collapse_{{ prefix_id }}" class="collapse {% if loop.first %}show{% endif %} my-3"
                     aria-labelledby="heading_{{ prefix_id }}" data-parent="#accordion_evalFamily">
 
-                    {% if ROLE_CHILD != support_person.role %}
+                    {% if support_person.role != ROLE_CHILD %}
                         <div class="row mb-3">
                             <div class="col-md-6">{{ form_row(eval_person.evalFamilyPerson.maritalStatus) }}</div>
                             <div class="col-md-6" data-parent-field="{{ prefix_id }}_maritalStatus" data-options="6">
@@ -30,7 +30,7 @@
                         </div>
                     {% endif %}
 
-                    {% if GENDER_FEMALE == person.gender and 12 > person.age < 60 %}
+                    {% if person.gender == GENDER_FEMALE and 12 > person.age < 60 %}
                         <div class="mb-3">
                             <div class="row">
                                 <div class="col-md-6">{{ form_row(eval_person.evalFamilyPerson.unbornChild) }}</div>
@@ -42,7 +42,7 @@
                         </div>
                     {% endif %}
                     
-                    {% if ROLE_CHILD == support_person.role %}
+                    {% if support_person.role == ROLE_CHILD %}
                         <div class="row">
                             <div class="col-md-6">{{ form_row(eval_person.evalFamilyPerson.childcareOrSchool) }}</div>
                             <div class="col-md-6" data-parent-field="{{ prefix_id }}_childcareOrSchool" data-options="1">
@@ -60,7 +60,7 @@
                             <div class="col-md-6">{{ form_row(eval_person.evalFamilyPerson.childDependance) }}</div>
                         </div>
                     {% endif %}
-                    {% if nb_children > 0 and (ROLE_CHILD == support_person.role or GENDER_FEMALE == person.gender) %}
+                    {% if nb_children > 0 and (support_person.role == ROLE_CHILD or person.gender == GENDER_FEMALE) %}
                         <div class="row mb-3">
                             <div class="col-md-6">{{ form_row(eval_person.evalFamilyPerson.pmiFollowUp) }}</div>
                             <div class="col-md-6" data-parent-field="{{ prefix_id }}_pmiFollowUp"

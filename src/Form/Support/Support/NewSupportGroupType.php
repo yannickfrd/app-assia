@@ -51,13 +51,13 @@ class NewSupportGroupType extends AbstractType
                 'choice_value' => 'code',
                 'placeholder' => 'placeholder.select',
             ])
-            ->add('cloneSupport', CheckboxType::class, [
+            ->add('_cloneSupport', CheckboxType::class, [
                 'label_attr' => ['class' => 'custom-control-label'],
                 'attr' => ['class' => 'custom-control-input checkbox'],
                 'required' => false,
                 'mapped' => false,
             ])
-            ->add('siSiaoImport', CheckboxType::class, [
+            ->add('_siSiaoImport', CheckboxType::class, [
                 'label_attr' => ['class' => 'custom-control-label'],
                 'attr' => ['class' => 'custom-control-input checkbox'],
                 'required' => false,
@@ -119,7 +119,7 @@ class NewSupportGroupType extends AbstractType
         $subService = $form->getData();
 
         $form->getParent()
-            ->add('place', EntityType::class, [
+            ->add('_place', EntityType::class, [
                 'class' => Place::class,
                 'choice_label' => 'name',
                 'query_builder' => function (PlaceRepository $repo) use ($service, $subService) {

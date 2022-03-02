@@ -1,6 +1,6 @@
 {% extends 'app/evaluation/edit/model/_evaluation_accordion.html.twig' %}
 
-{% import 'macros/loopSupportPeople.html.twig' as utils %}
+{% import 'macros/support_people_looper.html.twig' as support_people_looper %}
 
 {% block card_title %}Emploi{{ parent() }}{% endblock %}
 
@@ -8,7 +8,7 @@
 
     <div class="row">
         <div class="col-md-12 accordion" id="accordion_evalProf">
-			{{ utils.loopSupportPeople(accordion_id, people_over_16, support, theme_color) }}
+			{{ support_people_looper.loop(accordion_id, people_over_16, support, theme_color) }}
 
             {% for key, eval_person in people_over_16 %}
             	{% set prefix_id= 'evaluation_evaluationPeople_' ~ key ~ '_evalProfPerson' %}
@@ -21,13 +21,16 @@
                             {{ form_row(eval_person.evalProfPerson.jobCenterId) }}</div>
                     </div>
                     <div class="row mb-3" data-parent-field="{{ prefix_id }}_profStatus" 
-                        data-options="3|5|8">
-                        <div class="col-md-6" >{{ form_row(eval_person.evalProfPerson.contractType) }}</div>
-                        <div class="col-md-6">{{ form_row(eval_person.evalProfPerson.jobType) }}</div>
+                        data-options="3|5|8">   
+                        <div class="col-md-6" data-parent-field="{{ prefix_id }}_profStatus" data-options="3|5|8">
+                            {{ form_row(eval_person.evalProfPerson.contractType) }}</div>
+                        <div class="col-md-6" data-parent-field="{{ prefix_id }}_profStatus" data-options="3|5|8">
+                            {{ form_row(eval_person.evalProfPerson.workingTime) }}</div>
                         <div class="col-md-6">{{ form_row(eval_person.evalProfPerson.contractStartDate) }}</div>
                         <div class="col-md-6">{{ form_row(eval_person.evalProfPerson.contractEndDate) }}</div>
                         <div class="col-md-6">{{ form_row(eval_person.evalProfPerson.nbWorkingHours) }}</div>
                         <div class="col-md-6">{{ form_row(eval_person.evalProfPerson.workingHours) }}</div>
+                        <div class="col-md-6">{{ form_row(eval_person.evalProfPerson.jobType) }}</div>
                         <div class="col-md-6">{{ form_row(eval_person.evalProfPerson.workPlace) }}</div>
                         <div class="col-md-6">{{ form_row(eval_person.evalProfPerson.employerName) }}</div>
                     </div>

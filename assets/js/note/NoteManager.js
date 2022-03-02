@@ -56,7 +56,7 @@ export default class NoteManager {
         switch (this.confirmModalElt.dataset.action) {
             case 'delete_note':
                 this.loader.on()
-                this.ajax.send('GET', this.deleteBtnElt.dataset.url, this.responseAjax.bind(this))
+                this.ajax.send('GET', this.noteForm.btnDeleteElt.dataset.url, this.responseAjax.bind(this))
                 break;
             case 'hide_note_modal':
                 this.noteModal.hide()
@@ -135,7 +135,6 @@ export default class NoteManager {
             </div>`
 
         this.noteModalElt.querySelector('form').action = `/note/${note.id}/edit`
-        this.noteForm.deleteBtnElt.classList.replace('d-none', 'd-block')
 
         this.containerNotesElt.firstChild.before(noteElt)
         // Met à jour le nombre de notes

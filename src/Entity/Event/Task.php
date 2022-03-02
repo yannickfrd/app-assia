@@ -5,7 +5,6 @@ namespace App\Entity\Event;
 use App\Entity\Organization\TagTrait;
 use App\Entity\Organization\User;
 use App\Entity\Support\SupportGroup;
-use App\Entity\Support\SupportPerson;
 use App\Repository\Event\TaskRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -72,12 +71,12 @@ class Task extends AbstractEvent
      */
     protected $supportGroup;
 
-    /**
-     * @var Collection<SupportPerson>
-     * @ORM\ManyToMany(targetEntity=SupportPerson::class, inversedBy="tasks", fetch="EXTRA_LAZY")
-     * @Groups("show_support_person")
-     */
-    protected $supportPeople;
+    // /**
+    //  * @var Collection<SupportPerson>
+    //  * @ORM\ManyToMany(targetEntity=SupportPerson::class, inversedBy="tasks", fetch="EXTRA_LAZY")
+    //  * @Groups("show_support_person")
+    //  */
+    // protected $supportPeople;
 
     /**
      * @Gedmo\Blameable(on="create")

@@ -1,5 +1,5 @@
-{% import 'macros/viewParagraph.html.twig' as view_p %}
-{% import 'macros/viewTextArea.html.twig' as view_text %}
+{% import 'macros/p_view.html.twig' as p_view %}
+{% import 'macros/textarea_view.html.twig' as textarea_view %}
 
 {% set eval_people_budget = eval_people|filter(e => e.evalBudgetPerson) %}
 {% set nb_people_budget = eval_people_budget|length %}
@@ -50,7 +50,7 @@
     <p>&nbsp;</p>
 {% endif %}
 
-{# {{ view_p.get(eval_budget_group.cafId ~ (eval_budget_group.cafAttachment ? ' (CAF de rattachement : ' ~ eval_budget_group.cafAttachment ~ ')'), 'Caf id', 'evaluation') }} #}
+{# {{ p_view.get(eval_budget_group.cafId ~ (eval_budget_group.cafAttachment ? ' (CAF de rattachement : ' ~ eval_budget_group.cafAttachment ~ ')'), 'Caf id', 'evaluation') }} #}
 
 {% for eval_person in eval_people_budget %}
     {% set eval_budget_person = eval_person.evalBudgetPerson %}
@@ -59,8 +59,8 @@
             <p style="{{ style_h3 }}"><u>{{ eval_person.supportPerson.person.fullname }}</u> :</p>
         {% endif %}
 
-        {{ eval_budget_person.resource != YES or eval_budget_person.resourcesAmt == null ? view_p.get(eval_budget_person.resourceToString, 'Resources', 'evaluation') }}
-        {# {{ eval_budget_person.charge != YES or eval_budget_person.chargesAmt == null ? view_p.get(eval_budget_person.chargeToString, 'Charges', 'evaluation') }} #}
+        {{ eval_budget_person.resource != YES or eval_budget_person.resourcesAmt == null ? p_view.get(eval_budget_person.resourceToString, 'Resources', 'evaluation') }}
+        {# {{ eval_budget_person.charge != YES or eval_budget_person.chargesAmt == null ? p_view.get(eval_budget_person.chargeToString, 'Charges', 'evaluation') }} #}
         
         {% if eval_budget_person.resource == YES %}
             <table class="table-bordered mb-2" style="width: 50%; {{ style_table }}">
@@ -100,7 +100,7 @@
             </table>
         {% endif %}
 
-        {{ view_p.get(eval_budget_person.resourcesComment, 'Resources comment', 'evaluation') }}
+        {{ p_view.get(eval_budget_person.resourcesComment, 'Resources comment', 'evaluation') }}
 
         {% if eval_budget_person.charge == YES %}
             <p>&nbsp;</p>
@@ -130,21 +130,21 @@
         {% endif %}
 
         {% if eval_budget_person.chargeComment %}
-            {{ view_p.get(eval_budget_person.chargeComment, 'Charge comment', 'evaluation') }}
+            {{ p_view.get(eval_budget_person.chargeComment, 'Charge comment', 'evaluation') }}
         {% endif %}
 
         {% if eval_budget_person.debt == YES %}
-            {{ view_p.get(eval_budget_person.debtToString ~ (eval_budget_person.evalBudgetDebts|length > 0 ? 
+            {{ p_view.get(eval_budget_person.debtToString ~ (eval_budget_person.evalBudgetDebts|length > 0 ? 
                 ' (' ~ eval_budget_person.evalBudgetDebtsToString|lower ~ ')'), 'Debts', 'evaluation') }}
-            {{ view_p.get(eval_budget_person.debtsAmt|amount(0), 'Debts amt', 'evaluation') }}
-            {{ view_p.get(eval_budget_person.debtComment, 'Debt comment', 'evaluation') }}
-            {{ view_p.get(eval_budget_person.overIndebtRecord ? eval_budget_person.overIndebtRecordToString ~ (eval_budget_person.overIndebtRecordDate ? 
+            {{ p_view.get(eval_budget_person.debtsAmt|amount(0), 'Debts amt', 'evaluation') }}
+            {{ p_view.get(eval_budget_person.debtComment, 'Debt comment', 'evaluation') }}
+            {{ p_view.get(eval_budget_person.overIndebtRecord ? eval_budget_person.overIndebtRecordToString ~ (eval_budget_person.overIndebtRecordDate ? 
                 ' (date de dépôt : ' ~ eval_budget_person.overIndebtRecordDate|date('d/m/Y') ~ ')'), 'Over indebt record', 'evaluation') }}
-            {{ view_p.get(eval_budget_person.settlementPlanToString, 'Settlement plan', 'evaluation') }}
-            {{ view_p.get(eval_budget_person.moratoriumToString, 'Moratorium', 'evaluation') }}
-            {{ view_p.get(eval_budget_person.endRightsDate ? eval_budget_person.endRightsDate|date('d/m/Y'), 'End rights date', 'evaluation') }}
+            {{ p_view.get(eval_budget_person.settlementPlanToString, 'Settlement plan', 'evaluation') }}
+            {{ p_view.get(eval_budget_person.moratoriumToString, 'Moratorium', 'evaluation') }}
+            {{ p_view.get(eval_budget_person.endRightsDate ? eval_budget_person.endRightsDate|date('d/m/Y'), 'End rights date', 'evaluation') }}
         {% endif %}
-        {{ view_text.get(eval_budget_person.commentEvalBudget, null, null, type) }}
+        {{ textarea_view.get(eval_budget_person.commentEvalBudget, null, null, type) }}
     {% endif %}
 
 {% endfor %}

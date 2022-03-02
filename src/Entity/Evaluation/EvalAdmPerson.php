@@ -16,6 +16,10 @@ class EvalAdmPerson
 {
     use SoftDeleteableEntity;
 
+    public const NATIONALITY_FRANCE = 1;
+    public const NATIONALITY_EU = 2;
+    public const NATIONALITY_OUTSIDE_EU = 3;
+
     public const NATIONALITY = [
         1 => 'France',
         2 => 'Union-Européenne',
@@ -48,7 +52,7 @@ class EvalAdmPerson
         8 => 'Procédure Schengen',
         3 => 'Protection subsidiaire',
         9 => 'Recours CNDA',
-        5 => 'Récépissé asile',
+        5 => 'ATDA (attestation temporaire de demande d\'asile)',
         4 => 'Réfugié statutaire',
         97 => 'Autre',
         99 => 'Non évalué',
@@ -126,7 +130,13 @@ class EvalAdmPerson
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups("export")
      */
-    private $AgdrefId;
+    private $agdrefId;
+    
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("export")
+     */
+    private $ofpraRegistrationId;
 
     /**
      * @ORM\Column(type="date", nullable=true)
@@ -280,12 +290,24 @@ class EvalAdmPerson
 
     public function getAgdrefId(): ?string
     {
-        return $this->AgdrefId;
+        return $this->agdrefId;
     }
 
-    public function setAgdrefId(?string $AgdrefId): self
+    public function setAgdrefId(?string $agdrefId): self
     {
-        $this->AgdrefId = $AgdrefId;
+        $this->agdrefId = $agdrefId;
+
+        return $this;
+    }
+
+    public function getOfpraRegistrationId(): ?string
+    {
+        return $this->ofpraRegistrationId;
+    }
+
+    public function setOfpraRegistrationId(?string $ofpraRegistrationId): self
+    {
+        $this->ofpraRegistrationId = $ofpraRegistrationId;
 
         return $this;
     }

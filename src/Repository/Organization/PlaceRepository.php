@@ -70,7 +70,8 @@ class PlaceRepository extends ServiceEntityRepository
             ->orderBy('pl.name', 'DESC')
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getResult();
+            ->getResult()
+        ;
     }
 
     /**
@@ -95,7 +96,8 @@ class PlaceRepository extends ServiceEntityRepository
             ->orWhere('pl.endDate > :date')
             ->setParameter('date', new \Datetime())
 
-            ->orderBy('pl.name', 'ASC');
+            ->orderBy('pl.name', 'ASC')
+        ;
     }
 
     /**

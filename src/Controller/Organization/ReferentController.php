@@ -109,7 +109,7 @@ class ReferentController extends AbstractController
         $this->discache($referent->getPeopleGroup());
 
         if ($supportId) {
-            return $this->redirectToRoute('support_view', ['id' => $supportId]);
+            return $this->redirectToRoute('support_show', ['id' => $supportId]);
         }
 
         return $this->redirectToRoute('people_group_show', ['id' => $referent->getPeopleGroup()->getId()]);

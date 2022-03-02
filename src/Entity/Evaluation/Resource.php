@@ -2,12 +2,7 @@
 
 namespace App\Entity\Evaluation;
 
-use App\Repository\Evaluation\ResourceRepository;
-use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=ResourceRepository::class)
- */
 class Resource
 {
     public const SALARY = 10;
@@ -65,66 +60,66 @@ class Resource
         1000 => 'Autre ressource',
     ];
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    // /**
+    //  * @ORM\Id
+    //  * @ORM\GeneratedValue
+    //  * @ORM\Column(type="integer")
+    //  */
+    // private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $name;
+    // /**
+    //  * @ORM\Column(type="string", length=255)
+    //  */
+    // private $name;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $code;
+    // /**
+    //  * @ORM\Column(type="integer")
+    //  */
+    // private $code;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $type;
+    // /**
+    //  * @ORM\Column(type="integer", nullable=true)
+    //  */
+    // private $type;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+    // public function getId(): ?int
+    // {
+    //     return $this->id;
+    // }
 
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
+    // public function getName(): ?string
+    // {
+    //     return $this->name;
+    // }
 
-    public function setName(string $name): self
-    {
-        $this->name = $name;
+    // public function setName(string $name): self
+    // {
+    //     $this->name = $name;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function getCode(): ?int
-    {
-        return $this->code;
-    }
+    // public function getCode(): ?int
+    // {
+    //     return $this->code;
+    // }
 
-    public function setCode(int $code): self
-    {
-        $this->code = $code;
+    // public function setCode(int $code): self
+    // {
+    //     $this->code = $code;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function getType(): ?int
-    {
-        return $this->type;
-    }
+    // public function getType(): ?int
+    // {
+    //     return $this->type;
+    // }
 
-    public function setType(?int $type): self
-    {
-        $this->type = $type;
+    // public function setType(?int $type): self
+    // {
+    //     $this->type = $type;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 }

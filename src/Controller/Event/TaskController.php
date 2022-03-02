@@ -84,8 +84,8 @@ class TaskController extends AbstractController
      * @Route("/task/new", name="task_new", methods="POST")
      * @Route("/support/{id}/task/new", name="support_task_new", methods="POST")
      */
-    public function new(?int $id = null, Request $request, EntityManagerInterface $em, TaskManager $taskManager,
-        NormalizerInterface $normalizer, TranslatorInterface $translator): JsonResponse
+    public function new(?int $id = null, Request $request, EntityManagerInterface $em,
+        TranslatorInterface $translator): JsonResponse
     {
         $task = new Task();
 
@@ -109,14 +109,14 @@ class TaskController extends AbstractController
             $em->persist($task);
             $em->flush();
 
-            $taskManager->deleteCacheItems($task);
+            TaskManager::deleteCacheItems($task);
 
             return $this->json([
                 'action' => 'create',
                 'alert' => 'success',
                 'msg' => $translator->trans('task.created_successfully', ['%task_title%' => $task->getTitle()], 'app'),
-                'task' => $normalizer->normalize($task, 'json', ['groups' => TASK::SERIALIZER_GROUPS]),
-            ]);
+                'task' => $task,
+            ], 200, [], ['groups' => Task::SERIALIZER_GROUPS]);
         }
 
         return $this->getErrorMessage($form);
@@ -135,7 +135,7 @@ class TaskController extends AbstractController
 
         return $this->json([
             'action' => 'show',
-            'task' => $normalizer->normalize($task, 'json', ['groups' => TASK::SERIALIZER_GROUPS]),
+            'task' => $normalizer->normalize($task, 'json', ['groups' => Task::SERIALIZER_GROUPS]),
         ]);
     }
 
@@ -143,8 +143,8 @@ class TaskController extends AbstractController
      * @Route("/task/{id}/edit", name="task_edit", methods="POST")
      * @IsGranted("EDIT", subject="task")
      */
-    public function edit(Task $task, Request $request, EntityManagerInterface $em, TaskManager $taskManager,
-        NormalizerInterface $normalizer, TranslatorInterface $translator): JsonResponse
+    public function edit(Task $task, Request $request, EntityManagerInterface $em,
+        TranslatorInterface $translator): JsonResponse
     {
         $form = $this->createForm(TaskType::class, $task)
             ->handleRequest($request);
@@ -152,14 +152,14 @@ class TaskController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $em->flush();
 
-            $taskManager->deleteCacheItems($task);
-
+            TaskManager::deleteCacheItems($task);
+            
             return $this->json([
                 'action' => 'edit',
                 'alert' => 'success',
                 'msg' => $translator->trans('task.updated_successfully', ['%task_title%' => $task->getTitle()], 'app'),
-                'task' => $normalizer->normalize($task, 'json', ['groups' => TASK::SERIALIZER_GROUPS]),
-            ]);
+                'task' => $task,
+            ], 200, [], ['groups' => Task::SERIALIZER_GROUPS]);
         }
 
         return $this->getErrorMessage($form);
@@ -169,15 +169,14 @@ class TaskController extends AbstractController
      * @Route("/task/{id}/delete", name="task_delete", methods="GET")
      * @IsGranted("DELETE", subject="task")
      */
-    public function delete(Task $task, EntityManagerInterface $em, TaskManager $taskManager,
-        TranslatorInterface $translator): JsonResponse
+    public function delete(Task $task, EntityManagerInterface $em, TranslatorInterface $translator): JsonResponse
     {
         $taskId = $task->getId();
 
         $em->remove($task);
         $em->flush();
 
-        $taskManager->deleteCacheItems($task);
+        TaskManager::deleteCacheItems($task);
 
         return $this->json([
             'action' => 'delete',
@@ -191,14 +190,14 @@ class TaskController extends AbstractController
      *@Route("/task/{id}/toggle-status", name="task_toggle_status")
      *@IsGranted("EDIT", subject="task")
      */
-    public function toggleStatus(Task $task, EntityManagerInterface $em, TaskManager $taskManager,
-        NormalizerInterface $normalizer, TranslatorInterface $translator): JsonResponse
+    public function toggleStatus(Task $task, EntityManagerInterface $em,
+        TranslatorInterface $translator): JsonResponse
     {
         $task->toggleStatus();
 
         $em->flush();
 
-        $taskManager->deleteCacheItems($task);
+        TaskManager::deleteCacheItems($task);
 
         return $this->json([
             'action' => 'toggle_status',
@@ -207,8 +206,8 @@ class TaskController extends AbstractController
                 '%task_title%' => $task->getTitle(),
                 '%task_status%' => mb_strtolower($task->getStatusToString()),
             ], 'app'),
-            'task' => $normalizer->normalize($task, 'json', ['groups' => 'show_event']),
-        ]);
+            'task' => $task,
+            ], 200, [], ['groups' => Task::SERIALIZER_GROUPS]);
     }
 
     private function exportData(TaskSearch $search, TaskRepository $taskRepo, ?SupportGroup $supportGroup = null): Response

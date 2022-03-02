@@ -20,10 +20,10 @@ class EvalBudgetResource extends AbstractFinance
      */
     private $evalBudgetPerson;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Resource::class)
-     */
-    private $resource;
+    // /**
+    //  * @ORM\ManyToOne(targetEntity=Resource::class)
+    //  */
+    // private $resource;
 
     public function getEndDate(): ?\DateTimeInterface
     {
@@ -54,15 +54,15 @@ class EvalBudgetResource extends AbstractFinance
         return $this;
     }
 
-    public function getResource(): ?Resource
-    {
-        return $this->resource;
-    }
+    // public function getResource(): ?Resource
+    // {
+    //     return $this->resource;
+    // }
 
-    public function setResource(?Resource $resource): self
-    {
-        $this->resource = $resource;
+    // public function setResource(?Resource $resource): self
+    // {
+    //     $this->resource = $resource;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 }

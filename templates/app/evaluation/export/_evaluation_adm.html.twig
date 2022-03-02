@@ -1,5 +1,5 @@
-{% import 'macros/viewParagraph.html.twig' as view_p %}
-{% import 'macros/viewTextArea.html.twig' as view_text %}
+{% import 'macros/p_view.html.twig' as p_view %}
+{% import 'macros/textarea_view.html.twig' as textarea_view %}
 
 <hr/>
 <h2 style=" color: {{ theme_color }}; {{ style_h2 }}">Situation administrative</h2>
@@ -10,17 +10,17 @@
     {% if nb_adults_admin > 1 %}
         <p style="{{ style_h3 }}"><u>{{ eval_person.supportPerson.person.fullname }}</u> :</p>
     {% endif %}
-    {{ view_p.get(eval_adm.nationality ? eval_adm.nationalityToString ~ (eval_adm.country ? ' (' 
+    {{ p_view.get(eval_adm.nationality ? eval_adm.nationalityToString ~ (eval_adm.country ? ' (' 
         ~ eval_adm.country ~ ')'), 'Nationality', 'evaluation') }}
-    {{ view_p.get(eval_adm.arrivalDate ? eval_adm.arrivalDate|date('d/m/Y'), 'Arrival date', 'evaluation') }}
-    {{ view_p.get(eval_adm.paper == YES and eval_adm.paperType ? eval_adm.paperTypeToString : eval_adm.paperToString, 'Paper', 'evaluation') }}
-    {{ view_p.get(eval_adm.asylumBackground == YES ? (eval_adm.asylumStatus ? eval_adm.asylumStatusToString : 
+    {{ p_view.get(eval_adm.arrivalDate ? eval_adm.arrivalDate|date('d/m/Y'), 'Arrival date', 'evaluation') }}
+    {{ p_view.get(eval_adm.paper == YES and eval_adm.paperType ? eval_adm.paperTypeToString : eval_adm.paperToString, 'Paper', 'evaluation') }}
+    {{ p_view.get(eval_adm.asylumBackground == YES ? (eval_adm.asylumStatus ? eval_adm.asylumStatusToString : 
         eval_adm.asylumBackgroundToString), 'Asylum background', 'evaluation') }}
-    {{ view_p.get(eval_adm.renewalPermitDate ? eval_adm.renewalPermitDate|date('d/m/Y') 
+    {{ p_view.get(eval_adm.renewalPermitDate ? eval_adm.renewalPermitDate|date('d/m/Y') 
         ~ (eval_adm.nbRenewals ? ' (' ~ eval_adm.nbRenewals ~ ' renouvellement(s))'), 'Renewal permit date', 'evaluation' ) }}
-    {{ view_p.get(eval_adm.endValidPermitDate ? eval_adm.endValidPermitDate|date('d/m/Y'), 'End valid permit date', 'evaluation') }}
-    {{ view_p.get(eval_adm.workRightToString, 'Work right', 'evaluation') }}
-    {{ view_text.get(eval_adm.commentEvalAdmPerson, null, null, type) }}
+    {{ p_view.get(eval_adm.endValidPermitDate ? eval_adm.endValidPermitDate|date('d/m/Y'), 'End valid permit date', 'evaluation') }}
+    {{ p_view.get(eval_adm.workRightToString, 'Work right', 'evaluation') }}
+    {{ textarea_view.get(eval_adm.commentEvalAdmPerson, null, null, type) }}
 {% endfor %}
 
 {% if eval_children|filter(e => e.evalAdmPerson)|length > 0 %}

@@ -98,7 +98,8 @@ section {
 }
 
 // Animation de synchronisation
-.fas.fa-sync-alt {
+.fas.fa-sync-alt,
+.fas.fa-spinner {
     animation: sync 1s linear infinite;
 }
 

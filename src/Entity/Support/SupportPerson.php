@@ -2,20 +2,19 @@
 
 namespace App\Entity\Support;
 
-use App\Entity\Event\Task;
-use App\Form\Utils\Choices;
-use App\Entity\People\Person;
-use Doctrine\ORM\Mapping as ORM;
-use App\Entity\People\RolePerson;
-use App\Entity\Support\SupportGroup;
-use Gedmo\Mapping\Annotation as Gedmo;
 use App\Entity\Evaluation\EvalInitPerson;
 use App\Entity\Evaluation\EvaluationPerson;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\Event\Task;
+use App\Entity\People\Person;
+use App\Entity\People\RolePerson;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
+use App\Form\Utils\Choices;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -82,6 +81,17 @@ class SupportPerson
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
+     * @Groups("export")
+     */
+    private $endReason;
+
+    /**
+     * @Groups("export")
+     */
+    private $endReasonToString;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $endStatus;
 
@@ -134,17 +144,17 @@ class SupportPerson
      */
     private $placesPerson;
 
-    /**
-     * @ORM\ManyToMany(targetEntity=Task::class, mappedBy="supportPeople")
-     */
-    private $tasks;
+    // /**
+    //  * @ORM\ManyToMany(targetEntity=Task::class, mappedBy="supportPeople")
+    //  */
+    // private $tasks;
 
     public function __construct()
     {
         $this->notes = new ArrayCollection();
         $this->evaluations = new ArrayCollection();
         $this->placesPerson = new ArrayCollection();
-        $this->tasks = new ArrayCollection();
+        // $this->tasks = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -235,6 +245,23 @@ class SupportPerson
         $this->status = $status;
 
         return $this;
+    }
+
+    public function getEndReason(): ?int
+    {
+        return $this->endReason;
+    }
+
+    public function setEndReason(?int $endReason): self
+    {
+        $this->endReason = $endReason;
+
+        return $this;
+    }
+
+    public function getEndReasonToString(): ?string
+    {
+        return $this->endReason ? SupportGroup::END_REASONS[$this->endReason] : null;
     }
 
     public function getEndStatus(): ?int
@@ -389,11 +416,11 @@ class SupportPerson
         return $this;
     }
 
-    /**
-     * @return Collection<Task>|Task[]|null
-     */
-    public function getTasks(): ?Collection
-    {
-        return $this->tasks;
-    }
+    // /**
+    //  * @return Collection<Task>|Task[]|null
+    //  */
+    // public function getTasks(): ?Collection
+    // {
+    //     return $this->tasks;
+    // }
 }

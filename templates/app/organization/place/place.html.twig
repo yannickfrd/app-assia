@@ -1,4 +1,4 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
 
 {% set place = form.vars.value %}
 {% set EDIT_MODE = place.id != null %}
@@ -14,9 +14,9 @@
         <h1 class="h2 mb-3">{{ place.service.name }}<span class="fas fa-angle-right fa-xs mx-1"></span>{{ title }}</h1>
         {% if EDIT_MODE %}
             <div class="small text-secondary">
-                <p> Créé le {{ place.createdAt|date("d/m/Y à H:i") }}
+                <p> Créé le {{ place.createdAt|date('d/m/Y à H:i') }}
                     {% if place.createdBy %}par {{ place.createdBy.fullname }}{% endif %}
-                    {% if place.updatedAt %}(modifié le {{ place.updatedAt|date("d/m/Y à H:i") }}){% endif %}
+                    {% if place.updatedAt %}(modifié le {{ place.updatedAt|date('d/m/Y à H:i') }}){% endif %}
                 </p>
             </div>
         {% else %}
@@ -27,7 +27,7 @@
                 <li class="breadcrumb-item"><a class="text-{{ theme_color }}" href="{{ path('services') }}">Liste des
                         services</a></li>
                 <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
-                        href="{{ path('service_edit', {'id':place.service.id}) }}">{{ place.service.name }}</a></li>
+                        href="{{ path('service_edit', {'id': place.service.id}) }}">{{ place.service.name }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Groupe de places</li>
             </ol>
         </nav>
@@ -35,7 +35,7 @@
         <hr>
 
         <section>
-            {% include "model/_msgFlash.html.twig" %}
+            {% include 'model/_msgFlash.html.twig' %}
             <div id="js-msg-flash-content"></div>
 
             {{ form_start(form) }}
@@ -56,7 +56,7 @@
                 <div class="col-md-6">{{ form_row(form.endDate) }}</div>
             </div>
             <div class="row mb-3" id="place_location">
-                <div class="col-md-6">{{ form_row(form.location.search) }}</div>
+                <div class="col-md-6">{{ form_row(form.location._search) }}</div>
                 <div class="col-md-6">{{ form_row(form.location.address) }}</div>
                 <div class="col-md-6">{{ form_row(form.location.city) }}</div>
                 <div class="col-md-6">{{ form_row(form.location.zipcode) }}</div>
@@ -81,23 +81,29 @@
                 <div class="col-md-12">{{ form_widget(form.comment) }}</div>
             </div>
 
-            {% if is_granted("EDIT", place.service) %}
+            {% if is_granted('EDIT', place.service) %}
                 <div class="row mb-3">
                     <div class="col-md-12">
-                        {% if EDIT_MODE and is_granted("DELETE", place) %}
+                        {% if EDIT_MODE and is_granted('DELETE', place) %}
                             <div class="float-left d-flex">
-                                <a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('admin_place_delete', {'id':place.id}) }}"
-                                    data-toggle="tooltip" title="Supprimer le groupe de places" data-placement="bottom"
-                                    onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer ce groupe de places ?')){return true;}else{return false;}"><span
-                                        class="fas fa-trash-alt mr-2"></span>Supprimer</a>
-                                <a class="mr-3 btn btn-{{ disabled ? 'success' : 'warning' }} d-block" href="{{ path('admin_place_disable', {'id':form.vars.value.id}) }}"
-                                    title="{{ disabled ? 'Réactiver' : 'Désactiver' }} le groupe de place" data-toggle="tooltip" data-placement="bottom"
-                                    {% if disabled == false %}onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir désactiver ce groupe de place ?')){return true;}else{return false;}"{% endif %}>
+                                {% set alert_text = '"Êtes-vous vraiment sûr de vouloir supprimer ce groupe de places ?"' %}
+                                <a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" 
+                                    href="{{ path('place_delete', {'id': place.id}) }}"
+                                   title="Supprimer le groupe de places" data-toggle="tooltip" data-placement="bottom"
+                                    onclick="if(window.confirm({{ alert_text }})){return true;}else{return false;}">
+                                        <span class="fas fa-trash-alt mr-2"></span>Supprimer</a>
+                                {% set alert_text = '"Êtes-vous vraiment sûr de vouloir désactiver ce groupe de places ?"' %}
+                                <a class="mr-3 btn btn-{{ disabled ? 'success' : 'warning' }} d-block" 
+                                    href="{{ path('place_disable', {'id': form.vars.value.id}) }}"
+                                    title="{{ disabled ? 'Réactiver' : 'Désactiver' }} le groupe de place" 
+                                    data-toggle="tooltip" data-placement="bottom"
+                                    {% if disabled == false %}onclick="if(window.confirm('{{ alert_text }}')){return true;}else{return false;}"{% endif %}>
                                     {% if disabled %}Réactiver{% else %}Désactiver{% endif %}</a>
                             </div>
                         {% endif %}
                         <div class="mb-4 float-right">
-                            <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>Enregistrer</button>
+                            <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">
+                                <span class="fas fa-save mr-2"></span>Enregistrer</button>
                         </div>
                     </div>
                 </div>
@@ -108,7 +114,7 @@
 
         </section>
 
-        {% if place.id is not null %}
+        {% if place.id %}
             <hr>
             <section id="place_groups">
                 <h2 class="h4 my-4">Prises en charge</h2>
@@ -128,18 +134,20 @@
                         </thead>
                         <tbody>
                             {% for place_group in places_group %}
-                                {% set person = (place_group.supportGroup.supportPeople|first).person %}
+                                {% set person = place_group.supportGroup.header %}
                                 <tr>
                                     <td scope="row">
-                                        <a href="{{ path('support_place_edit', {'id':place_group.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow" 
-                                            data-toggle="tooltip" data-placement="bottom" title="Voir le détail de la prise en charge"><span class="fas fa-eye"></span>
+                                        <a href="{{ path('support_place_edit', {'id': place_group.id}) }}" 
+                                            class="btn btn-{{ theme_color }} btn-sm shadow"  
+                                            title="Voir le détail de la prise en charge" data-toggle="tooltip" 
+                                            data-placement="bottom"><span class="fas fa-eye"></span>
                                         </a>
                                     </td>
                                     <td>{{ person ? person.fullname }}</td>
                                     <td>{{ place_group.peopleGroup.familyTypologyToString }}</td>
                                     <td>{{ place_group.placePeople ? place_group.placePeople|length }}</td>
-                                    <td>{{ place_group.startDate ? place_group.startDate|date("d/m/Y") }}</td>                    
-                                    <td>{{ place_group.endDate ? place_group.endDate|date("d/m/Y") }}</td>                    
+                                    <td>{{ place_group.startDate ? place_group.startDate|date('d/m/Y') }}</td>
+                                    <td>{{ place_group.endDate ? place_group.endDate|date('d/m/Y') }}</td>
                                     <td>{{ place_group.endReasonToString }}</td>
                                 </tr>
                             {% endfor %}
@@ -152,10 +160,10 @@
 
     </div>
 
-{% include "app/organization/place/_modalDeletePlace.html.twig" %}
+{% include 'app/organization/place/_place_delete_modal.html.twig' %}
 
 {% endblock %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags("place") }}
+    {{ encore_entry_script_tags('place') }}
 {% endblock javascripts %}

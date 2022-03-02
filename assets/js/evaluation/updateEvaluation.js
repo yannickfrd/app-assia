@@ -11,8 +11,8 @@ export default class UpdateEvaluation {
     constructor() {
         this.loader = new Loader()
         this.ajax = new Ajax(this.loader)
-        this.autoSaver = new AutoSaver(this.sendRequest.bind(this), this.formElt, 5 * 60, 20, ['SELECT', 'INPUT', 'TEXTAREA'])
         this.formElt = document.querySelector('form[name="evaluation"]')
+        this.autoSaver = new AutoSaver('form[name="evaluation"]', this.sendRequest.bind(this),5 * 60, 20, ['SELECT', 'INPUT', 'TEXTAREA'])
         this.btnSubmitElts = this.formElt.querySelectorAll('button[type="submit"]')
         this.init()
     }

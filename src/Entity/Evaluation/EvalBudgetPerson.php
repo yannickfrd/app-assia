@@ -386,6 +386,35 @@ class EvalBudgetPerson
         $this->evalBudgetDebts = new ArrayCollection();
     }
 
+    public function __clone()
+    {
+        $newEvalBudgetResources = new ArrayCollection();
+        $newEvalBudgetCharges = new ArrayCollection();
+        $newEvalBudgetDebts = new ArrayCollection();
+
+        foreach ($this->evalBudgetResources as $evalBudgetResource) {
+            $newEvalBudgetResource = clone $evalBudgetResource;
+            $newEvalBudgetResource->setEvalBudgetPerson($this);
+            $newEvalBudgetResources->add($newEvalBudgetResource);
+        }
+
+        foreach ($this->evalBudgetCharges as $evalBudgetCharge) {
+            $newEvalBudgetCharge = clone $evalBudgetCharge;
+            $newEvalBudgetCharge->setEvalBudgetPerson($this);
+            $newEvalBudgetCharges->add($newEvalBudgetCharge);
+        }
+
+        foreach ($this->evalBudgetDebts as $evalBudgetDebt) {
+            $newEvalBudgetDebt = clone $evalBudgetDebt;
+            $newEvalBudgetDebt->setEvalBudgetPerson($this);
+            $newEvalBudgetDebts->add($newEvalBudgetDebt);
+        }
+
+        $this->evalBudgetResources = $newEvalBudgetResources;
+        $this->evalBudgetCharges = $newEvalBudgetCharges;
+        $this->evalBudgetDebts = $newEvalBudgetDebts;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

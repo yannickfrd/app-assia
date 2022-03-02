@@ -1,20 +1,20 @@
 import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document'
 // import language from '@ckeditor/ckeditor5-build-decoupled-document/build/translations/fr.js'
 
-export default class CKEditor {
+export default class CkEditor {
 
     /**
-     * @param {String} eltId 
+     * @param {string} selector 
      */
-    constructor(eltId) {
-        this.editorElt = document.querySelector(eltId)
-        this.editor
+    constructor(selector) {
+        this.editorElt = document.querySelector(selector)
+        this.editor = null
         this.init()
     }
 
     init() {
         DecoupledEditor
-            .create(document.querySelector('#editor'), {
+            .create(this.editorElt, {
                 toolbar: ['undo', 'redo', '|', 'fontFamily', 'fontSize', '|', 'bold', 'italic', 'underline', 'highlight', '|', 'heading', 'alignment', '|', 'bulletedList', 'numberedList', '|', 'link', 'blockQuote', '|', 'insertTable'],
                 language: {
                     ui: 'fr',
@@ -29,10 +29,6 @@ export default class CKEditor {
             .catch(error => {
                 throw new Error(error)
             })
-    }
-
-    getEditorElt() {
-        return this.editorElt
     }
 
     /**

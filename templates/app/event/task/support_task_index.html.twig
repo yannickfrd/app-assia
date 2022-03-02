@@ -6,7 +6,7 @@
 
 {% block body %}
     <div class="container">
-        {% include 'app/support/_partials/_nav_support.html.twig' %}
+        {% include 'app/support/_partials/_support_nav.html.twig' %}
         {% include 'model/_msgFlash.html.twig' %}
 
         <div class="row">
@@ -26,7 +26,7 @@
             </div>
         </div>
 
-        {% include 'app/event/task/_support_task_form_search.html.twig' %}
+        {% include 'app/event/task/_support_task_search_form.html.twig' %}
         
         <div class="row mb-4">
             {% include 'app/event/task/_task_table.html.twig' %}
@@ -34,7 +34,7 @@
         <div class="navigation">{{ knp_pagination_render(tasks) }}</div>
     </div>
     {% include 'app/event/task/_task_form_modal.html.twig' %}
-    {% include 'app/event/task/_task_modal_delete.html.twig' %}
+    {% include 'app/event/task/_task_delete_modal.html.twig' %}
 {% endblock %}
 
 {% block javascripts %}

@@ -38,7 +38,7 @@ class HotelSupportType extends AbstractType
                 'widget' => 'single_text',
                 'required' => false,
             ])
-            ->add('searchSsd', null, [
+            ->add('_searchSsd', null, [
                 'label' => 'hotelSupport.ssd.search',
                 'attr' => [
                     'class' => 'js-search',
@@ -75,11 +75,6 @@ class HotelSupportType extends AbstractType
             ])
             ->add('recommendation', ChoiceType::class, [
                 'choices' => Choices::getChoices(HotelSupport::RECOMMENDATIONS),
-                'placeholder' => 'placeholder.select',
-                'required' => false,
-            ])
-            ->add('endSupportReason', ChoiceType::class, [
-                'choices' => Choices::getChoices(HotelSupport::END_SUPPORT_REASONS),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])

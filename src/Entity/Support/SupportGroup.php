@@ -67,19 +67,54 @@ class SupportGroup
         97 => 'Autre',
     ];
 
+    public const END_REASONS = [
+        100 => 'Accès à une solution d\'hébgt/logt',
+        110 => 'Autonone', // AVDL
+        200 => 'Non adhésion à l\'accompagnement', // 2
+        210 => 'Exclusion disciplinaire',
+        220 => 'Fin du contrat de séjour',
+        500 => 'Fin d\'intervention d\'urgence', // PASH 6
+        510 => 'Fin de prise en charge 115', //PASH  5
+        520 => 'Fin de prise en charge ASE', // PASH 3
+        400 => 'Fin de prise en charge OFII', // Asile
+        410 => 'Transfert Dublin', // Asile
+        300 => 'Départ vers un autre département', // 4
+        310 => 'Départ volontaire',
+        230 => 'Retour dans le pays d\'origine',
+        240 => 'Séparation du couple',
+        330 => 'Transfert vers autre département', // AVDL
+        900 => 'Décès',
+        97 => 'Autre',
+        99 => 'Inconnu',
+    ];
+
+    public const REGULAR_END_REASONS = [
+        100 => 'Accès à une solution d\'hébgt/logt',
+        200 => 'Non adhésion à l\'accompagnement',
+        210 => 'Exclusion disciplinaire',
+        220 => 'Fin du contrat de séjour',
+        300 => 'Départ vers un autre département',
+        310 => 'Départ volontaire',
+        230 => 'Retour dans le pays d\'origine',
+        240 => 'Séparation du couple',
+        900 => 'Décès',
+        97 => 'Autre',
+        99 => 'Inconnu',
+    ];
+
     public const END_STATUS = [
         001 => 'A la rue - abri de fortune',
         303 => 'Accès à la propriété',
         208 => 'ALTHO',
         400 => 'CADA - dispositif asile',
         304 => 'Colocation',
-        900 => 'Décès',
-        700 => 'Départ volontaire de la personne',
+        // 900 => 'Décès', // 900
+        // 700 => 'Départ volontaire de la personne', // 310
         500 => 'Détention',
         105 => 'Dispositif hivernal',
         502 => 'DLSAP',
-        701 => 'Exclusion de la structure',
-        702 => 'Fin du contrat de séjour',
+        // 701 => 'Exclusion de la structure', // 210
+        // 702 => 'Fin du contrat de séjour', // 220
         106 => 'Foyer maternel',
         010 => 'Hébergé chez des tiers',
         011 => 'Hébergé chez famille',
@@ -103,7 +138,7 @@ class SupportGroup
         301 => 'Logement social',
         305 => 'Maison de retraite',
         501 => 'Placement extérieur',
-        704 => "Retour dans le pays d'origine",
+        // 704 => "Retour dans le pays d'origine", // 230
         302 => 'Sous-location',
         002 => 'Squat',
         602 => 'Structure de soin ou médical (LAM, autre)',
@@ -175,6 +210,11 @@ class SupportGroup
      * @Groups("export")
      */
     private $coefficient = self::DEFAULT_COEFFICIENT;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $endReason;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -477,6 +517,23 @@ class SupportGroup
         $this->agreement = $agreement;
 
         return $this;
+    }
+
+    public function getEndReason(): ?int
+    {
+        return $this->endReason;
+    }
+
+    public function setEndReason(?int $endReason): self
+    {
+        $this->endReason = $endReason;
+
+        return $this;
+    }
+
+    public function getEndReasonToString(): ?string
+    {
+        return $this->endReason ? self::END_REASONS[$this->endReason] : null;
     }
 
     public function getEndStatus(): ?int

@@ -298,7 +298,7 @@ export default class TaskForm {
      * @returns {Boolean}
      */
     isValidDate(inputDateElt) {
-        if (this.formValidator.checkDate(inputDateElt, -(9 * 365), (2 * 365), 'Date incorrecte', false) == false) {
+        if (this.formValidator.checkDate(inputDateElt, -(10 * 365), (2 * 365), 'Date incorrecte', false) == false) {
             return false
         }
         return true

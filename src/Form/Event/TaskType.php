@@ -43,6 +43,7 @@ class TaskType extends AbstractType
     {
         /** @var SupportGroup $supportGroup */
         $supportGroup = $options['support_group'] ?? $options['data']->getSupportGroup();
+        $service = $supportGroup ? $supportGroup->getService() : null;
 
         /** @var User $user */
         $user = $this->currentUser->getUser();
@@ -76,8 +77,8 @@ class TaskType extends AbstractType
             ])
              ->add('users', EntityType::class, [
                 'class' => User::class,
-                'query_builder' => function (UserRepository $userRepo) {
-                    return $userRepo->getReferentsOfServicesQueryBuilder($this->currentUser);
+                'query_builder' => function (UserRepository $userRepo) use ($service, $user) {
+                    return $userRepo->findUsersOfCurrentUserQueryBuilder($user, $service);
                 },
                 'choice_label' => 'fullname',
                 'multiple' => true,
@@ -113,8 +114,8 @@ class TaskType extends AbstractType
                 'multiple' => true,
                 'expanded' => false,
                 'by_reference' => false,
-                'choices' => $supportGroup ?
-                    $this->tagRepo->getTagsByService($supportGroup->getService(), 'task') :
+                'choices' => $service ?
+                    $this->tagRepo->getTagsByService($service, 'task') :
                     $this->tagRepo->findAllTags('task'),
                 'choice_label' => 'name',
                 'attr' => [
@@ -161,6 +162,15 @@ class TaskType extends AbstractType
             //     $this->preSubmitForm($formEvent);
             // })
         ;
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => Task::class,
+            'translation_domain' => 'forms',
+            'support_group' => null,
+        ]);
     }
 
     private function postSetDataForm(FormEvent $formEvent, ?SupportGroup $supportGroup): void
@@ -214,14 +224,5 @@ class TaskType extends AbstractType
                 'required' => false,
             ])
         ;
-    }
-
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        $resolver->setDefaults([
-            'data_class' => Task::class,
-            'translation_domain' => 'forms',
-            'support_group' => null,
-        ]);
     }
 }

@@ -11,7 +11,6 @@ use App\Form\Type\ServiceDeviceReferentSearchType;
 use App\Form\Utils\Choices;
 use App\Repository\Organization\TagRepository;
 use App\Repository\Organization\UserRepository;
-use App\Security\CurrentUserService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -20,15 +19,18 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Security;
 
 class TaskSearchType extends AbstractType
 {
-    private $currentUserService;
+    /** @var User */
+    private $user;
+
     private $tagRepo;
 
-    public function __construct(CurrentUserService $currentUserService, TagRepository $tagRepo)
+    public function __construct(Security $security, TagRepository $tagRepo)
     {
-        $this->currentUserService = $currentUserService;
+        $this->user = $security->getUser();
         $this->tagRepo = $tagRepo;
     }
 
@@ -100,7 +102,7 @@ class TaskSearchType extends AbstractType
                 'choice_label' => 'fullname',
                 'multiple' => true,
                 'query_builder' => function (UserRepository $repo) {
-                    return $repo->getReferentsOfServicesQueryBuilder($this->currentUserService);
+                    return $repo->findUsersOfCurrentUserQueryBuilder($this->user);
                 },
                 'attr' => [
                     'class' => 'multi-select w-min-150 w-max-220',
@@ -133,10 +135,9 @@ class TaskSearchType extends AbstractType
         return $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             /** @var TaskSearch $search */
             $search = $event->getData();
-            $user = $this->currentUserService->getUser();
 
-            if (User::STATUS_SOCIAL_WORKER === $user->getStatus()) {
-                $usersCollection = new ArrayCollection([$user]);
+            if (User::STATUS_SOCIAL_WORKER === $this->user->getStatus()) {
+                $usersCollection = new ArrayCollection([$this->user]);
                 $search->setUsers($usersCollection);
             }
         });

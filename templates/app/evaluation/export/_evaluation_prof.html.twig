@@ -1,5 +1,5 @@
-{% import 'macros/viewParagraph.html.twig' as view_p %}
-{% import 'macros/viewTextArea.html.twig' as view_text %}
+{% import 'macros/p_view.html.twig' as p_view %}
+{% import 'macros/textarea_view.html.twig' as textarea_view %}
 
 <hr/>
 <h2 style="{{ style_h2 }}">Situation professionnelle</h2>
@@ -12,21 +12,21 @@
     {% if nb_people_prof > 1 %}
         <p style="{{ style_h3 }}"><u>{{ eval_person.supportPerson.person.fullname }}</u> :</p>
     {% endif %}
-    {{ view_p.get(eval_prof.profStatus ? eval_prof.profStatusToString ~ (eval_prof.contractType ? ' (' 
+    {{ p_view.get(eval_prof.profStatus ? eval_prof.profStatusToString ~ (eval_prof.contractType ? ' (' 
         ~ eval_prof.contractTypeToString ~ ')'), 'Prof status', 'evaluation') }}
-    {{ view_p.get(eval_prof.jobCenterId, 'Job center id', 'evaluation') }}
-    {{ view_p.get(eval_prof.jobType, 'Job type', 'evaluation') }}
-    {{ view_p.get(eval_prof.contractEndDate ? eval_prof.contractEndDate|date('d/m/Y'), 'Contract end date', 'evaluation') }}
-    {{ view_p.get(eval_prof.workingHours ? eval_prof.workingHours ~ (eval_prof.nbWorkingHours ? ' (nb d\'heures : ' 
+    {{ p_view.get(eval_prof.jobCenterId, 'Job center id', 'evaluation') }}
+    {{ p_view.get(eval_prof.jobType, 'Job type', 'evaluation') }}
+    {{ p_view.get(eval_prof.contractEndDate ? eval_prof.contractEndDate|date('d/m/Y'), 'Contract end date', 'evaluation') }}
+    {{ p_view.get(eval_prof.workingHours ? eval_prof.workingHours ~ (eval_prof.nbWorkingHours ? ' (nb d\'heures : ' 
         ~ eval_prof.nbWorkingHours ~ ')'), 'Working hours', 'evaluation') }}
-    {{ view_p.get(eval_prof.employerName ? eval_prof.employerName ~ (eval_prof.workPlace ? ' | ' 
+    {{ p_view.get(eval_prof.employerName ? eval_prof.employerName ~ (eval_prof.workPlace ? ' | ' 
         ~ eval_prof.workPlace), 'Employer name', 'evaluation') }}
-    {{ view_p.get(eval_prof.transportMeansType ? eval_prof.transportMeansTypeToString ~ (eval_prof.transportMeans ? ' (' 
+    {{ p_view.get(eval_prof.transportMeansType ? eval_prof.transportMeansTypeToString ~ (eval_prof.transportMeans ? ' (' 
         ~ eval_prof.transportMeans ~ ')'), 'Transport means type', 'evaluation') }}
-    {{ view_p.get(eval_prof.rqth in [YES, IN_PROGRESS] ? eval_prof.rqthToString ~ (eval_prof.endRqthDate ? ' (fin de validité : ' 
+    {{ p_view.get(eval_prof.rqth in [YES, IN_PROGRESS] ? eval_prof.rqthToString ~ (eval_prof.endRqthDate ? ' (fin de validité : ' 
         ~ eval_prof.endRqthDate|date('d/m/Y') ~ ')'), 'Rqth', 'evaluation') }}
-    {{ view_p.get(eval_prof.schoolLevelToString, 'School level', 'evaluation') }}
-    {{ view_p.get(eval_prof.profExperienceToString, 'Prof experience', 'evaluation') }}
-    {{ view_text.get(eval_prof.commentEvalProf, null, null, type) }}
+    {{ p_view.get(eval_prof.schoolLevelToString, 'School level', 'evaluation') }}
+    {{ p_view.get(eval_prof.profExperienceToString, 'Prof experience', 'evaluation') }}
+    {{ textarea_view.get(eval_prof.commentEvalProf, null, null, type) }}
     <p>&nbsp;</p>
 {% endfor %}

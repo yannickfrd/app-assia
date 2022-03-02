@@ -16,6 +16,7 @@ evalInitGroup:
 # Administratif
 Adm: Administratif
 Agdref id: Numéro AGDREF
+Ofpra registration id: Numéro d'enregistrement OFPRA
 Arrival date: Date d'arrivée en France
 Asylum background: Parcours asile
 Asylum status: Statut lié à l'asile
@@ -257,7 +258,7 @@ Employer name: Nom employeur(s)
 End rqth date: Date de fin de validité RQTH
 Job center id: Numéro Pôle Emploi
 Job type: Type d'emploi(s)
-Nb working hours: Nombre d'heures de travail
+Nb working hours: Nombre d'heures hebdomadaires
 Prof experience: Expérience professionnelle
 Prof status: Statut professionnel
 Prof: Emploi
@@ -267,6 +268,7 @@ Transport means type: Moyen(s) de transport
 Transport means: Précision moyen(s) de transport
 Work place: Lieu de travail (commune)
 Working hours: Horaires de travail
+Working time: Temps de travail
 evalProfPerson.comment: Écrire un commentaire relatif à la situation professionnelle (démarches en cours, évolution de la situation...)
 
 # Housing

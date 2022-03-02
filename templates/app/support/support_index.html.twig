@@ -1,0 +1,99 @@
+{% extends 'base.html.twig' %}
+
+{% set title = 'Suivis' %}
+{% set ROLE_CHILD = constant('App\\Entity\\People\\RolePerson::ROLE_CHILD') %}
+{% set form_head = form.vars.value.head == true %}          
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+
+    <section class="mt-0">
+
+        <div class="container-fluid pt-4">
+            {% include 'model/_msgFlash.html.twig' %}
+            <h1 class="h2 mb-3">{{ title }}</h1>
+        </div>
+
+        {% include 'app/support/_partials/_support_search_form.html.twig' %}
+
+        <div class="container-fluid mt-4">
+
+            <div class="row align-items-baseline">
+                <div class="col-md-4 count align-middle mb-2">
+                    <span class="align-middle">Résultat : {{ supports.getTotalItemCount|number }} <!--
+                    -->{% if form_head %}ménage{% else %}personne{% endif %}{% if supports.getTotalItemCount > 1 %}s{% endif %}.</span>
+                </div>
+                <div class="col-md-8">
+                    <div class="navigation">{{ knp_pagination_render(supports) }}</div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="align-middle th-w-20"></th>
+                            <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, 'Nom et prénom', 'p.lastname') }}</th>
+                            <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, 'Date de naissance', 'p.birthdate') }}</th>
+                            <th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(supports, 'Typologie familiale', 'g.familyTypology') }}</th>
+                            <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, 'Service (Dispositif)', 's.name') }}</th>
+                            <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, 'Référent·e social·e', 'u.lastname') }}</th>
+                            <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, 'Statut', 'sg.status') }}</th>
+                            <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, 'Début de suivi', 'sg.startDate') }}</th>
+                            <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, 'Fin de suivi', 'sg.endDate') }}</th>
+                            <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, 'Commune', 'sg.city') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>  
+                        {% for support_person in supports %}
+                            {% set support_group = support_person.supportGroup %}
+                            {% set person = support_person.person %}
+                            <tr class="{% if form_head == false and support_person.head %}font-weight-bold{% endif %}">
+                                <td scope="row" class="align-middle text-center">
+                                    {% if is_granted('VIEW', support_group) %}
+                                        <a href="{{ path('support_show', {'id': support_group.id}) }}" class="btn btn-{{ theme_color }} btn-sm my-1 shadow" 
+                                            data-toggle="tooltip" data-placement="bottom" title="Voir la fiche du suivi"><span class="fas fa-eye"></span>
+                                        </a>
+                                    {% endif %}
+                                </td>
+                                <td class="align-middle">{{ person.fullname ~ (person.usename ? ' (' ~ person.usename ~ ')') }}</td>
+                                <td class="align-middle">{{ person.birthdate ? person.birthdate|date('d/m/Y') }}</td>
+                                <td class="align-middle">{{ support_group.peopleGroup.familyTypologyToString }}<!--
+                                    -->{{ support_group.nbPeople > 1 ? ', ' ~ support_group.nbPeople ~ ' pers.' }}
+                                    {% if support_group.nbPeople != support_group.peopleGroup.nbPeople %}
+                                        <span class="fas fa-exclamation-triangle text-warning" 
+                                            title="Le nombre de personnes rattachées au suivi ne correspond pas à la composition familiale."></span>
+                                    {% endif %}
+                                </td>
+                                <td class="align-middle">
+                                    {{ support_group.service.name }}{{ support_group.subService ? ' | ' ~ support_group.subService.name }}<br/>
+                                    <span class="text-secondary">{{ support_group.device ? '(' ~ support_group.device.name ~ ')' }}</span>
+                                </td>
+                                <td class="align-middle">{{ support_group.referent ? support_group.referent.fullname }}</td>
+                                <td class="align-middle">{{ support_person.statusToString }}<!--
+                                    -->{% if support_group.service.coefficient == YES %}<!--
+                                        --><br/><span class="text-secondary">{{ support_group.coefficient ? '(coeff. ' ~ support_group.coefficient ~ ')' }}</span><!--
+                                    -->{% endif %}
+                                </td>
+                                <td class="align-middle">{{ support_person.startDate ? support_person.startDate|date('d/m/Y') }}</td>
+                                <td class="align-middle">{{ support_person.endDate ? support_person.endDate|date('d/m/Y') }}
+                                    {% if support_group.endDate == null and support_group.theoreticalEndDate %}
+                                        <span class="text-secondary">{{ support_group.theoreticalEndDate|date('d/m/Y') }}<br/>(Fin théorique)</span>
+                                    {% endif %}
+                                    </td>
+                                <td class="align-middle">{{ support_group.city }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="navigation">{{ knp_pagination_render(supports) }}</div>
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('search') }}
+{% endblock javascripts %}

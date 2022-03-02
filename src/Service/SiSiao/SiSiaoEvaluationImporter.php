@@ -12,14 +12,14 @@ use App\Entity\Evaluation\EvalBudgetResource;
 use App\Entity\Evaluation\EvalFamilyGroup;
 use App\Entity\Evaluation\EvalFamilyPerson;
 use App\Entity\Evaluation\EvalHousingGroup;
+use App\Entity\Evaluation\EvalInitGroup;
+use App\Entity\Evaluation\EvalInitPerson;
 use App\Entity\Evaluation\EvalInitResource;
 use App\Entity\Evaluation\EvalProfPerson;
 use App\Entity\Evaluation\EvalSocialGroup;
 use App\Entity\Evaluation\EvalSocialPerson;
 use App\Entity\Evaluation\EvaluationGroup;
 use App\Entity\Evaluation\EvaluationPerson;
-use App\Entity\Evaluation\EvalInitGroup;
-use App\Entity\Evaluation\EvalInitPerson;
 use App\Entity\Evaluation\Resource as EvaResource;
 use App\Entity\People\Person;
 use App\Entity\Support\HotelSupport;
@@ -588,6 +588,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         $evalProfPerson
             ->setProfStatus($this->getProfStatus($diagSocial))
             ->setContractType($this->findInArray($diagSocial->typeContrat, SiSiaoItems::CONTRACT_TYPE))
+            ->setWorkingTime($this->findInArray($diagSocial->tempsTravail, SiSiaoItems::WORKING_TIME))
             ->setContractStartDate($this->convertDate($diagSocial->dateDebutContrat))
             ->setContractEndDate($this->convertDate($diagSocial->dateFinContrat))
             ->setNbWorkingHours($diagSocial->nombreHeures)

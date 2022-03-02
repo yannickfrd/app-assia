@@ -13,7 +13,7 @@ class HotelSupportSearch extends SupportSearch
     private $departmentAnchor;
 
     /** @var array */
-    private $endSupportReasons;
+    private $endReasons;
 
     /** @var ArrayCollection */
     private $hotels;
@@ -47,14 +47,14 @@ class HotelSupportSearch extends SupportSearch
         return $this;
     }
 
-    public function getEndSupportReasons(): ?array
+    public function getEndReasons(): ?array
     {
-        return $this->endSupportReasons;
+        return $this->endReasons;
     }
 
-    public function setEndSupportReasons(?array $endSupportReasons): self
+    public function setEndReasons(?array $endReasons): self
     {
-        $this->endSupportReasons = $endSupportReasons;
+        $this->endReasons = $endReasons;
 
         return $this;
     }

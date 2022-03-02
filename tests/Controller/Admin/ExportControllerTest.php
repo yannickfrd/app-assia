@@ -48,47 +48,62 @@ class ExportControllerTest extends WebTestCase
 
     public function testExportIsSuccessful()
     {
-        $this->client->request('GET', '/export');
+        $this->client->request('GET', '/exports');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Export des données');
 
-        $this->client->submitForm('export');
+        $this->client->request('POST', '/export/new', $this->getFormData());
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $content = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertSame('export', $content['type']);
+        $this->assertSame('create', $content['action']);
+
+        $id = $content['export']['id'];
+        $this->client->request('POST', "/export/$id/send", $this->getFormData());
+
+        $this->assertResponseIsSuccessful();
+        $content = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertSame('export', $content['action']);
 
         // Fail to get the export
-        $this->client->request('GET', '/export/2/get');
+        $this->client->request('GET', '/export/2/download');
         $this->assertSame(Response::HTTP_NOT_FOUND, $this->client->getResponse()->getStatusCode());
 
         // Success to get the export
-        $this->client->request('GET', '/export/1/get');
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->client->request('GET', '/export/1/download');
+        
+        $this->assertResponseIsSuccessful();
         $this->assertStringContainsString('spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
 
         // Delete the export
         $this->client->request('GET', '/export/1/delete');
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('.alert.alert-warning', 'Le fichier d\'export est supprimé.');
+
+        $this->assertResponseIsSuccessful();
+        $content = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertSame('delete', $content['action']);
     }
 
     public function testCountResultsIsSuccessful()
     {
-        $this->client->request('POST', '/export/count_results', [
+        $this->client->request('POST', '/export/count', $this->getFormData());
+
+        $this->assertResponseIsSuccessful();
+        $content = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertSame('count', $content['action']);
+    }
+
+    private function getFormData(): array
+    {
+        return [
             'supportDates' => '',
             'date' => [
                 'start' => '',
                 'end' => '',
             ],
-            'head' => true,
+            'head' => false,
             'status' => [SupportGroup::STATUS_IN_PROGRESS],
-        ]);
-
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $content = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertSame('count', $content['type']);
+        ];
     }
 
     protected function tearDown(): void

@@ -66,21 +66,22 @@ class RenameUserCommand extends Command
         $hashedPassword = $this->passwordHasher->hashPassword(new User(), 'test');
 
         foreach ($users as $user) {
-            if (in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
-                continue;
-            }
-
             $firstname = $this->faker->firstName();
             $lastname = $this->faker->lastName();
             $username = strtolower(substr($this->slugger->slug($firstname), 0, 1).'.'.$this->slugger->slug($lastname));
 
             $user
-                ->setUsername($username)
                 ->setFirstName($firstname)
                 ->setLastName($lastname)
                 ->setEmail($username.'@app-assia.org')
-                ->setPassword($hashedPassword)
             ;
+
+            if (!in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
+                $user
+                    ->setUsername($username)
+                    ->setPassword($hashedPassword)
+                ;
+            }
 
             ++$count;
 
@@ -91,8 +92,7 @@ class RenameUserCommand extends Command
 
         $io->progressFinish();
 
-        $io->success('Change name of people is successful !'
-            ."\n  ".$count.' users modified.');
+        $io->success("$count users modified !");
 
         return Command::SUCCESS;
     }

@@ -134,7 +134,7 @@ class PaymentControllerTest extends WebTestCase
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testViewSupportListPaymentsIsUp()
+    public function testShowSupportListPaymentsIsUp()
     {
         $this->createLogin($this->fixtures['userRoleUser']);
 

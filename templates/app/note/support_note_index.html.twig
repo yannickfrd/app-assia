@@ -9,11 +9,11 @@
 	<div class="container">
 
 		{% set title = 'Notes sociales' %}
-		{% include 'app/support/_partials/_nav_support.html.twig' %}
+		{% include 'app/support/_partials/_support_nav.html.twig' %}
 
 		<div class="row mb-2">
 			<div id="js-search-support-notes" class="col-md-12">
-				{% include 'app/note/_support_note_form_search.html.twig' %}
+				{% include 'app/note/_support_note_search_form.html.twig' %}
 			</div>
 		</div>
 		<div class="row mb-3">
@@ -92,7 +92,7 @@
 	</div>
 
 	{% include 'app/note/_note_form_modal.html.twig' %}
-	{% include 'model/_confirmModal.html.twig' %}
+	{% include 'model/_confirm_modal.html.twig' %}
 
 {% endblock %}
 

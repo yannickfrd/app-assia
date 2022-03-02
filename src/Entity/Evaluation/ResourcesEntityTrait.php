@@ -280,6 +280,70 @@ trait ResourcesEntityTrait
         return $this;
     }
 
+    public function getSalariesAmt(): ?float
+    {
+        return $this->getEvalBudgetResourceAmt([Resource::SALARY]);
+    }
+
+    public function getAreAmt(): ?float
+    {
+        return $this->getEvalBudgetResourceAmt([Resource::ARE]);
+    }
+
+    public function getRsaAmt(): ?float
+    {
+        return $this->getEvalBudgetResourceAmt(Resource::RSA);
+    }
+
+    public function getIjAmt(): ?float
+    {
+        return $this->getEvalBudgetResourceAmt([Resource::IJ]);
+    }
+
+    public function getAfAmt(): ?float
+    {
+        return $this->getEvalBudgetResourceAmt([Resource::AF]);
+    }
+
+    public function getEvalBudgetResourcesToArray(): array
+    {
+        if (!$this->evalBudgetResources) {
+            return [];
+        }
+
+        $resources = [];
+
+        foreach ($this->evalBudgetResources as $evalBudgetResources) {
+            $resources[] = Resource::RESOURCES[$evalBudgetResources->getType()].
+                (Resource::OTHER === $evalBudgetResources->getType() && $evalBudgetResources->getComment()
+                ? ' ('.$evalBudgetResources->getComment().')' : '');
+        }
+
+        return $resources;
+    }
+
+    public function getEvalBudgetResourcesToString(): ?string
+    {
+        return join(', ', $this->getEvalBudgetResourcesToArray());
+    }
+
+    protected function getEvalBudgetResourceAmt(array $resourceTypes): float
+    {
+        $amount = 0;
+
+        foreach ($this->evalBudgetResources as $evalBudgetResource) {
+            if (in_array($evalBudgetResource->getType(), $resourceTypes)) {
+                $amount += $evalBudgetResource->getAmount();
+            }
+        }
+
+        return $amount;
+    }
+
+    //
+    // A supprimer tout ce qui est en dessous.
+    //
+
     public function getDisAdultAllowance(): ?int
     {
         return $this->disAdultAllowance;
@@ -794,65 +858,5 @@ trait ResourcesEntityTrait
         $this->ressourceOtherAmt = $ressourceOtherAmt;
 
         return $this;
-    }
-
-    public function getSalariesAmt(): ?float
-    {
-        return $this->getEvalBudgetResourceAmt([Resource::SALARY]);
-    }
-
-    public function getAreAmt(): ?float
-    {
-        return $this->getEvalBudgetResourceAmt([Resource::ARE]);
-    }
-
-    public function getRsaAmt(): ?float
-    {
-        return $this->getEvalBudgetResourceAmt(Resource::RSA);
-    }
-
-    public function getIjAmt(): ?float
-    {
-        return $this->getEvalBudgetResourceAmt([Resource::IJ]);
-    }
-
-    public function getAfAmt(): ?float
-    {
-        return $this->getEvalBudgetResourceAmt([Resource::AF]);
-    }
-
-    public function getEvalBudgetResourcesToArray(): array
-    {
-        if (!$this->evalBudgetResources) {
-            return [];
-        }
-
-        $resources = [];
-
-        foreach ($this->evalBudgetResources as $evalBudgetResources) {
-            $resources[] = Resource::RESOURCES[$evalBudgetResources->getType()].
-                (Resource::OTHER === $evalBudgetResources->getType() && $evalBudgetResources->getComment()
-                ? ' ('.$evalBudgetResources->getComment().')' : '');
-        }
-
-        return $resources;
-    }
-
-    public function getEvalBudgetResourcesToString(): ?string
-    {
-        return join(', ', $this->getEvalBudgetResourcesToArray());
-    }
-
-    protected function getEvalBudgetResourceAmt(array $resourceTypes): float
-    {
-        $amount = 0;
-
-        foreach ($this->evalBudgetResources as $evalBudgetResource) {
-            if (in_array($evalBudgetResource->getType(), $resourceTypes)) {
-                $amount += $evalBudgetResource->getAmount();
-            }
-        }
-
-        return $amount;
     }
 }

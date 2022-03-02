@@ -4,7 +4,6 @@ namespace App\Controller\Evaluation;
 
 use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Evaluation\EvaluationGroup;
-use App\Event\Evaluation\EvaluationEvent;
 use App\Form\Evaluation\EvaluationGroupType;
 use App\Repository\Evaluation\EvaluationGroupRepository;
 use App\Repository\Support\SupportGroupRepository;
@@ -16,7 +15,6 @@ use App\Service\SupportGroup\SupportManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,17 +24,10 @@ class EvaluationController extends AbstractController
 {
     use ErrorMessageTrait;
 
-    private $em;
-    private $supportGroupRepo;
     private $evaluationRepo;
 
-    public function __construct(
-        EntityManagerInterface $em,
-        SupportGroupRepository $supportGroupRepo,
-        EvaluationGroupRepository $evaluationRepo
-    ) {
-        $this->em = $em;
-        $this->supportGroupRepo = $supportGroupRepo;
+    public function __construct(EvaluationGroupRepository $evaluationRepo)
+    {
         $this->evaluationRepo = $evaluationRepo;
     }
 
@@ -45,13 +36,14 @@ class EvaluationController extends AbstractController
      *
      * @Route("/support/{id}/evaluation/new", name="support_evaluation_new", methods="GET")
      */
-    public function createEvaluation(int $id, EvaluationCreator $evaluationCreator): Response
+    public function createEvaluation(int $id, SupportGroupRepository $supportGroupRepo,
+        EvaluationCreator $evaluationCreator): Response
     {
         if ($this->evaluationRepo->count(['supportGroup' => $id])) {
             return $this->redirectToRoute('support_evaluation_view', ['id' => $id]);
         }
 
-        $this->denyAccessUnlessGranted('EDIT', $supportGroup = $this->supportGroupRepo->find($id));
+        $this->denyAccessUnlessGranted('EDIT', $supportGroup = $supportGroupRepo->find($id));
 
         $evaluationCreator->create($supportGroup);
 
@@ -65,11 +57,12 @@ class EvaluationController extends AbstractController
      */
     public function showEvaluation(int $id, Request $request): Response
     {
-        if (0 === $this->evaluationRepo->count(['supportGroup' => $id])) {
+        $evaluationGroup = $this->evaluationRepo->findEvaluationOfSupport($id);
+
+        if (!$evaluationGroup) {
             return $this->redirectToRoute('support_evaluation_new', ['id' => $id]);
         }
 
-        $evaluationGroup = $this->evaluationRepo->findEvaluationOfSupport($id);
         $supportGroup = $evaluationGroup->getSupportGroup();
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
@@ -81,9 +74,9 @@ class EvaluationController extends AbstractController
         $form = $this->createForm(EvaluationGroupType::class, $evaluationGroup)
             ->handleRequest($request);
 
-        return $this->render('app/evaluation/edit/evaluation_edit.html.twig', [
+        return $this->renderForm('app/evaluation/edit/evaluation_edit.html.twig', [
             'support' => $supportGroup,
-            'form' => $form->createView(),
+            'form' => $form,
         ]);
     }
 
@@ -92,7 +85,8 @@ class EvaluationController extends AbstractController
      *
      * @Route("/support/{id}/evaluation/edit", name="support_evaluation_edit", methods="POST")
      */
-    public function editEvaluation(int $id, Request $request, EventDispatcherInterface $dispatcher, Normalisation $normalisation): JsonResponse
+    public function editEvaluation(int $id, Request $request, EvaluationManager $evaluationManager,
+        Normalisation $normalisation): JsonResponse
     {
         if (null === $evaluationGroup = $this->evaluationRepo->findEvaluationOfSupport($id)) {
             throw $this->createAccessDeniedException();
@@ -104,11 +98,7 @@ class EvaluationController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $dispatcher->dispatch(new EvaluationEvent($evaluationGroup), 'evaluation.before_update');
-
-            $this->em->flush();
-
-            $dispatcher->dispatch(new EvaluationEvent($evaluationGroup), 'evaluation.after_update');
+            $evaluationManager->updateAndFlush($evaluationGroup);
 
             return $this->json([
                 'alert' => 'success',
@@ -128,7 +118,7 @@ class EvaluationController extends AbstractController
      *
      * @Route("/evaluation/{id}/delete", name="evaluation_delete", methods="GET")
      */
-    public function deleteEvaluationGroup(EvaluationGroup $evaluationGroup): Response
+    public function deleteEvaluationGroup(EvaluationGroup $evaluationGroup, EntityManagerInterface $em): Response
     {
         $supportGroup = $evaluationGroup->getSupportGroup();
 
@@ -144,8 +134,8 @@ class EvaluationController extends AbstractController
             }
         }
 
-        $this->em->remove($evaluationGroup);
-        $this->em->flush();
+        $em->remove($evaluationGroup);
+        $em->flush();
 
         $this->addFlash('warning', "L'évaluation sociale est supprimée.");
 
@@ -153,7 +143,7 @@ class EvaluationController extends AbstractController
             EvaluationGroup::CACHE_EVALUATION_KEY.$supportGroup->getId()
         );
 
-        return $this->redirectToRoute('support_view', ['id' => $supportGroup->getId()]);
+        return $this->redirectToRoute('support_show', ['id' => $supportGroup->getId()]);
     }
 
     /**
@@ -186,7 +176,7 @@ class EvaluationController extends AbstractController
         if (!$response) {
             $this->addFlash('warning', 'Il n\'y a pas d\'évaluation sociale créée pour ce suivi.');
 
-            return $this->redirectToRoute('support_view', ['id' => $id]);
+            return $this->redirectToRoute('support_show', ['id' => $id]);
         }
 
         return $response;
