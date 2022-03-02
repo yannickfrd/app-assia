@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+## Version 3.9.3 - 02/03/2022
+[Payment] Rename item 'Remboursement de dette' to 'Remboursement' (#128)
+
 ## Version 3.9.2 - 02/03/2022
 Update feature import SI-SIAO (#127)
 [SiSiaoEvaluationImporter] Add import notes
