@@ -6,6 +6,7 @@ import {Modal} from 'bootstrap'
 import ParametersUrl from '../utils/parametersUrl'
 import SelectManager from '../utils/form/SelectManager'
 import ApiCalendar from '../api/ApiCalendar';
+import RdvModel from "./model/RdvModel";
 
 export default class Calendar {
 
@@ -14,6 +15,7 @@ export default class Calendar {
         this.ajax = new Ajax(this.loader)
         this.parametersUrl = new ParametersUrl()
         this.modalElt = new Modal(document.getElementById('modal-rdv'))
+        this.updateModalElt = new Modal(document.getElementById('modal-update'))
         this.apiCalendar = new ApiCalendar()
 
         this.calendarContainer = document.getElementById('calendar-container')
@@ -48,6 +50,8 @@ export default class Calendar {
         this.fullWidthItem = localStorage.getItem('agenda.full_width')
 
         this.selectManager = new SelectManager('#rdv_tags', { name: 'onModal', elementId: this.modalRdvElt.id })
+
+        this.rdvTemp = null
         
         this.init()
     }
@@ -235,12 +239,17 @@ export default class Calendar {
         if (!this.loader.isActive()) {
             this.updateDatetimes()
 
-            if (this.formRdvElt.elements['rdv__googleCalendar'].checked) {
-                this.googleCalendarCheckbox = this.formRdvElt.elements['rdv__googleCalendar'].checked
-            }
+            // if (this.formRdvElt.elements['rdv__googleCalendar'].checked) {
+            //     this.googleCalendarCheckbox = this.formRdvElt.elements['rdv__googleCalendar'].checked
+            // }
 
             this.loader.on()
-            this.ajax.send('POST', this.formRdvElt.getAttribute('action'), this.responseAjax.bind(this), new FormData(this.formRdvElt))
+
+            this.ajax.send(
+                'POST',
+                this.formRdvElt.getAttribute('action'),
+                this.responseAjax.bind(this), new FormData(this.formRdvElt)
+            )
         }
     }
 
@@ -287,6 +296,8 @@ export default class Calendar {
      * @param {Object} rdv
      */
     showRdv(rdv) {
+        this.rdvTemp = rdv.getRdv
+
         this.modalRdvElt.querySelector('form').action = '/rdv/' + this.rdvId + '/edit'
         this.modalRdvElt.querySelector('#rdv_title').value = rdv.title
         this.rdvStartInput.value = rdv.start
@@ -400,6 +411,15 @@ export default class Calendar {
      * @param {Object} apiUrls
      */
     updateRdv(rdv, action, apiUrls) {
+        const rdvMdl = new RdvModel(rdv.getRdv)
+
+        if (rdvMdl.isDifferent(this.rdvTemp)) {
+            this.updateModalElt.show()
+
+            document.getElementById('modal-confirm')
+                .addEventListener('click', () => this.apiCalendar.executeJs(rdv.getRdv, apiUrls))
+        }
+
         this.rdvElt.remove()
         this.createRdv(rdv, action, apiUrls)
     }

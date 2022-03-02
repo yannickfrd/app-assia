@@ -97,11 +97,13 @@ class Rdv
 
     /**
      * @ORM\Column(type="string", nullable=true)
+     * @Groups("show_rdv")
      */
     private $googleEventId;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("show_rdv")
      */
     private $outlookEventId;
 

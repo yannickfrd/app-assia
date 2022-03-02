@@ -49,7 +49,7 @@ class RdvController extends AbstractController
      *
      * @Route("/rdvs", name="rdvs", methods="GET|POST")
      */
-    public function viewListRdvs(Request $request, Pagination $pagination, CurrentUserService $currentUser): Response
+    public function index(Request $request, Pagination $pagination, CurrentUserService $currentUser): Response
     {
         $form = $this->createForm(RdvSearchType::class, $search = new RdvSearch())
             ->handleRequest($request);
@@ -58,7 +58,7 @@ class RdvController extends AbstractController
             return $this->exportData($search);
         }
 
-        return $this->render('app/rdv/listRdvs.html.twig', [
+        return $this->render('app/rdv/rdv_index.html.twig', [
             'form' => $form->createView(),
             'rdvs' => $pagination->paginate($this->rdvRepo->findRdvsQuery($search, $currentUser), $request, 10),
         ]);
@@ -98,12 +98,14 @@ class RdvController extends AbstractController
      *
      * @Route("/rdv/new", name="rdv_new", methods="POST")
      */
-    public function createRdv(Request $request): JsonResponse
+    public function createRdv(Request $request, EventDispatcherInterface $dispatcher): JsonResponse
     {
         $form = $this->createForm(RdvType::class, $rdv = new Rdv())
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $dispatcher->dispatch(new RdvEvent($rdv, null, $form), 'rdv.before_create');
+
             $this->em->persist($rdv);
             $this->em->flush();
 
@@ -141,7 +143,7 @@ class RdvController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $rdv->setSupportGroup($supportGroup);
+            $dispatcher->dispatch(new RdvEvent($rdv, $supportGroup, $form), 'rdv.before_create');
 
             $this->em->persist($rdv);
             $this->em->flush();
@@ -178,6 +180,7 @@ class RdvController extends AbstractController
         return $this->json([
             'action' => 'show',
             'rdv' => [
+                'getRdv' => $rdv,
                 'title' => $rdv->getTitle(),
                 'fullnameSupport' => $supportGroup ? $supportGroup->getHeader()->getFullname() : null,
                 'start' => $rdv->getStart()->format("Y-m-d\TH:i"),
@@ -194,7 +197,7 @@ class RdvController extends AbstractController
                 'tags' => $serializer->serialize($rdv->getTags(), 'json', ['groups' => 'show_tag']),
                 'tagIds' => $rdv->getTagsIdsToString(),
             ],
-        ]);
+        ], 200, [], ['groups' => 'show_rdv']);
     }
 
     /**
@@ -210,6 +213,8 @@ class RdvController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $dispatcher->dispatch(new RdvEvent($rdv, null, $form), 'rdv.before_update');
+
             $this->em->flush();
 
             $dispatcher->dispatch(new RdvEvent($rdv), 'rdv.after_update');
@@ -219,6 +224,7 @@ class RdvController extends AbstractController
                 'alert' => 'success',
                 'msg' => 'Le RDV est modifié.',
                 'rdv' => [
+                    'getRdv' => $rdv,
                     'id' => $rdv->getId(),
                     'title' => $rdv->getTitle(),
                     'day' => $rdv->getStart()->format('Y-m-d'),
@@ -229,7 +235,7 @@ class RdvController extends AbstractController
                     $rdv->getId(),
                     (array) $request->request->get('rdv')
                 ),
-            ]);
+            ], 200, [], ['groups' => 'show_rdv']);
         }
 
         return $this->getErrorMessage($form);

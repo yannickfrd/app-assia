@@ -1,6 +1,6 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
 
-{% set title = "Rendez-vous" %}
+{% set title = 'Rendez-vous' %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -10,11 +10,11 @@
 
         <div class="container">
             <h1 class="h2 mb-3"><a class="fas fa-calendar-alt mr-2 text-{{ theme_color }}" 
-                href="{{ path("calendar") }}" title="Passer en vue agenda"></a>{{ title }}</h1>
-            {% include "model/_msgFlash.html.twig" %}
+                href="{{ path('calendar') }}" title="Passer en vue agenda"></a>{{ title }}</h1>
+            {% include 'model/_msgFlash.html.twig' %}
         </div>
 
-        {% include "app/rdv/_searchRdvs.html.twig" %}
+        {% include 'app/rdv/_searchRdvs.html.twig' %}
 
         <div class="container mt-4">
 
@@ -36,18 +36,18 @@
                                 <tr>
                                     <th scope="col" class="align-middle th-w-20"></th>
                                     <th scope="col" class="align-middle th-w-150">
-                                        {{ knp_pagination_sortable(rdvs, "Rendez-vous", "r.title") }}</th>
+                                        {{ knp_pagination_sortable(rdvs, 'Rendez-vous', 'r.title') }}</th>
                                     <th scope="col" class="align-middle th-date">
-                                        {{ knp_pagination_sortable(rdvs, "Date", "r.start") }}</th>
+                                        {{ knp_pagination_sortable(rdvs, 'Date', 'r.start') }}</th>
                                     <th scope="col" class="align-middle th-w-80">
-                                        {{ knp_pagination_sortable(rdvs, "Statut", "r.status") }}</th>
+                                        {{ knp_pagination_sortable(rdvs, 'Statut', 'r.status') }}</th>
                                     <th scope="col" class="align-middle th-w-120">
-                                        {{ knp_pagination_sortable(rdvs, "Lieu", "r.location") }}</th>
+                                        {{ knp_pagination_sortable(rdvs, 'Lieu', 'r.location') }}</th>
                                     <th scope="col" class="align-middle th-w-60">Étiquette(s)</th>
                                     <th scope="col" class="align-middle th-w-120">
-                                        {{ knp_pagination_sortable(rdvs, "Référent·e", "ref.lastname") }}</th>
+                                        {{ knp_pagination_sortable(rdvs, 'Référent·e', 'ref.lastname') }}</th>
                                     <th scope="col" class="align-middle th-w-120">
-                                        {{ knp_pagination_sortable(rdvs, "Suivi", "p.lastname") }}</th>
+                                        {{ knp_pagination_sortable(rdvs, 'Suivi', 'p.lastname') }}</th>
                                     <th scope="col" class="align-middle th-w-20"></th>
                                 </tr>
                             </thead>
@@ -66,11 +66,11 @@
                                         </td>
                                         <td class="align-middle justify"><span class="font-weight-bold">
                                             {{ rdv.title }}{% if rdv.content %} : {% endif %}</span>
-                                            {{ rdv.content|u.truncate(200, " [...]", false)|striptags|raw }}
+                                            {{ rdv.content|u.truncate(200, ' [...]', false)|striptags|raw }}
                                         </td>
-                                        <td class="align-middle">{{ rdv.start|date("d/m/Y") }}<br/>
-                                            {{ rdv.start|date("H:i") }} – {{ rdv.end|date("H:i") }}</td>
-                                        <td class="align-middle">{{ rdv.start|date("Y-m-d-H") > "now"|date("Y-m-d-H") ? "À venir" : 
+                                        <td class="align-middle">{{ rdv.start|date('d/m/Y') }}<br/>
+                                            {{ rdv.start|date("H:i") }} – {{ rdv.end|date('H:i') }}</td>
+                                        <td class="align-middle">{{ rdv.start|date('Y-m-d-H') > 'now'|date('Y-m-d-H') ? 'À venir' :
                                             rdv.statusToString }}</td>
                                         <td class="align-middle">{{ rdv.location }}</td>
                                         <td class="align-middle">
@@ -82,7 +82,7 @@
                                             rdv.createdBy.fullname }}</td>
                                         <td class="align-middle">{{ support ? support.header.fullname }}</td>
                                         <td class="align-middle text-center">
-                                            {% if is_granted("DELETE", rdv) %}
+                                            {% if is_granted('DELETE', rdv) %}
                                                 <button data-url="{{ path('rdv_delete', {'id': rdv.id}) }}"
                                                     class="js-delete btn btn-danger btn-sm shadow my-1" title="Supprimer le rendez-vous" 
                                                     data-toggle="tooltip" data-placement="bottom"><i class="fas fa-trash-alt"></i>
@@ -99,13 +99,13 @@
             <div class="navigation">{{ knp_pagination_render(rdvs) }}</div>
         </div>
 
-		{% include "app/rdv/_deleteRdvModal.html.twig" %}
+		{% include 'app/rdv/_deleteRdvModal.html.twig' %}
 
     </section>
 
 {% endblock %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags("search") }}
-    {{ encore_entry_script_tags("rdvs") }}
+    {{ encore_entry_script_tags('search') }}
+    {{ encore_entry_script_tags('rdvs') }}
 {% endblock javascripts %}

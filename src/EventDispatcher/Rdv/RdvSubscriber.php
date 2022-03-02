@@ -13,9 +13,34 @@ class RdvSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
+            'rdv.before_create' => 'dispatch',
+            'rdv.before_update' => 'dispatch',
             'rdv.after_create' => 'discache',
             'rdv.after_update' => 'discache',
         ];
+    }
+
+    public function dispatch(RdvEvent $event)
+    {
+        $rdv = $event->getRdv();
+        $form = $event->getForm();
+        $supportGroup = $event->getSupportGroup();
+
+        if (null !== $supportGroup) {
+            $rdv->setSupportGroup($supportGroup);
+        }
+
+        if (!$form->get('_googleCalendar')->getData() && null !== $rdv->getGoogleEventId()) {
+            $rdv->setGoogleEventId(null);
+        } elseif ($form->get('_googleCalendar')->getData()) {
+            $rdv->setGoogleEventId(true);
+        }
+
+        if (!$form->get('_outlookCalendar')->getData() && null !== $rdv->getOutlookEventId()) {
+            $rdv->setOutlookEventId(null);
+        } elseif ($form->get('_outlookCalendar')->getData()) {
+            $rdv->setOutlookEventId(true);
+        }
     }
 
     /**

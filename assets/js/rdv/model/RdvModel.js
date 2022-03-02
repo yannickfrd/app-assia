@@ -11,14 +11,13 @@ export default class RdvModel {
     #content
     #createdBy
     #supportGroupName
+    #google = false
+    #outlook = false
 
     /**
-     * @param {String} apiName
      * @param {Object} rdvEntity
      */
-    constructor(apiName, rdvEntity) {
-        this.#apiName = apiName
-
+    constructor(rdvEntity) {
         this.#title = rdvEntity.title
         this.#start = rdvEntity.start
         this.#end = rdvEntity.end
@@ -26,10 +25,16 @@ export default class RdvModel {
         this.#content = rdvEntity.content
         this.#createdBy = rdvEntity.createdBy.fullname
         this.#supportGroupName = rdvEntity.supportGroup.header.fullname
+        this.#google = rdvEntity.googleEventId === '1'
+        this.#supportGroupName = rdvEntity.outlookEventId === '1'
     }
 
     get url() {
-        const apiNameIsGoogle = this.apiName === 'google'
+        if (this.apiName === null) {
+            return null
+        }
+
+        const apiNameIsGoogle = this.apiName === 'google';
 
         let url = this.apiName === 'google' ? this.#baseUrlGoogle : this.#baseUrlOutlook
         url += apiNameIsGoogle
@@ -57,6 +62,17 @@ export default class RdvModel {
         return url
     }
 
+    /**
+     * @param {Object} rdvTemp
+     * @returns {boolean}
+     */
+    isDifferent(rdvTemp) {
+        return this.title !== rdvTemp.title || this.start !== rdvTemp.start
+            || this.end !== rdvTemp.end || this.content !== rdvTemp.content
+            || this.google !== (rdvTemp.googleEventId === '1')
+            || this.supportGroupName !== (rdvTemp.outlookEventId === '1');
+    }
+
     #createBodyEvent() {
         let body = this.content !== null ? '<p>' + this.content + '</p>' : ''
 
@@ -71,6 +87,22 @@ export default class RdvModel {
         return body
     }
 
+
+    get google() {
+        return this.#google;
+    }
+
+    set google(value) {
+        this.#google = value;
+    }
+
+    get outlook() {
+        return this.#outlook;
+    }
+
+    set outlook(value) {
+        this.#outlook = value;
+    }
 
     get supportGroupName() {
         return this.#supportGroupName;
