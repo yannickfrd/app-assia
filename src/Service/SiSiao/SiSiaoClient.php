@@ -11,21 +11,21 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class SiSiaoClient
 {
-    public const API = '/api/';
+    public const API = '/api';
 
     public const API_PATHS = [
-        'fiches/ficheIdentite/{fichePersonneId}',
-        'fiches/ficheSynthese/{fichePersonneId}',
-        'diagnosticSocials/{diagSocialId}',
-        'ressourcePersonnes/diagnosticSocial/{diagSocialId}',
-        'chargePersonnes/diagnosticSocial/{diagSocialId}',
-        'dettePersonnes/diagnosticSocial/{diagSocialId}',
-        'demandeInsertion/{id}',
-        'demandeInsertion/getLastDemandeEnCours?idFiche={ficheGroupeId}',
-        'situationParRapportAuLogement/getByDiagnosticSocialId?diagnosticSocialId={diagSocialId}',
-        'demandeInsertion/historiquePersonne/{id}',
-        'informationsenfant/getByFicheId/{id}',
-        'login/user',
+        '/fiches/ficheIdentite/{fichePersonneId}',
+        '/fiches/ficheSynthese/{fichePersonneId}',
+        '/diagnosticSocials/{diagSocialId}',
+        '/ressourcePersonnes/diagnosticSocial/{diagSocialId}',
+        '/chargePersonnes/diagnosticSocial/{diagSocialId}',
+        '/dettePersonnes/diagnosticSocial/{diagSocialId}',
+        '/demandeInsertion/{id}',
+        '/demandeInsertion/getLastDemandeEnCours?idFiche={ficheGroupeId}',
+        '/situationParRapportAuLogement/getByDiagnosticSocialId?diagnosticSocialId={diagSocialId}',
+        '/demandeInsertion/historiquePersonne/{id}',
+        '/informationsenfant/getByFicheId/{id}',
+        '/login/user',
     ];
 
     private $client;
@@ -48,10 +48,10 @@ class SiSiaoClient
      */
     public function searchById(int $id)
     {
-        $result = $this->get("personnes/search/findByCriteria?idGroupe={$id}");
+        $result = $this->get("/personnes/search/findByCriteria?idGroupe={$id}");
 
         if (!is_object($result) || 0 === $result->total) {
-            $result = $this->get("personnes/search/findByCriteria?idFichePersonne={$id}");
+            $result = $this->get("/personnes/search/findByCriteria?idFichePersonne={$id}");
         }
 
         return $result;
@@ -107,7 +107,7 @@ class SiSiaoClient
             ];
         }
 
-        $data = $this->get("fiches/ficheIdentite/{$id}");
+        $data = $this->get("/fiches/ficheIdentite/{$id}");
 
         $dp = $data->demandeurprincipal;
 
@@ -144,7 +144,7 @@ class SiSiaoClient
      */
     public function dumpGroupById(int $id)
     {
-        $ficheGroupe = $this->get("fiches/ficheIdentite/{$id}");
+        $ficheGroupe = $this->get("/fiches/ficheIdentite/{$id}");
         dump($ficheGroupe);
         $diagSocialId = $ficheGroupe ? $ficheGroupe->demandeurprincipal->diagnosticSocial->id : null;
 
@@ -154,14 +154,14 @@ class SiSiaoClient
 
         foreach ($ficheGroupe->personnes as $personne) {
             $diagSocialId = $personne->diagnosticSocial->id;
-            // dump($this->get("diagnosticSocials/{$diagSocialId}"));
-            // dump($this->get("ressourcePersonnes/diagnosticSocial/{$diagSocialId}"));
-            // dump($this->get("chargePersonnes/diagnosticSocial/{$diagSocialId}"));
-            // dump($this->get("dettePersonnes/diagnosticSocial/{$diagSocialId}"));
+            // dump($this->get("/diagnosticSocials/{$diagSocialId}"));
+            // dump($this->get("/ressourcePersonnes/diagnosticSocial/{$diagSocialId}"));
+            // dump($this->get("/chargePersonnes/diagnosticSocial/{$diagSocialId}"));
+            // dump($this->get("/dettePersonnes/diagnosticSocial/{$diagSocialId}"));
         }
 
-        dump($this->get("situationParRapportAuLogement/getByDiagnosticSocialId?diagnosticSocialId={$diagSocialId}"));
-        dump($this->get("demandeInsertion/getLastDemandeEnCours?idFiche={$id}"));
+        dump($this->get("/situationParRapportAuLogement/getByDiagnosticSocialId?diagnosticSocialId={$diagSocialId}"));
+        dump($this->get("/demandeInsertion/getLastDemandeEnCours?idFiche={$id}"));
 
         exit;
     }
@@ -173,7 +173,7 @@ class SiSiaoClient
      */
     public function getUser()
     {
-        return $this->get('login/user');
+        return $this->get('/login/user');
     }
 
     /**
@@ -181,7 +181,7 @@ class SiSiaoClient
      */
     protected function getCurrentRoleUser(): JsonResponse
     {
-        $user = $this->get('login/user');
+        $user = $this->get('/login/user');
 
         return $user->currentRole;
     }
@@ -196,7 +196,7 @@ class SiSiaoClient
         }
 
         try {
-            $response = $this->client->request('POST', $this->url.'login', [
+            $response = $this->client->request('POST', $this->url.'/login', [
                 'headers' => $this->headers = $this->getHeaders(),
                 'body' => [
                     'username' => $siSiaoLogin ? $siSiaoLogin->getUsername() : '',
@@ -230,7 +230,7 @@ class SiSiaoClient
 
     public function logout(): void
     {
-        $this->client->request('POST', $this->url.'logout', ['headers' => $this->headers]);
+        $this->client->request('POST', $this->url.'/logout', ['headers' => $this->headers]);
     }
 
     /**

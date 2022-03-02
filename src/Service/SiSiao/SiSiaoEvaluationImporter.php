@@ -23,11 +23,13 @@ use App\Entity\Evaluation\EvaluationPerson;
 use App\Entity\Evaluation\Resource as EvaResource;
 use App\Entity\People\Person;
 use App\Entity\Support\HotelSupport;
+use App\Entity\Support\Note;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Support\SupportPerson;
 use App\Form\Utils\Choices;
 use App\Form\Utils\EvaluationChoices;
 use App\Notification\ExceptionNotification;
+use App\Service\Note\NoteManager;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -121,7 +123,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
 
         $this->evaluationGroup = $supportGroup->getEvaluationsGroup()->first();
 
-        $this->ficheGroupe = $this->get("fiches/ficheIdentite/{$this->id}");
+        $this->ficheGroupe = $this->get("/fiches/ficheIdentite/{$this->id}");
 
         $evaluationGroup = $this->createOrEditEvaluationGroup($supportGroup);
 
@@ -137,6 +139,8 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         if (!$evaluationGroup->getEvalInitGroup()) {
             $this->createEvalInitGroup($supportGroup, $evaluationGroup);
         }
+
+        $this->importNotes($supportGroup);
 
         $this->em->flush();
 
@@ -172,7 +176,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         /** @var object */
         $sitSociale = $this->ficheGroupe->situationsociale;
         /** @var object */
-        $demandeSiao = $this->get("demandeInsertion/getLastDemandeEnCours?idFiche={$this->id}");
+        $demandeSiao = $this->get("/demandeInsertion/getLastDemandeEnCours?idFiche={$this->id}");
 
         $this->createOrEditEvalSocialGroup($evaluationGroup, $sitSociale, $demandeSiao);
         $this->createOrEditEvalFamilyGroup($evaluationGroup);
@@ -289,7 +293,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         ?object $sitSociale = null, $demandeSiao = null): EvalHousingGroup
     {
         /** @var object */
-        $sitLogement = $this->get("situationParRapportAuLogement/getByFicheId?ficheId={$this->id}");
+        $sitLogement = $this->get("/situationParRapportAuLogement/getByFicheId?ficheId={$this->id}");
         if (!$evalHousingGroup = $evaluationGroup->getEvalHousingGroup()) {
             $evalHousingGroup = (new EvalHousingGroup())
                 ->setCommentEvalHousing($sitLogement ? $sitLogement->commentaireSituationLogement : null)
@@ -303,7 +307,6 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
 
         if ($sitLogement) {
             $evalHousingGroup
-                ->setSiaoRequest($demandeSiao ? Choices::YES : Choices::NO)
                 ->setSocialHousingRequest($this->findInArray($sitLogement->demandeLogementSocial, SiSiaoItems::YES_NO))
                 ->setSocialHousingRequestId($this->getSocialHousingRequestId($sitLogement->numerosUniqueLogementSocial))
                 ->setSocialHousingRequestDate($this->convertDate($sitLogement->dateDemandeLogementSocial))
@@ -331,6 +334,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         if ($demandeSiao && is_object($demandeSiao)) {
             $evalHousingGroup
                 ->setHousingStatus($this->findInArray($demandeSiao->situationDemande, SiSiaoItems::HOUSING_STATUS))
+                ->setSiaoRequest(Choices::YES)
                 ->setSiaoRequestDate($this->convertDate($demandeSiao->dateTransmissionInitialeSiao))
                 ->setSiaoUpdatedRequestDate($this->convertDate($demandeSiao->dateTransmissionSiao))
                 ->setSiaoRequestDept($this->findInArray($demandeSiao->siao->territoire->codeDepartement, SiSiaoItems::DEPARTMENTS))
@@ -441,7 +445,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         $diagSocialId = $personne->diagnosticSocial ? $personne->diagnosticSocial->id : null;
 
         if ($diagSocialId) {
-            $diagSocial = $this->get("diagnosticSocials/{$diagSocialId}");
+            $diagSocial = $this->get("/diagnosticSocials/{$diagSocialId}");
             $this->createOrEditEvalProfPerson($evaluationPerson, $personne, $diagSocial);
             $this->createOrEditEvalBudgetPerson($evaluationPerson, $personne, $diagSocial);
         }
@@ -663,7 +667,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
 
     protected function createResources(EvalBudgetPerson $evalBudgetPerson, object $diagSocial): EvalBudgetPerson
     {
-        $ressources = $this->get("ressourcePersonnes/diagnosticSocial/{$diagSocial->id}");
+        $ressources = $this->get("/ressourcePersonnes/diagnosticSocial/{$diagSocial->id}");
         $sumAmt = 0;
 
         foreach ($ressources as $ressource) {
@@ -695,7 +699,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
 
     protected function createCharges(EvalBudgetPerson $evalBudgetPerson, object $diagSocial): EvalBudgetPerson
     {
-        $charges = $this->get("chargePersonnes/diagnosticSocial/{$diagSocial->id}");
+        $charges = $this->get("/chargePersonnes/diagnosticSocial/{$diagSocial->id}");
         $sumAmt = 0;
 
         foreach ($charges as $charge) {
@@ -739,7 +743,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
 
     protected function createDebts(EvalBudgetPerson $evalBudgetPerson, object $diagSocial): EvalBudgetPerson
     {
-        $dettes = $this->get("dettePersonnes/diagnosticSocial/{$diagSocial->id}");
+        $dettes = $this->get("/dettePersonnes/diagnosticSocial/{$diagSocial->id}");
         $sumAmt = 0;
 
         foreach ($dettes as $dette) {
@@ -768,7 +772,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
     }
 
     /**
-     * @param Collection<EvaResource>|Collection<EvalBudgeCharge>|Collection<Debts> $finances
+     * @param Collection<EvaResource>|Collection<EvalBudgeCharge>|Collection<Debts>|Collection<AbstractFinance $finances
      *
      * @return EvaResource|Charge|Debt
      */
@@ -842,5 +846,34 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         }
 
         return $evalInitPerson;
+    }
+
+    protected function importNotes(SupportGroup $supportGroup): void
+    {
+        $results = $this->get('/notes/findRecentNotesByFicheId?ficheId='.$this->id);
+
+        if (0 === count($results)) {
+            return;
+        }
+
+        $noteRepo = $this->em->getRepository(Note::class);
+
+        foreach ($results as $result) {
+            if (!$note = $noteRepo->findOneBy(['comment' => $result->id])) {
+                $note = (new Note())
+                    ->setTitle('Note import SI-SIAO')
+                    ->setType(Note::TYPE_NOTE)
+                    ->setStatus(null)
+                    ->setComment($result->id)
+                    ->setSupportGroup($supportGroup)
+                ;
+
+                $this->em->persist($note);
+            }
+
+            $note->setContent($result->contenu);
+        }
+
+        NoteManager::deleteCacheItems($note);
     }
 }

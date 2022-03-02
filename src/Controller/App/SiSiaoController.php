@@ -153,7 +153,7 @@ class SiSiaoController extends AbstractController
     }
 
     /**
-     * Search group by id in API SI-SIAO.
+     * Import evaluation from API SI-SIAO.
      *
      * @Route("/api-sisiao/support/{id}/import-evaluation", name="api_sisiao_support_import_evaluation", methods="GET")
      */

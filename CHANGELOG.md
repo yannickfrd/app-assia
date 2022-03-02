@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+## Version 3.9.2 - 02/03/2022
+Update feature import SI-SIAO (#127)
+[SiSiaoEvaluationImporter] Add import notes
+
 ## Version 3.9.1 - 02/03/2022
 Edit feature support and evaluation and refactoring
 * [ResourcesEntityTrait] Refacto
