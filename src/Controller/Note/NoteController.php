@@ -92,7 +92,6 @@ class NoteController extends AbstractController
         SupportGroup $supportGroup,
         Request $request,
         EntityManagerInterface $em,
-        NoteManager $noteManager,
         NormalizerInterface $normalizer,
         TranslatorInterface $translator
     ): JsonResponse {
@@ -109,7 +108,7 @@ class NoteController extends AbstractController
             $em->persist($note);
             $em->flush();
 
-            $noteManager->deleteCacheItems($note);
+            NoteManager::deleteCacheItems($note);
 
             return $this->json([
                 'action' => 'create',
@@ -126,8 +125,8 @@ class NoteController extends AbstractController
      * @Route("/note/{id}/edit", name="note_edit", methods="POST")
      * @IsGranted("EDIT", subject="note")
      */
-    public function edit(Note $note, Request $request, EntityManagerInterface $em, NoteManager $noteManager,
-        NormalizerInterface $normalizer, TranslatorInterface $translator): JsonResponse
+    public function edit(Note $note, Request $request, EntityManagerInterface $em,  NormalizerInterface $normalizer,
+        TranslatorInterface $translator): JsonResponse
     {
         $form = $this->createForm(NoteType::class, $note)
             ->handleRequest($request);
@@ -135,7 +134,7 @@ class NoteController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $em->flush();
 
-            $noteManager->deleteCacheItems($note);
+            NoteManager::deleteCacheItems($note);
 
             return $this->json([
                 'action' => 'update',
@@ -152,15 +151,14 @@ class NoteController extends AbstractController
      * @Route("/note/{id}/delete", name="note_delete", methods="GET")
      * @IsGranted("DELETE", subject="note")
      */
-    public function delete(Note $note, EntityManagerInterface $em, NoteManager $noteManager,
-        TranslatorInterface $translator): JsonResponse
+    public function delete(Note $note, EntityManagerInterface $em, TranslatorInterface $translator): JsonResponse
     {
         $noteId = $note->getId();
 
         $em->remove($note);
         $em->flush();
 
-        $noteManager->deleteCacheItems($note);
+        NoteManager::deleteCacheItems($note);
 
         return $this->json([
             'action' => 'delete',
@@ -198,8 +196,7 @@ class NoteController extends AbstractController
         int $id,
         SupportGroupRepository $supportGroupRepo,
         EvaluationExporter $evaluationExporter,
-        EntityManagerInterface $em,
-        NoteManager $noteManager
+        EntityManagerInterface $em
     ): Response {
         $supportGroup = $supportGroupRepo->findFullSupportById($id);
 
@@ -210,13 +207,13 @@ class NoteController extends AbstractController
         if (!$note) {
             $this->addFlash('warning', "Il n'y a pas d'évaluation sociale créée pour ce suivi.");
 
-            return $this->redirectToRoute('support_view', ['id' => $id]);
+            return $this->redirectToRoute('support_show', ['id' => $id]);
         }
 
         $em->persist($note);
         $em->flush();
 
-        $noteManager->deleteCacheItems($note);
+        NoteManager::deleteCacheItems($note);
 
         return $this->redirectToRoute('support_note_index', [
             'id' => $id,

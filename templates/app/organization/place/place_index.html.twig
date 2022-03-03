@@ -1,0 +1,126 @@
+{% extends 'base.html.twig' %}
+
+{% set title = 'Groupes de places' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+
+    <section class="mt-0 mb-4">
+        <div class="container-fluid mt-4">
+            {% include 'model/_msgFlash.html.twig' %}
+            <h1 class="h2 mb-3">{{ title }}</h1>
+        </div>
+
+        {% include 'app/organization/place/_place_search_form.html.twig' %}
+
+        <div class="container-fluid mt-4">
+            <div class="row align-items-baseline">
+                <div class="col-md-4 count align-middle">
+                    <p class="align-middle">Total : {{ places.getTotalItemCount|number }} groupes
+                        de places.</p>
+                </div>
+                <div class="col-md-8">
+                    <div class="navigation">{{ knp_pagination_render(places) }}</div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="align-middle th-w-20"></th>
+                            <th scope="col" class="align-middle th-w-150">
+                                {{ knp_pagination_sortable(places, 'Groupe de places', 'pl.name') }}
+                            </th>
+                            <th scope="col" class="align-middle th-w-100">
+                                {{ knp_pagination_sortable(places, 'Service', 's.name') }}
+                            </th>
+                            <th scope="col" class="align-middle th-w-100">
+                                {{ knp_pagination_sortable(places, 'Dispositif', 'd.name') }}
+                            </th>
+                            <th scope="col" class="align-middle th-w-80">
+                                {{ knp_pagination_sortable(places, 'Nombre de places', 'pl.nbPlaces') }}
+                            </th>
+                            <th scope="col" class="align-middle th-date">
+                                {{ knp_pagination_sortable(places, 'Date d\'ouverture', 'pl.startDate') }}
+                            </th>
+                            <th scope="col" class="align-middle th-date">
+                                {{ knp_pagination_sortable(places, 'Date de fermeture', 'pl.endDate') }}
+                            </th>
+                            </th>
+                            <th scope="col" class="align-middle th-w-150">
+                                {{ knp_pagination_sortable(places, 'Adresse', 'pl.address') }}
+                            </th>
+                            <th scope="col" class="align-middle th-w-100">
+                                {{ knp_pagination_sortable(places, 'Ville', 'pl.city') }}
+                            </th>
+                            <th scope="col" class="align-middle th-w-60">
+                                {{ knp_pagination_sortable(places, 'Code postal', 'pl.zipcode') }}
+                            </th>
+                            <th scope="col" class="align-middle th-w-150">Occupation actuelle (Nb de personnes)</th>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <th scope="col" class="align-middle th-w-60">
+                                    {{ knp_pagination_sortable(places, 'Désactivé', 'pl.disabledAt') }}
+                                </th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for place in places %}
+                            <tr class="{% if place.disabled %}text-secondary{% endif %}">
+                                <td scope="row" class="align-middle" >
+                                    <a href="{{ path('place_edit', {'id': place.id}) }}"
+                                        class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
+                                        title="Voir le groupe de places"><span class="fas fa-eye"></span>
+                                    </a>
+                                </td>
+                                <td class="align-middle {% if place.disabled %}delete{% endif %}">
+                                    {{ place.name }}{% if place.disabled %} (désactivé){% endif %}
+                                </td> 
+                                <td class="align-middle">
+                                    <a href="{{ path('service_edit', {'id': place.service.id }) }}" 
+                                        class="text-{{ theme_color }}">{{ place.service.name }}</a>
+                                </td>
+                                <td class="align-middle">{{ place.device ? place.device.name }}</td>
+                                <td class="align-middle">{{ place.nbPlaces }}</td>
+                                <td class="align-middle">{{ place.startDate ? place.startDate|date('d/m/Y') }}</td>
+                                <td class="align-middle">{{ place.endDate ? place.endDate|date('d/m/Y') }}</td>
+                                <td class="align-middle">{{ place.address }}</td>
+                                <td class="align-middle">{{ place.city }}</td>
+                                <td class="align-middle">{{ place.zipcode }}</td>
+                                <td class="align-middle">{% set nb_people = 0 %}
+                                    {% if place.placeType != 3 %}
+                                        {% for place_group in place.placeGroups|filter(pl => pl.endDate|date('Y-m-d') >= 'now'|date('Y-m-d')) %} 
+                                            {% set nb_place_people = place_group.placePeople|length %}
+                                            {% if not loop.first %} + {% endif %}{{ nb_place_people }}
+                                            {% set nb_people = nb_people + nb_place_people %}
+                                        {% endfor %}
+                                        {% if nb_people == 0 %}
+                                            <span class="badge badge-danger" title="Ce groupe de places est innocupé.">Vacant</span>
+                                        {% elseif place.nbPlaces != nb_people %}
+                                            <span class="fas fa-exclamation-triangle text-warning" 
+                                                title="Le nombre de personnes ne correspond pas au nombre de places"></span>
+                                        {% endif %}
+                                    {% endif %}
+                                </td>
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <td class="align-middle">{{ place.disabledAt ? 'Oui' }}</td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="navigation">{{ knp_pagination_render(places) }}</div>
+
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('search') }}
+{% endblock javascripts %}

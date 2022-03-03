@@ -182,14 +182,14 @@
 
             <hr>
 
-            {% include "app/support/_partials/_historySupports.html.twig" %}
+            {% include "app/support/_partials/_supports_index_table.html.twig" %}
 
         {% endif %}
 
     </div>
 
     {% if people_group is defined %}
-        {% include "app/support/_partials/_modalNewSupport.html.twig" %}
+        {% include "app/support/_partials/_support_new_modal.html.twig" %}
     {% endif %}
 
     {% if EDIT_MODE == true %}

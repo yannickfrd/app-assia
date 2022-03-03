@@ -6,7 +6,6 @@ use App\Entity\Organization\Device;
 use App\Entity\Organization\Service;
 use App\Form\Model\Admin\OccupancySearch;
 use App\Form\Model\Organization\DeviceSearch;
-use App\Form\Model\Support\SupportsByUserSearch;
 use App\Form\Utils\Choices;
 use App\Repository\Traits\QueryTrait;
 use App\Security\CurrentUserService;
@@ -162,17 +161,18 @@ class DeviceRepository extends ServiceEntityRepository
             ->orderBy('d.name', 'ASC')
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getResult();
+            ->getResult()
+        ;
     }
 
     /**
      * @return Device[]|null
      */
-    public function findDevicesForDashboard(CurrentUserService $currentUser, SupportsByUserSearch $search): ?array
+    public function findDevicesForDashboard(CurrentUserService $currentUser): ?array
     {
-        $qb = $this->createQueryBuilder('d')->select('PARTIAL d.{id, name, coefficient}')
+        $qb = $this->createQueryBuilder('d')
             ->leftJoin('d.serviceDevices', 'sd')->addSelect('sd')
-            ->leftJoin('sd.service', 's')->addSelect('PARTIAL s.{id, name}')
+            ->leftJoin('sd.service', 's')->addSelect('PARTIAL s.{id, name, coefficient}')
 
             ->where('d.disabledAt IS NULL');
 
@@ -185,6 +185,7 @@ class DeviceRepository extends ServiceEntityRepository
             ->orderBy('d.name', 'ASC')
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getResult();
+            ->getResult()
+        ;
     }
 }

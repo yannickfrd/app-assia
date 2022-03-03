@@ -85,13 +85,13 @@ trait QueryTrait
         return $qb;
     }
 
-    protected function filterByServiceType(QueryBuilder $qb, string $dataClass = null): QueryBuilder
+    protected function filterByServiceType(QueryBuilder $qb, string $className = null): QueryBuilder
     {
-        if (HotelSupportSearch::class === $dataClass) {
+        if (HotelSupportSearch::class === $className) {
             $qb->andWhere('s.type = :type')
                 ->setParameter('type', Service::SERVICE_TYPE_HOTEL);
         }
-        if (AvdlSupportSearch::class === $dataClass) {
+        if (AvdlSupportSearch::class === $className) {
             $qb->andWhere('s.type = :type')
                 ->setParameter('type', Service::SERVICE_TYPE_AVDL);
         }

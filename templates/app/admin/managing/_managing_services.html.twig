@@ -1,0 +1,38 @@
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <h2 class="h5">Suivi d'activité</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <ul>
+                    <li class="mb-2 text-{{ theme_color }}">
+                        <a class="text-dark" href="{{ path('supports_by_user') }}">Répartition des suivis en cours</a>
+                    </li>
+                    {% if is_granted('ROLE_SUPER_ADMIN') or app.session.get('haveServiceWithPlace') %}
+                        <li class="mb-2 text-{{ theme_color }}">
+                            <a class="text-dark" href="{{ path('occupancy_services') }}">Taux d'occupation</a>
+                        </li>
+                    {% endif %}
+                    {% if is_granted('ROLE_SUPER_ADMIN') or YES == app.session.get('haveServiceAVDL') %}
+                        <li class="mb-2 text-{{ theme_color }}">
+                            <a class="text-dark" href="{{ path('avdl_supports') }}">Tableau de suivi AVDL</a>
+                        </li>
+                    {% endif %}   
+                    {% if is_granted('ROLE_SUPER_ADMIN') or YES == app.session.get('haveServiceHotel') %}
+                        <li class="mb-2 text-{{ theme_color }}">
+                            <a class="text-dark" href="{{ path('hotel_supports') }}">Tableau de suivi PASH</a>
+                        </li>
+                    {% endif %}   
+                </ul>
+            </div>
+            <div class="col-md-6">
+                {% if is_granted('ROLE_ADMIN') %}
+                    <ul>
+                        <li class="mb-2 text-{{ theme_color }}">
+                            <a class="text-dark" href="{{ path('admin_users') }}">Gérer les utilisateurs</a>
+                        </li>
+                    </ul>
+                {% endif %}   
+            </div>
+        </div>
+    </div>
+</div>

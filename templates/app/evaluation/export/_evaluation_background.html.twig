@@ -1,5 +1,5 @@
-{% import 'macros/viewTextArea.html.twig' as view_text %}
+{% import 'macros/textarea_view.html.twig' as textarea_view %}
 
 <hr/>
 <h2 style="{{ style_h2 }}">Parcours de vie</h2>
-{{ view_text.get(evaluation.backgroundPeople, null, null, type) }}
+{{ textarea_view.get(evaluation.backgroundPeople, null, null, type) }}

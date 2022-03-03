@@ -344,7 +344,7 @@ class SupportPersonRepository extends ServiceEntityRepository
         $qb = $this->addOrganizationFilters($qb, $search);
 
         if ($search->getStatus()) {
-            $qb = $this->addOrWhere($qb, 'sg.status', $search->getStatus());
+            $qb = $this->addOrWhere($qb, 'sp.status', $search->getStatus());
         }
 
         $supportDates = $search->getSupportDates();

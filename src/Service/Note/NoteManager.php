@@ -9,7 +9,7 @@ use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 class NoteManager
 {
-    public function deleteCacheItems(Note $note): void
+    public static function deleteCacheItems(Note $note): void
     {
         $supportGroup = $note->getSupportGroup();
         $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);

@@ -61,13 +61,13 @@ class HotelSupportSearchType extends AbstractType
                 'placeholder' => 'hotelSupport.search.departmentAnchor',
                 'required' => false,
             ])
-            ->add('endSupportReasons', ChoiceType::class, [
+            ->add('endReasons', ChoiceType::class, [
                 'label_attr' => ['class' => 'sr-only'],
                 'multiple' => true,
-                'choices' => Choices::getChoices(HotelSupport::END_SUPPORT_REASONS),
+                'choices' => Choices::getChoices(HotelSupport::END_REASONS),
                 'attr' => [
                     'class' => 'multi-select w-min-120',
-                    'placeholder' => 'placeholder.endSupportReasons',
+                    'placeholder' => 'support.endReasons.placeholder',
                     'size' => 1,
                 ],
                 'required' => false,

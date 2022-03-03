@@ -66,6 +66,12 @@ class EvalProfPerson
         99 => 'Non évalué',
     ];
 
+    public const WORKING_TIME = [
+        1 => 'Temps complet',
+        2 => 'Temps partiel',
+        99 => 'Non évalué',
+    ];
+
     public const TRANSFORT_MEANS = [
         1 => 'Voiture',
         2 => 'Transport en commun',
@@ -94,18 +100,20 @@ class EvalProfPerson
     private $jobCenterId;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups("export")
-     */
-    private $jobType;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $contractType;
 
     /** @Groups("export") */
     private $contractTypeToString;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $workingTime;
+
+    /** @Groups("export") */
+    private $workingTimeToString;
 
     /**
      * @ORM\Column(type="date", nullable=true)
@@ -126,6 +134,11 @@ class EvalProfPerson
      * @ORM\Column(type="string", length=100, nullable=true)
      */
     private $workingHours;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $jobType;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
@@ -249,6 +262,23 @@ class EvalProfPerson
     public function setContractType(?int $contractType): self
     {
         $this->contractType = $contractType;
+
+        return $this;
+    }
+
+    public function getWorkingTime(): ?int
+    {
+        return $this->workingTime;
+    }
+
+    public function getWorkingTimeToString(): ?string
+    {
+        return $this->workingTime ? self::WORKING_TIME[$this->workingTime] : null;
+    }
+
+    public function setWorkingTime(?int $workingTime): self
+    {
+        $this->workingTime = $workingTime;
 
         return $this;
     }

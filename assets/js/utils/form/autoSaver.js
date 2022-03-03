@@ -4,15 +4,15 @@
 export default class AutoSaver {
 
 /**
+ * @param {string} target
  * @param {CallableFunction} callback 
- * @param {HTMLElement} targetElt 
- * @param {Number} delay in secondes
- * @param {Number} minCount 
- * @param {Array} validTargets 
+ * @param {number} delay in secondes
+ * @param {number} minCount 
+ * @param {array} validTargets 
  */
-    constructor(callback, targetElt = document, delay = 10 * 60, minCount = 10, validTargets = null) {
+    constructor(target, callback, delay = 10 * 60, minCount = 10, validTargets = null) {
+        this.targetElt = document.querySelector(target)
         this.callback = callback
-        this.targetElt = targetElt
         this.delay = delay * 1000
         this.minCount = minCount
         this.validTargets = validTargets
@@ -61,7 +61,6 @@ export default class AutoSaver {
     clear() {
         this.count = 0
         this.active = false
-        // clearInterval(this.countdownID)
         this.init()
     }
 }

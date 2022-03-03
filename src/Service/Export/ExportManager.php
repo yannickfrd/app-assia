@@ -7,6 +7,7 @@ use App\Form\Model\Admin\ExportSearch;
 use App\Form\Model\Support\SupportSearch;
 use App\Notification\ExportNotification;
 use App\Repository\Admin\ExportRepository;
+use App\Repository\Support\SupportPersonRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
 
@@ -16,17 +17,23 @@ class ExportManager
     private $em;
     private $exportNotification;
     private $exportRepo;
+    private $supportPersonRepo;
+    private $evaluationPersonExport;
 
     public function __construct(
         Security $security,
         EntityManagerInterface $em,
         ExportRepository $exportRepo,
-        ExportNotification $exportNotification
+        ExportNotification $exportNotification,
+        SupportPersonRepository $supportPersonRepo,
+        EvaluationPersonExport $evaluationPersonExport
     ) {
         $this->security = $security;
         $this->em = $em;
         $this->exportNotification = $exportNotification;
         $this->exportRepo = $exportRepo;
+        $this->supportPersonRepo = $supportPersonRepo;
+        $this->evaluationPersonExport = $evaluationPersonExport;
     }
 
     /**
@@ -39,7 +46,7 @@ class ExportManager
             'createdBy' => $this->security->getUser(),
         ], ['createdAt' => 'DESC']);
 
-        if ($lastExport) {
+        if ($lastExport && $lastExport->getCreatedAt()->modify('+10 minutes') > new \Datetime()) {
             return null;
         }
 
@@ -56,10 +63,23 @@ class ExportManager
         return $export;
     }
 
-    /**
-     * @param ExportSearch|SupportSearch $search
-     */
-    public function updateAndSend(Export $export, string $file): Export
+    public function send(Export $export, ExportSearch $search): ?Export
+    {
+        $supports = $this->supportPersonRepo->findSupportsFullToExport($search);
+
+        $file = $this->evaluationPersonExport->exportData($supports, $search);
+
+        $this->update($export, $file);
+
+        /** @var User */
+        $user = $this->security->getUser();
+
+        $this->exportNotification->sendExport($user->getEmail(), $export);
+
+        return $export;
+    }
+
+    private function update(Export $export, string $file): void
     {
         $export
             ->setFileName($file)
@@ -69,13 +89,6 @@ class ExportManager
         ;
 
         $this->em->flush();
-
-        /** @var User */
-        $user = $this->security->getUser();
-
-        $this->exportNotification->sendExport($user->getEmail(), $export);
-
-        return $export;
     }
 
     /**

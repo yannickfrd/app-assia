@@ -39,6 +39,7 @@ class Service
     public const SERVICE_TYPE_HEB = 1;
     public const SERVICE_TYPE_AVDL = 2;
     public const SERVICE_TYPE_HOTEL = 3;
+    public const SERVICE_TYPE_ASYLUM = 4;
 
     public const SERVICE_TYPE = [
         1 => 'Accompagnement social',

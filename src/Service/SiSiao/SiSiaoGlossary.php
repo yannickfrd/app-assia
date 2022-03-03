@@ -8,29 +8,29 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class SiSiaoGlossary extends SiSiaoClient
 {
     public const REFERENTIELS = [
-        'referentiels/' => [
-            'situationDemandes',
-            'motifDemandes',
-            'dureeErrances',
-            'compositions',
-            'situationPersonnes',
-            'situationSortieDemande',
-            'papierIdentites',
-            'droitSejours',
-            'typeHebergementEnfant',
-            'regroupementFamilial',
-            'droitOuvertSecuriteSociales',
-            'animaux',
-            'typeContrats',
-            'typeRessources',
-            'typeCharges',
-            'typeDettes',
-            'evolutionsBudgetaires',
-            'dispositif',
-            'mesureAccompagnement',
-            'categoriePlaces',
-            'typePlaces',
-            'typesEtablissementUn',
+        '/referentiels' => [
+            '/situationDemandes',
+            '/motifDemandes',
+            '/dureeErrances',
+            '/compositions',
+            '/situationPersonnes',
+            '/situationSortieDemande',
+            '/papierIdentites',
+            '/droitSejours',
+            '/typeHebergementEnfant',
+            '/regroupementFamilial',
+            '/droitOuvertSecuriteSociales',
+            '/animaux',
+            '/typeContrats',
+            '/typeRessources',
+            '/typeCharges',
+            '/typeDettes',
+            '/evolutionsBudgetaires',
+            '/dispositif',
+            '/mesureAccompagnement',
+            '/categoriePlaces',
+            '/typePlaces',
+            '/typesEtablissementUn',
         ],
     ];
 
@@ -68,8 +68,8 @@ class SiSiaoGlossary extends SiSiaoClient
 
         $referentielsString = '';
 
-        foreach (self::REFERENTIELS['referentiels/'] as $key => $value) {
-            $referentiel = $this->get('referentiels/'.$value);
+        foreach (self::REFERENTIELS['/referentiels'] as $key => $value) {
+            $referentiel = $this->get('/referentiels'.$value);
             $referentielsString .= '// '.strtoupper($value).
                 '<br/>public const '.strtoupper($value).' = [<br/>';
 

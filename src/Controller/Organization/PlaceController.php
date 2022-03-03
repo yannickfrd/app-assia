@@ -12,52 +12,45 @@ use App\Repository\Support\PlaceGroupRepository;
 use App\Security\CurrentUserService;
 use App\Service\Export\PlaceExport;
 use App\Service\Pagination;
+use App\Service\Place\PlaceManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class PlaceController extends AbstractController
 {
-    private $em;
-    private $placeRepo;
-
-    public function __construct(EntityManagerInterface $em, PlaceRepository $placeRepo)
-    {
-        $this->em = $em;
-        $this->placeRepo = $placeRepo;
-    }
-
     /**
-     * Affiche la liste des groupes de places.
-     *
-     * @Route("/places", name="places", methods="GET|POST")
+     * @Route("/places", name="place_index", methods="GET|POST")
      */
-    public function listPlaces(Request $request, Pagination $pagination, CurrentUserService $currentUser): Response
+    public function index(Request $request, PlaceRepository $placeRepo, Pagination $pagination,
+        CurrentUserService $currentUser): Response
     {
         $form = $this->createForm(PlaceSearchType::class, $search = new PlaceSearch())
             ->handleRequest($request);
 
         if ($search->getExport()) {
-            return $this->exportData($search);
+            $places = $placeRepo->findPlacesToExport($search);
+
+            if ($places) {
+                return (new PlaceExport())->exportData($places);
+            }
+            $this->addFlash('warning', 'Aucun résultat à exporter.');
         }
 
-        return $this->render('app/organization/place/listPlaces.html.twig', [
+        return $this->renderForm('app/organization/place/place_index.html.twig', [
             'placeSearch' => $search,
-            'form' => $form->createView(),
-            'places' => $pagination->paginate($this->placeRepo->findPlacesQuery($search, $currentUser), $request) ?? null,
+            'form' => $form,
+            'places' => $pagination->paginate($placeRepo->findPlacesQuery($search, $currentUser), $request),
         ]);
     }
 
     /**
-     * Nouveau groupe de places.
-     *
      * @Route("/admin/service/{id}/place/new", name="service_place_new", methods="GET|POST")
      */
-    public function newPlace(Service $service, Place $place = null, Request $request): Response
+    public function new(Service $service, Request $request, EntityManagerInterface $em): Response
     {
         $this->denyAccessUnlessGranted('EDIT', $service);
 
@@ -67,12 +60,12 @@ class PlaceController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->em->persist($place);
-            $this->em->flush();
+            $em->persist($place);
+            $em->flush();
 
             $this->addFlash('success', 'Le groupe de places est créé.');
 
-            $this->discache($place->getService());
+            PlaceManager::deleteCacheItems($place);
 
             return $this->redirectToRoute('service_edit', ['id' => $service->getId()]);
         }
@@ -81,17 +74,14 @@ class PlaceController extends AbstractController
             $this->addFlash('danger', "Une erreur s'est produite.");
         }
 
-        return $this->render('app/organization/place/place.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        return $this->renderForm('app/organization/place/place.html.twig', ['form' => $form]);
     }
 
     /**
-     * Modification d'un groupe de places.
-     *
      * @Route("/place/{id}", name="place_edit", methods="GET|POST")
      */
-    public function editPlace(Place $place, Request $request, PlaceGroupRepository $placeGroupRepo): Response
+    public function edit(Place $place, Request $request, EntityManagerInterface $em,
+        PlaceGroupRepository $placeGroupRepo): Response
     {
         $this->denyAccessUnlessGranted('VIEW', $place);
 
@@ -101,43 +91,39 @@ class PlaceController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->denyAccessUnlessGranted('EDIT', $place->getService());
 
-            $this->em->flush();
+            $em->flush();
 
-            $this->discache($place->getService());
+            PlaceManager::deleteCacheItems($place);
 
             $this->addFlash('success', 'Les modifications sont enregistrées.');
         }
 
-        return $this->render('app/organization/place/place.html.twig', [
-            'form' => $form->createView(),
-            'places_group' => $placeGroupRepo->findAllPlace($place),
+        return $this->renderForm('app/organization/place/place.html.twig', [
+            'form' => $form,
+            'places_group' => $placeGroupRepo->findAllPlaceGroups($place),
         ]);
     }
 
     /**
-     * Supprime le groupe de places.
-     *
-     * @Route("/admin/place/{id}/delete", name="admin_place_delete", methods="GET")
+     * @Route("/place/{id}/delete", name="place_delete", methods="GET")
      * @IsGranted("DELETE", subject="place")
      */
-    public function deletePlace(Place $place): Response
+    public function delete(Place $place, EntityManagerInterface $em): Response
     {
-        $this->em->remove($place);
-        $this->em->flush();
+        $em->remove($place);
+        $em->flush();
 
         $this->addFlash('warning', 'Le groupe de places est supprimé.');
 
-        $this->discache($place->getService());
+        PlaceManager::deleteCacheItems($place);
 
         return $this->redirectToRoute('service_edit', ['id' => $place->getService()->getId()]);
     }
 
     /**
-     * Désactive ou réactive le place.
-     *
-     * @Route("/admin/place/{id}/disable", name="admin_place_disable", methods="GET")
+     * @Route("/place/{id}/disable", name="place_disable", methods="GET")
      */
-    public function disablePlace(Place $place): Response
+    public function disable(Place $place, EntityManagerInterface $em): Response
     {
         $this->denyAccessUnlessGranted('DISABLE', $place);
 
@@ -149,36 +135,10 @@ class PlaceController extends AbstractController
             $this->addFlash('warning', 'Le groupe de places "'.$place->getName().'" est désactivé.');
         }
 
-        $this->discache($place->getService());
+        PlaceManager::deleteCacheItems($place);
 
-        $this->em->flush();
+        $em->flush();
 
         return $this->redirectToRoute('place_edit', ['id' => $place->getId()]);
-    }
-
-    /**
-     * Exporte les données.
-     */
-    protected function exportData(PlaceSearch $search): Response
-    {
-        $places = $this->placeRepo->findPlacesToExport($search);
-
-        if (!$places) {
-            $this->addFlash('warning', 'Aucun résultat à exporter.');
-
-            return $this->redirectToRoute('supports');
-        }
-
-        return (new PlaceExport())->exportData($places);
-    }
-
-    /**
-     * Supprime les groupes de places en cache du service.
-     */
-    protected function discache(Service $service): bool
-    {
-        $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
-
-        return $cache->deleteItem(Service::CACHE_SERVICE_PLACES_KEY.$service->getId());
     }
 }

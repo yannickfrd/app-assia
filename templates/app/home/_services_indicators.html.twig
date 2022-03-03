@@ -36,7 +36,7 @@
                             <tr class="{{ nb_tr_collapsed ? 'cursor-pointer' }}" data-toggle="collapse" data-target=".multi-collapse-service-{{ service_id }}" 
                                 aria-expanded="false" aria-controls="multi-collapse-service-{{ service_id }}">
                                 <td scope="row" class="align-middle text-center">
-                                    <a href="{{ path('supports', {'status': [2], 'service': {'services': [service_id]}, 'head': true}) }}" 
+                                    <a href="{{ path('support_index', {'status': [2], 'service': {'services': [service_id]}, 'head': true}) }}" 
                                         class="btn btn-{{ theme_color }} shadow" data-placement="bottom" 
                                         title="Voir les suivis en cours"><span class="fas fa-eye fa-sm"></span>
                                     </a>
@@ -63,7 +63,7 @@
                                 {% set nb_active_supports = sub_service['nbActiveSupportsGroups'] %}
                                 <tr class="collapse multi-collapse-service-{{ service_id }}" id="multi-collapse-service-{{ service_id }}">
                                     <td scope="row" class="align-middle text-center">
-                                        <a href="{{ path('supports', {'status': [2], 'service': {'services': [service_id], 'subServices': [sub_service_id]}, 'head': true}) }}" 
+                                        <a href="{{ path('support_index', {'status': [2], 'service': {'services': [service_id], 'subServices': [sub_service_id]}, 'head': true}) }}" 
                                             class="btn btn-secondary btn-sm shadow" data-placement="bottom" 
                                             title="Voir les suivis en cours"><span class="fas fa-eye fa-sm"></span>
                                         </a>
@@ -88,7 +88,7 @@
                                 {% set nb_active_supports = device['nbActiveSupportsGroups'] %}
                                 <tr class="text-secondary collapse multi-collapse-service-{{ service_id }}" id="multi-collapse-service-{{ service_id }}">
                                     <td scope="row" class="align-middle text-center">
-                                        <a href="{{ path('supports', {'status': [2], 'service': {'services': [service_id], 'devices': [device_id]}, 'head': true}) }}" 
+                                        <a href="{{ path('support_index', {'status': [2], 'service': {'services': [service_id], 'devices': [device_id]}, 'head': true}) }}" 
                                             class="btn btn-secondary btn-sm shadow" data-placement="bottom" 
                                             title="Voir les suivis en cours"><span class="fas fa-eye fa-sm"></span>
                                         </a>

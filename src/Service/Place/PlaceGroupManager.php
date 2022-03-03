@@ -32,7 +32,9 @@ class PlaceGroupManager
                 ->setPlace($place)
                 ->setStartDate($supportGroup->getStartDate())
                 ->setEndDate($supportGroup->getEndDate())
-                ->setSupportGroup($supportGroup);
+            ;
+
+            $supportGroup->addPlaceGroup($placeGroup);
         }
 
         $placeGroup->setPeopleGroup($supportGroup->getPeopleGroup());
@@ -128,9 +130,11 @@ class PlaceGroupManager
             ->setEndDate($placeGroup->getEndDate())
             ->setEndReason($placeGroup->getEndReason())
             ->setCommentEndReason($placeGroup->getCommentEndReason())
-            ->setPlaceGroup($placeGroup)
-            ->setSupportPerson($supportPerson)
-            ->setPerson($person);
+            ->setPerson($person)
+        ;
+
+        $placeGroup->addPlacePerson($placePerson);
+        $supportPerson->addPlacesPerson($placePerson);
 
         // Vérifie si la date de prise en charge n'est pas antérieure à la date de naissance
         if ($placePerson->getStartDate() < $person->getBirthdate()) {

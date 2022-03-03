@@ -38,6 +38,7 @@ End: Fin
 End place: Mettre fin également à l'hébergement
 endPlace.help: Si cette case est cochée, l'hébergement associé au suivi aura automatiquement les mêmes dates de fin de prise en charge.
 End date: Date de fin
+End reason: Motif de fin
 End status: Situation résidentielle à l'issue
 End status comment: Précision sur la situation à l'issue
 Error: Erreur
@@ -48,7 +49,7 @@ Fullname: Nom et prénom
 Gender: Sexe
 head.help: Demandeur principal
 Hotel: Hôtel
-Info to siao date: Date remise à dispo au SIAO
+Info to siao date: Date remise à disposition de la place
 hotelName: Nom de l'hôtel
 Lastname: Nom
 Lessor: Bailleur/Propriétaire
@@ -142,7 +143,6 @@ comment.placeholder: Écrire un commentaire relatif au suivi social
 service.comment: Écrire un commentaire concernant le service
 Year: Année
 Zipcode: Code postal
-End reason: Motif de fin
 Comment: Commentaire
 Comment end reason: Commentaire sur le motif de fin
 Place: Hébergement
@@ -322,7 +322,6 @@ avdl:
   recommendationSupport: Préconisation d'accompagnement
   support: Accompagnement
   supportType: Type d'accompagnement
-  endSupportReason: Motif de fin d'accompagnement
   accessHousingModality: Modalité d'accès au logement
   propoHousingDate: Date de la proposition
   propoResult: Résultat de la proposition
@@ -349,7 +348,6 @@ hotelSupport:
   evaluation: Date de l'évaluation / diagnostic
   agreementDate: Date de signature de la convention
   departmentAnchor: Département d'ancrage
-  endSupportReason: Motif de fin d'accompagnement
   recommendation: Préconisation
   orientationDate: Date d'orientation
   sub_service.help: Secteur géographique

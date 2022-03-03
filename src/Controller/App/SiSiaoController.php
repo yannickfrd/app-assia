@@ -3,16 +3,15 @@
 namespace App\Controller\App;
 
 use App\Entity\Support\SupportGroup;
-use App\Event\Evaluation\EvaluationEvent;
 use App\Form\Admin\Security\SiSiaoLoginType;
 use App\Form\Model\SiSiao\SiSiaoLogin;
+use App\Service\Evaluation\EvaluationManager;
 use App\Service\SiSiao\SiSiaoClient;
 use App\Service\SiSiao\SiSiaoEvaluationImporter;
 use App\Service\SiSiao\SiSiaoGlossary;
 use App\Service\SiSiao\SiSiaoGroupImporter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -154,14 +153,13 @@ class SiSiaoController extends AbstractController
     }
 
     /**
-     * Search group by id in API SI-SIAO.
+     * Import evaluation from API SI-SIAO.
      *
      * @Route("/api-sisiao/support/{id}/import-evaluation", name="api_sisiao_support_import_evaluation", methods="GET")
      */
     public function importEvaluation(
         SupportGroup $supportGroup,
-        SiSiaoEvaluationImporter $siSiaoEvalImporter,
-        EventDispatcherInterface $dispatcher
+        SiSiaoEvaluationImporter $siSiaoEvalImporter
     ): Response {
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
@@ -170,7 +168,7 @@ class SiSiaoController extends AbstractController
         }
 
         if ($evaluationGroup = $siSiaoEvalImporter->import($supportGroup)) {
-            $dispatcher->dispatch(new EvaluationEvent($evaluationGroup), 'evaluation.after_update');
+            EvaluationManager::deleteCacheItems($evaluationGroup);
         }
 
         return $this->redirectToRoute('support_evaluation_view', ['id' => $supportGroup->getId()]);

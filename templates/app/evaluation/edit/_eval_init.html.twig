@@ -1,6 +1,6 @@
 {% extends 'app/evaluation/edit/model/_evaluation_accordion.html.twig' %}
 
-{% import 'macros/loopSupportPeople.html.twig' as utils %}
+{% import 'macros/support_people_looper.html.twig' as support_people_looper %}
 
 {% block card_title %}<span class="{{ EDIT_MODE ? 'text-secondary' }}">Situation à l'entrée</span>{{ parent() }}{% endblock %}
 
@@ -26,7 +26,7 @@
 
 	<div class="row">
 		<div class="col-md-12 accordion" id="accordion_eval_init">
-			{{ utils.loopSupportPeople(accordion_id, evaluation_people, support, theme_color) }}
+			{{ support_people_looper.loop(accordion_id, evaluation_people, support, theme_color) }}
 
 			{% for key, form_eval_person in evaluation_people %}
 				{% set form_eval_init_person = form_eval_person.evalInitPerson %}

@@ -49,6 +49,16 @@ export default class SelectManager {
      * @returns {Object}
      */
     getDefaultOptions() {
+        if (!this.selectElt.getAttribute('multiple')) {
+            return {
+                width: 'resolve',
+                theme: 'bootstrap4',
+                language: {
+                    'noResults': () => 'Aucun résultat.',
+                },
+            }
+        }
+
         return {
             placeholder: ' ' + (this.selectElt.getAttribute('placeholder') ?? '-- Sélectionner --'),
             allowClear: true,

@@ -1,0 +1,68 @@
+{% import 'macros/div_view.html.twig' as view_div %}
+
+{% set hotel_support = support.hotelSupport %}
+
+<div class="row">
+    <div class="col-md-6 mb-1 py-2">
+        <span class="py-2 font-weight-bold">Service (dispositif) : </span>
+        <a href="{{ path('service_edit', {'id': support.service.id }) }}" class="text-{{ theme_color }}">
+            {{ support.service.name }}</a>
+            <span>{{ support.subService ? ' | ' ~ support.subService.name }}</span>
+        <span>{{ support.device ? ' (' ~ support.device.name ~ ')' }}</span>
+    </div>
+    {% if hotel_support %}
+        {{ view_div.get(hotel_support.statusToString 
+            ~ (support.service.coefficient == YES and support.status == STATUS_IN_PROGRESS ? ' (coeff. ' ~ support.coefficient ~ ')' )
+            ~ (hotel_support.reasonNoInclusionToString ? ' (' ~ hotel_support.reasonNoInclusionToString ~ ')')
+            ~ (support.endStatus ? ' (' ~ support.endStatusToString ~ ')' ), 'Status') }}
+    {% endif %}
+    {{ view_div.get(support.startDate ? support.startDate|date('d/m/Y') 
+        ~ (support.endDate ? ' - ' ~ support.endDate|date('d/m/Y')), 'Date de suivi') }}
+    {{ view_div.get(support.referent ? support.referent.fullname ~ (support.referent2 ? ' | ' ~ support.referent2.fullname), 'Referent') }}
+</div>
+
+{% set origin_request = support.originRequest %}
+{% if origin_request %}
+    <div class="row my-2">
+        {{ view_div.get(origin_request.orientationDate ? origin_request.orientationDate|date('d/m/Y'), 'Orientation date', 'forms') }}
+        {{ view_div.get(origin_request.organization ? origin_request.organization.name ~ (origin_request.organizationComment ? ' (' 
+            ~ origin_request.organizationComment ~ ')'), 'Organization', 'forms') }}
+    </div>
+{% endif %}
+    <div class="row my-2">
+        {{ view_div.get(support.peopleGroup.siSiaoId, 'Si siao id', 'forms') }}
+        {{ hotel_support ? view_div.get(hotel_support.rosalieId, 'Rosalie id', 'forms') }}
+    </div>
+
+{% if hotel_support %}
+    <div class="row my-2">
+        {{ view_div.get(hotel_support.entryHotelDate ? hotel_support.entryHotelDate|date('d/m/Y'), 'Entry hotel date') }}
+        {{ view_div.get(hotel_support.emergencyActionRequestToString, 'Emergency action request') }}
+        {{ origin_request ? view_div.get(origin_request.comment, 'Comment') }}
+    </div>
+
+    {% if support.placeGroups|length %}
+        <div class="row my-2">
+            {% set place = support.placeGroups|length > 0 ? support.placeGroups[support.placeGroups|length - 1].place %}
+            {{ view_div.get(place ? place.name ~ ' (' ~ place.address ~ ' - ' ~ place.city ~ ')', 'Hotel') }}
+            {{ view_div.get(place ? place.comment, 'Comment') }}
+        </div>
+    {% endif %}
+
+    <div class="my-2">
+        <div class="row">
+            {{ view_div.get(hotel_support.evaluationDate ? hotel_support.evaluationDate|date('d/m/Y'), 'hotelSupport.evaluation') }}
+            {{ view_div.get(hotel_support.levelSupportToString, 'hotelSupport.levelSupport') }}
+            {{ view_div.get(hotel_support.agreementDate ? hotel_support.agreementDate|date('d/m/Y'), 'hotelSupport.agreementDate') }}
+            {{ view_div.get(hotel_support.emergencyActionDoneToString ~ 
+                (hotel_support.emergencyActionPrecision ? ' (' ~ hotel_support.emergencyActionPrecision ~ ')'), 'Emergency action done') }}
+        </div>
+        <div class="row">
+            {{ view_div.get(hotel_support.departmentAnchorToString, 'hotelSupport.departmentAnchor') }}
+            {{ view_div.get(hotel_support.recommendationToString, 'hotelSupport.recommendation') }}
+        </div>
+        <div class="row">
+            {{ view_div.get(support.comment, 'Comment') }}
+        </div>
+    </div>
+{% endif %}

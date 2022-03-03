@@ -37,13 +37,10 @@ class PlaceGroupType extends AbstractType
             ->add('commentEndReason')
             ->add('placePeople', CollectionType::class, [
                 'entry_type' => PlacePersonType::class,
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
+                'label' => false,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'delete_empty' => true,
-                'required' => false,
             ]);
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {

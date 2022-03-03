@@ -1,6 +1,67 @@
 CHANGELOG
 =========
 
+## Version 3.10.0 - 03/03/2022
+Feature to import huda data (#129)
+* [ImportHudaData] Create a system to import HUDA data form csv file
+* [_service_places] Fix error type nbPlaces
+* [_hotel_support_form] Edit visibility agreementDate
+* [TaskSettingTrait] Edit default values
+
+## Version 3.9.3 - 02/03/2022
+[Payment] Rename item 'Remboursement de dette' to 'Remboursement' (#128)
+
+## Version 3.9.2 - 02/03/2022
+Update feature import SI-SIAO (#127)
+[SiSiaoEvaluationImporter] Add import notes
+
+## Version 3.9.1 - 02/03/2022
+Edit feature support and evaluation and refactoring
+* [ResourcesEntityTrait] Refacto
+* [Task] Remove relation with SupportPerson entity
+* [SupportPersonRepository] Edit status filter (sg.status to sp.status)
+* [migration] Edit the migration (fix index problem)
+* [EvalProfPerson] Add 'Working time' property
+* [HotelSupportService] Fix problem with status
+* [SupportGroup] Create 'endReason' field
+* Update translation file
+* Remove Resource entity
+* [AnonymizeDatabaseCommand] Edit confirmation question
+* [Country] Create Country entity and command to import countries
+* [Evaluation] Add country select
+* [CountryManager] Refactor
+* [SupportType] Add advanded select
+* [Task] Refacto and fix some bugs
+* [UserRepository] Fix error
+* [Note] Fix bug with autosave and refactoring JS classes
+* [Evaluation] Refactor evaluation feature (remove subscriber)
+* [Export] Edit feature to export evaluation data
+* Remove cache tag in view
+* [SupportPerson] Add endReason field
+* [Support] Rename Twig files in snake_case
+* [SupportGroupController] Rename controller
+* [SupportGroupController][SupportPersonController] Refactoring controller
+* [support] Rename all variables in snake_case in Twig views
+* Rename twig macros in snake_casead committed 2 days ago
+* Create SupportPersonControllerTest
+* [Export][ExportController] Update export feature (add ajax requests)
+* Remove subscribers and use service classes
+* [Place][PlaceController] Refactor place feature
+* Refacto place feature
+* [PlaceManager] Fix error type (flashbag)
+* [PlaceControllerTest] Update tests
+* [EvalAdminPerson] Fix error type agdrefId
+* [EvalAdmin] Add ofpraRegistrationId field (asylum)
+* [SupportGroup][HotelSupport] Add item 'Séparation du couple'
+* [Task] Rename a view file _task_delete_modal
+* [Note] Rename a view file _confirm_modal
+* [Document] Remove message after upload
+* Rename twig file _modal_dialog.html.twig
+* [TaskController] Refactor (remove Normalizer)
+* [PlaceGroupMananager] Fix collection problems
+* [SupportManager] Fix set nbPeople
+* [Support] Fix bug with _place field
+
 ## Version 3.9.0 - 22/02/2022
 Create the task/alert feature (#117)
 * Create Task and Alert entities

@@ -141,13 +141,13 @@
         {{ form_row(form._token) }}
         {{ form_end(form, {"render_rest": false}) }}
         <hr>
-        {% include "app/support/_partials/_historySupports.html.twig" %}
+        {% include "app/support/_partials/_supports_index_table.html.twig" %}
         <hr>
         {% include "app/organization/referent/_historyReferents.html.twig" %}
     </div>
 
     {% include "app/people/peopleGroup/_removePerson.html.twig" %}
-    {% include "app/support/_partials/_modalNewSupport.html.twig" %}
+    {% include "app/support/_partials/_support_new_modal.html.twig" %}
 
     {% if siSiaoLoginForm is defined %}
         {% include "app/siSiao/_si_siao_login_modal.html.twig" with {"modal_id": "modal-si-siao-login"} %}

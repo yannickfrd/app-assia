@@ -21,6 +21,7 @@ trait SupportPersonCreator
             ->setStatus($supportGroup->getStatus())
             ->setStartDate($supportGroup->getStartDate())
             ->setEndDate($supportGroup->getEndDate())
+            ->setEndReason($supportGroup->getEndReason())
             ->setEndStatus($supportGroup->getEndStatus())
             ->setEndStatusComment($supportGroup->getEndStatusComment());
 

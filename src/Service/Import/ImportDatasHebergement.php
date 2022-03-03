@@ -5,16 +5,18 @@ namespace App\Service\Import;
 use App\Entity\Evaluation\EvalAdmPerson;
 use App\Entity\Evaluation\EvalBudgetGroup;
 use App\Entity\Evaluation\EvalBudgetPerson;
+use App\Entity\Evaluation\EvalBudgetResource;
 use App\Entity\Evaluation\EvalFamilyGroup;
 use App\Entity\Evaluation\EvalFamilyPerson;
 use App\Entity\Evaluation\EvalHousingGroup;
+use App\Entity\Evaluation\EvalInitGroup;
+use App\Entity\Evaluation\EvalInitPerson;
+use App\Entity\Evaluation\EvalInitResource;
 use App\Entity\Evaluation\EvalProfPerson;
 use App\Entity\Evaluation\EvalSocialGroup;
 use App\Entity\Evaluation\EvalSocialPerson;
 use App\Entity\Evaluation\EvaluationGroup;
 use App\Entity\Evaluation\EvaluationPerson;
-use App\Entity\Evaluation\EvalInitGroup;
-use App\Entity\Evaluation\EvalInitPerson;
 use App\Entity\Organization\Device;
 use App\Entity\Organization\Place;
 use App\Entity\Organization\Referent;
@@ -38,6 +40,7 @@ use App\Repository\People\PersonRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class ImportDatasHebergement extends ImportDatas
 {
@@ -316,6 +319,31 @@ class ImportDatasHebergement extends ImportDatas
         'NR' => Choices::NO_INFORMATION,
     ];
 
+    public const RESOURCES_TYPE = [
+        'Salaire' => 10,
+        'Prime d\'activité' => 50,
+        'ARE' => 30,
+        'RSA' => 60,
+        'RSA socle' => 60,
+        'RSA majoré' => 70,
+        'AF' => 100,
+        'AAH' => 80,
+        'AEEH' => 85,
+        'ASF' => 101,
+        'ASS' => 90,
+        'ADA' => 130,
+        'Bourse' => 180,
+        'Complément familial' => 102,
+        'Formation rémunérée' => 40,
+        'Garantie jeunes' => 120,
+        'IJ' => 170,
+        'Pension alimentaire' => 200,
+        'Pension d\'invalidité' => 210,
+        'PAJE' => 103,
+        'Retraite' => 20,
+        'Autre ressource' => 1000,
+    ];
+
     public const RIGHT_SOCIAL_SECURITY = [
         'Sans' => 2,
         'CMU' => 1,
@@ -453,6 +481,7 @@ class ImportDatasHebergement extends ImportDatas
     protected $deviceRepo;
     protected $placeRepo;
     protected $personRepo;
+    protected $slugger;
 
     protected $datas;
     protected $row;
@@ -488,14 +517,16 @@ class ImportDatasHebergement extends ImportDatas
         SubServiceRepository $subServiceRepo,
         DeviceRepository $deviceRepo,
         PlaceRepository $placeRepo,
-        PersonRepository $personRepo)
-    {
+        PersonRepository $personRepo,
+        SluggerInterface $slugger
+        ) {
         $this->em = $em;
         $this->importNotification = $importNotification;
         $this->subServiceRepo = $subServiceRepo;
         $this->deviceRepo = $deviceRepo;
         $this->repoPlace = $placeRepo;
         $this->personRepo = $personRepo;
+        $this->slugger = $slugger;
     }
 
     /**
@@ -981,22 +1012,21 @@ class ImportDatasHebergement extends ImportDatas
             ->setContractType($this->findInArray($this->field['Emploi (entrée)'], self::CONTRACT_TYPE))
             ->setResource($this->findInArray($this->field['Ressources (entrée)'], self::YES_NO))
             ->setResourcesAmt((float) $this->field['Montant ressources (entrée)'])
-            ->setUnemplBenefit('Oui' === $this->field['ARE (entrée)'] ? Choices::YES : 0)
-            ->setMinimumIncome('Oui' === $this->field['RSA (entrée)'] ? Choices::YES : 0)
-            ->setFamilyAllowance('Oui' === $this->field['AF (entrée)'] ? Choices::YES : 0)
-            ->setSalary('Oui' === $this->field['Salaire (entrée)'] ? Choices::YES : 0)
-            ->setRessourceOther($this->field['Autres ressources (entrée)'] ? Choices::YES : 0)
-            ->setRessourceOtherPrecision($this->field['Autres ressources (entrée)'])
-            ->setDebts(Choices::NO_INFORMATION)
-            ->setSalaryAmt('Oui' === $this->field['Salaire (entrée)'] && 'Oui' != $this->field['ARE (entrée)'] && 'Oui' != $this->field['RSA (entrée)'] && 'Oui' != $this->field['AF (entrée)'] && !$this->field['Autres ressources (entrée)'] ? (float) $this->field['Montant ressources (entrée)'] : null)
-            ->setUnemplBenefitAmt('Oui' === $this->field['ARE (entrée)'] && 'Oui' != $this->field['Salaire (entrée)'] && 'Oui' != $this->field['RSA (entrée)'] && 'Oui' != $this->field['AF (entrée)'] && !$this->field['Autres ressources (entrée)'] ? (float) $this->field['Montant ressources (entrée)'] : null)
-            ->setMinimumIncomeAmt('Oui' === $this->field['RSA (entrée)'] && 'Oui' != $this->field['Salaire (entrée)'] && 'Oui' != $this->field['ARE (entrée)'] && 'Oui' != $this->field['AF (entrée)'] && !$this->field['Autres ressources (entrée)'] ? (float) $this->field['Montant ressources (entrée)'] : null)
-            ->setFamilyAllowanceAmt('Oui' === $this->field['AF (entrée)'] && 'Oui' != $this->field['Salaire (entrée)'] && 'Oui' != $this->field['RSA (entrée)'] && 'Oui' != $this->field['ARE (entrée)'] && !$this->field['Autres ressources (entrée)'] ? (float) $this->field['Montant ressources (entrée)'] : null)
-            ->setRessourceOtherAmt($this->field['Autres ressources (entrée)'] && 'Oui' != $this->field['Salaire (entrée)'] && 'Oui' != $this->field['RSA (entrée)'] && 'Oui' != $this->field['ARE (entrée)'] && 'Oui' != $this->field['AF (entrée)'] ? (float) $this->field['Montant ressources (entrée)'] : null)
             ->setComment($this->field['Commentaire situation à l\'entrée'])
-            ->setSupportPerson($supportPerson);
+            ->setSupportPerson($supportPerson)
+        ;
 
-        $evalInitPerson = $this->updateResourceType($evalInitPerson, $this->field['Autres ressources (entrée)']);
+        foreach (self::RESOURCES_TYPE as $key => $value) {
+            if ($this->field['Ressources (entrée)'] === $key) {
+                $evalInitResource = (new EvalInitResource())
+                    ->setAmount((float) $this->field['Montant ressources (entrée)'])
+                    ->setType($value);
+
+                $this->em->persist($evalInitResource);
+
+                $evalInitPerson->addEvalBudgetResource($evalInitResource);
+            }
+        }
 
         $this->em->persist($evalInitPerson);
 
@@ -1097,45 +1127,24 @@ class ImportDatasHebergement extends ImportDatas
         $evalBudgetPerson = (new EvalBudgetPerson())
             ->setResource($this->findInArray($this->field['Ressources'], self::YES_NO))
             ->setResourcesAmt((float) $this->field['Montant ressources'])
-            ->setUnemplBenefit('Oui' === $this->field['ARE'] ? Choices::YES : 0)
-            ->setMinimumIncome('Oui' === $this->field['RSA'] ? Choices::YES : 0)
-            ->setFamilyAllowance('Oui' === $this->field['AF'] ? Choices::YES : 0)
-            ->setSalary('Oui' === $this->field['Salaire'] ? Choices::YES : 0)
-            ->setRessourceOther($this->field['Autres ressources'] ? Choices::YES : 0)
-            ->setRessourceOtherPrecision($this->field['Autres ressources'])
-            ->setSalaryAmt('Oui' === $this->field['Salaire'] && 'Oui' != $this->field['ARE'] && 'Oui' != $this->field['RSA'] && 'Oui' != $this->field['AF'] && !$this->field['Autres ressources'] ? (float) $this->field['Montant ressources'] : null)
-            ->setUnemplBenefitAmt('Oui' === $this->field['ARE'] && 'Oui' != $this->field['Salaire'] && 'Oui' != $this->field['RSA'] && 'Oui' != $this->field['AF'] && !$this->field['Autres ressources'] ? (float) $this->field['Montant ressources'] : null)
-            ->setMinimumIncomeAmt('Oui' === $this->field['RSA'] && 'Oui' != $this->field['Salaire'] && 'Oui' != $this->field['ARE'] && 'Oui' != $this->field['AF'] && !$this->field['Autres ressources'] ? (float) $this->field['Montant ressources'] : null)
-            ->setFamilyAllowanceAmt('Oui' === $this->field['AF'] && 'Oui' != $this->field['Salaire'] && 'Oui' != $this->field['RSA'] && 'Oui' != $this->field['ARE'] && !$this->field['Autres ressources'] ? (float) $this->field['Montant ressources'] : null)
-            ->setRessourceOtherAmt($this->field['Autres ressources'] && 'Oui' != $this->field['Salaire'] && 'Oui' != $this->field['RSA'] && 'Oui' != $this->field['ARE'] && 'Oui' != $this->field['AF'] ? (float) $this->field['Montant ressources'] : null)
-            ->setEvaluationPerson($evaluationPerson);
+            ->setEvaluationPerson($evaluationPerson)
+        ;
 
-        $evalBudgetPerson = $this->updateResourceType($evalBudgetPerson, $this->field['Autres ressources']);
+        foreach (self::RESOURCES_TYPE as $key => $value) {
+            if ($this->field['Ressources'] === $key) {
+                $evalBudgetResource = (new EvalBudgetResource())
+                    ->setAmount((float) $this->field['Montant ressources'])
+                    ->setType($value);
+
+                $this->em->persist($evalBudgetResource);
+
+                $evalBudgetPerson->addEvalBudgetResource($evalBudgetResource);
+            }
+        }
 
         $this->em->persist($evalBudgetPerson);
 
         return $evalBudgetPerson;
-    }
-
-    /**
-     * @param EvalBudgetPerson|EvalInitPerson $evalBudgetPerson
-     */
-    protected function updateResourceType(object $evalBudgetPerson, string $resourceType): object
-    {
-        return $evalBudgetPerson
-            ->setDisAdultAllowance(strstr($resourceType, 'AAH') ? Choices::YES : 0)
-            ->setDisChildAllowance(strstr($resourceType, 'AAEH') ? Choices::YES : 0)
-            ->setAsylumAllowance(strstr($resourceType, 'ADA') ? Choices::YES : 0)
-            ->setTempWaitingAllowance(strstr($resourceType, 'ATA') ? Choices::YES : 0)
-            ->setPensionBenefit(strstr($resourceType, 'Pension de retraite') ? Choices::YES : 0)
-            ->setMaintenance(strstr($resourceType, 'Pension alimentaire') ? Choices::YES : 0)
-            ->setAsf(strstr($resourceType, 'ASF') ? Choices::YES : 0)
-            ->setSolidarityAllowance(strstr($resourceType, 'ASS') ? Choices::YES : 0)
-            ->setPaidTraining(strstr($resourceType, 'Formation') ? Choices::YES : 0)
-            ->setYouthGuarantee(strstr($resourceType, 'Garantie jeunes') ? Choices::YES : 0)
-            ->setDisabilityPension(strstr($resourceType, 'Pension d\'invalidité') ? Choices::YES : 0)
-            ->setPaje(strstr($resourceType, 'PAJE') ? Choices::YES : 0)
-            ->setActivityBonus(strstr($resourceType, 'Prime d\'activité') ? Choices::YES : 0);
     }
 
     protected function getRoleAndGender(int $typology): void
@@ -1219,20 +1228,19 @@ class ImportDatasHebergement extends ImportDatas
     protected function getPlace(): Place
     {
         $placeExists = false;
+        $placeName = strtolower($this->slugger->slug((string) $this->field['Nom place']));
 
         foreach ($this->places as $key => $value) {
-            if ((string) $key === $this->field['Nom place']) {
+            if ((string) $key === $placeName) {
                 $placeExists = true;
             }
         }
 
         if (!$placeExists) {
-            $this->places[(string) $this->field['Nom place']] = [
-                $this->createPlace($this->device),
-            ];
+            $this->places[$placeName] = $this->createPlace($this->device);
         }
 
-        return $this->places[$this->field['Nom place']][0];
+        return $this->places[$placeName];
     }
 
     protected function createPlace(Device $device): Place

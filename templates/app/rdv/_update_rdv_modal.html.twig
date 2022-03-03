@@ -1,23 +1,9 @@
-{% extends 'model/_modalDialog.html.twig' %}
+{% extends 'model/_modal_dialog.html.twig' %}
 
 {% block modal_body %}
     Vous avez apporté des modifications à ce rendez-vous.<br>
     <strong>Attention</strong>, ces modifications ne sont pas pris en compte dans l'agenda externe.<br><br>
     Voulez-vous ajouter un nouveau rendez-vous à l'agenda externe ?
-{#    Pensez à modifier l'agenda <strong>Google</strong> et/ou <strong>Outlook</strong>.#}
 {% endblock %}
 
 {% block modal_confirm %}Ajouter{% endblock %}
-{#{% block modal_alert %}danger{% endblock %}#}
-
-{#{% block modal_footer %}#}
-{#    <div class="float-left">#}
-{#        <button type="button" class="btn btn-secondary" data-dismiss="modal">{% block modal_cancel %}Annuler{% endblock %}</button>#}
-{#    </div>#}
-{#    <div class="float-right">#}
-{#        <button type="button" id="modal-confirm" class="btn btn-warning text-white" data-dismiss="modal">#}
-{#            Par moi même</button>#}
-{#        <button type="button" id="modal-create" class="btn btn-{{ theme_color }} text-white"#}
-{#                data-dismiss="modal"><span class="fas fa-save mr-2"></span>Créer</button>#}
-{#    </div>#}
-{#{% endblock %}#}

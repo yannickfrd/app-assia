@@ -7,6 +7,8 @@ use App\Entity\Organization\Place;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\SubService;
 use App\Entity\Organization\User;
+use App\Entity\Support\AsylumSupport;
+use App\Entity\Support\Avdl;
 use App\Entity\Support\HotelSupport;
 use App\Entity\Support\PlaceGroup;
 use App\Entity\Support\SupportGroup;
@@ -73,6 +75,11 @@ class SupportGroupType extends AbstractType
                 'widget' => 'single_text',
                 'required' => false,
             ])
+            ->add('endReason', ChoiceType::class, [
+                'choices' => Choices::getChoices(SupportGroup::REGULAR_END_REASONS),
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
             ->add('endStatus', ChoiceType::class, [
                 'choices' => Choices::getChoices(SupportGroup::END_STATUS),
                 'placeholder' => 'placeholder.select',
@@ -85,7 +92,7 @@ class SupportGroupType extends AbstractType
                 'required' => false,
                 'help' => 'endPlace.help',
             ])
-            ->add('endLocationSearch', null, [
+            ->add('_endLocationSearch', null, [
                 'label' => ' ',
                 'attr' => [
                     'class' => 'js-search',
@@ -128,6 +135,7 @@ class SupportGroupType extends AbstractType
                 'allow_delete' => true,
                 'delete_empty' => true,
                 'required' => false,
+                'attr' => ['test' => 'test'],
             ])
             ->add('location', LocationType::class, [
                 'data_class' => SupportGroup::class,
@@ -139,10 +147,10 @@ class SupportGroupType extends AbstractType
             ->add('comment', null, [
                 'attr' => ['placeholder' => 'comment.placeholder'],
             ])
-            ->add('cloneSupport', HiddenType::class, [
+            ->add('_cloneSupport', HiddenType::class, [
                 'mapped' => false,
             ])
-            ->add('siSiaoImport', HiddenType::class, [
+            ->add('_siSiaoImport', HiddenType::class, [
                 'mapped' => false,
             ])
         ;
@@ -153,7 +161,6 @@ class SupportGroupType extends AbstractType
             $form = $event->getForm();
             $supportGroup = $event->getData();
             $service = $supportGroup->getService();
-
             $formModifier($form, $supportGroup);
 
             $this->addSupportFields($form, $service);
@@ -171,9 +178,8 @@ class SupportGroupType extends AbstractType
     {
         return function (FormInterface $form, SupportGroup $supportGroup) {
             $service = $supportGroup->getService();
+            $device = $supportGroup->getDevice();
             $subService = $supportGroup->getSubService();
-
-            $serviceType = $service ? $service->getType() : null;
 
             $form
                 ->add('subService', EntityType::class, [
@@ -198,16 +204,27 @@ class SupportGroupType extends AbstractType
                 ->add('referent2', EntityType::class, $optionsReferent)
                 ->add('originRequest', OriginRequestType::class, [
                     'attr' => ['service' => $service],
-                ]);
+                ])
+                ->add('supportPeople', CollectionType::class, [
+                    'entry_type' => SupportPersonType::class,
+                    'label' => null,
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'delete_empty' => true,
+                    'required' => false,
+                    'attr' => ['service' => $service],
+                ])
+            ;
 
-            if (Service::SERVICE_TYPE_HEB === $serviceType) {
-                $form->add('place', EntityType::class, [
+            if ($service and Choices::YES === $service->getPlace()) {
+                $form->add('_place', EntityType::class, [
                     'class' => Place::class,
                     'choice_label' => 'name',
                     'query_builder' => function (PlaceRepository $repo) use ($service, $subService) {
                         return $repo->getPlacesQueryBuilder($service, $subService);
                     },
                     'label' => 'place.name',
+                    'attr' => ['data-select' => 'advanced'],
                     'placeholder' => 'placeholder.select',
                     'help' => 'placeGroup.help',
                     'mapped' => false,
@@ -226,6 +243,9 @@ class SupportGroupType extends AbstractType
             case Service::SERVICE_TYPE_HOTEL:
                 $this->addHotelFields($form);
                 break;
+            case Service::SERVICE_TYPE_ASYLUM:
+                $this->addAsylumFields($form);
+                break;
          }
     }
 
@@ -235,7 +255,13 @@ class SupportGroupType extends AbstractType
             ->remove('startDate')
             ->remove('endDate')
             ->remove('endStatusComment')
-            ->add('avdl', AvdlType::class);
+            ->add('endReason', ChoiceType::class, [
+                'choices' => Choices::getChoices(Avdl::END_REASONS),
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
+            ->add('avdl', AvdlType::class)
+        ;
     }
 
     protected function addHotelFields(FormInterface $form): void
@@ -250,10 +276,16 @@ class SupportGroupType extends AbstractType
                 'placeholder' => 'placeholder.select',
                 'required' => true,
             ])
+            ->add('endReason', ChoiceType::class, [
+                'choices' => Choices::getChoices(HotelSupport::END_REASONS),
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
             ->add('peopleGroup', PeopleGroupSiSiaoType::class, [
                 'data' => $supportGroup->getPeopleGroup(),
             ])
-            ->add('hotelSupport', HotelSupportType::class);
+            ->add('hotelSupport', HotelSupportType::class)
+        ;
 
         if (0 === $supportGroup->getPlaceGroups()->count()) {
             $this->addPlaceGroup($supportGroup);
@@ -271,6 +303,17 @@ class SupportGroupType extends AbstractType
             ],
             'required' => true,
         ]);
+    }
+
+    protected function addAsylumFields(FormInterface $form): void
+    {
+        $form
+            ->add('endReason', ChoiceType::class, [
+                'choices' => Choices::getChoices(AsylumSupport::END_REASONS),
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
+        ;
     }
 
     protected function addPlaceGroup(SupportGroup $supportGroup): void
@@ -294,6 +337,7 @@ class SupportGroupType extends AbstractType
                     $supportGroup->getReferent()
                 );
             },
+            'attr' => ['data-select' => 'advanced'],
             'placeholder' => 'placeholder.select',
             'required' => false,
         ];

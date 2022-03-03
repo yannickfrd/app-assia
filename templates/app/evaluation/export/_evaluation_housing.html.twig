@@ -1,62 +1,62 @@
-{% import 'macros/viewParagraph.html.twig' as view_p %}
-{% import 'macros/viewTextArea.html.twig' as view_text %}
-{% import 'macros/viewLi.html.twig' as view_li %}
+{% import 'macros/p_view.html.twig' as p_view %}
+{% import 'macros/textarea_view.html.twig' as textarea_view %}
+{% import 'macros/li_view.html.twig' as li_view %}
 
 <hr/>
 <h2 style="{{ style_h2 }}">Situation au regard du logement</h2>
-{{ view_p.get(eval_housing.housingStatusToString, 'Housing status', 'evaluation') }}
+{{ p_view.get(eval_housing.housingStatusToString, 'Housing status', 'evaluation') }}
 {% if eval_housing.siaoRequest %}
-    {{ view_p.get(eval_housing.siaoRequestToString, 'Siao request', 'evaluation') }}
+    {{ p_view.get(eval_housing.siaoRequestToString, 'Siao request', 'evaluation') }}
     <ul>
-        {{ view_li.get(eval_housing.siaoRequestDate ? eval_housing.siaoRequestDate|date('d/m/Y') 
+        {{ li_view.get(eval_housing.siaoRequestDate ? eval_housing.siaoRequestDate|date('d/m/Y') 
             ~ (eval_housing.siaoUpdatedRequestDate ? ' (actualisation : ' ~ eval_housing.siaoUpdatedRequestDate|date('d/m/Y') 
             ~ ')'), 'Siao request date', 'evaluation') }}
-        {{ view_li.get(eval_housing.siaoRequestDept, 'Siao request dept', 'evaluation') }}
-        {{ view_li.get(eval_housing.siaoRecommendationToString, 'Siao recommendation', 'evaluation') }}
+        {{ li_view.get(eval_housing.siaoRequestDept, 'Siao request dept', 'evaluation') }}
+        {{ li_view.get(eval_housing.siaoRecommendationToString, 'Siao recommendation', 'evaluation') }}
     </ul>
 {% endif %}
 {% if eval_housing.socialHousingRequest %}
-    {{ view_p.get(eval_housing.socialHousingRequestToString, 'Social housing request', 'evaluation') }}
+    {{ p_view.get(eval_housing.socialHousingRequestToString, 'Social housing request', 'evaluation') }}
     <ul>
-        {{ view_li.get(eval_housing.socialHousingRequestId, 'NUR', 'evaluation') }}
-        {{ view_li.get(eval_housing.socialHousingRequestDate ? eval_housing.socialHousingRequestDate|date('d/m/Y') 
+        {{ li_view.get(eval_housing.socialHousingRequestId, 'NUR', 'evaluation') }}
+        {{ li_view.get(eval_housing.socialHousingRequestDate ? eval_housing.socialHousingRequestDate|date('d/m/Y') 
             ~ (eval_housing.socialHousingUpdatedRequestDate ? ' (actualisation : ' ~ eval_housing.socialHousingUpdatedRequestDate|date('d/m/Y') 
             ~ ')'), 'Date demande de logement social', 'evaluation') }}
-        {{ view_li.get(eval_housing.housingWishes, 'Housing wishes', 'evaluation') }}
-        {{ view_li.get(eval_housing.citiesWishes, 'Cities wishes', 'evaluation') }}
-        {{ view_li.get(eval_housing.specificities, 'Specificities', 'evaluation') }}
+        {{ li_view.get(eval_housing.housingWishes, 'Housing wishes', 'evaluation') }}
+        {{ li_view.get(eval_housing.citiesWishes, 'Cities wishes', 'evaluation') }}
+        {{ li_view.get(eval_housing.specificities, 'Specificities', 'evaluation') }}
     </ul>
 {% endif %}
 {% if eval_housing.syplo in [YES, IN_PROGRESS] %}
-    {{ view_p.get(eval_housing.syploToString, 'Syplo', 'evaluation') }}
+    {{ p_view.get(eval_housing.syploToString, 'Syplo', 'evaluation') }}
     <ul>
-        {{ view_li.get(eval_housing.syploDate ? eval_housing.syploDate|date('d/m/Y'), 'Syplo date', 'evaluation') }}
-        {{ view_li.get(eval_housing.syploId, 'Syplo id', 'evaluation') }}
+        {{ li_view.get(eval_housing.syploDate ? eval_housing.syploDate|date('d/m/Y'), 'Syplo date', 'evaluation') }}
+        {{ li_view.get(eval_housing.syploId, 'Syplo id', 'evaluation') }}
     </ul>
 {% endif %}
 {% if eval_housing.daloAction in [YES, IN_PROGRESS] %}
-    {{ view_p.get(eval_housing.daloActionToString, 'Dalo action', 'evaluation') }}
+    {{ p_view.get(eval_housing.daloActionToString, 'Dalo action', 'evaluation') }}
     <ul>
-        {{ view_li.get(eval_housing.daloTypeToString, 'Dalo type', 'evaluation') }}
-        {{ view_li.get(eval_housing.daloDecisionDate ? eval_housing.daloDecisionDate|date('d/m/Y'), 'Dalo decision date', 'evaluation') }}
-        {{ view_li.get(eval_housing.daloId, 'Dalo id', 'evaluation') }}
-        {{ view_li.get(eval_housing.daloRecordDate ? eval_housing.daloRecordDate|date('d/m/Y'), 'Dalo record date', 'evaluation') }}
-        {{ view_li.get(eval_housing.daloTribunalAction in [YES, IN_PROGRESS] ? eval_housing.daloTribunalActionToString ~ (eval_housing.daloTribunalActionDate ? 
+        {{ li_view.get(eval_housing.daloTypeToString, 'Dalo type', 'evaluation') }}
+        {{ li_view.get(eval_housing.daloDecisionDate ? eval_housing.daloDecisionDate|date('d/m/Y'), 'Dalo decision date', 'evaluation') }}
+        {{ li_view.get(eval_housing.daloId, 'Dalo id', 'evaluation') }}
+        {{ li_view.get(eval_housing.daloRecordDate ? eval_housing.daloRecordDate|date('d/m/Y'), 'Dalo record date', 'evaluation') }}
+        {{ li_view.get(eval_housing.daloTribunalAction in [YES, IN_PROGRESS] ? eval_housing.daloTribunalActionToString ~ (eval_housing.daloTribunalActionDate ? 
             ' (le ' ~ eval_housing.daloTribunalActionDate|date('d/m/Y') ~ ')'), 'Dalo tribunal action', 'evaluation') }}
     </ul>
 {% endif %}
 {% if eval_housing.hsgActionEligibility in [YES, IN_PROGRESS] %}					
-    {{ view_p.get(eval_housing.hsgActionEligibilityToString, 'Hsg action eligibility', 'evaluation') }}
-    {{ view_p.get(eval_housing.hsgActionRecordToString ~ (eval_housing.hsgActionDate ? 
+    {{ p_view.get(eval_housing.hsgActionEligibilityToString, 'Hsg action eligibility', 'evaluation') }}
+    {{ p_view.get(eval_housing.hsgActionRecordToString ~ (eval_housing.hsgActionDate ? 
         ' (le ' ~ eval_housing.hsgActionDate|date('d/m/Y') ~ ')'), 'Hsg action record', 'evaluation') }}
-    {{ view_p.get(eval_housing.hsgActionRecordId, 'Hsg action record id', 'evaluation') }}
-    {{ view_p.get(eval_housing.hsgActionDept, 'Hsg action dept', 'evaluation') }}
+    {{ p_view.get(eval_housing.hsgActionRecordId, 'Hsg action record id', 'evaluation') }}
+    {{ p_view.get(eval_housing.hsgActionDept, 'Hsg action dept', 'evaluation') }}
 {% endif %}
 {% if eval_housing.expulsionInProgress == YES %}
-    {{ view_p.get(eval_housing.expulsionInProgressToString, 'Expulsion in progress', 'evaluation') }}
-    {{ view_p.get(eval_housing.publicForceToString ~ (eval_housing.publicForceDate ? 
+    {{ p_view.get(eval_housing.expulsionInProgressToString, 'Expulsion in progress', 'evaluation') }}
+    {{ p_view.get(eval_housing.publicForceToString ~ (eval_housing.publicForceDate ? 
         ' (le ' ~ eval_housing.publicForceDate|date('d/m/Y') ~ ')'), 'Public force', 'evaluation') }}
-    {{ view_p.get(eval_housing.expulsionComment) }}
+    {{ p_view.get(eval_housing.expulsionComment) }}
 {% endif %}
-{{ view_p.get(eval_housing.housingExperienceToString, 'Housing experience', 'evaluation') }}
-{{ view_text.get(eval_housing.commentEvalHousing, null, null, type) }}
+{{ p_view.get(eval_housing.housingExperienceToString, 'Housing experience', 'evaluation') }}
+{{ textarea_view.get(eval_housing.commentEvalHousing, null, null, type) }}

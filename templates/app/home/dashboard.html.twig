@@ -17,7 +17,7 @@
     <hr>
 
     <div class="my-5">
-      {% include 'app/admin/managing/_managingServices.html.twig' %}
+      {% include 'app/admin/managing/_managing_services.html.twig' %}
           {% if is_social_worker or supports|length > 0 %}
             {% include 'app/home/_user_support_index.html.twig' with {accordion_id: 'list_supports'} %}
           {% endif %}

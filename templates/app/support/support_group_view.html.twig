@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% import 'macros/viewDiv.html.twig' as view_div %}
+{% import 'macros/div_view.html.twig' as view_div %}
 
 {% set ROLE_CHILD = constant('App\\Entity\\People\\RolePerson::ROLE_CHILD') %}
 {% set STATUS_IN_PROGRESS = constant('App\\Entity\\Support\\SupportGroup::STATUS_IN_PROGRESS') %}
 {% set SERVICE_TYPE_AVDL = constant('App\\Entity\\Organization\\Service::SERVICE_TYPE_AVDL') %}
 {% set SERVICE_TYPE_HOTEL = constant('App\\Entity\\Organization\\Service::SERVICE_TYPE_HOTEL') %}
-{% set supportPeople = support.supportPeople|filter(s => s.status == support.status) %}
+{% set support_people = support.supportPeople|filter(s => s.status == support.status) %}
 {% set title = 'Suivi social' %}
 
 {% block title %}{{ title }}{% endblock %}
@@ -22,7 +22,7 @@
 			</div>
 		</div>
 
-		{% include "model/_msgFlash.html.twig" %}
+		{% include 'model/_msgFlash.html.twig' %}
 		<div id="js-msg-flash-content"></div>
 
 		{% set people_group = support.peopleGroup %}
@@ -44,7 +44,7 @@
 				<li class="breadcrumb-item active" aria-current="page">Suivi social (Accueil)</li>
 			</ol>
 		</nav>
-		{% for support_person in supportPeople %}
+		{% for support_person in support_people %}
 			<a href="{{ path('group_person_show', {'id': people_group.id, 'person_id': support_person.person.id, 'slug': support_person.person.slug}) }}" 
 				class="btn btn-outline-{{ theme_color }} btn-sm rounded-pill mb-2">{{ support_person.person.fullname }}</a>
 		{% endfor %}
@@ -95,36 +95,36 @@
 		</div>
 
 		{% if support.service.type == SERVICE_TYPE_AVDL and support.avdl %}
-			{% include 'app/support/avdl/_avdlView.html.twig' %}
+			{% include 'app/support/avdl/_avdl_support_view.html.twig' %}
 		{% elseif support.service.type == SERVICE_TYPE_HOTEL %}
-			{% include 'app/support/hotelSupport/_hotelSupportView.html.twig' %}
+			{% include 'app/support/hotel_support/_hotel_support_view.html.twig' %}
 		{% else %}		
-			{% include 'app/support/_partials/_supportRegularView.html.twig' %}
+			{% include 'app/support/_partials/_support_regular_view.html.twig' %}
 		{% endif %}
 
 		<div class="row mt-3">
 			<div class="col-md-12">
 				<div class="float-left d-flex">
 					{% if is_granted('DELETE', support) %}
-						{% set textAlert = "'Tous les éléments rattachés au suivi vont être supprimés (évaluation sociale, RDVs, notes, documents...)." ~ 
-							" Êtes-vous vraiment sûr de vouloir supprimer ce suivi social ?'" %}
+						{% set alert_text = '"Tous les éléments rattachés au suivi vont être supprimés (évaluation sociale, RDVs, notes, documents...).' ~ 
+							' Êtes-vous vraiment sûr de vouloir supprimer ce suivi social ?"' %}
 						<a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('support_delete', {'id': support.id}) }}" 
 							title="Supprimer le suivi social" data-toggle="tooltip" data-placement="bottom" 
-							onclick="if(window.confirm({{ textAlert }})){return true;}else{return false;}"><i class="fas fa-trash-alt mr-2"></i>
+							onclick="if(window.confirm({{ alert_text }})){return true;}else{return false;}"><i class="fas fa-trash-alt mr-2"></i>
 							<span class="d-none d-sm-inline">Supprimer</span></a>
 					{% endif %}
 					{% if evaluation == null %}
-						{% set textAlert = "'Êtes-vous vraiment sûr de vouloir récupérer l`évaluation sociale du SI-SIAO ?'" %}
+						{% set alert_text = '"Êtes-vous vraiment sûr de vouloir récupérer l`évaluation sociale du SI-SIAO ?"' %}
 						<a class="btn btn-{{ theme_color }} d-block mr-3" href="{{ path('api_sisiao_support_import_evaluation', {'id': support.id}) }}" 
 							title="Importer l'évaluation sociale du SI-SIAO" data-toggle="tooltip" data-placement="bottom" 
-							onclick="if(window.confirm({{ textAlert }})){return true;}else{return false;}"><i class="fas fa-cloud-download-alt mr-2"></i>
+							onclick="if(window.confirm({{ alert_text }})){return true;}else{return false;}"><i class="fas fa-cloud-download-alt mr-2"></i>
 							<span class="d-none d-sm-inline">Import SI-SIAO</span></a>
 					{% endif %}
-					{% if is_granted("ROLE_ADMIN") %}	
-						{% set textAlert = "'Êtes-vous vraiment sûr de vouloir récupérer les informations du précédent suivi social ?'" %}
+					{% if is_granted('ROLE_ADMIN') %}	
+						{% set alert_text = '"Êtes-vous vraiment sûr de vouloir récupérer les informations du précédent suivi social ?"' %}
 						<a class="btn btn-{{ theme_color }} d-block mr-3" href="{{ path('support_clone', {'id': support.id}) }}" 
 							title="Récupérer les éléments du précédent suivi social" data-toggle="tooltip" data-placement="bottom" 
-							onclick="if(window.confirm({{ textAlert }})){return true;}else{return false;}"><i class="fas fa-clone mr-2"></i>
+							onclick="if(window.confirm({{ alert_text }})){return true;}else{return false;}"><i class="fas fa-clone mr-2"></i>
 							<span class="d-none d-sm-inline">Copier suivi</span></a>
 					{% endif %}
 				</div>

@@ -65,7 +65,7 @@ class TaskControllerTest extends WebTestCase
 
     public function testExportTasksIsSuccessful(): void
     {
-        $crawler = $this->client->request('GET', '/tasks');
+        $this->client->request('GET', '/tasks');
 
         // Export with no result
         $this->client->submitForm('export', [

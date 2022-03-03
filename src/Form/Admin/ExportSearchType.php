@@ -56,55 +56,6 @@ class ExportSearchType extends AbstractType
             //         'autocomplete' => 'off',
             //     ],
             // ])
-        // ->add('evalSocial', CheckBoxType::class, [
-            //     'required' => false,
-            //     'label_attr' => [
-            //         'class' => 'custom-control-label',
-            //     ],
-            //     'attr' => ['class' => 'custom-control-input checkbox'],
-            // ])
-            // ->add('evalAdm', CheckBoxType::class, [
-            //     'required' => false,
-            //     'label_attr' => ['class' => 'custom-control-label',],
-            //     'attr' => [
-            //         'class' => 'custom-control-input checkbox',
-            //     ],
-            // ])
-            // ->add('evalFamily', CheckBoxType::class, [
-            //     'required' => false,
-            //     'label_attr' => [
-            //         'class' => 'custom-control-label',
-            //     ],
-            //     'attr' => ['class' => 'custom-control-input checkbox'],
-            // ])
-            // ->add('evalBudget', CheckBoxType::class, [
-            //     'required' => false,
-            //     'label_attr' => [
-            //         'class' => 'custom-control-label',
-            //     ],
-            //     'attr' => ['class' => 'custom-control-input checkbox'],
-            // ])
-            // ->add('evalProf', CheckBoxType::class, [
-            //     'required' => false,
-            //     'label_attr' => [
-            //         'class' => 'custom-control-label',
-            //     ],
-            //     'attr' => ['class' => 'custom-control-input checkbox'],
-            // ])
-            // ->add('evalHousing', CheckBoxType::class, [
-            //     'required' => false,
-            //     'label_attr' => [
-            //         'class' => 'custom-control-label',
-            //     ],
-            //     'attr' => ['class' => 'custom-control-input checkbox'],
-            // ])
-            // ->add('evalJustice', CheckBoxType::class, [
-            //     'required' => false,
-            //     'label_attr' => [
-            //         'class' => 'custom-control-label',
-            //     ],
-            //     'attr' => ['class' => 'custom-control-input checkbox'],
-            // ])
     }
 
     public function configureOptions(OptionsResolver $resolver): void

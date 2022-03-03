@@ -70,6 +70,7 @@ class EvalBudgetPersonType extends AbstractType
             ->add('resourcesComment')
             ->add('charge', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
+                'attr' => ['data-important' => 'true'],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])

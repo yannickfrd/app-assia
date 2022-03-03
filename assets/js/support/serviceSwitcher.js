@@ -36,7 +36,7 @@ export default class ServiceSwitcher {
 
         this.updateVisibilityFields()
         this.changeService()
-        this.siSiaoLogin.init('support_siSiaoImport')
+        this.siSiaoLogin.init('support__siSiaoImport')
     }
     /**
      * Au changement de service dans la liste déroulante.

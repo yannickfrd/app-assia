@@ -53,7 +53,7 @@ class TaskRepository extends ServiceEntityRepository
      */
     public function findTask(int $id): ?Task
     {
-        return $this->createQueryBuilder('t')->select('t')
+        return $this->createQueryBuilder('t')
             ->leftJoin('t.users', 'u1')->addSelect('PARTIAL u1.{id, firstname, lastname}')
             ->leftJoin('t.createdBy', 'u2')->addSelect('PARTIAL u2.{id, firstname, lastname}')
             ->leftJoin('t.updatedBy', 'u3')->addSelect('PARTIAL u3.{id, firstname, lastname}')
@@ -62,8 +62,8 @@ class TaskRepository extends ServiceEntityRepository
             ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')
             ->leftJoin('sg.supportPeople', 'sp1')->addSelect('PARTIAL sp1.{id, head}')
             ->leftJoin('sp1.person', 'p1')->addSelect('PARTIAL p1.{id, firstname, lastname}')
-            ->leftJoin('t.supportPeople', 'sp2')->addSelect('PARTIAL sp2.{id, head}')
-            ->leftJoin('sp2.person', 'p2')->addSelect('PARTIAL p2.{id, firstname, lastname}')
+            // ->leftJoin('t.supportPeople', 'sp2')->addSelect('PARTIAL sp2.{id, head}')
+            // ->leftJoin('sp2.person', 'p2')->addSelect('PARTIAL p2.{id, firstname, lastname}')
             ->leftJoin('t.tags', 'tags')->addSelect('tags')
             ->leftJoin('t.alerts', 'a')->addSelect('a')
 

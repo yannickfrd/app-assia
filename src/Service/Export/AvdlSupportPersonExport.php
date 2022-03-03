@@ -83,7 +83,7 @@ class AvdlSupportPersonExport extends ExportExcel
             'Date de fin de l\'accompagnement' => $this->formatDate($avdlSupport->getSupportEndDate()),
             'Type d\'accompagnement' => $avdlSupport->getSupportTypeToString(),
             'Commentaire sur l\'accompagnement' => $avdlSupport->getSupportComment(),
-            'Motif de fin d\'accompagnement' => $avdlSupport->getEndSupportReasonToString(),
+            'Motif de fin d\'accompagnement' => $supportGroup->getEndReasonToString(),
             'Type d\'accès au logement' => $avdlSupport->getAccessHousingModalityToString(),
             'Situation à la fin' => $supportGroup->getEndStatusToString(),
             'Commentaire situation à la fin' => $supportGroup->getEndStatusComment(),

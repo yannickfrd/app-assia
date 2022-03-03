@@ -18,7 +18,7 @@
         {% elseif payment.type == 10 %}
            la caution
         {% elseif payment.type in [30, 31, 32] %}
-            le remboursement de dette
+            le remboursement
         {% endif %}
         d'un montant de <b>{{ payment.paidAmt|amount }}</b>{#
         #}{% if payment.type in [1, 2] %}{#

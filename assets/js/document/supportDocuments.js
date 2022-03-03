@@ -222,7 +222,11 @@ export default class SupportDocuments {
             case 'download':
                 return this.getFile(response.data)
         }
-        new MessageFlash(response.alert, response.msg)
+
+        if (response.msg) {
+            new MessageFlash(response.alert, response.msg)
+        }
+
         this.loader.off()
     }
 

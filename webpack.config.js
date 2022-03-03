@@ -31,7 +31,7 @@ Encore
     .addEntry('device', './assets/js/device/device.js')
     .addEntry('document', './assets/js/document/document.js')
     .addEntry('evaluation', './assets/js/evaluation/evaluationIndex.js')
-    .addEntry('export', './assets/js/export/exportIndex.js')
+    .addEntry('export', './assets/js/export/export-index.js')
     .addEntry('peopleGroup', './assets/js/peopleGroup/peopleGroup.js')
     .addEntry('home', './assets/js/home/home.js')
     .addEntry('listPeople', './assets/js/listPeople/listPeople.js')

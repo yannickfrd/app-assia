@@ -386,6 +386,14 @@ class SiSiaoItems
         90 => 8, // Stagiaire
     ];
 
+    // TEMPS_TRAVAIL
+    public const WORKING_TIME = [
+        'COMPLET' => 1,
+        'PARTIEL' => 2,
+        'NR' => null,
+        null => null,
+    ];
+
     public const RESOURCES = [
         10 => 10, // Ressources d'activité
         20 => 20, // Retraite

@@ -1,4 +1,4 @@
-{% import 'macros/viewDiv.html.twig' as view_div %}
+{% import 'macros/div_view.html.twig' as view_div %}
 
 <hr/>
 <section>
@@ -11,7 +11,7 @@
 
     {% set eval_family = evaluation.evalFamilyGroup %}
     {% if eval_family %}
-        {% if YES == eval_family.famlReunification %}
+        {% if eval_family.famlReunification == YES %}
             <div class="row mb-2">
                 {{ view_div.get(eval_family.famlReunificationToString ~ (eval_family.nbPeopleReunification ? ' (' 
                     ~ eval_family.nbPeopleReunification ~ ' personne(s))'), 'Faml reunification', 'evaluation') }}
@@ -33,30 +33,30 @@
                 </div>
             {% endif %}
         <div class="my-3">
-            {% if ROLE_CHILD != support_person.role %}
+            {% if support_person.role != ROLE_CHILD %}
                 <div class="row">
                     {{ view_div.get(eval_family.maritalStatusToString, 'Marital status', 'evaluation') }}
                     {{ view_div.get(eval_family.noConciliationOrderToString, 'No conciliation order', 'evaluation') }}
-                    {{ view_div.get(YES == eval_family.protectiveMeasure and eval_family.protectiveMeasureType ? 
+                    {{ view_div.get(eval_family.protectiveMeasure == YES and eval_family.protectiveMeasureType ? 
                         eval_family.protectiveMeasureTypeToString, 'Protective measure', 'evaluation') }}
                 </div>
             {% endif %}
-            {% if YES == eval_family.unbornChild %}
+            {% if eval_family.unbornChild == YES %}
                 <div class="row">
                     {{ view_div.get(eval_family.unbornChildToString ~ (eval_family.expDateChildbirth ? ' (' 
                         ~ eval_family.expDateChildbirth|date('d/m/Y') ~ ')'), 'Unborn child', 'evaluation') }}
                 </div>
             {% endif %}    
-            {% if ROLE_CHILD == support_person.role %}
+            {% if support_person.role == ROLE_CHILD %}
                 <div class="row">
-                    {{ view_div.get((YES == eval_family.childcareOrSchool ? eval_family.childcareSchoolTypeToString : 
+                    {{ view_div.get((eval_family.childcareOrSchool == YES ? eval_family.childcareSchoolTypeToString : 
                         eval_family.childcareOrSchoolToString) ~ (eval_family.schoolCity or eval_family.schoolChildCarePrecision ? ' (' ~ eval_family.schoolCity 
                         ~ ', ' ~ (eval_family.schoolChildCarePrecision ? eval_family.schoolChildCarePrecision) ~ ')'), 'Childcare or school', 'evaluation') }}
                     {{ view_div.get(eval_family.childToHostToString, 'Child to host', 'evaluation') }}
                     {{ view_div.get(eval_family.childDependanceToString, 'Child dependance', 'evaluation') }}
                 </div>
             {% endif %}
-            {% if YES == eval_family.pmiFollowUp %}
+            {% if eval_family.pmiFollowUp == YES %}
                 <div class="row mb-2">
                     {{ view_div.get(eval_family.pmiName, 'Pmi follow up', 'evaluation') }}
                 </div>

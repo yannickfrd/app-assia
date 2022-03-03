@@ -6,7 +6,6 @@ use App\Entity\Organization\Place;
 use App\Entity\Support\PlaceGroup;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -29,7 +28,7 @@ class PlaceGroupRepository extends ServiceEntityRepository
      */
     public function findPlaceGroupById(int $id): ?PlaceGroup
     {
-        return $this->createQueryBuilder('pg')->select('pg')
+        return $this->createQueryBuilder('pg')
             ->leftJoin('pg.createdBy', 'user')->addSelect('PARTIAL user.{id, firstname, lastname}')
             ->leftJoin('pg.place', 'pl')->addSelect('PARTIAL pl.{id, name}')
             ->leftJoin('pg.placePeople', 'pp')->addSelect('pp')
@@ -46,7 +45,8 @@ class PlaceGroupRepository extends ServiceEntityRepository
 
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getOneOrNullResult();
+            ->getOneOrNullResult()
+        ;
     }
 
     /**
@@ -54,26 +54,26 @@ class PlaceGroupRepository extends ServiceEntityRepository
      *
      * @return PlaceGroup[]|null
      */
-    public function findAllPlace(Place $place, $maxResults = 10): Paginator
+    public function findAllPlaceGroups(Place $place, $maxResults = 10): array
     {
-        $qb = $this->createQueryBuilder('pg')->select('pg')
+        return $this->createQueryBuilder('pg')
             ->leftJoin('pg.placePeople', 'pp')->addSelect('PARTIAL pg.{id}')
             ->leftJoin('pg.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, startDate, endDate}')
             ->leftJoin('pg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, familyTypology}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, head, role, startDate, endDate}')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
 
+            ->andWhere('sp.head = TRUE')
             ->andWhere('pg.place = :place')
             ->setParameter('place', $place)
 
             ->addOrderBy('pg.startDate', 'DESC')
-            ->addOrderBy('sp.head', 'DESC')
 
             ->setMaxResults($maxResults)
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
-
-        return new Paginator($qb);
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult()
+        ;
     }
 }

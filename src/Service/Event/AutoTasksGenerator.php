@@ -187,7 +187,7 @@ class AutoTasksGenerator
         /** @var \Datetime|null $endDate */
         $endDate = $evalEntity->$method();
 
-        if (!$endDate || $endDate < (new \Datetime())->modify('-10 years')) {
+        if (!$endDate || $endDate < (new \Datetime())->modify('-9 years')) {
             return null;
         }
 

@@ -14,7 +14,7 @@ class LocationType extends AbstractType
         $attr = $builder->getOption('attr');
 
         $builder
-            ->add('search', null, [
+            ->add('_search', null, [
                 'label' => $attr['seachLabel'] ?? '',
                 'attr' => [
                     'class' => 'js-search',
