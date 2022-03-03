@@ -11,25 +11,31 @@ export default class RdvModel {
     #content
     #createdBy
     #supportGroupName
-    #google = false
-    #outlook = false
+    #nameSupport
+    #google
+    #outlook
 
     /**
      * @param {Object} rdvEntity
      */
     constructor(rdvEntity) {
+        // console.log(rdvEntity.supportGroup.header.fullname)
+
         this.#title = rdvEntity.title
         this.#start = rdvEntity.start
         this.#end = rdvEntity.end
         this.#location = rdvEntity.location
         this.#content = rdvEntity.content
         this.#createdBy = rdvEntity.createdBy.fullname
-        this.#supportGroupName = rdvEntity.supportGroup !== null ? rdvEntity.supportGroup.header.fullname : ''
+        this.#supportGroupName = rdvEntity.supportGroup !== null ? rdvEntity.supportGroup.header.fullname : null
+        this.#nameSupport = rdvEntity.supportGroup !== null ? rdvEntity.supportGroup.header.fullname : ''
         this.#google = rdvEntity.googleEventId === '1'
-        this.#supportGroupName = rdvEntity.outlookEventId === '1'
+        this.#outlook = rdvEntity.outlookEventId === '1'
     }
 
     get url() {
+        console.log(this.supportGroupName)
+
         if (this.apiName === null) {
             return null
         }
@@ -79,7 +85,7 @@ export default class RdvModel {
         if (this.createdBy !== null && this.createdBy !== undefined) {
             body += '<br><strong>Créé par : </strong>' + this.createdBy
         }
-
+        console.log(this.nameSupport)
         if (this.supportGroupName !== null && this.supportGroupName !== undefined) {
             body += '<br><strong>Nom du suivi : </strong>' + this.supportGroupName
         }
@@ -87,6 +93,13 @@ export default class RdvModel {
         return body
     }
 
+    get nameSupport() {
+        return this.#nameSupport;
+    }
+
+    set nameSupport(value) {
+        this.#nameSupport = value;
+    }
 
     get google() {
         return this.#google;
