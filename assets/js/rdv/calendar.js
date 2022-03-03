@@ -414,7 +414,9 @@ export default class Calendar {
         const rdvMdl = new RdvModel(rdv.getRdv)
 
         if (rdvMdl.isDifferent(this.rdvTemp)) {
-            this.updateModalElt.show()
+            if (this.apiIsChecked()) {
+                this.updateModalElt.show();
+            }
 
             document.getElementById('modal-confirm')
                 .addEventListener('click', () => this.apiCalendar.executeJs(rdv.getRdv, apiUrls))
@@ -424,6 +426,14 @@ export default class Calendar {
         this.createRdv(rdv, action, apiUrls)
     }
 
+    /**
+     * Check in the local storage if the checkboxes is checked
+     * @returns {boolean}
+     */
+    apiIsChecked() {
+        return localStorage.getItem('agenda.google') === 'true'
+            || localStorage.getItem('agenda.outlook') === 'true'
+    }
     /**
      * Supprime le RDV dans l'agenda.
      * @param {Object} rdv
