@@ -56,9 +56,11 @@
 				<div class="col-md-6">{{ form_row(form.hotelSupport.evaluationDate) }}</div>
 			</div>
 			<div data-parent-field="support_startDate">
-				<div class="row" data-parent-field="support_device" data-options="{{ HOTEL_SUPPORT }}">
-					<div class="col-md-6">{{ form_row(form.hotelSupport.levelSupport) }}</div>
-					<div class="col-md-6">{{ form_row(form.hotelSupport.agreementDate) }}</div>
+				<div class="row">
+					<div class="col-md-6" data-parent-field="support_device" data-options="{{ HOTEL_SUPPORT }}">
+						{{ form_row(form.hotelSupport.levelSupport) }}</div>
+					<div class="col-md-6" data-parent-field="support_device" data-options="{{ HOTEL_SUPPORT }}|{{ ASE_HEB }}">
+						{{ form_row(form.hotelSupport.agreementDate) }}</div>
 				</div>
 				<div class="row" data-parent-field="support_device" data-options="{{ HOTEL_URG }}">
 					<div class="col-md-6">{{ form_row(form.hotelSupport.emergencyActionDone) }}</div>

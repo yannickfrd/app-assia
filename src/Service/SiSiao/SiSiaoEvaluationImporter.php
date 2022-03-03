@@ -850,30 +850,34 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
 
     protected function importNotes(SupportGroup $supportGroup): void
     {
-        $results = $this->get('/notes/findRecentNotesByFicheId?ficheId='.$this->id);
+        try {
+            $results = $this->get('/notes/findRecentNotesByFicheId?ficheId='.$this->id);
 
-        if (0 === count($results)) {
-            return;
-        }
-
-        $noteRepo = $this->em->getRepository(Note::class);
-
-        foreach ($results as $result) {
-            if (!$note = $noteRepo->findOneBy(['comment' => $result->id])) {
-                $note = (new Note())
-                    ->setTitle('Note import SI-SIAO')
-                    ->setType(Note::TYPE_NOTE)
-                    ->setStatus(null)
-                    ->setComment($result->id)
-                    ->setSupportGroup($supportGroup)
-                ;
-
-                $this->em->persist($note);
+            if (0 === count($results)) {
+                return;
             }
 
-            $note->setContent($result->contenu);
-        }
+            $noteRepo = $this->em->getRepository(Note::class);
 
-        NoteManager::deleteCacheItems($note);
+            foreach ($results as $result) {
+                if (!$note = $noteRepo->findOneBy(['comment' => $result->id])) {
+                    $note = (new Note())
+                        ->setTitle('Note import SI-SIAO')
+                        ->setType(Note::TYPE_NOTE)
+                        ->setStatus(null)
+                        ->setComment($result->id)
+                        ->setSupportGroup($supportGroup)
+                    ;
+
+                    $this->em->persist($note);
+                }
+
+                $note->setContent($result->contenu);
+            }
+
+            NoteManager::deleteCacheItems($note);
+        } catch (\Exception $e) {
+            $this->flashBag->add('danger', $this->getErrorMessage($e)."Les notes n'ont pas pu être importées.");
+        }
     }
 }

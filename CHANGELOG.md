@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+## Version 3.10.0 - 03/03/2022
+Feature to import huda data (#129)
+* [ImportHudaData] Create a system to import HUDA data form csv file
+* [_service_places] Fix error type nbPlaces
+* [_hotel_support_form] Edit visibility agreementDate
+* [TaskSettingTrait] Edit default values
+
 ## Version 3.9.3 - 02/03/2022
 [Payment] Rename item 'Remboursement de dette' to 'Remboursement' (#128)
 

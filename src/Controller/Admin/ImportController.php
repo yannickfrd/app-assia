@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Form\Admin\ImportType;
 use App\Form\Model\Admin\Import;
 use App\Service\Import\ImportDatasHebergement;
+use App\Service\Import\ImportHudaData;
 use App\Service\Import\ImportPAFDatas;
 use App\Service\Import\ImportPlaceDatas;
 use App\Service\Import\ImportUserDatas;
@@ -15,6 +16,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/import")
+ * @IsGranted("ROLE_SUPER_ADMIN")
+ */
 class ImportController extends AbstractController
 {
     protected $import;
@@ -27,19 +32,27 @@ class ImportController extends AbstractController
     /**
      * Import de données du pôle Hébergement.
      *
-     * @Route("/import_heb", name="import_heb", methods="GET|POST")
-     * @IsGranted("ROLE_SUPER_ADMIN")
+     * @Route("/heb", name="import_heb", methods="GET|POST")
      */
-    public function importHebergement(Request $request, ImportDatasHebergement $importDatas): Response
+    public function imporHeb(Request $request, ImportDatasHebergement $importDatas): Response
     {
         return $this->import($request, $importDatas, 'import_heb.csv');
     }
 
     /**
+     * Import de données de l'HUDA.
+     *
+     * @Route("/huda", name="import_huda", methods="GET|POST")
+     */
+    public function importHuda(Request $request, ImportHudaData $importDatas): Response
+    {
+        return $this->import($request, $importDatas, 'import_huda.csv');
+    }
+
+    /**
      * Import des hôtels.
      *
-     * @Route("/import/places", name="import_places", methods="GET|POST")
-     * @IsGranted("ROLE_SUPER_ADMIN")
+     * @Route("/places", name="import_places", methods="GET|POST")
      */
     public function importPlaces(Request $request, ImportPlaceDatas $importDatas): Response
     {
@@ -49,8 +62,7 @@ class ImportController extends AbstractController
     /**
      * Import des utilisateurs.
      *
-     * @Route("/import/users", name="import_users", methods="GET|POST")
-     * @IsGranted("ROLE_SUPER_ADMIN")
+     * @Route("/users", name="import_users", methods="GET|POST")
      */
     public function importUser(Request $request, ImportUserDatas $importDatas): Response
     {
@@ -60,8 +72,7 @@ class ImportController extends AbstractController
     /**
      * Import des PAFs.
      *
-     * @Route("/import/paf", name="import_paf", methods="GET|POST")
-     * @IsGranted("ROLE_SUPER_ADMIN")
+     * @Route("/paf", name="import_paf", methods="GET|POST")
      */
     public function importPAF(Request $request, ImportPAFDatas $importDatas): Response
     {
@@ -71,7 +82,7 @@ class ImportController extends AbstractController
     /**
      * Importe les données.
      */
-    protected function import(Request $request, object $importDatas, string $filename): Response
+    private function import(Request $request, object $importDatas, string $filename): Response
     {
         $file = \dirname(__DIR__).'/../../public/import/datas/'.$filename;
 
@@ -95,8 +106,8 @@ class ImportController extends AbstractController
             // dump($datas);
         }
 
-        return $this->render('app/admin/import.html.twig', [
-            'form' => $form->createView(),
+        return $this->renderForm('app/admin/import.html.twig', [
+            'form' => $form,
             'datas' => $datas,
         ]);
     }

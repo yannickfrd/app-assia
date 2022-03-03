@@ -31,13 +31,13 @@ trait TaskSettingTrait
      * @ORM\Column(type="integer", nullable=true)
      * @Assert\Range(min=0, max=12)
      */
-    protected $endRightsSocialSecurityDateDelay = Setting::DEFAULT_AUTO_ALERT_DELAY;
+    protected $endRightsSocialSecurityDateDelay = 2;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @Assert\Range(min=0, max=12)
      */
-    protected $endRqthDateDelay = Setting::DEFAULT_AUTO_ALERT_DELAY;
+    protected $endRqthDateDelay = 6;
 
     /**
      * @ORM\Column(type="integer", nullable=true)

@@ -24,7 +24,7 @@
 	
 	{% set active_places = places|filter(p => p.disabled == false)  %} 
 	{% set nb_active_places = active_places|length %}
-	{% set sum_actives_places = active_places|cumulate('nb_places') %} 
+	{% set sum_actives_places = active_places|cumulate('nbPlaces') %} 
 	<p class="align-middle">{{ nb_active_places }} groupe{{ nb_places > 1 ? 's' }} de places actif<!--
 		-->{{ nb_places > 1 ? 's' }}{{ sum_actives_places > 1 ? ' (soit ' ~ sum_actives_places ~ ' places)' }}.</p>
 
