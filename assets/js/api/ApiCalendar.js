@@ -34,12 +34,9 @@ export default class ApiCalendar {
      */
     executeJs(rdv, api) {
         Object.keys(api).forEach(apiName => {
-            // console.log(rdv.title)
             const rdvMdl = new RdvModel(rdv)
-            // console.log(rdvMdl.supportGroupName)
             rdvMdl.apiName = apiName
 
-            // console.log(rdvMdl.url)
             window.open(rdvMdl.url, '_blank')
         })
     }

@@ -19,8 +19,6 @@ export default class RdvModel {
      * @param {Object} rdvEntity
      */
     constructor(rdvEntity) {
-        // console.log(rdvEntity.supportGroup.header.fullname)
-
         this.#title = rdvEntity.title
         this.#start = rdvEntity.start
         this.#end = rdvEntity.end
@@ -34,8 +32,6 @@ export default class RdvModel {
     }
 
     get url() {
-        console.log(this.supportGroupName)
-
         if (this.apiName === null) {
             return null
         }
@@ -85,7 +81,6 @@ export default class RdvModel {
         if (this.createdBy !== null && this.createdBy !== undefined) {
             body += '<br><strong>Créé par : </strong>' + this.createdBy
         }
-        console.log(this.nameSupport)
         if (this.supportGroupName !== null && this.supportGroupName !== undefined) {
             body += '<br><strong>Nom du suivi : </strong>' + this.supportGroupName
         }
