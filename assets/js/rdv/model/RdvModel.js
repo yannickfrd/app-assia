@@ -24,7 +24,7 @@ export default class RdvModel {
         this.#location = rdvEntity.location
         this.#content = rdvEntity.content
         this.#createdBy = rdvEntity.createdBy.fullname
-        this.#supportGroupName = rdvEntity.supportGroup.header.fullname
+        this.#supportGroupName = rdvEntity.supportGroup !== null ? rdvEntity.supportGroup.header.fullname : ''
         this.#google = rdvEntity.googleEventId === '1'
         this.#supportGroupName = rdvEntity.outlookEventId === '1'
     }
