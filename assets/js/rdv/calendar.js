@@ -399,7 +399,7 @@ export default class Calendar {
         rdvElt.addEventListener('click', this.requestGetRdv.bind(this, rdvElt))
 
         if (action === 'create') { //v1
-            this.apiCalendar.executeJs(rdv, apiUrls)
+            this.apiCalendar.executeJs(new RdvModel(rdv), apiUrls)
         }
         // v2 ...
         // this.apiCalendar.execute(action, apiUrls)
