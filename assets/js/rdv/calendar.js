@@ -398,9 +398,10 @@ export default class Calendar {
 
         rdvElt.addEventListener('click', this.requestGetRdv.bind(this, rdvElt))
 
-        if (action === 'create') {
+        if (action === 'create') { //v1
             this.apiCalendar.executeJs(rdv, apiUrls)
         }
+        // v2 ...
         // this.apiCalendar.execute(action, apiUrls)
     }
 
@@ -413,13 +414,17 @@ export default class Calendar {
     updateRdv(rdv, action, apiUrls) {
         const rdvMdl = new RdvModel(rdv.getRdv)
 
-        if (rdvMdl.isDifferent(this.rdvTemp)) {
-            if (this.apiIsChecked()) {
-                this.updateModalElt.show();
-            }
+        if (rdvMdl.isDifferent(this.rdvTemp) && this.apiIsChecked()) {
+            this.updateModalElt.show()
 
-            document.getElementById('modal-confirm')
-                .addEventListener('click', () => this.apiCalendar.executeJs(rdv.getRdv, apiUrls))
+            let cpt = 0
+            document.getElementById('modal-confirm').addEventListener('click', () => {
+                cpt++
+                if (cpt <= 1) {
+                    this.apiCalendar.executeJs(rdvMdl, apiUrls)
+                }
+            })
+            cpt = 0
         }
 
         this.rdvElt.remove()
@@ -434,6 +439,7 @@ export default class Calendar {
         return localStorage.getItem('agenda.google') === 'true'
             || localStorage.getItem('agenda.outlook') === 'true'
     }
+
     /**
      * Supprime le RDV dans l'agenda.
      * @param {Object} rdv

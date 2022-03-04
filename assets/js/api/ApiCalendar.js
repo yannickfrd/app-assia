@@ -1,6 +1,5 @@
 import Ajax from "../utils/ajax";
 import MessageFlash from "../utils/messageFlash";
-import RdvModel from "../rdv/model/RdvModel";
 
 export default class ApiCalendar {
     constructor() {
@@ -29,15 +28,16 @@ export default class ApiCalendar {
     /**
      * Allows to pre-fill the form automatically on Google and Outlook calendars.
      * And open a new tab.
-     * @param {Object} rdv
+     * @param {RdvModel} rdvMdl
      * @param {Object} api
      */
-    executeJs(rdv, api) {
+    executeJs(rdvMdl, api) {
         Object.keys(api).forEach(apiName => {
-            const rdvMdl = new RdvModel(rdv)
-            rdvMdl.apiName = apiName
+            if (localStorage.getItem('agenda.' + apiName) === 'true') {
+                rdvMdl.apiName = apiName
 
-            window.open(rdvMdl.url, '_blank')
+                window.open(rdvMdl.url, '_blank')
+            }
         })
     }
 

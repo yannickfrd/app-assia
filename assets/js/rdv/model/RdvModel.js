@@ -12,8 +12,8 @@ export default class RdvModel {
     #createdBy
     #supportGroupName
     #nameSupport
-    #google
-    #outlook
+    #google = false
+    #outlook = false
 
     /**
      * @param {Object} rdvEntity
@@ -57,7 +57,7 @@ export default class RdvModel {
                     + this.start.replaceAll('-', '').replace(':', '')
                     + '/' + this.end.replaceAll('-', '').replace(':', '')
             } else {
-                url += '&startdt=' + this.start + '&enddt=' + this.end
+                url += '&startdt=' + this.start.split('+')[0] + '&enddt=' + this.end.split('+')[0]
             }
         }
 
@@ -71,15 +71,15 @@ export default class RdvModel {
     isDifferent(rdvTemp) {
         return this.title !== rdvTemp.title || this.start !== rdvTemp.start
             || this.end !== rdvTemp.end || this.content !== rdvTemp.content
-            || this.google !== (rdvTemp.googleEventId === '1')
-            || this.supportGroupName !== (rdvTemp.outlookEventId === '1');
+            || this.google !== (null !== rdvTemp.googleEventId && rdvTemp.googleEventId === '1')
+            || this.outlook !== (null !== rdvTemp.outlookEventId && rdvTemp.outlookEventId === '1');
     }
 
     #createBodyEvent() {
-        let body = this.content !== null ? '<p>' + this.content + '</p>' : ''
+        let body = this.content !== null ? '<p>' + this.content + '</p><br>' : ''
 
         if (this.createdBy !== null && this.createdBy !== undefined) {
-            body += '<br><strong>Créé par : </strong>' + this.createdBy
+            body += '<strong>Créé par : </strong>' + this.createdBy
         }
         if (this.supportGroupName !== null && this.supportGroupName !== undefined) {
             body += '<br><strong>Nom du suivi : </strong>' + this.supportGroupName
