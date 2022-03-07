@@ -31,7 +31,7 @@ export default class ApiCalendar {
      * @param {RdvModel} rdvMdl
      * @param {Object} api
      */
-    executeJs(rdvMdl, api) {
+    addEvent(rdvMdl, api) {
         Object.keys(api).forEach(apiName => {
             if (localStorage.getItem('agenda.' + apiName) === 'true') {
                 rdvMdl.apiName = apiName

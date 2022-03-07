@@ -399,7 +399,7 @@ export default class Calendar {
         rdvElt.addEventListener('click', this.requestGetRdv.bind(this, rdvElt))
 
         if (action === 'create') { //v1
-            this.apiCalendar.executeJs(new RdvModel(rdv), apiUrls)
+            this.apiCalendar.addEvent(new RdvModel(rdv), apiUrls)
         }
         // v2 ...
         // this.apiCalendar.execute(action, apiUrls)
@@ -414,16 +414,19 @@ export default class Calendar {
     updateRdv(rdv, action, apiUrls) {
         const rdvMdl = new RdvModel(rdv.getRdv)
 
-        if (rdvMdl.isDifferent(this.rdvTemp) && this.apiIsChecked()) {
-            this.updateModalElt.show()
+        const googleIsClicked = this.strToBool(localStorage.getItem('agenda.google'))
+        const outlookIsClicked = this.strToBool(localStorage.getItem('agenda.outlook'))
 
-            let cpt = 0
+        if (rdvMdl.isDifferent(this.rdvTemp) || (googleIsClicked || outlookIsClicked)) {
+            if ((!this.strToBool(this.rdvTemp.googleEventId) && googleIsClicked)
+                || (!this.strToBool(this.rdvTemp.outlookEventId) && outlookIsClicked)) {
+
+                this.updateModalElt.show()
+            }
+
             document.getElementById('modal-confirm').addEventListener('click', () => {
-                if (++cpt <= 1) {
-                    this.apiCalendar.executeJs(rdvMdl, apiUrls)
-                }
-            })
-            cpt = 0
+                this.apiCalendar.addEvent(rdvMdl, apiUrls)
+            }, {once: true})
         }
 
         this.rdvElt.remove()
@@ -431,12 +434,18 @@ export default class Calendar {
     }
 
     /**
-     * Check in the local storage if the checkboxes is checked
+     * @param str
      * @returns {boolean}
      */
-    apiIsChecked() {
-        return localStorage.getItem('agenda.google') === 'true'
-            || localStorage.getItem('agenda.outlook') === 'true'
+    strToBool(str) {
+        switch (str) {
+            case true:
+            case '1':
+            case 'true':
+                return true
+            default:
+                return false
+        }
     }
 
     /**

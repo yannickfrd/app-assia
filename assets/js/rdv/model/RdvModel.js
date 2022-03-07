@@ -71,8 +71,9 @@ export default class RdvModel {
     isDifferent(rdvTemp) {
         return this.title !== rdvTemp.title || this.start !== rdvTemp.start
             || this.end !== rdvTemp.end || this.content !== rdvTemp.content
-            || this.google !== (null !== rdvTemp.googleEventId && rdvTemp.googleEventId === '1')
-            || this.outlook !== (null !== rdvTemp.outlookEventId && rdvTemp.outlookEventId === '1');
+            // || this.google !== (null !== rdvTemp.googleEventId && rdvTemp.googleEventId === '1')
+            // || this.outlook !== (null !== rdvTemp.outlookEventId && rdvTemp.outlookEventId === '1')
+            ;
     }
 
     #createBodyEvent() {
