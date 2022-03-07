@@ -419,8 +419,7 @@ export default class Calendar {
 
             let cpt = 0
             document.getElementById('modal-confirm').addEventListener('click', () => {
-                cpt++
-                if (cpt <= 1) {
+                if (++cpt <= 1) {
                     this.apiCalendar.executeJs(rdvMdl, apiUrls)
                 }
             })
