@@ -28,7 +28,7 @@
                 {% if is_granted('ROLE_ADMIN') %}
                     <ul>
                         <li class="mb-2 text-{{ theme_color }}">
-                            <a class="text-dark" href="{{ path('admin_users') }}">Gérer les utilisateurs</a>
+                            <a class="text-dark" href="{{ path('admin_user_index') }}">Gérer les utilisateurs</a>
                         </li>
                     </ul>
                 {% endif %}   

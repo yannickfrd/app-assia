@@ -3,6 +3,7 @@
 namespace App\Security\Voter;
 
 use App\Entity\Organization\Place;
+use App\Entity\Organization\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -18,13 +19,13 @@ class PlaceVoter extends Voter
     /** @var Place */
     protected $place;
 
-    protected function supports($attribute, $subject): bool
+    protected function supports(string $attribute, $subject): bool
     {
         return in_array($attribute, ['VIEW', 'EDIT', 'DELETE', 'DISABLE'])
         && $subject instanceof \App\Entity\Organization\Place;
     }
 
-    protected function voteOnAttribute($attribute, $place, TokenInterface $token): bool
+    protected function voteOnAttribute(string $attribute, $place, TokenInterface $token): bool
     {
         /** @var User */
         $this->user = $token->getUser();
@@ -38,16 +39,11 @@ class PlaceVoter extends Voter
         switch ($attribute) {
             case 'VIEW':
                 return $this->canView();
-                break;
             case 'EDIT':
                 return $this->canEdit();
-                break;
+            case 'DISABLE':
             case 'DELETE':
                 return $this->canDelete();
-                break;
-            case 'DISABLE':
-                return $this->canDelete();
-                break;
         }
 
         return false;

@@ -3,6 +3,7 @@
 namespace App\Tests\Controller;
 
 use App\Entity\Organization\Service;
+use App\Entity\Organization\User;
 use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
@@ -31,7 +32,7 @@ class ServiceTagControllerTest extends WebTestCase
 
         $this->client = $this->createClient();
 
-        $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
+        $this->databaseTool = $this->getContainer()->get(DatabaseToolCollection::class)->get();
 
         $this->fixtures = $this->databaseTool->loadAliceFixture([
             dirname(__DIR__).'/../DataFixturesTest/TagFixturesTest.yaml',
@@ -43,36 +44,42 @@ class ServiceTagControllerTest extends WebTestCase
 
     public function testServicePageWithTagsIsUp()
     {
-        $this->createLogin($this->fixtures['userAdmin']);
+        /** @var User $admin */
+        $admin = $this->fixtures['userAdmin'];
+        $this->createLogin($admin);
+        $service = $admin->getServiceUser()->first()->getService();
 
-        $crawler = $this->client->request('GET', '/service/'.$this->service->getId());
+        $crawler = $this->client->request('GET', '/service/'.$service->getId());
 
-        self::assertResponseIsSuccessful();
-        self::assertSelectorExists('form[name="service_tag"]');
-        self::assertCount(5, $crawler->filter('select#service_tag_tags option'));
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorExists('form[name="service_tag"]');
+        $this->assertCount(5, $crawler->filter('select#service_tag_tags option'));
     }
 
     public function testGetFormServiceTagsWidthBadRoleUserIsFailed()
     {
         $this->createLogin($this->fixtures['userRoleUser']);
 
-        $this->client->request('GET', '/service/'.$this->service->getId());
+        $this->client->request('GET', '/service/'.$this->fixtures['service1']);
 
-        self::assertResponseIsSuccessful();
-        self::assertSelectorNotExists('form[name="service_tag"]');
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorNotExists('form[name="service_tag"]');
     }
 
     public function testAddTagIsSuccessful()
     {
-        $this->createLogin($this->fixtures['userAdmin']);
+        /** @var User $admin */
+        $admin = $this->fixtures['userAdmin'];
+        $this->createLogin($admin);
+        $service = $admin->getServiceUser()->first()->getService();
 
-        $this->client->request('GET', '/service/'.$this->service->getId());
+        $this->client->request('GET', '/service/'.$service->getId());
         $this->client->submitForm('add_tags', [
             'service_tag[tags]' => ['2', '3'],
         ]);
 
-        self::assertResponseIsSuccessful();
-        self::assertEquals('success', json_decode($this->client->getResponse()->getContent())->alert);
+        $this->assertResponseIsSuccessful();
+        $this->assertEquals('success', json_decode($this->client->getResponse()->getContent())->alert);
     }
 
     public function testRemoveTagIsSuccessful()
@@ -81,12 +88,12 @@ class ServiceTagControllerTest extends WebTestCase
 
         $crawler = $this->client->request('GET', '/service/'.$this->service->getId());
 
-        self::assertSelectorExists($tagSelector = "span.badge[data-tag-id='{$this->fixtures['tag1']->getId()}']");
+        $this->assertSelectorExists($tagSelector = "span.badge[data-tag-id='{$this->fixtures['tag1']->getId()}']");
 
         $link = $crawler->filter("$tagSelector a")->link();
         $this->client->click($link);
 
-        self::assertSelectorNotExists($tagSelector);
+        $this->assertSelectorNotExists($tagSelector);
     }
 
     protected function tearDown(): void

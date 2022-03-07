@@ -1,0 +1,63 @@
+{% set can_edit_user = is_granted('EDIT', user) %}
+
+{{ form_start(form) }}
+
+<section>
+    <div class="row">
+        {% set form_options = {attr: {'disabled': can_edit_user == false}} %}
+        <div class="col-md-6">{{ form_row(form.firstname, form_options) }}</div>
+        <div class="col-md-6">{{ form_row(form.lastname, form_options) }}</div>
+        <div class="col-md-6">{{ form_row(form.email, form_options) }}</div>
+        <div class="col-md-6">{{ form_row(form.phone1, form_options) }}</div>
+        <div class="col-md-6">{{ form_row(form.status, form_options) }}</div>
+        {% if can_edit_user %}
+            <div class="col-md-6">{{ form_row(form.roles, form_options) }}</div>
+            <div class="col-md-6">{{ form_row(form.username, form_options) }}</div>
+        {% endif %}
+    </div>
+    {% if user.id == null %}
+        <div class="mb-2 text-secondary">
+            <p>Un email sera automatiquement envoyé à l'utlisateur après l'enregistrement.</p>
+        </div>
+    {% endif %}
+
+    {% if can_edit_user %}
+        <div class="row mb-4">
+            <div class="col-md-12">
+                {% if user.id %}
+                    <div class="float-left d-flex">
+                        {% set alert_msg = '"Êtes-vous vraiment sûr de vouloir désactiver cet utilisateur ?"' %}
+                        <a class="mr-3 btn btn-{{ is_disabled ? 'success' : 'danger' }} d-block"
+                            href="{{ path('security_user_disable', {'id':user.id}) }}"
+                            title="{{ is_disabled ? 'Réactiver' : 'Désactiver' }} l'utilisateur"
+                            data-toggle="tooltip" data-placement="bottom"
+                            {% if is_disabled == false %}onclick="return window.confirm({{ alert_msg }});"{% endif %}>
+                            {% if is_disabled %}Réactiver{% else %}Désactiver{% endif %}</a>
+                        {% if is_disabled == false %}
+                            {% set alert_msg = '"Êtes-vous vraiment sûr de vouloir envoyer un e-mail à l\'utilisateur ?"' %}
+                            <a class="mr-3 btn btn-{{ theme_color }} d-block"
+                                href="{{ path('security_user_send_new_email', {'id':user.id}) }}"
+                                title="Envoyer un nouvel e-mail à l'utilisateur afin de définir son mot de passe"
+                                data-toggle="tooltip" data-placement="bottom"
+                                onclick="return window.confirm({{ alert_msg }});">Envoyer e-mail</a>
+                        {% endif %}
+                    </div>
+                {% endif %} 
+                <div class="float-right">
+                    <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">
+                        <i class="fas fa-save mr-2"></i>Enregistrer</button>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</section>
+
+{% if user.id == null %}
+    <section id="user_services">
+        <h2 class="h4 mb-4">Services rattachés</h2>
+        {% include 'app/admin/security/_security_user_services_collection.html.twig' with {'form_user_services': form} %}
+    </section>
+{% endif %}
+
+{{ form_row(form._token) }}
+{{ form_end(form, {render_rest: false}) }}

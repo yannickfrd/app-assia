@@ -28,6 +28,8 @@ export default class Username {
         if (this.lastnameInputElt) {
             this.firstnameInputElt.addEventListener('change', this.updateUsername.bind(this))
             this.lastnameInputElt.addEventListener('change', this.updateUsername.bind(this))
+        }
+        if (this.usernameInputElt) {
             this.usernameInputElt.addEventListener('keyup', this.timer.bind(this))
         }
         this.emailInputElt.addEventListener('change', this.checkEmail.bind(this))

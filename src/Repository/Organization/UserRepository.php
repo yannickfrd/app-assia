@@ -76,13 +76,17 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Retourne tous les utilisateurs.
      */
-    public function findUsersQuery(UserSearch $search, ?User $user = null): Query
+    public function findUsersQuery(UserSearch $search): Query
     {
-        $qb = $this->queryUsers();
+        $qb = $this->getQueryUsers();
 
-        return $this->filters($qb, $search, $user)
+        $qb = $this->filters($qb, $search);
+
+        return $qb
+            ->addOrderBy('u.lastname', 'ASC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+        ;
     }
 
     /**
@@ -90,7 +94,7 @@ class UserRepository extends ServiceEntityRepository
      */
     public function findUsersAdminQuery(UserSearch $search, User $user): Query
     {
-        $qb = $this->queryUsers();
+        $qb = $this->getQueryUsers();
 
         if (!in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
             $qb->leftJoin('u.serviceUser', 'r')
@@ -98,7 +102,13 @@ class UserRepository extends ServiceEntityRepository
                 ->setParameter('services', $user->getServices());
         }
 
-        return $this->filters($qb, $search, $user)
+        if (in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
+            $qb->orderBy('u.lastActivityAt', 'DESC');
+        } else {
+            $qb->orderBy('u.lastname', 'ASC');
+        }
+
+        return $this->filters($qb, $search)
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
@@ -106,10 +116,9 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Donne le querybuilder des utilisateurs.
      */
-    protected function queryUsers(): QueryBuilder
+    protected function getQueryUsers(): QueryBuilder
     {
         return $this->createQueryBuilder('u')->select('u')
-            // ->leftJoin('u.createdBy', 'creator')->addSelect('PARTIAL creator.{id, lastname, firstname}')
             ->leftJoin('u.serviceUser', 'su')->addSelect('su')
             ->leftJoin('su.service', 's')->addSelect('PARTIAL s.{id, name}')
             ->leftJoin('s.pole', 'p')->addSelect('PARTIAL p.{id, name}');
@@ -118,7 +127,7 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Filtre les utilisateurs.
      */
-    protected function filters(QueryBuilder $qb, UserSearch $search, ?User $user = null): QueryBuilder
+    protected function filters(QueryBuilder $qb, UserSearch $search): QueryBuilder
     {
         if ($search->getFirstname()) {
             $qb->andWhere('u.firstname LIKE :firstname')
@@ -145,12 +154,6 @@ class UserRepository extends ServiceEntityRepository
 
         $qb = $this->addPolesFilter($qb, $search, 'p.id');
         $qb = $this->addServicesFilter($qb, $search);
-
-        if ($user && in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
-            $qb->orderBy('u.lastActivityAt', 'DESC');
-        } else {
-            $qb->orderBy('u.lastname', 'ASC');
-        }
 
         return $qb;
     }

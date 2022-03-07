@@ -2,6 +2,8 @@
 
 namespace App\Tests\Controller\Support;
 
+use App\Entity\Organization\Service;
+use App\Entity\Organization\User;
 use App\Entity\Support\SupportGroup;
 use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
@@ -296,9 +298,11 @@ class SupportControllerTest extends WebTestCase
     {
         $this->loadFixtures();
 
-        $this->createLogin($this->fixtures['userAdmin']);
+        /** @var User $admin */
+        $admin = $this->fixtures['userAdmin'];
+        $this->createLogin($admin);
 
-        $id = $this->fixtures['supportGroup1']->getId();
+        $id = $this->fixtures['supportGroup3']->getId();
         $this->client->request('GET', "/support/$id/delete");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());

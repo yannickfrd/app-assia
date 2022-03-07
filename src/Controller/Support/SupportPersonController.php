@@ -8,7 +8,6 @@ use App\Form\Support\Support\AddPersonToSupportType;
 use App\Service\Grammar;
 use App\Service\SupportGroup\SupportManager;
 use App\Service\SupportGroup\SupportPeopleAdder;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,12 +48,8 @@ class SupportPersonController extends AbstractController
      *
      * @Route("/support-person/{id}/delete/{_token}", name="support_peron_delete", methods="GET")
      */
-    public function delete(
-        SupportPerson $supportPerson,
-        string $_token,
-        SupportManager $supportManager,
-        EntityManagerInterface $em
-    ): Response {
+    public function delete(SupportPerson $supportPerson, string $_token, SupportManager $supportManager): Response
+    {
         $error = false;
 
         $supportGroup = $supportPerson->getSupportGroup();

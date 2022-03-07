@@ -1,5 +1,10 @@
 CHANGELOG
 =========
+## Version 3.11.0 - 07/03/2022
+* Create ServiceUserController
+* Create ServiceUserManger.js
+* Create toggleMain method in entity ServiceUser
+* Refactoring/conventions
 
 ## Version 3.10.0 - 03/03/2022
 Feature to import huda data (#129)

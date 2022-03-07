@@ -26,6 +26,7 @@ App\Entity\Organization\User:
     updatedAt: <dateTimeBetween($createdAt, "now")>
     loginCount: 1
     lastlogin: <dateTimeBetween($updatedAt, "now")>
+    serviceUser: ["@serv2UserAdmin"]
 
   userRoleUser:
     firstname: Role
@@ -41,8 +42,9 @@ App\Entity\Organization\User:
     lastlogin: <dateTimeBetween($updatedAt, "now")>
     createdBy: "@userSuperAdmin"
     updatedBy: "@userSuperAdmin"
+    serviceUser: ["@serv1User1"]
 
-  user{4..5}:
+  user4:
     firstname: <fr_FR:firstName()>
     lastname: <fr_FR:lastName()>
     username: <mb_strtolower($firstname.$lastname)>
@@ -56,6 +58,23 @@ App\Entity\Organization\User:
     lastlogin: <dateTimeBetween($updatedAt, "now")>
     createdBy: "@userSuperAdmin"
     updatedBy: "@userSuperAdmin"
+    serviceUser: ["@serv1User4"]
+
+  user5:
+    firstname: <fr_FR:firstName()>
+    lastname: <fr_FR:lastName()>
+    username: <mb_strtolower($firstname.$lastname)>
+    plainPassword: Test123*
+    email: $username@mail.fr
+    status: 1
+    phone1: 01 00 00 00 00
+    createdAt: <dateTimeBetween("-2 years", "now")>
+    updatedAt: <dateTimeBetween($createdAt, "now")>
+    loginCount: <numberBetween(0, 99)>
+    lastlogin: <dateTimeBetween($updatedAt, "now")>
+    createdBy: "@userSuperAdmin"
+    updatedBy: "@userSuperAdmin"
+    serviceUser: ["@serv2User5"]
 
 App\Entity\Organization\Service:
   service1:
@@ -80,8 +99,9 @@ App\Entity\Organization\serviceUser:
   serv1User1:
     service: "@service1"
     user: "@userRoleUser"
-  serv1UserAdmin:
-    service: "@service1"
+    main: true
+  serv2UserAdmin:
+    service: "@service2"
     user: "@userAdmin"
   serv1User4:
     service: "@service1"

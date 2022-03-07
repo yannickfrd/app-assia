@@ -1,0 +1,62 @@
+<section>
+    <h2 class="h4 mb-4">Services rattachés</h2>
+
+    {% if user_services is not empty %}
+
+        <div class="table-responsive">
+            <table id="user_services_table" class="table table-sm table-striped table-hover text-dark">
+                <thead>
+                <tr>
+                    <th scope="col" class="align-middle th-w-20"></th>
+                    <th scope="col" class="align-middle th-w-140">Nom du service</th>
+                    <th scope="col" class="align-middle th-w-140">Service principal</th>
+                    <th scope="col" class="align-middle th-w-140">Pôle</th>
+                    <th scope="col" class="align-middle th-w-40"></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for service_user in user_services %}
+                    {% set service = service_user.service %}
+                    <tr data-service-id="{{ service.id }}" data-service-name="{{ service.name }}">
+                        <th scope="row" class="align-middle"></th>
+                        <td class="align-middle">{{ service.name }}</td>
+                        <td class="align-middle">
+                            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }}">
+                                <div class="form-check">
+                                    {% if is_granted("EDIT", service) %}
+                                        <input type="checkbox" id="service_user_main_{{ service_user.id }}" 
+                                            name="service_user_main_{{ service_user.id }}" data-action="toggle_main"
+                                            class="custom-control-input checkbox form-check-input"
+                                            data-path="{{ path('service_user_toggle_main', {'id': service_user.id}) }}"
+                                            {% if service_user.main %}checked="checked"{% endif %}>
+                                        <label class="custom-control-label form-check-label" for="service_user_main_{{ service_user.id }}"></label>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </td>
+                        <td class="align-middle">{{ service.pole.name }}</td>
+                        <td class="align-middle text-right">
+                            {% if is_granted('EDIT', service) %}
+                                <button class="btn btn-danger btn-sm shadow mx-2" data-action="delete"
+                                    data-path="{{ path('service_user_delete', {'id': service_user.id, 
+                                    '_token': csrf_token('delete' ~ service_user.id)}) }}" 
+                                    title="Retirer l'utilisateur de ce service" data-toggle="tooltip" data-placement="bottom">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+
+    {{ form_start(form_user_services, {action: path('service_user_add', {'id': user.id})}) }}
+
+    {% include 'app/admin/security/_security_user_services_collection.html.twig' %}
+
+    {{ form_row(form_user_services._token) }}
+    {{ form_end(form_user_services, {'render_rest': false}) }}
+
+</section>

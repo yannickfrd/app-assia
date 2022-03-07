@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% set user = form.vars.value  %}
+{% set is_disabled = user.isDisabled %}
+{% set title = user.id ? user.fullname ~ (is_disabled ? ' (désactivé)') : 'Création d\'un compte utilisateur'  %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+
+        <h1 class="h2 mb-3">{{ title }}</h1>
+        {% if user.id %}
+            <div class="small text-secondary">
+                <p> Créé le {{ user.createdAt|date('d/m/Y à H:i') }}{{ user.createdBy ? ' par ' ~ user.createdBy.fullname }}
+                    {% if user.updatedAt %}(modifié le {{ user.updatedAt|date('d/m/Y à H:i') }}<!--
+                        -->	{{ user.updatedBy ? ' par ' ~ user.updatedBy.fullname }}{% endif %})
+                </p>
+            </div>
+        {% else %}
+            <div class="mb-4"></div>
+        {% endif %}
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a class="text-{{ theme_color }}" href="{{ path('user_index') }}">Liste des utilisateurs</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+            </ol>
+        </nav>
+
+        {% include 'model/_msgFlash.html.twig' %}
+        <div id="js-msg-flash-content"></div>
+
+        <hr>
+
+        {% include 'app/admin/security/_security_user_form.html.twig' %}
+
+        {% if user.id %}
+            <hr>
+            {% include 'app/admin/security/_security_user_services.html.twig' %}
+        {% endif %}
+
+        {% if user.id and user.status == constant('STATUS_SOCIAL_WORKER', user) %}
+            <hr>
+            {% include 'app/admin/security/_security_user_devices.html.twig' %}
+        {% endif %}
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+	{{ encore_entry_script_tags('securityUser') }}
+{% endblock %}

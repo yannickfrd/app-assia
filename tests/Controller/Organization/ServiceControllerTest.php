@@ -2,6 +2,7 @@
 
 namespace App\Tests\Controller\Organization;
 
+use App\Entity\Organization\User;
 use App\Tests\AppTestTrait;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -107,9 +108,11 @@ class ServiceControllerTest extends WebTestCase
             dirname(__DIR__).'/../DataFixturesTest/PlaceFixturesTest.yaml',
         ]));
 
-        $this->createLogin($fixtures['userAdmin']);
+        /** @var User $admin */
+        $admin = $fixtures['userAdmin'];
+        $this->createLogin($admin);
 
-        $service = $fixtures['service1'];
+        $service = $admin->getServiceUser()->first()->getService();
         $id = $service->getId();
         $this->client->request('GET', "/service/$id");
 

@@ -14,14 +14,14 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
- * Commande pour changer le nom des utilisateurs (uniquement en mode développement).
+ * Commande pour changer le nom des utilisateurs (uniquement en local et en développement).
  */
-class RenameUserCommand extends Command
+class RenameUsersCommand extends Command
 {
     use DoctrineTrait;
 
-    protected static $defaultName = 'app:user:rename';
-    protected static $defaultDescription = 'Rename users in development environnement.';
+    protected static $defaultName = 'app:user:rename-all';
+    protected static $defaultDescription = 'Rename all users in local and development environnement.';
 
     protected $em;
     protected $userRepo;
@@ -63,7 +63,7 @@ class RenameUserCommand extends Command
 
         $count = 0;
 
-        $hashedPassword = $this->passwordHasher->hashPassword(new User(), 'test');
+        $hashedPassword = $this->passwordHasher->hashPassword(new User(), 'password');
 
         foreach ($users as $user) {
             $firstname = $this->faker->firstName();

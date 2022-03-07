@@ -39,7 +39,7 @@ class UserManager
         $this->em->persist($user);
         $this->em->flush();
 
-        $this->discache($user);
+        $this->deleteCacheItems($user);
 
         $userNotification->newUser($user);
 
@@ -213,7 +213,7 @@ class UserManager
     /**
      * Supprime les utilisateurs en cache pour chaque service.
      */
-    public function discache(User $user): bool
+    public static function deleteCacheItems(User $user): bool
     {
         $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
 

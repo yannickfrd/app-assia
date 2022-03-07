@@ -44,7 +44,7 @@ class PlaceControllerTest extends WebTestCase
             dirname(__DIR__).'/../DataFixturesTest/PlaceFixturesTest.yaml',
         ]);
 
-        $this->service = $this->fixtures['service1'];
+        $this->service = $this->fixtures['service2'];
         $this->place = $this->fixtures['place1'];
     }
 
@@ -57,13 +57,11 @@ class PlaceControllerTest extends WebTestCase
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Groupes de places');
 
-        /** @var Crawler */
         $crawler = $this->client->submitForm('search', [
             'name' => 'Logement test',
             'nbPlaces' => 6,
             'service' => [
                 'services' => $this->service->getId(),
-                'devices' => $this->fixtures['device1'],
             ],
             'date[start]' => '2019-01-01',
             'date[end]' => '2020-01-01',
@@ -71,7 +69,7 @@ class PlaceControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertGreaterThanOrEqual(2, $crawler->filter('tr')->count());
+        $this->assertGreaterThanOrEqual(1, $crawler->filter('tr')->count());
     }
 
     public function testExportPlaceIsSuccessful()
@@ -123,7 +121,7 @@ class PlaceControllerTest extends WebTestCase
 
         // Fail
         $this->client->submitForm('send', [
-            'place[name]' => 'Logement test',
+            'place[name]' => null,
             'place[service]' => $this->service->getId(),
             'place[nbPlaces]' => 6,
             'place[startDate]' => '2019-01-01',
@@ -141,7 +139,7 @@ class PlaceControllerTest extends WebTestCase
             'place[location][city]' => 'Houilles',
             'place[location][zipcode]' => '78 800',
             'place[location][address]' => 'xxx',
-            'place[service]' => $this->fixtures['service1'],
+            'place[service]' => $this->service->getId(),
         ]);
 
         $this->assertResponseIsSuccessful();
@@ -150,7 +148,7 @@ class PlaceControllerTest extends WebTestCase
 
     public function testEditPlaceIsSuccessful()
     {
-        $this->createLogin($this->fixtures['userAdmin']);
+        $this->createLogin($this->fixtures['userSuperAdmin']);
 
         $id = $this->place->getId();
         $this->client->request('GET', "/place/$id");
@@ -168,7 +166,7 @@ class PlaceControllerTest extends WebTestCase
 
     public function testDeletePlace()
     {
-        $this->createLogin($this->fixtures['userAdmin']);
+        $this->createLogin($this->fixtures['userSuperAdmin']);
 
         $id = $this->place->getId();
         $this->client->request('GET', "/place/$id/delete");
@@ -179,7 +177,7 @@ class PlaceControllerTest extends WebTestCase
 
     public function testDisablePlace()
     {
-        $this->createLogin($this->fixtures['userAdmin']);
+        $this->createLogin($this->fixtures['userSuperAdmin']);
 
         $id = $this->fixtures['place1']->getId();
         $this->client->request('GET', "/place/$id/disable");
