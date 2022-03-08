@@ -8,16 +8,18 @@ use App\Form\Admin\Security\ForgotPasswordType;
 use App\Form\Admin\Security\InitPasswordType;
 use App\Form\Admin\Security\LoginType;
 use App\Form\Admin\Security\ReinitPasswordType;
+use App\Form\Admin\Security\SecurityUserDevicesType;
+use App\Form\Admin\Security\SecurityUserServicesType;
 use App\Form\Admin\Security\SecurityUserType;
 use App\Form\Model\Security\UserChangeInfo;
 use App\Form\Model\Security\UserChangePassword;
 use App\Form\Model\Security\UserInitPassword;
 use App\Form\Model\Security\UserResetPassword;
 use App\Form\Organization\User\UserChangeInfoType;
+use App\Form\Organization\User\UserSettingType;
 use App\Notification\UserNotification;
-use App\Repository\Organization\ServiceRepository;
+use App\Repository\Organization\ServiceUserRepository;
 use App\Repository\Organization\UserRepository;
-use App\Repository\Support\SupportGroupRepository;
 use App\Service\User\UserManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -39,26 +41,18 @@ class SecurityController extends AbstractController
     /**
      * @Route("/admin/registration", name="security_registration", methods="GET|POST")
      */
-    public function registration(Request $request, UserPasswordHasherInterface $passwordHasher, UserNotification $userNotification): Response
+    public function registration(Request $request, UserNotification $userNotification): Response
     {
-        $user = new User();
-        $user->setPassword($passwordHasher->hashPassword($user, bin2hex(random_bytes(8))));
-
-        $form = $this->createForm(SecurityUserType::class, $user)
+        $form = $this->createForm(SecurityUserType::class, $user = new User())
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($user->getServices()->count() > 0) {
-                $this->userManager->createUser($user, $userNotification);
+            $this->userManager->createUser($user, $userNotification);
 
-                return $this->redirectToRoute('security_user', ['id' => $user->getId()]);
-            }
-            $this->addFlash('danger', "Veuillez rattacher l'utilisateur au minimum à un service.");
+            return $this->redirectToRoute('security_user', ['id' => $user->getId()]);
         }
 
-        return $this->render('app/admin/security/securityUser.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        return $this->renderForm('app/admin/security/security_user.html.twig', ['form' => $form]);
     }
 
     /**
@@ -126,7 +120,7 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('home');
         }
 
-        return $this->render('app/admin/security/initPassword.html.twig', [
+        return $this->render('app/admin/security/security_init_password.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -136,27 +130,39 @@ class SecurityController extends AbstractController
      *
      * @Route("/my_profile", name="my_profile", methods="GET|POST")
      */
-    public function showCurrentUser(Request $request, UserPasswordHasherInterface $passwordHasher, SupportGroupRepository $supportRepo, ServiceRepository $serviceRepo): Response
+    public function showCurrentUser(Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
-        $userChangeInfo = (new UserChangeInfo())
-            ->setEmail($this->getUser()->getEmail())
-            ->setPhone1($this->getUser()->getPhone1())
-            ->setPhone2($this->getUser()->getPhone2());
+        /** @var User $user */
+        $user = $this->getUser();
 
-        $form = $this->createForm(UserChangeInfoType::class, $userChangeInfo)
+        $setting = $user->getSetting() ?? $this->userManager->getUserSetting($user);
+        $formSetting = $this->createForm(UserSettingType::class, $setting)
+            ->handleRequest($request);
+
+        $userChangeInfo = (new UserChangeInfo())
+            ->setEmail($user->getEmail())
+            ->setPhone1($user->getPhone1())
+            ->setPhone2($user->getPhone2())
+        ;
+
+        $form = $this->createForm(UserChangeInfoType::class, $userChangeInfo, ['user' => $user])
             ->handleRequest($request);
 
         $userChangePassword = new UserChangePassword();
 
-        $formPassword = $this->createForm(ChangePasswordType::class, $userChangePassword);
-        $formPassword->handleRequest($request);
+        $formPassword = $this->createForm(ChangePasswordType::class, $userChangePassword)
+            ->handleRequest($request);
+
+        if ($formSetting->isSubmitted() && $formSetting->isValid()) {
+            $this->userManager->updateSetting($user->setSetting($setting));
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->userManager->updateCurrentUserInfo($this->getUser(), $userChangeInfo);
+            $this->userManager->updateCurrentUserInfo($user, $userChangeInfo);
         }
 
         if ($formPassword->isSubmitted() && $formPassword->isValid()) {
-            $this->userManager->updatePassword($this->getUser(), $passwordHasher, $userChangePassword->getNewPassword());
+            $this->userManager->updatePassword($user, $passwordHasher, $userChangePassword->getNewPassword());
 
             return $this->redirectToRoute('home');
         }
@@ -165,31 +171,38 @@ class SecurityController extends AbstractController
         }
 
         return $this->render('app/organization/user/user.html.twig', [
-            'form' => $form->createView(),
-            'formPassword' => $formPassword->createView(),
-            'supports' => $supportRepo->findSupportsOfUser($this->getUser()),
-            'services' => $serviceRepo->findServicesOfUser($this->getUser()),
+            'form_user' => $form->createView(),
+            'form_password' => $formPassword->createView(),
+            'form_setting' => $formSetting->createView(),
         ]);
     }
 
     /**
      * @Route("/admin/user/{id}", name="security_user", methods="GET|POST")
      */
-    public function editUser(User $user, Request $request, EntityManagerInterface $em): Response
+    public function editUser(User $user, Request $request, EntityManagerInterface $em,
+        ServiceUserRepository $serviceUserRepo): Response
     {
         $form = $this->createForm(SecurityUserType::class, $user)
             ->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        $formUserDevices = $this->createForm(SecurityUserDevicesType::class, $user)
+            ->handleRequest($request);
+
+        if (($form->isSubmitted() && $form->isValid())
+            || ($formUserDevices->isSubmitted() && $formUserDevices->isValid())) {
             $em->flush();
 
-            $this->userManager->discache($user);
+            $this->userManager->deleteCacheItems($user);
 
             $this->addFlash('success', 'Le compte de '.$user->getFirstname().' est mis à jour.');
         }
 
-        return $this->render('app/admin/security/securityUser.html.twig', [
-            'form' => $form->createView(),
+        return $this->renderForm('app/admin/security/security_user.html.twig', [
+            'form' => $form,
+            'form_user_devices' => $formUserDevices,
+            'form_user_services' => $this->createForm(SecurityUserServicesType::class),
+            'user_services' => $serviceUserRepo->findUserServices($user),
         ]);
     }
 
@@ -212,12 +225,12 @@ class SecurityController extends AbstractController
             $user->setDisabledAt(null);
             $this->addFlash('success', 'Ce compte utilisateur est ré-activé.');
         } else {
-            $user->setPassword('Assia!?='.bin2hex(random_bytes(8)))
+            $user->setPassword('')
                 ->setDisabledAt(new \DateTime());
             $this->addFlash('warning', 'Ce compte utilisateur est désactivé.');
         }
 
-        $this->userManager->discache($user);
+        $this->userManager->deleteCacheItems($user);
 
         $em->flush();
 
@@ -253,7 +266,7 @@ class SecurityController extends AbstractController
             $this->addFlash('danger', "Le login ou l'adresse email sont incorrects.");
         }
 
-        return $this->render('app/admin/security/forgotPassword.html.twig', [
+        return $this->render('app/admin/security/security_forgot_password.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -282,7 +295,7 @@ class SecurityController extends AbstractController
             }
         }
 
-        return $this->render('app/admin/security/reinitPassword.html.twig', [
+        return $this->render('app/admin/security/security_reinit_password.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -321,7 +334,7 @@ class SecurityController extends AbstractController
             }
         }
 
-        return $this->render('app/admin/security/reinitPassword.html.twig', [
+        return $this->render('app/admin/security/security_reinit_password.html.twig', [
             'form' => $form->createView(),
         ]);
     }

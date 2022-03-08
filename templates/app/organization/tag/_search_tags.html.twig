@@ -1,0 +1,7 @@
+{% extends "model/_search.html.twig" %}
+
+{% block search_form %}
+    <div class="col-auto my-1 px-1">{{ form_widget(form.name) }}</div>
+    <div class="col-auto my-1 px-1">{{ form_widget(form.color) }}</div>
+    <div class="col-auto my-1 px-1">{{ form_widget(form.categories) }}</div>
+{% endblock %}

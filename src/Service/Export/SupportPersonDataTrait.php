@@ -13,17 +13,17 @@ trait SupportPersonDataTrait
         $peopleGroup = $supportGroup->getPeopleGroup();
         $originRequest = $supportGroup->getOriginRequest() ?? $this->originRequest;
 
-        $startPlaces = [];
-        $endPlaces = [];
-        $endReasonPlaces = [];
-        $namePlaces = [];
+        $placesStartDates = [];
+        $placesEndDates = [];
+        $placesEndReasons = [];
+        $placesNames = [];
 
         foreach ($supportPerson->getPlacesPerson() as $placePerson) {
-            $startPlaces[] = $placePerson->getStartDate();
-            $endPlaces[] = $placePerson->getEndDate();
-            $placePerson->getEndReason() ? $endReasonPlaces[] = $placePerson->getEndReasonToString() : null;
+            $placesStartDates[] = $placePerson->getStartDate();
+            $placesEndDates[] = $placePerson->getEndDate();
+            $placePerson->getEndReason() ? $placesEndReasons[] = $placePerson->getEndReasonToString() : null;
             $place = $placePerson->getPlaceGroup()->getPlace();
-            $namePlaces[] = (string) $place->getName().' ';
+            $placesNames[] = (string) $place->getName().' ';
         }
 
         $datas = [
@@ -47,6 +47,7 @@ trait SupportPersonDataTrait
             'Date début suivi' => $this->formatDate($supportPerson->getStartDate()),
             'Date fin théorique suivi' => $this->formatDate($supportGroup->getTheoreticalEndDate()),
             'Date fin suivi' => $this->formatDate($supportPerson->getEndDate()),
+            'Motif de fin de suivi' => $supportPerson->getEndReasonToString(),
             'Situation à la fin' => $supportPerson->getEndStatusToString(),
             'Commentaire situation à la fin' => $anonymized ? 'XXX' : $supportPerson->getEndStatusComment(),
             'Fin - Ville' => $supportGroup->getEndLocationCity(),
@@ -57,10 +58,10 @@ trait SupportPersonDataTrait
             'Dispositif' => $supportGroup->getDevice() ? $supportGroup->getDevice()->getName() : '',
             'Référent social' => $supportGroup->getReferent() ? $supportGroup->getReferent()->getFullname() : null,
             'Référent social suppléant' => $supportGroup->getReferent2() ? $supportGroup->getReferent2()->getFullname() : null,
-            'Date début hébergement' => $startPlaces ? $this->formatDate(min($startPlaces)) : null,
-            'Date fin hébergement' => $endPlaces ? $this->formatDate($this->getEndDate($endPlaces)) : null,
-            'Motif fin hébergement' => join(', ', $endReasonPlaces),
-            'Nom du logement/ hébergement' => (string) join(', ', $namePlaces),
+            'Date début hébergement' => $placesStartDates ? $this->formatDate(min($placesStartDates)) : null,
+            'Date fin hébergement' => $placesEndDates ? $this->formatDate($this->getEndDate($placesEndDates)) : null,
+            'Motif fin hébergement' => join(', ', $placesEndReasons),
+            'Nom du logement/ hébergement' => (string) join(', ', $placesNames),
             'Adresse' => $anonymized ? 'XXX' : $supportGroup->getAddress(),
             'Ville' => $supportGroup->getCity(),
             'Département' => (string) $supportGroup->getDept(),

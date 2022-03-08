@@ -1,0 +1,13 @@
+{% extends 'app/evaluation/edit/model/_evaluation_accordion.html.twig' %}
+
+{% block card_title %}Synthèse - Conclusion{% endblock %}
+
+{% block card_body %}
+
+	<div class="row mb-3">
+		<div class="col-md-12 d-none">{{ form_label(form.conclusion) }}</div>
+		<div class="col-md-12">{{ form_widget(form.conclusion) }}</div>
+	</div>
+	{{ parent() }}
+	
+{% endblock %}

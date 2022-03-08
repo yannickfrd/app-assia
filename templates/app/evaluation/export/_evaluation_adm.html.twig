@@ -1,0 +1,58 @@
+{% import 'macros/p_view.html.twig' as p_view %}
+{% import 'macros/textarea_view.html.twig' as textarea_view %}
+
+<hr/>
+<h2 style=" color: {{ theme_color }}; {{ style_h2 }}">Situation administrative</h2>
+{% set eval_adults_admin = eval_adults|filter(e => e.evalAdmPerson) %}
+{% set nb_adults_admin = eval_adults_admin|length %}
+{% for eval_person in eval_adults_admin %}
+    {% set eval_adm = eval_person.evalAdmPerson %}
+    {% if nb_adults_admin > 1 %}
+        <p style="{{ style_h3 }}"><u>{{ eval_person.supportPerson.person.fullname }}</u> :</p>
+    {% endif %}
+    {{ p_view.get(eval_adm.nationality ? eval_adm.nationalityToString ~ (eval_adm.country ? ' (' 
+        ~ eval_adm.country ~ ')'), 'Nationality', 'evaluation') }}
+    {{ p_view.get(eval_adm.arrivalDate ? eval_adm.arrivalDate|date('d/m/Y'), 'Arrival date', 'evaluation') }}
+    {{ p_view.get(eval_adm.paper == YES and eval_adm.paperType ? eval_adm.paperTypeToString : eval_adm.paperToString, 'Paper', 'evaluation') }}
+    {{ p_view.get(eval_adm.asylumBackground == YES ? (eval_adm.asylumStatus ? eval_adm.asylumStatusToString : 
+        eval_adm.asylumBackgroundToString), 'Asylum background', 'evaluation') }}
+    {{ p_view.get(eval_adm.renewalPermitDate ? eval_adm.renewalPermitDate|date('d/m/Y') 
+        ~ (eval_adm.nbRenewals ? ' (' ~ eval_adm.nbRenewals ~ ' renouvellement(s))'), 'Renewal permit date', 'evaluation' ) }}
+    {{ p_view.get(eval_adm.endValidPermitDate ? eval_adm.endValidPermitDate|date('d/m/Y'), 'End valid permit date', 'evaluation') }}
+    {{ p_view.get(eval_adm.workRightToString, 'Work right', 'evaluation') }}
+    {{ textarea_view.get(eval_adm.commentEvalAdmPerson, null, null, type) }}
+{% endfor %}
+
+{% if eval_children|filter(e => e.evalAdmPerson)|length > 0 %}
+    {% set nb_asylum_children = eval_children|filter(e => e.evalAdmPerson and e.evalAdmPerson.asylumBackground == YES)|length %}
+    <p>&nbsp;</p>
+    <table class="table-bordered mb-2" style="width: 100%; {{ style_table }}">
+        <thead>
+            <tr style="background-color: #e9ecef; font-weight: bold;">
+                <th>Enfants</th>
+                <th>Nationalité</th>
+                <th>Papier</th>
+                {% if nb_asylum_children > 0 %}
+                    <th>Asile</th>
+                {% endif %}
+                <th>Commentaire</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for eval_person in eval_children %}
+                {% set eval_adm = eval_person.evalAdmPerson %}
+                {% if eval_adm %}
+                    <tr>
+                        <td scope="row">{{ eval_person.supportPerson.person.fullname }}</td>
+                        <td>{{ eval_adm.nationalityToString ~ (eval_adm.country ? ' (' ~ eval_adm.country ~ ')') }}</td>
+                        <td>{{ eval_adm.paper == YES ? eval_adm.paperType ? eval_adm.paperTypeToString ~ (eval_adm.endValidPermitDate ? ' (fin de validité : ' ~ eval_adm.endValidPermitDate|date('d/m/Y') ~ ')') : eval_adm.paperToString }}</td>
+                        {% if nb_asylum_children > 0 %}
+                            <td>{{ eval_adm.asylumBackground == YES ? eval_adm.asylumStatus ? eval_adm.asylumStatusToString : eval_adm.asylumBackgroundToString }}</td>
+                        {% endif %}
+                        <td>{{ eval_adm.commentEvalAdmPerson }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}

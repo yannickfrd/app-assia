@@ -2,18 +2,17 @@
 
 namespace App\Controller\Security;
 
-use App\Service\Pagination;
-use App\Entity\Organization\User;
-use App\Service\Export\UserExport;
 use App\Form\Model\Organization\UserSearch;
-use Symfony\Component\HttpFoundation\Request;
 use App\Form\Organization\User\UserSearchType;
-use Symfony\Component\HttpFoundation\Response;
 use App\Repository\Organization\UserRepository;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Service\Export\UserExport;
+use App\Service\Pagination;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
 {
@@ -27,9 +26,9 @@ class UserController extends AbstractController
     /**
      * Liste des utilisateurs.
      *
-     * @Route("/directory/users", name="users", methods="GET|POST")
+     * @Route("/directory/users", name="user_index", methods="GET|POST")
      */
-    public function listUsers(Request $request, Pagination $pagination): Response
+    public function index(Request $request, Pagination $pagination): Response
     {
         $form = $this->createForm(UserSearchType::class, $search = new UserSearch())
             ->handleRequest($request);
@@ -38,20 +37,19 @@ class UserController extends AbstractController
             return $this->exportData($search);
         }
 
-        return $this->render('app/organization/user/listUsers.html.twig', [
-            'userSearch' => $search,
-            'form' => $form->createView(),
-            'users' => $pagination->paginate($this->userRepo->findUsersQuery($search), $request) ?? null,
+        return $this->renderForm('app/organization/user/user_index.html.twig', [
+            'form' => $form,
+            'users' => $pagination->paginate($this->userRepo->findUsersQuery($search), $request),
         ]);
     }
 
     /**
      * Administration des utilisateurs.
      *
-     * @Route("/admin/users", name="admin_users", methods="GET|POST")
+     * @Route("/admin/users", name="admin_user_index", methods="GET|POST")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function adminListUsers(Request $request, Pagination $pagination): Response
+    public function adminIndex(Request $request, Pagination $pagination): Response
     {
         $form = $this->createForm(UserSearchType::class, $search = new UserSearch())
             ->handleRequest($request);
@@ -60,7 +58,7 @@ class UserController extends AbstractController
             return $this->exportData($search);
         }
 
-        return $this->render('app/organization/user/adminListUsers.html.twig', [
+        return $this->render('app/organization/user/admin_user_index.html.twig', [
             'userSearch' => $search,
             'form' => $form->createView(),
             'users' => $pagination->paginate($this->userRepo->findUsersAdminQuery($search, $this->getUser()), $request),
@@ -76,7 +74,7 @@ class UserController extends AbstractController
     {
         $user = $this->userRepo->findOneBy(['username' => $username]);
 
-        return $this->json(['response' => $user != null]);
+        return $this->json(['response' => null != $user]);
     }
 
     /**

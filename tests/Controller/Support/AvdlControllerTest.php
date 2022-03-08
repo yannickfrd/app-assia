@@ -2,15 +2,15 @@
 
 namespace App\Tests\Controller\Support;
 
-use App\Tests\AppTestTrait;
 use App\Entity\Support\SupportGroup;
-use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\HttpFoundation\Response;
+use App\Tests\AppTestTrait;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
-use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
+use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\HttpFoundation\Response;
 
 class AvdlControllerTest extends WebTestCase
 {
@@ -21,7 +21,7 @@ class AvdlControllerTest extends WebTestCase
 
     /** @var AbstractDatabaseTool */
     protected $databaseTool;
-    
+
     /** @var array */
     protected $fixtures;
 
@@ -34,7 +34,7 @@ class AvdlControllerTest extends WebTestCase
 
         $this->client = $this->createClient();
 
-        /** @var AbstractDatabaseTool */
+        /* @var AbstractDatabaseTool */
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
 
         $this->fixtures = $this->databaseTool->loadAliceFixture([
@@ -124,7 +124,6 @@ class AvdlControllerTest extends WebTestCase
         ]);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        // dump($this->client->getResponse()->getContent());
         $this->assertSelectorTextContains('.alert.alert-success', 'Le suivi social est créé.');
     }
 
@@ -170,19 +169,18 @@ class AvdlControllerTest extends WebTestCase
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('.alert.alert-success', 'Le suivi social est mis à jour.');
 
-        $this->client->request('GET', "/support/$id/view");
+        $this->client->request('GET', "/support/$id/show");
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
-        
+
         $this->client = null;
         $this->fixtures = null;
 
         $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
         $cache->clear();
-
     }
 }

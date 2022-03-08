@@ -2,12 +2,12 @@
 
 namespace App\Form\Organization\SubService;
 
-use App\Entity\Organization\User;
 use App\Entity\Organization\SubService;
-use Symfony\Component\Form\AbstractType;
+use App\Entity\Organization\User;
 use App\Repository\Organization\UserRepository;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SubServiceType extends AbstractType
@@ -17,7 +17,7 @@ class SubServiceType extends AbstractType
         $builder
             ->add('name', null, [
                 'attr' => [
-                    'placeholder' => 'subService.name',
+                    'placeholder' => 'sub_service.name',
                 ],
             ])
             ->add('phone1', null, [
@@ -31,7 +31,7 @@ class SubServiceType extends AbstractType
                 ],
             ])
             ->add('chief', EntityType::class, [
-                'label' => 'subService.chief',
+                'label' => 'sub_service.chief',
                 'class' => User::class,
                 'choice_label' => 'fullname',
                 'query_builder' => function (UserRepository $repo) {

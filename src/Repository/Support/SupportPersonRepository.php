@@ -3,6 +3,7 @@
 namespace App\Repository\Support;
 
 use App\Entity\Organization\Service;
+use App\Entity\Organization\User;
 use App\Entity\People\PeopleGroup;
 use App\Entity\People\Person;
 use App\Entity\Support\PlaceGroup;
@@ -27,6 +28,8 @@ use Doctrine\Persistence\ManagerRegistry;
 class SupportPersonRepository extends ServiceEntityRepository
 {
     use QueryTrait;
+
+    public const EXPORT_LIMIT = 15_000;
 
     private $currentUser;
 
@@ -61,7 +64,7 @@ class SupportPersonRepository extends ServiceEntityRepository
      */
     public function findSupportsToExport(?SupportSearch $search = null): ?array
     {
-        $qb = $this->getSupportsQuery()
+        $qb = $this->getSupportsQuery(true)
             ->leftJoin('sp.placesPerson', 'pp')->addSelect('pp')
             ->leftJoin('pp.placeGroup', 'pg')->addSelect('pg')
             ->leftJoin('pg.place', 'pl')->addSelect('pl');
@@ -143,7 +146,8 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->leftJoin('pg.place', 'pl')->addSelect('PARTIAL pl.{id, name}')
 
             ->where('s.type = :type')
-            ->setParameter('type', Service::SERVICE_TYPE_HOTEL);
+            ->setParameter('type', Service::SERVICE_TYPE_HOTEL)
+        ;
 
         $qb = $this->filters($qb, $search);
 
@@ -159,7 +163,8 @@ class SupportPersonRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('sg.updatedAt', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+        ;
     }
 
     /**
@@ -190,12 +195,12 @@ class SupportPersonRepository extends ServiceEntityRepository
      *
      * @return SupportPerson[]|null
      */
-    public function findSupportsFullToExport($search = null): ?array
+    public function findSupportsFullToExport($search = null, $limit = 99_999): ?array
     {
         $qb = $this->getSupportsQuery()
             ->leftJoin('sp.placesPerson', 'pp')->addSelect('pp')
-            ->leftJoin('pp.placeGroup', 'pg')->addSelect('pg')
-            ->leftJoin('pg.place', 'pl')->addSelect('pl')
+            ->leftJoin('pp.placeGroup', 'pg')->addSelect('PARTIAL pg.{id}')
+            ->leftJoin('pg.place', 'pl')->addSelect('PARTIAL pl.{id, name}')
 
             ->leftJoin('g.referents', 'ref')->addSelect('PARTIAL ref.{id, name, type}')
 
@@ -203,28 +208,35 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->leftJoin('sg.avdl', 'avdl')->addSelect('avdl')
 
             ->leftJoin('sp.evaluations', 'ep')->addSelect('PARTIAL ep.{id}')
-            ->leftJoin('ep.initEvalPerson', 'initEvalPerson')->addSelect('initEvalPerson')
-            ->leftJoin('ep.evalJusticePerson', 'evalJusticePerson')->addSelect('evalJusticePerson')
-            ->leftJoin('ep.evalAdmPerson', 'evalAdmPerson')->addSelect('evalAdmPerson')
-            ->leftJoin('ep.evalBudgetPerson', 'evalBudgetPerson')->addSelect('evalBudgetPerson')
-            ->leftJoin('ep.evalFamilyPerson', 'evalFamilyPerson')->addSelect('evalFamilyPerson')
-            ->leftJoin('ep.evalProfPerson', 'evalProfPerson')->addSelect('evalProfPerson')
-            ->leftJoin('ep.evalSocialPerson', 'evalSocialPerson')->addSelect('evalSocialPerson')
+            ->leftJoin('ep.evalInitPerson', 'eip')->addSelect('eip')
+            ->leftJoin('ep.evalJusticePerson', 'ejp')->addSelect('ejp')
+            ->leftJoin('ep.evalAdmPerson', 'eap')->addSelect('eap')
+            ->leftJoin('ep.evalBudgetPerson', 'ebp')->addSelect('ebp')
+            ->leftJoin('ep.evalFamilyPerson', 'efp')->addSelect('efp')
+            ->leftJoin('ep.evalProfPerson', 'epf')->addSelect('epf')
+            ->leftJoin('ep.evalSocialPerson', 'esp')->addSelect('esp')
+
+            ->leftJoin('eip.evalBudgetResources', 'eir')->addSelect('eir')
+            ->leftJoin('ebp.evalBudgetResources', 'ebr')->addSelect('ebr')
+            ->leftJoin('ebp.evalBudgetCharges', 'ebc')->addSelect('ebc')
+            ->leftJoin('ebp.evalBudgetDebts', 'ebd')->addSelect('ebd')
 
             ->leftJoin('ep.evaluationGroup', 'eg')->addSelect('PARTIAL eg.{id}')
-            ->leftJoin('eg.initEvalGroup', 'initEvalGroup')->addSelect('initEvalGroup')
-            ->leftJoin('eg.evalBudgetGroup', 'evalBudgetGroup')->addSelect('evalBudgetGroup')
-            ->leftJoin('eg.evalFamilyGroup', 'evalFamilyGroup')->addSelect('evalFamilyGroup')
-            ->leftJoin('eg.evalHousingGroup', 'evalHousingGroup')->addSelect('evalHousingGroup')
-            ->leftJoin('eg.evalSocialGroup', 'evalSocialGroup')->addSelect('evalSocialGroup');
+            ->leftJoin('eg.evalInitGroup', 'eig')->addSelect('eig')
+            ->leftJoin('eg.evalBudgetGroup', 'ebg')->addSelect('ebg')
+            ->leftJoin('eg.evalFamilyGroup', 'efg')->addSelect('efg')
+            ->leftJoin('eg.evalHousingGroup', 'ehg')->addSelect('ehg')
+            ->leftJoin('eg.evalSocialGroup', 'esg')->addSelect('esg')
+        ;
 
         return $this->filters($qb, $search)
 
-            ->setMaxResults(9999)
+            ->setMaxResults($limit)
             ->orderBy('sp.startDate', 'DESC')
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getResult();
+            ->getResult()
+        ;
     }
 
     /**
@@ -233,12 +245,12 @@ class SupportPersonRepository extends ServiceEntityRepository
     public function countSupportsToExport($search = null): int
     {
         $qb = $this->getSupportsQuery()
-            ->select('COUNT(sp.id)');
+            ->select('count(DISTINCT sp.id)');
 
         return $this->filters($qb, $search)
-
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getSingleScalarResult()
+        ;
     }
 
     /**
@@ -266,7 +278,8 @@ class SupportPersonRepository extends ServiceEntityRepository
 
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getOneOrNullResult();
+            ->getOneOrNullResult()
+        ;
     }
 
     /**
@@ -274,7 +287,9 @@ class SupportPersonRepository extends ServiceEntityRepository
      */
     protected function getSupportsQuery(): QueryBuilder
     {
-        return $this->createQueryBuilder('sp')->select('sp')
+        return $this->createQueryBuilder('sp')
+        //     $qb->select('DISTINCT sp')
+        //         ->groupBy('sp.id');
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, birthdate, gender}')
             ->leftJoin('sp.supportGroup', 'sg')->addSelect('sg')
             ->leftJoin('sg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople, siSiaoId}')
@@ -284,14 +299,16 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
             ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')
             ->leftJoin('sg.originRequest', 'origin')->addSelect('origin')
-            ->leftJoin('origin.organization', 'orga')->addSelect('PARTIAL orga.{id, name}');
+            ->leftJoin('origin.organization', 'orga')->addSelect('PARTIAL orga.{id, name}')
+        ;
     }
 
     protected function getSupportsOfServiceQuery(): QueryBuilder
     {
         return $this->getSupportsQuery()
             ->leftJoin('sg.avdl', 'avdl')->addSelect('avdl')
-            ->leftJoin('sg.hotelSupport', 'hs')->addSelect('hs');
+            ->leftJoin('sg.hotelSupport', 'hs')->addSelect('hs')
+        ;
     }
 
     /**
@@ -327,7 +344,7 @@ class SupportPersonRepository extends ServiceEntityRepository
         $qb = $this->addOrganizationFilters($qb, $search);
 
         if ($search->getStatus()) {
-            $qb = $this->addOrWhere($qb, 'sg.status', $search->getStatus());
+            $qb = $this->addOrWhere($qb, 'sp.status', $search->getStatus());
         }
 
         $supportDates = $search->getSupportDates();
@@ -436,14 +453,33 @@ class SupportPersonRepository extends ServiceEntityRepository
      */
     public function findPeopleInSupport(SupportGroup $supportGroup): array
     {
+        return $this->findPeopleInSupportqueryBuilder($supportGroup)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return QueryBuilder|null
+     */
+    public function findPeopleInSupportqueryBuilder(SupportGroup $supportGroup): QueryBuilder
+    {
         return $this->createQueryBuilder('sp')->select('sp')
             ->leftJoin('sp.person', 'p')->addSelect('p')
 
             ->where('sp.supportGroup = :supportGroup')
-            ->setParameter('supportGroup', $supportGroup)
+            ->setParameter('supportGroup', $supportGroup);
+    }
 
-            ->getQuery()
-            ->getResult();
+    /**
+     * @return QueryBuilder|null
+     */
+    public function findPeopleInSupportByIdqueryBuilder(int $supportGroupId): QueryBuilder
+    {
+        return $this->createQueryBuilder('sp')->select('PARTIAL sp.{id, supportGroup}')
+            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, lastname, firstname}')
+
+            ->where('sp.supportGroup = :supportGroup')
+            ->setParameter('supportGroup', $supportGroupId);
     }
 
     /**
@@ -474,5 +510,48 @@ class SupportPersonRepository extends ServiceEntityRepository
         }
 
         return false;
+    }
+
+    /**
+     * Donne tous les suivis sociaux de l'utilisateur.
+     */
+    public function getSupportsOfUserQueryBuilder(User $user, $maxResult = null): QueryBuilder
+    {
+        return $this->createQueryBuilder('sp')->select('sp, sp.id, p.firstname, p.lastname')
+            ->leftJoin('sp.supportGroup', 'sg')->addSelect(('PARTIAL sg.{id, referent, status}'))
+            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
+
+            ->andWhere('sg.referent = :referent')
+            ->setParameter('referent', $user)
+            ->andWhere('sg.status = :status')
+            ->setParameter('status', SupportGroup::STATUS_IN_PROGRESS)
+            ->andWhere('sp.head = TRUE')
+
+            ->orderBy('p.lastname', 'ASC')
+            ->setMaxResults($maxResult);
+    }
+
+    /**
+     * Donne tous les suivis individuel de l'utilisateur selon le groupe.
+     */
+    public function getPeopleOfSupportQueryBuilder(User $user, int $supportGroupId): QueryBuilder
+    {
+        return $this->createQueryBuilder('sp')->select('sp, sp.id, p.firstname, p.lastname')
+            ->leftJoin('sp.supportGroup', 'sg')->addSelect(('PARTIAL sg.{id, referent, status}'))
+            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
+
+            ->andWhere('sg.referent = :referent')
+            ->setParameter('referent', $user)
+            ->andWhere('sg.id = :id_supportGroup')
+            ->setParameter('id_supportGroup', $supportGroupId)
+
+            ->orderBy('p.lastname', 'ASC');
+    }
+
+    public function getPeopleOfSupport(User $user, int $supportGroupId)
+    {
+        return $this->getPeopleOfSupportQueryBuilder($user, $supportGroupId)
+            ->getQuery()
+            ->getArrayResult();
     }
 }

@@ -2,8 +2,10 @@
 
 namespace App\Repository\Organization;
 
+use App\Entity\Event\Alert;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\User;
+use App\Entity\Support\SupportGroup;
 use App\Form\Model\Organization\UserSearch;
 use App\Form\Utils\Choices;
 use App\Repository\Traits\QueryTrait;
@@ -74,13 +76,17 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Retourne tous les utilisateurs.
      */
-    public function findUsersQuery(UserSearch $search, ?User $user = null): Query
+    public function findUsersQuery(UserSearch $search): Query
     {
-        $qb = $this->queryUsers();
+        $qb = $this->getQueryUsers();
 
-        return $this->filters($qb, $search, $user)
+        $qb = $this->filters($qb, $search);
+
+        return $qb
+            ->addOrderBy('u.lastname', 'ASC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+        ;
     }
 
     /**
@@ -88,7 +94,7 @@ class UserRepository extends ServiceEntityRepository
      */
     public function findUsersAdminQuery(UserSearch $search, User $user): Query
     {
-        $qb = $this->queryUsers();
+        $qb = $this->getQueryUsers();
 
         if (!in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
             $qb->leftJoin('u.serviceUser', 'r')
@@ -96,7 +102,13 @@ class UserRepository extends ServiceEntityRepository
                 ->setParameter('services', $user->getServices());
         }
 
-        return $this->filters($qb, $search, $user)
+        if (in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
+            $qb->orderBy('u.lastActivityAt', 'DESC');
+        } else {
+            $qb->orderBy('u.lastname', 'ASC');
+        }
+
+        return $this->filters($qb, $search)
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
@@ -104,10 +116,9 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Donne le querybuilder des utilisateurs.
      */
-    protected function queryUsers(): QueryBuilder
+    protected function getQueryUsers(): QueryBuilder
     {
         return $this->createQueryBuilder('u')->select('u')
-            // ->leftJoin('u.createdBy', 'creator')->addSelect('PARTIAL creator.{id, lastname, firstname}')
             ->leftJoin('u.serviceUser', 'su')->addSelect('su')
             ->leftJoin('su.service', 's')->addSelect('PARTIAL s.{id, name}')
             ->leftJoin('s.pole', 'p')->addSelect('PARTIAL p.{id, name}');
@@ -116,7 +127,7 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Filtre les utilisateurs.
      */
-    protected function filters(QueryBuilder $qb, UserSearch $search, ?User $user = null): QueryBuilder
+    protected function filters(QueryBuilder $qb, UserSearch $search): QueryBuilder
     {
         if ($search->getFirstname()) {
             $qb->andWhere('u.firstname LIKE :firstname')
@@ -144,12 +155,6 @@ class UserRepository extends ServiceEntityRepository
         $qb = $this->addPolesFilter($qb, $search, 'p.id');
         $qb = $this->addServicesFilter($qb, $search);
 
-        if ($user && in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
-            $qb->orderBy('u.lastActivityAt', 'DESC');
-        } else {
-            $qb->orderBy('u.lastname', 'ASC');
-        }
-
         return $qb;
     }
 
@@ -171,7 +176,7 @@ class UserRepository extends ServiceEntityRepository
     {
         $users = [];
         $users[] = $currentUser->getId();
-        
+
         if ($referent) {
             $users[] = $referent->getId();
         }
@@ -250,12 +255,12 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Donne la liste des utilisateurs pour les listes déroulantes.
      */
-    public function getReferentsOfServicesQueryBuilder(CurrentUserService $currentUser, Service $service = null, string $dataClass = null): QueryBuilder
+    public function getReferentsOfServicesQueryBuilder(CurrentUserService $currentUser, Service $service = null, string $className = null): QueryBuilder
     {
         $qb = $this->getReferentsQueryBuilder();
 
-        if ($dataClass) {
-            $qb = $this->filterByServiceType($qb, $dataClass);
+        if ($className) {
+            $qb = $this->filterByServiceType($qb, $className);
         }
         if ($service) {
             $qb->andWhere('su.service = :service')
@@ -280,7 +285,29 @@ class UserRepository extends ServiceEntityRepository
             ->andWhere('u.status IN (:status)')
             ->setParameter('status', User::REFERENTS_STATUS)
 
-            ->orderBy('u.lastname', 'ASC');
+            ->orderBy('u.lastname', 'ASC')
+        ;
+    }
+
+    /**
+     * Donne tous les utilisateurs liés à l'utilisateur courant (pour les listes déroulantes).
+     */
+    public function findUsersOfCurrentUserQueryBuilder(User $user, ?Service $service = null): QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->leftJoin('u.serviceUser', 'su')->addSelect('su')
+
+            ->andWhere('u.disabledAt IS NULL');
+
+        if ($service) {
+            $qb->andWhere('su.service = :service')
+                ->setParameter('service', $service);
+        } elseif (!in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
+            $qb->andWhere('su.service IN (:service)')
+                ->setParameter('service', $user->getServices());
+        }
+
+        return $qb->orderBy('u.lastname', 'ASC');
     }
 
     /**
@@ -301,7 +328,8 @@ class UserRepository extends ServiceEntityRepository
             ->orderBy('u.lastname', 'ASC')
 
             ->getQuery()
-            ->getResult();
+            ->getResult()
+        ;
     }
 
     /**
@@ -355,6 +383,70 @@ class UserRepository extends ServiceEntityRepository
         return $qb
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    /**
+     * Donne les utilisateurs avec leur suivis actifs et leur évaluations sociales.
+     *
+     * @return User[]
+     */
+    public function findUsersWithActiveSupportsAndEval(): array
+    {
+        return $this->createQueryBuilder('u')
+            ->leftJoin('u.setting', 's')->addSelect('s')
+            ->leftJoin('u.referentSupport', 'sg')->addSelect('PARTIAL sg.{id, status}')
+            ->leftJoin('sg.evaluationsGroup', 'eg')->addSelect('PARTIAL eg.{id}')
+            ->leftJoin('eg.evaluationPeople', 'ep')->addSelect('PARTIAL ep.{id}')
+
+            ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
+            ->leftJoin('sp.person', 'p')->addSelect('p')
+            ->leftJoin('ep.supportPerson', 'sp2')->addSelect('sp2')
+            ->leftJoin('sp2.person', 'p2')->addSelect('p2')
+
+            ->leftJoin('ep.evalAdmPerson', 'eap')->addSelect('PARTIAL eap.{id, endValidPermitDate}')
+            ->leftJoin('ep.evalSocialPerson', 'esp')->addSelect('PARTIAL esp.{id, endRightsSocialSecurityDate}')
+            ->leftJoin('ep.evalBudgetPerson', 'ebp')->addSelect('PARTIAL ebp.{id, endRightsDate}')
+            ->leftJoin('ep.evalProfPerson', 'epp')->addSelect('PARTIAL epp.{id, endRqthDate}')
+            ->leftJoin('eg.evalHousingGroup', 'ehg')->addSelect('PARTIAL ehg.{id, siaoUpdatedRequestDate, 
+                socialHousingUpdatedRequestDate, endDomiciliationDate}')
+
+            ->andWhere('u.disabledAt IS NULL')
+            ->andWhere('u.status IN (:user_status)')
+            ->setParameter('user_status', User::REFERENTS_STATUS)
+            ->andWhere('sg.status = :support_status')
+            ->setParameter(':support_status', SupportGroup::STATUS_IN_PROGRESS)
+
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult()
+        ;
+    }
+
+    /**
+     * Donne les utilisateurs qui ont des tâches avec des alertes.
+     *
+     * @return User[]|null
+     */
+    public function getUsersWithAlerts(\DateTime $date): ?array
+    {
+        return $this->createQueryBuilder('u')
+            ->leftJoin('u.setting', 's')->addSelect('s')
+            ->leftJoin('u.tasks', 't')->addSelect('t')
+            ->leftJoin('t.alerts', 'a')->addSelect('a')
+            ->leftJoin('t.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
+            ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id}')
+            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
+
+            ->where('a.sended <> TRUE')
+            ->andWhere('a.date < :date')
+            ->setParameter(':date', $date)
+            ->andWhere('a.type = :type')
+            ->setParameter('type', Alert::EMAIL_TYPE)
+
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult()
+        ;
     }
 
     /**

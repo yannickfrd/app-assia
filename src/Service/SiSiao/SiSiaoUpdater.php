@@ -42,29 +42,29 @@ class SiSiaoUpdater extends SiSiaoClient
 
         $this->headers[] = 'Content-Type: application/json';
 
-        $data = $this->get("fiches/ficheIdentite/{$id}");
+        $data = $this->get("/fiches/ficheIdentite/{$id}");
         // dump($data);
 
         // Diagnostic social
         // $diagSocialId = $data->demandeurprincipal->diagnosticSocial->id;
         // $this->set('diagnosticSocials/'.$diagSocialId, $this->getDiagnosticSocial($diagSocialId));
-        // // dump($this->get("diagnosticSocials/{$diagSocialId}"));
+        // // dump($this->get("/diagnosticSocials/{$diagSocialId}"));
 
         // Situation famille
         // $sitFamilleId = $data->situationfamille->id;
         // $this->set('situationFamilles/'.$sitFamilleId, $this->getSituationFamilles($sitFamilleId));
-        // // dump($this->get("fiches/ficheIdentite/{$id}")->situationfamille);
+        // // dump($this->get("/fiches/ficheIdentite/{$id}")->situationfamille);
 
         // Situation sociale
         // $sitSocialeId = $data->situationsociale->id;
         // $this->set('situationSociales/'.$sitSocialeId, $this->getDiagnosticSocial($sitSocialeId));
-        // // dump($this->get("fiches/ficheIdentite/{$id}")->situationsociale);
+        // // dump($this->get("/fiches/ficheIdentite/{$id}")->situationsociale);
 
         // Situation par rapport au logement
-        // $sitLogement = $this->get("situationParRapportAuLogement/getByDiagnosticSocialId?diagnosticSocialId={$diagSocialId}");
+        // $sitLogement = $this->get("/situationParRapportAuLogement/getByDiagnosticSocialId?diagnosticSocialId={$diagSocialId}");
         // $sitLogementId = $sitLogement->id;
         // $this->set('situationParRapportAuLogement/'.$sitLogementId, $this->getSituationParRapportAuLogement($sitLogementId, $diagSocialId));
-        // // dump($this->get("situationParRapportAuLogement/getByDiagnosticSocialId?diagnosticSocialId={$diagSocialId}"));
+        // // dump($this->get("/situationParRapportAuLogement/getByDiagnosticSocialId?diagnosticSocialId={$diagSocialId}"));
 
         foreach ($data->personnes as $personne) {
             $diagSocialId = $personne->diagnosticSocial->id;
@@ -73,21 +73,21 @@ class SiSiaoUpdater extends SiSiaoClient
             // $this->set('situationAdministratives/'.$sitAdmId, $this->getSituationAdministratives($sitAdmId));
 
             // Resources
-            // $ressources = $this->get("ressourcePersonnes/diagnosticSocial/{$diagSocialId}");
+            // $ressources = $this->get("/ressourcePersonnes/diagnosticSocial/{$diagSocialId}");
             // foreach ($ressources as $ressource) {
             //     $ressourceId = $ressource->id;
             //     $this->set("ressourcePersonnes/{$ressourceId}", $this->getRessourcePersonne($ressourceId, $diagSocialId));
             // }
 
             // Charges
-            // $charges = $this->get("chargePersonnes/diagnosticSocial/{$diagSocialId}");
+            // $charges = $this->get("/chargePersonnes/diagnosticSocial/{$diagSocialId}");
             // foreach ($charges as $charge) {
                 //     $chargeId = $charge->id;
                 //     $this->set("chargePersonnes/{$chargeId}", $this->getChargePersonne($chargeId, $diagSocialId));
                 // }
 
             // Dettes
-            // $dettes = $this->get("dettePersonnes/diagnosticSocial/{$diagSocialId}");
+            // $dettes = $this->get("/dettePersonnes/diagnosticSocial/{$diagSocialId}");
             // foreach ($dettes as $dette) {
             //     $detteId = $dette->id;
             //     $this->set("dettePersonnes/{$detteId}", $this->getDettePersonne($detteId, $diagSocialId));
@@ -108,7 +108,7 @@ class SiSiaoUpdater extends SiSiaoClient
         $this->headers[] = 'Content-Type: application/json';
 
         $now = (new \DateTime())->format('Y-m-d\T00:00');
-        $demandeInsertion = $this->get("demandeInsertion/getLastDemandeEnCours?idFiche={$id}");
+        $demandeInsertion = $this->get("/demandeInsertion/getLastDemandeEnCours?idFiche={$id}");
         $demandeInsertion->dateTransmissionSiao = $now;
         $demandeInsertion->dateModification = $now;
 

@@ -4,11 +4,11 @@ namespace App\Tests\Controller\Rdv;
 
 use App\Entity\Support\Rdv;
 use App\Tests\AppTestTrait;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class CalendarControllerTest extends WebTestCase
 {
@@ -19,7 +19,7 @@ class CalendarControllerTest extends WebTestCase
 
     /** @var AbstractDatabaseTool */
     protected $databaseTool;
-    
+
     /** @var array */
     protected $fixtures;
 
@@ -58,10 +58,10 @@ class CalendarControllerTest extends WebTestCase
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h2', 'Agenda');
-        
+
         $id = $this->supportGroup->getId();
         $this->client->request('GET', "/support/$id/calendar/month");
-        
+
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h2', 'Agenda');
     }
@@ -81,7 +81,7 @@ class CalendarControllerTest extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
-        
+
         $this->client = null;
         $this->fixtures = null;
     }

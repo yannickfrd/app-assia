@@ -2,38 +2,48 @@
 
 namespace App\Service\People;
 
+use App\Entity\Evaluation\EvaluationGroup;
 use App\Entity\People\PeopleGroup;
 use App\Entity\People\Person;
 use App\Entity\People\RolePerson;
 use App\Entity\Support\SupportGroup;
-use App\Event\People\PeopleGroupEvent;
-use App\Event\Support\SupportGroupEvent;
 use App\Repository\People\RolePersonRepository;
 use App\Repository\Support\SupportGroupRepository;
 use App\Security\CurrentUserService;
 use App\Service\Grammar;
+use App\Service\SupportGroup\SupportManager;
 use App\Service\SupportGroup\SupportPeopleAdder;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class PeopleGroupManager
 {
     private $em;
     private $currentUserService;
-    private $dispatcher;
+    private $peopleGroupChecker;
     private $flashbag;
 
     public function __construct(
         EntityManagerInterface $em,
         CurrentUserService $currentUserService,
-        EventDispatcherInterface $dispatcher,
+        PeopleGroupChecker $peopleGroupChecker,
         FlashBagInterface $flashbag
     ) {
         $this->em = $em;
         $this->currentUserService = $currentUserService;
-        $this->dispatcher = $dispatcher;
+        $this->peopleGroupChecker = $peopleGroupChecker;
         $this->flashbag = $flashbag;
+    }
+
+    public function update(PeopleGroup $peopleGroup, array $supports = [])
+    {
+        $this->peopleGroupChecker->checkValidHeader($peopleGroup);
+        $this->updateNbPeople($peopleGroup);
+
+        $this->em->flush();
+
+        $this->deleteCacheItems($peopleGroup, $supports);
     }
 
     /**
@@ -63,51 +73,7 @@ class PeopleGroupManager
 
         $this->addRolePerson($peopleGroup, $person, $rolePerson, $addPersonToSupport);
 
-        $this->em->flush();
-
         return $person;
-    }
-
-    /**
-     * Add role of the person in the group and add person in the active support(s).
-     */
-    protected function addRolePerson(PeopleGroup $peopleGroup, Person $person, RolePerson $rolePerson, bool $addPersonToSupport = false): void
-    {
-        $rolePerson->setHead(false)
-            ->setPerson($person)
-            ->setPeopleGroup($peopleGroup);
-
-        $this->em->persist($rolePerson);
-
-        $peopleGroup->addRolePerson($rolePerson);
-
-        $this->dispatcher->dispatch(new PeopleGroupEvent($peopleGroup), 'people_group.before_update');
-
-        $this->flashbag->add('success', $person->getFullname().' est ajouté'.Grammar::gender($person->getGender()).' au groupe.');
-
-        $this->addPersonToActiveSupport($peopleGroup, $rolePerson, $addPersonToSupport);
-    }
-
-    /**
-     * Add person in the active support.
-     */
-    protected function addPersonToActiveSupport(PeopleGroup $peopleGroup, RolePerson $rolePerson, bool $addPersonToSupport = false): void
-    {
-        if (false === $addPersonToSupport) {
-            return;
-        }
-
-        /** @var SupportGroupRepository $supportGroupRepo */
-        $supportGroupRepo = $this->em->getRepository(SupportGroup::class);
-
-        foreach ($supportGroupRepo->findBy(['peopleGroup' => $peopleGroup]) as $supportGroup) {
-            if (SupportGroup::STATUS_IN_PROGRESS === $supportGroup->getStatus()
-                && ($this->currentUserService->isInService($supportGroup->getService()))) {
-                (new SupportPeopleAdder($this->em, $this->flashbag))->addPersonToSupport($supportGroup, $rolePerson);
-
-                $this->dispatcher->dispatch(new SupportGroupEvent($supportGroup), 'support.after_update');
-            }
-        }
     }
 
     /**
@@ -132,14 +98,85 @@ class PeopleGroupManager
     }
 
     /**
+     * @param SupportGroup[] $supports
+     */
+    public static function deleteCacheItems(PeopleGroup $peopleGroup, array $supports = []): void
+    {
+        $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
+
+        $cache->deleteItems([
+            PeopleGroup::CACHE_GROUP_REFERENTS_KEY.$peopleGroup->getId(),
+            PeopleGroup::CACHE_GROUP_SUPPORTS_KEY.$peopleGroup->getId(),
+        ]);
+
+        foreach ($supports as $supportGroup) {
+            $cache->deleteItems([
+                SupportGroup::CACHE_SUPPORT_KEY.$supportGroup->getId(),
+                SupportGroup::CACHE_FULLSUPPORT_KEY.$supportGroup->getId(),
+                EvaluationGroup::CACHE_EVALUATION_KEY.$supportGroup->getId(),
+            ]);
+        }
+    }
+
+    private function updateNbPeople(PeopleGroup $peopleGroup)
+    {
+        $nbPeople = count($peopleGroup->getRolePeople());
+        $peopleGroup->setNbPeople($nbPeople);
+    }
+
+    /**
+     * Add role of the person in the group and add person in the active support(s).
+     */
+    private function addRolePerson(PeopleGroup $peopleGroup, Person $person, RolePerson $rolePerson, bool $addPersonToSupport = false): void
+    {
+        $rolePerson
+            ->setHead(false)
+            ->setPerson($person)
+            ->setPeopleGroup($peopleGroup)
+        ;
+
+        $this->em->persist($rolePerson);
+
+        $peopleGroup->addRolePerson($rolePerson);
+
+        $this->update($peopleGroup);
+
+        $this->flashbag->add('success', $person->getFullname().' est ajouté'.Grammar::gender($person->getGender()).' au groupe.');
+
+        $this->addPersonToActiveSupport($peopleGroup, $rolePerson, $addPersonToSupport);
+    }
+
+    /**
+     * Add person in the active support.
+     */
+    private function addPersonToActiveSupport(PeopleGroup $peopleGroup, RolePerson $rolePerson, bool $addPersonToSupport = false): void
+    {
+        if (false === $addPersonToSupport) {
+            return;
+        }
+
+        /** @var SupportGroupRepository $supportGroupRepo */
+        $supportGroupRepo = $this->em->getRepository(SupportGroup::class);
+
+        foreach ($supportGroupRepo->findBy(['peopleGroup' => $peopleGroup]) as $supportGroup) {
+            if (SupportGroup::STATUS_IN_PROGRESS === $supportGroup->getStatus()
+                && ($this->currentUserService->isInService($supportGroup->getService()))) {
+                (new SupportPeopleAdder($this->em, $this->flashbag))->addPersonToSupport($supportGroup, $rolePerson);
+
+                SupportManager::deleteCacheItems($supportGroup);
+            }
+        }
+    }
+
+    /**
      * Check if the person is already in the group.
      */
-    protected function personIsInGroup(PeopleGroup $peopleGroup, Person $person): bool
+    private function personIsInGroup(PeopleGroup $peopleGroup, Person $person): bool
     {
         /** @var RolePersonRepository $rolePersonRepo */
         $rolePersonRepo = $this->em->getRepository(RolePerson::class);
 
-        return 0 != $rolePersonRepo->count([
+        return 0 !== $rolePersonRepo->count([
             'person' => $person->getId(),
             'peopleGroup' => $peopleGroup->getId(),
         ]);

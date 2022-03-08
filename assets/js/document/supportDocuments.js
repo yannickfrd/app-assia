@@ -5,6 +5,8 @@ import Ajax from '../utils/ajax'
 import Dropzone from '../utils/file/dropzone'
 import CheckboxSelector from '../utils/form/checkboxSelector'
 import DateFormater from '../utils/date/dateFormater'
+import TagsManager from '../tag/TagsManager'
+import SelectManager from '../utils/form/SelectManager'
 
 /**
  * Classe de gestion des documents.
@@ -16,10 +18,13 @@ export default class SupportDocuments {
         this.ajax = new Ajax(this.loader, 60)
         this.checkboxSelector = new CheckboxSelector()
 
+        this.tagsManager = new TagsManager()
+        this.selectManager = new SelectManager('#document_tags', {name: 'onModal', elementId: 'document-modal'})
+
         this.dropzoneModalElt = new Modal(document.getElementById('dropzone-modal'))
         this.dropzoneFormElt = document.querySelector('form[name="dropzone_document"]')
         this.dropzone = new Dropzone(this.dropzoneFormElt, this.uploadFile.bind(this))
-        
+
         this.documentModalElt = new Modal(document.getElementById('document-modal'))
         this.documentFormElt = document.querySelector('form[name=document]')
         this.updateBtnElt = this.documentFormElt.querySelector('button[data-action="update"]')
@@ -30,10 +35,10 @@ export default class SupportDocuments {
         this.confirmDeleteBtnElt = document.getElementById('modal-confirm')
 
         this.actionFormElt = document.querySelector('form[name="action"]')
-            
+
         this.themeColor = document.getElementById('header').dataset.color
         this.countDocumentsElt = document.getElementById('count-documents')
-
+        
         this.init()
     }
 
@@ -50,11 +55,10 @@ export default class SupportDocuments {
             this.ajax.send('GET', this.confirmDeleteBtnElt.dataset.url, this.responseAjax.bind(this))
         })
         document.getElementById('action-validate').addEventListener('click', e => this.onValidateAction(e))
-        
     }
-    
+
     /**
-     * @param {HTMLTableRowElement} documentTrElt 
+     * @param {HTMLTableRowElement} documentTrElt
      */
     addEventListenersToTr(documentTrElt) {
         documentTrElt.addEventListener('click', e => this.showDocument(e, documentTrElt))
@@ -63,11 +67,11 @@ export default class SupportDocuments {
             deleteBtnElt.dataset.documentId = documentTrElt.dataset.documentId
             const documentName = documentTrElt.querySelector('td[data-document="name"]').textContent
             this.updateDeleteModal(documentName, deleteBtnElt.dataset.url)
-        })      
+        })
     }
 
     /**    req.onprogress = updateProgress;
-     * @param {Event} e 
+     * @param {Event} e
      */
     onValidateAction(e) {
         e.preventDefault()
@@ -91,7 +95,7 @@ export default class SupportDocuments {
     }
 
     /**
-     * @param {Array} items 
+     * @param {Array} items
      */
     downloadFiles(items) {
         this.loader.on()
@@ -107,8 +111,8 @@ export default class SupportDocuments {
     }
 
     /**
-     * @param {String} documentName 
-     * @param {String} url 
+     * @param {String} documentName
+     * @param {String} url
      */
     updateDeleteModal(documentName, url) {
         const modalBodyElt = this.modalBlockElt.querySelector('div.modal-body')
@@ -118,7 +122,7 @@ export default class SupportDocuments {
     }
 
     /**
-     * @param {Array} items 
+     * @param {Array} items
      */
     deleteFiles(items) {
         this.loader.on()
@@ -144,8 +148,8 @@ export default class SupportDocuments {
 
     /**
      * Affiche le document sélectionné dans le formulaire modal.
-     * @param {Event} e 
-     * @param {HTMLTableRowElement} documentTrElt 
+     * @param {Event} e
+     * @param {HTMLTableRowElement} documentTrElt
      */
     showDocument(e, documentTrElt) {
         if (!e.target.className.includes('cursor-pointer')) {
@@ -153,17 +157,29 @@ export default class SupportDocuments {
         }
 
         const id = documentTrElt.dataset.documentId
-        const typeValue = documentTrElt.querySelector('td[data-document="type"]').dataset.typeValue
 
         this.documentFormElt.action = this.documentFormElt.dataset.url.replace('__id__', id)
         this.documentFormElt.querySelector('#document_name').value = documentTrElt.querySelector('td[data-document="name"]').textContent
         this.documentFormElt.querySelector('#document_content').value = documentTrElt.querySelector('td[data-document="content"]').textContent
-        this.documentFormElt.querySelector('#document_type').value = typeValue
         this.deleteBtnElt.classList.replace('d-none', 'd-block')
         this.deleteBtnElt.dataset.documentId = id
         this.documentModalElt.show()
+
+        this.updateTagsSelect(documentTrElt)
     }
-   
+
+    /**
+     * Permet d'initialiser les valeurs dans le multi-select
+     * @param {HTMLTableRowElement} documentTrElt
+     */
+    updateTagsSelect(documentTrElt) {
+        const tagElts = documentTrElt.querySelectorAll('td[data-document="tags"] span')
+        const tagOptionElts = this.documentFormElt.querySelectorAll('select#document_tags option')
+        const tagsIds = this.tagsManager.getTagIds(tagElts, tagOptionElts)
+
+        this.selectManager.showOptionsFromArray(tagsIds)
+    }
+
     /**
      * @param {Event} e
      */
@@ -190,7 +206,7 @@ export default class SupportDocuments {
     }
 
     /**
-     * @param {Object} response 
+     * @param {Object} response
      */
     responseAjax(response) {
         switch (response.action) {
@@ -205,15 +221,18 @@ export default class SupportDocuments {
                 break
             case 'download':
                 return this.getFile(response.data)
-                break
         }
-        new MessageFlash(response.alert, response.msg)
+
+        if (response.msg) {
+            new MessageFlash(response.alert, response.msg)
+        }
+
         this.loader.off()
     }
 
     /**
      * Crée la ligne du nouveau document dans le tableau.
-     * @param {Object} data 
+     * @param datas
      */
     createDocumentTr(datas) {
         datas.forEach(data => {
@@ -226,24 +245,25 @@ export default class SupportDocuments {
             this.addEventListenersToTr(documentTrElt)
             this.dropzone.updateItemInList(data)
         })
-    }   
+    }
 
     /**
      * Met à jour la ligne du tableau correspondant au document.
-     * @param {Object} data 
+     * @param {Object} data
      */
     updateDocumentTr(data) {
         const documentTrElt = document.querySelector(`tr[data-document-id="${data.id}"]`)
+            
         documentTrElt.querySelector('td[data-document="name"]').textContent = data.name
-        const documentTypeTdElt = documentTrElt.querySelector('td[data-document="type"]')
-        documentTypeTdElt.dataset.typeValue = data.type
-        documentTypeTdElt.textContent = data.typeToString
         documentTrElt.querySelector('td[data-document="content"]').textContent = data.content
+        
+        this.tagsManager.updateTagsContainer(documentTrElt.querySelector('td[data-document="tags"]'), data.tags)
+
         this.documentModalElt.hide()
     }
     /**
-     * @param {Object} data 
-     */ 
+     * @param {Object} data
+     */
     deleteDocumentTr(data) {
         this.documentModalElt.hide()
         document.querySelector(`tr[data-document-id="${data.id}"]`).remove()
@@ -251,7 +271,7 @@ export default class SupportDocuments {
     }
 
     /**
-     * @param {Object} data 
+     * @param {Object} data
      */
     getFile(data) {
         this.loader.on()
@@ -260,8 +280,8 @@ export default class SupportDocuments {
     }
 
     /**
-     * @param {Object} data 
-     */ 
+     * @param {Object} data
+     */
     getDocumentTrPrototype(data) {
         const documentTrElt = document.createElement('tr')
         documentTrElt.dataset.documentId = data.id
@@ -282,25 +302,25 @@ export default class SupportDocuments {
                 </a>
             </td>
             <td class="align-middle cursor-pointer" data-document="name">${data.name}</td>
-            <td class="align-middle cursor-pointer" data-document="type" data-type-value="${data.type}">${data.typeToString ?? ''}</td>
+            <td class="align-middle cursor-pointer" data-document="tags"></td>
             <td class="align-middle cursor-pointer" data-document="content">${data.content ?? ''}</td>
             <td class="align-middle text-right">${((Math.floor(data.size / 10000) / 100).toLocaleString('fr') + ' Mo')}</td>
             <td class="align-middle" data-document="extension">${data.fileType}</td>
-            <td class="align-middle">${new DateFormater().getDate(data.createdAt)}</td>
-            <td class="align-middle">${data.createdBy.fullname}</td>
+            <td class="d-none d-lg-table-cell align-middle th-date">${new DateFormater().getDate(data.createdAt)}</td>
+            <td class="d-none d-lg-table-cell align-middle th-w-100">${data.createdBy.fullname}</td>
             <td class="align-middle text-center">
                 <button data-url="/document/${data.id}/delete" class="btn btn-danger btn-sm shadow my-1"
                     data-action="delete" title="Supprimer le document"><span class="fas fa-trash-alt"></span>
                 </button>
             </td>`
-        
+
         return documentTrElt
     }
 
     /**
-     * @param {Number} number 
+     * @param {Number} number
      */
     updateCounter(number) {
         this.countDocumentsElt.textContent = parseInt(this.countDocumentsElt.textContent) + number
-    }    
+    }
 }

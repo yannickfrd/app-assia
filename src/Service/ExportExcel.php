@@ -377,23 +377,17 @@ class ExportExcel
         return [
             'font' => [
                 'bold' => true,
-                'color' => [
-                    'argb' => 'FFFFFF',
-                ],
+                'color' => ['argb' => 'FFFFFFFF'],
             ],
             'alignment' => [
                 'vertical' => Alignment::VERTICAL_CENTER,
             ],
             'borders' => [
-                'top' => [
-                    'borderStyle' => Border::BORDER_THIN,
-                ],
+                'top' => ['borderStyle' => Border::BORDER_THIN],
             ],
             'fill' => [
                 'fillType' => Fill::FILL_SOLID,
-                'startColor' => [
-                    'argb' => '404040',
-                ],
+                'startColor' => ['argb' => 'FF404040'],
             ],
         ];
     }
@@ -410,7 +404,7 @@ class ExportExcel
             'borders' => [
                 'allBorders' => [
                     'borderStyle' => Border::BORDER_THIN,
-                    'color' => ['argb' => 'a6a6a6'],
+                    'color' => ['argb' => 'FF808080'],
                 ],
             ],
         ];

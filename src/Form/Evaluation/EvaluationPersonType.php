@@ -2,12 +2,12 @@
 
 namespace App\Form\Evaluation;
 
+use App\Entity\Evaluation\EvaluationPerson;
 use App\Form\Utils\EvaluationChoices;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\AbstractType;
-use App\Entity\Evaluation\EvaluationPerson;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EvaluationPersonType extends AbstractType
@@ -23,10 +23,12 @@ class EvaluationPersonType extends AbstractType
             $person = $supportPerson->getPerson();
 
             $form
-                ->add('initEvalPerson', InitEvalPersonType::class, [
+                ->add('evalInitPerson', EvalInitPersonType::class, [
                     'attr' => ['person' => $person],
                 ])
-                ->add('evalAdmPerson', EvalAdmPersonType::class)
+                ->add('evalAdmPerson', EvalAdmPersonType::class, [
+                    'attr' => ['service' => $service],
+                ])
                 ->add('evalFamilyPerson', EvalFamilyPersonType::class, [
                     'attr' => ['supportPerson' => $supportPerson],
                     ])

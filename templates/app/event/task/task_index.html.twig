@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% set title = 'Tâches' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+    <section class="mt-0">
+
+		<div class="container-fluid mt-4">
+            <h1 class="h2 mb-3">{{ title }}</h1>
+            {% include 'model/_msgFlash.html.twig' %}
+        </div>
+        {% include 'app/event/task/_task_search_form.html.twig' %}
+
+        <div class="container-fluid mt-4">
+            <div class="row align-items-baseline">
+                <div class="col-md-6 align-middle mb-2">
+                    <button id="js_new_task" class="btn btn-{{ theme_color }} shadow align-middle mr-2"
+                        title="Ajouter une tâche" data-toggle="modal" data-placement="bottom"
+                        data-target="#modal-task">
+                        <span class="fas fa-plus-square mr-2"></span>Nouvelle tâche
+                    </button>
+                    <span>
+                        Résultat : <span id="count_tasks" data-count-tasks="{{ tasks.getTotalItemCount }}">
+                        {{ tasks.getTotalItemCount|number }}</span>
+                    </span>
+                </div>
+                <div class="col-md-6">
+                    <div class="navigation">{{ knp_pagination_render(tasks) }}</div>
+                </div>
+            </div>
+
+            {% include 'app/event/task/_task_table.html.twig' %}
+
+            <div class="navigation">{{ knp_pagination_render(tasks) }}</div>
+        </div>
+    </section>
+    {% include 'app/event/task/_task_form_modal.html.twig' %}
+	{% include 'app/event/task/_task_delete_modal.html.twig' %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('task') }}
+    {{ encore_entry_script_tags('search') }}
+{% endblock javascripts %}

@@ -42,43 +42,49 @@ class HotelContributionCalculator
     /** @var float Nombre de jours dans le mois (moyenne) */
     public const NB_DAYS = 30;
 
-    public const RESOURCES_TYPE = [
-        'salary' => 'Salaire', // SI-SIAO => OK
-        'activityBonus' => 'Prime d\'activité', // SI-SIAO => OK
-        'unemplBenefit' => 'ARE', // SI-SIAO => OK
-        'minimumIncome' => 'RSA', // SI-SIAO => OK
-        'familyAllowance' => 'AF', // SI-SIAO => OK
-        'disAdultAllowance' => 'AAH', // SI-SIAO => OK
-        // 'disChildAllowance' => 'AEEH', //SI-SIAO => OK
-        'asf' => 'ASF', // ??
-        'solidarityAllowance' => 'ASS', // SI-SIAO OK
-        'asylumAllowance' => 'ADA', // SI-SIAO => OK
-        // 'tempWaitingAllowance' => 'ATA', // SI-SIAO => OK
-        'scholarships' => 'Bourse', // SI-SIAO => OK
-        'familySupplement' => 'Complément familial', // ??
-        'paidTraining' => 'Formation', // SI-SIAO => OK
-        'youthGuarantee' => 'Garantie jeunes', // SI-SIAO => OK
-        'dailyAllowance' => 'Indemnités journalières (IJ)', // SI-SIAO => OK
-        'maintenance' => 'Pension alimentaire', // ??
-        'disabilityPension' => 'Pension d\'invalidité', // ??
-        // 'paje' => 'PAJE', // ??
-        'pensionBenefit' => 'Retraite', // SI-SIAO => OK
-        // 'ressourceOther' => 'Autre', // ??
+    public const RESOURCES = [
+        10 => 'Salaire', // SI-SIAO => OK
+        50 => 'Prime d\'activité', // SI-SIAO => OK
+        30 => 'Allocation chômage (ARE)', // SI-SIAO => OK
+        60 => 'RSA socle', // SI-SIAO => OK
+        70 => 'RSA majoré', // SI-SIAO => OK
+        100 => 'Allocations familiales (AF)', // SI-SIAO => OK
+        80 => 'Allocation adulte handicapé (AAH)', // SI-SIAO => OK
+        // 85 => 'Allocation d\'éducation de l\'enfant handicapé (AEEH)',
+        101 => 'Allocation de soutien familial (ASF)', // ??
+        90 => 'Allocation de solidarité spécifique (ASS)', // SI-SIAO => OK
+        130 => 'Allocation pour demandeur d\'asile (ADA)', // SI-SIAO => OK
+        180 => 'Bourse', // SI-SIAO => OK
+        102 => 'Complément familial',
+        40 => 'Formation rémunérée', // SI-SIAO => OK
+        120 => 'Garantie jeunes', // SI-SIAO => OK
+        170 => 'Indemnités journalières (IJ)', // SI-SIAO => OK
+        200 => 'Pension alimentaire',
+        210 => 'Pension d\'invalidité',
+        // 103 => 'Prestation d\'accueil du jeune enfant (PAJE)', // ??
+        20 => 'Retraite', // SI-SIAO => OK
+        // 1000 => 'Autre ressource',
     ];
 
-    public const CHARGES_TYPE = [
-        'insurance' => 'Assurance(s)', // SI-SIAO => OK
-        // 'canteen' => 'Cantine', // ??
-        'consumerCredit' => 'Crédit(s) à la consommation', // ??
-        'water' => 'Eau', // SI-SIAO => OK
-        'electricityGas' => 'Electricité / Gaz', // SI-SIAO => OK
-        'childcare' => 'Garde d\'enfant(s)', // SI-SIAO => OK
-        'taxes' => 'Impôts', // SI-SIAO => OK
-        // 'rent' => 'Loyer', // SI-SIAO => OK
-        'mutual' => 'Mutuelle(s)', // SI-SIAO => OK
-        'alimony' => 'Pension alimentaire', // SI-SIAO => OK
-        'phone' => 'Téléphone', // SI-SIAO => OK
-        'transport' => 'Transport', // SI-SIAO => OK
-        // 'chargeOther' => 'Autre charge', // ??
+    public const CHARGES = [
+        50 => 'Assurance(s)', // SI-SIAO => OK
+        // 220 => 'Cantine',
+        // 270 => 'Carburant',
+        230 => 'Crédit(s) à la consommation', // ??t
+        40 => 'Eau', // SI-SIAO => OK
+        20 => 'Electricité', // SI-SIAO => OK
+        30 => 'Gaz', // SI-SIAO => OK
+        90 => 'Garde d\'enfant(s)', // SI-SIAO => OK
+        250 => 'Internet',
+        70 => 'Impôts', // SI-SIAO => OK
+        // 10 => 'Loyer', // SI-SIAO => OK
+        60 => 'Mutuelle(s)', // SI-SIAO => OK
+        // 240 => 'Participation financière',
+        100 => 'Pension alimentaire', // SI-SIAO => OK
+        260 => 'Remboursement de dette(s)', // SI-SIAO => OK
+        110 => 'Téléphone', // SI-SIAO => OK
+        80 => 'Transport', // SI-SIAO => OK
+        // 280 => 'Frais de scolarité',
+        // 1000 => 'Autre charge',
     ];
 }

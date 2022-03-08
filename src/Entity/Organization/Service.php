@@ -26,6 +26,7 @@ class Service
 {
     use ContactEntityTrait;
     use LocationEntityTrait;
+    use TagTrait;
     use CreatedUpdatedEntityTrait;
     use DisableEntityTrait;
 
@@ -33,10 +34,12 @@ class Service
     public const CACHE_SERVICE_PLACES_KEY = 'service.places';
     public const CACHE_SERVICE_SUBSERVICES_KEY = 'service.sub_services';
     public const CACHE_SERVICE_USERS_KEY = 'service.users';
+    public const CACHE_SERVICE_TAGS_KEY = 'service.tags';
 
     public const SERVICE_TYPE_HEB = 1;
     public const SERVICE_TYPE_AVDL = 2;
     public const SERVICE_TYPE_HOTEL = 3;
+    public const SERVICE_TYPE_ASYLUM = 4;
 
     public const SERVICE_TYPE = [
         1 => 'Accompagnement social',
@@ -71,13 +74,14 @@ class Service
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"export", "show_service"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le nom du service ne doit pas être vide.")
-     * @Groups("export")
+     * @Groups({"export", "show_service"})
      */
     private $name;
 
@@ -202,6 +206,18 @@ class Service
      */
     private $subServices;
 
+    /**
+     * @var Collection|Tag[]|null
+     * @ORM\ManyToMany(targetEntity=Tag::class, inversedBy="services")
+     * @ORM\OrderBy({"name": "ASC"})
+     */
+    protected $tags;
+
+    /**
+     * @ORM\OneToOne(targetEntity=ServiceSetting::class, cascade={"persist", "remove"})
+     */
+    private $setting;
+
     public function __construct()
     {
         $this->serviceUser = new ArrayCollection();
@@ -210,6 +226,7 @@ class Service
         $this->places = new ArrayCollection();
         $this->organizations = new ArrayCollection();
         $this->subServices = new ArrayCollection();
+        $this->tags = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -371,6 +388,11 @@ class Service
     public function getPlace(): ?int
     {
         return $this->place;
+    }
+
+    public function getServiceTypeDefault(): array
+    {
+        return self::SERVICE_TYPE;
     }
 
     public function setPlace(?int $place): self
@@ -663,6 +685,18 @@ class Service
                 $subService->setService(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSetting(): ?ServiceSetting
+    {
+        return $this->setting;
+    }
+
+    public function setSetting(?ServiceSetting $setting): self
+    {
+        $this->setting = $setting;
 
         return $this;
     }

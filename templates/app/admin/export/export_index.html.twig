@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Export des données{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+
+        <h1 class="h2 mb-3">Export des données</h1>
+
+        <hr/>
+
+        <section>
+            {% include 'model/_msgFlash.html.twig' %}
+            <div id="js-msg-flash-content"></div>
+            
+            {% include 'app/admin/export/export_form.html.twig' %}
+            
+            <div>
+                <a href="{{ absolute_url('documentation/models/modele-export.xlsx') }}" 
+                    class="text-{{ theme_color }}"><i class="fas fa-file-download mr-1"></i>
+                    Télécharger le modèle vierge Excel de traitement statistique.</a>
+            </div>
+        </section>
+
+        <hr/>
+
+        {% include 'app/admin/export/export_table.html.twig' %}
+
+    </div>
+    
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('search') }}
+    {{ encore_entry_script_tags('export') }}
+{% endblock javascripts %}

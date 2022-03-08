@@ -2,14 +2,16 @@
 
 namespace App\Form\Evaluation;
 
+use App\Entity\Evaluation\EvalBudgetCharge;
+use App\Entity\Evaluation\EvalBudgetDebt;
 use App\Entity\Evaluation\EvalBudgetPerson;
-use App\Form\Type\ResourcesType;
+use App\Entity\Evaluation\Resource;
 use App\Form\Utils\Choices;
 use App\Form\Utils\EvaluationChoices;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -19,7 +21,31 @@ class EvalBudgetPersonType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('resources', ResourcesType::class)
+            ->add('resource', ChoiceType::class, [
+                'choices' => Choices::getChoices(EvalBudgetPerson::RESOURCES),
+                'attr' => [
+                    'data-twin-field' => 'resource',
+                    'data-important' => 'true',
+                ],
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
+            ->add('resourceType', ChoiceType::class, [
+                'choices' => Choices::getChoices(Resource::RESOURCES),
+                'attr' => ['data-twin-field' => 'true'],
+                'placeholder' => 'placeholder.add',
+                'mapped' => false,
+                'required' => false,
+            ])
+            ->add('resourcesAmt', MoneyType::class, [
+                'attr' => [
+                    'class' => 'text-right',
+                    'data-amount' => 'resourcesAmt',
+                    'data-important' => 'true',
+                    'data-twin-field' => 'true',
+                    'placeholder' => 'Amount',
+                ],
+            ])
             ->add('incomeTax', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
                 'placeholder' => 'placeholder.select',
@@ -42,9 +68,16 @@ class EvalBudgetPersonType extends AbstractType
                 'required' => false,
             ])
             ->add('resourcesComment')
-            ->add('charges', ChoiceType::class, [
+            ->add('charge', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
+                'attr' => ['data-important' => 'true'],
                 'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
+            ->add('chargeType', ChoiceType::class, [
+                'choices' => Choices::getChoices(EvalBudgetCharge::CHARGES),
+                'placeholder' => 'placeholder.add',
+                'mapped' => false,
                 'required' => false,
             ])
             ->add('chargesAmt', MoneyType::class, [
@@ -54,57 +87,34 @@ class EvalBudgetPersonType extends AbstractType
                     'placeholder' => 'Amount',
                 ],
                 'required' => false,
-            ]);
-
-        foreach (EvalBudgetPerson::CHARGES_TYPE as $key => $value) {
-            $builder
-            ->add($key, HiddenType::class)
-            ->add($key.'Amt', MoneyType::class, [
-                'attr' => [
-                    'class' => 'text-right',
-                    'data-amount' => 'charges',
-                    'placeholder' => 'Amount',
-                ],
-                'required' => false,
-            ]);
-        }
-
-        $builder
+            ])
             ->add('chargeOtherPrecision', null, ['attr' => ['placeholder' => 'Other charge(s)...']])
             ->add('chargeComment')
-            ->add('debts', ChoiceType::class, [
+            ->add('debt', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
                 'attr' => [
                     'data-important' => 'true',
-                    'data-twin-field' => 'debts',
+                    'data-twin-field' => 'debt',
                 ],
                 'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
+            ->add('debtType', ChoiceType::class, [
+                'choices' => Choices::getChoices(EvalBudgetDebt::DEBTS),
+                'placeholder' => 'placeholder.add',
+                'mapped' => false,
                 'required' => false,
             ])
             ->add('debtsAmt', MoneyType::class, [
                 'attr' => [
                     'class' => 'text-right',
                     'data-amount' => 'debtsAmt',
-                    'data-twin-field' => 'debtsAmt',
+                    'data-twin-field' => 'true',
                     'placeholder' => 'Amount',
                 ],
-            ]);
-
-        foreach (EvalBudgetPerson::DEBTS_TYPE as $key => $value) {
-            $builder->add($key, HiddenType::class);
-        }
-
-        $builder
+            ])
             ->add('debtOtherPrecision', null, ['attr' => ['placeholder' => 'Other debt(s)...']])
             ->add('debtComment')
-            ->add('monthlyRepaymentAmt', MoneyType::class, [
-                'attr' => [
-                    'class' => 'text-right',
-                    'data-amount' => 'repaymentAmt',
-                    'placeholder' => 'Amount',
-                ],
-                'required' => false,
-            ])
             ->add('overIndebtRecord', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS),
                 'placeholder' => 'placeholder.select',
@@ -136,7 +146,25 @@ class EvalBudgetPersonType extends AbstractType
                     'class' => 'justify',
                     'placeholder' => 'evalBudgetPerson.comment',
                 ],
+            ])
+        ;
+
+        $finances = [
+            'evalBudgetResources' => EvalBudgetResourceType::class,
+            'evalBudgetCharges' => EvalBudgetChargeType::class,
+            'evalBudgetDebts' => EvalBudgetDebtType::class,
+        ];
+
+        foreach ($finances as $childName => $className) {
+            $builder->add($childName, CollectionType::class, [
+                'entry_type' => $className,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'delete_empty' => true,
+                'prototype' => true,
+                'by_reference' => false,
             ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void

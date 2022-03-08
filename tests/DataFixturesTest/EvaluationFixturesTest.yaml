@@ -37,11 +37,11 @@ App\Entity\Evaluation\EvaluationPerson:
   evaluationPerson1:
     evaluationGroup: "@evaluationGroup1"
     supportPerson: "@supportPersonWithEval"
-    initEvalPerson: "@initEvalPerson1"
+    evalInitPerson: "@evalInitPerson1"
 
 # Evaluation group
-App\Entity\Evaluation\InitEvalGroup:
-  initEvalGroup1:
+App\Entity\Evaluation\EvalInitGroup:
+  evalInitGroup1:
     siaoRequest: 1
     socialHousingRequest: 2
     supportGroup: "@supportGroupWithEval"
@@ -52,7 +52,6 @@ App\Entity\Evaluation\EvalBudgetGroup:
     resourcesGroupAmt: 1100
     chargesGroupAmt: 500
     debtsGroupAmt: 10000
-    monthlyRepaymentAmt: 200
     budgetBalanceAmt: 400
     evaluationGroup: "@evaluationGroup1"
 
@@ -111,8 +110,8 @@ App\Entity\Evaluation\EvalHousingGroup:
     evaluationGroup: "@evaluationGroup1"
 
 ## Evaluation person
-App\Entity\Evaluation\InitEvalPerson:
-  initEvalPerson1:
+App\Entity\Evaluation\EvalInitPerson:
+  evalInitPerson1:
     paper: 1
     paperType: 1
     rightSocialSecurity: 1
@@ -121,14 +120,12 @@ App\Entity\Evaluation\InitEvalPerson:
     friendshipBreakdown: 2
     profStatus: 1
     contractType: 1
-    resources: 1
+    resource: 1
     resourcesAmt: 1100
-    salary: 1
-    salaryAmt: 1000
     ressourceOther: 1
     ressourceOtherPrecision: Aide famille
     ressourceOtherAmt: 100
-    debts: 1
+    debt: 1
     debtsAmt: 10000
     comment: XXX
     supportPerson: "@supportPersonWithEval"
@@ -144,14 +141,9 @@ App\Entity\Evaluation\EvalAdmPerson:
 
 App\Entity\Evaluation\EvalBudgetPerson:
   evalBudgetPerson1:
-    resources: 1
+    resource: 1
     resourcesAmt: 1100
-    salary: 1
-    salaryAmt: 1000
-    ressourceOther: 1
-    ressourceOtherPrecision: Aide famille
-    ressourceOtherAmt: 100
-    debts: 1
+    debt: 1
     debtsAmt: 10000
     commentEvalBudget: XXX
     evaluationPerson: "@evaluationPerson1"
@@ -186,3 +178,31 @@ App\Entity\Evaluation\EvalSocialPerson:
     healthProblem: 1
     commentEvalSocialPerson: XXX
     evaluationPerson: "@evaluationPerson1"
+
+App\Entity\Evaluation\EvalInitResource:
+  evalInitResource1:
+    type: 20
+    amount: 1100
+    evalInitPerson: "@evalInitPerson1"
+
+App\Entity\Evaluation\EvalBudgetResource:
+  evalBudgetRessource1:
+    type: 20
+    amount: 1000
+    evalBudgetPerson: "@evalBudgetPerson1"
+  evalBudgetRessource2:
+    type: 1000
+    amount: 100
+    evalBudgetPerson: "@evalBudgetPerson1"
+
+App\Entity\Evaluation\EvalBudgetCharge:
+  evalBudgetCharge1:
+    type: 10
+    amount: 600
+    evalBudgetPerson: "@evalBudgetPerson1"
+
+App\Entity\Evaluation\EvalBudgetDebt:
+  evalBudgetDebt1:
+    type: 10
+    amount: 10000
+    evalBudgetPerson: "@evalBudgetPerson1"

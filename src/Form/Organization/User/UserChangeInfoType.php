@@ -2,8 +2,9 @@
 
 namespace App\Form\Organization\User;
 
-use Symfony\Component\Form\AbstractType;
+use App\Entity\Organization\User;
 use App\Form\Model\Security\UserChangeInfo;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -11,21 +12,40 @@ class UserChangeInfoType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        /**
+         * @var User $user
+         */
+        $user = $options['user'];
+
         $builder
+            ->add('firstname', null, [
+                'data' => $user->getFirstname(),
+                'disabled' => true,
+                'mapped' => false,
+            ])
+            ->add('lastname', null, [
+                'data' => $user->getLastname(),
+                'disabled' => true,
+                'mapped' => false,
+            ])
+            ->add('username', null, [
+                'data' => $user->getUsername(),
+                'disabled' => true,
+                'mapped' => false,
+            ])
+            ->add('status', null, [
+                'data' => $user->getStatusToString(),
+                'disabled' => true,
+                'mapped' => false,
+            ])
             ->add('email', null, [
-                'attr' => [
-                    'placeholder' => 'Email',
-                ],
+                'attr' => ['placeholder' => 'Email'],
             ])
             ->add('phone1', null, [
-                'attr' => [
-                    'class' => 'js-phone',
-                ],
+                'attr' => ['class' => 'js-phone'],
             ])
             ->add('phone2', null, [
-                'attr' => [
-                    'class' => 'js-phone',
-                ],
+                'attr' => ['class' => 'js-phone'],
             ]);
     }
 
@@ -34,6 +54,7 @@ class UserChangeInfoType extends AbstractType
         $resolver->setDefaults([
             'data_class' => UserChangeInfo::class,
             'translation_domain' => 'forms',
+            'user' => User::class,
         ]);
     }
 

@@ -2,8 +2,10 @@
 
 namespace App\Entity\Support;
 
+use App\Entity\Organization\TagTrait;
 use App\Entity\People\PeopleGroup;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
@@ -20,6 +22,7 @@ class Document
 {
     use CreatedUpdatedEntityTrait;
     use SoftDeleteableEntity;
+    use TagTrait;
 
     public const TYPE = [
         2 => 'Administratif',
@@ -57,26 +60,25 @@ class Document
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups("get")
+     * @Groups("show_document")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank();
-     * @Groups("get")
+     * @Groups("show_document")
      */
     private $name;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
-     * @Groups("get")
      */
     private $type;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups("get")
+     * @Groups("show_document")
      */
     private $content;
 
@@ -87,17 +89,17 @@ class Document
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups("get")
+     * @Groups("show_document")
      */
     private $size;
 
     /**
      * @Gedmo\Blameable(on="create")
      * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User", inversedBy="documents")
-     * @Groups("get")
+     * @Groups("show_document")
      * @MaxDepth(1)
      */
-    private $createdBy; // NE PAS SUPPRIMER
+    protected $createdBy; // NE PAS SUPPRIMER
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\People\PeopleGroup", inversedBy="documents")
@@ -110,14 +112,9 @@ class Document
      */
     private $supportGroup;
 
-    /**
-     * @ORM\PreFlush
-     */
-    public function preFlush(): void
+    public function __construct()
     {
-        if ($this->supportGroup) {
-            $this->supportGroup->setUpdatedAt(new \DateTime());
-        }
+        $this->tags = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -142,7 +139,6 @@ class Document
         return $this->type;
     }
 
-    /** @Groups("get") */
     public function getTypeToString(): ?string
     {
         return $this->type ? self::TYPE[$this->type] : '';
@@ -191,7 +187,7 @@ class Document
         return $this;
     }
 
-    /** @Groups("get") */
+    /** @Groups("show_document") */
     public function getExtension(): ?string
     {
         $array = explode('.', $this->internalFileName);
@@ -199,7 +195,7 @@ class Document
         return $array[count($array) - 1];
     }
 
-    /** @Groups("get") */
+    /** @Groups("show_document") */
     public function getFileType(): ?string
     {
         return self::TYPE_EXTENSIONS[$this->getExtension()] ?? null;

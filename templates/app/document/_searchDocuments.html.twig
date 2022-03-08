@@ -2,17 +2,25 @@
 
 {% block search_form %}
 
-<div class="form-group col-auto my-1 px-1">{{ form_widget(form.name) }}</div>
-<div class="form-group col-auto my-1 px-1">{{ form_widget(form.type) }}</div>
-
+<div class="col-auto my-1 px-1">{{ form_widget(form.name) }}</div>
+<div class="col-auto my-1 px-1">
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <div class="input-group-text" title="Étiquettes" data-toggle="tooltip" data-placement="bottom">
+                <i class="fas fa-tag text-black-50"></i>
+            </div>
+        </div>
+        {{ form_widget(form.tags) }}
+    </div>
+</div>
 {% include "_shared/_serviceDeviceReferentSearch.html.twig" %}
-<div class="form-group col-auto my-1 px-1 d-inline-flex" data-toggle="tooltip" data-placement="bottom"
+<div class="col-auto my-1 px-1 d-inline-flex" data-toggle="tooltip" data-placement="bottom"
     title="Date de début"><span class="my-2 px-1">Entre</span>{{ form_widget(form.date.start) }}
 </div>
-<div class="form-group col-auto my-1 px-1 d-inline-flex" data-toggle="tooltip" data-placement="bottom"
+<div class="col-auto my-1 px-1 d-inline-flex" data-toggle="tooltip" data-placement="bottom"
     title="Date de fin"><span class="my-2 pr-1">et</span>{{ form_widget(form.date.end) }}
 </div>
 {% if is_granted("ROLE_SUPER_ADMIN") %}
-    <div class="form-group col-auto my-1 px-1">{{ form_widget(form.id) }}</div>
+    <div class="col-auto my-1 px-1">{{ form_widget(form.id) }}</div>
 {% endif %}
 {% endblock %}

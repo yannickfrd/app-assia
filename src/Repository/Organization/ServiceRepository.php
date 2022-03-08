@@ -12,7 +12,6 @@ use App\Form\Utils\Choices;
 use App\Repository\Traits\QueryTrait;
 use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -65,6 +64,14 @@ class ServiceRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('s.name', 'ASC')
             ->getQuery();
+    }
+
+    /**
+     * Retourne tous les services.
+     */
+    public function findAllQuery(): QueryBuilder
+    {
+        return $this->createQueryBuilder('s')->select('s')->orderBy('s.name', 'ASC');
     }
 
     /**
@@ -193,6 +200,7 @@ class ServiceRepository extends ServiceEntityRepository
     public function getFullService(int $id): ?Service
     {
         return $this->createQueryBuilder('s')->select('s')
+            ->leftJoin('s.setting', 'setting')->addSelect('setting')
             ->leftJoin('s.pole', 'p')->addSelect('PARTIAL p.{id, name}')
             ->leftJoin('s.chief', 'chief')->addSelect('PARTIAL chief.{id, firstname, lastname, status, phone1, email}')
             ->leftJoin('s.serviceDevices', 'sd')->addSelect('sd')
@@ -218,6 +226,22 @@ class ServiceRepository extends ServiceEntityRepository
         return $qb
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
+    }
+
+    /**
+     * Permet de récupérer les tags d'un service.
+     */
+    public function findTagsByServiceId(int $serviceId): array
+    {
+        return $this->createQueryBuilder('s')
+            ->select('t.id, t.name, t.createdAt, u.id as createdBy')
+            ->innerJoin('s.tags', 't')
+            ->innerJoin('t.createdBy', 'u')
+            ->andWhere('s.id = :serviceId')
+            ->setParameter('serviceId', $serviceId)
+            ->orderBy('t.name', 'ASC')
+            ->getQuery()
             ->getResult();
     }
 }

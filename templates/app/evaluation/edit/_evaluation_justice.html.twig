@@ -1,0 +1,28 @@
+{% extends 'app/evaluation/edit/model/_evaluation_accordion.html.twig' %}
+
+{% import 'macros/support_people_looper.html.twig' as support_people_looper %}
+
+{% block card_title %}Justice{{ parent() }}{% endblock %}
+
+{% block card_body %}
+
+	<div class="row">
+		<div class="col-md-12">
+			{% for eval_person in evaluation_people|filter(a => a.vars.value.supportPerson.head) %}
+				<button type="button" class="btn btn-outline-{{ theme_color }} active mb-4">{{ eval_person.vars.value.supportPerson.person.fullname }}</button>
+				<div class="row mb-3">
+					<div class="col-md-6">{{ form_row(eval_person.evalJusticePerson.justiceStatus) }}</div>
+					<div class="col-md-6">{{ form_row(eval_person.evalJusticePerson.justiceAct) }}</div>
+				</div>
+				<div class="row mb-3">
+					<div class="col-md-12">
+						{{ form_label(eval_person.evalJusticePerson.commentEvalJustice) }}
+						{{ form_widget(eval_person.evalJusticePerson.commentEvalJustice) }}
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+	{{ parent() }}
+	
+{% endblock %}

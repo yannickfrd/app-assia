@@ -29,10 +29,9 @@ class ExportSearchType extends AbstractType
                 'choices' => Choices::getChoices(PeopleGroup::FAMILY_TYPOLOGY),
                 'attr' => [
                     'class' => 'multi-select',
+                    'placeholder' => 'placeholder.familtyTypology',
                     'size' => 1,
-                    'data-select2-id' => 'typology',
                 ],
-                'placeholder' => 'placeholder.familtyTypology',
                 'required' => false,
             ])
             ->add('model', ChoiceType::class, [
@@ -56,55 +55,6 @@ class ExportSearchType extends AbstractType
             //         'placeholder' => 'NbPeople',
             //         'autocomplete' => 'off',
             //     ],
-            // ])
-        // ->add('evalSocial', CheckBoxType::class, [
-            //     'required' => false,
-            //     'label_attr' => [
-            //         'class' => 'custom-control-label',
-            //     ],
-            //     'attr' => ['class' => 'custom-control-input checkbox'],
-            // ])
-            // ->add('evalAdm', CheckBoxType::class, [
-            //     'required' => false,
-            //     'label_attr' => ['class' => 'custom-control-label',],
-            //     'attr' => [
-            //         'class' => 'custom-control-input checkbox',
-            //     ],
-            // ])
-            // ->add('evalFamily', CheckBoxType::class, [
-            //     'required' => false,
-            //     'label_attr' => [
-            //         'class' => 'custom-control-label',
-            //     ],
-            //     'attr' => ['class' => 'custom-control-input checkbox'],
-            // ])
-            // ->add('evalBudget', CheckBoxType::class, [
-            //     'required' => false,
-            //     'label_attr' => [
-            //         'class' => 'custom-control-label',
-            //     ],
-            //     'attr' => ['class' => 'custom-control-input checkbox'],
-            // ])
-            // ->add('evalProf', CheckBoxType::class, [
-            //     'required' => false,
-            //     'label_attr' => [
-            //         'class' => 'custom-control-label',
-            //     ],
-            //     'attr' => ['class' => 'custom-control-input checkbox'],
-            // ])
-            // ->add('evalHousing', CheckBoxType::class, [
-            //     'required' => false,
-            //     'label_attr' => [
-            //         'class' => 'custom-control-label',
-            //     ],
-            //     'attr' => ['class' => 'custom-control-input checkbox'],
-            // ])
-            // ->add('evalJustice', CheckBoxType::class, [
-            //     'required' => false,
-            //     'label_attr' => [
-            //         'class' => 'custom-control-label',
-            //     ],
-            //     'attr' => ['class' => 'custom-control-input checkbox'],
             // ])
     }
 

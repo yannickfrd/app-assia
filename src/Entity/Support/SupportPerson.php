@@ -2,8 +2,9 @@
 
 namespace App\Entity\Support;
 
+use App\Entity\Evaluation\EvalInitPerson;
 use App\Entity\Evaluation\EvaluationPerson;
-use App\Entity\Evaluation\InitEvalPerson;
+use App\Entity\Event\Task;
 use App\Entity\People\Person;
 use App\Entity\People\RolePerson;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
@@ -29,6 +30,7 @@ class SupportPerson
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"show_support_person"})
      */
     private $id;
 
@@ -79,6 +81,17 @@ class SupportPerson
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
+     * @Groups("export")
+     */
+    private $endReason;
+
+    /**
+     * @Groups("export")
+     */
+    private $endReasonToString;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $endStatus;
 
@@ -101,6 +114,7 @@ class SupportPerson
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\People\Person", inversedBy="supports")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups("show_person")
      */
     private $person;
 
@@ -121,20 +135,31 @@ class SupportPerson
     private $evaluations;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\InitEvalPerson", mappedBy="supportPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvalInitPerson", mappedBy="supportPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      */
-    private $initEvalPerson;
+    private $evalInitPerson;
 
     /**
      * @ORM\OneToMany(targetEntity=PlacePerson::class, mappedBy="supportPerson", cascade={"persist", "remove"})
      */
     private $placesPerson;
 
+    // /**
+    //  * @ORM\ManyToMany(targetEntity=Task::class, mappedBy="supportPeople")
+    //  */
+    // private $tasks;
+
     public function __construct()
     {
         $this->notes = new ArrayCollection();
         $this->evaluations = new ArrayCollection();
         $this->placesPerson = new ArrayCollection();
+        // $this->tasks = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->id;
     }
 
     public function getId(): ?int
@@ -220,6 +245,23 @@ class SupportPerson
         $this->status = $status;
 
         return $this;
+    }
+
+    public function getEndReason(): ?int
+    {
+        return $this->endReason;
+    }
+
+    public function setEndReason(?int $endReason): self
+    {
+        $this->endReason = $endReason;
+
+        return $this;
+    }
+
+    public function getEndReasonToString(): ?string
+    {
+        return $this->endReason ? SupportGroup::END_REASONS[$this->endReason] : null;
     }
 
     public function getEndStatus(): ?int
@@ -326,18 +368,18 @@ class SupportPerson
         return $this;
     }
 
-    public function getInitEvalPerson(): ?InitEvalPerson
+    public function getEvalInitPerson(): ?EvalInitPerson
     {
-        return $this->initEvalPerson;
+        return $this->evalInitPerson;
     }
 
-    public function setInitEvalPerson(?InitEvalPerson $initEvalPerson): self
+    public function setEvalInitPerson(?EvalInitPerson $evalInitPerson): self
     {
-        $this->initEvalPerson = $initEvalPerson;
+        $this->evalInitPerson = $evalInitPerson;
 
         // set the owning side of the relation if necessary
-        if ($this !== $initEvalPerson->getSupportPerson()) {
-            $initEvalPerson->setSupportPerson($this);
+        if ($this !== $evalInitPerson->getSupportPerson()) {
+            $evalInitPerson->setSupportPerson($this);
         }
 
         return $this;
@@ -373,4 +415,12 @@ class SupportPerson
 
         return $this;
     }
+
+    // /**
+    //  * @return Collection<Task>|Task[]|null
+    //  */
+    // public function getTasks(): ?Collection
+    // {
+    //     return $this->tasks;
+    // }
 }

@@ -31,13 +31,14 @@ device:
   coefficient.help: Coefficient entre 0 et 10. Les décimales sont prises en compte.
   place.help: Ce dispositif a t-il une activité d'hébergement ?
   comment.placeholder: Description...
-Email: Adresse email
+Email: Email
 Email1: Adresse email 1
 Email2: Adresse email 2
 End: Fin
 End place: Mettre fin également à l'hébergement
 endPlace.help: Si cette case est cochée, l'hébergement associé au suivi aura automatiquement les mêmes dates de fin de prise en charge.
 End date: Date de fin
+End reason: Motif de fin
 End status: Situation résidentielle à l'issue
 End status comment: Précision sur la situation à l'issue
 Error: Erreur
@@ -48,7 +49,7 @@ Fullname: Nom et prénom
 Gender: Sexe
 head.help: Demandeur principal
 Hotel: Hôtel
-Info to siao date: Date remise à dispo au SIAO
+Info to siao date: Date remise à disposition de la place
 hotelName: Nom de l'hôtel
 Lastname: Nom
 Lessor: Bailleur/Propriétaire
@@ -65,11 +66,14 @@ organization.name: Organisme
 placeholder:
   action: -- Action --
   comment: Écrire un commentaire...
+  categories: -- Catégories --
+  color: -- Couleur --
   date: -- Date --
   dateType: -- Type de date --
   device: -- Dispositif --
   disabled: -- Statut --
   familtyTypology: -- Typologie familiale --
+  hotels: -- Hôtels --
   name_or_id: Nom, prénom ou ID SI-SIAO
   gender: -- Sexe --
   nbSupports: Nb de suivis
@@ -81,8 +85,13 @@ placeholder:
   service: -- Service --
   status: -- Statut --
   support: -- Suivi --
+  supportLevels: -- Niveaux d'intervention --
+  support_people: -- Membre(s) du suivi --
+  supportType: -- Type d'accompagnement --
+  tags: -- Étiquettes --
   type: -- Type --
   user: -- Utilisateur --
+  professionals: -- Professionnel·le(s) --
 Password: Mot de passe
 Phone: Téléphone
 Phone1: Téléphone 1
@@ -96,6 +105,7 @@ Social referent: Référent social
 Referent2: Référent 2
 Referents: Référents
 Role: Rôle dans le groupe
+search: Recherche
 Search: Recherche
 Select: Sélectionner
 Service: Service
@@ -107,11 +117,12 @@ Start date: Date de début
 Status: Statut
 Sub service: Sous-service
 Sub services: Sous-services
-subService:
+sub_service:
   name: Nom du sous-service
   chief: Coordination
 Support access: Accès aux suivis sociaux du service
 Support dates: Dates de suivi
+Support people: Membres du suivi
 Theoretical end date: Date de fin théorique
 Title: Titre
 user:
@@ -120,6 +131,7 @@ user:
   username.help: Remplissage auto. en fonction du nom et prénom.
   password.help: 8 caractères minimum dont 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial (? ! * { } [ ]- + = & < > $)
   confirmPassword.help: Veuillez re-saisir le mot de passe pour confirmation
+professionals: Professionnel·le(s)
 Username: Login
 Usename or maiden name: Nom d'usage ou de jeune fille
 Write a note: Écrire une note
@@ -131,7 +143,6 @@ comment.placeholder: Écrire un commentaire relatif au suivi social
 service.comment: Écrire un commentaire concernant le service
 Year: Année
 Zipcode: Code postal
-End reason: Motif de fin
 Comment: Commentaire
 Comment end reason: Commentaire sur le motif de fin
 Place: Hébergement
@@ -141,7 +152,7 @@ Enabled: Actif
 
 search.fullname.placeholder: Nom du suivi
 
-### SupportGroup
+# SupportGroup
 Eval adm: Administratif
 Eval budget: Budget
 Eval family: Famille
@@ -155,7 +166,7 @@ support:
   endDate: Date de fin d'accompagnement
 Clone support: Je souhaite récupérer les informations du précédent suivi social (évaluation et documents) en accord avec le service concerné.
 
-### OriginRequest
+# OriginRequest
 Decision date: Date de décision
 Organization: Organisme prescripteur ou orienteur
 Organization comment: Précision concernant l'organisme
@@ -164,7 +175,7 @@ Pre admission date: Date d'entretien de pré-admission
 Resul pre admission: Résultat de l'orientation ou pré-admission
 originRequest.comment: Écrire un commentaire relatif à la demande ou à l'orientation
 
-### Document
+# Document
 document:
   name.placeholder: Nom du fichier
   content.placeholder: Ajouter une description
@@ -175,7 +186,7 @@ document:
     placeholder: Glisser-déposer ici les fichiers ou cliquer pour en choisir...
 Agreement: Consentement de la personne
 
-### Referent
+# Referent
 Social worker: Travailleur social
 Social worker2: Travailleur social suppléant
 Social worker name 2: Nom du travailleur social suppléant
@@ -186,7 +197,7 @@ referent:
   socialWorker2: Travailleur social suppléant
   comment.plaholder: Écrire un commentaire concernant le service social référent...
 
-### Service
+# Service
 Chief: Responsable
 Siret id: Numéro SIRET
 Finess id: Numéro FINESS
@@ -209,7 +220,7 @@ Individual collective: Individuel ou partagé
 Contribution amt: Montant de la participation financière
 Min rest to live: Reste à vivre minimum
 
-### Paiement/Contribution
+# Payment
 Amount: Montant
 Apl amt: Montant APL
 Charges amt: Montant charges
@@ -245,7 +256,24 @@ contribution.rate.help: Nombre entre 0 et 1.
 ### Note
 notes.export.title: Exporter toutes les notes sur un document Word
 
-### RDV
+# Event
+event:
+  content.placeholder: Ajouter une note
+  location.placeholder: Ajouter un lieu
+  support_group: Nom du suivi
+  support_group.placeholder: -- Nom du suivi concerné --
+  support_people: Membre(s) du suivi
+  support_people.placeholder: -- Membre(s) du suivi concerné --
+  title.placeholder: Ajouter un titre
+  users: Profesionnel·le(s) concerné·e(s)
+  users.placeholder: -- Profesionnel·le(s) --
+
+# Task
+task:
+  level.placeholder: -- Priorité --
+  title.placeholder: Nom de la tâche
+
+# Rdv
 rdv:
   placeholder:
     location: Ajouter un lieu
@@ -253,8 +281,11 @@ rdv:
     title: Ajouter un titre
   last: Dernier rendez-vous
   next: Prochain rendez-vous
+  label:
+    google: Ajouter à Google Agenda
+    outlook: Ajouter à Outlook Agenda
 
-### Adresse
+# Adress
 location:
   address_auto: Adresse (auto.)
   city_auto: Ville (auto.)
@@ -265,7 +296,7 @@ location:
     help: Adresse du logement, hébergement, domiciliation...
 endLocation: Adresse à l'issue
 
-### AVDL
+# AVDL
 Diag type: Type de diagnostic
 Diag start date: Date de début diagnostic
 Diag end date: Date de fin diagnostic
@@ -291,7 +322,6 @@ avdl:
   recommendationSupport: Préconisation d'accompagnement
   support: Accompagnement
   supportType: Type d'accompagnement
-  endSupportReason: Motif de fin d'accompagnement
   accessHousingModality: Modalité d'accès au logement
   propoHousingDate: Date de la proposition
   propoResult: Résultat de la proposition
@@ -299,7 +329,7 @@ avdl:
   supportComment.placeholder: Écrire un commentaire concernant l'accompagnement
   endSupportComment.placeholder: Écrire un commentaire concernant la fin d'accompagnement ou la proposition logement
 
-### Suivi hôtel
+#  SupportHotel
 Emergency action request: Motif de l'intervention d'urgence
 Reason no inclusion: Motif de la non inclusion
 Emergency action done: Type d'intervention d'urgence réalisé
@@ -318,10 +348,9 @@ hotelSupport:
   evaluation: Date de l'évaluation / diagnostic
   agreementDate: Date de signature de la convention
   departmentAnchor: Département d'ancrage
-  endSupportReason: Motif de fin d'accompagnement
   recommendation: Préconisation
   orientationDate: Date d'orientation
-  subService.help: Secteur géographique
+  sub_service.help: Secteur géographique
   support: Suivi
   levelSupport: Niveau d'intervention
   search:
@@ -330,12 +359,13 @@ hotelSupport:
     search: Recherche du SSD orienteur
     city: SSD orienteur (auto.)
 
-#Export
+# Export
 Formatted sheet: Tableur formaté
 Model: Modèle d'export
 Anonymized: Anonymisé
+no_result_to_export: Aucun résultat à exporter.
 
-#SI-SIAO
+# SiSiao
 si_siao:
   login_successfully: Vous êtes connecté·e au SI-SIAO.
   login_failed: Identifiant SI-SIAO ou mot de passe incorrect.
@@ -345,3 +375,42 @@ si_siao:
 si_siao_id.placeholder: ID groupe SI-SIAO
 Si siao search: Recherche SI-SIAO
 Si siao import: Importer l'évaluation sociale présente dans le SI-SIAO.
+
+# Tag
+tag:
+  name: Nom
+  placeholder: Étiquette(s)
+
+# Setting
+Organization name: Nom de l'organisation
+Weekly alert: Rappel hebdomadaire
+Daily alert: Rappel quotidien
+Soft deletion delay: Délai d'archivage
+Hard deletion delay: Délai de suppression
+
+setting:
+  soft_deletion_delay:
+    service_help: Nombre de mois avant l'archivage.
+    label: Délai minimum d'archivage
+    placeholder: "Exemple : 24 mois"
+    help: Par mois.
+    error.expiry_delai: La valeur du champ, ne peut pas être inférieur à
+  hard_deletion_delay:
+    service_help: Nombre de mois avant la suppression définitive à partir de la fin du délai d'archivage.
+    label: Délai minimum de suppression
+    placeholder: "Exemple : 24 mois"
+    help: Nombre de mois à partir de la fin du délai d'archivage.
+  delay_update.placeholder: "Exemple : 3 mois."
+  auto_evaluation_alerts.label: Rappels automatiques relatifs à l'évaluation sociale
+  update_siao_request.help: Nombre de mois avant la date limite de renouvellement de la demande SIAO
+  update_social_housing_request.help: Nombre de mois avant la date limite de renouvellement de la demande de logement social
+  delay_to_update_siao_request: Délai pour actualiser une demande SIAO
+  delay_to_update_social_housing_request: Délai pour actualiser une demande de logement social
+
+update_paper: Renouvellement papiers administratifs
+update_social_security_rights: Renouvellement couverture maladie
+update_rqth: Renouvellement RQTH
+update_resources_rights: Renouvellement droits relatifs aux ressources
+update_siao_request: Renouvellement demande SIAO
+update_social_housing_request: Renouvellement demande de logement
+update_domiciliation: Renouvellement domiciliation

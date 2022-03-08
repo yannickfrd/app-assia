@@ -4,12 +4,13 @@ namespace App\Form\Admin\Security;
 
 use App\Entity\Organization\User;
 use App\Form\Organization\Service\ServiceUserType;
-use App\Form\Organization\User\UserDeviceType;
 use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Security;
 
@@ -47,9 +48,7 @@ class SecurityUserType extends AbstractType
                 'help' => 'user.username.help',
             ])
             ->add('email', null, [
-                'attr' => [
-                    'placeholder' => 'Email',
-                ],
+                'attr' => ['placeholder' => 'Email'],
             ])
             ->add('phone1', null, [
                 'attr' => [
@@ -69,57 +68,34 @@ class SecurityUserType extends AbstractType
                 'multiple' => true,
                 'attr' => [
                     'class' => 'multi-select',
+                    'placeholder' => 'placeholder.select',
                     'size' => 1,
-                    'data-select2-id' => 'role',
-            ],
-                'placeholder' => 'placeholder.select',
-            ])
-            // ->add('password', PasswordType::class, [
-            //     'attr' => [
-            //         'class' => 'js-password',
-            //         'placeholder' => 'Password',
-            //     ],
-            //     'help' => 'user.password.help',
-            // ])
-            // ->add('confirmPassword', PasswordType::class, [
-            //     'attr' => [
-            //         'class' => 'js-password',
-            //         'placeholder' => 'Confirm password',
-            //     ],
-            //     'help' => 'user.confirmPassword.help',
-            // ])
-            ->add('serviceUser', CollectionType::class, [
-                'entry_type' => ServiceUserType::class,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'delete_empty' => true,
-                'prototype' => true,
-                'by_reference' => false,
-                'label_attr' => ['class' => 'sr-only'],
-                'entry_options' => [
-                    'attr' => ['class' => 'form-inline'],
                 ],
             ])
-            ->add('userDevices', CollectionType::class, [
-                'entry_type' => UserDeviceType::class,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'delete_empty' => true,
-                'prototype' => true,
-                'by_reference' => false,
-                'label_attr' => ['class' => 'sr-only'],
-                'entry_options' => [
-                    'attr' => ['class' => 'form-inline'],
-                ],
-            ]);
-    }
+        ;
 
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        $resolver->setDefaults([
-            'data_class' => User::class,
-            'translation_domain' => 'forms',
-        ]);
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $user = $event->getData();
+
+            if ($user->getId()) {
+                return;
+            }
+
+            $event->getForm()
+                ->add('serviceUser', CollectionType::class, [
+                    'entry_type' => ServiceUserType::class,
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'delete_empty' => true,
+                    'prototype' => true,
+                    'by_reference' => false,
+                    'label_attr' => ['class' => 'sr-only'],
+                    'entry_options' => [
+                        'attr' => ['class' => 'form-inline'],
+                    ],
+                ])
+            ;
+        });
     }
 
     public function getRoles(): array
@@ -132,6 +108,14 @@ class SecurityUserType extends AbstractType
             'Utilisateur' => 'ROLE_USER',
             'Administrateur' => 'ROLE_ADMIN',
         ];
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => User::class,
+            'translation_domain' => 'forms',
+        ]);
     }
 
     public function getBlockPrefix(): string

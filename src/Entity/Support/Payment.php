@@ -32,13 +32,13 @@ class Payment
         2 => 'Loyer / Redevance',
         10 => 'Caution',
         20 => 'Prêt / Avance',
-        30 => 'Remboursement de dette',
+        30 => 'Remboursement',
         11 => 'Restitution de caution',
     ];
 
     public const CONTRIBUTION_HOTEL_TYPES = [
         1 => 'Participation financière',
-        30 => 'Remboursement de dette',
+        30 => 'Remboursement',
     ];
 
     public const REPAYMENT_REASONS = [
@@ -52,6 +52,7 @@ class Payment
 
     public const PAYMENT_TYPES = [
         1 => 'Virement',
+        // 2 => '',
         3 => 'Chèque',
         4 => 'Espèce',
         99 => 'Non renseigné',

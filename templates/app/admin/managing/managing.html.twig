@@ -1,4 +1,4 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
 
 {% block title %}Gestion{% endblock %}
 
@@ -8,24 +8,24 @@
 
         <h1 class="h2 mb-3">Gestion</h1>
 
-        {% include "model/_msgFlash.html.twig" %}
+        {% include 'model/_msgFlash.html.twig' %}
 
         <hr>
 
         <div class="my-4">
 
-            {% include "app/admin/managing/_managingServices.html.twig" %}
+            {% include 'app/admin/managing/_managing_services.html.twig' %}
 
             <h2 class="h5">Paiements</h2>
             <ul>
                 <li class="mb-2 text-{{ theme_color }}">
-                    <a class="text-dark" href="{{ path("supports_current_month") }}">Récapitulatif mensuel des redevances</a>
+                    <a class="text-dark" href="{{ path('supports_current_month') }}">Récapitulatif mensuel des redevances</a>
                 </li>
                 <li class="mb-2 text-{{ theme_color }}">
-                    <a class="text-dark" href="{{ path("payments") }}">Paiements (redevances, participations financières)</a>
-                </li class="mb-2">
+                    <a class="text-dark" href="{{ path('payments') }}">Paiements (redevances, participations financières)</a>
+                </li>
                 <li class="mb-2 text-{{ theme_color }}">
-                    <a class="text-dark" href="{{ path("payment_indicators") }}">Indicateurs des paiements</a>
+                    <a class="text-dark" href="{{ path('payment_indicators') }}">Indicateurs des paiements</a>
             </ul>
 
             <hr class="my-3">
@@ -33,18 +33,13 @@
             <h2 class="h5">Listes</h2>
             <ul>
                 <li class="mb-2 text-{{ theme_color }}">
-                    <a class="text-dark" href="{{ path("places") }}">Groupes de places</a>
+                    <a class="text-dark" href="{{ path('place_index') }}">Groupes de places</a>
                 </li> 
                 <li class="mb-2 text-{{ theme_color }}">
-                    <a class="text-dark" href="{{ path("organizations") }}">Organismes prescripteurs</a>
+                    <a class="text-dark" href="{{ path('organizations') }}">Organismes prescripteurs</a>
                 </li>
             </ul>
-
         </div>
-
     </div>
 
 {% endblock %}
-
-{% block javascripts %}
-{% endblock javascripts %}

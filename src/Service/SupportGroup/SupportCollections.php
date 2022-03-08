@@ -7,6 +7,7 @@ use App\Entity\People\PeopleGroup;
 use App\Entity\Support\Rdv;
 use App\Entity\Support\SupportGroup;
 use App\Repository\Evaluation\EvaluationGroupRepository;
+use App\Repository\Event\TaskRepository;
 use App\Repository\Organization\ReferentRepository;
 use App\Repository\Support\DocumentRepository;
 use App\Repository\Support\NoteRepository;
@@ -19,27 +20,30 @@ class SupportCollections
 {
     private $cache;
 
-    private $noteRepository;
-    private $rdvRepository;
-    private $documentRepository;
-    private $paymentRepository;
-    private $referentRepository;
-    private $evaluationGroupRepository;
+    private $noteRepo;
+    private $rdvRepo;
+    private $taskRepo;
+    private $documentRepo;
+    private $paymentRepo;
+    private $referentRepo;
+    private $evaluationGroupRepo;
 
     public function __construct(
-        NoteRepository $noteRepository,
-        RdvRepository $rdvRepository,
-        DocumentRepository $documentRepository,
-        PaymentRepository $paymentRepository,
-        ReferentRepository $referentRepository,
-        EvaluationGroupRepository $evaluationGroupRepository
+        NoteRepository $noteRepo,
+        RdvRepository $rdvRepo,
+        TaskRepository $taskRepo,
+        DocumentRepository $documentRepo,
+        PaymentRepository $paymentRepo,
+        ReferentRepository $referentRepo,
+        EvaluationGroupRepository $evaluationGroupRepo
     ) {
-        $this->noteRepository = $noteRepository;
-        $this->rdvRepository = $rdvRepository;
-        $this->documentRepository = $documentRepository;
-        $this->paymentRepository = $paymentRepository;
-        $this->referentRepository = $referentRepository;
-        $this->evaluationGroupRepository = $evaluationGroupRepository;
+        $this->noteRepo = $noteRepo;
+        $this->rdvRepo = $rdvRepo;
+        $this->taskRepo = $taskRepo;
+        $this->documentRepo = $documentRepo;
+        $this->paymentRepo = $paymentRepo;
+        $this->referentRepo = $referentRepo;
+        $this->evaluationGroupRepo = $evaluationGroupRepo;
 
         $this->cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
     }
@@ -52,7 +56,7 @@ class SupportCollections
         return $this->cache->get(EvaluationGroup::CACHE_EVALUATION_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup) {
             $item->expiresAfter(\DateInterval::createFromDateString('1 month'));
 
-            return $this->evaluationGroupRepository->findEvaluationOfSupport($supportGroup->getId());
+            return $this->evaluationGroupRepo->findEvaluationOfSupport($supportGroup->getId());
         });
     }
 
@@ -66,7 +70,7 @@ class SupportCollections
         return $this->cache->get(PeopleGroup::CACHE_GROUP_REFERENTS_KEY.$peopleGroup->getId(), function (CacheItemInterface $item) use ($peopleGroup) {
             $item->expiresAfter(\DateInterval::createFromDateString('1 month'));
 
-            return $this->referentRepository->findReferentsOfPeopleGroup($peopleGroup);
+            return $this->referentRepo->findReferentsOfPeopleGroup($peopleGroup);
         });
     }
 
@@ -78,7 +82,7 @@ class SupportCollections
         return $this->cache->get(SupportGroup::CACHE_SUPPORT_NB_NOTES_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup) {
             $item->expiresAfter(\DateInterval::createFromDateString('1 month'));
 
-            return $this->noteRepository->count(['supportGroup' => $supportGroup->getId()]);
+            return $this->noteRepo->count(['supportGroup' => $supportGroup->getId()]);
         });
     }
 
@@ -90,7 +94,22 @@ class SupportCollections
         return $this->cache->get(SupportGroup::CACHE_SUPPORT_NB_RDVS_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup) {
             $item->expiresAfter(\DateInterval::createFromDateString('1 month'));
 
-            return $this->rdvRepository->count(['supportGroup' => $supportGroup->getId()]);
+            return $this->rdvRepo->count(['supportGroup' => $supportGroup->getId()]);
+        });
+    }
+
+    /**
+     * Donne le nombre d'évenement du suivi social.
+     */
+    public function getNbTasks(SupportGroup $supportGroup): int
+    {
+        return $this->cache->get(SupportGroup::CACHE_SUPPORT_NB_TASKS_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup) {
+            $item->expiresAfter(\DateInterval::createFromDateString('1 month'));
+
+            return $this->taskRepo->count([
+                'supportGroup' => $supportGroup->getId(),
+                'status' => false, ]
+            );
         });
     }
 
@@ -102,7 +121,7 @@ class SupportCollections
         return $this->cache->get(SupportGroup::CACHE_SUPPORT_LAST_RDV_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup) {
             $item->expiresAfter(\DateInterval::createFromDateString('12 hours'));
 
-            return $this->rdvRepository->findLastRdvOfSupport($supportGroup->getId());
+            return $this->rdvRepo->findLastRdvOfSupport($supportGroup->getId());
         });
     }
 
@@ -114,7 +133,7 @@ class SupportCollections
         return $this->cache->get(SupportGroup::CACHE_SUPPORT_NEXT_RDV_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup) {
             $item->expiresAfter(\DateInterval::createFromDateString('12 hours'));
 
-            return $this->rdvRepository->findNextRdvOfSupport($supportGroup->getId());
+            return $this->rdvRepo->findNextRdvOfSupport($supportGroup->getId());
         });
     }
 
@@ -126,7 +145,7 @@ class SupportCollections
         return $this->cache->get(SupportGroup::CACHE_SUPPORT_NB_DOCUMENTS_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup) {
             $item->expiresAfter(\DateInterval::createFromDateString('1 month'));
 
-            return $this->documentRepository->count(['supportGroup' => $supportGroup->getId()]);
+            return $this->documentRepo->count(['supportGroup' => $supportGroup->getId()]);
         });
     }
 
@@ -142,7 +161,7 @@ class SupportCollections
         return $this->cache->get(SupportGroup::CACHE_SUPPORT_NB_PAYMENTS_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup) {
             $item->expiresAfter(\DateInterval::createFromDateString('1 month'));
 
-            return $this->paymentRepository->count(['supportGroup' => $supportGroup->getId()]);
+            return $this->paymentRepo->count(['supportGroup' => $supportGroup->getId()]);
         });
     }
 }

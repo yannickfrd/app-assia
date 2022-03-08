@@ -32,7 +32,7 @@ class HotelSupportService
         return $supportGroup;
     }
 
-    protected function getStatus(SupportGroup $supportGroup)
+    protected function getStatus(SupportGroup $supportGroup): int
     {
         if ($supportGroup->getEndDate()) {
             return SupportGroup::STATUS_ENDED;
@@ -86,6 +86,10 @@ class HotelSupportService
      */
     protected function getCoeffSupport(HotelSupport $hotelSupport): float
     {
+        if (Choices::NO === $hotelSupport->getSupportGroup()->getService()->getCoefficient()) {
+            return SupportGroup::DEFAULT_COEFFICIENT;
+        }
+
         // Si accompagnement en complémentarité : coeff. 0,5
         if (3 === $hotelSupport->getLevelSupport()) {
             return SupportGroup::COEFFICIENT_HALF;

@@ -3,7 +3,6 @@
 namespace App\Tests\Entity;
 
 use App\Entity\Organization\User;
-use App\Tests\Entity\AssertHasErrorsTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class UserTest extends WebTestCase
@@ -67,16 +66,6 @@ class UserTest extends WebTestCase
         $this->assertHasErrors($this->user->setUsername(''), 1);
     }
 
-    public function testBlankPassword()
-    {
-        $this->assertHasErrors($this->user->setPassword(''), 1);
-    }
-
-    public function testInvalidPassword()
-    {
-        $this->assertHasErrors($this->user->setPassword('test123'), 1);
-    }
-
     public function testBlankEmail()
     {
         $this->assertHasErrors($this->user->setEmail(''), 1);
@@ -85,12 +74,6 @@ class UserTest extends WebTestCase
     public function testInvalidEmail()
     {
         $this->assertHasErrors($this->user->setEmail('xxxx@xxx'), 1);
-    }
-
-    public function testUsernameExists()
-    {
-        $user = $this->user->setUsername('r.super_admin');
-        $this->assertHasErrors($user, 1);
     }
 
     protected function tearDown(): void

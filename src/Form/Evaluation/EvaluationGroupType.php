@@ -21,7 +21,7 @@ class EvaluationGroupType extends AbstractType
         $service = $evaluationGroup->getSupportGroup()->getService();
 
         $builder
-            ->add('initEvalGroup', InitEvalGroupType::class)
+            ->add('evalInitGroup', EvalInitGroupType::class)
             ->add('evalSocialGroup', EvalSocialGroupType::class)
             ->add('evalFamilyGroup', EvalFamilyGroupType::class)
             ->add('evalBudgetGroup', EvalBudgetGroupType::class)

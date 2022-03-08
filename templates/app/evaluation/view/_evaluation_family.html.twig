@@ -1,0 +1,69 @@
+{% import 'macros/div_view.html.twig' as view_div %}
+
+<hr/>
+<section>
+    <div class="d-flex mb-3">
+        <h2 class="h4">Famille</h2>
+        <span class="align-content-center"><a href="{{ path('support_evaluation_view', {'id': support.id }) }}" 
+            class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
+        </span>
+    </div>
+
+    {% set eval_family = evaluation.evalFamilyGroup %}
+    {% if eval_family %}
+        {% if eval_family.famlReunification == YES %}
+            <div class="row mb-2">
+                {{ view_div.get(eval_family.famlReunificationToString ~ (eval_family.nbPeopleReunification ? ' (' 
+                    ~ eval_family.nbPeopleReunification ~ ' personne(s))'), 'Faml reunification', 'evaluation') }}
+            </div>
+        {% endif %}
+        <div class="row my-3">
+            <div class="col-md-12 justify">{{ evaluation.evalFamilyGroup.commentEvalFamilyGroup|nl2br }}</div>
+        </div>
+    {% endif %}
+
+    {% set eval_people_family = eval_people|filter(e => e.evalFamilyPerson) %}
+    {% set nb_adults_family = eval_people_family|length %}
+    {% for eval_person in eval_people_family %}
+        {% set eval_family = eval_person.evalFamilyPerson %}
+        {% set support_person = eval_person.supportPerson %}
+            {% if nb_adults_family > 1 %}
+                <div class="row mb-2">
+                    <div class="col-md-12 font-weight-bold"><span class="text-underline">{{ support_person.person.fullname }}</span> :</div>
+                </div>
+            {% endif %}
+        <div class="my-3">
+            {% if support_person.role != ROLE_CHILD %}
+                <div class="row">
+                    {{ view_div.get(eval_family.maritalStatusToString, 'Marital status', 'evaluation') }}
+                    {{ view_div.get(eval_family.noConciliationOrderToString, 'No conciliation order', 'evaluation') }}
+                    {{ view_div.get(eval_family.protectiveMeasure == YES and eval_family.protectiveMeasureType ? 
+                        eval_family.protectiveMeasureTypeToString, 'Protective measure', 'evaluation') }}
+                </div>
+            {% endif %}
+            {% if eval_family.unbornChild == YES %}
+                <div class="row">
+                    {{ view_div.get(eval_family.unbornChildToString ~ (eval_family.expDateChildbirth ? ' (' 
+                        ~ eval_family.expDateChildbirth|date('d/m/Y') ~ ')'), 'Unborn child', 'evaluation') }}
+                </div>
+            {% endif %}    
+            {% if support_person.role == ROLE_CHILD %}
+                <div class="row">
+                    {{ view_div.get((eval_family.childcareOrSchool == YES ? eval_family.childcareSchoolTypeToString : 
+                        eval_family.childcareOrSchoolToString) ~ (eval_family.schoolCity or eval_family.schoolChildCarePrecision ? ' (' ~ eval_family.schoolCity 
+                        ~ ', ' ~ (eval_family.schoolChildCarePrecision ? eval_family.schoolChildCarePrecision) ~ ')'), 'Childcare or school', 'evaluation') }}
+                    {{ view_div.get(eval_family.childToHostToString, 'Child to host', 'evaluation') }}
+                    {{ view_div.get(eval_family.childDependanceToString, 'Child dependance', 'evaluation') }}
+                </div>
+            {% endif %}
+            {% if eval_family.pmiFollowUp == YES %}
+                <div class="row mb-2">
+                    {{ view_div.get(eval_family.pmiName, 'Pmi follow up', 'evaluation') }}
+                </div>
+            {% endif %}
+            <div class="row my-2">
+                <div class="col-md-12 justify">{{ eval_family.commentEvalFamilyPerson|nl2br }}</div>
+            </div>
+        </div>
+    {% endfor %}
+</section>

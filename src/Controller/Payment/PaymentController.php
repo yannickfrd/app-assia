@@ -6,7 +6,6 @@ use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Organization\User;
 use App\Entity\Support\Payment;
 use App\Entity\Support\SupportGroup;
-use App\Event\Payment\PaymentEvent;
 use App\Form\Model\Support\PaymentSearch;
 use App\Form\Model\Support\SupportPaymentSearch;
 use App\Form\Support\Payment\PaymentSearchType;
@@ -19,11 +18,11 @@ use App\Service\Export\PaymentFullExport;
 use App\Service\Indicators\PaymentIndicators;
 use App\Service\Normalisation;
 use App\Service\Pagination;
+use App\Service\Payment\PaymentManager;
 use App\Service\SupportGroup\SupportManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -121,13 +120,9 @@ class PaymentController extends AbstractController
      *
      * @Route("/support/{id}/payment/new", name="payment_new", methods="POST")
      */
-    public function createPayment(
-        SupportGroup $supportGroup,
-        Request $request,
-        NormalizerInterface $normalizer,
-        Normalisation $normalisation,
-        EventDispatcherInterface $dispatcher
-    ): JsonResponse {
+    public function createPayment(SupportGroup $supportGroup, Request $request,NormalizerInterface $normalizer,
+        Normalisation $normalisation): JsonResponse
+    {
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
         $form = $this->createForm(PaymentType::class, $payment = new Payment())
@@ -139,7 +134,7 @@ class PaymentController extends AbstractController
             $this->em->persist($payment);
             $this->em->flush();
 
-            $dispatcher->dispatch(new PaymentEvent($payment, $supportGroup), 'payment.after_create');
+            PaymentManager::deleteCacheItems($payment);
 
             return $this->json([
                 'action' => 'create',
@@ -184,8 +179,7 @@ class PaymentController extends AbstractController
         Payment $payment,
         Request $request,
         NormalizerInterface $normalizer,
-        Normalisation $normalisation,
-        EventDispatcherInterface $dispatcher
+        Normalisation $normalisation
     ): JsonResponse {
         $this->denyAccessUnlessGranted('EDIT', $payment);
 
@@ -195,7 +189,7 @@ class PaymentController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->flush();
 
-            $dispatcher->dispatch(new PaymentEvent($payment), 'payment.after_update');
+            PaymentManager::deleteCacheItems($payment);
 
             return $this->json([
                 'action' => 'update',
@@ -217,14 +211,14 @@ class PaymentController extends AbstractController
      *
      * @Route("/payment/{id}/delete", name="payment_delete", methods="GET")
      */
-    public function deletePayment(Payment $payment, EventDispatcherInterface $dispatcher): JsonResponse
+    public function deletePayment(Payment $payment): JsonResponse
     {
         $this->denyAccessUnlessGranted('DELETE', $payment);
 
         $this->em->remove($payment);
         $this->em->flush();
 
-        $dispatcher->dispatch(new PaymentEvent($payment), 'payment.after_update');
+        PaymentManager::deleteCacheItems($payment);
 
         return $this->json([
             'action' => 'delete',
@@ -251,7 +245,7 @@ class PaymentController extends AbstractController
 
         $datas = $indicators->getIndicators(
             $this->paymentRepo->findPaymentsForIndicators($search),
-            $search,
+            $search
         );
 
         return $this->render('app/payment/paymentIndicators.html.twig', [

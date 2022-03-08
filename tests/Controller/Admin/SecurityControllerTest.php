@@ -2,13 +2,14 @@
 
 namespace App\Tests\Controller\Admin;
 
-use App\Tests\AppTestTrait;
 use App\Entity\Organization\User;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\HttpFoundation\Response;
 
 class SecurityControllerTest extends WebTestCase
 {
@@ -29,10 +30,10 @@ class SecurityControllerTest extends WebTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->client = $this->createClient();
 
-        /** @var AbstractDatabaseTool */
+        /* @var AbstractDatabaseTool */
         $this->databaseTool = $this->getContainer()->get(DatabaseToolCollection::class)->get();
 
         $this->fixtures = $this->databaseTool->loadAliceFixture([
@@ -40,7 +41,7 @@ class SecurityControllerTest extends WebTestCase
         ]);
     }
 
-    public function testLoginIsSuccessful()
+    public function testLoginIsSuccessful(): void
     {
         $this->createLogin($this->fixtures['userRoleUser']);
         // $this->client->followRedirects();
@@ -77,7 +78,7 @@ class SecurityControllerTest extends WebTestCase
         static::assertSelectorTextContains('h1', 'Merci de vous connecter');
     }
 
-    public function testRegistrationIsFailed()
+    public function testRegistrationIsFailed(): void
     {
         $this->createLogin($this->fixtures['userAdmin']);
 
@@ -95,26 +96,26 @@ class SecurityControllerTest extends WebTestCase
                 'email' => 'j.doe@mail.fr',
                 'status' => User::STATUS_SOCIAL_WORKER,
                 'roles' => ['ROLE_USER'],
-                'username' => 'j.doe',
+                'username' => '',
                 '_token' => $csrfToken,
             ],
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('.alert.alert-danger', "Veuillez rattacher l'utilisateur au minimum à un service.");
+        $this->assertResponseStatusCodeSame(422);
     }
 
-    public function testRegistrationIsSuccessful()
+    public function testRegistrationIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userAdmin']);
+        $admin = $this->fixtures['userAdmin'];
+        $this->createLogin($admin);
 
-        $this->createNewUser();
+        $this->createNewUser($admin);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('.alert.alert-success', 'Le compte de John est créé');
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorTextContains('.alert.alert-success', 'Le compte de John est créé.');
     }
 
-    public function testSendNewEmailToUser()
+    public function testSendNewEmailToUser(): void
     {
         $this->createLogin($this->fixtures['userAdmin']);
 
@@ -127,7 +128,7 @@ class SecurityControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', $user->getFullname());
     }
 
-    public function testInitPasswordIsSuccessful()
+    public function testInitPasswordIsSuccessful(): void
     {
         $this->createLogin($this->fixtures['userRoleUser']);
         $this->client->request('GET', '/login/init_password');
@@ -146,7 +147,7 @@ class SecurityControllerTest extends WebTestCase
         $this->assertSelectorExists('.alert.alert-success', 'Votre mot de passe est mis à jour !');
     }
 
-    public function testEditCurrentUserIsSuccessful()
+    public function testEditCurrentUserIsSuccessful(): void
     {
         $user = $this->fixtures['userRoleUser'];
 
@@ -189,7 +190,7 @@ class SecurityControllerTest extends WebTestCase
         $this->assertSelectorExists('.alert.alert-success', 'Votre mot de passe est mis à jour !');
     }
 
-    public function testEditUserIsSuccessful()
+    public function testEditUserIsSuccessful(): void
     {
         $user = $this->fixtures['userAdmin'];
         $this->createLogin($user);
@@ -211,9 +212,9 @@ class SecurityControllerTest extends WebTestCase
         $this->assertSelectorExists('.alert.alert-success', 'Les modifications sont enregistrées.');
     }
 
-    public function testDisableUserIsSuccessful()
+    public function testDisableUserIsSuccessful(): void
     {
-        $user = $this->fixtures['userAdmin'];
+        $user = $this->fixtures['userSuperAdmin'];
         $this->createLogin($user);
 
         $id = $user->getId();
@@ -234,7 +235,7 @@ class SecurityControllerTest extends WebTestCase
         $this->assertSelectorExists('.alert.alert-success', 'Ce compte utilisateur est ré-activé.');
     }
 
-    public function testForgotPasswordIsSuccessful()
+    public function testForgotPasswordIsSuccessful(): void
     {
         /** @var User */
         $user = $this->fixtures['userRoleUser'];
@@ -268,7 +269,7 @@ class SecurityControllerTest extends WebTestCase
         $this->assertSelectorTextContains('.alert.alert-success', 'Un mail vous a été envoyé');
     }
 
-    public function testReinitPasswordIsSuccessful()
+    public function testReinitPasswordIsSuccessful(): void
     {
         /** @var User */
         $user = $this->fixtures['userRoleUser'];
@@ -321,11 +322,12 @@ class SecurityControllerTest extends WebTestCase
         $this->assertSelectorTextContains('.alert.alert-success', 'Votre mot de passe est réinitialisé !');
     }
 
-    public function testCreatePasswordIsSuccessful()
+    public function testCreatePasswordIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userAdmin']);
+        $admin = $this->fixtures['userAdmin'];
+        $this->createLogin($admin);
 
-        $this->createNewUser();
+        $this->createNewUser($admin);
         $this->client->request('GET', '/logout');
 
         $userRepo = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository(User::class);
@@ -367,7 +369,7 @@ class SecurityControllerTest extends WebTestCase
         $this->assertSelectorTextContains('.alert.alert-success', 'Votre mot de passe est créé !');
     }
 
-    public function testLoginIsFailed()
+    public function testLoginIsFailed(): void
     {
         $this->client->followRedirects();
         $this->client->request('GET', '/login');
@@ -380,7 +382,7 @@ class SecurityControllerTest extends WebTestCase
         static::assertSelectorExists('.alert.alert-danger');
     }
 
-    protected function createNewUser()
+    protected function createNewUser(User $admin = null): void
     {
         /** @var Crawler */
         $crawler = $this->client->request('GET', '/admin/registration');
@@ -400,7 +402,7 @@ class SecurityControllerTest extends WebTestCase
                 '_token' => $csrfToken,
                 'serviceUser' => [
                     0 => [
-                        'service' => $this->fixtures['service1'],
+                        'service' => $admin ? $admin->getServiceUser()->first()->getId() : $this->fixtures['service1'],
                     ],
                 ],
             ],
@@ -410,7 +412,7 @@ class SecurityControllerTest extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
-        
+
         $this->client = null;
         $this->fixtures = null;
     }

@@ -16,6 +16,23 @@ trait RdvSearchTrait
      */
     private $status;
 
+    /**
+     * @var ArrayCollection|null
+     */
+    protected $tags;
+
+    public function getTags(): ?ArrayCollection
+    {
+        return $this->tags;
+    }
+
+    public function setTags(?ArrayCollection $tags): self
+    {
+        $this->tags = $tags;
+
+        return $this;
+    }
+
     public function getTitle(): ?string
     {
         return $this->title;

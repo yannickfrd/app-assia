@@ -35,8 +35,15 @@ class SupportSearch
     /** @var bool */
     private $export;
 
+    private $tags = null;
+
     public function __construct()
     {
+    }
+
+    public function getTags()
+    {
+        return $this->tags;
     }
 
     public function getFullname(): ?string

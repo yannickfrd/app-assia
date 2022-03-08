@@ -32,6 +32,7 @@ class PlaceGroupHotelType extends AbstractType
                         return $repo->getPlacesQueryBuilder($service);
                     },
                     'label' => Service::SERVICE_TYPE_HOTEL === $service->getType() ? 'hotelName' : 'place.name',
+                    'attr' => ['data-select' => 'advanced'],
                     'placeholder' => 'placeholder.select',
                     'required' => true,
                 ])

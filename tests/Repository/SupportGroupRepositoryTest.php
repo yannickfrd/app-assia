@@ -2,6 +2,7 @@
 
 namespace App\Tests\Repository;
 
+use Doctrine\ORM\EntityManager;
 use App\Entity\Organization\User;
 use App\Entity\Organization\Service;
 use App\Entity\Support\SupportGroup;
@@ -13,10 +14,7 @@ use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 
 class SupportGroupRepositoryTest extends WebTestCase
 {
-
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
+    /** @var EntityManager */
     private $entityManager;
 
     /** @var SupportGroupRepository */

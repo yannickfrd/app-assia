@@ -1,0 +1,106 @@
+{% import 'macros/div_view.html.twig' as view_div %}
+
+<hr/>
+<section class="mb-5">
+    <div class="d-flex mb-3">
+        <h2 class="h4">Logement - Hébergement</h2>
+        <span class="align-content-center"><a href="{{ path('support_evaluation_view', {'id': support.id }) }}" 
+            class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
+        </span>
+    </div>
+    {% if SERVICE_TYPE_AVDL or support.service.id == 2 %}
+        <div class="row mb-3">
+            {{ view_div.get(eval_housing.housingStatusToString, 'Housing status', 'evaluation') }}
+        </div>
+    {% endif %}
+        <div class="row mb-3">
+            {{ view_div.get(eval_housing.siaoRequestToString, 'Siao request', 'evaluation') }}
+            {% if eval_housing.siaoRequest == YES %}
+                {{ view_div.get(eval_housing.siaoRequestDate ? eval_housing.siaoRequestDate|date('d/m/Y') 
+                    ~ (eval_housing.siaoUpdatedRequestDate ? ' (actualisation : ' ~ eval_housing.siaoUpdatedRequestDate|date('d/m/Y') 
+                    ~ ')'), 'Siao request date', 'evaluation') }}
+                {{ view_div.get(eval_housing.siaoRequestDeptToString, 'Siao request dept', 'evaluation') }}
+                {{ view_div.get(eval_housing.siaoRecommendationToString, 'Siao recommendation', 'evaluation') }}
+            {% endif %}
+        </div>
+    {% if eval_housing.socialHousingRequest %}
+        <div class="row mb-3">
+            {{ view_div.get(eval_housing.socialHousingRequestToString ~ (eval_housing.socialHousingRequestId ? ' (NUR : ' 
+                ~ eval_housing.socialHousingRequestId ~ ')'), 'Social housing request', 'evaluation') }}
+            {{ view_div.get(eval_housing.socialHousingRequestDate ? eval_housing.socialHousingRequestDate|date('d/m/Y') 
+                ~ (eval_housing.socialHousingUpdatedRequestDate ? ' (actualisation : ' ~ eval_housing.socialHousingUpdatedRequestDate|date('d/m/Y') 
+                ~ ')'), 'Date demande de logement social', 'evaluation') }}
+            {{ view_div.get(eval_housing.housingWishes, 'Housing wishes', 'evaluation') }}
+            {{ view_div.get(eval_housing.citiesWishes, 'Cities wishes', 'evaluation') }}
+            {{ view_div.get(eval_housing.specificities, 'Specificities', 'evaluation') }}
+        </div>
+    {% endif %}
+    {% if eval_housing.syplo in [YES, IN_PROGRESS] %}
+        <div class="row mb-3">
+            {{ view_div.get(eval_housing.syploToString ~ (eval_housing.syploDate ? ' (' 
+                ~ eval_housing.syploDate|date('d/m/Y') ~ ')'), 'Syplo', 'evaluation') }}
+            {{ view_div.get(eval_housing.syploId, 'Syplo id', 'evaluation') }}
+        </div>
+    {% endif %}
+    {% if eval_housing.daloAction in [YES, IN_PROGRESS] %}
+        <div class="row mb-3">
+            {{ view_div.get(eval_housing.daloActionToString ~ (eval_housing.daloDecisionDate ? ' (' 
+                ~ eval_housing.daloDecisionDate|date('d/m/Y') ~ ')'), 'Dalo action', 'evaluation') }}
+            {{ view_div.get(eval_housing.daloTypeToString, 'Dalo type', 'evaluation') }}
+            {{ view_div.get(eval_housing.daloId, 'Dalo id', 'evaluation') }}
+            {{ view_div.get(eval_housing.daloRecordDate ? eval_housing.daloRecordDate|date('d/m/Y'), 'Dalo record date', 'evaluation') }}
+            {{ view_div.get(eval_housing.daloTribunalActionToString ~ (eval_housing.daloTribunalActionDate ? 
+                ' (le ' ~ eval_housing.daloTribunalActionDate|date('d/m/Y') ~ ')'), 'Dalo tribunal action', 'evaluation') }}
+        </div>
+    {% endif %}
+    {#{% if eval_housing.collectiveAgreementHousing %}
+        <div class="row mb-3">
+            {{ view_div.get(eval_housing.collectiveAgreementHousingToString ~ (eval_housing.collectiveAgreementHousingDate ? 
+                ' (le ' ~ eval_housing.collectiveAgreementHousingDate|date('d/m/Y') ~ ')'), 'Collective agreement housing', 'evaluation') }}
+        </div>
+    {% endif %} #}
+    {% if eval_housing.hsgActionEligibility in [YES, IN_PROGRESS] %}					
+        <div class="row mb-3">
+            {{ view_div.get(eval_housing.hsgActionEligibilityToString, 'Hsg action eligibility', 'evaluation') }}
+            {{ view_div.get(eval_housing.hsgActionRecordToString ~ (eval_housing.hsgActionDate ? 
+                ' (le ' ~ eval_housing.hsgActionDate|date('d/m/Y') ~ ')'), 'Hsg action record', 'evaluation') }}
+            {{ view_div.get(eval_housing.hsgActionRecordId, 'Hsg action record id', 'evaluation') }}
+            {{ view_div.get(eval_housing.hsgActionDept, 'Hsg action dept', 'evaluation') }}
+        </div>
+    {% endif %}
+    {% if eval_housing.expulsionInProgress == YES %}
+        <div class="row mb-3">
+            {{ view_div.get(eval_housing.expulsionInProgressToString, 'Expulsion in progress', 'evaluation') }}
+            {{ view_div.get(eval_housing.publicForceToString ~ (eval_housing.publicForceDate ? 
+                ' (le ' ~ eval_housing.publicForceDate|date('d/m/Y') ~ ')'), 'Public force', 'evaluation') }}
+            {{ view_div.get(eval_housing.expulsionComment) }}
+        </div>
+    {% endif %}
+    {% if eval_housing.housingExperience %}
+        <div class="row mb-3">
+            {{ view_div.get(eval_housing.housingExperienceToString, 'Housing experience', 'evaluation') }}
+            {{ view_div.get(eval_housing.housingExpeComment) }}
+        </div>
+    {% endif %}
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <ul class="mb-0">
+                {% for key, value in constant('HOUSING_HELPS', eval_housing) %}
+                    {% if attribute(eval_housing, key) %}
+                        <li>{{ value }}</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="row mb-3">
+        {{ view_div.get(eval_housing.domiciliation == YES ? (eval_housing.domiciliationComment ? eval_housing.domiciliationComment ~ ' - ') 
+            ~ eval_housing.domiciliationAddress ~ (eval_housing.domiciliationCity ? ' - ' ~ eval_housing.domiciliationDept ~ ' ' 
+            ~ eval_housing.domiciliationCity), 'Domiciliation', 'evaluation') }}
+        {{ view_div.get(eval_housing.endDomiciliationDate ? eval_housing.endDomiciliationDate|date('d/m/Y'), 'End domiciliation date', 'evaluation') }}
+    </div>
+    <div class="row my-3">
+        <div class="col-md-12 justify">{{ eval_housing.commentEvalHousing|nl2br }}</div>
+    </div>
+
+</section>

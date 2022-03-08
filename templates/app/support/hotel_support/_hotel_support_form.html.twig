@@ -1,0 +1,100 @@
+{% set device = form.vars.value.device%}
+{% set ASE_MAB = constant('ASE_MAB', device) %}
+{% set ASE_HEB = constant('ASE_HEB', device) %}
+{% set HOTEL_SUPPORT = constant('HOTEL_SUPPORT', device) %}
+{% set HOTEL_URG = constant('HOTEL_URG', device) %}
+
+<div id="hotel_support">
+	<div class="mb-3">
+		<div class="row">
+			<div class="col-md-12"><h2 class="h5 mb-3">Demande</h2></div>
+			<div class="col-md-6">{{ form_row(form.originRequest.orientationDate) }}</div>
+			<div class="col-md-6">{{ form_row(form.originRequest.organization) }}</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">{{ form_row(form.peopleGroup.siSiaoId) }}</div>
+			<div class="col-md-6">{{ form_row(form.hotelSupport.rosalieId) }}</div>
+		</div>
+		{% if form.hotelSupport is defined %}	
+			<div data-parent-field="support_device" data-options="{{ HOTEL_SUPPORT }}|{{ HOTEL_URG }}">
+				<div class="row">
+					<div class="col-md-6">{{ form_row(form.hotelSupport.entryHotelDate) }}</div>
+					<div class="col-md-6" data-parent-field="support_device" 
+						data-options="{{ HOTEL_URG }}">{{ form_row(form.hotelSupport.emergencyActionRequest) }}</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">{{ form_row(form.status) }}</div>
+					<div class="col-md-6" data-parent-field="support_status" 
+						data-options="{{ constant('STATUS_PRE_ADD_FAILED', support) }}">
+						{{ form_row(form.hotelSupport.reasonNoInclusion) }}</div>
+				</div>
+			</div>
+			<div class="row" id="ssd_location" data-parent-field="support_device" 
+				data-options="{{ ASE_MAB }}|{{ ASE_HEB }}">
+				<div class="col-md-6">{{ form_row(form.hotelSupport._searchSsd) }}</div>
+				<div class="col-md-6">{{ form_row(form.hotelSupport.ssd) }}</div>
+			</div>
+		{% endif %}
+		<div class="row">
+			<div class="col-md-12">{{ form_widget(form.originRequest.comment) }}</div>
+		</div>
+	</div>
+	<hr/>
+	{% if form.hotelSupport is defined %}	
+		<div class="row mb-3">
+			<div class="col-md-12"><h2 class="h5 mb-3">Hôtel</h2></div>
+			<div class="col-md-6">{{ form_row(form.placeGroups[0].place) }}</div>
+			<div class="col-md-6">{{ form_row(form.placeGroups[0].comment) }}</div>
+		</div>
+		<hr/>
+		<div class="mb-3">
+			<div class="row">
+				<div class="col-md-12"><h2 class="h5 mb-3">Accompagnement - Intervention</h2></div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">{{ form_row(form.startDate) }}</div>
+				<div class="col-md-6">{{ form_row(form.hotelSupport.evaluationDate) }}</div>
+			</div>
+			<div data-parent-field="support_startDate">
+				<div class="row">
+					<div class="col-md-6" data-parent-field="support_device" data-options="{{ HOTEL_SUPPORT }}">
+						{{ form_row(form.hotelSupport.levelSupport) }}</div>
+					<div class="col-md-6" data-parent-field="support_device" data-options="{{ HOTEL_SUPPORT }}|{{ ASE_HEB }}">
+						{{ form_row(form.hotelSupport.agreementDate) }}</div>
+				</div>
+				<div class="row" data-parent-field="support_device" data-options="{{ HOTEL_URG }}">
+					<div class="col-md-6">{{ form_row(form.hotelSupport.emergencyActionDone) }}</div>
+					<div class="col-md-6" data-parent-field="support_hotelSupport_emergencyActionDone" 
+						data-options="*">{{ form_row(form.hotelSupport.emergencyActionPrecision) }}</div>
+				</div>
+				<div class="row" data-parent-field="support_device" data-options="{{ HOTEL_SUPPORT }}|{{ HOTEL_URG }}">
+					<div class="col-md-6">{{ form_row(form.hotelSupport.departmentAnchor) }}</div>
+					<div class="col-md-6">{{ form_row(form.hotelSupport.recommendation) }}</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6" data-check-valid="endDate">{{ form_row(form.endDate) }}</div>
+					<div class="col-md-6" data-parent-field="support_endDate" 
+						data-check-valid="endDate">{{ form_row(form.endReason) }}</div>
+					<div class="col-md-6" data-parent-field="support_endDate" 
+						data-check-valid="endDate">{{ form_row(form.endStatus) }}</div>
+					<div class="col-md-6" data-parent-field="support_endStatus" 
+						data-options="*">{{ form_row(form.endStatusComment) }}</div>
+				</div>
+				<div class="row" >
+					<div class="col-md-6" data-parent-field="support_endDate" data-check-valid="endDate">
+						{{ form_row(form.hotelSupport.endSupportDepartment) }}</div>
+				</div>
+				<div class="row" data-parent-field="support_hotelSupport_endSupportDepartment" 
+					data-options="75|77|78|91|92|93|94|95" id="support_end_location">
+					<div class="col-md-6">{{ form_row(form._endLocationSearch) }}</div>
+					<div class="col-md-6">{{ form_row(form.endLocationAddress) }}</div>
+					<div class="col-md-6">{{ form_row(form.endLocationCity) }}</div>
+					<div class="col-md-6">{{ form_row(form.endLocationZipcode) }}</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">{{ form_widget(form.comment) }}</div>
+				</div>
+			</div>
+		</div>
+	{% endif %}
+</div>

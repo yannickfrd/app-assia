@@ -1,0 +1,30 @@
+{% import 'macros/div_view.html.twig' as view_div %}
+
+<hr/>
+<section>
+    <div class="d-flex mb-3">
+        <h2 class="h4">Justice</h2>
+            <span class="align-content-center"><a href="{{ path('support_evaluation_view', {'id': support.id }) }}" 
+                class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
+            </span>
+    </div>
+
+    {% set eval_people_justice = eval_people|filter(e => e.evalJusticePerson) %}
+    {% for eval_person in eval_people_justice %}
+        {% set evalJustice = eval_person.evalJusticePerson %}
+        <div class="my-3">
+            {% if nb_people > 1 %}
+                <div class="row mb-2">
+                    <div class="col-md-12 font-weight-bold"><span class="text-underline">{{ eval_person.supportPerson.person.fullname }}</span> :</div>
+                </div>
+            {% endif %}
+            <div class="row">
+                {{ view_div.get(evalJustice.justiceStatusToString, 'Justice status', 'evaluation') }}
+                {{ view_div.get(evalJustice.justiceActToString, 'Justice act', 'evaluation') }}
+            </div>
+            <div class="row my-2">
+                <div class="col-md-12 justify">{{ evalJustice.commentEvalJustice|nl2br }}</div>
+            </div>
+        </div>
+    {% endfor %}
+</section>

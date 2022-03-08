@@ -2,7 +2,9 @@
 
 namespace App\Security\Voter;
 
+use App\Entity\Organization\User;
 use App\Entity\Support\Payment;
+use App\Entity\Support\SupportGroup;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -12,22 +14,22 @@ class PaymentVoter extends Voter
 
     /** @var User */
     protected $user;
-    
+
     protected $userId;
 
     /** @var Payment */
     protected $payment;
-    
+
     /** @var SupportGroup */
     protected $supportGroup;
-    
-    protected function supports($attribute, $subject): bool
+
+    protected function supports(string $attribute, $subject): bool
     {
         return in_array($attribute, ['VIEW', 'EDIT', 'DELETE'])
             && $subject instanceof \App\Entity\Support\Payment;
     }
 
-    protected function voteOnAttribute($attribute, $payment, TokenInterface $token): bool
+    protected function voteOnAttribute(string $attribute, $payment, TokenInterface $token): bool
     {
         /** @var User */
         $this->user = $token->getUser();
@@ -42,13 +44,10 @@ class PaymentVoter extends Voter
         switch ($attribute) {
             case 'VIEW':
                 return $this->canView();
-                break;
             case 'EDIT':
                 return $this->canEdit();
-                break;
             case 'DELETE':
                 return $this->canDelete();
-                break;
         }
 
         return false;

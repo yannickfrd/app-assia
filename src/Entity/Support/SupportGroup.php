@@ -2,8 +2,9 @@
 
 namespace App\Entity\Support;
 
+use App\Entity\Evaluation\EvalInitGroup;
 use App\Entity\Evaluation\EvaluationGroup;
-use App\Entity\Evaluation\InitEvalGroup;
+use App\Entity\Event\Task;
 use App\Entity\Organization\Device;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\SubService;
@@ -45,6 +46,8 @@ class SupportGroup
     public const CACHE_SUPPORT_NB_PAYMENTS_KEY = 'support.payments_count';
     public const CACHE_SUPPORT_LAST_RDV_KEY = 'support.last_rdv';
     public const CACHE_SUPPORT_NEXT_RDV_KEY = 'support.next_rdv';
+    public const CACHE_SUPPORT_TASKS_KEY = 'support.tasks';
+    public const CACHE_SUPPORT_NB_TASKS_KEY = 'support.tasks_count';
 
     public const STATUS_IN_PROGRESS = 2;
     public const STATUS_ENDED = 4;
@@ -64,19 +67,54 @@ class SupportGroup
         97 => 'Autre',
     ];
 
+    public const END_REASONS = [
+        100 => 'Accès à une solution d\'hébgt/logt',
+        110 => 'Autonone', // AVDL
+        200 => 'Non adhésion à l\'accompagnement', // 2
+        210 => 'Exclusion disciplinaire',
+        220 => 'Fin du contrat de séjour',
+        500 => 'Fin d\'intervention d\'urgence', // PASH 6
+        510 => 'Fin de prise en charge 115', //PASH  5
+        520 => 'Fin de prise en charge ASE', // PASH 3
+        400 => 'Fin de prise en charge OFII', // Asile
+        410 => 'Transfert Dublin', // Asile
+        300 => 'Départ vers un autre département', // 4
+        310 => 'Départ volontaire',
+        230 => 'Retour dans le pays d\'origine',
+        240 => 'Séparation du couple',
+        330 => 'Transfert vers autre département', // AVDL
+        900 => 'Décès',
+        97 => 'Autre',
+        99 => 'Inconnu',
+    ];
+
+    public const REGULAR_END_REASONS = [
+        100 => 'Accès à une solution d\'hébgt/logt',
+        200 => 'Non adhésion à l\'accompagnement',
+        210 => 'Exclusion disciplinaire',
+        220 => 'Fin du contrat de séjour',
+        300 => 'Départ vers un autre département',
+        310 => 'Départ volontaire',
+        230 => 'Retour dans le pays d\'origine',
+        240 => 'Séparation du couple',
+        900 => 'Décès',
+        97 => 'Autre',
+        99 => 'Inconnu',
+    ];
+
     public const END_STATUS = [
         001 => 'A la rue - abri de fortune',
         303 => 'Accès à la propriété',
         208 => 'ALTHO',
         400 => 'CADA - dispositif asile',
         304 => 'Colocation',
-        900 => 'Décès',
-        700 => 'Départ volontaire de la personne',
+        // 900 => 'Décès', // 900
+        // 700 => 'Départ volontaire de la personne', // 310
         500 => 'Détention',
         105 => 'Dispositif hivernal',
         502 => 'DLSAP',
-        701 => 'Exclusion de la structure',
-        702 => 'Fin du contrat de séjour',
+        // 701 => 'Exclusion de la structure', // 210
+        // 702 => 'Fin du contrat de séjour', // 220
         106 => 'Foyer maternel',
         010 => 'Hébergé chez des tiers',
         011 => 'Hébergé chez famille',
@@ -100,7 +138,7 @@ class SupportGroup
         301 => 'Logement social',
         305 => 'Maison de retraite',
         501 => 'Placement extérieur',
-        704 => "Retour dans le pays d'origine",
+        // 704 => "Retour dans le pays d'origine", // 230
         302 => 'Sous-location',
         002 => 'Squat',
         602 => 'Structure de soin ou médical (LAM, autre)',
@@ -118,18 +156,17 @@ class SupportGroup
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("show_support_group")
      */
     private $id;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("export")
      */
     private $startDate;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("export")
      */
     private $theoreticalEndDate;
 
@@ -173,6 +210,11 @@ class SupportGroup
      * @Groups("export")
      */
     private $coefficient = self::DEFAULT_COEFFICIENT;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $endReason;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -227,7 +269,7 @@ class SupportGroup
      * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User", inversedBy="supports")
      * @MaxDepth(1)
      */
-    private $createdBy; // NE PAS SUPPRIMER
+    protected $createdBy; // NE PAS SUPPRIMER
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\People\PeopleGroup", inversedBy="supports")
@@ -238,13 +280,14 @@ class SupportGroup
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Support\SupportPerson", mappedBy="supportGroup", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @Groups("show_support_person")
      * @MaxDepth(1)
      */
     private $supportPeople;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Organization\Service", inversedBy="supportGroup")
-     * @Groups("export")
+     * @Groups({"export", "show_service"})
      */
     private $service;
 
@@ -273,6 +316,13 @@ class SupportGroup
     private $rdvs;
 
     /**
+     * @var Collection<Task>
+     * @ORM\OneToMany(targetEntity=Task::class, mappedBy="supportGroup", cascade={"remove"})
+     * @MaxDepth(1)
+     */
+    private $tasks;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Support\Document", mappedBy="supportGroup", cascade={"persist", "remove"})
      * @MaxDepth(1)
      */
@@ -291,10 +341,10 @@ class SupportGroup
     private $evaluationsGroup;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\InitEvalGroup", mappedBy="supportGroup", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvalInitGroup", mappedBy="supportGroup", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      * @MaxDepth(1)
      */
-    private $initEvalGroup;
+    private $evalInitGroup;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Support\OriginRequest", mappedBy="supportGroup", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
@@ -332,6 +382,7 @@ class SupportGroup
         $this->supportPeople = new ArrayCollection();
         $this->notes = new ArrayCollection();
         $this->rdvs = new ArrayCollection();
+        $this->tasks = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->placeGroups = new ArrayCollection();
         $this->evaluationsGroup = new ArrayCollection();
@@ -466,6 +517,23 @@ class SupportGroup
         $this->agreement = $agreement;
 
         return $this;
+    }
+
+    public function getEndReason(): ?int
+    {
+        return $this->endReason;
+    }
+
+    public function setEndReason(?int $endReason): self
+    {
+        $this->endReason = $endReason;
+
+        return $this;
+    }
+
+    public function getEndReasonToString(): ?string
+    {
+        return $this->endReason ? self::END_REASONS[$this->endReason] : null;
     }
 
     public function getEndStatus(): ?int
@@ -605,6 +673,9 @@ class SupportGroup
         return $this;
     }
 
+    /**
+     * @Groups({"export", "show_service"})
+     */
     public function getService(): ?Service
     {
         return $this->service;
@@ -704,6 +775,27 @@ class SupportGroup
     }
 
     /**
+     * @return Collection<Task>|Task[]|null
+     */
+    public function getTasks(): ?Collection
+    {
+        return $this->tasks;
+    }
+
+    public function countActiveTasks(): ?int
+    {
+        $count = 0;
+
+        foreach ($this->tasks as $task) {
+            if (Task::TASK_IS_NOT_DONE === $task->getStatus()) {
+                ++$count;
+            }
+        }
+
+        return $count;
+    }
+
+    /**
      * @return Collection<Document>|Document[]|null
      */
     public function getDocuments(): ?Collection
@@ -796,18 +888,18 @@ class SupportGroup
         return $this;
     }
 
-    public function getInitEvalGroup(): ?InitEvalGroup
+    public function getEvalInitGroup(): ?EvalInitGroup
     {
-        return $this->initEvalGroup;
+        return $this->evalInitGroup;
     }
 
-    public function setInitEvalGroup(InitEvalGroup $initEvalGroup): self
+    public function setEvalInitGroup(EvalInitGroup $evalInitGroup): self
     {
-        $this->initEvalGroup = $initEvalGroup;
+        $this->evalInitGroup = $evalInitGroup;
 
         // set the owning side of the relation if necessary
-        if ($this !== $initEvalGroup->getSupportGroup()) {
-            $initEvalGroup->setSupportGroup($this);
+        if ($this !== $evalInitGroup->getSupportGroup()) {
+            $evalInitGroup->setSupportGroup($this);
         }
 
         return $this;
@@ -934,6 +1026,8 @@ class SupportGroup
 
     /**
      * Donne le demandeur principal du suivi.
+     *
+     * @Groups({"show_support_group", "show_rdv"})
      */
     public function getHeader(): ?Person
     {

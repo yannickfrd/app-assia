@@ -1,6 +1,0 @@
-{#  #}
-{% macro get(value, key = null, trans = "forms") %}{% apply spaceless %}
-    {% if value not in ["", "Non renseigné"] %}
-        <p>{% if key %}<b>{{ key|trans({}, trans) }} : </b>{% endif %}{{ value }}</p>
-    {% endif %}
-{% endapply %}{% endmacro %}

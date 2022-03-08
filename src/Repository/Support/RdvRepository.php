@@ -36,12 +36,12 @@ class RdvRepository extends ServiceEntityRepository
     {
         $qb = $this->getRdvsQuery();
 
-        $qb = $this->filter($qb, $search, $currentUser);
+        return $qb = $this->filter($qb, $search, $currentUser)
 
-        return $qb
             ->orderBy('r.start', 'ASC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+        ;
     }
 
     /**
@@ -57,6 +57,7 @@ class RdvRepository extends ServiceEntityRepository
             ->leftJoin('sg.referent2', 'ref2')->addSelect('PARTIAL ref2.{id}')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, head}')
+            ->leftJoin('r.tags', 't')->addSelect('t')
 
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
 
@@ -88,6 +89,7 @@ class RdvRepository extends ServiceEntityRepository
     protected function getRdvsQuery(): QueryBuilder
     {
         return $this->createQueryBuilder('r')->select('r')
+            ->leftJoin('r.tags', 't')->addSelect('t')
             ->leftJoin('r.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
             ->leftJoin('r.supportGroup', 'sg')->addSelect('sg')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
@@ -100,11 +102,13 @@ class RdvRepository extends ServiceEntityRepository
     protected function filter(QueryBuilder $qb, RdvSearch $search, CurrentUserService $currentUser = null): QueryBuilder
     {
         if ($currentUser && !$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
-            $qb->where('r.createdBy IN (:user)')
+            $qb->where('r.createdBy = :user')
                 ->setParameter('user', $currentUser->getUser());
             $qb->orWhere('sg.service IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
         }
+
+        $qb->andWhere('sg.id IS NULL OR sp.head = TRUE');
 
         if ($search->getId()) {
             return $qb->andWhere('r.id = :id')
@@ -131,6 +135,7 @@ class RdvRepository extends ServiceEntityRepository
         }
 
         $qb = $this->addOrganizationFilters($qb, $search);
+        $qb = $this->addTagsFilter($qb, $search, 'r.tags');
 
         return $qb;
     }
@@ -141,6 +146,7 @@ class RdvRepository extends ServiceEntityRepository
     public function findRdvsQueryOfSupport(int $supportGroupId, SupportRdvSearch $search): Query
     {
         $qb = $this->createQueryBuilder('r')->select('r')
+            ->leftJoin('r.tags', 't')->addSelect('t')
             ->leftJoin('r.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
             ->leftJoin('r.supportGroup', 'sg')->addSelect('sg')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
@@ -162,10 +168,13 @@ class RdvRepository extends ServiceEntityRepository
                 ->setParameter('end', $search->getEnd());
         }
 
+        $this->addTagsFilter($qb, $search, 'r.tags');
+
         return $qb
             ->orderBy('r.start', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+        ;
     }
 
     public function findLastRdvOfSupport(int $supportGroupId): ?Rdv
@@ -210,6 +219,7 @@ class RdvRepository extends ServiceEntityRepository
     public function findRdvsBetween(\Datetime $start, \Datetime $end, SupportGroup $supportGroup = null, User $user = null): ?array
     {
         $qb = $this->createQueryBuilder('r')->select('r')
+            ->leftJoin('r.tags', 't')->addSelect('t')
             ->leftJoin('r.createdBy', 'u')->addSelect('u')
             ->leftJoin('r.supportGroup', 's')->addSelect('s')
 
@@ -254,18 +264,18 @@ class RdvRepository extends ServiceEntityRepository
      *
      * @return Rdv[]|null
      */
-    public function findRdvsOfUser(User $user, int $maxResults = 1000): ?array
+    public function findRdvsOfUser(User $user, int $maxResults = 100): ?array
     {
-        return $this->createQueryBuilder('rdv')->addSelect('rdv')
+        return $this->createQueryBuilder('rdv')
             ->leftJoin('rdv.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, head, role}')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
 
-            ->andWhere('rdv.createdBy = :createdBy')
-            ->setParameter('createdBy', $user)
+            ->where('rdv.createdBy = :user')
+            ->setParameter('user', $user)
+            ->andWhere('sg.id IS NULL OR sp.head = TRUE')
             ->andWhere('rdv.start >= :start')
             ->setParameter('start', (new \DateTime())->modify('-1 hour'))
-            // ->andWhere('sp.head = TRUE')
 
             ->orderBy('rdv.start', 'DESC')
 

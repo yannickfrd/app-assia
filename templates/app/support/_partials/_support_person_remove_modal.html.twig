@@ -1,0 +1,9 @@
+{% extends 'model/_modal_dialog.html.twig' %}
+
+{% block modal_body %}
+    <p>Attention, toutes les informations relatives à la situation sociale de la personne seront supprimées.</p>
+    <p>Êtes-vous sûr de vouloir supprimer cette personne du suivi ?</p>
+{% endblock %}
+{% block modal_confirm %}Supprimer{% endblock %}
+{% block modal_alert %}danger{% endblock %}
+{% block modal_bg %}bg-light{% endblock %}

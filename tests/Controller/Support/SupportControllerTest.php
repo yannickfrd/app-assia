@@ -2,15 +2,15 @@
 
 namespace App\Tests\Controller\Support;
 
+use App\Entity\Organization\Service;
+use App\Entity\Organization\User;
 use App\Entity\Support\SupportGroup;
-use App\Service\Grammar;
 use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
 
 class SupportControllerTest extends WebTestCase
@@ -155,7 +155,6 @@ class SupportControllerTest extends WebTestCase
             ],
         ]);
 
-        // dump($this->client->getResponse()->getContent());
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorExists('.alert.alert-success');
     }
@@ -177,11 +176,11 @@ class SupportControllerTest extends WebTestCase
                 'device' => $this->fixtures['device1']->getCode(),
                 'status' => SupportGroup::STATUS_IN_PROGRESS,
                 'agreement' => true,
-                'cloneSupport' => true,
+                '_cloneSupport' => true,
             ],
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorExists('.alert.alert-success');
     }
 
@@ -205,6 +204,28 @@ class SupportControllerTest extends WebTestCase
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('.alert.alert-danger', 'Attention, un suivi social est déjà en cours');
+    }
+
+    public function testCreateEndedSupportWithOtherSupportInProgressIsSuccessful()
+    {
+        $this->loadFixtures();
+
+        $this->createLogin($this->fixtures['userRoleUser']);
+
+        $id = $this->fixtures['peopleGroup1']->getId();
+        $this->client->request('POST', "/people-group/$id/new-support", [
+            'support' => ['service' => $this->fixtures['service1']->getId()],
+        ]);
+
+        $this->client->submitForm('send', [
+            'support[service]' => $this->fixtures['service1'],
+            'support[device]' => $this->fixtures['device1']->getCode(),
+            'support[status]' => SupportGroup::STATUS_ENDED,
+            'support[agreement]' => true,
+        ]);
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('.alert.alert-success', 'Le suivi social est créé');
     }
 
     public function testEditSupportGroupIsSuccessful()
@@ -242,7 +263,7 @@ class SupportControllerTest extends WebTestCase
         $this->assertSelectorTextContains('.alert.alert-success', 'Le coefficient du suivi est mis à jour.');
     }
 
-    public function testViewSupportGroupIsUp()
+    public function testShowSupportGroupIsUp()
     {
         $this->fixtures = $this->databaseTool->loadAliceFixture([
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
@@ -255,7 +276,7 @@ class SupportControllerTest extends WebTestCase
         $this->createLogin($this->fixtures['userRoleUser']);
 
         $id = $this->fixtures['supportGroupWithEval']->getId();
-        $this->client->request('GET', "/support/$id/view");
+        $this->client->request('GET', "/support/$id/show");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Suivi social');
@@ -277,80 +298,16 @@ class SupportControllerTest extends WebTestCase
     {
         $this->loadFixtures();
 
-        $this->createLogin($this->fixtures['userAdmin']);
+        /** @var User $admin */
+        $admin = $this->fixtures['userAdmin'];
+        $this->createLogin($admin);
 
-        $id = $this->fixtures['supportGroup1']->getId();
+        $id = $this->fixtures['supportGroup3']->getId();
         $this->client->request('GET', "/support/$id/delete");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Groupe');
         $this->assertSelectorExists('.alert.alert-warning');
-    }
-
-    public function testAddPersonToSupportIsSuccessful()
-    {
-        $this->loadFixtures();
-
-        $this->createLogin($this->fixtures['userSuperAdmin']);
-
-        $person = $this->fixtures['person5'];
-        $personId = $person->getId();
-        $groupId = $this->fixtures['peopleGroup1']->getId();
-        $supportId = $this->fixtures['supportGroup1']->getId();
-
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', "/group/$groupId/search_person");
-
-        $this->client->request('POST', "/group/$groupId/add_person/$personId", [
-            'role_person' => [
-                'role' => 1,
-                'addPersonToSupport' => false,
-                '_token' => $crawler->filter('#role_person__token')->attr('value'),
-            ],
-        ]);
-
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', "/support/$supportId/edit");
-
-        $this->client->submitForm('add-person', [
-            'add_person_to_support[rolePerson]' => $crawler->filter('#add_person_to_support_rolePerson option')->last()->attr('value'),
-        ]);
-
-        $this->assertSelectorTextContains(
-            '.alert.alert-success',
-            $person->getFullname().' est ajouté'.Grammar::gender($person->getGender()).' au suivi en cours.'
-        );
-    }
-
-    public function testRemoveSupportPersonWithoutTokenIsFailed()
-    {
-        $this->loadFixtures();
-
-        $this->createLogin($this->fixtures['userRoleUser']);
-
-        $id = $this->fixtures['supportGroup1']->getId();
-        $supportPersId = $this->fixtures['supportPerson2']->getId();
-        $this->client->request('GET', "/support/$id/edit");
-        $this->client->request('GET', "/supportGroup/$id/remove-$supportPersId/tokenId");
-
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('.alert.alert-danger', 'Une erreur');
-    }
-
-    public function testRemoveSupportPersonIsSuccessful()
-    {
-        $this->loadFixtures();
-
-        $this->createLogin($this->fixtures['userRoleUser']);
-
-        $id = $this->fixtures['supportGroup1']->getId();
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', "/support/$id/edit");
-        $url = $crawler->filter('button[data-action="remove"]')->last()->attr('data-url');
-        $this->client->request('GET', $url);
-
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('.alert.alert-warning', 'est retiré');
     }
 
     public function testCloneSupportIsFailed()

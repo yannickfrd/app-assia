@@ -32,7 +32,7 @@ class AvdlController extends AbstractController
             return $this->exportData($search, $supportPersonRepo);
         }
 
-        return $this->render('app/support/avdl/listAvdlSupports.html.twig', [
+        return $this->render('app/support/avdl/avdl_support_index.html.twig', [
             'form' => $form->createView(),
             'supports' => $pagination->paginate($supportPersonRepo->findAvdlSupportsQuery($search), $request),
         ]);

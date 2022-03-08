@@ -1,0 +1,25 @@
+{% extends 'model/_search.html.twig' %}
+
+{% block search_form %}
+<div class="col-auto my-1 px-1">{{ form_row(form.lastname) }}</div>
+<div class="col-auto my-1 px-1">{{ form_row(form.firstname) }}</div>
+<div class="col-auto my-1 px-1">{{ form_row(form.status) }}</div>
+<div class="col-auto my-1 px-1">
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <div class="input-group-text d-none d-sm-block" title="Téléphone" 
+                data-toggle="tooltip" data-placement="bottom">
+                <i class="fas fa-phone text-black-50"></i>
+            </div>
+        </div>
+        {{ form_row(form.phone) }}
+    </div>
+</div>
+{% if is_granted('ROLE_SUPER_ADMIN') %}
+    <div class="col-auto my-1 px-1">{{ form_widget(form.service.poles) }}</div>
+{% endif %}
+<div class="col-auto my-1 px-1">{{ form_widget(form.service.services) }}</div>
+{% if is_granted('ROLE_ADMIN') %}
+    <div class="col-auto my-1 px-1">{{ form_row(form.disabled) }}</div>
+{% endif %}
+{% endblock %}

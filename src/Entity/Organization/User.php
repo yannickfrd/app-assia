@@ -2,16 +2,17 @@
 
 namespace App\Entity\Organization;
 
+use App\Entity\Event\Task;
 use App\Entity\Support\Document;
 use App\Entity\Support\Note;
 use App\Entity\Support\Rdv;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Traits\ContactEntityTrait;
-use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use App\Entity\Traits\DisableEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -28,7 +29,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use ContactEntityTrait;
-    use CreatedUpdatedEntityTrait;
     use DisableEntityTrait;
 
     public const CACHE_INDICATORS_KEY = 'stats.users'; // Indicateurs de tous les utilisateurs
@@ -36,6 +36,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public const CACHE_USER_SUPPORTS_KEY = 'user.supports'; // Suivis de l'utilisateur
     public const CACHE_USER_NOTES_KEY = 'user.notes'; // Notes de l'utilisateur
     public const CACHE_USER_RDVS_KEY = 'user.rdvs'; // Rendez-vous de l'utilisateur
+    public const CACHE_USER_TASKS_KEY = 'user.tasks'; // Tâches de l'utilisateur
 
     public const STATUS_SOCIAL_WORKER = 1;
     public const STATUS_COORDO = 2;
@@ -43,6 +44,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public const STATUS_DIRECTOR = 4;
     public const STATUS_ADMINISTRATIVE = 5;
     public const STATUS_PSYCHO = 9;
+    public const STATUS_TRAINEE = 7;
 
     public const STATUS = [
         1 => 'Travailleur social',
@@ -72,10 +74,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // 'ROLE_INDICATOR' => 'Indicateur',
     ];
 
+    public const PASSWORD_REGEX_PATTERN = '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).{8,}$^';
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("show_user")
      */
     private $id;
 
@@ -99,9 +104,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $phone1; // NE PAS SUPPRIMER
 
     /**
-     * @ORM\Column(type="string", length=255)
-     *@Assert\NotBlank()
-     * @Assert\Regex(pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).{8,}$^", match=true, message="Le mot de passe est invalide.")
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $password;
 
@@ -134,7 +137,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $firstname;
 
     /**
-     * @Groups({"export", "view"})
+     * @Groups({"export", "view", "show_user", "show_rdv"})
      */
     private $fullname;
 
@@ -194,6 +197,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $tokenCreatedAt;
 
     /**
+     * @var \DateTime
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime", nullable=true)
+     * @Groups("view")
+     */
+    protected $createdAt;
+
+    /**
+     * @var User
+     * @Gedmo\Blameable(on="create")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User")
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     */
+    protected $createdBy;
+
+    /**
+     * @var \DateTime
+     * @Gedmo\Timestampable(on="create", on="update")
+     * @ORM\Column(type="datetime", nullable=true)
+     * @Groups("view")
+     */
+    protected $updatedAt;
+
+    /**
+     * @var User
+     * @Gedmo\Blameable(on="create", on="update")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User")
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     */
+    protected $updatedBy;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Support\SupportGroup", mappedBy="referent")
      */
     private $referentSupport;
@@ -228,6 +263,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $rdvs2;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Task::class, mappedBy="users")
+     */
+    private $tasks;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Task::class, mappedBy="createdBy")
+     */
+    private $tasksCreated;
+    /**
+     * @ORM\OneToOne(targetEntity=UserSetting::class, cascade={"persist", "remove"})
+     */
+    private $setting;
+
     public function __construct()
     {
         $this->supports = new ArrayCollection();
@@ -240,6 +289,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->documents = new ArrayCollection();
         $this->userDevices = new ArrayCollection();
         $this->rdvs2 = new ArrayCollection();
+        $this->tasks = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -342,7 +392,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
@@ -404,6 +454,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function hasRole(string $role): bool
+    {
+        return in_array($role, $this->roles);
+    }
+
     public function getLoginCount(): ?int
     {
         return $this->loginCount;
@@ -455,6 +510,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function isActiveNow(): bool
     {
         return $this->getLastActivityAt() > new \DateTime('5 minutes ago');
+    }
+
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(?string $token): self
+    {
+        $this->token = $token;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): self
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getUpdatedBy(): ?User
+    {
+        return $this->updatedBy;
+    }
+
+    public function setUpdatedBy(?User $updatedBy): self
+    {
+        $this->updatedBy = $updatedBy;
+
+        return $this;
     }
 
     /**
@@ -560,18 +675,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $userConnection->setUser(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getToken(): ?string
-    {
-        return $this->token;
-    }
-
-    public function setToken(?string $token): self
-    {
-        $this->token = $token;
 
         return $this;
     }
@@ -802,5 +905,60 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<Task>|Task[]|null
+     */
+    public function getTasks(): ?Collection
+    {
+        return $this->tasks;
+    }
+
+    public function getSetting(): ?UserSetting
+    {
+        return $this->setting;
+    }
+
+    public function setSetting(?UserSetting $setting): self
+    {
+        $this->setting = $setting;
+
+        return $this;
+    }
+
+    public function getIdsMainServices(): array
+    {
+        $ids = [];
+
+        foreach ($this->getServiceUser() as $serviceUser) {
+            if ($serviceUser->getMain()) {
+                $ids[] = $serviceUser->getService()->getId();
+            }
+        }
+
+        return $ids;
+    }
+
+    public function getServicesIds(): array
+    {
+        $ids = [];
+
+        foreach ($this->getServiceUser() as $serviceUser) {
+            $ids[] = $serviceUser->getService()->getId();
+        }
+
+        return $ids;
+    }
+
+    public function hasService(Service $service): bool
+    {
+        foreach ($this->getServiceUser() as $serviceUser) {
+            if ($serviceUser->getService()->getId() === $service->getId()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

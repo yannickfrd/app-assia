@@ -3,6 +3,7 @@
 namespace App\Tests\Controller\Document;
 
 use App\Entity\Support\Document;
+use App\Entity\Support\SupportGroup;
 use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
@@ -33,7 +34,7 @@ class DocumentControllerTest extends WebTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->client = $this->createClient();
 
         /** @var AbstractDatabaseTool */
@@ -45,6 +46,7 @@ class DocumentControllerTest extends WebTestCase
             dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/SupportFixturesTest.yaml',
             dirname(__DIR__).'/../DataFixturesTest/DocumentFixturesTest.yaml',
+            dirname(__DIR__).'/../DataFixturesTest/TagFixturesTest.yaml',
         ]);
 
         $this->supportGroup = $this->fixtures['supportGroup1'];
@@ -61,10 +63,9 @@ class DocumentControllerTest extends WebTestCase
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h1', 'Documents');
 
-        /** @var Crawler */
         $crawler = $this->client->submitForm('search', [
             'name' => 'Document',
-            'type' => 1,
+            // 'tags' => ['1'],
         ], 'GET');
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -83,7 +84,7 @@ class DocumentControllerTest extends WebTestCase
 
         $this->client->submitForm('search', [
             'search[name]' => 'Document',
-            'search[type]' => 1,
+            // 'search[tags]' => ['1'],
         ]);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -190,7 +191,7 @@ class DocumentControllerTest extends WebTestCase
 
         $this->client->submitForm('document_update', [
             'document[name]' => 'Document',
-            'document[type]' => 1,
+            'document[tags]' => ['1'],
         ]);
 
         $contentResponse = json_decode($this->client->getResponse()->getContent(), true);

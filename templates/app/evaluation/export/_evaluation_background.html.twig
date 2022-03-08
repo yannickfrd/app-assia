@@ -1,0 +1,5 @@
+{% import 'macros/textarea_view.html.twig' as textarea_view %}
+
+<hr/>
+<h2 style="{{ style_h2 }}">Parcours de vie</h2>
+{{ textarea_view.get(evaluation.backgroundPeople, null, null, type) }}

@@ -1,0 +1,9 @@
+{% import 'macros/textarea_view.html.twig' as textarea_view %}
+
+<hr/>
+<h2 class="h3" style="{{ style_h2 }}">Vie à l'hôtel</h2>
+{% if eval_hotel_life.food %}<br/>{{ textarea_view.get(eval_hotel_life.food, 'Food', 'evaluation', type) }}{% endif %}
+{% if eval_hotel_life.clothing %}<br/>{{ textarea_view.get(eval_hotel_life.clothing, 'Clothing', 'evaluation', type) }}{% endif %}
+{% if eval_hotel_life.roomMaintenance %}<br/>{{ textarea_view.get(eval_hotel_life.roomMaintenance, 'Room maintenance', 'evaluation', type) }}{% endif %}
+{% if eval_hotel_life.otherHotelLife %}<br/>{{ textarea_view.get(eval_hotel_life.otherHotelLife, 'Other hotel life', 'evaluation', type) }}{% endif %}
+{% if eval_hotel_life.commentHotelLife %}<br/>{{ textarea_view.get(eval_hotel_life.commentHotelLife, 'Comment hotel life', 'evaluation', type) }}{% endif %}

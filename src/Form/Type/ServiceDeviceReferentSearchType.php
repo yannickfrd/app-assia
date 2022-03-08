@@ -44,11 +44,10 @@ class ServiceDeviceReferentSearchType extends AbstractType
                     'query_builder' => function (PoleRepository $repo) {
                         return $repo->getPoleQueryBuilder();
                     },
-                    'placeholder' => 'placeholder.pole',
                     'attr' => [
                         'class' => 'multi-select w-min-150 w-max-200',
+                        'placeholder' => 'placeholder.pole',
                         'size' => 1,
-                        'data-select2-id' => 'poles',
                     ],
                     'required' => false,
                 ]);
@@ -63,11 +62,10 @@ class ServiceDeviceReferentSearchType extends AbstractType
                     'query_builder' => function (ServiceRepository $repo) use ($dataClass) {
                         return $repo->getServicesOfUserQueryBuilder($this->currentUser, $dataClass);
                     },
-                    'placeholder' => 'placeholder.service',
                     'attr' => [
                         'class' => 'multi-select w-min-150 w-max-200',
+                        'placeholder' => 'placeholder.service',
                         'size' => 1,
-                        'data-select2-id' => 'services',
                     ],
                     'required' => false,
                 ]);
@@ -82,11 +80,10 @@ class ServiceDeviceReferentSearchType extends AbstractType
                     'query_builder' => function (SubServiceRepository $repo) use ($service, $dataClass) {
                         return $repo->getSubServicesOfUserQueryBuilder($this->currentUser, $service, $dataClass);
                     },
-                    'placeholder' => 'placeholder.subService',
                     'attr' => [
                         'class' => 'multi-select w-min-160 w-max-200',
+                        'placeholder' => 'placeholder.subService',
                         'size' => 1,
-                        'data-select2-id' => 'sub-services',
                     ],
                     'required' => false,
                 ]);
@@ -101,11 +98,10 @@ class ServiceDeviceReferentSearchType extends AbstractType
                     'query_builder' => function (DeviceRepository $repo) use ($service, $dataClass) {
                         return $repo->getDevicesOfUserQueryBuilder($this->currentUser, $service, $dataClass);
                     },
-                    'placeholder' => 'placeholder.device',
                     'attr' => [
                         'class' => 'multi-select w-min-150 w-max-200',
+                        'placeholder' => 'placeholder.device',
                         'size' => 1,
-                        'data-select2-id' => 'devices',
                     ],
                     'required' => false,
                 ]);
@@ -120,11 +116,10 @@ class ServiceDeviceReferentSearchType extends AbstractType
                     'query_builder' => function (UserRepository $repo) use ($service, $dataClass) {
                         return $repo->getReferentsOfServicesQueryBuilder($this->currentUser, $service, $dataClass);
                     },
-                    'placeholder' => 'placeholder.referent',
                     'attr' => [
                         'class' => 'multi-select w-min-150 w-max-220',
+                        'placeholder' => 'placeholder.referent',
                         'size' => 1,
-                        'data-select2-id' => 'referents',
                     ],
                     'required' => false,
                 ]);

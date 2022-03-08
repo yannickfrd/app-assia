@@ -79,7 +79,7 @@ class SiSiaoGroupImporter extends SiSiaoClient
             return null;
         }
 
-        $this->ficheGroupe = $this->get("fiches/ficheSynthese/{$id}");
+        $this->ficheGroupe = $this->get("/fiches/ficheSynthese/{$id}");
 
         $peopleGroup = $this->createPeopleGroup($this->ficheGroupe);
 

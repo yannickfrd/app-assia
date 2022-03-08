@@ -2,66 +2,56 @@
 
 namespace App\Controller\Note;
 
+use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Support\Note;
-use App\Event\Note\NoteEvent;
-use App\Service\Note\NoteExporter;
-use App\Form\Support\Note\NoteType;
-use App\Service\Note\NotePaginator;
 use App\Entity\Support\SupportGroup;
 use App\Form\Model\Support\NoteSearch;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Form\Support\Note\NoteSearchType;
-use App\Repository\Support\NoteRepository;
-use App\Controller\Traits\ErrorMessageTrait;
-use App\Service\SupportGroup\SupportManager;
 use App\Form\Model\Support\SupportNoteSearch;
-use Symfony\Component\HttpFoundation\Request;
+use App\Form\Support\Note\NoteSearchType;
+use App\Form\Support\Note\NoteType;
+use App\Form\Support\Note\SupportNoteSearchType;
+use App\Repository\Support\NoteRepository;
+use App\Repository\Support\SupportGroupRepository;
 use App\Service\Evaluation\EvaluationExporter;
+use App\Service\Note\NoteExporter;
+use App\Service\Note\NoteManager;
+use App\Service\Note\NotePaginator;
+use App\Service\SupportGroup\SupportCollections;
+use App\Service\SupportGroup\SupportManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Form\Support\Note\SupportNoteSearchType;
-use App\Service\SupportGroup\SupportCollections;
-use App\Repository\Support\SupportGroupRepository;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class NoteController extends AbstractController
 {
     use ErrorMessageTrait;
 
-    private $em;
-
-    public function __construct(EntityManagerInterface $em)
-    {
-        $this->em = $em;
-    }
-
     /**
-     * Liste des notes.
-     *
-     * @Route("/notes", name="notes", methods="GET|POST")
+     * @Route("/notes", name="note_index", methods="GET|POST")
      */
-    public function listNotes(Request $request, NotePaginator $notePaginator): Response
+    public function index(Request $request, NotePaginator $notePaginator): Response
     {
         $form = $this->createForm(NoteSearchType::class, $search = new NoteSearch())
             ->handleRequest($request);
 
-        return $this->render('app/note/listNotes.html.twig', [
+        return $this->render('app/note/note_index.html.twig', [
             'form' => $form->createView(),
             'notes' => $notePaginator->paginateNotes($request, $search),
         ]);
     }
 
     /**
-     * Liste des notes du suivi social.
-     *
-     * @Route("/support/{id}/notes", name="support_notes", methods="GET|POST")
+     * @Route("/support/{id}/notes", name="support_note_index", methods="GET|POST")
      *
      * @param int $id // SupportGroup
      */
-    public function listSupportNotes(
+    public function supportNotesIndex(
         int $id,
         SupportManager $supportManager,
         SupportCollections $supportCollections,
@@ -73,51 +63,58 @@ class NoteController extends AbstractController
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
-        $formSearch = $this->createForm(SupportNoteSearchType::class, $search = new SupportNoteSearch())
-            ->handleRequest($request);
+        $formSearch = $this->createForm(SupportNoteSearchType::class, $search = new SupportNoteSearch(), [
+            'service' => $supportGroup->getService(),
+        ]);
+        $formSearch->handleRequest($request);
 
-        $form = $this->createForm(NoteType::class, new Note());
+        $note = (new Note())->setSupportGroup($supportGroup);
+
+        $form = $this->createForm(NoteType::class, $note);
 
         if ($search->getExport()) {
-            return $noteExporter->exportAllNotes($supportGroup, $search);
+            return $noteExporter->exportAll($supportGroup, $search);
         }
 
-        return $this->render('app/note/supportNotes.html.twig', [
+        return $this->render('app/note/support_note_index.html.twig', [
             'support' => $supportGroup,
             'form_search' => $formSearch->createView(),
             'form' => $form->createView(),
-            'nbTotalNotes' => $supportCollections->getNbNotes($supportGroup),
+            'nb_total_notes' => $supportCollections->getNbNotes($supportGroup),
             'notes' => $notePaginator->paginateSupportNotes($supportGroup, $request, $search),
         ]);
     }
 
     /**
-     * Nouvelle note.
-     *
      * @Route("/support/{id}/note/new", name="support_note_new", methods="POST")
      */
-    public function createSupportNote(SupportGroup $supportGroup, Request $request, EventDispatcherInterface $dispatcher): JsonResponse
-    {
+    public function new(
+        SupportGroup $supportGroup,
+        Request $request,
+        EntityManagerInterface $em,
+        NormalizerInterface $normalizer,
+        TranslatorInterface $translator
+    ): JsonResponse {
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        $form = $this->createForm(NoteType::class, $note = new Note())
+        $note = (new Note())->setSupportGroup($supportGroup);
+
+        $form = $this->createForm(NoteType::class, $note)
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $note->setSupportGroup($supportGroup);
 
-            $this->em->persist($note);
-            $this->em->flush();
+            $em->persist($note);
+            $em->flush();
 
-            $dispatcher->dispatch(new NoteEvent($note, $supportGroup), 'note.after_create');
+            NoteManager::deleteCacheItems($note);
 
             return $this->json([
                 'action' => 'create',
                 'alert' => 'success',
-                'msg' => 'La note est enregistrée.',
-                'data' => [
-                    'note' => $this->getNote($note),
-                ],
+                'msg' => $translator->trans('note.created_successfully', ['%note_title%' => $note->getTitle()], 'app'),
+                'note' => $normalizer->normalize($note, 'json', ['groups' => ['show_note', 'show_tag']]),
             ]);
         }
 
@@ -125,28 +122,25 @@ class NoteController extends AbstractController
     }
 
     /**
-     * Modification d'une note.
-     *
      * @Route("/note/{id}/edit", name="note_edit", methods="POST")
      * @IsGranted("EDIT", subject="note")
      */
-    public function editNote(Note $note, Request $request, EventDispatcherInterface $dispatcher): JsonResponse
+    public function edit(Note $note, Request $request, EntityManagerInterface $em,  NormalizerInterface $normalizer,
+        TranslatorInterface $translator): JsonResponse
     {
         $form = $this->createForm(NoteType::class, $note)
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->em->flush();
+            $em->flush();
 
-            $dispatcher->dispatch(new NoteEvent($note), 'note.after_update');
+            NoteManager::deleteCacheItems($note);
 
             return $this->json([
                 'action' => 'update',
                 'alert' => 'success',
-                'msg' => 'Les modifications sont enregistrées.',
-                'data' => [
-                    'note' => $this->getNote($note),
-                ],
+                'msg' => $translator->trans('note.updated_successfully', ['%note_title%' => $note->getTitle()], 'app'),
+                'note' => $normalizer->normalize($note, 'json', ['groups' => ['show_note', 'show_tag']]),
             ]);
         }
 
@@ -154,27 +148,23 @@ class NoteController extends AbstractController
     }
 
     /**
-     * Supprime la note.
-     *
      * @Route("/note/{id}/delete", name="note_delete", methods="GET")
      * @IsGranted("DELETE", subject="note")
      */
-    public function deleteNote(Note $note, EventDispatcherInterface $dispatcher): JsonResponse
+    public function delete(Note $note, EntityManagerInterface $em, TranslatorInterface $translator): JsonResponse
     {
         $noteId = $note->getId();
 
-        $this->em->remove($note);
-        $this->em->flush();
+        $em->remove($note);
+        $em->flush();
 
-        $dispatcher->dispatch(new NoteEvent($note), 'note.after_update');
+        NoteManager::deleteCacheItems($note);
 
         return $this->json([
             'action' => 'delete',
             'alert' => 'warning',
-            'msg' => 'La note est supprimée.',
-            'data' => [
-                'note' => ['id' => $noteId],
-            ],
+            'msg' => $translator->trans('note.deleted_successfully', ['%note_title%' => $note->getTitle()], 'app'),
+            'note' => ['id' => $noteId],
         ]);
     }
 
@@ -194,7 +184,7 @@ class NoteController extends AbstractController
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        return $noteExporter->exportOneNote($request, $note, $supportGroup);
+        return $noteExporter->exportOne($request, $note, $supportGroup);
     }
 
     /**
@@ -202,11 +192,11 @@ class NoteController extends AbstractController
      *
      * @Route("/support/{id}/note/new_evaluation", name="support_note_new_evaluation", methods="GET")
      */
-    public function generateNoteEvaluation(
+    public function generateEvaluationNote(
         int $id,
         SupportGroupRepository $supportGroupRepo,
         EvaluationExporter $evaluationExporter,
-        EventDispatcherInterface $dispatcher
+        EntityManagerInterface $em
     ): Response {
         $supportGroup = $supportGroupRepo->findFullSupportById($id);
 
@@ -215,29 +205,19 @@ class NoteController extends AbstractController
         $note = $evaluationExporter->createNote($supportGroup);
 
         if (!$note) {
-            $this->addFlash('warning', 'Il n\'y a pas d\'évaluation sociale créée pour ce suivi.');
+            $this->addFlash('warning', "Il n'y a pas d'évaluation sociale créée pour ce suivi.");
 
-            return $this->redirectToRoute('support_view', ['id' => $id]);
+            return $this->redirectToRoute('support_show', ['id' => $id]);
         }
 
-        $this->em->persist($note);
-        $this->em->flush();
+        $em->persist($note);
+        $em->flush();
 
-        $dispatcher->dispatch(new NoteEvent($note), 'note.after_create');
+        NoteManager::deleteCacheItems($note);
 
-        return $this->redirectToRoute('support_notes', [
+        return $this->redirectToRoute('support_note_index', [
             'id' => $id,
             'noteId' => $note->getId(),
         ]);
-    }
-
-    private function getNote(Note $note): array
-    {
-        return [
-            'id' => $note->getId(),
-            'typeToString' => $note->getTypeToString(),
-            'statusToString' => $note->getStatusToString(),
-            'editionToString' => '(modifié le '.$note->getUpdatedAt()->format('d/m/Y à H:i').' par '.$note->getUpdatedBy()->getFullname().')',
-        ];
     }
 }

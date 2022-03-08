@@ -10,7 +10,6 @@ use App\Repository\Traits\QueryTrait;
 use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -33,7 +32,8 @@ class DocumentRepository extends ServiceEntityRepository
      */
     public function findDocumentsQuery(DocumentSearch $search, CurrentUserService $currentUser = null): Query
     {
-        $qb = $this->createQueryBuilder('d')->select('d')
+        $qb = $this->createQueryBuilder('d')
+            ->leftJoin('d.tags', 't')->addSelect('t')
             ->leftJoin('d.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
             ->join('d.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
             ->join('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
@@ -42,15 +42,21 @@ class DocumentRepository extends ServiceEntityRepository
             ->join('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}');
 
         if ($currentUser && !$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
-            $qb->where('d.createdBy IN (:user)')
+            $qb->where('d.createdBy = :user')
                 ->setParameter('user', $currentUser->getUser());
             $qb->orWhere('sg.service IN (:services)')
                 ->setParameter('services', $currentUser->getServices());
         }
 
+        $qb->andWhere('sg.id IS NULL OR sp.head = TRUE');
+
         if ($search->getId()) {
             $qb->andWhere('d.id = :id')
                 ->setParameter('id', $search->getId());
+        }
+        if ($search->getName()) {
+            $qb->andWhere('d.name LIKE :name OR d.content LIKE :name')
+                ->setParameter('name', '%'.$search->getName().'%');
         }
 
         if ($search->getStart()) {
@@ -63,11 +69,12 @@ class DocumentRepository extends ServiceEntityRepository
         }
 
         $qb = $this->addOrganizationFilters($qb, $search);
+        $qb = $this->addTagsFilter($qb, $search, 'd.tags');
 
-        return $qb = $this->filters($qb, $search)
-            ->orderBy('d.createdAt', 'DESC')
+        return $qb
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+        ;
     }
 
     /**
@@ -76,30 +83,24 @@ class DocumentRepository extends ServiceEntityRepository
     public function findSupportDocumentsQuery(SupportGroup $supportGroup, SupportDocumentSearch $search): Query
     {
         $qb = $this->createQueryBuilder('d')->select('d')
-            // ->leftJoin('d.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, service}')
+            ->leftJoin('d.tags', 't')->addSelect('t')
             ->leftJoin('d.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
 
             ->where('d.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroup);
 
-        // if ($user && !in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
-        //     $qb->andWhere('sg.service IN (:services)')
-        //         ->setParameter('services', $user->getServices());
-        // }
-
         if ($search->getName()) {
             $qb->andWhere('d.name LIKE :name OR d.content LIKE :name')
-                ->setParameter('name', '%'.$search->getName().'%');
+            ->setParameter('name', '%'.$search->getName().'%');
         }
-        if ($search->getType()) {
-            $qb->andWhere('d.type = :type')
-                ->setParameter('type', $search->getType());
-        }
+
+        $this->addTagsFilter($qb, $search, 'd.tags');
 
         return $qb
             ->orderBy('d.createdAt', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+        ;
     }
 
     /**
@@ -182,19 +183,5 @@ class DocumentRepository extends ServiceEntityRepository
         return $qb
             ->getQuery()
             ->getSingleScalarResult();
-    }
-
-    protected function filters(QueryBuilder $qb, $search): QueryBuilder
-    {
-        if ($search->getName()) {
-            $qb->andWhere('d.name LIKE :name OR d.content LIKE :name')
-                ->setParameter('name', '%'.$search->getName().'%');
-        }
-        if ($search->getType()) {
-            $qb->andWhere('d.type = :type')
-                ->setParameter('type', $search->getType());
-        }
-
-        return $qb;
     }
 }

@@ -3,14 +3,15 @@
 namespace App\Form\Model\Support;
 
 use App\Entity\Support\Document;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class SupportDocumentSearch
 {
     /** @var string|null */
     private $name;
 
-    /** @var int|null */
-    private $type;
+    /** @var ArrayCollection|null */
+    protected $tags;
 
     public function getName(): ?string
     {
@@ -23,21 +24,16 @@ class SupportDocumentSearch
 
         return $this;
     }
-
-    public function getType(): ?int
+    
+    public function getTags(): ?ArrayCollection
     {
-        return $this->type;
+        return $this->tags;
     }
 
-    public function setType(?int $type): self
+    public function setTags(?ArrayCollection $tags): self
     {
-        $this->type = $type;
+        $this->tags = $tags;
 
         return $this;
-    }
-
-    public function getTypeString()
-    {
-        return Document::TYPE[$this->type];
     }
 }

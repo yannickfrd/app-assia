@@ -1,0 +1,6 @@
+{#  #}
+{% macro get(value, key = null, trans = 'forms') %}{% apply spaceless %}
+    {% if value != null and 'Non ' not in value %}
+        <li>{% if key %}<b>{{ key|trans({}, trans) }} : </b>{% endif %}{{ value }}</li>
+    {% endif %}
+{% endapply %}{% endmacro %}

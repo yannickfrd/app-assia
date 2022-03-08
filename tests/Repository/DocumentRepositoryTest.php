@@ -6,6 +6,7 @@ use App\Entity\Support\Document;
 use App\Entity\Organization\User;
 use App\Entity\Support\SupportGroup;
 use App\Form\Model\Support\DocumentSearch;
+use App\Repository\Support\DocumentRepository;
 use App\Form\Model\Support\SupportDocumentSearch;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
@@ -29,7 +30,7 @@ class DocumentRepositoryTest extends WebTestCase
     protected $search;
 
     protected function setUp(): void
-    {        
+    {
         /** @var AbstractDatabaseTool */
         $databaseTool = $this->getContainer()->get(DatabaseToolCollection::class)->get();
 
@@ -47,14 +48,12 @@ class DocumentRepositoryTest extends WebTestCase
             ->get('doctrine')
             ->getManager();
 
-        /* @var DocumentRepository */
         $this->documentRepo = $this->entityManager->getRepository(Document::class);
 
         $this->supportGroup = $fixtures['supportGroup1'];
         $this->user = $fixtures['userRoleUser'];
         $this->search = (new SupportDocumentSearch())
-            ->setName('Document')
-            ->setType(1);
+            ->setName('Document');
     }
 
     public function testCount()

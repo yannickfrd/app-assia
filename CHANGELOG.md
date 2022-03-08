@@ -1,23 +1,154 @@
 CHANGELOG
 =========
 
+## Version 3.12.0 - 08/03/2022
+Sync google/outlook calendar feature
+* Create GoogleCalendarController
+* Create OutlookCalendarController
+* Edit RdvController
+* Create AbstractApiCalendar 
+* Create ApiCalendarRouter
+* Create GoogleCalendarApiService
+* Create OutlookCalendarApiService
+* Create ApiCalendar.js
+* Update calendar.js
+
+## Version 3.11.0 - 07/03/2022
+* Create ServiceUserController
+* Create ServiceUserManger.js
+* Create toggleMain method in entity ServiceUser
+* Refactoring/conventions
+
+## Version 3.10.0 - 03/03/2022
+Feature to import huda data (#129)
+* [ImportHudaData] Create a system to import HUDA data form csv file
+* [_service_places] Fix error type nbPlaces
+* [_hotel_support_form] Edit visibility agreementDate
+* [TaskSettingTrait] Edit default values
+
+## Version 3.9.3 - 02/03/2022
+[Payment] Rename item 'Remboursement de dette' to 'Remboursement' (#128)
+
+## Version 3.9.2 - 02/03/2022
+Update feature import SI-SIAO (#127)
+[SiSiaoEvaluationImporter] Add import notes
+
+## Version 3.9.1 - 02/03/2022
+Edit feature support and evaluation and refactoring
+* [ResourcesEntityTrait] Refacto
+* [Task] Remove relation with SupportPerson entity
+* [SupportPersonRepository] Edit status filter (sg.status to sp.status)
+* [migration] Edit the migration (fix index problem)
+* [EvalProfPerson] Add 'Working time' property
+* [HotelSupportService] Fix problem with status
+* [SupportGroup] Create 'endReason' field
+* Update translation file
+* Remove Resource entity
+* [AnonymizeDatabaseCommand] Edit confirmation question
+* [Country] Create Country entity and command to import countries
+* [Evaluation] Add country select
+* [CountryManager] Refactor
+* [SupportType] Add advanded select
+* [Task] Refacto and fix some bugs
+* [UserRepository] Fix error
+* [Note] Fix bug with autosave and refactoring JS classes
+* [Evaluation] Refactor evaluation feature (remove subscriber)
+* [Export] Edit feature to export evaluation data
+* Remove cache tag in view
+* [SupportPerson] Add endReason field
+* [Support] Rename Twig files in snake_case
+* [SupportGroupController] Rename controller
+* [SupportGroupController][SupportPersonController] Refactoring controller
+* [support] Rename all variables in snake_case in Twig views
+* Rename twig macros in snake_casead committed 2 days ago
+* Create SupportPersonControllerTest
+* [Export][ExportController] Update export feature (add ajax requests)
+* Remove subscribers and use service classes
+* [Place][PlaceController] Refactor place feature
+* Refacto place feature
+* [PlaceManager] Fix error type (flashbag)
+* [PlaceControllerTest] Update tests
+* [EvalAdminPerson] Fix error type agdrefId
+* [EvalAdmin] Add ofpraRegistrationId field (asylum)
+* [SupportGroup][HotelSupport] Add item 'Séparation du couple'
+* [Task] Rename a view file _task_delete_modal
+* [Note] Rename a view file _confirm_modal
+* [Document] Remove message after upload
+* Rename twig file _modal_dialog.html.twig
+* [TaskController] Refactor (remove Normalizer)
+* [PlaceGroupMananager] Fix collection problems
+* [SupportManager] Fix set nbPeople
+* [Support] Fix bug with _place field
+
+## Version 3.9.0 - 22/02/2022
+Create the task/alert feature (#117)
+* Create Task and Alert entities
+* Create CRUD for Task
+* Create Twig views
+* Create TagManager.js and TagForm.js with Ajax request
+* Create command to create auto tasks with alert from evaluation informations
+* Create command to send email about task alerts to users
+* Create unit and functional tests for Task feature
+* Refactoring
+
+## Version 3.8.6 - 21/02/2022
+Edit feature resource, charge and debt collections (#119)
+* Rename entities : Resource to EvalBudgetResource, Charge to EvalBudgetCharge, Debt to EvalBudgetDebt and create Resource
+ entity
+* Refactor ResourceEntityTrait
+* Edit translation file (resources)
+* Rename 'InitEvalPerson' entity to 'EvalInitPerson' and 'InitEvalGroup' to 'EvalInitGroup'
+* [Evaluation] apply twig conventions (snake_case for files and variables)
+* [Evaluation] Fix bug with window.confirm
+* Edit full export with evaluation
+* Edit command to create resources, charges and debts
+
+## Version 3.8.6 - 17/02/2022
+Update dependencies (PHP, JS) (#118)
+Updating phpcs fixer to v3.5.0 (#107)
+
+## Version 3.8.5 - 17/02/2022
+Update voters : a user of same service can edit note, rdv, document and payment (#113)
+* [NoteVoter] Edit canEdit method
+* [RdvVoter] Edit canEdit method
+* [DocumentVoter] Edit canEdit method
+* [NoteControllerTest][RdvControllerTest][DocumentControllerTest] Update functional tests
+* Refactoring
+## Version 3.8.4 - 17/02/2022
+Update the verification when creating a new supportGroup (#112)
+* [SupportCreator] Can create a new support with ended status even if the group have an other support in progress
+* [SupportControllerTest] Add test
 ## Version 3.6.10 - 03/02/2022
-Fix error if role person is null and edit referer header call
+Fix error if role person is null and edit referer header call (#110)
 * [SiSiaoController] Edit 'referer' header call
 * [SiSiaoGroupImporter] Fix if role is null
 
 ## Version 3.6.9 - 03/02/2022
-Fix problem import after update SI-SIAO version
+Fix problem import after update SI-SIAO version (#109)
 * [SiSIaoEvaluationImporter] Fix problem import evaluation after update SI-SIAO
 * [SupportGroup] Edit subscribed events order after create
 * [SiSiaoEvaluationImporter] Fix ASE informations and wished cities
 * [SiSiaoItems] Change value 99 (no information) to null
 
-## Version 3.6.8 - 19/01/2022
-Fix authentication problem with email
+## Version 3.8.3 - 20/01/2022
+Update Fixtures (#104)
+* Add dependencies
+* Add groups
+* Create TagFixtures
+* Create EvaluationFixtures
+* Refactor all fixtures
+
+## Version 3.6.10 - 19/01/2022
+Edit dot env (#103)
+
+## Version 3.6.9 - 19/01/2022
+Fix authentication problem with email (#102)
 * [AppAuthenticator] Add find User by email
 * [Security] Delete old CustomAuthenticator
 * Fix raw flash messages
+
+## Version 3.6.8 - 19/01/2022
+Add settings for app and services and users (#101)
 
 ## Version 3.6.7 - 19/01/2022
 Fix full data export for occupancy rate (#99)
@@ -31,9 +162,59 @@ Fix duplication people in evaluation (#98)
 * [CheckEvaluationPeopleCommand] Add condition if person is duplicate in the same evaluation
 * [CheckEvaluationPeopleCommand] Add option to active/disable doctrine listeners
 
+## Version 3.8.2 - 06/01/2022
+Fix multi select feature (#96)
+* [SelectManager.js] Rename 'selectManager' object
+* [SelectManager.js] Add default placeholder in options
+* [Select2] Edit css font-size selections 
+
+## Version 3.8.1 - 05/01/2022
+Create a select manager (JS) and update tag feature (#95)
+* [SelectManager] Create a JS class to manage multi-select (select2)
+* [Tag] Update and create new Commands to add tags
+* [Tag] Add 'color' and 'categories' variables to Tag entity
+* [Tag] Refacto repositories
+* [SelectManager] Refactor multi-selects
+* [Search] Refactor SearchManager
+* [Selelct2] Edit style css
+* Update JS dependencies (@ttskch/select2-bootstrap4-theme)
+* Fix bugs
+Co-authored-by: yannickfarade <yannick.farade@esperer-95.org>
+
+## Version 3.8.0 - 23/12/2021
+Feat resource, charge and debt collections (#94)
+* Create InitResource, Resource, Charge and Debt entities
+* Create AbstractFinance entity class
+* Create migration file
+* Create FormType for resources, charges and debts
+* Update evaluation repositories
+* Update twig views (edit, view et export evaluation
+* Update/Refacto JS evaluation classes
+* Update evaluation exports to Excel
+* Update contribution calculator system
+* Update import SI-SIAO
+* Update fixtures and functional tests
+
+## Version 3.7.0 - 21/12/2021
+Feature system tags (yannickfrd) (#93)
+* Create Tag entity and TagRepository
+* Create system to create, read, update and delete tags (admin user)
+* [ServiceTagController] Create system to add/remove tags to services
+* Create system to add/remove tags to documents
+* Create system to add/remove tags to notes
+* Create system to add/remove tags to rdvs
+* Add system to search documents, notes and rdvs by tags
+* Create command to create tags and tags in documents
+* Create TagFixtures
+* Create unit and functional tests
+* [FileUploader] Edit Group 'get' to 'show_document'
+* [Service] Add TagTrait
+Co-authored-by: yannickfarade <yannick.farade@esperer-95.org>
+
 ## Version 3.6.5 - 15/12/2021
-Fix bugs
+Fix bugs (#90)
 * [AutoLogout] Fix invalid url to logout
+
 ## Version 3.6.4 - 15/12/2021
 Update feature evaluation  (#89)
 * [EvaluationController] Add check if number of people in evaluation is invalid in 'showEvaluation'
@@ -42,7 +223,7 @@ Update feature evaluation  (#89)
 [Entities] Edit annotations 'export' groups (#88)
 
 ## Version 3.6.2 - 13/12/2021
-Edit all multi-selelct in FormType (#87)
+Edit all multi-select in FormType (#87)
 * [FormType] Add 'size' = 1 for all multi selects
 * [SecurityUserType] Add JS select2 for user roles
 

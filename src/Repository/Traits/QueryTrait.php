@@ -15,11 +15,11 @@ trait QueryTrait
      */
     protected function addOrganizationFilters(QueryBuilder $qb, object $search): QueryBuilder
     {
-        $qb = $this->addPolesFilter($qb, $search);
-        $qb = $this->addServicesFilter($qb, $search);
-        $qb = $this->addSubServicesFilter($qb, $search);
-        $qb = $this->addDevicesFilter($qb, $search);
-        $qb = $this->addReferentsFilter($qb, $search);
+        $this->addPolesFilter($qb, $search);
+        $this->addServicesFilter($qb, $search);
+        $this->addSubServicesFilter($qb, $search);
+        $this->addDevicesFilter($qb, $search);
+        $this->addReferentsFilter($qb, $search);
 
         return $qb;
     }
@@ -27,7 +27,8 @@ trait QueryTrait
     protected function addPolesFilter(QueryBuilder $qb, object $search, string $x = 's.pole'): QueryBuilder
     {
         if ($search->getPoles() && count($search->getPoles()) > 0) {
-            $qb = $this->addOrWhere($qb, $x, $search->getPoles());
+            $qb->andWhere($x.' IN (:poles)')
+                ->setParameter('poles', $search->getPoles());
         }
 
         return $qb;
@@ -36,7 +37,8 @@ trait QueryTrait
     protected function addServicesFilter(QueryBuilder $qb, object $search, string $x = 's.id'): QueryBuilder
     {
         if ($search->getServices() && count($search->getServices()) > 0) {
-            $qb = $this->addOrWhere($qb, $x, $search->getServices());
+            $qb->andWhere($x.' IN (:services)')
+                ->setParameter('services', $search->getServices());
         }
 
         return $qb;
@@ -45,7 +47,8 @@ trait QueryTrait
     protected function addSubServicesFilter(QueryBuilder $qb, object $search, string $x = 'sg.subService'): QueryBuilder
     {
         if ($search->getSubServices() && count($search->getSubServices()) > 0) {
-            $qb = $this->addOrWhere($qb, $x, $search->getSubServices());
+            $qb->andWhere($x.' IN (:subServices)')
+                ->setParameter('subServices', $search->getSubServices());
         }
 
         return $qb;
@@ -54,7 +57,8 @@ trait QueryTrait
     protected function addDevicesFilter(QueryBuilder $qb, object $search, string $x = 'sg.device'): QueryBuilder
     {
         if ($search->getDevices() && count($search->getDevices()) > 0) {
-            $qb = $this->addOrWhere($qb, $x, $search->getDevices());
+            $qb->andWhere($x.' IN (:devices)')
+                ->setParameter('devices', $search->getDevices());
         }
 
         return $qb;
@@ -63,19 +67,31 @@ trait QueryTrait
     protected function addReferentsFilter(QueryBuilder $qb, object $search, string $x = 'sg.referent'): QueryBuilder
     {
         if ($search->getReferents() && count($search->getReferents()) > 0) {
-            $qb = $this->addOrWhere($qb, $x, $search->getReferents());
+            $qb->andWhere($x.' IN (:referents)')
+                ->setParameter('referents', $search->getReferents());
         }
 
         return $qb;
     }
 
-    protected function filterByServiceType(QueryBuilder $qb, string $dataClass = null): QueryBuilder
+    protected function addTagsFilter(QueryBuilder $qb, object $search, string $join): QueryBuilder
     {
-        if (HotelSupportSearch::class === $dataClass) {
+        if ($search->getTags() && count($search->getTags()) > 0) {
+            $qb->leftJoin($join, 't2')
+                ->andWhere('t2.id IN (:tags)')
+                ->setParameter('tags', $search->getTags());
+        }
+
+        return $qb;
+    }
+
+    protected function filterByServiceType(QueryBuilder $qb, string $className = null): QueryBuilder
+    {
+        if (HotelSupportSearch::class === $className) {
             $qb->andWhere('s.type = :type')
                 ->setParameter('type', Service::SERVICE_TYPE_HOTEL);
         }
-        if (AvdlSupportSearch::class === $dataClass) {
+        if (AvdlSupportSearch::class === $className) {
             $qb->andWhere('s.type = :type')
                 ->setParameter('type', Service::SERVICE_TYPE_AVDL);
         }

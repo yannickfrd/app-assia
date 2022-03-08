@@ -1,0 +1,20 @@
+{% extends 'model/_search.html.twig' %}
+
+{% block search_form %}
+    <div class="col-auto my-1 px-1">{{ form_row(form.name) }}</div>
+        {% include '_shared/_serviceDeviceReferentSearch.html.twig' with {'referents': false} %}
+    <div class="col-auto my-1 px-1">{{ form_row(form.nbPlaces) }}</div>
+    <div class="col-auto my-1 px-1">{{ form_row(form.supportDates) }}</div>
+    <div class="col-auto my-1 px-1 d-inline-flex" data-toggle="tooltip" data-placement="bottom"
+        title="Date de début">
+        <span class="my-2 px-1">Entre</span>{{ form_widget(form.date.start) }}
+    </div>
+    <div class="col-auto my-1 px-1 d-inline-flex" data-toggle="tooltip" data-placement="bottom"
+        title="Date de fin">
+        <span class="my-2 pr-2">et</span>{{ form_widget(form.date.end) }}
+    </div>
+    <div class="col-auto my-1 px-1">{{ form_row(form.city) }}</div>
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="col-auto my-1 px-1">{{ form_row(form.disabled) }}</div>
+    {% endif %}
+{% endblock %}

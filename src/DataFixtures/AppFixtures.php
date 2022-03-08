@@ -2,189 +2,118 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Admin\Setting;
 use App\Entity\Organization\Device;
 use App\Entity\Organization\Organization;
 use App\Entity\Organization\Place;
 use App\Entity\Organization\Pole;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\ServiceDevice;
+use App\Form\Utils\Choices;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Persistence\ObjectManager;
 
 /*
  * @codeCoverageIgnore
  */
-class AppFixtures extends Fixture
+class AppFixtures extends Fixture implements FixtureGroupInterface
 {
-    private $em;
-
     public const ORGANIZATION = [
         'ESPERER 95',
         'CCAS',
         'Conseil Départemental',
         'CHRS',
-        'Autre',
     ];
 
-    public const POLES = [
-        1 => 'Hébergement',
-        2 => 'Habitat',
-    ];
+    private $objectManager;
 
-    public const DEVICES = [
-        1 => 'ALT',
-        2 => 'ALTHO',
-        3 => 'ASLLT',
-        4 => 'AVDL hors-DALO',
-        5 => 'Insertion - Regroupé',
-        6 => 'HU - Diffus',
-        7 => 'Maison relais',
-        8 => 'ASLL',
-        9 => '10 000 LA BA',
-        10 => 'AVDL DALO',
-        11 => 'AVDL (SAVL)',
-        12 => 'XXX1',
-        13 => '10 000 LA BD',
-        14 => 'Famille AMH',
-        15 => "ASE mise à l'abri",
-        16 => 'ASE hébergement',
-        17 => 'Injonctions Réfugiés',
-        18 => 'Opération ciblée',
-        19 => 'Accompagnement hôtel',
-        20 => "Intervention d'urgence",
-        21 => 'HU - Regroupé',
-        26 => 'HU hiver',
-    ];
-
-    public const SERVICES = [
-        0 => [
-            'name' => 'CHU Pontoise',
-            'pole' => 1,
-            'devices' => [21],
-        ],
-        3 => [
-            'name' => 'CHRS Cergy',
-            'pole' => 1,
-            'devices' => [5, 21],
-        ],
-        4 => [
-            'name' => 'Maison Relais Cergy',
-            'pole' => 1,
-            'devices' => [7],
-        ],
-        10 => [
-            'name' => 'ALTHO',
-            'pole' => 2,
-            'devices' => [2],
-        ],
-        11 => [
-            'name' => 'ASSL',
-            'pole' => 2,
-            'devices' => [3],
-        ],
-        12 => [
-            'name' => 'AVDL',
-            'pole' => 2,
-            'devices' => [4, 11],
-        ],
-        13 => [
-            'name' => 'PASH',
-            'pole' => 2,
-            'devices' => [19, 20],
-        ],
-    ];
-
-    public $organization = null;
-    public $poles = [];
-    public $devices = [];
-    public $services = [];
-
-    public function __construct(EntityManagerInterface $em)
+    public function __construct()
     {
-        $this->em = $em;
         $this->faker = \Faker\Factory::create('fr_FR');
     }
 
-    public function load(ObjectManager $em): void
+    public function load(ObjectManager $objectManager): void
     {
-        // Créé les dispositifs
+        $this->objectManager = $objectManager;
+
+        $this->createSetting();
+        $this->createOrganizations();
+        $this->createPoles();
         $this->createDevices();
+        $this->createServices();
 
-        //Crée les pôles d'activité
-        foreach (self::POLES as $key => $name) {
-            $pole = $this->createPole($key, $name);
-        }
-
-        //Crée les différents services
-        foreach (self::SERVICES as $serviceArray) {
-            $this->createService($serviceArray);
-        }
-
-        $this->em->flush();
+        $this->objectManager->flush();
     }
 
-    public function createOrganizations(): void
+    private function createSetting()
     {
+        $setting = (new Setting())->setOrganizationName('ESPERER 95');
+
+        $this->objectManager->persist($setting);
+    }
+
+    private function createOrganizations(): void
+    {
+        $i = 0;
         foreach (self::ORGANIZATION as $value) {
-            $organization = (new Organization())
-                ->setName($value);
+            $organization = (new Organization())->setName($value);
 
-            $this->em->persist($organization);
+            $this->objectManager->persist($organization);
 
-            if (null === $this->organization) {
-                $this->organization = $organization;
+            if (0 === $i) {
+                $this->addReference('organization_0', $organization);
             }
+            ++$i;
         }
     }
 
-    public function createPole($key, string $name): Pole
+    private function createPoles(): void
     {
-        $pole = (new Pole())
-            ->setName($name)
-            ->setOrganization($this->organization)
-            ->setColor('dark')
-            ->setCreatedAt(new \DateTime());
+        foreach ($this->getDataPoles() as $key => [$name, $color]) {
+            $pole = (new Pole())
+                ->setName($name)
+                ->setOrganization($this->getReference('organization_0'))
+                ->setColor($color);
 
-        $this->em->persist($pole);
+            $this->objectManager->persist($pole);
 
-        $this->poles[$key] = $pole;
-
-        return $pole;
+            $this->addReference('pole_'.$key, $pole);
+        }
     }
 
-    public function createService(array $arrayService): Service
+    private function createServices(): void
     {
-        $service = (new Service())
-            ->setName($arrayService['name'])
-            ->setPlace(true)
-            ->setPole($this->poles[$arrayService['pole']]);
+        foreach ($this->getDataServices() as [$serviceName, $poleId, $deviceIds, $type, $place, $contribution]) {
+            $service = (new Service())
+                ->setName($serviceName)
+                ->setType($type)
+                ->setPlace($place)
+                ->setContribution($contribution)
+                ->setPole($this->getReference('pole_'.$poleId));
 
-        $this->em->persist($service);
+            $this->objectManager->persist($service);
 
-        $this->services[] = $service;
-
-        $this->createServiceDevices($service, $arrayService['devices']);
-
-        return $service;
+            $this->createServiceDevices($service, $deviceIds);
+        }
     }
 
-    protected function createServiceDevices(Service $service, array $arrayDevices): void
+    private function createServiceDevices(Service $service, array $arrayDevices): void
     {
         foreach ($arrayDevices as $deviceKey) {
-            $device = $this->devices[$deviceKey];
+            $device = $this->getReference('device_'.$deviceKey);
 
             $serviceDevice = (new ServiceDevice())
                 ->setService($service)
                 ->setDevice($device);
 
-            $this->em->persist($serviceDevice);
+            $this->objectManager->persist($serviceDevice);
 
             $this->createPlaces($service, $device);
         }
     }
 
-    protected function createPlaces(Service $service, Device $device): void
+    private function createPlaces(Service $service, Device $device): void
     {
         for ($i = 0; $i < mt_rand(5, 10); ++$i) {
             $place = (new Place())
@@ -195,21 +124,62 @@ class AppFixtures extends Fixture
                 ->setStartDate($this->faker->dateTimeBetween('-5years', '-12months'))
                 ->setCity('Cergy-Pontoise');
 
-            $this->em->persist($place);
+            $this->objectManager->persist($place);
         }
     }
 
-    public function createDevices(): void
+    private function createDevices(): void
     {
-        foreach (self::DEVICES as $key => $name) {
+        foreach ($this->getDataDevices() as $key => [$name, $place, $contribution]) {
             $device = (new Device())
                 ->setCode($key)
+                ->setPlace($place)
+                ->setContribution($contribution)
                 ->setName($name);
 
-            $this->em->persist($device);
+            $this->objectManager->persist($device);
 
-            $this->devices[$key] = $device;
+            $this->addReference('device_'.$key, $device);
         }
+    }
+
+    private function getDataPoles(): array
+    {
+        return [
+            1 => ['Hébergement', 'brown'],
+            2 => ['Habitat', 'brown'],
+        ];
+    }
+
+    private function getDataServices(): array
+    {
+        return [
+            // 0 => [$serviceName, $poleId, $deviceIds, $type, $place, $contribution]
+                1 => ['CHU Pontoise', 1, [22], 1, Choices::YES, Choices::YES],
+                3 => ['CHRS Cergy ', 1, [5, 22], 1, Choices::YES, Choices::YES],
+                4 => ['Maison Relais Cergy ', 1, [7], 1, Choices::YES, Choices::YES],
+                10 => ['ALTHO ', 2, [2], 1, Choices::YES, Choices::YES],
+                11 => ['ASSL ', 2, [3, 8], 1, Choices::NO, Choices::NO],
+                12 => ['AVDL ', 2, [4, 10], 2, Choices::NO, Choices::NO],
+                13 => ['PASH ', 2, [19, 20], 3, Choices::YES, Choices::YES],
+        ];
+    }
+
+    private function getDataDevices(): array
+    {
+        return [
+            // 0 => [$deviceName, $place, $contribution]
+            2 => ['ALTHO', Choices::YES, Choices::YES],
+            3 => ['ASSLT', Choices::NO, Choices::NO],
+            4 => ['AVDL hors-DALO', Choices::NO, Choices::NO],
+            5 => ['Insertion - Regroupé', Choices::YES, Choices::YES],
+            7 => ['Maison relais', Choices::YES, Choices::YES],
+            8 => ['ASSL', Choices::NO, Choices::NO],
+            10 => ['AVDL DALO', Choices::NO, Choices::NO],
+            19 => ['Accompagnement hôtel', Choices::NO, Choices::YES],
+            20 => ["Intervention d'urgence", Choices::NO, Choices::NO],
+            22 => ['HU - Regroupé', Choices::YES, Choices::YES],
+        ];
     }
 
     public static function getDateTimeBeetwen($startEnd, $endDate = 'now'): \DateTime
@@ -225,5 +195,10 @@ class AppFixtures extends Fixture
         $days = $interval->days;
 
         return '-'.$days.' days';
+    }
+
+    public static function getGroups(): array
+    {
+        return ['user', 'people', 'support', 'evaluation', 'note', 'rdv' , 'task', 'document', 'payment', 'tag'];
     }
 }

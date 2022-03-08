@@ -1,8 +1,6 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
 
 {% block title %}{{ form.vars.value.fullname }}{% endblock %}
-
-
 
 {% block body %}
 
@@ -10,12 +8,13 @@
 
         <section>
 
-            {% include "model/_msgFlash.html.twig" %}
+            {% include 'model/_msgFlash.html.twig' %}
+
             <h1 class="h2 mb-3">{{ form.vars.value.fullname }}</h1>
 
             {{ form_start(form) }}
-            
             <hr>
+
             <div class="row">
                 <div class="col-md-6">{{ form_row(form.firstname) }}</div>
                 <div class="col-md-6">{{ form_row(form.lastname) }}</div>
@@ -28,9 +27,16 @@
             <hr>
 
             <h2 class="h4 mb-4">Services rattachés</h2>
-            <div id="serviceUser-fields-list" 
-                data-prototype="<td class='align-middle'>{{ form_widget(form.serviceUser.vars.prototype.service)|e }}</td>"
-                data-widget-tags="<tr></tr>" data-widget-counter="{{ form.serviceUser|length }}">
+
+			{% set service_user_prototype %}
+				<td class="align-middle">{{ form_widget(form.serviceUser.vars.prototype.service) }}</td>
+				<td class="align-middle">
+					<button class="btn btn-danger" data-action="remove"><i class="fas fa-trash-alt"></i></button>
+				</td>
+			{% endset %}
+
+            <div id="service_user_fields_list" data-prototype="{{ service_user_prototype|e|spaceless }}" 
+                data-container-tag="tr" data-widget-counter="{{ form.serviceUser|length }}">
                 <div class="table-responsive">
                     <table id="function-table" class="table">
                         <thead>
@@ -41,32 +47,34 @@
                         </thead>
                         <tbody>
                             {% for role in form.serviceUser %}
-                            <tr id="{{ role.vars.id }}">
-                                <td>{{ form_widget(role.service) }}</td>
-                                <td class="align-middle">
-                                    <button class="btn btn-danger" data-action="remove"><span class="fas fa-trash-alt"></span></button>
-                                </td>
-                            </tr>
+                                <tr id="{{ role.vars.id }}">
+                                    <td class="align-middle">{{ form_widget(role.service) }}</td>
+                                    <td class="align-middle">
+                                        <button class="btn btn-danger" data-action="remove">
+											<i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
             </div>
             <div class="my-2">
-                <button type="button" class="add-another-collection-widget btn btn-{{ theme_color }}"
-                    data-list-selector="#serviceUser-fields-list"><span class="fas fa-plus-square mr-2"></span>Ajouter un
-                    service</button>
+                <button type="button" class="btn btn-{{ theme_color }}" data-add-widget="service"
+                    data-list-selector="#service_user_fields_list"><i class="fas fa-plus-square mr-2"></i>
+					Ajouter un service</button>
             </div>
             <div class="row">
                 <div class="col-md-12">
                     <div class="float-right mb-2">
-                        <button type="submit" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>Enregistrer</button>
+                        <button type="submit" class="btn btn-{{ theme_color }} shadow">
+							<i class="fas fa-save mr-2"></i>Enregistrer</button>
                     </div>
                 </div>
             </div>
 
             {{ form_row(form._token) }}
-            {{ form_end(form, {"render_rest": false}) }}
+            {{ form_end(form, {'render_rest': false}) }}
 
         </section>
     </div>
@@ -74,5 +82,5 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags("registration") }}
+    {{ encore_entry_script_tags('registration') }}
 {% endblock %}

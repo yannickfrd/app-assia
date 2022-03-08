@@ -1,9 +1,0 @@
-{#  #}
-{% macro get(value, key = null, trans = "forms") %}
-    {% if value not in ["", "Non renseigné"] %}
-        <div class="col-md-6 mb-1 py-2">
-            {% if key %}<span class="py-2 font-weight-bold">{{ key|trans({}, trans) }} : </span>{% endif %}
-            <span>{{ value }}</span>
-        </div>
-    {% endif %}
-{% endmacro %}

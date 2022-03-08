@@ -53,6 +53,7 @@ class Person
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("show_person")
      */
     private $id;
 
@@ -64,7 +65,7 @@ class Person
      * max=50,
      * minMessage="Le nom est trop court ({{ limit }} caractères min).",
      * maxMessage="Le nom est trop long ({{ limit }} caractères max).")
-     * @Groups("export")
+     * @Groups({"export", "show_person"})
      */
     private $lastname;
 
@@ -76,7 +77,7 @@ class Person
      * max=50,
      * minMessage="Le prénom est trop court ({{ limit }} caractères min).",
      * maxMessage="Le prénom est trop long ({{ limit }} caractères max).")
-     * @Groups("export")
+     * @Groups({"export", "show_person"})
      */
     private $firstname;
 
@@ -209,6 +210,9 @@ class Person
         return strtolower((new AsciiSlugger())->slug($this->firstname.'-'.$this->lastname));
     }
 
+    /**
+     * @Groups({"show_person", "show_rdv"})
+     */
     public function getFullname(): ?string
     {
         return $this->lastname.' '.$this->firstname;

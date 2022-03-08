@@ -4,7 +4,7 @@
 export default class ItemsListManager {
 
     /**
-     * @param {String} eltId
+     * @param {string} eltId
      * @param {CallableFunction} callback
      */
     constructor(eltId, callback = null) {
@@ -24,14 +24,11 @@ export default class ItemsListManager {
 
         this.trElts.forEach(trElt => {
             this.displayTr(trElt)
-            trElt.querySelector('button[data-action="remove"')
-                .addEventListener('click', e => {
-                    e.preventDefault()
-                    this.removeTr(trElt)
-                    if (this.callback) {
-                        this.callback()
-                    }
-                }) 
+            trElt.querySelector('button[data-action="remove"').addEventListener('click', e => {
+                e.preventDefault()
+                this.removeTr(trElt)
+                if (this.callback) this.callback()
+            }) 
         })
     }
 
@@ -43,17 +40,10 @@ export default class ItemsListManager {
             if (option.selected) {
                 this.trElt = document.querySelector(`tr[data-parent-select="${this.eltId}"][data-value="${option.value}"]`)
                 this.displayTr(this.trElt, 1)
-                if (this.selectElt.dataset.type === 'resources') {
-                    const type = this.trElt.dataset.value
-                    const spId = this.trElt.dataset.spId
-                    document.querySelectorAll(`tr[data-value="${type}"][data-sp-id="${spId}"]`).forEach(trElt => {
-                        this.displayTr(trElt, 1)
-                    })
-                }
             }
         })
 
-        this.initTrElts()
+        this.trElts.forEach(trElt => this.initTrElt(trElt))
         this.reinitSelect()
     }
 
@@ -69,25 +59,22 @@ export default class ItemsListManager {
         }
 
         if (inputElt.value != 1) {
-            return trElt.classList.replace('d-table-row', 'd-none')
+            return trElt.classList.add('d-none')
         }
-        trElt.classList.replace('d-none', 'd-table-row')
+        
+        trElt.classList.remove('d-none')
     }
 
     /**
      * Met tous les autres inputs du tableau à 0 si vide
+     * @param {HTMLTableRowElement} trElt 
      */
-    initTrElts() {
-        this.trElts.forEach(trElt => {
-            const inputHiddenElt = trElt.querySelector('input[type="hidden"]')
-            const inputTextElt = trElt.querySelector('input[type="text"]')
-            if (!inputHiddenElt.value) {
-                inputHiddenElt.value = 0
-            }
-            if (inputTextElt && !inputTextElt.dataset.edit) {
-                inputTextElt.dataset.edit = 1
-            }    
-        })
+    initTrElt(trElt) {
+        const inputHiddenElt = trElt.querySelector('input[type="hidden"]')
+        const inputTextElt = trElt.querySelector('input[type="text"]')
+
+        if (!inputHiddenElt.value) inputHiddenElt.value = 0
+        if (inputTextElt && !inputTextElt.dataset.edit)  inputTextElt.dataset.edit = 1
     }
 
     /**
@@ -97,9 +84,7 @@ export default class ItemsListManager {
         window.setTimeout(() => {
             this.selectElt.querySelector('option').selected = 'selected'
             const inputTextElt = this.trElt.querySelector('input[type="text"]')
-            if (inputTextElt) {
-                inputTextElt.focus()
-            }
+            if (inputTextElt) inputTextElt.focus()
         }, 200)
     }
 
@@ -111,6 +96,6 @@ export default class ItemsListManager {
         trElt.querySelectorAll('input').forEach(inputElt => {
             inputElt.getAttribute('type') === 'hidden' ? inputElt.value = 0 : inputElt.value = null
         })
-        trElt.classList.replace('d-table-row', 'd-none')
+        trElt.classList.add('d-none')
     }
 }

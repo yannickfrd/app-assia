@@ -42,26 +42,33 @@ export default class DateFormater {
      * @param {String} locale 
      * @returns {String}
      */
-    getDate(date, type = 'datetime', locale = 'fr') {
+    getDate(date, type = 'datetime', separator = '-', locale = 'fr') {
         if (date === null) {
             return ''
         }
-        
-        date = new Date(date)
+
+        if (date instanceof Date === false) {
+            date = new Date(date)
+        }
+
+        const month = date.getMonth() + 1
 
         switch (type) {
             case 'date':
                 return date.toLocaleDateString(locale)
-                break
             case 'd/m':
                 return date.toLocaleDateString(locale).substring(3, 10)
-                break
             case 'time':
                 return date.toLocaleTimeString(locale).substring(0, 5)
-                break
+            case 'dateInput':
+                return date.getFullYear() + separator + month.toString().padStart(2, '0')
+                    + separator + date.getDate().toString().padStart(2, '0')
+            case 'datetimeInput':
+                return date.getFullYear() + separator + month.toString().padStart(2, '0')
+                    + separator + date.getDate().toString().padStart(2, '0')
+                    + 'T' + date.toLocaleTimeString(locale).substring(0, 5)
             default:
                 return date.toLocaleDateString(locale) + ' ' + date.toLocaleTimeString(locale).substring(0, 5)
-                break
         }
     }
 }

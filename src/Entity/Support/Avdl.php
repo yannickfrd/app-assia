@@ -3,9 +3,9 @@
 namespace App\Entity\Support;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=AvdlRepository::class)
@@ -39,10 +39,10 @@ class Avdl
     // 2 => '2 - Moyen',
     // 3 => '3 - Lourd',
 
-    public const END_SUPPORT_REASONS = [
-        1 => 'Autonome',
-        2 => 'Non adhésion',
-        3 => 'Transfert (autre département)',
+    public const END_REASONS = [
+        110 => 'Autonome', // 1
+        200 => 'Non adhésion', // 2
+        330 => 'Transfert (autre département)', // 3
         97 => 'Autre',
         99 => 'Inconnu',
     ];
@@ -124,7 +124,7 @@ class Avdl
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $endSupportReason;
+    private $endSupportReason; // A supprimer
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -295,20 +295,12 @@ class Avdl
         return $this;
     }
 
-    public function getEndSupportReason(): ?int
+    public function getEndSupportReason(): ?int // A supprimer
     {
         return $this->endSupportReason;
     }
 
-    /**
-     * @Groups("export")
-     */
-    public function getEndSupportReasonToString(): ?string
-    {
-        return $this->endSupportReason ? self::END_SUPPORT_REASONS[$this->endSupportReason] : null;
-    }
-
-    public function setEndSupportReason(?int $endSupportReason): self
+    public function setEndSupportReason(?int $endSupportReason): self // A supprimer
     {
         $this->endSupportReason = $endSupportReason;
 

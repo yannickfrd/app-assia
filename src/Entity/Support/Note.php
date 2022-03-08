@@ -2,10 +2,13 @@
 
 namespace App\Entity\Support;
 
+use App\Entity\Organization\TagTrait;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -16,6 +19,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Note
 {
     use CreatedUpdatedEntityTrait;
+    use TagTrait;
     use SoftDeleteableEntity;
 
     public const TYPE_NOTE = 1;
@@ -40,11 +44,13 @@ class Note
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("show_note")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("show_note")
      */
     private $title;
 
@@ -56,11 +62,13 @@ class Note
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
+     * @Groups("show_note")
      */
     private $type = self::TYPE_NOTE;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
+     * @Groups("show_note")
      */
     private $status = self::STATUS_DEFAULT;
 
@@ -73,7 +81,7 @@ class Note
      * @Gedmo\Blameable(on="create")
      * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User", inversedBy="notes")
      */
-    private $createdBy; // NE PAS SUPPRIMER
+    protected $createdBy; // NE PAS SUPPRIMER
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Support\SupportGroup", inversedBy="notes")
@@ -84,6 +92,11 @@ class Note
      * @ORM\ManyToOne(targetEntity="App\Entity\Support\SupportPerson", inversedBy="notes")
      */
     private $supportPerson;
+
+    public function __construct()
+    {
+        $this->tags = new ArrayCollection();
+    }
 
     /**
      * @ORM\PreFlush
@@ -136,6 +149,9 @@ class Note
         return $this;
     }
 
+    /**
+     * @Groups("show_note")
+     */
     public function getTypeToString(): ?string
     {
         return $this->type ? self::TYPE[$this->type] : null;
@@ -153,6 +169,9 @@ class Note
         return $this;
     }
 
+    /**
+     * @Groups("show_note")
+     */
     public function getStatusToString(): ?string
     {
         return $this->status ? self::STATUS[$this->status] : null;
@@ -192,5 +211,21 @@ class Note
         $this->supportPerson = $supportPerson;
 
         return $this;
+    }
+
+    /**
+     * @Groups("show_note")
+     */
+    public function getUpdatedAtToString(string $format = 'd/m/Y à H:i'): string
+    {
+        return $this->updatedAt ? $this->updatedAt->format($format) : '';
+    }
+
+    /**
+     * @Groups("show_note")
+     */
+    public function getUpdatedByToString(): string
+    {
+        return $this->updatedBy ? $this->updatedBy->getFullname() : '';
     }
 }

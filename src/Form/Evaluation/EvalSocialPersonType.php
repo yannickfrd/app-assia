@@ -30,7 +30,7 @@ class EvalSocialPersonType extends AbstractType
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS),
                 'attr' => [
                     'data-important' => 'true',
-                    'data-twin-field' => 'rightSocialSecurity',
+                    'data-twin-field' => 'true',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
@@ -39,7 +39,7 @@ class EvalSocialPersonType extends AbstractType
                 'choices' => Choices::getChoices(EvalSocialPerson::SOCIAL_SECURITY),
                 'attr' => [
                     'data-important' => 'true',
-                    'data-twin-field' => 'socialSecurity',
+                    'data-twin-field' => 'true',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
@@ -84,6 +84,12 @@ class EvalSocialPersonType extends AbstractType
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
+            ->add('_healthProblemType', ChoiceType::class, [
+                'choices' => Choices::getChoices(EvalSocialPerson::HEALTH_PROBLEMS_TYPE),
+                'placeholder' => 'placeholder.add',
+                'mapped' => false,
+                'required' => false,
+            ])
             ->add('physicalHealthProblem', HiddenType::class)
             ->add('mentalHealthProblem', HiddenType::class)
             ->add('addictionProblem', HiddenType::class)
@@ -126,7 +132,7 @@ class EvalSocialPersonType extends AbstractType
             ->add('familyBreakdown', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO_PARTIAL),
                 'attr' => [
-                    'data-twin-field' => 'familyBreakdown',
+                    'data-twin-field' => 'true',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
@@ -134,7 +140,7 @@ class EvalSocialPersonType extends AbstractType
             ->add('friendshipBreakdown', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO_PARTIAL),
                 'attr' => [
-                    'data-twin-field' => 'friendshipBreakdown',
+                    'data-twin-field' => 'true',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,

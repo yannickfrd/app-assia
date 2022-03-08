@@ -1,0 +1,96 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Évaluation sociale{% endblock %}
+
+{% block body %}
+
+	{% set ROLE_CHILD = constant('App\\Entity\\People\\RolePerson::ROLE_CHILD') %}
+	{% set GENDER_FEMALE = constant('App\\Entity\\People\\Person::GENDER_FEMALE') %}
+	{% set SERVICE_TYPE_AVDL = support.service.type == constant('App\\Entity\\Organization\\Service::SERVICE_TYPE_AVDL') %}
+	{% set SERVICE_TYPE_HOTEL = support.service.type == constant('App\\Entity\\Organization\\Service::SERVICE_TYPE_HOTEL') %}
+	
+	{% set title = 'Évaluation sociale' %}
+	{% set evaluation_group = form.vars.value %}
+	{% set EDIT_MODE = evaluation_group.updatedAt != evaluation_group.createdAt %}
+	{% set evaluation_people = form.evaluationPeople %}
+	{% set nb_people = evaluation_people|length %}
+	{% set people_adults = evaluation_people|filter(e => e.vars.value.supportPerson.role != ROLE_CHILD) %}
+	{% set people_over_16 = evaluation_people|filter(e => e.vars.value.supportPerson.person.age >= 16) %}
+	{% set nb_children = nb_people - people_adults|length %}
+
+	<div class="container">
+
+		{% include 'app/support/_partials/_support_nav.html.twig' %}
+
+		{{ form_start(form) }}
+
+		{% include 'model/_msgFlash.html.twig' %}
+		<div id="js-msg-flash-content"></div>
+
+		<div class="row mb-3 align-items-center">
+			<div class="col-md-6 my-2 small text-secondary" data-edit-mode="{{ EDIT_MODE ? 'true' : 'false' }}">
+				Créée le {{ evaluation_group.createdAt|date('d/m/Y à H:i') }}
+				<span id="evaluation-updateAt">
+					{% if evaluation_group.updatedAt != evaluation_group.createdAt %}
+						(modifiée le {{ evaluation_group.updatedAt|date('d/m/Y à H:i') }}
+						{% if evaluation_group.updatedBy %} par {{ evaluation_group.updatedBy.fullname }}{% endif %})
+					{% endif %}
+				</span>
+			</div>
+			<div class="col-md-6">
+				{% include 'app/evaluation/_export_evaluation.html.twig' %}
+			</div>
+		</div>
+		<div class="mb-4">
+			{% include 'app/evaluation/edit/_eval_init.html.twig' with {accordion_id: 'evalInit'} %}
+			{% include 'app/evaluation/edit/_evaluation_background.html.twig' with {accordion_id: 'evalBackground'} %}
+			{% if support.service.justice == YES %}
+				{% include 'app/evaluation/edit/_evaluation_justice.html.twig' with {accordion_id: 'evalJustice'} %}
+			{% endif %}
+			{% include 'app/evaluation/edit/_evaluation_adm.html.twig' with {accordion_id: 'evalAdm'} %}
+			{% include 'app/evaluation/edit/_evaluation_family.html.twig' with {accordion_id: 'evalFamily'} %}
+			{% include 'app/evaluation/edit/_evaluation_social.html.twig' with {accordion_id: 'evalSocial'} %}
+			{% include 'app/evaluation/edit/_evaluation_prof.html.twig' with {accordion_id: 'evalProf'} %}
+			{% include 'app/evaluation/edit/_eval_budget.html.twig' with {accordion_id: 'evalBudget'} %}
+			{% include 'app/evaluation/edit/_evaluation_housing.html.twig' with {accordion_id: 'evalHousing'} %}
+			{% if SERVICE_TYPE_HOTEL %}
+				{% include 'app/evaluation/edit/_evaluation_hotel_life.html.twig' with {accordion_id: 'evalHotelLife'} %}
+			{% endif %}
+			{% include 'app/evaluation/edit/_evaluation_conclusion.html.twig' with {accordion_id: 'evalConclusion'} %}
+		</div>
+
+		<div class="row mb-3">
+			<div class="col-md-12">
+				<div class="float-left d-flex">
+					{% if is_granted('ROLE_ADMIN') %}
+						{% set alert_text = '"Êtes-vous vraiment sûr de vouloir supprimer cette évaluation sociale ?"' %}
+						<a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('evaluation_delete', {'id': evaluation_group.id}) }}" 
+							title="Supprimer l'évaluation sociale" data-toggle="tooltip" data-placement="bottom" 
+							onclick="if(window.confirm({{ alert_text }})){return true;}else{return false;}">
+							<i class="fas fa-trash-alt mr-2"></i>Supprimer</a>
+					{% endif %}
+					{% set alert_text = '"Attention, cela va écraser les données de la présente évaluation sociale.' ~ 
+						' Êtes-vous vraiment sûr de vouloir récupérer l\'évaluation sociale du SI-SIAO ?"' %}
+					<a class="btn btn-{{ theme_color }} d-block mr-3" href="{{ path('api_sisiao_support_import_evaluation', {'id': support.id}) }}" 
+						title="Importer l'évaluation sociale du SI-SIAO" data-toggle="tooltip" data-placement="bottom" 
+						onclick="if(window.confirm({{ alert_text }})){return true;}else{return false;}"><i class="fas fa-cloud-download-alt mr-2"></i>
+						<span class="d-none d-sm-inline">Importer SI-SIAO</span></a>
+				</div>
+				<div class="mb-4 float-right">
+					<button type="submit" name="send" class="btn btn-{{ theme_color }} shadow" 
+						data-url="{{ path('support_evaluation_edit', {'id': support.id}) }}">
+						<i class="fas fa-save mr-2"></i>Enregistrer</button>
+				</div>
+			</div>
+		</div>
+		{{ form_row(form._token) }}
+		{{ form_end(form, {'render_rest': false}) }}
+	</div>
+
+	{% include 'app/payment/_contributionCalculModal.html.twig' %}
+
+{% endblock %}
+
+{% block javascripts %}
+	{{ encore_entry_script_tags('evaluation') }}
+{% endblock javascripts %}

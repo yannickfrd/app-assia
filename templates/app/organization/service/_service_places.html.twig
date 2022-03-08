@@ -1,0 +1,87 @@
+{% extends 'model/_accordion.html.twig' %}
+
+{% block card_title %}{{ service.type == SERVICE_TYPE_HOTEL ? 'Hôtels' : 'Groupes de places' }} rattachés{% endblock %}
+
+{% block card_body %}
+
+	{% set nb_places = places|length %}
+
+	{% set add_place %}
+		{% if is_granted_edit_service %}
+			<div class="row my-3">
+				<div class="col-md-12">
+					<a href="{{ path('service_place_new', {'id': service.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow">
+					<span class="fas fa-plus-square pr-2"></span>Créer un nouveau {% if service.type == SERVICE_TYPE_HOTEL %}
+						hôtel{% else %}groupe de places{% endif %}</a>
+				</div>
+			</div>
+		{% endif %}
+	{% endset %}
+
+	{% if nb_places > 5 %}
+		{{ add_place }}
+	{% endif %}
+	
+	{% set active_places = places|filter(p => p.disabled == false)  %} 
+	{% set nb_active_places = active_places|length %}
+	{% set sum_actives_places = active_places|cumulate('nbPlaces') %} 
+	<p class="align-middle">{{ nb_active_places }} groupe{{ nb_places > 1 ? 's' }} de places actif<!--
+		-->{{ nb_places > 1 ? 's' }}{{ sum_actives_places > 1 ? ' (soit ' ~ sum_actives_places ~ ' places)' }}.</p>
+
+	{% if nb_places > 0 %}
+		<div class="table-responsive">
+			<table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+				<thead>
+					<tr>
+						<th scope="col" class="align-middle th-w-20"></th>
+						<th scope="col" class="align-middle th-w-150">Nom</th>
+						<th scope="col" class="align-middle th-w-100">Dispositif</th>
+						<th scope="col" class="align-middle th-w-80">Nombre de places</th>
+						<th scope="col" class="align-middle th-w-80">Type</th>
+						<th scope="col" class="align-middle th-date">Date d'ouverture</th>
+						<th scope="col" class="align-middle th-date">Date de fermeture</th>
+						<th scope="col" class="align-middle th-w-100">Ville</th>
+						<th scope="col" class="align-middle th-w-60">Code postal</th>
+						<th scope="col" class="align-middle th-w-150">Adresse</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for place in places %}
+						<tr class="{{ place.disabled ? 'delete text-secondary' }}">
+							<td class="align-middle text-center" scope="row">
+								{% if is_granted_edit_service %}
+									<a href="{{ path('place_edit', {'id': place.id}) }}"
+										class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" 
+										data-placement="bottom" title="Voir le groupe de places">
+										<span class="fas fa-eye"></span>
+									</a>
+								{% else %}
+									<span class="btn btn-secondary btn-sm shadow cursor-default" data-toggle="tooltip" data-placement="bottom" 
+										title="Vous n'avez pas les droits pour accéder à la fiche"><span class="fas fa-ban"></span></span>                           
+								{% endif %}
+							</td>
+							<td class="align-middle">{{ place.name }}{{ place.disabled ? ' (désactivé)' }}</td>
+							<td class="align-middle">{{ place.device ? place.device.name }}</td>
+							<td class="align-middle">{{ place.nbPlaces }}</td>
+							<td class="align-middle">{{ place.placeTypeToString }}</td>
+							<td class="align-middle">{{ place.startDate ? place.startDate|date('d/m/Y') }}</td>
+							<td class="align-middle">{{ place.endDate ? place.endDate|date('d/m/Y') }}</td>
+							<td class="align-middle">{{ place.city|capitalize }}</td>
+							<td class="align-middle">{{ place.zipcode }}</td>
+							<td class="align-middle">{{ place.address }}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+				<tfoot class="font-weight-bold">
+					<td class="align-middle" scope="row">Total</td>
+					<td class="align-middle">{{ nb_active_places }}</td>
+					<td class="align-middle"></td>
+					<td class="align-middle">{{ sum_actives_places }}</td>
+				</tfoot>
+			</table>
+		</div>
+	{% endif %}
+
+	{{ add_place }}
+
+{% endblock %}

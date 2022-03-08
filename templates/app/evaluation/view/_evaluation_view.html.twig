@@ -1,0 +1,89 @@
+{# {% cache 'evaluation.view' ~ evaluation.id ~ evaluation.updatedAt.timestamp evaluation.updatedAt.timestamp %} #}
+{% import 'macros/div_view.html.twig' as view_div %}
+
+{% set ROLE_CHILD = constant('App\\Entity\\People\\RolePerson::ROLE_CHILD') %}
+{% set IN_PROGRESS = constant('App\\Form\\Utils\\EvaluationChoices::IN_PROGRESS') %}
+{% set SERVICE_TYPE_AVDL = support.service.type == constant('App\\Entity\\Organization\\Service::SERVICE_TYPE_AVDL') %}
+
+{% set eval_people = evaluation.evaluationPeople|filter(e => e.supportPerson.status == support.status) %}
+{% set eval_adults = eval_people|filter(e => e.supportPerson.role != ROLE_CHILD) %}
+{% set eval_children = eval_people|filter(e => e.supportPerson.role == ROLE_CHILD) %}
+{% set people_over_16 = eval_people|filter(e => e.supportPerson.person.age >= 16) %}
+{% set nb_people = support.supportPeople|length %}
+
+{% apply spaceless %}
+
+    <div class="row mb-2">
+        {{ view_div.get(support.peopleGroup.familyTypologyToString ~ (nb_people > 1 ? ', ' ~ nb_people ~ ' personnes'), 'Family typology') }}
+    </div>
+
+    <div class="row mb-2">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover text-dark">
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th>Nom et prénom</th>
+                            <th>Date de naissance</th>
+                            <th class="d-none d-sm-table-cell">Âge</th>
+                            <th>Sexe</th>
+                            <th>Rôle</th>
+                            <th>Téléphone</th>
+                            <th class="d-none d-sm-table-cell">Adresse email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for support_person in support_people %}
+                            {% set person = support_person.person %}
+                            <tr>
+                                <td class="align-middle text-center" scope="row">
+                                    <a href="{{ path('group_person_show', {'id': people_group.id, 'person_id': person.id, 'slug': person.slug}) }}"
+                                        class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" data-placement="bottom"
+                                        title="Voir la fiche individuelle"><span class="fas fa-eye"></span>
+                                    </a>
+                                </td>
+                                <td class="align-middle">{{ person.fullname }}
+                                    {{ person.usename ? ' (' ~ person.usename ~ ')' }}</td>
+                                <td class="align-middle">{{ person.birthdate|date('d/m/Y') }}</td>
+                                <td class="align-middle d-none d-sm-table-cell">{{ person.age }} an{{ person.age > 1 ? 's' }}</td>
+                                <td class="align-middle">{{ person.genderToString }}</td>
+                                <td class="align-middle">{{ support_person.roleToString }}</td>
+                                <td class="align-middle">{{ person.phone1 }}</td>
+                                <td class="align-middle d-none d-sm-table-cell">{{ person.email }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {% if evaluation.backgroundPeople %}
+        {% include 'app/evaluation/view/_evaluation_background.html.twig' %}
+    {% endif %}
+    {% if support.service.justice == YES %}
+        {% include 'app/evaluation/view/_evaluation_justice.html.twig' %}
+    {% endif %}
+    {% include 'app/evaluation/view/_evaluation_adm.html.twig' %}
+    {% include 'app/evaluation/view/_evaluation_family.html.twig' %}
+    {% include 'app/evaluation/view/_evaluation_social.html.twig' %}
+    {% include 'app/evaluation/view/_evaluation_prof.html.twig' %}
+    {% set eval_budget_group = evaluation.evalBudgetGroup %}
+    {% if eval_budget_group %}
+    {% include 'app/evaluation/view/_eval_budget.html.twig' %}
+    {% endif %}
+    {% set eval_housing = evaluation.evalHousingGroup %}
+    {% if eval_housing %}
+        {% include 'app/evaluation/view/_evaluation_housing.html.twig' %}
+    {% endif %}
+    {% set eval_hotel_life = evaluation.evalHotelLifeGroup %}
+    {% if eval_hotel_life %}
+        {% include 'app/evaluation/view/_evaluation_hotel_life.html.twig' %}
+    {% endif %}
+    {% if evaluation.conclusion %}
+        {% include 'app/evaluation/view/_evaluation_conclusion.html.twig' %}
+    {% endif %}
+
+{% endapply %}
+{# {% endcache %} #}

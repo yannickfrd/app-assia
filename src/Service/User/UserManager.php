@@ -2,13 +2,16 @@
 
 namespace App\Service\User;
 
-use App\Entity\Organization\User;
+use App\Entity\Admin\Setting;
 use App\Entity\Organization\Service;
-use App\Notification\UserNotification;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Organization\ServiceSetting;
+use App\Entity\Organization\User;
+use App\Entity\Organization\UserSetting;
 use App\Form\Model\Security\UserChangeInfo;
 use App\Form\Model\Security\UserResetPassword;
+use App\Notification\UserNotification;
 use App\Repository\Organization\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -30,16 +33,37 @@ class UserManager
     public function createUser(User $user, UserNotification $userNotification): void
     {
         $user->setToken(bin2hex(random_bytes(32)))
-            ->setTokenCreatedAt(new \DateTime());
+            ->setTokenCreatedAt(new \DateTime())
+            ->setSetting($user->getSetting() ?? $this->getUserSetting($user));
 
         $this->em->persist($user);
         $this->em->flush();
 
-        $this->discache($user);
+        $this->deleteCacheItems($user);
 
         $userNotification->newUser($user);
 
         $this->flashbag->add('success', 'Le compte de '.$user->getFirstname().' est créé. Un e-mail lui a été envoyé.');
+    }
+
+    public function getUserSetting(User $user): UserSetting
+    {
+        // If the user has no service, we get the application's config.
+        if (!$user->getServices() || !$user->getServices()->first() || !$user->getServices()->first()->getSetting()) {
+            return $this->hydrateUserSetting($this->em->getRepository(Setting::class)->findOneBy([]));
+        }
+
+        return $this->hydrateUserSetting($user->getServices()->first()->getSetting());
+    }
+
+    /**
+     * @param Setting|ServiceSetting $setting
+     */
+    private function hydrateUserSetting($setting): ?UserSetting
+    {
+        return (new UserSetting())
+            ->setDailyAlert($setting ? $setting->getDailyAlert() : false)
+            ->setWeeklyAlert($setting ? $setting->getWeeklyAlert() : false);
     }
 
     /**
@@ -84,6 +108,13 @@ class UserManager
         $this->em->flush();
 
         $this->flashbag->add('success', 'Les modifications sont enregistrées.');
+    }
+
+    public function updateSetting(): void
+    {
+        $this->em->flush();
+
+        $this->flashbag->add('success', 'Les paramètres sont bien enregistrés.');
     }
 
     /**
@@ -182,7 +213,7 @@ class UserManager
     /**
      * Supprime les utilisateurs en cache pour chaque service.
      */
-    public function discache(User $user): bool
+    public static function deleteCacheItems(User $user): bool
     {
         $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
 

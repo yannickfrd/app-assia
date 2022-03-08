@@ -47,7 +47,7 @@ class SubServiceController extends AbstractController
             return $this->redirectToRoute('service_edit', ['id' => $service->getId()]);
         }
 
-        return $this->render('app/organization/subService/subServiceEdit.html.twig', [
+        return $this->render('app/organization/sub_service/sub_service.html.twig', [
             'service' => $service,
                 'form' => $form->createView(),
         ]);
@@ -82,7 +82,7 @@ class SubServiceController extends AbstractController
             $nbPlaces += $place->getNbPlaces();
         }
 
-        return $this->render('app/organization/subService/subServiceEdit.html.twig', [
+        return $this->render('app/organization/sub_service/sub_service.html.twig', [
             'service' => $subService->getService(),
             'form' => $form->createView(),
             // 'users' => $userRepo->findUsersFromSubService($subService),

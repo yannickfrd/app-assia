@@ -3,11 +3,11 @@
 namespace App\Tests\Controller\Organization;
 
 use App\Tests\AppTestTrait;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class SubServiceControllerTest extends WebTestCase
 {
@@ -22,7 +22,7 @@ class SubServiceControllerTest extends WebTestCase
 
         $this->client = $this->createClient();
 
-        /** @var AbstractDatabaseTool */
+        /* @var AbstractDatabaseTool */
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
     }
 
@@ -31,7 +31,7 @@ class SubServiceControllerTest extends WebTestCase
         $fixtures = $this->databaseTool->loadAliceFixture($this->getFixtureFiles());
         $this->createLogin($fixtures['userAdmin']);
 
-        $id = $fixtures['service1']->getId();
+        $id = $fixtures['service2']->getId();
         $this->client->request('GET', "/service/$id/sub-service/new");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -50,9 +50,10 @@ class SubServiceControllerTest extends WebTestCase
     {
         $fixtures = $this->databaseTool->loadAliceFixture(array_merge($this->getFixtureFiles(), [
             dirname(__DIR__).'/../DataFixturesTest/PlaceFixturesTest.yaml',
+            dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
         ]));
 
-        $this->createLogin($fixtures['userAdmin']);
+        $this->createLogin($fixtures['userSuperAdmin']);
 
         $id = $fixtures['subService1']->getId();
         $this->client->request('GET', "/sub-service/$id");
@@ -83,7 +84,7 @@ class SubServiceControllerTest extends WebTestCase
         $this->assertSelectorExists('.alert.alert-success', 'est ré-activé');
     }
 
-    protected function getFixtureFiles()
+    protected function getFixtureFiles(): array
     {
         return [
             dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
@@ -94,7 +95,7 @@ class SubServiceControllerTest extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
-        
+
         $this->client = null;
         $fixtures = null;
     }

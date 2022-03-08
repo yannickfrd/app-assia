@@ -1,0 +1,35 @@
+{% extends 'model/_accordion.html.twig' %}
+
+{% block card_title %}Étiquettes <small class="small text-secondary">(mots clés, catégories)</small>{% endblock %}
+
+{% block card_body %}
+	<div class="row mb-4">
+		<div class="col-md-12">
+			<div id="tags-list">
+				{% for tag in service_tags %}
+					<span class="badge bg-{{ theme_color }} mb-1 text-light tag" data-tag-id="{{ tag.id }}" 
+						data-tag-name="{{ tag.name }}">{{ tag.name }}<!--
+						--><a href="{{ path('service_delete_tag', {service: service.id, tag: tag.id}) }}">
+							<span class="badge badge-danger ml-2"><i class="fas fa-times"></i></span>
+						</a>
+					</span>
+				{% else %}
+					<p class="text-secondary">Il n'y a pas encore d'étiquette.</p>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+	{% if is_granted_edit_service %}
+		{{ form_start(form_tags, {'action': path('service_add_tags', {service: service.id})}) }}
+			<div class="form-row">
+				<div class="col-md-6 mb-2">{{ form_widget(form_tags.tags) }}</div>
+				<div class="col-sm-4">
+					<button type="submit" name="add_tags" class="btn btn-{{ theme_color }}" 
+						title="Ajouter une ou plusieurs étiquettes" data-toggle="tooltip" data-placement="bottom">
+						<span class="fas fa-plus-square mr-2"></span>Ajouter
+					</button>
+				</div>
+			</div>
+		{{ form_end(form_tags) }}
+	{% endif %}
+{% endblock %}

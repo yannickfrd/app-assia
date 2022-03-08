@@ -1,19 +1,22 @@
-Init eval: Entrée
-placeholder.select: -- Sélectionner --
-initEvalPerson.comment: Écrire un commentaire relatif à la situation initiale de la personne
+Eval init: Entrée
+placeholder:
+    select: -- Sélectionner --
+    add: -- Ajouter --
+evalInitPerson.comment: Écrire un commentaire relatif à la situation initiale de la personne
 backgroundPeople: Parcours de vie
 backgroundPeople.placeholder: Présenter le parcours de vie / historique du ménage
 Comment: Commentaire
 conclusion: Conclusion
 conclusion.placeholder: Synthèse et/ou conclusion de la situation (autonomie, axes de travail, objectifs...)
 
-initEvalGroup:
-  housingStatus.help: Situation résidentielle avant le début du suivi.
-  comment: Écrire un commentaire relatif à la situation initiale du groupe
+evalInitGroup:
+    housingStatus.help: Situation résidentielle avant le début du suivi.
+    comment: Écrire un commentaire relatif à la situation initiale du groupe
 
 # Administratif
 Adm: Administratif
 Agdref id: Numéro AGDREF
+Ofpra registration id: Numéro d'enregistrement OFPRA
 Arrival date: Date d'arrivée en France
 Asylum background: Parcours asile
 Asylum status: Statut lié à l'asile
@@ -28,37 +31,45 @@ Renewal permit date: Date d'obtention du titre
 Resid permit request: Demande de titre de séjour
 Work right: Autorisation de travail
 evalAdmPerson:
-  comment: Écrire un commentaire relatif à la situation administrative de la personne (démarches en cours, évolution de la situation, papier d'identité secondaire...).
-  paper.help: Carte d'identité, passport, titre de séjour, récépissé...
-  paperType.help: Si plusieurs papiers, sélectionner ici le titre principal et préciser le secondaire en commentaire ci-dessous.
+    comment: Écrire un commentaire relatif à la situation administrative de la personne (démarches en cours, évolution de la situation, papier d'identité secondaire...).
+    paper.help: Carte d'identité, passport, titre de séjour, récépissé...
+    paperType.help: Si plusieurs papiers, sélectionner ici le titre principal et préciser le secondaire en commentaire ci-dessous.
 
 # Budget
 evalBudgetPerson:
-  endRightsDate.help: Date de fin des prestations ou des allocations
-  comment: Écrire un commentaire relatif à la situation budgétaire (démarches en cours, évolution de la situation...)
+    endRightsDate.help: Date de fin des prestations ou des allocations
+    comment: Écrire un commentaire relatif à la situation budgétaire (démarches en cours, évolution de la situation...)
+debt.comment.placeholder: Autre(s) dette(s)
+charge.comment.placeholder: Autre(s) charge(s)
+resource.comment.placeholder: Autre(s) ressource(s)
 Activity bonus amt: Montant Prime d'activité
 Activity bonus: Prime d'activité
+Af amt: Montant allocations familiales
 Alimony amt: Montant Pension alimentaire
 Alimony: Pension alimentaire
 Amount: Montant
+Are amt: Montant ARE
 Asf amt: Montant ASF
 Asf: ASF
 Asylum allowance amt: Montant ADA
 Asylum allowance: ADA
 Budget balance amt: Montant reste à vivre
 Budget: Budget
+Charge: Charge(s)
 Charge comment: Commentaire sur les charges
 Charge other amt: Montant autre charge
 Charge other precision: Précision Autre charge
 Charge other: Autre charge
+Charge type: Type de charge(s)
 Charges amt: Montant total des charges
 Charges group amt: Montant total charges du groupe
-Charges: Charges
+Eval budget charges: Type de charge(s)
 Childcare amt: Montant garde enfant(s)
 Childcare: Garde d'enfant(s)
 Contribution amt: Montant de la participation financière
 Daily allowance: Indemnités journalières
 Daily allowance amt: Montant indemnités journalières
+Debt: Dette(s)
 Debt amt: Montant total des dettes
 Debt bank old amt: Montant découverts bancaires
 Debt bank overdrafts: Découverts bancaires
@@ -78,9 +89,10 @@ Debt tax delays amt: Montant retards d'impôts
 Debt tax delays: Retards d'impôts
 Debt unpaid maint amt: Montant pension alimentaire non réglée
 Debt unpaid maint: Pension alimentaire non réglée
+Debt type: Type de dette(s)
 Debts amt: Montant des dettes
 Debts group amt: Montant total dettes du groupe
-Debts: Dettes
+Eval budget debts: Type de dette(s)
 Dis adult allowance amt: Montant AAH
 Dis adult allowance: AAH
 Dis child allowance amt: Montant AAEH
@@ -94,6 +106,7 @@ Family allowance amt: Montant allocations familiales
 Family allowance: Allocations familiales
 Family supplement: Complément familial
 Family supplement amt: Montant complément familial
+Ij amt: Montant indemnités journalières
 Income tax: Impôt sur le revenu (n-1 ou n-2)
 Income n1 amt: Revenu fiscal n-1
 Income n2 amt: Revenu fiscal n-2
@@ -105,13 +118,9 @@ Maintenance amt: Montant pension alimentaire
 Maintenance: Pension alimentaire
 Minimum income amt: Montant RSA
 Minimum income: RSA
-Monthly repayment amt: Montant du remboursement mensuel
 Moratorium: Moratoire
 Mutual amt: Montant mutuelle(s)
 Mutual: Mutuelle(s)
-Other charge(s)...: Autre(s) charge(s)...
-Other debt(s)...: Autre(s) dette(s)...
-Other ressource(s)...: Autre(s) ressource(s)
 Over indebt record date: Date de dépôt du dossier
 Over indebt record: Dossier de surendettement
 Paid training amt: Montant formation rémunérée
@@ -122,17 +131,20 @@ Pension benefit amt: Montant retraire
 Pension benefit: Retraite
 Phone amt: Montant téléphone
 Phone: Téléphone
+Rsa amt: Montant RSA
 Rent amt: Montant loyer
 Rent: Loyer
+Resource: Ressource(s)
 Resources amt: Montant total des ressources
 Resources comment: Commentaire sur les ressources
 Resources group amt: Montant total ressources du groupe
-Resources types: Types de ressources
-Resources: Ressources
+Resource type: Type de ressource(s)
+Eval budget resources: Type de ressource(s)
 Ressource other amt: Montant autre ressource
 Ressource other precision: Précision autres revenus
 Ressource other: Autre ressource
 Salary amt: Montant salaire
+Salaries amt: Montant salaire(s)
 Salary: Salaire
 Scholarships: Bourse
 Scholarships amt: Montant bourse
@@ -152,6 +164,54 @@ Water: Eau
 Youth guarantee amt: Montant Garantie jeunes
 Youth guarantee: Garantie jeunes
 
+# Resources
+salary: Salaire
+activityBonus: "Prime d'activité"
+unemplBenefit: "Allocation chômage (ARE)"
+minimumIncome: RSA
+familyAllowance: "Prestations familiales (AF)"
+disAdultAllowance: "Allocation adulte handicapé (AAH)"
+disChildAllowance: "Allocation d'éducation de l'enfant handicapé (AEEH)"
+asf: "Allocation de soutien familial (ASF)"
+solidarityAllowance: "Allocation de solidarité spécifique (ASS)"
+asylumAllowance: "Allocation pour demandeur d'asile (ADA)"
+scholarships: Bourse
+familySupplement: "Complément familial"
+paidTraining: "Formation rémunérée"
+youthGuarantee: "Garantie jeunes"
+dailyAllowance: "Indemnités journalières (IJ)"
+maintenance: "Pension alimentaire"
+disabilityPension: "Pension d'invalidité"
+paje: "Prestation d'accueil du jeune enfant (PAJE)"
+pensionBenefit: Retraite
+ressourceOther: "Autre ressource"
+
+# Charges
+insurance: Assurance(s)
+canteen: Cantine
+consumerCredit: "Crédit(s) à la consommation"
+water: Eau
+electricityGas: "Electricité - Gaz"
+childcare: "Garde d'enfant(s)"
+taxes: Impôts
+rent: Loyer
+mutual: Mutuelle(s)
+alimony: "Pension alimentaire"
+phone: Téléphone
+transport: Transport
+chargeOther: Autre charge
+
+# Debts
+debtRental: "Dettes locatives"
+debtConsrCredit: "Dette de crédits à la consommation"
+debtMortgage: "Dettes de crédits immobiliers"
+debtFines: Amendes
+debtHealth: "Dettes de santé (hôpital)"
+debtTaxDelays: "Retards d'impôts"
+debtBankOverdrafts: "Découverts bancaires"
+debtEnergy: "Dette d'énergie"
+debtOther: "Autres dettes"
+
 # Family
 Caf id: Numéro CAF
 Caf attachment: CAF de rattachement
@@ -159,9 +219,9 @@ Child dependance: À charge
 Child to host: À héberger
 schoolChildCarePrecision.help: Nom de l'école, classe, date de début de scolarité...
 school:
-  address: Adresse école ou garde (auto)
-  city: Ville école ou garde (auto)
-  zipcode: Code postal école ou garde (auto)
+    address: Adresse école ou garde (auto)
+    city: Ville école ou garde (auto)
+    zipcode: Code postal école ou garde (auto)
 School child care precision: Précision sur l'école ou la garde
 Childcare or school: École/garde
 Childcare school type: Type de garde ou école
@@ -198,7 +258,7 @@ Employer name: Nom employeur(s)
 End rqth date: Date de fin de validité RQTH
 Job center id: Numéro Pôle Emploi
 Job type: Type d'emploi(s)
-Nb working hours: Nombre d'heures de travail
+Nb working hours: Nombre d'heures hebdomadaires
 Prof experience: Expérience professionnelle
 Prof status: Statut professionnel
 Prof: Emploi
@@ -208,12 +268,13 @@ Transport means type: Moyen(s) de transport
 Transport means: Précision moyen(s) de transport
 Work place: Lieu de travail (commune)
 Working hours: Horaires de travail
+Working time: Temps de travail
 evalProfPerson.comment: Écrire un commentaire relatif à la situation professionnelle (démarches en cours, évolution de la situation...)
 
 # Housing
 evalHousingGroup:
-  housingWishes.help: T1, T2, T3, T4, T5...
-  comment: Écrire un commentaire relatif à la situation liée au logement et à l'hébergement (démarches en cours, évolution de la situation...)
+    housingWishes.help: T1, T2, T3, T4, T5...
+    comment: Écrire un commentaire relatif à la situation liée au logement et à l'hébergement (démarches en cours, évolution de la situation...)
 Caf eligibility: Eligibilité CAF
 Cities wishes: Communes ou départements souhaités
 Collective agreement housing date: Date de labellisation Accord Collectif
@@ -255,6 +316,7 @@ Hsg action dept: Département
 Hsg action eligibility: Eligibilité Action Logement
 Hsg action record id: Numéro d'enregistrement
 Hsg action record: Demande déposée Action Logement
+Hsg helps: Aides liées au logement
 Other helps: Autre(s) aide(s)
 Public force date: Date du concours de la Force Publique
 Public force: Concours de la Force Publique
@@ -285,8 +347,8 @@ Info crip date: Date de transmission IP
 Info crip by service: IP transmise par le service
 Info crip comment: Commentaire IP
 evalSocialPerson:
-  aseFollowUp.help: Aide sociale à l'enfance, PJJ…
-  comment: Écrire un commentaire relatif à la situation sociale de la personne (évolution de la situation...)
+    aseFollowUp.help: Aide sociale à l'enfance, PJJ…
+    comment: Écrire un commentaire relatif à la situation sociale de la personne (évolution de la situation...)
 Addiction problem: Problématique d'addiction
 Animal type: Type d'animal
 Animal: Présence d'un animal
@@ -303,6 +365,7 @@ End rights social security date: Date de fin de droits à la Sécurité sociale
 Family breakdown: Rupture des liens familiaux
 Friendship breakdown: Rupture des liens amicaux
 Health problem: Problématique de santé
+Health problem type: Type de problématiques de santé
 Mental health problem: Problématique de santé mentale
 Physical health problem: Problématique de santé physique
 Reason request: Motif de la prise en charge
@@ -318,10 +381,10 @@ Wheelchair: Personne en fauteuil roulant
 evalSocialGroup.comment: Écrire un commentaire relatif à la situation sociale du groupe
 
 location:
-  search:
-    address.placeholder: Saisir une adresse ou une ville...
-    city.placeholder: Saisir une ville...
-  department.help: Département ou code postal
+    search:
+        address.placeholder: Saisir une adresse ou une ville...
+        city.placeholder: Saisir une ville...
+    department.help: Département ou code postal
 
 ## Vie à l'hôtel
 Food: Alimentation

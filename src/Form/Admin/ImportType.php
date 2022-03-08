@@ -22,11 +22,10 @@ class ImportType extends AbstractType
                 'query_builder' => function (ServiceRepository $repo) {
                     return $repo->createQueryBuilder('s')->orderBy('s.name', 'ASC');
                 },
-                'placeholder' => 'placeholder.service',
                 'attr' => [
                     'class' => 'multi-select w-min-150',
+                    'placeholder' => 'placeholder.services',
                     'size' => 1,
-                    'data-select2-id' => 'services',
                 ],
                 'required' => true,
             ]);

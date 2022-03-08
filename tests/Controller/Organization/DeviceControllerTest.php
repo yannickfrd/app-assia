@@ -36,7 +36,7 @@ class DeviceControllerTest extends WebTestCase
 
         $this->client = $this->createClient();
 
-        /* @var AbstractDatabaseTool */
+        /** @var AbstractDatabaseTool */
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
 
         $this->fixtures = $this->databaseTool->loadAliceFixture([

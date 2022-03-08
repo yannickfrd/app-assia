@@ -2,6 +2,7 @@
 
 namespace App\Tests\Controller\App;
 
+use App\Entity\Organization\User;
 use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
@@ -119,7 +120,9 @@ class AppControllerTest extends WebTestCase
             dirname(__DIR__).'/../DataFixturesTest/SupportFixturesTest.yaml',
         ]);
 
-        $this->createLogin($this->fixtures['userAdmin']);
+        /** @var User $admin */
+        $admin = $this->fixtures['userAdmin'];
+        $this->createLogin($admin);
 
         $this->client->request('GET', '/dashboard/supports_by_user');
 
@@ -128,7 +131,7 @@ class AppControllerTest extends WebTestCase
 
         $this->client->submitForm('search', [
             'service' => [
-                'services' => $this->fixtures['service1'],
+                'services' => $this->fixtures['service2'],
             ],
             'send' => true,
         ], 'GET');

@@ -11,6 +11,8 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SupportPersonType extends AbstractType
@@ -22,38 +24,44 @@ class SupportPersonType extends AbstractType
                 'label' => false,
                 'label_attr' => ['class' => 'custom-control-label'],
                 'attr' => ['class' => 'custom-control-input checkbox'],
-                'help' => 'head.help',
-                'help_attr' => ['class' => 'sr-only'],
                 'required' => false,
             ])
             ->add('role', ChoiceType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getChoices(RolePerson::ROLE),
                 'placeholder' => 'placeholder.select',
                 'required' => true,
             ])
             ->add('startDate', DateType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'widget' => 'single_text',
-                'attr' => ['class' => 'w-max-165'],
-                'required' => true,
+                'required' => false,
             ])
             ->add('endDate', DateType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'widget' => 'single_text',
-                'attr' => ['class' => 'w-max-165'],
                 'required' => false,
             ])
             ->add('endStatus', ChoiceType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getChoices(SupportGroup::END_STATUS),
-                'attr' => ['class' => 'w-min-180'],
                 'placeholder' => 'placeholder.select',
-                'required' => true,
             ])
-            ->add('endStatusComment', null, [
-                'attr' => ['class' => 'w-min-160'],
-            ]);
+            ->add('endStatusComment')
+        ;
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $form = $event->getForm();
+
+            if (!$form->getParent()) {
+                return;
+            }
+
+            $form
+                ->add('endReason', ChoiceType::class, [
+                    'label_attr' => ['class' => 'sr-only'],
+                    'choices' => $form->getParent()->getParent()->get('endReason')->getConfig()->getOption('choices'),
+                    'placeholder' => 'placeholder.select',
+                    'required' => true,
+                ])
+            ;
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver): void

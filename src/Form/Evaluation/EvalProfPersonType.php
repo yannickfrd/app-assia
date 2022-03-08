@@ -20,7 +20,7 @@ class EvalProfPersonType extends AbstractType
                 'choices' => Choices::getChoices(EvalProfPerson::PROF_STATUS),
                 'attr' => [
                     'data-important' => 'true',
-                    'data-twin-field' => 'profStatus',
+                    'data-twin-field' => 'true',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
@@ -29,12 +29,18 @@ class EvalProfPersonType extends AbstractType
             ->add('contractType', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalProfPerson::CONTRACT_TYPE),
                 'attr' => [
-                    'data-twin-field' => 'contractType',
+                    'data-important' => 'true',
+                    'data-twin-field' => 'true',
                 ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
-            ->add('jobType')
+            ->add('workingTime', ChoiceType::class, [
+                'choices' => Choices::getChoices(EvalProfPerson::WORKING_TIME),
+                'attr' => ['data-important' => 'true'],
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
             ->add('contractStartDate', DateType::class, [
                 'widget' => 'single_text',
                 'required' => false,
@@ -45,6 +51,7 @@ class EvalProfPersonType extends AbstractType
             ])
             ->add('nbWorkingHours')
             ->add('workingHours')
+            ->add('jobType')
             ->add('workPlace')
             ->add('employerName')
             ->add('transportMeansType', ChoiceType::class, [

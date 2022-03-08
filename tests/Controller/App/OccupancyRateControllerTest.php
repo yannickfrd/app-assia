@@ -1,14 +1,13 @@
 <?php
 
-
 namespace App\Tests\Controller\App;
 
 use App\Tests\AppTestTrait;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class OccupancyRateControllerTest extends WebTestCase
 {
@@ -19,13 +18,14 @@ class OccupancyRateControllerTest extends WebTestCase
 
     /** @var AbstractDatabaseTool */
     protected $databaseTool;
-    
+
     /** @var array */
     protected $fixtures;
+
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->client = $this->createClient();
 
         /** @var AbstractDatabaseTool */
@@ -97,7 +97,7 @@ class OccupancyRateControllerTest extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
-        
+
         $this->client = null;
         $this->fixtures = null;
     }

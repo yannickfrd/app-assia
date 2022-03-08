@@ -1,0 +1,126 @@
+{% extends 'base.html.twig' %}
+
+{% set title = 'Utilisateurs' %}
+{% set is_granted_admin = is_granted('ROLE_ADMIN') %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+
+    <section class="mt-0 mb-4">
+
+        <div class="container">
+            {% include 'model/_msgFlash.html.twig' %}
+            <h1 class="h2 mb-3">{{ title }}</h1>
+        </div>
+
+        {% include 'app/organization/user/_user_search_form.html.twig' %}
+
+        {% if users %}
+
+        <div class="container">
+
+        {% if is_granted('ROLE_ADMIN') %}
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <a href="{{ path('security_registration') }}" class="btn btn-{{ theme_color }} btn-sm shadow">
+                        <span class="fas fa-plus-square mr-2"></span>Créer un nouvel utilisateur</a>
+                </div>
+            </div>
+        {% endif %}
+
+            <div class="row align-items-baseline">
+                <div class="col-md-4 count align-middle">
+                    <p class="align-middle mb-0">Total : {{ users.getTotalItemCount|number }}
+                        utilisateur{% if users.getTotalItemCount > 1 %}s{% endif %}.</p>
+                </div>
+                <div class="col-md-8">
+                    <div class="navigation">{{ knp_pagination_render(users) }}</div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="align-middle th-w-20"></th>
+                            <th scope="col" class="align-middle th-w-120">
+                                {{ knp_pagination_sortable(users, 'Nom', 'u.lastname') }}
+                            </th>
+                            <th scope="col" class="align-middle th-w-120">
+                                {{ knp_pagination_sortable(users, 'Prénom', 'u.firstname') }}
+                            </th>
+                            <th scope="col" class="align-middle th-w-120">
+                                {{ knp_pagination_sortable(users, 'Statut', 'u.status') }}
+                            </th>
+                            <th scope="col" class="align-middle th-w-120">
+                                {{ knp_pagination_sortable(users, 'Téléphone', 'u.phone1') }}
+                            </th>
+                            <th scope="col" class="align-middle th-w-150">
+                                {{ knp_pagination_sortable(users, 'E-mail', 'u.email') }}
+                            </th>
+                            <th scope="col" class="align-middle th-w-150">Service</th>
+                            <th scope="col" class="align-middle th-w-150">Pôle</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for user in users %}
+                            <tr>
+                                <td scope="row" class="align-middle text-center">
+                                    {% if is_granted_admin %}
+                                        {% if is_granted('VIEW', user) %}
+                                            <a href="{{ path('security_user', {'id': user.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow" 
+                                                title="Voir la fiche" data-toggle="tooltip" data-placement="bottom"><i class="fas fa-eye"></i>
+                                            </a>
+                                        {% else %}
+                                            <span class="btn btn-secondary btn-sm shadow cursor-default" 
+                                                title="Vous n'avez pas les droits pour accéder à la fiche"
+                                                data-toggle="tooltip" data-placement="bottom"><i class="fas fa-ban"></i></span>                           
+                                        {% endif %}
+                                    {% endif %}
+                                </td>
+                                <td class="align-middle text-uppercase">{{ user.lastname }}</td>
+                                <td class="align-middle">{{ user.firstname }}</td>
+                                <td class="align-middle">{{ user.statusToString }}</td>
+                                <td class="align-middle">{{ user.phone1}}</td>
+                                <td class="align-middle">{{ user.email }}</td>
+                                <td class="position-relative overflow-auto">
+                                    <div class="position-absolute h-100">
+                                        {% for user_service in user.serviceUser|sort ((a, b) => a.service.name <=> b.service.name)
+                                            |sort ((a, b) => b.main <=> a.main)  %}
+                                            {% set service = user_service.service %}
+                                            <a href="{{ path('service_edit', {'id': service.id}) }}" 
+                                                class="text-{{ theme_color }} {{ user_service.main ? 'font-weight-bold' }}">
+                                                {{ service.name }}</a>{% if not loop.last %}, {% endif %}
+                                            {% endfor %}
+                                    </div>
+                                </td>
+                                <td class="align-middle">
+                                    {% set poles = [] %}
+                                    {% for service in user.services %}
+                                        {% if service.pole.id not in poles %}
+                                            {% set poles = poles|merge([service.pole.id]) %}
+                                            {{ service.pole.name }}<br/>
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="navigation">{{ knp_pagination_render(users) }}</div>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('search') }}
+{% endblock javascripts %}

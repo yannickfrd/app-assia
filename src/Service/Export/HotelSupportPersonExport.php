@@ -95,7 +95,7 @@ class HotelSupportPersonExport extends ExportExcel
             'Département d\'ancrage' => $hotelSupport->getDepartmentAnchorToString(),
             'Préconisation d\'accompagnement' => $hotelSupport->getRecommendationToString(),
             'Date de fin de l\'accompagnement' => $this->formatDate($supportPerson->getEndDate()),
-            'Motif de fin d\'accompagnement' => $hotelSupport->getEndSupportReasonToString(),
+            'Motif de fin d\'accompagnement' => $supportGroup->getEndReasonToString(),
             'Situation à la fin' => $supportPerson->getEndStatusToString(),
             'Commentaire situation à la fin' => $supportPerson->getEndStatusComment(),
             'Fin - Ville' => $supportGroup->getEndLocationCity(),

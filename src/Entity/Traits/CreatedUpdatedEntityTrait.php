@@ -3,6 +3,7 @@
 namespace App\Entity\Traits;
 
 use App\Entity\Organization\User;
+use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -14,15 +15,16 @@ trait CreatedUpdatedEntityTrait
      * @ORM\Column(type="datetime", nullable=true)
      * @Groups("view")
      */
-    private $createdAt;
+    protected $createdAt;
 
     /**
      * @var User
      * @Gedmo\Blameable(on="create")
      * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User")
      * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     * @Groups("show_rdv")
      */
-    private $createdBy;
+    protected $createdBy;
 
     /**
      * @var \DateTime
@@ -30,7 +32,7 @@ trait CreatedUpdatedEntityTrait
      * @ORM\Column(type="datetime", nullable=true)
      * @Groups("view")
      */
-    private $updatedAt;
+    protected $updatedAt;
 
     /**
      * @var User
@@ -38,7 +40,7 @@ trait CreatedUpdatedEntityTrait
      * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User")
      * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      */
-    private $updatedBy;
+    protected $updatedBy;
 
     public function getCreatedAt(): ?\DateTimeInterface
     {

@@ -6,7 +6,7 @@ use App\Entity\Organization\Service;
 
 trait VoterTrait
 {
-    protected function isGranted(string $role)
+    protected function isGranted(string $role): bool
     {
         return in_array($role, $this->user->getRoles());
     }

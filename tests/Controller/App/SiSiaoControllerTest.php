@@ -242,7 +242,7 @@ class SiSiaoControllerTest extends WebTestCase
             ],
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('.alert.alert-success', 'Le suivi social est créé');
     }
 

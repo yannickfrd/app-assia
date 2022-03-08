@@ -62,7 +62,7 @@ class UpdatePmiCommand extends Command
                 }
                 ++$count;
             }
-            
+
             $io->progressAdvance();
         }
         $this->em->flush();

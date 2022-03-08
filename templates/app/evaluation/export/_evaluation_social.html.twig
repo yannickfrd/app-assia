@@ -1,0 +1,41 @@
+{% import 'macros/p_view.html.twig' as p_view %}
+{% import 'macros/textarea_view.html.twig' as textarea_view %}
+
+<hr/>
+<h2 style="{{ style_h2 }}">Situation sociale et de santé</h2>
+
+{% set eval_people_social = eval_people|filter(e => e.evalSocialPerson) %}
+{% set nb_people_social = eval_people_social|length %}
+{% for eval_person in eval_people_social %}
+    {% set eval_social = eval_person.evalSocialPerson %}
+    {% if eval_social.rightSocialSecurity or eval_social.healthProblem == YES or eval_social.aseFollowUp == YES or eval_social.commentEvalSocialPerson  %}
+        {% if nb_people_social > 1 %}
+            <p style="{{ style_h3 }}"><u>{{ eval_person.supportPerson.person.fullname }}</u> :</p>
+        {% endif %}
+        {{ p_view.get(eval_social.rightSocialSecurity in [1, 3] ? eval_social.rightSocialSecurityToString ~ ' - ' 
+            ~ eval_social.socialSecurityToString ~ (eval_social.endRightsSocialSecurityDate ? ' (fin de validité : ' 
+        ~ eval_social.endRightsSocialSecurityDate|date('d/m/Y') ~ ')') : eval_social.rightSocialSecurityToString , 'Right social security', 'evaluation') }}
+        {{ p_view.get(eval_social.aseFollowUp == YES ? eval_social.aseFollowUpToString ~ (eval_social.aseMeasureType ? ' (Mesure ' ~ eval_social.aseMeasureTypeToString ~ ')'), 'Ase follow up', 'evaluation') }}
+        {{ p_view.get(eval_social.aseComment) }}
+        {% if eval_social.familyBreakdown == YES or eval_social.friendshipBreakdown == YES %}
+            {{ p_view.get(eval_social.familyBreakdownToString, 'Family breakdown', 'evaluation') }}
+            {{ p_view.get(eval_social.friendshipBreakdownToString, 'Friendship breakdown', 'evaluation') }}
+        {% endif %}
+        {% if eval_social.healthProblem == YES %}
+            {{ p_view.get(eval_social.healthProblemToString ~ (eval_social.healthProblemTypes ? 
+            ' (' ~ eval_social.healthProblemTypes|join(', ') ~ ')'), 'Health problem', 'evaluation') }}
+        {% endif %}
+        {{ p_view.get(eval_social.medicalFollowUp == YES ? eval_social.medicalFollowUpToString, 'Medical follow up', 'evaluation') }}
+        {{ p_view.get(eval_social.homeCareSupport == YES ? eval_social.homeCareSupportToString ~ (eval_social.homeCareSupportType ? ' - ' 
+            ~ eval_social.homeCareSupportTypeToString), 'Home care support', 'evaluation') }}
+        {{ p_view.get(eval_social.violenceVictim == YES ? eval_social.violenceVictimToString ~ (eval_social.domViolenceVictim == YES ? 
+            ' (Violence conjugale)'), 'Violence victim', 'evaluation') }}
+        {{ textarea_view.get(eval_social.commentEvalSocialPerson, null, null, type) }}
+    {% endif %}
+{% endfor %}
+
+{% if evaluation.evalSocialGroup %}
+    {% set eval_social = evaluation.evalSocialGroup %}
+    {{ p_view.get(eval_social.animal == YES ? eval_social.animalToString ~ (eval_social.animalType ? ' (' ~ eval_social.animalType ~ ')' ), 'Animal', 'evaluation') }}
+    {{ textarea_view.get(evaluation.evalSocialGroup.commentEvalSocialGroup, null, null, type) }}
+{% endif %}

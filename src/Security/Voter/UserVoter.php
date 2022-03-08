@@ -12,16 +12,18 @@ class UserVoter extends Voter
 
     /** @var User */
     protected $user;
+    /** @var int|null */
+    private $userId;
 
-    protected function supports($attribute, $subject): bool
+    protected function supports(string $attribute, $subject): bool
     {
         return in_array($attribute, ['VIEW', 'EDIT', 'DISABLE'])
             && $subject instanceof \App\Entity\Organization\User;
     }
 
-    protected function voteOnAttribute($attribute, $user, TokenInterface $token): bool
+    protected function voteOnAttribute(string $attribute, $user, TokenInterface $token): bool
     {
-        /** @var User */
+        /* @var User */
         $this->user = $token->getUser();
         $this->userId = $this->user->getId();
 
@@ -31,39 +33,35 @@ class UserVoter extends Voter
 
         switch ($attribute) {
             case 'VIEW':
-                return true;
-                break;
+                return $this->canView($user);
             case 'EDIT':
                 return $this->canEdit($user);
-                break;
             case 'DISABLE':
                 return $this->canDisable($user);
-                break;
         }
 
         return false;
+    }
+
+    protected function canView(User $user): bool
+    {
+        return $this->canEdit($user)
+            || ($this->isGranted('ROLE_ADMIN') && !$user->hasRole('ROLE_ADMIN') && !$user->hasRole('ROLE_SUPER_ADMIN'))
+        ;
     }
 
     protected function canEdit(User $user): bool
     {
-        if ($this->userId === $user->getId()
-            || $this->isAdminUser($user)
+        return null === $user->getId()
+            || $this->userId === $user->getId()
             || $this->isGranted('ROLE_SUPER_ADMIN')
-            || 0 === $user->getServices()->count() && !in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
-            return true;
-        }
-
-        return false;
+            || $this->isAdminUser($user)
+        ;
     }
 
     protected function canDisable(User $user): bool
     {
-        if ($this->isAdminUser($user)
-            || $this->isGranted('ROLE_SUPER_ADMIN')) {
-            return true;
-        }
-
-        return false;
+        return $this->isAdminUser($user) || $this->isGranted('ROLE_SUPER_ADMIN');
     }
 
     /**

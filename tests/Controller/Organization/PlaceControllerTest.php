@@ -2,14 +2,13 @@
 
 namespace App\Tests\Controller\Organization;
 
-use App\Tests\AppTestTrait;
 use App\Entity\Organization\Place;
 use App\Entity\Organization\Service;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class PlaceControllerTest extends WebTestCase
 {
@@ -36,7 +35,7 @@ class PlaceControllerTest extends WebTestCase
 
         $this->client = $this->createClient();
 
-        /** @var AbstractDatabaseTool */
+        /* @var AbstractDatabaseTool */
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
 
         $this->fixtures = $this->databaseTool->loadAliceFixture([
@@ -45,34 +44,32 @@ class PlaceControllerTest extends WebTestCase
             dirname(__DIR__).'/../DataFixturesTest/PlaceFixturesTest.yaml',
         ]);
 
-        $this->service = $this->fixtures['service1'];
+        $this->service = $this->fixtures['service2'];
         $this->place = $this->fixtures['place1'];
     }
 
-    public function testSearchListPlacesIsSuccessful()
+    public function testSearchPlacesIsSuccessful()
     {
         $this->createLogin($this->fixtures['userAdmin']);
 
         $this->client->request('GET', '/places');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Groupes de places');
 
-        /** @var Crawler */
         $crawler = $this->client->submitForm('search', [
             'name' => 'Logement test',
             'nbPlaces' => 6,
             'service' => [
                 'services' => $this->service->getId(),
-                'devices' => $this->fixtures['device1'],
             ],
             'date[start]' => '2019-01-01',
             'date[end]' => '2020-01-01',
             'city' => 'Houilles',
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertGreaterThanOrEqual(2, $crawler->filter('tr')->count());
+        $this->assertResponseIsSuccessful();
+        $this->assertGreaterThanOrEqual(1, $crawler->filter('tr')->count());
     }
 
     public function testExportPlaceIsSuccessful()
@@ -86,14 +83,14 @@ class PlaceControllerTest extends WebTestCase
             'name' => 'Logement inconnu',
         ], 'GET');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
 
         // Export with results
         $this->client->request('GET', '/places');
 
         $this->client->submitForm('export', [], 'GET');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertStringContainsString('.spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
     }
 
@@ -105,13 +102,13 @@ class PlaceControllerTest extends WebTestCase
         $this->client->request('GET', "/admin/service/$id/place/new");
 
         // Page is up
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Nouveau groupe de places');
 
         // Create is failed
         $this->client->submitForm('send');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseStatusCodeSame(422);
         $this->assertSelectorExists('.alert.alert-danger');
     }
 
@@ -124,13 +121,13 @@ class PlaceControllerTest extends WebTestCase
 
         // Fail
         $this->client->submitForm('send', [
-            'place[name]' => 'Logement test',
+            'place[name]' => null,
             'place[service]' => $this->service->getId(),
             'place[nbPlaces]' => 6,
             'place[startDate]' => '2019-01-01',
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseStatusCodeSame(422);
         $this->assertSelectorExists('.alert.alert-danger');
 
         // Success
@@ -142,62 +139,62 @@ class PlaceControllerTest extends WebTestCase
             'place[location][city]' => 'Houilles',
             'place[location][zipcode]' => '78 800',
             'place[location][address]' => 'xxx',
-            'place[service]' => $this->fixtures['service1'],
+            'place[service]' => $this->service->getId(),
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorExists('.alert.alert-success');
     }
 
     public function testEditPlaceIsSuccessful()
     {
-        $this->createLogin($this->fixtures['userAdmin']);
+        $this->createLogin($this->fixtures['userSuperAdmin']);
 
         $id = $this->place->getId();
         $this->client->request('GET', "/place/$id");
 
         // Page is up
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', $this->place->getName());
 
         // Edit is successful
         $this->client->submitForm('send');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorExists('.alert.alert-success');
     }
 
     public function testDeletePlace()
     {
-        $this->createLogin($this->fixtures['userAdmin']);
+        $this->createLogin($this->fixtures['userSuperAdmin']);
 
         $id = $this->place->getId();
-        $this->client->request('GET', "/admin/place/$id/delete");
+        $this->client->request('GET', "/place/$id/delete");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', $this->place->getService()->getName());
     }
 
     public function testDisablePlace()
     {
-        $this->createLogin($this->fixtures['userAdmin']);
+        $this->createLogin($this->fixtures['userSuperAdmin']);
 
         $id = $this->fixtures['place1']->getId();
-        $this->client->request('GET', "/admin/place/$id/disable");
+        $this->client->request('GET', "/place/$id/disable");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('.alert.alert-warning', 'est désactivé');
 
-        $this->client->request('GET', "/admin/place/$id/disable");
+        $this->client->request('GET', "/place/$id/disable");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('.alert.alert-success', 'est ré-activé');
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
-        
+
         $this->client = null;
         $this->fixtures = null;
     }

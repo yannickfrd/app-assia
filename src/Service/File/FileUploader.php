@@ -77,15 +77,13 @@ class FileUploader
         $data = [];
         $names = [];
         foreach ($documents as $document) {
-            $data[] = $this->normalizer->normalize($document, 'json', ['groups' => ['get', 'view']]);
+            $data[] = $this->normalizer->normalize($document, 'json', ['groups' => ['show_document', 'view']]);
             $names[] = $document->getName();
         }
 
         return [
             'action' => 'create',
             'alert' => 'success',
-            'msg' => count($names) > 1 ? 'Les fichiers "'.join(', ', $names).'" sont enregistrés.' :
-                'Le fichier "'.$names[0].'" est enregistré.',
             'data' => $data,
         ];
     }

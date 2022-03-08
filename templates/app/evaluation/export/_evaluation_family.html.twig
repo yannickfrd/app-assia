@@ -1,0 +1,42 @@
+{% import 'macros/p_view.html.twig' as p_view %}
+{% import 'macros/textarea_view.html.twig' as textarea_view %}
+
+<hr/>
+<h2 style="{{ style_h2 }}">Situation familiale</h2>
+
+{% set eval_family = evaluation.evalFamilyGroup %}
+{% if eval_family %}
+    {{ p_view.get(eval_family.famlReunification == YES ? eval_family.famlReunificationToString ~ (eval_family.nbPeopleReunification ? ' (' 
+        ~ eval_family.nbPeopleReunification ~ ' personne(s))'), 'Faml reunification', 'evaluation') }}
+    {{ textarea_view.get(evaluation.evalFamilyGroup.commentEvalFamilyGroup, null, null, type) }}
+    <p>&nbsp;</p>
+{% endif %}
+
+{% set eval_people_family = eval_people|filter(e => e.evalFamilyPerson) %}
+{% set nb_adults_family = eval_people_family|length %}
+{% for eval_person in eval_people_family %}
+    {% set eval_family = eval_person.evalFamilyPerson %}
+    {% set support_person = eval_person.supportPerson %}
+    {% if nb_adults_family > 1 %}
+        <p style="{{ style_h3 }}"><u>{{ eval_person.supportPerson.person.fullname }}</u> :</p>
+    {% endif %}
+    {% if eval_person.supportPerson.role != ROLE_CHILD %}
+        {{ p_view.get(eval_family.maritalStatusToString, 'Marital status', 'evaluation') }}
+        {{ p_view.get(eval_family.noConciliationOrderToString, 'No conciliation order', 'evaluation') }}
+        {{ p_view.get(eval_family.protectiveMeasure == YES and eval_family.protectiveMeasureType ? 
+            eval_family.protectiveMeasureTypeToString, 'Protective measure', 'evaluation') }}
+    {% endif %}
+    {% if eval_family.unbornChild == YES %}
+        {{ p_view.get(eval_family.unbornChildToString ~ (eval_family.expDateChildbirth ? ' (' 
+            ~ eval_family.expDateChildbirth|date('d/m/Y') ~ ')'), 'Unborn child', 'evaluation') }}
+    {% endif %}
+    {% if eval_person.supportPerson.role == ROLE_CHILD %}
+        {{ p_view.get((eval_family.childcareOrSchool == YES ? eval_family.childcareSchoolTypeToString : 
+            eval_family.childcareOrSchoolToString) ~ (eval_family.schoolCity or eval_family.schoolChildCarePrecision ? ' (' ~ eval_family.schoolCity 
+            ~ ( eval_family.schoolChildCarePrecision ? ' - ' ~ eval_family.schoolChildCarePrecision) ~ ')'), 'Childcare or school', 'evaluation') }}
+        {{ p_view.get(eval_family.childToHostToString, 'Child to host', 'evaluation') }}
+        {{ p_view.get(eval_family.childDependanceToString, 'Child dependance', 'evaluation') }}
+    {% endif %}
+    {{ p_view.get(eval_family.pmiFollowUp == YES ? (eval_family.pmiName ? eval_family.pmiName), 'Pmi follow up', 'evaluation') }}
+    {{ textarea_view.get(eval_family.commentEvalFamilyPerson, null, null, type) }}
+{% endfor %}

@@ -12,7 +12,6 @@ use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -118,6 +117,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin('sg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, head, role}')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, usename}')
+            ->leftJoin('sg.tasks', 't')->addSelect('PARTIAL t.{id, title, status, end}')
 
             ->andWhere('sg.referent = :referent')
             ->setParameter('referent', $user)
@@ -136,23 +136,30 @@ class SupportGroupRepository extends ServiceEntityRepository
     /**
      * Donne tous les suivis sociaux de l'utilisateur.
      */
-    public function getSupportsOfUserQueryBuilder(User $user): array
+    public function getSupportsOfUser(User $user, ?SupportGroup $supportGroup = null): array
     {
-        return $this->createQueryBuilder('sg')->select('sg')
-            ->leftJoin('sg.service', 'sv')->addSelect('PARTIAL sv.{id, name}')
+        $qb = $this->createQueryBuilder('sg')->select('sg')
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, head}')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
 
-            ->andWhere('sg.referent = :referent')
-            ->setParameter('referent', $user)
+            ->where('sp.head = TRUE')
             ->andWhere('sg.status = :status')
             ->setParameter('status', SupportGroup::STATUS_IN_PROGRESS)
-            ->andWhere('sp.head = TRUE')
+            ->andWhere('sg.referent = :referent')
+            ->setParameter('referent', $user);
 
+        if ($supportGroup) {
+            $qb->orWhere('sg.id = :id')
+                ->setParameter('id', $supportGroup->getId());
+        }
+
+        return $qb
             ->orderBy('p.lastname', 'ASC')
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getResult();
+            ->getResult()
+        ;
     }
 
     /**
@@ -195,7 +202,7 @@ class SupportGroupRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('sg')->select('PARTIAL sg.{id, status, startDate, referent, service, device, coefficient}')
             ->leftJoin('sg.referent', 'u')->addSelect('PARTIAL u.{id}')
-            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, coefficient}')
             ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}');
 
         if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
@@ -261,11 +268,6 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
-
-        // $paginator = new Paginator($qb);
-        // foreach ($paginator->getIterator() as $supportGroup) {
-        //     return $supportGroup;
-        // }
     }
 
     public function countSupports(array $criteria = null): int

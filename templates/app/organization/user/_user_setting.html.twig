@@ -1,0 +1,47 @@
+<section>
+    {{ form_start(form_setting) }}
+    <h2 class="h4 my-4">Paramètres</h2>
+
+    <div class="row">
+        <div class="col-md-12"><h3 class="h6 mb-3">Rappels</h3></div>
+    </div>
+
+    <div class="mb-3">
+        <div class="row">
+            <div class="col-md-6 custom-control custom-checkbox custom-checkbox-{{ theme_color }}">
+                {{ form_row(form_setting.weeklyAlert) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 custom-control custom-checkbox custom-checkbox-{{ theme_color }}">
+                {{ form_row(form_setting.dailyAlert) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 custom-control custom-checkbox custom-checkbox-{{ theme_color }}">
+                {{ form_row(form_setting.autoEvaluationAlerts) }}
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3" data-parent-field="user_setting_autoEvaluationAlerts">
+        <div class="col-md-12">
+            <h3 class="h6 mb-3">Définir le nombre de mois avant l'envoi d'un rappel par email en fonction des différents types de renouvellement :</h3>
+        </div>
+        <div class="col-md-6">{{ form_row(form_setting.endValidPermitDateDelay) }}</div>                
+        <div class="col-md-6">{{ form_row(form_setting.endRightsSocialSecurityDateDelay) }}</div>                
+        <div class="col-md-6">{{ form_row(form_setting.endRqthDateDelay) }}</div>                
+        <div class="col-md-6">{{ form_row(form_setting.endRightsDateDelay) }}</div>                
+        <div class="col-md-6">{{ form_row(form_setting.siaoUpdatedRequestDateDelay) }}</div>                
+        <div class="col-md-6">{{ form_row(form_setting.socialHousingUpdatedRequestDateDelay) }}</div>                
+        <div class="col-md-6">{{ form_row(form_setting.endDomiciliationDateDelay) }}</div>                
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="float-right">
+                <button type="submit" id="send3" name="send3" class="btn btn-{{ theme_color }} shadow">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form_setting) }}
+</section>

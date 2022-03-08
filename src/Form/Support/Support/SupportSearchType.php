@@ -31,10 +31,9 @@ class SupportSearchType extends AbstractType
                 'choices' => Choices::getChoices(SupportGroup::STATUS),
                 'attr' => [
                     'class' => 'multi-select',
+                    'placeholder' => 'placeholder.status',
                     'size' => 1,
-                    'data-select2-id' => 'status',
                 ],
-                'placeholder' => 'placeholder.status',
                 'required' => false,
             ])
             ->add('supportDates', ChoiceType::class, [
