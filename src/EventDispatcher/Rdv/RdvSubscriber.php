@@ -30,16 +30,16 @@ class RdvSubscriber implements EventSubscriberInterface
             $rdv->setSupportGroup($supportGroup);
         }
 
-        if (!$form->get('_googleCalendar')->getData() && null !== $rdv->getGoogleEventId()) {
-            $rdv->setGoogleEventId(null);
-        } elseif ($form->get('_googleCalendar')->getData()) {
+        if ($form->get('_googleCalendar')->getData()) {
             $rdv->setGoogleEventId(true);
+        } elseif ($rdv->getGoogleEventId()) {
+            $rdv->setGoogleEventId(null);
         }
 
-        if (!$form->get('_outlookCalendar')->getData() && null !== $rdv->getOutlookEventId()) {
-            $rdv->setOutlookEventId(null);
-        } elseif ($form->get('_outlookCalendar')->getData()) {
+        if ($form->get('_outlookCalendar')->getData()) {
             $rdv->setOutlookEventId(true);
+        } elseif ($rdv->getOutlookEventId()) {
+            $rdv->setOutlookEventId(null);
         }
     }
 

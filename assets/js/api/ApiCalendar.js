@@ -89,7 +89,7 @@ export default class ApiCalendar {
      * @returns {boolean}
      */
     calendarIsChecked(key) {
-        const valLocalStorage = localStorage.getItem('agenda.' + key)
+        const valLocalStorage = localStorage.getItem('calendar.' + key)
         
         return (null === valLocalStorage) ? false : JSON.parse(valLocalStorage)
     }

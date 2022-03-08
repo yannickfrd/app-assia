@@ -49,8 +49,8 @@ export default class Calendar {
         this.supportElt = document.getElementById('support')
         this.supportPeopleElt = document.getElementById('js-support-people')
 
-        this.showWeekendsItem = localStorage.getItem('agenda.show_weekends')
-        this.fullWidthItem = localStorage.getItem('agenda.full_width')
+        this.showWeekendsItem = localStorage.getItem('calendar.show_weekends')
+        this.fullWidthItem = localStorage.getItem('calendar.full_width')
 
         this.selectManager = new SelectManager('#rdv_tags', { name: 'onModal', elementId: this.modalRdvElt.id })
 
@@ -127,10 +127,10 @@ export default class Calendar {
     changeWidthCalendar() {
         if (this.fullWidthCheckbox.checked) {
             this.calendarContainer.classList.replace('container', 'container-fluid');
-            localStorage.setItem('agenda.full_width', true);
+            localStorage.setItem('calendar.full_width', true);
         } else {
             this.calendarContainer.classList.replace('container-fluid', 'container');
-            localStorage.setItem('agenda.full_width', false);
+            localStorage.setItem('calendar.full_width', false);
         }
     }
     /**
@@ -141,9 +141,9 @@ export default class Calendar {
             elt.classList.toggle('d-none');
         });
         if (this.showWeekendCheckbox.checked) {
-            localStorage.setItem('agenda.show_weekends', true);
+            localStorage.setItem('calendar.show_weekends', true);
         } else {
-            localStorage.setItem('agenda.show_weekends', false);
+            localStorage.setItem('calendar.show_weekends', false);
         }
     }
 
@@ -408,7 +408,8 @@ export default class Calendar {
 
         rdvElt.addEventListener('click', this.requestGetRdv.bind(this, rdvElt))
 
-        if (action === 'create') { //v1
+        //v1
+        if (action === 'create') {
             this.apiCalendar.addEvent(new RdvModel(rdv), apiUrls)
         }
         // v2 ...
@@ -422,27 +423,22 @@ export default class Calendar {
      * @param {Object} apiUrls
      */
     updateRdv(rdv, action, apiUrls) {
-        const rdvMdl = new RdvModel(rdv.getRdv)
+        const rdvModel = new RdvModel(rdv.getRdv)
 
-        const googleIsCheckedNow = (null === this.rdvBeforeUpdate.googleEventId && this.googleCalendarCheckbox.checked)
-        const outlookIsCheckedNow = (null === this.rdvBeforeUpdate.outlookEventId && this.outlookCalendarCheckbox.checked)
-
-        if (
-            (rdvMdl.isDifferent(this.rdvBeforeUpdate)
-                && (this.googleCalendarCheckbox.checked || this.outlookCalendarCheckbox.checked)
-            )
-            || googleIsCheckedNow
-            || outlookIsCheckedNow
+        if ((this.googleCalendarCheckbox.checked && null === this.rdvBeforeUpdate.googleEventId)
+            || (this.outlookCalendarCheckbox.checked && null === this.rdvBeforeUpdate.outlookEventId)
+            || (rdvModel.isDifferent(this.rdvBeforeUpdate) && (this.googleCalendarCheckbox.checked
+                || this.outlookCalendarCheckbox.checked))
         ) {
             this.updateModalElt.show()
 
             const listApis = () => {
                 let list = {}
 
-                if (googleIsCheckedNow) {
+                if (this.googleCalendarCheckbox.checked) {
                     list.google = apiUrls.google;
                 }
-                if (outlookIsCheckedNow) {
+                if (this.outlookCalendarCheckbox.checked) {
                     list.outlook =  apiUrls.outlook
                 }
 
@@ -450,7 +446,7 @@ export default class Calendar {
             }
 
             document.getElementById('modal-confirm').addEventListener('click', () => {
-                this.apiCalendar.addEvent(rdvMdl, listApis())
+                this.apiCalendar.addEvent(rdvModel, listApis())
             }, {once: true})
         }
 
@@ -460,12 +456,11 @@ export default class Calendar {
 
     /**
      * Supprime le RDV dans l'agenda.
-     * @param {Object} rdv
-     * @param {Object} apiUrls
      */
-    deleteRdv(rdv, apiUrls) {
+    deleteRdv() {
         const rdvElt = document.getElementById('rdv-' + this.rdvId)
         const dayElt = rdvElt.parentNode
+
         rdvElt.remove()
         this.hideRdvElts(dayElt)
 
