@@ -1,5 +1,18 @@
 CHANGELOG
 =========
+
+## Version 3.12.0 - 08/03/2022
+Sync google/outlook calendar feature
+* Create GoogleCalendarController
+* Create OutlookCalendarController
+* Edit RdvController
+* Create AbstractApiCalendar 
+* Create ApiCalendarRouter
+* Create GoogleCalendarApiService
+* Create OutlookCalendarApiService
+* Create ApiCalendar.js
+* Update calendar.js
+
 ## Version 3.11.0 - 07/03/2022
 * Create ServiceUserController
 * Create ServiceUserManger.js

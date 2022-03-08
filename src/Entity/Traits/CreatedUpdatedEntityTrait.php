@@ -3,6 +3,7 @@
 namespace App\Entity\Traits;
 
 use App\Entity\Organization\User;
+use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -21,6 +22,7 @@ trait CreatedUpdatedEntityTrait
      * @Gedmo\Blameable(on="create")
      * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User")
      * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     * @Groups("show_rdv")
      */
     protected $createdBy;
 

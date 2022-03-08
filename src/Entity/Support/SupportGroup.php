@@ -1027,7 +1027,7 @@ class SupportGroup
     /**
      * Donne le demandeur principal du suivi.
      *
-     * @Groups("show_support_group")
+     * @Groups({"show_support_group", "show_rdv"})
      */
     public function getHeader(): ?Person
     {

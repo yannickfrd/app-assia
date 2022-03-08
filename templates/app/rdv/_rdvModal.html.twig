@@ -82,20 +82,35 @@
                 <div class="row mb-3">
                     <div class="col-md-12">{{ form_widget(form.content) }}</div>
                 </div>
+                <div class="form-group row">
+                    <div class="col-md-6 custom-control custom-checkbox custom-checkbox-{{ theme_color }}">
+                        <div class="col-md-12">
+                            {{ form_widget(form._googleCalendar, {attr: {'data-api-name': 'google'} }) }}
+                        </div>
+                    </div>
+                    <div class="col-md-6 custom-control custom-checkbox custom-checkbox-{{ theme_color }}">
+                        <div class="col-md-12">
+                            {{ form_widget(form._outlookCalendar, {attr: {'data-api-name': 'outlook'} }) }}
+                        </div>
+                    </div>
+                </div>
                 {{ form_row(form._token) }}
             </div>
             <div class="modal-footer d-flex justify-content-between">
                 <div class="float-left">
                     <button id="modal-btn-delete" class="mr-3 btn btn-danger" data-placement="bottom"
-                        title="Supprimer le rendez-vous"><span class="fas fa-trash-alt"></span><span class="d-none d-md-inline ml-2">Supprimer</span></button>
+                        title="Supprimer le rendez-vous"><span class="fas fa-trash-alt"></span>
+                        <span class="d-none d-md-inline ml-2">Supprimer</span>
+                    </button>
                 </div>
                 <div class="float-right">
                     <button type="button" id="js-btn-cancel" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                    <button type="submit" id="js-btn-save" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>Enregistrer</button>
+                    <button type="submit" id="js-btn-save" class="btn btn-{{ theme_color }} shadow">
+                        <span class="fas fa-save mr-2"></span>Enregistrer</button>
                 </div>
             </div>
 
-            {{ form_end(form, {"render_rest": false}) }}
+            {{ form_end(form, {'render_rest': false}) }}
 
         </div>
     </div>

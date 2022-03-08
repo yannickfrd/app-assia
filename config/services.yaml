@@ -125,11 +125,16 @@ services:
         arguments:
             $url: "%env(SISIAO_URL)%"
 
-    Twig\CacheExtension\CacheProviderInterface:
-        class: Twig\CacheExtension\CacheProvider\PsrCacheAdapter
+    App\Service\Api\OutlookApi\OutlookCalendarApiService:
+        arguments:
+            $outlookClientSecret: "%env(OUTLOOK_CLIENT_SECRET)%"
+            $outlookClientId: "%env(OUTLOOK_CLIENT_ID)%"
 
-    Twig\CacheExtension\CacheStrategyInterface:
-        class: Twig\CacheExtension\CacheStrategy\LifetimeCacheStrategy
+    App\Service\Api\GoogleApi\GoogleCalendarApiService:
+        arguments:
+            $googleClientSecret: "%env(GOOGLE_CLIENT_SECRET)%"
+            $googleClientId: "%env(GOOGLE_CLIENT_ID)%"
+            $googleProjectId: "%env(GOOGLE_PROJECT_ID)%"
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

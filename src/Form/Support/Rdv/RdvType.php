@@ -2,20 +2,20 @@
 
 namespace App\Form\Support\Rdv;
 
-use App\Entity\Organization\Tag;
 use App\Entity\Support\Rdv;
 use App\Form\Utils\Choices;
-use App\Repository\Organization\TagRepository;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Entity\Organization\Tag;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use App\Repository\Organization\TagRepository;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
 class RdvType extends AbstractType
 {
-    /** @var TagRepository */
     private $tagRepo;
 
     public function __construct(TagRepository $tagRepo)
@@ -67,8 +67,8 @@ class RdvType extends AbstractType
                 'expanded' => false,
                 'by_reference' => false,
                 'choices' => $supportGroup ?
-                $this->tagRepo->getTagsByService($supportGroup->getService(), 'rdv') :
-                $this->tagRepo->findAllTags('rdv'),
+                    $this->tagRepo->getTagsByService($supportGroup->getService(), 'rdv') :
+                    $this->tagRepo->findAllTags('rdv'),
                 'choice_label' => 'name',
                 'attr' => [
                     'class' => 'multi-select',
@@ -77,6 +77,38 @@ class RdvType extends AbstractType
                 ],
                 'required' => false,
             ])
+            ->add('_googleCalendar', CheckboxType::class, [
+                'label' => 'rdv.label.google',
+                'label_attr' => ['class' => 'custom-control-label'],
+                'attr' => ['class' => 'custom-control-input checkbox api-calendar'],
+                'mapped' => false,
+                'required' => false,
+            ])
+            ->add('_outlookCalendar', CheckboxType::class, [
+                'label' => 'rdv.label.outlook',
+                'label_attr' => ['class' => 'custom-control-label'],
+                'attr' => ['class' => 'custom-control-input checkbox api-calendar'],
+                'mapped' => false,
+                'required' => false,
+            ])
+        // ->add('user', EntityType::class, [
+            //     'class' => User::class,
+            //     'choice_label' => 'fullname',
+            //         'query_builder' => function (UserRepository $repo) {
+            //             return $repo->getUsersForCalendarQueryBuilder($this->security->getUser());
+            //         },
+            //     'placeholder' => 'placeholder.user',
+            //     'required' => true,
+            // ])
+            // ->add('supportGroup', EntityType::class, [
+            //         'class' => SupportGroup::class,
+            //         'choices' => $this->supportGroupRepo->getSupportsOfUserQueryBuilder($this->security->getUser()),
+            //         'choice_label' => function (SupportGroup $supportGroup) {
+            //             return $supportGroup->getSupportPeople()->first()->getPerson()->getFullname();
+            //         },
+            //         'placeholder' => 'placeholder.support',
+            //         'required' => false,
+            // ]);
         ;
     }
 

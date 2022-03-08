@@ -13,6 +13,7 @@ use App\Form\Support\Rdv\SupportRdvSearchType;
 use App\Repository\Support\RdvRepository;
 use App\Repository\Support\SupportGroupRepository;
 use App\Security\CurrentUserService;
+use App\Service\Api\ApiCalendarRouter;
 use App\Service\Export\RdvExport;
 use App\Service\Pagination;
 use App\Service\Rdv\RdvPaginator;
@@ -33,11 +34,14 @@ class RdvController extends AbstractController
 
     private $em;
     private $rdvRepo;
+    /** @var ApiCalendarRouter */
+    private $calendarRouter;
 
-    public function __construct(EntityManagerInterface $em, RdvRepository $rdvRepo)
+    public function __construct(EntityManagerInterface $em, RdvRepository $rdvRepo, ApiCalendarRouter $calendarRouter)
     {
         $this->em = $em;
         $this->rdvRepo = $rdvRepo;
+        $this->calendarRouter = $calendarRouter;
     }
 
     /**
@@ -45,7 +49,7 @@ class RdvController extends AbstractController
      *
      * @Route("/rdvs", name="rdvs", methods="GET|POST")
      */
-    public function viewListRdvs(Request $request, Pagination $pagination, CurrentUserService $currentUser): Response
+    public function index(Request $request, Pagination $pagination, CurrentUserService $currentUser): Response
     {
         $form = $this->createForm(RdvSearchType::class, $search = new RdvSearch())
             ->handleRequest($request);
@@ -54,7 +58,7 @@ class RdvController extends AbstractController
             return $this->exportData($search);
         }
 
-        return $this->render('app/rdv/listRdvs.html.twig', [
+        return $this->render('app/rdv/rdv_index.html.twig', [
             'form' => $form->createView(),
             'rdvs' => $pagination->paginate($this->rdvRepo->findRdvsQuery($search, $currentUser), $request, 10),
         ]);
@@ -67,8 +71,12 @@ class RdvController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function viewSupportListRdvs(int $id, SupportManager $supportManager, Request $request, RdvPaginator $rdvPaginator): Response
-    {
+    public function viewSupportListRdvs(
+        int $id,
+        SupportManager $supportManager,
+        Request $request,
+        RdvPaginator $rdvPaginator
+    ): Response {
         $supportGroup = $supportManager->getSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
@@ -90,16 +98,26 @@ class RdvController extends AbstractController
      *
      * @Route("/rdv/new", name="rdv_new", methods="POST")
      */
-    public function createRdv(Request $request): JsonResponse
+    public function createRdv(Request $request, EventDispatcherInterface $dispatcher): JsonResponse
     {
         $form = $this->createForm(RdvType::class, $rdv = new Rdv())
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $dispatcher->dispatch(new RdvEvent($rdv, null, $form), 'rdv.before_create');
+
             $this->em->persist($rdv);
             $this->em->flush();
 
-            return $this->json($this->getDataNewRdv($rdv));
+            return $this->json([
+                'action' => 'create',
+                'alert' => 'success',
+                'msg' => 'Le RDV est enregistré.',
+                'rdv' => $rdv,
+                'apiUrls' => $this->calendarRouter->getUrls(
+                    'create', $rdv->getId(), (array) $request->request->get('rdv')
+                ),
+            ], 200, [], ['groups' => 'show_rdv']);
         }
 
         return $this->getErrorMessage($form);
@@ -110,8 +128,12 @@ class RdvController extends AbstractController
      *
      * @Route("/support/{id}/rdv/new", name="support_rdv_new", methods="POST")
      */
-    public function createSupportRdv(int $id, SupportGroupRepository $supportGroupRepo, Request $request, EventDispatcherInterface $dispatcher): JsonResponse
-    {
+    public function createSupportRdv(
+        int $id,
+        SupportGroupRepository $supportGroupRepo,
+        Request $request,
+        EventDispatcherInterface $dispatcher
+    ): JsonResponse {
         $supportGroup = $supportGroupRepo->findSupportById($id);
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
@@ -121,14 +143,22 @@ class RdvController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $rdv->setSupportGroup($supportGroup);
+            $dispatcher->dispatch(new RdvEvent($rdv, $supportGroup, $form), 'rdv.before_create');
 
             $this->em->persist($rdv);
             $this->em->flush();
 
             $dispatcher->dispatch(new RdvEvent($rdv), 'rdv.after_create');
 
-            return $this->json($this->getDataNewRdv($rdv));
+            return $this->json([
+                'action' => 'create',
+                'alert' => 'success',
+                'msg' => 'Le RDV est enregistré.',
+                'rdv' => $rdv,
+                'apiUrls' => $this->calendarRouter->getUrls(
+                    'create', $rdv->getId(), (array) $request->request->get('rdv')
+                ),
+            ], 200, [], ['groups' => 'show_rdv']);
         }
 
         return $this->getErrorMessage($form);
@@ -150,6 +180,7 @@ class RdvController extends AbstractController
         return $this->json([
             'action' => 'show',
             'rdv' => [
+                'getRdv' => $rdv,
                 'title' => $rdv->getTitle(),
                 'fullnameSupport' => $supportGroup ? $supportGroup->getHeader()->getFullname() : null,
                 'start' => $rdv->getStart()->format("Y-m-d\TH:i"),
@@ -166,7 +197,7 @@ class RdvController extends AbstractController
                 'tags' => $serializer->serialize($rdv->getTags(), 'json', ['groups' => 'show_tag']),
                 'tagIds' => $rdv->getTagsIdsToString(),
             ],
-        ]);
+        ], 200, [], ['groups' => 'show_rdv']);
     }
 
     /**
@@ -182,6 +213,8 @@ class RdvController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $dispatcher->dispatch(new RdvEvent($rdv, null, $form), 'rdv.before_update');
+
             $this->em->flush();
 
             $dispatcher->dispatch(new RdvEvent($rdv), 'rdv.after_update');
@@ -191,12 +224,18 @@ class RdvController extends AbstractController
                 'alert' => 'success',
                 'msg' => 'Le RDV est modifié.',
                 'rdv' => [
+                    'getRdv' => $rdv,
                     'id' => $rdv->getId(),
                     'title' => $rdv->getTitle(),
                     'day' => $rdv->getStart()->format('Y-m-d'),
                     'start' => $rdv->getStart()->format('H:i'),
                 ],
-            ]);
+                'apiUrls' => $this->calendarRouter->getUrls(
+                    'update',
+                    $rdv->getId(),
+                    (array) $request->request->get('rdv')
+                ),
+            ], 200, [], ['groups' => 'show_rdv']);
         }
 
         return $this->getErrorMessage($form);
@@ -210,7 +249,7 @@ class RdvController extends AbstractController
      */
     public function deleteRdv(Rdv $rdv, EventDispatcherInterface $dispatcher): JsonResponse
     {
-        $id = $rdv->getId();
+        $rdvId = $rdv->getId();
 
         $this->em->remove($rdv);
         $this->em->flush();
@@ -219,32 +258,20 @@ class RdvController extends AbstractController
 
         return $this->json([
             'action' => 'delete',
-            'rdv' => ['id' => $id],
+            'rdv' => ['id' => $rdvId],
             'alert' => 'warning',
             'msg' => 'Le RDV est supprimé.',
+            'apiUrls' => $this->calendarRouter->getUrls('delete', $rdvId, [], [
+                'google' => $rdv->getGoogleEventId(),
+                'outlook' => $rdv->getOutlookEventId(),
+            ]),
         ]);
-    }
-
-    private function getDataNewRdv(Rdv $rdv): array
-    {
-        return [
-            'action' => 'create',
-            'alert' => 'success',
-            'msg' => 'Le RDV est enregistré.',
-            'rdv' => [
-                'id' => $rdv->getId(),
-                'title' => $rdv->getTitle(),
-                'day' => $rdv->getStart()->format('Y-m-d'),
-                'start' => $rdv->getStart()->format('H:i'),
-                'tagsIds' => $rdv->getTagsIdsToString(),
-            ],
-        ];
     }
 
     /**
      * Exporte les données.
      */
-    private function exportData(RdvSearch $search): Response
+    private function exportData(RdvSearch $search)
     {
         $rdvs = $this->rdvRepo->findRdvsToExport($search);
 
