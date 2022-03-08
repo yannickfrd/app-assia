@@ -427,7 +427,13 @@ export default class Calendar {
         const googleIsCheckedNow = (null === this.rdvBeforeUpdate.googleEventId && this.googleCalendarCheckbox.checked)
         const outlookIsCheckedNow = (null === this.rdvBeforeUpdate.outlookEventId && this.outlookCalendarCheckbox.checked)
 
-        if (rdvMdl.isDifferent(this.rdvBeforeUpdate) || googleIsCheckedNow || outlookIsCheckedNow) {
+        if (
+            (rdvMdl.isDifferent(this.rdvBeforeUpdate)
+                && (this.googleCalendarCheckbox.checked || this.outlookCalendarCheckbox.checked)
+            )
+            || googleIsCheckedNow
+            || outlookIsCheckedNow
+        ) {
             this.updateModalElt.show()
 
             const listApis = () => {
