@@ -2,22 +2,15 @@
 
 namespace App\Service\Api;
 
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ApiCalendarRouter
 {
-    /** @var ContainerInterface */
     private $router;
 
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    public function __construct(ContainerInterface $container)
+    public function __construct(UrlGeneratorInterface $router)
     {
-        $this->router = $container->get('router');
+        $this->router = $router;
     }
 
     public function getUrls(string $action, int $rdvId, array $requestRdv = [], array $eventIds = []): array

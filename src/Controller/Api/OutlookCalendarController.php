@@ -3,39 +3,31 @@
 namespace App\Controller\Api;
 
 use App\Service\Api\OutlookApi\OutlookCalendarApiService;
-use GuzzleHttp\Exception\GuzzleException;
-use Microsoft\Graph\Exception\GraphException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class OutlookCalendarController extends AbstractController
 {
-    /** @var OutlookCalendarApiService */
-    private $outApiService;
+    private $outlookCalendar;
 
-    public function __construct(OutlookCalendarApiService $outApiService)
+    public function __construct(OutlookCalendarApiService $outlookCalendar)
     {
-        $this->outApiService = $outApiService;
+        $this->outlookCalendar = $outlookCalendar;
     }
 
     /**
-     * @Route("/outlook-calendar/event/create", name="create_event_outlook_calendar", methods={"GET"})
+     * @Route("/outlook-calendar/event/create", name="create_event_outlook_calendar", methods="GET")
      */
     public function createEventClientOutlookCalendar(Request $request): JsonResponse
     {
-        $this->outApiService->setOnSessionRdvId('outlook', $request->query->get('rdvId'));
+        $this->outlookCalendar->setOnSessionRdvId('outlook', $request->query->get('rdvId'));
 
         return $this->json([
             'action' => 'create',
-            'url' => $this->outApiService->getAuthUrl(),
+            'url' => $this->outlookCalendar->getAuthUrl(),
         ]);
     }
 
@@ -49,29 +41,25 @@ class OutlookCalendarController extends AbstractController
         $authCode = $request->query->get('code');
 
         if (isset($authCode)) {
-            $this->outApiService->authClient($authCode);
+            $this->outlookCalendar->authClient($authCode);
 
-            $urlResponse = $this->outApiService->addRdv();
+            $urlResponse = $this->outlookCalendar->addRdv();
 
             return $this->redirect($urlResponse);
         }
 
-        return $this->redirect($this->outApiService->getAuthUrl());
+        return $this->redirect($this->outlookCalendar->getAuthUrl());
     }
 
     /**
-     * @Route("/outlook-calendar/event/update/{rdvId}", name="update_event_outlook_calendar", methods={"PUT"})
-     *
-     * @throws GuzzleException
-     * @throws GraphException
+     * @Route("/outlook-calendar/event/update/{rdvId}", name="update_event_outlook_calendar", methods="PUT")
      */
     public function updateEventOutlookCalendar(int $rdvId): JsonResponse
     {
-        $updated = $this->outApiService->update($rdvId);
+        $updated = $this->outlookCalendar->update($rdvId);
 
         if (!$updated) {
             return $this->json([
-                'action' => 'update',
                 'alert' => 'danger',
                 'msg' => 'Le RDV n\'a pas été mise à jour sur Outlook Agenda.',
             ]);
@@ -85,23 +73,14 @@ class OutlookCalendarController extends AbstractController
     }
 
     /**
-     * @Route("/outlook-calendar/event/delete/{eventId}", name="delete_event_outlook_calendar", methods={"DELETE"})
-     *
-     * @throws GraphException
-     * @throws GuzzleException
-     * @throws ClientExceptionInterface
-     * @throws DecodingExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws TransportExceptionInterface
+     * @Route("/outlook-calendar/event/delete/{eventId}", name="delete_event_outlook_calendar", methods="DELETE")
      */
     public function deleteEventOutlookCalendar(string $eventId): JsonResponse
     {
-        $delete = $this->outApiService->delete($eventId);
+        $delete = $this->outlookCalendar->delete($eventId);
         if (!$delete) {
             return $this->json([
-                'action' => 'delete',
-                'alert' => 'warning',
+                'alert' => 'danger',
                 'msg' => 'Une erreur s\'est produite avec Outlook Agenda.',
             ]);
         }

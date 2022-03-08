@@ -12,26 +12,23 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class GoogleCalendarController extends AbstractController
 {
-    /** @var GoogleCalendarApiService */
-    private $gapiService;
+    private $googleCalendar;
 
-    public function __construct(GoogleCalendarApiService $gapiService)
+    public function __construct(GoogleCalendarApiService $googleCalendar)
     {
-        $this->gapiService = $gapiService;
+        $this->googleCalendar = $googleCalendar;
     }
 
     /**
-     * @Route("/google-calendar/event/create", name="create_event_google_calendar", methods={"GET"})
-     *
-     * @throws Exception
+     * @Route("/google-calendar/event/create", name="create_event_google_calendar", methods="GET")
      */
     public function createEventGoogleCalendar(Request $request): JsonResponse
     {
-        $this->gapiService->setOnSessionRdvId('google', $request->query->get('rdvId'));
+        $this->googleCalendar->setOnSessionRdvId('google', $request->query->get('rdvId'));
 
         return $this->json([
             'action' => 'create',
-            'url' => $this->gapiService->getAuthUrl(),
+            'url' => $this->googleCalendar->getAuthUrl(),
         ]);
     }
 
@@ -39,36 +36,30 @@ class GoogleCalendarController extends AbstractController
      * Callback function.
      *
      * @Route("/add-event-google-calendar", name="add_event_google_calendar")
-     * @throws Exception
      */
     public function addEventGoogleCalendar(Request $request): RedirectResponse
     {
         $authCode = $request->query->get('code');
 
         if (!empty($authCode)) {
-            $this->gapiService->authClient($authCode);
-            $urlResponse = $this->gapiService->addRdv();
+            $this->googleCalendar->authClient($authCode);
+            $urlResponse = $this->googleCalendar->addRdv();
 
-            return (empty($urlResponse)) ?
-                $this->redirect($this->gapiService->getAuthUrl()) :
-                $this->redirect($urlResponse);
+            return $this->redirect(empty($urlResponse) ? $this->googleCalendar->getAuthUrl() : $urlResponse);
         }
 
-        return $this->redirect($this->gapiService->getAuthUrl());
+        return $this->redirect($this->googleCalendar->getAuthUrl());
     }
 
     /**
-     * @Route("/google-calendar/event/update/{rdvId}", name="update_event_google_calendar", methods={"PUT"})
-     *
-     * @throws Exception
+     * @Route("/google-calendar/event/update/{rdvId}", name="update_event_google_calendar", methods="PUT")
      */
     public function updateEventGoogleCalendar(int $rdvId): JsonResponse
     {
-        $updated = $this->gapiService->update($rdvId);
+        $updated = $this->googleCalendar->update($rdvId);
 
         if (!$updated) {
             return $this->json([
-                'action' => 'update',
                 'alert' => 'danger',
                 'msg' => 'Le RDV n\'a pas été mise à jour sur Google Agenda.',
             ]);
@@ -89,12 +80,12 @@ class GoogleCalendarController extends AbstractController
     }
 
     /**
-     * @Route("/google-calendar/event/delete/{eventId}", name="delete_event_google_calendar", methods={"DELETE"})
+     * @Route("/google-calendar/event/delete/{eventId}", name="delete_event_google_calendar", methods="DELETE")
      */
     public function deleteEventGoogleCalendar(string $eventId): JsonResponse
     {
         try {
-            $this->gapiService->deleteEvent($eventId);
+            $this->googleCalendar->deleteEvent($eventId);
         } catch (Exception $e) {
             $getErrors = json_decode($e->getMessage(), false);
 
@@ -102,8 +93,7 @@ class GoogleCalendarController extends AbstractController
                 $messError = $getErrors->error->message;
 
                 return $this->json([
-                    'action' => 'delete',
-                    'alert' => 'warning',
+                    'alert' => 'danger',
                     'msg' => 'Une erreur s\'est produite avec Google Agenda: "'.$messError.'".',
                 ]);
             }
