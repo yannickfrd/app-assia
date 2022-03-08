@@ -66,7 +66,7 @@ class LoginListener
      */
     private function addColorServiceInSession(User $user): void
     {
-        if ($user->getServices()->count() > 0) {
+        if ($user->getServices()->count() > 0 && null !== $user->getServices()->first()->getPole()) {
             $this->session->set('theme_color', $user->getServices()->first()->getPole()->getColor());
         }
     }

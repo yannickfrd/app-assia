@@ -1,7 +1,7 @@
 import 'select2'
 
 /**
- * Gestion des selects (actuellement via la librarie "select2").
+ * Gestion des selects (actuellement via la librairie "select2").
  * https://select2.org/
  */
 export default class SelectManager {

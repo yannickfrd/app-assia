@@ -1,4 +1,4 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
 
 {% set is_granted_role_super_admin = is_granted('ROLE_SUPER_ADMIN') %}
 
@@ -8,16 +8,16 @@
 
     <section class="mt-0">
         <div class="container-fluid pt-4">
-            {% include "model/_msgFlash.html.twig" %}
+            {% include 'model/_msgFlash.html.twig' %}
             <h1 class="h2 mb-3">Administration des utilisateurs</h1>
         </div>
 
-        {% include "app/organization/user/_searchUsers.html.twig" %}
+        {% include 'app/organization/user/_user_search_form.html.twig' %}
 
         <div class="container-fluid mt-4">
             <div class="row">
                 <div class="col-md-12">
-                    <p><a href="{{ path("security_registration") }}" class="btn btn-{{ theme_color }} btn-sm shadow">
+                    <p><a href="{{ path('security_registration') }}" class="btn btn-{{ theme_color }} btn-sm shadow">
                          <span class="fas fa-plus-square mr-2"></span>Créer un nouvel utilisateur</a>
                     </p>
                 </div>
@@ -37,30 +37,30 @@
                         <tr>
                             <th scope="col" class="align-middle th-w-20"></th>
                             <th scope="col" class="align-middle th-w-120">
-                                {{ knp_pagination_sortable(users, "Nom", "u.lastname") }}</th>
+                                {{ knp_pagination_sortable(users, 'Nom', 'u.lastname') }}</th>
                             <th scope="col" class="align-middle th-w-120">
-                                {{ knp_pagination_sortable(users, "Prénom", "u.firstname") }}</th>
+                                {{ knp_pagination_sortable(users, 'Prénom', 'u.firstname') }}</th>
                             <th scope="col" class="align-middle th-w-120 d-none d-md-table-cell">
-                                {{ knp_pagination_sortable(users, "Statut", "u.status") }}</th>
+                                {{ knp_pagination_sortable(users, 'Statut', 'u.status') }}</th>
                             <th scope="col" class="align-middle th-w-120 d-none d-md-table-cell">
-                                {{ knp_pagination_sortable(users, "Profil", "u.roles") }}</th>
+                                {{ knp_pagination_sortable(users, 'Profil', 'u.roles') }}</th>
                             <th scope="col" class="align-middle th-w-120 d-none d-md-table-cell">Téléphone</th>
                             <th scope="col" class="align-middle th-w-150 d-none d-md-table-cell">Email</th>
                             <th scope="col" class="align-middle th-w-150 d-none d-md-table-cell">
-                                {{ knp_pagination_sortable(users, "Service", "s.name") }}</th>
+                                {{ knp_pagination_sortable(users, 'Service', 's.name') }}</th>
                             <th scope="col" class="align-middle th-w-150 d-none d-md-table-cell">
-                                {{ knp_pagination_sortable(users, "Pôle", "p.name") }}</th>
+                                {{ knp_pagination_sortable(users, 'Pôle', 'p.name') }}</th>
                             {% if is_granted_role_super_admin %}
                                 <th scope="col" class="align-middle th-w-80">
-                                    {{ knp_pagination_sortable(users, "Dernière activité", "u.lastActivityAt") }}</th>
+                                    {{ knp_pagination_sortable(users, 'Dernière activité', 'u.lastActivityAt') }}</th>
                                 <th scope="col" class="align-middle th-w-80">
-                                    {{ knp_pagination_sortable(users, "Nombre de connexions", "u.loginCount") }}</th>
+                                    {{ knp_pagination_sortable(users, 'Nombre de connexions', 'u.loginCount') }}</th>
                             {% endif %}
                             <th scope="col" class="align-middle th-w-60">
-                                {{ knp_pagination_sortable(users, "Désactivé", "u.disabledAt") }}
+                                {{ knp_pagination_sortable(users, 'Désactivé', 'u.disabledAt') }}
                             </th>                        
                             <th scope="col" class="align-middle th-w-80">
-                                {{ knp_pagination_sortable(users, "Date de création", "u.createdAt") }}</th>
+                                {{ knp_pagination_sortable(users, 'Date de création', 'u.createdAt') }}</th>
                         </tr>
                     </thead>
 
@@ -96,11 +96,11 @@
                                     {% endfor %}
                                 </td>
                                 {% if is_granted_role_super_admin %}
-                                    <td class="align-middle">{{ user.lastActivityAt ? user.lastActivityAt|date("d/m/Y H:i") }}</td>
+                                    <td class="align-middle">{{ user.lastActivityAt ? user.lastActivityAt|date('d/m/Y H:i') }}</td>
                                     <td class="align-middle">{{ user.loginCount }}</td>
                                 {% endif %}
-                                <td class="align-middle">{{ user.disabledAt ? user.disabledAt|date("d/m/Y H:i") }}</td>
-                                <td class="align-middle">{{ user.createdAt|date("d/m/Y H:i") }}</td>
+                                <td class="align-middle">{{ user.disabledAt ? user.disabledAt|date('d/m/Y H:i') }}</td>
+                                <td class="align-middle">{{ user.createdAt|date('d/m/Y H:i') }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -111,7 +111,7 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <p><a href="{{ path("security_registration") }}" class="btn btn-{{ theme_color }} btn-sm shadow">
+                    <p><a href="{{ path('security_registration') }}" class="btn btn-{{ theme_color }} btn-sm shadow">
                          <span class="fas fa-plus-square mr-2"></span>Créer un nouvel utilisateur</a>
                     </p>
                 </div>
@@ -122,5 +122,5 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags("search") }}
+    {{ encore_entry_script_tags('search') }}
 {% endblock javascripts %}

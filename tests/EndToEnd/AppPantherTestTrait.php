@@ -14,7 +14,8 @@ trait AppPantherTestTrait
     /** @var PantherClient */
     protected $client;
 
-    protected function createPantherLogin(): Client
+    protected function
+    createPantherLogin(): Client
     {
         $this->output = new ConsoleOutput();
         $this->documentsDirectory = dirname(__DIR__).'/../../public/uploads/documents/';

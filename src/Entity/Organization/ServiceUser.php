@@ -42,6 +42,11 @@ class ServiceUser
      */
     private $service;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $main = false;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -84,6 +89,25 @@ class ServiceUser
     public function setService(?Service $service): self
     {
         $this->service = $service;
+
+        return $this;
+    }
+
+    public function getMain(): ?bool
+    {
+        return $this->main;
+    }
+
+    public function setMain(bool $main): self
+    {
+        $this->main = $main;
+
+        return $this;
+    }
+
+    public function toggleMain(): self
+    {
+        $this->main = !$this->main;
 
         return $this;
     }

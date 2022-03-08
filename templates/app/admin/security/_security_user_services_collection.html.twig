@@ -1,0 +1,41 @@
+<div class="row">
+    <div class="col-md-6">
+        <div class="table-responsive table-sm">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col" class="align-middle th-w-150">Nom du service</th>
+                        <th scope="col" class="align-middle th-w-100">Service principal</th>
+                        <th scope="col" class="align-middle th-w-20"></th>
+                    </tr>
+                </thead>
+                {% set service_user_prototype %}
+                        <td class="align-middle">{{ form_widget(form_user_services.serviceUser.vars.prototype.service) }}</td>
+                        <td class="align-middle">
+                            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }}">
+                                {{ form_widget(form_user_services.serviceUser.vars.prototype.main) }}
+                            </div>
+                        </td>
+                        <td class="align-middle">
+                            <button class="btn btn-danger" data-action="remove">
+                                <i class="fas fa-trash-alt"></i></button>
+                        </td>
+                {% endset %}
+                <tbody id="service_user_fields_list" data-prototype="{{ service_user_prototype|e|spaceless }}" 
+                    data-container-tag="tr" data-widget-counter="{{ form_user_services.serviceUser|length }}">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="row mb-4">
+    <div class="col-md-12">
+        <button type="button" id="addService" class="btn btn-{{ theme_color }}" data-add-widget="service"
+            data-list-selector="#service_user_fields_list"><i class="fas fa-plus-square mr-2"></i>
+            Ajouter un service</button>
+        <div class="float-right">
+            <button type="submit" id="user_services_send" name="user_services_send" 
+                class="btn btn-{{ theme_color }} shadow"><i class="fas fa-save mr-2"></i>Enregistrer</button>
+        </div>
+    </div>
+</div>

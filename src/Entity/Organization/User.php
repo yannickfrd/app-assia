@@ -44,6 +44,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public const STATUS_DIRECTOR = 4;
     public const STATUS_ADMINISTRATIVE = 5;
     public const STATUS_PSYCHO = 9;
+    public const STATUS_TRAINEE = 7;
 
     public const STATUS = [
         1 => 'Travailleur social',
@@ -73,6 +74,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // 'ROLE_INDICATOR' => 'Indicateur',
     ];
 
+    public const PASSWORD_REGEX_PATTERN = '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).{8,}$^';
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -101,9 +104,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $phone1; // NE PAS SUPPRIMER
 
     /**
-     * @ORM\Column(type="string", length=255)
-     *@Assert\NotBlank()
-     * @Assert\Regex(pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).{8,}$^", match=true, message="Le mot de passe est invalide.")
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $password;
 
@@ -451,6 +452,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->roles[] = $role;
 
         return $this;
+    }
+
+    public function hasRole(string $role): bool
+    {
+        return in_array($role, $this->roles);
     }
 
     public function getLoginCount(): ?int
@@ -919,5 +925,40 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->setting = $setting;
 
         return $this;
+    }
+
+    public function getIdsMainServices(): array
+    {
+        $ids = [];
+
+        foreach ($this->getServiceUser() as $serviceUser) {
+            if ($serviceUser->getMain()) {
+                $ids[] = $serviceUser->getService()->getId();
+            }
+        }
+
+        return $ids;
+    }
+
+    public function getServicesIds(): array
+    {
+        $ids = [];
+
+        foreach ($this->getServiceUser() as $serviceUser) {
+            $ids[] = $serviceUser->getService()->getId();
+        }
+
+        return $ids;
+    }
+
+    public function hasService(Service $service): bool
+    {
+        foreach ($this->getServiceUser() as $serviceUser) {
+            if ($serviceUser->getService()->getId() === $service->getId()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

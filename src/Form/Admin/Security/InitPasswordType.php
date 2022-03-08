@@ -2,11 +2,14 @@
 
 namespace App\Form\Admin\Security;
 
-use Symfony\Component\Form\AbstractType;
+use App\Entity\Organization\User;
 use App\Form\Model\Security\UserInitPassword;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class InitPasswordType extends AbstractType
 {
@@ -14,6 +17,14 @@ class InitPasswordType extends AbstractType
     {
         $builder
             ->add('password', PasswordType::class, [
+                'constraints' => [
+                    new NotBlank(),
+                    new Regex([
+                        'pattern' => User::PASSWORD_REGEX_PATTERN,
+                        'match' => true,
+                        'message' => 'Le mot de passe est invalide.',
+                    ]),
+                ],
                 'attr' => [
                     'class' => 'js-password',
                     'placeholder' => 'New password',

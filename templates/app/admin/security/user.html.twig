@@ -1,4 +1,4 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
 
 {% block title %}{{ form.vars.value.fullname }}{% endblock %}
 
@@ -8,12 +8,11 @@
 
         <section>
 
-            {% include "model/_msgFlash.html.twig" %}
+            {% include 'model/_msgFlash.html.twig' %}
 
             <h1 class="h2 mb-3">{{ form.vars.value.fullname }}</h1>
 
             {{ form_start(form) }}
-            
             <hr>
 
             <div class="row">
@@ -36,7 +35,7 @@
 				</td>
 			{% endset %}
 
-            <div id="serviceUser-fields-list" data-prototype="{{ service_user_prototype|e|spaceless }}" 
+            <div id="service_user_fields_list" data-prototype="{{ service_user_prototype|e|spaceless }}" 
                 data-container-tag="tr" data-widget-counter="{{ form.serviceUser|length }}">
                 <div class="table-responsive">
                     <table id="function-table" class="table">
@@ -62,7 +61,7 @@
             </div>
             <div class="my-2">
                 <button type="button" class="btn btn-{{ theme_color }}" data-add-widget="service"
-                    data-list-selector="#serviceUser-fields-list"><i class="fas fa-plus-square mr-2"></i>
+                    data-list-selector="#service_user_fields_list"><i class="fas fa-plus-square mr-2"></i>
 					Ajouter un service</button>
             </div>
             <div class="row">
@@ -75,7 +74,7 @@
             </div>
 
             {{ form_row(form._token) }}
-            {{ form_end(form, {"render_rest": false}) }}
+            {{ form_end(form, {'render_rest': false}) }}
 
         </section>
     </div>
@@ -83,5 +82,5 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags("registration") }}
+    {{ encore_entry_script_tags('registration') }}
 {% endblock %}

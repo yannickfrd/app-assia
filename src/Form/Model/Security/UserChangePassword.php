@@ -12,9 +12,6 @@ class UserChangePassword
      */
     private $oldPassword;
 
-    /**
-     * @Assert\Regex(pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).{8,}$^", match=true, message="Le nouveau mot de passe est invalide.")
-     */
     private $newPassword;
 
     /**

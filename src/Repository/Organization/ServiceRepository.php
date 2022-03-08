@@ -67,6 +67,14 @@ class ServiceRepository extends ServiceEntityRepository
     }
 
     /**
+     * Retourne tous les services.
+     */
+    public function findAllQuery(): QueryBuilder
+    {
+        return $this->createQueryBuilder('s')->select('s')->orderBy('s.name', 'ASC');
+    }
+
+    /**
      * Donne tous les services à exporter.
      *
      * @return Service[]|null
