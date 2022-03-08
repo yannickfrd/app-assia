@@ -42,6 +42,9 @@ export default class Calendar {
         this.btnCancelElt = this.modalRdvElt.querySelector('#js-btn-cancel')
         this.btnDeleteElt = this.modalRdvElt.querySelector('#modal-btn-delete')
 
+        this.googleCalendarCheckbox = this.modalRdvElt.querySelector('input[name="rdv[_googleCalendar]"]')
+        this.outlookCalendarCheckbox = this.modalRdvElt.querySelector('input[name="rdv[_outlookCalendar]"]')
+
         this.themeColor = document.getElementById('header').dataset.color
         this.supportElt = document.getElementById('support')
         this.supportPeopleElt = document.getElementById('js-support-people')
@@ -51,7 +54,7 @@ export default class Calendar {
 
         this.selectManager = new SelectManager('#rdv_tags', { name: 'onModal', elementId: this.modalRdvElt.id })
 
-        this.rdvTemp = null
+        this.rdvBeforeUpdate = null
         
         this.init()
     }
@@ -296,7 +299,7 @@ export default class Calendar {
      * @param {Object} rdv
      */
     showRdv(rdv) {
-        this.rdvTemp = rdv.getRdv
+        this.rdvBeforeUpdate = rdv.getRdv
 
         this.modalRdvElt.querySelector('form').action = '/rdv/' + this.rdvId + '/edit'
         this.modalRdvElt.querySelector('#rdv_title').value = rdv.title
@@ -414,15 +417,12 @@ export default class Calendar {
     updateRdv(rdv, action, apiUrls) {
         const rdvMdl = new RdvModel(rdv.getRdv)
 
-        const googleIsClicked = this.strToBool(localStorage.getItem('agenda.google'))
-        const outlookIsClicked = this.strToBool(localStorage.getItem('agenda.outlook'))
-
-        if (rdvMdl.isDifferent(this.rdvTemp) || (googleIsClicked || outlookIsClicked)) {
-            if ((!this.strToBool(this.rdvTemp.googleEventId) && googleIsClicked)
-                || (!this.strToBool(this.rdvTemp.outlookEventId) && outlookIsClicked)) {
-
-                this.updateModalElt.show()
-            }
+        if (
+            rdvMdl.isDifferent(this.rdvBeforeUpdate)
+            || (null === this.rdvBeforeUpdate.googleEventId && this.googleCalendarCheckbox.checked)
+            || (null === this.rdvBeforeUpdate.outlookEventId && this.outlookCalendarCheckbox.checked)
+        ) {
+            this.updateModalElt.show()
 
             document.getElementById('modal-confirm').addEventListener('click', () => {
                 this.apiCalendar.addEvent(rdvMdl, apiUrls)
@@ -431,21 +431,6 @@ export default class Calendar {
 
         this.rdvElt.remove()
         this.createRdv(rdv, action, apiUrls)
-    }
-
-    /**
-     * @param str
-     * @returns {boolean}
-     */
-    strToBool(str) {
-        switch (str) {
-            case true:
-            case '1':
-            case 'true':
-                return true
-            default:
-                return false
-        }
     }
 
     /**

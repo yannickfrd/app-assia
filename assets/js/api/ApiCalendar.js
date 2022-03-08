@@ -8,20 +8,19 @@ export default class ApiCalendar {
         this.modalRdvElt = document.getElementById('modal-rdv')
         this.btnDeleteRdvElt = this.modalRdvElt.querySelector('button#modal-btn-delete')
         this.formRdvElt = this.modalRdvElt.querySelector('form[name=rdv]')
-        this.listApiCalendarCheckbox = this.modalRdvElt.querySelectorAll('.api-calendar')
+
+        this.googleCalendarCheckbox = this.modalRdvElt.querySelector('input[name="rdv[_googleCalendar]"]')
+        this.outlookCalendarCheckbox = this.modalRdvElt.querySelector('input[name="rdv[_outlookCalendar]"]')
 
         this.init()
     }
 
     init() {
-        this.listApiCalendarCheckbox.forEach(elt => {
-            const apiName = elt.dataset['apiName']
-            const storageKey = 'agenda.' + apiName
-            const valLocalStorage = localStorage.getItem(storageKey)
-
-            elt.checked = (null === valLocalStorage) ? false : JSON.parse(valLocalStorage)
-
-            elt.addEventListener('change', e => localStorage.setItem(storageKey, e.currentTarget.checked))
+        this.googleCalendarCheckbox.addEventListener('change', (e) => {
+            localStorage.setItem('calendar.google', e.currentTarget.checked)
+        })
+        this.outlookCalendarCheckbox.addEventListener('change', (e) => {
+            localStorage.setItem('calendar.outlook', e.currentTarget.checked)
         })
     }
 
@@ -33,11 +32,9 @@ export default class ApiCalendar {
      */
     addEvent(rdvMdl, api) {
         Object.keys(api).forEach(apiName => {
-            if (localStorage.getItem('agenda.' + apiName) === 'true') {
-                rdvMdl.apiName = apiName
+            rdvMdl.apiName = apiName
 
-                window.open(rdvMdl.url, '_blank')
-            }
+            window.open(rdvMdl.url, '_blank')
         })
     }
 
