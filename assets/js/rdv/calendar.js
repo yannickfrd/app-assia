@@ -112,6 +112,13 @@ export default class Calendar {
         if (rdvElt) {
             rdvElt.click()
         }
+
+        if (localStorage.getItem('calendar.google') === 'true') {
+            this.googleCalendarCheckbox.checked = 'checked'
+        }
+        if (localStorage.getItem('calendar.outlook') === 'true') {
+            this.outlookCalendarCheckbox.checked = 'checked';
+        }
     }
 
     /**
@@ -417,15 +424,27 @@ export default class Calendar {
     updateRdv(rdv, action, apiUrls) {
         const rdvMdl = new RdvModel(rdv.getRdv)
 
-        if (
-            rdvMdl.isDifferent(this.rdvBeforeUpdate)
-            || (null === this.rdvBeforeUpdate.googleEventId && this.googleCalendarCheckbox.checked)
-            || (null === this.rdvBeforeUpdate.outlookEventId && this.outlookCalendarCheckbox.checked)
-        ) {
+        const googleIsCheckedNow = (null === this.rdvBeforeUpdate.googleEventId && this.googleCalendarCheckbox.checked)
+        const outlookIsCheckedNow = (null === this.rdvBeforeUpdate.outlookEventId && this.outlookCalendarCheckbox.checked)
+
+        if (rdvMdl.isDifferent(this.rdvBeforeUpdate) || googleIsCheckedNow || outlookIsCheckedNow) {
             this.updateModalElt.show()
 
+            const listApis = () => {
+                let list = {}
+
+                if (googleIsCheckedNow) {
+                    list.google = apiUrls.google;
+                }
+                if (outlookIsCheckedNow) {
+                    list.outlook =  apiUrls.outlook
+                }
+
+                return Object.keys(list).length === 0 ? apiUrls : list
+            }
+
             document.getElementById('modal-confirm').addEventListener('click', () => {
-                this.apiCalendar.addEvent(rdvMdl, apiUrls)
+                this.apiCalendar.addEvent(rdvMdl, listApis())
             }, {once: true})
         }
 
