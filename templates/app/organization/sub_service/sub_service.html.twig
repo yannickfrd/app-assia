@@ -1,9 +1,9 @@
-{% extends 'base.html.twig '%}
+{% extends 'base.html.twig' %}
 
-{% set subService = form.vars.value %}
-{% set disabled = subService.isDisabled %}
-{% set EDIT_MODE = subService.id != null %}
-{% set title = EDIT_MODE ? 'Sous-service ' ~ subService.name ~ (disabled ? ' (désactivé)') : 'Nouveau sous-service' %}
+{% set sub_service = form.vars.value %}
+{% set disabled = sub_service.isDisabled %}
+{% set EDIT_MODE = sub_service.id != null %}
+{% set title = EDIT_MODE ? 'Sous-service ' ~ sub_service.name ~ (disabled ? ' (désactivé)') : 'Nouveau sous-service' %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -14,8 +14,8 @@
         <h1 class="h2 mb-3">{{ title }}</h1>
         {% if EDIT_MODE %}
             <div class="small text-secondary">
-                <p> Créé le {{ subService.createdAt|date('d/m/Y à H:i') }}{{ subService.createdBy ? ' par ' ~ subService.createdBy.fullname }}
-                    (modifié le {{ subService.updatedAt|date('d/m/Y à H:i') }}{{ subService.updatedBy ? ' par ' ~ subService.updatedBy.fullname }})
+                <p> Créé le {{ sub_service.createdAt|date('d/m/Y à H:i') }}{{ sub_service.createdBy ? ' par ' ~ sub_service.createdBy.fullname }}
+                    (modifié le {{ sub_service.updatedAt|date('d/m/Y à H:i') }}{{ sub_service.updatedBy ? ' par ' ~ sub_service.updatedBy.fullname }})
                 </p>
             </div>
         {% else %}
@@ -24,7 +24,7 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
-                    href="{{ path('service_edit', {'id':service.id}) }}">{{ service.name }}</a></li>
+                    href="{{ path('service_edit', {'id': service.id}) }}">{{ service.name }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Sous-service</li>
             </ol>
         </nav>
@@ -55,9 +55,9 @@
             
             <div class="row mb-3">
                 <div class="col-md-12"> 
-                    {% if EDIT_MODE and is_granted('DISABLE', subService.service) %}
+                    {% if EDIT_MODE and is_granted('DISABLE', sub_service.service) %}
                         <div class="float-left d-flex">
-                            <a class="mr-3 btn btn-{{ disabled ? 'success' : 'danger' }} d-block" href="{{ path('sub_service_disable', {'id':subService.id}) }}"
+                            <a class="mr-3 btn btn-{{ disabled ? 'success' : 'danger' }} d-block" href="{{ path('sub_service_disable', {'id': sub_service.id}) }}"
                                 title="{{ disabled ? 'Réactiver' : 'Désactiver' }} le sous-service" data-toggle="tooltip" data-placement="bottom"
                                 {% if disabled == false %}onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir désactiver ce sous-service ?')){return true;}else{return false;}"{% endif %}>
                                 {% if disabled %}Réactiver{% else %}Désactiver{% endif %}</a>
@@ -72,62 +72,59 @@
         </section>
 
         {% if EDIT_MODE == true and service.place == YES %}
-        <section>
-            <h2 class="h4 my-4">Groupes de places rattachés</h2>
-            <p class="align-middle">{{ places|length }} groupe{% if places|length > 0 %}s{% endif %}<!--
-                --> ({{ nbPlaces }} places).</p>
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
-                    <thead>
-                        <tr>
-                            <th scope="col" class="align-middle th-w-20"></th>
-                            <th scope="col" class="align-middle th-w-150">Nom du groupe de places</th>
-                            <th scope="col" class="align-middle th-w-100">Dispositif</th>
-                            <th scope="col" class="align-middle th-w-80">Nombre de places</th>
-                            <th scope="col" class="align-middle th-date">Date d'ouverture</th>
-                            <th scope="col" class="align-middle th-date">Date de fermeture</th>
-                            <th scope="col" class="align-middle th-w-100">Ville</th>
-                            <th scope="col" class="align-middle th-w-60">Code postal</th>
-                            <th scope="col" class="align-middle th-w-150">Adresse</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for place in places %}
-                        <tr>
-                            <td scope="row" class="align-middle text-center">
-                                <a href="{{ path('place_edit', {'id':place.id}) }}"
-                                    class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" 
-                                    data-placement="bottom" title="Voir le groupe de places">
-                                    <span class="fas fa-eye"></span>
-                                </a>
-                            </td>
-                            <td class="align-middle">{{ place.name }}</td>
-                            <td class="align-middle">{{ place.device.name }}</td>
-                            <td class="align-middle">{{ place.nbPlaces }}</td>
-                            <td class="align-middle">{{ place.startDate|date('d/m/Y') }}</td>
-                            <td class="align-middle">{% if place.endDate %}{{ place.endDate|date('d/m/Y') }}{% endif %}
-                            </td>
-                            <td class="align-middle">{{ place.city|capitalize }}</td>
-                            <td class="align-middle">{{ place.zipcode }}</td>
-                            <td class="align-middle">{{ place.address }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            {% if is_granted('EDIT', service) %}
-            <div class="row my-3">
-                <div class="col-md-12">
-                    <a href="{{ path('service_place_new', {'id':service.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow">
-                    <span class="fas fa-plus-square pr-2"></span>Créer un nouveau groupe de places</a>
+            <section>
+                <h2 class="h4 my-4">Groupes de places rattachés</h2>
+                <p class="align-middle">{{ places|length }} groupe{% if places|length > 0 %}s{% endif %}<!--
+                    --> ({{ nbPlaces }} places).</p>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="align-middle th-w-20"></th>
+                                <th scope="col" class="align-middle th-w-150">Nom du groupe de places</th>
+                                <th scope="col" class="align-middle th-w-100">Dispositif</th>
+                                <th scope="col" class="align-middle th-w-80">Nombre de places</th>
+                                <th scope="col" class="align-middle th-date">Date d'ouverture</th>
+                                <th scope="col" class="align-middle th-date">Date de fermeture</th>
+                                <th scope="col" class="align-middle th-w-100">Ville</th>
+                                <th scope="col" class="align-middle th-w-60">Code postal</th>
+                                <th scope="col" class="align-middle th-w-150">Adresse</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for place in places %}
+                            <tr>
+                                <td scope="row" class="align-middle text-center">
+                                    <a href="{{ path('place_edit', {'id': place.id}) }}"
+                                        class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" 
+                                        data-placement="bottom" title="Voir le groupe de places">
+                                        <span class="fas fa-eye"></span>
+                                    </a>
+                                </td>
+                                <td class="align-middle">{{ place.name }}</td>
+                                <td class="align-middle">{{ place.device.name }}</td>
+                                <td class="align-middle">{{ place.nbPlaces }}</td>
+                                <td class="align-middle">{{ place.startDate|date('d/m/Y') }}</td>
+                                <td class="align-middle">{% if place.endDate %}{{ place.endDate|date('d/m/Y') }}{% endif %}
+                                </td>
+                                <td class="align-middle">{{ place.city|capitalize }}</td>
+                                <td class="align-middle">{{ place.zipcode }}</td>
+                                <td class="align-middle">{{ place.address }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
-            </div>
-            {% endif %}
-        </section>
-        <hr>
+                {% if is_granted('EDIT', service) %}
+                <div class="row my-3">
+                    <div class="col-md-12">
+                        <a href="{{ path('service_place_new', {'id': service.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow">
+                        <span class="fas fa-plus-square pr-2"></span>Créer un nouveau groupe de places</a>
+                    </div>
+                </div>
+                {% endif %}
+            </section>
         {% endif %}
-
-
     </div>
     
 {% endblock %}
