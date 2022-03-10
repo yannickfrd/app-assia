@@ -6,6 +6,7 @@ use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Evaluation\EvaluationGroup;
 use App\Form\Evaluation\EvaluationGroupType;
 use App\Repository\Evaluation\EvaluationGroupRepository;
+use App\Repository\Support\PaymentRepository;
 use App\Repository\Support\SupportGroupRepository;
 use App\Service\Evaluation\EvaluationCreator;
 use App\Service\Evaluation\EvaluationExporter;
@@ -165,13 +166,15 @@ class EvaluationController extends AbstractController
      *
      * @Route("/support/{id}/evaluation/export/{type}", name="evaluation_export", methods="GET")
      */
-    public function exportEvaluation(int $id, SupportManager $supportManager, EvaluationExporter $evaluationExporter, Request $request): Response
+    public function exportEvaluation(int $id, SupportManager $supportManager, EvaluationExporter $evaluationExporter, Request $request, PaymentRepository $paymentRepo): Response
     {
         $supportGroup = $supportManager->getFullSupportGroup($id);
 
+        $payments = 1 === $supportGroup->getService()->getContribution() ? $paymentRepo->findPaymentsOfSupport($id) : null;
+
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        $response = $evaluationExporter->export($supportGroup, $request);
+        $response = $evaluationExporter->export($supportGroup, $request, $payments);
 
         if (!$response) {
             $this->addFlash('warning', 'Il n\'y a pas d\'évaluation sociale créée pour ce suivi.');

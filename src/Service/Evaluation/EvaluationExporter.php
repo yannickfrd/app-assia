@@ -31,7 +31,7 @@ class EvaluationExporter
     /**
      * @return StreamedResponse|null
      */
-    public function export(SupportGroup $supportGroup, Request $request): ?Response
+    public function export(SupportGroup $supportGroup, Request $request, $payments): ?Response
     {
         $evaluation = $this->getEvaluation($supportGroup);
 
@@ -45,14 +45,14 @@ class EvaluationExporter
         $pathImage = 'pdf' === $exportType ? $export->getPathImage($logoPath) : null;
         $fullnameSupport = $supportGroup->getHeader()->getFullname();
 
-        $content = $this->getContent($supportGroup, $evaluation, $exportType, $pathImage, $fullnameSupport);
+        $content = $this->getContent($supportGroup, $evaluation, $exportType, $pathImage, $fullnameSupport, $payments);
 
         $export->createDocument($content, self::TITLE, $logoPath, $fullnameSupport);
 
         return $export->download($this->appEnv);
     }
 
-    public function createNote(SupportGroup $supportGroup): ?Note
+    public function createNote(SupportGroup $supportGroup, $payments): ?Note
     {
         $evaluation = $this->getEvaluation($supportGroup);
 
@@ -62,13 +62,19 @@ class EvaluationExporter
 
         return (new Note())
             ->setTitle(self::TITLE.' '.(new \DateTime())->format('d/m/Y'))
-            ->setContent($this->getContent($supportGroup, $evaluation, 'note'))
+            ->setContent($this->getContent($supportGroup, $evaluation, 'note', null, null, $payments))
             ->setType(Note::TYPE_NOTE)
             ->setSupportGroup($supportGroup);
     }
 
-    private function getContent(SupportGroup $supportGroup, EvaluationGroup $evaluation, string $exportType, string $pathImage = null, string $fullnameSupport = null): string
-    {
+    private function getContent(
+        SupportGroup $supportGroup,
+        EvaluationGroup $evaluation,
+        string $exportType,
+        string $pathImage = null,
+        string $fullnameSupport = null,
+        array $payments = null
+    ): string {
         $organization = $supportGroup->getService()->getPole()->getOrganization()->getName();
 
         return $this->renderer->render('app/evaluation/export/evaluation_export.html.twig', [
@@ -76,6 +82,7 @@ class EvaluationExporter
             'support' => $supportGroup,
             'referents' => $this->supportCollections->getReferents($supportGroup),
             'evaluation' => $evaluation,
+            'payments' => $payments,
             'lastRdv' => $this->supportCollections->getLastRdvs($supportGroup),
             'nextRdv' => $this->supportCollections->getNextRdvs($supportGroup),
             'title' => self::TITLE,

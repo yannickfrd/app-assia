@@ -76,7 +76,7 @@ class PaymentRepository extends ServiceEntityRepository
      *
      * @return Payment[]|null
      */
-    public function findPaymentsBetween(\Datetime $start, \Datetime $end, array $supportsId): ?array
+    public function findPaymentsBetween(\DateTime $start, \DateTime $end, array $supportsId): ?array
     {
         $qb = $this->createQueryBuilder('p')->select('p')
             ->leftJoin('p.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
@@ -250,28 +250,37 @@ class PaymentRepository extends ServiceEntityRepository
     /**
      * Return all payments of group support.
      */
-    public function findPaymentsOfSupportQuery(int $supportGroupId, SupportPaymentSearch $search): Query
+    public function findPaymentsOfSupportQuery(int $supportGroupId, SupportPaymentSearch $search = null): Query
     {
         $qb = $this->createQueryBuilder('p')->select('p')
             ->andWhere('p.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroupId);
 
-        if ($search->getType()) {
-            $qb->andWhere('p.type IN (:type)')
-                ->setParameter('type', $search->getType());
-        }
-        if ($search->getStart()) {
-            $qb->andWhere('p.startDate >= :start')
-                ->setParameter('start', $search->getStart());
-        }
-        if ($search->getEnd()) {
-            $qb->andWhere('p.startDate <= :end')
-                ->setParameter('end', $search->getEnd());
+        if (null !== $search) {
+            if ($search->getType()) {
+                $qb->andWhere('p.type IN (:type)')
+                    ->setParameter('type', $search->getType());
+            }
+            if ($search->getStart()) {
+                $qb->andWhere('p.startDate >= :start')
+                    ->setParameter('start', $search->getStart());
+            }
+            if ($search->getEnd()) {
+                $qb->andWhere('p.startDate <= :end')
+                    ->setParameter('end', $search->getEnd());
+            }
         }
 
         return $qb
             ->orderBy('p.createdAt', 'DESC')
             ->getQuery();
+    }
+
+    public function findPaymentsOfSupport(int $supportGroupId)
+    {
+        return $this->findPaymentsOfSupportQuery($supportGroupId)
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
     }
 
     /**
