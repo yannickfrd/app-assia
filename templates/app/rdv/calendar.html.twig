@@ -18,7 +18,7 @@
 				<div class="d-flex align-items-center">
 					<h2 class="h2 mr-3 mb-0 d-none d-sm-block">Agenda</h2>
 					<a class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-toggle="tooltip" data-placement="bottom" title="Passer en vue liste"
-						href="{% if support is defined %}{{ path('support_rdvs', {'id': support.id}) }}{% else %}{{ path('rdvs') }}{% endif %}">
+						href="{% if support is defined %}{{ path('support_rdv_index', {'id': support.id}) }}{% else %}{{ path('rdv_index') }}{% endif %}">
 						<span class="far fa-list-alt"></span>
 					</a>
 					<button id="js-new-rdv" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-toggle="tooltip" data-placement="bottom"

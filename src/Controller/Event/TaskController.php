@@ -153,7 +153,7 @@ class TaskController extends AbstractController
             $em->flush();
 
             TaskManager::deleteCacheItems($task);
-            
+
             return $this->json([
                 'action' => 'edit',
                 'alert' => 'success',

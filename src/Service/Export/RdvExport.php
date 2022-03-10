@@ -4,6 +4,8 @@ namespace App\Service\Export;
 
 use App\Entity\Support\Rdv;
 use App\Service\ExportExcel;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class RdvExport extends ExportExcel
@@ -16,7 +18,6 @@ class RdvExport extends ExportExcel
     }
 
     /**
-     * Exporte les données.
      * @return StreamedResponse|Response|string
      */
     public function exportData(array $rdvs)

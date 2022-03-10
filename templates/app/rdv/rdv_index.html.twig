@@ -55,7 +55,7 @@
                                 {% for rdv in rdvs %}
                                     {% set support = rdv.supportGroup %}
                                     <tr id="rdv-{{ rdv.id }}" class="js-rdv">
-                                        <td scope="row" class="align-middle text-center">
+                                        <td class="align-middle text-center">
                                             <a href="{% if support %}{{ path('support_calendar_show',
                                                 {'id': support.id, 'year': rdv.start|date('Y'),'month': rdv.start|date('m'), 
                                                 'rdv_id': rdv.id}) }}{% else %}{{ path('calendar_show', {'year': rdv.start|date('Y'), 
@@ -69,7 +69,7 @@
                                             {{ rdv.content|u.truncate(200, ' [...]', false)|striptags|raw }}
                                         </td>
                                         <td class="align-middle">{{ rdv.start|date('d/m/Y') }}<br/>
-                                            {{ rdv.start|date("H:i") }} – {{ rdv.end|date('H:i') }}</td>
+                                            {{ rdv.start|date('H:i') }} – {{ rdv.end|date('H:i') }}</td>
                                         <td class="align-middle">{{ rdv.start|date('Y-m-d-H') > 'now'|date('Y-m-d-H') ? 'À venir' :
                                             rdv.statusToString }}</td>
                                         <td class="align-middle">{{ rdv.location }}</td>

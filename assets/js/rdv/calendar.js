@@ -232,7 +232,7 @@ export default class Calendar {
         this.loader.on()
         this.rdvElt = rdvElt
         this.rdvId = Number(this.rdvElt.id.replace('rdv-', ''))
-        this.ajax.send('GET', '/rdv/' + this.rdvId + '/get', this.responseAjax.bind(this))
+        this.ajax.send('GET', '/rdv/' + this.rdvId + '/show', this.responseAjax.bind(this))
     }
 
     /**
@@ -350,11 +350,10 @@ export default class Calendar {
      * @param {Object} rdv
      */
     initTagSelect(rdv){
-        const tags = JSON.parse(rdv.tags)
         const tagOptions = this.modalRdvElt.querySelectorAll('select#rdv_tags option')
 
         const listTagId = []
-        tags.forEach(tag => {
+        rdv.tags.forEach(tag => {
             tagOptions.forEach(option => {
                 if (parseInt(option.value) === parseInt(tag.id)){
                     listTagId.push(option.value)
