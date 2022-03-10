@@ -50,58 +50,6 @@
     <p>&nbsp;</p>
 {% endif %}
 
-{# A mettre le tb !!#}
-<table class="table-bordered mb-2" style="width: 100%; {{ style_table }}">
-    <thead>
-        <tr style="{{ style_thead }}">
-            <th>Paiements</th>
-            <th class="text-center" style="text-align: center;">Période</th>
-            <th class="text-right" style="text-align: right;">Montant à régler</th>
-            <th class="text-right" style="text-align: right;">Montant réglé</th>
-            <th class="text-right" style="text-align: right;">Restant dû (différenciel)</th>
-            <th class="text-center th-date" style="text-align: center;">Date de l'opération</th>
-            <th>Commentaire</th>
-        </tr>
-    </thead>
-    <tbody>
-
-    {% set to_pay_amt_sum, paid_amt_sum, still_to_pay_amt_sum = 0, 0, 0 %}
-    {% for payment in payments %}
-
-        {% set to_pay_amt_sum = to_pay_amt_sum + payment.toPayAmt %}
-        {% set paid_amt_sum = paid_amt_sum + payment.paidAmt %}
-        {% set still_to_pay_amt_sum = still_to_pay_amt_sum + payment.stillToPayAmt %}
-
-        {% if loop.index <= 3 %}
-            <tr>
-                <td>{{ payment.typeToString }}</td>
-                <td class="align-middle text-center" style="text-align: center;">{% if payment.startDate %}
-                        <small>{{ payment.startDate|date("d/m/Y") }} - {{ payment.endDate|date("d/m/Y") }}</small>
-                    {% endif %}</td>
-
-                <td class="align-middle text-right" style="text-align: right;">{{ payment.toPayAmt is not null ? payment.toPayAmt|amount }}</td>
-                <td class="align-middle text-right" style="text-align: right;">{{ payment.paidAmt is not null ? payment.paidAmt|amount }}</td>
-                <td class="align-middle text-right" style="text-align: right;">{{ payment.stillToPayAmt is not null ? payment.stillToPayAmt|amount }}</td>
-
-                <td class="align-middle text-center" style="text-align: center;">{{ payment.paymentDate ? payment.paymentDate|date("d/m/Y") }}</td>
-                <td><small>{{ payment.comment }}</small></td>
-            </tr>
-        {% endif %}
-
-    {% endfor %}
-    </tbody>
-    <tfoot>
-    <tr style="font-weight: bold;">
-        <td colspan="2">Total</td>
-        <td class="align-middle text-right" style="text-align: right;">{{ to_pay_amt_sum|amount }}</td>
-        <td class="align-middle text-right" style="text-align: right;">{{ paid_amt_sum|amount }}</td>
-        <td class="align-middle text-right" style="text-align: right;">{{ still_to_pay_amt_sum|amount }}</td>
-        <td colspan="2"></td>
-    </tr>
-    </tfoot>
-</table>
-<br>
-
 {# {{ p_view.get(eval_budget_group.cafId ~ (eval_budget_group.cafAttachment ? ' (CAF de rattachement : ' ~ eval_budget_group.cafAttachment ~ ')'), 'Caf id', 'evaluation') }} #}
 
 {% for eval_person in eval_people_budget %}
@@ -200,3 +148,113 @@
     {% endif %}
 
 {% endfor %}
+
+{# Payments table #}
+<br>
+<table class="table-bordered mb-2" style="width: 100%; {{ style_table }}">
+    <thead>
+    <tr style="{{ style_thead }}">
+        <th>
+            {% if type == 'note' %}<p style="text-align: justify;">Paiements</p>{% else %}
+            <span style="width: 100%;">Paiements</span>
+            {% endif %}
+        </th>
+        <th class="text-center" style="text-align: center;">
+            {% if type == 'note' %}<p style="text-align: center;">Période</p>{% else %}
+            <span style="width: 100%;">Période</span>
+            {% endif %}
+        </th>
+        <th style="text-align: right; padding-right: 2px;">
+            {% if type == 'note' %}<p style="text-align: right;">Montant à régler</p>{% else %}
+            <span style="width: 100%;">Montant à régler</span>
+            {% endif %}
+        </th>
+        <th style="text-align: right; padding-right: 2px;">
+            {% if type == 'note' %}<p style="text-align: right;">Montant réglé</p>{% else %}
+            <span style="width: 100%;">Montant réglé</span>
+            {% endif %}
+        </th>
+        <th style="text-align: right; padding-right: 2px;">
+            {% if type == 'note' %}<p style="text-align: right;">Restant dû (différenciel)</p>{% else %}
+            <span style="width: 100%;">Restant dû (différenciel)</span>
+            {% endif %}
+        </th>
+        <th class="text-center th-date" style="text-align: center;">
+            {% if type == 'note' %}<p style="text-align: center;">Date de l'opération</p>{% else %}
+            <span style="width: 100%;">Date de l'opération</span>
+            {% endif %}
+        </th>
+        <th>
+            {% if type == 'note' %}<p style="text-align: justify;">Commentaire</p>{% else %}
+            <span style="width: 100%;">Commentaire</span>
+            {% endif %}
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+
+    {% set to_pay_amt_sum, paid_amt_sum, still_to_pay_amt_sum = 0, 0, 0 %}
+    {% for payment in payments %}
+
+        {% set to_pay_amt_sum = to_pay_amt_sum + payment.toPayAmt %}
+        {% set paid_amt_sum = paid_amt_sum + payment.paidAmt %}
+        {% set still_to_pay_amt_sum = still_to_pay_amt_sum + payment.stillToPayAmt %}
+
+        {% if loop.index <= 3 %}
+
+            {% if type == 'note' %}
+                {% include 'app/evaluation/export/_evaluation_budget_payment_note.html.twig' %}
+            {% else %}
+
+                <tr>
+                    <td>{{ payment.typeToString }}</td>
+                    <td class="align-middle text-center" style="text-align: center;">
+                        {% if payment.startDate %}
+                            <small>{{ payment.startDate|date("d/m/Y") }} - {{ payment.endDate|date("d/m/Y") }}</small>
+                        {% endif %}
+                    </td>
+
+                    <td class="align-middle text-right" style="text-align: right;">
+                        <span style="width: 100%;">{{ payment.toPayAmt is not null ? payment.toPayAmt|amount }}</span></td>
+
+                    <td class="align-middle text-right" style="text-align: right;">
+                        <span style="width: 100%;">{{ payment.paidAmt is not null ? payment.paidAmt|amount }}</span></td>
+
+                    <td class="align-middle text-right" style="text-align: right;">
+                        <span style="width: 100%;">{{ payment.stillToPayAmt is not null ? payment.stillToPayAmt|amount }}</span></td>
+
+                    <td class="align-middle text-center" style="text-align: center;">
+                        <span style="width: 100%;">{{ payment.paymentDate ? payment.paymentDate|date("d/m/Y") }}</span></td>
+
+                    <td><small>{{ payment.comment }}</small></td>
+                </tr>
+            {% endif %}
+        {% endif %}
+
+    {% endfor %}
+    </tbody>
+    <tfoot>
+    <tr style="font-weight: bold; text-align: justify">
+        <td style="text-align: justify;" colspan="2">Total</td>
+        <td style="text-align: right;">
+            {% if type == 'note' %}
+                <p style="text-align: right;">{{ to_pay_amt_sum|amount }}</p>
+            {% else %}
+                <span style="width: 100%;">{{ to_pay_amt_sum|amount }}</span>
+            {% endif %}</td>
+        <td style="text-align: right;">
+            {% if type == 'note' %}
+                <p style="text-align: right;">{{ paid_amt_sum|amount }}</p>
+            {% else %}
+                <span style="width: 100%;">{{ paid_amt_sum|amount }}</span>
+            {% endif %}</td>
+        <td style="text-align: right;">
+            {% if type == 'note' %}
+                <p style="text-align: right;">{{ still_to_pay_amt_sum|amount }}</p>
+            {% else %}
+                <span style="width: 100%;">{{ still_to_pay_amt_sum|amount }}</span>
+            {% endif %}</td>
+        <td colspan="2"></td>
+    </tr>
+    </tfoot>
+</table>
