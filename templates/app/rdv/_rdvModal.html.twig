@@ -67,7 +67,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row mb-3">
+                <div class="row mb-2">
                     <div class="col-12">
                         <div class="input-group">
                             <div class="input-group-prepend">
@@ -79,6 +79,23 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        {{ form_label(form.users, null, {label_attr: {class: 'col-12 col-sm-12'}}) }}
+                        {{ form_widget(form.users) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_label(form.supportGroup, null, {label_attr: {class: 'col-12 col-sm-12'}}) }}
+                        {{ form_widget(form.supportGroup) }}
+                    </div>
+                    {# <div class="col-md-12">
+                        {{ form_label(form_task.supportPeople, null, {label_attr: {class: 'col-12 col-sm-12'}}) }}
+                        {{ form_widget(form_task.supportPeople, {attr:
+                            {'data-url': path('support_people', {'id': '__id__'}) }}) }}
+                    </div> #}
+                </div>
+
                 <div class="row mb-3">
                     <div class="col-md-12">{{ form_widget(form.content) }}</div>
                 </div>

@@ -31,9 +31,11 @@ class TaskType extends AbstractType
     private $currentUser;
     private $tagRepo;
 
-    public function __construct(SupportGroupRepository $supportGroupRepo, CurrentUserService $currentUser,
-        TagRepository $tagRepo)
-    {
+    public function __construct(
+        SupportGroupRepository $supportGroupRepo,
+        CurrentUserService $currentUser,
+        TagRepository $tagRepo
+    ) {
         $this->supportGroupRepo = $supportGroupRepo;
         $this->currentUser = $currentUser;
         $this->tagRepo = $tagRepo;

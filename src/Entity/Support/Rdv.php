@@ -2,10 +2,11 @@
 
 namespace App\Entity\Support;
 
+use App\Entity\Event\AbstractEvent;
 use App\Entity\Organization\TagTrait;
 use App\Entity\Organization\User;
-use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
@@ -17,10 +18,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\HasLifecycleCallbacks
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
-class Rdv
+class Rdv extends AbstractEvent
 {
     use TagTrait;
-    use CreatedUpdatedEntityTrait;
     use SoftDeleteableEntity;
 
     public const STATUS = [
@@ -31,33 +31,16 @@ class Rdv
     ];
 
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     * @Groups("show_rdv")
+     * @ORM\Column(type="smallint")
      */
-    private $id;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=false)
-     * @Assert\NotBlank()
-     * @Groups("show_rdv")
-     */
-    private $title;
+    protected $type = parent::TYPE_EVENT;
 
     /**
      * @ORM\Column(type="datetime")
      * @Assert\NotNull()
      * @Groups("show_rdv")
      */
-    private $start;
-
-    /**
-     * @ORM\Column(type="datetime")
-     * @Assert\NotNull()
-     * @Groups("show_rdv")
-     */
-    private $end;
+    protected $start;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -65,35 +48,32 @@ class Rdv
      */
     private $status;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups("show_rdv")
-     */
-    private $location;
+//    /**
+//     * @Gedmo\Blameable(on="create")
+//     * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User", inversedBy="rdvs")
+//     * @Groups("show_rdv")
+//     */
+//    protected $createdBy; // NE PAS SUPPRIMER
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @var Collection<User>
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="rdvs")
+     * @ORM\OrderBy({"lastname": "ASC"})
      * @Groups("show_rdv")
      */
-    private $content;
+    protected $users;
 
     /**
-     * @Gedmo\Blameable(on="create")
-     * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User", inversedBy="rdvs")
-     * @Groups("show_rdv")
-     */
-    protected $createdBy; // NE PAS SUPPRIMER
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Support\SupportGroup", inversedBy="rdvs", fetch="EXTRA_LAZY")
+     * @var SupportGroup
+     * @ORM\ManyToOne(targetEntity=SupportGroup::class, inversedBy="rdvs", cascade={"persist"})
      * @Groups("show_rdv")
      */
     private $supportGroup;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="rdvs2")
-     */
-    private $user;
+//    /**
+//     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="rdvs")
+//     */
+//    private $user;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -109,48 +89,15 @@ class Rdv
 
     public function __construct()
     {
+        parent::__construct();
+
+        $this->users = new ArrayCollection();
         $this->tags = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getTitle(): ?string
-    {
-        return $this->title;
-    }
-
-    public function setTitle(?string $title): self
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    public function getStart(): ?\DateTimeInterface
-    {
-        return $this->start;
-    }
-
-    public function setStart(?\DateTimeInterface $start): self
-    {
-        $this->start = $start;
-
-        return $this;
-    }
-
-    public function getEnd(): ?\DateTimeInterface
-    {
-        return $this->end;
-    }
-
-    public function setEnd(?\DateTimeInterface $end): self
-    {
-        $this->end = $end;
-
-        return $this;
     }
 
     public function getStatus(): ?int
@@ -170,30 +117,6 @@ class Rdv
         return $this->status ? self::STATUS[$this->status] : null;
     }
 
-    public function getLocation(): ?string
-    {
-        return $this->location;
-    }
-
-    public function setLocation(?string $location): self
-    {
-        $this->location = $location;
-
-        return $this;
-    }
-
-    public function getContent(): ?string
-    {
-        return $this->content;
-    }
-
-    public function setContent(?string $content): self
-    {
-        $this->content = $content;
-
-        return $this;
-    }
-
     public function getSupportGroup(): ?SupportGroup
     {
         return $this->supportGroup;
@@ -206,17 +129,17 @@ class Rdv
         return $this;
     }
 
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
-
-        return $this;
-    }
+//    public function getUser(): ?User
+//    {
+//        return $this->user;
+//    }
+//
+//    public function setUser(?User $user): self
+//    {
+//        $this->user = $user;
+//
+//        return $this;
+//    }
 
     public function getGoogleEventId(): ?string
     {
@@ -241,4 +164,41 @@ class Rdv
 
         return $this;
     }
+
+
+//    /**
+//     * @return Collection<User>|User[]|null
+//     */
+//    public function getUsers(): ?Collection
+//    {
+//        return $this->users;
+//    }
+//
+//    public function getUsersToString(): string
+//    {
+//        $userNames = [];
+//
+//        foreach ($this->users as $user) {
+//            $userNames[] = $user->getFullname();
+//        }
+//
+//        return join(', ', $userNames);
+//    }
+//
+//    public function addUser(?User $user): self
+//    {
+//        if (!$this->users->contains($user)) {
+//            $this->users[] = $user;
+//        }
+//
+//        return $this;
+//    }
+//
+//    public function removeUser(User $user): self
+//    {
+//        $this->users->removeElement($user);
+//
+//        return $this;
+//    }
+
 }

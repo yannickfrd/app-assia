@@ -45,17 +45,30 @@ export default class Calendar {
         this.googleCalendarCheckbox = this.modalRdvElt.querySelector('input[name="rdv[_googleCalendar]"]')
         this.outlookCalendarCheckbox = this.modalRdvElt.querySelector('input[name="rdv[_outlookCalendar]"]')
 
+        const divSupportElt = document.querySelector('div[data-support]')
+        this.supportId = divSupportElt ? divSupportElt.dataset.support : null
+
         this.themeColor = document.getElementById('header').dataset.color
         this.supportElt = document.getElementById('support')
         this.supportPeopleElt = document.getElementById('js-support-people')
+        this.supportSelectElt = document.getElementById('rdv_supportGroup')
 
         this.showWeekendsItem = localStorage.getItem('calendar.show_weekends')
         this.fullWidthItem = localStorage.getItem('calendar.full_width')
 
-        this.selectManager = new SelectManager('#rdv_tags', { name: 'onModal', elementId: this.modalRdvElt.id })
+        this.tagsSelectManager = new SelectManager(
+            '#rdv_tags',
+            { name: 'onModal', elementId: this.modalRdvElt.id }
+        )
+        this.usersSelectManager = new SelectManager(
+            '#rdv_users',
+            { name: 'onModal', elementId: 'modal-rdv' }
+        )
+
+        this.currentUserId = document.getElementById('user-name').dataset.userId
 
         this.rdvBeforeUpdate = null
-        
+
         this.init()
     }
 
@@ -148,7 +161,7 @@ export default class Calendar {
     }
 
     /**
-     * Réinialise le formulaire modal de rdv.
+     * Réinitialise le formulaire modal de rdv.
      * @param {Event} e
      */
     resetData(e) {
@@ -174,15 +187,20 @@ export default class Calendar {
         this.rdvLocationInput.value = ''
         this.rdvStatusInput.value = ''
 
+        this.supportSelectElt.value = this.supportId ?? ''
+        this.supportSelectElt.disabled = this.supportId !== null
+
+        this.usersSelectManager.updateSelect(this.currentUserId)
+
         this.modalRdvElt.querySelector('#rdv_content').value = ''
         this.btnDeleteElt.classList.add('d-none')
         this.btnSaveElt.classList.remove('d-none')
 
         if (e.target.className && e.target.className.search('calendar-event') !== 0) {
-            this.selectManager.clearSelect()
+            this.tagsSelectManager.clearSelect()
             this.modalElt.show()
             const rdvTags = $('#rdv_tags')
-            rdvTags.val(null).trigger('change');
+            rdvTags.val(null).trigger('change')
         }
     }
 
@@ -340,6 +358,23 @@ export default class Calendar {
             this.btnSaveElt.classList.add('d-none')
         }
 
+        const userIds = []
+        rdv.getRdv.users.forEach(user => userIds.push(user.id))
+        this.usersSelectManager.updateSelect(userIds)
+
+        this.supportSelectElt.value = ''
+        this.supportSelectElt.disabled = rdv.getRdv.supportGroup !== null
+        if (rdv.getRdv.supportGroup) {
+            this.supportSelectElt.value = rdv.getRdv.supportGroup.id
+            if (this.supportSelectElt.value === '') {
+                const optionElt = document.createElement('option')
+                optionElt.value = rdv.getRdv.supportGroup.id
+                optionElt.textContent = rdv.getRdv.supportGroup.header.fullname
+                this.supportSelectElt.appendChild(optionElt)
+                this.supportSelectElt.value = rdv.getRdv.supportGroup.id
+            }
+        }
+
         this.modalElt.show()
 
         this.initTagSelect(rdv)
@@ -360,7 +395,7 @@ export default class Calendar {
                 }
             })
         })
-        this.selectManager.showOptionsFromArray(listTagId)
+        this.tagsSelectManager.showOptionsFromArray(listTagId)
     }
 
     /**

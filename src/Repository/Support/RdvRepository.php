@@ -50,6 +50,7 @@ class RdvRepository extends ServiceEntityRepository
     public function findRdv(int $id): ?Rdv
     {
         return $this->createQueryBuilder('r')->select('r')
+            ->leftJoin('r.users', 'u1')->addSelect('PARTIAL u1.{id, firstname, lastname}')
             ->leftJoin('r.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
             ->leftJoin('r.updatedBy', 'u2')->addSelect('PARTIAL u2.{id, firstname, lastname}')
             ->leftJoin('r.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')

@@ -86,7 +86,8 @@ class RdvController extends AbstractController
 
         $formSearch = $this->createForm(SupportRdvSearchType::class, $search = new SupportRdvSearch(), [
             'service' => $supportGroup->getService(),
-        ]);
+        ])
+            ->handleRequest($request);
 
         return $this->render('app/rdv/support_rdv_index.html.twig', [
             'support' => $supportGroup,
@@ -169,7 +170,7 @@ class RdvController extends AbstractController
     /**
      * @Route("/rdv/{id}/show", name="rdv_show", methods="GET")
      */
-    public function show($id, SerializerInterface $serializer): JsonResponse
+    public function show($id): JsonResponse
     {
         $rdv = $this->rdvRepo->findRdv($id);
 

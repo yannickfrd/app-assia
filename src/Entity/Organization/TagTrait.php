@@ -4,6 +4,7 @@ namespace App\Entity\Organization;
 
 use App\Entity\Organization\Tag as Tag;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 trait TagTrait

@@ -80,7 +80,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups("show_user")
+     * @Groups({"show_user", "show_rdv"})
      */
     private $id;
 
@@ -244,11 +244,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $notes;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Support\Rdv", mappedBy="createdBy")
-     */
-    private $rdvs;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Support\Document", mappedBy="createdBy")
      */
     private $documents;
@@ -258,10 +253,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $userDevices;
 
+//    /**
+//     * @ORM\OneToMany(targetEntity=Rdv::class, mappedBy="users")
+//     */
+//    private $rdvs2;
+
     /**
-     * @ORM\OneToMany(targetEntity=Rdv::class, mappedBy="user")
+     * @ORM\ManyToMany(targetEntity=Rdv::class, mappedBy="users")
      */
-    private $rdvs2;
+    private $rdvs;
 
     /**
      * @ORM\ManyToMany(targetEntity=Task::class, mappedBy="users")
@@ -288,7 +288,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->rdvs = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->userDevices = new ArrayCollection();
-        $this->rdvs2 = new ArrayCollection();
+//        $this->rdvs2 = new ArrayCollection();
         $this->tasks = new ArrayCollection();
     }
 

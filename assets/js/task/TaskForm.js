@@ -57,7 +57,7 @@ export default class TaskForm {
     }
 
     /**
-     * Réinialise les champs du formulaire.
+     * Initialise les champs du formulaire.
      */
     resetForm() {
         this.formValidator.reinit()
@@ -149,7 +149,7 @@ export default class TaskForm {
             this.taskManager.confirmDeleteModal.show()
             this.taskManager.btnConfirmDeleteElt.dataset.url = this.btnDeleteElt.dataset.url.replace('__id__', task.id)
         })
-        
+
         const userIds = []
         task.users.forEach(user => userIds.push(user.id))
         this.usersSelectManager.updateSelect(userIds)

@@ -33,7 +33,7 @@ class CalendarController extends AbstractController
      */
     public function showCalendar(int $year = null, int $month = null): Response
     {
-        $rdv = (new Rdv())->setUser($this->getUser());
+        $rdv = (new Rdv())->addUser($this->getUser());
         $form = $this->createForm(RdvType::class, $rdv);
 
         return $this->render('app/rdv/calendar.html.twig', [
@@ -45,6 +45,29 @@ class CalendarController extends AbstractController
                 null,
                 $this->getUser()
             ),
+        ]);
+    }
+
+    /**
+     * Affiche un jour du mois (vue journalière).
+     *
+     * @Route("/calendar/day/{year}/{month}/{day}", name="calendar_day_show", methods="GET", requirements={
+     * "year" : "\d{4}",
+     * "month" : "0?[1-9]|1[0-2]",
+     * "day" : "[1-9]|[0-3][0-9]",
+     * })
+     */
+    public function showDay(int $year = null, int $month = null, int $day = null, Request $request): Response
+    {
+        $startDay = new \DateTime($year.'-'.$month.'-'.$day);
+        $endDay = clone ($startDay)->modify('+1 day');
+
+        $form = $this->createForm(RdvType::class, new Rdv())
+            ->handleRequest($request);
+
+        return $this->render('app/rdv/day.html.twig', [
+            'form' => $form->createView(),
+            'rdvs' => $this->rdvRepo->findRdvsBetween($startDay, $endDay, null, $this->getUser()),
         ]);
     }
 
@@ -65,9 +88,9 @@ class CalendarController extends AbstractController
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
-        /** @var User $user */
-        $user = $this->getUser();
-        $form = $this->createForm(RdvType::class, (new Rdv())->setUser($user)->setSupportGroup($supportGroup));
+        $form = $this->createForm(RdvType::class, new Rdv(), [
+            'support_group' => $supportGroup,
+        ]);
 
         return $this->render('app/rdv/calendar.html.twig', [
             'support' => $supportGroup,
@@ -78,29 +101,6 @@ class CalendarController extends AbstractController
                 $calendar->getLastday(),
                 $supportGroup
             ),
-        ]);
-    }
-
-    /**
-     * Affiche un jour du mois (vue journalière).
-     *
-     * @Route("/calendar/day/{year}/{month}/{day}", name="calendar_day_show", methods="GET", requirements={
-     * "year" : "\d{4}",
-     * "month" : "0?[1-9]|1[0-2]",
-     * "day" : "[1-9]|[0-3][0-9]",
-     * })
-     */
-    public function showDay(int $year = null, int $month = null, int $day = null, Request $request): Response
-    {
-        $startDay = new \Datetime($year.'-'.$month.'-'.$day);
-        $endDay = clone ($startDay)->modify('+1 day');
-
-        $form = $this->createForm(RdvType::class, new Rdv())
-            ->handleRequest($request);
-
-        return $this->render('app/rdv/day.html.twig', [
-            'form' => $form->createView(),
-            'rdvs' => $this->rdvRepo->findRdvsBetween($startDay, $endDay, null, $this->getUser()),
         ]);
     }
 }

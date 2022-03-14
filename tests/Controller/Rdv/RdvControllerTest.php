@@ -126,6 +126,8 @@ class RdvControllerTest extends WebTestCase
             ],
         ]);
 
+        $content = json_decode($this->client->getResponse()->getContent(), true);
+
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('create', $content['action']);
@@ -168,7 +170,7 @@ class RdvControllerTest extends WebTestCase
     {
         $this->createLogin($this->fixtures['userRoleUser']);
         $id = $this->rdv->getId();
-        $this->client->request('GET', "rdv/$id/get");
+        $this->client->request('GET', "rdv/$id/show");
 
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('show', $content['action']);
@@ -201,6 +203,7 @@ class RdvControllerTest extends WebTestCase
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $content = json_decode($this->client->getResponse()->getContent(), true);
+
         $this->assertSame('update', $content['action']);
         $this->assertSame('RDV test edit', $content['rdv']['title']);
     }
