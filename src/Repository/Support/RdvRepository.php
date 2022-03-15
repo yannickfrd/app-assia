@@ -50,7 +50,7 @@ class RdvRepository extends ServiceEntityRepository
     {
         return $this->getBaseQuery()
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, head}')
-            ->leftJoin('r.updatedBy', 'u2')->addSelect('PARTIAL u2.{id, firstname, lastname}')
+            ->leftJoin('r.updatedBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
             ->leftJoin('sg.referent', 'ref')->addSelect('PARTIAL ref.{id}')
             ->leftJoin('sg.referent2', 'ref2')->addSelect('PARTIAL ref2.{id}')
 
@@ -69,7 +69,10 @@ class RdvRepository extends ServiceEntityRepository
      */
     public function findRdvsToExport(RdvSearch $search): ?array
     {
-        $qb = $this->filter($this->getRdvsQuery(), $search);
+        $qb = $this->getRdvsQuery()
+            ->leftJoin('r.updatedBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}');
+
+        $qb = $this->filter($qb, $search);
 
         return $qb
             ->orderBy('r.createdBy', 'DESC')
