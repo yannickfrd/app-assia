@@ -10,6 +10,7 @@ use App\Form\Type\DateSearchType;
 use App\Form\Type\ServiceDeviceReferentSearchType;
 use App\Form\Utils\Choices;
 use App\Repository\Organization\TagRepository;
+use App\Repository\Organization\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -77,6 +78,20 @@ class RdvSearchType extends AbstractType
                 'data_class' => RdvSearch::class,
             ])
             ->add('export')
+            ->add('users', EntityType::class, [
+                'class' => User::class,
+                'choice_label' => 'fullname',
+                'multiple' => true,
+                'query_builder' => function (UserRepository $repo) {
+                    return $repo->findUsersOfCurrentUserQueryBuilder($this->user);
+                },
+                'attr' => [
+                    'class' => 'multi-select w-min-150 w-max-220',
+                    'placeholder' => 'event.users.placeholder',
+                    'size' => 1,
+                ],
+                'required' => false,
+            ])
             ->add('tags', EntityType::class, [
                 'class' => Tag::class,
                 'multiple' => true,

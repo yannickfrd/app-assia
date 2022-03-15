@@ -135,6 +135,13 @@ class RdvRepository extends ServiceEntityRepository
             $qb->andWhere('r.start <= :end')
                 ->setParameter('end', $search->getEnd());
         }
+        if ($search->getUsers() && $search->getUsers()->count() > 0) {
+            $qb
+                ->leftJoin('r.users', 'u3')
+                ->andWhere('u3.id in (:users)')
+                ->setParameter('users', $search->getUsers())
+            ;
+        }
 
         $qb = $this->addOrganizationFilters($qb, $search);
         $qb = $this->addTagsFilter($qb, $search, 'r.tags');

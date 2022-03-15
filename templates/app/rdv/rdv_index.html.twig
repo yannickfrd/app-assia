@@ -8,13 +8,13 @@
 
     <section class="mt-0">
 
-        <div class="container">
+        <div class="container-fluid mt-4">
             <h1 class="h2 mb-3"><a class="fas fa-calendar-alt mr-2 text-{{ theme_color }}" 
                 href="{{ path('calendar') }}" title="Passer en vue agenda"></a>{{ title }}</h1>
             {% include 'model/_msgFlash.html.twig' %}
         </div>
 
-        {% include 'app/rdv/_searchRdvs.html.twig' %}
+        {% include 'app/rdv/_rdv_search_form.html.twig' %}
 
         <div class="container-fluid mt-4">
 

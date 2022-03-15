@@ -9,7 +9,7 @@
 {% endif %}
 {% if form.service.devices.vars.choices|length > 1 %}
     <div class="col-auto my-1 px-1">{{ form_widget(form.service.devices) }}</div>
-{% endif %}   
+{% endif %}
 {% if referents is not defined and form.service.referents is defined %}
     <div class="col-auto my-1 px-1">{{ form_widget(form.service.referents) }}</div>
 {% endif %} 

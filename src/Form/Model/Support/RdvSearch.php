@@ -5,6 +5,7 @@ namespace App\Form\Model\Support;
 use App\Form\Model\Traits\DateSearchTrait;
 use App\Form\Model\Support\Traits\RdvSearchTrait;
 use App\Form\Model\Organization\ReferentServiceDeviceSearchTrait;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class RdvSearch
 {
@@ -20,6 +21,9 @@ class RdvSearch
 
     /** @var bool */
     private $export;
+
+    /** @var ArrayCollection|null */
+    protected $users;
 
     public function getId(): ?int
     {
@@ -53,6 +57,18 @@ class RdvSearch
     public function setExport(bool $export): self
     {
         $this->export = $export;
+
+        return $this;
+    }
+
+    public function getUsers(): ?ArrayCollection
+    {
+        return $this->users;
+    }
+
+    public function setUsers(?ArrayCollection $users): self
+    {
+        $this->users = $users;
 
         return $this;
     }
