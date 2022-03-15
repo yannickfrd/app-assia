@@ -32,17 +32,10 @@
             </div>
         </div>
 
-        <div class="row mb-4">
-            <div class="col-md-12">
-
-                {% include 'app/rdv/_rdv_table.html.twig' %}
-
-                <div class="navigation">{{ knp_pagination_render(rdvs) }}</div>
-            </div>
-        </div>
+        {% include 'app/rdv/_rdv_table.html.twig' %}
     </div>
 
-	{% include 'app/rdv/_deleteRdvModal.html.twig' %}
+	{% include 'app/rdv/_rdv_delete_modal.html.twig' %}
 
 {% endblock %}
 
