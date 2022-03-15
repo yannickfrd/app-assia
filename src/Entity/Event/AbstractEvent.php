@@ -21,9 +21,6 @@ abstract class AbstractEvent
         1 => 'Tâche',
     ];
 
-    public const TYPE_EVENT = 0;
-    public const TYPE_TASK = 1;
-
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -31,6 +28,12 @@ abstract class AbstractEvent
      * @Groups({"show_event", "show_rdv"})
      */
     protected $id;
+
+    /**
+     * @ORM\Column(type="smallint")
+     * @Groups("show_event")
+     */
+    protected $type;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -82,6 +85,7 @@ abstract class AbstractEvent
 
     public function __construct()
     {
+        $this->type = get_class($this)::TYPE_EVENT;
         $this->alerts = new ArrayCollection();
     }
 

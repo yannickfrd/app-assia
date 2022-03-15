@@ -23,6 +23,8 @@ class Task extends AbstractEvent
     public const TASK_IS_DONE = true;
     public const TASK_IS_NOT_DONE = false;
 
+    public const TYPE_EVENT = 1;
+
     public const STATUS = [
         false => 'Non réalisée',
         true => 'Réalisée',
@@ -40,12 +42,6 @@ class Task extends AbstractEvent
         'show_event', 'show_support_group', 'show_support_person', 'show_person',
         'show_user', 'show_service', 'show_alert', 'show_tag',
     ];
-
-    /**
-     * @ORM\Column(type="smallint")
-     * @Groups("show_event")
-     */
-    protected $type = parent::TYPE_TASK;
 
     /**
      * @ORM\Column(type="boolean")
@@ -117,7 +113,7 @@ class Task extends AbstractEvent
 
     public function toggleStatus(): bool
     {
-        return $this->status = $this->status ? false : true;
+        return $this->status = !$this->status;
     }
 
     /** @Groups("show_event") */
@@ -177,42 +173,4 @@ class Task extends AbstractEvent
 
         return $this;
     }
-
-
-//    /**
-//     * @return Collection<User>|User[]|null
-//     */
-//    public function getUsers(): ?Collection
-//    {
-//        return $this->users;
-//    }
-//
-//    /** @Groups("show_event") */
-//    public function getUsersToString(): string
-//    {
-//        $userNames = [];
-//
-//        foreach ($this->users as $user) {
-//            $userNames[] = $user->getFullname();
-//        }
-//
-//        return join(', ', $userNames);
-//    }
-//
-//    public function addUser(?User $user): self
-//    {
-//        if (!$this->users->contains($user)) {
-//            $this->users[] = $user;
-//        }
-//
-//        return $this;
-//    }
-//
-//    public function removeUser(User $user): self
-//    {
-//        $this->users->removeElement($user);
-//
-//        return $this;
-//    }
-
 }

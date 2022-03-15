@@ -23,17 +23,14 @@ class Rdv extends AbstractEvent
     use TagTrait;
     use SoftDeleteableEntity;
 
+    public const TYPE_EVENT = 0;
+
     public const STATUS = [
         1 => 'Présent',
         2 => 'Absent',
         3 => 'Annulé',
         99 => 'Non renseigné',
     ];
-
-    /**
-     * @ORM\Column(type="smallint")
-     */
-    protected $type = parent::TYPE_EVENT;
 
     /**
      * @ORM\Column(type="datetime")
@@ -48,12 +45,12 @@ class Rdv extends AbstractEvent
      */
     private $status;
 
-//    /**
-//     * @Gedmo\Blameable(on="create")
-//     * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User", inversedBy="rdvs")
-//     * @Groups("show_rdv")
-//     */
-//    protected $createdBy; // NE PAS SUPPRIMER
+    /**
+     * @Gedmo\Blameable(on="create")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="rdvsCreated")
+     * @Groups("show_rdv")
+     */
+    protected $createdBy; // NE PAS SUPPRIMER
 
     /**
      * @var Collection<User>
@@ -164,41 +161,4 @@ class Rdv extends AbstractEvent
 
         return $this;
     }
-
-
-//    /**
-//     * @return Collection<User>|User[]|null
-//     */
-//    public function getUsers(): ?Collection
-//    {
-//        return $this->users;
-//    }
-//
-//    public function getUsersToString(): string
-//    {
-//        $userNames = [];
-//
-//        foreach ($this->users as $user) {
-//            $userNames[] = $user->getFullname();
-//        }
-//
-//        return join(', ', $userNames);
-//    }
-//
-//    public function addUser(?User $user): self
-//    {
-//        if (!$this->users->contains($user)) {
-//            $this->users[] = $user;
-//        }
-//
-//        return $this;
-//    }
-//
-//    public function removeUser(User $user): self
-//    {
-//        $this->users->removeElement($user);
-//
-//        return $this;
-//    }
-
 }
