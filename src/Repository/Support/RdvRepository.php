@@ -36,12 +36,11 @@ class RdvRepository extends ServiceEntityRepository
     {
         $qb = $this->getRdvsQuery();
 
-        return $qb = $this->filter($qb, $search, $currentUser)
+        return $this->filter($qb, $search, $currentUser)
 
             ->orderBy('r.start', 'ASC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-        ;
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
     }
 
     /**
@@ -49,16 +48,11 @@ class RdvRepository extends ServiceEntityRepository
      */
     public function findRdv(int $id): ?Rdv
     {
-        return $this->createQueryBuilder('r')->select('r')
-            ->leftJoin('r.users', 'u1')->addSelect('PARTIAL u1.{id, firstname, lastname}')
-            ->leftJoin('r.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
+        return $this->getBaseQuery()
+            ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, head}')
             ->leftJoin('r.updatedBy', 'u2')->addSelect('PARTIAL u2.{id, firstname, lastname}')
-            ->leftJoin('r.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
             ->leftJoin('sg.referent', 'ref')->addSelect('PARTIAL ref.{id}')
             ->leftJoin('sg.referent2', 'ref2')->addSelect('PARTIAL ref2.{id}')
-            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
-            ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, head}')
-            ->leftJoin('r.tags', 't')->addSelect('t')
 
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
 
@@ -75,9 +69,7 @@ class RdvRepository extends ServiceEntityRepository
      */
     public function findRdvsToExport(RdvSearch $search): ?array
     {
-        $qb = $this->getRdvsQuery();
-
-        $qb = $this->filter($qb, $search);
+        $qb = $this->filter($this->getRdvsQuery(), $search);
 
         return $qb
             ->orderBy('r.createdBy', 'DESC')
@@ -86,14 +78,19 @@ class RdvRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    protected function getRdvsQuery(): QueryBuilder
+    protected function getBaseQuery(): QueryBuilder
     {
         return $this->createQueryBuilder('r')->select('r')
             ->leftJoin('r.users', 'u1')->addSelect('PARTIAL u1.{id, firstname, lastname}')
             ->leftJoin('r.tags', 't')->addSelect('t')
             ->leftJoin('r.createdBy', 'u2')->addSelect('PARTIAL u2.{id, firstname, lastname}')
             ->leftJoin('r.supportGroup', 'sg')->addSelect('sg')
-            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}');
+    }
+
+    protected function getRdvsQuery(): QueryBuilder
+    {
+        return $this->getBaseQuery()
             ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')
             ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
             ->leftJoin('sg.referent', 'ref')->addSelect('PARTIAL ref.{id, firstname, lastname}')
@@ -147,12 +144,7 @@ class RdvRepository extends ServiceEntityRepository
      */
     public function findRdvsQueryOfSupport(int $supportGroupId, SupportRdvSearch $search): Query
     {
-        $qb = $this->createQueryBuilder('r')->select('r')
-            ->leftJoin('r.users', 'u1')->addSelect('PARTIAL u1.{id, firstname, lastname}')
-            ->leftJoin('r.tags', 't')->addSelect('t')
-            ->leftJoin('r.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
-            ->leftJoin('r.supportGroup', 'sg')->addSelect('sg')
-            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
+        $qb = $this->getBaseQuery()
 
             ->andWhere('sg.id = :supportGroup')
             ->setParameter('supportGroup', $supportGroupId);
@@ -219,7 +211,7 @@ class RdvRepository extends ServiceEntityRepository
      *
      * @return Rdv[]|null
      */
-    public function findRdvsBetween(\Datetime $start, \Datetime $end, SupportGroup $supportGroup = null, User $user = null): ?array
+    public function findRdvsBetween(\DateTime $start, \DateTime $end, SupportGroup $supportGroup = null, User $user = null): ?array
     {
         $qb = $this->createQueryBuilder('r')->select('r')
             ->leftJoin('r.tags', 't')->addSelect('t')
@@ -246,7 +238,7 @@ class RdvRepository extends ServiceEntityRepository
     /**
      * Donne tous les RDV entre 2 dates par jour.
      */
-    public function findRdvsBetweenByDay(\Datetime $start, \Datetime $end, SupportGroup $supportGroup = null, User $user = null): array
+    public function findRdvsBetweenByDay(\DateTime $start, \DateTime $end, SupportGroup $supportGroup = null, User $user = null): array
     {
         $rdvs = $this->findRdvsBetween($start, $end, $supportGroup, $user);
         $days = [];
