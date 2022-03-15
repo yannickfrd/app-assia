@@ -25,6 +25,8 @@ class Rdv extends AbstractEvent
 
     public const TYPE_EVENT = 0;
 
+    const NO_STATUS = 99;
+
     public const STATUS = [
         1 => 'Présent',
         2 => 'Absent',
@@ -112,6 +114,7 @@ class Rdv extends AbstractEvent
     public function getStatusToString(): ?string
     {
         return $this->status ? self::STATUS[$this->status] : null;
+//        self::STATUS[self::NO_STATUS]
     }
 
     public function getSupportGroup(): ?SupportGroup

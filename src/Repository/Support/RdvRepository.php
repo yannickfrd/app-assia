@@ -75,8 +75,7 @@ class RdvRepository extends ServiceEntityRepository
      */
     public function findRdvsToExport(RdvSearch $search): ?array
     {
-        $qb = $this->getRdvsQuery()
-            ->leftJoin('r.updatedBy', 'u2')->addSelect('PARTIAL u2.{id, firstname, lastname}');
+        $qb = $this->getRdvsQuery();
 
         $qb = $this->filter($qb, $search);
 
@@ -90,10 +89,12 @@ class RdvRepository extends ServiceEntityRepository
     protected function getRdvsQuery(): QueryBuilder
     {
         return $this->createQueryBuilder('r')->select('r')
+            ->leftJoin('r.users', 'u1')->addSelect('PARTIAL u1.{id, firstname, lastname}')
             ->leftJoin('r.tags', 't')->addSelect('t')
-            ->leftJoin('r.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
+            ->leftJoin('r.createdBy', 'u2')->addSelect('PARTIAL u2.{id, firstname, lastname}')
             ->leftJoin('r.supportGroup', 'sg')->addSelect('sg')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
+            ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')
             ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
             ->leftJoin('sg.referent', 'ref')->addSelect('PARTIAL ref.{id, firstname, lastname}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
@@ -147,6 +148,7 @@ class RdvRepository extends ServiceEntityRepository
     public function findRdvsQueryOfSupport(int $supportGroupId, SupportRdvSearch $search): Query
     {
         $qb = $this->createQueryBuilder('r')->select('r')
+            ->leftJoin('r.users', 'u1')->addSelect('PARTIAL u1.{id, firstname, lastname}')
             ->leftJoin('r.tags', 't')->addSelect('t')
             ->leftJoin('r.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
             ->leftJoin('r.supportGroup', 'sg')->addSelect('sg')

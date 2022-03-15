@@ -207,6 +207,10 @@ abstract class AbstractEvent
     /** @Groups("show_event") */
     public function getUsersToString(): string
     {
+        if (null === $this->users) {
+            return '';
+        }
+
         $userNames = [];
 
         foreach ($this->users as $user) {
