@@ -264,7 +264,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $rdvs;
 
     /**
-     * @ORM\OneToMany(targetEntity=Rdv::class, mappedBy="users")
+     * @ORM\OneToMany(targetEntity=Rdv::class, mappedBy="createdBy")
      */
     private $rdvsCreated;
 

@@ -81,7 +81,6 @@ class SupportManager
      */
     public function getSupportGroup(int $id): ?SupportGroup
     {
-//        return $this->supportGroupRepo->findSupportById($id);
         $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
 
         return $cache->get(SupportGroup::CACHE_SUPPORT_KEY.$id, function (CacheItemInterface $item) use ($id) {
