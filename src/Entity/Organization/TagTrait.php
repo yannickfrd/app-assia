@@ -13,7 +13,7 @@ trait TagTrait
      * @var Collection|Tag[]|null
      * @ORM\ManyToMany(targetEntity=Tag::class)
      * @ORM\OrderBy({"name": "ASC"})
-     * @Groups("show_tag")
+     * @Groups({"show_tag", "show_rdv"})
      */
     protected $tags;
 

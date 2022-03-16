@@ -287,7 +287,7 @@ class SupportGroup
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Organization\Service", inversedBy="supportGroup")
-     * @Groups({"export", "show_service"})
+     * @Groups({"export", "show_service", "show_rdv"})
      */
     private $service;
 

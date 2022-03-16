@@ -204,7 +204,7 @@ abstract class AbstractEvent
         return $this->users;
     }
 
-    /** @Groups("show_event") */
+    /** @Groups({"show_event", "show_rdv"}) */
     public function getUsersToString(): string
     {
         if (null === $this->users) {

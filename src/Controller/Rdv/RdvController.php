@@ -62,8 +62,11 @@ class RdvController extends AbstractController
             return (new RdvExport())->exportData($rdvs);
         }
 
+        $formRdv = $this->createForm(RdvType::class, (new Rdv())->addUser($this->getUser()));
+
         return $this->render('app/rdv/rdv_index.html.twig', [
             'form' => $form->createView(),
+            'form_rdv' => $formRdv->createView(),
             'rdvs' => $pagination->paginate($this->rdvRepo->findRdvsQuery($search, $currentUser), $request, 10),
         ]);
     }
@@ -88,9 +91,14 @@ class RdvController extends AbstractController
         ])
             ->handleRequest($request);
 
+        $formRdv = $this->createForm(RdvType::class, (new Rdv())->addUser($this->getUser()), [
+            'support_group' => $supportGroup,
+        ]);
+
         return $this->render('app/rdv/support_rdv_index.html.twig', [
             'support' => $supportGroup,
             'form_search' => $formSearch->createView(),
+            'form_rdv' => $formRdv->createView(),
             'rdvs' => $rdvPaginator->getRdvs($supportGroup, $request, $search),
         ]);
     }
@@ -119,7 +127,7 @@ class RdvController extends AbstractController
                 'apiUrls' => $this->calendarRouter->getUrls(
                     'create', $rdv->getId(), (array) $request->request->get('rdv')
                 ),
-            ], 200, [], ['groups' => 'show_rdv']);
+            ], 200, [], ['groups' => ['show_rdv', 'show_tag']]);
         }
 
         return $this->getErrorMessage($form);
@@ -160,7 +168,7 @@ class RdvController extends AbstractController
                 'apiUrls' => $this->calendarRouter->getUrls(
                     'create', $rdv->getId(), (array) $request->request->get('rdv')
                 ),
-            ], 200, [], ['groups' => 'show_rdv']);
+            ], 200, [], ['groups' => ['show_rdv', 'show_tag']]);
         }
 
         return $this->getErrorMessage($form);
@@ -254,7 +262,7 @@ class RdvController extends AbstractController
 
         return $this->json([
             'action' => 'delete',
-            'rdv' => ['id' => $rdvId],
+            'rdvId' => $rdvId,
             'alert' => 'warning',
             'msg' => 'Le RDV est supprimé.',
             'apiUrls' => $this->calendarRouter->getUrls('delete', $rdvId, [], [

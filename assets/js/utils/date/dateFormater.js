@@ -37,9 +37,10 @@ export default class DateFormater {
 
     /**
      * Return a locale formated date from a string date.
-     * @param {String} date 
-     * @param {String} type 
-     * @param {String} locale 
+     * @param {String} date
+     * @param {String} type
+     * @param {String} separator
+     * @param {String} locale
      * @returns {String}
      */
     getDate(date, type = 'datetime', separator = '-', locale = 'fr') {
@@ -47,7 +48,7 @@ export default class DateFormater {
             return ''
         }
 
-        if (date instanceof Date === false) {
+        if (!(date instanceof Date)) {
             date = new Date(date)
         }
 

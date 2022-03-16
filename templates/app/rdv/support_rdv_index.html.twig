@@ -3,9 +3,7 @@
 {% block title %}Rendez-vous{% endblock %}
 
 {% block body %}
-
     <div class="container">
-
         {% set title = 'Rendez-vous' %}
         {% include 'app/support/_partials/_support_nav.html.twig' %}
 
@@ -15,31 +13,15 @@
 			</div>
 		</div>
 
-        <div class="row mb-3">
-            <div class="d-flex col-md-6 mb-1 align-items-center">
-                <a href="{{ path('support_calendar_show', {'id': support.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow mr-2"
-                   title="Passer en vue agenda" data-toggle="tooltip" data-placement="bottom" ><i class="far fa-calendar-alt"></i></a>
-                <a id="js-new-rdv" href="{{ path('support_calendar_show', {'id': support.id}) }}" 
-                    class="btn btn-{{ theme_color }} btn-sm shadow mr-2" title="Ajouter un rdv" data-toggle="tooltip" 
-                    data-placement="bottom" ><i class="fas fa-plus-square mr-2"></i>Nouveau RDV</a>
-                <div class="d-inline align-middle">Total :
-                    <span id="count-rdvs">{{ rdvs.getTotalItemCount|number }}</span>
-                    rdv{% if rdvs.getTotalItemCount > 1 %}s{% endif %}.
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="navigation">{{ knp_pagination_render(rdvs) }}</div>
-            </div>
-        </div>
-
         {% include 'app/rdv/_rdv_table.html.twig' %}
     </div>
 
+    {% include 'app/rdv/_rdv_form_modal.html.twig' with { 'action': path('support_rdv_new', {'id': support.id}) } %}
 	{% include 'app/rdv/_rdv_delete_modal.html.twig' %}
 
 {% endblock %}
 
 {% block javascripts %}
     {{ encore_entry_script_tags('search') }}
-    {{ encore_entry_script_tags('rdvs') }}
+    {{ encore_entry_script_tags('rdv') }}
 {% endblock javascripts %}

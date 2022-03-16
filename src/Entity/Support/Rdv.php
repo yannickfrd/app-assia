@@ -111,10 +111,10 @@ class Rdv extends AbstractEvent
         return $this;
     }
 
+    /** @Groups("show_rdv") */
     public function getStatusToString(): ?string
     {
         return $this->status ? self::STATUS[$this->status] : null;
-//        self::STATUS[self::NO_STATUS]
     }
 
     public function getSupportGroup(): ?SupportGroup

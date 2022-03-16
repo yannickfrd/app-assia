@@ -38,7 +38,7 @@ class CalendarController extends AbstractController
 
         return $this->render('app/rdv/calendar.html.twig', [
             'calendar' => $calendar = new Calendar($year, $month),
-            'form' => $form->createView(),
+            'form_rdv' => $form->createView(),
             'rdvs' => $this->rdvRepo->findRdvsBetweenByDay(
                 $calendar->getFirstMonday(),
                 $calendar->getLastday(),
@@ -66,7 +66,7 @@ class CalendarController extends AbstractController
             ->handleRequest($request);
 
         return $this->render('app/rdv/day.html.twig', [
-            'form' => $form->createView(),
+            'form_rdv' => $form->createView(),
             'rdvs' => $this->rdvRepo->findRdvsBetween($startDay, $endDay, null, $this->getUser()),
         ]);
     }
@@ -95,7 +95,7 @@ class CalendarController extends AbstractController
         return $this->render('app/rdv/calendar.html.twig', [
             'support' => $supportGroup,
             'calendar' => $calendar = new Calendar($year, $month),
-            'form' => $form->createView(),
+            'form_rdv' => $form->createView(),
             'rdvs' => $this->rdvRepo->findRdvsBetweenByDay(
                 $calendar->getFirstMonday(),
                 $calendar->getLastday(),

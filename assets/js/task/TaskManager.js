@@ -122,7 +122,7 @@ export default class TaskManager {
         const rowElt = document.createElement('tr')
 
         let htmlContent = `
-            <td scope="row" class="align-middle text-center">
+            <td class="align-middle text-center">
                 <div class="custom-control custom-checkbox custom-checkbox-${this.themeColor} text-dark pl-0" 
                     title="Cliquer pour changer le statut" data-toggle="tooltip" data-placement="bottom">
                     <div class="form-check">

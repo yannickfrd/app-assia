@@ -41,7 +41,7 @@ Encore
     .addEntry('person', './assets/js/person/person.js')
     .addEntry('place', './assets/js/place/place.js')
     .addEntry('placeGroup', './assets/js/place/placeGroup.js')
-    .addEntry('rdvs', './assets/js/rdv/rdvsIndex.js')
+    .addEntry('rdv', './assets/js/rdv/rdvIndex.js')
     .addEntry('referent', './assets/js/referent/referent.js')
     .addEntry('search', './assets/js/searchIndex.js')
     .addEntry('service', './assets/js/service/service.js')

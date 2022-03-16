@@ -1,5 +1,5 @@
-import Rdvs from './rdvs'
+import RdvManager from "./RdvManager";
 // import SearchLocation from '../utils/searchLocation'
 
-new Rdvs()
+new RdvManager()
 // new SearchLocation('rdv_search_location')
