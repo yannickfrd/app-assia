@@ -48,7 +48,7 @@
 									<th scope="col" class="align-middle th-date">
 										{{ knp_pagination_sortable(documents, "Ajouté le", "d.createdAt") }}</th>
 									<th scope="col" class="align-middle th-w-80">
-										{{ knp_pagination_sortable(documents, "Ajouté par", "d.createdBy") }}</th>
+										{{ knp_pagination_sortable(documents, "Ajouté par", "u.lastname") }}</th>
 									<th scope="col" class="align-middle th-date">
 										{{ knp_pagination_sortable(documents, "Nom du suivi", "p.lastname") }}</th>
 									<th scope="col" class="align-middle th-w-80">

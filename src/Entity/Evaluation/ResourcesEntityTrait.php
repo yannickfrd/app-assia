@@ -314,7 +314,7 @@ trait ResourcesEntityTrait
         $resources = [];
 
         foreach ($this->evalBudgetResources as $evalBudgetResources) {
-            $resources[] = Resource::RESOURCES[$evalBudgetResources->getType()].
+            $resources[] = Resource::SHORT_RESOURCES[$evalBudgetResources->getType()].
                 (Resource::OTHER === $evalBudgetResources->getType() && $evalBudgetResources->getComment()
                 ? ' ('.$evalBudgetResources->getComment().')' : '');
         }

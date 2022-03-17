@@ -104,6 +104,7 @@ class AnonymizeDatabaseCommand extends Command
             UPDATE eval_adm_person SET agdref_id = "XXX" WHERE agdref_id != "";
             UPDATE eval_adm_person SET ofpra_registration_id = "XXX" WHERE ofpra_registration_id != "";
             UPDATE eval_adm_person SET comment_eval_adm_person = "XXX" WHERE comment_eval_adm_person != "";
+            UPDATE eval_prof_person SET job_center_id = "XXX" WHERE job_center_id != "";
             UPDATE eval_prof_person SET comment_eval_prof = "XXX" WHERE comment_eval_prof != "";
             UPDATE eval_budget_person SET comment_eval_budget = "XXX" WHERE comment_eval_budget != "";
 

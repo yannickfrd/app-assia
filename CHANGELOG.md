@@ -1,8 +1,14 @@
 CHANGELOG
 =========
 
+## Version 3.12.2 - 17/03/2022
+Fix bugs (#132)
+* [ResourcesEntityTrait] Edit getEvalBudgetResourcesToArray method (use Resource::SHORT_RESOURCES const)
+* [listDocuments.html.twig] Fix error createdBy
+* [AnonymizeDatabaseCommand] Add job_center_id to anonymize
+
 ## Version 3.12.0 - 08/03/2022
-Sync google/outlook calendar feature
+Sync google/outlook calendar feature (#123)
 * Create GoogleCalendarController
 * Create OutlookCalendarController
 * Edit RdvController
