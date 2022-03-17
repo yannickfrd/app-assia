@@ -4,12 +4,16 @@ import Loader from '../utils/loader'
 import { Modal } from 'bootstrap'
 import RdvForm from "./RdvForm";
 import DateFormater from "../utils/date/dateFormater";
+import ApiCalendar from "../api/ApiCalendar";
+import RdvModel from "./model/RdvModel";
 
 export default class RdvManager {
 
     constructor() {
         this.loader = new Loader()
         this.ajax = new Ajax(this.loader)
+
+        this.apiCalendar = new ApiCalendar();
 
         this.themeColor = document.getElementById('header').dataset.color
 
@@ -74,7 +78,7 @@ export default class RdvManager {
                     this.deleteRdvTr(response.rdvId)
                     break
                 case 'create':
-                    this.createRdvTr(response.rdv);
+                    this.createRdvTr(response.rdv, response.apiUrls);
                     break;
                 case 'edit':
                     this.editRdvTr(response.rdv);
@@ -122,8 +126,9 @@ export default class RdvManager {
     /**
      * Create rdv's row.
      * @param {Object} rdv
+     * @param {Object} apiUrls
      */
-    createRdvTr(rdv) {
+    createRdvTr(rdv, apiUrls) {
         const tbodyElt = document.querySelector('table#table-rdvs tbody')
         const rowElt = document.createElement('tr')
 
@@ -178,6 +183,9 @@ export default class RdvManager {
         btnDeleteElt.addEventListener('click', () => this.onClickDeleteRdv(btnDeleteElt))
 
         this.rdvForm.updateCounterTasks(1)
+
+        //v1
+        this.apiCalendar.addEvent(new RdvModel(rdv), apiUrls)
 
         this.rdvModal.hide()
         document.getElementById('js-btn-cancel').click()
