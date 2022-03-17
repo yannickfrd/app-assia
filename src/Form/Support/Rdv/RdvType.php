@@ -97,7 +97,7 @@ class RdvType extends AbstractType
             ])
             ->add('content', null, [
                 'attr' => [
-                    'rows' => 5,
+                    'rows' => 3,
                     'placeholder' => 'rdv.placeholder.content',
                 ],
             ])
