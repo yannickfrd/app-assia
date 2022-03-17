@@ -1,5 +1,4 @@
 
-
 <div id="modal-rdv" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalRdvLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -117,7 +116,8 @@
             </div>
             <div class="modal-footer d-flex justify-content-between">
                 <div class="float-left">
-                    <button id="modal-btn-delete" class="mr-3 btn btn-danger" data-placement="bottom"  data-action="delete-rdv"
+                    <button id="modal-btn-delete" class="mr-3 btn btn-danger" data-placement="bottom"
+                            data-action="delete-rdv-modal" data-url="{{ path('rdv_delete', {'id': '__id__'}) }}"
                         title="Supprimer le rendez-vous"><span class="fas fa-trash-alt"></span>
                         <span class="d-none d-md-inline ml-2">Supprimer</span>
                     </button>

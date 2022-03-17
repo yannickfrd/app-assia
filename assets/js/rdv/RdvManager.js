@@ -15,7 +15,8 @@ export default class RdvManager {
 
         this.modalRdvElt = document.getElementById('modal-rdv')
         this.modalConfirmElt = document.getElementById('modal-confirm')
-        this.modalDeleteElt = new Modal(document.getElementById('modal-block'))
+        this.confirmDeleteModal = new Modal(document.getElementById('modal-block'))
+        this.btnConfirmDeleteModalElt = document.querySelector('button#modal-confirm')
 
         const divSupportElt = document.querySelector('div[data-support]')
         this.supportId = divSupportElt ? divSupportElt.dataset.support : null
@@ -58,7 +59,7 @@ export default class RdvManager {
      * @param {HTMLButtonElement} btnElt
      */
     onClickDeleteRdv(btnElt) {
-        this.modalDeleteElt.show()
+        this.confirmDeleteModal.show()
         this.modalConfirmElt.dataset.url = btnElt.dataset.url
     }
 
@@ -79,7 +80,6 @@ export default class RdvManager {
                     this.editRdvTr(response.rdv);
                     break;
                 case 'show':
-                    console.log('show')
                     this.showRdv(response.rdv, response.canEdit);
                     break;
             }

@@ -19,7 +19,7 @@ export default class RdvForm {
         this.modalRdvElt = document.getElementById('modal-rdv')
         this.modalElt = new Modal(this.modalRdvElt)
         this.btnSaveRdvElt = this.modalRdvElt.querySelector('button[data-action="save-rdv"]')
-        this.btnDeleteRdvElt = this.modalRdvElt.querySelector('button[data-action="delete-rdv"]')
+        this.btnDeleteRdvElt = this.modalRdvElt.querySelector('button[data-action="delete-rdv-modal"]')
         this.formRdvElt = this.modalRdvElt.querySelector('form[name="rdv"]')
         this.rdvTitleElt = this.modalRdvElt.querySelector('.modal-header h2')
 
@@ -61,6 +61,12 @@ export default class RdvForm {
         this.btnSaveRdvElt.addEventListener('click', e => this.requestCreateRdv(e))
 
         this.pathEditRdv = this.getPathEditRdv()
+    }
+
+    onClickDeleteRdvModal(e, url) {
+        e.preventDefault()
+        this.manager.confirmDeleteModal.show()
+        this.manager.btnConfirmDeleteModalElt.dataset.url = url
     }
 
     /** @returns {String} */
@@ -145,8 +151,8 @@ export default class RdvForm {
 
         this.rdvTitleInput.value = rdv.title
 
-        this.startInput.value = rdv.start
-        this.endInput.value = rdv.end
+        this.rdvStartInput.value = rdv.start.substr(0, 16)
+        this.rdvEndInput.value = rdv.end.substr(0, 16)
 
         this.dateInput.value = rdv.start.substr(0, 10)
         this.startInput.value = rdv.start.substr(11, 5)
@@ -190,6 +196,9 @@ export default class RdvForm {
         }
 
         this.formRdvElt.action = this.getPathEditRdv().replace('__id__', rdv.id)
+
+        const url = this.btnDeleteRdvElt.dataset.url.replace('__id__', rdv.id)
+        this.btnDeleteRdvElt.addEventListener('click', e => this.onClickDeleteRdvModal(e, url))
 
         this.modalElt.show();
     }

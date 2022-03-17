@@ -19,12 +19,10 @@
         <div class="container-fluid mt-4">
             {% include 'app/rdv/_rdv_table.html.twig' %}
         </div>
-
-		{% include 'app/rdv/_rdv_delete_modal.html.twig' %}
-
     </section>
 
     {% include 'app/rdv/_rdv_form_modal.html.twig' with { 'action': path('rdv_new') } %}
+    {% include 'app/rdv/_rdv_delete_modal.html.twig' %}
 
 {% endblock %}
 
