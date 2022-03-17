@@ -56,6 +56,7 @@ class RdvVoter extends Voter
     protected function canView(): bool
     {
         if ($this->isCreatorOrReferent()
+            || $this->isInUsers()
             || ($this->supportGroup && $this->isUserOfService($this->supportGroup->getService()))
             || $this->isGranted('ROLE_SUPER_ADMIN')
         ) {
@@ -82,6 +83,17 @@ class RdvVoter extends Voter
             || ($this->supportGroup->getReferent2() && $this->supportGroup->getReferent2()->getId() === $this->userId))
         ) {
             return true;
+        }
+
+        return false;
+    }
+
+    protected function isInUsers(): bool
+    {
+        foreach ($this->rdv->getUsers() as $user) {
+            if ($user->getId() === $this->userId) {
+                return true;
+            }
         }
 
         return false;
