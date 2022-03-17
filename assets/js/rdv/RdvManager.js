@@ -92,10 +92,19 @@ export default class RdvManager {
         this.loader.off()
     }
 
+    /**
+     * @param {Object} rdv
+     * @param {boolean} canEdit
+     */
     showRdv(rdv, canEdit) {
         this.rdvForm.show(rdv, canEdit)
     }
 
+    /**
+     * Format date start of rdv.
+     * @param {Object} rdv
+     * @returns {string}
+     */
     rdvDateToString(rdv) {
         const rdvTime = (date) => {
             const rdvDate = new Date(date)
@@ -208,6 +217,9 @@ export default class RdvManager {
      */
     deleteRdvTr(rdvId) {
         document.getElementById('rdv-' + rdvId).remove()
+
+        this.rdvModal.hide()
+        document.getElementById('js-btn-cancel').click()
     }
 
 }

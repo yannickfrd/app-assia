@@ -64,10 +64,10 @@ export default class RdvForm {
     }
 
     onClickDeleteRdvModal(e, url) {
-        e.preventDefault()
-        this.manager.confirmDeleteModal.show()
-        this.manager.btnConfirmDeleteModalElt.dataset.url = url
-    }
+            e.preventDefault()
+            this.manager.confirmDeleteModal.show()
+            this.manager.btnConfirmDeleteModalElt.dataset.url = url
+        }
 
     /** @returns {String} */
     getPathEditRdv() {
@@ -78,6 +78,8 @@ export default class RdvForm {
     }
 
     resetForm(e) {
+        this.formRdvElt.action = this.manager.createRdvBtn.dataset.url
+
         this.formValidator.reinit()
 
         this.rdvTitleElt.textContent = 'Nouveau rendez-vous'
@@ -231,8 +233,7 @@ export default class RdvForm {
      * @param {Object} rdv
      * @returns {string}
      */
-    createTags(rdv)
-    {
+    createTags(rdv) {
         let tags = ''
         rdv.tags.forEach(tag => {
             tags += `<span class="badge bg-${tag.color} text-light mr-1">${tag.name}</span>`
@@ -248,4 +249,4 @@ export default class RdvForm {
     }
 
 
-}
+    }
