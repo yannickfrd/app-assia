@@ -28,7 +28,7 @@
             {% for task in tasks %}
                 {% set support = task.supportGroup %}
                 <tr id="task_{{ task.id }}" class="{% if task.status == true %}text-secondary delete{% endif %}">
-                    <td scope="row" class="align-middle text-center">
+                    <td class="align-middle text-center">
                         <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} text-dark pl-0" 
                             title="Cliquer pour changer le statut" data-toggle="tooltip" data-placement="bottom">
                             <div class="form-check">

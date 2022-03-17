@@ -1,9 +1,8 @@
-import Calendar from "./calendar";
-import RdvManager from "./RdvManager";
 import FormValidator from "../utils/form/formValidator";
 import SelectManager from "../utils/form/SelectManager";
 import DateFormater from "../utils/date/dateFormater";
 import MessageFlash from "../utils/messageFlash";
+import {Modal} from "bootstrap";
 
 export default class RdvForm {
 
@@ -18,7 +17,8 @@ export default class RdvForm {
         this.themeColor = manager.themeColor
 
         this.modalRdvElt = document.getElementById('modal-rdv')
-        this.btnCreateRdvElt = this.modalRdvElt.querySelector('button[data-action="create-rdv"]')
+        this.modalElt = new Modal(this.modalRdvElt)
+        this.btnSaveRdvElt = this.modalRdvElt.querySelector('button[data-action="save-rdv"]')
         this.btnDeleteRdvElt = this.modalRdvElt.querySelector('button[data-action="delete-rdv"]')
         this.formRdvElt = this.modalRdvElt.querySelector('form[name="rdv"]')
         this.rdvTitleElt = this.modalRdvElt.querySelector('.modal-header h2')
@@ -50,11 +50,25 @@ export default class RdvForm {
         this.usersSelectManager = new SelectManager('#rdv_users', eventObject, { width: '100%' })
         this.tagsSelectManager = new SelectManager('#rdv_tags', eventObject)
 
+        this.editColumnRdvElement = document.querySelector('table#table-rdvs th[data-path-edit-rdv]')
+
+        this.rdvBeforeUpdate = null
+
         this.init()
     }
 
     init() {
-        this.btnCreateRdvElt.addEventListener('click', e => this.requestSaveRdv(e))
+        this.btnSaveRdvElt.addEventListener('click', e => this.requestCreateRdv(e))
+
+        this.pathEditRdv = this.getPathEditRdv()
+    }
+
+    /** @returns {String} */
+    getPathEditRdv() {
+        if (this.editColumnRdvElement !== null) {
+            return this.editColumnRdvElement.dataset.pathEditRdv
+        }
+        // else return dans le calendar
     }
 
     resetForm(e) {
@@ -91,7 +105,7 @@ export default class RdvForm {
         }
     }
 
-    requestSaveRdv() {
+    requestCreateRdv() {
         if (this.rdvTitleInput.value === '') {
             return new MessageFlash('danger', 'Le rdv est vide.')
         }
@@ -111,6 +125,86 @@ export default class RdvForm {
         }
     }
 
+    /**
+     * @param {HTMLElement} htmlElt
+     */
+    requestShowRdv(htmlElt) {
+        if (!this.loader.isActive()) {
+            this.loader.on()
+
+            this.ajax.send('GET', htmlElt.dataset.url, this.manager.responseAjax.bind(this.manager))
+        }
+    }
+
+    show(rdv, canEdit) {
+        this.rdvBeforeUpdate = rdv
+
+        const title = 'RDV' + (rdv.supportGroup ? ' | ' + rdv.supportGroup.header.fullname : '')
+        this.rdvTitleElt.textContent = title
+        this.infoRdvElt.innerHTML = this.getInfoRdvElt(rdv)
+
+        this.rdvTitleInput.value = rdv.title
+
+        this.startInput.value = rdv.start
+        this.endInput.value = rdv.end
+
+        this.dateInput.value = rdv.start.substr(0, 10)
+        this.startInput.value = rdv.start.substr(11, 5)
+        this.endInput.value = rdv.end.substr(11, 5)
+
+        this.rdvStatusInput.value = rdv.status ? rdv.status : ''
+
+        this.rdvLocationInput.value = rdv.location
+
+        const tagsIds = []
+        rdv.tags.forEach(tags => tagsIds.push(tags.id))
+        this.tagsSelectManager.updateSelect(tagsIds)
+
+        const userIds = []
+        rdv.users.forEach(user => userIds.push(user.id))
+        this.usersSelectManager.updateSelect(userIds)
+
+        this.supportSelectElt.value = ''
+        this.supportSelectElt.disabled = rdv.supportGroup !== null
+        if (rdv.supportGroup) {
+            this.supportSelectElt.value = rdv.supportGroup.id
+            if (this.supportSelectElt.value === '') {
+                const optionElt = document.createElement('option')
+                optionElt.value = rdv.supportGroup.id
+                optionElt.textContent = rdv.supportGroup.header.fullname
+                this.supportSelectElt.appendChild(optionElt)
+                this.supportSelectElt.value = rdv.supportGroup.id
+            }
+        }
+
+        this.rdvContentText.value = rdv.content ? rdv.content : ''
+
+        if (rdv.supportGroup) {
+            const href = this.rdvTitleElt.dataset.url.replace('__id__', rdv.supportGroup.id)
+            this.rdvTitleElt.innerHTML = `<a href="${href}" class="text-${this.themeColor}" title="Accéder au suivi">${title}</a>`
+        }
+
+        if (!canEdit) {
+            this.btnSaveRdvElt.classList.add('d-none')
+            this.btnDeleteRdvElt.classList.add('d-none')
+        }
+
+        this.formRdvElt.action = this.getPathEditRdv().replace('__id__', rdv.id)
+
+        this.modalElt.show();
+    }
+
+    /**
+     * Donnes les informations sur l'enregistrement (date de création, créateur...).
+     * @param {Object} rdv
+     */
+    getInfoRdvElt(rdv) {
+        let htmlContent = `Créé le ${rdv.createdAtToString} par ${rdv.createdBy.fullname}`
+        if (rdv.createdAt !== rdv.updatedAt) {
+            htmlContent += `<br/> (modifié le ${rdv.updatedAtToString} par ${rdv.updatedBy.fullname})`
+        }
+        return htmlContent
+    }
 
     /**
      * Met à jour les dates de début et de fin.
@@ -123,7 +217,6 @@ export default class RdvForm {
             this.rdvEndInput.value = this.dateInput.value + 'T' + this.endInput.value
         }
     }
-
 
     /**
      * @param {Object} rdv
@@ -144,4 +237,6 @@ export default class RdvForm {
         this.counterRdvsElt.dataset.countTasks = countRdvs
         this.counterRdvsElt.textContent = countRdvs.toLocaleString()
     }
+
+
 }

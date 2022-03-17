@@ -177,35 +177,35 @@ class RdvController extends AbstractController
     /**
      * @Route("/rdv/{id}/show", name="rdv_show", methods="GET")
      */
-    public function show($id): JsonResponse
+    public function show(Rdv $rdv): JsonResponse
     {
-        $rdv = $this->rdvRepo->findRdv($id);
-
         $this->denyAccessUnlessGranted('VIEW', $rdv);
 
-        $supportGroup = $rdv->getSupportGroup();
+//        $supportGroup = $rdv->getSupportGroup();
 
         return $this->json([
             'action' => 'show',
-            'rdv' => [
-                'getRdv' => $rdv,
-                'title' => $rdv->getTitle(),
-                'fullnameSupport' => $supportGroup ? $supportGroup->getHeader()->getFullname() : null,
-                'start' => $rdv->getStart()->format("Y-m-d\TH:i"),
-                'end' => $rdv->getEnd()->format("Y-m-d\TH:i"),
-                'location' => $rdv->getLocation(),
-                'status' => $rdv->getStatus(),
-                'content' => $rdv->getContent(),
-                'supportId' => $rdv->getSupportGroup() ? $rdv->getSupportGroup()->getId() : null,
-                'createdBy' => $rdv->getCreatedBy()->getFullname(),
-                'createdAt' => $rdv->getCreatedAt()->format('d/m/Y à H:i'),
-                'updatedBy' => $rdv->getUpdatedBy()->getFullname(),
-                'updatedAt' => $rdv->getUpdatedAt()->format('d/m/Y à H:i'),
-                'canEdit' => $this->isGranted('EDIT', $rdv),
-                'tags' => $rdv->getTags(),
-                'tagIds' => $rdv->getTagsIdsToString(),
-            ],
-        ], 200, [], ['groups' => 'show_rdv']);
+            'canEdit' => $this->isGranted('EDIT', $rdv),
+            'rdv' => $rdv,
+//            'rdv' => [
+//                'getRdv' => $rdv,
+//                'title' => $rdv->getTitle(),
+//                'fullnameSupport' => $supportGroup ? $supportGroup->getHeader()->getFullname() : null,
+//                'start' => $rdv->getStart()->format("Y-m-d\TH:i"),
+//                'end' => $rdv->getEnd()->format("Y-m-d\TH:i"),
+//                'location' => $rdv->getLocation(),
+//                'status' => $rdv->getStatus(),
+//                'content' => $rdv->getContent(),
+//                'supportId' => $rdv->getSupportGroup() ? $rdv->getSupportGroup()->getId() : null,
+//                'createdBy' => $rdv->getCreatedBy()->getFullname(),
+//                'createdAt' => $rdv->getCreatedAt()->format('d/m/Y à H:i'),
+//                'updatedBy' => $rdv->getUpdatedBy()->getFullname(),
+//                'updatedAt' => $rdv->getUpdatedAt()->format('d/m/Y à H:i'),
+//
+//                'tags' => $rdv->getTags(),
+//                'tagIds' => $rdv->getTagsIdsToString(),
+//            ],
+        ], 200, [], ['groups' => ['show_rdv', 'show_tag', 'show_support_group']]);
     }
 
     /**
@@ -226,22 +226,23 @@ class RdvController extends AbstractController
             $dispatcher->dispatch(new RdvEvent($rdv), 'rdv.after_update');
 
             return $this->json([
-                'action' => 'update',
+                'action' => 'edit',
                 'alert' => 'success',
                 'msg' => 'Le RDV est modifié.',
-                'rdv' => [
-                    'getRdv' => $rdv,
-                    'id' => $rdv->getId(),
-                    'title' => $rdv->getTitle(),
-                    'day' => $rdv->getStart()->format('Y-m-d'),
-                    'start' => $rdv->getStart()->format('H:i'),
-                ],
+                'rdv' => $rdv,
+//                'rdv' => [
+//                    'getRdv' => $rdv,
+//                    'id' => $rdv->getId(),
+//                    'title' => $rdv->getTitle(),
+//                    'day' => $rdv->getStart()->format('Y-m-d'),
+//                    'start' => $rdv->getStart()->format('H:i'),
+//                ],
                 'apiUrls' => $this->calendarRouter->getUrls(
                     'update',
                     $rdv->getId(),
                     (array) $request->request->get('rdv')
                 ),
-            ], 200, [], ['groups' => 'show_rdv']);
+            ], 200, [], ['groups' => ['show_rdv', 'show_tag', 'show_support_group']]);
         }
 
         return $this->getErrorMessage($form);

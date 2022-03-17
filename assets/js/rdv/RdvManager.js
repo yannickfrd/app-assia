@@ -20,7 +20,9 @@ export default class RdvManager {
         const divSupportElt = document.querySelector('div[data-support]')
         this.supportId = divSupportElt ? divSupportElt.dataset.support : null
 
-        this.createRdvButton = document.querySelector('button[data-action="add-rdv"]')
+        this.createRdvBtn = document.querySelector('button[data-action="add-rdv"]')
+        this.editRdvBtn = document.querySelectorAll('table#table-rdvs button[data-action="edit-rdv"]')
+        this.deleteRdvBtn = document.querySelectorAll('table#table-rdvs button[data-action="delete-rdv"]')
 
         this.rdvModal = new Modal(this.modalRdvElt)
         this.rdvForm = new RdvForm(this)
@@ -29,9 +31,13 @@ export default class RdvManager {
     }
 
     init() {
-        this.createRdvButton.addEventListener('click', () => this.rdvForm.resetForm())
+        this.createRdvBtn.addEventListener('click', () => this.rdvForm.resetForm())
 
-        document.querySelectorAll('button[data-action="delete-rdv"]').forEach(btnElt => {
+        this.editRdvBtn.forEach(btnElt => {
+            btnElt.addEventListener('click', () => this.onClickEditRdv(btnElt))
+        })
+
+        this.deleteRdvBtn.forEach(btnElt => {
             btnElt.addEventListener('click', () => this.onClickDeleteRdv(btnElt))
         })
 
@@ -39,6 +45,13 @@ export default class RdvManager {
             e.preventDefault()
             this.ajax.send('GET', this.modalConfirmElt.dataset.url, this.responseAjax.bind(this))
         })
+    }
+
+    /**
+     * @param {HTMLButtonElement} btnElt
+     */
+    onClickEditRdv(btnElt) {
+        this.rdvForm.requestShowRdv(btnElt)
     }
 
     /**
@@ -53,19 +66,48 @@ export default class RdvManager {
      * @param {Object} response
      */
     responseAjax(response) {
+        console.log(response)
         if (response.action) {
             switch (response.action) {
                 case 'delete':
-                    this.deleteRdv(response.rdvId)
+                    this.deleteRdvTr(response.rdvId)
                     break
                 case 'create':
                     this.createRdvTr(response.rdv);
                     break;
+                case 'edit':
+                    this.editRdvTr(response.rdv);
+                    break;
+                case 'show':
+                    console.log('show')
+                    this.showRdv(response.rdv, response.canEdit);
+                    break;
             }
         }
 
-        new MessageFlash(response.alert, response.msg)
+        if (response.msg !== undefined) {
+            new MessageFlash(response.alert, response.msg);
+        }
+
         this.loader.off()
+    }
+
+    showRdv(rdv, canEdit) {
+        this.rdvForm.show(rdv, canEdit)
+    }
+
+    rdvDateToString(rdv) {
+        const rdvTime = (date) => {
+            const rdvDate = new Date(date)
+            const min = rdvDate.getMinutes().toString().length === 1 ? '0' + rdvDate.getMinutes() : rdvDate.getMinutes()
+
+            return rdvDate.getHours() + ':' + min
+        }
+
+        const dateFormater = new DateFormater()
+        const dateStart = dateFormater.getDate(rdv.start).split(' ')[0]
+
+        return `${dateStart}<br>${rdvTime(rdv.start)} - ${rdvTime(rdv.end)}`
     }
 
     /**
@@ -76,34 +118,27 @@ export default class RdvManager {
         const tbodyElt = document.querySelector('table#table-rdvs tbody')
         const rowElt = document.createElement('tr')
 
-        const rdvTime = (date) => {
-            const rdvDate = new Date(date)
-            const min = rdvDate.getMinutes().toString().length === 1 ? '0' + rdvDate.getMinutes() : rdvDate.getMinutes()
-
-            return rdvDate.getHours() + ':' + min
-        }
-
         const dateFormater = new DateFormater()
         const createdAt = dateFormater.getDate(rdv.createdAt)
-        const dateStart = dateFormater.getDate(rdv.start).split(' ')[0]
 
         let htmlContent = `
             <td class="align-middle text-center">
-                <a href="/rdv/${rdv.id}/show"
-                   class="btn btn-${this.themeColor} btn-sm shadow" title="Voir le rendez-vous"
-                   data-toggle="tooltip" data-placement="bottom"><i class="fas fa-eye"></i>
-                </a>
+                <button class="btn btn-${this.themeColor} btn-sm shadow my-1"
+                    title="Voir/Modifier le rendez-vous"  data-toggle="tooltip" data-placement="bottom"
+                    data-action="edit-rdv" data-url="/rdv/${rdv.id}/show">
+                    <span class="fas fa-eye"></span>
+                </button>
             </td>
-            <td class="align-middle justify"><span class="font-weight-bold">${rdv.title}</span></td>
-            <td class="align-middle">${dateStart}<br>${rdvTime(rdv.start)} - ${rdvTime(rdv.end)}
-            <td class="align-middle">${rdv.statusToString ?? ''}</td>
-            <td class="align-middle">${this.rdvForm.createTags(rdv)}</td>
-            <td class="align-middle">${rdv.location ?? ''}</td>
-            <td class="align-middle">${rdv.usersToString}</td>`
+            <td class="align-middle justify" data-cell="title"><span class="font-weight-bold">${rdv.title}</span></td>
+            <td class="align-middle" data-cell="start">${this.rdvDateToString(rdv)}
+            <td class="align-middle" data-cell="status">${rdv.statusToString ?? ''}</td>
+            <td class="align-middle" data-cell="tags">${this.rdvForm.createTags(rdv)}</td>
+            <td class="align-middle" data-cell="location">${rdv.location ?? ''}</td>
+            <td class="align-middle" data-cell="users">${rdv.usersToString}</td>`
 
         if (!this.supportId) {
              htmlContent += `
-                <td class="align-middle">${rdv.supportGroup ? rdv.supportGroup.header.fullname : ''}</td>
+                <td class="align-middle" data-cell="support">${rdv.supportGroup ? rdv.supportGroup.header.fullname : ''}</td>
                 <td class="align-middle" data-cell="service">${rdv.supportGroup ? rdv.supportGroup.service.name : ''}</td>`
         }
 
@@ -127,10 +162,8 @@ export default class RdvManager {
 
         tbodyElt.insertBefore(rowElt, tbodyElt.firstChild)
 
-        // const btnEditElt = rowElt.querySelector('button[data-action="edit_task"]')
-        // btnEditElt.addEventListener('click', () => {
-        //     this.requestShowTask(btnEditElt)
-        // })
+        const btnEditElt = rowElt.querySelector('button[data-action="edit-rdv"]')
+        btnEditElt.addEventListener('click', () => this.onClickEditRdv(btnEditElt))
 
         const btnDeleteElt = rowElt.querySelector('button[data-action="delete-rdv"]')
         btnDeleteElt.addEventListener('click', () => this.onClickDeleteRdv(btnDeleteElt))
@@ -142,10 +175,39 @@ export default class RdvManager {
     }
 
     /**
+     * Edit rdv's row.
+     * @param {Object} rdv
+     */
+    editRdvTr(rdv) {
+        const rowElt = document.getElementById('rdv-' + rdv.id)
+        const supportGroup = rdv.supportGroup
+
+        if (!rowElt) {
+            return console.error('No row task ' + rdv.id + ' in this page.')
+        }
+
+        rowElt.querySelector('td[data-cell="title"] span').textContent = rdv.title ?? ''
+        rowElt.querySelector('td[data-cell="start"]').innerHTML = this.rdvDateToString(rdv)
+        rowElt.querySelector('td[data-cell="status"]').textContent = rdv.statusToString ?? ''
+        rowElt.querySelector('td[data-cell="tags"]').innerHTML = this.rdvForm.createTags(rdv)
+        rowElt.querySelector('td[data-cell="location"]').innerHTML = rdv.location ?? ''
+        rowElt.querySelector('td[data-cell="users"]').textContent = rdv.usersToString ?? ''
+
+        if (!this.supportId && supportGroup) {
+            rowElt.querySelector('td[data-cell="support"]').textContent = supportGroup.header.fullname ?? ''
+            rowElt.querySelector('td[data-cell="service"]').textContent = supportGroup.service.name ?? ''
+        }
+
+        this.rdvModal.hide()
+        document.getElementById('js-btn-cancel').click()
+    }
+
+    /**
      * Delete rdv's row.
      * @param {number} rdvId
      */
-    deleteRdv(rdvId) {
+    deleteRdvTr(rdvId) {
         document.getElementById('rdv-' + rdvId).remove()
     }
+
 }

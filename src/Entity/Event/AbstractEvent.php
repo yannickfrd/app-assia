@@ -277,13 +277,13 @@ abstract class AbstractEvent
         return $countViewedAlerts;
     }
 
-    /** @Groups("show_event") */
+    /** @Groups({"show_event", "show_rdv"}) */
     public function getCreatedAtToString(string $format = 'd/m/Y H:i'): string
     {
         return $this->createdAt ? $this->createdAt->format($format) : '';
     }
 
-    /** @Groups("show_event") */
+    /** @Groups({"show_event", "show_rdv"}) */
     public function getUpdatedAtToString(string $format = 'd/m/Y H:i'): string
     {
         return $this->updatedAt ? $this->updatedAt->format($format) : '';
