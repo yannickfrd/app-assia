@@ -17,7 +17,8 @@
     </div>
 
     {% include 'app/rdv/_rdv_form_modal.html.twig' with { 'action': path('support_rdv_new', {'id': support.id}) } %}
-	{% include 'app/rdv/_rdv_delete_modal.html.twig' %}
+    {% include 'app/rdv/_rdv_update_api_modal.html.twig' with {'modal_id': 'modal-update'} %}
+    {% include 'app/rdv/_rdv_delete_modal.html.twig' %}
 
 {% endblock %}
 

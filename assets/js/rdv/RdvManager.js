@@ -32,6 +32,8 @@ export default class RdvManager {
         this.rdvModal = new Modal(this.modalRdvElt)
         this.rdvForm = new RdvForm(this)
 
+        this.rdvBeforeUpdate = null
+
         this.init()
     }
 
@@ -81,7 +83,7 @@ export default class RdvManager {
                     this.createRdvTr(response.rdv, response.apiUrls);
                     break;
                 case 'edit':
-                    this.editRdvTr(response.rdv);
+                    this.editRdvTr(response.rdv, response.apiUrls);
                     break;
                 case 'show':
                     this.showRdv(response.rdv, response.canEdit);
@@ -187,15 +189,15 @@ export default class RdvManager {
         //v1
         this.apiCalendar.addEvent(new RdvModel(rdv), apiUrls)
 
-        this.rdvModal.hide()
-        document.getElementById('js-btn-cancel').click()
+        this.closeModal()
     }
 
     /**
      * Edit rdv's row.
      * @param {Object} rdv
+     * @param {Object} apiUrls
      */
-    editRdvTr(rdv) {
+    editRdvTr(rdv, apiUrls) {
         const rowElt = document.getElementById('rdv-' + rdv.id)
         const supportGroup = rdv.supportGroup
 
@@ -215,8 +217,9 @@ export default class RdvManager {
             rowElt.querySelector('td[data-cell="service"]').textContent = supportGroup.service.name ?? ''
         }
 
-        this.rdvModal.hide()
-        document.getElementById('js-btn-cancel').click()
+        this.rdvForm.updateRdv(rdv, apiUrls)
+
+        this.closeModal()
     }
 
     /**
@@ -226,6 +229,10 @@ export default class RdvManager {
     deleteRdvTr(rdvId) {
         document.getElementById('rdv-' + rdvId).remove()
 
+        this.closeModal()
+    }
+
+    closeModal() {
         this.rdvModal.hide()
         document.getElementById('js-btn-cancel').click()
     }

@@ -3,6 +3,8 @@ import SelectManager from "../utils/form/SelectManager";
 import DateFormater from "../utils/date/dateFormater";
 import MessageFlash from "../utils/messageFlash";
 import {Modal} from "bootstrap";
+import RdvModel from "./model/RdvModel";
+import ApiCalendar from "../api/ApiCalendar";
 
 export default class RdvForm {
 
@@ -15,6 +17,9 @@ export default class RdvForm {
         this.loader = manager.loader
         this.ajax = manager.ajax
         this.themeColor = manager.themeColor
+
+        this.apiCalendar = new ApiCalendar()
+        this.formValidator = new FormValidator(this.modalRdvElt)
 
         this.modalRdvElt = document.getElementById('modal-rdv')
         this.modalElt = new Modal(this.modalRdvElt)
@@ -44,13 +49,15 @@ export default class RdvForm {
 
         this.currentUserId = document.getElementById('user-name').dataset.userId
 
-        this.formValidator = new FormValidator(this.modalRdvElt)
-
         const eventObject = { name: 'onModal', elementId: 'modal-rdv' }
         this.usersSelectManager = new SelectManager('#rdv_users', eventObject, { width: '100%' })
         this.tagsSelectManager = new SelectManager('#rdv_tags', eventObject)
 
         this.editColumnRdvElement = document.querySelector('table#table-rdvs th[data-path-edit-rdv]')
+
+        this.updateModalElt = new Modal(document.getElementById('modal-update'))
+        this.googleCalendarCheckbox = this.modalRdvElt.querySelector('input[name="rdv[_googleCalendar]"]')
+        this.outlookCalendarCheckbox = this.modalRdvElt.querySelector('input[name="rdv[_outlookCalendar]"]')
 
         this.rdvBeforeUpdate = null
 
@@ -248,5 +255,36 @@ export default class RdvForm {
         this.counterRdvsElt.textContent = countRdvs.toLocaleString()
     }
 
+    /**
+     * @param {Object} rdv
+     * @param {Object} apiUrls
+     */
+    updateRdv(rdv, apiUrls) {
+        const rdvModel = new RdvModel(rdv)
 
+        if ((this.googleCalendarCheckbox.checked && null === this.rdvBeforeUpdate.googleEventId)
+            || (this.outlookCalendarCheckbox.checked && null === this.rdvBeforeUpdate.outlookEventId)
+            || (rdvModel.isDifferent(this.rdvBeforeUpdate) && (this.googleCalendarCheckbox.checked
+                || this.outlookCalendarCheckbox.checked))
+        ) {
+            this.updateModalElt.show()
+
+            const listApis = () => {
+                let list = {}
+
+                if (this.googleCalendarCheckbox.checked) {
+                    list.google = apiUrls.google;
+                }
+                if (this.outlookCalendarCheckbox.checked) {
+                    list.outlook =  apiUrls.outlook
+                }
+
+                return Object.keys(list).length === 0 ? apiUrls : list
+            }
+
+            document.getElementById('modal-confirm').addEventListener('click', () => {
+                this.apiCalendar.addEvent(rdvModel, listApis())
+            }, {once: true})
+        }
     }
+}
