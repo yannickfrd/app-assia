@@ -2,6 +2,7 @@
 
 namespace App\Entity\Event;
 
+use App\Entity\Support\Rdv;
 use App\Repository\Event\AlertRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -53,6 +54,11 @@ class Alert
      * @ORM\ManyToOne(targetEntity=Task::class, inversedBy="alerts")
      */
     private $task;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Rdv::class, inversedBy="alerts")
+     */
+    private $rdv;
 
     /**
      * @ORM\Column(type="boolean")
@@ -126,6 +132,17 @@ class Alert
     public function getTask(): Task
     {
         return $this->task;
+    }
+
+    public function getRdv(): Rdv
+    {
+        return $this->rdv;
+    }
+
+    public function setRdv($rdv): self
+    {
+        $this->rdv = $rdv;
+        return $this;
     }
 
     public function getViewed(): ?bool

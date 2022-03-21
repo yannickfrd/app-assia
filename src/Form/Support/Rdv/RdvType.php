@@ -6,6 +6,7 @@ use App\Entity\Organization\Tag;
 use App\Entity\Organization\User;
 use App\Entity\Support\Rdv;
 use App\Entity\Support\SupportGroup;
+use App\Form\Event\AlertType;
 use App\Form\Utils\Choices;
 use App\Repository\Organization\TagRepository;
 use App\Repository\Organization\UserRepository;
@@ -15,6 +16,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -117,6 +119,14 @@ class RdvType extends AbstractType
                     'size' => 1,
                 ],
                 'required' => false,
+            ])
+            ->add('alerts', CollectionType::class, [
+                'entry_type' => AlertType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'delete_empty' => true,
+                'prototype' => true,
+                'by_reference' => false,
             ])
             ->add('_googleCalendar', CheckboxType::class, [
                 'label' => 'rdv.label.google',

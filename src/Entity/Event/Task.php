@@ -90,6 +90,15 @@ class Task extends AbstractEvent
      */
     protected $createdBy; // NE PAS SUPPRIMER
 
+    /**
+     * @var Collection<Alert>
+     * @ORM\OneToMany(targetEntity=Alert::class, mappedBy="task", orphanRemoval=true, cascade={"persist"})
+     * @ORM\JoinColumn(name="alert", nullable=true)
+     * @ORM\OrderBy({"date": "ASC"})
+     * @Groups("show_alert")
+     */
+    protected $alerts;
+
     public function __construct()
     {
         parent::__construct();
@@ -97,6 +106,16 @@ class Task extends AbstractEvent
         $this->users = new ArrayCollection();
         $this->tags = new ArrayCollection();
 
+    }
+
+    public function addAlert(?Alert $alert): self
+    {
+        if (!$this->alerts->contains($alert)) {
+            $alert->setTask($this);
+            $this->alerts[] = $alert;
+        }
+
+        return $this;
     }
 
     public function getStatus(): ?bool
@@ -148,16 +167,6 @@ class Task extends AbstractEvent
     public function setAutoTaskId($autoTaskId): self
     {
         $this->autoTaskId = $autoTaskId;
-
-        return $this;
-    }
-
-    public function addAlert(?Alert $alert): self
-    {
-        if (!$this->alerts->contains($alert)) {
-            $alert->setTask($this);
-            $this->alerts[] = $alert;
-        }
 
         return $this;
     }

@@ -222,7 +222,6 @@ export default class TaskForm {
             this.endInputElt.value = this.endDateInputElt.value + 'T' + this.endTimeInputElt.value
         }
     }
-    
 
     /**
      * Initialise les rappels du formulaire.

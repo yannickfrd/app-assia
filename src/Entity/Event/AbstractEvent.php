@@ -74,15 +74,6 @@ abstract class AbstractEvent
      */
     protected $updatedBy; // NE PAS SUPPRIMER
 
-    /**
-     * @var Collection<Alert>
-     * @ORM\OneToMany(targetEntity=Alert::class, mappedBy="task", orphanRemoval=true, cascade={"persist"})
-     * @ORM\JoinColumn(name="alert", nullable=true)
-     * @ORM\OrderBy({"date": "ASC"})
-     * @Groups("show_alert")
-     */
-    protected $alerts;
-
     public function __construct()
     {
         $this->type = get_class($this)::TYPE_EVENT;

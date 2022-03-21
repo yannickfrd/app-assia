@@ -127,7 +127,7 @@ class RdvController extends AbstractController
                 'apiUrls' => $this->calendarRouter->getUrls(
                     'create', $rdv->getId(), (array) $request->request->get('rdv')
                 ),
-            ], 200, [], ['groups' => ['show_rdv', 'show_tag']]);
+            ], 200, [], ['groups' => Rdv::SERIALIZER_GROUPS]);
         }
 
         return $this->getErrorMessage($form);
@@ -168,7 +168,7 @@ class RdvController extends AbstractController
                 'apiUrls' => $this->calendarRouter->getUrls(
                     'create', $rdv->getId(), (array) $request->request->get('rdv')
                 ),
-            ], 200, [], ['groups' => ['show_rdv', 'show_tag']]);
+            ], 200, [], ['groups' => Rdv::SERIALIZER_GROUPS]);
         }
 
         return $this->getErrorMessage($form);
@@ -185,7 +185,7 @@ class RdvController extends AbstractController
             'action' => 'show',
             'canEdit' => $this->isGranted('EDIT', $rdv),
             'rdv' => $rdv,
-        ], 200, [], ['groups' => ['show_rdv', 'show_tag', 'show_support_group']]);
+        ], 200, [], ['groups' => Rdv::SERIALIZER_GROUPS]);
     }
 
     /**
@@ -218,7 +218,7 @@ class RdvController extends AbstractController
                     $rdv->getId(),
                     (array) $request->request->get('rdv')
                 ),
-            ], 200, [], ['groups' => ['show_rdv', 'show_tag', 'show_support_group']]);
+            ], 200, [], ['groups' => Rdv::SERIALIZER_GROUPS]);
         }
 
         return $this->getErrorMessage($form);

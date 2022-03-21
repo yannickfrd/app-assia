@@ -111,6 +111,37 @@
                         </div>
                     </div>
                 </div>
+
+                {% set alert_widget %}
+                    <div class="form-inline mb-1">
+                        <div class="d-inline-flex mr-2 mb-2">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text" title="Alerte" data-toggle="tooltip" data-placement="bottom">
+                                        <i class="fas fa-bell text-black-50"></i>
+                                    </div>
+                                </div>{{ form_widget(form_rdv.alerts.vars.prototype.date) }}
+                            </div>
+                        </div>
+                        <div class="d-inline-flex mr-2 mb-2">{{ form_widget(form_rdv.alerts.vars.prototype.type) }}</div>
+                        <div class="d-inline-flex mb-2">
+                            <button class="btn btn-sm btn-danger" data-action="remove"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    </div>
+                {% endset %}
+
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <div id="alerts-fields-list" data-prototype="{{ alert_widget|e }}"
+                             data-container-tag="div" data-widget-counter="{{ form_rdv.alerts|length }}">
+                        </div>
+                        <button type="button" class="btn btn-{{ theme_color }} btn-sm"
+                                data-list-selector="#alerts-fields-list" data-add-widget="alert" data-url="/alert/__id__/toggle-status">
+                            <i class="fas fa-plus-square mr-2"></i>Ajouter un rappel
+                        </button>
+                    </div>
+                </div>
+
                 {{ form_row(form_rdv._token) }}
             </div>
             <div class="modal-footer d-flex justify-content-between">

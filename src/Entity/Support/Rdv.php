@@ -3,6 +3,7 @@
 namespace App\Entity\Support;
 
 use App\Entity\Event\AbstractEvent;
+use App\Entity\Event\Alert;
 use App\Entity\Organization\TagTrait;
 use App\Entity\Organization\User;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -22,6 +23,10 @@ class Rdv extends AbstractEvent
 {
     use TagTrait;
     use SoftDeleteableEntity;
+
+    public const SERIALIZER_GROUPS = [
+        'show_rdv', 'show_tag', 'show_support_group', 'show_alert',
+    ];
 
     public const TYPE_EVENT = 0;
 
@@ -86,12 +91,32 @@ class Rdv extends AbstractEvent
      */
     private $outlookEventId;
 
+    /**
+     * @var Collection<Alert>
+     * @ORM\OneToMany(targetEntity=Alert::class, mappedBy="rdv", orphanRemoval=true, cascade={"persist"})
+     * @ORM\JoinColumn(name="alert", nullable=true)
+     * @ORM\OrderBy({"date": "ASC"})
+     * @Groups("show_rdv")
+     */
+    protected $alerts;
+
+
     public function __construct()
     {
         parent::__construct();
 
         $this->users = new ArrayCollection();
         $this->tags = new ArrayCollection();
+    }
+
+    public function addAlert(?Alert $alert): self
+    {
+        if (!$this->alerts->contains($alert)) {
+            $alert->setRdv($this);
+            $this->alerts[] = $alert;
+        }
+
+        return $this;
     }
 
     public function getId(): ?int

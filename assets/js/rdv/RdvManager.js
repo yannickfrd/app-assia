@@ -30,7 +30,7 @@ export default class RdvManager {
     }
 
     init() {
-        this.newRdvBtn.addEventListener('click', () => this.rdvForm.resetForm())
+        this.newRdvBtn.addEventListener('click', e => this.rdvForm.resetForm(e))
 
         this.editRdvBtn.forEach(btnElt => {
             btnElt.addEventListener('click', () => this.onClickEditRdv(btnElt))
@@ -58,7 +58,6 @@ export default class RdvManager {
         document.getElementById('modal-block').addEventListener('click', () => {
             this.rdvForm.requestDeleteRdv(btnElt.dataset.url)
         })
-
     }
 
     /**
@@ -66,6 +65,7 @@ export default class RdvManager {
      */
     responseAjax(response) {
         const rdv = response.rdv
+        const apiUrls = response.apiUrls
 
         if (response.action) {
             switch (response.action) {
@@ -73,10 +73,10 @@ export default class RdvManager {
                     this.deleteRdvTr(response.rdvId)
                     break
                 case 'create':
-                    this.createRdvTr(rdv, response.apiUrls)
+                    this.createRdvTr(rdv, apiUrls)
                     break;
                 case 'edit':
-                    this.editRdvTr(rdv, response.apiUrls)
+                    this.editRdvTr(rdv, apiUrls)
                     break;
                 case 'show':
                     if (response.canEdit) {

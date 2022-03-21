@@ -48,6 +48,7 @@ class RdvControllerTest extends WebTestCase
             dirname(__DIR__).'/../DataFixturesTest/RdvFixturesTest.yaml',
         ]);
 
+        $this->user = $this->fixtures['userRoleUser'];
         $this->supportGroup = $this->fixtures['supportGroup1'];
         $this->rdv = $this->fixtures['rdv1'];
     }
@@ -120,6 +121,7 @@ class RdvControllerTest extends WebTestCase
         $this->client->request('POST', '/rdv/new', [
             'rdv' => [
                 'title' => 'RDV test',
+                'users' => [$this->user->getId()],
                 'start' => $now->format('Y-m-d\TH:00'),
                 'end' => (clone $now)->modify('+1 hour')->format('Y-m-d\TH:00'),
                 '_token' => $csrfToken,
@@ -154,6 +156,7 @@ class RdvControllerTest extends WebTestCase
         $this->client->request('POST', "/support/$id/rdv/new", [
             'rdv' => [
                 'title' => 'RDV test',
+                'users' => [$this->user->getId()],
                 'start' => $now->format('Y-m-d\TH:00'),
                 'end' => (clone $now)->modify('+1 hour')->format('Y-m-d\TH:00'),
                 '_token' => $csrfToken,
@@ -195,6 +198,7 @@ class RdvControllerTest extends WebTestCase
         $this->client->request('POST', "/rdv/$id/edit", [
             'rdv' => [
                 'title' => 'RDV test edit',
+                'users' => [$this->user->getId()],
                 'start' => $now->format('Y-m-d\TH:00'),
                 'end' => (clone $now)->modify('+1 hour')->format('Y-m-d\TH:00'),
                 '_token' => $csrfToken,
@@ -204,7 +208,7 @@ class RdvControllerTest extends WebTestCase
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $content = json_decode($this->client->getResponse()->getContent(), true);
 
-        $this->assertSame('update', $content['action']);
+        $this->assertSame('edit', $content['action']);
         $this->assertSame('RDV test edit', $content['rdv']['title']);
     }
 

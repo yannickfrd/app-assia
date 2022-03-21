@@ -5,6 +5,7 @@ import MessageFlash from "../utils/messageFlash";
 import {Modal} from "bootstrap";
 import RdvModel from "./model/RdvModel";
 import ApiCalendar from "../api/ApiCalendar";
+import WidgetCollectionManager from "../utils/form/WidgetCollectionManager";
 
 export default class RdvForm {
 
@@ -24,6 +25,8 @@ export default class RdvForm {
 
         this.modalRdvElt = document.getElementById('modal-rdv')
         this.modalElt = new Modal(this.modalRdvElt)
+
+        this.btnAddAlertElt = document.querySelector('button[data-add-widget]')
         this.btnSaveRdvElt = this.modalRdvElt.querySelector('button[data-action="save-rdv"]')
         this.btnDeleteRdvElt = this.modalRdvElt.querySelector('button[data-action="delete-rdv-modal"]')
         this.formRdvElt = this.modalRdvElt.querySelector('form[name="rdv"]')
@@ -59,6 +62,8 @@ export default class RdvForm {
         const eventObject = { name: 'onModal', elementId: 'modal-rdv' }
         this.usersSelectManager = new SelectManager('#rdv_users', eventObject, { width: '100%' })
         this.tagsSelectManager = new SelectManager('#rdv_tags', eventObject)
+
+        this.alertsCollectionManager = new WidgetCollectionManager(this.afterToAddAlert.bind(this), null, 3)
 
         this.editColumnRdvElt = document.querySelector('table#table-rdvs th[data-path-edit-rdv]')
         this.editContainRdvElt = document.querySelector('div.calendar-table div[data-path-edit-rdv]')
@@ -141,7 +146,64 @@ export default class RdvForm {
         }
 
         this.usersSelectManager.updateSelect(this.currentUserId)
+
+        this.resetAlerts()
     }
+
+    /**
+     * Réinitialise les alertes du formulaire.
+     */
+    resetAlerts() {
+        const alertprototype = document.querySelector('#alerts-fields-list')
+        alertprototype.innerHTML = ''
+        alertprototype.dataset.widgetCounter = 0
+        this.btnAddAlertElt.classList.remove('d-none')
+    }
+
+    /**
+     * Initialise les rappels du formulaire.
+     * @param {Object} rdv
+     */
+    initAlerts(rdv) {
+        this.resetAlerts()
+
+        rdv.alerts.forEach(alert => {
+            const alertElt = this.alertsCollectionManager.addElt(this.btnAddAlertElt)
+            alertElt.querySelector('input').value = alert.date.slice(0, 19)
+            alertElt.querySelector('select').value = alert.type
+        })
+    }
+
+    /**
+     * Définit une date et heure par défaut après l'ajout d'une alerte.
+     */
+    afterToAddAlert() {
+        // this.updateEndDate()
+        const elt = this.alertsCollectionManager.listElt.lastElementChild
+
+        const defaultDate = new Date(this.dateInput.value + 'T' + this.startInput.value)
+        defaultDate.setDate(defaultDate.getDate() - 1)
+
+        const inputDateElt = elt.querySelector('input')
+        inputDateElt.value = new DateFormater().getDate(defaultDate, 'datetimeInput')
+        inputDateElt.addEventListener('focusout', e => this.isValidDate(e.target))
+    }
+
+    /**
+     *
+     * @param {HTMLInputElement} inputDateElt
+     * @returns {Boolean}
+     */
+    isValidDate(inputDateElt) {
+        return this.formValidator
+            .checkDate(inputDateElt, -(10 * 365), (2 * 365), 'Date incorrecte', false) !== false
+    }
+
+    // updateEndDate() {
+    //     if (isNaN(this.dateInput.value) && isNaN(this.startInput.value)) {
+    //         this.endInput.value = this.dateInput.value + 'T' + this.startInput.value
+    //     }
+    // }
 
     requestCreateRdv() {
         if (this.rdvTitleInput.value === '') {
@@ -243,6 +305,8 @@ export default class RdvForm {
 
         const url = this.btnDeleteRdvElt.dataset.url.replace('__id__', rdv.id)
         this.btnDeleteRdvElt.addEventListener('click', e => this.onClickDeleteRdvModal(e, url))
+
+        this.initAlerts(rdv)
 
         this.modalElt.show()
     }
