@@ -55,9 +55,11 @@ class RdvVoter extends Voter
 
     protected function canView(): bool
     {
+//        dd($this->rdv->getUsers()->count());
         if ($this->isCreatorOrReferent()
             || $this->isInUsers()
             || ($this->supportGroup && $this->isUserOfService($this->supportGroup->getService()))
+            || (0 === $this->rdv->getUsers()->count() && $this->isGranted('ROLE_ADMIN'))
             || $this->isGranted('ROLE_SUPER_ADMIN')
         ) {
             return true;

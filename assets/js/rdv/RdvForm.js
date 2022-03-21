@@ -16,10 +16,11 @@ export default class RdvForm {
 
         this.loader = manager.loader
         this.ajax = manager.ajax
-        this.themeColor = manager.themeColor
 
         this.apiCalendar = new ApiCalendar()
         this.formValidator = new FormValidator(this.modalRdvElt)
+
+        this.themeColor = document.getElementById('header').dataset.color
 
         this.modalRdvElt = document.getElementById('modal-rdv')
         this.modalElt = new Modal(this.modalRdvElt)
@@ -27,6 +28,12 @@ export default class RdvForm {
         this.btnDeleteRdvElt = this.modalRdvElt.querySelector('button[data-action="delete-rdv-modal"]')
         this.formRdvElt = this.modalRdvElt.querySelector('form[name="rdv"]')
         this.rdvTitleElt = this.modalRdvElt.querySelector('.modal-header h2')
+
+        this.confirmDeleteModalElt = document.getElementById('modal-block')
+        this.confirmDeleteModal = new Modal(this.confirmDeleteModalElt)
+        this.btnConfirmDeleteElt = document.querySelector('button#modal-confirm')
+
+        this.supportPeopleElt = document.getElementById('js-support-people')
 
         this.counterRdvsElt = document.querySelector('span#count-rdvs')
 
@@ -53,13 +60,25 @@ export default class RdvForm {
         this.usersSelectManager = new SelectManager('#rdv_users', eventObject, { width: '100%' })
         this.tagsSelectManager = new SelectManager('#rdv_tags', eventObject)
 
-        this.editColumnRdvElement = document.querySelector('table#table-rdvs th[data-path-edit-rdv]')
+        this.editColumnRdvElt = document.querySelector('table#table-rdvs th[data-path-edit-rdv]')
+        this.editContainRdvElt = document.querySelector('div.calendar-table div[data-path-edit-rdv]')
 
         this.updateModalElt = new Modal(document.getElementById('modal-update'))
+
         this.googleCalendarCheckbox = this.modalRdvElt.querySelector('input[name="rdv[_googleCalendar]"]')
+
         this.outlookCalendarCheckbox = this.modalRdvElt.querySelector('input[name="rdv[_outlookCalendar]"]')
+        if (localStorage.getItem('calendar.google') === 'true') {
+
+            this.googleCalendarCheckbox.checked = 'checked'
+        }
+        if (localStorage.getItem('calendar.outlook') === 'true') {
+            this.outlookCalendarCheckbox.checked = 'checked';
+        }
 
         this.rdvBeforeUpdate = null
+
+        this.modalConfirmElt = document.getElementById('modal-confirm')
 
         this.init()
     }
@@ -71,21 +90,25 @@ export default class RdvForm {
     }
 
     onClickDeleteRdvModal(e, url) {
-            e.preventDefault()
-            this.manager.confirmDeleteModal.show()
-            this.manager.btnConfirmDeleteModalElt.dataset.url = url
-        }
+        e.preventDefault()
+        this.confirmDeleteModal.show()
+
+        this.confirmDeleteModalElt.querySelector('button#modal-confirm').addEventListener('click', () => {
+            this.requestDeleteRdv(url)
+        })
+    }
 
     /** @returns {String} */
     getPathEditRdv() {
-        if (this.editColumnRdvElement !== null) {
-            return this.editColumnRdvElement.dataset.pathEditRdv
+        if (this.editColumnRdvElt !== null) {
+            return this.editColumnRdvElt.dataset.pathEditRdv
+        } else {
+            return this.editContainRdvElt.dataset.pathEditRdv
         }
-        // else return dans le calendar
     }
 
     resetForm(e) {
-        this.formRdvElt.action = this.manager.createRdvBtn.dataset.url
+        this.formRdvElt.action = this.manager.newRdvBtn.dataset.url
 
         this.formValidator.reinit()
 
@@ -98,8 +121,10 @@ export default class RdvForm {
         this.endInput.value = end + ':00'
 
         this.infoRdvElt.innerHTML = ''
+        this.rdvTitleInput.value = this.supportPeopleElt
+            ? this.supportPeopleElt.querySelector('a').textContent
+            : ''
         this.rdvStartInput.value = ''
-        this.rdvTitleInput.value = ''
         this.rdvEndInput.value = ''
         this.rdvLocationInput.value = ''
         this.rdvStatusInput.value = ''
@@ -108,16 +133,14 @@ export default class RdvForm {
         this.supportSelectElt.value = this.supportId ?? ''
         this.supportSelectElt.disabled = this.supportId !== null
 
-        this.usersSelectManager.updateSelect(this.currentUserId)
-
         this.btnDeleteRdvElt.classList.add('d-none')
 
         if (e !== undefined && (e.target.className && e.target.className.search('calendar-event') !== 0)) {
+            this.modalElt.show()
             this.tagsSelectManager.clearSelect()
-            this.modalRdvElt.show()
-            const rdvTags = $('#rdv_tags')
-            rdvTags.val(null).trigger('change')
         }
+
+        this.usersSelectManager.updateSelect(this.currentUserId)
     }
 
     requestCreateRdv() {
@@ -141,13 +164,23 @@ export default class RdvForm {
     }
 
     /**
-     * @param {HTMLElement} htmlElt
+     * @param {String} url
      */
-    requestShowRdv(htmlElt) {
+    requestShowRdv(url) {
         if (!this.loader.isActive()) {
             this.loader.on()
 
-            this.ajax.send('GET', htmlElt.dataset.url, this.manager.responseAjax.bind(this.manager))
+            this.ajax.send('GET', url, this.manager.responseAjax.bind(this.manager))
+        }
+    }
+    /**
+     * @param {String} url
+     */
+    requestDeleteRdv(url) {
+        if (!this.loader.isActive()) {
+            this.loader.on()
+
+            this.ajax.send('GET', url, this.manager.responseAjax.bind(this.manager))
         }
     }
 
@@ -202,6 +235,8 @@ export default class RdvForm {
         if (!canEdit) {
             this.btnSaveRdvElt.classList.add('d-none')
             this.btnDeleteRdvElt.classList.add('d-none')
+        } else {
+            this.btnDeleteRdvElt.classList.remove('d-none')
         }
 
         this.formRdvElt.action = this.getPathEditRdv().replace('__id__', rdv.id)
@@ -209,7 +244,7 @@ export default class RdvForm {
         const url = this.btnDeleteRdvElt.dataset.url.replace('__id__', rdv.id)
         this.btnDeleteRdvElt.addEventListener('click', e => this.onClickDeleteRdvModal(e, url))
 
-        this.modalElt.show();
+        this.modalElt.show()
     }
 
     /**
@@ -259,7 +294,7 @@ export default class RdvForm {
      * @param {Object} rdv
      * @param {Object} apiUrls
      */
-    updateRdv(rdv, apiUrls) {
+    updateApiRdv(rdv, apiUrls) {
         const rdvModel = new RdvModel(rdv)
 
         if ((this.googleCalendarCheckbox.checked && null === this.rdvBeforeUpdate.googleEventId)
@@ -286,5 +321,10 @@ export default class RdvForm {
                 this.apiCalendar.addEvent(rdvModel, listApis())
             }, {once: true})
         }
+    }
+
+    closeModal() {
+        this.modalElt.hide()
+        document.getElementById('js-btn-cancel').click()
     }
 }

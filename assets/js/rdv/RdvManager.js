@@ -13,32 +13,24 @@ export default class RdvManager {
         this.loader = new Loader()
         this.ajax = new Ajax(this.loader)
 
+        this.rdvForm = new RdvForm(this)
         this.apiCalendar = new ApiCalendar();
 
-        this.themeColor = document.getElementById('header').dataset.color
-
-        this.modalRdvElt = document.getElementById('modal-rdv')
-        this.modalConfirmElt = document.getElementById('modal-confirm')
         this.confirmDeleteModal = new Modal(document.getElementById('modal-block'))
-        this.btnConfirmDeleteModalElt = document.querySelector('button#modal-confirm')
+        this.btnConfirmDeleteElt = document.querySelector('button#modal-confirm')
 
         const divSupportElt = document.querySelector('div[data-support]')
         this.supportId = divSupportElt ? divSupportElt.dataset.support : null
 
-        this.createRdvBtn = document.querySelector('button[data-action="add-rdv"]')
+        this.newRdvBtn = document.querySelector('button[data-action="add-rdv"]')
         this.editRdvBtn = document.querySelectorAll('table#table-rdvs button[data-action="edit-rdv"]')
         this.deleteRdvBtn = document.querySelectorAll('table#table-rdvs button[data-action="delete-rdv"]')
-
-        this.rdvModal = new Modal(this.modalRdvElt)
-        this.rdvForm = new RdvForm(this)
-
-        this.rdvBeforeUpdate = null
 
         this.init()
     }
 
     init() {
-        this.createRdvBtn.addEventListener('click', () => this.rdvForm.resetForm())
+        this.newRdvBtn.addEventListener('click', () => this.rdvForm.resetForm())
 
         this.editRdvBtn.forEach(btnElt => {
             btnElt.addEventListener('click', () => this.onClickEditRdv(btnElt))
@@ -47,52 +39,57 @@ export default class RdvManager {
         this.deleteRdvBtn.forEach(btnElt => {
             btnElt.addEventListener('click', () => this.onClickDeleteRdv(btnElt))
         })
-
-        this.modalConfirmElt.addEventListener('click', e => {
-            e.preventDefault()
-            this.ajax.send('GET', this.modalConfirmElt.dataset.url, this.responseAjax.bind(this))
-        })
     }
 
     /**
      * @param {HTMLButtonElement} btnElt
      */
     onClickEditRdv(btnElt) {
-        this.rdvForm.requestShowRdv(btnElt)
+        this.rdvForm.requestShowRdv(btnElt.dataset.url)
     }
 
     /**
      * @param {HTMLButtonElement} btnElt
      */
     onClickDeleteRdv(btnElt) {
+        this.btnConfirmDeleteElt.dataset.url = btnElt.dataset.url
         this.confirmDeleteModal.show()
-        this.modalConfirmElt.dataset.url = btnElt.dataset.url
+
+        document.getElementById('modal-block').addEventListener('click', () => {
+            this.rdvForm.requestDeleteRdv(btnElt.dataset.url)
+        })
+
     }
 
     /**
      * @param {Object} response
      */
     responseAjax(response) {
-        console.log(response)
+        const rdv = response.rdv
+
         if (response.action) {
             switch (response.action) {
                 case 'delete':
                     this.deleteRdvTr(response.rdvId)
                     break
                 case 'create':
-                    this.createRdvTr(response.rdv, response.apiUrls);
+                    this.createRdvTr(rdv, response.apiUrls)
                     break;
                 case 'edit':
-                    this.editRdvTr(response.rdv, response.apiUrls);
+                    this.editRdvTr(rdv, response.apiUrls)
                     break;
                 case 'show':
-                    this.showRdv(response.rdv, response.canEdit);
+                    if (response.canEdit) {
+                        this.showRdv(rdv, response.canEdit);
+                    } else {
+                        new MessageFlash('danger', 'Vous n\'êtes pas autorisez à voir ce rendez-vous.')
+                    }
                     break;
             }
         }
 
         if (response.msg !== undefined) {
-            new MessageFlash(response.alert, response.msg);
+            new MessageFlash(response.alert, response.msg)
         }
 
         this.loader.off()
@@ -137,11 +134,15 @@ export default class RdvManager {
         const dateFormater = new DateFormater()
         const createdAt = dateFormater.getDate(rdv.createdAt)
 
+        const url = this.rdvForm.getPathEditRdv()
+            .replace('__id__', rdv.id)
+            .replace('edit', 'show')
+
         let htmlContent = `
             <td class="align-middle text-center">
-                <button class="btn btn-${this.themeColor} btn-sm shadow my-1"
+                <button class="btn btn-${this.rdvForm.themeColor} btn-sm shadow my-1"
                     title="Voir/Modifier le rendez-vous"  data-toggle="tooltip" data-placement="bottom"
-                    data-action="edit-rdv" data-url="/rdv/${rdv.id}/show">
+                    data-action="edit-rdv" data-url="${url}">
                     <span class="fas fa-eye"></span>
                 </button>
             </td>
@@ -189,7 +190,7 @@ export default class RdvManager {
         //v1
         this.apiCalendar.addEvent(new RdvModel(rdv), apiUrls)
 
-        this.closeModal()
+        this.rdvForm.closeModal()
     }
 
     /**
@@ -217,9 +218,9 @@ export default class RdvManager {
             rowElt.querySelector('td[data-cell="service"]').textContent = supportGroup.service.name ?? ''
         }
 
-        this.rdvForm.updateRdv(rdv, apiUrls)
+        this.rdvForm.updateApiRdv(rdv, apiUrls)
 
-        this.closeModal()
+        this.rdvForm.closeModal()
     }
 
     /**
@@ -229,12 +230,6 @@ export default class RdvManager {
     deleteRdvTr(rdvId) {
         document.getElementById('rdv-' + rdvId).remove()
 
-        this.closeModal()
+        this.rdvForm.closeModal()
     }
-
-    closeModal() {
-        this.rdvModal.hide()
-        document.getElementById('js-btn-cancel').click()
-    }
-
 }

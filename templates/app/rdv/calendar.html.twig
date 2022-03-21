@@ -21,8 +21,9 @@
 						href="{% if support is defined %}{{ path('support_rdv_index', {'id': support.id}) }}{% else %}{{ path('rdv_index') }}{% endif %}">
 						<span class="far fa-list-alt"></span>
 					</a>
-					<button id="js-new-rdv" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-toggle="tooltip" data-placement="bottom"
-						title="Ajouter un rendez-vous"><span class="far fa-calendar-plus"></span>
+					<button id="js-new-rdv" class="btn btn-{{ theme_color }} btn-sm shadow mr-2"
+							data-toggle="tooltip" data-placement="bottom" data-url="{{ path('rdv_new') }}"
+							title="Ajouter un rendez-vous"><span class="far fa-calendar-plus"></span>
 					</button>
 				</div>
 				<h3 class="h4 text-secondary">
@@ -74,7 +75,7 @@
 
 			<div class="calendar-table calendar-{{ calendar.weeks }}weeks">
 				<div class="calendar-header text-secondary">
-					<div class="calendar-week-number"></div>
+					<div class="calendar-week-number" data-path-edit-rdv="{{ path('rdv_edit', {'id': '__id__'}) }}"></div>
 					{% for key, day in calendar.daysList %}
 						{% if key < 7 %}
 							<div class="calendar-header-col week-5days" {% if key >= 5 %}data-weekend="true"{% endif %}>{{ day }}</div>
@@ -105,6 +106,7 @@
 										{% if day|date("Y-m-d") in rdvs %}
 											{% for rdv in rdvs[day|date('Y-m-d')] %}
 												<a class="calendar-event bg-{{ theme_color }} text-light" id="rdv-{{ rdv.id }}"
+												   href="{{ path('rdv_show', {'id': rdv.id}) }}"
 													title="Voir le rendez-vous" data-toggle="tooltip" data-placement="bottom">
 													{{ rdv.start|date('H:i') }} {{ rdv.title }}
 												</a>
@@ -120,8 +122,11 @@
 		</div>
 	</section>
 
-	{% include 'app/rdv/_rdv_form_modal.html.twig' %}
+		{% include 'app/rdv/_rdv_form_modal.html.twig' with {
+			'action': support is defined ? path('support_rdv_new', {'id': support.id}) : path('rdv_new')
+		} %}
 	{% include 'app/rdv/_rdv_update_api_modal.html.twig' with {'modal_id': 'modal-update'}  %}
+	{% include 'app/rdv/_rdv_delete_modal.html.twig' %}
 
 {% endblock %}
 

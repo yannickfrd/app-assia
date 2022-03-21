@@ -181,30 +181,10 @@ class RdvController extends AbstractController
     {
         $this->denyAccessUnlessGranted('VIEW', $rdv);
 
-//        $supportGroup = $rdv->getSupportGroup();
-
         return $this->json([
             'action' => 'show',
             'canEdit' => $this->isGranted('EDIT', $rdv),
             'rdv' => $rdv,
-//            'rdv' => [
-//                'getRdv' => $rdv,
-//                'title' => $rdv->getTitle(),
-//                'fullnameSupport' => $supportGroup ? $supportGroup->getHeader()->getFullname() : null,
-//                'start' => $rdv->getStart()->format("Y-m-d\TH:i"),
-//                'end' => $rdv->getEnd()->format("Y-m-d\TH:i"),
-//                'location' => $rdv->getLocation(),
-//                'status' => $rdv->getStatus(),
-//                'content' => $rdv->getContent(),
-//                'supportId' => $rdv->getSupportGroup() ? $rdv->getSupportGroup()->getId() : null,
-//                'createdBy' => $rdv->getCreatedBy()->getFullname(),
-//                'createdAt' => $rdv->getCreatedAt()->format('d/m/Y à H:i'),
-//                'updatedBy' => $rdv->getUpdatedBy()->getFullname(),
-//                'updatedAt' => $rdv->getUpdatedAt()->format('d/m/Y à H:i'),
-//
-//                'tags' => $rdv->getTags(),
-//                'tagIds' => $rdv->getTagsIdsToString(),
-//            ],
         ], 200, [], ['groups' => ['show_rdv', 'show_tag', 'show_support_group']]);
     }
 
@@ -215,11 +195,14 @@ class RdvController extends AbstractController
     {
         $this->denyAccessUnlessGranted('EDIT', $rdv);
 
+        $supportGroup = $rdv->getSupportGroup();
+
         $form = $this->createForm(RdvType::class, $rdv)
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $dispatcher->dispatch(new RdvEvent($rdv, null, $form), 'rdv.before_update');
+
+            $dispatcher->dispatch(new RdvEvent($rdv, $supportGroup, $form), 'rdv.before_update');
 
             $this->em->flush();
 
@@ -230,13 +213,6 @@ class RdvController extends AbstractController
                 'alert' => 'success',
                 'msg' => 'Le RDV est modifié.',
                 'rdv' => $rdv,
-//                'rdv' => [
-//                    'getRdv' => $rdv,
-//                    'id' => $rdv->getId(),
-//                    'title' => $rdv->getTitle(),
-//                    'day' => $rdv->getStart()->format('Y-m-d'),
-//                    'start' => $rdv->getStart()->format('H:i'),
-//                ],
                 'apiUrls' => $this->calendarRouter->getUrls(
                     'update',
                     $rdv->getId(),

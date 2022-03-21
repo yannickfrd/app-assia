@@ -1,21 +1,18 @@
 import Ajax from '../utils/ajax'
 import MessageFlash from '../utils/messageFlash'
 import Loader from '../utils/loader'
-import DateFormater from '../utils/date/dateFormater'
-import {Modal} from 'bootstrap'
 import ParametersUrl from '../utils/parametersUrl'
-import SelectManager from '../utils/form/SelectManager'
 import ApiCalendar from '../api/ApiCalendar';
 import RdvModel from "./model/RdvModel";
+import RdvForm from "./RdvForm";
 
 export default class Calendar {
 
     constructor() {
         this.loader = new Loader()
         this.ajax = new Ajax(this.loader)
-        this.parametersUrl = new ParametersUrl()
-        this.modalElt = new Modal(document.getElementById('modal-rdv'))
-        this.updateModalElt = new Modal(document.getElementById('modal-update'))
+        this.rdvForm = new RdvForm(this)
+        // this.parametersUrl = new ParametersUrl()
         this.apiCalendar = new ApiCalendar()
 
         this.calendarContainer = document.getElementById('calendar-container')
@@ -27,83 +24,37 @@ export default class Calendar {
         this.weekendElts = document.querySelectorAll('div[data-weekend=true]')
 
         this.modalRdvElt = document.getElementById('modal-rdv')
-        this.formRdvElt = this.modalRdvElt.querySelector('form[name=rdv]')
-        this.rdvTitleElt = this.modalRdvElt.querySelector('#js-rdv-title')
-        this.infoRdvElt = document.getElementById('js-rdv-info')
+
         this.rdvStartInput = this.modalRdvElt.querySelector('#rdv_start')
         this.rdvEndInput = this.modalRdvElt.querySelector('#rdv_end')
         this.dateInput = this.modalRdvElt.querySelector('#date')
         this.startInput = this.modalRdvElt.querySelector('#start')
         this.endInput = this.modalRdvElt.querySelector('#end')
-        this.rdvLocationInput = this.modalRdvElt.querySelector('#rdv_location')
-        this.rdvStatusInput = this.modalRdvElt.querySelector('#rdv_status')
-        this.rdvContentElt = this.modalRdvElt.querySelector('#rdv_content')
-        this.btnSaveElt = this.modalRdvElt.querySelector('#js-btn-save')
-        this.btnCancelElt = this.modalRdvElt.querySelector('#js-btn-cancel')
         this.btnDeleteElt = this.modalRdvElt.querySelector('#modal-btn-delete')
 
-        this.googleCalendarCheckbox = this.modalRdvElt.querySelector('input[name="rdv[_googleCalendar]"]')
-        this.outlookCalendarCheckbox = this.modalRdvElt.querySelector('input[name="rdv[_outlookCalendar]"]')
-
-        const divSupportElt = document.querySelector('div[data-support]')
-        this.supportId = divSupportElt ? divSupportElt.dataset.support : null
-
         this.themeColor = document.getElementById('header').dataset.color
-        this.supportElt = document.getElementById('support')
-        this.supportPeopleElt = document.getElementById('js-support-people')
-        this.supportSelectElt = document.getElementById('rdv_supportGroup')
 
         this.showWeekendsItem = localStorage.getItem('calendar.show_weekends')
         this.fullWidthItem = localStorage.getItem('calendar.full_width')
-
-        this.tagsSelectManager = new SelectManager(
-            '#rdv_tags',
-            { name: 'onModal', elementId: this.modalRdvElt.id }
-        )
-        this.usersSelectManager = new SelectManager(
-            '#rdv_users',
-            { name: 'onModal', elementId: 'modal-rdv' }
-        )
-
-        this.currentUserId = document.getElementById('user-name').dataset.userId
-
-        this.rdvBeforeUpdate = null
 
         this.init()
     }
 
     init() {
-        this.newRdvBtn.addEventListener('click', e => {
-            this.resetData(e);
-        })
+        this.newRdvBtn.addEventListener('click', e => this.rdvForm.resetForm(e))
 
         this.dayElts.forEach(dayElt => {
             this.hideRdvElts(dayElt)
-            dayElt.addEventListener('click', e => {
-                this.resetData(e)
-                this.dateInput.value = dayElt.id
-                this.modalRdvElt.querySelector('#rdv_start').value = dayElt.id + 'T00:00'
-                this.modalRdvElt.querySelector('#rdv_end').value = dayElt.id + 'T00:00'
-            })
+            dayElt.addEventListener('click', e => this.onClickDayElt(e, dayElt))
         })
 
         this.rdvElts.forEach(rdvElt => {
-            rdvElt.addEventListener('click', e => {
-                this.resetData(e)
-                this.requestGetRdv(rdvElt)
-            })
+            rdvElt.addEventListener('click', e => this.onClickEditRdv(e, rdvElt))
         })
 
         this.dateInput.addEventListener('focusout', this.checkDate.bind(this))
         this.startInput.addEventListener('input', this.checkStart.bind(this))
         this.endInput.addEventListener('focusout', this.checkEnd.bind(this))
-
-        this.btnSaveElt.addEventListener('click', e => this.requestSaveRdv(e))
-
-        this.btnDeleteElt.addEventListener('click', e => {
-            e.preventDefault()
-            this.requestDeleteRdv()
-        })
 
         if (this.fullWidthItem === 'true') {
             this.fullWidthCheckbox.checked = 'checked'
@@ -120,18 +71,23 @@ export default class Calendar {
 
         this.showWeekendCheckbox.addEventListener('click', () => this.hideWeekends())
 
-        // Si l'ID d'une suivi est en pramètre, affiche le rendez-vous
-        const rdvElt = document.getElementById('rdv-' + this.parametersUrl.get('rdv_id'))
-        if (rdvElt) {
-            rdvElt.click()
-        }
+        // Si l'ID d'un suivi est en paramètre, affiche le rendez-vous
+        // const rdvElt = document.getElementById('rdv-' + this.parametersUrl.get('rdv_id'))
+        // if (rdvElt) {
+        //     rdvElt.click()
+        // }
+    }
 
-        if (localStorage.getItem('calendar.google') === 'true') {
-            this.googleCalendarCheckbox.checked = 'checked'
-        }
-        if (localStorage.getItem('calendar.outlook') === 'true') {
-            this.outlookCalendarCheckbox.checked = 'checked';
-        }
+    onClickEditRdv(e, rdvElt) {
+        e.preventDefault()
+        this.rdvForm.requestShowRdv(rdvElt.href)
+    }
+
+    onClickDayElt(e, dayElt) {
+        this.rdvForm.resetForm(e)
+        this.dateInput.value = dayElt.id
+        this.modalRdvElt.querySelector('#rdv_start').value = dayElt.id + 'T00:00'
+        this.modalRdvElt.querySelector('#rdv_end').value = dayElt.id + 'T00:00'
     }
 
     /**
@@ -146,6 +102,7 @@ export default class Calendar {
             localStorage.setItem('calendar.full_width', false);
         }
     }
+
     /**
      * Masque ou affiche les week-ends.
      */
@@ -157,50 +114,6 @@ export default class Calendar {
             localStorage.setItem('calendar.show_weekends', true);
         } else {
             localStorage.setItem('calendar.show_weekends', false);
-        }
-    }
-
-    /**
-     * Réinitialise le formulaire modal de rdv.
-     * @param {Event} e
-     */
-    resetData(e) {
-        e.preventDefault()
-        if (this.supportElt) {
-            this.modalRdvElt.querySelector('form').action = '/support/' + this.supportElt.dataset.support + '/rdv/new'
-            this.modalRdvElt.querySelector('#rdv_title').value = this.supportPeopleElt.querySelector('.btn').textContent
-        } else {
-            this.modalRdvElt.querySelector('form').action = '/rdv/new'
-            this.modalRdvElt.querySelector('#rdv_title').value = ''
-        }
-        this.rdvTitleElt.textContent = 'Rendez-vous'
-
-        const dateFormater = new DateFormater()
-        this.dateInput.value = dateFormater.getDateNow()
-        this.startInput.value = dateFormater.getHour()
-        const end = parseInt(this.startInput.value.substr(0, 2)) + 1
-        this.endInput.value = end + ':00'
-
-        this.infoRdvElt.innerHTML = ''
-        this.rdvStartInput.value = ''
-        this.rdvEndInput.value = ''
-        this.rdvLocationInput.value = ''
-        this.rdvStatusInput.value = ''
-
-        this.supportSelectElt.value = this.supportId ?? ''
-        this.supportSelectElt.disabled = this.supportId !== null
-
-        this.usersSelectManager.updateSelect(this.currentUserId)
-
-        this.modalRdvElt.querySelector('#rdv_content').value = ''
-        this.btnDeleteElt.classList.add('d-none')
-        this.btnSaveElt.classList.remove('d-none')
-
-        if (e.target.className && e.target.className.search('calendar-event') !== 0) {
-            this.tagsSelectManager.clearSelect()
-            this.modalElt.show()
-            const rdvTags = $('#rdv_tags')
-            rdvTags.val(null).trigger('change')
         }
     }
 
@@ -243,45 +156,6 @@ export default class Calendar {
     }
 
     /**
-     * Requête pour obtenir le RDV sélectionné dans le formulaire modal.
-     * @param {HTMLElement} rdvElt
-     */
-    requestGetRdv(rdvElt) {
-        this.loader.on()
-        this.rdvElt = rdvElt
-        this.rdvId = Number(this.rdvElt.id.replace('rdv-', ''))
-        this.ajax.send('GET', '/rdv/' + this.rdvId + '/show', this.responseAjax.bind(this))
-    }
-
-    /**
-     * Requête pour sauvegarder le RDV.
-     * @param {Event} e
-     */
-    requestSaveRdv(e) {
-        e.preventDefault()
-
-        if (this.modalRdvElt.querySelector('#rdv_title').value === '') {
-            return new MessageFlash('danger', 'Le rdv est vide.')
-        }
-
-        if (!this.loader.isActive()) {
-            this.updateDatetimes()
-
-            // if (this.formRdvElt.elements['rdv__googleCalendar'].checked) {
-            //     this.googleCalendarCheckbox = this.formRdvElt.elements['rdv__googleCalendar'].checked
-            // }
-
-            this.loader.on()
-
-            this.ajax.send(
-                'POST',
-                this.formRdvElt.getAttribute('action'),
-                this.responseAjax.bind(this), new FormData(this.formRdvElt)
-            )
-        }
-    }
-
-    /**
      * Requête pour supprimer le RDV.
      */
     requestDeleteRdv() {
@@ -299,21 +173,20 @@ export default class Calendar {
         if (data.action) {
             switch (data.action) {
                 case 'show':
-                    this.showRdv(data.rdv);
+                    this.showRdv(data.rdv, data.canEdit);
                     break;
                 case 'create':
                     this.createRdv(data.rdv, data.action, data.apiUrls);
                     break;
-                case 'update':
+                case 'edit':
                     this.updateRdv(data.rdv, data.action, data.apiUrls);
                     break;
                 case 'delete':
-                    this.deleteRdv(data.rdv, data.apiUrls);
+                    this.deleteRdv(data.rdvId, data.apiUrls);
                     break;
             }
         }
         if (data.msg) {
-            this.modalElt.hide()
             new MessageFlash(data.alert, data.msg)
         }
         this.loader.off()
@@ -322,62 +195,10 @@ export default class Calendar {
     /**
      * Affiche le RDV dans le formulaire modal.
      * @param {Object} rdv
+     * @param {boolean} canEdit
      */
-    showRdv(rdv) {
-        this.rdvBeforeUpdate = rdv.getRdv
-
-        this.modalRdvElt.querySelector('form').action = '/rdv/' + this.rdvId + '/edit'
-        this.modalRdvElt.querySelector('#rdv_title').value = rdv.title
-        this.rdvStartInput.value = rdv.start
-        this.rdvEndInput.value = rdv.end
-
-        this.dateInput.value = rdv.start.substr(0, 10)
-        this.startInput.value = rdv.start.substr(11, 5)
-        this.endInput.value = rdv.end.substr(11, 5)
-
-        this.rdvLocationInput.value = rdv.location
-        this.rdvStatusInput.value = rdv.status ? rdv.status : ''
-        this.modalRdvElt.querySelector('#rdv_content').value = rdv.content ? rdv.content : ''
-
-        this.infoRdvElt.innerHTML = this.getInfoRdvElt(rdv)
-
-        const title = 'RDV' + (rdv.fullnameSupport ? ' | ' + rdv.fullnameSupport : '')
-        this.rdvTitleElt.textContent = title
-
-        if (rdv.supportId) {
-            const href = this.rdvTitleElt.dataset.url.replace('__id__', rdv.supportId)
-            this.rdvTitleElt.innerHTML = `<a href="${href}" class="text-${this.themeColor}" title="Accéder au suivi">${title}</a>`
-        }
-
-        if (rdv.canEdit) {
-            this.btnDeleteElt.href = `/rdv/${this.rdvId}/delete`
-            this.btnDeleteElt.classList.remove('d-none')
-            this.btnSaveElt.classList.remove('d-none')
-        } else {
-            this.btnDeleteElt.classList.add('d-none')
-            this.btnSaveElt.classList.add('d-none')
-        }
-
-        const userIds = []
-        rdv.getRdv.users.forEach(user => userIds.push(user.id))
-        this.usersSelectManager.updateSelect(userIds)
-
-        this.supportSelectElt.value = ''
-        this.supportSelectElt.disabled = rdv.getRdv.supportGroup !== null
-        if (rdv.getRdv.supportGroup) {
-            this.supportSelectElt.value = rdv.getRdv.supportGroup.id
-            if (this.supportSelectElt.value === '') {
-                const optionElt = document.createElement('option')
-                optionElt.value = rdv.getRdv.supportGroup.id
-                optionElt.textContent = rdv.getRdv.supportGroup.header.fullname
-                this.supportSelectElt.appendChild(optionElt)
-                this.supportSelectElt.value = rdv.getRdv.supportGroup.id
-            }
-        }
-
-        this.modalElt.show()
-
-        this.initTagSelect(rdv)
+    showRdv(rdv, canEdit) {
+        this.rdvForm.show(rdv, canEdit)
     }
 
     /**
@@ -399,25 +220,16 @@ export default class Calendar {
     }
 
     /**
-     * Donnes les informations sur l'enregistrement (date de création, créateur...).
-     * @param {Object} rdv
-     */
-    getInfoRdvElt(rdv) {
-        let htmlContent = `Créé le ${rdv.createdAt} par ${rdv.createdBy}`
-        if (rdv.createdAt !== rdv.updatedAt) {
-            htmlContent = htmlContent + `<br/> (modifié le ${rdv.updatedAt} par ${rdv.updatedBy})`
-        }
-        return htmlContent
-    }
-
-    /**
      * Crée le RDV dans le container du jour de l'agenda.
      * @param {Object} rdv
      * @param {string} action
      * @param {Object} apiUrls
      */
     createRdv(rdv, action, apiUrls) {
-        const rdvElt = document.createElement('div')
+        const rdvElt = document.createElement('a')
+        rdvElt.href = this.rdvForm.getPathEditRdv()
+            .replace('__id__', rdv.id)
+            .replace('edit', 'show')
         rdvElt.className = `calendar-event bg-${this.themeColor} text-light`
         rdvElt.id = `rdv-${rdv.id}`
         rdvElt.dataset.title = 'Voir le rendez-vous'
@@ -440,7 +252,7 @@ export default class Calendar {
             this.hideRdvElts(dayElt)
         }
 
-        rdvElt.addEventListener('click', this.requestGetRdv.bind(this, rdvElt))
+        rdvElt.addEventListener('click', e => this.onClickEditRdv(e, rdvElt))
 
         //v1
         if (action === 'create') {
@@ -448,6 +260,8 @@ export default class Calendar {
         }
         // v2 ...
         // this.apiCalendar.execute(action, apiUrls)
+
+        this.rdvForm.closeModal()
     }
 
     /**
@@ -457,48 +271,24 @@ export default class Calendar {
      * @param {Object} apiUrls
      */
     updateRdv(rdv, action, apiUrls) {
-        const rdvModel = new RdvModel(rdv.getRdv)
+        this.rdvForm.updateApiRdv(rdv, apiUrls)
 
-        if ((this.googleCalendarCheckbox.checked && null === this.rdvBeforeUpdate.googleEventId)
-            || (this.outlookCalendarCheckbox.checked && null === this.rdvBeforeUpdate.outlookEventId)
-            || (rdvModel.isDifferent(this.rdvBeforeUpdate) && (this.googleCalendarCheckbox.checked
-                || this.outlookCalendarCheckbox.checked))
-        ) {
-            this.updateModalElt.show()
-
-            const listApis = () => {
-                let list = {}
-
-                if (this.googleCalendarCheckbox.checked) {
-                    list.google = apiUrls.google;
-                }
-                if (this.outlookCalendarCheckbox.checked) {
-                    list.outlook =  apiUrls.outlook
-                }
-
-                return Object.keys(list).length === 0 ? apiUrls : list
-            }
-
-            document.getElementById('modal-confirm').addEventListener('click', () => {
-                this.apiCalendar.addEvent(rdvModel, listApis())
-            }, {once: true})
-        }
-
-        this.rdvElt.remove()
+        document.getElementById('rdv-'+rdv.id).remove()
         this.createRdv(rdv, action, apiUrls)
     }
 
     /**
      * Supprime le RDV dans l'agenda.
      */
-    deleteRdv() {
-        const rdvElt = document.getElementById('rdv-' + this.rdvId)
-        const dayElt = rdvElt.parentNode
+    deleteRdv(rdvId, apiUrls) {
+        const rdvElt = document.getElementById('rdv-' + rdvId)
 
         rdvElt.remove()
-        this.hideRdvElts(dayElt)
+        // this.hideRdvElts(dayElt)
 
         // this.apiCalendar.execute('delete', apiUrls)
+
+        this.rdvForm.closeModal()
     }
 
     /**
@@ -506,7 +296,6 @@ export default class Calendar {
      * @param {HTMLElement} dayElt
      */
     sortDayBlock(dayElt) {
-
         const rdvArr = []
         dayElt.querySelectorAll('.calendar-event').forEach(rdvElt => {
             rdvArr.push(rdvElt)
@@ -521,7 +310,6 @@ export default class Calendar {
      * @param {HTMLElement} dayElt
      */
     hideRdvElts(dayElt) {
-
         const rdvElts = dayElt.querySelectorAll('.calendar-event')
 
         const othersEventsElt = dayElt.querySelector('.calendar-others-events')

@@ -13,7 +13,6 @@
             </div>
 
             {{ action is defined ? form_start(form_rdv, {'action': action}) : form_start(form_rdv) }}
-
             <div class="modal-body pb-0">
                 <div class="row mb-3">
                     <div class="col-12" id="modalRdvLabel">{{ form_widget(form_rdv.title) }}</div>
@@ -119,7 +118,7 @@
                     <button id="modal-btn-delete" class="mr-3 btn btn-danger" data-placement="bottom"
                             data-action="delete-rdv-modal" data-url="{{ path('rdv_delete', {'id': '__id__'}) }}"
                         title="Supprimer le rendez-vous"><span class="fas fa-trash-alt"></span>
-                        <span class="d-none d-md-inline ml-2">Supprimer</span>
+                        <span class="d-md-inline ml-2">Supprimer</span>
                     </button>
                 </div>
                 <div class="float-right">
