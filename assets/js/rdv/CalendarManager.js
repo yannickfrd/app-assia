@@ -212,24 +212,6 @@ export default class CalendarManager {
     }
 
     /**
-     * Permet d'initialiser les valeurs dans le select multiple.
-     * @param {Object} rdv
-     */
-    initTagSelect(rdv){
-        const tagOptions = this.modalRdvElt.querySelectorAll('select#rdv_tags option')
-
-        const listTagId = []
-        rdv.tags.forEach(tag => {
-            tagOptions.forEach(option => {
-                if (parseInt(option.value) === parseInt(tag.id)){
-                    listTagId.push(option.value)
-                }
-            })
-        })
-        this.tagsSelectManager.showOptionsFromArray(listTagId)
-    }
-
-    /**
      * Crée le RDV dans le container du jour de l'agenda.
      * @param {Object} data
      */
