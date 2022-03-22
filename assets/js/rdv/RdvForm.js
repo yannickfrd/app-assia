@@ -10,7 +10,7 @@ import WidgetCollectionManager from "../utils/form/WidgetCollectionManager";
 export default class RdvForm {
 
     /**
-     * @param {RdvManager|Calendar} manager
+     * @param {RdvManager|CalendarManager} manager
      */
     constructor(manager) {
         this.manager = manager

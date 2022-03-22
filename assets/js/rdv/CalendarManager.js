@@ -6,7 +6,7 @@ import ApiCalendar from '../api/ApiCalendar';
 import RdvModel from "./model/RdvModel";
 import RdvForm from "./RdvForm";
 
-export default class Calendar {
+export default class CalendarManager {
 
     constructor() {
         this.loader = new Loader()
@@ -279,6 +279,8 @@ export default class Calendar {
 
     /**
      * Supprime le RDV dans l'agenda.
+     * @param {number} rdvId
+     * @param {Object} apiUrls
      */
     deleteRdv(rdvId, apiUrls) {
         const rdvElt = document.getElementById('rdv-' + rdvId)
@@ -286,7 +288,7 @@ export default class Calendar {
         rdvElt.remove()
         // this.hideRdvElts(dayElt)
 
-        // this.apiCalendar.execute('delete', apiUrls)
+        this.apiCalendar.execute('delete', apiUrls)
 
         this.rdvForm.closeModal()
     }

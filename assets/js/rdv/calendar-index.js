@@ -1,5 +1,5 @@
-import Calendar from './calendar'
+import CalendarManager from './CalendarManager'
 import SearchLocation from '../utils/searchLocation'
 
-new Calendar()
+new CalendarManager()
 new SearchLocation('rdv_search_location')
