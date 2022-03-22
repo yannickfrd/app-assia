@@ -2,14 +2,12 @@
 
 namespace App\Controller\Rdv;
 
-use App\Entity\Organization\User;
 use App\Entity\Support\Rdv;
 use App\Form\Support\Rdv\RdvType;
 use App\Repository\Support\RdvRepository;
 use App\Service\Calendar;
 use App\Service\SupportGroup\SupportManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -45,29 +43,6 @@ class CalendarController extends AbstractController
                 null,
                 $this->getUser()
             ),
-        ]);
-    }
-
-    /**
-     * Affiche un jour du mois (vue journalière).
-     *
-     * @Route("/calendar/day/{year}/{month}/{day}", name="calendar_day_show", methods="GET", requirements={
-     * "year" : "\d{4}",
-     * "month" : "0?[1-9]|1[0-2]",
-     * "day" : "[1-9]|[0-3][0-9]",
-     * })
-     */
-    public function showDay(int $year = null, int $month = null, int $day = null, Request $request): Response
-    {
-        $startDay = new \DateTime($year.'-'.$month.'-'.$day);
-        $endDay = clone ($startDay)->modify('+1 day');
-
-        $form = $this->createForm(RdvType::class, new Rdv())
-            ->handleRequest($request);
-
-        return $this->render('app/rdv/day.html.twig', [
-            'form_rdv' => $form->createView(),
-            'rdvs' => $this->rdvRepo->findRdvsBetween($startDay, $endDay, null, $this->getUser()),
         ]);
     }
 

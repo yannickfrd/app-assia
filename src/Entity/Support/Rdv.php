@@ -30,7 +30,7 @@ class Rdv extends AbstractEvent
 
     public const TYPE_EVENT = 0;
 
-    const NO_STATUS = 99;
+    public const NO_STATUS = 99;
 
     public const STATUS = [
         1 => 'Présent',
@@ -99,7 +99,6 @@ class Rdv extends AbstractEvent
      * @Groups("show_rdv")
      */
     protected $alerts;
-
 
     public function __construct()
     {

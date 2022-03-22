@@ -5,7 +5,7 @@
 
             <div class="modal-header d-block d-md-flex pb-2">
                 <div class="col-12 col-lg-6">
-                    <h2 class="h3" id="js-rdv-title" data-url="{{ path('support_show', {'id': '__id__'} ) }}"></h2>
+                    <h2 class="h3" data-url="{{ path('support_show', {'id': '__id__'} ) }}"></h2>
                 </div>
                 <div class="col-12 col-lg-6">
                     <p class="mb-0 text-right small text-secondary" id="js-rdv-info"></p>
@@ -89,11 +89,6 @@
                         {{ form_label(form_rdv.supportGroup, null, {label_attr: {class: 'col-12 col-sm-12'}}) }}
                         {{ form_widget(form_rdv.supportGroup) }}
                     </div>
-                    {# <div class="col-md-12">
-                        {{ form_label(form_task.supportPeople, null, {label_attr: {class: 'col-12 col-sm-12'}}) }}
-                        {{ form_widget(form_task.supportPeople, {attr:
-                            {'data-url': path('support_people', {'id': '__id__'}) }}) }}
-                    </div> #}
                 </div>
 
                 <div class="row mb-3">
@@ -141,7 +136,6 @@
                         </button>
                     </div>
                 </div>
-
                 {{ form_row(form_rdv._token) }}
             </div>
             <div class="modal-footer d-flex justify-content-between">
@@ -154,7 +148,7 @@
                 </div>
                 <div class="float-right">
                     <button type="button" id="js-btn-cancel" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                    <button type="button" id="js-btn-save" class="btn btn-{{ theme_color }} shadow" data-action="save-rdv">
+                    <button type="button" class="btn btn-{{ theme_color }} shadow" data-action="save-rdv">
                         <span class="fas fa-save mr-2"></span>Enregistrer</button>
                 </div>
             </div>

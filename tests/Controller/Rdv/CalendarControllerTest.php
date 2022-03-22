@@ -3,6 +3,7 @@
 namespace App\Tests\Controller\Rdv;
 
 use App\Entity\Support\Rdv;
+use App\Entity\Support\SupportGroup;
 use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
@@ -64,18 +65,6 @@ class CalendarControllerTest extends WebTestCase
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('h2', 'Agenda');
-    }
-
-    public function testShowDayIsUp()
-    {
-        $now = new \DateTime();
-        $year = $now->format('Y');
-        $month = $now->format('m');
-        $day = $now->format('d');
-        $this->client->request('GET', "/calendar/day/$year/$month/$day");
-
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h3', 'Jour');
     }
 
     protected function tearDown(): void
