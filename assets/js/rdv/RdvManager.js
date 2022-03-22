@@ -80,11 +80,7 @@ export default class RdvManager {
                     this.editRdvTr(rdv, apiUrls)
                     break;
                 case 'show':
-                    if (response.canEdit) {
-                        this.showRdv(rdv, response.canEdit);
-                    } else {
-                        new MessageFlash('danger', 'Vous n\'êtes pas autorisez à voir ce rendez-vous.')
-                    }
+                    this.showRdv(rdv, response.canEdit)
                     break;
             }
         }

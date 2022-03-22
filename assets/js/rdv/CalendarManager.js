@@ -186,10 +186,10 @@ export default class CalendarManager {
                     this.showRdv(data.rdv, data.canEdit);
                     break;
                 case 'create':
-                    this.createRdv(data.rdv, data.action, data.apiUrls);
+                    this.createRdv(data);
                     break;
                 case 'edit':
-                    this.updateRdv(data.rdv, data.action, data.apiUrls);
+                    this.updateRdv(data);
                     break;
                 case 'delete':
                     this.deleteRdv(data.rdvId, data.apiUrls);
@@ -231,11 +231,11 @@ export default class CalendarManager {
 
     /**
      * Crée le RDV dans le container du jour de l'agenda.
-     * @param {Object} rdv
-     * @param {string} action
-     * @param {Object} apiUrls
+     * @param {Object} data
      */
-    createRdv(rdv, action, apiUrls) {
+    createRdv(data) {
+        const rdv =  data.rdv
+        const apiUrls =  data.apiUrls
         const rdvElt = document.createElement('a')
         rdvElt.href = this.rdvForm.getPathEditRdv()
             .replace('__id__', rdv.id)
@@ -265,7 +265,7 @@ export default class CalendarManager {
         rdvElt.addEventListener('click', e => this.getRdv(e, rdvElt))
 
         //v1
-        if (action === 'create') {
+        if (data.action === 'create') {
             this.apiCalendar.addEvent(new RdvModel(rdv), apiUrls)
         }
         // v2 ...
@@ -276,15 +276,13 @@ export default class CalendarManager {
 
     /**
      * Met à jour le RDV dans l'agenda.
-     * @param {Object} rdv
-     * @param {string} action
-     * @param {Object} apiUrls
+     * @param {Object} data
      */
-    updateRdv(rdv, action, apiUrls) {
-        this.rdvForm.updateApiRdv(rdv, apiUrls)
+    updateRdv(data) {
+        this.rdvForm.updateApiRdv(data.rdv, data.apiUrls)
 
-        document.getElementById('rdv-'+rdv.id).remove()
-        this.createRdv(rdv, action, apiUrls)
+        document.getElementById('rdv-'+data.rdv.id).remove()
+        this.createRdv(data)
     }
 
     /**
