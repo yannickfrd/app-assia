@@ -94,24 +94,22 @@ export default class RdvForm {
         this.pathEditRdv = this.getPathEditRdv()
     }
 
-    onClickDeleteRdvModal(e, url) {
+    /**
+     * On click delete btn
+     * @param {Event} e
+     * @param {String} url
+     */
+    deleteRdv(e, url) {
         e.preventDefault()
         this.confirmDeleteModal.show()
 
-        this.confirmDeleteModalElt.querySelector('button#modal-confirm').addEventListener('click', () => {
-            this.requestDeleteRdv(url)
-        })
+        this.confirmDeleteModalElt.querySelector('button#modal-confirm')
+            .addEventListener('click', () => this.requestDeleteRdv(url))
     }
 
-    /** @returns {String} */
-    getPathEditRdv() {
-        if (this.editColumnRdvElt !== null) {
-            return this.editColumnRdvElt.dataset.pathEditRdv
-        } else {
-            return this.editContainRdvElt.dataset.pathEditRdv
-        }
-    }
-
+    /**
+     * @param {Event} e
+     */
     resetForm(e) {
         this.formRdvElt.action = this.manager.newRdvBtn.dataset.url
 
@@ -199,12 +197,6 @@ export default class RdvForm {
             .checkDate(inputDateElt, -(10 * 365), (2 * 365), 'Date incorrecte', false) !== false
     }
 
-    // updateEndDate() {
-    //     if (isNaN(this.dateInput.value) && isNaN(this.startInput.value)) {
-    //         this.endInput.value = this.dateInput.value + 'T' + this.startInput.value
-    //     }
-    // }
-
     requestCreateRdv() {
         if (this.rdvTitleInput.value === '') {
             return new MessageFlash('danger', 'Le rdv est vide.')
@@ -247,6 +239,12 @@ export default class RdvForm {
         }
     }
 
+    /**
+     * Show rdv.
+     *
+     * @param {Object} rdv
+     * @param {boolean} canEdit
+     */
     show(rdv, canEdit) {
         this.rdvBeforeUpdate = rdv
 
@@ -305,7 +303,7 @@ export default class RdvForm {
         this.formRdvElt.action = this.getPathEditRdv().replace('__id__', rdv.id)
 
         const url = this.btnDeleteRdvElt.dataset.url.replace('__id__', rdv.id)
-        this.btnDeleteRdvElt.addEventListener('click', e => this.onClickDeleteRdvModal(e, url))
+        this.btnDeleteRdvElt.addEventListener('click', e => this.deleteRdv(e, url))
 
         this.initAlerts(rdv)
 
@@ -349,12 +347,6 @@ export default class RdvForm {
         return tags
     }
 
-    updateCounterTasks(value) {
-        const countRdvs = parseInt(this.counterRdvsElt.dataset.countRdvs) + value
-        this.counterRdvsElt.dataset.countTasks = countRdvs
-        this.counterRdvsElt.textContent = countRdvs.toLocaleString()
-    }
-
     /**
      * @param {Object} rdv
      * @param {Object} apiUrls
@@ -385,6 +377,15 @@ export default class RdvForm {
             document.getElementById('modal-confirm').addEventListener('click', () => {
                 this.apiCalendar.addEvent(rdvModel, listApis())
             }, {once: true})
+        }
+    }
+
+    /** @returns {String} */
+    getPathEditRdv() {
+        if (this.editColumnRdvElt !== null) {
+            return this.editColumnRdvElt.dataset.pathEditRdv
+        } else {
+            return this.editContainRdvElt.dataset.pathEditRdv
         }
     }
 

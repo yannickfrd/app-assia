@@ -45,11 +45,11 @@ export default class CalendarManager {
 
         this.dayElts.forEach(dayElt => {
             this.hideRdvElts(dayElt)
-            dayElt.addEventListener('click', e => this.onClickDayElt(e, dayElt))
+            dayElt.addEventListener('click', e => this.newRdv(e, dayElt))
         })
 
         this.rdvElts.forEach(rdvElt => {
-            rdvElt.addEventListener('click', e => this.onClickEditRdv(e, rdvElt))
+            rdvElt.addEventListener('click', e => this.getRdv(e, rdvElt))
         })
 
         this.dateInput.addEventListener('focusout', this.checkDate.bind(this))
@@ -78,12 +78,22 @@ export default class CalendarManager {
         }
     }
 
-    onClickEditRdv(e, rdvElt) {
+    /**
+     * On click in edit rdv.
+     * @param {Event} e
+     * @param {HTMLLinkElement} rdvElt
+     */
+    getRdv(e, rdvElt) {
         e.preventDefault()
         this.rdvForm.requestShowRdv(rdvElt.href)
     }
 
-    onClickDayElt(e, dayElt) {
+    /**
+     * On click on rdv in day.
+     * @param {Event} e
+     * @param {HTMLElement} dayElt
+     */
+    newRdv(e, dayElt) {
         this.rdvForm.resetForm(e)
         this.dateInput.value = dayElt.id
         this.modalRdvElt.querySelector('#rdv_start').value = dayElt.id + 'T00:00'
@@ -121,7 +131,7 @@ export default class CalendarManager {
      * Vérifie si la date est valide.
      */
     checkDate() {
-        this.updateDatetimes()
+        this.updateDateTimes()
     }
 
     /**
@@ -132,7 +142,7 @@ export default class CalendarManager {
             const endHour = parseInt(this.startInput.value.substr(0, 2)) + 1
 
             this.endInput.value = endHour.toString().padStart(2, '0') + ':' + this.startInput.value.substr(3, 2)
-            this.updateDatetimes()
+            this.updateDateTimes()
         }
     }
 
@@ -140,13 +150,13 @@ export default class CalendarManager {
      * Vérifie si l'heure de fin est valide.
      */
     checkEnd() {
-        this.updateDatetimes()
+        this.updateDateTimes()
     }
 
     /**
      * Met à jour les dates de début et de fin.
      */
-    updateDatetimes() {
+    updateDateTimes() {
         if (isNaN(this.dateInput.value) && isNaN(this.startInput.value)) {
             this.rdvStartInput.value = this.dateInput.value + 'T' + this.startInput.value
         }
@@ -252,7 +262,7 @@ export default class CalendarManager {
             this.hideRdvElts(dayElt)
         }
 
-        rdvElt.addEventListener('click', e => this.onClickEditRdv(e, rdvElt))
+        rdvElt.addEventListener('click', e => this.getRdv(e, rdvElt))
 
         //v1
         if (action === 'create') {
@@ -284,7 +294,6 @@ export default class CalendarManager {
      */
     deleteRdv(rdvId, apiUrls) {
         const rdvElt = document.getElementById('rdv-' + rdvId)
-
         rdvElt.remove()
         // this.hideRdvElts(dayElt)
 

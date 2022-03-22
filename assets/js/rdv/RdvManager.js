@@ -33,25 +33,26 @@ export default class RdvManager {
         this.newRdvBtn.addEventListener('click', e => this.rdvForm.resetForm(e))
 
         this.editRdvBtn.forEach(btnElt => {
-            btnElt.addEventListener('click', () => this.onClickEditRdv(btnElt))
+            btnElt.addEventListener('click', () => this.getRdv(btnElt))
         })
 
         this.deleteRdvBtn.forEach(btnElt => {
-            btnElt.addEventListener('click', () => this.onClickDeleteRdv(btnElt))
+            btnElt.addEventListener('click', () => this.deleteRdv(btnElt))
         })
     }
 
     /**
+     * On click in edit rdv.
      * @param {HTMLButtonElement} btnElt
      */
-    onClickEditRdv(btnElt) {
+    getRdv(btnElt) {
         this.rdvForm.requestShowRdv(btnElt.dataset.url)
     }
 
     /**
      * @param {HTMLButtonElement} btnElt
      */
-    onClickDeleteRdv(btnElt) {
+    deleteRdv(btnElt) {
         this.btnConfirmDeleteElt.dataset.url = btnElt.dataset.url
         this.confirmDeleteModal.show()
 
@@ -180,12 +181,10 @@ export default class RdvManager {
         tbodyElt.insertBefore(rowElt, tbodyElt.firstChild)
 
         const btnEditElt = rowElt.querySelector('button[data-action="edit-rdv"]')
-        btnEditElt.addEventListener('click', () => this.onClickEditRdv(btnEditElt))
+        btnEditElt.addEventListener('click', () => this.getRdv(btnEditElt))
 
         const btnDeleteElt = rowElt.querySelector('button[data-action="delete-rdv"]')
-        btnDeleteElt.addEventListener('click', () => this.onClickDeleteRdv(btnDeleteElt))
-
-        this.rdvForm.updateCounterTasks(1)
+        btnDeleteElt.addEventListener('click', () => this.deleteRdv(btnDeleteElt))
 
         //v1
         this.apiCalendar.addEvent(new RdvModel(rdv), apiUrls)
