@@ -1,5 +1,7 @@
 import CalendarManager from './CalendarManager'
 import SearchLocation from '../utils/searchLocation'
 
-new CalendarManager()
-new SearchLocation('rdv_search_location')
+window.addEventListener('load', () => {
+    new CalendarManager()
+    new SearchLocation('rdv_search_location')
+})

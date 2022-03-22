@@ -232,9 +232,10 @@ export default class RdvForm {
         if (!this.loader.isActive()) {
             this.loader.on()
 
-            this.ajax.send('GET', url, this.manager.responseAjax.bind(this.manager))
+            this.ajax.send('GET', url, this.manager.responseAjax.bind(this.manager));
         }
     }
+
     /**
      * @param {String} url
      */

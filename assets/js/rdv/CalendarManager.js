@@ -12,7 +12,7 @@ export default class CalendarManager {
         this.loader = new Loader()
         this.ajax = new Ajax(this.loader)
         this.rdvForm = new RdvForm(this)
-        // this.parametersUrl = new ParametersUrl()
+        this.parametersUrl = new ParametersUrl()
         this.apiCalendar = new ApiCalendar()
 
         this.calendarContainer = document.getElementById('calendar-container')
@@ -72,10 +72,10 @@ export default class CalendarManager {
         this.showWeekendCheckbox.addEventListener('click', () => this.hideWeekends())
 
         // Si l'ID d'un suivi est en paramètre, affiche le rendez-vous
-        // const rdvElt = document.getElementById('rdv-' + this.parametersUrl.get('rdv_id'))
-        // if (rdvElt) {
-        //     rdvElt.click()
-        // }
+        const rdvElt = document.getElementById('rdv-' + this.parametersUrl.get('rdv_id'))
+        if (rdvElt) {
+            this.rdvForm.requestShowRdv(rdvElt.href)
+        }
     }
 
     onClickEditRdv(e, rdvElt) {
