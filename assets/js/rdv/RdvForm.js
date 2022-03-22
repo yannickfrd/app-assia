@@ -96,22 +96,21 @@ export default class RdvForm {
 
     /**
      * On click delete btn
-     * @param {Event} e
-     * @param {String} url
      */
-    deleteRdv(e, url) {
+    deleteRdv(e) {
         e.preventDefault()
         this.confirmDeleteModal.show()
 
         this.confirmDeleteModalElt.querySelector('button#modal-confirm')
-            .addEventListener('click', () => this.requestDeleteRdv(url))
+            .addEventListener('click', () => this.requestDeleteRdv())
     }
 
     /**
      * @param {Event} e
      */
     resetForm(e) {
-        this.formRdvElt.action = this.manager.newRdvBtn.dataset.url
+        // console.log(this.manager.newRdvBtn.dataset.url)
+        // this.formRdvElt.action = this.manager.newRdvBtn.dataset.url
 
         this.formValidator.reinit()
 
@@ -228,14 +227,14 @@ export default class RdvForm {
         }
     }
 
-    /**
-     * @param {String} url
-     */
-    requestDeleteRdv(url) {
+    requestDeleteRdv() {
         if (!this.loader.isActive()) {
             this.loader.on()
-
-            this.ajax.send('GET', url, this.manager.responseAjax.bind(this.manager))
+            this.ajax.send(
+                'GET',
+                this.confirmDeleteModalElt.querySelector('button#modal-confirm').dataset.url,
+                this.manager.responseAjax.bind(this.manager)
+            )
         }
     }
 
@@ -302,8 +301,9 @@ export default class RdvForm {
 
         this.formRdvElt.action = this.getPathEditRdv().replace('__id__', rdv.id)
 
-        const url = this.btnDeleteRdvElt.dataset.url.replace('__id__', rdv.id)
-        this.btnDeleteRdvElt.addEventListener('click', e => this.deleteRdv(e, url))
+        this.confirmDeleteModalElt.querySelector('button#modal-confirm')
+            .dataset.url = this.btnDeleteRdvElt.dataset.url.replace('__id__', rdv.id)
+        this.btnDeleteRdvElt.addEventListener('click', e => this.deleteRdv(e))
 
         this.initAlerts(rdv)
 

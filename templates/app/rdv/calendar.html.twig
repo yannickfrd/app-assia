@@ -122,9 +122,7 @@
 		</div>
 	</section>
 
-		{% include 'app/rdv/_rdv_form_modal.html.twig' with {
-			'action': support is defined ? path('support_rdv_new', {'id': support.id}) : path('rdv_new')
-		} %}
+	{% include 'app/rdv/_rdv_form_modal.html.twig' %}
 	{% include 'app/rdv/_rdv_update_api_modal.html.twig' with {'modal_id': 'modal-update'}  %}
 	{% include 'app/rdv/_rdv_delete_modal.html.twig' %}
 

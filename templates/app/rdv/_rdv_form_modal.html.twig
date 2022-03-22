@@ -12,7 +12,10 @@
                 </div>
             </div>
 
-            {{ action is defined ? form_start(form_rdv, {'action': action}) : form_start(form_rdv) }}
+            {{ form_start(
+                form_rdv,
+                {'action': support is defined ? path('support_rdv_new', {'id': support.id}) : path('rdv_new')}
+            ) }}
             <div class="modal-body pb-0">
                 <div class="row mb-3">
                     <div class="col-12" id="modalRdvLabel">{{ form_widget(form_rdv.title) }}</div>
