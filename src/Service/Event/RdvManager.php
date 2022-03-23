@@ -1,55 +1,38 @@
 <?php
 
-namespace App\EventDispatcher\Rdv;
+declare(strict_types=1);
 
+namespace App\Service\Event;
+
+use App\Entity\Event\Rdv;
 use App\Entity\Organization\User;
 use App\Entity\Support\SupportGroup;
-use App\Event\Rdv\RdvEvent;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Form\FormInterface;
 
-class RdvSubscriber implements EventSubscriberInterface
+class RdvManager
 {
-    public static function getSubscribedEvents(): array
+    public static function addonBeforeFlush(Rdv $rdv, ?FormInterface $form = null, ?SupportGroup $supportGroup = null)
     {
-        return [
-            'rdv.before_create' => 'dispatch',
-            'rdv.before_update' => 'dispatch',
-            'rdv.after_create' => 'discache',
-            'rdv.after_update' => 'discache',
-        ];
-    }
-
-    public function dispatch(RdvEvent $event)
-    {
-        $rdv = $event->getRdv();
-        $form = $event->getForm();
-        $supportGroup = $event->getSupportGroup();
-
         if (null !== $supportGroup) {
             $rdv->setSupportGroup($supportGroup);
         }
 
         if ($form->get('_googleCalendar')->getData()) {
-            $rdv->setGoogleEventId(true);
+            $rdv->setGoogleEventId('1');
         } elseif ($rdv->getGoogleEventId()) {
             $rdv->setGoogleEventId(null);
         }
 
         if ($form->get('_outlookCalendar')->getData()) {
-            $rdv->setOutlookEventId(true);
+            $rdv->setOutlookEventId('1');
         } elseif ($rdv->getOutlookEventId()) {
             $rdv->setOutlookEventId(null);
         }
     }
 
-    /**
-     * Supprime les rendez-vous en cache du suivi et de l'utlisateur.
-     */
-    public function discache(RdvEvent $event): bool
+    public static function deleteCacheItems(Rdv $rdv)
     {
-        $rdv = $event->getRdv();
-
         $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
 
         if ($supportGroup = $rdv->getSupportGroup()) {

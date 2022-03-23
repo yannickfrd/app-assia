@@ -4,7 +4,6 @@ namespace App\Controller\Event;
 
 use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Event\Rdv;
-use App\Event\Rdv\RdvEvent;
 use App\Form\Model\Support\RdvSearch;
 use App\Form\Model\Support\SupportRdvSearch;
 use App\Form\Support\Rdv\RdvSearchType;
@@ -14,6 +13,7 @@ use App\Repository\Event\RdvRepository;
 use App\Repository\Support\SupportGroupRepository;
 use App\Security\CurrentUserService;
 use App\Service\Api\ApiCalendarRouter;
+use App\Service\Event\RdvManager;
 use App\Service\Export\RdvExport;
 use App\Service\Pagination;
 use App\Service\Rdv\RdvPaginator;
@@ -21,7 +21,6 @@ use App\Service\SupportGroup\SupportManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -103,7 +102,6 @@ class RdvController extends AbstractController
      */
     public function create(
         Request $request,
-        EventDispatcherInterface $dispatcher,
         EntityManagerInterface $em,
         ApiCalendarRouter $calendarRouter
     ): JsonResponse {
@@ -111,7 +109,7 @@ class RdvController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $dispatcher->dispatch(new RdvEvent($rdv, null, $form), 'rdv.before_create');
+            RdvManager::addonBeforeFlush($rdv, $form);
 
             $em->persist($rdv);
             $em->flush();
@@ -139,7 +137,6 @@ class RdvController extends AbstractController
         int $id,
         SupportGroupRepository $supportGroupRepo,
         Request $request,
-        EventDispatcherInterface $dispatcher,
         EntityManagerInterface $em,
         ApiCalendarRouter $calendarRouter
     ): JsonResponse {
@@ -152,12 +149,12 @@ class RdvController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $dispatcher->dispatch(new RdvEvent($rdv, $supportGroup, $form), 'rdv.before_create');
+            RdvManager::addonBeforeFlush($rdv, $form, $supportGroup);
 
             $em->persist($rdv);
             $em->flush();
 
-            $dispatcher->dispatch(new RdvEvent($rdv), 'rdv.after_create');
+            RdvManager::deleteCacheItems($rdv);
 
             return $this->json([
                 'action' => 'create',
@@ -191,8 +188,8 @@ class RdvController extends AbstractController
      * @Route("/rdv/{id}/edit", name="rdv_edit", methods="POST")
      */
     public function edit(
-        Rdv $rdv, Request $request,
-        EventDispatcherInterface $dispatcher,
+        Rdv $rdv,
+        Request $request,
         EntityManagerInterface $em,
         ApiCalendarRouter $calendarRouter
     ): JsonResponse {
@@ -204,11 +201,11 @@ class RdvController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $dispatcher->dispatch(new RdvEvent($rdv, $supportGroup, $form), 'rdv.before_update');
+            RdvManager::addonBeforeFlush($rdv, $form, $supportGroup);
 
             $em->flush();
 
-            $dispatcher->dispatch(new RdvEvent($rdv), 'rdv.after_update');
+            RdvManager::deleteCacheItems($rdv);
 
             return $this->json([
                 'action' => 'edit',
@@ -230,18 +227,14 @@ class RdvController extends AbstractController
      * @Route("/rdv/{id}/delete", name="rdv_delete", methods="GET")
      * @IsGranted("DELETE", subject="rdv")
      */
-    public function delete(
-        Rdv $rdv,
-        EventDispatcherInterface $dispatcher,
-        EntityManagerInterface $em,
-        ApiCalendarRouter $calendarRouter
-    ): JsonResponse {
+    public function delete(Rdv $rdv, EntityManagerInterface $em, ApiCalendarRouter $calendarRouter): JsonResponse
+    {
         $rdvId = $rdv->getId();
 
         $em->remove($rdv);
         $em->flush();
 
-        $dispatcher->dispatch(new RdvEvent($rdv), 'rdv.after_update');
+        RdvManager::deleteCacheItems($rdv);
 
         return $this->json([
             'action' => 'delete',
