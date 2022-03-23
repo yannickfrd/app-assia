@@ -387,5 +387,13 @@ export default class RdvForm {
     closeModal() {
         this.modalElt.hide()
         document.getElementById('js-btn-cancel').click()
+
+        // Dans le cas où il resterait le fond voil transparent noir.
+        const backgroundDark = document.querySelectorAll('div.modal-backdrop')
+        backgroundDark.forEach(bg => {
+            if (bg.classList.contains('show')) {
+                bg.classList.replace('show', 'hide')
+            }
+        })
     }
 }
