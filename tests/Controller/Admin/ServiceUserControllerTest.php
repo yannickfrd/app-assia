@@ -3,7 +3,6 @@
 namespace App\Tests\Controller\Admin;
 
 use App\Entity\Organization\User;
-use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -12,8 +11,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ServiceUserControllerTest extends WebTestCase
 {
-    use AppTestTrait;
-
     /** @var KernelBrowser */
     protected $client;
 
@@ -30,19 +27,20 @@ class ServiceUserControllerTest extends WebTestCase
     {
         parent::setUp();
 
-        $this->client = $this->createClient();
+        $this->client = static::createClient();
+        $this->client->followRedirects();
 
-        /* @var AbstractDatabaseTool */
+        /** @var AbstractDatabaseTool */
         $this->databaseTool = $this->getContainer()->get(DatabaseToolCollection::class)->get();
 
         $this->fixtures = $this->databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
+            dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',
         ]);
     }
 
     public function testAccessIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userAdmin']);
+        $this->client->loginUser($this->fixtures['user_admin']);
 
         $this->client->request('GET', '/admin/user/4');
         $this->assertResponseIsSuccessful();
@@ -50,7 +48,7 @@ class ServiceUserControllerTest extends WebTestCase
 
     public function testAccessBadUser(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
         $this->client->request('GET', '/admin/user/4');
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
@@ -58,10 +56,10 @@ class ServiceUserControllerTest extends WebTestCase
 
     public function testAddUserService(): void
     {
-        $this->createLogin($this->fixtures['userAdmin']);
+        $this->client->loginUser($this->fixtures['user_admin']);
 
         /** @var User $user */
-        $user = $this->fixtures['userRoleUser'];
+        $user = $this->fixtures['john_user'];
         $serviceId = $user->getServiceUser()->first()->getService()->getId();
 
         $crawler = $this->client->request('GET', '/admin/user/'.$user->getId());
@@ -83,7 +81,7 @@ class ServiceUserControllerTest extends WebTestCase
 
     public function testDeleteServiceUser(): void
     {
-        $this->createLogin($this->fixtures['userAdmin']);
+        $this->client->loginUser($this->fixtures['user_admin']);
 
         /** @var User $user */
         $user = $this->fixtures['user5'];
@@ -102,7 +100,7 @@ class ServiceUserControllerTest extends WebTestCase
 
     public function testToggleMainService(): void
     {
-        $this->createLogin($this->fixtures['userAdmin']);
+        $this->client->loginUser($this->fixtures['user_admin']);
 
         /** @var User $user */
         $user = $this->fixtures['user5'];
@@ -123,8 +121,5 @@ class ServiceUserControllerTest extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
-
-        $this->client = null;
-        $this->fixtures = null;
     }
 }

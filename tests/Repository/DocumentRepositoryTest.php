@@ -35,11 +35,11 @@ class DocumentRepositoryTest extends WebTestCase
         $databaseTool = $this->getContainer()->get(DatabaseToolCollection::class)->get();
 
         $fixtures = $databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/DataFixturesTest/ServiceFixturesTest.yaml',
-            dirname(__DIR__).'/DataFixturesTest/PersonFixturesTest.yaml',
-            dirname(__DIR__).'/DataFixturesTest/SupportFixturesTest.yaml',
-            dirname(__DIR__).'/DataFixturesTest/DocumentFixturesTest.yaml',
+            dirname(__DIR__).'/fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/fixtures/service_fixtures_test.yaml',
+            dirname(__DIR__).'/fixtures/person_fixtures_test.yaml',
+            dirname(__DIR__).'/fixtures/support_fixtures_test.yaml',
+            dirname(__DIR__).'/fixtures/document_fixtures_test.yaml',
         ]);
 
         $kernel = self::bootKernel();
@@ -50,52 +50,52 @@ class DocumentRepositoryTest extends WebTestCase
 
         $this->documentRepo = $this->entityManager->getRepository(Document::class);
 
-        $this->supportGroup = $fixtures['supportGroup1'];
-        $this->user = $fixtures['userRoleUser'];
+        $this->supportGroup = $fixtures['support_group1'];
+        $this->user = $fixtures['john_user'];
         $this->search = (new SupportDocumentSearch())
             ->setName('Document');
     }
 
-    public function testCount()
+    public function testCount(): void
     {
         $this->assertGreaterThanOrEqual(2, $this->documentRepo->count([]));
     }
 
-    public function testFindDocumentsQueryWithoutFilters()
+    public function testFindDocumentsQueryWithoutFilters(): void
     {
         $qb = $this->documentRepo->findDocumentsQuery(new DocumentSearch());
         $this->assertGreaterThanOrEqual(5, count($qb->getResult()));
     }
 
-    public function testFindSupportDocumentsQueryWithoutFilters()
+    public function testFindSupportDocumentsQueryWithoutFilters(): void
     {
         $qb = $this->documentRepo->findSupportDocumentsQuery($this->supportGroup, new SupportDocumentSearch());
         $this->assertGreaterThanOrEqual(5, count($qb->getResult()));
     }
 
-    public function testFindSupportDocumentsQueryWithFilters()
+    public function testFindSupportDocumentsQueryWithFilters(): void
     {
         $qb = $this->documentRepo->findSupportDocumentsQuery($this->supportGroup, $this->search);
         $this->assertGreaterThanOrEqual(1, count($qb->getResult()));
     }
 
-    public function testFindSupportsDocumentsQueryWithFilterByContent()
+    public function testFindSupportsDocumentsQueryWithFilterByContent(): void
     {
         $qb = $this->documentRepo->findSupportDocumentsQuery($this->supportGroup, $this->search->setName('Description'));
         $this->assertGreaterThanOrEqual(1, count($qb->getResult()));
     }
 
-    public function testCountDocumentsWithoutCriteria()
+    public function testCountDocumentsWithoutCriteria(): void
     {
         $this->assertGreaterThanOrEqual(5, $this->documentRepo->countDocuments());
     }
 
-    public function testCountDocumentsWithCriteria()
+    public function testCountDocumentsWithCriteria(): void
     {
         $this->assertGreaterThanOrEqual(5, $this->documentRepo->countDocuments(['user' => $this->user]));
     }
 
-    public function testSumSizeAllDocuments()
+    public function testSumSizeAllDocuments(): void
     {
         $this->assertGreaterThan(200000 * 5, $this->documentRepo->sumSizeAllDocuments());
     }

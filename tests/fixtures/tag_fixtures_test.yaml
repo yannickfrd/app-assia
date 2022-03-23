@@ -1,0 +1,9 @@
+App\Entity\Organization\Tag:
+    tag1:
+        name: Tag test
+        services: ["@service1", "@service2"]
+    tag2:
+        name: <word()>
+    tag{3..5}:
+        name: <word()>
+        services: ["@service1"]

@@ -2,10 +2,10 @@
 
 namespace App\Service\Evaluation;
 
-use App\Entity\Evaluation\EvaluationGroup;
-use App\Entity\Evaluation\EvaluationPerson;
 use App\Entity\Evaluation\EvalInitGroup;
 use App\Entity\Evaluation\EvalInitPerson;
+use App\Entity\Evaluation\EvaluationGroup;
+use App\Entity\Evaluation\EvaluationPerson;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Support\SupportPerson;
 use Doctrine\ORM\EntityManagerInterface;

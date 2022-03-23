@@ -65,18 +65,18 @@
         "dama/doctrine-test-bundle": "^6.3",
         "dbrekelmans/bdi": "^1.0",
         "doctrine/doctrine-fixtures-bundle": "^3.3",
-        "easycorp/easy-deploy-bundle": "^1.0",
         "friendsofphp/php-cs-fixer": "^3.5.0",
         "fzaninotto/faker": "^1.9",
         "hautelook/alice-bundle": "^2.9",
         "liip/test-fixtures-bundle": "^2.1",
-        "phpstan/phpstan-symfony": "^0.12.4",
+        "phpstan/extension-installer": "^1.1",
+        "phpstan/phpstan-symfony": "^1.1",
         "symfony/browser-kit": "5.4.*",
         "symfony/css-selector": "5.4.*",
         "symfony/debug-bundle": "5.4.*",
         "symfony/maker-bundle": "^1.0",
-        "symfony/panther": "1.0.*",
-        "symfony/phpunit-bridge": "^5.3",
+        "symfony/panther": "1.1.*",
+        "symfony/phpunit-bridge": "5.4.*",
         "symfony/stopwatch": "5.4.*",
         "symfony/web-profiler-bundle": "5.4.*",
         "theofidry/alice-data-fixtures": "^1.1"
@@ -112,33 +112,37 @@
             "assets:install %PUBLIC_DIR%": "symfony-cmd",
             "requirements-checker": "script"
         },
+        "cs-fix": [
+            "./tools/php-cs-fixer/vendor/bin/php-cs-fixer fix src --verbose"
+        ],
+        "check-quality": [
+            "./vendor/bin/phpstan analyse -c phpstan.neon"
+        ],
         "database-setup": [
-            "/usr/bin/php7.4-cli bin/console make:migration --env=dev",
-            "/usr/bin/php7.4-cli bin/console doctrine:migrations:migrate --env=dev --no-interaction"
+            "php bin/console make:migration --env=dev",
+            "php bin/console doctrine:migrations:migrate --env=dev --no-interaction"
         ],
         "phpunit-tests-dev": [
             "php bin/console cache:clear --env=test",
-            "php bin/console d:d:drop -e test --force",
-            "php bin/console d:d:create -e test",
-            "php bin/console d:schema:update -e test --force",
-            "php bin/console hautelook:f:l -e test -n",
+            "php bin/console doctrine:database:drop -e test --force",
+            "php bin/console doctrine:database:create -e test",
+            "php bin/console doctrine:schema:update -e test --force",
+            "php bin/console hautelook:fixtures:load -e test -n",
             "php bin/phpunit tests/Entity",
             "php bin/phpunit tests/Repository",
-            "php bin/phpunit tests/Controller --stop-on-error"
+            "php bin/phpunit tests/Controller",
+            "php bin/phpunit tests/EndToEnd"
         ],
         "phpunit-tests-prod": [
-            "/usr/bin/php7.4-cli bin/console cache:clear --env=test",
-            "/usr/bin/php7.4-cli bin/console d:d:drop -e test --force",
-            "/usr/bin/php7.4-cli bin/console d:d:create -e test",
-            "/usr/bin/php7.4-cli bin/console d:schema:update -e test --force",
-            "/usr/bin/php7.4-cli bin/console hautelook:f:l -e test -n",
-            "/usr/bin/php7.4-cli bin/phpunit tests/Entity",
-            "/usr/bin/php7.4-cli bin/phpunit tests/Repository",
-            "/usr/bin/php7.4-cli bin/phpunit tests/Controller/Admin",
-            "/usr/bin/php7.4-cli bin/phpunit tests/Controller/App",
-            "/usr/bin/php7.4-cli bin/phpunit tests/Controller/Organization",
-            "/usr/bin/php7.4-cli bin/phpunit tests/Controller/People",
-            "/usr/bin/php7.4-cli bin/phpunit tests/Controller/Support"
+            "php bin/console cache:clear --env=prod",
+            "php bin/console cache:clear --env=test",
+            "php bin/console doctrine:database:drop -e test --force",
+            "php bin/console doctrine:database:create -e test",
+            "php bin/console doctrine:schema:update -e test --force",
+            "php bin/console hautelook:fixtures:load -e test -n",
+            "php bin/phpunit tests/Entity",
+            "php bin/phpunit tests/Repository",
+            "php bin/phpunit tests/Controller"
         ],
         "post-install-cmd": [
             "@auto-scripts"
@@ -146,6 +150,10 @@
         "post-update-cmd": [
             "@auto-scripts"
         ]
+    },
+    "scripts-descriptions": {
+        "cs-fix": "Execute PHP CS Fixer in the src directory and fix errors",
+        "check-quality": "Execute PHP Stan to check code quality"
     },
     "conflict": {
         "symfony/symfony": "*"

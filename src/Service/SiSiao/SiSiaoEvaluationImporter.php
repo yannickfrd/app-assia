@@ -2,7 +2,6 @@
 
 namespace App\Service\SiSiao;
 
-use App\Entity\Evaluation\AbstractFinance;
 use App\Entity\Evaluation\EvalAdmPerson;
 use App\Entity\Evaluation\EvalBudgetCharge;
 use App\Entity\Evaluation\EvalBudgetDebt;
@@ -20,7 +19,6 @@ use App\Entity\Evaluation\EvalSocialGroup;
 use App\Entity\Evaluation\EvalSocialPerson;
 use App\Entity\Evaluation\EvaluationGroup;
 use App\Entity\Evaluation\EvaluationPerson;
-use App\Entity\Evaluation\Resource as EvaResource;
 use App\Entity\People\Person;
 use App\Entity\Support\HotelSupport;
 use App\Entity\Support\Note;
@@ -30,6 +28,7 @@ use App\Form\Utils\Choices;
 use App\Form\Utils\EvaluationChoices;
 use App\Notification\ExceptionNotification;
 use App\Service\Note\NoteManager;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -105,7 +104,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
             return null;
         }
 
-        $this->id = $supportGroup->getPeopleGroup()->getSiSiaoId();
+        $this->id = (int) $supportGroup->getPeopleGroup()->getSiSiaoId();
 
         if (!$this->id) {
             $this->flashBag->add('warning', "Il n'y a pas d'ID fiche groupe SI-SIAO saisi pour ce groupe.");
@@ -113,6 +112,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
             return null;
         }
 
+        /** @var object $result */
         $result = $this->searchById($this->id);
 
         if (0 === $result->total) {
@@ -772,11 +772,11 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
     }
 
     /**
-     * @param Collection<EvaResource>|Collection<EvalBudgeCharge>|Collection<Debts>|Collection<AbstractFinance $finances
+     * @param Collection<EvalBudgetResource>|Collection<EvalBudgetCharge>|Collection<EvalBudgetDebt> $finances
      *
-     * @return EvaResource|Charge|Debt
+     * @return EvalBudgetResource|EvalBudgetCharge|EvalBudgetDebt|null
      */
-    protected function financeExists(Collection $finances, int $type): ?AbstractFinance
+    protected function financeExists(Collection $finances, int $type)
     {
         foreach ($finances as $finance) {
             if ($finance->getType() === $type) {
@@ -858,6 +858,8 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
             }
 
             $noteRepo = $this->em->getRepository(Note::class);
+            /** @var Collection<Note> */
+            $notes = new ArrayCollection();
 
             foreach ($results as $result) {
                 if (!$note = $noteRepo->findOneBy(['comment' => $result->id])) {
@@ -870,12 +872,16 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
                     ;
 
                     $this->em->persist($note);
+
+                    $notes->add($note);
                 }
 
                 $note->setContent($result->contenu);
             }
 
-            NoteManager::deleteCacheItems($note);
+            if ($notes->count() > 0) {
+                NoteManager::deleteCacheItems($notes->first());
+            }
         } catch (\Exception $e) {
             $this->flashBag->add('danger', $this->getErrorMessage($e)."Les notes n'ont pas pu être importées.");
         }

@@ -103,7 +103,7 @@ export default class TaskManager {
                 case 'toggle_status':
                     this.checkStatus(task)
                     break
-                // case 'getSupportPeople':
+                // case 'get_support_people':
                 // this.changeSupportPeopleSelect(response.supportPeople)
                 // break
             }

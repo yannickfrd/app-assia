@@ -45,6 +45,7 @@ yarn-error.log
 ###< secrets keys ###
 
 ###> friendsofphp/php-cs-fixer ###
+/tools/
 /.php_cs
 /.php_cs.cache
 ###< friendsofphp/php-cs-fixer ###
@@ -56,6 +57,7 @@ yarn-error.log
 
 ###> editors ###
 .idea
+/.idea/
 .vscode
 /.vscode/
 ###< editors ###

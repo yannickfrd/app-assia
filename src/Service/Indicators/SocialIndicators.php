@@ -21,6 +21,10 @@ class SocialIndicators
 
     protected $profStatusDatas;
 
+    protected $contractTypeDatas;
+    protected $resourcesDatas;
+    protected $chargesDatas;
+
     public function __construct()
     {
     }

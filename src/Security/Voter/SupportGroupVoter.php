@@ -4,8 +4,8 @@ namespace App\Security\Voter;
 
 use App\Entity\Organization\User;
 use App\Entity\Support\SupportGroup;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class SupportGroupVoter extends Voter
 {
@@ -13,8 +13,6 @@ class SupportGroupVoter extends Voter
 
     /** @var User */
     protected $user;
-
-    protected $userId;
 
     /** @var SupportGroup */
     protected $supportGroup;
@@ -27,9 +25,7 @@ class SupportGroupVoter extends Voter
 
     protected function voteOnAttribute($attribute, $supportGroup, TokenInterface $token): bool
     {
-        /** @var User */
         $this->user = $token->getUser();
-        $this->userId = $this->user->getId();
         $this->supportGroup = $supportGroup;
 
         if (!$this->user) {
@@ -80,9 +76,9 @@ class SupportGroupVoter extends Voter
 
     protected function isCreatorOrReferent(): bool
     {
-        if (($this->supportGroup->getReferent() && $this->supportGroup->getReferent()->getId() === $this->userId)
-            || ($this->supportGroup->getReferent2() && $this->supportGroup->getReferent2()->getId() === $this->userId)
-            || ($this->supportGroup->getCreatedBy() && $this->supportGroup->getCreatedBy()->getId() === $this->userId)
+        if (($this->supportGroup->getReferent() && $this->supportGroup->getReferent()->getId() === $this->user->getId())
+            || ($this->supportGroup->getReferent2() && $this->supportGroup->getReferent2()->getId() === $this->user->getId())
+            || ($this->supportGroup->getCreatedBy() && $this->supportGroup->getCreatedBy()->getId() === $this->user->getId())
         ) {
             return true;
         }

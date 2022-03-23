@@ -1,0 +1,36 @@
+App\Entity\Organization\Place:
+    place1:
+        name: Logement test
+        nbPlaces: 6
+        startDate: <date_create("2010-01-01")>
+        city: Houilles
+        zipcode: <numberBetween(1, 95)>
+        address: <fr_FR:address()>
+        placeType: <numberBetween(1, 13)>
+        configuration: <numberBetween(1, 2)>
+        individualCollective: <numberBetween(1, 2)>
+        createdAt: <dateTimeBetween("-10 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        service: "@service1"
+        subService: "@sub_service1"
+        device: "@device1"
+        createdBy: "@user_admin"
+        updatedBy: "@user_admin"
+
+    place{2..5}:
+        name: <word()> <numberBetween(1, 1000)>
+        nbPlaces: <numberBetween(1, 10)>
+        startDate: <datetimeBetween("-10 years", "now")>
+        city: <fr_FR:city()>
+        zipcode: <numberBetween(1, 95)>
+        address: <fr_FR:address()>
+        placeType: <numberBetween(1, 13)>
+        configuration: <numberBetween(1, 2)>
+        individualCollective: <numberBetween(1, 2)>
+        createdAt: <dateTimeBetween("-10 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        service: "@service1"
+        subService: "@sub_service1"
+        device: "@device1"
+        createdBy: "@user_admin"
+        updatedBy: "@user_admin"

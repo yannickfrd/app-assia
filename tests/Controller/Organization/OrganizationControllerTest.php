@@ -2,9 +2,7 @@
 
 namespace App\Tests\Controller\Organization;
 
-use App\Tests\AppTestTrait;
 use App\Entity\Organization\Organization;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
@@ -12,8 +10,6 @@ use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 
 class OrganizationControllerTest extends WebTestCase
 {
-    use AppTestTrait;
-
     /** @var KernelBrowser */
     protected $client;
 
@@ -30,30 +26,31 @@ class OrganizationControllerTest extends WebTestCase
     {
         parent::setUp();
 
-        $this->client = $this->createClient();
+        $this->client = static::createClient();
+        $this->client->followRedirects();
 
         /** @var AbstractDatabaseTool */
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
 
         $this->fixtures = $this->databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/OrganizationFixturesTest.yaml',
+            dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/organization_fixtures_test.yaml',
         ]);
 
-        $this->createLogin($this->fixtures['userAdmin']);
+        $this->client->loginUser($this->fixtures['user_admin']);
 
         $this->organization = $this->fixtures['organization1'];
     }
 
-    public function testListOrganizationsIsUp()
+    public function testListOrganizationsIsUp(): void
     {
         $this->client->request('GET', '/organizations');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Organismes');
     }
 
-    public function testSortOrganizationsIsSuccessful()
+    public function testSortOrganizationsIsSuccessful(): void
     {
         /** @var Crawler $crawler */
         $crawler = $this->client->request('GET', '/organizations');
@@ -62,15 +59,15 @@ class OrganizationControllerTest extends WebTestCase
 
         $this->client->click($link);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Organismes');
     }
 
-    public function testCreateNewOrganizationIsSuccessful()
+    public function testCreateNewOrganizationIsSuccessful(): void
     {
         $this->client->request('GET', '/admin/organization/new');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Nouvel organisme');
 
         $this->client->submitForm('send', [
@@ -78,29 +75,26 @@ class OrganizationControllerTest extends WebTestCase
             'organization[comment]' => 'XXX',
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorExists('.alert.alert-success');
     }
 
-    public function testEditOrganizationIsSuccessful()
+    public function testEditOrganizationIsSuccessful(): void
     {
         $id = $this->organization->getId();
         $this->client->request('GET', "/admin/organization/ $id");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', $this->organization->getName());
 
         $this->client->submitForm('send');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorExists('.alert.alert-success');
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
-        
-        $this->client = null;
-        $this->fixtures = null;
     }
 }

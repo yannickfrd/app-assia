@@ -2,13 +2,13 @@
 
 namespace App\Form\Evaluation;
 
+use App\Entity\Evaluation\EvalSocialGroup;
 use App\Form\Utils\Choices;
 use App\Form\Utils\EvaluationChoices;
 use Symfony\Component\Form\AbstractType;
-use App\Entity\Evaluation\EvalSocialGroup;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class EvalSocialGroupType extends AbstractType
 {

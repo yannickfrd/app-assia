@@ -5,6 +5,7 @@ namespace App\Service\Export;
 use App\Entity\Support\OriginRequest;
 use App\Entity\Support\SupportPerson;
 use App\Service\ExportExcel;
+use Symfony\Component\HttpFoundation\Response;
 
 class SupportPersonExport extends ExportExcel
 {
@@ -22,11 +23,9 @@ class SupportPersonExport extends ExportExcel
     /**
      * Exporte les données.
      *
-     * @param Collection<SupportPerson>|null $supports
-     *
-     * @return StreamedResponse|Response|string
+     * @param SupportPerson[] $supports
      */
-    public function exportData(array $supports)
+    public function exportData(array $supports): Response
     {
         $arrayData = [];
         $arrayData[] = array_keys($this->getSupportPersonDatas($supports[0]));

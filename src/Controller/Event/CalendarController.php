@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Event;
 
 use App\Entity\Event\Rdv;
@@ -11,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CalendarController extends AbstractController
+final class CalendarController extends AbstractController
 {
     private $rdvRepo;
 
@@ -57,7 +59,7 @@ class CalendarController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function showSupportCalendar(int $id, SupportManager $supportManager, $year = null, $month = null): Response
+    public function showSupportCalendar(int $id, int $year = null, int $month = null, SupportManager $supportManager): Response
     {
         $supportGroup = $supportManager->getSupportGroup($id);
 

@@ -120,7 +120,7 @@ class Calendar
      */
     public function getFirstDayOfTheMonth(): \DateTime
     {
-        return new \Datetime($this->year.'-'.$this->month.'-01');
+        return new \DateTime($this->year.'-'.$this->month.'-01');
     }
 
     /**
@@ -179,20 +179,20 @@ class Calendar
     /**
      * Retourne si le jour est est à l'intérieur du mois.
      */
-    public function withinMonth(\datetime $date): bool
+    public function withinMonth(\DateTime $date): bool
     {
         return $this->getFirstDayOfTheMonth()->format('m') === $date->format('m');
     }
 
-    public function IsToday(\datetime $date): bool
+    public function IsToday(\DateTime $date): bool
     {
-        return $date->format('Y-m-d') === (new \dateTime())->format('Y-m-d');
+        return $date->format('Y-m-d') === (new \DateTime())->format('Y-m-d');
     }
 
     /**
      * Retourne l'abréviation du mois.
      */
-    public function getOtherMonth(\datetime $date): string
+    public function getOtherMonth(\DateTime $date): string
     {
         if ($this->getFirstDayOfTheMonth()->format('m') != $date->format('m')) {
             return self::MONTHS_MIN[intval($date->format('m'))];

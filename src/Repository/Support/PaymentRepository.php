@@ -76,7 +76,7 @@ class PaymentRepository extends ServiceEntityRepository
      *
      * @return Payment[]|null
      */
-    public function findPaymentsBetween(\Datetime $start, \Datetime $end, array $supportsId): ?array
+    public function findPaymentsBetween(\DateTime $start, \DateTime $end, array $supportsId): ?array
     {
         $qb = $this->createQueryBuilder('p')->select('p')
             ->leftJoin('p.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')

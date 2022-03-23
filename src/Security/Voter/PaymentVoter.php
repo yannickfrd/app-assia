@@ -15,8 +15,6 @@ class PaymentVoter extends Voter
     /** @var User */
     protected $user;
 
-    protected $userId;
-
     /** @var Payment */
     protected $payment;
 
@@ -31,9 +29,7 @@ class PaymentVoter extends Voter
 
     protected function voteOnAttribute(string $attribute, $payment, TokenInterface $token): bool
     {
-        /** @var User */
         $this->user = $token->getUser();
-        $this->userId = $this->user->getId();
         $this->payment = $payment;
         $this->supportGroup = $this->payment->getSupportGroup();
 
@@ -77,9 +73,9 @@ class PaymentVoter extends Voter
 
     protected function isCreatorOrReferent(): bool
     {
-        if (($this->payment->getCreatedBy() && $this->payment->getCreatedBy()->getId() === $this->userId)
-            || ($this->supportGroup->getReferent() && $this->supportGroup->getReferent()->getId() === $this->userId)
-            || ($this->supportGroup->getReferent2() && $this->supportGroup->getReferent2()->getId() === $this->userId)
+        if (($this->payment->getCreatedBy() && $this->payment->getCreatedBy()->getId() === $this->user->getId())
+            || ($this->supportGroup->getReferent() && $this->supportGroup->getReferent()->getId() === $this->user->getId())
+            || ($this->supportGroup->getReferent2() && $this->supportGroup->getReferent2()->getId() === $this->user->getId())
         ) {
             return true;
         }

@@ -1,17 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Payment;
 
 use App\Entity\Support\Payment;
+use App\Repository\Support\PaymentRepository;
 use App\Service\Payment\PaymentExporter;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\Support\PaymentRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class ExportPaymentController extends AbstractController
+final class ExportPaymentController extends AbstractController
 {
     private $em;
     private $paymentRepo;
@@ -33,7 +35,7 @@ class ExportPaymentController extends AbstractController
 
         $this->denyAccessUnlessGranted('VIEW', $payment);
 
-        $payment->setPdfGenerateAt(new \Datetime());
+        $payment->setPdfGenerateAt(new \DateTime());
 
         $this->em->flush();
 

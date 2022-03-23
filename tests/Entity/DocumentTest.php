@@ -22,17 +22,17 @@ class DocumentTest extends WebTestCase
             ->setInternalFileName($faker->slug());
     }
 
-    public function testValidDocument()
+    public function testValidDocument(): void
     {
         $this->assertHasErrors($this->document, 0);
     }
 
-    public function testBlankName()
+    public function testBlankName(): void
     {
         $this->assertHasErrors($this->document->setName(''), 1);
     }
 
-    public function testNullType()
+    public function testNullType(): void
     {
         $this->assertHasErrors($this->document->setType(null), 0);
     }

@@ -18,9 +18,8 @@ class Tag
     use CreatedUpdatedEntityTrait;
 
     public const COLORS = [
-        'primary' => 'Primaire',
-        'secondary' => 'Secondaire',
         'primary' => 'Bleu',
+        'secondary' => 'Gris',
         'success' => 'Vert',
         'warning' => 'Jaune',
         'orange2' => 'Orange',
@@ -160,7 +159,7 @@ class Tag
     }
 
     /**
-     * @return Collection|Service[]|null
+     * @return Collection<Service>|null
      */
     public function getServices(): ?Collection
     {
@@ -171,6 +170,8 @@ class Tag
     {
         if (!$this->services->contains($service)) {
             $this->services[] = $service;
+
+            $service->addTag($this);
         }
 
         return $this;

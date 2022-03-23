@@ -1,0 +1,18 @@
+parameters:
+    level: 3
+    paths:
+        - src
+        #- tests
+    excludePaths:
+        - src/Entity/Event/AbstractEvent.php
+        - src/Service/SiSiao/SiSiaoGlossary.php
+        - src/Security/CurrentUserService.php
+    ignoreErrors:
+        - '#\$user \(App\\Entity\\Organization\\User\) does not accept Symfony\\Component\\Security\\Core\\User\\UserInterface#'
+        #- '#\$id is never written, only read#'
+        #- '#ToString is unused#'
+    symfony:
+        containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml
+    scanDirectories:
+        - var/cache/dev/Symfony/Config
+    editorUrl: 'vscode://file/%%file%%:%%line%%'

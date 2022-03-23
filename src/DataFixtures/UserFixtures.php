@@ -41,7 +41,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface, Fixture
         foreach ($services as $service) {
             for ($i = 1; $i <= 5; ++$i) {
                 $firstname = $faker->firstName();
-                $lastname = $faker->lastName();
+                $lastname = $faker->lastName;
                 $username = strtolower(substr($this->slugger->slug($firstname), 0, 1).'.'.$this->slugger->slug($lastname));
                 $this->createUser($username, $password, $firstname, $lastname, 1, ['ROLE_USER'], [$service]);
             }

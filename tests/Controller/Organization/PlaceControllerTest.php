@@ -4,7 +4,6 @@ namespace App\Tests\Controller\Organization;
 
 use App\Entity\Organization\Place;
 use App\Entity\Organization\Service;
-use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -12,8 +11,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class PlaceControllerTest extends WebTestCase
 {
-    use AppTestTrait;
-
     /** @var KernelBrowser */
     protected $client;
 
@@ -33,24 +30,25 @@ class PlaceControllerTest extends WebTestCase
     {
         parent::setUp();
 
-        $this->client = $this->createClient();
+        $this->client = static::createClient();
+        $this->client->followRedirects();
 
         /* @var AbstractDatabaseTool */
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
 
         $this->fixtures = $this->databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/PlaceFixturesTest.yaml',
+            dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/service_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/place_fixtures_test.yaml',
         ]);
 
         $this->service = $this->fixtures['service2'];
         $this->place = $this->fixtures['place1'];
     }
 
-    public function testSearchPlacesIsSuccessful()
+    public function testSearchPlacesIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userAdmin']);
+        $this->client->loginUser($this->fixtures['user_admin']);
 
         $this->client->request('GET', '/places');
 
@@ -72,9 +70,9 @@ class PlaceControllerTest extends WebTestCase
         $this->assertGreaterThanOrEqual(1, $crawler->filter('tr')->count());
     }
 
-    public function testExportPlaceIsSuccessful()
+    public function testExportPlaceIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userAdmin']);
+        $this->client->loginUser($this->fixtures['user_admin']);
 
         $this->client->request('GET', '/places');
 
@@ -94,9 +92,9 @@ class PlaceControllerTest extends WebTestCase
         $this->assertStringContainsString('.spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
     }
 
-    public function testCreatePlaceIsFailed()
+    public function testCreatePlaceIsFailed(): void
     {
-        $this->createLogin($this->fixtures['userAdmin']);
+        $this->client->loginUser($this->fixtures['user_admin']);
 
         $id = $this->service->getId();
         $this->client->request('GET', "/admin/service/$id/place/new");
@@ -112,9 +110,9 @@ class PlaceControllerTest extends WebTestCase
         $this->assertSelectorExists('.alert.alert-danger');
     }
 
-    public function testCreateNewPlaceIsSuccessful()
+    public function testCreateNewPlaceIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userAdmin']);
+        $this->client->loginUser($this->fixtures['user_admin']);
 
         $id = $this->service->getId();
         $this->client->request('GET', "/admin/service/$id/place/new");
@@ -146,9 +144,9 @@ class PlaceControllerTest extends WebTestCase
         $this->assertSelectorExists('.alert.alert-success');
     }
 
-    public function testEditPlaceIsSuccessful()
+    public function testEditPlaceIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userSuperAdmin']);
+        $this->client->loginUser($this->fixtures['user_super_admin']);
 
         $id = $this->place->getId();
         $this->client->request('GET', "/place/$id");
@@ -164,9 +162,9 @@ class PlaceControllerTest extends WebTestCase
         $this->assertSelectorExists('.alert.alert-success');
     }
 
-    public function testDeletePlace()
+    public function testDeletePlace(): void
     {
-        $this->createLogin($this->fixtures['userSuperAdmin']);
+        $this->client->loginUser($this->fixtures['user_super_admin']);
 
         $id = $this->place->getId();
         $this->client->request('GET', "/place/$id/delete");
@@ -175,9 +173,9 @@ class PlaceControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h1', $this->place->getService()->getName());
     }
 
-    public function testDisablePlace()
+    public function testDisablePlace(): void
     {
-        $this->createLogin($this->fixtures['userSuperAdmin']);
+        $this->client->loginUser($this->fixtures['user_super_admin']);
 
         $id = $this->fixtures['place1']->getId();
         $this->client->request('GET', "/place/$id/disable");
@@ -194,8 +192,5 @@ class PlaceControllerTest extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
-
-        $this->client = null;
-        $this->fixtures = null;
     }
 }

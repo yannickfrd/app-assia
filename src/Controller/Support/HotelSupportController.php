@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Support;
 
 use App\Entity\Organization\Service;
@@ -13,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class HotelSupportController extends AbstractController
+final class HotelSupportController extends AbstractController
 {
     /**
      * Liste des suivis AVDL.

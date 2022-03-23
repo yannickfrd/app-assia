@@ -40,11 +40,11 @@ class RdvRepositoryTest extends WebTestCase
         $databaseTool = $this->getContainer()->get(DatabaseToolCollection::class)->get();
 
         $fixtures = $databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/DataFixturesTest/ServiceFixturesTest.yaml',
-            dirname(__DIR__).'/DataFixturesTest/PersonFixturesTest.yaml',
-            dirname(__DIR__).'/DataFixturesTest/SupportFixturesTest.yaml',
-            dirname(__DIR__).'/DataFixturesTest/RdvFixturesTest.yaml',
+            dirname(__DIR__).'/fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/fixtures/service_fixtures_test.yaml',
+            dirname(__DIR__).'/fixtures/person_fixtures_test.yaml',
+            dirname(__DIR__).'/fixtures/support_fixtures_test.yaml',
+            dirname(__DIR__).'/fixtures/rdv_fixtures_test.yaml',
         ]);
 
         $kernel = self::bootKernel();
@@ -56,8 +56,8 @@ class RdvRepositoryTest extends WebTestCase
         /* @var RdvRepository */
         $this->rdvRepo = $this->entityManager->getRepository(Rdv::class);
 
-        $this->supportGroup = $fixtures['supportGroup1'];
-        $this->user = $fixtures['userRoleUser'];
+        $this->supportGroup = $fixtures['support_group1'];
+        $this->user = $fixtures['john_user'];
 
         $referents = new ArrayCollection();
         $referents->add($this->user);
@@ -74,30 +74,30 @@ class RdvRepositoryTest extends WebTestCase
             ->setEnd(new \DateTime());
     }
 
-    public function testCount()
+    public function testCount(): void
     {
         $this->assertGreaterThanOrEqual(2, $this->rdvRepo->count([]));
     }
 
-    public function testFindAllRdvsQueryWithoutFilters()
+    public function testFindAllRdvsQueryWithoutFilters(): void
     {
         $qb = $this->rdvRepo->findRdvsQuery(new RdvSearch());
         $this->assertGreaterThanOrEqual(5, count($qb->getResult()));
     }
 
-    public function testFindAllRdvsQueryWithFilters()
+    public function testFindAllRdvsQueryWithFilters(): void
     {
         $qb = $this->rdvRepo->findRdvsQuery($this->search);
         $this->assertGreaterThanOrEqual(1, count($qb->getResult()));
     }
 
-    public function testFindAllRdvsQueryOfSupportWithoutFilters()
+    public function testFindAllRdvsQueryOfSupportWithoutFilters(): void
     {
         $qb = $this->rdvRepo->findRdvsQueryOfSupport($this->supportGroup->getId(), new SupportRdvSearch());
         $this->assertGreaterThanOrEqual(1, count($qb->getResult()));
     }
 
-    public function testFindAllRdvsQueryOfSupportWithFilters()
+    public function testFindAllRdvsQueryOfSupportWithFilters(): void
     {
         $qb = $this->rdvRepo->findRdvsQueryOfSupport($this->supportGroup->getId(), $this->supportRdvSearch);
         $this->assertGreaterThanOrEqual(1, count($qb->getResult()));
@@ -106,17 +106,17 @@ class RdvRepositoryTest extends WebTestCase
     // public function testindRdvsBetween() {}
     // public function testFindRdvsBetweenByDay() {}
 
-    public function testFindAllRdvsOfUser()
+    public function testFindAllRdvsOfUser(): void
     {
         $this->assertGreaterThanOrEqual(1, count($this->rdvRepo->findRdvsOfUser($this->user)));
     }
 
-    public function testCountAllRdvsWithoutCriteria()
+    public function testCountAllRdvsWithoutCriteria(): void
     {
         $this->assertGreaterThanOrEqual(5, $this->rdvRepo->countRdvs());
     }
 
-    public function testCountAllRdvsWithCriteria()
+    public function testCountAllRdvsWithCriteria(): void
     {
         $this->assertGreaterThanOrEqual(5, $this->rdvRepo->countRdvs(['user' => $this->user]));
     }

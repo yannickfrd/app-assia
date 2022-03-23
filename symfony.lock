@@ -135,9 +135,6 @@
     "dompdf/dompdf": {
         "version": "v0.8.5"
     },
-    "easycorp/easy-deploy-bundle": {
-        "version": "v1.0.5"
-    },
     "egulias/email-validator": {
         "version": "2.1.17"
     },
@@ -303,11 +300,14 @@
     "phpseclib/phpseclib": {
         "version": "3.0.12"
     },
+    "phpstan/extension-installer": {
+        "version": "1.1.0"
+    },
     "phpstan/phpstan": {
-        "version": "0.12.18"
+        "version": "1.4.10"
     },
     "phpstan/phpstan-symfony": {
-        "version": "0.12.4"
+        "version": "1.1.7"
     },
     "psr/cache": {
         "version": "1.0.1"

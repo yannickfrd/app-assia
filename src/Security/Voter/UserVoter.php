@@ -12,8 +12,6 @@ class UserVoter extends Voter
 
     /** @var User */
     protected $user;
-    /** @var int|null */
-    private $userId;
 
     protected function supports(string $attribute, $subject): bool
     {
@@ -23,9 +21,7 @@ class UserVoter extends Voter
 
     protected function voteOnAttribute(string $attribute, $user, TokenInterface $token): bool
     {
-        /* @var User */
         $this->user = $token->getUser();
-        $this->userId = $this->user->getId();
 
         if (!$this->user) {
             return false;
@@ -53,7 +49,7 @@ class UserVoter extends Voter
     protected function canEdit(User $user): bool
     {
         return null === $user->getId()
-            || $this->userId === $user->getId()
+            || $this->user->getId() === $user->getId()
             || $this->isGranted('ROLE_SUPER_ADMIN')
             || $this->isAdminUser($user)
         ;

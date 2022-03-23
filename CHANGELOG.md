@@ -1,8 +1,53 @@
 CHANGELOG
 =========
+## Version 3.13.0 - 23/03/2022
+
+Optimize and update tests, create github action, PHP CS Fixer and PHP Stan
+
+* Edit password algorithm in tests/security
+* [Config] Set logging to false in test/doctrine
+* [Config] Set APP_DEBUG = false in phpunit.xml.dist
+* Update config in test env
+* [NoteControllerTest] Update functionnal test
+* [Tests] Use 'client->loginUser' and 'assertResponseIsSuccessful' methods in all functionnal tests
+* [Tests] Edit spacing in *FixturesTest.yaml files
+* [Composer] Update scripts 'phpunit-tests-dev', 'phpunit-tests-prod'
+* [tests] Rename fixtures files to snake_case
+* [tests] Rename fixtures vars to snake_case
+* [fixtures] Rename Alice fixtures files to snake_case
+* [fixtures] Rename fixtures vars to snake_case
+* Delete unused files
+* [ExportPDF][PaymentExporter] Fix problem with path directory
+* Update phpstan and create phpstan.neon config file
+* Fix static errors with PHPStan (level 3)
+* [Controllers] Add declare(strict_types=1) and final class
+* Remove unused files and update gitignore
+* Update PHP CS Fixer config
+* Fix code standard with PHP CS Fixer
+* Create a Github Actions Workflows config file
+* [SiSiaoControllerTest] Add condition before test SI-SIAO API
+* [ExportExcel] Create a new spreadsheet if the model file don't exist
+* [SiSiaoControllerTest] Move to folder 'Controller/Api'
+* [SiSiaoControllerTest] Add annotation '@group api'
+* Create .editorconfig file
+* Update README
+* Update PHP dependencies
+* [tests] Add functionnal tests and refactor
+* [TagController] Refactor and update tests
+* [tests] Add return type 'void' for all test methods
+* Update tests EndToEnd
+* Create test EndToEnd for Task feature
+* [Js] Install prettier and prettier-plugin-twig-melody dependencies
+* Fix errors and bugs
+
+## Version 3.12.2 - 17/03/2022
+Fix bugs (#132)
+* [ResourcesEntityTrait] Edit getEvalBudgetResourcesToArray method (use Resource::SHORT_RESOURCES const)
+* [listDocuments.html.twig] Fix error createdBy
+* [AnonymizeDatabaseCommand] Add job_center_id to anonymize
 
 ## Version 3.12.0 - 08/03/2022
-Sync google/outlook calendar feature
+Sync google/outlook calendar feature (#123)
 * Create GoogleCalendarController
 * Create OutlookCalendarController
 * Edit RdvController

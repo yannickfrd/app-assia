@@ -1,25 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Admin;
 
-use App\Service\Pagination;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Form\Model\Support\SupportSearch;
 use App\Controller\Traits\ErrorMessageTrait;
-use App\Service\Indicators\ServiceIndicator;
-use App\Service\Indicators\SocialIndicators;
-use App\Repository\Admin\IndicatorRepository;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use App\Form\Admin\ServiceIndicatorsSearchType;
 use App\Form\Model\Admin\ServiceIndicatorsSearch;
+use App\Form\Model\Support\SupportSearch;
 use App\Form\Support\Support\SupportSearchType;
-use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\Admin\IndicatorRepository;
 use App\Repository\Support\SupportPersonRepository;
+use App\Service\Indicators\ServiceIndicator;
+use App\Service\Indicators\SocialIndicators;
+use App\Service\Pagination;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
-class IndicatorController extends AbstractController
+final class IndicatorController extends AbstractController
 {
     use ErrorMessageTrait;
 

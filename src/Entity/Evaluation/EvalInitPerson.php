@@ -90,7 +90,7 @@ class EvalInitPerson
     private $comment;
 
     /**
-     * @var Collection<EvalInitResource>|EvalInitResource[]|null
+     * @var Collection<EvalInitResource>|null
      * @ORM\OneToMany(targetEntity=EvalInitResource::class, mappedBy="evalInitPerson", cascade={"persist", "remove"}, orphanRemoval=true)
      * @ORM\OrderBy({"amount": "DESC"})
      */
@@ -326,7 +326,7 @@ class EvalInitPerson
     }
 
     /**
-     * @return Collection<EvalInitResource>|EvalInitResource[]
+     * @return Collection<EvalInitResource>
      */
     public function getEvalBudgetResources(): Collection
     {

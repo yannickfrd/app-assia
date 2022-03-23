@@ -42,6 +42,7 @@ class SiSiaoUpdater extends SiSiaoClient
 
         $this->headers[] = 'Content-Type: application/json';
 
+        /** @var object $data */
         $data = $this->get("/fiches/ficheIdentite/{$id}");
         // dump($data);
 
@@ -108,6 +109,8 @@ class SiSiaoUpdater extends SiSiaoClient
         $this->headers[] = 'Content-Type: application/json';
 
         $now = (new \DateTime())->format('Y-m-d\T00:00');
+
+        /** @var object $demandeInsertion */
         $demandeInsertion = $this->get("/demandeInsertion/getLastDemandeEnCours?idFiche={$id}");
         $demandeInsertion->dateTransmissionSiao = $now;
         $demandeInsertion->dateModification = $now;

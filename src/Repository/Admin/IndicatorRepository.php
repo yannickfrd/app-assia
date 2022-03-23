@@ -2,10 +2,10 @@
 
 namespace App\Repository\Admin;
 
-use Doctrine\ORM\Query;
 use App\Entity\Admin\Indicator;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method Indicator|null find($id, $lockMode = null, $lockVersion = null)

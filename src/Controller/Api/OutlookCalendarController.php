@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Api;
 
 use App\Service\Api\OutlookApi\OutlookCalendarApiService;
@@ -9,7 +11,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class OutlookCalendarController extends AbstractController
+final class OutlookCalendarController extends AbstractController
 {
     private $outlookCalendar;
 

@@ -14,8 +14,6 @@ class PlaceVoter extends Voter
     /** @var User */
     protected $user;
 
-    protected $userId;
-
     /** @var Place */
     protected $place;
 
@@ -27,9 +25,7 @@ class PlaceVoter extends Voter
 
     protected function voteOnAttribute(string $attribute, $place, TokenInterface $token): bool
     {
-        /** @var User */
         $this->user = $token->getUser();
-        $this->userId = $this->user->getId();
         $this->place = $place;
 
         if (!$this->user) {

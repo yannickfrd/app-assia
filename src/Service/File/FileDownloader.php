@@ -4,7 +4,6 @@ namespace App\Service\File;
 
 use App\Entity\Support\SupportGroup;
 use App\Repository\Support\DocumentRepository;
-use Symfony\Component\BrowserKit\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class FileDownloader extends Downloader

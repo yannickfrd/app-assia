@@ -1,0 +1,24 @@
+App\Entity\Support\PlaceGroup:
+    pl_group{1..50}:
+        startDate: <dateTimeBetween("-2 years", "now")>
+        endDate: <dateTimeBetween($startDate, "now")>
+        endReason: <numberBetween(1, 2)>
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        createdBy: "@user*"
+        updatedBy: "@user*"
+        place: "@place*"
+        peopleGroup: "@people_group*"
+        supportGroup: "@support_group*"
+
+App\Entity\Support\PlacePerson:
+    pl_person{1..100}:
+        startDate: "@pl_group*->startDate"
+        endDate: "@pl_group*->endDate"
+        endReason: <numberBetween(1, 2)>
+        createdAt: "@pl_group*->createdAt"
+        createdBy: "@pl_group*->createdBy"
+        updatedAt: "@pl_group*->updatedAt"
+        updatedBy: "@pl_group*->updatedBy"
+        placeGroup: "@pl_group*"
+        person: "@person*"

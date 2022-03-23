@@ -15,8 +15,6 @@ class NoteVoter extends Voter
     /** @var User */
     protected $user;
 
-    protected $userId;
-
     /** @var Note */
     protected $note;
 
@@ -31,9 +29,7 @@ class NoteVoter extends Voter
 
     protected function voteOnAttribute(string $attribute, $note, TokenInterface $token): bool
     {
-        /** @var User */
         $this->user = $token->getUser();
-        $this->userId = $this->user->getId();
         $this->note = $note;
         $this->supportGroup = $this->note->getSupportGroup();
 
@@ -77,9 +73,9 @@ class NoteVoter extends Voter
 
     protected function isCreatorOrReferent(): bool
     {
-        if (($this->note->getCreatedBy() && $this->note->getCreatedBy()->getId() === $this->userId)
-            || ($this->supportGroup->getReferent() && $this->supportGroup->getReferent()->getId() === $this->userId)
-            || ($this->supportGroup->getReferent2() && $this->supportGroup->getReferent2()->getId() === $this->userId)
+        if (($this->note->getCreatedBy() && $this->note->getCreatedBy()->getId() === $this->user->getId())
+            || ($this->supportGroup->getReferent() && $this->supportGroup->getReferent()->getId() === $this->user->getId())
+            || ($this->supportGroup->getReferent2() && $this->supportGroup->getReferent2()->getId() === $this->user->getId())
         ) {
             return true;
         }

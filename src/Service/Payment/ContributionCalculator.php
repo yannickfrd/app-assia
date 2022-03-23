@@ -2,32 +2,32 @@
 
 namespace App\Service\Payment;
 
-use App\Entity\Support\Payment;
+use App\Entity\Evaluation\EvalBudgetCharge;
+use App\Entity\Evaluation\EvalBudgetDebt;
+use App\Entity\Evaluation\EvalBudgetResource;
+use App\Entity\Evaluation\EvaluationGroup;
 use App\Entity\Evaluation\Resource;
 use App\Entity\Organization\Device;
 use App\Entity\Organization\Service;
+use App\Entity\Support\Payment;
 use App\Entity\Support\SupportGroup;
-use App\Entity\Evaluation\EvalBudgetDebt;
-use App\Entity\Evaluation\EvaluationGroup;
-use App\Entity\Evaluation\EvalBudgetCharge;
-use Doctrine\Common\Collections\Collection;
-use App\Entity\Evaluation\EvalBudgetResource;
-use App\Repository\Organization\PlaceRepository;
 use App\Repository\Evaluation\EvaluationGroupRepository;
+use App\Repository\Organization\PlaceRepository;
+use Doctrine\Common\Collections\Collection;
 
 class ContributionCalculator
 {
     public const AGE_ADULT = 18;
     public const AGE_TEENAGE = 14;
 
-    /** @var float Unité de consommation (UC) pour le 1er adulte */
+    /** @var int Unité de consommation (UC) pour le 1er adulte */
     public const UC_FIRST_ADULT = 1;
     /** @var float Unité de consommation (UC) pour les autres personnes de 14 ans ou plus */
     public const UC_OTHER_ADULT_OR_TEENAGE = 0.5;
     /** @var float Unité de consommation (UC) pour un enfant (moins de 14 ans) */
     public const UC_CHILD = 0.3;
 
-    /** @var float Reste à vivre journalier unitaire minimum (12 euros) */
+    /** @var int Reste à vivre journalier unitaire minimum (12 euros) */
     public const MIN_REST_TO_LIVE = 12;
 
     protected $evaluationRepo;

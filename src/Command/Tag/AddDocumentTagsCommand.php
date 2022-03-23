@@ -45,15 +45,12 @@ class AddDocumentTagsCommand extends Command // TEMPORAIRE A SUPPRIMER
         $this->io->progressStart($nbDocumentWithType);
 
         foreach ($tagRepo->findAll() as $tag) {
-            /** @var Document $documents */
+            /** @var Document[] $documents */
             $documents = $documentRepo->findBy(['type' => $tag->getCode()]);
             /** @var Tag $tag */
             $tag = $tagRepo->findOneBy(['name' => $tag->getName()]);
 
             foreach ($documents as $document) {
-
-
-                
                 $document->addTag($tag);
                 $this->io->progressAdvance();
             }

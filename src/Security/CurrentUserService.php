@@ -8,24 +8,24 @@ use Symfony\Component\Security\Core\Security;
 
 class CurrentUserService
 {
-    /** @var User */
-    protected $user;
+    /** @var Security */
+    protected $security;
 
     public function __construct(Security $security)
     {
-        $this->user = $security->getUser();
+        $this->security = $security;
     }
 
     public function getUser(): User
     {
-        return $this->user;
+        return $this->security->getUser();
     }
 
     public function getServices(): array
     {
         $services = [];
 
-        foreach ($this->user->getServices() as $service) {
+        foreach ($this->getUser()->getServices() as $service) {
             $services[] = $service->getId();
         }
 
@@ -45,6 +45,6 @@ class CurrentUserService
 
     public function hasRole(string $role): bool
     {
-        return null != in_array($role, $this->user->getRoles());
+        return null != in_array($role, $this->getUser()->getRoles());
     }
 }

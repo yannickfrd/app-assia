@@ -65,9 +65,9 @@ class ExportPDF
     /**
      * Save the document.
      */
-    public function save(): string
+    public function save(string $path = 'uploads/exports/'): string
     {
-        $path = 'uploads/exports/'.(new \DateTime())->format('Y/m/d/');
+        $path = $path.(new \DateTime())->format('Y/m/d/');
 
         if (!file_exists($path)) {
             mkdir($path, 0777, true);
@@ -85,7 +85,7 @@ class ExportPDF
     /**
      * Output the generated PDF to Browser.
      */
-    public function download(string $appEnv = null): StreamedResponse
+    public function download(): StreamedResponse
     {
         $response = new StreamedResponse();
         $response->headers->set('Content-Type', 'application/pdf');
@@ -93,8 +93,8 @@ class ExportPDF
         $response->setPrivate();
         $response->headers->addCacheControlDirective('no-cache', true);
         $response->headers->addCacheControlDirective('must-revalidate', true);
-        $response->setCallback(function () use ($appEnv) {
-            if ('test' != $appEnv) {
+        $response->setCallback(function () {
+            if ('test' !== $_ENV['APP_ENV']) {
                 $this->dompdf->stream($this->getFileName());
             }
         });

@@ -1,5 +1,0 @@
-App\Entity\Admin\Setting:
-  setting1:
-    organizationName: Organization 1
-    archivingTime: 24
-    deletionTime: 24

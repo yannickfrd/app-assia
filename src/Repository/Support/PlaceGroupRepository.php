@@ -52,7 +52,7 @@ class PlaceGroupRepository extends ServiceEntityRepository
     /**
      * Donne les prises en charge sur le groupe de places.
      *
-     * @return PlaceGroup[]|null
+     * @return PlaceGroup[]
      */
     public function findAllPlaceGroups(Place $place, $maxResults = 10): array
     {

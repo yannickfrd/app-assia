@@ -30,7 +30,7 @@ class MailNotifier
         try {
             $this->mailer->send($email);
         } catch (TransportExceptionInterface $e) {
-            if ($this->appEnv === 'prod') {
+            if ('prod' === $this->appEnv) {
                 throw $e;
             }
 

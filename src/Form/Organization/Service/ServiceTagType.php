@@ -2,10 +2,7 @@
 
 namespace App\Form\Organization\Service;
 
-use App\Entity\Organization\Device;
-use App\Entity\Organization\ServiceDevice;
 use App\Entity\Organization\Tag;
-use App\Repository\Organization\DeviceRepository;
 use App\Repository\Organization\TagRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;

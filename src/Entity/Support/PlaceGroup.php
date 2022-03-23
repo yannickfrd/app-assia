@@ -2,15 +2,15 @@
 
 namespace App\Entity\Support;
 
-use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Organization\Place;
 use App\Entity\People\PeopleGroup;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Doctrine\Common\Collections\Collection;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -206,7 +206,7 @@ class PlaceGroup
     }
 
     /**
-     * @return Collection<PlacePerson>|PlacePerson[]|null
+     * @return Collection<PlacePerson>|null
      */
     public function getPlacePeople(): ?Collection
     {

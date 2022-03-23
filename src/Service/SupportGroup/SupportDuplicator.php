@@ -2,9 +2,9 @@
 
 namespace App\Service\SupportGroup;
 
+use App\Entity\Evaluation\EvalInitGroup;
 use App\Entity\Evaluation\EvaluationGroup;
 use App\Entity\Evaluation\EvaluationPerson;
-use App\Entity\Evaluation\EvalInitGroup;
 use App\Entity\Organization\Service;
 use App\Entity\Support\Document;
 use App\Entity\Support\SupportGroup;
@@ -14,7 +14,6 @@ use App\Repository\Support\DocumentRepository;
 use App\Repository\Support\NoteRepository;
 use App\Repository\Support\SupportGroupRepository;
 use App\Repository\Support\SupportPersonRepository;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 
 class SupportDuplicator
@@ -98,7 +97,7 @@ class SupportDuplicator
     private function duplicateEvaluation(SupportGroup $newSupportGroup, SupportGroup $lastSupportGroup): void
     {
         $lastEvaluation = $this->evaluationGroupRepo->findEvaluationOfSupport($lastSupportGroup->getId());
-        $now = new \Datetime();
+        $now = new \DateTime();
 
         if ($lastEvaluation && 0 === $newSupportGroup->getEvaluationsGroup()->count()) {
             $evaluationGroup = (clone $lastEvaluation)->setSupportGroup($newSupportGroup);
@@ -133,7 +132,7 @@ class SupportDuplicator
     /**
      * Check if the new document exists already in the support.
      *
-     * @param Collection<Document>|Document[] $documents
+     * @param Document[]|null $documents
      */
     private function documentExists(Document $newDocument, ?array $documents): bool
     {

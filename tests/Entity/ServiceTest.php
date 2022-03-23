@@ -38,27 +38,27 @@ class ServiceTest extends WebTestCase
             ->setPole(new Pole());
     }
 
-    public function testValidService()
+    public function testValidService(): void
     {
         $this->assertHasErrors($this->service, 0);
     }
 
-    public function testBlankName()
+    public function testBlankName(): void
     {
         $this->assertHasErrors($this->service->setName(''), 1);
     }
 
-    public function testNullPole()
+    public function testNullPole(): void
     {
         $this->assertHasErrors($this->service->setPole(null), 1);
     }
 
-    public function testInvalidEmail()
+    public function testInvalidEmail(): void
     {
         $this->assertHasErrors($this->service->setEmail('xxx@xxx'), 1);
     }
 
-    public function testServiceExists()
+    public function testServiceExists(): void
     {
         $service = $this->service
             ->setName('CHRS Cergy');

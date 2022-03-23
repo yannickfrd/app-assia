@@ -2,7 +2,6 @@
 
 namespace App\Tests\Command\Event;
 
-use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -11,8 +10,6 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class SendTaskAlertsCommandTest extends KernelTestCase
 {
-    use AppTestTrait;
-
     /** @var Command */
     protected $command;
 
@@ -28,11 +25,11 @@ class SendTaskAlertsCommandTest extends KernelTestCase
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
 
         $this->databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/SupportFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/task_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/service_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/person_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/support_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/task_fixtures_test.yaml',
         ]);
 
         $application = new Application($kernel);
@@ -76,7 +73,5 @@ class SendTaskAlertsCommandTest extends KernelTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
-        $this->command = null;
-        $this->commandTester = null;
     }
 }

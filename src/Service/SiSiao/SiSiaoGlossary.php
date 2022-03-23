@@ -69,11 +69,16 @@ class SiSiaoGlossary extends SiSiaoClient
         $referentielsString = '';
 
         foreach (self::REFERENTIELS['/referentiels'] as $key => $value) {
+            /** @var array */
             $referentiel = $this->get('/referentiels'.$value);
             $referentielsString .= '// '.strtoupper($value).
                 '<br/>public const '.strtoupper($value).' = [<br/>';
 
             foreach ($referentiel as $item) {
+                if (!is_object($item)) {
+                    continue;
+                }
+
                 if (isset($item->libelle)) {
                     $referentielsString .= "&nbsp;&nbsp;&nbsp;&nbsp;{$item->id} => null, // {$item->libelle}<br/>";
                     continue;

@@ -2,7 +2,7 @@
 
 namespace App\Entity\Support;
 
-use App\Entity\Organization\TagTrait;
+use App\Entity\Organization\Traits\TagTrait;
 use App\Entity\People\PeopleGroup;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
