@@ -2,10 +2,10 @@
 
 namespace App\Entity\Organization;
 
+use App\Entity\Event\Rdv;
 use App\Entity\Event\Task;
 use App\Entity\Support\Document;
 use App\Entity\Support\Note;
-use App\Entity\Support\Rdv;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Traits\ContactEntityTrait;
 use App\Entity\Traits\DisableEntityTrait;

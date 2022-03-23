@@ -3,16 +3,16 @@
 namespace App\Service\SupportGroup;
 
 use App\Entity\Evaluation\EvaluationGroup;
+use App\Entity\Event\Rdv;
 use App\Entity\People\PeopleGroup;
-use App\Entity\Support\Rdv;
 use App\Entity\Support\SupportGroup;
 use App\Repository\Evaluation\EvaluationGroupRepository;
+use App\Repository\Event\RdvRepository;
 use App\Repository\Event\TaskRepository;
 use App\Repository\Organization\ReferentRepository;
 use App\Repository\Support\DocumentRepository;
 use App\Repository\Support\NoteRepository;
 use App\Repository\Support\PaymentRepository;
-use App\Repository\Support\RdvRepository;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 

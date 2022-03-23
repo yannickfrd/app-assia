@@ -2,7 +2,6 @@
 
 namespace App\Entity\Event;
 
-use App\Entity\Support\Rdv;
 use App\Repository\Event\AlertRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;

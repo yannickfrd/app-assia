@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Controller\Rdv;
+namespace App\Controller\Event;
 
-use App\Entity\Support\Rdv;
+use App\Entity\Event\Rdv;
 use App\Form\Support\Rdv\RdvType;
-use App\Repository\Support\RdvRepository;
+use App\Repository\Event\RdvRepository;
 use App\Service\Calendar;
 use App\Service\SupportGroup\SupportManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

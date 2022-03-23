@@ -1,4 +1,4 @@
-App\Entity\Support\Rdv:
+App\Entity\Event\Rdv:
   rdv1:
     title: RDV test
     content: Contenu du RDV

@@ -2,10 +2,10 @@
 
 namespace App\Command\Tag;
 
+use App\Entity\Event\Rdv;
 use App\Entity\Organization\Tag;
-use App\Entity\Support\Rdv;
+use App\Repository\Event\RdvRepository;
 use App\Repository\Organization\TagRepository;
-use App\Repository\Support\RdvRepository;
 use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;

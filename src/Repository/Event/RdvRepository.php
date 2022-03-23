@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Repository\Support;
+namespace App\Repository\Event;
 
+use App\Entity\Event\Rdv;
 use App\Entity\Organization\User;
-use App\Entity\Support\Rdv;
 use App\Entity\Support\SupportGroup;
 use App\Form\Model\Support\RdvSearch;
 use App\Form\Model\Support\SupportRdvSearch;
@@ -116,12 +116,12 @@ class RdvRepository extends ServiceEntityRepository
 
         if ($search->getTitle()) {
             $qb->andWhere('r.title LIKE :title')
-                ->setParameter('title', '%' . $search->getTitle() . '%');
+                ->setParameter('title', '%'.$search->getTitle().'%');
         }
 
         if ($search->getFullname()) {
             $qb->andWhere("CONCAT(p.lastname,' ' ,p.firstname) LIKE :fullname")
-                ->setParameter('fullname', '%' . $search->getFullname() . '%');
+                ->setParameter('fullname', '%'.$search->getFullname().'%');
         }
 
         if ($search->getStart()) {
@@ -156,7 +156,7 @@ class RdvRepository extends ServiceEntityRepository
 
         if ($search->getTitle()) {
             $qb->andWhere('r.title LIKE :title')
-                ->setParameter('title', '%' . $search->getTitle() . '%');
+                ->setParameter('title', '%'.$search->getTitle().'%');
         }
 
         if ($search->getStart()) {

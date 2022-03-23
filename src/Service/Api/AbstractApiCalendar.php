@@ -2,8 +2,8 @@
 
 namespace App\Service\Api;
 
+use App\Entity\Event\Rdv;
 use App\Entity\Organization\User;
-use App\Entity\Support\Rdv;
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;

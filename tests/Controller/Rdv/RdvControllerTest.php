@@ -2,7 +2,7 @@
 
 namespace App\Tests\Controller\Rdv;
 
-use App\Entity\Support\Rdv;
+use App\Entity\Event\Rdv;
 use App\Entity\Support\SupportGroup;
 use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
@@ -112,13 +112,13 @@ class RdvControllerTest extends WebTestCase
         $now = new \DateTime();
 
         // Fail
-        $this->client->request('POST', '/rdv/new');
+        $this->client->request('POST', '/rdv/create');
 
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('danger', $content['alert']);
 
         // Success
-        $this->client->request('POST', '/rdv/new', [
+        $this->client->request('POST', '/rdv/create', [
             'rdv' => [
                 'title' => 'RDV test',
                 'users' => [$this->user->getId()],
@@ -127,8 +127,6 @@ class RdvControllerTest extends WebTestCase
                 '_token' => $csrfToken,
             ],
         ]);
-
-        $content = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $content = json_decode($this->client->getResponse()->getContent(), true);
@@ -146,14 +144,14 @@ class RdvControllerTest extends WebTestCase
         $now = new \DateTime();
 
         // Fail
-        $this->client->request('POST', "/support/$id/rdv/new");
+        $this->client->request('POST', "/support/$id/rdv/create");
 
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('danger', $content['alert']);
 
         // Success
-        $this->client->request('POST', "/support/$id/rdv/new", [
+        $this->client->request('POST', "/support/$id/rdv/create", [
             'rdv' => [
                 'title' => 'RDV test',
                 'users' => [$this->user->getId()],

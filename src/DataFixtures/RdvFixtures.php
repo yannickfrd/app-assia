@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Support\Rdv;
+use App\Entity\Event\Rdv;
 use App\Entity\Support\SupportGroup;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;

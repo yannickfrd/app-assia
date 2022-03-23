@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Entity\Support;
+namespace App\Entity\Event;
 
-use App\Entity\Event\AbstractEvent;
-use App\Entity\Event\Alert;
 use App\Entity\Organization\TagTrait;
 use App\Entity\Organization\User;
+use App\Entity\Support\SupportGroup;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,7 +14,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\Support\RdvRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\Event\RdvRepository")
  * @ORM\HasLifecycleCallbacks
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */

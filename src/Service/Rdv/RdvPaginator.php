@@ -4,7 +4,7 @@ namespace App\Service\Rdv;
 
 use App\Entity\Support\SupportGroup;
 use App\Form\Model\Support\SupportRdvSearch;
-use App\Repository\Support\RdvRepository;
+use App\Repository\Event\RdvRepository;
 use App\Service\Pagination;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;

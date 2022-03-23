@@ -2,7 +2,7 @@
 
 namespace App\Service\Api\GoogleApi;
 
-use App\Entity\Support\Rdv;
+use App\Entity\Event\Rdv;
 use App\Service\Api\AbstractApiCalendar;
 use Google_Client;
 use Google_Service_Calendar;

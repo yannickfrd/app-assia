@@ -2,8 +2,8 @@
 
 namespace App\Security\Voter;
 
+use App\Entity\Event\Rdv;
 use App\Entity\Organization\User;
-use App\Entity\Support\Rdv;
 use App\Entity\Support\SupportGroup;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -26,7 +26,7 @@ class RdvVoter extends Voter
     protected function supports(string $attribute, $subject): bool
     {
         return in_array($attribute, ['VIEW', 'EDIT', 'DELETE'])
-            && $subject instanceof \App\Entity\Support\Rdv;
+            && $subject instanceof \App\Entity\Event\Rdv;
     }
 
     protected function voteOnAttribute(string $attribute, $rdv, TokenInterface $token): bool

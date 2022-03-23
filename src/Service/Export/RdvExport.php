@@ -2,7 +2,7 @@
 
 namespace App\Service\Export;
 
-use App\Entity\Support\Rdv;
+use App\Entity\Event\Rdv;
 use App\Service\ExportExcel;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;

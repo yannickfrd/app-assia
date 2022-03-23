@@ -2,20 +2,21 @@
 
 namespace App\Tests\Repository;
 
+use App\Entity\Event\Rdv;
 use App\Entity\Organization\User;
-use App\Entity\Support\Rdv;
 use App\Entity\Support\SupportGroup;
 use App\Form\Model\Support\RdvSearch;
 use App\Form\Model\Support\SupportRdvSearch;
-use App\Repository\Support\RdvRepository;
+use App\Repository\Event\RdvRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManager;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class RdvRepositoryTest extends WebTestCase
 {
-    /** @var \Doctrine\ORM\EntityManager */
+    /** @var EntityManager */
     private $entityManager;
 
     /** @var RdvRepository */

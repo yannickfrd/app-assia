@@ -2,7 +2,7 @@
 
 namespace App\Tests\Controller\Rdv;
 
-use App\Entity\Support\Rdv;
+use App\Entity\Event\Rdv;
 use App\Entity\Support\SupportGroup;
 use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;

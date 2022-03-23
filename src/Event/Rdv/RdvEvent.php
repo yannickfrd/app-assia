@@ -2,7 +2,7 @@
 
 namespace App\Event\Rdv;
 
-use App\Entity\Support\Rdv;
+use App\Entity\Event\Rdv;
 use App\Entity\Support\SupportGroup;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Contracts\EventDispatcher\Event;

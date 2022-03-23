@@ -2,9 +2,9 @@
 
 namespace App\Form\Support\Rdv;
 
+use App\Entity\Event\Rdv;
 use App\Entity\Organization\Tag;
 use App\Entity\Organization\User;
-use App\Entity\Support\Rdv;
 use App\Form\Model\Support\RdvSearch;
 use App\Form\Type\DateSearchType;
 use App\Form\Type\ServiceDeviceReferentSearchType;

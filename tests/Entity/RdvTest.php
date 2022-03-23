@@ -2,8 +2,7 @@
 
 namespace App\Tests\Entity;
 
-use App\Entity\Support\Rdv;
-use App\Tests\Entity\AssertHasErrorsTrait;
+use App\Entity\Event\Rdv;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class RdvTest extends WebTestCase

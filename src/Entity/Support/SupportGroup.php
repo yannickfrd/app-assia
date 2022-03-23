@@ -4,6 +4,7 @@ namespace App\Entity\Support;
 
 use App\Entity\Evaluation\EvalInitGroup;
 use App\Entity\Evaluation\EvaluationGroup;
+use App\Entity\Event\Rdv;
 use App\Entity\Event\Task;
 use App\Entity\Organization\Device;
 use App\Entity\Organization\Service;
@@ -310,7 +311,7 @@ class SupportGroup
     private $notes;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Support\Rdv", mappedBy="supportGroup", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity=Rdv::class, mappedBy="supportGroup", cascade={"persist", "remove"})
      * @MaxDepth(1)
      */
     private $rdvs;
