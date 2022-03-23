@@ -16,7 +16,8 @@ export default class RdvManager {
         this.rdvForm = new RdvForm(this)
         this.apiCalendar = new ApiCalendar();
 
-        this.confirmDeleteModal = new Modal(document.getElementById('modal-block'))
+        this.confirmDeleteModalElt = document.getElementById('modal-block')
+        this.confirmDeleteModal = new Modal(this.confirmDeleteModalElt)
         this.btnConfirmDeleteElt = document.querySelector('button#modal-confirm')
 
         const divSupportElt = document.querySelector('div[data-support]')
@@ -53,11 +54,14 @@ export default class RdvManager {
      * @param {HTMLButtonElement} btnElt
      */
     deleteRdv(btnElt) {
-        this.btnConfirmDeleteElt.dataset.url = btnElt.dataset.url
+        // this.confirmDeleteModalElt.querySelector('button#modal-confirm')
+        this.confirmDeleteModalElt.querySelector('button#modal-confirm')
+            .dataset.url = btnElt.dataset.url
+        // this.btnConfirmDeleteElt.dataset.url = btnElt.dataset.url
         this.confirmDeleteModal.show()
 
         document.getElementById('modal-block').addEventListener('click', () => {
-            this.rdvForm.requestDeleteRdv(btnElt.dataset.url)
+            this.rdvForm.requestDeleteRdv()
         })
     }
 

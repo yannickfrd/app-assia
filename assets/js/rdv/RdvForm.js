@@ -224,6 +224,7 @@ export default class RdvForm {
     requestDeleteRdv() {
         if (!this.loader.isActive()) {
             this.loader.on()
+
             this.ajax.send(
                 'GET',
                 this.confirmDeleteModalElt.querySelector('button#modal-confirm').dataset.url,
