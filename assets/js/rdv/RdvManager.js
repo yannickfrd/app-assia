@@ -61,15 +61,13 @@ export default class RdvManager {
      * @param {HTMLButtonElement} btnElt
      */
     deleteRdv(btnElt) {
-        // this.confirmDeleteModalElt.querySelector('button#modal-confirm')
-        this.confirmDeleteModalElt.querySelector('button#modal-confirm')
-            .dataset.url = btnElt.dataset.url
-        // this.btnConfirmDeleteElt.dataset.url = btnElt.dataset.url
+        const btnConfirmDelete = this.confirmDeleteModalElt.querySelector('button#modal-confirm')
+
+        btnConfirmDelete.dataset.url = btnElt.dataset.url
+
         this.confirmDeleteModal.show()
 
-        document.getElementById('modal-block').addEventListener('click', () => {
-            this.rdvForm.requestDeleteRdv()
-        })
+        btnConfirmDelete.addEventListener('click', () => this.rdvForm.requestDeleteRdv())
     }
 
     /**
