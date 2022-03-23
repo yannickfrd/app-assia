@@ -1,7 +1,7 @@
 import Ajax from '../utils/ajax'
 import MessageFlash from '../utils/messageFlash'
 import Loader from '../utils/loader'
-import { Modal } from 'bootstrap'
+import {Modal} from 'bootstrap'
 import RdvForm from "./RdvForm";
 import DateFormater from "../utils/date/dateFormater";
 import ApiCalendar from "../api/ApiCalendar";
@@ -151,17 +151,17 @@ export default class RdvManager {
             <td class="align-middle" data-cell="users">${rdv.usersToString}</td>`
 
         if (!this.supportId) {
-             htmlContent += `
+            htmlContent += `
                 <td class="align-middle" data-cell="support">${rdv.supportGroup ? rdv.supportGroup.header.fullname : ''}</td>
                 <td class="align-middle" data-cell="service">${rdv.supportGroup ? rdv.supportGroup.service.name : ''}</td>`
         }
 
         htmlContent += `<td class="align-middle" data-cell="createdAt">${createdAt}</td>`
 
-         if (!this.supportId) {
-             htmlContent += `
+        if (!this.supportId) {
+            htmlContent += `
                 <td class="align-middle">${rdv.createdBy ? rdv.createdBy.fullname : ''}</td>`
-         }
+        }
         htmlContent += `
             <td class="align-middle text-center">
                 <button data-url="/rdv/${rdv.id}/delete"
@@ -171,7 +171,7 @@ export default class RdvManager {
                 </button>
             </td>`
 
-        rowElt.id = 'rdv-'+rdv.id
+        rowElt.id = 'rdv-' + rdv.id
         rowElt.innerHTML = htmlContent
 
         tbodyElt.insertBefore(rowElt, tbodyElt.firstChild)

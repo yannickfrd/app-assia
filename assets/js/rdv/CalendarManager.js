@@ -206,8 +206,8 @@ export default class CalendarManager {
      * @param {Object} data
      */
     createRdv(data) {
-        const rdv =  data.rdv
-        const apiUrls =  data.apiUrls
+        const rdv = data.rdv
+        const apiUrls = data.apiUrls
         const rdvElt = document.createElement('a')
         rdvElt.href = this.rdvForm.getPathEditRdv()
             .replace('__id__', rdv.id)
@@ -253,7 +253,7 @@ export default class CalendarManager {
     updateRdv(data) {
         this.rdvForm.updateApiRdv(data.rdv, data.apiUrls)
 
-        document.getElementById('rdv-'+data.rdv.id).remove()
+        document.getElementById('rdv-' + data.rdv.id).remove()
         this.createRdv(data)
     }
 

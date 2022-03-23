@@ -56,8 +56,8 @@ export default class RdvForm {
 
         this.currentUserId = document.getElementById('user-name').dataset.userId
 
-        const eventObject = { name: 'onModal', elementId: 'modal-rdv' }
-        this.usersSelectManager = new SelectManager('#rdv_users', eventObject, { width: '100%' })
+        const eventObject = {name: 'onModal', elementId: 'modal-rdv'}
+        this.usersSelectManager = new SelectManager('#rdv_users', eventObject, {width: '100%'})
         this.tagsSelectManager = new SelectManager('#rdv_tags', eventObject)
 
         this.alertsCollectionManager = new WidgetCollectionManager(this.afterToAddAlert.bind(this), null, 3)
@@ -362,7 +362,7 @@ export default class RdvForm {
                     list.google = apiUrls.google;
                 }
                 if (this.outlookCalendarCheckbox.checked) {
-                    list.outlook =  apiUrls.outlook
+                    list.outlook = apiUrls.outlook
                 }
 
                 return Object.keys(list).length === 0 ? apiUrls : list
