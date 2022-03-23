@@ -145,6 +145,7 @@ export default class RdvManager {
             </td>
             <td class="align-middle justify" data-cell="title"><span class="font-weight-bold">${rdv.title}</span></td>
             <td class="align-middle" data-cell="start">${this.rdvDateToString(rdv)}
+            <td class="align-middle" data-cell="alerts">${this.createAlerts(rdv)}
             <td class="align-middle" data-cell="status">${rdv.statusToString ?? ''}</td>
             <td class="align-middle" data-cell="tags">${this.rdvForm.createTags(rdv)}</td>
             <td class="align-middle" data-cell="location">${rdv.location ?? ''}</td>
@@ -203,6 +204,7 @@ export default class RdvManager {
 
         rowElt.querySelector('td[data-cell="title"] span').textContent = rdv.title ?? ''
         rowElt.querySelector('td[data-cell="start"]').innerHTML = this.rdvDateToString(rdv)
+        rowElt.querySelector('td[data-cell="alerts"]').innerHTML = this.createAlerts(rdv)
         rowElt.querySelector('td[data-cell="status"]').textContent = rdv.statusToString ?? ''
         rowElt.querySelector('td[data-cell="tags"]').innerHTML = this.rdvForm.createTags(rdv)
         rowElt.querySelector('td[data-cell="location"]').innerHTML = rdv.location ?? ''
@@ -230,4 +232,19 @@ export default class RdvManager {
 
         this.rdvForm.closeModal()
     }
+
+    /**
+     * @param {Object} rdv
+     * @returns {string}
+     */
+    createAlerts(rdv) {
+        let alerts = ''
+        if (rdv.alerts.length > 0) {
+            alerts = `<span title="${rdv.alerts.length} rappel(s)">${rdv.alerts[0].dateToString}
+                <i class="fas fa-bell text-secondary"></i></span>`
+        }
+
+        return alerts
+    }
+
 }
