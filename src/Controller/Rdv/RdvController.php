@@ -106,9 +106,9 @@ class RdvController extends AbstractController
     /**
      * Without SupportGroup.
      *
-     * @Route("/rdv/new", name="rdv_new", methods="POST")
+     * @Route("/rdv/create", name="rdv_create", methods="POST")
      */
-    public function new(Request $request, EventDispatcherInterface $dispatcher): JsonResponse
+    public function create(Request $request, EventDispatcherInterface $dispatcher): JsonResponse
     {
         $form = $this->createForm(RdvType::class, $rdv = new Rdv())
             ->handleRequest($request);
@@ -136,9 +136,9 @@ class RdvController extends AbstractController
     /**
      * With SupportGroup.
      *
-     * @Route("/support/{id}/rdv/new", name="support_rdv_new", methods="POST")
+     * @Route("/support/{id}/rdv/create", name="support_rdv_create", methods="POST")
      */
-    public function supportRdvNew(
+    public function supportRdvCreate(
         int $id,
         SupportGroupRepository $supportGroupRepo,
         Request $request,
@@ -201,7 +201,6 @@ class RdvController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $dispatcher->dispatch(new RdvEvent($rdv, $supportGroup, $form), 'rdv.before_update');
 
             $this->em->flush();
@@ -248,5 +247,4 @@ class RdvController extends AbstractController
             ]),
         ]);
     }
-
 }
