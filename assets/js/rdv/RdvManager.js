@@ -20,6 +20,8 @@ export default class RdvManager {
         this.confirmDeleteModal = new Modal(this.confirmDeleteModalElt)
         this.btnConfirmDeleteElt = document.querySelector('button#modal-confirm')
 
+        this.totalElt = document.getElementById('count-rdvs')
+
         const divSupportElt = document.querySelector('div[data-support]')
         this.supportId = divSupportElt ? divSupportElt.dataset.support : null
 
@@ -40,6 +42,11 @@ export default class RdvManager {
         this.deleteRdvBtn.forEach(btnElt => {
             btnElt.addEventListener('click', () => this.deleteRdv(btnElt))
         })
+
+        this.total = {
+            increment: () => this.totalElt.innerText = parseInt(this.totalElt.innerText) + 1,
+            decrement: () => this.totalElt.innerText = parseInt(this.totalElt.innerText) - 1
+        }
     }
 
     /**
@@ -190,7 +197,11 @@ export default class RdvManager {
         //v1
         this.apiCalendar.addEvent(new RdvModel(rdv), apiUrls)
 
+
+        // document.getElementById('js-btn-cancel').click()
         this.rdvForm.closeModal()
+
+        this.total.increment()
     }
 
     /**
@@ -235,6 +246,8 @@ export default class RdvManager {
         this.apiCalendar.execute('delete', apiUrls)
 
         this.rdvForm.closeModal()
+
+        this.total.decrement()
     }
 
     /**
@@ -250,5 +263,4 @@ export default class RdvManager {
 
         return alerts
     }
-
 }
