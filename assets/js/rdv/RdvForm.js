@@ -34,11 +34,8 @@ export default class RdvForm {
 
         this.confirmDeleteModalElt = document.getElementById('modal-block')
         this.confirmDeleteModal = new Modal(this.confirmDeleteModalElt)
-        this.btnConfirmDeleteElt = document.querySelector('button#modal-confirm')
 
         this.supportPeopleElt = document.getElementById('js-support-people')
-
-        this.counterRdvsElt = document.querySelector('span#count-rdvs')
 
         this.infoRdvElt = document.getElementById('js-rdv-info')
         this.rdvTitleInput = this.modalRdvElt.querySelector('input[name="rdv[title]"]')
@@ -74,7 +71,6 @@ export default class RdvForm {
 
         this.outlookCalendarCheckbox = this.modalRdvElt.querySelector('input[name="rdv[_outlookCalendar]"]')
         if (localStorage.getItem('calendar.google') === 'true') {
-
             this.googleCalendarCheckbox.checked = 'checked'
         }
         if (localStorage.getItem('calendar.outlook') === 'true') {
@@ -82,8 +78,6 @@ export default class RdvForm {
         }
 
         this.rdvBeforeUpdate = null
-
-        this.modalConfirmElt = document.getElementById('modal-confirm')
 
         this.init()
     }

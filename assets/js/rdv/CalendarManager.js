@@ -166,16 +166,6 @@ export default class CalendarManager {
     }
 
     /**
-     * Requête pour supprimer le RDV.
-     */
-    requestDeleteRdv() {
-        if (window.confirm('Voulez-vous vraiment supprimer ce rendez-vous ?')) {
-            this.loader.on()
-            this.ajax.send('GET', this.btnDeleteElt.href, this.responseAjax.bind(this))
-        }
-    }
-
-    /**
      * Donne la réponse à la requête Ajax.
      * @param {Object} data
      */
