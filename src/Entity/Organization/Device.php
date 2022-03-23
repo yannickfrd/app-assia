@@ -24,7 +24,7 @@ class Device
 {
     use CreatedUpdatedEntityTrait;
     use DisableEntityTrait;
-    
+
     public const CODES = [
         9 => '10 000 LA BA',
         13 => '10 000 LA BD',
@@ -321,7 +321,7 @@ class Device
     }
 
     /**
-     * @return Collection<Device>|Device[]|null
+     * @return Collection<Device>|null
      */
     public function getServiceDevices(): ?Collection
     {
@@ -352,7 +352,7 @@ class Device
     }
 
     /**
-     * @return Collection<Place>|Place[]|null
+     * @return Collection<Place>|null
      */
     public function getPlaces(): ?Collection
     {
@@ -383,7 +383,7 @@ class Device
     }
 
     /**
-     * @return Collection<SupportGroup>|SupportGroup[]|null
+     * @return Collection<SupportGroup>|null
      */
     public function getSupportGroup(): ?Collection
     {
@@ -414,7 +414,7 @@ class Device
     }
 
     /**
-     * @return Collection<UserDevice>|UserDevice[]|null
+     * @return Collection<UserDevice>|null
      */
     public function getUserDevices(): ?Collection
     {

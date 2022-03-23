@@ -7,7 +7,6 @@ use App\Entity\People\PeopleGroup;
 use App\Entity\Support\SupportGroup;
 use App\Repository\Organization\ReferentRepository;
 use App\Repository\Support\SupportGroupRepository;
-use Doctrine\Common\Collections\Collection;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 

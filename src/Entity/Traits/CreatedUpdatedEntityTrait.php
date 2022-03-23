@@ -10,7 +10,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 trait CreatedUpdatedEntityTrait
 {
     /**
-     * @var \DateTime
+     * @var \DateTimeInterface
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime", nullable=true)
      * @Groups("view")
@@ -27,7 +27,7 @@ trait CreatedUpdatedEntityTrait
     protected $createdBy;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeInterface
      * @Gedmo\Timestampable(on="create", on="update")
      * @ORM\Column(type="datetime", nullable=true)
      * @Groups("view")

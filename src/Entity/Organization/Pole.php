@@ -2,13 +2,13 @@
 
 namespace App\Entity\Organization;
 
-use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\ContactEntityTrait;
+use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use App\Entity\Traits\DisableEntityTrait;
 use App\Entity\Traits\LocationEntityTrait;
-use Doctrine\Common\Collections\Collection;
-use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -142,7 +142,7 @@ class Pole
     }
 
     /**
-     * @return Collection<Service>|Service[]|ull
+     * @return Collection<Service>|null
      */
     public function getServices(): ?Collection
     {

@@ -70,11 +70,11 @@ class UpdatePlacePersonCommand extends Command
 
             $io->progressAdvance();
         }
-        
+
         if ('fix' === $arg) {
             $this->em->flush();
         }
-        
+
         $io->progressFinish();
 
         $io->success("Update PlacePerson entities is successful !\n  ".$countUpdate.' / '.$nbPlaceGroups);

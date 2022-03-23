@@ -2,9 +2,7 @@
 
 namespace App\Tests\Controller\Organization;
 
-use App\Tests\AppTestTrait;
 use App\Entity\Organization\Pole;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
@@ -12,8 +10,6 @@ use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 
 class PoleControllerTest extends WebTestCase
 {
-    use AppTestTrait;
-
     /** @var KernelBrowser */
     protected $client;
 
@@ -30,63 +26,61 @@ class PoleControllerTest extends WebTestCase
     {
         parent::setUp();
 
-        $this->client = $this->createClient();
+        $this->client = static::createClient();
+        $this->client->followRedirects();
 
         /** @var AbstractDatabaseTool */
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
 
         $this->fixtures = $this->databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
+            dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/service_fixtures_test.yaml',
         ]);
 
-        $this->createLogin($this->fixtures['userSuperAdmin']);
+        $this->client->loginUser($this->fixtures['user_super_admin']);
 
         $this->pole = $this->fixtures['pole1'];
     }
 
-    public function testListPolesIsUp()
+    public function testListPolesIsUp(): void
     {
         $this->client->request('GET', '/poles');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Pôles');
     }
 
-    public function testCreateNewPoleIsSuccessful()
+    public function testCreateNewPoleIsSuccessful(): void
     {
         $this->client->request('GET', '/pole/new');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Nouveau pôle');
 
         $this->client->submitForm('send', [
             'pole[name]' => 'Pôle test',
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorExists('.alert.alert-success');
     }
 
-    public function testEditPoleIsSuccessful()
+    public function testEditPoleIsSuccessful(): void
     {
         $id = $this->pole->getId();
         $this->client->request('GET', "/pole/$id");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', $this->pole->getName());
 
         $this->client->submitForm('send');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', $this->pole->getName());
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
-        
-        $this->client = null;
-        $this->fixtures = null;
     }
 }

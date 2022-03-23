@@ -1,0 +1,92 @@
+App\Entity\Support\SupportGroup:
+    support_group_hotel1:
+        startDate: <date_create("2019-04-03")>
+        status: 2
+        agreement: true
+        referent: "@john_user"
+        service: "@service_pash"
+        device: "@device_hotel"
+        peopleGroup: "@people_group1"
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        createdBy: $referent
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        updatedBy: $referent
+    support_group_hotel2:
+        startDate: <dateTimeBetween("-2 years", "now")>
+        status: 2
+        referent: "@john_user"
+        service: "@service_pash"
+        device: "@device_hotel"
+        peopleGroup: "@people_group2"
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        createdBy: $referent
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        updatedBy: $referent
+
+App\Entity\Support\HotelSupport:
+    hotel_support1:
+        supportGroup: "@support_group_hotel1"
+        evaluationDate: "@support_group_hotel1->startDate"
+        agreementDate: "@support_group_hotel1->startDate"
+        levelSupport: 1
+        departmentAnchor: 95
+        recommendation: 10
+    hotel_support2:
+        supportGroup: "@support_group_hotel2"
+        evaluationDate: "@support_group_hotel2->startDate"
+        agreementDate: "@support_group_hotel2->startDate"
+        levelSupport: 2
+        departmentAnchor: 93
+        recommendation: 20
+
+App\Entity\Support\SupportPerson:
+    support_pers_hotel1:
+        startDate: "@support_group_hotel1->startDate"
+        endDate: "@support_group_hotel1->endDate"
+        status: "@support_group_hotel1->status"
+        createdAt: "@support_group_hotel1->createdAt"
+        updatedAt: "@support_group_hotel1->updatedAt"
+        supportGroup: "@support_group_hotel1"
+        person: "@person1"
+        head: "@role_person1->head"
+        role: "@role_person1->role"
+    support_pers_hotel2:
+        startDate: "@support_group_hotel1->startDate"
+        endDate: "@support_group_hotel1->endDate"
+        status: "@support_group_hotel1->status"
+        createdAt: "@support_group_hotel1->createdAt"
+        updatedAt: "@support_group_hotel1->updatedAt"
+        supportGroup: "@support_group_hotel1"
+        person: "@person2"
+        head: "@role_person2->head"
+        role: "@role_person2->role"
+    support_pers_hotel3:
+        startDate: "@support_group_hotel2->startDate"
+        endDate: "@support_group_hotel2->endDate"
+        status: "@support_group_hotel2->status"
+        createdAt: "@support_group_hotel2->createdAt"
+        updatedAt: "@support_group_hotel2->updatedAt"
+        supportGroup: "@support_group_hotel2"
+        person: "@person3"
+        head: "@role_person3->head"
+        role: "@role_person3->role"
+
+App\Entity\Organization\Organization:
+    siao95:
+        name: SIAO 95
+        type: <numberBetween(1, 9)>
+        services:
+            - "@service_pash"
+
+App\Entity\Organization\ServiceUser:
+    serv_pash_john_user:
+        service: "@service_pash"
+        user: "@john_user"
+    serv_pash_user_admin:
+        service: "@service_pash"
+        user: "@user_admin"
+
+App\Entity\Organization\SubService:
+    sub_service_pash:
+        service: "@service_pash"
+        name: Sous-service PASH

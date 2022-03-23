@@ -33,7 +33,7 @@ class PlaceTest extends WebTestCase
             ->getManager();
     }
 
-    protected function getPlace()
+    protected function getPlace(): Place
     {
         $faker = \Faker\Factory::create('fr_FR');
         $now = new \DateTime();
@@ -47,40 +47,40 @@ class PlaceTest extends WebTestCase
             ->setAddress($faker->address);
     }
 
-    public function testValidPlace()
+    public function testValidPlace(): void
     {
         $this->assertHasErrors($this->place, 0);
     }
 
-    public function testBlankName()
+    public function testBlankName(): void
     {
         $this->assertHasErrors($this->place->setName(''), 1);
     }
 
-    public function testNbPlaces()
+    public function testNbPlaces(): void
     {
         $this->assertHasErrors($this->place->setNbPlaces(0), 0);
     }
 
-    public function testNullStartDate()
+    public function testNullStartDate(): void
     {
         $this->assertHasErrors($this->place->setStartDate(null), 0);
     }
 
-    public function testNullEndDate()
+    public function testNullEndDate(): void
     {
         $this->assertHasErrors($this->place->setEndDate(null), 0);
     }
 
-    public function testPlaceExists()
+    public function testPlaceExists(): void
     {
         /** @var AbstractDatabaseTool */
         $databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
 
         $fixtures = $databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/DataFixturesTest/ServiceFixturesTest.yaml',
-            dirname(__DIR__).'/DataFixturesTest/PlaceFixturesTest.yaml',
+            dirname(__DIR__).'/fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/fixtures/service_fixtures_test.yaml',
+            dirname(__DIR__).'/fixtures/place_fixtures_test.yaml',
         ]);
 
         $place = $this->place

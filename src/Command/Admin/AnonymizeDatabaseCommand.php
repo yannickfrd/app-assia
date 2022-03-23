@@ -4,6 +4,7 @@ namespace App\Command\Admin;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
@@ -33,7 +34,9 @@ class AnonymizeDatabaseCommand extends Command
             return Command::FAILURE;
         }
 
+        /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
+
         $confirmationQuestion = new Question(
             '<info>Are you sure to anonymize the datatase? (yes/no)</info> [<comment>no</comment>]'.PHP_EOL.'> ', false);
         $answer = $helper->ask($input, $output, $confirmationQuestion);

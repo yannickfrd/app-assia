@@ -105,6 +105,10 @@ services:
             $documentsDirectory: "%documents_directory%"
             $downloadsDirectory: "%downloads_directory%"
 
+    App\Service\Payment\PaymentExporter:
+        arguments:
+            $downloadsDirectory: "%downloads_directory%"
+
     App\Service\File\ImageOptimizer:
         arguments:
             $tinifyKey: "%env(TINIFY_KEY)%"

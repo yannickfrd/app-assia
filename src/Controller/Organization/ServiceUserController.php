@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Organization;
 
 use App\Entity\Organization\ServiceUser;
@@ -16,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/service-user")
  */
-class ServiceUserController extends AbstractController
+final class ServiceUserController extends AbstractController
 {
     private $em;
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Organization;
 
 use App\Entity\Organization\Pole;
@@ -13,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class PoleController extends AbstractController
+final class PoleController extends AbstractController
 {
     private $poleRepo;
     private $em;

@@ -3,7 +3,6 @@
 {% block card_title %}Services prescripteurs{% endblock %}
 
 {% block card_body %}
-
 	<div class="row">
 		<div class="col-md-6">
 			<div class="table-responsive table-sm">
@@ -16,7 +15,7 @@
 					</thead>
 				
 					{% set organization_prototype %}
-						<td class="align-middle">{{ form_widget(form.organizations.vars.prototype.organization)|e) }}</td>
+						<td class="align-middle">{{ form_widget(form.organizations.vars.prototype.organization|e) }}</td>
 						<td class="align-middle">
 							<button class="btn btn-danger" data-action="remove"><i class="fas fa-trash-alt"></i></button>
 						</td>
@@ -49,5 +48,4 @@
 			</div>
 		</div>
 	</div>
-
 {% endblock %}

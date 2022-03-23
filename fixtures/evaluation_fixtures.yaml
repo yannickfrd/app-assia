@@ -1,0 +1,21 @@
+App\Entity\Evaluation\EvaluationGroup:
+    evaluation_group1:
+        date: <date_create("2019-04-03")>
+        title: "Evaluation initiale"
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        supportGroup: "@support_group1"
+    evaluation_group2:
+        title: "Evaluation initiale"
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        date: $createdAt
+        supportGroup: "@support_group2"
+
+App\Entity\Evaluation\EvaluationPerson:
+    evaluation_person1:
+        evaluationGroup: "@evaluation_group1"
+        support_person_: "@support_person1"
+    evaluation_person2:
+        evaluationGroup: "@evaluation_group2"
+        support_person_: "@support_person2"

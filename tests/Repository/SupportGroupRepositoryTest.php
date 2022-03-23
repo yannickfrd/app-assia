@@ -38,10 +38,10 @@ class SupportGroupRepositoryTest extends WebTestCase
         $databaseTool = $this->getContainer()->get(DatabaseToolCollection::class)->get();
 
         $fixtures = $databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/DataFixturesTest/ServiceFixturesTest.yaml',
-            dirname(__DIR__).'/DataFixturesTest/PersonFixturesTest.yaml',
-            dirname(__DIR__).'/DataFixturesTest/SupportFixturesTest.yaml',
+            dirname(__DIR__).'/fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/fixtures/service_fixtures_test.yaml',
+            dirname(__DIR__).'/fixtures/person_fixtures_test.yaml',
+            dirname(__DIR__).'/fixtures/support_fixtures_test.yaml',
         ]);
 
         $kernel = self::bootKernel();
@@ -53,13 +53,13 @@ class SupportGroupRepositoryTest extends WebTestCase
         /* @var SupportGroupRepository */
         $this->supportGroupRepo = $this->entityManager->getRepository(SupportGroup::class);
 
-        $this->supportGroup = $fixtures['supportGroup1'];
+        $this->supportGroup = $fixtures['support_group1'];
         $this->service = $fixtures['service1'];
-        $this->user = $fixtures['userRoleUser'];
+        $this->user = $fixtures['john_user'];
         $this->search = $this->getSupportSearch();
     }
 
-    protected function getSupportSearch()
+    protected function getSupportSearch(): SupportSearch
     {
         $referents = new ArrayCollection();
         $referents->add($this->user);
@@ -72,27 +72,27 @@ class SupportGroupRepositoryTest extends WebTestCase
             ->setReferents($referents);
     }
 
-    public function testCount()
+    public function testCount(): void
     {
         $this->assertGreaterThanOrEqual(3, $this->supportGroupRepo->count([]));
     }
 
-    public function testFindSupportById()
+    public function testFindSupportById(): void
     {
         $this->assertNotNull($this->supportGroupRepo->findSupportById($this->supportGroup->getId()));
     }
 
-    public function testFindFullSupportById()
+    public function testFindFullSupportById(): void
     {
         $this->assertNotNull($this->supportGroupRepo->findFullSupportById($this->supportGroup->getId()));
     }
 
-    public function testFindAllSupportsOfUser()
+    public function testFindAllSupportsOfUser(): void
     {
         $this->assertGreaterThanOrEqual(1, count($this->supportGroupRepo->findSupportsOfUser($this->user)));
     }
 
-    public function testCountAllSupportsWithoutCriteria()
+    public function testCountAllSupportsWithoutCriteria(): void
     {
         $this->assertGreaterThanOrEqual(3, $this->supportGroupRepo->countSupports());
     }

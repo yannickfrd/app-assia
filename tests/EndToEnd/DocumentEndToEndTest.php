@@ -2,6 +2,7 @@
 
 namespace App\Tests\EndToEnd;
 
+use App\Tests\EndToEnd\Traits\AppPantherTestTrait;
 use Symfony\Component\DomCrawler\Field\FormField;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Panther\Client as PantherClient;
@@ -15,17 +16,12 @@ class DocumentEndToEndTest extends PantherTestCase
     /** @var PantherClient */
     protected $client;
 
-    protected function setUp(): void
+    public function testDocument(): void
     {
-        $this->client = $this->createPantherLogin();
+        $this->client = $this->loginUser();
 
-        $this->faker = \Faker\Factory::create('fr_FR');
-    }
-
-    public function testDocument()
-    {
         /** @var Crawler */
-        $crawler = $this->client->request('GET', '/support/1/view');
+        $crawler = $this->client->request('GET', '/support/1/show');
 
         $this->assertSelectorTextContains('h1', 'Suivi');
 
@@ -33,16 +29,16 @@ class DocumentEndToEndTest extends PantherTestCase
         $crawler = $this->addFile($crawler);
         $crawler = $this->editDocument($crawler);
         $crawler = $this->downloadDocument($crawler);
-        $crawler = $this->downloadAllDocuments($crawler);
+        // $crawler = $this->downloadAllDocuments($crawler);
         $crawler = $this->deleteDocumentInModal($crawler);
         $crawler = $this->deleteDocument($crawler);
     }
 
     private function goToSupportDocumentPage(Crawler $crawler): Crawler
     {
-        $this->outputMsg('Go to support documents page');
+        $this->outputMsg('Show support documents page');
 
-        $this->client->waitFor('#support-documents');
+        $this->client->waitForVisibility('#support-documents');
         $link = $crawler->filter('#support-documents')->link();
 
         /** @var Crawler */
@@ -57,27 +53,24 @@ class DocumentEndToEndTest extends PantherTestCase
     {
         $this->outputMsg('Add a new document');
 
-        $this->client->waitFor('#btn-new-files');
+        $this->client->waitForVisibility('#btn-new-files');
         $crawler->selectButton('btn-new-files')->click();
         sleep(1); //pop-up effect
 
         // $uploadedFile = new UploadedFile(
-        //     dirname(__DIR__).'\DataFixturesTest\files\doc.docx',
+        //     dirname(__DIR__).'\fixtures\files\doc.docx',
         //     'doc.docx', null, 1, true
         // );
 
-        $this->client->waitFor('button[name="send"]');
+        $this->client->waitForVisibility('button[name="send"]');
         $form = $crawler->selectButton('send')->form([]);
 
         /** @var FormField $fileFormField */
         $fileFormField = $form['dropzone_document[files]'];
-        $fileFormField->setValue(dirname(__DIR__).'/DataFixturesTest/files/doc.docx');
+        $fileFormField->setValue(dirname(__DIR__).'/fixtures/files/doc.docx');
 
-        $this->client->waitFor('#js-msg-flash');
-        $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
-
-        $crawler->selectButton('btn-close-msg')->click();
-        sleep(1); //pop-up effect
+        $this->client->waitForVisibility('#dropzone ul li.list-group-item-success');
+        $this->assertSelectorExists('#dropzone ul li.list-group-item-success');
 
         $crawler->selectButton('close')->click();
         sleep(1); //pop-up effect
@@ -89,22 +82,22 @@ class DocumentEndToEndTest extends PantherTestCase
     {
         $this->outputMsg('Select a document');
 
-        $this->client->waitFor('td[data-document="name"]');
+        $this->client->waitForVisibility('td[data-document="name"]');
         $crawler->filter('td[data-document="name"]')->first()->click();
         sleep(1); //pop-up effect
 
         $this->outputMsg('Edit a document');
 
-        $this->client->waitFor('button[name="document_update"]');
+        $this->client->waitForVisibility('button[name="document_update"]');
 
         /** @var Crawler */
         $crawler = $this->client->submitForm('document_update', [
-            'document[name]' => $this->faker->sentence(mt_rand(3, 5), true),
-            'document[type]' => mt_rand(1, 9),
-            'document[content]' => join('. ', $this->faker->paragraphs(1)),
+            'document[name]' => 'Document test',
+            // 'document[type]' => [mt_rand(1, 9)],
+            'document[content]' => 'Content test...',
         ]);
 
-        $this->client->waitFor('#js-msg-flash');
+        $this->client->waitForVisibility('#js-msg-flash');
         $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
 
         $crawler->selectButton('btn-close-msg')->click();
@@ -117,7 +110,7 @@ class DocumentEndToEndTest extends PantherTestCase
     {
         $this->outputMsg('Download a document');
 
-        $this->client->waitFor('tr>td>a');
+        $this->client->waitForVisibility('tr>td>a');
         $crawler->filter('tr>td>a')->first()->click();
 
         return $crawler;
@@ -127,14 +120,14 @@ class DocumentEndToEndTest extends PantherTestCase
     {
         $this->outputMsg('Delete a document');
 
-        $this->client->waitFor('button[data-action="delete"]');
+        $this->client->waitForVisibility('button[data-action="delete"]');
         $crawler->filter('button[data-action="delete"]')->first()->click();
         sleep(1); //pop-up effect
 
-        $this->client->waitFor('#modal-confirm');
+        $this->client->waitForVisibility('#modal-confirm');
         $crawler->filter('#modal-confirm')->click();
 
-        $this->client->waitFor('#js-msg-flash.alert.alert-warning');
+        $this->client->waitForVisibility('#js-msg-flash.alert.alert-warning');
         $this->assertSelectorExists('#js-msg-flash.alert.alert-warning');
 
         $crawler->selectButton('btn-close-msg')->click();
@@ -147,19 +140,19 @@ class DocumentEndToEndTest extends PantherTestCase
     {
         $this->outputMsg('Delete a document in modal');
 
-        $this->client->waitFor('td[data-document="name"]');
+        $this->client->waitForVisibility('td[data-document="name"]');
         $crawler->filter('td[data-document="name"]')->first()->click();
         sleep(1); //pop-up effect
 
-        $this->client->waitFor('button[data-action="delete"]');
+        $this->client->waitForVisibility('button[data-action="delete"]');
         $crawler->filter('button[data-url-document-delete]')->click();
         sleep(1); //pop-up effect
 
-        $this->client->waitFor('#modal-confirm');
+        $this->client->waitForVisibility('#modal-confirm');
         $crawler->filter('#modal-confirm')->click();
         sleep(1);
 
-        $this->client->waitFor('#js-msg-flash.alert.alert-warning');
+        $this->client->waitForVisibility('#js-msg-flash.alert.alert-warning');
         $this->assertSelectorExists('#js-msg-flash.alert.alert-warning');
 
         $crawler->selectButton('btn-close-msg')->click();
@@ -179,7 +172,7 @@ class DocumentEndToEndTest extends PantherTestCase
             'action[type]' => 1,
         ]);
 
-        $this->client->waitFor('#js-msg-flash');
+        $this->client->waitForVisibility('#js-msg-flash');
         $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
 
         $crawler->selectButton('btn-close-msg')->click();

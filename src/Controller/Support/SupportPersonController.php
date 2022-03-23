@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Support;
 
 use App\Entity\Support\SupportGroup;
@@ -15,7 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class SupportPersonController extends AbstractController
+final class SupportPersonController extends AbstractController
 {
     /**
      * Ajout de nouvelles personnes au suivi.
@@ -101,7 +103,7 @@ class SupportPersonController extends AbstractController
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
         return $this->json([
-            'action' => 'getSupportPeople',
+            'action' => 'get_support_people',
             'support_people' => $normalizer->normalize($supportGroup->getSupportPeople(), null, [
                 'groups' => ['show_support_person', 'show_person'],
             ]),

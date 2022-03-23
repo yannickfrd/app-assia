@@ -4,6 +4,7 @@ namespace App\Service\Export;
 
 use App\Entity\Support\Payment;
 use App\Service\ExportExcel;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PaymentFullExport extends ExportExcel
@@ -17,9 +18,10 @@ class PaymentFullExport extends ExportExcel
 
     /**
      * Exporte les données.
-     * @return StreamedResponse|Response|string
+     *
+     * @param Payment[] $payments
      */
-    public function exportData(array $payments)
+    public function exportData(array $payments): Response
     {
         $arrayData[] = array_keys($this->getDatas($payments[0]));
 

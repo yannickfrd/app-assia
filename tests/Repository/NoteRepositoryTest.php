@@ -34,11 +34,11 @@ class NoteRepositoryTest extends WebTestCase
         $databaseTool = $this->getContainer()->get(DatabaseToolCollection::class)->get();
 
         $fixtures = $databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/DataFixturesTest/ServiceFixturesTest.yaml',
-            dirname(__DIR__).'/DataFixturesTest/PersonFixturesTest.yaml',
-            dirname(__DIR__).'/DataFixturesTest/SupportFixturesTest.yaml',
-            dirname(__DIR__).'/DataFixturesTest/NoteFixturesTest.yaml',
+            dirname(__DIR__).'/fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/fixtures/service_fixtures_test.yaml',
+            dirname(__DIR__).'/fixtures/person_fixtures_test.yaml',
+            dirname(__DIR__).'/fixtures/support_fixtures_test.yaml',
+            dirname(__DIR__).'/fixtures/note_fixtures_test.yaml',
         ]);
 
         $kernel = self::bootKernel();
@@ -49,54 +49,54 @@ class NoteRepositoryTest extends WebTestCase
 
         $this->noteRepo = $this->entityManager->getRepository(Note::class);
 
-        $this->supportGroup = $fixtures['supportGroup1'];
-        $this->user = $fixtures['userRoleUser'];
+        $this->supportGroup = $fixtures['support_group1'];
+        $this->user = $fixtures['john_user'];
         $this->search = (new SupportNoteSearch())
             ->setContent('Contenu de la note')
             ->setType(1)
             ->setStatus(1);
     }
 
-    public function testCount()
+    public function testCount(): void
     {
         $this->assertGreaterThanOrEqual(2, $this->noteRepo->count([]));
     }
 
-    public function testFindAllNotesQueryWithoutFilters()
+    public function testFindAllNotesQueryWithoutFilters(): void
     {
         $qb = $this->noteRepo->findNotesQuery(new NoteSearch());
         $this->assertGreaterThanOrEqual(5, count($qb->getResult()));
     }
 
-    public function testFindAllNotesOfSupportQueryWithoutFilters()
+    public function testFindAllNotesOfSupportQueryWithoutFilters(): void
     {
         $qb = $this->noteRepo->findNotesOfSupportQuery($this->supportGroup->getId(), new SupportNoteSearch());
         $this->assertGreaterThanOrEqual(5, count($qb->getResult()));
     }
 
-    public function testFindAllNotesOfSupportQueryWithFilters()
+    public function testFindAllNotesOfSupportQueryWithFilters(): void
     {
         $qb = $this->noteRepo->findNotesOfSupportQuery($this->supportGroup->getId(), $this->search);
         $this->assertGreaterThanOrEqual(1, count($qb->getResult()));
     }
 
-    public function testFindAllNotesOfSupportQueryWithFilterByTitle()
+    public function testFindAllNotesOfSupportQueryWithFilterByTitle(): void
     {
         $qb = $this->noteRepo->findNotesOfSupportQuery($this->supportGroup->getId(), $this->search->setContent('Note test'));
         $this->assertGreaterThanOrEqual(1, count($qb->getResult()));
     }
 
-    public function testFindAllNotesOfUser()
+    public function testFindAllNotesOfUser(): void
     {
         $this->assertGreaterThanOrEqual(1, count($this->noteRepo->findNotesOfUser($this->user)));
     }
 
-    public function testCountAllNotesWithoutCriteria()
+    public function testCountAllNotesWithoutCriteria(): void
     {
         $this->assertGreaterThanOrEqual(5, $this->noteRepo->countNotes());
     }
 
-    public function testCountAllNotesWithCriteria()
+    public function testCountAllNotesWithCriteria(): void
     {
         $this->assertGreaterThanOrEqual(5, $this->noteRepo->countNotes(['user' => $this->user]));
     }

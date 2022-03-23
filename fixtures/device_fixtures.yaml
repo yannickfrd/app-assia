@@ -1,0 +1,25 @@
+App\Entity\Organization\Device:
+    device1:
+        name: Insertion
+        code: 5
+        coefficient: 1
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        createdBy: "@user_super_admin"
+        updatedBy: "@user_super_admin"
+    device{2..10}:
+        name (unique): <sentence(3, true)>
+        code (unique): <numberBetween(1, 20)>
+        coefficient: <numberBetween(1, 3)>
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        createdBy: "@user*"
+        updatedBy: "@user*"
+
+App\Entity\Organization\ServiceDevice:
+    serv_device1:
+        device: "@device1"
+        service: "@service1"
+    serv_device{2..10}:
+        device: "@device*"
+        service: "@service*"

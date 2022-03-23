@@ -24,7 +24,7 @@ class CreateDailyIndicatorsCommand extends Command
     public function __construct(EntityManagerInterface $em, IndicatorRepository $indicatorRepo, IndicatorsService $indicators)
     {
         $this->em = $em;
-        $this->repoIndicator = $indicatorRepo;
+        $this->indicatorRepo = $indicatorRepo;
         $this->indicators = $indicators;
 
         parent::__construct();
@@ -38,7 +38,7 @@ class CreateDailyIndicatorsCommand extends Command
 
         $indicator = $this->indicators->createIndicator($date);
 
-        if ($this->repoIndicator->findOneBy(['date' => $date])) {
+        if ($this->indicatorRepo->findOneBy(['date' => $date])) {
             $io->error('The daily indicators exists already !');
 
             return Command::FAILURE;

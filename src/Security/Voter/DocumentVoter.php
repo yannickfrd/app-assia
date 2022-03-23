@@ -15,8 +15,6 @@ class DocumentVoter extends Voter
     /** @var User */
     protected $user;
 
-    protected $userId;
-
     /** @var Document */
     protected $document;
 
@@ -31,9 +29,7 @@ class DocumentVoter extends Voter
 
     protected function voteOnAttribute(string $attribute, $document, TokenInterface $token): bool
     {
-        /** @var User */
         $this->user = $token->getUser();
-        $this->userId = $this->user->getId();
         $this->document = $document;
         $this->supportGroup = $this->document->getSupportGroup();
 
@@ -77,9 +73,9 @@ class DocumentVoter extends Voter
 
     protected function isCreatorOrReferent(): bool
     {
-        if (($this->document->getCreatedBy() && $this->document->getCreatedBy()->getId() === $this->userId)
-            || ($this->supportGroup->getReferent() && $this->supportGroup->getReferent()->getId() === $this->userId)
-            || ($this->supportGroup->getReferent2() && $this->supportGroup->getReferent2()->getId() === $this->userId)
+        if (($this->document->getCreatedBy() && $this->document->getCreatedBy()->getId() === $this->user->getId())
+            || ($this->supportGroup->getReferent() && $this->supportGroup->getReferent()->getId() === $this->user->getId())
+            || ($this->supportGroup->getReferent2() && $this->supportGroup->getReferent2()->getId() === $this->user->getId())
         ) {
             return true;
         }

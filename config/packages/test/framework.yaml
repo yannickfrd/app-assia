@@ -7,7 +7,7 @@ framework:
     http_client:
         default_options:
             verify_peer: false
-# L'activivation de ce code provoque une erreur des tests sur un serveur externe
-# liip_test_fixtures:
-#     cache_db:
-#         sqlite: liip_test_fixtures.services_database_backup.sqlite
+
+liip_test_fixtures:
+    cache_db:
+        sqlite: 'Liip\TestFixturesBundle\Services\DatabaseBackup\SqliteDatabaseBackup'

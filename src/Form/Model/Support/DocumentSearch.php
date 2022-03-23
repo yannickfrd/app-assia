@@ -2,9 +2,8 @@
 
 namespace App\Form\Model\Support;
 
-use App\Entity\Support\Document;
-use App\Form\Model\Traits\DateSearchTrait;
 use App\Form\Model\Organization\ReferentServiceDeviceSearchTrait;
+use App\Form\Model\Traits\DateSearchTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class DocumentSearch

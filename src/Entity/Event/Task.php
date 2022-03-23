@@ -2,10 +2,11 @@
 
 namespace App\Entity\Event;
 
-use App\Entity\Organization\TagTrait;
+use App\Entity\Organization\Traits\TagTrait;
 use App\Entity\Organization\User;
 use App\Entity\Support\SupportGroup;
 use App\Repository\Event\TaskRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -106,11 +107,6 @@ class Task extends AbstractEvent
     public function toggleStatus(): bool
     {
         return $this->status = $this->status ? false : true;
-    }
-
-    public function getRdvStatus(): ?int
-    {
-        return $this->rdvStatus;
     }
 
     /** @Groups("show_event") */

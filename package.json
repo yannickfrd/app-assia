@@ -6,6 +6,8 @@
         "mailhog": "^4.16.0",
         "node-sass": "^7.0.1",
         "nodemailer": "^6.6.3",
+        "prettier": "^2.6.0",
+        "prettier-plugin-twig-melody": "^0.4.6",
         "regenerator-runtime": "^0.13.9",
         "sass-loader": "^12.6.0",
         "uglifyjs-webpack-plugin": "^2.2.0",

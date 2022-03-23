@@ -37,7 +37,7 @@ use App\Repository\Organization\DeviceRepository;
 use App\Repository\Organization\PlaceRepository;
 use App\Repository\Organization\SubServiceRepository;
 use App\Repository\People\PersonRepository;
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -421,7 +421,6 @@ class ImportDatasHebergement extends ImportDatas
         'Logement adapté - Maison relais' => 203,
         'Logement adapté - RHVS' => 205,
         'Résidence sociale' => 204, // Logement adapté - Résidence sociale
-        'Logement adapté - RHVS' => 205,
         'Solibail' => 206, // Logement adapté - Solibail/IML
         'Logement foyer' => 207,
         'Logement privé' => 300,
@@ -494,18 +493,19 @@ class ImportDatasHebergement extends ImportDatas
     protected $subService;
     protected $place;
 
-    protected $devices = [];
-    protected $places = [];
-    protected $subServices = [];
+    protected array $devices = [];
+    protected array $places = [];
+    protected array $subServices = [];
+    protected array $users = [];
 
     protected $person;
     protected $personExists;
 
-    protected $items = [];
-    protected $people = [];
-    protected $rolePeople = [];
-    protected $duplicatedPeople = [];
-    protected $existPeople = [];
+    protected array $items = [];
+    protected array $people = [];
+    protected array $rolePeople = [];
+    protected array $duplicatedPeople = [];
+    protected array $existPeople = [];
 
     protected $gender;
     protected $head;
@@ -524,7 +524,7 @@ class ImportDatasHebergement extends ImportDatas
         $this->importNotification = $importNotification;
         $this->subServiceRepo = $subServiceRepo;
         $this->deviceRepo = $deviceRepo;
-        $this->repoPlace = $placeRepo;
+        $this->placeRepo = $placeRepo;
         $this->personRepo = $personRepo;
         $this->slugger = $slugger;
     }
@@ -534,13 +534,13 @@ class ImportDatasHebergement extends ImportDatas
      *
      * @param Collection<Service> $services
      */
-    public function importInDatabase(string $fileName, ArrayCollection $services): array
+    public function importInDatabase(string $fileName, Collection $services): array
     {
         $this->fields = $this->getDatas($fileName);
         $this->service = $services->first();
         $this->subServices = $this->subServiceRepo->findBy(['service' => $this->service]);
         $this->devices = $this->deviceRepo->getDevicesOfService($this->service);
-        // $this->places = $this->repoPlace->findBy(['service' => $service]);
+        // $this->places = $this->placeRepo->findBy(['service' => $service]);
 
         // $this->users = $this->getUsers();
 
@@ -549,14 +549,14 @@ class ImportDatasHebergement extends ImportDatas
             $this->field = $field;
             if ($i > 0) {
                 $typology = $this->findInArray($this->field['Typologie familiale'], self::FAMILY_TYPOLOGY) ?? 9;
-                $this->device = $this->getDevice();
-                $this->place = $this->getPlace($this->service);
+                $device = $this->getDevice();
+                $this->place = $this->getPlace($device);
 
                 $this->getRoleAndGender($typology);
                 $this->person = $this->getPerson();
-                $this->personExists = $this->personExistsInDatabase($this->person);
+                $this->personExists = $this->personExistsInDatabase();
 
-                $this->checkGroupExists($typology);
+                $this->checkGroupExists($typology, $device);
 
                 $this->person = $this->createPerson($this->items[$this->field['N° ménage']]['peopleGroup']);
 
@@ -594,7 +594,7 @@ class ImportDatasHebergement extends ImportDatas
         $person = (new Person())
                 ->setLastname($this->field['Nom ménage'])
                 ->setFirstname($this->field['Prénom'])
-                ->setBirthdate($this->field['Date naissance'] ? new \Datetime($this->field['Date naissance']) : null)
+                ->setBirthdate($this->field['Date naissance'] ? new \DateTime($this->field['Date naissance']) : null)
                 ->setGender($this->gender)
                 ->setCreatedBy($this->user)
                 ->setUpdatedBy($this->user);
@@ -602,10 +602,10 @@ class ImportDatasHebergement extends ImportDatas
         return $person;
     }
 
-    protected function checkGroupExists(int $typology): void
+    protected function checkGroupExists(int $typology, Device $device): void
     {
         // Si le groupe n'existe pas encore, on le crée ainsi que le suivi et l'évaluation sociale.
-        if (false === $this->groupExists()) {
+        if (false === $this->groupExists($device)) {
             // Si la personne existe déjà dans la base de données, on récupère son groupe.
             if ($this->personExists) {
                 $peopleGroup = $this->personExists->getRolesPerson()->first()->getPeopleGroup();
@@ -614,7 +614,7 @@ class ImportDatasHebergement extends ImportDatas
                 $peopleGroup = $this->createPeopleGroup($typology);
             }
 
-            $supportGroup = $this->createSupportGroup($peopleGroup);
+            $supportGroup = $this->createSupportGroup($peopleGroup, $device);
             if ($supportGroup->getStartDate()) {
                 $placeGroup = $this->createPlaceGroup($peopleGroup, $supportGroup);
                 $this->createReferent($peopleGroup);
@@ -635,7 +635,7 @@ class ImportDatasHebergement extends ImportDatas
         }
     }
 
-    protected function groupExists(): bool
+    protected function groupExists(Device $device): bool
     {
         $groupExists = false;
         // Vérifie si le groupe de la personne existe déjà.
@@ -656,7 +656,7 @@ class ImportDatasHebergement extends ImportDatas
 
                 // Si le suivi social du groupe n'existe pas encore, on le crée ainsi que l'évaluation sociale.
                 if (false === $supportExists) {
-                    $supportGroup = $this->createSupportGroup($this->items[$this->field['N° ménage']]['peopleGroup']);
+                    $supportGroup = $this->createSupportGroup($this->items[$this->field['N° ménage']]['peopleGroup'], $device);
                     $evaluationGroup = $this->createEvaluationGroup($supportGroup);
 
                     $this->items[$this->field['N° ménage']]['supports'][$this->field['N° ménage']] = [
@@ -687,7 +687,7 @@ class ImportDatasHebergement extends ImportDatas
         return $peopleGroup;
     }
 
-    protected function createSupportGroup(PeopleGroup $peopleGroup): SupportGroup
+    protected function createSupportGroup(PeopleGroup $peopleGroup, Device $device): SupportGroup
     {
         $this->subService = $this->getSubService();
 
@@ -702,7 +702,7 @@ class ImportDatasHebergement extends ImportDatas
                     ->setPeopleGroup($peopleGroup)
                     ->setService($this->service)
                     ->setSubService($this->subService)
-                    ->setDevice($this->device)
+                    ->setDevice($device)
                     ->setCreatedBy($this->user)
                     ->setUpdatedBy($this->user)
                     ->setComment(null);
@@ -721,10 +721,10 @@ class ImportDatasHebergement extends ImportDatas
         }
 
         $originRequest = new OriginRequest();
-        $originRequest->setInfoToSiaoDate($this->field['Date entretien pré-admission'] ? new \Datetime($this->field['Date remise à dispo SIAO']) : null)
-            ->setOrientationDate($this->field['Date entretien pré-admission'] ? new \Datetime($this->field['Date remise à dispo SIAO']) : null)
+        $originRequest->setInfoToSiaoDate($this->field['Date entretien pré-admission'] ? new \DateTime($this->field['Date remise à dispo SIAO']) : null)
+            ->setOrientationDate($this->field['Date entretien pré-admission'] ? new \DateTime($this->field['Date remise à dispo SIAO']) : null)
             ->setOrganizationComment($this->field['Service prescripteur'])
-            ->setPreAdmissionDate($this->field['Date entretien pré-admission'] ? new \Datetime($this->field['Date entretien pré-admission']) : null)
+            ->setPreAdmissionDate($this->field['Date entretien pré-admission'] ? new \DateTime($this->field['Date entretien pré-admission']) : null)
             ->setResulPreAdmission($this->findInArray($this->field['Résultat entretien pré-admission'], self::RESULT_PRE_ADMISSION))
             ->setComment($this->field['Commentaire pré-admission'])
             ->setSupportGroup($supportGroup);
@@ -896,10 +896,10 @@ class ImportDatasHebergement extends ImportDatas
         $evalHousingGroup = (new EvalHousingGroup())
         ->setHousingStatus($this->findInArray($this->field['Dispositif'], self::PLACE_HOUSING_STATUS))
         ->setSiaoRequest($this->findInArray($this->field['Demande SIAO active'], self::YES_NO))
-        ->setSiaoRequestDate($this->field['Date demande initiale SIAO'] ? new \Datetime($this->field['Date demande initiale SIAO']) : null)
-        ->setSiaoUpdatedRequestDate($this->field['Date dernière actualisation SIAO'] ? new \Datetime($this->field['Date dernière actualisation SIAO']) : null)
+        ->setSiaoRequestDate($this->field['Date demande initiale SIAO'] ? new \DateTime($this->field['Date demande initiale SIAO']) : null)
+        ->setSiaoUpdatedRequestDate($this->field['Date dernière actualisation SIAO'] ? new \DateTime($this->field['Date dernière actualisation SIAO']) : null)
         ->setSocialHousingRequest($this->findInArray($this->field['Demande de logement social active'], self::YES_NO))
-        ->setSocialHousingRequestDate($this->field['Date demande de logement social'] ? new \Datetime($this->field['Date demande de logement social']) : null)
+        ->setSocialHousingRequestDate($this->field['Date demande de logement social'] ? new \DateTime($this->field['Date demande de logement social']) : null)
         ->setCommentEvalHousing($this->field['Modalité de sortie vers le logement'] ? 'Modalité de sortie vers le logement : '.$this->field['Modalité de sortie vers le logement'] : null)
         ->setEvaluationGroup($evaluationGroup);
 
@@ -1182,12 +1182,12 @@ class ImportDatasHebergement extends ImportDatas
 
     protected function getStartDate(): ?\DateTime
     {
-        return $this->field['Date entrée'] ? new \Datetime($this->field['Date entrée']) : null;
+        return $this->field['Date entrée'] ? new \DateTime($this->field['Date entrée']) : null;
     }
 
     protected function getEndDate(): ?\DateTime
     {
-        return $this->field['Date sortie'] ? new \Datetime($this->field['Date sortie']) : null;
+        return $this->field['Date sortie'] ? new \DateTime($this->field['Date sortie']) : null;
     }
 
     protected function createReferent(PeopleGroup $peopleGroup): ?Referent
@@ -1225,7 +1225,7 @@ class ImportDatasHebergement extends ImportDatas
         return Choices::NO_INFORMATION;
     }
 
-    protected function getPlace(): Place
+    protected function getPlace(Device $device): Place
     {
         $placeExists = false;
         $placeName = strtolower($this->slugger->slug((string) $this->field['Nom place']));
@@ -1237,7 +1237,7 @@ class ImportDatasHebergement extends ImportDatas
         }
 
         if (!$placeExists) {
-            $this->places[$placeName] = $this->createPlace($this->device);
+            $this->places[$placeName] = $this->createPlace($device);
         }
 
         return $this->places[$placeName];
@@ -1251,7 +1251,7 @@ class ImportDatasHebergement extends ImportDatas
             ->setName($this->field['Nom place'])
             ->setAddress(isset($this->field['Adresse place']) ? (string) $this->field['Adresse place'] : (string) $this->field['Adresse logement'])
             ->setNbPlaces(isset($this->field['Nb places']) ? (int) $this->field['Nb places'] : (int) $this->field['Nb personnes'])
-            ->setStartDate(isset($this->field['Date ouverture']) ? new \Datetime($this->field['Date ouverture']) : new \Datetime('2020-01-01'))
+            ->setStartDate(isset($this->field['Date ouverture']) ? new \DateTime($this->field['Date ouverture']) : new \DateTime('2020-01-01'))
             ->setPlaceType($this->findInArray($this->field['Type place'], self::PLACE_TYPE))
             ->setArea(isset($this->field['Superficie']) ? (float) $this->field['Superficie'] : null)
             ->setLessor(isset($this->field['Bailleur']) ? $this->field['Bailleur'] : null)

@@ -174,7 +174,7 @@ trait ResourcesEntityTrait
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $disAdultAllowanceAmt; //AAH
+    private $disAdultAllowanceAmt; // AAH
 
     /**
      * @ORM\Column(type="float", nullable=true)

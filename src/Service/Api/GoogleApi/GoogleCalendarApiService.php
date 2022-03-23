@@ -3,6 +3,7 @@
 namespace App\Service\Api\GoogleApi;
 
 use App\Entity\Support\Rdv;
+use App\Repository\Support\RdvRepository;
 use App\Service\Api\AbstractApiCalendar;
 use Google_Client;
 use Google_Service_Calendar;
@@ -89,8 +90,9 @@ class GoogleCalendarApiService extends AbstractApiCalendar
      */
     public function update(int $rdvId)
     {
-        /** @var Rdv $rdv */
-        $rdv = $this->em->getRepository(Rdv::class)->findRdv($rdvId);
+        /** @var RdvRepository $rdvRepo */
+        $rdvRepo = $this->em->getRepository(Rdv::class);
+        $rdv = $rdvRepo->findRdv($rdvId);
 
         if (null === $rdv->getGoogleEventId()) {
             $this->session->set('googleRdvId', $rdvId);

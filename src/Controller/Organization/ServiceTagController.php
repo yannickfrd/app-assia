@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Organization;
 
 use App\Entity\Organization\Service;
@@ -11,7 +13,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ServiceTagController extends AbstractController
+final class ServiceTagController extends AbstractController
 {
     private $manager;
 

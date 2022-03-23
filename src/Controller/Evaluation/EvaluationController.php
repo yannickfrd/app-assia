@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Evaluation;
 
 use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Evaluation\EvaluationGroup;
+use App\Entity\Organization\User;
 use App\Form\Evaluation\EvaluationGroupType;
 use App\Repository\Evaluation\EvaluationGroupRepository;
 use App\Repository\Support\SupportGroupRepository;
@@ -20,7 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class EvaluationController extends AbstractController
+final class EvaluationController extends AbstractController
 {
     use ErrorMessageTrait;
 
@@ -100,12 +103,15 @@ class EvaluationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $evaluationManager->updateAndFlush($evaluationGroup);
 
+            /** @var User $user */
+            $user = $this->getUser();
+
             return $this->json([
                 'alert' => 'success',
                 'msg' => 'Les modifications sont enregistrées.',
                 'data' => [
                     'updatedAt' => $evaluationGroup->getUpdatedAt()->format('d/m/Y à H:i'),
-                    'updatedBy' => $this->getUser()->getFullName(),
+                    'updatedBy' => $user->getFullname(),
                 ],
             ]);
         }

@@ -27,12 +27,12 @@ class SupportGroupTest extends WebTestCase
             ->setDevice(new Device());
     }
 
-    public function testValidSupportGroup()
+    public function testValidSupportGroup(): void
     {
         $this->assertHasErrors($this->supportGroup, 0);
     }
 
-    public function testNullStatusSupportGroup()
+    public function testNullStatusSupportGroup(): void
     {
         $this->assertHasErrors($this->supportGroup->setStatus(null), 1);
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Rdv;
 
 use App\Entity\Organization\User;
@@ -13,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CalendarController extends AbstractController
+final class CalendarController extends AbstractController
 {
     private $rdvRepo;
 
@@ -59,7 +61,7 @@ class CalendarController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function showSupportCalendar(int $id, SupportManager $supportManager, $year = null, $month = null): Response
+    public function showSupportCalendar(int $id, int $year = null, int $month = null, SupportManager $supportManager): Response
     {
         $supportGroup = $supportManager->getSupportGroup($id);
 
@@ -92,7 +94,7 @@ class CalendarController extends AbstractController
      */
     public function showDay(int $year = null, int $month = null, int $day = null, Request $request): Response
     {
-        $startDay = new \Datetime($year.'-'.$month.'-'.$day);
+        $startDay = new \DateTime($year.'-'.$month.'-'.$day);
         $endDay = clone ($startDay)->modify('+1 day');
 
         $form = $this->createForm(RdvType::class, new Rdv())

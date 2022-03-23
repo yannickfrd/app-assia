@@ -38,11 +38,11 @@ class TaskRepositoryTest extends WebTestCase
 
         /** @var array */
         $fixtures = $databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/SupportFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/task_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/service_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/person_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/support_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/task_fixtures_test.yaml',
         ]);
 
         $kernel = self::bootKernel();
@@ -53,8 +53,8 @@ class TaskRepositoryTest extends WebTestCase
 
         $this->taskRepo = $this->entityManager->getRepository(Task::class);
 
-        $this->supportGroup = $fixtures['supportGroup1'];
-        $this->user = $fixtures['userRoleUser'];
+        $this->supportGroup = $fixtures['support_group1'];
+        $this->user = $fixtures['john_user'];
 
         $referents = new ArrayCollection();
         $referents->add($this->user);
@@ -66,41 +66,41 @@ class TaskRepositoryTest extends WebTestCase
             ->setReferents($referents);
     }
 
-    public function testCount()
+    public function testCount(): void
     {
         $this->assertGreaterThanOrEqual(2, $this->taskRepo->count([]));
     }
 
-    public function testFindAllTasksQueryWithoutFilters()
+    public function testFindAllTasksQueryWithoutFilters(): void
     {
         $query = $this->taskRepo->findTasksQuery(new TaskSearch());
         $this->assertGreaterThanOrEqual(5, count($query->getResult()));
     }
 
-    public function testFindAllTasksQueryWithFilters()
+    public function testFindAllTasksQueryWithFilters(): void
     {
         $query = $this->taskRepo->findTasksQuery($this->taskSearch);
         $this->assertGreaterThanOrEqual(0, count($query->getResult()));
     }
 
-    public function testFindAllTasksQueryOfSupportWithoutFilters()
+    public function testFindAllTasksQueryOfSupportWithoutFilters(): void
     {
         $query = $this->taskRepo->findTasksQueryOfSupport($this->supportGroup->getId(), new TaskSearch());
         $this->assertGreaterThanOrEqual(1, count($query->getResult()));
     }
 
-    public function testFindAllTasksQueryOfSupportWithFilters()
+    public function testFindAllTasksQueryOfSupportWithFilters(): void
     {
         $query = $this->taskRepo->findTasksQueryOfSupport($this->supportGroup->getId(), $this->taskSearch);
         $this->assertGreaterThanOrEqual(0, count($query->getResult()));
     }
 
-    public function testCountAllTasksWithoutCriteria()
+    public function testCountAllTasksWithoutCriteria(): void
     {
         $this->assertGreaterThanOrEqual(5, $this->taskRepo->countTasks());
     }
 
-    public function testCountAllTasksWithCriteria()
+    public function testCountAllTasksWithCriteria(): void
     {
         $this->assertGreaterThanOrEqual(5, $this->taskRepo->countTasks(['user' => $this->user]));
     }

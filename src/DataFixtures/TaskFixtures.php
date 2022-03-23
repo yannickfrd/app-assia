@@ -21,11 +21,11 @@ class TaskFixtures extends Fixture implements DependentFixtureInterface, Fixture
         foreach ($manager->getRepository(SupportGroup::class)->findAll() as $support) {
             for ($i = 0; $i < mt_rand(6, 10); ++$i) {
                 $task = (new Task())
+                ->setStatus(mt_rand(0, 1))
                 ->setLevel(mt_rand(1, 3))
                 ->setTitle($faker->sentence(mt_rand(3, 5), true))
                 ->setEnd(AppFixtures::getDateTimeBeetwen('-3 months', '+3 months'))
                 ->setType(1)
-                ->setStatus(mt_rand(0, 1))
                 ->setSupportGroup($support)
                 ->setCreatedBy($support->getReferent())
                 ->addUser($support->getReferent());

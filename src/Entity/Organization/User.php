@@ -197,7 +197,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $tokenCreatedAt;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeInterface
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime", nullable=true)
      * @Groups("view")
@@ -213,7 +213,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     protected $createdBy;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeInterface
      * @Gedmo\Timestampable(on="create", on="update")
      * @ORM\Column(type="datetime", nullable=true)
      * @Groups("view")
@@ -573,7 +573,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<SupportGroup>|SupportGroup[]|null
+     * @return Collection<SupportGroup>|null
      */
     public function getSupports(): ?Collection
     {
@@ -604,7 +604,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<ServiceUser>|ServiceUser[]|null
+     * @return Collection<ServiceUser>|null
      */
     public function getServiceUser(): ?Collection
     {
@@ -635,7 +635,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<Service>|Service[]|null
+     * @return Collection<Service>|null
      */
     public function getServices(): ?Collection
     {
@@ -649,7 +649,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<UserConnection>|UserConnection[]|null
+     * @return Collection<UserConnection>|null
      */
     public function getUserConnections(): ?Collection
     {
@@ -692,7 +692,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<SupportGroup>|SupportGroup[]|null
+     * @return Collection<SupportGroup>|null
      */
     public function getReferentSupport(): ?Collection
     {
@@ -723,7 +723,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<SupportGroup>|SupportGroup[]|null
+     * @return Collection<SupportGroup>|null
      */
     public function getReferent2Support(): ?Collection
     {
@@ -754,7 +754,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<Note>|Note[]|null
+     * @return Collection<Note>|null
      */
     public function getNotes(): ?Collection
     {
@@ -785,7 +785,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<Rdv>|Rdv[]|null
+     * @return Collection<Rdv>|null
      */
     public function getRdvs(): ?Collection
     {
@@ -816,7 +816,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<Document>|Document[]|null
+     * @return Collection<Document>|null
      */
     public function getDocuments(): ?Collection
     {
@@ -847,7 +847,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<UserDevice>|UserDevice[]|null
+     * @return Collection<UserDevice>|null
      */
     public function getUserDevices(): ?Collection
     {
@@ -878,7 +878,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<Rdv>|Rdv[]|null
+     * @return Collection<Rdv>|null
      */
     public function getRdvs2(): ?Collection
     {
@@ -908,7 +908,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<Task>|Task[]|null
+     * @return Collection<Task>|null
      */
     public function getTasks(): ?Collection
     {

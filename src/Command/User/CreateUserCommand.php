@@ -2,21 +2,22 @@
 
 namespace App\Command\User;
 
-use App\Form\Utils\Choices;
-use App\Entity\Organization\User;
-use App\Notification\UserNotification;
 use App\Entity\Organization\ServiceUser;
+use App\Entity\Organization\User;
+use App\Form\Utils\Choices;
+use App\Notification\UserNotification;
+use App\Repository\Organization\ServiceRepository;
+use App\Repository\Organization\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
-use App\Repository\Organization\UserRepository;
-use Symfony\Component\Console\Question\Question;
-use Symfony\Component\Console\Style\SymfonyStyle;
-use App\Repository\Organization\ServiceRepository;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
-use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
  * Commande pour créer un nouvel utilisateur.
@@ -59,6 +60,7 @@ class CreateUserCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
+        /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
 
         $lastnameQuestion = new Question("<info>Lastname</info>:\n> ");

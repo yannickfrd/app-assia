@@ -2,17 +2,13 @@
 
 namespace App\Tests\Controller\Organization;
 
-use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Response;
 
 class SubServiceControllerTest extends WebTestCase
 {
-    use AppTestTrait;
-
     /** @var KernelBrowser */
     protected $client;
 
@@ -20,21 +16,22 @@ class SubServiceControllerTest extends WebTestCase
     {
         parent::setUp();
 
-        $this->client = $this->createClient();
+        $this->client = static::createClient();
+        $this->client->followRedirects();
 
-        /* @var AbstractDatabaseTool */
+        /** @var AbstractDatabaseTool */
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
     }
 
-    public function testCreateNewSubServiceIsSuccessful()
+    public function testCreateNewSubServiceIsSuccessful(): void
     {
         $fixtures = $this->databaseTool->loadAliceFixture($this->getFixtureFiles());
-        $this->createLogin($fixtures['userAdmin']);
+        $this->client->loginUser($fixtures['user_admin']);
 
         $id = $fixtures['service2']->getId();
         $this->client->request('GET', "/service/$id/sub-service/new");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Nouveau sous-service');
 
         $this->client->submitForm('send', [
@@ -42,53 +39,53 @@ class SubServiceControllerTest extends WebTestCase
             'sub_service[phone1]' => '01 00 00 00 00',
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorExists('.alert.alert-success');
     }
 
-    public function testEditSubServiceIsSuccessful()
+    public function testEditSubServiceIsSuccessful(): void
     {
         $fixtures = $this->databaseTool->loadAliceFixture(array_merge($this->getFixtureFiles(), [
-            dirname(__DIR__).'/../DataFixturesTest/PlaceFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
+            dirname(__DIR__).'/../fixtures/place_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/service_fixtures_test.yaml',
         ]));
 
-        $this->createLogin($fixtures['userSuperAdmin']);
+        $this->client->loginUser($fixtures['user_super_admin']);
 
-        $id = $fixtures['subService1']->getId();
+        $id = $fixtures['sub_service1']->getId();
         $this->client->request('GET', "/sub-service/$id");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', $fixtures['subService1']->getName());
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorTextContains('h1', $fixtures['sub_service1']->getName());
 
         $this->client->submitForm('send', []);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorExists('.alert.alert-success');
     }
 
-    public function testDisableSubService()
+    public function testDisableSubService(): void
     {
         $fixtures = $this->databaseTool->loadAliceFixture($this->getFixtureFiles());
-        $this->createLogin($fixtures['userSuperAdmin']);
+        $this->client->loginUser($fixtures['user_super_admin']);
 
-        $id = $fixtures['subService1']->getId();
+        $id = $fixtures['sub_service1']->getId();
         $this->client->request('GET', "/sub-service/$id/disable");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('.alert.alert-warning', 'est désactivé');
 
         $this->client->request('GET', "/sub-service/$id/disable");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorExists('.alert.alert-success', 'est ré-activé');
     }
 
     protected function getFixtureFiles(): array
     {
         return [
-            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
+            dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/service_fixtures_test.yaml',
         ];
     }
 

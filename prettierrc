@@ -1,0 +1,15 @@
+{
+    "arrowParens": "avoid",
+    "bracketSpacing": false,
+    "printWidth": 120,
+    "singleQuote": true,
+    "tabWidth": 4,
+    "useTabs":true,
+    "twigAlwaysBreakObjects" : false,
+    "twigPrintWidth": 140,
+    "twigSingleQuote": true,
+    "twigOutputEndblockName": false,
+    "twigFollowOfficialCodingStandards": true,
+    "plugins": ["./node_modules/prettier-plugin-twig-melody"],
+    "twigMelodyPlugins": ["./node_modules/prettier-plugin-twig-enhancements"]
+}

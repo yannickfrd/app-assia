@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\Form\Admin\ImportType;
@@ -20,7 +22,7 @@ use Symfony\Component\Routing\Annotation\Route;
  * @Route("/import")
  * @IsGranted("ROLE_SUPER_ADMIN")
  */
-class ImportController extends AbstractController
+final class ImportController extends AbstractController
 {
     protected $import;
 

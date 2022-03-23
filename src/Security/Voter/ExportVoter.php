@@ -12,8 +12,6 @@ class ExportVoter extends Voter
 
     /** @var User */
     protected $user;
-    
-    protected $userId;
 
     /** @var Export */
     protected $export;
@@ -26,9 +24,7 @@ class ExportVoter extends Voter
 
     protected function voteOnAttribute($attribute, $export, TokenInterface $token): bool
     {
-        /** @var User */
         $this->user = $token->getUser();
-        $this->userId = $this->user->getId();
         $this->export = $export;
 
         if (!$this->user) {
@@ -52,7 +48,7 @@ class ExportVoter extends Voter
 
     protected function canView(): bool
     {
-        if ($this->userId === $this->export->getCreatedBy()->getId()
+        if ($this->user->getId() === $this->export->getCreatedBy()->getId()
          || $this->isGranted('ROLE_SUPER_ADMIN')
         ) {
             return true;

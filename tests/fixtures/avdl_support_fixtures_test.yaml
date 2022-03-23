@@ -1,0 +1,78 @@
+App\Entity\Support\SupportGroup:
+    support_group_avdl:
+        startDate: <date_create("2019-04-03")>
+        status: 2
+        agreement: true
+        referent: "@john_user"
+        service: "@service_avdl"
+        device: "@device_avdl"
+        peopleGroup: "@people_group1"
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        createdBy: $referent
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        updatedBy: $referent
+    support_group_avdl2:
+        startDate: <dateTimeBetween("-2 years", "now")>
+        status: 2
+        referent: "@john_user"
+        service: "@service_avdl"
+        device: "@device_avdl"
+        peopleGroup: "@people_group2"
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        createdBy: $referent
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        updatedBy: $referent
+
+App\Entity\Support\Avdl:
+    avdl1:
+        supportGroup: "@support_group_avdl"
+        diagStartDate: "@support_group_avdl->startDate"
+        diagEndDate: $diagStartDate
+        recommendationSupport: 1
+        supportStartDate: "@support_group_avdl->startDate"
+        supportType: 2
+    avdl2:
+        supportGroup: "@support_group_avdl2"
+        supportStartDate: "@support_group_avdl2->startDate"
+        supportType: 3
+        propoHousingDate: <dateTimeBetween($supportStartDate, "now")>
+        propoResult: 3
+
+App\Entity\Support\SupportPerson:
+    support_person_avdl1:
+        startDate: "@support_group_avdl->startDate"
+        endDate: "@support_group_avdl->endDate"
+        status: "@support_group_avdl->status"
+        createdAt: "@support_group_avdl->createdAt"
+        updatedAt: "@support_group_avdl->updatedAt"
+        supportGroup: "@support_group_avdl"
+        person: "@person1"
+        head: "@role_person1->head"
+        role: "@role_person1->role"
+    support_person_avdl2:
+        startDate: "@support_group_avdl->startDate"
+        endDate: "@support_group_avdl->endDate"
+        status: "@support_group_avdl->status"
+        createdAt: "@support_group_avdl->createdAt"
+        updatedAt: "@support_group_avdl->updatedAt"
+        supportGroup: "@support_group_avdl"
+        person: "@person2"
+        head: "@role_person2->head"
+        role: "@role_person2->role"
+    support_person_avdl3:
+        startDate: "@support_group_avdl2->startDate"
+        endDate: "@support_group_avdl2->endDate"
+        status: "@support_group_avdl2->status"
+        createdAt: "@support_group_avdl2->createdAt"
+        updatedAt: "@support_group_avdl2->updatedAt"
+        supportGroup: "@support_group_avdl2"
+        person: "@person3"
+        head: "@role_person3->head"
+        role: "@role_person3->role"
+
+App\Entity\Organization\Organization:
+    comedDalo:
+        name: COMED DALO
+        type: <numberBetween(1, 9)>
+        services:
+            - "@service_avdl"

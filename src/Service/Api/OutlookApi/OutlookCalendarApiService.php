@@ -3,6 +3,7 @@
 namespace App\Service\Api\OutlookApi;
 
 use App\Entity\Support\Rdv;
+use App\Repository\Support\RdvRepository;
 use App\Service\Api\AbstractApiCalendar;
 use GuzzleHttp\Exception\GuzzleException;
 use Microsoft\Graph\Exception\GraphException;
@@ -69,12 +70,6 @@ class OutlookCalendarApiService extends AbstractApiCalendar
 
     /**
      * Authentication.
-     *
-     * @throws ClientExceptionInterface
-     * @throws DecodingExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws TransportExceptionInterface
      */
     public function authClient(string $authCode): array
     {
@@ -121,13 +116,6 @@ class OutlookCalendarApiService extends AbstractApiCalendar
         return $client->toArray();
     }
 
-    /**
-     * @throws ClientExceptionInterface
-     * @throws DecodingExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws TransportExceptionInterface
-     */
     private function refreshToken(): void
     {
         $params = [
@@ -153,8 +141,6 @@ class OutlookCalendarApiService extends AbstractApiCalendar
 
     /**
      * Creating an event in the Outlook calendar.
-     * @throws GuzzleException
-     * @throws GraphException
      */
     public function addRdv(): string
     {
@@ -173,17 +159,15 @@ class OutlookCalendarApiService extends AbstractApiCalendar
     }
 
     /**
-     * @return false|string|null
-     *
-     * @throws GraphException
-     * @throws GuzzleException
+     * @return string|bool
      */
     public function update(int $rdvId)
     {
 //        $this->refreshToken();
 
-        /** @var Rdv $rdv */
-        $rdv = $this->em->getRepository(Rdv::class)->findRdv($rdvId);
+        /** @var RdvRepository $rdvRepo */
+        $rdvRepo = $this->em->getRepository(Rdv::class);
+        $rdv = $rdvRepo->findRdv($rdvId);
 
         $this->session->set('outlookRdvId', $rdvId);
 
@@ -230,6 +214,7 @@ class OutlookCalendarApiService extends AbstractApiCalendar
 
     /**
      * Check if the event exists in the Outlook Calendar.
+     *
      * @throws GuzzleException
      */
     private function eventExists(string $eventId): bool

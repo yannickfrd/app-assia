@@ -3,23 +3,18 @@
 namespace App\Tests\Controller\Evaluation;
 
 use App\Entity\Support\SupportGroup;
-use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\HttpFoundation\Response;
 
 class EvaluationControllerTest extends WebTestCase
 {
-    use AppTestTrait;
-
     /** @var KernelBrowser */
     protected $client;
-
-    /** @var AbstractDatabaseTool */
-    protected $databaseTool;
 
     /** @var array */
     protected $fixtures;
@@ -31,25 +26,26 @@ class EvaluationControllerTest extends WebTestCase
     {
         parent::setUp();
 
-        $this->client = $this->createClient();
+        $this->client = static::createClient();
+        $this->client->followRedirects();
 
-        /* @var AbstractDatabaseTool */
-        $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
+        /** @var AbstractDatabaseTool $databaseTool */
+        $databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
 
-        $this->fixtures = $this->databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/SupportFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/EvaluationFixturesTest.yaml',
+        $this->fixtures = $databaseTool->loadAliceFixture([
+            dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/service_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/person_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/support_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/evaluation_fixtures_test.yaml',
         ]);
 
-        $this->supportGroup = $this->fixtures['supportGroup1'];
+        $this->supportGroup = $this->fixtures['support_group1'];
     }
 
-    public function testCreateEvaluationIsSuccessful()
+    public function testCreateEvaluationIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
         $id = $this->supportGroup->getId();
         $this->client->request('GET', "/support/$id/evaluation/new");
@@ -59,11 +55,11 @@ class EvaluationControllerTest extends WebTestCase
         $this->assertSelectorTextContains('.small.text-secondary', 'Créée le');
     }
 
-    public function testCreateEvaluationIsRedirect()
+    public function testCreateEvaluationIsRedirect(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
-        $id = $this->fixtures['supportGroupWithEval']->getId();
+        $id = $this->fixtures['support_group_with_eval']->getId();
         /** @var Crawler */
         $crawler = $this->client->request('GET', "/support/$id/evaluation/new");
 
@@ -80,11 +76,11 @@ class EvaluationControllerTest extends WebTestCase
         $this->assertSame('success', $content['alert']);
     }
 
-    public function testShowEvaluationIsSuccessful()
+    public function testShowEvaluationIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
-        $id = $this->fixtures['supportGroupWithEval']->getId();
+        $id = $this->fixtures['support_group_with_eval']->getId();
         $this->client->request('GET', "/support/$id/evaluation/view");
 
         $this->assertResponseIsSuccessful();
@@ -92,9 +88,9 @@ class EvaluationControllerTest extends WebTestCase
         $this->assertSelectorExists('button#heading_evaluation_evaluationPeople_0_evalInitPerson');
     }
 
-    public function testShowEvaluationIsRedirect()
+    public function testShowEvaluationIsRedirect(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
         $id = $this->supportGroup->getId();
         $this->client->request('GET', "/support/$id/evaluation/view");
@@ -104,11 +100,11 @@ class EvaluationControllerTest extends WebTestCase
         $this->assertSelectorExists('button#heading_evaluation_evaluationPeople_0_evalInitPerson');
     }
 
-    public function testEditEvaluationIsSuccessful()
+    public function testEditEvaluationIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
-        $id = $this->fixtures['supportGroupWithEval']->getId();
+        $id = $this->fixtures['support_group_with_eval']->getId();
         /** @var Crawler */
         $crawler = $this->client->request('GET', "/support/$id/evaluation/view");
         $csrfToken = $crawler->filter('#evaluation__token')->attr('value');
@@ -128,9 +124,9 @@ class EvaluationControllerTest extends WebTestCase
         $this->assertSame('success', $content['alert']);
     }
 
-    public function testExportEvaluationToPdfIsSuccessful()
+    public function testExportEvaluationToPdfIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
         // Fail
         $id = $this->supportGroup->getId();
@@ -140,7 +136,7 @@ class EvaluationControllerTest extends WebTestCase
         $this->assertSelectorTextContains('.alert.alert-warning', 'Il n\'y a pas d\'évaluation sociale créée pour ce suivi.');
 
         // Success export to PDF
-        $id = $this->fixtures['supportGroupWithEval']->getId();
+        $id = $this->fixtures['support_group_with_eval']->getId();
         $this->client->request('GET', "/support/$id/evaluation/export/pdf");
 
         $this->assertResponseIsSuccessful();
@@ -151,6 +147,37 @@ class EvaluationControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertSame('application/vnd.ms-word', $this->client->getResponse()->headers->get('content-type'));
+    }
+
+    public function testDeleteEvaluationIsFailed(): void
+    {
+        $this->client->loginUser($this->fixtures['john_user']);
+
+        $id = $this->fixtures['evaluation_group1']->getId();
+        $this->client->request('GET', "/evaluation/$id/delete");
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+    }
+
+    public function testDeleteEvaluationIsSuccessful(): void
+    {
+        $this->client->loginUser($this->fixtures['user_super_admin']);
+
+        $id = $this->fixtures['evaluation_group1']->getId();
+        $this->client->request('GET', "/evaluation/$id/delete");
+
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorTextContains('.alert.alert-warning', "L'évaluation sociale est supprimée.");
+    }
+
+    public function testFixPeopleIsSuccessful(): void
+    {
+        $this->client->loginUser($this->fixtures['john_user']);
+
+        $id = $this->fixtures['evaluation_group1']->getId();
+        $this->client->request('GET', "/evaluation/$id/fix-people");
+
+        $this->assertResponseIsSuccessful();
     }
 
     protected function getEvaluationData(string $csrfToken): array
@@ -295,9 +322,6 @@ class EvaluationControllerTest extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
-
-        $this->client = null;
-        $this->fixtures = null;
 
         $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
         $cache->clear();

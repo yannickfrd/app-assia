@@ -3,17 +3,13 @@
 namespace App\Tests\Controller\Rdv;
 
 use App\Entity\Support\Rdv;
-use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Response;
 
 class CalendarControllerTest extends WebTestCase
 {
-    use AppTestTrait;
-
     /** @var KernelBrowser */
     protected $client;
 
@@ -33,40 +29,41 @@ class CalendarControllerTest extends WebTestCase
     {
         parent::setUp();
 
-        $this->client = $this->createClient();
+        $this->client = static::createClient();
+        $this->client->followRedirects();
 
         /** @var AbstractDatabaseTool */
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
 
         $this->fixtures = $this->databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/SupportFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/RdvFixturesTest.yaml',
+            dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/service_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/person_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/support_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/rdv_fixtures_test.yaml',
         ]);
 
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
-        $this->supportGroup = $this->fixtures['supportGroup1'];
+        $this->supportGroup = $this->fixtures['support_group1'];
         $this->rdv = $this->fixtures['rdv1'];
     }
 
-    public function testShowCalendarIsUp()
+    public function testShowCalendarIsUp(): void
     {
         $this->client->request('GET', '/calendar/month');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h2', 'Agenda');
 
         $id = $this->supportGroup->getId();
         $this->client->request('GET', "/support/$id/calendar/month");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h2', 'Agenda');
     }
 
-    public function testShowDayIsUp()
+    public function testShowDayIsUp(): void
     {
         $now = new \DateTime();
         $year = $now->format('Y');
@@ -74,15 +71,12 @@ class CalendarControllerTest extends WebTestCase
         $day = $now->format('d');
         $this->client->request('GET', "/calendar/day/$year/$month/$day");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h3', 'Jour');
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
-
-        $this->client = null;
-        $this->fixtures = null;
     }
 }

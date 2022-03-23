@@ -15,15 +15,13 @@ use Symfony\Component\Security\Core\Security;
 
 class EvaluationManager extends EvaluationCreator
 {
-    /** @var User */
-    private $user;
-
+    private $security;
     private $em;
     private $flasgBag;
 
     public function __construct(Security $security, EntityManagerInterface $em, FlashBagInterface $flashBag)
     {
-        $this->user = $security->getUser();
+        $this->security = $security;
         $this->em = $em;
         $this->flasgBag = $flashBag;
 
@@ -32,13 +30,16 @@ class EvaluationManager extends EvaluationCreator
 
     public function updateAndFlush(EvaluationGroup $evaluationGroup): void
     {
+        /** @var User */
+        $user = $this->security->getUser();
+
         $evaluationGroup
             ->setUpdatedAt($now = new \DateTime())
-            ->setUpdatedBy($this->user);
+            ->setUpdatedBy($user);
 
         $evaluationGroup->getSupportGroup()
             ->setUpdatedAt($now)
-            ->setUpdatedBy($this->user);
+            ->setUpdatedBy($user);
 
         $this->updateBudgetGroup($evaluationGroup);
 

@@ -35,6 +35,7 @@ class ExportExcel
     ];
 
     protected $name;
+    protected $fileType;
     protected $format;
 
     protected $spreadsheet;
@@ -66,18 +67,15 @@ class ExportExcel
         $this->data = $data;
         $this->now = new \DateTime();
         $this->setOptions($options);
+        $path = $this->options['modelPath'];
 
-        if ($this->options['modelPath']) {
+        if ($path && !file_exists($path)) {
             $reader = IOFactory::createReader('Xlsx');
-            $path = $this->options['modelPath'];
-
-            if (!file_exists($path)) {
-                throw new \Exception('The file don\'t exist');
-            }
 
             $this->spreadsheet = $reader->load($path);
         } else {
             $this->spreadsheet = new Spreadsheet();
+            $this->options['startCell'] = 'A1';
         }
 
         $this->sheet = $this->spreadsheet->getActiveSheet();
@@ -210,9 +208,7 @@ class ExportExcel
         $response->headers->addCacheControlDirective('no-cache', true);
         $response->headers->addCacheControlDirective('must-revalidate', true);
         $response->setCallback(function () use ($writer) {
-            if ('test' != $_ENV['APP_ENV']) {
-                $writer->save('php://output');
-            }
+            $writer->save('test' !== $_ENV['APP_ENV'] ? 'php://output' : 'php://memory');
         });
 
         return $response;
@@ -449,7 +445,7 @@ class ExportExcel
             $simpleCache = new SimpleCacheBridge($cacheItemPool);
             Settings::setCache($simpleCache);
         } catch (\Throwable $e) {
-            throw $e;
+            echo 'Fail to active APCu Cache';
         }
     }
 }

@@ -31,7 +31,7 @@ use App\Repository\Organization\DeviceRepository;
 use App\Repository\Organization\PlaceRepository;
 use App\Repository\Organization\SubServiceRepository;
 use App\Repository\People\PersonRepository;
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -261,7 +261,7 @@ class ImportHudaData extends ImportDatas
         $this->importNotification = $importNotification;
         $this->subServiceRepo = $subServiceRepo;
         $this->deviceRepo = $deviceRepo;
-        $this->repoPlace = $placeRepo;
+        $this->placeRepo = $placeRepo;
         $this->personRepo = $personRepo;
         $this->slugger = $slugger;
     }
@@ -271,7 +271,7 @@ class ImportHudaData extends ImportDatas
      *
      * @param Collection<Service> $services
      */
-    public function importInDatabase(string $fileName, ArrayCollection $services): array
+    public function importInDatabase(string $fileName, Collection $services): array
     {
         $this->fields = $this->getDatas($fileName);
         $this->service = $services->first();
@@ -282,16 +282,16 @@ class ImportHudaData extends ImportDatas
         foreach ($this->fields as $field) {
             $this->field = $field;
             if ($i > 0) {
-                $this->device = $this->getDevice();
-                $this->place = $this->getPlace($this->service);
+                $device = $this->getDevice();
+                $this->place = $this->getPlace($device);
 
                 $this->person = $this->getPerson();
-                $this->personExists = $this->personExistsInDatabase($this->person);
+                $this->personExistsInDatabase();
 
                 $peopleGroup = $this->createPeopleGroup();
                 $this->person = $this->createPerson($peopleGroup);
 
-                $supportGroup = $this->createSupportGroup($peopleGroup);
+                $supportGroup = $this->createSupportGroup($peopleGroup, $device);
 
                 if ($this->place) {
                     $placeGroup = $this->createPlaceGroup($peopleGroup, $supportGroup);
@@ -301,7 +301,7 @@ class ImportHudaData extends ImportDatas
 
                 $supportPerson = $this->createSupportPerson($supportGroup);
                 if ($supportPerson->getStartDate()) {
-                    if ($this->place) {
+                    if (isset($placeGroup)) {
                         $this->createPlacePerson($this->person, $placeGroup, $supportPerson);
                     }
                     $this->createEvaluationPerson($evaluationGroup, $supportPerson);
@@ -332,7 +332,7 @@ class ImportHudaData extends ImportDatas
             ->setLastname($this->field['Nom'])
             ->setFirstname($this->field['Prénom'])
             ->setGender(Person::GENDER_MALE)
-            ->setBirthdate($this->field['Date naissance'] ? new \Datetime($this->field['Date naissance']) : null)
+            ->setBirthdate($this->field['Date naissance'] ? new \DateTime($this->field['Date naissance']) : null)
         ;
     }
 
@@ -357,7 +357,7 @@ class ImportHudaData extends ImportDatas
         return $peopleGroup;
     }
 
-    protected function createSupportGroup(PeopleGroup $peopleGroup): SupportGroup
+    protected function createSupportGroup(PeopleGroup $peopleGroup, Device $device): SupportGroup
     {
         $supportGroup = (new SupportGroup())
             ->setStatus($this->getStatus())
@@ -370,7 +370,7 @@ class ImportHudaData extends ImportDatas
             ->setPeopleGroup($peopleGroup)
             ->setService($this->service)
             ->setSubService($this->subService)
-            ->setDevice($this->device)
+            ->setDevice($device)
         ;
 
         $this->em->persist($supportGroup);
@@ -654,15 +654,15 @@ class ImportHudaData extends ImportDatas
 
     protected function getStartDate(): ?\DateTime
     {
-        return $this->field['Date entrée'] ? new \Datetime($this->field['Date entrée']) : null;
+        return $this->field['Date entrée'] ? new \DateTime($this->field['Date entrée']) : null;
     }
 
     protected function getEndDate(): ?\DateTime
     {
-        return $this->field['Date sortie'] ? new \Datetime($this->field['Date sortie']) : null;
+        return $this->field['Date sortie'] ? new \DateTime($this->field['Date sortie']) : null;
     }
 
-    protected function getPlace(): ?Place
+    protected function getPlace(Device $device): ?Place
     {
         $placeExists = false;
         $placeName = strtolower($this->slugger->slug($this->field['Nom du logement']));
@@ -678,7 +678,7 @@ class ImportHudaData extends ImportDatas
         }
 
         if (!$placeExists) {
-            $this->places[$placeName] = $this->createPlace($this->device);
+            $this->places[$placeName] = $this->createPlace($device);
         }
 
         return $this->places[$placeName];
@@ -693,7 +693,7 @@ class ImportHudaData extends ImportDatas
             ->setName($this->field['Nom du logement'])
             ->setAddress($this->field['Adresse logement'])
             ->setNbPlaces((int) $this->field['Nombre de places'])
-            ->setStartDate(isset($this->field['Date ouverture']) ? new \Datetime($this->field['Date ouverture']) : new \Datetime('2020-01-01'))
+            ->setStartDate(isset($this->field['Date ouverture']) ? new \DateTime($this->field['Date ouverture']) : new \DateTime('2020-01-01'))
             ->setPlaceType($this->findInArray($this->field['Type logement'], self::PLACE_TYPE))
             ->setDevice($device)
             ->setService($this->service)

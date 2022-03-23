@@ -2,10 +2,8 @@
 
 namespace App\Tests\Controller\Support;
 
-use App\Entity\Organization\Service;
 use App\Entity\Organization\User;
 use App\Entity\Support\SupportGroup;
-use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -15,8 +13,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SupportControllerTest extends WebTestCase
 {
-    use AppTestTrait;
-
     /** @var KernelBrowser */
     protected $client;
 
@@ -33,7 +29,8 @@ class SupportControllerTest extends WebTestCase
     {
         parent::setUp();
 
-        $this->client = $this->createClient();
+        $this->client = static::createClient();
+        $this->client->followRedirects();
 
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
     }
@@ -41,22 +38,22 @@ class SupportControllerTest extends WebTestCase
     protected function loadFixtures(): void
     {
         $this->fixtures = $this->databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/SupportFixturesTest.yaml',
+            dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/service_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/person_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/support_fixtures_test.yaml',
         ]);
     }
 
-    public function testSearchSupportsIsSuccessful()
+    public function testSearchSupportsIsSuccessful(): void
     {
         $this->loadFixtures();
 
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
         $this->client->request('GET', '/supports');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Suivis');
 
         $this->client->submitForm('search', [
@@ -65,15 +62,15 @@ class SupportControllerTest extends WebTestCase
             'date[end]' => (new \DateTime())->format('Y-m-d'),
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Suivis');
     }
 
-    public function testExportSupportsIsSuccessful()
+    public function testExportSupportsIsSuccessful(): void
     {
         $this->loadFixtures();
 
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
         $this->client->request('GET', '/supports');
 
@@ -82,51 +79,51 @@ class SupportControllerTest extends WebTestCase
             'date[start]' => (new \DateTime())->modify('+1 year')->format('Y-m-d'),
         ], 'GET');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('.alert.alert-warning', 'Aucun résultat à exporter.');
 
         $this->client->submitForm('export', [], 'GET');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertStringContainsString('.spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
     }
 
-    public function testNewSupportGroupAjax()
+    public function testNewSupportGroupAjax(): void
     {
         $this->loadFixtures();
 
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
-        $id = $this->fixtures['peopleGroup1']->getId();
+        $id = $this->fixtures['people_group1']->getId();
         $this->client->request('GET', "/group/$id/new_support");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertArrayHasKey('html', $content);
     }
 
-    public function testNewSupportGroupPageIsUp()
+    public function testNewSupportGroupPageIsUp(): void
     {
         $this->loadFixtures();
 
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
-        $id = $this->fixtures['peopleGroup2']->getId();
+        $id = $this->fixtures['people_group2']->getId();
         $this->client->request('POST', "/people-group/$id/new-support", [
             'support' => ['service' => $this->fixtures['service1']->getId()],
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Nouveau suivi');
     }
 
-    public function testCreateNewSupportGroupIsSuccessful()
+    public function testCreateNewSupportGroupIsSuccessful(): void
     {
         $this->loadFixtures();
 
-        $this->createLogin($user = $this->fixtures['userRoleUser']);
+        $this->client->loginUser($user = $this->fixtures['john_user']);
 
-        $id = $this->fixtures['peopleGroup2']->getId();
+        $id = $this->fixtures['people_group2']->getId();
         $this->client->request('POST', "/people-group/$id/new-support", [
             'support' => [
                 'service' => $this->fixtures['service1'],
@@ -155,17 +152,17 @@ class SupportControllerTest extends WebTestCase
             ],
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorExists('.alert.alert-success');
     }
 
-    public function testCreateNewSupportGroupAndCloneIsSuccessful()
+    public function testCreateNewSupportGroupAndCloneIsSuccessful(): void
     {
         $this->loadFixtures();
 
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
-        $id = $this->fixtures['peopleGroup2']->getId();
+        $id = $this->fixtures['people_group2']->getId();
         $this->client->request('POST', "/people-group/$id/new-support", [
             'support' => ['service' => $this->fixtures['service1']->getId()],
         ]);
@@ -184,13 +181,13 @@ class SupportControllerTest extends WebTestCase
         $this->assertSelectorExists('.alert.alert-success');
     }
 
-    public function testPeopleHaveOtherSupportInProgress()
+    public function testPeopleHaveOtherSupportInProgress(): void
     {
         $this->loadFixtures();
 
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
-        $id = $this->fixtures['peopleGroup1']->getId();
+        $id = $this->fixtures['people_group1']->getId();
         $this->client->request('POST', "/people-group/$id/new-support", [
             'support' => ['service' => $this->fixtures['service1']->getId()],
         ]);
@@ -202,17 +199,17 @@ class SupportControllerTest extends WebTestCase
             'support[agreement]' => true,
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('.alert.alert-danger', 'Attention, un suivi social est déjà en cours');
     }
 
-    public function testCreateEndedSupportWithOtherSupportInProgressIsSuccessful()
+    public function testCreateEndedSupportWithOtherSupportInProgressIsSuccessful(): void
     {
         $this->loadFixtures();
 
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
-        $id = $this->fixtures['peopleGroup1']->getId();
+        $id = $this->fixtures['people_group1']->getId();
         $this->client->request('POST', "/people-group/$id/new-support", [
             'support' => ['service' => $this->fixtures['service1']->getId()],
         ]);
@@ -224,136 +221,133 @@ class SupportControllerTest extends WebTestCase
             'support[agreement]' => true,
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('.alert.alert-success', 'Le suivi social est créé');
     }
 
-    public function testEditSupportGroupIsSuccessful()
+    public function testEditSupportGroupIsSuccessful(): void
     {
         $this->loadFixtures();
 
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
-        $id = $this->fixtures['supportGroup1']->getId();
+        $id = $this->fixtures['support_group1']->getId();
         $this->client->request('GET', "/support/$id/edit");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Édition du suivi');
 
         $this->client->submitForm('send');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorExists('.alert.alert-success');
     }
 
-    public function testEditCoefficientIsSuccessful()
+    public function testEditCoefficientIsSuccessful(): void
     {
         $this->loadFixtures();
 
-        $this->createLogin($this->fixtures['userAdmin']);
+        $this->client->loginUser($this->fixtures['user_admin']);
 
-        $id = $this->fixtures['supportGroup2']->getId();
+        $id = $this->fixtures['support_group2']->getId();
         $this->client->request('GET', "/support/$id/edit");
 
         $this->client->submitForm('send-coeff', [
             'support_coefficient[coefficient]' => 2,
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('.alert.alert-success', 'Le coefficient du suivi est mis à jour.');
     }
 
-    public function testShowSupportGroupIsUp()
+    public function testShowSupportGroupIsUp(): void
     {
         $this->fixtures = $this->databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/SupportFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/EvaluationFixturesTest.yaml',
+            dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/service_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/person_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/support_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/evaluation_fixtures_test.yaml',
         ]);
 
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
-        $id = $this->fixtures['supportGroupWithEval']->getId();
+        $id = $this->fixtures['support_group_with_eval']->getId();
         $this->client->request('GET', "/support/$id/show");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Suivi social');
     }
 
-    public function testDeleteSupportIsFailed()
+    public function testDeleteSupportIsFailed(): void
     {
         $this->loadFixtures();
 
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
-        $id = $this->fixtures['supportGroup1']->getId();
+        $id = $this->fixtures['support_group1']->getId();
         $this->client->request('GET', "/support/$id/delete");
 
-        $this->assertSame(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
 
-    public function testDeleteSupportIsSuccessful()
+    public function testDeleteSupportIsSuccessful(): void
     {
         $this->loadFixtures();
 
         /** @var User $admin */
-        $admin = $this->fixtures['userAdmin'];
-        $this->createLogin($admin);
+        $admin = $this->fixtures['user_admin'];
+        $this->client->loginUser($admin);
 
-        $id = $this->fixtures['supportGroup3']->getId();
+        $id = $this->fixtures['support_group3']->getId();
         $this->client->request('GET', "/support/$id/delete");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Groupe');
         $this->assertSelectorExists('.alert.alert-warning');
     }
 
-    public function testCloneSupportIsFailed()
+    public function testCloneSupportIsFailed(): void
     {
         $this->loadFixtures();
 
-        $this->createLogin($this->fixtures['userSuperAdmin']);
+        $this->client->loginUser($this->fixtures['user_super_admin']);
 
-        $id = $this->fixtures['supportGroup2']->getId();
+        $id = $this->fixtures['support_group2']->getId();
         $this->client->request('GET', "/support/$id/clone");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('.alert.alert-warning', 'Aucun autre suivi n\'a été trouvé.');
     }
 
-    public function testCloneSupportIsSuccessful()
+    public function testCloneSupportIsSuccessful(): void
     {
         $this->loadFixtures();
 
-        $this->createLogin($this->fixtures['userSuperAdmin']);
+        $this->client->loginUser($this->fixtures['user_super_admin']);
 
-        $id = $this->fixtures['supportGroup1']->getId();
+        $id = $this->fixtures['support_group1']->getId();
         $this->client->request('GET', "/support/$id/clone");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('.alert.alert-success', 'Les informations du précédent suivi ont été ajoutées');
     }
 
-    public function testShowSupportsWithContributioIsUp()
+    public function testShowSupportsWithContributioIsUp(): void
     {
         $this->loadFixtures();
 
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
         $this->client->request('GET', '/supports/current_month');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Suivis en présence');
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
-
-        $this->client = null;
-        $this->fixtures = null;
 
         $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
         $cache->clear();

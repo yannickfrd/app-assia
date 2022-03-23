@@ -1,0 +1,70 @@
+App\Entity\Support\SupportGroup:
+    support_group1:
+        startDate: <date_create("2019-04-03")>
+        status: 2
+        agreement: true
+        referent: "@john_user"
+        service: "@service1"
+        subService: "@sub_service1"
+        device: "@device1"
+        peopleGroup: "@people_group1"
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        createdBy: $referent
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        updatedBy: $referent
+        supportPeople: ["@support_person1", "@support_person2"]
+    support_group2:
+        startDate: <dateTimeBetween("-2 years", "now")>
+        status: 2
+        referent: "@john_user"
+        service: "@service_avdl"
+        device: "@device_avdl"
+        peopleGroup: "@people_group2"
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        createdBy: $referent
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        updatedBy: $referent
+        supportPeople: ["@support_person3"]
+    support_group3:
+        startDate: <dateTimeBetween("-2 years", "now")>
+        status: 2
+        referent: "@john_user"
+        service: "@service2"
+        device: "@device*"
+        peopleGroup: "@people_group1"
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        createdBy: $referent
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        updatedBy: $referent
+
+App\Entity\Support\SupportPerson:
+    support_person1:
+        startDate: "@support_group1->startDate"
+        endDate: "@support_group1->endDate"
+        status: "@support_group1->status"
+        createdAt: "@support_group1->createdAt"
+        updatedAt: "@support_group1->updatedAt"
+        supportGroup: "@support_group1"
+        person: "@person1"
+        head: "@role_person1->head"
+        role: "@role_person1->role"
+    support_person2:
+        startDate: "@support_group1->startDate"
+        endDate: "@support_group1->endDate"
+        status: "@support_group1->status"
+        createdAt: "@support_group1->createdAt"
+        updatedAt: "@support_group1->updatedAt"
+        supportGroup: "@support_group1"
+        person: "@person2"
+        head: "@role_person2->head"
+        role: "@role_person2->role"
+    support_person3:
+        startDate: "@support_group2->startDate"
+        endDate: "@support_group2->endDate"
+        status: "@support_group2->status"
+        createdAt: "@support_group2->createdAt"
+        updatedAt: "@support_group2->updatedAt"
+        supportGroup: "@support_group2"
+        person: "@person3"
+        head: "@role_person3->head"
+        role: "@role_person3->role"

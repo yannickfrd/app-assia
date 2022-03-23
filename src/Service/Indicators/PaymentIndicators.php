@@ -2,6 +2,7 @@
 
 namespace App\Service\Indicators;
 
+use App\Entity\Support\Payment;
 use App\Form\Model\Support\PaymentSearch;
 use App\Service\Calendar;
 
@@ -93,7 +94,7 @@ class PaymentIndicators
     /**
      * Retourne si la participation financière est à l'intérieur du mois.
      */
-    public function withinMonth(?\datetime $date = null, \datetime $month): bool
+    public function withinMonth(?\DateTime $date = null, \DateTime $month): bool
     {
         return $date ? $date->format('Y-m') === $month->format('Y-m') : false;
     }

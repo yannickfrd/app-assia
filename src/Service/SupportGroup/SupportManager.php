@@ -52,7 +52,13 @@ class SupportManager
     {
         $supportGroup = (new SupportGroup())->setPeopleGroup($peopleGroup);
 
-        $serviceId = $request->request->get('support') ? $request->request->get('support')['service'] : null;
+        /** @var array|null */
+        $support = $request->request->get('support');
+        $serviceId = null;
+
+        if ($support) {
+            $serviceId = $support['service'];
+        }
 
         if ((int) $serviceId) {
             $service = $this->em->getRepository(Service::class)->find($serviceId);

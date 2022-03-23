@@ -135,7 +135,7 @@ class AutoTasksGenerator
     }
 
     /**
-     * @param EvalHousingGroup|EvalAdmPerson|EvalSocialPerson|EvalProfPerson|EvalBudgetPerson $entity
+     * @param EvalHousingGroup|EvalAdmPerson|EvalSocialPerson|EvalProfPerson|EvalBudgetPerson|null $evalEntity
      */
     private function createTaskOrNot(?object $evalEntity = null, string $property, string $title,
         int $delay = null, User $user): void
@@ -182,12 +182,12 @@ class AutoTasksGenerator
         ++$this->nbTasks;
     }
 
-    private function getEndDate(object $evalEntity, string $method, ?int $delay = null): ?\Datetime
+    private function getEndDate(object $evalEntity, string $method, ?int $delay = null): ?\DateTime
     {
         /** @var \Datetime|null $endDate */
         $endDate = $evalEntity->$method();
 
-        if (!$endDate || $endDate < (new \Datetime())->modify('-9 years')) {
+        if (!$endDate || $endDate < (new \DateTime())->modify('-9 years')) {
             return null;
         }
 
@@ -198,7 +198,7 @@ class AutoTasksGenerator
         return $endDate->modify('+8 hours');
     }
 
-    private function getAlertDate(\Datetime $endDate, string $method, User $user): ?\Datetime
+    private function getAlertDate(\DateTime $endDate, string $method, User $user): ?\DateTime
     {
         $settingMethod = $method.'Delay';
         $delay = $user->getSetting() ? $user->getSetting()->$settingMethod() : $this->adminSetting->$settingMethod();

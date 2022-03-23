@@ -2,8 +2,8 @@
 
 namespace App\Form\Support\Event;
 
-use App\Entity\Organization\Tag;
 use App\Entity\Event\Task;
+use App\Entity\Organization\Tag;
 use App\Form\Model\Event\TaskSearch;
 use App\Form\Utils\Choices;
 use App\Repository\Organization\TagRepository;

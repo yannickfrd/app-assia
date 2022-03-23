@@ -1,0 +1,79 @@
+App\Entity\Organization\Service:
+    service_avdl:
+        name: AVDL
+        type: 2
+        email: avdl@mail.fr
+        phone1: "01 00 00 00 00"
+        address: Pontoise
+        city: Pontoise
+        zipcode: 95 000
+        coefficient: 1
+        place: false
+        pole: "@pole1"
+        createdAt: <date_create()>
+        updatedAt: <date_create()>
+        createdBy: "@user_super_admin"
+        updatedBy: "@user_super_admin"
+    service_pash:
+        name: PASH
+        type: 3
+        pole: "@pole1"
+        email: pash@mail.fr
+        phone1: "01 00 00 00 00"
+        address: Cergy
+        city: Cergy
+        zipcode: 95 000
+        coefficient: 1
+        place: false
+        createdAt: <date_create()>
+        updatedAt: <date_create()>
+        createdBy: "@user_super_admin"
+        updatedBy: "@user_super_admin"
+    service5:
+        name: <sentence(3, true)>
+        type: 1
+        city: <fr_FR:city()>
+        phone1: <fr_FR:phoneNumber()>
+        email: <fr_FR:email()>
+        zipcode: <numberBetween(1, 95)>
+        address: <fr_FR:address()>
+        place: true
+        createdAt: <date_create()>
+        updatedAt: <date_create()>
+        pole: "@pole1"
+        createdBy: "@user_super_admin"
+        updatedBy: "@user_super_admin"
+
+App\Entity\Organization\ServiceUser:
+    serv3_user1:
+        service: "@service_avdl"
+        user: "@john_user"
+    serv3_user_admin:
+        service: "@service_avdl"
+        user: "@user_admin"
+
+App\Entity\Organization\Device:
+    device_avdl:
+        name: AVDL
+        code: 4
+        place: false
+    device_hotel:
+        name: Accommpagnement hôtel
+        code: 19
+        place: false
+        contribution: true
+        contributionType: 1
+        contributionRate: 0.1
+
+App\Entity\Organization\ServiceDevice:
+    serv_device_avdl:
+        service: "@service_avdl"
+        device: "@device_avdl"
+    serv_device_pash:
+        service: "@service_pash"
+        device: "@device_hotel"
+
+App\Entity\Organization\SubService:
+    sub_service1:
+        service: "@service1"
+        name: CHRS sous-service

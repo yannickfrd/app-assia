@@ -4,19 +4,15 @@ namespace App\Tests\Controller\Payment;
 
 use App\Entity\Support\Payment;
 use App\Entity\Support\SupportGroup;
-use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\HttpFoundation\Response;
 
 class PaymentControllerTest extends WebTestCase
 {
-    use AppTestTrait;
-
     /** @var KernelBrowser */
     protected $client;
 
@@ -36,30 +32,31 @@ class PaymentControllerTest extends WebTestCase
     {
         parent::setUp();
 
-        $this->client = $this->createClient();
+        $this->client = static::createClient();
+        $this->client->followRedirects();
 
-        /* @var AbstractDatabaseTool */
+        /** @var AbstractDatabaseTool */
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
 
         $this->fixtures = $this->databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/SupportFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/PaymentFixturesTest.yaml',
+            dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/service_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/person_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/support_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/payment_fixtures_test.yaml',
         ]);
 
-        $this->supportGroup = $this->fixtures['supportGroup1'];
+        $this->supportGroup = $this->fixtures['support_group1'];
         $this->payment = $this->fixtures['payment1'];
     }
 
-    public function testSearchPaymentsIsSuccessful()
+    public function testSearchPaymentsIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
         $this->client->request('GET', '/payments');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Paiements');
 
         /** @var Crawler */
@@ -68,13 +65,13 @@ class PaymentControllerTest extends WebTestCase
             'date[end]' => '2020-04-30',
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertGreaterThanOrEqual(4, $crawler->filter('td[scope="row"]')->count());
     }
 
-    public function testExportPaymentsIsSuccessful()
+    public function testExportPaymentsIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
         $this->client->request('GET', '/payments');
 
@@ -83,13 +80,13 @@ class PaymentControllerTest extends WebTestCase
             'date[start]' => (new \Datetime())->modify('+1 year')->format('Y-m-d'),
         ], 'GET');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('.alert.alert-warning', 'Aucun résultat à exporter.');
 
         // Export 1
         $this->client->submitForm('export', [], 'GET');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertStringContainsString('spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
 
         $this->client->request('GET', '/payments');
@@ -99,68 +96,66 @@ class PaymentControllerTest extends WebTestCase
             'date[start]' => (new \Datetime())->modify('+1 year')->format('Y-m-d'),
         ], 'GET');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('.alert.alert-warning', 'Aucun résultat à exporter.');
 
         // Export 2
         $this->client->submitForm('export-accounting', [], 'GET');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertStringContainsString('spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
     }
 
-    public function testExportDeltaPaymentsIsSuccessful()
+    public function testExportDeltaPaymentsIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userSuperAdmin']);
+        $this->client->loginUser($this->fixtures['user_super_admin']);
 
         $this->client->request('GET', '/payments');
 
         $this->client->submitForm('export-delta', [], 'GET');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertStringContainsString('spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
     }
 
-    public function testShowPaymentIndicatorsIsUp()
+    public function testShowPaymentIndicatorsIsUp(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
         $this->client->request('GET', '/payment/indicators');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
 
         $this->client->submitForm('search');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
     }
 
-    public function testShowSupportListPaymentsIsUp()
+    public function testShowSupportListPaymentsIsUp(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
-        $id = $this->supportGroup->getId();
-        $this->client->request('GET', "/support/$id/payments");
+        $this->client->request('GET', "/support/{$this->supportGroup->getId()}/payments");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Paiements');
     }
 
-    public function testExportSupportPaymentsIsSuccessful()
+    public function testExportSupportPaymentsIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
-        $id = $this->supportGroup->getId();
-        $this->client->request('GET', "/support/$id/payments");
+        $this->client->request('GET', "/support/{$this->supportGroup->getId()}/payments");
 
         $this->client->submitForm('export', [], 'GET');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertStringContainsString('spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
     }
 
-    public function testCreatePaymentIsSuccessful()
+    public function testCreatePaymentIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
         $id = $this->supportGroup->getId();
         /** @var Crawler */
@@ -172,7 +167,7 @@ class PaymentControllerTest extends WebTestCase
             'payment[type]' => Payment::CONTRIBUTION,
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('danger', $content['alert']);
 
@@ -188,14 +183,14 @@ class PaymentControllerTest extends WebTestCase
             ],
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('create', $content['action']);
     }
 
-    public function testUpdatePaymentIsSuccessful()
+    public function testEditPaymentIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
         $id = $this->payment->getId();
         $supportId = $this->supportGroup->getId();
@@ -206,7 +201,7 @@ class PaymentControllerTest extends WebTestCase
         // Fail
         $this->client->request('POST', "/payment/$id/edit", []);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('danger', $content['alert']);
 
@@ -222,20 +217,19 @@ class PaymentControllerTest extends WebTestCase
             ],
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('update', $content['action']);
     }
 
-    public function testUpdatePaymentWithOtherUserIsSuccessful()
+    public function testUpdatePaymentWithOtherUserIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['user4']);
+        $this->client->loginUser($this->fixtures['user4']);
 
-        $id = $this->payment->getId();
         $crawler = $this->client->request('GET', '/support/1/payments');
         $this->assertResponseIsSuccessful();
 
-        $this->client->request('POST', "/payment/$id/edit", [
+        $this->client->request('POST', "/payment/{$this->payment->getId()}/edit", [
             'payment' => [
                 'startDate' => '2021-01-01',
                 'endDate' => '2021-01-31',
@@ -246,55 +240,51 @@ class PaymentControllerTest extends WebTestCase
             ],
         ]);
 
-
         $this->assertResponseIsSuccessful();
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('update', $content['action']);
     }
 
-    public function testGetPaymentIsSuccessful()
+    public function testGetPaymentIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
-        $id = $this->payment->getId();
-        $this->client->request('GET', "/payment/$id/get");
+        $this->client->request('GET', "/payment/{$this->payment->getId()}/get");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('show', $content['action']);
     }
 
-    public function testDeletePaymentIsSuccessful()
+    public function testDeletePaymentIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
-        $id = $this->payment->getId();
-        $this->client->request('GET', "/payment/$id/delete");
+        $this->client->request('GET', "/payment/{$this->payment->getId()}/delete");
 
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('delete', $content['action']);
     }
 
-    public function testExportPaymentToPdfIsSuccessful()
+    public function testExportPaymentToPdfIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
-        $id = $this->payment->getId();
-        $this->client->request('GET', "/payment/$id/export/pdf");
+        $this->client->request('GET', "/payment/{$this->payment->getId()}/export/pdf");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertStringContainsString('application/pdf', $this->client->getResponse()->headers->get('content-type'));
     }
 
-    public function testSendPaymentByEmailIsSuccessful()
+    public function testSendPaymentByEmailIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
         // Fail
         $id = $this->fixtures['payment2']->getId();
         $this->client->request('GET', "/payment/$id/send/pdf");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('Le suivi n\'a pas d\'adresse e-mail renseignée.', $content['msg']);
 
@@ -302,7 +292,7 @@ class PaymentControllerTest extends WebTestCase
         $id = $this->payment->getId();
         $this->client->request('GET', "/payment/$id/send/pdf");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
 
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('Le reçu du paiement a été envoyé par email.', $content['msg']);
@@ -311,9 +301,6 @@ class PaymentControllerTest extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
-
-        $this->client = null;
-        $this->fixtures = null;
 
         $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
         $cache->clear();

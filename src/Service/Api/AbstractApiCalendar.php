@@ -4,6 +4,7 @@ namespace App\Service\Api;
 
 use App\Entity\Organization\User;
 use App\Entity\Support\Rdv;
+use App\Repository\Support\RdvRepository;
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -62,14 +63,15 @@ abstract class AbstractApiCalendar
 
     /**
      * Returns the current Rdv recorded in session according to the id.
-     *
-     * @param null $rdvId
      */
-    protected function getRdv(string $key, $rdvId = null): Rdv
+    protected function getRdv(string $key, ?int $rdvId = null): Rdv
     {
         $id = $rdvId ?? $this->session->get(strtolower($key).'RdvId');
 
-        return $this->em->getRepository(Rdv::class)->findRdv($id);
+        /** @var RdvRepository $rdvRepo */
+        $rdvRepo = $this->em->getRepository(Rdv::class);
+
+        return $rdvRepo->findRdv($rdvId);
     }
 
     /**

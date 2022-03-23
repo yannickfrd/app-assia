@@ -61,7 +61,7 @@ class IndicatorsService
         PaymentRepository $paymentRepo,
         UserConnectionRepository $ConnectionRepo
     ) {
-        $this->repoIndicator = $indicatorRepo;
+        $this->indicatorRepo = $indicatorRepo;
         $this->userRepo = $userRepo;
         $this->serviceRepo = $serviceRepo;
         $this->personRepo = $personRepo;
@@ -209,7 +209,7 @@ class IndicatorsService
         $criteriaByUpdate = $criteriaByCreation;
         $criteriaByUpdate['filterDateBy'] = 'updatedAt';
 
-        $indicator = $this->repoIndicator->findOneBy(['date' => new \DateTime('yesterday')]);
+        $indicator = $this->indicatorRepo->findOneBy(['date' => new \DateTime('yesterday')]);
         $yesterdayIndicator = $indicator ?? $this->createIndicator($totay);
 
         return [

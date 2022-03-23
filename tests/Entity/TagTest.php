@@ -18,23 +18,23 @@ class TagTest extends WebTestCase
     protected function setUp(): void
     {
         $this->tag = (new Tag())
-            ->setName('Tag 666')
+            ->setName('Tag test')
         ;
     }
 
-    public function testValidTag()
+    public function testValidTag(): void
     {
         $this->assertHasErrors($this->tag->setName('Valid tag'), 0);
     }
 
-    public function testBlankName()
+    public function testBlankName(): void
     {
         $this->assertHasErrors($this->tag->setName(''), 1);
     }
 
-    public function testGetName()
+    public function testGetName(): void
     {
-        $this->assertEquals('Tag 666', $this->tag->getName());
+        $this->assertEquals('Tag test', $this->tag->getName());
     }
 
     protected function tearDown(): void

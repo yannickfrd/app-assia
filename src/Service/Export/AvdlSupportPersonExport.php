@@ -3,9 +3,9 @@
 namespace App\Service\Export;
 
 use App\Entity\Support\Avdl;
-use App\Service\ExportExcel;
 use App\Entity\Support\OriginRequest;
 use App\Entity\Support\SupportPerson;
+use App\Service\ExportExcel;
 use Symfony\Component\HttpFoundation\Response;
 
 class AvdlSupportPersonExport extends ExportExcel
@@ -19,6 +19,8 @@ class AvdlSupportPersonExport extends ExportExcel
 
     /**
      * Exporte les données.
+     *
+     * @param SupportPerson[] $supports
      */
     public function exportData(array $supports): Response
     {

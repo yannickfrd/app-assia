@@ -77,7 +77,7 @@ class RolePerson
     private $peopleGroup;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeInterface
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime", nullable=true)
      */

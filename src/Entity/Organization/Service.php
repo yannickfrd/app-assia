@@ -2,6 +2,7 @@
 
 namespace App\Entity\Organization;
 
+use App\Entity\Organization\Traits\TagTrait;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Traits\ContactEntityTrait;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
@@ -207,7 +208,7 @@ class Service
     private $subServices;
 
     /**
-     * @var Collection|Tag[]|null
+     * @var Collection<Tag>|null
      * @ORM\ManyToMany(targetEntity=Tag::class, inversedBy="services")
      * @ORM\OrderBy({"name": "ASC"})
      */
@@ -269,7 +270,7 @@ class Service
     }
 
     /**
-     * @return Collection<User>|User[]|null
+     * @return Collection<User>|null
      */
     public function getserviceUser(): ?Collection
     {
@@ -300,7 +301,7 @@ class Service
     }
 
     /**
-     * @return Collection<User>|User[]|null
+     * @return Collection<User>|null
      */
     public function getUsers(): ?Collection
     {
@@ -326,7 +327,7 @@ class Service
     }
 
     /**
-     * @return Collection<SupportGroup>|SupportGroup[]|null
+     * @return Collection<SupportGroup>|null
      */
     public function getSupportGroup(): ?Collection
     {
@@ -460,7 +461,7 @@ class Service
         return $this->coefficient;
     }
 
-    public function getCoefficientToString(): ?int
+    public function getCoefficientToString(): ?string
     {
         return $this->contributionType ? Choices::YES_NO[$this->contributionType] : null;
     }
@@ -545,7 +546,7 @@ class Service
     }
 
     /**
-     * @return Collection<ServiceDevice>|ServiceDevice[]|null
+     * @return Collection<ServiceDevice>|null
      */
     public function getServiceDevices(): ?Collection
     {
@@ -553,7 +554,7 @@ class Service
     }
 
     /**
-     * @return Collection<Device>|Device[]|null
+     * @return Collection<Device>|null
      */
     public function getDevices(): ?Collection
     {
@@ -590,7 +591,7 @@ class Service
     }
 
     /**
-     * @return Collection<Place>|Place[]|null
+     * @return Collection<Place>|null
      */
     public function getPlaces(): ?Collection
     {
@@ -633,7 +634,7 @@ class Service
     }
 
     /**
-     * @return Collection<Organization>|Organization[]|null
+     * @return Collection<Organization>|null
      */
     public function getOrganizations(): ?Collection
     {
@@ -659,7 +660,7 @@ class Service
     }
 
     /**
-     * @return Collection<SubService>|SubService[]|null
+     * @return Collection<SubService>|null
      */
     public function getSubServices(): ?Collection
     {

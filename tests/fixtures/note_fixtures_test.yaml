@@ -1,0 +1,21 @@
+App\Entity\Support\Note:
+    note1:
+        title: Note test
+        content: Contenu de la note
+        type: 1
+        status: 1
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        createdBy: "@john_user"
+        updatedBy: "@john_user"
+        supportGroup: "@support_group1"
+    note{2..5}:
+        title: <sentence(10, true)>
+        content: <paragraphs(6, true)>
+        type: <numberBetween(1, 2)>
+        status: <numberBetween(1, 4)>
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        createdBy: "@john_user"
+        updatedBy: "@john_user"
+        supportGroup: "@support_group1"

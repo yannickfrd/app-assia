@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Event;
 
 use App\Controller\Traits\ErrorMessageTrait;
@@ -25,7 +27,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class TaskController extends AbstractController
+final class TaskController extends AbstractController
 {
     use ErrorMessageTrait;
 
@@ -153,7 +155,7 @@ class TaskController extends AbstractController
             $em->flush();
 
             TaskManager::deleteCacheItems($task);
-            
+
             return $this->json([
                 'action' => 'edit',
                 'alert' => 'success',

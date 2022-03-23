@@ -27,7 +27,7 @@ class UserProcessor implements ProcessorInterface
             return;
         }
 
-        /** @var User $object */
+        /* @var User $object */
         $object->setPassword($this->passwordHasher->hashPassword($object, $object->getPlainPassword()));
     }
 

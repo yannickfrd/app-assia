@@ -4,6 +4,7 @@ namespace App\Service\Export;
 
 use App\Entity\Event\Task;
 use App\Service\ExportExcel;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class TaskExport extends ExportExcel
@@ -17,8 +18,10 @@ class TaskExport extends ExportExcel
 
     /**
      * Exporte les données.
+     *
+     * @param Task[] $tasks
      */
-    public function exportData($tasks)
+    public function exportData(array $tasks): Response
     {
         $arrayData[] = array_keys($this->getDatas($tasks[0]));
 

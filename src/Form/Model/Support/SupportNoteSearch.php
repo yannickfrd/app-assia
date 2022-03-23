@@ -3,7 +3,6 @@
 namespace App\Form\Model\Support;
 
 use App\Form\Model\Support\Traits\NoteSearchTrait;
-use Doctrine\Common\Collections\ArrayCollection;
 
 class SupportNoteSearch
 {

@@ -3,7 +3,6 @@
 namespace App\Tests\Controller\Organization;
 
 use App\Entity\Organization\Tag;
-use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -12,13 +11,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class TagControllerTest extends WebTestCase
 {
-    use AppTestTrait;
-
     /** @var KernelBrowser */
     protected $client;
-
-    /** @var AbstractDatabaseTool */
-    private $databaseTool;
 
     /** @var array */
     private $fixtures;
@@ -30,31 +24,34 @@ class TagControllerTest extends WebTestCase
     {
         parent::setUp();
 
-        $this->client = $this->createClient();
+        $this->client = static::createClient();
+        $this->client->followRedirects();
 
-        /* @var AbstractDatabaseTool */
-        $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
+        /** @var AbstractDatabaseTool */
+        $databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
 
-        $this->fixtures = $this->databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/TagFixturesTest.yaml',
+        $this->fixtures = $databaseTool->loadAliceFixture([
+            dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/tag_fixtures_test.yaml',
         ]);
 
         $this->tag = $this->fixtures['tag1'];
     }
 
-    public function testListTagsIsSuccessfully(): void
+    public function testTagIndexPageIsUpWithRoleAdmin(): void
     {
-        $this->createLogin($this->fixtures['userAdmin']);
+        $this->client->loginUser($this->fixtures['user_admin']);
+
         $this->client->request('GET', '/admin/tags');
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Étiquettes');
     }
 
-    public function testListTagsWithRoleUser(): void
+    public function testTagIndexPageIsForbiddenWithRoleUser(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
+
         $this->client->request('GET', '/admin/tags');
 
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
@@ -63,28 +60,19 @@ class TagControllerTest extends WebTestCase
     /**
      * @dataProvider provideBadUser
      */
-    public function testCreateTagsWithBadUserRole(string $user): void
+    public function testCreateTagWithBadUserRole(string $user): void
     {
-        $this->createLogin($this->fixtures[$user]);
+        $this->client->loginUser($this->fixtures[$user]);
+
         $this->client->request('GET', '/admin/tag/new');
 
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
 
-    /**
-     * @dataProvider provideBadUser
-     */
-    public function testEditTagsWithBadUserRole(string $user): void
+    public function testCreateTagIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures[$user]);
-        $this->client->request('GET', '/admin/tags/'.$this->tag->getId().'/edit');
+        $this->client->loginUser($this->fixtures['user_super_admin']);
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
-    }
-
-    public function testCreateTagIsSuccessfully(): void
-    {
-        $this->createLogin($this->fixtures['userSuperAdmin']);
         $crawler = $this->client->request('GET', '/admin/tag/new');
 
         $this->assertResponseIsSuccessful();
@@ -99,7 +87,8 @@ class TagControllerTest extends WebTestCase
 
     public function testCreateTagBlank(): void
     {
-        $this->createLogin($this->fixtures['userSuperAdmin']);
+        $this->client->loginUser($this->fixtures['user_super_admin']);
+
         $crawler = $this->client->request('GET', '/admin/tag/new');
 
         $this->assertResponseIsSuccessful();
@@ -112,10 +101,23 @@ class TagControllerTest extends WebTestCase
         $this->assertSelectorTextContains('html', 'Cette valeur ne doit pas être vide');
     }
 
-    public function testEditTagIsSuccessfully(): void
+    /**
+     * @dataProvider provideBadUser
+     */
+    public function testEditTagWithBadUserRole(string $user): void
     {
-        $this->createLogin($this->fixtures['userSuperAdmin']);
-        $crawler = $this->client->request('GET', '/admin/tags/'.$this->tag->getId().'/edit');
+        $this->client->loginUser($this->fixtures[$user]);
+
+        $this->client->request('GET', '/admin/tag/1/edit');
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+    }
+
+    public function testEditTagIsSuccessful(): void
+    {
+        $this->client->loginUser($this->fixtures['user_super_admin']);
+
+        $crawler = $this->client->request('GET', '/admin/tag/1/edit');
 
         $this->assertResponseIsSuccessful();
 
@@ -124,37 +126,36 @@ class TagControllerTest extends WebTestCase
         ]);
         $this->client->submit($form);
 
-        $this->assertSelectorTextContains('html', 'Les modifications sont enregistrées');
+        $this->assertSelectorTextContains('.alert.alert-success', 'Les modifications sont enregistrées');
     }
 
-    public function testDeleteTagIsSuccessfully(): void
+    public function testDeleteTagIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userSuperAdmin']);
-        $this->client->request('GET', '/admin/tags/'.$this->tag->getId().'/delete');
+        $this->client->loginUser($this->fixtures['user_super_admin']);
+
+        $this->client->request('GET', '/admin/tag/2/delete');
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('html', 'L\'étiquette est supprimée');
+        $this->assertSelectorTextContains('.alert.alert-success', 'L\'étiquette est supprimée');
     }
 
     public function testDeleteTagFail(): void
     {
-        $this->createLogin($this->fixtures['userSuperAdmin']);
-        $this->client->request('GET', '/admin/tags/'.'fail'.'/delete');
+        $this->client->loginUser($this->fixtures['user_super_admin']);
+
+        $this->client->request('GET', '/admin/tag/'.'fail'.'/delete');
 
         $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
     }
 
     public function provideBadUser(): \Generator
     {
-        yield ['userRoleUser'];
-        yield ['userAdmin'];
+        yield ['john_user'];
+        yield ['user_admin'];
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
-        $this->client = null;
-        $this->fixtures = null;
-        $this->tag = null;
     }
 }

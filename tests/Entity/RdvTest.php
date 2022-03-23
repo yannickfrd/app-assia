@@ -27,22 +27,22 @@ class RdvTest extends WebTestCase
             ->setStatus(1);
     }
 
-    public function testValidRdv()
+    public function testValidRdv(): void
     {
         $this->assertHasErrors($this->rdv, 0);
     }
 
-    public function testBlankTitle()
+    public function testBlankTitle(): void
     {
         $this->assertHasErrors($this->rdv->setTitle(''), 1);
     }
 
-    public function testNullStart()
+    public function testNullStart(): void
     {
         $this->assertHasErrors($this->rdv->setStart(null), 1);
     }
 
-    public function testNullEnd()
+    public function testNullEnd(): void
     {
         $this->assertHasErrors($this->rdv->setEnd(null), 1);
     }

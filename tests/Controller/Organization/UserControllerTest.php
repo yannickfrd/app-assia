@@ -2,9 +2,7 @@
 
 namespace App\Tests\Controller\Organization;
 
-use App\Tests\AppTestTrait;
 use App\Entity\Organization\User;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
@@ -12,8 +10,6 @@ use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 
 class UserControllerTest extends WebTestCase
 {
-    use AppTestTrait;
-
     /** @var KernelBrowser */
     protected $client;
 
@@ -30,25 +26,26 @@ class UserControllerTest extends WebTestCase
     {
         parent::setUp();
 
-        $this->client = $this->createClient();
+        $this->client = static::createClient();
+        $this->client->followRedirects();
 
         /** @var AbstractDatabaseTool */
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
 
         $this->fixtures = $this->databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
+            dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',
         ]);
 
-        $this->user = $this->fixtures['userRoleUser'];
+        $this->user = $this->fixtures['john_user'];
     }
 
-    public function testSearchUsersPageIsSuccessful()
+    public function testSearchUsersPageIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
         $this->client->request('GET', '/directory/users');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Utilisateurs');
 
         $this->client->submitForm('search', [
@@ -59,40 +56,40 @@ class UserControllerTest extends WebTestCase
             'service[services]' => [$this->fixtures['service1']],
         ], 'GET');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('table tbody tr td:nth-child(2)', 'SUPER_ADMIN');
     }
 
-    public function testExportUsersIsSuccessful()
+    public function testExportUsersIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
         $this->client->request('GET', '/directory/users');
 
         $this->client->submitForm('export', [], 'GET');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertStringContainsString('spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
     }
 
-    public function testAdminListUsersIsUp()
+    public function testAdminListUsersIsUp(): void
     {
-        $this->createLogin($this->fixtures['userSuperAdmin']);
+        $this->client->loginUser($this->fixtures['user_super_admin']);
 
         $this->client->request('GET', '/admin/users');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Administration des utilisateurs');
 
         $this->client->submitForm('export', [], 'GET');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertStringContainsString('spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
     }
 
-    public function testUsernameExistsIsTrue()
+    public function testUsernameExistsIsTrue(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
         $this->client->request('GET', '/user/username_exists/r.super_admin');
 
@@ -100,9 +97,9 @@ class UserControllerTest extends WebTestCase
         $this->assertTrue($result['response']);
     }
 
-    public function testUsernameExistsIsFalse()
+    public function testUsernameExistsIsFalse(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
         $this->client->request('GET', '/user/username_exists/xxx');
 
@@ -114,8 +111,5 @@ class UserControllerTest extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
-        
-        $this->client = null;
-        $this->fixtures = null;
     }
 }

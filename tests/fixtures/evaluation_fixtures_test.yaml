@@ -1,0 +1,207 @@
+App\Entity\Support\SupportGroup:
+    support_group_with_eval:
+        startDate: <date_create("2020-03-04")>
+        endDate: null
+        status: 2
+        agreement: true
+        referent: "@john_user"
+        service: "@service1"
+        device: "@device1"
+        peopleGroup: "@people_group1"
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        createdBy: $referent
+        updatedBy: $referent
+        supportPeople: ["@support_person_with_eval"]
+
+App\Entity\Support\SupportPerson:
+    support_person_with_eval:
+        startDate: "@support_group_with_eval->startDate"
+        endDate: "@support_group_with_eval->endDate"
+        status: "@support_group_with_eval->status"
+        createdAt: "@support_group_with_eval->createdAt"
+        updatedAt: "@support_group_with_eval->updatedAt"
+        supportGroup: "@support_group_with_eval"
+        person: "@person1"
+        head: "@role_person1->head"
+        role: "@role_person1->role"
+
+App\Entity\Evaluation\EvaluationGroup:
+    evaluation_group1:
+        date: <date_create("2019-04-03")>
+        title: "Evaluation initiale"
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        supportGroup: "@support_group_with_eval"
+        evaluationPeople: ["@evaluation_person1"]
+
+App\Entity\Evaluation\EvaluationPerson:
+    evaluation_person1:
+        evaluation_group: "@evaluation_group1"
+        supportPerson: "@support_person_with_eval"
+        evalInitPerson: "@eval_init_person1"
+
+App\Entity\Evaluation\EvalInitGroup:
+    eva_init_group1:
+        siaoRequest: 1
+        socialHousingRequest: 2
+        supportGroup: "@support_group_with_eval"
+
+App\Entity\Evaluation\EvalBudgetGroup:
+    eval_budget_group1:
+        cafId: 1
+        resourcesGroupAmt: 1100
+        chargesGroupAmt: 500
+        debtsGroupAmt: 10000
+        budgetBalanceAmt: 400
+        evaluation_group: "@evaluation_group1"
+
+App\Entity\Evaluation\EvalFamilyGroup:
+    eval_family_group1:
+        famlReunification: 2
+        commentEvalFamilyGroup: XXX
+        evaluation_group: "@evaluation_group1"
+
+App\Entity\Evaluation\EvalHotelLifeGroup:
+    eval_hotel_life_group1:
+        food: XXX
+        clothing: XXX
+        roomMaintenance: XXX
+        otherHotelLife: XXX
+        commentHotelLife: XXX
+        evaluation_group: "@evaluation_group1"
+
+App\Entity\Evaluation\EvalSocialGroup:
+    eval_social_group1:
+        reasonRequest: 1
+        wanderingTime: 1
+        animal: 1
+        animalType: chien
+        commentEvalSocialGroup: XXX
+        evaluation_group: "@evaluation_group1"
+
+App\Entity\Evaluation\EvalHousingGroup:
+    eval_housing_group1:
+        housingStatus: 1
+        siaoRequest: 1
+        siaoRequestDate: <date_create("2020-04-03")>
+        siaoUpdatedRequestDate: <date_create("2021-04-03")>
+        siaoRecommendation: 10
+        socialHousingRequest: 1
+        socialHousingRequestId: XXX
+        socialHousingRequestDate: <date_create("2020-04-03")>
+        socialHousingUpdatedRequestDate: <date_create("2021-04-03")>
+        housingWishes: XXX
+        citiesWishes: XXX
+        syplo: 1
+        syploId: XXX
+        syploDate: <date_create("2021-04-03")>
+        daloAction: 1
+        daloType: 1
+        daloId: XXX
+        daloDecisionDate: <date_create("2020-04-03")>
+        daloTribunalAction: 1
+        daloTribunalActionDate: <date_create("2021-04-03")>
+        hsgActionEligibility: 1
+        hsgActionRecord: 1
+        hsgActionDate: <date_create("2020-04-03")>
+        hsgActionDept: XXX
+        hsgActionRecordId: XXX
+        evaluation_group: "@evaluation_group1"
+
+App\Entity\Evaluation\EvalInitPerson:
+    eval_init_person1:
+        paper: 1
+        paperType: 1
+        rightSocialSecurity: 1
+        socialSecurity: 1
+        familyBreakdown: 2
+        friendshipBreakdown: 2
+        profStatus: 1
+        contractType: 1
+        resource: 1
+        resourcesAmt: 1100
+        ressourceOther: 1
+        ressourceOtherPrecision: Aide famille
+        ressourceOtherAmt: 100
+        debt: 1
+        debtsAmt: 10000
+        comment: XXX
+        supportPerson: "@support_person_with_eval"
+
+App\Entity\Evaluation\EvalAdmPerson:
+    eval_adm_person1:
+        nationality: 2
+        paper: 1
+        paperType: 1
+        asylumBackground: 2
+        commentEvalAdmPerson: XXX
+        evaluation_person: "@evaluation_person1"
+
+App\Entity\Evaluation\EvalBudgetPerson:
+    eval_budget_person1:
+        resource: 1
+        resourcesAmt: 1100
+        debt: 1
+        debtsAmt: 10000
+        commentEvalBudget: XXX
+        evaluation_person: "@evaluation_person1"
+
+App\Entity\Evaluation\EvalFamilyPerson:
+    eval_family_person1:
+        maritalStatus: 1
+        commentEvalFamilyPerson: XXX
+        evaluation_person: "@evaluation_person1"
+
+App\Entity\Evaluation\EvalJusticePerson:
+    eval_justice_person1:
+        justiceStatus: 1
+        commentEvalJustice: XXX
+        evaluation_person: "@evaluation_person1"
+
+App\Entity\Evaluation\EvalProfPerson:
+    eval_prof_person1:
+        profStatus: 1
+        contractType: 1
+        schoolLevel: 1
+        profExperience: 1
+        commentEvalProf: XXX
+        evaluation_person: "@evaluation_person1"
+
+App\Entity\Evaluation\EvalSocialPerson:
+    eval_social_person1:
+        rightSocialSecurity: 1
+        socialSecurity: 1
+        familyBreakdown: 2
+        friendshipBreakdown: 2
+        healthProblem: 1
+        commentEvalSocialPerson: XXX
+        evaluation_person: "@evaluation_person1"
+
+App\Entity\Evaluation\EvalInitResource:
+    eval_init_resource1:
+        type: 20
+        amount: 1100
+        evalInitPerson: "@eval_init_person1"
+
+App\Entity\Evaluation\EvalBudgetResource:
+    eval_budget_ressource1:
+        type: 20
+        amount: 1000
+        evalBudgetPerson: "@eval_budget_person1"
+    eval_budget_ressource2:
+        type: 1000
+        amount: 100
+        evalBudgetPerson: "@eval_budget_person1"
+
+App\Entity\Evaluation\EvalBudgetCharge:
+    eval_budget_charge1:
+        type: 10
+        amount: 600
+        evalBudgetPerson: "@eval_budget_person1"
+
+App\Entity\Evaluation\EvalBudgetDebt:
+    eval_budget_debt1:
+        type: 10
+        amount: 10000
+        evalBudgetPerson: "@eval_budget_person1"

@@ -7,23 +7,17 @@ $finder = PhpCsFixer\Finder::create()
     ->exclude('public')
     ->exclude('var')
     ->exclude('vendor')
-    ->exclude('web')
     ->notPath('bin/console')
-    ->notPath('public/index.php')
 ;
 
-$config = new PhpCsFixer\Config();
-$config
+return (new PhpCsFixer\Config())
     ->setRiskyAllowed(true)
     ->setRules([
-        '@PSR1' => true,
-        '@PSR2' => true,
+        '@PSR12' => true,
         '@Symfony' => true,
         'array_syntax' => ['syntax' => 'short'],
-        // 'single_quote' => false
     ])
+    ->setLineEnding(PHP_EOL)
     ->setFinder($finder)
     ->setCacheFile(__DIR__.'/var/.php_cs.cache')
 ;
-
-return $config;
