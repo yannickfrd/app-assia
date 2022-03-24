@@ -217,7 +217,8 @@ class RdvControllerTest extends WebTestCase
 
     public function testEditRdvWithOtherUserIsSuccessful(): void
     {
-        $this->client->loginUser($this->fixtures['user4']);
+        $user = $this->fixtures['user4'];
+        $this->client->loginUser($user);
 
         $crawler = $this->client->request('GET', '/calendar/month');
 
@@ -226,6 +227,7 @@ class RdvControllerTest extends WebTestCase
             'rdv' => [
                 'title' => 'RDV test edit',
                 'start' => $now->format('Y-m-d\TH:00'),
+                'users' => [$user->getId()],
                 'end' => (clone $now)->modify('+1 hour')->format('Y-m-d\TH:00'),
                 '_token' => $crawler->filter('#rdv__token')->attr('value'),
             ],
