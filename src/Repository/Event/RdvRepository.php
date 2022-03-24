@@ -323,4 +323,18 @@ class RdvRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+
+    public function findRdvWithNotUsers()
+    {
+        return $this->createQueryBuilder('r')->addSelect('r')
+
+            ->leftJoin('r.users', 'u')
+            ->addSelect('PARTIAL u.{id}')
+
+            ->where('r.createdBy IS NOT null')
+
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }
