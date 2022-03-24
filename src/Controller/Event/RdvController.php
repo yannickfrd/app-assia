@@ -175,8 +175,10 @@ final class RdvController extends AbstractController
     /**
      * @Route("/rdv/{id}/show", name="rdv_show", methods="GET")
      */
-    public function show(Rdv $rdv): JsonResponse
+    public function show(int $id, RdvRepository $rdvRepo): JsonResponse
     {
+        $rdv = $rdvRepo->findRdv($id);
+
         $this->denyAccessUnlessGranted('VIEW', $rdv);
 
         return $this->json([
