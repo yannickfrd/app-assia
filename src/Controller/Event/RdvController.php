@@ -146,6 +146,7 @@ final class RdvController extends AbstractController
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
+
         $rdv = (new Rdv())->setSupportGroup($supportGroup);
         $form = $this->createForm(RdvType::class, $rdv)
             ->handleRequest($request);

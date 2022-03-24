@@ -19,6 +19,9 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Count;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class RdvType extends AbstractType
 {
@@ -82,6 +85,9 @@ class RdvType extends AbstractType
                     'placeholder' => 'event.users.placeholder',
                     'size' => 1,
                 ],
+                'constraints' => [
+                    new Count(['min' => 1])
+                ]
             ])
             ->add('supportGroup', EntityType::class, [
                 'class' => SupportGroup::class,

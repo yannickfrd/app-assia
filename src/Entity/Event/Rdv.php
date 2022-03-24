@@ -62,6 +62,7 @@ class Rdv extends AbstractEvent
      * @var Collection<User>
      * @ORM\ManyToMany(targetEntity=User::class, inversedBy="rdvs")
      * @ORM\OrderBy({"lastname": "ASC"})
+     * @Assert\NotBlank()
      * @Groups("show_rdv")
      */
     protected $users;
