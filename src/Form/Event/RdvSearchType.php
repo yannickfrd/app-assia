@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\Support\Rdv;
+namespace App\Form\Event;
 
 use App\Entity\Event\Rdv;
 use App\Entity\Organization\Tag;

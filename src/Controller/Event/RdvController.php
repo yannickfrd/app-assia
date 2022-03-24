@@ -6,11 +6,11 @@ namespace App\Controller\Event;
 
 use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Event\Rdv;
+use App\Form\Event\RdvSearchType;
+use App\Form\Event\RdvType;
+use App\Form\Event\SupportRdvSearchType;
 use App\Form\Model\Support\RdvSearch;
 use App\Form\Model\Support\SupportRdvSearch;
-use App\Form\Support\Rdv\RdvSearchType;
-use App\Form\Support\Rdv\RdvType;
-use App\Form\Support\Rdv\SupportRdvSearchType;
 use App\Repository\Event\RdvRepository;
 use App\Repository\Support\SupportGroupRepository;
 use App\Security\CurrentUserService;

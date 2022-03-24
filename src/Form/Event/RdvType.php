@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Form\Support\Rdv;
+namespace App\Form\Event;
 
 use App\Entity\Event\Rdv;
 use App\Entity\Organization\Tag;
 use App\Entity\Organization\User;
 use App\Entity\Support\SupportGroup;
-use App\Form\Event\AlertType;
 use App\Form\Utils\Choices;
 use App\Repository\Organization\TagRepository;
 use App\Repository\Organization\UserRepository;

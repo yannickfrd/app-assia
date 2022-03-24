@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Event;
 
 use App\Entity\Event\Rdv;
-use App\Form\Support\Rdv\RdvType;
+use App\Form\Event\RdvType;
 use App\Repository\Event\RdvRepository;
 use App\Service\Calendar;
 use App\Service\SupportGroup\SupportManager;
