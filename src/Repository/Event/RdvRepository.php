@@ -258,17 +258,24 @@ class RdvRepository extends ServiceEntityRepository
      */
     public function findRdvsOfUser(User $user, int $maxResults = 100): ?array
     {
-        return $this->createQueryBuilder('rdv')
-            ->leftJoin('rdv.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
+        return $this->createQueryBuilder('r')
+            ->join('r.users', 'u')
+            ->leftJoin('r.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, head, role}')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
-            ->where('rdv.createdBy = :user')
-            ->setParameter('user', $user)
+            ->leftJoin('r.alerts', 'a')->addSelect('a')
+
             ->andWhere('sg.id IS NULL OR sp.head = TRUE')
-            ->andWhere('rdv.start >= :start')
+
+            ->andWhere('u.id = :user')
+            ->setParameter('user', $user)
+
+            ->andWhere('r.start >= :start')
             ->setParameter('start', (new \DateTime())->modify('-1 hour'))
-            ->orderBy('rdv.start', 'DESC')
+
+            ->orderBy('r.start', 'DESC')
             ->setMaxResults($maxResults)
+
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
