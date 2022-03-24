@@ -87,6 +87,7 @@
                     <div class="col-md-6">
                         {{ form_label(form_rdv.users, null, {label_attr: {class: 'col-12 col-sm-12'}}) }}
                         {{ form_widget(form_rdv.users) }}
+                        {{ form_errors(form_rdv.users) }}
                     </div>
                     <div class="col-md-6">
                         {{ form_label(form_rdv.supportGroup, null, {label_attr: {class: 'col-12 col-sm-12'}}) }}
@@ -135,8 +136,8 @@
                              data-container-tag="div" data-widget-counter="{{ form_rdv.alerts|length }}">
                         </div>
                         <button type="button" class="btn btn-{{ theme_color }} btn-sm"
-                            data-list-selector="#alerts-fields-list" data-add-widget="alert"
-                            data-url="/alert/__id__/toggle-status">
+                                data-list-selector="#alerts-fields-list" data-add-widget="alert"
+                                data-url="/alert/__id__/toggle-status">
                             <i class="fas fa-plus-square mr-2"></i>Ajouter un rappel
                         </button>
                     </div>
@@ -146,8 +147,8 @@
             <div class="modal-footer d-flex justify-content-between">
                 <div class="float-left">
                     <button id="modal-btn-delete" class="mr-3 btn btn-danger" data-placement="bottom"
-                        data-action="delete-rdv-modal" data-url="{{ path('rdv_delete', {'id': '__id__'}) }}"
-                        title="Supprimer le rendez-vous"><i class="fas fa-trash-alt"></i>
+                            data-action="delete-rdv-modal" data-url="{{ path('rdv_delete', {'id': '__id__'}) }}"
+                            title="Supprimer le rendez-vous"><i class="fas fa-trash-alt"></i>
                         <span class="d-md-inline ml-2">Supprimer</span>
                     </button>
                 </div>

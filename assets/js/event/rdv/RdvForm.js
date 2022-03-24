@@ -8,23 +8,22 @@ import ApiCalendar from "../../api/ApiCalendar";
 import WidgetCollectionManager from "../../utils/form/WidgetCollectionManager";
 
 export default class RdvForm {
-
     /**
      * @param {RdvManager|CalendarManager} manager
      */
     constructor(manager) {
         this.manager = manager
-
         this.loader = manager.loader
         this.ajax = manager.ajax
 
         this.apiCalendar = new ApiCalendar()
-        this.formValidator = new FormValidator(this.modalRdvElt)
 
         this.themeColor = document.getElementById('header').dataset.color
 
         this.modalRdvElt = document.getElementById('modal-rdv')
         this.modalElt = new Modal(this.modalRdvElt)
+
+        this.formValidator = new FormValidator(this.modalRdvElt)
 
         this.btnAddAlertElt = document.querySelector('button[data-add-widget]')
         this.btnSaveRdvElt = this.modalRdvElt.querySelector('button[data-action="save-rdv"]')
@@ -44,6 +43,8 @@ export default class RdvForm {
         this.rdvLocationInput = this.modalRdvElt.querySelector('input[name="rdv[location]"]')
         this.rdvStatusInput = this.modalRdvElt.querySelector('select[name="rdv[status]"]')
         this.rdvContentText = this.modalRdvElt.querySelector('textarea[name="rdv[content]"]')
+
+        this.usersSelecElt = document.getElementById('rdv_users')
 
         const divSupportElt = document.querySelector('div[data-support]')
         this.supportId = divSupportElt ? divSupportElt.dataset.support : null
@@ -103,9 +104,6 @@ export default class RdvForm {
      * @param {Event} e
      */
     resetForm(e) {
-        // console.log(this.manager.newRdvBtn.dataset.url)
-        // this.formRdvElt.action = this.manager.newRdvBtn.dataset.url
-
         this.formValidator.reinit()
 
         this.rdvTitleElt.textContent = 'Nouveau rendez-vous'
@@ -180,19 +178,9 @@ export default class RdvForm {
         inputDateElt.addEventListener('focusout', e => this.isValidDate(e.target))
     }
 
-    /**
-     *
-     * @param {HTMLInputElement} inputDateElt
-     * @returns {Boolean}
-     */
-    isValidDate(inputDateElt) {
-        return this.formValidator
-            .checkDate(inputDateElt, -(10 * 365), (2 * 365), 'Date incorrecte', false) !== false
-    }
-
     requestCreateRdv() {
-        if (this.rdvTitleInput.value === '') {
-            return new MessageFlash('danger', 'Le rdv est vide.')
+        if (!this.isValidForm()) {
+            return new MessageFlash('danger', 'Une ou plusieurs informations sont invalides.')
         }
 
         if (!this.loader.isActive()) {
@@ -373,6 +361,55 @@ export default class RdvForm {
                 this.apiCalendar.addEvent(rdvModel, listApis())
             }, {once: true})
         }
+    }
+
+    /**
+     *
+     * @param {Element|HTMLElement} inputDateElt
+     * @returns {Boolean}
+     */
+    isValidDate(inputDateElt) {
+        return this.formValidator
+            .checkDate(inputDateElt, -(10 * 365), (2 * 365), 'Date incorrecte', false) !== false
+    }
+
+    /**
+     * Vérifie si les champs du formulaire sont valides.
+     * @returns {Boolean}
+     */
+    isValidForm() {
+        let isValid = true
+        const fieldElts = [
+            this.rdvTitleInput,
+            this.dateInput,
+            this.startInput,
+            this.endInput,
+            this.usersSelecElt,
+        ]
+
+        document.querySelector('#alerts-fields-list').querySelectorAll('input, select').forEach(fieldElt => fieldElts.push(fieldElt))
+
+        fieldElts.forEach(fieldElt => {
+            if (fieldElt.value === '') {
+                isValid = false
+
+                fieldElt.addEventListener('input', () => {
+                    if (fieldElt.value === '') {
+                        this.formValidator.invalidField(fieldElt, 'Saisie obligatoire.')
+                    }
+                    this.formValidator.validField(fieldElt)
+                })
+                return this.formValidator.invalidField(fieldElt, 'Saisie obligatoire.')
+            }
+
+            this.formValidator.validField(fieldElt, false)
+
+            if (fieldElt.type.includes('date') && this.isValidDate(fieldElt) === false) {
+                isValid = false
+            }
+        })
+
+        return isValid
     }
 
     /** @returns {String} */
