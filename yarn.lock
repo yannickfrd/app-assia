@@ -1073,6 +1073,7 @@
     "string-width" "^4.2.3"
 
 "@symfony/webpack-encore@github:symfony/webpack-encore":
+  "integrity" "sha512-5PTMfqOin9gPlQ2XKVds25/1kyst0juCH7bK/2dZ4SEVUls9fj2UpslQbX5mH4bQQj6w9JH0wcwuSZAvyH+5NQ=="
   "resolved" "git+ssh://git@github.com/symfony/webpack-encore.git#9e1528efbbd9db8ac734c177f2e22c71a507e60c"
   "version" "1.8.1"
   dependencies:
