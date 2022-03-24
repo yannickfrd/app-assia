@@ -73,11 +73,6 @@ class Rdv extends AbstractEvent
      */
     private $supportGroup;
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="rdvs")
-//     */
-//    private $user;
-
     /**
      * @ORM\Column(type="string", nullable=true)
      * @Groups("show_rdv")
@@ -151,18 +146,6 @@ class Rdv extends AbstractEvent
 
         return $this;
     }
-
-//    public function getUser(): ?User
-//    {
-//        return $this->user;
-//    }
-//
-//    public function setUser(?User $user): self
-//    {
-//        $this->user = $user;
-//
-//        return $this;
-//    }
 
     public function getGoogleEventId(): ?string
     {
