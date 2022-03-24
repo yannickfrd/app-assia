@@ -4,18 +4,14 @@ namespace App\Tests\Controller\Rdv;
 
 use App\Entity\Support\Rdv;
 use App\Entity\Support\SupportGroup;
-use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\HttpFoundation\Response;
 
 class RdvControllerTest extends WebTestCase
 {
-    use AppTestTrait;
-
     /** @var KernelBrowser */
     protected $client;
 
@@ -35,30 +31,31 @@ class RdvControllerTest extends WebTestCase
     {
         parent::setUp();
 
-        $this->client = $this->createClient();
+        $this->client = static::createClient();
+        $this->client->followRedirects();
 
         /** @var AbstractDatabaseTool */
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
 
         $this->fixtures = $this->databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/SupportFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/RdvFixturesTest.yaml',
+            dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/service_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/person_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/support_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/rdv_fixtures_test.yaml',
         ]);
 
-        $this->supportGroup = $this->fixtures['supportGroup1'];
+        $this->supportGroup = $this->fixtures['support_group1'];
         $this->rdv = $this->fixtures['rdv1'];
     }
 
-    public function testSearchRdvsIsSuccessful()
+    public function testSearchRdvsIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
         $this->client->request('GET', '/rdvs');
 
         // Page is up
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Rendez-vous');
 
         // Search is successful
@@ -68,13 +65,13 @@ class RdvControllerTest extends WebTestCase
             'date[end]' => (new \DateTime())->format('Y-m-d'),
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Rendez-vous');
     }
 
-    public function testExportRdvsIsSuccessful()
+    public function testExportRdvsIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
         $this->client->request('GET', '/rdvs');
 
         // Export with no result
@@ -82,29 +79,29 @@ class RdvControllerTest extends WebTestCase
             'date[start]' => (new \Datetime())->modify('+10 year')->format('Y-m-d'),
         ], 'GET');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('.alert-warning', 'Aucun résultat à exporter');
 
         // Export with results
         $this->client->submitForm('export', [], 'GET');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertStringContainsString('spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
     }
 
-    public function testShowSupportListRdvsIsUp()
+    public function testShowSupportListRdvsIsUp(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
         $id = $this->supportGroup->getId();
         $this->client->request('GET', "/support/$id/rdvs");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Rendez-vous');
     }
 
-    public function testCreateNewRdvIsSuccessful()
+    public function testCreateNewRdvIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
         /** @var Crawler */
         $crawler = $this->client->request('GET', '/calendar/month');
         $csrfToken = $crawler->filter('#rdv__token')->attr('value');
@@ -126,15 +123,15 @@ class RdvControllerTest extends WebTestCase
             ],
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('create', $content['action']);
         $this->assertSame('RDV test', $content['rdv']['title']);
     }
 
-    public function testCreateNewSupportRdvIsSuccessful()
+    public function testCreateNewSupportRdvIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
         $id = $this->supportGroup->getId();
         /** @var Crawler */
         $crawler = $this->client->request('GET', "/support/$id/calendar/month");
@@ -144,7 +141,7 @@ class RdvControllerTest extends WebTestCase
         // Fail
         $this->client->request('POST', "/support/$id/rdv/new");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('danger', $content['alert']);
 
@@ -158,15 +155,15 @@ class RdvControllerTest extends WebTestCase
             ],
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('create', $content['action']);
         $this->assertSame('RDV test', $content['rdv']['title']);
     }
 
-    public function testGetRdv()
+    public function testGetRdv(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
         $id = $this->rdv->getId();
         $this->client->request('GET', "rdv/$id/get");
 
@@ -174,9 +171,9 @@ class RdvControllerTest extends WebTestCase
         $this->assertSame('show', $content['action']);
     }
 
-    public function testEditRdvIsSuccessful()
+    public function testEditRdvIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
         /** @var Crawler */
         $crawler = $this->client->request('GET', '/calendar/month');
         $csrfToken = $crawler->filter('#rdv__token')->attr('value');
@@ -199,15 +196,15 @@ class RdvControllerTest extends WebTestCase
             ],
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('update', $content['action']);
         $this->assertSame('RDV test edit', $content['rdv']['title']);
     }
 
-    public function testEditRdvWithOtherUserIsSuccessful()
+    public function testEditRdvWithOtherUserIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['user4']);
+        $this->client->loginUser($this->fixtures['user4']);
 
         $crawler = $this->client->request('GET', '/calendar/month');
 
@@ -226,9 +223,9 @@ class RdvControllerTest extends WebTestCase
         $this->assertSame('RDV test edit', $content['rdv']['title']);
     }
 
-    public function testDeleteRdv()
+    public function testDeleteRdv(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
         $id = $this->rdv->getId();
         $this->client->request('GET', "/rdv/$id/delete");
 
@@ -239,8 +236,5 @@ class RdvControllerTest extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
-
-        $this->client = null;
-        $this->fixtures = null;
     }
 }

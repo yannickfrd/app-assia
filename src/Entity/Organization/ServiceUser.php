@@ -78,6 +78,10 @@ class ServiceUser
     {
         $this->user = $user;
 
+        if (!$this->user->getServiceUser()->contains($this)) {
+            $this->user->addServiceUser($this);
+        }
+
         return $this;
     }
 
@@ -89,6 +93,10 @@ class ServiceUser
     public function setService(?Service $service): self
     {
         $this->service = $service;
+
+        if (!$this->service->getServiceUser()->contains($this)) {
+            $this->service->addServiceUser($this);
+        }
 
         return $this;
     }

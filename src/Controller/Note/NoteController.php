@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Note;
 
 use App\Controller\Traits\ErrorMessageTrait;
@@ -29,7 +31,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class NoteController extends AbstractController
+final class NoteController extends AbstractController
 {
     use ErrorMessageTrait;
 

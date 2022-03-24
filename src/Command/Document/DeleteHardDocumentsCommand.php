@@ -46,7 +46,7 @@ class DeleteHardDocumentsCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         $nbMonths = $input->getArgument('nb_months') ?? 12;
-        $date = (new \Datetime())->modify("-{$nbMonths} months");
+        $date = (new \DateTime())->modify("-{$nbMonths} months");
 
         $this->disableListeners($this->em);
         $this->em->getFilters()->disable('softdeleteable');

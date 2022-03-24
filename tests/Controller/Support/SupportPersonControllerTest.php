@@ -4,19 +4,15 @@ namespace App\Tests\Controller\Support;
 
 use App\Entity\Support\SupportGroup;
 use App\Service\Grammar;
-use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\HttpFoundation\Response;
 
 class SupportPersonControllerTest extends WebTestCase
 {
-    use AppTestTrait;
-
     /** @var KernelBrowser */
     protected $client;
 
@@ -33,7 +29,8 @@ class SupportPersonControllerTest extends WebTestCase
     {
         parent::setUp();
 
-        $this->client = $this->createClient();
+        $this->client = static::createClient();
+        $this->client->followRedirects();
 
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
     }
@@ -41,23 +38,23 @@ class SupportPersonControllerTest extends WebTestCase
     protected function loadFixtures(): void
     {
         $this->fixtures = $this->databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/SupportFixturesTest.yaml',
+            dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/service_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/person_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/support_fixtures_test.yaml',
         ]);
     }
 
-    public function testAddPersonToSupportIsSuccessful()
+    public function testAddPersonToSupportIsSuccessful(): void
     {
         $this->loadFixtures();
 
-        $this->createLogin($this->fixtures['userSuperAdmin']);
+        $this->client->loginUser($this->fixtures['user_super_admin']);
 
         $person = $this->fixtures['person5'];
         $personId = $person->getId();
-        $groupId = $this->fixtures['peopleGroup1']->getId();
-        $supportId = $this->fixtures['supportGroup1']->getId();
+        $groupId = $this->fixtures['people_group1']->getId();
+        $supportId = $this->fixtures['support_group1']->getId();
 
         /** @var Crawler */
         $crawler = $this->client->request('GET', "/group/$groupId/search_person");
@@ -83,43 +80,55 @@ class SupportPersonControllerTest extends WebTestCase
         );
     }
 
-    public function testDeleteSupportPersonWithoutTokenIsFailed()
+    public function testDeleteSupportPersonWithoutTokenIsFailed(): void
     {
         $this->loadFixtures();
 
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
-        $id = $this->fixtures['supportGroup1']->getId();
-        $supportPersId = $this->fixtures['supportPerson2']->getId();
+        $id = $this->fixtures['support_group1']->getId();
+        $supportPersId = $this->fixtures['support_person2']->getId();
         $this->client->request('GET', "/support/$id/edit");
         $this->client->request('GET', "/support-person/$supportPersId/delete/tokenId");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('.alert.alert-danger', 'Une erreur');
     }
 
-    public function testDeleteSupportPersonIsSuccessful()
+    public function testDeleteSupportPersonIsSuccessful(): void
     {
         $this->loadFixtures();
 
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
-        $id = $this->fixtures['supportGroup1']->getId();
+        $id = $this->fixtures['support_group1']->getId();
         /** @var Crawler */
         $crawler = $this->client->request('GET', "/support/$id/edit");
         $url = $crawler->filter('button[data-action="remove"]')->last()->attr('data-url');
         $this->client->request('GET', $url);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('.alert.alert-warning', 'est retiré');
+    }
+
+    public function testGetPeopleInSupportGroupIsSuccessful(): void
+    {
+        $this->loadFixtures();
+
+        $this->client->loginUser($this->fixtures['john_user']);
+
+        $id = $this->fixtures['support_group1']->getId();
+        $this->client->request('GET', "/support/$id/people");
+
+        $response = json_decode($this->client->getResponse()->getContent(), true);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertSame('get_support_people', $response['action']);
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
-
-        $this->client = null;
-        $this->fixtures = null;
 
         $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
         $cache->clear();

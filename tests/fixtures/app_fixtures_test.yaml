@@ -1,0 +1,130 @@
+App\Entity\Organization\User:
+    user_super_admin:
+        firstname: ROLE
+        lastname: SUPER_ADMIN
+        username: r.super_admin
+        plainPassword: password
+        email: $username@mail.fr
+        status: 6
+        roles: ["ROLE_SUPER_ADMIN"]
+        phone1: "01 00 00 00 00"
+        loginCount: 1
+    user_admin:
+        firstname: Role
+        lastname: ADMIN
+        username: r.admin
+        plainPassword: password
+        email: $username@mail.fr
+        status: 3
+        roles: ["ROLE_ADMIN"]
+        phone1: "01 00 00 00 00"
+        loginCount: 1
+        serviceUser: ["@serv2_user_admin"]
+    john_user:
+        firstname: John
+        lastname: USER
+        username: john_user
+        plainPassword: password
+        email: $username@mail.fr
+        status: 1
+        phone1: 01 00 00 00 00
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        loginCount: <numberBetween(0, 99)>
+        lastlogin: <dateTimeBetween($updatedAt, "now")>
+        createdBy: "@user_super_admin"
+        updatedBy: "@user_super_admin"
+        serviceUser: ["@serv1_user1"]
+    user4:
+        firstname: <fr_FR:firstName()>
+        lastname: <fr_FR:lastName()>
+        username: <mb_strtolower($firstname.$lastname)>
+        plainPassword: password
+        email: $username@mail.fr
+        status: 1
+        phone1: 01 00 00 00 00
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        loginCount: <numberBetween(0, 99)>
+        lastlogin: <dateTimeBetween($updatedAt, "now")>
+        createdBy: "@user_super_admin"
+        updatedBy: "@user_super_admin"
+        serviceUser: ["@serv1_user4"]
+    user5:
+        firstname: <fr_FR:firstName()>
+        lastname: <fr_FR:lastName()>
+        username: <mb_strtolower($firstname.$lastname)>
+        plainPassword: password
+        email: $username@mail.fr
+        status: 1
+        phone1: 01 00 00 00 00
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        loginCount: <numberBetween(0, 99)>
+        lastlogin: <dateTimeBetween($updatedAt, "now")>
+        createdBy: "@user_super_admin"
+        updatedBy: "@user_super_admin"
+        serviceUser: ["@serv2_user5"]
+
+App\Entity\Organization\Service:
+    service1:
+        name: CHRS Cergy
+        type: 1
+        email: chrs@mail.fr
+        city: Pontoise
+        phone1: 01 00 00 00 00
+        preAdmission: 1
+        coefficient: 2
+        place: true
+        pole: "@pole1"
+        createdAt: <date_create()>
+        updatedAt: <date_create()>
+    service2:
+        name: Autre service
+        type: 2
+        pole: "@pole1"
+
+App\Entity\Organization\ServiceUser:
+    serv1_user1:
+        service: "@service1"
+        user: "@john_user"
+        main: true
+    serv2_user_admin:
+        service: "@service2"
+        user: "@user_admin"
+    serv1_user4:
+        service: "@service1"
+        user: "@user4"
+    serv2_user5:
+        service: "@service2"
+        user: "@user5"
+
+App\Entity\Organization\Device:
+    device1:
+        name: Insertion
+        place: true
+        code: 5
+
+App\Entity\Organization\ServiceDevice:
+    serv_device1:
+        device: "@device1"
+        service: "@service1"
+
+App\Entity\Organization\Pole:
+    pole1:
+        name: Habitat
+        organization: "@organization1"
+        logoPath: images/logo_assia_mail.png
+        createdAt: <date_create()>
+        updatedAt: <date_create()>
+
+App\Entity\Organization\Organization:
+    organization1:
+        name: Organization test
+        type: <numberBetween(1, 9)>
+
+App\Entity\Admin\Setting:
+    setting:
+        organizationName: Organization test
+        softDeletionDelay: 24
+        hardDeletionDelay: 24

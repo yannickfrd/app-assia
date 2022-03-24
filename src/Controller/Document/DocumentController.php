@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Document;
 
 use App\Controller\Traits\ErrorMessageTrait;
@@ -29,7 +31,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class DocumentController extends AbstractController
+final class DocumentController extends AbstractController
 {
     use ErrorMessageTrait;
 
@@ -161,7 +163,7 @@ class DocumentController extends AbstractController
         $form = $this->createForm(ActionType::class, null)
             ->handleRequest($request);
 
-        $items = json_decode($request->request->get('items'));
+        $items = $request->request->has('items') ? json_decode($request->request->get('items')) : null;
 
         if ($form->isSubmitted() && $form->isValid() && $items && count($items) > 0) {
             return $this->json($downloader->sendDocuments($items, $supportGroup));

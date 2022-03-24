@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\App;
 
 use App\Entity\Support\SupportGroup;
@@ -19,7 +21,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class SiSiaoController extends AbstractController
+final class SiSiaoController extends AbstractController
 {
     use TargetPathTrait;
 

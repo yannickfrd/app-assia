@@ -2,6 +2,7 @@
 
 namespace App\Service\Indicators;
 
+use App\Entity\Organization\Device;
 use App\Form\Model\Support\SupportsByUserSearch;
 use App\Repository\Organization\DeviceRepository;
 use App\Repository\Organization\UserRepository;

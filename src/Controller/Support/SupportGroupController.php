@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Support;
 
 use App\Controller\Traits\ErrorMessageTrait;
@@ -33,7 +35,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class SupportGroupController extends AbstractController
+final class SupportGroupController extends AbstractController
 {
     use ErrorMessageTrait;
 

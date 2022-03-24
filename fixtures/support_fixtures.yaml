@@ -1,0 +1,49 @@
+App\Entity\Support\SupportGroup:
+    support_group1:
+        startDate: <date_create("2019-04-03")>
+        endDate: null
+        status: 2
+        agreement: true
+        referent: "@john_user"
+        service: "@service1"
+        device: "@device1"
+        peopleGroup: "@people_group1"
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        createdBy: $referent
+        updatedBy: $referent
+    support_group{2..50}:
+        startDate: <dateTimeBetween("-2 years", "now")>
+        endDate: <dateTimeBetween($startDate, "now")>
+        status: <numberBetween(1, 4)>
+        agreement: true
+        referent: "@user*"
+        service: "@service*"
+        device: "@device*"
+        peopleGroup: "@people_group*"
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        createdBy: $referent
+        updatedBy: $referent
+
+App\Entity\Support\SupportPerson:
+    support_person1:
+        startDate: "@support_group1->startDate"
+        endDate: "@support_group1->endDate"
+        status: "@support_group1->status"
+        createdAt: "@support_group1->createdAt"
+        updatedAt: "@support_group1->updatedAt"
+        supportGroup: "@support_group1"
+        person: "@person1"
+        head: "@role_person1->head"
+        role: "@role_person1->role"
+    support_person{2..150}:
+        startDate: <dateTimeBetween("-2 years", "now")>
+        endDate: <dateTimeBetween($startDate, "now")>
+        status: <numberBetween(1, 4)>
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        supportGroup: "@support_group*"
+        person: "@person*"
+        head: "@role_person*->head"
+        role: "@role_person*->role"

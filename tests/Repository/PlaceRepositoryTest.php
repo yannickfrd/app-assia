@@ -37,9 +37,9 @@ class PlaceRepositoryTest extends WebTestCase
         $databaseTool = $this->getContainer()->get(DatabaseToolCollection::class)->get();
 
         $fixtures = $databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/DataFixturesTest/ServiceFixturesTest.yaml',
-            dirname(__DIR__).'/DataFixturesTest/PlaceFixturesTest.yaml',
+            dirname(__DIR__).'/fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/fixtures/service_fixtures_test.yaml',
+            dirname(__DIR__).'/fixtures/place_fixtures_test.yaml',
         ]);
 
         $kernel = self::bootKernel();
@@ -60,35 +60,35 @@ class PlaceRepositoryTest extends WebTestCase
             ->setPole($this->entityManager->getRepository(Pole::class)->findOneBy(['name' => 'AVDL']));
     }
 
-    public function testCount()
+    public function testCount(): void
     {
         $this->assertGreaterThanOrEqual(5, $this->placeRepo->count([]));
     }
 
-    public function testFindAllPlacesQueryWithoutFilters()
+    public function testFindAllPlacesQueryWithoutFilters(): void
     {
         $qb = $this->placeRepo->findPlacesQuery(new PlaceSearch());
         $this->assertGreaterThanOrEqual(5, count($qb->getResult()));
     }
 
-    public function testFindAllPlacesQueryWithFilters()
+    public function testFindAllPlacesQueryWithFilters(): void
     {
         $qb = $this->placeRepo->findPlacesQuery($this->search);
         $this->assertGreaterThanOrEqual(1, count($qb->getResult()));
     }
 
-    public function testFindPlacesToExportQueryWithFilters()
+    public function testFindPlacesToExportQueryWithFilters(): void
     {
         $this->assertGreaterThanOrEqual(1, $this->placeRepo->findPlacesToExport($this->search));
     }
 
-    public function testGetPlacesQueryBuilder()
+    public function testGetPlacesQueryBuilder(): void
     {
         $qb = $this->placeRepo->getPlacesQueryBuilder($this->service);
         $this->assertGreaterThanOrEqual(1, count($qb->getQuery()->getResult()));
     }
 
-    public function testfindPlacesOfService()
+    public function testfindPlacesOfService(): void
     {
         $this->assertGreaterThanOrEqual(1, $this->placeRepo->findPlacesOfService($this->service));
     }

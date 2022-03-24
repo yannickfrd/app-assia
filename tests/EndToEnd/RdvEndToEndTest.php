@@ -2,6 +2,7 @@
 
 namespace App\Tests\EndToEnd;
 
+use App\Tests\EndToEnd\Traits\AppPantherTestTrait;
 use Symfony\Component\Panther\Client as PantherClient;
 use Symfony\Component\Panther\DomCrawler\Crawler;
 use Symfony\Component\Panther\PantherTestCase;
@@ -15,15 +16,15 @@ class RdvEndToEndTest extends PantherTestCase
 
     protected function setUp(): void
     {
-        $this->client = $this->createPantherLogin();
+        $this->client = $this->loginUser();
 
         $this->faker = \Faker\Factory::create('fr_FR');
     }
 
-    public function testRdv()
+    public function testRdv(): void
     {
         /** @var Crawler */
-        $crawler = $this->client->request('GET', '/support/1/view');
+        $crawler = $this->client->request('GET', '/support/1/show');
 
         $crawler = $this->goToCalendar($crawler);
         $crawler = $this->createRdv($crawler);
@@ -31,9 +32,9 @@ class RdvEndToEndTest extends PantherTestCase
         // $crawler = $this->deleteRdv($crawler);
     }
 
-    private function goToCalendar(Crawler $crawler)
+    private function goToCalendar(Crawler $crawler): Crawler
     {
-        $this->outputMsg('Go to calendar page');
+        $this->outputMsg('Show calendar page');
 
         $link = $crawler->filter('#support-calendar')->link();
 
@@ -41,13 +42,13 @@ class RdvEndToEndTest extends PantherTestCase
         $crawler = $this->client->click($link);
 
         $this->assertSelectorTextContains('h1', 'Rendez-vous');
-        // $this->client->waitFor('#js-new-rdv');
+        // $this->client->waitForVisibility('#js-new-rdv');
         sleep(1);
 
         return $crawler;
     }
 
-    private function createRdv(Crawler $crawler)
+    private function createRdv(Crawler $crawler): Crawler
     {
         $this->outputMsg('Create a rdv');
 
@@ -63,7 +64,7 @@ class RdvEndToEndTest extends PantherTestCase
         ]);
         sleep(1);
 
-        $this->client->waitFor('#js-msg-flash');
+        $this->client->waitForVisibility('#js-msg-flash');
         $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
 
         $crawler->selectButton('btn-close-msg')->click();
@@ -72,7 +73,7 @@ class RdvEndToEndTest extends PantherTestCase
         return $crawler;
     }
 
-    private function editRdv(Crawler $crawler)
+    private function editRdv(Crawler $crawler): Crawler
     {
         $this->outputMsg('Edit a rdv');
 
@@ -87,7 +88,7 @@ class RdvEndToEndTest extends PantherTestCase
             'rdv[content]' => join('. ', $this->faker->paragraphs(mt_rand(1, 2))),
         ]);
 
-        sleep(1);
+        $this->client->waitForVisibility('#js-msg-flash');
         $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
 
         $crawler->selectButton('btn-close-msg')->click();
@@ -96,7 +97,7 @@ class RdvEndToEndTest extends PantherTestCase
         return $crawler;
     }
 
-    private function deleteRdv(Crawler $crawler)
+    private function deleteRdv(Crawler $crawler): Crawler
     {
         $this->outputMsg('Delete a rdv');
 

@@ -3,7 +3,6 @@
 namespace App\Entity\Evaluation;
 
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Evaluation\Resource;
 
 /**
  * @ORM\Entity(repositoryClass=ResourceRepository::class)

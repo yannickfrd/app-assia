@@ -15,8 +15,6 @@ class RdvVoter extends Voter
     /** @var User */
     protected $user;
 
-    protected $userId;
-
     /** @var Rdv */
     protected $rdv;
 
@@ -31,9 +29,7 @@ class RdvVoter extends Voter
 
     protected function voteOnAttribute(string $attribute, $rdv, TokenInterface $token): bool
     {
-        /** @var User */
         $this->user = $token->getUser();
-        $this->userId = $this->user->getId();
         $this->rdv = $rdv;
         $this->supportGroup = $this->rdv->getSupportGroup();
 
@@ -77,9 +73,9 @@ class RdvVoter extends Voter
 
     protected function isCreatorOrReferent(): bool
     {
-        if (($this->rdv->getCreatedBy() && $this->rdv->getCreatedBy()->getId() === $this->userId)
-            || $this->supportGroup && (($this->supportGroup->getReferent() && $this->supportGroup->getReferent()->getId() === $this->userId)
-            || ($this->supportGroup->getReferent2() && $this->supportGroup->getReferent2()->getId() === $this->userId))
+        if (($this->rdv->getCreatedBy() && $this->rdv->getCreatedBy()->getId() === $this->user->getId())
+            || $this->supportGroup && (($this->supportGroup->getReferent() && $this->supportGroup->getReferent()->getId() === $this->user->getId())
+            || ($this->supportGroup->getReferent2() && $this->supportGroup->getReferent2()->getId() === $this->user->getId()))
         ) {
             return true;
         }

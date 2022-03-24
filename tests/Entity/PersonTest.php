@@ -27,44 +27,44 @@ class PersonTest extends WebTestCase
             ->setEmail($faker->email());
     }
 
-    public function testValidPerson()
+    public function testValidPerson(): void
     {
         $this->assertHasErrors($this->person, 0);
     }
 
-    public function testBlankFirstname()
+    public function testBlankFirstname(): void
     {
         $this->assertHasErrors($this->person->setFirstname(''), 2);
     }
 
-    public function testInvalidFirstname()
+    public function testInvalidFirstname(): void
     {
         $this->assertHasErrors($this->person->setFirstname('x'), 1);
     }
 
-    public function testBlankLastname()
+    public function testBlankLastname(): void
     {
         $this->assertHasErrors($this->person->setLastname(''), 2);
     }
 
-    public function testInvalidLastname()
+    public function testInvalidLastname(): void
     {
         $this->assertHasErrors($this->person->setLastname('x'), 1);
     }
 
-    public function testInvalidEmail()
+    public function testInvalidEmail(): void
     {
         $this->assertHasErrors($this->person->setEmail('xxxx@xxx'), 1);
     }
 
-    public function testPersonExists()
+    public function testPersonExists(): void
     {
         /** @var AbstractDatabaseTool */
         $databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
         
         $databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/DataFixturesTest/PersonFixturesTest.yaml',
+            dirname(__DIR__).'/fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/fixtures/person_fixtures_test.yaml',
         ]);
 
         $person = $this->person

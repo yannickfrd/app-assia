@@ -1,0 +1,66 @@
+App\Entity\People\Person:
+    person1:
+        firstname: John
+        lastname: Doe
+        gender: 2
+        birthdate: <date_create("1980-01-01")>
+        phone1: 01 00 00 00 00
+        email: "j.doe@free.fr"
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        createdBy: "@john_user"
+        updatedBy: "@john_user"
+    person2:
+        firstname: Jane
+        lastname: Doe
+        gender: 1
+        birthdate: <date_create("1981-01-01")>
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        createdBy: "@john_user"
+        updatedBy: "@john_user"
+    person{3..5}:
+        gender: <numberBetween(1, 2)>
+        firstname: <fr_FR:firstName($gender, "fr_FR")>
+        lastname: <lastName()>
+        birthdate: <dateTimeBetween("-55 years", "now")>
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        createdBy: "@john_user"
+        updatedBy: "@john_user"
+
+App\Entity\People\PeopleGroup:
+    people_group1:
+        familyTypology: 3
+        nbPeople: 2
+        rolePeople: "@role_person{1..2}"
+    people_group2:
+        familyTypology: 1
+        nbPeople: 1
+        rolePeople: ["@role_person3"]
+    people_group3:
+        familyTypology: 2
+        nbPeople: 1
+        rolePeople: ["@role_person4"]
+
+App\Entity\People\RolePerson:
+    role_person1:
+        head: 1
+        role: 1
+        person: "@person1"
+        peopleGroup: "@people_group1"
+    role_person2:
+        head: 0
+        role: 1
+        person: "@person2"
+        peopleGroup: "@people_group1"
+    role_person3:
+        head: 1
+        role: 1
+        person: "@person3"
+        peopleGroup: "@people_group2"
+    role_person4:
+        head: 1
+        role: 1
+        person: "@person4"
+        peopleGroup: "@people_group3"

@@ -100,34 +100,11 @@ class SubService
     }
 
     /**
-     * @return Collection<SupportGroup>|SupportGroup[]|null
+     * @return Collection<SupportGroup>|null
      */
     public function getSupportGroups(): ?Collection
     {
         return $this->supportGroups;
-    }
-
-    public function addSupportGroup(SupportGroup $supportGroup): self
-    {
-        if (!$this->supportGroup->contains($supportGroup)) {
-            $this->supportGroups[] = $supportGroup;
-            $supportGroup->setSubService($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSupportGroup(SupportGroup $supportGroup): self
-    {
-        if ($this->supportGroup->contains($supportGroup)) {
-            $this->supportGroups->removeElement($supportGroup);
-            // set the owning side to null (unless already changed)
-            if ($supportGroup->getSubService() === $this) {
-                $supportGroup->setSubService(null);
-            }
-        }
-
-        return $this;
     }
 
     public function getService(): ?Service
@@ -155,7 +132,7 @@ class SubService
     }
 
     /**
-     * @return Collection<Place>|Place[]|null
+     * @return Collection<Place>|null
      */
     public function getPlaces(): ?Collection
     {

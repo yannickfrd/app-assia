@@ -353,21 +353,21 @@ class EvalBudgetPerson
     private $commentEvalBudget;
 
     /**
-     * @var Collection<EvalBudgetResource>|EvalBudgetResource[]|null
+     * @var Collection<EvalBudgetResource>|null
      * @ORM\OneToMany(targetEntity=EvalBudgetResource::class, mappedBy="evalBudgetPerson", cascade={"persist", "remove"}, orphanRemoval=true)
      * @ORM\OrderBy({"amount": "DESC"})
      */
     private $evalBudgetResources;
 
     /**
-     * @var Collection<EvalBudgetCharge>|EvalBudgetCharge[]|null
+     * @var Collection<EvalBudgetCharge>|null
      * @ORM\OneToMany(targetEntity=EvalBudgetCharge::class, mappedBy="evalBudgetPerson", cascade={"persist", "remove"}, orphanRemoval=true)
      * @ORM\OrderBy({"amount": "DESC"})
      */
     private $evalBudgetCharges;
 
     /**
-     * @var Collection<EvalBudgetDebt>|EvalBudgetDebt[]|null
+     * @var Collection<EvalBudgetDebt>|null
      * @ORM\OneToMany(targetEntity=EvalBudgetDebt::class, mappedBy="evalBudgetPerson", cascade={"persist", "remove"}, orphanRemoval=true)
      * @ORM\OrderBy({"amount": "DESC"})
      */
@@ -1142,7 +1142,7 @@ class EvalBudgetPerson
     }
 
     /**
-     * @return Collection<EvalBudgetResource>|EvalBudgetResource[]|null
+     * @return Collection<EvalBudgetResource>|null
      */
     public function getEvalBudgetResources(): ?Collection
     {
@@ -1172,7 +1172,7 @@ class EvalBudgetPerson
     }
 
     /**
-     * @return Collection|EvalBudgetCharge[]|null
+     * @return Collection<EvalBudgetCharge>|null
      */
     public function getEvalBudgetCharges(): ?Collection
     {
@@ -1202,7 +1202,7 @@ class EvalBudgetPerson
     }
 
     /**
-     * @return Collection|EvalBudgetDebt[]|null
+     * @return Collection<EvalBudgetDebt>|null
      */
     public function getEvalBudgetDebts(): ?Collection
     {

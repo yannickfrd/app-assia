@@ -31,9 +31,9 @@ class Avdl
     public const SUPPORT_TYPE = [
         1 => 'Prêt au logement (0,25)', // 0.25
         2 => 'Acc. dans le logement (1)', // 1
-        3 => 'Propo. en cours (1)', //1
-        4 => 'Non prêt au logement (1)', //1
-        5 => 'Acc. lourd (2)', //2
+        3 => 'Propo. en cours (1)', // 1
+        4 => 'Non prêt au logement (1)', // 1
+        5 => 'Acc. lourd (2)', // 2
     ];
     // 1 => '1 - Léger',
     // 2 => '2 - Moyen',

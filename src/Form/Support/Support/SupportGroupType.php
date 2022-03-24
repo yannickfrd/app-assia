@@ -25,7 +25,6 @@ use App\Repository\Organization\ServiceRepository;
 use App\Repository\Organization\SubServiceRepository;
 use App\Repository\Organization\UserRepository;
 use App\Security\CurrentUserService;
-use Closure;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -99,7 +98,6 @@ class SupportGroupType extends AbstractType
                     'placeholder' => 'location.search.address.placeholder',
                     'autocomplete' => 'off',
                 ],
-                'help' => $attr['searchHelp'] ?? null,
                 'mapped' => false,
             ])
             ->add('endLocationAddress', null, [
@@ -174,7 +172,7 @@ class SupportGroupType extends AbstractType
         });
     }
 
-    protected function formModifier(): Closure
+    protected function formModifier(): \Closure
     {
         return function (FormInterface $form, SupportGroup $supportGroup) {
             $service = $supportGroup->getService();

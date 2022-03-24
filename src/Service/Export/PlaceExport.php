@@ -4,6 +4,7 @@ namespace App\Service\Export;
 
 use App\Entity\Organization\Place;
 use App\Service\ExportExcel;
+use Symfony\Component\HttpFoundation\Response;
 
 class PlaceExport extends ExportExcel
 {
@@ -16,9 +17,10 @@ class PlaceExport extends ExportExcel
 
     /**
      * Exporte les données.
-     * @return StreamedResponse|Response|string
+     *
+     * @param Place[] $places
      */
-    public function exportData(array $places)
+    public function exportData(array $places): Response
     {
         $arrayData = [];
         $i = 0;
@@ -47,7 +49,7 @@ class PlaceExport extends ExportExcel
         foreach ($place->getPlaceGroups() as $placeGroup) {
             foreach ($placeGroup->getPlacePeople() as $placePerson) {
                 $endDate = $placePerson->getEndDate();
-                if (!$endDate || $endDate->format('d/m/Y') >= (new \Datetime())->format('d/m/Y')) {
+                if (!$endDate || $endDate->format('d/m/Y') >= (new \DateTime())->format('d/m/Y')) {
                     ++$numberPeople;
                 }
             }

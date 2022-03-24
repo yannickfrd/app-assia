@@ -2,22 +2,21 @@
 
 namespace App\Form\Evaluation;
 
-use App\Form\Utils\Choices;
-use App\Entity\People\Person;
-use App\Entity\Evaluation\Resource;
-use App\Form\Utils\EvaluationChoices;
 use App\Entity\Evaluation\EvalAdmPerson;
-use Symfony\Component\Form\AbstractType;
-use App\Entity\Evaluation\EvalProfPerson;
-use App\Entity\Evaluation\EvalInitPerson;
 use App\Entity\Evaluation\EvalBudgetPerson;
+use App\Entity\Evaluation\EvalInitPerson;
+use App\Entity\Evaluation\EvalProfPerson;
 use App\Entity\Evaluation\EvalSocialPerson;
-use App\Entity\Evaluation\EvalBudgetResource;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use App\Entity\Evaluation\Resource;
+use App\Entity\People\Person;
+use App\Form\Utils\Choices;
+use App\Form\Utils\EvaluationChoices;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EvalInitPersonType extends AbstractType
 {

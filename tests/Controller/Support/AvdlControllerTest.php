@@ -3,19 +3,15 @@
 namespace App\Tests\Controller\Support;
 
 use App\Entity\Support\SupportGroup;
-use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\HttpFoundation\Response;
 
 class AvdlControllerTest extends WebTestCase
 {
-    use AppTestTrait;
-
     /** @var KernelBrowser */
     protected $client;
 
@@ -32,28 +28,29 @@ class AvdlControllerTest extends WebTestCase
     {
         parent::setUp();
 
-        $this->client = $this->createClient();
+        $this->client = static::createClient();
+        $this->client->followRedirects();
 
         /* @var AbstractDatabaseTool */
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
 
         $this->fixtures = $this->databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/AvdlSupportFixturesTest.yaml',
+            dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/service_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/person_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/avdl_support_fixtures_test.yaml',
         ]);
 
-        $this->supportGroup = $this->fixtures['supportGrpAvdl1'];
+        $this->supportGroup = $this->fixtures['support_group_avdl'];
     }
 
-    public function testSearchAvdlSupportsIsSuccessful()
+    public function testSearchAvdlSupportsIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
         $this->client->request('GET', '/avdl-supports');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Suivis AVDL');
 
         /** @var Crawler */
@@ -62,14 +59,14 @@ class AvdlControllerTest extends WebTestCase
             'supportType' => [1, 2],
         ], 'GET');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Suivis AVDL');
         $this->assertGreaterThanOrEqual(2, $crawler->filter('tr')->count());
     }
 
-    public function testExportAvdlSupportsIsSuccessful()
+    public function testExportAvdlSupportsIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
         $this->client->request('GET', '/avdl-supports');
 
@@ -79,26 +76,26 @@ class AvdlControllerTest extends WebTestCase
             'date[start]' => (new \DateTime())->modify('+1 year')->format('Y-m-d'),
         ], 'GET');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('.alert.alert-warning', 'Aucun résultat à exporter.');
 
         // Export with results
         $this->client->submitForm('export', [], 'GET');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertStringContainsString('.spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
     }
 
-    public function testCreateAvdlSupportGroupIsSuccessful()
+    public function testCreateAvdlSupportGroupIsSuccessful(): void
     {
-        $user = $this->fixtures['userRoleUser'];
-        $this->createLogin($user);
+        $user = $this->fixtures['john_user'];
+        $this->client->loginUser($user);
 
-        $id = $this->fixtures['peopleGroup3']->getId();
+        $id = $this->fixtures['people_group3']->getId();
         $this->client->request('POST', "/people-group/$id/new-support", [
             'support' => [
-                'service' => $this->fixtures['serviceAvdl'],
-                'device' => $this->fixtures['deviceAvdl']->getCode(),
+                'service' => $this->fixtures['service_avdl'],
+                'device' => $this->fixtures['device_avdl']->getCode(),
                 'referent' => $user,
             ],
         ]);
@@ -106,8 +103,8 @@ class AvdlControllerTest extends WebTestCase
         $now = new \DateTime();
         $this->client->submitForm('send', [
             'support' => [
-                'service' => $this->fixtures['serviceAvdl'],
-                'device' => $this->fixtures['deviceAvdl']->getCode(),
+                'service' => $this->fixtures['service_avdl'],
+                'device' => $this->fixtures['device_avdl']->getCode(),
                 'status' => SupportGroup::STATUS_IN_PROGRESS,
                 'referent' => $user,
                 'originRequest' => [
@@ -123,26 +120,26 @@ class AvdlControllerTest extends WebTestCase
             ],
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('.alert.alert-success', 'Le suivi social est créé.');
     }
 
-    public function testEditAvdlSupportGroupIsSuccessful()
+    public function testEditAvdlSupportGroupIsSuccessful(): void
     {
-        $user = $this->fixtures['userRoleUser'];
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $user = $this->fixtures['john_user'];
+        $this->client->loginUser($this->fixtures['john_user']);
 
-        $id = $this->fixtures['supportGrpAvdl1']->getId();
+        $id = $this->fixtures['support_group_avdl']->getId();
         $this->client->request('GET', "/support/$id/edit");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Édition du suivi');
 
         $now = new \DateTime();
         $this->client->submitForm('send', [
             'support' => [
-                'service' => $this->fixtures['serviceAvdl'],
-                'device' => $this->fixtures['deviceAvdl']->getCode(),
+                'service' => $this->fixtures['service_avdl'],
+                'device' => $this->fixtures['device_avdl']->getCode(),
                 'status' => SupportGroup::STATUS_IN_PROGRESS,
                 'referent' => $user,
                 'originRequest' => [
@@ -166,19 +163,16 @@ class AvdlControllerTest extends WebTestCase
             ],
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('.alert.alert-success', 'Le suivi social est mis à jour.');
 
         $this->client->request('GET', "/support/$id/show");
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
-
-        $this->client = null;
-        $this->fixtures = null;
 
         $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
         $cache->clear();

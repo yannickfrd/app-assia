@@ -2,8 +2,8 @@
 
 namespace App\Form\Admin\Security;
 
-use Symfony\Component\Form\AbstractType;
 use App\Form\Model\Security\UserResetPassword;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 

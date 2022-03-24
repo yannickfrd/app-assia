@@ -45,7 +45,7 @@ class EvalSocialPerson
     ];
 
     public const ASE_MEASURE_TYPE = [
-        1 => 'AED', //Action éducative à domicile
+        1 => 'AED', // Action éducative à domicile
         2 => 'AGBF', // Aide à la gestion du budget familial
         3 => 'AEMO', // Action éducative en milieu ouvert
         4 => 'AESF', // Accommpagnbement en économie sociale et familiale

@@ -35,22 +35,22 @@ class TaskTest extends WebTestCase
         ;
     }
 
-    public function testValidTask()
+    public function testValidTask(): void
     {
         $this->assertHasErrors($this->task, 0);
     }
 
-    public function testBlankTitle()
+    public function testBlankTitle(): void
     {
         $this->assertHasErrors($this->task->setTitle(''), 1);
     }
 
-    public function testNullStart()
+    public function testNullStart(): void
     {
         $this->assertHasErrors($this->task->setStart(null), 0);
     }
 
-    public function testNullEnd()
+    public function testNullEnd(): void
     {
         $this->assertHasErrors($this->task->setEnd(null), 1);
     }

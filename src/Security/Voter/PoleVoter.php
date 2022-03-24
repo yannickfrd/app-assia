@@ -13,12 +13,10 @@ class PoleVoter extends Voter
 
     /** @var User */
     protected $user;
-    
-    protected $userId;
 
     /** @var Pole */
     protected $pole;
-    
+
     protected function supports($attribute, $subject): bool
     {
         return in_array($attribute, ['VIEW', 'EDIT', 'DISABLE'])
@@ -27,9 +25,7 @@ class PoleVoter extends Voter
 
     protected function voteOnAttribute($attribute, $pole, TokenInterface $token): bool
     {
-        /** @var User */
         $this->user = $token->getUser();
-        $this->userId = $this->user->getId();
         $this->pole = $pole;
 
         if (!$this->user) {

@@ -2,7 +2,6 @@
 
 namespace App\Tests\Controller\Organization;
 
-use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -10,8 +9,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ServiceSettingTest extends WebTestCase
 {
-    use AppTestTrait;
-
     /** @var KernelBrowser */
     protected $client;
 
@@ -25,7 +22,9 @@ class ServiceSettingTest extends WebTestCase
     {
         parent::setUp();
 
-        $this->client = $this->createClient();
+        $this->client = static::createClient();
+        $this->client->followRedirects();
+    
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
     }
 
@@ -35,7 +34,7 @@ class ServiceSettingTest extends WebTestCase
     public function testShowServiceSettingByRole(string $user): void
     {
         $fixtures = $this->databaseTool->loadAliceFixture($this->getFixtureFiles());
-        $this->createLogin($fixtures[$user]);
+        $this->client->loginUser($fixtures[$user]);
 
         $service = $fixtures['service1'];
         $id = $service->getId();
@@ -44,7 +43,7 @@ class ServiceSettingTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
 
-        if ('userRoleUser' !== $user) {
+        if ('john_user' !== $user) {
             $this->assertSelectorExists('section#accordion_parent_settings');
             $this->assertSelectorTextContains('html', 'Paramètres');
         } else {
@@ -55,16 +54,16 @@ class ServiceSettingTest extends WebTestCase
 
     public function provideUser(): \Generator
     {
-        yield ['userSuperAdmin'];
-        yield ['userRoleUser'];
-        yield ['userAdmin'];
+        yield ['user_super_admin'];
+        yield ['john_user'];
+        yield ['user_admin'];
     }
 
     protected function getFixtureFiles(): array
     {
         return [
-            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
+            dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/service_fixtures_test.yaml',
         ];
     }
 

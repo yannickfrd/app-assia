@@ -2,6 +2,8 @@
 
 namespace App\Command\Support;
 
+use App\Entity\Evaluation\EvaluationGroup;
+use App\Entity\Support\PlaceGroup;
 use App\Repository\Support\SupportGroupRepository;
 use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
@@ -59,7 +61,7 @@ class UpdateLocationSupportsCommand extends Command
 
         foreach ($supports as $support) {
             if (null === $support->getLocationId()) {
-                /** @var PlaceGroup */
+                /** @var PlaceGroup $placeGroup */
                 $placeGroup = $support->getPlaceGroups()[0];
 
                 if ($placeGroup && $placeGroup->getPlace()) {
@@ -72,7 +74,7 @@ class UpdateLocationSupportsCommand extends Command
                         ->setLon($place->getLon())
                         ->setLocationId($place->getLocationId());
                 } else {
-                    /** @var EvaluationGroup */
+                    /** @var EvaluationGroup $evaluation */
                     $evaluation = $support->getEvaluationsGroup()->last();
 
                     if ($evaluation && $evaluation->getEvalHousingGroup()) {

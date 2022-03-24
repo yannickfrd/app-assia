@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Rdv;
 
 use App\Controller\Traits\ErrorMessageTrait;
@@ -28,7 +30,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
-class RdvController extends AbstractController
+final class RdvController extends AbstractController
 {
     use ErrorMessageTrait;
 
@@ -169,7 +171,7 @@ class RdvController extends AbstractController
      *
      * @Route("/rdv/{id}/get", name="rdv_get", methods="GET")
      */
-    public function getRdv($id, SerializerInterface $serializer): JsonResponse
+    public function getRdv(int $id, SerializerInterface $serializer): JsonResponse
     {
         $rdv = $this->rdvRepo->findRdv($id);
 

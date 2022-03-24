@@ -4,6 +4,7 @@ namespace App\Command\Admin;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
@@ -33,7 +34,9 @@ class AnonymizeDatabaseCommand extends Command
             return Command::FAILURE;
         }
 
+        /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
+
         $confirmationQuestion = new Question(
             '<info>Are you sure to anonymize the datatase? (yes/no)</info> [<comment>no</comment>]'.PHP_EOL.'> ', false);
         $answer = $helper->ask($input, $output, $confirmationQuestion);
@@ -104,6 +107,7 @@ class AnonymizeDatabaseCommand extends Command
             UPDATE eval_adm_person SET agdref_id = "XXX" WHERE agdref_id != "";
             UPDATE eval_adm_person SET ofpra_registration_id = "XXX" WHERE ofpra_registration_id != "";
             UPDATE eval_adm_person SET comment_eval_adm_person = "XXX" WHERE comment_eval_adm_person != "";
+            UPDATE eval_prof_person SET job_center_id = "XXX" WHERE job_center_id != "";
             UPDATE eval_prof_person SET comment_eval_prof = "XXX" WHERE comment_eval_prof != "";
             UPDATE eval_budget_person SET comment_eval_budget = "XXX" WHERE comment_eval_budget != "";
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Api;
 
 use App\Service\Api\GoogleApi\GoogleCalendarApiService;
@@ -10,7 +12,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class GoogleCalendarController extends AbstractController
+final class GoogleCalendarController extends AbstractController
 {
     private $googleCalendar;
 

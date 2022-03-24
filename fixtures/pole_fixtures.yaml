@@ -1,0 +1,32 @@
+App\Entity\Organization\Pole:
+    pole1:
+        name: Habitat
+        phone1: <fr_FR:phoneNumber()>
+        email: <fr_FR:email()>
+        city: Pontoise
+        zipcode: 95 000
+        address: <fr_FR:address()>
+        color: brown
+        organization: "@organization1"
+        createdAt: <date_create()>
+        updatedAt: <date_create()>
+        createdBy: "@user*"
+        updatedBy: "@user*"
+    pole{2..5}:
+        name: <sentence(3, true)>
+        phone1: <fr_FR:phoneNumber()>
+        email: <fr_FR:email()>
+        city: <fr_FR:city()>
+        zipcode: <numberBetween(1, 95)>
+        address: <fr_FR:address()>
+        color: brown
+        createdAt: <date_create()>
+        updatedAt: <date_create()>
+        createdBy: "@user*"
+        updatedBy: "@user*"
+
+App\Entity\Organization\Organization:
+    organization1:
+        name: ESPERER 95
+        createdAt: <date_create()>
+        updatedAt: <date_create()>

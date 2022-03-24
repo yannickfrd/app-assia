@@ -26,7 +26,7 @@ class CreateIndicatorsCommand extends Command
     public function __construct(EntityManagerInterface $em, IndicatorRepository $indicatorRepo, IndicatorsService $indicators)
     {
         $this->em = $em;
-        $this->repoIndicator = $indicatorRepo;
+        $this->indicatorRepo = $indicatorRepo;
         $this->indicators = $indicators;
 
         parent::__construct();
@@ -55,7 +55,7 @@ class CreateIndicatorsCommand extends Command
         for ($i = 0; $i < $diff; ++$i) {
             $io->text($date->format('Y-m-d'));
             $indicator = $this->indicators->createIndicator($date);
-            if (!$this->repoIndicator->findOneBy(['date' => $date])) {
+            if (!$this->indicatorRepo->findOneBy(['date' => $date])) {
                 $this->em->persist($indicator);
                 ++$count;
             }

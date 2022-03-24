@@ -7,6 +7,7 @@ use App\Service\Import\ImportUserDatas;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
@@ -44,6 +45,7 @@ class ImportUserCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
+        /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
 
         $serviceChoices = [];

@@ -39,7 +39,7 @@ namespace App\Service\Payment;
 
 class HotelContributionCalculator
 {
-    /** @var float Nombre de jours dans le mois (moyenne) */
+    /** @var int Nombre de jours dans le mois (moyenne) */
     public const NB_DAYS = 30;
 
     public const RESOURCES = [

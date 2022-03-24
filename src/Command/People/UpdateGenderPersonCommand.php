@@ -49,7 +49,7 @@ class UpdateGenderPersonCommand extends Command
                 $person->setGender($otherPerson->getGender());
                 ++$count;
             }
-            
+
             $io->progressAdvance();
         }
 

@@ -30,21 +30,21 @@ class ImportDatas
     {
         $this->datas = [];
 
-        $row = 1;
+        $nbRows = 1;
         if (false !== ($handle = fopen($fileName, 'r'))) {
             while (false !== ($data = fgetcsv($handle, 2000, ';'))) {
                 $num = count($data);
-                ++$row;
-                $row = [];
+                ++$nbRows;
+                $rows = [];
                 for ($col = 0; $col < $num; ++$col) {
                     $cel = iconv('CP1252', 'UTF-8', $data[$col]);
                     $date = \DateTime::createFromFormat('d/m/Y', $cel, new \DateTimeZone(('UTC')));
                     if ($date) {
                         $cel = $date->format('Y-m-d');
                     }
-                    isset($this->datas[0]) ? $row[$this->datas[0][$col]] = $cel : $row[] = $cel;
+                    isset($this->datas[0]) ? $rows[$this->datas[0][$col]] = $cel : $rows[] = $cel;
                 }
-                $this->datas[] = $row;
+                $this->datas[] = $rows;
             }
             fclose($handle);
         }

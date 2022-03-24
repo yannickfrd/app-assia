@@ -3,8 +3,6 @@
 namespace App\Tests\Controller\Organization;
 
 use App\Entity\Organization\User;
-use App\Tests\AppTestTrait;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
@@ -12,8 +10,6 @@ use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 
 class ServiceControllerTest extends WebTestCase
 {
-    use AppTestTrait;
-
     /** @var KernelBrowser */
     protected $client;
 
@@ -27,19 +23,20 @@ class ServiceControllerTest extends WebTestCase
     {
         parent::setUp();
 
-        $this->client = $this->createClient();
+        $this->client = static::createClient();
+        $this->client->followRedirects();
 
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
     }
 
-    public function testSearchServicesIsSuccessful()
+    public function testSearchServicesIsSuccessful(): void
     {
         $fixtures = $this->databaseTool->loadAliceFixture($this->getFixtureFiles());
-        $this->createLogin($fixtures['userRoleUser']);
+        $this->client->loginUser($fixtures['john_user']);
 
         $this->client->request('GET', '/services');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Services');
 
         $this->client->submitForm('search', [
@@ -49,31 +46,31 @@ class ServiceControllerTest extends WebTestCase
             'pole' => $fixtures['pole1']->getId(),
         ], 'GET');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Services');
     }
 
-    public function testExportServicesIsSuccessful()
+    public function testExportServicesIsSuccessful(): void
     {
         $fixtures = $this->databaseTool->loadAliceFixture($this->getFixtureFiles());
-        $this->createLogin($fixtures['userRoleUser']);
+        $this->client->loginUser($fixtures['john_user']);
 
         $this->client->request('GET', '/services');
 
         $this->client->submitForm('export', [], 'GET');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertStringContainsString('.spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
     }
 
-    public function testCreateNewServiceIsSuccessful()
+    public function testCreateNewServiceIsSuccessful(): void
     {
         $fixtures = $this->databaseTool->loadAliceFixture($this->getFixtureFiles());
-        $this->createLogin($fixtures['userSuperAdmin']);
+        $this->client->loginUser($fixtures['user_super_admin']);
 
         $this->client->request('GET', '/service/new');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Nouveau service');
 
         $this->client->submitForm('send', [
@@ -86,37 +83,37 @@ class ServiceControllerTest extends WebTestCase
         $this->assertResponseIsSuccessful('Le service est créé.');
     }
 
-    public function testEditServiceInSuperAdminIsUp()
+    public function testEditServiceInSuperAdminIsUp(): void
     {
         $fixtures = $this->databaseTool->loadAliceFixture(array_merge($this->getFixtureFiles(), [
-            dirname(__DIR__).'/../DataFixturesTest/PlaceFixturesTest.yaml',
+            dirname(__DIR__).'/../fixtures/place_fixtures_test.yaml',
         ]));
 
-        $this->createLogin($fixtures['userSuperAdmin']);
+        $this->client->loginUser($fixtures['user_super_admin']);
 
         $service = $fixtures['service1'];
         $id = $service->getId();
         $this->client->request('GET', "/service/$id");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', $service->getName());
     }
 
-    public function testEditServiceIsSuccessful()
+    public function testEditServiceIsSuccessful(): void
     {
         $fixtures = $this->databaseTool->loadAliceFixture(array_merge($this->getFixtureFiles(), [
-            dirname(__DIR__).'/../DataFixturesTest/PlaceFixturesTest.yaml',
+            dirname(__DIR__).'/../fixtures/place_fixtures_test.yaml',
         ]));
 
         /** @var User $admin */
-        $admin = $fixtures['userAdmin'];
-        $this->createLogin($admin);
+        $admin = $fixtures['user_admin'];
+        $this->client->loginUser($admin);
 
         $service = $admin->getServiceUser()->first()->getService();
         $id = $service->getId();
         $this->client->request('GET', "/service/$id");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', $service->getName());
 
         $this->client->submitForm('send', [
@@ -126,29 +123,29 @@ class ServiceControllerTest extends WebTestCase
         $this->assertResponseIsSuccessful('Les modifications sont enregistrées.');
     }
 
-    public function testDisableService()
+    public function testDisableService(): void
     {
         $fixtures = $this->databaseTool->loadAliceFixture($this->getFixtureFiles());
 
-        $this->createLogin($fixtures['userSuperAdmin']);
+        $this->client->loginUser($fixtures['user_super_admin']);
 
         $id = $fixtures['service1']->getId();
         $this->client->request('GET', "/admin/service/$id/disable");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('.alert.alert-warning', 'est désactivé');
 
         $this->client->request('GET', "/admin/service/$id/disable");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('.alert.alert-success', 'est ré-activé');
     }
 
     protected function getFixtureFiles(): array
     {
         return [
-            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
+            dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/service_fixtures_test.yaml',
         ];
     }
 

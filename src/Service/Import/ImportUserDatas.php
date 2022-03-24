@@ -2,17 +2,16 @@
 
 namespace App\Service\Import;
 
-use App\Entity\Organization\User;
 use App\Entity\Organization\Service;
-use App\Notification\UserNotification;
 use App\Entity\Organization\ServiceUser;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Common\Collections\Collection;
-use Symfony\Component\HttpFoundation\Request;
+use App\Entity\Organization\User;
+use App\Notification\UserNotification;
 use App\Repository\Organization\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\String\Slugger\SluggerInterface;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class ImportUserDatas extends ImportDatas
 {
@@ -50,7 +49,7 @@ class ImportUserDatas extends ImportDatas
      *
      * @param Collection<Service> $services
      */
-    public function importInDatabase(string $fileName, ArrayCollection $services, ?Request $request = null): array
+    public function importInDatabase(string $fileName, Collection $services, ?Request $request = null): array
     {
         $this->fields = $this->getDatas($fileName);
         $this->request = $request;
@@ -135,7 +134,7 @@ class ImportUserDatas extends ImportDatas
         }
 
         $appEnv = $this->request ? $this->request->server->get('APP_ENV') : 'prod';
-        $postfix = $appEnv && 'prod' != $appEnv ? '_test' : '';
+        $postfix = $appEnv && 'prod' !== $appEnv ? '_test' : '';
 
         return strtolower($this->slugger->slug($username).'.'.$this->slugger->slug($lastname).$postfix);
     }

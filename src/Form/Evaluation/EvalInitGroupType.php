@@ -2,14 +2,14 @@
 
 namespace App\Form\Evaluation;
 
+use App\Entity\Evaluation\EvalHousingGroup;
+use App\Entity\Evaluation\EvalInitGroup;
 use App\Form\Utils\Choices;
 use App\Form\Utils\EvaluationChoices;
-use App\Entity\Evaluation\EvalInitGroup;
 use Symfony\Component\Form\AbstractType;
-use App\Entity\Evaluation\EvalHousingGroup;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class EvalInitGroupType extends AbstractType
 {

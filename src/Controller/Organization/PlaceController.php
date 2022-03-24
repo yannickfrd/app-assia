@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Organization;
 
 use App\Entity\Organization\Place;
@@ -20,7 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class PlaceController extends AbstractController
+final class PlaceController extends AbstractController
 {
     /**
      * @Route("/places", name="place_index", methods="GET|POST")

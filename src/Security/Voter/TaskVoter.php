@@ -15,8 +15,6 @@ class TaskVoter extends Voter
     /** @var User */
     protected $user;
 
-    protected $userId;
-
     /** @var Task */
     protected $task;
 
@@ -31,9 +29,7 @@ class TaskVoter extends Voter
 
     protected function voteOnAttribute(string $attribute, $task, TokenInterface $token)
     {
-        /** @var User */
         $this->user = $token->getUser();
-        $this->userId = $this->user->getId();
         $this->task = $task;
         $this->supportGroup = $this->task->getSupportGroup();
 
@@ -80,10 +76,10 @@ class TaskVoter extends Voter
 
     protected function isCreatorOrReferent(): bool
     {
-        if (($this->task->getCreatedBy() && $this->task->getCreatedBy()->getId() === $this->userId)
+        if (($this->task->getCreatedBy() && $this->task->getCreatedBy()->getId() === $this->user->getId())
             || ($this->task->getUsers()->contains($this->user))
-            || $this->supportGroup && (($this->supportGroup->getReferent() && $this->supportGroup->getReferent()->getId() === $this->userId)
-            || ($this->supportGroup->getReferent2() && $this->supportGroup->getReferent2()->getId() === $this->userId))
+            || $this->supportGroup && (($this->supportGroup->getReferent() && $this->supportGroup->getReferent()->getId() === $this->user->getId())
+            || ($this->supportGroup->getReferent2() && $this->supportGroup->getReferent2()->getId() === $this->user->getId()))
         ) {
             return true;
         }

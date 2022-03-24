@@ -2,6 +2,7 @@
 
 namespace App\Tests\EndToEnd;
 
+use App\Tests\EndToEnd\Traits\AppPantherTestTrait;
 use Symfony\Component\Panther\Client as PantherClient;
 use Symfony\Component\Panther\DomCrawler\Crawler;
 use Symfony\Component\Panther\PantherTestCase;
@@ -13,14 +14,11 @@ class PersonEndToEndTest extends PantherTestCase
     /** @var PantherClient */
     protected $client;
 
-    protected function setUp(): void
+    public function testPerson(): void
     {
-        $this->client = $this->createPantherLogin();
-    }
+        $this->client = $this->loginUser('john_user');
 
-    public function testPerson()
-    {
-        $this->outputMsg('Go to people search page');
+        $this->outputMsg('Show people search page');
 
         /** @var Crawler */
         $crawler = $this->client->request('GET', '/people');
@@ -41,10 +39,10 @@ class PersonEndToEndTest extends PantherTestCase
             'lastname' => 'DOE',
         ]);
 
-        $this->client->waitFor('a.btn[title="Voir la fiche de la personne"]');
+        $this->client->waitForVisibility('a.btn[title="Voir la fiche de la personne"]');
         $link = $crawler->filter('a.btn[title="Voir la fiche de la personne"]')->link();
 
-        $this->outputMsg('Go to person page');
+        $this->outputMsg('Show person page');
 
         /** @var Crawler */
         $crawler = $this->client->click($link);
@@ -59,7 +57,7 @@ class PersonEndToEndTest extends PantherTestCase
         $this->client->waitFor('#updatePerson');
         $crawler->selectButton('updatePerson')->click();
 
-        $this->client->waitFor('#js-msg-flash');
+        $this->client->waitForVisibility('#js-msg-flash');
         $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
 
         $crawler->selectButton('btn-close-msg')->click();
@@ -71,11 +69,15 @@ class PersonEndToEndTest extends PantherTestCase
     {
         $this->outputMsg('Create a new group for the person');
 
-        $crawler->selectButton('btn-new-group')->click();
         sleep(1);
 
-        $this->client->waitFor('#js-btn-confirm');
-            
+        $this->client->waitForVisibility('#btn-new-group');
+        $crawler->filter('#btn-new-group')->click();
+
+        sleep(1);
+
+        $this->client->waitForVisibility('#js-btn-confirm');
+
         $crawler = $this->client->submitForm('js-btn-confirm', [
             'person_new_group[peopleGroup][familyTypology]' => 1,
             'person_new_group[peopleGroup][nbPeople]' => 1,

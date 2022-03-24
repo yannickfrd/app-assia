@@ -2,19 +2,19 @@
 
 namespace App\Entity\Organization;
 
-use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Support\PlaceGroup;
-use Gedmo\Mapping\Annotation as Gedmo;
-use App\Entity\Traits\DisableEntityTrait;
-use App\Entity\Traits\LocationEntityTrait;
-use Doctrine\Common\Collections\Collection;
-use App\Entity\Traits\GeoLocationEntityTrait;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
+use App\Entity\Traits\DisableEntityTrait;
+use App\Entity\Traits\GeoLocationEntityTrait;
+use App\Entity\Traits\LocationEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Organization\PlaceRepository")
@@ -340,7 +340,7 @@ class Place
     }
 
     /**
-     * @return Collection<PlaceGroup>|PlaceGroup[]|null
+     * @return Collection<PlaceGroup>|null
      */
     public function getPlaceGroups(): ?Collection
     {

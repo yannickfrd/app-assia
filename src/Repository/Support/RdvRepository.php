@@ -216,7 +216,7 @@ class RdvRepository extends ServiceEntityRepository
      *
      * @return Rdv[]|null
      */
-    public function findRdvsBetween(\Datetime $start, \Datetime $end, SupportGroup $supportGroup = null, User $user = null): ?array
+    public function findRdvsBetween(\DateTime $start, \DateTime $end, SupportGroup $supportGroup = null, User $user = null): ?array
     {
         $qb = $this->createQueryBuilder('r')->select('r')
             ->leftJoin('r.tags', 't')->addSelect('t')
@@ -243,7 +243,7 @@ class RdvRepository extends ServiceEntityRepository
     /**
      * Donne tous les RDV entre 2 dates par jour.
      */
-    public function findRdvsBetweenByDay(\Datetime $start, \Datetime $end, SupportGroup $supportGroup = null, User $user = null): array
+    public function findRdvsBetweenByDay(\DateTime $start, \DateTime $end, SupportGroup $supportGroup = null, User $user = null): array
     {
         $rdvs = $this->findRdvsBetween($start, $end, $supportGroup, $user);
         $days = [];

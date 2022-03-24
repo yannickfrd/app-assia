@@ -31,7 +31,7 @@ class SmokeTest extends WebTestCase
         );
     }
 
-    public function provideUrls()
+    public function provideUrls(): array
     {
         return [
             'Login' => ['login', '/login'],
