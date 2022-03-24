@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Organization;
 
 use App\Entity\Organization\Organization;
@@ -12,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class OrganizationController extends AbstractController
+final class OrganizationController extends AbstractController
 {
     private $em;
     private $organizationRepo;
@@ -59,7 +61,7 @@ class OrganizationController extends AbstractController
         ]);
     }
 
-        /**
+    /**
      * Modification d'un dispositif.
      *
      * @Route("/admin/organization/{id}", name="admin_organization_edit", methods="GET|POST")

@@ -1,0 +1,45 @@
+App\Entity\Support\PlaceGroup:
+    pl_group1:
+        startDate: "@support_group1->startDate"
+        endDate: "@support_group1->endDate"
+        endReason: <numberBetween(1, 2)>
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        createdBy: "@john_user"
+        updatedBy: "@john_user"
+        place: "@place1"
+        peopleGroup: "@people_group1"
+        supportGroup: "@support_group1"
+    pl_group{2..5}:
+        startDate: "@support_group*->startDate"
+        endDate: "@support_group*->endDate"
+        endReason: <numberBetween(1, 2)>
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        createdBy: "@user*"
+        updatedBy: "@user*"
+        place: "@place*"
+        peopleGroup: "@people_group*"
+        supportGroup: "@support_group*"
+
+App\Entity\Support\PlacePerson:
+    pl_person1:
+        startDate: "@pl_group1->startDate"
+        endDate: "@pl_group1->endDate"
+        endReason: "@pl_group1->endReason"
+        createdAt: "@pl_group1->createdAt"
+        createdBy: "@pl_group1->createdBy"
+        updatedAt: "@pl_group1->updatedAt"
+        updatedBy: "@pl_group1->updatedBy"
+        placeGroup: "@pl_group1"
+        person: "@person1"
+    pl_person{2..10}:
+        startDate: "@pl_group*->startDate"
+        endDate: "@pl_group*->endDate"
+        endReason: "@pl_group*->endReason"
+        createdAt: "@pl_group*->createdAt"
+        createdBy: "@pl_group*->createdBy"
+        updatedAt: "@pl_group*->updatedAt"
+        updatedBy: "@pl_group*->updatedBy"
+        placeGroup: "@pl_group*"
+        person: "@person*"

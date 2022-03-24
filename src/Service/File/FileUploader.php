@@ -42,15 +42,13 @@ class FileUploader
      * Upload le fichier  et crée le document associé.
      *
      * @param UploadedFile[]|UploadedFile $files
-     *
-     * @return Document[]
      */
     public function createDocuments(SupportGroup $supportGroup, $files): array
     {
         $peopleGroup = $supportGroup->getPeopleGroup();
         $now = new \DateTime();
 
-        /** @var Documents[] */
+        /** @var Document[] */
         $documents = [];
         foreach ($files as $file) {
             if (!$file instanceof UploadedFile) {

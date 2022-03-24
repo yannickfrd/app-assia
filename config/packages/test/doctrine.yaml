@@ -1,6 +1,11 @@
-# config/packages/test/doctrine.yaml
+parameters:
+    test_token: 1
+
 doctrine:
     dbal:
+        # "TEST_TOKEN" is typically set by ParaTest
+        dbname_suffix: "_test%env(default::TEST_TOKEN)%"
         driver: pdo_sqlite
         path: "%kernel.cache_dir%/test.db"
         url: null
+        logging: false

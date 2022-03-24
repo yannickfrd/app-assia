@@ -50,15 +50,15 @@ class SupportFixtures extends Fixture implements DependentFixtureInterface, Fixt
         if ($nbSupports >= 2 && 1 === $k) {
             $status = SupportGroup::STATUS_IN_PROGRESS;
             $startDate = AppFixtures::getDateTimeBeetwen($peopleGroup->getCreatedAt(), 'now');
-            $endDate = AppFixtures::getDateTimeBeetwen(AppFixtures::getStartDate($startDate, 'now'));
+            $endDate = AppFixtures::getDateTimeBeetwen(AppFixtures::getStartDate($startDate));
         } elseif ($nbSupports >= 2 && 2 === $k) {
             $status = SupportGroup::STATUS_IN_PROGRESS;
-            $startDate = AppFixtures::getDateTimeBeetwen(AppFixtures::getStartDate($endDate, 'now'));
+            $startDate = AppFixtures::getDateTimeBeetwen(AppFixtures::getStartDate($endDate));
         } else {
             $status = SupportGroup::STATUS_IN_PROGRESS;
             $startDate = AppFixtures::getDateTimeBeetwen($peopleGroup->getCreatedAt(), 'now');
             if (4 === $status) {
-                $endDate = AppFixtures::getDateTimeBeetwen(AppFixtures::getStartDate($startDate, 'now'));
+                $endDate = AppFixtures::getDateTimeBeetwen(AppFixtures::getStartDate($startDate));
             }
         }
 
@@ -116,6 +116,6 @@ class SupportFixtures extends Fixture implements DependentFixtureInterface, Fixt
 
     public static function getGroups(): array
     {
-        return ['support', 'evaluation', 'note', 'rdv' , 'task', 'document', 'payment', 'tag'];
+        return ['support', 'evaluation', 'note', 'rdv', 'task', 'document', 'payment', 'tag'];
     }
 }

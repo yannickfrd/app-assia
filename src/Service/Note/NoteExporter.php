@@ -17,14 +17,12 @@ class NoteExporter
     private $noteRepo;
     private $exportWord;
     private $renderer;
-    private $appEnv;
 
-    public function __construct(NoteRepository $noteRepo, ExportWord $exportWord, Environment $renderer, string $appEnv)
+    public function __construct(NoteRepository $noteRepo, ExportWord $exportWord, Environment $renderer)
     {
         $this->noteRepo = $noteRepo;
         $this->exportWord = $exportWord;
         $this->renderer = $renderer;
-        $this->appEnv = $appEnv;
     }
 
     public function exportAll(SupportGroup $supportGroup, SupportNoteSearch $search): StreamedResponse
@@ -46,7 +44,7 @@ class NoteExporter
             $supportGroup->getService()->getPole()->getLogoPath()
         );
 
-        return $this->exportWord->download($this->appEnv);
+        return $this->exportWord->download();
     }
 
     public function exportOne(Request $request, Note $note, SupportGroup $supportGroup): StreamedResponse
@@ -63,6 +61,6 @@ class NoteExporter
 
         $export->createDocument($content, $note->getTitle(), $logoPath, $fullnameSupport);
 
-        return $export->download($this->appEnv);
+        return $export->download();
     }
 }

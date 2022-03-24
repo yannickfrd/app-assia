@@ -2,7 +2,7 @@
 
 namespace App\Entity\Event;
 
-use App\Entity\Organization\TagTrait;
+use App\Entity\Organization\Traits\TagTrait;
 use App\Entity\Organization\User;
 use App\Entity\Support\SupportGroup;
 use App\Repository\Event\TaskRepository;
@@ -105,7 +105,6 @@ class Task extends AbstractEvent
 
         $this->users = new ArrayCollection();
         $this->tags = new ArrayCollection();
-
     }
 
     public function addAlert(?Alert $alert): self

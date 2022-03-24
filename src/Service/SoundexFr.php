@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-
 class SoundexFr
 {
     /**

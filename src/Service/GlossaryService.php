@@ -78,6 +78,7 @@ class GlossaryService
                 $shortName = $reflectionMethod->getShortName();
                 if (str_contains($shortName, 'get')) {
                     $propertyName = str_replace('get', '', $shortName);
+                    /** @var object $type */
                     $type = $reflectionMethod->getReturnType();
                     if ($type && !in_array(lcfirst($propertyName), self::TO_IGNORE)
                         && !str_contains($propertyName, 'ToString')

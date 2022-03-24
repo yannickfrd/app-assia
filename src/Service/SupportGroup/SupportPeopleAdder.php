@@ -20,14 +20,11 @@ class SupportPeopleAdder
     use SupportPersonCreator;
 
     private $em;
-    /** @var EvaluationGroupRepository */
-    private $evaluationRepo;
     private $flashbag;
 
     public function __construct(EntityManagerInterface $em, FlashBagInterface $flashbag)
     {
         $this->em = $em;
-        $this->evaluationRepo = $em->getRepository(EvaluationGroup::class);
         $this->flashbag = $flashbag;
     }
 
@@ -82,7 +79,10 @@ class SupportPeopleAdder
 
     protected function createEvaluationPerson(SupportGroup $supportGroup, SupportPerson $supportPerson): ?EvaluationPerson
     {
-        $evaluationGroup = $this->evaluationRepo->findLastEvaluationOfSupport($supportGroup);
+        /** @var EvaluationGroupRepository $evaluationGroupRepo */
+        $evaluationGroupRepo = $this->em->getRepository(EvaluationGroup::class);
+
+        $evaluationGroup = $evaluationGroupRepo->findLastEvaluationOfSupport($supportGroup);
 
         if (null === $evaluationGroup) {
             return null;

@@ -3,7 +3,6 @@
 namespace App\Tests\Controller\Admin;
 
 use App\Entity\Support\SupportGroup;
-use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -12,8 +11,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ExportControllerTest extends WebTestCase
 {
-    use AppTestTrait;
-
     /** @var KernelBrowser */
     protected $client;
 
@@ -30,23 +27,24 @@ class ExportControllerTest extends WebTestCase
     {
         parent::setUp();
 
-        $this->client = $this->createClient();
+        $this->client = static::createClient();
+        $this->client->followRedirects();
 
-        /* @var AbstractDatabaseTool */
+        /** @var AbstractDatabaseTool */
         $this->databaseTool = $this->getContainer()->get(DatabaseToolCollection::class)->get();
 
         $this->fixtures = $this->databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/SupportFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/EvaluationFixturesTest.yaml',
+            dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/service_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/person_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/support_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/evaluation_fixtures_test.yaml',
         ]);
 
-        $this->createLogin($this->fixtures['userSuperAdmin']);
+        $this->client->loginUser($this->fixtures['user_super_admin']);
     }
 
-    public function testExportIsSuccessful()
+    public function testExportIsSuccessful(): void
     {
         $this->client->request('GET', '/exports');
 
@@ -68,11 +66,11 @@ class ExportControllerTest extends WebTestCase
 
         // Fail to get the export
         $this->client->request('GET', '/export/2/download');
-        $this->assertSame(Response::HTTP_NOT_FOUND, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
 
         // Success to get the export
         $this->client->request('GET', '/export/1/download');
-        
+
         $this->assertResponseIsSuccessful();
         $this->assertStringContainsString('spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
 
@@ -84,7 +82,7 @@ class ExportControllerTest extends WebTestCase
         $this->assertSame('delete', $content['action']);
     }
 
-    public function testCountResultsIsSuccessful()
+    public function testCountResultsIsSuccessful(): void
     {
         $this->client->request('POST', '/export/count', $this->getFormData());
 
@@ -109,8 +107,5 @@ class ExportControllerTest extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
-
-        $this->client = null;
-        $this->fixtures = null;
     }
 }

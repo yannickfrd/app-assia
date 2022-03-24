@@ -1,0 +1,120 @@
+name: Integration tests
+
+on:
+    push:
+        branches:
+            - main
+            - dev
+    pull_request:
+        branches:
+            - main
+            - dev
+jobs:
+    symfony-tests:
+        name: Symfony 5.4 (PHP ${{ matrix.php-versions }})
+        runs-on: ubuntu-latest
+        environment: test
+        strategy:
+            fail-fast: false
+            matrix:
+                php-versions: ['7.4']
+        steps:
+            # https://github.com/actions/checkout (official)
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            # https://github.com/shivammathur/setup-php (community)
+            - name: Setup PHP, extensions and composer with shivammathur/setup-php
+              uses: shivammathur/setup-php@verbose
+              with:
+                  php-version: ${{ matrix.php-versions }}
+                  extensions: apcu, curl, fileinfo, gd, opcache, intl, mbstring, mysqli, openssl, pdo_mysql, pdo_sqlite, sqlite3, xml, xsl
+                  ini-values: apc.enabled=1, apc.shm_size=1G, apc.ttl=7200, apc.enable_cli=1, apc.serializer=php
+                  coverage: xdebug
+                  tools: phpunit
+
+            - name: Copy .env.test.local
+              run: php -r "file_exists('.env.test.local') || copy('.env.test', '.env.test.local');"
+
+            # Composer
+            - name: Cache Composer packages
+              id: composer-cache
+              uses: actions/cache@v2
+              with:
+                  path: vendor
+                  key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-php-
+
+            - name: Install PHP Dependencies
+              run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+            # Symfony
+            - name: Check the Symfony console
+              run: |
+                  php bin/console -V
+                  php bin/console about
+                  php bin/console cache:clear --env=dev
+
+            # https://github.com/sensiolabs/security-checker
+            - name: Security check installed dependencies
+              uses: symfonycorp/security-checker-action@v2
+
+            # https://github.com/phpstan/phpstan
+            - name: Analyse PHP Code (PHPStan)
+              run: ./vendor/bin/phpstan analyse src -c phpstan.neon
+
+            # # https://cs.symfony.com/
+            - name: Install PHP CS Fixer
+              run: |
+                  mkdir --parents tools/php-cs-fixer
+                  composer require --working-dir=tools/php-cs-fixer friendsofphp/php-cs-fixer
+
+            - name: Analyse PHP Code standard via PHP CS Fixer (PSR-12 et Symfony code style)
+              run: ./tools/php-cs-fixer/vendor/bin/php-cs-fixer fix src --dry-run --verbose
+
+            - name: Lint YAML files
+              if: always() && steps.install.outcome == 'success'
+              run: php bin/console lint:yaml config --parse-tags
+
+            - name: Lint Twig templates
+              if: always() && steps.install.outcome == 'success'
+              run: php bin/console lint:twig templates --env=prod
+
+            - name: Create database
+              run: |
+                  php bin/console doctrine:database:create --env=test;
+                  php bin/console doctrine:schema:update --env=test --force;
+                  php bin/console hautelook:fixtures:load --env=test --no-interaction;
+
+            # JS Dependencies
+            - name: Cache node_modules
+              uses: actions/cache@v1
+              id: yarn-cache-node-modules
+              with:
+                  path: node_modules
+                  key: ${{ runner.os }}-yarn-cache-node-modules-${{ hashFiles('**/yarn.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-yarn-cache-node-modules-
+
+            - name: Install Yarn
+              if: steps.yarn-cache-node-modules.outputs.cache-hit != 'true'
+              run: yarn install
+
+            - name: Build Yarn
+              run: yarn run build
+
+            # - name: Archive production artifacts
+            #   uses: actions/upload-artifact@v1
+            #   with:
+            #     name: build
+            #     path: public/build
+            - name: Execute tests via PHPUnit
+              env:
+                  SISIAO_LOGIN: ${{ secrets.SISIAO_LOGIN }}
+                  SISIAO_PASSWORD: ${{ secrets.SISIAO_PASSWORD }}
+                  SISIAO_GROUP_ID: ${{ secrets.SISIAO_GROUP_ID }}
+              run: |
+                  php bin/phpunit tests/Entity;
+                  php bin/phpunit tests/Repository;
+                  php bin/phpunit tests/Controller --exclude-group=api;

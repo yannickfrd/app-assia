@@ -19,13 +19,11 @@ class EvaluationExporter
 
     private $supportCollections;
     private $renderer;
-    private $appEnv;
 
-    public function __construct(SupportCollections $supportCollections, Environment $renderer, string $appEnv)
+    public function __construct(SupportCollections $supportCollections, Environment $renderer)
     {
         $this->supportCollections = $supportCollections;
         $this->renderer = $renderer;
-        $this->appEnv = $appEnv;
     }
 
     /**
@@ -49,7 +47,7 @@ class EvaluationExporter
 
         $export->createDocument($content, self::TITLE, $logoPath, $fullnameSupport);
 
-        return $export->download($this->appEnv);
+        return $export->download();
     }
 
     public function createNote(SupportGroup $supportGroup): ?Note

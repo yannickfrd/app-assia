@@ -165,7 +165,7 @@ class SupportGroupRepository extends ServiceEntityRepository
     /**
      * Trouve tous les suivis entre 2 dates.
      */
-    public function findSupportsBetween(\Datetime $start, \Datetime $end, SupportsInMonthSearch $search = null): Query
+    public function findSupportsBetween(\DateTime $start, \DateTime $end, SupportsInMonthSearch $search = null): Query
     {
         $qb = $this->createQueryBuilder('sg')->select('sg')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')

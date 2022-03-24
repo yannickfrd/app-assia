@@ -1,22 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Organization;
 
-use App\Service\Pagination;
 use App\Entity\Organization\Device;
-use App\Security\CurrentUserService;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Form\Organization\Device\DeviceType;
 use App\Form\Model\Organization\DeviceSearch;
+use App\Form\Organization\Device\DeviceSearchType;
+use App\Form\Organization\Device\DeviceType;
+use App\Repository\Organization\DeviceRepository;
+use App\Security\CurrentUserService;
+use App\Service\Pagination;
+use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Repository\Organization\DeviceRepository;
-use App\Form\Organization\Device\DeviceSearchType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class DeviceController extends AbstractController
+final class DeviceController extends AbstractController
 {
     private $deviceRepo;
     private $em;

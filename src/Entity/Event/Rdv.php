@@ -2,7 +2,7 @@
 
 namespace App\Entity\Event;
 
-use App\Entity\Organization\TagTrait;
+use App\Entity\Organization\Traits\TagTrait;
 use App\Entity\Organization\User;
 use App\Entity\Support\SupportGroup;
 use Doctrine\Common\Collections\ArrayCollection;

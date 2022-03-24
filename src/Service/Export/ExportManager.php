@@ -3,6 +3,7 @@
 namespace App\Service\Export;
 
 use App\Entity\Admin\Export;
+use App\Entity\Organization\User;
 use App\Form\Model\Admin\ExportSearch;
 use App\Form\Model\Support\SupportSearch;
 use App\Notification\ExportNotification;
@@ -46,7 +47,7 @@ class ExportManager
             'createdBy' => $this->security->getUser(),
         ], ['createdAt' => 'DESC']);
 
-        if ($lastExport && $lastExport->getCreatedAt()->modify('+10 minutes') > new \Datetime()) {
+        if ($lastExport && $lastExport->getCreatedAt()->modify('+10 minutes') > new \DateTime()) {
             return null;
         }
 

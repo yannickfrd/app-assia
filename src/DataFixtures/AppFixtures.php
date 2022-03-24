@@ -26,7 +26,11 @@ class AppFixtures extends Fixture implements FixtureGroupInterface
         'CHRS',
     ];
 
+    /** @var ObjectManager */
     private $objectManager;
+
+    /** @var \Faker\Generator */
+    private $faker;
 
     public function __construct()
     {
@@ -199,6 +203,6 @@ class AppFixtures extends Fixture implements FixtureGroupInterface
 
     public static function getGroups(): array
     {
-        return ['user', 'people', 'support', 'evaluation', 'note', 'rdv' , 'task', 'document', 'payment', 'tag'];
+        return ['user', 'people', 'support', 'evaluation', 'note', 'rdv', 'task', 'document', 'payment', 'tag'];
     }
 }

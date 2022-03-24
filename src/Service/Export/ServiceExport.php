@@ -4,13 +4,16 @@ namespace App\Service\Export;
 
 use App\Entity\Organization\Service;
 use App\Service\ExportExcel;
+use Symfony\Component\HttpFoundation\Response;
 
 class ServiceExport extends ExportExcel
 {
     /**
      * Exporte les données.
+     *
+     * @param Service[] $services
      */
-    public function exportData(array $services)
+    public function exportData(array $services): Response
     {
         $arrayData[] = array_keys($this->getDatas($services[0]));
 

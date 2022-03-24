@@ -4,7 +4,6 @@ namespace App\Service\Indicators;
 
 use App\Entity\Organization\Service;
 use App\Entity\Organization\SubService;
-use App\Entity\Organization\User;
 use App\Form\Model\Admin\ServiceIndicatorsSearch;
 use App\Repository\Admin\IndicatorRepository;
 use App\Repository\Evaluation\EvaluationGroupRepository;
@@ -18,15 +17,9 @@ use App\Repository\Support\NoteRepository;
 use App\Repository\Support\PaymentRepository;
 use App\Repository\Support\SupportGroupRepository;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\Security\Core\Security;
 
 class ServiceIndicator
 {
-    /**
-     * @var User
-     */
-    protected $user;
-
     protected $indicatorRepo;
     protected $userRepo;
     protected $serviceRepo;
@@ -50,7 +43,6 @@ class ServiceIndicator
     protected $cache;
 
     public function __construct(
-        Security $security,
         IndicatorRepository $indicatorRepo,
         UserRepository $userRepo,
         ServiceRepository $serviceRepo,
@@ -63,9 +55,7 @@ class ServiceIndicator
         PaymentRepository $paymentRepo,
         UserConnectionRepository $ConnectionRepo
     ) {
-        $this->user = $security->getUser();
-
-        $this->repoIndicator = $indicatorRepo;
+        $this->indicatorRepo = $indicatorRepo;
         $this->userRepo = $userRepo;
         $this->serviceRepo = $serviceRepo;
         $this->peopleGroupRepo = $peopleGroupRepo;

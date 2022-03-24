@@ -28,8 +28,8 @@ class TagRepositoryTest extends WebTestCase
         $databaseTool = $this->getContainer()->get(DatabaseToolCollection::class)->get();
 
         $fixtures = $databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/DataFixturesTest/TagFixturesTest.yaml',
-            dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
+            dirname(__DIR__).'/fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/fixtures/tag_fixtures_test.yaml',
         ]);
 
         $kernel = self::bootKernel();
@@ -43,24 +43,24 @@ class TagRepositoryTest extends WebTestCase
         $this->service = $fixtures['service1'];
     }
 
-    public function testCount()
+    public function testCount(): void
     {
         $this->assertGreaterThanOrEqual(5, $this->tagRepo->count([]));
     }
 
-    public function testFindTagByService()
+    public function testFindTagByService(): void
     {
         $query = $this->tagRepo->findTagByService($this->service);
-        $this->assertCount(1, $query);
+        $this->assertCount(4, $query);
     }
 
-    public function testFindTagsQuery()
+    public function testFindTagsQuery(): void
     {
         $query = $this->tagRepo->findTagsQuery(new TagSearch())->getResult();
         $this->assertCount(5, $query);
     }
 
-    public function testFindAllQueryBuilder()
+    public function testFindAllQueryBuilder(): void
     {
         $query = $this->tagRepo->findAllQueryBuilder()->getQuery()->getResult();
         $this->assertCount(5, $query);

@@ -2,7 +2,6 @@
 
 namespace App\Entity\Evaluation;
 
-
 class Resource
 {
     public const SALARY = 10;
@@ -22,10 +21,10 @@ class Resource
         80 => 'Allocation adulte handicapé (AAH)', // 6 disAdultAllowance
         85 => 'Allocation d\'éducation de l\'enfant handicapé (AEEH)', // 7 disChildAllowance
         101 => 'Allocation de soutien familial (ASF)', // 8 asf
-        90 => 'Allocation de solidarité spécifique (ASS)', //9 solidarityAllowance
+        90 => 'Allocation de solidarité spécifique (ASS)', // 9 solidarityAllowance
         130 => 'Allocation pour demandeur d\'asile (ADA)', // 10 asylumAllowance
         180 => 'Bourse', // 11 scholarships
-        102 => 'Complément familial', //12 familySupplement
+        102 => 'Complément familial', // 12 familySupplement
         40 => 'Formation rémunérée', // 13 paidTraining
         120 => 'Garantie jeunes', // 14 youthGuarantee
         170 => 'Indemnités journalières (IJ)', // 15 dailyAllowance

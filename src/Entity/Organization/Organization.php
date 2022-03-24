@@ -121,7 +121,7 @@ class Organization
     }
 
     /**
-     * @return Collection<OriginRequest>|OriginRequest[]|null
+     * @return Collection<OriginRequest>|null
      */
     public function getOriginRequests(): ?Collection
     {
@@ -152,7 +152,7 @@ class Organization
     }
 
     /**
-     * @return Collection<Service>|Service[]|null
+     * @return Collection<Service>|null
      */
     public function getServices(): ?Collection
     {
@@ -180,7 +180,7 @@ class Organization
     }
 
     /**
-     * @return Collection|Pole[]|null
+     * @return Collection<Pole>|null
      */
     public function getPoles(): ?Collection
     {

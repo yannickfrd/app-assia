@@ -2,7 +2,6 @@
 
 namespace App\Form\Model\Support\Traits;
 
-use App\Entity\Organization\Tag;
 use Doctrine\Common\Collections\ArrayCollection;
 
 trait NoteSearchTrait

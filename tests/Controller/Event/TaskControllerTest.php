@@ -4,16 +4,14 @@ namespace App\Tests\Controller\Event;
 
 use App\Entity\Event\Task;
 use App\Entity\Support\SupportGroup;
-use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\HttpFoundation\Response;
 
 class TaskControllerTest extends WebTestCase
 {
-    use AppTestTrait;
-
     /** @var KernelBrowser */
     protected $client;
 
@@ -28,21 +26,22 @@ class TaskControllerTest extends WebTestCase
         parent::setUp();
 
         $this->client = static::createClient();
+        $this->client->followRedirects();
 
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
 
         $fixtures = $this->databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/SupportFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/task_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/service_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/person_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/support_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/task_fixtures_test.yaml',
         ]);
 
-        $this->createLogin($fixtures['userRoleUser']);
+        $this->client->loginUser($fixtures['john_user']);
 
-        $this->user = $fixtures['userRoleUser'];
-        $this->supportGroup = $fixtures['supportGroup1'];
+        $this->user = $fixtures['john_user'];
+        $this->supportGroup = $fixtures['support_group1'];
         $this->task = $fixtures['task1'];
     }
 
@@ -212,8 +211,7 @@ class TaskControllerTest extends WebTestCase
 
     public function testDeleteTaskIsSuccessful(): void
     {
-        $id = $this->task->getId();
-        $this->client->request('GET', "/task/$id/delete");
+        $this->client->request('GET', "/task/{$this->task->getId()}/delete");
 
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('delete', $content['action']);
@@ -221,8 +219,7 @@ class TaskControllerTest extends WebTestCase
 
     public function testToggleStatusIsSuccessful(): void
     {
-        $id = $this->task->getId();
-        $this->client->request('GET', "/task/$id/toggle-status");
+        $this->client->request('GET', "/task/{$this->task->getId()}/toggle-status");
 
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('toggle_status', $content['action']);
@@ -231,9 +228,5 @@ class TaskControllerTest extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
-        $this->client = null;
-        $this->user = null;
-        $this->supportGroup = null;
-        $this->task = null;
     }
 }

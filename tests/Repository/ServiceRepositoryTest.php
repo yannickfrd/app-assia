@@ -37,8 +37,8 @@ class ServiceRepositoryTest extends WebTestCase
         $databaseTool = $this->getContainer()->get(DatabaseToolCollection::class)->get();
 
         $fixtures = $databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/DataFixturesTest/ServiceFixturesTest.yaml',
+            dirname(__DIR__).'/fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/fixtures/service_fixtures_test.yaml',
         ]);
 
         $kernel = self::bootKernel();
@@ -51,7 +51,7 @@ class ServiceRepositoryTest extends WebTestCase
 
         $this->service = $fixtures['service1'];
         $this->pole = $fixtures['pole1'];
-        $this->user = $fixtures['userRoleUser'];
+        $this->user = $fixtures['john_user'];
         $this->search = (new ServiceSearch())
             ->setName('CHRS Cergy')
             ->setEmail('chrs@mail.fr')
@@ -60,24 +60,24 @@ class ServiceRepositoryTest extends WebTestCase
             ->setPhone('01 00 00 00 00');
     }
 
-    public function testCount()
+    public function testCount(): void
     {
         $this->assertGreaterThanOrEqual(5, $this->serviceRepo->count([]));
     }
 
-    public function testFindAllServicesQueryWithoutFilters()
+    public function testFindAllServicesQueryWithoutFilters(): void
     {
         $qb = $this->serviceRepo->findServicesQuery(new ServiceSearch());
         $this->assertGreaterThanOrEqual(5, count($qb->getResult()));
     }
 
-    public function testFindAllServicesQueryWithFilters()
+    public function testFindAllServicesQueryWithFilters(): void
     {
         $qb = $this->serviceRepo->findServicesQuery($this->search);
         $this->assertGreaterThanOrEqual(1, count($qb->getResult()));
     }
 
-    public function testFindServicesToExportWithFilters()
+    public function testFindServicesToExportWithFilters(): void
     {
         $this->assertGreaterThanOrEqual(1, count($this->serviceRepo->findServicesToExport($this->search)));
     }
@@ -86,12 +86,12 @@ class ServiceRepositoryTest extends WebTestCase
     // {
     // }
 
-    public function testFindAllServicesOfUser()
+    public function testFindAllServicesOfUser(): void
     {
         $this->assertGreaterThanOrEqual(1, count($this->serviceRepo->findServicesOfUser($this->user)));
     }
 
-    public function testGetFullService()
+    public function testGetFullService(): void
     {
         $this->assertNotNull($this->serviceRepo->getFullService($this->service->getId()));
     }

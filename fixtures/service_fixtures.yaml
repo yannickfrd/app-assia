@@ -1,0 +1,73 @@
+App\Entity\Organization\Service:
+    service1:
+        name: CHRS Cergy
+        type: 1
+        pole: "@pole1"
+        email: chrs@app-assia.org
+        phone1: "01 00 00 00 00"
+        address: Pontoise
+        city: Pontoise
+        zipcode: 95 000
+        place: true
+        createdAt: <date_create()>
+        updatedAt: <date_create()>
+        createdBy: "@user*"
+        updatedBy: "@user*"
+    service2:
+        name: AVDL
+        type: 2
+        pole: "@pole1"
+        email: avdl@app-assia.org
+        phone1: "01 00 00 00 00"
+        address: Pontoise
+        city: Pontoise
+        zipcode: 95 000
+        place: true
+        createdAt: <date_create()>
+        updatedAt: <date_create()>
+        createdBy: "@user*"
+        updatedBy: "@user*"
+    service3:
+        name: PASH
+        type: 3
+        pole: "@pole1"
+        email: pash@app-assia.org
+        phone1: "01 00 00 00 00"
+        address: Pontoise
+        city: Pontoise
+        zipcode: 95 000
+        place: true
+        createdAt: <date_create()>
+        updatedAt: <date_create()>
+        createdBy: "@user*"
+        updatedBy: "@user*"
+    service{4..10}:
+        name: <sentence(3, true)>
+        city: <fr_FR:city()>
+        phone1: <fr_FR:phoneNumber()>
+        email: <fr_FR:email()>
+        zipcode: <numberBetween(1, 95)>
+        address: <fr_FR:address()>
+        place: true
+        createdAt: <date_create()>
+        updatedAt: <date_create()>
+        pole: "@pole*"
+        createdBy: "@user*"
+        updatedBy: "@user*"
+
+App\Entity\Organization\ServiceUser:
+    serv_user1:
+        service: "@service1"
+        user: "@user_super_admin"
+    serv_user2:
+        service: "@service1"
+        user: "@user_admin"
+    serv_user3:
+        service: "@service1"
+        user: "@john_user"
+    serv_user_test:
+        service: "@service1"
+        user: "@user_test"
+    serv_user{4..10}:
+        service: "@service*"
+        user: "@user*"

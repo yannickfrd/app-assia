@@ -7,7 +7,6 @@ use App\Entity\Organization\User;
 use App\Entity\Support\Payment;
 use App\Entity\Support\SupportGroup;
 use App\Repository\Support\HotelSupportRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -30,7 +29,8 @@ class ImportPAFDatas extends ImportDatas
     protected $fields;
     protected $field;
 
-    protected $items = [];
+    protected array $items = [];
+    protected array $users = [];
     protected $hotelSupportRepo;
     protected $hotelSupports;
 
@@ -50,7 +50,7 @@ class ImportPAFDatas extends ImportDatas
      *
      * @param Collection<Service> $services
      */
-    public function importInDatabase(string $fileName, ArrayCollection $services): int
+    public function importInDatabase(string $fileName, Collection $services): array
     {
         $this->fields = $this->getDatas($fileName);
         $this->users = $this->getUsers($services);
@@ -106,20 +106,20 @@ class ImportPAFDatas extends ImportDatas
             ($paf['Commentaire'] ?? null);
 
         $payment = (new Payment())
-            ->setMonthContrib($paf['Date PAF'] ? new \Datetime($paf['Date PAF']) : null)
+            ->setMonthContrib($paf['Date PAF'] ? new \DateTime($paf['Date PAF']) : null)
             ->setResourcesAmt((float) $paf['Montant ressources'])
             ->setToPayAmt((float) $paf['Montant à payer'])
             ->setPaidAmt((float) $paf['Montant réglé'])
             ->setType(Payment::CONTRIBUTION)
-            ->setPaymentDate($paf['Date paiement'] ? new \Datetime($paf['Date paiement']) : null)
+            ->setPaymentDate($paf['Date paiement'] ? new \DateTime($paf['Date paiement']) : null)
             ->setStillToPayAmt()
             ->setPaymentType($this->findInArray($paf['Type paiement'], self::PAYMENT_TYPE) ?? 99)
             ->setComment($comment)
-            ->setCheckAt(new \Datetime($paf['Date vérification']))
+            ->setCheckAt(new \DateTime($paf['Date vérification']))
             ->setCreatedBy($userReferent ?? $this->user)
-            ->setCreatedAt(new \Datetime($paf['Date création']))
+            ->setCreatedAt(new \DateTime($paf['Date création']))
             ->setUpdatedBy($userReferent ?? $this->user)
-            ->setUpdatedAt(new \Datetime($paf['Date mise à jour']))
+            ->setUpdatedAt(new \DateTime($paf['Date mise à jour']))
             ->setSupportGroup($supportGroup);
 
         $this->em->persist($payment);
@@ -141,7 +141,7 @@ class ImportPAFDatas extends ImportDatas
     /**
      * @param Collection<Service> $services
      */
-    protected function getUsers(ArrayCollection $services): array
+    protected function getUsers(Collection $services): array
     {
         $users = [];
 

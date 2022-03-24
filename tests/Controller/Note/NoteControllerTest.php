@@ -4,19 +4,15 @@ namespace App\Tests\Controller\Note;
 
 use App\Entity\Support\Note;
 use App\Entity\Support\SupportGroup;
-use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\HttpFoundation\Response;
 
 class NoteControllerTest extends WebTestCase
 {
-    use AppTestTrait;
-
     /** @var KernelBrowser */
     protected $client;
 
@@ -36,21 +32,21 @@ class NoteControllerTest extends WebTestCase
     {
         parent::setUp();
 
-        $this->client = $this->createClient();
+        $this->client = static::createClient();
+        $this->client->followRedirects();
 
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
     }
 
-    public function testSearchNotesIsSuccessful()
+    public function testSearchNotesIsSuccessful(): void
     {
         $this->loadFixtures();
-
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
         // Page is up
         $this->client->request('GET', '/notes');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Notes');
 
         // Search is up
@@ -61,21 +57,20 @@ class NoteControllerTest extends WebTestCase
             'status' => 1,
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertGreaterThanOrEqual(4, $crawler->filter('td[scope="row"]')->count());
     }
 
-    public function testSearchSupportNotesIsSuccessful()
+    public function testSearchSupportNotesIsSuccessful(): void
     {
         $this->loadFixtures();
-
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
         $id = $this->supportGroup->getId();
         $this->client->request('GET', "/support/$id/notes");
 
         // Page is up
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Notes sociales');
 
         // Search is successful
@@ -86,30 +81,29 @@ class NoteControllerTest extends WebTestCase
             'status' => 1,
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertGreaterThanOrEqual(5, $crawler->filter('div[data-note-id]')->count());
     }
 
-    public function testExportNotesOfSupportIsSuccessful()
+    public function testExportNotesOfSupportIsSuccessful(): void
     {
         $this->loadFixtures();
-
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
         $id = $this->supportGroup->getId();
         $this->client->request('GET', "/support/$id/notes");
 
         $this->client->submitForm('export', [], 'GET');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSame('application/vnd.ms-word', $this->client->getResponse()->headers->get('content-type'));
     }
 
-    public function testCreateNoteIsSuccessful()
+    public function testCreateNoteIsSuccessful(): void
     {
         $this->loadFixtures();
 
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
         $id = $this->supportGroup->getId();
         /** @var Crawler */
@@ -133,16 +127,15 @@ class NoteControllerTest extends WebTestCase
             ],
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('create', $content['action']);
     }
 
-    public function testUpdateNoteIsSuccessful()
+    public function testEditNoteIsSuccessful(): void
     {
         $this->loadFixtures();
-
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
         $id = $this->supportGroup->getId();
         /** @var Crawler */
@@ -167,15 +160,15 @@ class NoteControllerTest extends WebTestCase
             ],
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('update', $content['action']);
     }
 
-    public function testUpdateNoteWithOtherUserIsSuccessful()
+    public function testUpdateNoteWithOtherUserIsSuccessful(): void
     {
         $this->loadFixtures();
-        $this->createLogin($this->fixtures['user4']);
+        $this->client->loginUser($this->fixtures['user4']);
 
         $crawler = $this->client->request('GET', '/support/1/notes');
 
@@ -192,11 +185,10 @@ class NoteControllerTest extends WebTestCase
         $this->assertSame('update', $content['action']);
     }
 
-    public function testDeleteNote()
+    public function testDeleteNote(): void
     {
         $this->loadFixtures();
-
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
         $id = $this->note->getId();
         $this->client->request('GET', "/note/$id/delete");
@@ -206,82 +198,78 @@ class NoteControllerTest extends WebTestCase
         $this->assertSame('delete', $data['action']);
     }
 
-    public function testExportNoteIsSuccessful()
+    public function testExportNoteIsSuccessful(): void
     {
         $this->loadFixtures();
-
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
         $id = $this->note->getId();
 
         // Export to Word
         $this->client->request('GET', "/note/$id/export/word");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSame('application/vnd.ms-word', $this->client->getResponse()->headers->get('content-type'));
 
         // Export to PDF
         $this->client->request('GET', "/note/$id/export/pdf");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSame('application/pdf', $this->client->getResponse()->headers->get('content-type'));
     }
 
-    public function testGenerateNoteEvaluationIsFailed()
+    public function testGenerateNoteEvaluationIsFailed(): void
     {
         $this->loadFixtures();
-
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
         $id = $this->note->getId();
         $this->client->request('GET', "/support/$id/note/new_evaluation");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('.alert.alert-warning', 'Il n\'y a pas d\'évaluation sociale créée pour ce suivi.');
     }
 
-    public function testGenerateNoteEvaluationIsSuccessful()
+    public function testGenerateNoteEvaluationIsSuccessful(): void
     {
         $this->fixtures = $this->databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/SupportFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/EvaluationFixturesTest.yaml',
+            dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/service_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/person_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/support_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/evaluation_fixtures_test.yaml',
         ]);
 
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
-        $id = $this->fixtures['supportGroupWithEval']->getId();
+        $id = $this->fixtures['support_group_with_eval']->getId();
         $this->client->request('GET', "/support/$id/evaluation/view");
 
         $this->client->submitForm('send');
 
         $this->client->request('GET', "/support/$id/note/new_evaluation");
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h3.card-title', 'Grille d\'évaluation sociale');
     }
 
     protected function loadFixtures(): void
     {
         $this->fixtures = $this->databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/SupportFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/NoteFixturesTest.yaml',
+            dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/service_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/person_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/support_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/note_fixtures_test.yaml',
         ]);
 
-        $this->supportGroup = $this->fixtures['supportGroup1'];
+        $this->supportGroup = $this->fixtures['support_group1'];
         $this->note = $this->fixtures['note1'];
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
-
-        $this->client = null;
-        $this->fixtures = null;
 
         $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
         $cache->clear();

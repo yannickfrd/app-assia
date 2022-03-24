@@ -3,9 +3,13 @@
 namespace App\Security\Voter;
 
 use App\Entity\Organization\Service;
+use App\Entity\Organization\User;
 
 trait VoterTrait
 {
+    /** @var User */
+    protected $user;
+
     protected function isGranted(string $role): bool
     {
         return in_array($role, $this->user->getRoles());

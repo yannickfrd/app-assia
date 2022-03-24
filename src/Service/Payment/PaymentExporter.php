@@ -14,18 +14,18 @@ class PaymentExporter
     private $paymentNotification;
     private $exportPDF;
     private $renderer;
-    private $appEnv;
+    private $downloadsDirectory;
 
     public function __construct(
         PaymentNotification $paymentNotification,
         ExportPDF $exportPDF,
         Environment $renderer,
-        string $appEnv
+        string $downloadsDirectory
     ) {
         $this->paymentNotification = $paymentNotification;
         $this->exportPDF = $exportPDF;
         $this->renderer = $renderer;
-        $this->appEnv = $appEnv;
+        $this->downloadsDirectory = $downloadsDirectory;
     }
 
     public function sendEmail(Payment $payment): bool
@@ -53,7 +53,7 @@ class PaymentExporter
         $path = $this->create($payment);
         $date = $payment->getPaymentDate() ? $payment->getPaymentDate()->format('d-m-Y') :
             $payment->getCreatedAt()->format('d-m-Y');
-        
+
         $organizationName = $supportGroup->getService()->getPole()->getOrganization()->getName();
 
         $this->paymentNotification->sendPayment(
@@ -66,7 +66,7 @@ class PaymentExporter
             $path
         );
 
-        $payment->setMailSentAt(new \Datetime());
+        $payment->setMailSentAt(new \DateTime());
 
         return true;
     }
@@ -75,7 +75,7 @@ class PaymentExporter
     {
         $this->create($payment);
 
-        return $this->exportPDF->download($this->appEnv);
+        return $this->exportPDF->download();
     }
 
     private function create(Payment $payment): string
@@ -93,7 +93,7 @@ class PaymentExporter
 
         $this->exportPDF->createDocument($content, $title, $logoPath, $supportGroup->getHeader()->getFullname());
 
-        return $this->exportPDF->save();
+        return $this->exportPDF->save($this->downloadsDirectory);
     }
 
     private function getTitle(Payment $payment)

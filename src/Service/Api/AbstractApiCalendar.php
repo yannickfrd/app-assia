@@ -4,7 +4,7 @@ namespace App\Service\Api;
 
 use App\Entity\Event\Rdv;
 use App\Entity\Organization\User;
-use DateTimeInterface;
+use App\Repository\Support\RdvRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -62,14 +62,15 @@ abstract class AbstractApiCalendar
 
     /**
      * Returns the current Rdv recorded in session according to the id.
-     *
-     * @param null $rdvId
      */
-    protected function getRdv(string $key, $rdvId = null): Rdv
+    protected function getRdv(string $key, ?int $rdvId = null): Rdv
     {
         $id = $rdvId ?? $this->session->get(strtolower($key).'RdvId');
 
-        return $this->em->getRepository(Rdv::class)->findRdv($id);
+        /** @var RdvRepository $rdvRepo */
+        $rdvRepo = $this->em->getRepository(Rdv::class);
+
+        return $rdvRepo->findRdv($rdvId);
     }
 
     /**
@@ -101,7 +102,7 @@ abstract class AbstractApiCalendar
     /**
      * Create an array with a \DateTime and a timeZone for Google's or Outlook's event.
      */
-    protected function createDateEvent(DateTimeInterface $dateTime): array
+    protected function createDateEvent(\DateTimeInterface $dateTime): array
     {
         return [
             'dateTime' => $dateTime->format('c'),

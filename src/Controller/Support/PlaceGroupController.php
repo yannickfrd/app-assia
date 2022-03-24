@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Support;
 
 use App\Entity\Organization\Place;
@@ -21,7 +23,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * Controller des hébergements des groupes de personnes.
  */
-class PlaceGroupController extends AbstractController
+final class PlaceGroupController extends AbstractController
 {
     private $em;
     private $placeGroupManager;

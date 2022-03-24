@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use PhpOffice\PhpWord\Element\Footer;
 use PhpOffice\PhpWord\Element\Header;
 use PhpOffice\PhpWord\Element\Section;
 use PhpOffice\PhpWord\IOFactory;
@@ -62,7 +63,7 @@ class ExportWord
     /**
      * Output the generated Word file to Browser.
      */
-    public function download(string $appEnv = null): StreamedResponse
+    public function download(): StreamedResponse
     {
         $objWriter = IOFactory::createWriter($this->phpWord, 'Word2007');
 
@@ -72,10 +73,8 @@ class ExportWord
         $response->setPrivate();
         $response->headers->addCacheControlDirective('no-cache', true);
         $response->headers->addCacheControlDirective('must-revalidate', true);
-        $response->setCallback(function () use ($objWriter, $appEnv) {
-            if ('test' != $appEnv) {
-                $objWriter->save('php://output');
-            }
+        $response->setCallback(function () use ($objWriter) {
+            $objWriter->save('test' !== $_ENV['APP_ENV'] ? 'php://output' : 'php://memory');
         });
 
         return $response;
@@ -130,7 +129,7 @@ class ExportWord
     {
         // Add first page footer
         $footer = $section->addFooter('first');
-        $footer->addPreserveText((new \Datetime())->format('d/m/Y').'                                                                           
+        $footer->addPreserveText((new \DateTime())->format('d/m/Y').'                                                                           
             {PAGE}/{NUMPAGES}', $this->getFontStyleFooter(), [
             'alignment' => 'right',
             // 'positioning' => 'absolute',
@@ -205,7 +204,7 @@ class ExportWord
      *
      * @param Section|Header|Footer $element
      */
-    protected function addLogo($element, string $logoPath = null, int $height = 60, string $align = 'left')
+    protected function addLogo(object $element, string $logoPath = null, int $height = 60, string $align = 'left')
     {
         if (null === $logoPath || false === \file_exists($logoPath)) {
             if (null === $this->defaultLogo || false === \file_exists($this->defaultLogo)) {
@@ -249,8 +248,6 @@ class ExportWord
 
     /**
      * Get the default paragrah style of the title.
-     *
-     * @return void
      */
     protected function getDefaultParagraphStyleTitle(): array
     {

@@ -1,0 +1,17 @@
+App\Entity\Organization\Organization:
+    organization1:
+        name: ESPERER 95
+        type: <numberBetween(1, 9)>
+        comment: <sentence(6, true)>
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        createdBy: "@john_user"
+        updatedBy: "@john_user"
+    organization{2..5}:
+        name: <sentence(3, true)>
+        type: <numberBetween(1, 9)>
+        comment: <sentence(6, true)>
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        createdBy: "@user*"
+        updatedBy: "@user*"

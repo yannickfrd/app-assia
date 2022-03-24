@@ -188,7 +188,7 @@ abstract class AbstractEvent
     }
 
     /**
-     * @return Collection<User>|User[]|null
+     * @return Collection<User>|null
      */
     public function getUsers(): ?Collection
     {
@@ -228,7 +228,7 @@ abstract class AbstractEvent
     }
 
     /**
-     * @return Collection<Alert>|Alert[]|null
+     * @return Collection<Alert>|null
      */
     public function getAlerts(): ?Collection
     {
@@ -281,7 +281,7 @@ abstract class AbstractEvent
     }
 
     // /**
-    //  * @return Collection<SupportPerson>|SupportPerson[]|null
+    //  * @return Collection<SupportPerson>|null
     //  */
     // public function getSupportPeople(): ?Collection
     // {

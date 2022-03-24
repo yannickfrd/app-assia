@@ -2,6 +2,7 @@
 
 namespace App\Tests\EndToEnd;
 
+use App\Tests\EndToEnd\Traits\AppPantherTestTrait;
 use Symfony\Component\Panther\Client as PantherClient;
 use Symfony\Component\Panther\DomCrawler\Crawler;
 use Symfony\Component\Panther\PantherTestCase;
@@ -13,37 +14,47 @@ class EvaluationEndToEndTest extends PantherTestCase
     /** @var PantherClient */
     protected $client;
 
-    protected function setUp(): void
+    public function testEvaluation(): void
     {
-        $this->client = $this->createPantherLogin();
+        $this->client = $this->loginUser();
 
-        $this->faker = \Faker\Factory::create('fr_FR');
+        /** @var Crawler */
+        $crawler = $this->client->request('GET', '/support/1/show');
+
+        $crawler = $this->showEvaluation($crawler);
+        $crawler = $this->editEvaluation($crawler);
     }
 
-    public function testEvaluation()
+    private function showEvaluation(Crawler $crawler): Crawler
     {
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', '/support/1/view');
-
-        $this->outputMsg('Go to the evaluation page');
+        $this->outputMsg('Show the evaluation page');
 
         sleep(1);
         $link = $crawler->filter('a#support-evaluation')->link();
 
         $crawler = $this->client->click($link);
 
-        $this->client->waitFor('#accordion-parent-init_eval');
         $this->assertSelectorTextContains('h1', 'Évaluation sociale');
 
+        return $crawler;
+    }
+
+    private function editEvaluation(Crawler $crawler): Crawler
+    {
         $this->outputMsg('Edit the evaluation');
 
-        $crawler = $this->client->submitForm('send');
+        $this->client->waitForVisibility('#card-evalHousing');
+        $crawler->filter('#card-evalHousing')->click();
 
-        $this->client->waitFor('div[data-edit-mode]');
+        $crawler->filter('#card-evalBackground')->click();
 
-        $this->client->waitFor('.alert.alert-success');
-        $this->assertSelectorExists('.alert.alert-success');
-        // $crawler->selectButton('btn-close-msg')->click();
+        $this->client->waitForVisibility('#card-evalBackground button[type="submit"]');
+        $crawler->filter('#card-evalBackground button[type="submit"]')->click();
+
+        $this->client->waitForVisibility('#js-msg-flash');
+        $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
+
+        $crawler->selectButton('btn-close-msg')->click();
 
         return $crawler;
     }

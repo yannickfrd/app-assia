@@ -17,7 +17,7 @@ class OccupancyIndicators
 {
     protected $currentUser;
     protected $placeRepo;
-    protected $placeRepoPerson;
+    protected $placePersonRepo;
     protected $serviceRepo;
     protected $subServiceRepo;
     protected $deviceRepo;
@@ -32,14 +32,14 @@ class OccupancyIndicators
     public function __construct(
         CurrentUserService $currentUser,
         PlaceRepository $placeRepo,
-        PlacePersonRepository $placeRepoPerson,
+        PlacePersonRepository $placePersonRepo,
         ServiceRepository $serviceRepo,
         SubServiceRepository $subServiceRepo,
         DeviceRepository $deviceRepo
     ) {
         $this->currentUser = $currentUser;
-        $this->repoPlace = $placeRepo;
-        $this->placePersonRepo = $placeRepoPerson;
+        $this->placeRepo = $placeRepo;
+        $this->placePersonRepo = $placePersonRepo;
         $this->serviceRepo = $serviceRepo;
         $this->subServiceRepo = $subServiceRepo;
         $this->deviceRepo = $deviceRepo;
@@ -53,7 +53,7 @@ class OccupancyIndicators
         $devices = $this->deviceRepo->findDevicesWithPlace($search, $this->currentUser, $service);
         $placePeople = $this->placePersonRepo->findPlacePeople($search, $this->currentUser, $service);
         $interval = date_diff($search->getStart(), $search->getEnd());
-        $nbDays = $interval->format('%a');
+        $nbDays = (int) $interval->format('%a');
 
         foreach ($devices as $device) {
             $nbPlaces = 0;
@@ -114,7 +114,7 @@ class OccupancyIndicators
         $services = $this->serviceRepo->findServicesWithPlace($search, $this->currentUser, $device);
         $placePeople = $this->placePersonRepo->findPlacePeople($search, $this->currentUser);
         $interval = date_diff($search->getStart(), $search->getEnd());
-        $nbDays = $interval->format('%a');
+        $nbDays = (int) $interval->format('%a');
 
         foreach ($services as $service) {
             $nbPlaces = 0;
@@ -176,7 +176,7 @@ class OccupancyIndicators
         $subServices = $this->subServiceRepo->findSubServicesWithPlace($search, $this->currentUser, $service);
         $placePeople = $this->placePersonRepo->findPlacePeople($search, $this->currentUser);
         $interval = date_diff($search->getStart(), $search->getEnd());
-        $nbDays = $interval->format('%a');
+        $nbDays = (int) $interval->format('%a');
 
         foreach ($subServices as $subService) {
             $nbPlaces = 0;
@@ -234,10 +234,10 @@ class OccupancyIndicators
      */
     public function getOccupancyRateByPlace(OccupancySearch $search, Service $service = null, SubService $subService = null): array
     {
-        $places = $this->repoPlace->findPlacesForOccupancy($search, $this->currentUser, $service, $subService);
+        $places = $this->placeRepo->findPlacesForOccupancy($search, $this->currentUser, $service, $subService);
         $placePeople = $this->placePersonRepo->findPlacePeople($search, $this->currentUser, $service, $subService);
         $interval = date_diff($search->getStart(), $search->getEnd());
-        $nbDays = $interval->format('%a');
+        $nbDays = (int) $interval->format('%a');
 
         foreach ($places as $place) {
             $capacityDays = 0;

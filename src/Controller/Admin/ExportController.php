@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\Controller\Traits\ErrorMessageTrait;
@@ -23,7 +25,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 /**
  * @IsGranted("ROLE_ADMIN")
  */
-class ExportController extends AbstractController
+final class ExportController extends AbstractController
 {
     use ErrorMessageTrait;
 

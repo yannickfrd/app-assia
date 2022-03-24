@@ -131,7 +131,7 @@ class EvalAdmPerson
      * @Groups("export")
      */
     private $agdrefId;
-    
+
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups("export")

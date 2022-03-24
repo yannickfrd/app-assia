@@ -3,19 +3,15 @@
 namespace App\Tests\Controller\Support;
 
 use App\Entity\Support\SupportGroup;
-use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\HttpFoundation\Response;
 
 class HotelControllerTest extends WebTestCase
 {
-    use AppTestTrait;
-
     /** @var KernelBrowser */
     protected $client;
 
@@ -32,43 +28,44 @@ class HotelControllerTest extends WebTestCase
     {
         parent::setUp();
 
-        $this->client = $this->createClient();
+        $this->client = static::createClient();
+        $this->client->followRedirects();
 
-        /* @var AbstractDatabaseTool */
+        /** @var AbstractDatabaseTool */
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
 
         $this->fixtures = $this->databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/HotelSupportFixturesTest.yaml',
+            dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/service_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/hotel_support_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/person_fixtures_test.yaml',
         ]);
 
-        $this->supportGroup = $this->fixtures['supportGrpHotel1'];
+        $this->supportGroup = $this->fixtures['support_group_hotel1'];
     }
 
-    public function testSearchHotelSupportsIsSuccessful()
+    public function testSearchHotelSupportsIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
         // Page is up
         $this->client->request('GET', '/hotel-supports');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Suivis PASH');
 
         // Search is successful
         /** @var Crawler */
         $crawler = $this->client->submitForm('search', [], 'GET');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Suivis PASH');
         $this->assertGreaterThanOrEqual(2, $crawler->filter('tr')->count());
     }
 
-    public function testExportHotelSupportsIsSuccessful()
+    public function testExportHotelSupportsIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
         $this->client->request('GET', '/hotel-supports');
 
@@ -78,26 +75,26 @@ class HotelControllerTest extends WebTestCase
             'date[start]' => (new \DateTime())->modify('+1 year')->format('Y-m-d'),
         ], 'GET');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('.alert.alert-warning', 'Aucun résultat à exporter.');
 
         // Export with results
         $this->client->submitForm('export', [], 'GET');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertStringContainsString('.spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));
     }
 
-    public function testCreateHotelSupportGroupIsSuccessful()
+    public function testCreateHotelSupportGroupIsSuccessful(): void
     {
-        $user = $this->fixtures['userRoleUser'];
-        $this->createLogin($user);
+        $user = $this->fixtures['john_user'];
+        $this->client->loginUser($user);
 
-        $id = $this->fixtures['peopleGroup3']->getId();
+        $id = $this->fixtures['people_group3']->getId();
         $this->client->request('POST', "/people-group/$id/new-support", [
             'support' => [
-                'service' => $this->fixtures['servicePash'],
-                'device' => $this->fixtures['deviceHotel']->getCode(),
+                'service' => $this->fixtures['service_pash'],
+                'device' => $this->fixtures['device_hotel']->getCode(),
                 'referent' => $user,
             ],
         ]);
@@ -105,8 +102,8 @@ class HotelControllerTest extends WebTestCase
         $now = new \DateTime();
         $this->client->submitForm('send', [
             'support' => [
-                'service' => $this->fixtures['servicePash'],
-                'device' => $this->fixtures['deviceHotel']->getCode(),
+                'service' => $this->fixtures['service_pash'],
+                'device' => $this->fixtures['device_hotel']->getCode(),
                 'status' => SupportGroup::STATUS_IN_PROGRESS,
                 'referent' => $user,
                 'originRequest' => [
@@ -122,27 +119,27 @@ class HotelControllerTest extends WebTestCase
             ],
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('.alert.alert-success', 'Le suivi social est créé.');
     }
 
-    public function testEditHotelSupportGroupIsSuccessful()
+    public function testEditHotelSupportGroupIsSuccessful(): void
     {
-        $user = $this->fixtures['userRoleUser'];
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $user = $this->fixtures['john_user'];
+        $this->client->loginUser($this->fixtures['john_user']);
 
-        $id = $this->fixtures['supportGrpHotel1']->getId();
+        $id = $this->fixtures['support_group_hotel1']->getId();
         $this->client->request('GET', "/support/$id/edit");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Édition du suivi');
 
         $now = new \DateTime();
         $this->client->submitForm('send', [
             'support' => [
-                'service' => $this->fixtures['servicePash'],
-                'subService' => $this->fixtures['subServicePash'],
-                'device' => $this->fixtures['deviceHotel']->getCode(),
+                'service' => $this->fixtures['service_pash'],
+                'subService' => $this->fixtures['sub_service_pash'],
+                'device' => $this->fixtures['device_hotel']->getCode(),
                 'status' => SupportGroup::STATUS_IN_PROGRESS,
                 'referent' => $user,
                 'originRequest' => [
@@ -167,19 +164,16 @@ class HotelControllerTest extends WebTestCase
             ],
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('.alert.alert-success', 'Le suivi social est mis à jour.');
 
         $this->client->request('GET', "/support/$id/show");
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
-
-        $this->client = null;
-        $this->fixtures = null;
 
         $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
         $cache->clear();

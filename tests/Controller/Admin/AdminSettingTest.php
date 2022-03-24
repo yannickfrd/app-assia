@@ -3,7 +3,6 @@
 namespace App\Tests\Controller\Admin;
 
 use App\Entity\Organization\Service;
-use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -12,8 +11,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AdminSettingTest extends WebTestCase
 {
-    use AppTestTrait;
-
     /** @var KernelBrowser */
     protected $client;
 
@@ -27,14 +24,16 @@ class AdminSettingTest extends WebTestCase
     {
         parent::setUp();
 
-        $this->client = $this->createClient();
+        $this->client = static::createClient();
+        $this->client->followRedirects();
+        
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
     }
 
     public function testShowAppSetting(): void
     {
         $fixtures = $this->databaseTool->loadAliceFixture($this->getFixtureFiles());
-        $this->createLogin($fixtures['userSuperAdmin']);
+        $this->client->loginUser($fixtures['user_super_admin']);
 
         $this->client->request('GET', '/admin');
 
@@ -45,7 +44,7 @@ class AdminSettingTest extends WebTestCase
     public function testSettingPageIsUp(): void
     {
         $fixtures = $this->databaseTool->loadAliceFixture($this->getFixtureFiles());
-        $this->createLogin($fixtures['userSuperAdmin']);
+        $this->client->loginUser($fixtures['user_super_admin']);
 
         $this->client->request('GET', '/admin/settings');
         $this->assertResponseIsSuccessful();
@@ -56,7 +55,7 @@ class AdminSettingTest extends WebTestCase
     public function testSettingPageWithBadRoleUserIsForbidden(string $user): void
     {
         $fixtures = $this->databaseTool->loadAliceFixture($this->getFixtureFiles());
-        $this->createLogin($fixtures[$user]);
+        $this->client->loginUser($fixtures[$user]);
 
         $this->client->request('GET', '/admin/settings');
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
@@ -65,7 +64,7 @@ class AdminSettingTest extends WebTestCase
     public function testEditSettingIsSuccessful(): void
     {
         $fixtures = $this->databaseTool->loadAliceFixture($this->getFixtureFiles());
-        $this->createLogin($fixtures['userSuperAdmin']);
+        $this->client->loginUser($fixtures['user_super_admin']);
 
         $this->sendAdminSettingByDefault();
 
@@ -76,7 +75,7 @@ class AdminSettingTest extends WebTestCase
     public function testServiceGetDefaultSetting(): void
     {
         $fixtures = $this->databaseTool->loadAliceFixture($this->getFixtureFiles());
-        $this->createLogin($fixtures['userSuperAdmin']);
+        $this->client->loginUser($fixtures['user_super_admin']);
 
         $this->sendAdminSettingByDefault();
 
@@ -95,7 +94,7 @@ class AdminSettingTest extends WebTestCase
     public function testUserGetServiceSetting(): void
     {
         $fixtures = $this->databaseTool->loadAliceFixture($this->getFixtureFiles());
-        $this->createLogin($fixtures['userSuperAdmin']);
+        $this->client->loginUser($fixtures['user_super_admin']);
 
         $this->sendAdminSettingByDefault();
 
@@ -115,7 +114,7 @@ class AdminSettingTest extends WebTestCase
         ]);
         $this->assertResponseIsSuccessful();
 
-        $this->createLogin($fixtures['userRoleUser']);
+        $this->client->loginUser($fixtures['john_user']);
         $crawler = $this->client->request('GET', '/my_profile');
         $this->assertResponseIsSuccessful();
 
@@ -141,15 +140,15 @@ class AdminSettingTest extends WebTestCase
 
     public function provideBadUser(): \Generator
     {
-        yield ['userRoleUser'];
-        yield ['userAdmin'];
+        yield ['john_user'];
+        yield ['user_admin'];
     }
 
     protected function getFixtureFiles(): array
     {
         return [
-            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
+            dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/service_fixtures_test.yaml',
         ];
     }
 }

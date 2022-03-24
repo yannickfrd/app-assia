@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\People;
 
 use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Evaluation\EvaluationGroup;
+use App\Entity\Organization\User;
 use App\Entity\People\PeopleGroup;
 use App\Entity\People\Person;
 use App\Entity\People\RolePerson;
@@ -35,7 +38,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class PersonController extends AbstractController
+final class PersonController extends AbstractController
 {
     use ErrorMessageTrait;
 
@@ -189,7 +192,8 @@ class PersonController extends AbstractController
      * @Route("/group/{id}/person/{person_id}-{slug}", name="group_person_show", requirements={"slug" : "[a-z0-9\-]*"}, methods="GET")
      * @ParamConverter("person", options={"id" = "person_id"})
      */
-    public function editPersonInGroup(int $id, int $person_id, PeopleGroupRepository $peopleGroupRepo, SupportPersonRepository $supportRepo, Request $request): Response
+    public function editPersonInGroup(int $id, int $person_id, PeopleGroupRepository $peopleGroupRepo,
+        SupportPersonRepository $supportRepo): Response
     {
         if (null === $person = $this->personRepo->findPersonById($person_id)) {
             throw $this->createAccessDeniedException('Cette personne n\'existe pas.');
@@ -208,7 +212,7 @@ class PersonController extends AbstractController
             'people_group' => $peopleGroupRepo->findPeopleGroupById($id),
             'supports' => $supports,
             'form_new_group' => $formNewGroup->createView(),
-            'canEdit' => $this->canEdit($person, $supports, $request),
+            'canEdit' => $this->canEdit($person, $supports),
         ]);
     }
 
@@ -238,7 +242,7 @@ class PersonController extends AbstractController
             'form' => $form->createView(),
             'supports' => $supports,
             'form_new_group' => $formNewGroup->createView(),
-            'canEdit' => $this->canEdit($person, $supports, $request),
+            'canEdit' => $this->canEdit($person, $supports),
         ]);
     }
 
@@ -257,10 +261,13 @@ class PersonController extends AbstractController
 
             $this->discacheSupport($person);
 
+            /** @var User $user */
+            $user = $this->getUser();
+
             return $this->json([
                 'alert' => 'success',
                 'msg' => 'Les modifications sont enregistrées.',
-                'user' => $this->getUser()->getFullname(),
+                'user' => $user->getFullname(),
                 'date' => $person->getUpdatedAt()->format('d/m/Y à H:i'),
             ]);
         }
@@ -412,14 +419,17 @@ class PersonController extends AbstractController
     /**
      * Vérifie si l'utilisateur a les droits concernant la personne.
      */
-    protected function canEdit(Person $person, array $supports, Request $request): bool
+    protected function canEdit(Person $person, array $supports): bool
     {
         if ($this->isGranted('ROLE_SUPER_ADMIN') || $person->getCreatedBy() === $this->getUser() || 0 === count($supports)) {
             return true;
         }
 
+        /** @var User $user */
+        $user = $this->getUser();
+
         foreach ($supports as $supportPerson) {
-            if (in_array($supportPerson->getSupportGroup()->getService()->getId(), array_keys($request->getSession()->get('userServices')))) {
+            if ($user->hasService($supportPerson->getSupportGroup()->getService())) {
                 return true;
             }
         }

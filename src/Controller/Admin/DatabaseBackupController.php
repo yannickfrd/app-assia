@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\Controller\Traits\ErrorMessageTrait;
@@ -15,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class DatabaseBackupController extends AbstractController
+final class DatabaseBackupController extends AbstractController
 {
     use ErrorMessageTrait;
 

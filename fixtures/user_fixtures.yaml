@@ -1,0 +1,65 @@
+# parameters:
+#     key: value
+
+App\Entity\Organization\User:
+    user_super_admin:
+        firstname: ROLE
+        lastname: SUPER_ADMIN
+        username: r.super_admin
+        plainPassword: password
+        email: $username@app-assia.org
+        status: 6
+        roles: ["ROLE_SUPER_ADMIN"]
+        phone1: "01 00 00 00 00"
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        loginCount: 1
+        lastlogin: <dateTimeBetween($updatedAt, "now")>
+    user_admin:
+        firstname: Role
+        lastname: ADMIN
+        username: r.admin
+        plainPassword: password
+        email: $username@app-assia.org
+        status: 6
+        roles: ["ROLE_ADMIN"]
+        phone1: "01 00 00 00 00"
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        loginCount: 1
+        lastlogin: <dateTimeBetween($updatedAt, "now")>
+    john_user:
+        firstname: John
+        lastname: USER
+        username: john_user
+        plainPassword: password
+        email: $username@app-assia.org
+        status: 1
+        phone1: 01 00 00 00 00
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        loginCount: <numberBetween(0, 99)>
+        lastlogin: <dateTimeBetween($updatedAt, "now")>
+        createdBy: "@user_super_admin"
+        updatedBy: "@user_super_admin"
+    user_test:
+        firstname: Test
+        lastname: Test
+        username: user_test
+        plainPassword: password
+        email: test@app-assia.org
+        status: 1
+    user{2..10}:
+        firstname: <fr_FR:firstName()>
+        lastname: <fr_FR:lastName()>
+        username: <mb_strtolower($firstname.$lastname)>
+        plainPassword: Test123*
+        email: $username@app-assia.org
+        status: 1
+        phone1: "01 00 00 00 00"
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        loginCount: <numberBetween(0, 99)>
+        lastlogin: <dateTimeBetween($updatedAt, "now")>
+        createdBy: "@user_super_admin"
+        updatedBy: "@user_super_admin"

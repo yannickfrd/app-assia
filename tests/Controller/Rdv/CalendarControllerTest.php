@@ -2,24 +2,16 @@
 
 namespace App\Tests\Controller\Rdv;
 
-use App\Entity\Event\Rdv;
 use App\Entity\Support\SupportGroup;
-use App\Tests\AppTestTrait;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Response;
 
 class CalendarControllerTest extends WebTestCase
 {
-    use AppTestTrait;
-
     /** @var KernelBrowser */
     protected $client;
-
-    /** @var AbstractDatabaseTool */
-    protected $databaseTool;
 
     /** @var array */
     protected $fixtures;
@@ -27,51 +19,45 @@ class CalendarControllerTest extends WebTestCase
     /** @var SupportGroup */
     protected $supportGroup;
 
-    /** @var Rdv */
-    protected $rdv;
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->client = $this->createClient();
+        $this->client = static::createClient();
+        $this->client->followRedirects();
 
         /** @var AbstractDatabaseTool */
-        $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
+        $databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
 
-        $this->fixtures = $this->databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/SupportFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/RdvFixturesTest.yaml',
+        $this->fixtures = $databaseTool->loadAliceFixture([
+            dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/service_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/person_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/support_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/rdv_fixtures_test.yaml',
         ]);
 
-        $this->createLogin($this->fixtures['userRoleUser']);
-
-        $this->supportGroup = $this->fixtures['supportGroup1'];
-        $this->rdv = $this->fixtures['rdv1'];
+        $this->supportGroup = $this->fixtures['support_group1'];
     }
 
-    public function testShowCalendarIsUp()
+    public function testShowCalendarIsUp(): void
     {
+        $this->client->loginUser($this->fixtures['john_user']);
+
         $this->client->request('GET', '/calendar/month');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h2', 'Agenda');
 
         $id = $this->supportGroup->getId();
         $this->client->request('GET', "/support/$id/calendar/month");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h2', 'Agenda');
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
-
-        $this->client = null;
-        $this->fixtures = null;
     }
 }

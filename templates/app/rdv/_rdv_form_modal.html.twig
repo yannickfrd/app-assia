@@ -11,10 +11,10 @@
                 </div>
             </div>
 
-            {{ form_start(
-                form_rdv,
-                {'action': support is defined ? path('support_rdv_create', {'id': support.id}) : path('rdv_create')}
-            ) }}
+            {{ form_start(form_rdv, {
+                'action': support is defined ? path('support_rdv_create', {'id': support.id}) : path('rdv_create')
+            }) }}
+
             <div class="modal-body pb-0">
                 <div class="row mb-3">
                     <div class="col-12" id="modalRdvLabel">{{ form_widget(form_rdv.title) }}</div>
@@ -116,8 +116,7 @@
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <div class="input-group-text" title="Alerte" data-toggle="tooltip"
-                                         data-placement="bottom">
-                                        <i class="fas fa-bell text-black-50"></i>
+                                         data-placement="bottom"><i class="fas fa-bell text-black-50"></i>
                                     </div>
                                 </div>{{ form_widget(form_rdv.alerts.vars.prototype.date) }}
                             </div>
@@ -136,8 +135,8 @@
                              data-container-tag="div" data-widget-counter="{{ form_rdv.alerts|length }}">
                         </div>
                         <button type="button" class="btn btn-{{ theme_color }} btn-sm"
-                                data-list-selector="#alerts-fields-list" data-add-widget="alert"
-                                data-url="/alert/__id__/toggle-status">
+                            data-list-selector="#alerts-fields-list" data-add-widget="alert"
+                            data-url="/alert/__id__/toggle-status">
                             <i class="fas fa-plus-square mr-2"></i>Ajouter un rappel
                         </button>
                     </div>
@@ -147,8 +146,8 @@
             <div class="modal-footer d-flex justify-content-between">
                 <div class="float-left">
                     <button id="modal-btn-delete" class="mr-3 btn btn-danger" data-placement="bottom"
-                            data-action="delete-rdv-modal" data-url="{{ path('rdv_delete', {'id': '__id__'}) }}"
-                            title="Supprimer le rendez-vous"><span class="fas fa-trash-alt"></span>
+                        data-action="delete-rdv-modal" data-url="{{ path('rdv_delete', {'id': '__id__'}) }}"
+                        title="Supprimer le rendez-vous"><i class="fas fa-trash-alt"></i>
                         <span class="d-md-inline ml-2">Supprimer</span>
                     </button>
                 </div>
@@ -156,7 +155,7 @@
                     <button type="button" id="js-btn-cancel" class="btn btn-secondary" data-dismiss="modal">Fermer
                     </button>
                     <button type="button" class="btn btn-{{ theme_color }} shadow" data-action="save-rdv">
-                        <span class="fas fa-save mr-2"></span>Enregistrer
+                        <i class="fas fa-save mr-2"></i>Enregistrer
                     </button>
                 </div>
             </div>

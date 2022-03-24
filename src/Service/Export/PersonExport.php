@@ -4,14 +4,16 @@ namespace App\Service\Export;
 
 use App\Entity\People\Person;
 use App\Service\ExportExcel;
+use Symfony\Component\HttpFoundation\Response;
 
 class PersonExport extends ExportExcel
 {
     /**
      * Exporte les données.
-     * @return StreamedResponse|Response|string
+     *
+     * @param Person[] $people
      */
-    public function exportData(array $people)
+    public function exportData(array $people): Response
     {
         $arrayData[] = array_keys((array) $this->getDatas($people[0]));
 

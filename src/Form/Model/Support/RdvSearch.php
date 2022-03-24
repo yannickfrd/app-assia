@@ -3,9 +3,9 @@
 namespace App\Form\Model\Support;
 
 use App\Form\Model\Traits\DateSearchTrait;
+use Doctrine\Common\Collections\ArrayCollection;
 use App\Form\Model\Support\Traits\RdvSearchTrait;
 use App\Form\Model\Organization\ReferentServiceDeviceSearchTrait;
-use Doctrine\Common\Collections\ArrayCollection;
 
 class RdvSearch
 {

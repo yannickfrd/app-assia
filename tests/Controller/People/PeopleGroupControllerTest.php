@@ -3,7 +3,6 @@
 namespace App\Tests\Controller\People;
 
 use App\Service\Grammar;
-use App\Tests\AppTestTrait;
 use App\Entity\People\PeopleGroup;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,8 +13,6 @@ use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 
 class PeopleGroupControllerTest extends WebTestCase
 {
-    use AppTestTrait;
-
     /** @var KernelBrowser */
     protected $client;
 
@@ -32,28 +29,29 @@ class PeopleGroupControllerTest extends WebTestCase
     {
         parent::setUp();
         
-        $this->client = $this->createClient();
+        $this->client = static::createClient();
+        $this->client->followRedirects();
 
         /** @var AbstractDatabaseTool */
         $this->databaseTool = $this->getContainer()->get(DatabaseToolCollection::class)->get();
 
         $this->fixtures = $this->databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
+            dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/person_fixtures_test.yaml',
         ]);
 
-        $this->peopleGroup = $this->fixtures['peopleGroup1'];
+        $this->peopleGroup = $this->fixtures['people_group1'];
     }
 
-    public function testEditPeopleGroupIsSuccessful()
+    public function testEditPeopleGroupIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
         $id = $this->peopleGroup->getId();
         $this->client->request('GET', "/group/$id");
 
         // Page is up
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Groupe');
 
         // Edit is successful
@@ -63,33 +61,33 @@ class PeopleGroupControllerTest extends WebTestCase
             'group[comment]' => 'XXX',
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Groupe');
     }
 
-    public function testDeletePeopleGroupWithRoleUser()
+    public function testDeletePeopleGroupWithRoleUser(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
         $id = $this->peopleGroup->getId();
         $this->client->request('GET', "/group/$id/delete");
 
-        $this->assertSame(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
 
-    public function testDeletePeopleGroupWithRoleAdmin()
+    public function testDeletePeopleGroupWithRoleAdmin(): void
     {
-        $this->createLogin($this->fixtures['userAdmin']);
+        $this->client->loginUser($this->fixtures['user_admin']);
 
         $id = $this->peopleGroup->getId();
         $this->client->request('GET', "/group/$id/delete");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
     }
 
-    public function testAddPersonToGroupIsSuccessful()
+    public function testAddPersonToGroupIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userRoleUser']);
+        $this->client->loginUser($this->fixtures['john_user']);
 
         $id = $this->peopleGroup->getId();
         /** @var Crawler */
@@ -100,7 +98,7 @@ class PeopleGroupControllerTest extends WebTestCase
         $personId = $this->fixtures['person1']->getId();
         $this->client->request('POST', "/group/$id/add_person/$personId");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('.alert.alert-danger', 'Une erreur s\'est produite.');
 
         // Success
@@ -113,13 +111,13 @@ class PeopleGroupControllerTest extends WebTestCase
             ],
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('.alert.alert-success', $person->getFullname().' est ajouté'.Grammar::gender($person->getGender()).' au groupe.');
     }
 
-    public function testRemovePersonInGroupIsSuccessful()
+    public function testRemovePersonInGroupIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['userAdmin']);
+        $this->client->loginUser($this->fixtures['user_admin']);
 
         $id = $this->peopleGroup->getId();
         /** @var Crawler */
@@ -127,24 +125,21 @@ class PeopleGroupControllerTest extends WebTestCase
         $url = $crawler->filter('button[data-action="remove"]')->last()->attr('data-url');
 
         // Fail
-        $id = $this->fixtures['rolePerson2']->getId();
+        $id = $this->fixtures['role_person2']->getId();
         $this->client->request('GET', "/role_person/$id/remove/token");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorExists('.alert.alert-danger');
 
         // Success
         $this->client->request('GET', $url);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('.alert.alert-warning', 'est retiré');
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
-        
-        $this->client = null;
-        $this->fixtures = null;
     }
 }

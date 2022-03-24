@@ -50,9 +50,10 @@ class ImageOptimizer
     {
         try {
             $source = \Tinify\fromFile($file);
+
             return $source->toFile($file);
         } catch (\Exception $e) {
-            return false;
+            return null;
         }
         // move_uploaded_file($this->file['tmp_name'], $this->toFolder.$this->originalFile);
         // $source = \Tinify\fromFile($this->toFolder.$this->originalFile);

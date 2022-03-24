@@ -14,7 +14,6 @@ class SiSiaoLogin
      */
     private $password;
 
-
     public function __construct()
     {
     }

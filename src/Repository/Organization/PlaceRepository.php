@@ -94,7 +94,7 @@ class PlaceRepository extends ServiceEntityRepository
         return $qb
             ->andWhere('pl.endDate IS NULL')
             ->orWhere('pl.endDate > :date')
-            ->setParameter('date', new \Datetime())
+            ->setParameter('date', new \DateTime())
 
             ->orderBy('pl.name', 'ASC')
         ;

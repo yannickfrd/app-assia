@@ -2,17 +2,17 @@
 
 namespace App\Command\People;
 
-use App\Service\DoctrineTrait;
 use App\Entity\People\RolePerson;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Service\People\PeopleGroupManager;
-use Symfony\Component\Console\Command\Command;
 use App\Repository\People\PeopleGroupRepository;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Style\SymfonyStyle;
+use App\Service\DoctrineTrait;
+use App\Service\People\PeopleGroupManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Commande pour mettre à jour la typologie familiale des groupes de personnes.
@@ -98,7 +98,7 @@ class UpdateFamilyTypologyOfGroupCommand extends Command
                     ++$count;
                 }
             }
-            
+
             $io->progressAdvance();
         }
 

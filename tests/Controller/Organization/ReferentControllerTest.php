@@ -2,17 +2,13 @@
 
 namespace App\Tests\Controller\Organization;
 
-use App\Tests\AppTestTrait;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ReferentControllerTest extends WebTestCase
 {
-    use AppTestTrait;
-
     /** @var KernelBrowser */
     protected $client;
 
@@ -29,32 +25,33 @@ class ReferentControllerTest extends WebTestCase
     {
         parent::setUp();
 
-        $this->client = $this->createClient();
+        $this->client = static::createClient();
+        $this->client->followRedirects();
 
-        /* @var AbstractDatabaseTool */
+        /** @var AbstractDatabaseTool */
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
     }
 
-    protected function getFixtureFiles()
+    protected function getFixtureFiles(): array
     {
         return [
-            dirname(__DIR__).'/../DataFixturesTest/UserFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/ServiceFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/PersonFixturesTest.yaml',
-            dirname(__DIR__).'/../DataFixturesTest/ReferentFixturesTest.yaml',
+            dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/service_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/person_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/referent_fixtures_test.yaml',
         ];
     }
 
-    public function testCreateReferentByPeopleGroupIsSuccessful()
+    public function testCreateReferentByPeopleGroupIsSuccessful(): void
     {
         $fixtures = $this->databaseTool->loadAliceFixture($this->getFixtureFiles());
 
-        $this->createLogin($fixtures['userRoleUser']);
+        $this->client->loginUser($fixtures['john_user']);
 
-        $id = $fixtures['peopleGroup1']->getId();
+        $id = $fixtures['people_group1']->getId();
         $this->client->request('GET', "/group/$id/referent/new");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Nouveau service social référent');
 
         $this->client->submitForm('send', [
@@ -66,20 +63,20 @@ class ReferentControllerTest extends WebTestCase
             ],
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorExists('.alert.alert-success');
     }
 
-    public function testEditReferentIsSuccessful()
+    public function testEditReferentIsSuccessful(): void
     {
         $fixtures = $this->databaseTool->loadAliceFixture(($this->getFixtureFiles()));
 
-        $this->createLogin($fixtures['userRoleUser']);
+        $this->client->loginUser($fixtures['john_user']);
 
         $id = $fixtures['referent1']->getId();
         $this->client->request('GET', "/referent/$id/edit");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', $fixtures['referent1']->getName());
 
         $this->client->submitForm('send', [
@@ -87,32 +84,32 @@ class ReferentControllerTest extends WebTestCase
             'referent[type]' => 2,
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Référent test edit');
     }
 
-    public function testDeleteReferentIsSuccessful()
+    public function testDeleteReferentIsSuccessful(): void
     {
         $fixtures = $this->databaseTool->loadAliceFixture(($this->getFixtureFiles()));
 
-        $this->createLogin($fixtures['userRoleUser']);
+        $this->client->loginUser($fixtures['john_user']);
 
         $id = $fixtures['referent1']->getId();
         $this->client->request('GET', "/referent/$id/delete");
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Group');
     }
 
-    public function testCreateReferentBySupportIsSuccessful()
+    public function testCreateReferentBySupportIsSuccessful(): void
     {
         $fixtures = $this->databaseTool->loadAliceFixture((array_merge($this->getFixtureFiles(), [
-            dirname(__DIR__).'/../DataFixturesTest/SupportFixturesTest.yaml',
+            dirname(__DIR__).'/../fixtures/support_fixtures_test.yaml',
         ])));
 
-        $this->createLogin($fixtures['userRoleUser']);
+        $this->client->loginUser($fixtures['john_user']);
 
-        $id = $fixtures['supportGroup1']->getId();
+        $id = $fixtures['support_group1']->getId();
         $this->client->request('GET', "/support/$id/referent/new");
 
         $this->client->submitForm('send', [
@@ -120,12 +117,12 @@ class ReferentControllerTest extends WebTestCase
             'referent[type]' => 1,
         ]);
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorExists('.alert.alert-success');
 
         $this->client->clickLink('Supprimer');
 
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('.alert.alert-warning', 'Le service social Référent test est supprimé.');
     }
 

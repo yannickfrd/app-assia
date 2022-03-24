@@ -330,7 +330,7 @@ class SupportPerson
     }
 
     /**
-     * @return Collection<Note>|Note[]|null
+     * @return Collection<Note>|null
      */
     public function getNotes(): ?Collection
     {
@@ -338,7 +338,7 @@ class SupportPerson
     }
 
     /**
-     * @return Collection<EvaluationPerson>|EvaluationPerson[]|null
+     * @return Collection<EvaluationPerson>|null
      */
     public function getEvaluations(): ?Collection
     {
@@ -386,7 +386,7 @@ class SupportPerson
     }
 
     /**
-     * @return Collection<PlacePerson>|PlacePerson[]|null
+     * @return Collection<PlacePerson>|null
      */
     public function getPlacesPerson(): ?Collection
     {
@@ -417,7 +417,7 @@ class SupportPerson
     }
 
     // /**
-    //  * @return Collection<Task>|Task[]|null
+    //  * @return Collection<Task>|null
     //  */
     // public function getTasks(): ?Collection
     // {

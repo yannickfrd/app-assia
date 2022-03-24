@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Payment;
 
 use App\Controller\Traits\ErrorMessageTrait;
@@ -31,7 +33,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class PaymentController extends AbstractController
+final class PaymentController extends AbstractController
 {
     use ErrorMessageTrait;
 

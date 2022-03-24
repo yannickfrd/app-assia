@@ -7,7 +7,6 @@ use App\Entity\Organization\Service;
 use App\Entity\Organization\SubService;
 use App\Repository\Organization\PlaceRepository;
 use App\Repository\Organization\SubServiceRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -18,6 +17,7 @@ class ImportPlaceDatas extends ImportDatas
     protected $items = [];
     protected $placeRepo;
     protected $subServiceRepo;
+    protected $fields;
     protected $field;
     protected $subServices = [];
 
@@ -33,7 +33,7 @@ class ImportPlaceDatas extends ImportDatas
      *
      * @param Collection<Service> $services
      */
-    public function importInDatabase(string $fileName, ArrayCollection $services): array
+    public function importInDatabase(string $fileName, Collection $services): array
     {
         $this->fields = $this->getDatas($fileName);
 
@@ -54,7 +54,7 @@ class ImportPlaceDatas extends ImportDatas
     /**
      * @param Collection<Service> $services
      */
-    protected function createPlace(ArrayCollection $services): ?Place
+    protected function createPlace(Collection $services): ?Place
     {
         $placeExists = $this->placeRepo->findOneBy([
             'name' => $this->field['Nom'],
@@ -63,6 +63,8 @@ class ImportPlaceDatas extends ImportDatas
         if ('Non' == $this->field['Nom'] || $placeExists) {
             return null;
         }
+
+        $places = [];
 
         foreach ($services as $service) {
             $place = (new Place())
@@ -78,9 +80,11 @@ class ImportPlaceDatas extends ImportDatas
             $this->updateLocation($place);
 
             $this->em->persist($place);
+
+            $places[] = $place;
         }
 
-        return $place;
+        return count($places) > 0 ? $place : null;
     }
 
     protected function cleanString(string $string): string

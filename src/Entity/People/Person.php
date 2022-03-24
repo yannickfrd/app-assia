@@ -313,7 +313,7 @@ class Person
     }
 
     /**
-     * @return Collection<RolePerson>|RolePerson[]|null
+     * @return Collection<RolePerson>|null
      */
     public function getRolesPerson(): ?Collection
     {
@@ -344,7 +344,7 @@ class Person
     }
 
     /**
-     * @return Collection<SupportPerson>|SupportPerson[]|null
+     * @return Collection<SupportPerson>|null
      */
     public function getSupports(): ?Collection
     {
@@ -375,7 +375,7 @@ class Person
     }
 
     /**
-     * @return Collection<PlacePerson>|PlacePerson[]|null
+     * @return Collection<PlacePerson>|null
      */
     public function getPlacePeople(): ?Collection
     {

@@ -2,17 +2,17 @@
 
 namespace App\Command\Support;
 
-use App\Service\DoctrineTrait;
 use App\Entity\People\RolePerson;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Stopwatch\Stopwatch;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Style\SymfonyStyle;
 use App\Repository\Support\SupportGroupRepository;
+use App\Service\DoctrineTrait;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * Commande pour mettre à jour le nombre de personnes par suivi (TEMPORAIRE, A SUPPRIMER).
@@ -92,10 +92,9 @@ class UpdateFamilyTypologyOfSupportCommand extends Command
                 $supportGroup->setNbPeople($nbSupportPeople);
                 ++$count;
             }
-            
+
             $io->progressAdvance();
         }
-
 
         if ('fix' === $arg) {
             $this->em->flush();

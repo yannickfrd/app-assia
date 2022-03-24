@@ -1,18 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Payment;
 
 use App\Entity\Support\Payment;
 use App\Form\Support\Payment\PaymentType;
-use App\Service\SupportGroup\SupportManager;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use App\Service\Payment\ContributionCalculator;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Service\SupportGroup\SupportManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
-class CalculContributionController extends AbstractController
+final class CalculContributionController extends AbstractController
 {
     private $supportManager;
     private $paymentCalculator;

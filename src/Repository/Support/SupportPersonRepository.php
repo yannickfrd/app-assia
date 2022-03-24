@@ -64,7 +64,7 @@ class SupportPersonRepository extends ServiceEntityRepository
      */
     public function findSupportsToExport(?SupportSearch $search = null): ?array
     {
-        $qb = $this->getSupportsQuery(true)
+        $qb = $this->getSupportsQuery()
             ->leftJoin('sp.placesPerson', 'pp')->addSelect('pp')
             ->leftJoin('pp.placeGroup', 'pg')->addSelect('pg')
             ->leftJoin('pg.place', 'pl')->addSelect('pl');
@@ -449,7 +449,7 @@ class SupportPersonRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return SupportPerson[]|null
+     * @return SupportPerson[]
      */
     public function findPeopleInSupport(SupportGroup $supportGroup): array
     {
@@ -458,9 +458,6 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    /**
-     * @return QueryBuilder|null
-     */
     public function findPeopleInSupportqueryBuilder(SupportGroup $supportGroup): QueryBuilder
     {
         return $this->createQueryBuilder('sp')->select('sp')
@@ -470,9 +467,6 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->setParameter('supportGroup', $supportGroup);
     }
 
-    /**
-     * @return QueryBuilder|null
-     */
     public function findPeopleInSupportByIdqueryBuilder(int $supportGroupId): QueryBuilder
     {
         return $this->createQueryBuilder('sp')->select('PARTIAL sp.{id, supportGroup}')
@@ -483,7 +477,7 @@ class SupportPersonRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return SupportPerson[]|null
+     * @return SupportPerson[]
      */
     public function findPeopleNotInPlaceGroup(PlaceGroup $placeGroup): array
     {

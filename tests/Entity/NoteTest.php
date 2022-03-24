@@ -24,12 +24,12 @@ class NoteTest extends WebTestCase
             ->setStatus(1);
     }
 
-    public function testValidNote()
+    public function testValidNote(): void
     {
         $this->assertHasErrors($this->note, 0);
     }
 
-    public function testBlankContent()
+    public function testBlankContent(): void
     {
         $this->assertHasErrors($this->note->setContent(''), 1);
     }

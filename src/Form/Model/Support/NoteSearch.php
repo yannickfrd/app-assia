@@ -2,9 +2,9 @@
 
 namespace App\Form\Model\Support;
 
-use App\Form\Model\Traits\DateSearchTrait;
-use App\Form\Model\Support\Traits\NoteSearchTrait;
 use App\Form\Model\Organization\ReferentServiceDeviceSearchTrait;
+use App\Form\Model\Support\Traits\NoteSearchTrait;
+use App\Form\Model\Traits\DateSearchTrait;
 
 class NoteSearch
 {

@@ -75,7 +75,7 @@ class SupportGroup
         210 => 'Exclusion disciplinaire',
         220 => 'Fin du contrat de séjour',
         500 => 'Fin d\'intervention d\'urgence', // PASH 6
-        510 => 'Fin de prise en charge 115', //PASH  5
+        510 => 'Fin de prise en charge 115', // PASH  5
         520 => 'Fin de prise en charge ASE', // PASH 3
         400 => 'Fin de prise en charge OFII', // Asile
         410 => 'Transfert Dublin', // Asile
@@ -644,7 +644,7 @@ class SupportGroup
     }
 
     /**
-     * @return Collection<SupportPerson>|SupportPerson[]|null
+     * @return Collection<SupportPerson>|null
      */
     public function getSupportPeople(): ?Collection
     {
@@ -714,7 +714,7 @@ class SupportGroup
     }
 
     /**
-     * @return Collection<Note>|Note[]|null
+     * @return Collection<Note>|null
      */
     public function getNotes(): ?Collection
     {
@@ -745,7 +745,7 @@ class SupportGroup
     }
 
     /**
-     * @return Collection<Rdv>|Rdv[]|null
+     * @return Collection<Rdv>|null
      */
     public function getRdvs(): ?Collection
     {
@@ -776,7 +776,7 @@ class SupportGroup
     }
 
     /**
-     * @return Collection<Task>|Task[]|null
+     * @return Collection<Task>|null
      */
     public function getTasks(): ?Collection
     {
@@ -797,7 +797,7 @@ class SupportGroup
     }
 
     /**
-     * @return Collection<Document>|Document[]|null
+     * @return Collection<Document>|null
      */
     public function getDocuments(): ?Collection
     {
@@ -828,7 +828,7 @@ class SupportGroup
     }
 
     /**
-     * @return Collection<PlaceGroup>|PlaceGroup[]|null
+     * @return Collection<PlaceGroup>|null
      */
     public function getPlaceGroups(): ?Collection
     {
@@ -859,7 +859,7 @@ class SupportGroup
     }
 
     /**
-     * @return Collection<EvaluationGroup>|EvaluationGroup[]|null
+     * @return Collection<EvaluationGroup>|null
      */
     public function getEvaluationsGroup(): ?Collection
     {
@@ -937,7 +937,7 @@ class SupportGroup
     }
 
     /**
-     * @return Collection<Payment>|Payment[]|null
+     * @return Collection<Payment>|null
      */
     public function getPayments(): ?Collection
     {

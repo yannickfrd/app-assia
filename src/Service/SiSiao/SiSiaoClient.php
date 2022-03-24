@@ -28,10 +28,10 @@ class SiSiaoClient
         '/login/user',
     ];
 
-    private $client;
-    private $session;
-    private $url;
-    private $headers;
+    protected $client;
+    protected $session;
+    protected $url;
+    protected $headers;
 
     public function __construct(HttpClientInterface $client, RequestStack $requestStack, string $url)
     {
@@ -63,6 +63,7 @@ class SiSiaoClient
     public function findPeople(int $id): ?array
     {
         $people = [];
+        /** @var object $result */
         $result = $this->searchById($id);
 
         foreach ($result->result as $personne) {
@@ -107,9 +108,12 @@ class SiSiaoClient
             ];
         }
 
+        /** @var object $data */
         $data = $this->get("/fiches/ficheIdentite/{$id}");
 
         $dp = $data->demandeurprincipal;
+        $personnes = $data->personnes;
+        $idGroupe = $data->id;
 
         if ('Personne' === $data->typefiche) {
             foreach ($dp->fiches as $fiche) {
@@ -123,9 +127,6 @@ class SiSiaoClient
                 $personnes = $fiche->personnes;
                 $idGroupe = $fiche->id;
             }
-        } else {
-            $personnes = $data->personnes;
-            $idGroupe = $data->id;
         }
 
         return [
@@ -144,6 +145,7 @@ class SiSiaoClient
      */
     public function dumpGroupById(int $id)
     {
+        /** @var object $ficheGroupe */
         $ficheGroupe = $this->get("/fiches/ficheIdentite/{$id}");
         dump($ficheGroupe);
         $diagSocialId = $ficheGroupe ? $ficheGroupe->demandeurprincipal->diagnosticSocial->id : null;
@@ -181,6 +183,7 @@ class SiSiaoClient
      */
     protected function getCurrentRoleUser(): JsonResponse
     {
+        /** @var object $user */
         $user = $this->get('/login/user');
 
         return $user->currentRole;
