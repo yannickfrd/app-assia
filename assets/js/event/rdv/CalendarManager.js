@@ -1,8 +1,8 @@
-import Ajax from '../utils/ajax'
-import MessageFlash from '../utils/messageFlash'
-import Loader from '../utils/loader'
-import ParametersUrl from '../utils/parametersUrl'
-import ApiCalendar from '../api/ApiCalendar';
+import Ajax from '../../utils/ajax'
+import MessageFlash from '../../utils/messageFlash'
+import Loader from '../../utils/loader'
+import ParametersUrl from '../../utils/parametersUrl'
+import ApiCalendar from '../../api/ApiCalendar';
 import RdvModel from "./model/RdvModel";
 import RdvForm from "./RdvForm";
 

@@ -1,5 +1,5 @@
 import CalendarManager from './CalendarManager'
-import SearchLocation from '../utils/searchLocation'
+import SearchLocation from '../../utils/searchLocation'
 
 window.addEventListener('load', () => {
     new CalendarManager()

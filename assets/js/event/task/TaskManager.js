@@ -1,8 +1,8 @@
-import Loader from '../utils/loader'
-import Ajax from '../utils/ajax.js'
+import Loader from '../../utils/loader'
+import Ajax from '../../utils/ajax.js'
 import TaskForm from './TaskForm.js'
-import MessageFlash from '../utils/messageFlash'
-import { Modal } from 'bootstrap'
+import MessageFlash from '../../utils/messageFlash'
+import {Modal} from 'bootstrap'
 
 export default class TaskManager {
 
@@ -63,7 +63,7 @@ export default class TaskManager {
 
     /**
      * Requête pour voir la tâche sélectionnée dans le formulaire.
-     * @param {HTMLButtonElement} btnEditElt 
+     * @param {HTMLButtonElement} btnEditElt
      */
     requestShowTask(btnEditElt) {
         this.loader.on()
@@ -71,7 +71,7 @@ export default class TaskManager {
     }
 
     /**
-     * @param {HTMLInputElement} checkboxElt 
+     * @param {HTMLInputElement} checkboxElt
      */
     requestToggleStatusTask(checkboxElt) {
         if (!this.loader.isActive()) {
@@ -81,12 +81,12 @@ export default class TaskManager {
 
     /**
      * Réponse du serveur.
-     * @param {Object} response 
+     * @param {Object} response
      */
     responseAjax(response) {
         if (response.action) {
             const task = response.task
-            
+
             switch (response.action) {
                 case 'create':
                     this.createTaskTr(task)
@@ -147,7 +147,7 @@ export default class TaskManager {
             <td class="align-middle" data-cell="tags">${this.createTags(task)}</td>
             <td class="align-middle" data-cell="users">${task.usersToString}</td>
          `
-        
+
         if (!this.supportId) {
             htmlContent = htmlContent + `
             <td class="align-middle" data-cell="support">${task.supportGroup ? task.supportGroup.header.fullname : ''}</td>
@@ -201,7 +201,7 @@ export default class TaskManager {
     }
 
     /**
-     * 
+     *
      * @param {HTMLElement} elt
      */
     onClickDeleteTask(elt) {
@@ -213,8 +213,7 @@ export default class TaskManager {
      * @param {Object} task
      * @returns {string}
      */
-    createAlerts(task)
-    {
+    createAlerts(task) {
         let alerts = ''
         if (task.alerts.length > 0) {
             alerts = `<span title="${task.alerts.length} rappel(s)">${task.alerts[0].dateToString}
@@ -228,8 +227,7 @@ export default class TaskManager {
      * @param {Object} task
      * @returns {string}
      */
-    createTags(task)
-    {
+    createTags(task) {
         let tags = ''
         task.tags.forEach(tag => {
             tags += `<span class="badge bg-${tag.color} text-light mr-1">${tag.name}</span>`
@@ -240,7 +238,7 @@ export default class TaskManager {
 
     /**
      * Affiche la tâche dans le formulaire modal.
-     * @param {Object} task 
+     * @param {Object} task
      */
     showTask(task) {
         this.taskForm.showTask(task)
@@ -248,7 +246,7 @@ export default class TaskManager {
     }
 
     /**
-     * @param {number} value 
+     * @param {number} value
      */
     updateCounterTasks(value) {
         const countTasks = parseInt(this.counterTasksElt.dataset.countTasks) + value
@@ -288,11 +286,11 @@ export default class TaskManager {
 
     /**
      * Supprime la ligne <tr> correspondant tâche.
-     * @param {Object} task 
+     * @param {Object} task
      */
     deleteTaskTr(task) {
         const rowElt = document.getElementById(`task_${task.id}`)
-        
+
         if (rowElt) {
             rowElt.remove()
         } else {
@@ -307,8 +305,8 @@ export default class TaskManager {
 
     /**
      * Inverse le statut de la tâche (réalisée/non-réalisée).
-     * @param {Object} task 
-     * @param {HTMLTableRowElement} rowElt 
+     * @param {Object} task
+     * @param {HTMLTableRowElement} rowElt
      */
     checkStatus(task, rowElt = null) {
         rowElt = rowElt ?? document.querySelector(`tr#task_${task.id}`)
@@ -320,11 +318,11 @@ export default class TaskManager {
         } else {
             rowElt.classList.remove('text-secondary', 'delete')
         }
-        
+
         if (spanElt && task.status === false) {
             endTdElt.classList.add('text-danger')
             spanElt.classList.remove('d-none')
-            return 
+            return
         }
 
         endTdElt.classList.remove('text-danger')
@@ -335,7 +333,7 @@ export default class TaskManager {
     }
 
     /**
-     * @param {number} taskId 
+     * @param {number} taskId
      */
     getUrlTaskShow(taskId) {
         return this.modalTaskElt.dataset.urlTaskShow.replace('__id__', taskId)

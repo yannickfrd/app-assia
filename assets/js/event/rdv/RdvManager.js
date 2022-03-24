@@ -1,10 +1,10 @@
-import Ajax from '../utils/ajax'
-import MessageFlash from '../utils/messageFlash'
-import Loader from '../utils/loader'
+import Ajax from '../../utils/ajax'
+import MessageFlash from '../../utils/messageFlash'
+import Loader from '../../utils/loader'
 import {Modal} from 'bootstrap'
 import RdvForm from "./RdvForm";
-import DateFormater from "../utils/date/dateFormater";
-import ApiCalendar from "../api/ApiCalendar";
+import DateFormater from "../../utils/date/dateFormater";
+import ApiCalendar from "../../api/ApiCalendar";
 import RdvModel from "./model/RdvModel";
 
 export default class RdvManager {

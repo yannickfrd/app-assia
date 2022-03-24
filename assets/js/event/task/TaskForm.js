@@ -1,13 +1,12 @@
-import MessageFlash from '../utils/messageFlash'
-import DateFormater from '../utils/date/dateFormater'
-import SelectManager from '../utils/form/SelectManager'
-import WidgetCollectionManager from '../utils/form/WidgetCollectionManager'
-import TaskManager from './TaskManager'
-import FormValidator from '../utils/form/formValidator'
+import MessageFlash from '../../utils/messageFlash'
+import DateFormater from '../../utils/date/dateFormater'
+import SelectManager from '../../utils/form/SelectManager'
+import WidgetCollectionManager from '../../utils/form/WidgetCollectionManager'
+import FormValidator from '../../utils/form/formValidator'
 
 export default class TaskForm {
     /**
-     * @param {TaskManager} taskManager 
+     * @param {TaskManager} taskManager
      */
     constructor(taskManager) {
         this.taskManager = taskManager
@@ -28,7 +27,7 @@ export default class TaskForm {
         this.supportSelectElt = document.getElementById('task_supportGroup')
         this.usersSelecElt = document.getElementById('task_users')
         this.contentTextAreaElt = document.getElementById('task_content')
-        
+
         this.taskTitleElt = this.modalTaskElt.querySelector('.modal-header h2')
         this.infoTaskElt = document.getElementById('js_task_info')
         this.btnSaveElt = document.getElementById('js-btn-save')
@@ -37,9 +36,12 @@ export default class TaskForm {
 
         this.currentUserId = document.getElementById('user-name').dataset.userId
 
-        this.usersSelectManager = new SelectManager('#task_users', { name: 'onModal', elementId: 'modal-task' }, { width: '100%' })
+        this.usersSelectManager = new SelectManager('#task_users', {
+            name: 'onModal',
+            elementId: 'modal-task'
+        }, {width: '100%'})
         this.tagsSelectManager = new SelectManager('#task_tags', {name: 'onModal', elementId: 'modal-task'})
-        
+
         this.alertsCollectionManager = new WidgetCollectionManager(this.afterToAddAlert.bind(this), null, 3)
 
         this.formValidator = new FormValidator(this.modalTaskElt)
@@ -62,10 +64,10 @@ export default class TaskForm {
     resetForm() {
         this.formValidator.reinit()
         this.formTaskElt.action = this.formTaskElt.dataset.urlTaskNew
-        
+
         this.taskTitleElt.textContent = 'Nouvelle tâche'
         this.infoTaskElt.textContent = ''
-        
+
         const dateFormater = new DateFormater()
         this.endDateInputElt.value = dateFormater.getDateNow()
         this.endTimeInputElt.value = dateFormater.getHour()
@@ -127,7 +129,7 @@ export default class TaskForm {
 
     /**
      * Affiche la tâche dans le formulaire modal.
-     * @param {Object} task 
+     * @param {Object} task
      */
     showTask(task) {
         this.modalTaskElt.querySelector('form').action = '/task/' + task.id + '/edit'
@@ -140,10 +142,10 @@ export default class TaskForm {
         this.statusCheckboxElt.value = task.status
         this.statusCheckboxElt.checked = task.status
         this.contentTextAreaElt.value = task.content ?? ''
-        
+
         this.taskTitleElt.innerHTML = this.getTitleModal(task)
         this.infoTaskElt.innerHTML = this.getInfoTaskElt(task)
-        
+
         this.btnDeleteElt.addEventListener('click', e => {
             e.preventDefault()
             this.taskManager.confirmDeleteModal.show()
@@ -153,11 +155,11 @@ export default class TaskForm {
         const userIds = []
         task.users.forEach(user => userIds.push(user.id))
         this.usersSelectManager.updateSelect(userIds)
-        
+
         const tagsIds = []
         task.tags.forEach(tags => tagsIds.push(tags.id))
         this.tagsSelectManager.updateSelect(tagsIds)
-        
+
         this.supportSelectElt.value = ''
         this.supportSelectElt.disabled = task.supportGroup !== null
         if (task.supportGroup) {
@@ -196,7 +198,7 @@ export default class TaskForm {
             data-placement="bottom">Tâche | ${task.supportGroup.header.fullname}</a>
         `
     }
-    
+
     /**
      * Donnes les informations sur l'enregistrement (créé le, créé par).
      * @param {Object} task
@@ -208,7 +210,7 @@ export default class TaskForm {
         if (task.createdBy) {
             htmlContent = `${htmlContent} par ${task.createdBy.fullname} `
         }
-        
+
         if (task.createdAtToString !== task.updatedAtToString) {
             htmlContent = `${htmlContent} <br/> (modifié le ${task.updatedAtToString}
                 ${task.updatedBy ? ' par ' + task.updatedBy.fullname : ''})`
@@ -225,11 +227,11 @@ export default class TaskForm {
 
     /**
      * Initialise les rappels du formulaire.
-     * @param {Object} task 
+     * @param {Object} task
      */
     initAlerts(task) {
         this.resetAlerts()
-        
+
         task.alerts.forEach(alert => {
             const alertElt = this.alertsCollectionManager.addElt(this.btnAddAlertElt)
             alertElt.querySelector('input').value = alert.date.slice(0, 19)
@@ -245,7 +247,7 @@ export default class TaskForm {
         const elt = this.alertsCollectionManager.listElt.lastElementChild
         const defaultDate = new Date(this.endInputElt.value)
         defaultDate.setDate(defaultDate.getDate() - 1)
-        
+
         const inputDateElt = elt.querySelector('input')
         inputDateElt.value = new DateFormater().getDate(defaultDate, 'datetimeInput')
         inputDateElt.addEventListener('focusout', e => this.isValidDate(e.target))
@@ -265,8 +267,7 @@ export default class TaskForm {
             this.usersSelecElt,
         ]
 
-        document.querySelector('#alerts-fields-list').
-            querySelectorAll('input, select').forEach(fieldElt => fieldElts.push(fieldElt))
+        document.querySelector('#alerts-fields-list').querySelectorAll('input, select').forEach(fieldElt => fieldElts.push(fieldElt))
 
         fieldElts.forEach(fieldElt => {
             if (fieldElt.value === '') {
@@ -292,8 +293,8 @@ export default class TaskForm {
     }
 
     /**
-     * 
-     * @param {HTMLInputElement} inputDateElt 
+     *
+     * @param {HTMLInputElement} inputDateElt
      * @returns {Boolean}
      */
     isValidDate(inputDateElt) {

@@ -1,11 +1,11 @@
-import FormValidator from "../utils/form/formValidator";
-import SelectManager from "../utils/form/SelectManager";
-import DateFormater from "../utils/date/dateFormater";
-import MessageFlash from "../utils/messageFlash";
+import FormValidator from "../../utils/form/formValidator";
+import SelectManager from "../../utils/form/SelectManager";
+import DateFormater from "../../utils/date/dateFormater";
+import MessageFlash from "../../utils/messageFlash";
 import {Modal} from "bootstrap";
 import RdvModel from "./model/RdvModel";
-import ApiCalendar from "../api/ApiCalendar";
-import WidgetCollectionManager from "../utils/form/WidgetCollectionManager";
+import ApiCalendar from "../../api/ApiCalendar";
+import WidgetCollectionManager from "../../utils/form/WidgetCollectionManager";
 
 export default class RdvForm {
 
