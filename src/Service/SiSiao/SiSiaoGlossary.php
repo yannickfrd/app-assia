@@ -25,6 +25,7 @@ class SiSiaoGlossary extends SiSiaoClient
             '/typeRessources',
             '/typeCharges',
             '/typeDettes',
+            '/typesMoyenLocomotion',
             '/evolutionsBudgetaires',
             '/dispositif',
             '/mesureAccompagnement',

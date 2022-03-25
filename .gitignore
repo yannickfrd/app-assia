@@ -2,7 +2,6 @@
 .env.local
 .env.*.local
 /php.ini.lnk
-/public/bundles/
 /backups/
 /drivers/
 /var/

@@ -1,8 +1,13 @@
 CHANGELOG
 =========
+
+## Version 3.13.1 - 25/03/2022
+
+Update SI-SIAO feature (#136)
+
 ## Version 3.13.0 - 23/03/2022
 
-Optimize and update tests, create github action, PHP CS Fixer and PHP Stan
+Optimize and update tests, create github action, PHP CS Fixer and PHP Stan (#134)
 
 * Edit password algorithm in tests/security
 * [Config] Set logging to false in test/doctrine

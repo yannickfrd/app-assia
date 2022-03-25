@@ -68,7 +68,7 @@ abstract class AbstractFinance
 
     public function setComment(?string $comment): self
     {
-        $this->comment = $comment;
+        $this->comment = substr($comment, 0, 100);
 
         return $this;
     }
