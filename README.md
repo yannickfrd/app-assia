@@ -4,7 +4,7 @@ Application d’Accompagnement Social et Solidaire Inter-Associative
 
 ## Version
 
-3.13.1 25/03/2022
+3.13.2 25/03/2022
 
 ## Author
 

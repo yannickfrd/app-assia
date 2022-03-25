@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+## Version 3.13.2 - 25/03/2022
+Fix problem APCU Cache with full export (#137)
+* [ExportController] Add condition check if fileName exist before delete
+* Add route to clear APCU Cache
+* Add delay to export data
+* [ExportExcel] Change ApcuCachePool to ApcuAdapter
+
 ## Version 3.13.1 - 25/03/2022
 
 Update SI-SIAO feature (#136)
