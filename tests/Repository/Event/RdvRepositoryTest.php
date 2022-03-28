@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Tests\Repository;
+namespace App\Tests\Repository\Event;
 
 use App\Entity\Event\Rdv;
 use App\Entity\Organization\User;
 use App\Entity\Support\SupportGroup;
-use App\Form\Model\Support\RdvSearch;
-use App\Form\Model\Support\SupportRdvSearch;
+use App\Form\Model\Event\EventSearch;
 use App\Repository\Event\RdvRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
@@ -28,11 +27,11 @@ class RdvRepositoryTest extends WebTestCase
     /** @var User */
     protected $user;
 
-    /** @var RdvSearch */
+    /** @var EventSearch */
     protected $search;
 
-    /** @var SupportRdvSearch */
-    protected $supportRdvSearch;
+    /** @var EventSearch */
+    protected $supportEventSearch;
 
     protected function setUp(): void
     {
@@ -40,11 +39,11 @@ class RdvRepositoryTest extends WebTestCase
         $databaseTool = $this->getContainer()->get(DatabaseToolCollection::class)->get();
 
         $fixtures = $databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/fixtures/app_fixtures_test.yaml',
-            dirname(__DIR__).'/fixtures/service_fixtures_test.yaml',
-            dirname(__DIR__).'/fixtures/person_fixtures_test.yaml',
-            dirname(__DIR__).'/fixtures/support_fixtures_test.yaml',
-            dirname(__DIR__).'/fixtures/rdv_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/service_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/person_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/support_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/rdv_fixtures_test.yaml',
         ]);
 
         $kernel = self::bootKernel();
@@ -61,13 +60,13 @@ class RdvRepositoryTest extends WebTestCase
         $referents = new ArrayCollection();
         $referents->add($this->user);
 
-        $this->search = (new RdvSearch())
+        $this->search = (new EventSearch())
             ->setTitle('RDV test')
             ->setStart(new \DateTime())
             ->setEnd((new \DateTime())->modify('+1 month'))
             ->setReferents($referents);
 
-        $this->supportRdvSearch = (new SupportRdvSearch())
+        $this->supportEventSearch = (new EventSearch())
             ->setTitle('RDV test')
             ->setStart(new \DateTime())
             ->setEnd((new \DateTime())->modify('+1 month'));
@@ -80,7 +79,7 @@ class RdvRepositoryTest extends WebTestCase
 
     public function testFindAllRdvsQueryWithoutFilters(): void
     {
-        $qb = $this->rdvRepo->findRdvsQuery(new RdvSearch(), $this->user);
+        $qb = $this->rdvRepo->findRdvsQuery(new EventSearch(), $this->user);
         $this->assertGreaterThanOrEqual(5, count($qb->getResult()));
     }
 
@@ -92,13 +91,13 @@ class RdvRepositoryTest extends WebTestCase
 
     public function testFindAllRdvsQueryOfSupportWithoutFilters(): void
     {
-        $qb = $this->rdvRepo->findRdvsQueryOfSupport($this->supportGroup->getId(), new SupportRdvSearch());
+        $qb = $this->rdvRepo->findRdvsQueryOfSupport($this->supportGroup->getId(), new EventSearch());
         $this->assertGreaterThanOrEqual(1, count($qb->getResult()));
     }
 
     public function testFindAllRdvsQueryOfSupportWithFilters(): void
     {
-        $qb = $this->rdvRepo->findRdvsQueryOfSupport($this->supportGroup->getId(), $this->supportRdvSearch);
+        $qb = $this->rdvRepo->findRdvsQueryOfSupport($this->supportGroup->getId(), $this->supportEventSearch);
         $this->assertGreaterThanOrEqual(1, count($qb->getResult()));
     }
 

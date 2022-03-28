@@ -8,7 +8,6 @@ use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\HttpFoundation\Response;
 
 class TaskControllerTest extends WebTestCase
 {
@@ -211,7 +210,7 @@ class TaskControllerTest extends WebTestCase
 
     public function testDeleteTaskIsSuccessful(): void
     {
-        $this->client->request('GET', "/task/{$this->task->getId()}/delete");
+        $this->client->request('DELETE', "/task/{$this->task->getId()}/delete");
 
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('delete', $content['action']);

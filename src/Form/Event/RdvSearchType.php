@@ -5,7 +5,7 @@ namespace App\Form\Event;
 use App\Entity\Event\Rdv;
 use App\Entity\Organization\Tag;
 use App\Entity\Organization\User;
-use App\Form\Model\Support\RdvSearch;
+use App\Form\Model\Event\EventSearch;
 use App\Form\Type\DateSearchType;
 use App\Form\Type\ServiceDeviceReferentSearchType;
 use App\Form\Utils\Choices;
@@ -72,10 +72,10 @@ class RdvSearchType extends AbstractType
                 'required' => false,
             ])
             ->add('date', DateSearchType::class, [
-                'data_class' => RdvSearch::class,
+                'data_class' => EventSearch::class,
             ])
             ->add('service', ServiceDeviceReferentSearchType::class, [
-                'data_class' => RdvSearch::class,
+                'data_class' => EventSearch::class,
             ])
             ->add('export')
             ->add('users', EntityType::class, [
@@ -113,7 +113,7 @@ class RdvSearchType extends AbstractType
     private function setFormData(FormBuilderInterface $builder): FormBuilderInterface
     {
         return $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            /** @var RdvSearch */
+            /** @var EventSearch */
             $search = $event->getData();
 
             if (User::STATUS_SOCIAL_WORKER === $this->user->getStatus()) {
@@ -127,7 +127,7 @@ class RdvSearchType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => RdvSearch::class,
+            'data_class' => EventSearch::class,
             'method' => 'get',
             'translation_domain' => 'forms',
             'allow_extra_fields' => true,

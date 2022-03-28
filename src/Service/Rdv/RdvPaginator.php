@@ -3,7 +3,7 @@
 namespace App\Service\Rdv;
 
 use App\Entity\Support\SupportGroup;
-use App\Form\Model\Support\SupportRdvSearch;
+use App\Form\Model\Event\EventSearch;
 use App\Repository\Event\RdvRepository;
 use App\Service\Pagination;
 use Psr\Cache\CacheItemInterface;
@@ -24,7 +24,7 @@ class RdvPaginator
     /**
      * Donne les rendez-vous du suivi.
      */
-    public function getRdvs(SupportGroup $supportGroup, Request $request, SupportRdvSearch $search): object
+    public function getRdvs(SupportGroup $supportGroup, Request $request, EventSearch $search): object
     {
         // Si filtre ou tri utilisé, n'utilise pas le cache.
         if ($request->query->count() > 0) {

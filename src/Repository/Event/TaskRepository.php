@@ -30,7 +30,7 @@ class TaskRepository extends ServiceEntityRepository
     /**
      * Return all tasks to paginate.
      */
-    public function findTasksQuery(TaskSearch $search, ?User $user = null, ?SupportGroup $supportGroup = null): Query
+    public function findTasksQuery(TaskSearch $search, User $user, ?SupportGroup $supportGroup = null): Query
     {
         $qb = $this->getTasksQuery();
         $qb = $this->filter($qb, $search, $user);
@@ -78,13 +78,13 @@ class TaskRepository extends ServiceEntityRepository
     /**
      * Donne tous les évenements à exporter.
      */
-    public function findTasksToExport(TaskSearch $search): array
+    public function findTasksToExport(TaskSearch $search, User $user): array
     {
         $qb = $this->getTasksQuery()
             ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
             ->leftJoin('t.updatedBy', 'u4')->addSelect('PARTIAL u4.{id, firstname, lastname}');
 
-        $qb = $this->filter($qb, $search);
+        $qb = $this->filter($qb, $search, $user);
 
         return $qb
             ->orderBy('t.createdBy', 'DESC')
@@ -135,12 +135,13 @@ class TaskRepository extends ServiceEntityRepository
 
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getResult();
+            ->getResult()
+        ;
     }
 
-    protected function filter(QueryBuilder $qb, TaskSearch $search, User $user = null): QueryBuilder
+    protected function filter(QueryBuilder $qb, TaskSearch $search, User $user): QueryBuilder
     {
-        if ($user && !$user->hasRole('ROLE_SUPER_ADMIN')) {
+        if (!$user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->where('t.createdBy IN (:user)')
                 ->setParameter('user', $user);
             $qb->orWhere('sg.service IN (:services)')
@@ -170,8 +171,8 @@ class TaskRepository extends ServiceEntityRepository
             $qb->andWhere('t.supportGroup = :supportGroup')
                 ->setParameter('supportGroup', $search->getSupportGroup());
         }
-        if (null !== $search->getStatus()) {
-            $qb->andWhere('t.status = :status')
+        if ($search->getStatus()) {
+            $qb->andWhere('t.status IN (:status)')
                 ->setParameter('status', $search->getStatus());
         }
         if ($search->getLevel()) {

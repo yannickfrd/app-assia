@@ -23,6 +23,7 @@ class AddUserToRdvCommand extends Command
     public function __construct(EntityManagerInterface $em, RdvRepository $rdvRepo)
     {
         parent::__construct();
+
         $this->em = $em;
         $this->rdvRepo = $rdvRepo;
     }

@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Tests\Controller\Rdv;
+namespace App\Tests\Controller\Event;
 
 use App\Entity\Event\Rdv;
 use App\Entity\Organization\User;
 use App\Entity\Support\SupportGroup;
-use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\DomCrawler\Crawler;
 
 class RdvControllerTest extends WebTestCase
 {
@@ -134,7 +134,7 @@ class RdvControllerTest extends WebTestCase
     }
 
     public function testCreateNewSupportRdvIsSuccessful(): void
-    {        
+    {
         /** @var User */
         $user = $this->fixtures['john_user'];
         $this->client->loginUser($user);
@@ -244,7 +244,7 @@ class RdvControllerTest extends WebTestCase
     {
         $this->client->loginUser($this->fixtures['john_user']);
         $id = $this->rdv->getId();
-        $this->client->request('GET', "/rdv/$id/delete");
+        $this->client->request('DELETE', "/rdv/$id/delete");
 
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('delete', $content['action']);

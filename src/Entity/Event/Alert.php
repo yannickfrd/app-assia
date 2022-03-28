@@ -138,9 +138,10 @@ class Alert
         return $this->rdv;
     }
 
-    public function setRdv($rdv): self
+    public function setRdv(Rdv $rdv): self
     {
         $this->rdv = $rdv;
+
         return $this;
     }
 

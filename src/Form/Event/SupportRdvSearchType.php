@@ -4,7 +4,7 @@ namespace App\Form\Event;
 
 use App\Entity\Organization\Service;
 use App\Entity\Organization\Tag;
-use App\Form\Model\Support\SupportRdvSearch;
+use App\Form\Model\Event\EventSearch;
 use App\Form\Type\DateSearchType;
 use App\Repository\Organization\TagRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -36,7 +36,7 @@ class SupportRdvSearchType extends AbstractType
                 ],
             ])
             ->add('date', DateSearchType::class, [
-                'data_class' => SupportRdvSearch::class,
+                'data_class' => EventSearch::class,
             ])
             ->add('tags', EntityType::class, [
                 'class' => Tag::class,
@@ -59,7 +59,7 @@ class SupportRdvSearchType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => SupportRdvSearch::class,
+            'data_class' => EventSearch::class,
             'method' => 'get',
             'translation_domain' => 'forms',
             'allow_extra_fields' => true,

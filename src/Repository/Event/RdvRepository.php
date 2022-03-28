@@ -5,8 +5,7 @@ namespace App\Repository\Event;
 use App\Entity\Event\Rdv;
 use App\Entity\Organization\User;
 use App\Entity\Support\SupportGroup;
-use App\Form\Model\Support\RdvSearch;
-use App\Form\Model\Support\SupportRdvSearch;
+use App\Form\Model\Event\EventSearch;
 use App\Repository\Traits\QueryTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
@@ -31,14 +30,15 @@ class RdvRepository extends ServiceEntityRepository
     /**
      * Return all rdvs of group support.
      */
-    public function findRdvsQuery(RdvSearch $search, User $user): Query
+    public function findRdvsQuery(EventSearch $search, User $user): Query
     {
         $qb = $this->getRdvsQuery();
 
         return $this->filter($qb, $search, $user)
             ->orderBy('r.start', 'ASC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+        ;
     }
 
     /**
@@ -52,17 +52,20 @@ class RdvRepository extends ServiceEntityRepository
             ->leftJoin('sg.referent', 'ref')->addSelect('PARTIAL ref.{id}')
             ->leftJoin('sg.referent2', 'ref2')->addSelect('PARTIAL ref2.{id}')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
+
             ->where('r.id = :id')
             ->setParameter('id', $id)
+
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getOneOrNullResult();
+            ->getOneOrNullResult()
+        ;
     }
 
     /**
      * Donne tous les RDVs à exporter.
      */
-    public function findRdvsToExport(RdvSearch $search, User $user): ?array
+    public function findRdvsToExport(EventSearch $search, User $user): ?array
     {
         $qb = $this->getRdvsQuery()
             ->leftJoin('r.updatedBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}');
@@ -73,7 +76,8 @@ class RdvRepository extends ServiceEntityRepository
             ->orderBy('r.createdBy', 'DESC')
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getResult();
+            ->getResult()
+        ;
     }
 
     protected function getBaseQuery(): QueryBuilder
@@ -84,7 +88,8 @@ class RdvRepository extends ServiceEntityRepository
             ->leftJoin('r.alerts', 'a')->addSelect('a')
             ->leftJoin('r.createdBy', 'u2')->addSelect('PARTIAL u2.{id, firstname, lastname}')
             ->leftJoin('r.supportGroup', 'sg')->addSelect('sg')
-            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}');
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
+        ;
     }
 
     protected function getRdvsQuery(): QueryBuilder
@@ -94,10 +99,11 @@ class RdvRepository extends ServiceEntityRepository
             ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
             ->leftJoin('sg.referent', 'ref')->addSelect('PARTIAL ref.{id, firstname, lastname}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
-            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}');
+            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
+        ;
     }
 
-    protected function filter(QueryBuilder $qb, RdvSearch $search, User $user): QueryBuilder
+    protected function filter(QueryBuilder $qb, EventSearch $search, User $user): QueryBuilder
     {
         if (!$user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->where('r.createdBy = :user')
@@ -147,7 +153,7 @@ class RdvRepository extends ServiceEntityRepository
     /**
      * Return all rdvs of group support.
      */
-    public function findRdvsQueryOfSupport(int $supportGroupId, SupportRdvSearch $search): Query
+    public function findRdvsQueryOfSupport(int $supportGroupId, EventSearch $search): Query
     {
         $qb = $this->getBaseQuery()
             ->andWhere('sg.id = :supportGroup')
@@ -172,7 +178,8 @@ class RdvRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('r.start', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+        ;
     }
 
     public function findLastRdvOfSupport(int $supportGroupId): ?Rdv
@@ -186,7 +193,8 @@ class RdvRepository extends ServiceEntityRepository
             ->orderBy('r.start', 'DESC')
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getOneOrNullResult();
+            ->getOneOrNullResult()
+        ;
     }
 
     public function findNextRdvOfSupport(int $supportGroupId): ?Rdv
@@ -200,7 +208,8 @@ class RdvRepository extends ServiceEntityRepository
             ->orderBy('r.start', 'ASC')
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getOneOrNullResult();
+            ->getOneOrNullResult()
+        ;
     }
 
     /**
@@ -215,7 +224,8 @@ class RdvRepository extends ServiceEntityRepository
             ->leftJoin('r.createdBy', 'u')->addSelect('u')
             ->leftJoin('r.supportGroup', 's')->addSelect('s')
             ->where('r.start >= :start')->setParameter('start', $start)
-            ->andWhere('r.start <= :end')->setParameter('end', $end);
+            ->andWhere('r.start <= :end')->setParameter('end', $end)
+        ;
 
         if ($supportGroup) {
             $qb->andWhere('r.supportGroup = :supportGroup')->setParameter('supportGroup', $supportGroup);
@@ -228,7 +238,8 @@ class RdvRepository extends ServiceEntityRepository
             ->orderBy('r.start', 'ASC')
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getResult();
+            ->getResult()
+        ;
     }
 
     /**
@@ -277,7 +288,8 @@ class RdvRepository extends ServiceEntityRepository
 
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getResult();
+            ->getResult()
+        ;
     }
 
     /**
@@ -320,7 +332,8 @@ class RdvRepository extends ServiceEntityRepository
 
         return $qb
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getSingleScalarResult()
+        ;
     }
 
     public function findRdvWithNotUsers()

@@ -6,6 +6,7 @@ import {Modal} from "bootstrap";
 import RdvModel from "./model/RdvModel";
 import ApiCalendar from "../../api/ApiCalendar";
 import WidgetCollectionManager from "../../utils/form/WidgetCollectionManager";
+import SearchLocation from '../../utils/searchLocation'
 
 export default class RdvForm {
     /**
@@ -22,6 +23,8 @@ export default class RdvForm {
 
         this.modalRdvElt = document.getElementById('modal-rdv')
         this.modalElt = new Modal(this.modalRdvElt)
+
+        new SearchLocation('rdv_search_location')
 
         this.formValidator = new FormValidator(this.modalRdvElt)
 
@@ -91,6 +94,7 @@ export default class RdvForm {
 
     /**
      * On click delete btn
+     * @param {Event} e
      */
     deleteRdv(e) {
         e.preventDefault()
@@ -115,9 +119,7 @@ export default class RdvForm {
         this.endInput.value = end + ':00'
 
         this.infoRdvElt.innerHTML = ''
-        this.rdvTitleInput.value = this.supportPeopleElt
-            ? this.supportPeopleElt.querySelector('a').textContent
-            : ''
+        this.rdvTitleInput.value = this.supportPeopleElt ? this.supportPeopleElt.querySelector('a').textContent : ''
         this.rdvStartInput.value = ''
         this.rdvEndInput.value = ''
         this.rdvLocationInput.value = ''
@@ -167,7 +169,6 @@ export default class RdvForm {
      * Définit une date et heure par défaut après l'ajout d'une alerte.
      */
     afterToAddAlert() {
-        // this.updateEndDate()
         const elt = this.alertsCollectionManager.listElt.lastElementChild
 
         const defaultDate = new Date(this.dateInput.value + 'T' + this.startInput.value)
@@ -214,7 +215,7 @@ export default class RdvForm {
             this.loader.on()
 
             this.ajax.send(
-                'GET',
+                'DELETE',
                 this.confirmDeleteModalElt.querySelector('button#modal-confirm').dataset.url,
                 this.manager.responseAjax.bind(this.manager)
             )
@@ -338,8 +339,8 @@ export default class RdvForm {
     updateApiRdv(rdv, apiUrls) {
         const rdvModel = new RdvModel(rdv)
 
-        if ((this.googleCalendarCheckbox.checked && null === this.rdvBeforeUpdate.googleEventId)
-            || (this.outlookCalendarCheckbox.checked && null === this.rdvBeforeUpdate.outlookEventId)
+        if ((this.googleCalendarCheckbox.checked && this.rdvBeforeUpdate.googleEventId === null)
+            || (this.outlookCalendarCheckbox.checked && this.rdvBeforeUpdate.outlookEventId === null)
             || (rdvModel.isDifferent(this.rdvBeforeUpdate) && (this.googleCalendarCheckbox.checked
                 || this.outlookCalendarCheckbox.checked))
         ) {
@@ -366,7 +367,7 @@ export default class RdvForm {
 
     /**
      *
-     * @param {Element|HTMLElement} inputDateElt
+     * @param {HTMLInputElement} inputDateElt
      * @returns {Boolean}
      */
     isValidDate(inputDateElt) {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Controller\Rdv;
+namespace App\Tests\Controller\Event;
 
 use App\Entity\Support\SupportGroup;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;

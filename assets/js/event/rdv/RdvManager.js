@@ -80,7 +80,7 @@ export default class RdvManager {
         if (response.action) {
             switch (response.action) {
                 case 'delete':
-                    this.deleteRdvTr(response.rdvId, apiUrls)
+                    this.deleteRdvTr(rdv, apiUrls)
                     break
                 case 'create':
                     this.createRdvTr(rdv, apiUrls)
@@ -235,11 +235,11 @@ export default class RdvManager {
 
     /**
      * Delete rdv's row.
-     * @param {number} rdvId
+     * @param {Object} rdv
      * @param {Object} apiUrls
      */
-    deleteRdvTr(rdvId, apiUrls) {
-        document.getElementById('rdv-' + rdvId).remove()
+    deleteRdvTr(rdv, apiUrls) {
+        document.getElementById('rdv-' + rdv.id).remove()
 
         this.apiCalendar.execute('delete', apiUrls)
 

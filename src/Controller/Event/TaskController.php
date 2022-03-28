@@ -6,6 +6,7 @@ namespace App\Controller\Event;
 
 use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Event\Task;
+use App\Entity\Organization\User;
 use App\Entity\Support\SupportGroup;
 use App\Form\Event\TaskSearchType;
 use App\Form\Event\TaskType;
@@ -40,7 +41,7 @@ final class TaskController extends AbstractController
             ->handleRequest($request);
 
         if ($search->getExport()) {
-            return $this->exportData($search, $paginator->getTaskRepository());
+            return $this->exportData($search, $paginator->getTaskRepository(), $this->getUser());
         }
 
         $formTask = $this->createForm(TaskType::class, new Task())
@@ -54,7 +55,7 @@ final class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/support/{id}/tasks", name="support_task_index", methods="GET")
+     * @Route("/support/{id}/tasks", name="support_task_index", methods="GET|POST")
      */
     public function supportTasksIndex(int $id, SupportManager $supportManager,
         Request $request, TaskPaginator $paginator): Response
@@ -67,7 +68,7 @@ final class TaskController extends AbstractController
             ->handleRequest($request);
 
         if ($search->getExport()) {
-            return $this->exportData($search, $paginator->getTaskRepository(), $supportGroup);
+            return $this->exportData($search, $paginator->getTaskRepository(), $this->getUser(), $supportGroup);
         }
 
         $formTask = $this->createForm(TaskType::class, new Task(), [
@@ -143,11 +144,14 @@ final class TaskController extends AbstractController
 
     /**
      * @Route("/task/{id}/edit", name="task_edit", methods="POST")
-     * @IsGranted("EDIT", subject="task")
      */
-    public function edit(Task $task, Request $request, EntityManagerInterface $em,
+    public function edit(int $id, TaskRepository $taskRepo, Request $request, EntityManagerInterface $em,
         TranslatorInterface $translator): JsonResponse
     {
+        $task = $taskRepo->findTask($id);
+
+        $this->denyAccessUnlessGranted('EDIT', $task);
+
         $form = $this->createForm(TaskType::class, $task)
             ->handleRequest($request);
 
@@ -168,7 +172,7 @@ final class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/task/{id}/delete", name="task_delete", methods="GET")
+     * @Route("/task/{id}/delete", name="task_delete", methods="DELETE")
      * @IsGranted("DELETE", subject="task")
      */
     public function delete(Task $task, EntityManagerInterface $em, TranslatorInterface $translator): JsonResponse
@@ -190,11 +194,14 @@ final class TaskController extends AbstractController
 
     /**
      *@Route("/task/{id}/toggle-status", name="task_toggle_status")
-     *@IsGranted("EDIT", subject="task")
      */
-    public function toggleStatus(Task $task, EntityManagerInterface $em,
+    public function toggleStatus(int $id, TaskRepository $taskRepo, EntityManagerInterface $em,
         TranslatorInterface $translator): JsonResponse
     {
+        $task = $taskRepo->findTask($id);
+
+        $this->denyAccessUnlessGranted('EDIT', $task);
+
         $task->toggleStatus();
 
         $em->flush();
@@ -212,13 +219,13 @@ final class TaskController extends AbstractController
             ], 200, [], ['groups' => Task::SERIALIZER_GROUPS]);
     }
 
-    private function exportData(TaskSearch $search, TaskRepository $taskRepo, ?SupportGroup $supportGroup = null): Response
+    private function exportData(TaskSearch $search, TaskRepository $taskRepo, User $user, ?SupportGroup $supportGroup = null): Response
     {
         if ($supportGroup) {
             $search->setSupportGroup($supportGroup);
         }
 
-        $tasks = $taskRepo->findTasksToExport($search);
+        $tasks = $taskRepo->findTasksToExport($search, $user);
 
         if (!$tasks) {
             $this->addFlash('warning', 'no_result_to_export');

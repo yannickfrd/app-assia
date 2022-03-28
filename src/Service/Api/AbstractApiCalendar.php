@@ -4,7 +4,7 @@ namespace App\Service\Api;
 
 use App\Entity\Event\Rdv;
 use App\Entity\Organization\User;
-use App\Repository\Support\RdvRepository;
+use App\Repository\Event\RdvRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;

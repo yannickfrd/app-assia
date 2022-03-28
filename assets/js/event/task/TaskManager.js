@@ -43,7 +43,7 @@ export default class TaskManager {
 
         this.btnConfirmDeleteElt.addEventListener('click', e => {
             e.preventDefault()
-            this.ajax.send('GET', this.btnConfirmDeleteElt.dataset.url, this.responseAjax.bind(this))
+            this.ajax.send('DELETE', this.btnConfirmDeleteElt.dataset.url, this.responseAjax.bind(this))
         })
 
         this.initToggleTaskStatus()

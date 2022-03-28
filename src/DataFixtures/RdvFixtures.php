@@ -21,11 +21,11 @@ class RdvFixtures extends Fixture implements DependentFixtureInterface, FixtureG
         foreach ($objectManager->getRepository(SupportGroup::class)->findAll() as $support) {
             for ($i = 0; $i < mt_rand(5, 10); ++$i) {
                 $rdv = (new Rdv())
+                ->setSupportGroup($support)
                 ->setTitle($faker->sentence(mt_rand(5, 10), true))
                 ->setStart($rdvCreatedAt = AppFixtures::getDateTimeBeetwen('-2 months', '+2 months'))
                 ->setEnd($faker->dateTimeInInterval($rdvCreatedAt, '+1 hours'))
                 ->setLocation('Cergy-Pontoise')
-                ->setSupportGroup($support)
                 ->setCreatedAt($rdvCreatedAt)
                 ->setCreatedBy($support->getReferent())
                 ->setUpdatedAt($rdvCreatedAt)

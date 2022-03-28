@@ -9,8 +9,7 @@ use App\Entity\Event\Rdv;
 use App\Form\Event\RdvSearchType;
 use App\Form\Event\RdvType;
 use App\Form\Event\SupportRdvSearchType;
-use App\Form\Model\Support\RdvSearch;
-use App\Form\Model\Support\SupportRdvSearch;
+use App\Form\Model\Event\EventSearch;
 use App\Repository\Event\RdvRepository;
 use App\Repository\Support\SupportGroupRepository;
 use App\Service\Api\ApiCalendarRouter;
@@ -20,7 +19,6 @@ use App\Service\Pagination;
 use App\Service\Rdv\RdvPaginator;
 use App\Service\SupportGroup\SupportManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,7 +34,7 @@ final class RdvController extends AbstractController
      */
     public function index(Request $request, Pagination $pagination, RdvRepository $rdvRepo): Response
     {
-        $form = $this->createForm(RdvSearchType::class, $search = new RdvSearch())
+        $form = $this->createForm(RdvSearchType::class, $search = new EventSearch())
             ->handleRequest($request);
 
         if ($search->getExport()) {
@@ -63,7 +61,7 @@ final class RdvController extends AbstractController
     /**
      * With SupportGroup.
      *
-     * @Route("/support/{id}/rdvs", name="support_rdv_index", methods="GET")
+     * @Route("/support/{id}/rdvs", name="support_rdv_index", methods="GET|POST")
      */
     public function supportRdvsIndex(
         int $id,
@@ -75,7 +73,7 @@ final class RdvController extends AbstractController
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
 
-        $formSearch = $this->createForm(SupportRdvSearchType::class, $search = new SupportRdvSearch(), [
+        $formSearch = $this->createForm(SupportRdvSearchType::class, $search = new EventSearch(), [
             'service' => $supportGroup->getService(),
         ])
             ->handleRequest($request);
@@ -187,11 +185,14 @@ final class RdvController extends AbstractController
      * @Route("/rdv/{id}/edit", name="rdv_edit", methods="POST")
      */
     public function edit(
-        Rdv $rdv,
+        int $id,
+        RdvRepository $rdvRepo,
         Request $request,
         EntityManagerInterface $em,
         ApiCalendarRouter $calendarRouter
     ): JsonResponse {
+        $rdv = $rdvRepo->findRdv($id);
+
         $this->denyAccessUnlessGranted('EDIT', $rdv);
 
         $supportGroup = $rdv->getSupportGroup();
@@ -223,12 +224,17 @@ final class RdvController extends AbstractController
     }
 
     /**
-     * @Route("/rdv/{id}/delete", name="rdv_delete", methods="GET")
-     * @IsGranted("DELETE", subject="rdv")
+     * @Route("/rdv/{id}/delete", name="rdv_delete", methods="DELETE")
      */
-    public function delete(Rdv $rdv, EntityManagerInterface $em, ApiCalendarRouter $calendarRouter): JsonResponse
-    {
-        $rdvId = $rdv->getId();
+    public function delete(
+        int $id,
+        RdvRepository $rdvRepo,
+        EntityManagerInterface $em,
+        ApiCalendarRouter $calendarRouter
+    ): JsonResponse {
+        $rdv = $rdvRepo->findRdv($id);
+
+        $this->denyAccessUnlessGranted('DELETE', $rdv);
 
         $em->remove($rdv);
         $em->flush();
@@ -237,10 +243,10 @@ final class RdvController extends AbstractController
 
         return $this->json([
             'action' => 'delete',
-            'rdvId' => $rdvId,
+            'rdv' => ['id' => $id],
             'alert' => 'warning',
             'msg' => 'Le RDV est supprimé.',
-            'apiUrls' => $calendarRouter->getUrls('delete', $rdvId, [], [
+            'apiUrls' => $calendarRouter->getUrls('delete', $id, [], [
                 'google' => $rdv->getGoogleEventId(),
                 'outlook' => $rdv->getOutlookEventId(),
             ]),

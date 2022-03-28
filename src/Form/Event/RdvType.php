@@ -10,7 +10,6 @@ use App\Form\Utils\Choices;
 use App\Repository\Organization\TagRepository;
 use App\Repository\Organization\UserRepository;
 use App\Repository\Support\SupportGroupRepository;
-use App\Security\CurrentUserService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -84,12 +83,12 @@ class RdvType extends AbstractType
                     'size' => 1,
                 ],
                 'constraints' => [
-                    new Count(['min' => 1])
-                ]
+                    new Count(['min' => 1]),
+                ],
             ])
             ->add('supportGroup', EntityType::class, [
                 'class' => SupportGroup::class,
-                'choices' => $this->supportGroupRepo->getSupportsOfUser($user, $supportGroup),
+                'choices' => $this->supportGroupRepo->getSupportsOfUser($this->user, $supportGroup),
                 'choice_label' => function (SupportGroup $supportGroup) {
                     return $supportGroup->getHeader()->getFullname();
                 },

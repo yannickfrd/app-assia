@@ -21,11 +21,8 @@ class EventSearch
     /** @var array */
     protected $types;
 
-    /** @var bool */
-    protected $status;
-
     /** @var array */
-    protected $level;
+    protected $status;
 
     /** @var SupportGroup */
     protected $supportGroup;
@@ -69,26 +66,14 @@ class EventSearch
         return $this;
     }
 
-    public function getStatus(): ?bool
+    public function getStatus(): ?array
     {
         return $this->status;
     }
 
-    public function setStatus(?bool $status): self
+    public function setStatus(?array $status): self
     {
         $this->status = $status;
-
-        return $this;
-    }
-
-    public function getLevel(): ?array
-    {
-        return $this->level;
-    }
-
-    public function setLevel(?array $level): self
-    {
-        $this->level = $level;
 
         return $this;
     }

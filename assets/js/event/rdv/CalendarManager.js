@@ -251,10 +251,10 @@ export default class CalendarManager {
      * @param {Object} data
      */
     updateRdv(data) {
-        this.rdvForm.updateApiRdv(data.rdv, data.apiUrls)
-
         document.getElementById('rdv-' + data.rdv.id).remove()
         this.createRdv(data)
+        
+        this.rdvForm.updateApiRdv(data.rdv, data.apiUrls)
     }
 
     /**
