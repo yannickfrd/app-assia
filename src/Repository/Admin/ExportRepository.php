@@ -3,10 +3,10 @@
 namespace App\Repository\Admin;
 
 use App\Entity\Admin\Export;
-use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * @method Export|null find($id, $lockMode = null, $lockVersion = null)
@@ -16,13 +16,13 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ExportRepository extends ServiceEntityRepository
 {
-    protected $currentUser;
+    protected $user;
 
-    public function __construct(ManagerRegistry $registry, CurrentUserService $currentUser)
+    public function __construct(ManagerRegistry $registry, Security $security)
     {
         parent::__construct($registry, Export::class);
 
-        $this->currentUser = $currentUser;
+        $this->user = $security->getUser();
     }
 
     /**
@@ -34,7 +34,7 @@ class ExportRepository extends ServiceEntityRepository
             ->leftJoin('e.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
 
             ->andWhere('e.createdBy = :user')
-            ->setParameter('user', $this->currentUser->getUser())
+            ->setParameter('user', $this->user)
 
             ->orderBy('e.createdAt', 'DESC')
             ->getQuery()

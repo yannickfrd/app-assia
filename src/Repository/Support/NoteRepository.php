@@ -7,7 +7,6 @@ use App\Entity\Support\Note;
 use App\Form\Model\Support\NoteSearch;
 use App\Form\Model\Support\SupportNoteSearch;
 use App\Repository\Traits\QueryTrait;
-use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
@@ -30,7 +29,7 @@ class NoteRepository extends ServiceEntityRepository
     /**
      * Return all notes of group support.
      */
-    public function findNotesQuery(NoteSearch $search, ?CurrentUserService $currentUser = null): Query
+    public function findNotesQuery(NoteSearch $search, ?User $user = null): Query
     {
         $qb = $this->createQueryBuilder('n')
             ->leftJoin('n.tags', 't')->addSelect('PARTIAL t.{id, name}')
@@ -45,9 +44,9 @@ class NoteRepository extends ServiceEntityRepository
 
             ->where('sg.id IS NULL OR sp.head = TRUE');
 
-        if ($currentUser && !$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+        if ($user && !$user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->andWhere('sg.service IN (:services)')
-                ->setParameter('services', $currentUser->getServices());
+                ->setParameter('services', $user->getServices());
         }
 
         if ($search->getId()) {

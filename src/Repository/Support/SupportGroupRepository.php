@@ -8,11 +8,11 @@ use App\Entity\Support\SupportGroup;
 use App\Form\Model\Support\SupportsByUserSearch;
 use App\Form\Model\Support\SupportsInMonthSearch;
 use App\Repository\Traits\QueryTrait;
-use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * @method SupportGroup|null find($id, $lockMode = null, $lockVersion = null)
@@ -24,13 +24,14 @@ class SupportGroupRepository extends ServiceEntityRepository
 {
     use QueryTrait;
 
-    private $currentUser;
+    /** @var User */
+    private $user;
 
-    public function __construct(ManagerRegistry $registry, CurrentUserService $currentUser)
+    public function __construct(ManagerRegistry $registry, Security $security)
     {
         parent::__construct($registry, SupportGroup::class);
 
-        $this->currentUser = $currentUser;
+        $this->user = $security->getUser();
     }
 
     /**
@@ -180,9 +181,9 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->setParameter('end', $end)
             ->andWhere('sp.head = TRUE');
 
-        if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+        if (!$this->user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->andWhere('s.id IN (:services)')
-                ->setParameter('services', $this->currentUser->getServices());
+                ->setParameter('services', $this->user->getServices());
         }
 
         $qb = $this->addOrganizationFilters($qb, $search);
@@ -205,9 +206,9 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, coefficient}')
             ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}');
 
-        if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+        if (!$this->user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->where('s.id IN (:services)')
-                ->setParameter('services', $this->currentUser->getServices());
+                ->setParameter('services', $this->user->getServices());
         }
 
         $qb = $this->addOrganizationFilters($qb, $search);
@@ -256,9 +257,9 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->andWhere('sg.id != :supportGroup')
             ->setParameter('supportGroup', $supportGroup);
 
-        if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+        if (!$this->user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->andWhere('sg.service IN (:services)')
-                ->setParameter('services', $this->currentUser->getServices());
+                ->setParameter('services', $this->user->getServices());
         }
 
         return $qb

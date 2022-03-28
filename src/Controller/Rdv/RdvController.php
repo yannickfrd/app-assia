@@ -14,7 +14,6 @@ use App\Form\Support\Rdv\RdvType;
 use App\Form\Support\Rdv\SupportRdvSearchType;
 use App\Repository\Support\RdvRepository;
 use App\Repository\Support\SupportGroupRepository;
-use App\Security\CurrentUserService;
 use App\Service\Api\ApiCalendarRouter;
 use App\Service\Export\RdvExport;
 use App\Service\Pagination;
@@ -51,18 +50,22 @@ final class RdvController extends AbstractController
      *
      * @Route("/rdvs", name="rdvs", methods="GET|POST")
      */
-    public function index(Request $request, Pagination $pagination, CurrentUserService $currentUser): Response
+    public function index(Request $request, Pagination $pagination): Response
     {
         $form = $this->createForm(RdvSearchType::class, $search = new RdvSearch())
             ->handleRequest($request);
 
         if ($search->getExport()) {
-            return $this->exportData($search);
+            if ($rdvs = $this->rdvRepo->findRdvsToExport($search, $this->getUser())) {
+                return (new RdvExport())->exportData($rdvs);
+            }
+
+            $this->addFlash('warning', 'Aucun résultat à exporter.');
         }
 
         return $this->render('app/rdv/rdv_index.html.twig', [
             'form' => $form->createView(),
-            'rdvs' => $pagination->paginate($this->rdvRepo->findRdvsQuery($search, $currentUser), $request, 10),
+            'rdvs' => $pagination->paginate($this->rdvRepo->findRdvsQuery($search, $this->getUser()), $request, 10),
         ]);
     }
 
@@ -268,21 +271,5 @@ final class RdvController extends AbstractController
                 'outlook' => $rdv->getOutlookEventId(),
             ]),
         ]);
-    }
-
-    /**
-     * Exporte les données.
-     */
-    private function exportData(RdvSearch $search)
-    {
-        $rdvs = $this->rdvRepo->findRdvsToExport($search);
-
-        if (!$rdvs) {
-            $this->addFlash('warning', 'Aucun résultat à exporter.');
-
-            return $this->redirectToRoute('rdvs');
-        }
-
-        return (new RdvExport())->exportData($rdvs);
     }
 }

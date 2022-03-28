@@ -2,12 +2,12 @@
 
 namespace App\Repository\Support;
 
+use App\Entity\Organization\User;
 use App\Entity\Support\Document;
 use App\Entity\Support\SupportGroup;
 use App\Form\Model\Support\DocumentSearch;
 use App\Form\Model\Support\SupportDocumentSearch;
 use App\Repository\Traits\QueryTrait;
-use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
@@ -30,7 +30,7 @@ class DocumentRepository extends ServiceEntityRepository
     /**
      * Return all documents of group support.
      */
-    public function findDocumentsQuery(DocumentSearch $search, CurrentUserService $currentUser = null): Query
+    public function findDocumentsQuery(DocumentSearch $search, User $user): Query
     {
         $qb = $this->createQueryBuilder('d')
             ->leftJoin('d.tags', 't')->addSelect('t')
@@ -41,11 +41,11 @@ class DocumentRepository extends ServiceEntityRepository
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
             ->join('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}');
 
-        if ($currentUser && !$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+        if (!$user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->where('d.createdBy = :user')
-                ->setParameter('user', $currentUser->getUser());
+                ->setParameter('user', $user);
             $qb->orWhere('sg.service IN (:services)')
-                ->setParameter('services', $currentUser->getServices());
+                ->setParameter('services', $user->getServices());
         }
 
         $qb->andWhere('sg.id IS NULL OR sp.head = TRUE');

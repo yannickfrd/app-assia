@@ -13,11 +13,11 @@ use App\Form\Model\Support\AvdlSupportSearch;
 use App\Form\Model\Support\HotelSupportSearch;
 use App\Form\Model\Support\SupportSearch;
 use App\Repository\Traits\QueryTrait;
-use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * @method SupportPerson|null find($id, $lockMode = null, $lockVersion = null)
@@ -31,13 +31,14 @@ class SupportPersonRepository extends ServiceEntityRepository
 
     public const EXPORT_LIMIT = 15_000;
 
-    private $currentUser;
+    /** @var User */
+    private $user;
 
-    public function __construct(ManagerRegistry $registry, CurrentUserService $currentUser)
+    public function __construct(ManagerRegistry $registry, Security $security)
     {
         parent::__construct($registry, SupportPerson::class);
 
-        $this->currentUser = $currentUser;
+        $this->user = $security->getUser();
     }
 
     /**
@@ -267,9 +268,9 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->andWhere('sp.id != :supportPerson')
             ->setParameter('supportPerson', $supportPerson);
 
-        if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+        if (!$this->user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->andWhere('sg.service IN (:services)')
-                ->setParameter('services', $this->currentUser->getServices());
+                ->setParameter('services', $this->user->getServices());
         }
 
         return $qb
@@ -316,9 +317,9 @@ class SupportPersonRepository extends ServiceEntityRepository
      */
     protected function filters(QueryBuilder $qb, $search): QueryBuilder
     {
-        if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+        if (!$this->user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->andWhere('s.id IN (:services)')
-                ->setParameter('services', $this->currentUser->getServices());
+                ->setParameter('services', $this->user->getServices());
         }
 
         if ($search->getHead()) {
@@ -399,9 +400,9 @@ class SupportPersonRepository extends ServiceEntityRepository
 
         $qb = $this->addOrWhere($qb, 'sp.person', $peopleGroup->getPeople());
 
-        if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+        if (!$this->user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->andWhere('sg.service IN (:services)')
-                ->setParameter('services', $this->currentUser->getServices());
+                ->setParameter('services', $this->user->getServices());
         }
 
         return $qb
