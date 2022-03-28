@@ -156,6 +156,11 @@ class Export
         return $this;
     }
 
+    public function getDelay(): string
+    {
+        return $this->createdAt->diff($this->updatedAt)->format('%im%ss');
+    }
+
     /** @Groups("show_export") */
     public function getCreatedAtToString(string $format = 'd/m/Y H:i'): string
     {

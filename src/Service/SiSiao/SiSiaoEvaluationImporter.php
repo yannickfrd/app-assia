@@ -566,7 +566,8 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
             ->setRenewalPermitDate($this->convertDate($sitAdm->dateRenouvellementTitreSejour))
             ->setNbRenewals($sitAdm->nombreRenouvellementTitreSejour)
             ->setWorkRight($sitAdm->droitTravaillerTitreSejour)
-            ->setAsylumBackground($this->findInArray($sitAdm->droitsejour, SiSiaoItems::ASYLUM_BACKGROUND))
+            ->setAsylumBackground($this->findInArray($sitAdm->statutAdministratifParticulier, SiSiaoItems::ASYLUM))
+            ->setAsylumStatus($this->findInArray($sitAdm->droitsejour, SiSiaoItems::ASYLUM_STATUS))
             ->setAgdrefId($sitAdm->numeroAgdref)
         ;
 
@@ -590,18 +591,19 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         }
 
         $evalProfPerson
+            ->setJobCenterId(null === $evalProfPerson->getJobCenterId() ?
+                $this->findInArray($diagSocial->statutDemandeurEmploi, SiSiaoItems::JOB_CENTER) : null)
             ->setProfStatus($this->getProfStatus($diagSocial))
-            ->setContractType($this->findInArray($diagSocial->typeContrat, SiSiaoItems::CONTRACT_TYPE))
+            ->setContractType($this->getContractType($diagSocial))
             ->setWorkingTime($this->findInArray($diagSocial->tempsTravail, SiSiaoItems::WORKING_TIME))
             ->setContractStartDate($this->convertDate($diagSocial->dateDebutContrat))
             ->setContractEndDate($this->convertDate($diagSocial->dateFinContrat))
-            ->setNbWorkingHours($diagSocial->nombreHeures)
-            ->setWorkingHours($diagSocial->horaireTravail)
-            ->setJobType($diagSocial->posteOccupe)
+            ->setWorkingHours(true === $diagSocial->horairesDecales ? 'Horaires décalés' : null)
             ->setWorkPlace($diagSocial->communeEmploi.
                 ($diagSocial->departementEmploi ? ' ('.$diagSocial->departementEmploi.')' : null))
             ->setRqth($this->findInArray($diagSocial->rqth, SiSiaoItems::YES_NO))
-            ->setTransportMeansType(true === $diagSocial->moyenLocomotion ? 1 : null)
+            ->setTransportMeansType($this->getTransportMeansType($diagSocial))
+            ->setTransportMeans($this->getTransportMeans($diagSocial))
         ;
 
         $evaluationPerson->setEvalProfPerson($evalProfPerson);
@@ -612,22 +614,63 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
     protected function getProfStatus(object $diagSocial): ?int
     {
         if (SiSiaoItems::YES === $diagSocial->enEmploi) {
-            return 8;
+            return EvalProfPerson::PROF_STATUS_EMPLOYEE;
         }
         if (SiSiaoItems::YES === $diagSocial->enFormation) {
-            return 3;
-        }
-        if (SiSiaoItems::YES === $diagSocial->etudiant) {
-            return 5;
+            if ('FORMATION_INITIALE' === $diagSocial->typeFormation) {
+                return EvalProfPerson::PROF_STATUS_STUDENT;
+            }
+
+            return EvalProfPerson::PROF_STATUS_IN_TRAINING;
         }
         if (SiSiaoItems::YES === $diagSocial->demandeur) {
-            return 2;
+            return EvalProfPerson::PROF_STATUS_JOB_SEEKER;
         }
         if (SiSiaoItems::YES === $diagSocial->retraite) {
-            return 7;
+            return EvalProfPerson::PROF_STATUS_RETIRED;
         }
 
-        return Choices::NO_INFORMATION;
+        return null;
+    }
+
+    protected function getContractType(object $diagSocial): ?int
+    {
+        $contractType = $this->findInArray($diagSocial->typeContrat, SiSiaoItems::CONTRACT_TYPE);
+
+        if ($contractType) {
+            return $contractType;
+        }
+
+        if ('FORMATION_INITIALE' === $diagSocial->typeFormation
+            && 'ALTERNANCE' === $diagSocial->soustypeFormation) {
+            return 4;
+        }
+
+        return null;
+    }
+
+    protected function getTransportMeansType(object $diagSocial): ?int
+    {
+        foreach (SiSiaoItems::TRANSFORT_MEANS as $key => $value) {
+            foreach ($diagSocial->typesMoyenLocomotion as $moyenLocomotion) {
+                if (isset($moyenLocomotion->id) && $moyenLocomotion->id == $key) {
+                    return $value;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    protected function getTransportMeans(object $diagSocial): string
+    {
+        $transports = [];
+
+        foreach ($diagSocial->typesMoyenLocomotion as $moyenLocomotion) {
+            $transports[] = $moyenLocomotion->libelle;
+        }
+
+        return join(', ', $transports);
     }
 
     protected function createOrEditEvalBudgetPerson(EvaluationPerson $evaluationPerson, object $personne, object $diagSocial): ?EvalBudgetPerson
@@ -671,18 +714,18 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         $sumAmt = 0;
 
         foreach ($ressources as $ressource) {
-            if (!$newEvalBudgetResource = $this->financeExists($evalBudgetPerson->getEvalBudgetResources(), $ressource->typeRessource->id)) {
-                $newEvalBudgetResource = (new EvalBudgetResource());
+            if (!$evalBudgetResource = $this->financeExists($evalBudgetPerson->getEvalBudgetResources(), $ressource->typeRessource->id)) {
+                $evalBudgetResource = (new EvalBudgetResource());
             }
 
-            $newEvalBudgetResource
+            $evalBudgetResource
                 ->setEvalBudgetPerson($evalBudgetPerson)
                 ->setType($this->findInArray($ressource->typeRessource, SiSiaoItems::RESOURCES))
                 ->setAmount($ressource->montant)
                 // ->setEnDate(null)
                 ->setComment($ressource->commentaire);
 
-            $this->em->persist($newEvalBudgetResource);
+            $this->em->persist($evalBudgetResource);
 
             $sumAmt += $ressource->montant;
         }
@@ -703,32 +746,35 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         $sumAmt = 0;
 
         foreach ($charges as $charge) {
-            if (!$newEvalBudgetCharge = $this->financeExists($evalBudgetPerson->getEvalBudgetCharges(), $charge->typeCharge->id)) {
-                $newEvalBudgetCharge = (new EvalBudgetCharge());
+            if ($evalBudgetPerson->getId() && 120 === $charge->typeCharge->id) {
+                continue;
+            }
+            if (!$evalBudgetCharge = $this->financeExists($evalBudgetPerson->getEvalBudgetCharges(), $charge->typeCharge->id)) {
+                $evalBudgetCharge = (new EvalBudgetCharge());
             }
 
-            $newEvalBudgetCharge
+            $evalBudgetCharge
                 ->setEvalBudgetPerson($evalBudgetPerson)
                 ->setType($this->findInArray($charge->typeCharge, SiSiaoItems::CHARGES))
                 ->setAmount($charge->montant)
                 ->setComment($charge->commentaire);
 
-            $this->em->persist($newEvalBudgetCharge);
+            $this->em->persist($evalBudgetCharge);
 
             $sumAmt += $charge->montant;
         }
 
         if ($diagSocial->remboursementDettes > 0) {
-            if (!$newEvalBudgetCharge = $this->financeExists($evalBudgetPerson->getEvalBudgetCharges(), EvalBudgetCharge::REPAYMENT_DEBT)) {
-                $newEvalBudgetCharge = (new EvalBudgetCharge());
+            if (!$evalBudgetCharge = $this->financeExists($evalBudgetPerson->getEvalBudgetCharges(), EvalBudgetCharge::REPAYMENT_DEBT)) {
+                $evalBudgetCharge = (new EvalBudgetCharge());
             }
 
-            $newEvalBudgetCharge
+            $evalBudgetCharge
                 ->setEvalBudgetPerson($evalBudgetPerson)
                 ->setType(EvalBudgetCharge::REPAYMENT_DEBT)
                 ->setAmount($diagSocial->remboursementDettes);
 
-            $this->em->persist($newEvalBudgetCharge);
+            $this->em->persist($evalBudgetCharge);
         }
 
         $evalBudgetPerson
@@ -747,17 +793,17 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         $sumAmt = 0;
 
         foreach ($dettes as $dette) {
-            if (!$newEvalBudgetDebt = $this->financeExists($evalBudgetPerson->getEvalBudgetDebts(), $dette->typeDette->id)) {
-                $newEvalBudgetDebt = (new EvalBudgetDebt());
+            if (!$evalBudgetDebt = $this->financeExists($evalBudgetPerson->getEvalBudgetDebts(), $dette->typeDette->id)) {
+                $evalBudgetDebt = (new EvalBudgetDebt());
             }
 
-            $newEvalBudgetDebt
+            $evalBudgetDebt
                 ->setEvalBudgetPerson($evalBudgetPerson)
                 ->setType($this->findInArray($dette->typeDette, SiSiaoItems::DEBTS))
                 ->setAmount($dette->montant)
                 ->setComment($dette->commentaire);
 
-            $this->em->persist($newEvalBudgetDebt);
+            $this->em->persist($evalBudgetDebt);
 
             $sumAmt += $dette->montant;
         }

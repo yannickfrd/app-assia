@@ -260,54 +260,45 @@ class SiSiaoItems
         90 => 01, // Français
         50 => null, // Non renseignée
         48 => 30, // Récépissé de demande de titre de séjour (1ère demande + renouvellement)
-        81 => 97, // Situation administrative non régularisée
+        81 => 97, // Situation administrative non régulière
         100 => 03, // UE
     ];
 
-    // DROIT_SEJOURS
-    public const ASYLUM_BACKGROUND = [
-        70 => null, // Autre
-        20 => Choices::YES, // Bénéficiaire protection internationale/réfugié
-        40 => null, // Carte de résident
-        60 => null, // Carte de séjour temporaire
-        30 => Choices::YES, // Débouté du droit d'asile
-        10 => Choices::YES, // Demandeur d'asile
-        50 => null, // Non renseignée
-        48 => null, // Récépissé première demande de titre de séjour
-        47 => null, // Récépissé renouvellement titre
-        81 => null, // Situation administrative non régularisée
-        80 => null, // Situation administrative régulière
+    // statutAdministratifParticulier
+    public const ASYLUM = [
+        'DEMANDEUR_ASILE' => Choices::YES, // Demandeur d'asile
+        'BENEFICIAIRE_PROTECTION_INTERNATIONALE_REFUGIE' => Choices::YES, // Bénéficiaire protection internationale/réfugié
     ];
 
     // // DROIT_SEJOURS
-    // public const PAPER_TYPE_ASYLUM_STATUS = [
+    // public const ASYLUM_BACKGROUND = [
     //     70 => null, // Autre
-    //     20 => null, // Bénéficiaire protection internationale/réfugié
-    //     40 => 20, // Carte de résident
-    //     60 => 21, // Carte de séjour temporaire
-    //     30 => null, // Débouté du droit d'asile
-    //     10 => null, // Demandeur d'asile
-    //     50 => null, // Non renseignée
-    //     48 => 30, // Récépissé première demande de titre de séjour
-    //     47 => 31, // Récépissé renouvellement titre
-    //     81 => null, // Situation administrative non régularisée
-    //     80 => null, // Situation administrative régulière
-    // ];
-
-    // // DROIT_SEJOURS
-    // public const ASYLUM_STATUS = [
-    //     70 => null, // Autre
-    //     20 => 4, // Bénéficiaire protection internationale/réfugié
+    //     20 => Choices::YES, // Bénéficiaire protection internationale/réfugié
     //     40 => null, // Carte de résident
     //     60 => null, // Carte de séjour temporaire
-    //     30 => 1, // Débouté du droit d'asile
-    //     10 => 2, // Demandeur d'asile
+    //     30 => Choices::YES, // Débouté du droit d'asile
+    //     10 => Choices::YES, // Demandeur d'asile
     //     50 => null, // Non renseignée
     //     48 => null, // Récépissé première demande de titre de séjour
     //     47 => null, // Récépissé renouvellement titre
     //     81 => null, // Situation administrative non régularisée
     //     80 => null, // Situation administrative régulière
     // ];
+
+    // DROIT_SEJOURS
+    public const ASYLUM_STATUS = [
+        70 => null, // Autre
+        20 => 4, // Bénéficiaire protection internationale/réfugié
+        40 => null, // Carte de résident
+        60 => null, // Carte de séjour temporaire
+        30 => 1, // Débouté du droit d'asile
+        10 => 2, // Demandeur d'asile
+        50 => null, // Non renseignée
+        48 => null, // Récépissé première demande de titre de séjour
+        47 => null, // Récépissé renouvellement titre
+        81 => null, // Situation administrative non régularisée
+        80 => null, // Situation administrative régulière
+    ];
 
     // TYPE_HEBERGEMENT_ENFANT
     public const CHILD_TO_HOST = [
@@ -345,19 +336,19 @@ class SiSiaoItems
 
     // DROIT_OUVERT_SECURITE_SOCIALES
     public const SOCIAL_SECURITY = [
-        40 => 2, // Mutuelle
-        30 => 4, // CMU-C -> CSS (ex-CMU-C)
         15 => 6, // Aide Complémentaire Santé (ACS)
         10 => 5, // Aide médicale de l'Etat (AME)
+        200 => 97, // Autre
         20 => 3, // CMU -> PUMA (ex-CMU)
+        30 => 4, // CMU-C -> CSS (ex-CMU-C)
+        70 => 97, // Couverture sociale européenne
+        40 => 2, // Mutuelle
+        1 => null, // Non renseigné
+        190 => null, // NSP
+        60 => 97, // Régime agricole
         50 => 1, // Régime général
         90 => 1, // Régime social des indépendants -> Régime général
-        60 => 97, // Régime agricole
-        70 => 97, // Couverture sociale européenne
-        200 => 97, // Autre
-        190 => null, // NSP
         80 => null, // Sans couverture sociale
-        1 => null, // Non renseigné
     ];
 
     // Animaux
@@ -373,25 +364,43 @@ class SiSiaoItems
         1 => null, // Autres
     ];
 
+    // statutDemandeurEmploi
+    public const JOB_CENTER = [
+        'INSCRIT_POLE_EMPLOI' => 'Inscrit à Pôle Emploi',
+        'NON_INSCRIT_POLE_EMPLOI' => 'Non inscrit à Pôle Emploi',
+    ];
+
     // TYPE_CONTRATS
     public const CONTRACT_TYPE = [
-        80 => 4, // Apprenti
         30 => 1, // CDD
         20 => 2, // CDI
         50 => 3, // Contrat aidé
-        40 => 6, // Fonctionnaire
+        110 => 97, // Indépendant / autre
         60 => 7, // Intérim
         10 => null, // Non renseignée
         70 => 97, // Saisonnier
+        // 80 => 4, // Apprenti (supprimé le 23/03/2022)
+        100 => 9, // Service Civique
         90 => 8, // Stagiaire
     ];
 
     // TEMPS_TRAVAIL
     public const WORKING_TIME = [
-        'COMPLET' => 1,
-        'PARTIEL' => 2,
-        'NR' => null,
+        'FROM_80_TO_100' => 1,
+        'FROM_50_TO_80' => 2,
+        'INF_50' => 3,
         null => null,
+    ];
+
+    // TYPES_MOYEN_LOCOMOTION
+    public const TRANSFORT_MEANS = [
+        60 => 1, // Voiture
+        50 => 3, // Moto
+        40 => 3, // Scooter
+        30 => 2, // Transport en commun
+        10 => 4, // Vélo
+        20 => 4, // Trottinette
+        70 => 97, // Autre
     ];
 
     public const RESOURCES = [
@@ -405,12 +414,12 @@ class SiSiaoItems
         80 => 80, // AAH
         90 => 90, // ASS
         100 => 100, // Allocations familliales
-        // 110 => 1000, // Allocation temporaire d'attente
+        110 => 1000, // Allocation temporaire d'attente
         120 => 120, // Garantie jeune
         130 => 130, // Allocation pour demandeur d'asile
         140 => 60, // En attente RSA
-        // 150 => null, // Non renseigné
-        // 160 => null, // Refus de répondre
+        150 => 1000, // Non renseigné
+        160 => null, // Refus de répondre
         170 => 170, // Indemnités journalières
         180 => 180, // Bourses
         1000 => 1000, // Autres ressources
@@ -428,7 +437,7 @@ class SiSiaoItems
         90 => 90, // Garde enfant(s)
         100 => 100, // Pension alimentaire
         110 => 110, // Téléphone
-        // 120 => 120, //  Non renseigné
+        120 => 1000, //  Non renseigné
         1000 => 1000, // Autres charges
     ];
 

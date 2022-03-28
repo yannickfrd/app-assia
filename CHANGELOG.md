@@ -1,8 +1,20 @@
 CHANGELOG
 =========
+
+## Version 3.13.2 - 25/03/2022
+Fix problem APCU Cache with full export (#137)
+* [ExportController] Add condition check if fileName exist before delete
+* Add route to clear APCU Cache
+* Add delay to export data
+* [ExportExcel] Change ApcuCachePool to ApcuAdapter
+
+## Version 3.13.1 - 25/03/2022
+
+Update SI-SIAO feature (#136)
+
 ## Version 3.13.0 - 23/03/2022
 
-Optimize and update tests, create github action, PHP CS Fixer and PHP Stan
+Optimize and update tests, create github action, PHP CS Fixer and PHP Stan (#134)
 
 * Edit password algorithm in tests/security
 * [Config] Set logging to false in test/doctrine

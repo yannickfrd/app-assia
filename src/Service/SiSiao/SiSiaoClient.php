@@ -156,13 +156,13 @@ class SiSiaoClient
 
         foreach ($ficheGroupe->personnes as $personne) {
             $diagSocialId = $personne->diagnosticSocial->id;
-            // dump($this->get("/diagnosticSocials/{$diagSocialId}"));
+            dump($this->get("/diagnosticSocials/{$diagSocialId}"));
             // dump($this->get("/ressourcePersonnes/diagnosticSocial/{$diagSocialId}"));
             // dump($this->get("/chargePersonnes/diagnosticSocial/{$diagSocialId}"));
             // dump($this->get("/dettePersonnes/diagnosticSocial/{$diagSocialId}"));
         }
 
-        dump($this->get("/situationParRapportAuLogement/getByDiagnosticSocialId?diagnosticSocialId={$diagSocialId}"));
+        dump($this->get("/situationParRapportAuLogement/getByFicheId?ficheId={$id}"));
         dump($this->get("/demandeInsertion/getLastDemandeEnCours?idFiche={$id}"));
 
         exit;
