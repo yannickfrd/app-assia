@@ -4,9 +4,9 @@ namespace App\Repository\Support;
 
 use App\Entity\Organization\Service;
 use App\Entity\Organization\SubService;
+use App\Entity\Organization\User;
 use App\Entity\Support\PlacePerson;
 use App\Form\Model\Admin\OccupancySearch;
-use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
@@ -48,7 +48,7 @@ class PlacePersonRepository extends ServiceEntityRepository
      *
      * @return PlacePerson[]|null
      */
-    public function findPlacePeople(OccupancySearch $search, CurrentUserService $currentUser, Service $service = null, SubService $subService = null): ?array
+    public function findPlacePeople(OccupancySearch $search, User $user, Service $service = null, SubService $subService = null): ?array
     {
         $qb = $this->createQueryBuilder('pp')->select('pp')
             ->leftJoin('pp.placeGroup', 'pg')->addSelect('PARTIAL pg.{id, place}')
@@ -69,9 +69,9 @@ class PlacePersonRepository extends ServiceEntityRepository
             $qb->andWhere('pl.subService = :subService')
                 ->setParameter('subService', $subService);
         }
-        if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+        if (!$user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->andWhere('s.id IN (:services)')
-                ->setParameter('services', $currentUser->getServices());
+                ->setParameter('services', $user->getServices());
         }
 
         return $qb

@@ -12,7 +12,6 @@ use App\Repository\Organization\TagRepository;
 use App\Repository\Organization\UserRepository;
 use App\Repository\Support\SupportGroupRepository;
 use App\Repository\Support\SupportPersonRepository;
-use App\Security\CurrentUserService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -24,20 +23,18 @@ use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Security;
 
 class TaskType extends AbstractType
 {
     private $supportGroupRepo;
-    private $currentUser;
+    private $security;
     private $tagRepo;
 
-    public function __construct(
-        SupportGroupRepository $supportGroupRepo,
-        CurrentUserService $currentUser,
-        TagRepository $tagRepo
-    ) {
+    public function __construct(SupportGroupRepository $supportGroupRepo, Security $security, TagRepository $tagRepo)
+    {
         $this->supportGroupRepo = $supportGroupRepo;
-        $this->currentUser = $currentUser;
+        $this->security = $security;
         $this->tagRepo = $tagRepo;
     }
 
@@ -48,7 +45,7 @@ class TaskType extends AbstractType
         $service = $supportGroup ? $supportGroup->getService() : null;
 
         /** @var User $user */
-        $user = $this->currentUser->getUser();
+        $user = $this->security->getUser();
 
         $builder
             ->add('title', null, [

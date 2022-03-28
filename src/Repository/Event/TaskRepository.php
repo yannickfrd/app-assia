@@ -7,7 +7,6 @@ use App\Entity\Organization\User;
 use App\Entity\Support\SupportGroup;
 use App\Form\Model\Event\TaskSearch;
 use App\Repository\Traits\QueryTrait;
-use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -31,10 +30,10 @@ class TaskRepository extends ServiceEntityRepository
     /**
      * Return all tasks to paginate.
      */
-    public function findTasksQuery(TaskSearch $search, ?CurrentUserService $currentUser = null, ?SupportGroup $supportGroup = null): Query
+    public function findTasksQuery(TaskSearch $search, ?User $user = null, ?SupportGroup $supportGroup = null): Query
     {
         $qb = $this->getTasksQuery();
-        $qb = $this->filter($qb, $search, $currentUser);
+        $qb = $this->filter($qb, $search, $user);
 
         if ($supportGroup) {
             $qb->andWhere('t.supportGroup = :supportGroup')
@@ -139,13 +138,13 @@ class TaskRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    protected function filter(QueryBuilder $qb, TaskSearch $search, CurrentUserService $currentUser = null): QueryBuilder
+    protected function filter(QueryBuilder $qb, TaskSearch $search, User $user = null): QueryBuilder
     {
-        if ($currentUser && !$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+        if ($user && !$user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->where('t.createdBy IN (:user)')
-                ->setParameter('user', $currentUser->getUser());
+                ->setParameter('user', $user);
             $qb->orWhere('sg.service IN (:services)')
-                ->setParameter('services', $currentUser->getServices());
+                ->setParameter('services', $user->getServices());
         }
         if ($search->getId()) {
             return $qb->andWhere('t.id = :id')

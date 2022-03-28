@@ -9,7 +9,6 @@ use App\Form\Model\Organization\DeviceSearch;
 use App\Form\Organization\Device\DeviceSearchType;
 use App\Form\Organization\Device\DeviceType;
 use App\Repository\Organization\DeviceRepository;
-use App\Security\CurrentUserService;
 use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -34,7 +33,7 @@ final class DeviceController extends AbstractController
      *
      * @Route("/admin/devices", name="admin_devices", methods="GET")
      */
-    public function listDevice(Request $request, Pagination $pagination, CurrentUserService $currentUser): Response
+    public function listDevice(Request $request, Pagination $pagination): Response
     {
         $form = $this->createForm(DeviceSearchType::class, $search = new DeviceSearch())
             ->handleRequest($request);
@@ -42,7 +41,7 @@ final class DeviceController extends AbstractController
         return $this->render('app/organization/device/listDevices.html.twig', [
             'deviceSearch' => $search,
             'form' => $form->createView(),
-            'devices' => $pagination->paginate($this->deviceRepo->findDevicesQuery($currentUser, $search), $request),
+            'devices' => $pagination->paginate($this->deviceRepo->findDevicesQuery($search, $this->getUser()), $request),
         ]);
     }
 

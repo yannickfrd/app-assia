@@ -81,7 +81,9 @@ class RdvControllerTest extends WebTestCase
         $this->assertSelectorTextContains('.alert-warning', 'Aucun résultat à exporter');
 
         // Export with results
-        $this->client->submitForm('export', [], 'GET');
+        $this->client->submitForm('export', [
+            'date[start]' => (new \Datetime())->format('Y-m-d'),
+        ], 'GET');
 
         $this->assertResponseIsSuccessful();
         $this->assertStringContainsString('spreadsheetml.sheet', $this->client->getResponse()->headers->get('content-type'));

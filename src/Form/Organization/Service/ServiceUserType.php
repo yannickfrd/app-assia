@@ -4,21 +4,23 @@ namespace App\Form\Organization\Service;
 
 use App\Entity\Organization\Service;
 use App\Entity\Organization\ServiceUser;
+use App\Entity\Organization\User;
 use App\Repository\Organization\ServiceRepository;
-use App\Security\CurrentUserService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Security;
 
 class ServiceUserType extends AbstractType
 {
-    private $currentUser;
+    /** @var User */
+    private $user;
 
-    public function __construct(CurrentUserService $currentUser)
+    public function __construct(Security $security)
     {
-        $this->currentUser = $currentUser;
+        $this->user = $security->getUser();
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -28,14 +30,12 @@ class ServiceUserType extends AbstractType
                 'class' => Service::class,
                 'choice_label' => 'name',
                 'query_builder' => function (ServiceRepository $repo) {
-//                    return $repo->findAllQuery();
-                    return $repo->getServicesOfUserQueryBuilder($this->currentUser);
+                    return $repo->getServicesOfUserQueryBuilder($this->user);
                 },
                 'placeholder' => 'placeholder.select',
                 'attr' => [
                     'class' => 'col-auto my-1 w-min-200',
                 ],
-//                'mapped' => false,
             ])
             ->add('main', CheckboxType::class, [
                 'label' => false,
@@ -46,7 +46,6 @@ class ServiceUserType extends AbstractType
                     'class' => 'custom-control-input checkbox',
                 ],
                 'required' => false,
-//                'mapped' => false,
             ])
         ;
     }

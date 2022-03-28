@@ -8,7 +8,6 @@ use App\Entity\Support\SupportGroup;
 use App\Form\Model\Support\RdvSearch;
 use App\Form\Model\Support\SupportRdvSearch;
 use App\Repository\Traits\QueryTrait;
-use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -32,11 +31,11 @@ class RdvRepository extends ServiceEntityRepository
     /**
      * Return all rdvs of group support.
      */
-    public function findRdvsQuery(RdvSearch $search, ?CurrentUserService $currentUser = null): Query
+    public function findRdvsQuery(RdvSearch $search, User $user): Query
     {
         $qb = $this->getRdvsQuery();
 
-        return $this->filter($qb, $search, $currentUser)
+        return $this->filter($qb, $search, $user)
             ->orderBy('r.start', 'ASC')
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
@@ -63,12 +62,12 @@ class RdvRepository extends ServiceEntityRepository
     /**
      * Donne tous les RDVs à exporter.
      */
-    public function findRdvsToExport(RdvSearch $search): ?array
+    public function findRdvsToExport(RdvSearch $search, User $user): ?array
     {
         $qb = $this->getRdvsQuery()
             ->leftJoin('r.updatedBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}');
 
-        $qb = $this->filter($qb, $search);
+        $qb = $this->filter($qb, $search, $user);
 
         return $qb
             ->orderBy('r.createdBy', 'DESC')
@@ -98,13 +97,13 @@ class RdvRepository extends ServiceEntityRepository
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}');
     }
 
-    protected function filter(QueryBuilder $qb, RdvSearch $search, CurrentUserService $currentUser = null): QueryBuilder
+    protected function filter(QueryBuilder $qb, RdvSearch $search, User $user): QueryBuilder
     {
-        if ($currentUser && !$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+        if (!$user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->where('r.createdBy = :user')
-                ->setParameter('user', $currentUser->getUser());
+                ->setParameter('user', $user);
             $qb->orWhere('sg.service IN (:services)')
-                ->setParameter('services', $currentUser->getServices());
+                ->setParameter('services', $user->getServices());
         }
 
         $qb->andWhere('sg.id IS NULL OR sp.head = TRUE');

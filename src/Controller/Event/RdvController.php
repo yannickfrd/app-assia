@@ -13,7 +13,6 @@ use App\Form\Model\Support\RdvSearch;
 use App\Form\Model\Support\SupportRdvSearch;
 use App\Repository\Event\RdvRepository;
 use App\Repository\Support\SupportGroupRepository;
-use App\Security\CurrentUserService;
 use App\Service\Api\ApiCalendarRouter;
 use App\Service\Event\RdvManager;
 use App\Service\Export\RdvExport;
@@ -35,17 +34,13 @@ final class RdvController extends AbstractController
     /**
      * @Route("/rdvs", name="rdv_index", methods="GET|POST")
      */
-    public function index(
-        Request $request,
-        Pagination $pagination,
-        CurrentUserService $currentUser,
-        RdvRepository $rdvRepo
-    ): Response {
+    public function index(Request $request, Pagination $pagination, RdvRepository $rdvRepo): Response
+    {
         $form = $this->createForm(RdvSearchType::class, $search = new RdvSearch())
             ->handleRequest($request);
 
         if ($search->getExport()) {
-            $rdvs = $rdvRepo->findRdvsToExport($search);
+            $rdvs = $rdvRepo->findRdvsToExport($search, $this->getUser());
 
             if (!$rdvs) {
                 $this->addFlash('warning', 'Aucun résultat à exporter.');
@@ -61,7 +56,7 @@ final class RdvController extends AbstractController
         return $this->render('app/rdv/rdv_index.html.twig', [
             'form' => $form->createView(),
             'form_rdv' => $formRdv->createView(),
-            'rdvs' => $pagination->paginate($rdvRepo->findRdvsQuery($search, $currentUser), $request, 10),
+            'rdvs' => $pagination->paginate($rdvRepo->findRdvsQuery($search, $this->getUser()), $request, 10),
         ]);
     }
 
@@ -145,7 +140,6 @@ final class RdvController extends AbstractController
         $supportGroup = $supportGroupRepo->findSupportById($id);
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
-
 
         $rdv = (new Rdv())->setSupportGroup($supportGroup);
         $form = $this->createForm(RdvType::class, $rdv)

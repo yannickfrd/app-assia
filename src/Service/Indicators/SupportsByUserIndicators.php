@@ -3,26 +3,28 @@
 namespace App\Service\Indicators;
 
 use App\Entity\Organization\Device;
+use App\Entity\Organization\User;
 use App\Form\Model\Support\SupportsByUserSearch;
 use App\Repository\Organization\DeviceRepository;
 use App\Repository\Organization\UserRepository;
 use App\Repository\Support\SupportGroupRepository;
-use App\Security\CurrentUserService;
+use Symfony\Component\Security\Core\Security;
 
 class SupportsByUserIndicators
 {
-    protected $currentUser;
+    /** @var User */
+    protected $user;
     protected $deviceRepo;
     protected $userRepo;
     protected $supportRepo;
 
     public function __construct(
-        CurrentUserService $currentUser,
+        Security $security,
         DeviceRepository $deviceRepo,
         UserRepository $userRepo,
         SupportGroupRepository $supportRepo
     ) {
-        $this->currentUser = $currentUser;
+        $this->user = $security->getUser();
         $this->deviceRepo = $deviceRepo;
         $this->userRepo = $userRepo;
         $this->supportRepo = $supportRepo;
@@ -30,8 +32,8 @@ class SupportsByUserIndicators
 
     public function getSupportsbyDevice(SupportsByUserSearch $search)
     {
-        $devices = $this->deviceRepo->findDevicesForDashboard($this->currentUser, $search);
-        $users = $this->userRepo->findUsersOfServices($this->currentUser, $search);
+        $devices = $this->deviceRepo->findDevicesForDashboard($this->user, $search);
+        $users = $this->userRepo->findUsersOfServices($this->user, $search);
         $supports = $this->supportRepo->findSupportsForDashboard($search);
 
         $initDevicesUser = $this->getInitDevicesUser($devices);

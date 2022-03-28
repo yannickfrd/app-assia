@@ -1,8 +1,25 @@
 CHANGELOG
 =========
 
+## Version 3.13.4 - 28/03/2022
+
+Remove current user service (#140)
+
+* Remove CurrentUserService and use Security->getUser()
+* Fix Php CS Fixer and PHP Stan
+
+## Version 3.13.3 - 28/03/2022
+
+Fix (#139)
+
+* [ExportExcel] Fix error to use model file
+* [AdminController] Edit phpinfo
+
+
 ## Version 3.13.2 - 25/03/2022
+
 Fix problem APCU Cache with full export (#137)
+
 * [ExportController] Add condition check if fileName exist before delete
 * Add route to clear APCU Cache
 * Add delay to export data

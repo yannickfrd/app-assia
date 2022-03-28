@@ -53,7 +53,6 @@ class RdvRepositoryTest extends WebTestCase
             ->get('doctrine')
             ->getManager();
 
-        /* @var RdvRepository */
         $this->rdvRepo = $this->entityManager->getRepository(Rdv::class);
 
         $this->supportGroup = $fixtures['support_group1'];
@@ -64,14 +63,14 @@ class RdvRepositoryTest extends WebTestCase
 
         $this->search = (new RdvSearch())
             ->setTitle('RDV test')
-            ->setStart(new \DateTime('2020-01-01'))
-            ->setEnd(new \DateTime())
+            ->setStart(new \DateTime())
+            ->setEnd((new \DateTime())->modify('+1 month'))
             ->setReferents($referents);
 
         $this->supportRdvSearch = (new SupportRdvSearch())
             ->setTitle('RDV test')
-            ->setStart(new \DateTime('2020-01-01'))
-            ->setEnd(new \DateTime());
+            ->setStart(new \DateTime())
+            ->setEnd((new \DateTime())->modify('+1 month'));
     }
 
     public function testCount(): void
@@ -81,13 +80,13 @@ class RdvRepositoryTest extends WebTestCase
 
     public function testFindAllRdvsQueryWithoutFilters(): void
     {
-        $qb = $this->rdvRepo->findRdvsQuery(new RdvSearch());
+        $qb = $this->rdvRepo->findRdvsQuery(new RdvSearch(), $this->user);
         $this->assertGreaterThanOrEqual(5, count($qb->getResult()));
     }
 
     public function testFindAllRdvsQueryWithFilters(): void
     {
-        $qb = $this->rdvRepo->findRdvsQuery($this->search);
+        $qb = $this->rdvRepo->findRdvsQuery($this->search, $this->user);
         $this->assertGreaterThanOrEqual(1, count($qb->getResult()));
     }
 

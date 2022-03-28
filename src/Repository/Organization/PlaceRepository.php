@@ -5,12 +5,12 @@ namespace App\Repository\Organization;
 use App\Entity\Organization\Place;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\SubService;
+use App\Entity\Organization\User;
 use App\Entity\Support\SupportGroup;
 use App\Form\Model\Admin\OccupancySearch;
 use App\Form\Model\Organization\PlaceSearch;
 use App\Form\Utils\Choices;
 use App\Repository\Traits\QueryTrait;
-use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -34,13 +34,13 @@ class PlaceRepository extends ServiceEntityRepository
     /**
      * Retourne toutes les places.
      */
-    public function findPlacesQuery(PlaceSearch $search = null, CurrentUserService $currentUser = null): Query
+    public function findPlacesQuery(PlaceSearch $search = null, User $user): Query
     {
         $qb = $this->getPlacesAlterQueryBuilder();
 
-        if ($currentUser && !$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+        if (!$user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->andWhere('pl.service IN (:services)')
-                ->setParameter('services', $currentUser->getServices());
+                ->setParameter('services', $user->getServices());
         }
 
         if ($search) {
@@ -159,7 +159,7 @@ class PlaceRepository extends ServiceEntityRepository
      *
      * @return Place[]|null
      */
-    public function findPlacesForOccupancy(OccupancySearch $search, $currentUser, Service $service = null, SubService $subService = null): ?array
+    public function findPlacesForOccupancy(OccupancySearch $search, User $user, Service $service = null, SubService $subService = null): ?array
     {
         $qb = $this->createQueryBuilder('pl')->select('pl')
             ->innerJoin('pl.service', 's')->addSelect('PARTIAL s.{id, name}')
@@ -182,9 +182,9 @@ class PlaceRepository extends ServiceEntityRepository
             $qb->andWhere('pl.subService = :subService')
                 ->setParameter('subService', $subService);
         }
-        if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+        if (!$user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->andWhere('pl.service IN (:services)')
-                ->setParameter('services', $currentUser->getServices());
+                ->setParameter('services', $user->getServices());
         }
 
         return $qb

@@ -19,23 +19,22 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Validator\Constraints\Count;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\NotNull;
 
 class RdvType extends AbstractType
 {
     private $tagRepo;
-    private $currentUser;
+    private $user;
     private $supportGroupRepo;
 
     public function __construct(
         TagRepository $tagRepo,
-        CurrentUserService $currentUser,
+        Security $security,
         SupportGroupRepository $supportGroupRepo
     ) {
         $this->tagRepo = $tagRepo;
-        $this->currentUser = $currentUser;
+        $this->user = $security->getUser();
         $this->supportGroupRepo = $supportGroupRepo;
     }
 
@@ -46,7 +45,6 @@ class RdvType extends AbstractType
         /** @var SupportGroup $supportGroup */
         $supportGroup = $options['support_group'] ?? $options['data']->getSupportGroup();
         $service = $supportGroup ? $supportGroup->getService() : null;
-        $user = $this->currentUser->getUser();
 
         $builder
             ->add('title', null, [
@@ -75,8 +73,8 @@ class RdvType extends AbstractType
             ])
             ->add('users', EntityType::class, [
                 'class' => User::class,
-                'query_builder' => function (UserRepository $userRepo) use ($service, $user) {
-                    return $userRepo->findUsersOfCurrentUserQueryBuilder($user, $service);
+                'query_builder' => function (UserRepository $userRepo) use ($service) {
+                    return $userRepo->findUsersOfCurrentUserQueryBuilder($this->user, $service);
                 },
                 'choice_label' => 'fullname',
                 'multiple' => true,

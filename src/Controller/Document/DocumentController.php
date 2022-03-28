@@ -15,7 +15,6 @@ use App\Form\Support\Document\DocumentType;
 use App\Form\Support\Document\DropzoneDocumentType;
 use App\Form\Support\Document\SupportDocumentSearchType;
 use App\Repository\Support\DocumentRepository;
-use App\Security\CurrentUserService;
 use App\Service\File\Downloader;
 use App\Service\File\FileDownloader;
 use App\Service\File\FileUploader;
@@ -51,14 +50,14 @@ final class DocumentController extends AbstractController
      *
      * @Route("/admin/documents", name="documents", methods="GET|POST")
      */
-    public function showListDocuments(Request $request, Pagination $pagination, CurrentUserService $currentUser): Response
+    public function showListDocuments(Request $request, Pagination $pagination): Response
     {
         $form = $this->createForm(DocumentSearchType::class, $search = new DocumentSearch())
             ->handleRequest($request);
 
         return $this->render('app/document/listDocuments.html.twig', [
             'form' => $form->createView(),
-            'documents' => $pagination->paginate($this->documentRepo->findDocumentsQuery($search, $currentUser), $request, 20),
+            'documents' => $pagination->paginate($this->documentRepo->findDocumentsQuery($search, $this->getUser()), $request, 20),
         ]);
     }
 

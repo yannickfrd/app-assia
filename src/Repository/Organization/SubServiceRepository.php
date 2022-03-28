@@ -4,9 +4,9 @@ namespace App\Repository\Organization;
 
 use App\Entity\Organization\Service;
 use App\Entity\Organization\SubService;
+use App\Entity\Organization\User;
 use App\Form\Model\Admin\OccupancySearch;
 use App\Repository\Traits\QueryTrait;
-use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -82,7 +82,7 @@ class SubServiceRepository extends ServiceEntityRepository
     /**
      * Donne la liste des sous-services de l'utilisateur.
      */
-    public function getSubServicesOfUserQueryBuilder(CurrentUserService $currentUser, Service $service = null, string $dataClass = null): QueryBuilder
+    public function getSubServicesOfUserQueryBuilder(User $user, Service $service = null, string $dataClass = null): QueryBuilder
     {
         $qb = $this->createQueryBuilder('ss')->select('PARTIAL ss.{id, name}')
             ->leftJoin('ss.service', 's')->addSelect('PARTIAL s.{id, name, type}')
@@ -94,9 +94,9 @@ class SubServiceRepository extends ServiceEntityRepository
             $qb = $this->filterByServiceType($qb, $dataClass);
         }
 
-        if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+        if (!$user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->andWhere('s.id IN (:services)')
-                ->setParameter('services', $currentUser->getServices());
+                ->setParameter('services', $user->getServices());
         }
 
         if ($service) {
@@ -110,7 +110,7 @@ class SubServiceRepository extends ServiceEntityRepository
     /**
      * @return SubService[]|null
      */
-    public function findSubServicesWithPlace(OccupancySearch $search, CurrentUserService $currentUser, ?Service $service = null): ?array
+    public function findSubServicesWithPlace(OccupancySearch $search, User $user, ?Service $service = null): ?array
     {
         $qb = $this->createQueryBuilder('ss')->select('ss')
             ->leftJoin('ss.service', 's')->addSelect('s')
@@ -129,9 +129,9 @@ class SubServiceRepository extends ServiceEntityRepository
             $qb->andWhere('ss.service = :service')
                 ->setParameter('service', $service);
         }
-        if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+        if (!$user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->andWhere('s.id IN (:services)')
-                ->setParameter('services', $currentUser->getServices());
+                ->setParameter('services', $user->getServices());
         }
 
         return $qb

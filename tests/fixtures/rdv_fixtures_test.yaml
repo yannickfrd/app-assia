@@ -3,7 +3,7 @@ App\Entity\Event\Rdv:
         title: RDV test
         content: Contenu du RDV
         status: <numberBetween(1, 2)>
-        start: <date_create("2020-01-01")>
+        start: <dateTimeBetween("now", "+1 month")>
         end: $start
         location: Houilles
         createdAt: <dateTimeBetween("-2 years", "now")>
@@ -16,7 +16,7 @@ App\Entity\Event\Rdv:
         title: <sentence(10, true)>
         content: <paragraphs(6, true)>
         status: <numberBetween(1, 2)>
-        start: <dateTimeBetween("-1 months", "+ 1 months")>
+        start: <dateTimeBetween("-1 month", "+ 1 month")>
         end: $start
         createdAt: <dateTimeBetween("-2 years", "now")>
         updatedAt: <dateTimeBetween($createdAt, "now")>
