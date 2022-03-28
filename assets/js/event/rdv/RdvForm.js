@@ -241,6 +241,7 @@ export default class RdvForm {
 
         this.dateInput.value = rdv.start.substr(0, 10)
         this.startInput.value = rdv.start.substr(11, 5)
+
         this.endInput.value = rdv.end.substr(11, 5)
 
         this.rdvStatusInput.value = rdv.status ? rdv.status : ''
@@ -299,7 +300,7 @@ export default class RdvForm {
      */
     getInfoRdvElt(rdv) {
         let htmlContent = `Créé le ${rdv.createdAtToString} par ${rdv.createdBy.fullname}`
-        if (rdv.createdAt !== rdv.updatedAt) {
+        if (rdv.createdAt !== rdv.updatedAt && rdv.updatedBy !== null) {
             htmlContent += `<br/> (modifié le ${rdv.updatedAtToString} par ${rdv.updatedBy.fullname})`
         }
         return htmlContent
