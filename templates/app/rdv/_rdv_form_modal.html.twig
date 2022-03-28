@@ -98,18 +98,6 @@
                 <div class="row mb-3">
                     <div class="col-md-12">{{ form_widget(form_rdv.content) }}</div>
                 </div>
-                <div class="row mb-3">
-                    <div class="col-md-6 mb-2 custom-control custom-checkbox custom-checkbox-{{ theme_color }}">
-                        <div class="col-md-12">
-                            {{ form_widget(form_rdv._googleCalendar, {attr: {'data-api-name': 'google'} }) }}
-                        </div>
-                    </div>
-                    <div class="col-md-6 mb-2 custom-control custom-checkbox custom-checkbox-{{ theme_color }}">
-                        <div class="col-md-12">
-                            {{ form_widget(form_rdv._outlookCalendar, {attr: {'data-api-name': 'outlook'} }) }}
-                        </div>
-                    </div>
-                </div>
 
                 {% set alert_widget %}
                     <div class="form-inline mb-1">
@@ -142,6 +130,22 @@
                         </button>
                     </div>
                 </div>
+
+                <hr>
+
+                <div class="row mb-3">
+                    <div class="col-md-6 custom-control custom-checkbox custom-checkbox-{{ theme_color }}">
+                        <div class="col-md-12">
+                            {{ form_widget(form_rdv._googleCalendar, {attr: {'data-api-name': 'google'} }) }}
+                        </div>
+                    </div>
+                    <div class="col-md-6 custom-control custom-checkbox custom-checkbox-{{ theme_color }}">
+                        <div class="col-md-12">
+                            {{ form_widget(form_rdv._outlookCalendar, {attr: {'data-api-name': 'outlook'} }) }}
+                        </div>
+                    </div>
+                </div>
+
                 {{ form_row(form_rdv._token) }}
             </div>
             <div class="modal-footer d-flex justify-content-between">
