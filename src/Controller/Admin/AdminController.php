@@ -60,11 +60,15 @@ final class AdminController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
 
-        if (1 != $user->getId()) {
-            return $this->redirect('home');
+        if (1 !== $user->getId()) {
+            return $this->redirectToRoute('home');
         }
 
-        return new Response(phpinfo());
+        phpinfo();
+
+        exit;
+
+        return $this->redirectToRoute('home');
     }
 
     /**
