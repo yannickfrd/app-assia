@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Rdv;
+namespace App\Service\Event;
 
 use App\Entity\Organization\User;
 use App\Entity\Support\SupportGroup;
