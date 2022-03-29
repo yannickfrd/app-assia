@@ -53,6 +53,7 @@ class SupportRdvSearchType extends AbstractType
                     'size' => 1,
                 ],
             ])
+            ->add('export')
         ;
     }
 
@@ -70,6 +71,6 @@ class SupportRdvSearchType extends AbstractType
 
     public function getBlockPrefix(): string
     {
-        return 'search';
+        return '';
     }
 }

@@ -77,7 +77,6 @@ class RdvSearchType extends AbstractType
             ->add('service', ServiceDeviceReferentSearchType::class, [
                 'data_class' => EventSearch::class,
             ])
-            ->add('export')
             ->add('users', EntityType::class, [
                 'class' => User::class,
                 'choice_label' => 'fullname',
@@ -107,6 +106,7 @@ class RdvSearchType extends AbstractType
                 ],
                 'required' => false,
             ])
+            ->add('export')
         ;
     }
 

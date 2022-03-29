@@ -30,7 +30,7 @@ class RdvRepository extends ServiceEntityRepository
     /**
      * Return all rdvs of group support.
      */
-    public function findRdvsQuery(EventSearch $search, User $user): Query
+    public function findRdvsQuery(EventSearch $search, User $user, ?SupportGroup $supportGroup = null): Query
     {
         $qb = $this->getRdvsQuery();
 
@@ -65,12 +65,12 @@ class RdvRepository extends ServiceEntityRepository
     /**
      * Donne tous les RDVs à exporter.
      */
-    public function findRdvsToExport(EventSearch $search, User $user): ?array
+    public function findRdvsToExport(EventSearch $search, User $user, ?SupportGroup $supportGroup = null): ?array
     {
         $qb = $this->getRdvsQuery()
             ->leftJoin('r.updatedBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}');
 
-        $qb = $this->filter($qb, $search, $user);
+        $qb = $this->filter($qb, $search, $user, $supportGroup);
 
         return $qb
             ->orderBy('r.createdBy', 'DESC')
@@ -102,7 +102,7 @@ class RdvRepository extends ServiceEntityRepository
         ;
     }
 
-    protected function filter(QueryBuilder $qb, EventSearch $search, User $user): QueryBuilder
+    protected function filter(QueryBuilder $qb, EventSearch $search, User $user, ?SupportGroup $supportGroup = null): QueryBuilder
     {
         if (!$user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->where('r.createdBy = :user')
@@ -112,6 +112,11 @@ class RdvRepository extends ServiceEntityRepository
         }
 
         $qb->andWhere('sg.id IS NULL OR sp.head = TRUE');
+
+        if ($supportGroup) {
+            $qb->andWhere('sg.id = :supportGroup')
+            ->setParameter('supportGroup', $supportGroup->getId());
+        }
 
         if ($search->getId()) {
             return $qb->andWhere('r.id = :id')
@@ -152,11 +157,11 @@ class RdvRepository extends ServiceEntityRepository
     /**
      * Return all rdvs of group support.
      */
-    public function findRdvsQueryOfSupport(int $supportGroupId, EventSearch $search): Query
+    public function findRdvsQueryOfSupport(EventSearch $search, SupportGroup $supportGroup): Query
     {
         $qb = $this->getBaseQuery()
             ->andWhere('sg.id = :supportGroup')
-            ->setParameter('supportGroup', $supportGroupId);
+            ->setParameter('supportGroup', $supportGroup->getId());
 
         if ($search->getTitle()) {
             $qb->andWhere('r.title LIKE :title')
