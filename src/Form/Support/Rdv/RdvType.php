@@ -43,7 +43,7 @@ class RdvType extends AbstractType
                 'widget' => 'single_text',
             ])
             ->add('status', ChoiceType::class, [
-                'choices' => Choices::getchoices(Rdv::STATUS),
+                'choices' => Choices::getChoices(Rdv::STATUS),
                 'placeholder' => 'placeholder.status',
                 'required' => false,
             ])
