@@ -14,6 +14,9 @@ class SupportNoteSearch
     /** @var bool */
     private $export;
 
+    /** @var bool */
+    private $disable = false;
+
     public function getNoteId(): ?int
     {
         return $this->noteId;
@@ -37,4 +40,17 @@ class SupportNoteSearch
 
         return $this;
     }
+
+    public function getDisable(): bool
+    {
+        return $this->disable;
+    }
+
+    public function setDisable(bool $disable): self
+    {
+        $this->disable = $disable;
+
+        return $this;
+    }
+
 }

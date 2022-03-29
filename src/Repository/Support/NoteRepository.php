@@ -4,6 +4,7 @@ namespace App\Repository\Support;
 
 use App\Entity\Organization\User;
 use App\Entity\Support\Note;
+use App\Entity\Support\SupportGroup;
 use App\Form\Model\Support\NoteSearch;
 use App\Form\Model\Support\SupportNoteSearch;
 use App\Repository\Traits\QueryTrait;
@@ -104,6 +105,10 @@ class NoteRepository extends ServiceEntityRepository
      */
     public function findNotesOfSupportQuery(int $supportGroupId, SupportNoteSearch $search): Query
     {
+        if ($search->getDisable() && $this->_em->getFilters()->isEnabled('softdeleteable')) {
+            $this->_em->getFilters()->disable('softdeleteable');
+        }
+
         $qb = $this->createQueryBuilder('n')
             ->leftJoin('n.tags', 't')->addSelect('t')
             ->leftJoin('n.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
@@ -112,6 +117,9 @@ class NoteRepository extends ServiceEntityRepository
             ->andWhere('n.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroupId);
 
+        if ($search->getDisable()) {
+            $qb->andWhere('n.deletedAt IS NOT null');
+        }
         if ($search->getNoteId()) {
             $qb->andWhere('n.id = :id')
                 ->setParameter('id', $search->getNoteId());
