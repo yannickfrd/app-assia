@@ -106,14 +106,14 @@ class TaskControllerTest extends WebTestCase
         $now = new \DateTime();
 
         // Fail
-        $this->client->request('POST', '/task/new');
+        $this->client->request('POST', '/task/create');
 
         $content = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertSame('danger', $content['alert']);
 
         // Success
-        $this->client->request('POST', '/task/new', [
+        $this->client->request('POST', '/task/create', [
             'task' => [
                 'title' => 'Task test',
                 'level' => Task::MEDIUM_LEVEL,
@@ -142,14 +142,14 @@ class TaskControllerTest extends WebTestCase
         $csrfToken = $crawler->filter('#task__token')->attr('value');
 
         // // Fail
-        $this->client->request('POST', "/support/$id/task/new");
+        $this->client->request('POST', "/support/$id/task/create");
 
         $this->assertResponseIsSuccessful();
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('danger', $content['alert']);
 
         // Success
-        $this->client->request('POST', "/support/$id/task/new", [
+        $this->client->request('POST', "/support/$id/task/create", [
             'task' => [
                 'title' => 'Task test',
                 'level' => Task::MEDIUM_LEVEL,
