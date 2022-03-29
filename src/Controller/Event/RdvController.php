@@ -38,22 +38,18 @@ final class RdvController extends AbstractController
             ->handleRequest($request);
 
         if ($search->getExport()) {
-            $rdvs = $rdvRepo->findRdvsToExport($search, $this->getUser());
-
-            if (!$rdvs) {
-                $this->addFlash('warning', 'Aucun résultat à exporter.');
-
-                return $this->redirectToRoute('rdv_index');
+            if ($rdvs = $rdvRepo->findRdvsToExport($search, $this->getUser())) {
+                return (new RdvExport())->exportData($rdvs);
             }
 
-            return (new RdvExport())->exportData($rdvs);
+            $this->addFlash('warning', 'Aucun résultat à exporter.');
         }
 
         $formRdv = $this->createForm(RdvType::class, (new Rdv())->addUser($this->getUser()));
 
-        return $this->render('app/rdv/rdv_index.html.twig', [
-            'form' => $form->createView(),
-            'form_rdv' => $formRdv->createView(),
+        return $this->renderForm('app/rdv/rdv_index.html.twig', [
+            'form' => $form,
+            'form_rdv' => $formRdv,
             'rdvs' => $pagination->paginate($rdvRepo->findRdvsQuery($search, $this->getUser()), $request, 10),
         ]);
     }
@@ -82,10 +78,10 @@ final class RdvController extends AbstractController
             'support_group' => $supportGroup,
         ]);
 
-        return $this->render('app/rdv/support_rdv_index.html.twig', [
+        return $this->renderForm('app/rdv/support_rdv_index.html.twig', [
             'support' => $supportGroup,
-            'form_search' => $formSearch->createView(),
-            'form_rdv' => $formRdv->createView(),
+            'form_search' => $formSearch,
+            'form_rdv' => $formRdv,
             'rdvs' => $rdvPaginator->getRdvs($supportGroup, $request, $search),
         ]);
     }
@@ -108,6 +104,8 @@ final class RdvController extends AbstractController
 
             $em->persist($rdv);
             $em->flush();
+
+            RdvManager::deleteCacheItems($rdv);
 
             return $this->json([
                 'action' => 'create',
