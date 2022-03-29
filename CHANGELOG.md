@@ -1,6 +1,17 @@
 CHANGELOG
 =========
 
+## Version 3.14.0 - 29/03/2022
+
+Update Rdv feature:
+
+* Add user and support choices in FormType
+* Add alerts in FormType
+* Refactor controller
+* Apply twig conventions
+* Update tests
+* Create command to add user to rdvs
+
 ## Version 3.13.4 - 28/03/2022
 
 Remove current user service (#140)
