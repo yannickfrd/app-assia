@@ -49,6 +49,7 @@ final class NoteController extends AbstractController
     }
 
     /**
+     * @Route("/support/{id}/notes/list", name="support_note_list_index", methods="GET|POST")
      * @Route("/support/{id}/notes", name="support_note_index", methods="GET|POST")
      *
      * @param int $id // SupportGroup
@@ -79,6 +80,7 @@ final class NoteController extends AbstractController
         }
 
         return $this->render('app/note/support_note_index.html.twig', [
+            'view' => $request->get('_route') === 'support_note_index' ? 'card' : 'list',
             'support' => $supportGroup,
             'form_search' => $formSearch->createView(),
             'form' => $form->createView(),

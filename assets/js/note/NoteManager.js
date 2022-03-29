@@ -2,7 +2,7 @@ import Ajax from '../utils/ajax'
 import MessageFlash from '../utils/messageFlash'
 import Loader from '../utils/loader'
 import ParametersUrl from '../utils/parametersUrl'
-import { Modal } from 'bootstrap'
+import {Modal} from 'bootstrap'
 import NoteForm from './NoteForm'
 
 export default class NoteManager {
@@ -27,7 +27,7 @@ export default class NoteManager {
         this.containerNotesElt = document.getElementById('container-notes')
 
         this.supportId = this.containerNotesElt.dataset.support
-        
+
         this.noteForm = new NoteForm(this)
 
         this.init()
@@ -35,7 +35,7 @@ export default class NoteManager {
 
     init() {
         this.noteElts.forEach(noteElt => noteElt.addEventListener('click', () => this.noteForm.show(noteElt)))
-        
+
         document.querySelector('button[data-action="new_note"]').addEventListener('click', () => {
             this.noteForm.resetForm()
         })
@@ -119,7 +119,7 @@ export default class NoteManager {
         noteElt.className = 'col-sm-12 col-lg-6 mb-4 reveal'
         noteElt.dataset.noteId = note.id
 
-        noteElt.innerHTML =`
+        noteElt.innerHTML = `
             <div class='card h-100 shadow'>
                 <div class='card-header'>
                     <h3 class='card-title h5 text-${this.themeColor}'>${this.noteModalElt.querySelector('#note_title').value}</h3>
@@ -152,8 +152,7 @@ export default class NoteManager {
      * @param {Object} note
      * @returns {string}
      */
-    getEditInfos(note)
-    {
+    getEditInfos(note) {
         return `(modifié le ${note.updatedAtToString} par ${note.updatedByToString})`
     }
 
@@ -161,8 +160,7 @@ export default class NoteManager {
      * @param {Object} note
      * @returns {string}
      */
-    createTags(note)
-    {
+    createTags(note) {
         return note.tags.reduce(
             (tags, tag) => tags + `<span class="badge bg-${tag.color} text-light mr-1" data-tag-id="${tag.id}">${tag.name}</span>`, ''
         )
@@ -177,15 +175,15 @@ export default class NoteManager {
 
         noteElt.querySelector('.card-title').textContent = this.noteModalElt.querySelector('#note_title').value
         noteElt.querySelector('.card-text').innerHTML = this.noteForm.ckEditor.getData()
-        
+
         const noteTypeElt = noteElt.querySelector('[data-note-type]')
         noteTypeElt.textContent = note.typeToString
         noteTypeElt.dataset.noteType = this.noteModalElt.querySelector('#note_type').value
-        
+
         const noteStatusElt = noteElt.querySelector('[data-note-status]')
         noteStatusElt.textContent = note.statusToString
         noteStatusElt.dataset.noteStatus = this.noteModalElt.querySelector('#note_status').value
-        
+
         noteElt.querySelector('[data-note-updated]').textContent = this.getEditInfos(note)
         noteElt.querySelector('.tags-list').innerHTML = this.createTags(note)
     }
