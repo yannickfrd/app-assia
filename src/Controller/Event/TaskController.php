@@ -57,7 +57,7 @@ final class TaskController extends AbstractController
     /**
      * @Route("/support/{id}/tasks", name="support_task_index", methods="GET|POST")
      */
-    public function supportTasksIndex(int $id, SupportManager $supportManager,
+    public function indexSupportTasks(int $id, SupportManager $supportManager,
         Request $request, TaskPaginator $paginator): Response
     {
         $supportGroup = $supportManager->getSupportGroup($id);
@@ -84,10 +84,10 @@ final class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/task/new", name="task_new", methods="POST")
-     * @Route("/support/{id}/task/new", name="support_task_new", methods="POST")
+     * @Route("/task/create", name="task_create", methods="POST")
+     * @Route("/support/{id}/task/create", name="support_task_create", methods="POST")
      */
-    public function new(?int $id = null, Request $request, EntityManagerInterface $em,
+    public function create(?int $id = null, Request $request, EntityManagerInterface $em,
         TranslatorInterface $translator): JsonResponse
     {
         $task = new Task();
