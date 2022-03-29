@@ -44,15 +44,6 @@ class RdvExport extends ExportExcel
     protected function getDatas(Rdv $rdv): array
     {
         $supportGroup = $rdv->getSupportGroup();
-        $person = null;
-
-        if ($supportGroup) {
-            foreach ($supportGroup->getSupportPeople() as $supportPerson) {
-                if ($supportPerson->getHead()) {
-                    $person = $supportPerson->getPerson();
-                }
-            }
-        }
 
         return [
             'N° RDV' => $rdv->getId(),
@@ -60,14 +51,17 @@ class RdvExport extends ExportExcel
             'Titre' => $rdv->getTitle(),
             'Date de début' => $this->formatDatetime($rdv->getStart()),
             'Date de fin' => $this->formatDatetime($rdv->getEnd()),
+            'Statut' => $rdv->getStatusToString(),
             'Lieu' => $rdv->getLocation(),
-            'Suivi' => $person ? $person->getFullname() : null,
+            'Étiquette(s)' => $rdv->getTagsToString(),
+            'Professionnel·le(s)' => $rdv->getUsersToString(),
+            'Suivi' => $supportGroup ? $supportGroup->getHeader()->getFullname() : null,
             'Service' => $supportGroup ? $supportGroup->getService()->getName() : null,
-            'Pôle' => $supportGroup ? $supportGroup->getService()->getPole()->getName() : null,
-            'Date de création' => $this->formatDate($rdv->getCreatedAt()),
-            'Créé par' => $rdv->getCreatedBy()->getFullname(),
-            'Date de modification' => $this->formatDate($rdv->getUpdatedAt()),
-            'Modifié par' => $rdv->getUpdatedBy()->getFullname(),
+            'Dispositif' => $supportGroup ? $supportGroup->getDevice()->getName() : null,
+            'Créé le (date)' => $this->formatDate($rdv->getCreatedAt()),
+            'Créé par' => $rdv->getCreatedBy() ? $rdv->getCreatedBy()->getFullname() : 'Auto.',
+            'Modifié le (date)' => $this->formatDate($rdv->getUpdatedAt()),
+            'Modifié par' => $rdv->getUpdatedBy() ? $rdv->getUpdatedBy()->getFullname() : '',
         ];
     }
 }

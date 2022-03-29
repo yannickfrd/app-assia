@@ -96,7 +96,6 @@ class RdvRepository extends ServiceEntityRepository
     {
         return $this->getBaseQuery()
             ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')
-            ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
             ->leftJoin('sg.referent', 'ref')->addSelect('PARTIAL ref.{id, firstname, lastname}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
