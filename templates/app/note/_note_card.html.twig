@@ -2,14 +2,14 @@
     <div class="col-md-7 mb-2">
         {% if notes.getTotalItemCount %}
             <span class="btn btn-outline-secondary btn-sm m-1 px-2 shadow-sm">
-						{{ knp_pagination_sortable(notes, 'Titre', 'n.title') }}
-					</span>
+                {{ knp_pagination_sortable(notes, 'Titre', 'n.title') }}
+            </span>
             <span class="btn btn-outline-secondary btn-sm m-1 px-2 shadow-sm">
-						{{ knp_pagination_sortable(notes, 'Date de création', 'n.createdAt') }}
-					</span>
+                {{ knp_pagination_sortable(notes, 'Date de création', 'n.createdAt') }}
+            </span>
             <span class="btn btn-outline-secondary btn-sm m-1 px-2 shadow-sm">
-						{{ knp_pagination_sortable(notes, 'Date de mise à jour', 'n.updatedAt') }}
-					</span>
+                {{ knp_pagination_sortable(notes, 'Date de mise à jour', 'n.updatedAt') }}
+            </span>
         {% endif %}
     </div>
     <div class="col-md-5">
@@ -20,6 +20,7 @@
 <div id="container-notes" class="row" data-support="{{ support.id }}">
     {% for note in notes %}
         {% set isDeleted = note.deletedAt is not null %}
+        {% set tooltipCard = isDeleted ? '' : 'title="Voir la note" data-toggle="tooltip" data-placement="bottom"' %}
 
         <div class="col-sm-12 col-lg-6 mb-4 reveal" data-note-id="{{ note.id }}" data-note-deleted="{{ isDeleted }}">
             <div class="card h-100 shadow">
@@ -29,18 +30,18 @@
                             class="btn btn-success btn-sm shadow position-absolute" style="right: 10px;" title="Restaurer la note sociale"
                             data-toggle="tooltip" data-placement="bottom"><i class="fa-solid fa-trash-arrow-up"></i></a>
                     {% endif %}
-                    <h3 class="card-title h5 text-{{ theme_color }} cursor-pointer"
-                        title="Voir la note" data-placement="bottom">{{ note.title }}</h3>
+
+                    <h3 class="card-title h5 text-{{ theme_color }} {{ isDeleted ? '' : 'cursor-pointer' }}" {{ tooltipCard }}>{{ note.title }}</h3>
                     <span data-note-type={{ note.type }}>{{ note.typeToString }}</span>
                     (<span data-note-status={{ note.status }}>{{ note.statusToString }}</span>)
                     <span class="small text-secondary" data-note-created="true">
-								| Créé le {{ note.createdAt|date('d/m/Y à H:i') }} par {{ note.createdBy.fullname }}
-							</span>
+                        | Créé le {{ note.createdAt|date('d/m/Y à H:i') }} par {{ note.createdBy.fullname }}
+                    </span>
                     <span class="small text-secondary" data-note-updated="true">
-								{% if note.updatedAt != note.createdAt and note.updatedBy %}
-                                    (modifié le {{ note.updatedAt|date('d/m/Y à H:i') }} par {{ note.updatedBy.fullname }})
-                                {% endif %}
-							</span>
+                        {% if note.updatedAt != note.createdAt and note.updatedBy %}
+                            (modifié le {{ note.updatedAt|date('d/m/Y à H:i') }} par {{ note.updatedBy.fullname }})
+                        {% endif %}
+                    </span>
 
                     <div class="mt-2 tags-list">
                         {% for tag in note.tags %}
@@ -50,8 +51,7 @@
                     </div>
 
                 </div>
-                <div class="card-body note-content cursor-pointer" title="Voir la note"
-                    data-toggle="tooltip" data-placement="bottom">
+                <div class="card-body note-content {{ isDeleted ? '' : 'cursor-pointer' }}" {{ tooltipCard }}>
                     <div class="card-text">{{ note.content|raw }}</div>
                     <span class="note-fadeout"></span>
                 </div>
