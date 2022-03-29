@@ -84,7 +84,7 @@ final class NoteController extends AbstractController
             'support' => $supportGroup,
             'form_search' => $formSearch->createView(),
             'form' => $form->createView(),
-            'nb_total_notes' => $supportCollections->getNbNotes($supportGroup),
+            'nb_total_notes' => $supportCollections->getNbNotes($supportGroup, $search->getDisable()),
             'notes' => $notePaginator->paginateSupportNotes($supportGroup, $request, $search),
         ]);
     }
@@ -223,5 +223,17 @@ final class NoteController extends AbstractController
             'id' => $id,
             'noteId' => $note->getId(),
         ]);
+    }
+
+    /**
+     * @Route("/support/{supportId}/note/{id}/restore", name="note_restore", methods="GET")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function restore(int $supportId, int $id, SupportGroupRepository $groupRepo)
+    {
+        $supportGroup = $groupRepo->findSupportById($supportId, true);
+        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
+
+        dd($supportGroup->getNotes());
     }
 }

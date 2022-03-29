@@ -4,7 +4,6 @@ namespace App\Repository\Support;
 
 use App\Entity\Organization\User;
 use App\Entity\Support\Note;
-use App\Entity\Support\SupportGroup;
 use App\Form\Model\Support\NoteSearch;
 use App\Form\Model\Support\SupportNoteSearch;
 use App\Repository\Traits\QueryTrait;
@@ -233,6 +232,18 @@ class NoteRepository extends ServiceEntityRepository
         }
 
         return $qb
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function countNotesDisabled()
+    {
+        if ($this->_em->getFilters()->isEnabled('softdeleteable')) {
+            $this->_em->getFilters()->disable('softdeleteable');
+        }
+
+        return $this->createQueryBuilder('n')->select('COUNT(n.id)')
+            ->andWhere('n.deletedAt IS NOT null')
             ->getQuery()
             ->getSingleScalarResult();
     }
