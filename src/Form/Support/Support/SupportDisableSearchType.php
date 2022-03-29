@@ -17,8 +17,8 @@ class SupportDisableSearchType extends AbstractType
                 'label_attr' => [
                     'class' => 'custom-control-label',
                 ],
-                'row_attr' => [
-                    'class' => 'col-12 px-0'
+                'attr' => [
+                    'class' => 'custom-control-input checkbox',
                 ],
                 'required' => false,
             ])
