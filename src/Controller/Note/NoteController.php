@@ -49,8 +49,8 @@ final class NoteController extends AbstractController
     }
 
     /**
-     * @Route("/support/{id}/notes/list", name="support_note_list_index", methods="GET|POST")
-     * @Route("/support/{id}/notes", name="support_note_index", methods="GET|POST")
+     * @Route("/support/{id}/notes/table-view", name="support_note_index_table", methods="GET|POST")
+     * @Route("/support/{id}/notes/card-view", name="support_note_index", methods="GET|POST")
      *
      * @param int $id // SupportGroup
      */
@@ -80,11 +80,11 @@ final class NoteController extends AbstractController
         }
 
         return $this->render('app/note/support_note_index.html.twig', [
-            'view' => $request->get('_route') === 'support_note_index' ? 'card' : 'list',
+            'is_card_view' => $request->get('_route') === 'support_note_index',
             'support' => $supportGroup,
             'form_search' => $formSearch->createView(),
             'form' => $form->createView(),
-            'nb_total_notes' => $supportCollections->getNbNotes($supportGroup, $search->getDisable()),
+            'nb_total_notes' => $supportCollections->getNbNotes($supportGroup, $search->getDeleted()),
             'notes' => $notePaginator->paginateSupportNotes($supportGroup, $request, $search),
         ]);
     }

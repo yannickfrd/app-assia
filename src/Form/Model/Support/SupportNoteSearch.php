@@ -15,7 +15,7 @@ class SupportNoteSearch
     private $export;
 
     /** @var bool */
-    private $disable = false;
+    private $deleted = false;
 
     public function getNoteId(): ?int
     {
@@ -41,14 +41,14 @@ class SupportNoteSearch
         return $this;
     }
 
-    public function getDisable(): bool
+    public function getDeleted(): bool
     {
-        return $this->disable;
+        return $this->deleted;
     }
 
-    public function setDisable(bool $disable): self
+    public function setDeleted(bool $deleted): self
     {
-        $this->disable = $disable;
+        $this->deleted = $deleted;
 
         return $this;
     }

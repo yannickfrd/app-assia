@@ -38,13 +38,13 @@
                     <div class="mt-2 tags-list">
                         {% for tag in note.tags %}
                             <span class="badge bg-{{ tag.color }} text-light"
-                                  data-tag-id="{{ tag.id }}">{{ tag.name }}</span>
+                                data-tag-id="{{ tag.id }}">{{ tag.name }}</span>
                         {% endfor %}
                     </div>
 
                 </div>
                 <div class="card-body note-content cursor-pointer" title="Voir la note"
-                     data-toggle="tooltip" data-placement="bottom">
+                    data-toggle="tooltip" data-placement="bottom">
                     <div class="card-text">{{ note.content|raw }}</div>
                     <span class="note-fadeout"></span>
                 </div>

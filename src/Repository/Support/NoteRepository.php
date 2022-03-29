@@ -104,7 +104,7 @@ class NoteRepository extends ServiceEntityRepository
      */
     public function findNotesOfSupportQuery(int $supportGroupId, SupportNoteSearch $search): Query
     {
-        if ($search->getDisable() && $this->_em->getFilters()->isEnabled('softdeleteable')) {
+        if ($search->getDeleted() && $this->_em->getFilters()->isEnabled('softdeleteable')) {
             $this->_em->getFilters()->disable('softdeleteable');
         }
 
@@ -116,7 +116,7 @@ class NoteRepository extends ServiceEntityRepository
             ->andWhere('n.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroupId);
 
-        if ($search->getDisable()) {
+        if ($search->getDeleted()) {
             $qb->andWhere('n.deletedAt IS NOT null');
         }
         if ($search->getNoteId()) {
@@ -236,7 +236,7 @@ class NoteRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    public function countNotesDisabled()
+    public function countNotesDisabled(): int
     {
         if ($this->_em->getFilters()->isEnabled('softdeleteable')) {
             $this->_em->getFilters()->disable('softdeleteable');

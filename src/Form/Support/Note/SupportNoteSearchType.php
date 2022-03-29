@@ -6,7 +6,7 @@ use App\Entity\Organization\Service;
 use App\Entity\Organization\Tag;
 use App\Entity\Support\Note;
 use App\Form\Model\Support\SupportNoteSearch;
-use App\Form\Support\Support\SupportDisableSearchType;
+use App\Form\Support\Support\DeletedSearchType;
 use App\Form\Utils\Choices;
 use App\Repository\Organization\TagRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -78,7 +78,7 @@ class SupportNoteSearchType extends AbstractType
                     'size' => 1,
                 ],
             ])
-            ->add('disable', SupportDisableSearchType::class, [
+            ->add('deleted', DeletedSearchType::class, [
                 'label' => false,
             ])
         ;

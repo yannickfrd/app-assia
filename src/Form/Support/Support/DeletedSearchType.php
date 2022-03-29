@@ -7,12 +7,12 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class SupportDisableSearchType extends AbstractType
+class DeletedSearchType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('disable', CheckboxType::class, [
+            ->add('deleted', CheckboxType::class, [
                 'label' => 'support.label.soft_deleteable',
                 'label_attr' => [
                     'class' => 'custom-control-label',
