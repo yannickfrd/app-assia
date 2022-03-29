@@ -91,13 +91,13 @@ class RdvRepositoryTest extends WebTestCase
 
     public function testFindAllRdvsQueryOfSupportWithoutFilters(): void
     {
-        $qb = $this->rdvRepo->findRdvsQueryOfSupport($this->supportGroup->getId(), new EventSearch());
+        $qb = $this->rdvRepo->findRdvsQueryOfSupport(new EventSearch(), $this->supportGroup);
         $this->assertGreaterThanOrEqual(1, count($qb->getResult()));
     }
 
     public function testFindAllRdvsQueryOfSupportWithFilters(): void
     {
-        $qb = $this->rdvRepo->findRdvsQueryOfSupport($this->supportGroup->getId(), $this->supportEventSearch);
+        $qb = $this->rdvRepo->findRdvsQueryOfSupport($this->supportEventSearch, $this->supportGroup);
         $this->assertGreaterThanOrEqual(1, count($qb->getResult()));
     }
 
