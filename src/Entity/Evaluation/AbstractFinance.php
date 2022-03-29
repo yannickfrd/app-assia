@@ -3,9 +3,12 @@
 namespace App\Entity\Evaluation;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 
 abstract class AbstractFinance
 {
+    use SoftDeleteableEntity;
+
     public const OTHER = 1000;
 
     /**
