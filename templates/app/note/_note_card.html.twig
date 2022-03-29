@@ -19,9 +19,16 @@
 
 <div id="container-notes" class="row" data-support="{{ support.id }}">
     {% for note in notes %}
-        <div class="col-sm-12 col-lg-6 mb-4 reveal" data-note-id="{{ note.id }}">
+        {% set isDeleted = note.deletedAt is not null %}
+
+        <div class="col-sm-12 col-lg-6 mb-4 reveal" data-note-id="{{ note.id }}" data-note-deleted="{{ isDeleted }}">
             <div class="card h-100 shadow">
                 <div class="card-header">
+                    {% if isDeleted %}
+                        <a href="{{ path('note_restore', {'supportId': support.id, 'id': note.id}) }}"
+                            class="btn btn-success btn-sm shadow position-absolute" style="right: 10px;" title="Restaurer la note sociale"
+                            data-toggle="tooltip" data-placement="bottom"><i class="fa-solid fa-trash-arrow-up"></i></a>
+                    {% endif %}
                     <h3 class="card-title h5 text-{{ theme_color }} cursor-pointer"
                         title="Voir la note" data-placement="bottom">{{ note.title }}</h3>
                     <span data-note-type={{ note.type }}>{{ note.typeToString }}</span>

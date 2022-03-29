@@ -34,7 +34,11 @@ export default class NoteManager {
     }
 
     init() {
-        this.noteElts.forEach(noteElt => noteElt.addEventListener('click', () => this.noteForm.show(noteElt)))
+        this.noteElts.forEach(noteElt => {
+            if (!noteElt.dataset.noteDeleted) {
+                noteElt.addEventListener('click', () => this.noteForm.show(noteElt))
+            }
+        })
 
         document.querySelector('button[data-action="new_note"]').addEventListener('click', () => {
             this.noteForm.resetForm()
