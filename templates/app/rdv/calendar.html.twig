@@ -17,13 +17,14 @@
                 <div class="d-flex align-items-center">
                     <h2 class="h2 mr-3 mb-0 d-none d-sm-block">Agenda</h2>
                     <a class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-toggle="tooltip"
-                       data-placement="bottom" title="Passer en vue liste"
-                       href="{% if support is defined %}{{ path('support_rdv_index', {'id': support.id}) }}{% else %}{{ path('rdv_index') }}{% endif %}">
-                        <span class="far fa-list-alt"></span>
+                        data-placement="bottom" title="Passer en vue liste"
+                        href="{% if support is defined %}{{ path('support_rdv_index', {'id': support.id}) }}
+                        {% else %}{{ path('rdv_index', {'date[start]': 'now'|date('Y-m-d') }) }}{% endif %}"
+                        ><i class="far fa-list-alt"></i>
                     </a>
                     <button id="js-new-rdv" class="btn btn-{{ theme_color }} btn-sm shadow mr-2"
                         data-toggle="tooltip" data-placement="bottom" data-url="{{ path('rdv_create') }}"
-                        title="Ajouter un rendez-vous"><span class="far fa-calendar-plus"></span>
+                        title="Ajouter un rendez-vous"><i class="far fa-calendar-plus"></i>
                     </button>
                 </div>
                 <h3 class="h4 text-secondary">

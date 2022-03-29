@@ -38,9 +38,9 @@
                     <th scope="col" class="align-middle th-w-100">Rappel(s)</th>
                     <th scope="col" class="align-middle th-w-80">
                         {{ knp_pagination_sortable(rdvs, 'Statut', 'r.status') }}</th>
-                    <th scope="col" class="align-middle th-w-60">Étiquette(s)</th>
                     <th scope="col" class="align-middle th-w-120">
                         {{ knp_pagination_sortable(rdvs, 'Lieu', 'r.location') }}</th>
+                    <th scope="col" class="align-middle th-w-60">Étiquette(s)</th>
                     <th scope="col" class="align-middle th-w-120">Professionnel·le(s)</th>
                     {% if support_is_not_defined %}
                         <th scope="col" class="align-middle th-w-120">
@@ -84,12 +84,12 @@
                         </td>
 
                         <td class="align-middle" data-cell="status">{{ rdv.statusToString }}</td>
+                        <td class="align-middle" data-cell="location">{{ rdv.location }}</td>
                         <td class="align-middle" data-cell="tags">
                             {% for tag in rdv.tags %}
                                 <span class="badge bg-{{ tag.color }} text-light">{{ tag.name }}</span>
                             {% endfor %}
                         </td>
-                        <td class="align-middle" data-cell="location">{{ rdv.location }}</td>
                         <td class="align-middle" data-cell="users">{{ rdv.usersToString }}</td>
 
                         {% if support_is_not_defined %}

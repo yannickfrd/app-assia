@@ -148,16 +148,15 @@ export default class RdvManager {
             <td class="align-middle text-center">
                 <button class="btn btn-${this.rdvForm.themeColor} btn-sm shadow my-1"
                     title="Voir/Modifier le rendez-vous"  data-toggle="tooltip" data-placement="bottom"
-                    data-action="edit-rdv" data-url="${url}">
-                    <span class="fas fa-eye"></span>
+                    data-action="edit-rdv" data-url="${url}"><i class="fas fa-eye"></i>
                 </button>
             </td>
             <td class="align-middle justify" data-cell="title"><span class="font-weight-bold">${rdv.title}</span></td>
             <td class="align-middle" data-cell="start">${this.rdvDateToString(rdv)}
             <td class="align-middle" data-cell="alerts">${this.createAlerts(rdv)}
             <td class="align-middle" data-cell="status">${rdv.statusToString ?? ''}</td>
-            <td class="align-middle" data-cell="tags">${this.rdvForm.createTags(rdv)}</td>
             <td class="align-middle" data-cell="location">${rdv.location ?? ''}</td>
+            <td class="align-middle" data-cell="tags">${this.rdvForm.createTags(rdv)}</td>
             <td class="align-middle" data-cell="users">${rdv.usersToString}</td>`
 
         if (!this.supportId) {
@@ -219,8 +218,8 @@ export default class RdvManager {
         rowElt.querySelector('td[data-cell="start"]').innerHTML = this.rdvDateToString(rdv)
         rowElt.querySelector('td[data-cell="alerts"]').innerHTML = this.createAlerts(rdv)
         rowElt.querySelector('td[data-cell="status"]').textContent = rdv.statusToString ?? ''
-        rowElt.querySelector('td[data-cell="tags"]').innerHTML = this.rdvForm.createTags(rdv)
         rowElt.querySelector('td[data-cell="location"]').innerHTML = rdv.location ?? ''
+        rowElt.querySelector('td[data-cell="tags"]').innerHTML = this.rdvForm.createTags(rdv)
         rowElt.querySelector('td[data-cell="users"]').textContent = rdv.usersToString ?? ''
 
         if (!this.supportId && supportGroup) {

@@ -3,12 +3,9 @@
 {% form_theme form_search 'bootstrap_4_layout.html.twig' %}
 
 {% block search_form %}
-
     <div class="col-auto my-1 px-1">{{ form_row(form_search.title) }}</div>
-
     <div class="col-auto my-1 px-1">{{ form_row(form_search.date.start) }}</div>
     <div class="col-auto my-1 px-1">{{ form_row(form_search.date.end) }}</div>
-
     <div class="col-auto my-1 px-1">
         <div class="input-group">
             <div class="input-group-prepend">
@@ -19,5 +16,4 @@
             {{ form_widget(form_search.tags) }}
         </div> 
     </div>
-
 {% endblock %}
