@@ -720,10 +720,11 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
 
             $evalBudgetResource
                 ->setEvalBudgetPerson($evalBudgetPerson)
+                // ->setEndDate(null)
                 ->setType($this->findInArray($ressource->typeRessource, SiSiaoItems::RESOURCES))
                 ->setAmount($ressource->montant)
-                // ->setEnDate(null)
-                ->setComment($ressource->commentaire);
+                ->setComment(htmlspecialchars(substr($ressource->commentaire, 0, 100)))
+            ;
 
             $this->em->persist($evalBudgetResource);
 
@@ -746,7 +747,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         $sumAmt = 0;
 
         foreach ($charges as $charge) {
-            if ($evalBudgetPerson->getId() && 120 === $charge->typeCharge->id) {
+            if (120 === $charge->typeCharge->id) {
                 continue;
             }
             if (!$evalBudgetCharge = $this->financeExists($evalBudgetPerson->getEvalBudgetCharges(), $charge->typeCharge->id)) {
@@ -757,7 +758,8 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
                 ->setEvalBudgetPerson($evalBudgetPerson)
                 ->setType($this->findInArray($charge->typeCharge, SiSiaoItems::CHARGES))
                 ->setAmount($charge->montant)
-                ->setComment($charge->commentaire);
+                ->setComment(htmlspecialchars(substr($charge->commentaire, 0, 100)))
+            ;
 
             $this->em->persist($evalBudgetCharge);
 
@@ -801,7 +803,8 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
                 ->setEvalBudgetPerson($evalBudgetPerson)
                 ->setType($this->findInArray($dette->typeDette, SiSiaoItems::DEBTS))
                 ->setAmount($dette->montant)
-                ->setComment($dette->commentaire);
+                ->setComment(htmlspecialchars(substr($dette->commentaire, 0, 100)))
+            ;
 
             $this->em->persist($evalBudgetDebt);
 
@@ -886,7 +889,8 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
                 ->setEvalInitPerson($evalInitPerson)
                 ->setType($evalBudgetResource->getType())
                 ->setAmount($evalBudgetResource->getAmount())
-                ->setComment($evalBudgetResource->getComment());
+                ->setComment($evalBudgetResource->getComment())
+            ;
 
             $this->em->persist($evalInitResource);
         }
@@ -913,7 +917,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
                         ->setTitle('Note import SI-SIAO')
                         ->setType(Note::TYPE_NOTE)
                         ->setStatus(null)
-                        ->setComment($result->id)
+                        ->setComment((string) $result->id)
                         ->setSupportGroup($supportGroup)
                     ;
 
