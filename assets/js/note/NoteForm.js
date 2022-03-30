@@ -1,4 +1,3 @@
-import NoteManager from './NoteManager'
 import MessageFlash from '../utils/messageFlash'
 import AutoSaver from '../utils/form/autoSaver'
 import ParametersUrl from '../utils/parametersUrl'
@@ -8,14 +7,14 @@ import SelectManager from '../utils/form/SelectManager'
 
 export default class NoteForm {
     /**
-     * @param {NoteManager} noteManager 
+     * @param {NoteManager} noteManager
      */
     constructor(noteManager) {
         this.noteManager = noteManager
         this.loader = noteManager.loader
         this.ajax = noteManager.ajax
         this.noteModalElt = noteManager.noteModalElt
-        this.noteModal = noteManager.noteModal 
+        this.noteModal = noteManager.noteModal
         this.supportId = noteManager.supportId
         this.confirmModal = noteManager.confirmModal
         this.confirmModalElt = noteManager.confirmModalElt
@@ -30,7 +29,7 @@ export default class NoteForm {
         this.btnDeleteElt = this.noteModalElt.querySelector('#modal-btn-delete')
 
         this.autoSaveElt = document.getElementById('js-auto-save')
-        
+
         this.tagsManager = new TagsManager()
         this.tagsSelectManager = new SelectManager('#note_tags', {name: 'onModal', elementId: this.noteModalElt.id})
 
@@ -64,7 +63,7 @@ export default class NoteForm {
     resetForm() {
         this.noteModal.show()
 
-        this.noteModalElt.querySelector('form').action = `/support/${this.supportId}/note/new` 
+        this.noteModalElt.querySelector('form').action = `/support/${this.supportId}/note/new`
         this.noteModalElt.querySelector('#note_title').value = ''
         this.contentElt.textContent = ''
         this.noteModalElt.querySelector('#note_type').value = 1
@@ -86,7 +85,7 @@ export default class NoteForm {
      */
     show(noteElt) {
         this.initModal(noteElt)
-        
+
         this.noteModalElt.querySelector('#note_title').value = noteElt.querySelector('.card-title').textContent
         this.noteModalElt.querySelector('#note_type').value = noteElt.querySelector('[data-note-type]').dataset.noteType
         this.noteModalElt.querySelector('#note_status').value = noteElt.querySelector('[data-note-status]').dataset.noteStatus
@@ -105,10 +104,10 @@ export default class NoteForm {
      */
     initModal(noteElt) {
         const noteId = noteElt.dataset.noteId
-        this.noteModalElt.querySelector('form').action = `/note/${noteId}/edit` 
+        this.noteModalElt.querySelector('form').action = `/note/${noteId}/edit`
 
         this.btnDeleteElt.classList.remove('d-none')
-        this.btnDeleteElt.dataset.url = `/note/${noteId}/delete` 
+        this.btnDeleteElt.dataset.url = `/note/${noteId}/delete`
 
         this.btnExportWordElt.classList.remove('d-none')
         this.btnExportWordElt.href = `/note/${noteId}/export/word`

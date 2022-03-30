@@ -1,8 +1,8 @@
-<div class="table-responsive" id="container-notes" {{ support is defined ? ' data-support="' ~ support.id ~ '"' : '' }}>
+<div class="table-responsive" id="container-notes" data-support="{{ support is defined ? support.id : '' }}">
     <table id="table-notes" class="table table-bordered table-striped table-hover text-dark shadow-sm">
         <thead>
         <tr>
-            <th scope="col" class="align-middle th-w-20"></th>
+            <th scope="col" class="align-middle th-w-20" data-get-url="show" data-show-url="{{ path('note_edit', {'id': '__id__'}) }}"></th>
             <th scope="col" class="align-middle th-w-150">
                 {{ knp_pagination_sortable(notes, 'Nom de la note', 'n.title') }}</th>
             <th scope="col" class="align-middle th-w-100">
@@ -30,7 +30,10 @@
                     {{ knp_pagination_sortable(notes, 'Modifié par', 'u2.lastname') }}</th>
             {% endif %}
 
-            <th scope="col" class="align-middle th-w-80"></th>
+            <th scope="col" class="align-middle th-w-80" data-get-url="action"
+                data-word-url="{{ path('note_export_word', {'id': '__id__'}) }}"
+                data-pdf-url="{{ path('note_export_pdf', {'id': '__id__'}) }}"
+                data-delete-url="{{ path('note_delete', {'id': '__id__'}) }}"></th>
         </tr>
         </thead>
         <tbody>
@@ -71,7 +74,7 @@
                     <td class="align-middle">{{ note.updatedBy ? note.updatedBy.fullname }}</td>
                 {% endif %}
 
-                <th scope="row" class="align-middle text-center p-1">
+                <td class="align-middle text-center p-1">
                     {% if isSoftDeletable %}
                         <a href="{{ path('note_restore', {'supportId': support.id, 'id': note.id}) }}"
                             class="btn btn-success btn-sm shadow" title="Restaurer la note sociale"
@@ -93,7 +96,7 @@
                             <i class="fa-solid fa-trash-can"></i>
                         </button>
                     {% endif %}
-                </th>
+                </td>
             </tr>
         {% endfor %}
         </tbody>

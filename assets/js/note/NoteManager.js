@@ -16,7 +16,6 @@ export default class NoteManager {
         this.noteModal = new Modal(this.noteModalElt, {backdrop: 'static', keyboard: false})
 
         this.noteElts = document.querySelectorAll('div[data-note-id]')
-        this.deleteNoteBtn = document.querySelectorAll('table#table-notes tbody button[data-action="delete_note"]')
 
         this.confirmModalElt = document.getElementById('confirm-modal')
         this.confirmModal = new Modal(this.confirmModalElt)
@@ -46,10 +45,11 @@ export default class NoteManager {
             }
         })
 
-        this.deleteNoteBtn.forEach(btn => btn.addEventListener('click', () => {
-            this.deleteModal.show()
-            this.deleteModalElt.querySelector('button#modal-confirm').dataset.url = btn.dataset.url
-        }))
+        document.querySelectorAll('table#table-notes tbody button[data-action="delete_note"]')
+            .forEach(btn => btn.addEventListener('click', () => {
+                this.deleteModal.show()
+                this.deleteModalElt.querySelector('button#modal-confirm').dataset.url = btn.dataset.url
+            }))
 
         document.querySelector('button[data-action="new_note"]').addEventListener('click', () => {
             this.noteForm.resetForm()
@@ -144,6 +144,19 @@ export default class NoteManager {
      * @param {Object} note
      */
     createNoteElt(note) {
+        if (this.isCardNoteView) {
+            this.createCardNoteElt(note);
+        } else {
+            this.createTableRowNoteTr(note)
+        }
+        this.updateCounter(1)
+    }
+
+    /**
+     * Crée la note dans le container.
+     * @param {Object} note
+     */
+    createCardNoteElt(note) {
         const noteElt = document.createElement('div')
         noteElt.className = 'col-sm-12 col-lg-6 mb-4 reveal'
         noteElt.dataset.noteId = note.id
@@ -166,8 +179,6 @@ export default class NoteManager {
         this.noteModalElt.querySelector('form').action = `/note/${note.id}/edit`
 
         this.containerNotesElt.firstChild.before(noteElt)
-        // Met à jour le nombre de notes
-        this.updateCounter(1)
 
         this.noteForm.initModal(noteElt)
 
@@ -175,6 +186,62 @@ export default class NoteManager {
         setTimeout(() => noteElt.classList.add('reveal-on'), 100)
 
         noteElt.addEventListener('click', () => this.noteForm.show(noteElt))
+    }
+
+    /**
+     * Crée la note dans le tableau.
+     * @param {Object} note
+     */
+    createTableRowNoteTr(note) {
+        const noteId = note.id
+
+        const showUrl = document.querySelector('table#table-notes thead th[data-get-url="show"]').dataset.showUrl
+        const thAction = document.querySelector('table#table-notes thead th[data-get-url="action"]')
+
+        const wordUrl = thAction.dataset.wordUrl.replace('__id__', noteId)
+        const pdfUrl = thAction.dataset.pdfUrl.replace('__id__', noteId)
+        const deleteUrl = thAction.dataset.deleteUrl.replace('__id__', noteId)
+
+        const noteTr = document.createElement('tr')
+        noteTr.id = 'note-' + noteId
+
+        noteTr.innerHTML = `
+            <td class="align-middle text-center">
+                <a href="${showUrl.replace('__id__', noteId)}"
+                    class="btn btn-${this.themeColor} btn-sm shadow" title="Voir la note sociale" type="button"
+                    data-toggle="tooltip" data-placement="bottom"><i class="fas fa-eye"></i></a></td>`
+
+        let titleTd = `<td class="align-middle justify">`
+        titleTd += note.title !== null ? `<span class="font-weight-bold">${note.title} : </span>` : ``
+        titleTd += `${note.content.length >= 200 ? note.content.substr(0, 200) + ' [...]' : note.content}</td>`
+        noteTr.innerHTML += titleTd
+
+        noteTr.innerHTML += `
+            <td class="align-middle">${note.typeToString}</td>
+            <td class="align-middle">${note.statusToString}</td>
+            <td class="align-middle">${this.createTags(note)}</td>
+            <td class="align-middle">${note.supportGroup ? note.supportGroup.header.fullname : ''}</td>
+            <td class="align-middle">${note.createdAtToString}</td>
+            <td class="align-middle text-center p-1">
+                <a href="${wordUrl}" class="btn btn-${this.themeColor} btn-sm mb-1 shadow" 
+                    title="Exporter la note au format Word" data-toggle="tooltip" data-placement="bottom">
+                    <i class="fas fa-file-word bg-primary fa-lg"></i><span class="sr-only">Word</span></a><br/>
+                <a href="${pdfUrl}" class="btn btn-${this.themeColor} btn-sm mb-1 shadow" 
+                    title="Exporter la note au format PDF" data-toggle="tooltip" data-placement="bottom">
+                    <i class="fas fa-file-pdf bg-danger fa-lg"></i><span class="sr-only">PDF</span></a><br/>
+                <button class="btn btn-sm btn-danger shadow mt-3" title="Supprimer la note" data-toggle="tooltip" data-placement="bottom"
+                    data-action="delete_note" data-url="${deleteUrl}"><i class="fa-solid fa-trash-can"></i></button></td>`
+
+        document.querySelector('table#table-notes tbody')
+            .insertBefore(noteTr, document.querySelector('table#table-notes tbody').firstChild)
+
+        this.noteModal.hide()
+
+        document.querySelectorAll('table#table-notes tbody button[data-action="delete_note"]')
+            .forEach(btn => btn.addEventListener('click', () => {
+                this.deleteModal.show()
+                this.deleteModalElt.querySelector('button#modal-confirm').dataset.url = btn.dataset.url
+            }))
     }
 
     /**

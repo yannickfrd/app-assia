@@ -96,7 +96,6 @@ final class NoteController extends AbstractController
         SupportGroup $supportGroup,
         Request $request,
         EntityManagerInterface $em,
-        NormalizerInterface $normalizer,
         TranslatorInterface $translator
     ): JsonResponse {
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
@@ -118,8 +117,8 @@ final class NoteController extends AbstractController
                 'action' => 'create',
                 'alert' => 'success',
                 'msg' => $translator->trans('note.created_successfully', ['%note_title%' => $note->getTitle()], 'app'),
-                'note' => $normalizer->normalize($note, 'json', ['groups' => ['show_note', 'show_tag']]),
-            ]);
+                'note' => $note,
+            ], 200, [], ['groups' => Note::SERIALIZER_GROUPS]);
         }
 
         return $this->getErrorMessage($form);
