@@ -14,7 +14,6 @@ export default class NoteManager {
 
         this.noteModalElt = document.getElementById('note-modal')
         this.noteModal = new Modal(this.noteModalElt)
-        // this.noteModal = new Modal(this.noteModalElt, {backdrop: 'static', keyboard: false})
 
         this.noteElts = document.querySelectorAll('div[data-note-id]')
 
@@ -157,6 +156,8 @@ export default class NoteManager {
             this.createTableRowNoteTr(note)
         }
         this.updateCounter(1)
+
+        this.noteModal.hide()
     }
 
     /**

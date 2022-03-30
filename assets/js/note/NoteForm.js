@@ -52,11 +52,6 @@ export default class NoteForm {
             e.preventDefault()
             this.requestToDelete()
         })
-        // this.noteModalElt.addEventListener('mousedown', e => {
-        //     if (e.target === this.noteModalElt && this.noteManager.isCardNoteView) {
-        //         this.tryCloseModal(e)
-        //     }
-        // })
         this.confirmModalElt.querySelector('#modal-confirm-btn').addEventListener('click', () => this.onclickModalConfirmBtn())
     }
 
@@ -85,9 +80,6 @@ export default class NoteForm {
      */
     show(noteElt) {
         this.initModal(noteElt)
-
-        console.log(this.noteManager.isCardNoteView)
-        console.log(noteElt.querySelector('td[data-cell="title-content"] span') === null)
 
         this.noteModalElt.querySelector('#note_title').value = this.noteManager.isCardNoteView
             ? noteElt.querySelector('.card-title').textContent
