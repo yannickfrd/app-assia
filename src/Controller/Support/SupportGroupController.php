@@ -31,6 +31,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -285,13 +286,11 @@ final class SupportGroupController extends AbstractController
      *
      * @Route("/support/{id}/clone", name="support_clone", methods="GET")
      */
-    public function clone(SupportGroup $supportGroup, SupportDuplicator $supportDuplicator, EntityManagerInterface $em): Response
+    public function clone(SupportGroup $supportGroup, SupportDuplicator $supportDuplicator): RedirectResponse
     {
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
         if ($supportDuplicator->duplicate($supportGroup)) {
-            $em->flush();
-
             $this->addFlash('success', 'Les informations du précédent suivi ont été ajoutées (évaluation sociale, documents...)');
 
             SupportManager::deleteCacheItems($supportGroup);
