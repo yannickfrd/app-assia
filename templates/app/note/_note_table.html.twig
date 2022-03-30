@@ -1,4 +1,4 @@
-<div class="table-responsive" id="container-notes" data-support="{{ support.id }}">
+<div class="table-responsive" id="container-notes" {{ support is defined ? ' data-support="' ~ support.id ~ '"' : '' }}>
     <table id="table-notes" class="table table-bordered table-striped table-hover text-dark shadow-sm">
         <thead>
         <tr>
@@ -12,16 +12,24 @@
             <th scope="col" class="align-middle th-w-100">Étiquette(s)</th>
             <th scope="col" class="align-middle th-w-120">
                 {{ knp_pagination_sortable(notes, 'Nom du suivi', 'p.lastname') }}</th>
-            <th scope="col" class="align-middle th-w-120">
-                {{ knp_pagination_sortable(notes, 'Service', 's.name') }}</th>
+
+            {% if support is not defined %}
+                <th scope="col" class="align-middle th-w-120">
+                    {{ knp_pagination_sortable(notes, 'Service', 's.name') }}</th>
+            {% endif %}
+
             <th scope="col" class="align-middle th-date">
                 {{ knp_pagination_sortable(notes, 'Créé le', 'n.createdAt') }}</th>
-            <th scope="col" class="align-middle th-w-80">
-                {{ knp_pagination_sortable(notes, 'Créé par', 'u.lastname') }}</th>
-            <th scope="col" class="align-middle th-date">
-                {{ knp_pagination_sortable(notes, 'Modifié le', 'n.updatedAt') }}</th>
-            <th scope="col" class="align-middle th-w-80">
-                {{ knp_pagination_sortable(notes, 'Modifié par', 'u2.lastname') }}</th>
+
+            {% if support is not defined %}
+                <th scope="col" class="align-middle th-w-80">
+                    {{ knp_pagination_sortable(notes, 'Créé par', 'u.lastname') }}</th>
+                <th scope="col" class="align-middle th-date">
+                    {{ knp_pagination_sortable(notes, 'Modifié le', 'n.updatedAt') }}</th>
+                <th scope="col" class="align-middle th-w-80">
+                    {{ knp_pagination_sortable(notes, 'Modifié par', 'u2.lastname') }}</th>
+            {% endif %}
+
             <th scope="col" class="align-middle th-w-80"></th>
         </tr>
         </thead>
@@ -47,14 +55,22 @@
                     {% endfor %}
                 </td>
                 <td class="align-middle">{{ support is defined ? support.header.fullname : note.supportGroup.header.fullname }}</td>
-                <td class="align-middle" data-cell="service">
-                    {{ support is defined ? support.service.name : note.supportGroup.service.name }}<br/>
-                    <span class="text-secondary">({{ support is defined ? support.device.name : note.supportGroup.device.name }})</span>
-                </td>
+
+                {% if support is not defined %}
+                    <td class="align-middle" data-cell="service">
+                        {{ note.supportGroup.service.name }}<br/>
+                        <span class="text-secondary">({{ note.supportGroup.device.name }})</span>
+                    </td>
+                {% endif %}
+
                 <td class="align-middle">{{ note.createdAt|date('d/m/Y') }}</td>
-                <td class="align-middle">{{ note.createdBy ? note.createdBy.fullname }}</td>
-                <td class="align-middle">{{ note.updatedAt|date('d/m/Y') }}</td>
-                <td class="align-middle">{{ note.updatedBy ? note.updatedBy.fullname }}</td>
+
+                {% if support is not defined %}
+                    <td class="align-middle">{{ note.createdBy ? note.createdBy.fullname }}</td>
+                    <td class="align-middle">{{ note.updatedAt|date('d/m/Y') }}</td>
+                    <td class="align-middle">{{ note.updatedBy ? note.updatedBy.fullname }}</td>
+                {% endif %}
+
                 <th scope="row" class="align-middle text-center p-1">
                     {% if isSoftDeletable %}
                         <a href="{{ path('note_restore', {'supportId': support.id, 'id': note.id}) }}"
@@ -71,8 +87,8 @@
                             class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" title="Exporter la note au format PDF"
                             data-toggle="tooltip" data-placement="bottom"><i class="fas fa-file-pdf bg-danger fa-lg"></i>
                             <span class="sr-only">PDF</span>
-                        </a>
-                        <button class="btn btn-sm btn-danger shadow mt-5" title="Supprimer la note" data-toggle="tooltip" data-placement="bottom"
+                        </a><br/>
+                        <button class="btn btn-sm btn-danger shadow mt-3" title="Supprimer la note" data-toggle="tooltip" data-placement="bottom"
                             data-action="delete_note" data-url="{{ path('note_delete', {'id': note.id}) }}">
                             <i class="fa-solid fa-trash-can"></i>
                         </button>
