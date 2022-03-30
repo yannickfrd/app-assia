@@ -13,7 +13,6 @@ use App\Form\Support\Note\NoteSearchType;
 use App\Form\Support\Note\NoteType;
 use App\Form\Support\Note\SupportNoteSearchType;
 use App\Repository\Support\NoteRepository;
-use App\Repository\Support\PaymentRepository;
 use App\Repository\Support\SupportGroupRepository;
 use App\Service\Evaluation\EvaluationExporter;
 use App\Service\Note\NoteExporter;
@@ -199,16 +198,13 @@ final class NoteController extends AbstractController
         int $id,
         SupportGroupRepository $supportGroupRepo,
         EvaluationExporter $evaluationExporter,
-        EntityManagerInterface $em,
-        PaymentRepository $paymentRepo
+        EntityManagerInterface $em
     ): Response {
         $supportGroup = $supportGroupRepo->findFullSupportById($id);
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        $payments = 1 === $supportGroup->getService()->getContribution() ? $paymentRepo->findPaymentsOfSupport($id) : null;
-
-        $note = $evaluationExporter->createNote($supportGroup, $payments);
+        $note = $evaluationExporter->createNote($supportGroup);
 
         if (!$note) {
             $this->addFlash('warning', "Il n'y a pas d'évaluation sociale créée pour ce suivi.");

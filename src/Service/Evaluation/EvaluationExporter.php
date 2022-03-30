@@ -29,7 +29,7 @@ class EvaluationExporter
     /**
      * @return StreamedResponse|null
      */
-    public function export(SupportGroup $supportGroup, Request $request, $payments): ?Response
+    public function export(SupportGroup $supportGroup, Request $request): ?Response
     {
         $evaluation = $this->getEvaluation($supportGroup);
 
@@ -43,6 +43,7 @@ class EvaluationExporter
         $pathImage = 'pdf' === $exportType ? $export->getPathImage($logoPath) : null;
         $fullnameSupport = $supportGroup->getHeader()->getFullname();
 
+        $payments = $this->supportCollections->getAllPayments($supportGroup);
         $content = $this->getContent($supportGroup, $evaluation, $exportType, $pathImage, $fullnameSupport, $payments);
 
         $export->createDocument($content, self::TITLE, $logoPath, $fullnameSupport);
@@ -50,7 +51,7 @@ class EvaluationExporter
         return $export->download();
     }
 
-    public function createNote(SupportGroup $supportGroup, $payments): ?Note
+    public function createNote(SupportGroup $supportGroup): ?Note
     {
         $evaluation = $this->getEvaluation($supportGroup);
 
@@ -58,9 +59,12 @@ class EvaluationExporter
             return null;
         }
 
+        $payments = $this->supportCollections->getAllPayments($supportGroup);
+        $content = $this->getContent($supportGroup, $evaluation, 'note', null, null, $payments);
+
         return (new Note())
             ->setTitle(self::TITLE.' '.(new \DateTime())->format('d/m/Y'))
-            ->setContent($this->getContent($supportGroup, $evaluation, 'note', null, null, $payments))
+            ->setContent($content)
             ->setType(Note::TYPE_NOTE)
             ->setSupportGroup($supportGroup);
     }
@@ -71,7 +75,7 @@ class EvaluationExporter
         string $exportType,
         string $pathImage = null,
         string $fullnameSupport = null,
-        array $payments = null
+        array $payments = []
     ): string {
         $organization = $supportGroup->getService()->getPole()->getOrganization()->getName();
 

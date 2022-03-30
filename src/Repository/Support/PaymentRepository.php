@@ -252,11 +252,11 @@ class PaymentRepository extends ServiceEntityRepository
     /**
      * Return all payments of group support.
      */
-    public function findPaymentsOfSupportQuery(int $supportGroupId, SupportPaymentSearch $search = null): Query
+    public function findPaymentsOfSupportQuery(SupportGroup $supportGroup, SupportPaymentSearch $search = null): Query
     {
-        $qb = $this->createQueryBuilder('p')->select('p')
+        $qb = $this->createQueryBuilder('p')
             ->andWhere('p.supportGroup = :supportGroup')
-            ->setParameter('supportGroup', $supportGroupId);
+            ->setParameter('supportGroup', $supportGroup);
 
         if (null !== $search) {
             if ($search->getType()) {
@@ -278,11 +278,15 @@ class PaymentRepository extends ServiceEntityRepository
             ->getQuery();
     }
 
-    public function findPaymentsOfSupport(int $supportGroupId)
+    /**
+     * @return Payment[]
+     */
+    public function findPaymentsOfSupport(SupportGroup $supportGroup): array
     {
-        return $this->findPaymentsOfSupportQuery($supportGroupId)
+        return $this->findPaymentsOfSupportQuery($supportGroup)
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getResult();
+            ->getResult()
+        ;
     }
 
     /**
@@ -325,7 +329,8 @@ class PaymentRepository extends ServiceEntityRepository
 
         return $qb
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getSingleScalarResult()
+        ;
     }
 
     /**
@@ -337,6 +342,7 @@ class PaymentRepository extends ServiceEntityRepository
             ->andWhere('p.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportId)
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getSingleScalarResult()
+        ;
     }
 }

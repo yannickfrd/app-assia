@@ -9,7 +9,6 @@ use App\Entity\Evaluation\EvaluationGroup;
 use App\Entity\Organization\User;
 use App\Form\Evaluation\EvaluationGroupType;
 use App\Repository\Evaluation\EvaluationGroupRepository;
-use App\Repository\Support\PaymentRepository;
 use App\Repository\Support\SupportGroupRepository;
 use App\Service\Evaluation\EvaluationCreator;
 use App\Service\Evaluation\EvaluationExporter;
@@ -176,18 +175,13 @@ final class EvaluationController extends AbstractController
         int $id,
         SupportManager $supportManager,
         EvaluationExporter $evaluationExporter,
-        Request $request,
-        PaymentRepository $paymentRepo
+        Request $request
     ): Response {
         $supportGroup = $supportManager->getFullSupportGroup($id);
 
-        $payments = (1 === $supportGroup->getService()->getContribution())
-            ? $paymentRepo->findPaymentsOfSupport($id)
-            : null;
-
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        $response = $evaluationExporter->export($supportGroup, $request, $payments);
+        $response = $evaluationExporter->export($supportGroup, $request);
 
         if (!$response) {
             $this->addFlash('warning', 'Il n\'y a pas d\'évaluation sociale créée pour ce suivi.');
