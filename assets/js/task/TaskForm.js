@@ -5,7 +5,8 @@ import WidgetCollectionManager from '../utils/form/WidgetCollectionManager'
 import TaskManager from './TaskManager'
 import FormValidator from '../utils/form/formValidator'
 
-export default class TaskForm {
+export default class TaskForm
+{
     /**
      * @param {TaskManager} taskManager 
      */
@@ -80,6 +81,9 @@ export default class TaskForm {
         this.levelSelectElt.value = this.levelSelectElt.dataset.defaultLevel
 
         this.usersSelectManager.updateSelect(this.currentUserId)
+        this.usersSelectManager.select2.on('select2:select', e => {
+            this.formValidator.validField(e.currentTarget, false)
+        })
         // this.supportPeopleId = []
         // this.supportPeopleSelectElt.value = ''
         // this.supportPeopleSelectElt.parentNode.classList.add('d-none')

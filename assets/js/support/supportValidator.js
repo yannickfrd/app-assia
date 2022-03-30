@@ -3,6 +3,7 @@ import FieldDisplayer from '../utils/form/fieldDisplayer'
 import DateValidator from '../utils/date/dateValidator'
 import Ajax from '../utils/ajax'
 import Loader from '../utils/loader'
+import SelectManager from '../utils/form/SelectManager'
 
 /**
  * Validation des données du suivi social.
@@ -30,6 +31,13 @@ export default class SupportValidator extends FormValidator
     }
 
     init() {
+        document.querySelectorAll('select[data-select="advanced"]').forEach(selectElt => {
+            const selectManager = new SelectManager('#' + selectElt.id)
+            selectManager.select2.on('select2:select', e => {
+                this.validField(e.currentTarget, false)
+            })
+        })
+
         document.querySelectorAll('div[data-parent-field]').forEach(elt => {
             new FieldDisplayer(elt)
         })
