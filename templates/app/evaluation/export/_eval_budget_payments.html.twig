@@ -1,0 +1,80 @@
+
+<p>&nbsp;</p>
+<table class="table-bordered mb-2" style="{{ style_table }}">
+    <thead>
+        <tr style="{{ style_thead }}">
+                <th>
+                    <span style="width: 100%;">Paiements (3&nbsp;derniers)</span>
+                </th>
+                <th class="text-center" style="text-align: center;">
+                    <span style="width: 100%;">Période</span>
+                </th>
+                <th style="text-align: right; padding-right: 2px;">
+                    <span style="width: 100%;">Montant à régler</span>
+                </th>
+                <th style="text-align: right; padding-right: 2px;">
+                    <span style="width: 100%;">Montant réglé</span>
+                </th>
+                <th style="text-align: right; padding-right: 2px;">
+                    <span style="width: 100%;">Restant dû (différentiel)</span>
+                </th>
+                <th class="text-center th-date" style="text-align: center;">
+                    <span style="width: 100%;">Date de l'opération</span>
+                </th>
+                <th>
+                    <span style="width: 100%;">Commentaire</span>
+                </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% set to_pay_amt_sum, paid_amt_sum, still_to_pay_amt_sum = 0, 0, 0 %}
+        {% for payment in payments %}
+            {% set to_pay_amt_sum = to_pay_amt_sum + payment.toPayAmt %}
+            {% set paid_amt_sum = paid_amt_sum + payment.paidAmt %}
+            {% set still_to_pay_amt_sum = still_to_pay_amt_sum + payment.stillToPayAmt %}
+            {% if loop.index <= 3 %}
+                <tr>
+                    <td>{{ payment.typeToString }}</td>
+                    <td class="align-middle text-center" style="text-align: center;">
+                        {% if payment.startDate %}
+                            <small>{{ payment.startDate|date("d/m/Y") }} - {{ payment.endDate|date("d/m/Y") }}</small>
+                        {% endif %}
+                    </td>
+                    <td class="align-middle text-right" style="text-align: right;">
+                        <span style="text-align: right;">{{ payment.toPayAmt is not null ? payment.toPayAmt|amount }}</span>
+                    </td>
+                    <td class="align-middle text-right" style="text-align: right;">
+                        <span style="text-align: right;">{{ payment.paidAmt is not null ? payment.paidAmt|amount }}</span>
+                    </td>
+                    <td class="align-middle text-right" style="text-align: right;">
+                        <span style="text-align: right;">{{ payment.stillToPayAmt ? payment.stillToPayAmt|amount }}</span>
+                    </td>
+                    <td class="align-middle text-center" style="text-align: center;">
+                        <span style="text-align: center;">{{ payment.paymentDate ? payment.paymentDate|date("d/m/Y") }}</span>
+                    </td>
+                    <td>
+                        <small>{{ payment.comment }}</small>
+                    </td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr style="font-weight: bold; text-align: justify">
+            <td colspan="2">
+                <span>Total depuis le début ({{ payments|length }})</span>
+            </td>
+            <td style="text-align: right;">
+                <span style="text-align: right;">{{ to_pay_amt_sum|amount }}</span>
+            </td>
+            <td style="text-align: right;">
+                <span style="text-align: right;">{{ paid_amt_sum|amount }}</span>
+            </td>
+            <td style="text-align: right;">
+                <span style="text-align: right;">{{ still_to_pay_amt_sum|amount }}</span>
+            </td>
+            <td></td>
+            <td></td>
+        </tr>
+    </tfoot>
+</table>
