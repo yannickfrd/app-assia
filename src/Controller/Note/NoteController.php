@@ -143,8 +143,8 @@ final class NoteController extends AbstractController
                 'action' => 'update',
                 'alert' => 'success',
                 'msg' => $translator->trans('note.updated_successfully', ['%note_title%' => $note->getTitle()], 'app'),
-                'note' => $normalizer->normalize($note, 'json', ['groups' => ['show_note', 'show_tag']]),
-            ]);
+                'note' => $note,
+            ], 200, [], ['groups' => Note::SERIALIZER_GROUPS]);
         }
 
         return $this->getErrorMessage($form);

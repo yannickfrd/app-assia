@@ -44,20 +44,22 @@
                     <a href="{{ path('support_note_index', {'id': support is defined ? support.id : note.supportGroup.id, 'noteId': note.id}) }}"
                         class="btn btn-{{ theme_color }} btn-sm shadow {{ isSoftDeletable ? 'disabled' : '' }}"
                         title="Voir la note sociale" type="button"
-                        data-toggle="tooltip" data-placement="bottom"><i class="fas fa-eye"></i></a>
+                        data-toggle="tooltip" data-placement="bottom" data-action="show"><i class="fas fa-eye"></i></a>
                 </td>
-                <td class="align-middle justify">
+                <td class="align-middle justify" data-cell="title-content" data-title="{{ note.title }}" data-content="{{ note.content }}">
                     {% if note.title %}<span class="font-weight-bold">{{ note.title }} : </span>{% endif %}
                     {{ note.content|u.truncate(200, ' [...]', false)|striptags|raw }}
                 </td>
-                <td class="align-middle">{{ note.typeToString }}</td>
-                <td class="align-middle">{{ note.statusToString }}</td>
-                <td class="align-middle">
+                <td class="align-middle" data-cell="type" data-note-type="{{ note.type }}">{{ note.typeToString }}</td>
+                <td class="align-middle" data-cell="status" data-note-status="{{ note.status }}">{{ note.statusToString }}</td>
+                <td class="align-middle" data-cell="tags">
                     {% for tag in note.tags %}
-                        <span class="badge bg-{{ tag.color }} text-light">{{ tag.name }}</span>
+                        <span class="badge bg-{{ tag.color }} text-light" data-tag-id="{{ tag.id }}">{{ tag.name }}</span>
                     {% endfor %}
                 </td>
-                <td class="align-middle">{{ support is defined ? support.header.fullname : note.supportGroup.header.fullname }}</td>
+                <td class=" align-middle"
+                    data-cell="support">{{ support is defined ? support.header.fullname : note.supportGroup.header.fullname }}
+                </td>
 
                 {% if support is not defined %}
                     <td class="align-middle" data-cell="service">
@@ -66,7 +68,7 @@
                     </td>
                 {% endif %}
 
-                <td class="align-middle">{{ note.createdAt|date('d/m/Y') }}</td>
+                <td class="align-middle" data-cell="createdAt">{{ note.createdAt|date('d/m/Y') }}</td>
 
                 {% if support is not defined %}
                     <td class="align-middle">{{ note.createdBy ? note.createdBy.fullname }}</td>

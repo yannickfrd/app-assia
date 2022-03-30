@@ -52,11 +52,11 @@ export default class NoteForm {
             e.preventDefault()
             this.requestToDelete()
         })
-        this.noteModalElt.addEventListener('mousedown', e => {
-            if (e.target === this.noteModalElt) {
-                this.tryCloseModal(e)
-            }
-        })
+        // this.noteModalElt.addEventListener('mousedown', e => {
+        //     if (e.target === this.noteModalElt && this.noteManager.isCardNoteView) {
+        //         this.tryCloseModal(e)
+        //     }
+        // })
         this.confirmModalElt.querySelector('#modal-confirm-btn').addEventListener('click', () => this.onclickModalConfirmBtn())
     }
 
@@ -86,11 +86,24 @@ export default class NoteForm {
     show(noteElt) {
         this.initModal(noteElt)
 
-        this.noteModalElt.querySelector('#note_title').value = noteElt.querySelector('.card-title').textContent
-        this.noteModalElt.querySelector('#note_type').value = noteElt.querySelector('[data-note-type]').dataset.noteType
-        this.noteModalElt.querySelector('#note_status').value = noteElt.querySelector('[data-note-status]').dataset.noteStatus
+        console.log(this.noteManager.isCardNoteView)
+        console.log(noteElt.querySelector('td[data-cell="title-content"] span') === null)
 
-        this.contentElt.textContent = noteElt.querySelector('.card-text').innerHTML
+        this.noteModalElt.querySelector('#note_title').value = this.noteManager.isCardNoteView
+            ? noteElt.querySelector('.card-title').textContent
+            : noteElt.querySelector('td[data-cell="title-content"]').dataset.title ?? ''
+
+        this.noteModalElt.querySelector('#note_type').value = this.noteManager.isCardNoteView
+            ? noteElt.querySelector('[data-note-type]').dataset.noteType
+            : noteElt.querySelector('td[data-cell="type"]').dataset.noteType
+
+        this.noteModalElt.querySelector('#note_status').value = this.noteManager.isCardNoteView
+            ? noteElt.querySelector('[data-note-status]').dataset.noteStatus
+            : noteElt.querySelector('td[data-cell="status"]').dataset.noteStatus
+
+        this.contentElt.textContent = this.noteManager.isCardNoteView
+            ? noteElt.querySelector('.card-text').innerHTML
+            : noteElt.querySelector('td[data-cell="title-content"]').dataset.content ?? ''
         this.ckEditor.setData(this.contentElt.textContent)
 
         this.updateTagsSelect(noteElt)
@@ -103,7 +116,7 @@ export default class NoteForm {
      * @param {HTMLElement} noteElt
      */
     initModal(noteElt) {
-        const noteId = noteElt.dataset.noteId
+        const noteId = this.noteManager.isCardNoteView ? noteElt.dataset.noteId : noteElt.id.split('-')[1]
         this.noteModalElt.querySelector('form').action = `/note/${noteId}/edit`
 
         this.btnDeleteElt.classList.remove('d-none')
@@ -123,7 +136,10 @@ export default class NoteForm {
      * @param {Object} noteElt
      */
     updateTagsSelect(noteElt) {
-        const tagElts = noteElt.querySelectorAll('.tags-list span')
+        const tagElts = this.noteManager.isCardNoteView
+            ? noteElt.querySelectorAll('.tags-list span')
+            : noteElt.querySelectorAll('td[data-cell="tags"] span')
+
         const tagOptionElts = this.noteModalElt.querySelectorAll('option')
         const tagsIds = this.tagsManager.getTagIds(tagElts, tagOptionElts)
 
