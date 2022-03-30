@@ -15,6 +15,7 @@ use App\Form\Support\Document\DocumentType;
 use App\Form\Support\Document\DropzoneDocumentType;
 use App\Form\Support\Document\SupportDocumentSearchType;
 use App\Repository\Support\DocumentRepository;
+use App\Service\Document\DocumentManager;
 use App\Service\File\Downloader;
 use App\Service\File\FileDownloader;
 use App\Service\File\FileUploader;
@@ -23,7 +24,6 @@ use App\Service\SupportGroup\SupportManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -123,7 +123,7 @@ final class DocumentController extends AbstractController
         if ($form->isSubmitted() && $form->isValid() && count($files) > 0) {
             $data = $fileUploader->createDocuments($supportGroup, $files);
 
-            $this->discache($supportGroup);
+            DocumentManager::deleteCacheItems($supportGroup);
 
             return $this->json($data);
         }
@@ -185,7 +185,7 @@ final class DocumentController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->flush();
 
-            $this->discache($document->getSupportGroup(), true);
+            DocumentManager::deleteCacheItems($document->getSupportGroup(), true);
 
             return $this->json([
                 'action' => 'update',
@@ -208,7 +208,7 @@ final class DocumentController extends AbstractController
         $this->em->remove($document);
         $this->em->flush();
 
-        $this->discache($document->getSupportGroup());
+        DocumentManager::deleteCacheItems($document->getSupportGroup());
 
         return $this->json([
             'action' => 'delete',
@@ -227,39 +227,5 @@ final class DocumentController extends AbstractController
     private function getFilePath(Document $document): string
     {
         return $this->documentsDirectory.$document->getCreatedAt()->format('Y/m/d/').$document->getPeopleGroup()->getId().'/'.$document->getInternalFileName();
-    }
-
-    // /**
-    //  * Donne les documents du suivi.
-    //  */
-    // protected function getDocuments(SupportGroup $supportGroup, Request $request, SupportDocumentSearch $search, Pagination $pagination)
-    // {
-    //     // Si filtre ou tri utilisé, n'utilise pas le cache.
-    //     if ($request->query->count() > 0) {
-    //         return  $pagination->paginate($this->documentRepo->findSupportDocumentsQuery($supportGroup, $search), $request);
-    //     }
-
-    //     // Sinon, récupère les documents en cache.
-    //     return (new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']))->get(SupportGroup::CACHE_SUPPORT_DOCUMENTS_KEY.$supportGroup->getId(),
-    //         function (CacheItemInterface $item) use ($supportGroup, $pagination, $search, $request) {
-    //             $item->expiresAfter(\DateInterval::createFromDateString('7 days'));
-
-    //             return $pagination->paginate($this->documentRepo->findSupportDocumentsQuery($supportGroup, $search), $request);
-    //         }
-    //     );
-    // }
-
-    /**
-     * Supprime les documents en cache du suivi.
-     */
-    protected function discache(SupportGroup $supportGroup, $isUpdate = false): bool
-    {
-        $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
-
-        if (false === $isUpdate) {
-            $cache->deleteItem(SupportGroup::CACHE_SUPPORT_NB_DOCUMENTS_KEY.$supportGroup->getId());
-        }
-
-        return $cache->deleteItem(SupportGroup::CACHE_SUPPORT_DOCUMENTS_KEY.$supportGroup->getId());
     }
 }

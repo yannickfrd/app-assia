@@ -2,11 +2,11 @@
 
 namespace App\Service\SupportGroup;
 
-use App\Entity\Evaluation\EvalInitGroup;
 use App\Entity\Evaluation\EvaluationGroup;
 use App\Entity\Evaluation\EvaluationPerson;
 use App\Entity\Organization\Service;
 use App\Entity\Support\Document;
+use App\Entity\Support\Note;
 use App\Entity\Support\SupportGroup;
 use App\Repository\Evaluation\EvaluationGroupRepository;
 use App\Repository\Evaluation\EvaluationPersonRepository;
@@ -14,12 +14,16 @@ use App\Repository\Support\DocumentRepository;
 use App\Repository\Support\NoteRepository;
 use App\Repository\Support\SupportGroupRepository;
 use App\Repository\Support\SupportPersonRepository;
+use App\Service\Document\DocumentManager;
+use App\Service\Evaluation\EvaluationDuplicator;
+use App\Service\Note\NoteManager;
 use Doctrine\ORM\EntityManagerInterface;
 
 class SupportDuplicator
 {
     private $em;
 
+    private $evaluationDuplicator;
     private $supportGroupRepo;
     private $supportPersonRepo;
     private $evaluationGroupRepo;
@@ -27,13 +31,12 @@ class SupportDuplicator
     private $noteRepo;
     private $documentRepo;
 
-    /** @var SupportGroup|null */
-    private $supportGroup = null;
     /** @var EvaluationGroup|null */
     private $evaluationGroup = null;
 
     public function __construct(
         EntityManagerInterface $em,
+        EvaluationDuplicator $evaluationDuplicator,
         SupportGroupRepository $supportGroupRepo,
         SupportPersonRepository $supportPersonRepo,
         EvaluationGroupRepository $evaluationGroupRepo,
@@ -42,6 +45,7 @@ class SupportDuplicator
         DocumentRepository $documentRepo
     ) {
         $this->em = $em;
+        $this->evaluationDuplicator = $evaluationDuplicator;
         $this->supportGroupRepo = $supportGroupRepo;
         $this->supportPersonRepo = $supportPersonRepo;
         $this->evaluationGroupRepo = $evaluationGroupRepo;
@@ -50,12 +54,12 @@ class SupportDuplicator
         $this->documentRepo = $documentRepo;
     }
 
-    public function duplicate(SupportGroup $supportGroup)
+    public function duplicate(SupportGroup $supportGroup): ?SupportGroup
     {
-        $this->supportGroup = $supportGroup;
         if ($this->duplicateSupportGroup($supportGroup)) {
             return $supportGroup;
         }
+
         if ($this->duplicateSupportPeople($supportGroup)) {
             foreach ($supportGroup->getSupportPeople() as $supportPerson) {
                 if ($this->evaluationGroup && 0 === $supportPerson->getEvaluations()->count()) {
@@ -66,9 +70,10 @@ class SupportDuplicator
                     $this->em->persist($evaluationPerson);
                 }
             }
+
             $this->em->flush();
 
-            return $this->evaluationGroup;
+            return $supportGroup;
         }
 
         return null;
@@ -79,65 +84,73 @@ class SupportDuplicator
      */
     public function duplicateSupportGroup(SupportGroup $supportGroup): ?SupportGroup
     {
-        $lastSupportGroup = $this->supportGroupRepo->findLastSupport($supportGroup);
+        $oldSupportGroup = $this->supportGroupRepo->findLastSupport($supportGroup);
 
-        if (null === $lastSupportGroup) {
+        if (null === $oldSupportGroup) {
             return null;
         }
 
-        $this->duplicateEvaluation($supportGroup, $lastSupportGroup);
-        $this->duplicateDocuments($supportGroup, $lastSupportGroup);
-        $this->duplicateNote($supportGroup, $lastSupportGroup);
+        $this->duplicateEvaluation($supportGroup, $oldSupportGroup);
+        $this->duplicateNotes($supportGroup, $oldSupportGroup);
+        $this->duplicateDocuments($supportGroup, $oldSupportGroup);
 
         $this->em->flush();
 
         return $supportGroup;
     }
 
-    private function duplicateEvaluation(SupportGroup $newSupportGroup, SupportGroup $lastSupportGroup): void
+    private function duplicateEvaluation(SupportGroup $newSupportGroup, SupportGroup $oldSupportGroup): void
     {
-        $lastEvaluation = $this->evaluationGroupRepo->findEvaluationOfSupport($lastSupportGroup->getId());
-        $now = new \DateTime();
+        $oldEvaluation = $this->evaluationGroupRepo->findEvaluationOfSupport($oldSupportGroup->getId());
 
-        if ($lastEvaluation && 0 === $newSupportGroup->getEvaluationsGroup()->count()) {
-            $evaluationGroup = (clone $lastEvaluation)->setSupportGroup($newSupportGroup);
+        if ($oldEvaluation && 0 === $newSupportGroup->getEvaluationsGroup()->count()) {
+            $evaluationGroup = (clone $oldEvaluation)->setSupportGroup($newSupportGroup);
+
+            if (Service::SERVICE_TYPE_HOTEL === $newSupportGroup->getService()->getType()
+                && $oldEvaluation->getEvalHotelLifeGroup()) {
+                $evaluationGroup->setEvalHotelLifeGroup(clone $oldEvaluation->getEvalHotelLifeGroup());
+            }
+
+            $this->evaluationDuplicator->createEvalInitGroup($newSupportGroup, $evaluationGroup);
 
             $newSupportGroup->getEvaluationsGroup()->add($evaluationGroup);
             // Change the supportPerson in every evaluationPerson
             foreach ($evaluationGroup->getEvaluationPeople() as $evaluationPerson) {
                 foreach ($newSupportGroup->getSupportPeople() as $newSupportPerson) {
                     if ($evaluationPerson->getSupportPerson()->getPerson()->getId() === $newSupportPerson->getPerson()->getId()) {
-                        $evaluationPerson->setSupportPerson($newSupportPerson);
-
                         $newSupportPerson->addEvaluationPerson($evaluationPerson);
+
+                        $this->evaluationDuplicator->createEvalInitPerson($newSupportPerson, $evaluationPerson);
                     }
                 }
             }
         }
     }
 
-    private function duplicateDocuments(SupportGroup $supportGroup, SupportGroup $lastSupportGroup): void
+    private function duplicateDocuments(SupportGroup $supportGroup, SupportGroup $oldSupportGroup): void
     {
         $documentsOfSupport = $this->documentRepo->findBy(['supportGroup' => $supportGroup]);
-        $documentsOfLastSupport = $this->documentRepo->findBy(['supportGroup' => $lastSupportGroup]);
 
-        foreach ($documentsOfLastSupport as $document) {
-            $newDocument = (clone $document)->setSupportGroup($supportGroup);
-            if (!$this->documentExists($newDocument, $documentsOfSupport)) {
-                $supportGroup->getDocuments()->add($newDocument);
+        foreach ($this->documentRepo->findBy(['supportGroup' => $oldSupportGroup]) as $oldDocument) {
+            if (!$this->documentExists($oldDocument, $documentsOfSupport)) {
+                $supportGroup->addDocument(clone $oldDocument);
             }
+        }
+
+        if ($supportGroup->getDocuments()->count() > 0) {
+            DocumentManager::deleteCacheItems($supportGroup);
         }
     }
 
     /**
-     * Check if the new document exists already in the support.
+     * Check if the document exists already in the support.
      *
-     * @param Document[]|null $documents
+     * @param Document[] $documents
      */
-    private function documentExists(Document $newDocument, ?array $documents): bool
+    private function documentExists(Document $oldDocument, array $documents): bool
     {
         foreach ($documents as $document) {
-            if ($newDocument->getInternalFileName() === $document->getInternalFileName()) {
+            if ($oldDocument->getInternalFileName() === $document->getInternalFileName()) {
                 return true;
             }
         }
@@ -145,35 +158,60 @@ class SupportDuplicator
         return false;
     }
 
-    private function duplicateNote(SupportGroup $supportGroup, SupportGroup $lastSupportGroup): void
+    private function duplicateNotes(SupportGroup $supportGroup, SupportGroup $oldSupportGroup): void
     {
-        $lastNote = $this->noteRepo->findOneBy(['supportGroup' => $lastSupportGroup], ['updatedAt' => 'DESC']);
+        $notesOfSupport = $this->noteRepo->findBy(['supportGroup' => $supportGroup]);
 
-        if ($lastNote) {
-            $note = (clone $lastNote)->setSupportGroup($supportGroup);
-            $supportGroup->getNotes()->add($note);
+        foreach ($this->noteRepo->findBy(['supportGroup' => $oldSupportGroup]) as $oldNote) {
+            if (!$this->noteExists($oldNote, $notesOfSupport)) {
+                $supportGroup->addNote(clone $oldNote);
+            }
+        }
+
+        if ($supportGroup->getNotes()->count() > 0) {
+            NoteManager::deleteCacheItems($supportGroup->getNotes()->last());
         }
     }
 
-    private function duplicateSupportPeople(SupportGroup $supportGroup): SupportGroup
+    /**
+     * Check if the note exists already in the support.
+     *
+     * @param Note[] $notes
+     */
+    private function noteExists(Note $oldNote, array $notes): bool
+    {
+        foreach ($notes as $note) {
+            if ($oldNote->getCreatedAt()->format('U') === $note->getCreatedAt()->format('U')) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function duplicateSupportPeople(SupportGroup $supportGroup): ?SupportGroup
     {
         foreach ($supportGroup->getSupportPeople() as $supportPerson) {
-            $lastSupportPerson = $this->supportPersonRepo->findLastSupport($supportPerson);
+            $oldSupportPerson = $this->supportPersonRepo->findLastSupport($supportPerson);
 
-            if (null === $lastSupportPerson) {
+            if (null === $oldSupportPerson) {
                 continue;
             }
 
-            $lastEvaluationPerson = $this->evaluationPersonRepo->findEvaluationOfSupportPerson($lastSupportPerson->getId());
+            $oldEvaluationPerson = $this->evaluationPersonRepo->findEvaluationOfSupportPerson($oldSupportPerson->getId());
 
-            if ($lastEvaluationPerson && 0 === $supportGroup->getEvaluationsGroup()->count() && null === $this->evaluationGroup) {
-                $this->evaluationGroup = $this->cloneEvaluationGroup($lastEvaluationPerson->getEvaluationGroup());
+            if ($oldEvaluationPerson && 0 === $supportGroup->getEvaluationsGroup()->count()
+                && null === $this->evaluationGroup) {
+                $this->evaluationGroup = $this->evaluationDuplicator->cloneEvaluationGroup(
+                    $supportGroup,
+                    $oldEvaluationPerson->getEvaluationGroup()
+                );
             } elseif ($supportGroup->getEvaluationsGroup()->count()) {
                 $this->evaluationGroup = $supportGroup->getEvaluationsGroup()->last();
             }
 
-            if ($lastEvaluationPerson && 0 === $supportPerson->getEvaluations()->count()) {
-                $evaluationPerson = (clone $lastEvaluationPerson)->setSupportPerson($supportPerson);
+            if ($oldEvaluationPerson && 0 === $supportPerson->getEvaluations()->count()) {
+                $evaluationPerson = (clone $oldEvaluationPerson);
                 $evaluationPerson->setEvaluationGroup($this->evaluationGroup);
 
                 $supportPerson->addEvaluationPerson($evaluationPerson);
@@ -181,41 +219,11 @@ class SupportDuplicator
         }
 
         if ($this->evaluationGroup) {
-            $this->evaluationGroup->setSupportGroup($this->supportGroup);
             $supportGroup->addEvaluationGroup($this->evaluationGroup);
+
+            return $supportGroup;
         }
 
-        return $supportGroup;
-    }
-
-    /**
-     * Clone the evaluation of the group.
-     */
-    private function cloneEvaluationGroup(EvaluationGroup $evaluationGroup): EvaluationGroup
-    {
-        $newEvaluationGroup = new EvaluationGroup();
-        $newEvaluationGroup->setDate(new \DateTime())
-            ->setEvalInitGroup(new EvalInitGroup());
-
-        // if ($evaluationGroup->getEvalInitGroup()) {
-        //     $newEvaluationGroup->setEvalInitGroup(clone $evaluationGroup->getEvalInitGroup());
-        // }
-        if ($evaluationGroup->getEvalBudgetGroup()) {
-            $newEvaluationGroup->setEvalBudgetGroup(clone $evaluationGroup->getEvalBudgetGroup());
-        }
-        if ($evaluationGroup->getEvalFamilyGroup()) {
-            $newEvaluationGroup->setEvalFamilyGroup(clone $evaluationGroup->getEvalFamilyGroup());
-        }
-        if ($evaluationGroup->getEvalHousingGroup()) {
-            $newEvaluationGroup->setEvalHousingGroup(clone $evaluationGroup->getEvalHousingGroup());
-        }
-        if ($evaluationGroup->getEvalSocialGroup()) {
-            $newEvaluationGroup->setEvalSocialGroup(clone $evaluationGroup->getEvalSocialGroup());
-        }
-        if (Service::SERVICE_TYPE_HOTEL && $this->supportGroup->getService()->getType() && $evaluationGroup->getEvalHotelLifeGroup()) {
-            $newEvaluationGroup->setEvalHotelLifeGroup(clone $evaluationGroup->getEvalHotelLifeGroup());
-        }
-
-        return $newEvaluationGroup;
+        return null;
     }
 }

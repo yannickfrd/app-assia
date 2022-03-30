@@ -3,9 +3,12 @@
 namespace App\Entity\Evaluation;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 
 abstract class AbstractFinance
 {
+    use SoftDeleteableEntity;
+
     public const OTHER = 1000;
 
     /**
@@ -68,7 +71,7 @@ abstract class AbstractFinance
 
     public function setComment(?string $comment): self
     {
-        $this->comment = substr($comment, 0, 100);
+        $this->comment = $comment;
 
         return $this;
     }
