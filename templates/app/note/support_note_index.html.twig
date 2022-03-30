@@ -5,7 +5,7 @@
 {% block title %}Notes sociales{% endblock %}
 
 {% block body %}
-    <div class="container">
+    <div class="container" data-view="card-table" data-is-card="{{ is_card_view }}">
         {% set title = 'Notes sociales' %}
         {% include 'app/support/_partials/_support_nav.html.twig' %}
 
@@ -44,6 +44,7 @@
 
     {% include 'app/note/_note_form_modal.html.twig' %}
     {% include 'model/_confirm_modal.html.twig' %}
+    {% include 'app/note/_note_delete_modal.html.twig' %}
 
 {% endblock %}
 

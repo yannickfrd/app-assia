@@ -72,6 +72,10 @@
                             data-toggle="tooltip" data-placement="bottom"><i class="fas fa-file-pdf bg-danger fa-lg"></i>
                             <span class="sr-only">PDF</span>
                         </a>
+                        <button class="btn btn-sm btn-danger shadow mt-5" title="Supprimer la note" data-toggle="tooltip" data-placement="bottom"
+                            data-action="delete_note" data-url="{{ path('note_delete', {'id': note.id}) }}">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
                     {% endif %}
                 </th>
             </tr>

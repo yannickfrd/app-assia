@@ -16,9 +16,13 @@ export default class NoteManager {
         this.noteModal = new Modal(this.noteModalElt, {backdrop: 'static', keyboard: false})
 
         this.noteElts = document.querySelectorAll('div[data-note-id]')
+        this.deleteNoteBtn = document.querySelectorAll('table#table-notes tbody button[data-action="delete_note"]')
 
-        this.confirmModal = new Modal(document.getElementById('confirm-modal'))
         this.confirmModalElt = document.getElementById('confirm-modal')
+        this.confirmModal = new Modal(this.confirmModalElt)
+
+        this.deleteModalElt = document.getElementById('modal-block')
+        this.deleteModal = new Modal(this.deleteModalElt)
 
         this.searchSupportNotesElt = document.getElementById('js-search-support-notes')
         this.themeColor = document.getElementById('header').dataset.color
@@ -34,17 +38,27 @@ export default class NoteManager {
     }
 
     init() {
+        this.isCardNoteView = Boolean(document.querySelector('div.container[data-view="card-table"]').dataset.isCard)
+
         this.noteElts.forEach(noteElt => {
             if (!noteElt.dataset.noteDeleted) {
                 noteElt.addEventListener('click', () => this.noteForm.show(noteElt))
             }
         })
 
+        this.deleteNoteBtn.forEach(btn => btn.addEventListener('click', () => {
+            this.deleteModal.show()
+            this.deleteModalElt.querySelector('button#modal-confirm').dataset.url = btn.dataset.url
+        }))
+
         document.querySelector('button[data-action="new_note"]').addEventListener('click', () => {
             this.noteForm.resetForm()
         })
 
         this.confirmModalElt.querySelector('#modal-confirm-btn').addEventListener('click', () => this.onclickModalConfirmBtn())
+
+        this.deleteModalElt.querySelector('button#modal-confirm')
+            .addEventListener('click', e => this.requestDeleteNote(e))
 
         this.checkIfNoteIdInUrl()
     }
@@ -67,6 +81,17 @@ export default class NoteManager {
                 break;
         }
         this.confirmModalElt.dataset.action = ''
+    }
+
+    /**
+     * @param {Event} e
+     */
+    requestDeleteNote(e) {
+        if (!this.loader.isActive()) {
+            this.loader.on()
+
+            this.ajax.send('GET', e.target.dataset.url, this.responseAjax.bind(this))
+        }
     }
 
     /**
@@ -196,9 +221,14 @@ export default class NoteManager {
      * @param {Object} note
      */
     deleteNoteElt(note) {
-        this.containerNotesElt.querySelector(`div[data-note-id="${note.id}"]`).remove()
+        if (this.isCardNoteView) {
+            this.containerNotesElt.querySelector(`div[data-note-id="${note.id}"]`).remove()
+            this.noteModal.hide()
+        } else {
+            const rowElt = document.getElementById('note-' + note.id)
+            rowElt.remove()
+        }
         this.updateCounter(-1)
-        this.noteModal.hide()
     }
 
     /**
@@ -206,7 +236,8 @@ export default class NoteManager {
      * @param {Number} nb
      */
     updateCounter(nb) {
-        const nbNotes = this.containerNotesElt.querySelectorAll('.card').length
+        const selector = this.isCardNoteView ? '.card' : 'table#table-notes tbody tr'
+        const nbNotes = this.containerNotesElt.querySelectorAll(selector).length
         const nbTotalNotes = parseInt(this.countNotesElt.dataset.nbTotalNotes) + nb
         this.countNotesElt.dataset.nbTotalNotes = nbTotalNotes
 
