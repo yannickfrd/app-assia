@@ -1,16 +1,29 @@
 CHANGELOG
 =========
 
-## Version 3.14.0 - 29/03/2022
+## Version 3.14.0 - 30/03/2022
 
-Update Rdv feature:
+Update Rdv feature (#138)
 
 * Add user and support choices in FormType
 * Add alerts in FormType
-* Refactor controller
+* Refactor controller and repository
+* Add CRUD to rdv table view
 * Apply twig conventions
 * Update tests
 * Create command to add user to rdvs
+
+## Version 3.13.5 - 30/03/2022
+
+Fix (#141)
+
+* [SupportDuplicator] Update feature to clone evaluation, notes and documents
+* Create DocumentManager to deleteCacheItems
+* [AbstractFinance][Tag] Add SoftDeleteable
+* [Choices] Fix error type getChoices
+* [SiSiaoEvaluationImporter] Fix error with string comment
+* Fix Check valid field with Select2
+* Create EvaluationDuplicator, update SupportDuplicator and refactor
 
 ## Version 3.13.4 - 28/03/2022
 
