@@ -266,7 +266,7 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->andWhere('sp.person = :person')
             ->setParameter('person', $supportPerson->getPerson())
             ->andWhere('sp.id != :supportPerson')
-            ->setParameter('supportPerson', $supportPerson);
+            ->setParameter('supportPerson', $supportPerson->getId());
 
         if (!$this->user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->andWhere('sg.service IN (:services)')

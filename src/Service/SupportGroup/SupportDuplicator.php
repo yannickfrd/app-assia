@@ -2,7 +2,6 @@
 
 namespace App\Service\SupportGroup;
 
-use App\Entity\Evaluation\EvalInitGroup;
 use App\Entity\Evaluation\EvaluationGroup;
 use App\Entity\Evaluation\EvaluationPerson;
 use App\Entity\Organization\Service;
@@ -16,6 +15,7 @@ use App\Repository\Support\NoteRepository;
 use App\Repository\Support\SupportGroupRepository;
 use App\Repository\Support\SupportPersonRepository;
 use App\Service\Document\DocumentManager;
+use App\Service\Evaluation\EvaluationDuplicator;
 use App\Service\Note\NoteManager;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -23,6 +23,7 @@ class SupportDuplicator
 {
     private $em;
 
+    private $evaluationDuplicator;
     private $supportGroupRepo;
     private $supportPersonRepo;
     private $evaluationGroupRepo;
@@ -35,6 +36,7 @@ class SupportDuplicator
 
     public function __construct(
         EntityManagerInterface $em,
+        EvaluationDuplicator $evaluationDuplicator,
         SupportGroupRepository $supportGroupRepo,
         SupportPersonRepository $supportPersonRepo,
         EvaluationGroupRepository $evaluationGroupRepo,
@@ -43,6 +45,7 @@ class SupportDuplicator
         DocumentRepository $documentRepo
     ) {
         $this->em = $em;
+        $this->evaluationDuplicator = $evaluationDuplicator;
         $this->supportGroupRepo = $supportGroupRepo;
         $this->supportPersonRepo = $supportPersonRepo;
         $this->evaluationGroupRepo = $evaluationGroupRepo;
@@ -108,14 +111,16 @@ class SupportDuplicator
                 $evaluationGroup->setEvalHotelLifeGroup(clone $oldEvaluation->getEvalHotelLifeGroup());
             }
 
+            $this->evaluationDuplicator->createEvalInitGroup($newSupportGroup, $evaluationGroup);
+
             $newSupportGroup->getEvaluationsGroup()->add($evaluationGroup);
             // Change the supportPerson in every evaluationPerson
             foreach ($evaluationGroup->getEvaluationPeople() as $evaluationPerson) {
                 foreach ($newSupportGroup->getSupportPeople() as $newSupportPerson) {
                     if ($evaluationPerson->getSupportPerson()->getPerson()->getId() === $newSupportPerson->getPerson()->getId()) {
-                        $evaluationPerson->setSupportPerson($newSupportPerson);
-
                         $newSupportPerson->addEvaluationPerson($evaluationPerson);
+
+                        $this->evaluationDuplicator->createEvalInitPerson($newSupportPerson, $evaluationPerson);
                     }
                 }
             }
@@ -184,7 +189,7 @@ class SupportDuplicator
         return false;
     }
 
-    private function duplicateSupportPeople(SupportGroup $supportGroup): SupportGroup
+    private function duplicateSupportPeople(SupportGroup $supportGroup): ?SupportGroup
     {
         foreach ($supportGroup->getSupportPeople() as $supportPerson) {
             $oldSupportPerson = $this->supportPersonRepo->findLastSupport($supportPerson);
@@ -197,13 +202,16 @@ class SupportDuplicator
 
             if ($oldEvaluationPerson && 0 === $supportGroup->getEvaluationsGroup()->count()
                 && null === $this->evaluationGroup) {
-                $this->evaluationGroup = $this->cloneEvaluationGroup($supportGroup, $oldEvaluationPerson->getEvaluationGroup());
+                $this->evaluationGroup = $this->evaluationDuplicator->cloneEvaluationGroup(
+                    $supportGroup,
+                    $oldEvaluationPerson->getEvaluationGroup()
+                );
             } elseif ($supportGroup->getEvaluationsGroup()->count()) {
                 $this->evaluationGroup = $supportGroup->getEvaluationsGroup()->last();
             }
 
             if ($oldEvaluationPerson && 0 === $supportPerson->getEvaluations()->count()) {
-                $evaluationPerson = (clone $oldEvaluationPerson)->setSupportPerson($supportPerson);
+                $evaluationPerson = (clone $oldEvaluationPerson);
                 $evaluationPerson->setEvaluationGroup($this->evaluationGroup);
 
                 $supportPerson->addEvaluationPerson($evaluationPerson);
@@ -211,42 +219,11 @@ class SupportDuplicator
         }
 
         if ($this->evaluationGroup) {
-            $this->evaluationGroup->setSupportGroup($supportGroup);
             $supportGroup->addEvaluationGroup($this->evaluationGroup);
+
+            return $supportGroup;
         }
 
-        return $supportGroup;
-    }
-
-    /**
-     * Clone the evaluation of the group.
-     */
-    private function cloneEvaluationGroup(SupportGroup $supportGroup, EvaluationGroup $evaluationGroup): EvaluationGroup
-    {
-        $newEvaluationGroup = new EvaluationGroup();
-        $newEvaluationGroup->setDate(new \DateTime())
-            ->setEvalInitGroup(new EvalInitGroup());
-
-        // if ($evaluationGroup->getEvalInitGroup()) {
-        //     $newEvaluationGroup->setEvalInitGroup(clone $evaluationGroup->getEvalInitGroup());
-        // }
-        if ($evaluationGroup->getEvalBudgetGroup()) {
-            $newEvaluationGroup->setEvalBudgetGroup(clone $evaluationGroup->getEvalBudgetGroup());
-        }
-        if ($evaluationGroup->getEvalFamilyGroup()) {
-            $newEvaluationGroup->setEvalFamilyGroup(clone $evaluationGroup->getEvalFamilyGroup());
-        }
-        if ($evaluationGroup->getEvalHousingGroup()) {
-            $newEvaluationGroup->setEvalHousingGroup(clone $evaluationGroup->getEvalHousingGroup());
-        }
-        if ($evaluationGroup->getEvalSocialGroup()) {
-            $newEvaluationGroup->setEvalSocialGroup(clone $evaluationGroup->getEvalSocialGroup());
-        }
-        if (Service::SERVICE_TYPE_HOTEL === $supportGroup->getService()->getType()
-            && $evaluationGroup->getEvalHotelLifeGroup()) {
-            $newEvaluationGroup->setEvalHotelLifeGroup(clone $evaluationGroup->getEvalHotelLifeGroup());
-        }
-
-        return $newEvaluationGroup;
+        return null;
     }
 }
