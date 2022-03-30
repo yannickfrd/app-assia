@@ -2,10 +2,10 @@
 
 namespace App\Entity\Organization;
 
+use App\Entity\Event\Rdv;
 use App\Entity\Event\Task;
 use App\Entity\Support\Document;
 use App\Entity\Support\Note;
-use App\Entity\Support\Rdv;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Traits\ContactEntityTrait;
 use App\Entity\Traits\DisableEntityTrait;
@@ -80,7 +80,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups("show_user")
+     * @Groups({"show_user", "show_rdv"})
      */
     private $id;
 
@@ -244,11 +244,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $notes;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Support\Rdv", mappedBy="createdBy")
-     */
-    private $rdvs;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Support\Document", mappedBy="createdBy")
      */
     private $documents;
@@ -258,10 +253,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $userDevices;
 
+//    /**
+//     * @ORM\OneToMany(targetEntity=Rdv::class, mappedBy="users")
+//     */
+//    private $rdvs2;
+
     /**
-     * @ORM\OneToMany(targetEntity=Rdv::class, mappedBy="user")
+     * @ORM\ManyToMany(targetEntity=Rdv::class, mappedBy="users")
      */
-    private $rdvs2;
+    private $rdvs;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Rdv::class, mappedBy="createdBy")
+     */
+    private $rdvsCreated;
 
     /**
      * @ORM\ManyToMany(targetEntity=Task::class, mappedBy="users")
@@ -288,7 +293,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->rdvs = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->userDevices = new ArrayCollection();
-        $this->rdvs2 = new ArrayCollection();
+//        $this->rdvs2 = new ArrayCollection();
         $this->tasks = new ArrayCollection();
     }
 
@@ -877,35 +882,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<Rdv>|null
-     */
-    public function getRdvs2(): ?Collection
-    {
-        return $this->rdvs2;
-    }
-
-    public function addRdvs2(Rdv $rdvs2): self
-    {
-        if (!$this->rdvs2->contains($rdvs2)) {
-            $this->rdvs2[] = $rdvs2;
-            $rdvs2->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRdvs2(Rdv $rdvs2): self
-    {
-        if ($this->rdvs2->removeElement($rdvs2)) {
-            // set the owning side to null (unless already changed)
-            if ($rdvs2->getUser() === $this) {
-                $rdvs2->setUser(null);
-            }
-        }
-
-        return $this;
-    }
+//    /**
+//     * @return Collection<Rdv>|Rdv[]|null
+//     */
+//    public function getRdvs2(): ?Collection
+//    {
+//        return $this->rdvs2;
+//    }
+//
+//    public function addRdvs2(Rdv $rdvs2): self
+//    {
+//        if (!$this->rdvs2->contains($rdvs2)) {
+//            $this->rdvs2[] = $rdvs2;
+//            $rdvs2->setUser($this);
+//        }
+//
+//        return $this;
+//    }
+//
+//    public function removeRdvs2(Rdv $rdvs2): self
+//    {
+//        if ($this->rdvs2->removeElement($rdvs2)) {
+//            // set the owning side to null (unless already changed)
+//            if ($rdvs2->getUser() === $this) {
+//                $rdvs2->setUser(null);
+//            }
+//        }
+//
+//        return $this;
+//    }
 
     /**
      * @return Collection<Task>|null

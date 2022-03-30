@@ -33,7 +33,7 @@
                     </a>
                     <div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownMenuCalendar">
                         <a class="dropdown-item" href="{{ path('calendar') }}">Mon agenda</a>
-                        <a class="dropdown-item" href="{{ path('rdvs', {'date[start]': 'now'|date('Y-m-d') }) }}">
+                        <a class="dropdown-item" href="{{ path('rdv_index', {'date[start]': 'now'|date('Y-m-d') }) }}">
                             Voir tous les rendez-vous</a>
                         <a class="dropdown-item" href="{{ path('task_index') }}">Voir toutes les tâches</a>
                         {# <a class="dropdown-item" href="{{ path('alerts_index') }}">Voir tous mes rappels</a> #}

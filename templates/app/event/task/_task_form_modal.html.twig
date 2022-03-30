@@ -12,7 +12,7 @@ data-url-task-show="{{ path('task_show', {'id': '__id__'}) }}">
             </div>
             
             {{ form_start(form_task, {attr: {'data-url-task-new': support is defined ? 
-                path('support_task_new', {'id': support.id}) : path('task_new') }}) }}
+                path('support_task_create', {'id': support.id}) : path('task_create') }}) }}
 
             <div class="modal-body pb-0">
             

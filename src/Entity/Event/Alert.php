@@ -55,6 +55,11 @@ class Alert
     private $task;
 
     /**
+     * @ORM\ManyToOne(targetEntity=Rdv::class, inversedBy="alerts")
+     */
+    private $rdv;
+
+    /**
      * @ORM\Column(type="boolean")
      * @Groups("show_alert")
      */
@@ -126,6 +131,18 @@ class Alert
     public function getTask(): Task
     {
         return $this->task;
+    }
+
+    public function getRdv(): Rdv
+    {
+        return $this->rdv;
+    }
+
+    public function setRdv(Rdv $rdv): self
+    {
+        $this->rdv = $rdv;
+
+        return $this;
     }
 
     public function getViewed(): ?bool

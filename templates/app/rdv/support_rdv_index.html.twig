@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Rendez-vous{% endblock %}
+
+{% block body %}
+    <div class="container">
+        {% set title = 'Rendez-vous' %}
+        {% include 'app/support/_partials/_support_nav.html.twig' %}
+
+		<div class="row mb-2">
+			<div class="col-md-12">
+                {% include 'app/rdv/_support_rdv_search_form.html.twig' %}
+			</div>
+		</div>
+
+        {% include 'app/rdv/_rdv_table.html.twig' %}
+    </div>
+
+    {% include 'app/rdv/_rdv_form_modal.html.twig' %}
+    {% include 'app/rdv/_rdv_update_api_modal.html.twig' with {modal_id: 'modal-update'} %}
+    {% include 'app/rdv/_rdv_delete_modal.html.twig' %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('search') }}
+    {{ encore_entry_script_tags('rdv') }}
+{% endblock javascripts %}

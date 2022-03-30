@@ -61,26 +61,30 @@ class TaskRepositoryTest extends WebTestCase
 
         $this->taskSearch = (new TaskSearch())
             ->setTitle('Task test')
-            ->setStart(new \DateTime('2020-01-01'))
-            ->setEnd(new \DateTime())
-            ->setReferents($referents);
+            ->setStatus([])
+            ->setStart(new \DateTime())
+            ->setEnd((new \DateTime())->modify('+1 month'))
+            ->setReferents($referents)
+        ;
     }
 
     public function testCount(): void
     {
-        $this->assertGreaterThanOrEqual(2, $this->taskRepo->count([]));
+        $this->assertGreaterThanOrEqual(5, $this->taskRepo->count([]));
     }
 
     public function testFindAllTasksQueryWithoutFilters(): void
     {
-        $query = $this->taskRepo->findTasksQuery(new TaskSearch());
+        $search = (new TaskSearch())->setStatus([]);
+
+        $query = $this->taskRepo->findTasksQuery($search, $this->user);
         $this->assertGreaterThanOrEqual(5, count($query->getResult()));
     }
 
     public function testFindAllTasksQueryWithFilters(): void
     {
-        $query = $this->taskRepo->findTasksQuery($this->taskSearch);
-        $this->assertGreaterThanOrEqual(0, count($query->getResult()));
+        $query = $this->taskRepo->findTasksQuery($this->taskSearch, $this->user);
+        $this->assertEquals(1, count($query->getResult()));
     }
 
     public function testFindAllTasksQueryOfSupportWithoutFilters(): void

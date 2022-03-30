@@ -3,10 +3,9 @@
 namespace App\Tests\Entity;
 
 use App\Entity\People\Person;
-use App\Tests\Entity\AssertHasErrorsTrait;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class PersonTest extends WebTestCase
 {
@@ -61,7 +60,7 @@ class PersonTest extends WebTestCase
     {
         /** @var AbstractDatabaseTool */
         $databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
-        
+
         $databaseTool->loadAliceFixture([
             dirname(__DIR__).'/fixtures/app_fixtures_test.yaml',
             dirname(__DIR__).'/fixtures/person_fixtures_test.yaml',

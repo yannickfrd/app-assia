@@ -1,4 +1,4 @@
 import '../utils/accordionChevron'
-import TaskManager from '../task/TaskManager.js'
+import TaskManager from '../event/task/TaskManager.js'
 
 new TaskManager()

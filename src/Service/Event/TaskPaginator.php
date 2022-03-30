@@ -7,6 +7,7 @@ use App\Entity\Support\SupportGroup;
 use App\Form\Model\Event\TaskSearch;
 use App\Repository\Event\TaskRepository;
 use App\Service\Pagination;
+use Knp\Component\Pager\Pagination\PaginationInterface;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,7 +31,7 @@ class TaskPaginator
     /**
      * Donne les tâches du suivi.
      */
-    public function paginate(Request $request, TaskSearch $search, ?SupportGroup $supportGroup = null)
+    public function paginate(Request $request, TaskSearch $search, ?SupportGroup $supportGroup = null): PaginationInterface
     {
         // Si filtre ou tri utilisé, n'utilise pas le cache.
         if (null === $supportGroup || $request->query->count() > 0) {
