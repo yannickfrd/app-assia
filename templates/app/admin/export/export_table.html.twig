@@ -45,6 +45,7 @@
                                 <td class="align-middle text-right">
                                     {% if export.size %}
                                         {{ (export.size / 1000)|round }} Ko
+                                        <span class="text-secondary">{{ is_granted('ROLE_SUPER_ADMIN') ? '(' ~ export.delay ~ ')' }}</span>
                                     {% else %}
                                         <i class="fas fa-spinner text-{{ theme_color }}">
                                     {% endif %}

@@ -3,21 +3,23 @@
 namespace App\Form\Organization\User;
 
 use App\Entity\Organization\Device;
+use App\Entity\Organization\User;
 use App\Entity\Organization\UserDevice;
 use App\Repository\Organization\DeviceRepository;
-use App\Security\CurrentUserService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Security;
 
 class UserDeviceType extends AbstractType
 {
-    private $currentUser;
+    /** @var User */
+    private $user;
 
-    public function __construct(CurrentUserService $currentUser)
+    public function __construct(Security $security)
     {
-        $this->currentUser = $currentUser;
+        $this->user = $security->getUser();
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -27,7 +29,7 @@ class UserDeviceType extends AbstractType
                 'class' => Device::class,
                 'choice_label' => 'name',
                 'query_builder' => function (DeviceRepository $repo) {
-                    return $repo->getDevicesOfUserQueryBuilder($this->currentUser);
+                    return $repo->getDevicesOfUserQueryBuilder($this->user);
                 },
                 'placeholder' => 'placeholder.device',
                 'attr' => [

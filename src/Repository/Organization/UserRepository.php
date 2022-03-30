@@ -9,7 +9,6 @@ use App\Entity\Support\SupportGroup;
 use App\Form\Model\Organization\UserSearch;
 use App\Form\Utils\Choices;
 use App\Repository\Traits\QueryTrait;
-use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -172,10 +171,10 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Donne la liste des référents possibles dans la page d'édition du suivi.
      */
-    public function getSupportReferentsQueryBuilder(Service $service = null, User $currentUser, User $referent = null): QueryBuilder
+    public function getSupportReferentsQueryBuilder(Service $service = null, User $user, User $referent = null): QueryBuilder
     {
         $users = [];
-        $users[] = $currentUser->getId();
+        $users[] = $user->getId();
 
         if ($referent) {
             $users[] = $referent->getId();
@@ -209,7 +208,7 @@ class UserRepository extends ServiceEntityRepository
      *
      * @return User[]|null
      */
-    public function findUsersOfServices(CurrentUserService $currentUser): ?array
+    public function findUsersOfServices(User $user): ?array
     {
         $qb = $this->createQueryBuilder('u')->select('PARTIAL u.{id, firstname, lastname, disabledAt}')
             ->leftJoin('u.userDevices', 'ud')->addSelect('ud')
@@ -217,14 +216,14 @@ class UserRepository extends ServiceEntityRepository
 
             ->where('u.disabledAt IS NULL');
 
-        if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
-            if ($currentUser->hasRole('ROLE_ADMIN')) {
+        if (!$user->hasRole('ROLE_SUPER_ADMIN')) {
+            if ($user->hasRole('ROLE_ADMIN')) {
                 $qb->leftJoin('u.serviceUser', 'r')
                     ->andWhere('r.service IN (:services)')
-                    ->setParameter('services', $currentUser->getServices());
+                    ->setParameter('services', $user->getServices());
             } else {
                 $qb->andWhere('u.id = :user')
-                ->setParameter('user', $currentUser->getUser());
+                ->setParameter('user', $user);
             }
         }
 
@@ -255,7 +254,7 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Donne la liste des utilisateurs pour les listes déroulantes.
      */
-    public function getReferentsOfServicesQueryBuilder(CurrentUserService $currentUser, Service $service = null, string $className = null): QueryBuilder
+    public function getReferentsOfServicesQueryBuilder(User $user, Service $service = null, string $className = null): QueryBuilder
     {
         $qb = $this->getReferentsQueryBuilder();
 
@@ -266,10 +265,10 @@ class UserRepository extends ServiceEntityRepository
             $qb->andWhere('su.service = :service')
                 ->setParameter('service', $service);
         }
-        if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+        if (!$user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->leftJoin('u.serviceUser', 'r')
                 ->andWhere('r.service IN (:services)')
-                ->setParameter('services', $currentUser->getServices());
+                ->setParameter('services', $user->getServices());
         }
 
         return $qb;

@@ -38,6 +38,12 @@ class EvalProfPerson
         99 => 'Non évalué',
     ];
 
+    public const PROF_STATUS_EMPLOYEE = 8;
+    public const PROF_STATUS_IN_TRAINING = 3;
+    public const PROF_STATUS_JOB_SEEKER = 2;
+    public const PROF_STATUS_RETIRED = 7;
+    public const PROF_STATUS_STUDENT = 5;
+
     public const PROF_STATUS = [
         1 => 'Auto-entrepreneur/euse',
         2 => "Demandeur/euse d'emploi",
@@ -59,22 +65,28 @@ class EvalProfPerson
         3 => 'Contrat aidé',
         4 => "Contrat d'apprentissage",
         5 => 'Contrat de professionnalisation',
-        6 => 'Fonction publique',
+        6 => 'Statut de la Fonction Publique',
         7 => 'Intérim (CTT)',
+        9 => 'Service Civique',
         8 => 'Stage',
         97 => 'Autre',
+        98 => 'Non concerné',
         99 => 'Non évalué',
     ];
 
     public const WORKING_TIME = [
-        1 => 'Temps complet',
-        2 => 'Temps partiel',
+        1 => 'Temps complet ou supérieur à 28h',
+        2 => 'Temps partiel – Entre 17,5h et 28h',
+        3 => 'Temps partiel – Moins de 17,5h',
+        98 => 'Non concerné',
         99 => 'Non évalué',
     ];
 
     public const TRANSFORT_MEANS = [
         1 => 'Voiture',
         2 => 'Transport en commun',
+        3 => 'Moto - Scooter',
+        4 => 'Vélo - Trottinette',
         97 => 'Autre',
         99 => 'Non évalué',
     ];

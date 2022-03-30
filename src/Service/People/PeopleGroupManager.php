@@ -3,35 +3,37 @@
 namespace App\Service\People;
 
 use App\Entity\Evaluation\EvaluationGroup;
+use App\Entity\Organization\User;
 use App\Entity\People\PeopleGroup;
 use App\Entity\People\Person;
 use App\Entity\People\RolePerson;
 use App\Entity\Support\SupportGroup;
 use App\Repository\People\RolePersonRepository;
 use App\Repository\Support\SupportGroupRepository;
-use App\Security\CurrentUserService;
 use App\Service\Grammar;
 use App\Service\SupportGroup\SupportManager;
 use App\Service\SupportGroup\SupportPeopleAdder;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\Security\Core\Security;
 
 class PeopleGroupManager
 {
+    /** @var User */
+    private $user;
     private $em;
-    private $currentUserService;
     private $peopleGroupChecker;
     private $flashbag;
 
     public function __construct(
+        Security $security,
         EntityManagerInterface $em,
-        CurrentUserService $currentUserService,
         PeopleGroupChecker $peopleGroupChecker,
         FlashBagInterface $flashbag
     ) {
+        $this->user = $security->getUser();
         $this->em = $em;
-        $this->currentUserService = $currentUserService;
         $this->peopleGroupChecker = $peopleGroupChecker;
         $this->flashbag = $flashbag;
     }
@@ -160,7 +162,7 @@ class PeopleGroupManager
 
         foreach ($supportGroupRepo->findBy(['peopleGroup' => $peopleGroup]) as $supportGroup) {
             if (SupportGroup::STATUS_IN_PROGRESS === $supportGroup->getStatus()
-                && ($this->currentUserService->isInService($supportGroup->getService()))) {
+                && ($this->user->hasService($supportGroup->getService()))) {
                 (new SupportPeopleAdder($this->em, $this->flashbag))->addPersonToSupport($supportGroup, $rolePerson);
 
                 SupportManager::deleteCacheItems($supportGroup);

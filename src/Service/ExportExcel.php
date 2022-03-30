@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use Cache\Adapter\Apcu\ApcuCachePool;
 use Cache\Bridge\SimpleCache\SimpleCacheBridge;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Settings;
@@ -17,6 +16,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
 use PhpOffice\PhpSpreadsheet\Writer\Ods;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Symfony\Component\Cache\Adapter\ApcuAdapter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -69,7 +69,7 @@ class ExportExcel
         $this->setOptions($options);
         $path = $this->options['modelPath'];
 
-        if ($path && !file_exists($path)) {
+        if ($path && file_exists($path)) {
             $reader = IOFactory::createReader('Xlsx');
 
             $this->spreadsheet = $reader->load($path);
@@ -441,10 +441,10 @@ class ExportExcel
         }
 
         try {
-            $cacheItemPool = new ApcuCachePool();
+            $cacheItemPool = new ApcuAdapter($_SERVER['DB_DATABASE_NAME'], 6000);
             $simpleCache = new SimpleCacheBridge($cacheItemPool);
             Settings::setCache($simpleCache);
-        } catch (\Throwable $e) {
+        } catch (\Exception $e) {
             echo 'Fail to active APCu Cache';
         }
     }

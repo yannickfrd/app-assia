@@ -1,8 +1,61 @@
 CHANGELOG
 =========
+
+## Version 3.14.0 - 30/03/2022
+
+Update Rdv feature (#138)
+
+* Add user and support choices in FormType
+* Add alerts in FormType
+* Refactor controller and repository
+* Add CRUD to rdv table view
+* Apply twig conventions
+* Update tests
+* Create command to add user to rdvs
+
+## Version 3.13.5 - 30/03/2022
+
+Fix (#141)
+
+* [SupportDuplicator] Update feature to clone evaluation, notes and documents
+* Create DocumentManager to deleteCacheItems
+* [AbstractFinance][Tag] Add SoftDeleteable
+* [Choices] Fix error type getChoices
+* [SiSiaoEvaluationImporter] Fix error with string comment
+* Fix Check valid field with Select2
+* Create EvaluationDuplicator, update SupportDuplicator and refactor
+
+## Version 3.13.4 - 28/03/2022
+
+Remove current user service (#140)
+
+* Remove CurrentUserService and use Security->getUser()
+* Fix Php CS Fixer and PHP Stan
+
+## Version 3.13.3 - 28/03/2022
+
+Fix (#139)
+
+* [ExportExcel] Fix error to use model file
+* [AdminController] Edit phpinfo
+
+
+## Version 3.13.2 - 25/03/2022
+
+Fix problem APCU Cache with full export (#137)
+
+* [ExportController] Add condition check if fileName exist before delete
+* Add route to clear APCU Cache
+* Add delay to export data
+* [ExportExcel] Change ApcuCachePool to ApcuAdapter
+
+## Version 3.13.1 - 25/03/2022
+
+Update SI-SIAO feature (#136)
+
 ## Version 3.13.0 - 23/03/2022
 
-Optimize and update tests, create github action, PHP CS Fixer and PHP Stan
+Optimize and update tests, create github action, PHP CS Fixer and PHP Stan (#134)
 
 * Edit password algorithm in tests/security
 * [Config] Set logging to false in test/doctrine

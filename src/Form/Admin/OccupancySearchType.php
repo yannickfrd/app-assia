@@ -4,7 +4,7 @@ namespace App\Form\Admin;
 
 use App\Entity\Organization\Pole;
 use App\Form\Model\Admin\OccupancySearch;
-use App\Form\Model\Support\RdvSearch;
+use App\Form\Model\Event\EventSearch;
 use App\Form\Type\DateSearchType;
 use App\Form\Utils\Choices;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -41,7 +41,7 @@ class OccupancySearchType extends AbstractType
                 'required' => false,
             ])
             ->add('date', DateSearchType::class, [
-                'data_class' => RdvSearch::class,
+                'data_class' => EventSearch::class,
             ]);
         // ->add('export');
     }

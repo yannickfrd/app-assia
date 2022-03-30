@@ -60,10 +60,27 @@ final class AdminController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
 
-        if (1 != $user->getId()) {
-            return $this->redirect('home');
+        if (1 !== $user->getId()) {
+            return $this->redirectToRoute('home');
         }
 
-        return new Response(phpinfo());
+        phpinfo();
+
+        exit;
+
+        return $this->redirectToRoute('home');
+    }
+
+    /**
+     * @Route("/admin/apcu-cache/clear", name="apcu_cache_clear", methods="GET")
+     * @IsGranted("ROLE_SUPER_ADMIN")
+     */
+    public function clearApcuCache(): Response
+    {
+        apcu_clear_cache();
+
+        $this->addFlash('success', 'APCU Cache was cleared.');
+
+        return $this->redirectToRoute('home');
     }
 }

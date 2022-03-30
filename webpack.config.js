@@ -25,7 +25,7 @@ Encore
      */
     .addEntry('app', './assets/js/app.js')
     .addEntry('calendar_css', './assets/css/calendar.scss')
-    .addEntry('calendar', './assets/js/rdv/calendarIndex.js')
+    .addEntry('calendar', './assets/js/event/rdv/calendar-index.js')
     .addEntry('payment', './assets/js/payment/payment.js')
     .addEntry('directory', './assets/js/directory/directory.js')
     .addEntry('device', './assets/js/device/device.js')
@@ -41,14 +41,14 @@ Encore
     .addEntry('person', './assets/js/person/person.js')
     .addEntry('place', './assets/js/place/place.js')
     .addEntry('placeGroup', './assets/js/place/placeGroup.js')
-    .addEntry('rdvs', './assets/js/rdv/rdvsIndex.js')
+    .addEntry('rdv', './assets/js/event/rdv/rdv-index.js')
     .addEntry('referent', './assets/js/referent/referent.js')
     .addEntry('search', './assets/js/searchIndex.js')
     .addEntry('service', './assets/js/service/service.js')
     .addEntry('support', './assets/js/support/support.js')
     .addEntry('securityUser', './assets/js/security/securityUser.js')
     .addEntry('tag', './assets/js/tag/tagIndex.js')
-    .addEntry('task', './assets/js/task/taskIndex.js')
+    .addEntry('task', './assets/js/event/task/taskIndex.js')
     .addEntry('user', './assets/js/user/user.js')
     .addEntry('alert', './assets/js/alert/alertIndex.js')
 
@@ -74,7 +74,8 @@ Encore
     .enableVersioning(Encore.isProduction())
 
     // enables @babel/preset-env polyfills
-    .configureBabel(() => { }, {
+    .configureBabel(() => {
+    }, {
         useBuiltIns: 'usage',
         corejs: 3
     })
@@ -101,22 +102,22 @@ Encore
         pattern: /\.(js|css)$/,
         includeSubdirectories: false
     },
-    {
-        from: './node_modules/ckeditor/adapters',
-        to: 'ckeditor/adapters/[path][name].[ext]'
-    },
-    {
-        from: './node_modules/ckeditor/lang',
-        to: 'ckeditor/lang/[path][name].[ext]'
-    },
-    {
-        from: './node_modules/ckeditor/plugins',
-        to: 'ckeditor/plugins/[path][name].[ext]'
-    },
-    {
-        from: './node_modules/ckeditor/skins',
-        to: 'ckeditor/skins/[path][name].[ext]'
-    }
+        {
+            from: './node_modules/ckeditor/adapters',
+            to: 'ckeditor/adapters/[path][name].[ext]'
+        },
+        {
+            from: './node_modules/ckeditor/lang',
+            to: 'ckeditor/lang/[path][name].[ext]'
+        },
+        {
+            from: './node_modules/ckeditor/plugins',
+            to: 'ckeditor/plugins/[path][name].[ext]'
+        },
+        {
+            from: './node_modules/ckeditor/skins',
+            to: 'ckeditor/skins/[path][name].[ext]'
+        }
     ])
 
 module.exports = Encore.getWebpackConfig();

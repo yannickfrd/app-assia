@@ -167,7 +167,7 @@ final class ExportController extends AbstractController
         try {
             $this->denyAccessUnlessGranted('DELETE', $export);
 
-            if (file_exists($export->getFileName())) {
+            if ($export->getFileName() && file_exists($export->getFileName())) {
                 unlink($export->getFileName());
             }
 

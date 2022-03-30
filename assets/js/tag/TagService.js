@@ -38,7 +38,7 @@ export default class TagService {
 
         const aElts = this.listBadge.querySelectorAll('span.badge a')
 
-        if (aElts){
+        if (aElts) {
             aElts.forEach(aElt => {
                 aElt.addEventListener('click', e => {
                     e.preventDefault()
@@ -49,14 +49,14 @@ export default class TagService {
     }
 
     /**
-     * @param {Event} e 
+     * @param {Event} e
      */
     add(e) {
         e.preventDefault()
         this.loader.on()
 
         const formData = new FormData(e.currentTarget)
-        if (this.tagsIds().length > 0){
+        if (this.tagsIds().length > 0) {
             this.tagsIds().forEach(id => {
                 formData.append('service_tag[tags][]', id)
             })
@@ -66,7 +66,7 @@ export default class TagService {
             formData.getAll('service_tag[tags][]').forEach(optionId => {
                 const options = document.getElementById('service_tag_tags').options
 
-                Array.from(options).forEach( tag => {
+                Array.from(options).forEach(tag => {
                     if (parseInt(optionId) === parseInt(tag.getAttribute('value'))) {
                         this.countAddingTag++
                         this.tagsTemp.push(new Tag(optionId, tag.innerText, tag.dataset.multiSelect))
@@ -82,7 +82,7 @@ export default class TagService {
     }
 
     /**
-     * @param {String} href 
+     * @param {String} href
      */
     tryDelete(href) {
         this.loader.on()
@@ -90,7 +90,7 @@ export default class TagService {
     }
 
     /**
-     * @param {Object} response 
+     * @param {Object} response
      */
     responseAjax(response) {
         switch (response.action) {
@@ -105,7 +105,7 @@ export default class TagService {
     }
 
     /**
-     * @param {Object} response 
+     * @param {Object} response
      */
     addTag(response) {
         if ('success' === response.alert) {
@@ -123,7 +123,7 @@ export default class TagService {
     }
 
     /**
-     * @param {Object} response 
+     * @param {Object} response
      */
     deleteTag(response) {
         if ('success' !== response.alert) {
@@ -146,7 +146,7 @@ export default class TagService {
     }
 
     /**
-     * @param {Object} data 
+     * @param {Object} data
      */
     createNodeTag(data) {
         if ('object' === typeof data) {
@@ -158,8 +158,8 @@ export default class TagService {
     }
 
     /**
-     * @param {String} tagText 
-     * @param {Number} optionId 
+     * @param {String} tagText
+     * @param {Number} optionId
      */
     addTagInHtml(tagText, optionId) {
         if (this.listBadge.querySelector('p')) {
@@ -169,7 +169,7 @@ export default class TagService {
     }
 
     /**
-     * @param {Object} tag 
+     * @param {Object} tag
      * @returns {HTMLSpanElement}
      */
     createTag(tag) {
@@ -197,7 +197,7 @@ export default class TagService {
     }
 
     /**
-     * @param {Object} tag 
+     * @param {Object} tag
      * @returns {HTMLOptionElement}
      */
     createOption(tag) {

@@ -29,7 +29,7 @@ class ReferentSearchType extends AbstractType
             ])
             ->add('type', ChoiceType::class, [
                 'label_attr' => ['class' => 'sr-only'],
-                'choices' => Choices::getchoices(Referent::TYPE),
+                'choices' => Choices::getChoices(Referent::TYPE),
                 'attr' => [
                     'class' => 'w-max-150',
                 ],

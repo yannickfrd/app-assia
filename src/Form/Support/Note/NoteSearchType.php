@@ -61,7 +61,7 @@ class NoteSearchType extends AbstractType
             ])
             ->add('type', ChoiceType::class, [
                 'label_attr' => ['class' => 'sr-only'],
-                'choices' => Choices::getchoices(Note::TYPE),
+                'choices' => Choices::getChoices(Note::TYPE),
                 'attr' => [
                     'class' => 'w-max-160',
                 ],
@@ -72,7 +72,7 @@ class NoteSearchType extends AbstractType
                 'label_attr' => [
                     'class' => 'sr-only',
                 ],
-                'choices' => Choices::getchoices(Note::STATUS),
+                'choices' => Choices::getChoices(Note::STATUS),
                 'attr' => [
                     'class' => 'w-max-160',
                 ],

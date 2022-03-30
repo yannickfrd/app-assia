@@ -33,13 +33,13 @@ class SupportTaskSearchType extends AbstractType
                 ],
             ])
             ->add('status', ChoiceType::class, [
-                'label_attr' => ['class' => 'sr-only'],
+                'multiple' => true,
                 'choices' => Choices::getChoices(Task::STATUS),
                 'attr' => [
-                    'class' => 'w-max-160',
+                    'class' => 'multi-select w-min-160',
                     'placeholder' => 'placeholder.status',
+                    'size' => 1,
                 ],
-                'placeholder' => 'placeholder.status',
                 'required' => false,
             ])
             ->add('level', ChoiceType::class, [

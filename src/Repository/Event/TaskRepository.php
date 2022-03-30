@@ -7,7 +7,6 @@ use App\Entity\Organization\User;
 use App\Entity\Support\SupportGroup;
 use App\Form\Model\Event\TaskSearch;
 use App\Repository\Traits\QueryTrait;
-use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -31,10 +30,10 @@ class TaskRepository extends ServiceEntityRepository
     /**
      * Return all tasks to paginate.
      */
-    public function findTasksQuery(TaskSearch $search, ?CurrentUserService $currentUser = null, ?SupportGroup $supportGroup = null): Query
+    public function findTasksQuery(TaskSearch $search, User $user, ?SupportGroup $supportGroup = null): Query
     {
         $qb = $this->getTasksQuery();
-        $qb = $this->filter($qb, $search, $currentUser);
+        $qb = $this->filter($qb, $search, $user);
 
         if ($supportGroup) {
             $qb->andWhere('t.supportGroup = :supportGroup')
@@ -79,13 +78,13 @@ class TaskRepository extends ServiceEntityRepository
     /**
      * Donne tous les évenements à exporter.
      */
-    public function findTasksToExport(TaskSearch $search): array
+    public function findTasksToExport(TaskSearch $search, User $user): array
     {
         $qb = $this->getTasksQuery()
             ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
             ->leftJoin('t.updatedBy', 'u4')->addSelect('PARTIAL u4.{id, firstname, lastname}');
 
-        $qb = $this->filter($qb, $search);
+        $qb = $this->filter($qb, $search, $user);
 
         return $qb
             ->orderBy('t.createdBy', 'DESC')
@@ -136,16 +135,17 @@ class TaskRepository extends ServiceEntityRepository
 
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getResult();
+            ->getResult()
+        ;
     }
 
-    protected function filter(QueryBuilder $qb, TaskSearch $search, CurrentUserService $currentUser = null): QueryBuilder
+    protected function filter(QueryBuilder $qb, TaskSearch $search, User $user): QueryBuilder
     {
-        if ($currentUser && !$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+        if (!$user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->where('t.createdBy IN (:user)')
-                ->setParameter('user', $currentUser->getUser());
+                ->setParameter('user', $user);
             $qb->orWhere('sg.service IN (:services)')
-                ->setParameter('services', $currentUser->getServices());
+                ->setParameter('services', $user->getServices());
         }
         if ($search->getId()) {
             return $qb->andWhere('t.id = :id')
@@ -171,8 +171,8 @@ class TaskRepository extends ServiceEntityRepository
             $qb->andWhere('t.supportGroup = :supportGroup')
                 ->setParameter('supportGroup', $search->getSupportGroup());
         }
-        if (null !== $search->getStatus()) {
-            $qb->andWhere('t.status = :status')
+        if ($search->getStatus()) {
+            $qb->andWhere('t.status IN (:status)')
                 ->setParameter('status', $search->getStatus());
         }
         if ($search->getLevel()) {

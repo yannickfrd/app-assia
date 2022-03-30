@@ -88,17 +88,17 @@ export default class FormValidator {
     /**
      * Vérifie les champs à compléter.
      * @param {NodeList} elts
-     * @param {Boolean} requiredField
      */
-    checkFields(elts, requiredField = false) {
-        const hasDatas = requiredField ? null : this.oneFieldIsFilled(elts)
+    checkFields(elts) {
         elts.forEach(elt => {
             const fieldElt = elt.querySelector('input, select')
-            if (this.isFilledField(fieldElt) || hasDatas === false) {
-                this.validField(fieldElt)
-            } else {
-                this.invalidField(fieldElt, 'Saisie obligatoire.')
-                fieldElt.addEventListener('change', () => this.validField(fieldElt))
+            if (!fieldElt.classList.contains('is-invalid')) {
+                if (this.isFilledField(fieldElt) || this.oneFieldOfCategoryIsFilled(elts) === false) {
+                    this.validField(fieldElt)
+                } else {
+                    this.invalidField(fieldElt, 'Saisie obligatoire.')
+                    fieldElt.addEventListener('change', () => this.validField(fieldElt))
+                }
             }
         })
     }
@@ -108,7 +108,7 @@ export default class FormValidator {
      * @param {NodeList} elts
      * @return {Boolean}
      */
-    oneFieldIsFilled(elts) {
+    oneFieldOfCategoryIsFilled(elts) {
         let value = false
         elts.forEach(elt => {
             if (this.isFilledField(elt.querySelector('input, select'))) {

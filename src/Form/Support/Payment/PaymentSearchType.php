@@ -53,7 +53,7 @@ class PaymentSearchType extends AbstractType
                     'placeholder' => 'placeholder.type',
                     'size' => 1,
                 ],
-                'choices' => Choices::getchoices(Payment::TYPES),
+                'choices' => Choices::getChoices(Payment::TYPES),
                 'required' => false,
             ])
             ->add('dateType', ChoiceType::class, [

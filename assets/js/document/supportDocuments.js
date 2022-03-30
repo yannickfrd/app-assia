@@ -1,6 +1,6 @@
 import MessageFlash from '../utils/messageFlash'
 import Loader from '../utils/loader'
-import { Modal } from 'bootstrap'
+import {Modal} from 'bootstrap'
 import Ajax from '../utils/ajax'
 import Dropzone from '../utils/file/dropzone'
 import CheckboxSelector from '../utils/form/checkboxSelector'
@@ -38,7 +38,7 @@ export default class SupportDocuments {
 
         this.themeColor = document.getElementById('header').dataset.color
         this.countDocumentsElt = document.getElementById('count-documents')
-        
+
         this.init()
     }
 
@@ -253,14 +253,15 @@ export default class SupportDocuments {
      */
     updateDocumentTr(data) {
         const documentTrElt = document.querySelector(`tr[data-document-id="${data.id}"]`)
-            
+
         documentTrElt.querySelector('td[data-document="name"]').textContent = data.name
         documentTrElt.querySelector('td[data-document="content"]').textContent = data.content
-        
+
         this.tagsManager.updateTagsContainer(documentTrElt.querySelector('td[data-document="tags"]'), data.tags)
 
         this.documentModalElt.hide()
     }
+
     /**
      * @param {Object} data
      */
@@ -285,8 +286,8 @@ export default class SupportDocuments {
     getDocumentTrPrototype(data) {
         const documentTrElt = document.createElement('tr')
         documentTrElt.dataset.documentId = data.id
-        documentTrElt.innerHTML =`
-            <td scope="row" class="align-middle text-center">
+        documentTrElt.innerHTML = `
+            <td class="align-middle text-center">
                 <div class="custom-control custom-checkbox custom-checkbox-${this.themeColor} text-dark pl-0" 
                     title="Sélectionner le document">
                     <div class="form-check">

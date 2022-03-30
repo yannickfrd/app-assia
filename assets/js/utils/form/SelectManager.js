@@ -74,7 +74,7 @@ export default class SelectManager {
     }
 
     /**
-     * Efface toute les sélections.
+     * Efface toutes les sélections.
      */
     clearSelect() {
         this.select2.val(null).trigger('change')
