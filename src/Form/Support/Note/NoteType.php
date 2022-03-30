@@ -39,11 +39,11 @@ class NoteType extends AbstractType
                 'attr' => ['class' => 'd-none'],
             ])
             ->add('type', ChoiceType::class, [
-                'choices' => Choices::getchoices(Note::TYPE),
+                'choices' => Choices::getChoices(Note::TYPE),
                 'placeholder' => 'placeholder.type',
             ])
             ->add('status', ChoiceType::class, [
-                'choices' => Choices::getchoices(Note::STATUS),
+                'choices' => Choices::getChoices(Note::STATUS),
                 'placeholder' => 'placeholder.status',
             ])
             ->add('tags', EntityType::class, [

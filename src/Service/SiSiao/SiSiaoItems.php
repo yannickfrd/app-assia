@@ -437,7 +437,7 @@ class SiSiaoItems
         90 => 90, // Garde enfant(s)
         100 => 100, // Pension alimentaire
         110 => 110, // Téléphone
-        120 => 1000, //  Non renseigné
+        // 120 => 1000, //  Non renseigné
         1000 => 1000, // Autres charges
     ];
 

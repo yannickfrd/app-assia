@@ -153,10 +153,10 @@ class SupportManager
 
     public function clone(SupportGroup $supportGroup, Form $form)
     {
-        if (null != $form->get('_cloneSupport')->getViewData()) {
+        if (null !== $form->get('_cloneSupport')->getData()) {
             $this->supportDuplicator->duplicate($supportGroup);
         }
-        if (null != $form->get('_siSiaoImport')->getViewData()) {
+        if (null !== $form->get('_siSiaoImport')->getData()) {
             $this->siSiaoEvalImporter->import($supportGroup);
         }
     }
