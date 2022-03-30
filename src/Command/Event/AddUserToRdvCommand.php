@@ -2,9 +2,7 @@
 
 namespace App\Command\Event;
 
-use App\Entity\Event\Rdv;
 use App\Repository\Event\RdvRepository;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -44,8 +42,7 @@ class AddUserToRdvCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        /** @var Collection<Rdv> $rdvs */
-        $rdvs = $this->rdvRepo->findRdvWithNotUsers();
+        $rdvs = $this->rdvRepo->findAll();
 
         $io->progressStart(count($rdvs) + ($input->getOption('flush') ? 1 : 0));
 
