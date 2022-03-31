@@ -108,9 +108,9 @@ class SupportGroupRepository extends ServiceEntityRepository
     /**
      * Donne tous les suivis sociaux de l'utilisateur.
      *
-     * @return SupportGroup[]|null
+     * @return SupportGroup[]
      */
-    public function findSupportsOfUser(User $user, $maxResults = null): ?array
+    public function findSupportsOfUser(User $user, $maxResults = null): array
     {
         return $this->createQueryBuilder('sg')->select('sg')
             ->leftJoin('sg.service', 'sv')->addSelect('PARTIAL sv.{id, name}')
@@ -197,9 +197,9 @@ class SupportGroupRepository extends ServiceEntityRepository
     /**
      * Donne les suivis pour le tableau de bord.
      *
-     * @return SupportGroup[]|null
+     * @return SupportGroup[]
      */
-    public function findSupportsForDashboard(SupportsByUserSearch $search): ?array
+    public function findSupportsForDashboard(SupportsByUserSearch $search): array
     {
         $qb = $this->createQueryBuilder('sg')->select('PARTIAL sg.{id, status, startDate, referent, service, device, coefficient}')
             ->leftJoin('sg.referent', 'u')->addSelect('PARTIAL u.{id}')
@@ -225,9 +225,9 @@ class SupportGroupRepository extends ServiceEntityRepository
     /**
      * Donne les suivis sociaux du ménage.
      *
-     * @return SupportGroup[]|null
+     * @return SupportGroup[]
      */
-    public function findSupportsOfPeopleGroup(PeopleGroup $peopleGroup): ?array
+    public function findSupportsOfPeopleGroup(PeopleGroup $peopleGroup): array
     {
         return $this->createQueryBuilder('sg')->select('sg')
             ->leftJoin('sg.referent', 'ref')->addSelect('PARTIAL ref.{id, firstname, lastname, email, phone1}')

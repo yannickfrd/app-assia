@@ -87,9 +87,9 @@ class PersonRepository extends ServiceEntityRepository
     /**
      * Trouve toutes les personnes à exporter.
      *
-     * @return Person[]|null
+     * @return Person[]
      */
-    public function findPeopleToExport(PersonSearch $personSearch): ?array
+    public function findPeopleToExport(PersonSearch $personSearch): array
     {
         $qb = $this->findPeopleQuery($personSearch);
 
@@ -99,9 +99,9 @@ class PersonRepository extends ServiceEntityRepository
     /**
      *  Recherche une personne par son nom, prénom ou date de naissance.
      *
-     * @return Person[]|null
+     * @return Person[]
      */
-    public function findPeopleByResearch(string $search = null): ?array
+    public function findPeopleByResearch(string $search = null): array
     {
         $qb = $this->createQueryBuilder('p')
             ->leftJoin('p.rolesPerson', 'r')->addSelect('PARTIAL r.{id}')
@@ -157,9 +157,9 @@ class PersonRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Person[]|null
+     * @return Person[]
      */
-    public function findDuplicatedPeople(DuplicatedPeopleSearch $search): ?array
+    public function findDuplicatedPeople(DuplicatedPeopleSearch $search): array
     {
         $qb = $this->createQueryBuilder('p')->select('p');
 

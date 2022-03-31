@@ -66,24 +66,24 @@ class EventSearch
         return $this;
     }
 
-    public function getStatus(): ?array
+    public function getStatus(): array
     {
         return $this->status;
     }
 
-    public function setStatus(?array $status): self
+    public function setStatus(array $status): self
     {
         $this->status = $status;
 
         return $this;
     }
 
-    public function getTypes(): ?array
+    public function getTypes(): array
     {
         return $this->types;
     }
 
-    public function setTypes(?array $types): self
+    public function setTypes(array $types): self
     {
         $this->types = $types;
 

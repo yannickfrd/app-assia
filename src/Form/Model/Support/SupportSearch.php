@@ -21,7 +21,7 @@ class SupportSearch
     private $fullname;
 
     /** @var array */
-    private $familyTypologies;
+    private $familyTypologies = [];
 
     /** @var array */
     private $status = [SupportGroup::STATUS_IN_PROGRESS];
@@ -58,24 +58,24 @@ class SupportSearch
         return $this;
     }
 
-    public function getFamilyTypologies(): ?array
+    public function getFamilyTypologies(): array
     {
         return $this->familyTypologies;
     }
 
-    public function setFamilyTypologies(?array $familyTypologies): self
+    public function setFamilyTypologies(array $familyTypologies): self
     {
         $this->familyTypologies = $familyTypologies;
 
         return $this;
     }
 
-    public function getStatus(): ?array
+    public function getStatus(): array
     {
         return $this->status;
     }
 
-    public function setStatus(?array $status): self
+    public function setStatus(array $status): self
     {
         $this->status = $status;
 

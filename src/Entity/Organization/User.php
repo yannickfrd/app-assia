@@ -293,7 +293,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->rdvs = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->userDevices = new ArrayCollection();
-//        $this->rdvs2 = new ArrayCollection();
         $this->tasks = new ArrayCollection();
     }
 
@@ -881,36 +880,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
-//    /**
-//     * @return Collection<Rdv>|Rdv[]|null
-//     */
-//    public function getRdvs2(): ?Collection
-//    {
-//        return $this->rdvs2;
-//    }
-//
-//    public function addRdvs2(Rdv $rdvs2): self
-//    {
-//        if (!$this->rdvs2->contains($rdvs2)) {
-//            $this->rdvs2[] = $rdvs2;
-//            $rdvs2->setUser($this);
-//        }
-//
-//        return $this;
-//    }
-//
-//    public function removeRdvs2(Rdv $rdvs2): self
-//    {
-//        if ($this->rdvs2->removeElement($rdvs2)) {
-//            // set the owning side to null (unless already changed)
-//            if ($rdvs2->getUser() === $this) {
-//                $rdvs2->setUser(null);
-//            }
-//        }
-//
-//        return $this;
-//    }
 
     /**
      * @return Collection<Task>|null

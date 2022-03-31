@@ -61,9 +61,9 @@ class SupportPersonRepository extends ServiceEntityRepository
     /**
      * Retourne toutes les suivis pour l'export.
      *
-     * @return SupportPerson[]|null
+     * @return SupportPerson[]
      */
-    public function findSupportsToExport(?SupportSearch $search = null): ?array
+    public function findSupportsToExport(?SupportSearch $search = null): array
     {
         $qb = $this->getSupportsQuery()
             ->leftJoin('sp.placesPerson', 'pp')->addSelect('pp')
@@ -84,9 +84,9 @@ class SupportPersonRepository extends ServiceEntityRepository
     /**
      * Retourne toutes les suivis d'un service pour l'export.
      *
-     * @return SupportPerson[]|null
+     * @return SupportPerson[]
      */
-    public function findSupportsOfServiceToExport($search = null, int $serviceType): ?array
+    public function findSupportsOfServiceToExport($search = null, int $serviceType): array
     {
         $qb = $this->getSupportsOfServiceQuery()
             ->leftJoin('sg.placeGroups', 'pg')->addSelect('PARTIAL pg.{id, place}')
@@ -171,9 +171,9 @@ class SupportPersonRepository extends ServiceEntityRepository
     /**
      * Donne les suivis sociaux de la personne.
      *
-     * @return SupportPerson[]|null
+     * @return SupportPerson[]
      */
-    public function findSupportsOfPerson(Person $person): ?array
+    public function findSupportsOfPerson(Person $person): array
     {
         return $this->createQueryBuilder('sp')->select('sp')
             ->leftJoin('sp.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
@@ -194,9 +194,9 @@ class SupportPersonRepository extends ServiceEntityRepository
     /**
      * Donne tous les suivis pour l'export complet.
      *
-     * @return SupportPerson[]|null
+     * @return SupportPerson[]
      */
-    public function findSupportsFullToExport($search = null, $limit = 99_999): ?array
+    public function findSupportsFullToExport($search = null, $limit = 99_999): array
     {
         $qb = $this->getSupportsQuery()
             ->leftJoin('sp.placesPerson', 'pp')->addSelect('pp')

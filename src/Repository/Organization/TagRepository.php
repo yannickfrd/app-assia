@@ -85,9 +85,9 @@ class TagRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Tag[]|null
+     * @return Tag[]
      */
-    public function getTagsByService(?Service $service = null, string $category = null): ?array
+    public function getTagsByService(?Service $service = null, string $category = null): array
     {
         if ($service) {
             $tags = $this->findTagByServiceQueryBuilder($service, $category)

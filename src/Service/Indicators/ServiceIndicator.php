@@ -24,9 +24,6 @@ class ServiceIndicator
     protected $userRepo;
     protected $serviceRepo;
     protected $peopleGroupRepo;
-    /**
-     * @var SupportGroupRepository
-     */
     protected $supportGroupRepo;
     protected $evaluationRepo;
     protected $noteRepo;
@@ -35,10 +32,8 @@ class ServiceIndicator
     protected $paymentRepo;
     protected $ConnectionRepo;
 
-    /**
-     * @var array
-     */
-    protected $criteria;
+    /** @var array */
+    protected $criteria = [];
 
     protected $cache;
 

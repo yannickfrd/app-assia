@@ -76,9 +76,9 @@ class ServiceRepository extends ServiceEntityRepository
     /**
      * Donne tous les services à exporter.
      *
-     * @return Service[]|null
+     * @return Service[]
      */
-    public function findServicesToExport(ServiceSearch $serviceSearch): ?array
+    public function findServicesToExport(ServiceSearch $serviceSearch): array
     {
         return $this->findServicesQuery($serviceSearch)->getResult();
     }
@@ -105,9 +105,9 @@ class ServiceRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Service[]|null
+     * @return Service[]
      */
-    public function findServicesWithPlace(OccupancySearch $search, User $user, Device $device = null): ?array
+    public function findServicesWithPlace(OccupancySearch $search, User $user, Device $device = null): array
     {
         $qb = $this->createQueryBuilder('s')->select('s')
             ->leftJoin('s.subServices', 'ss')->addSelect('PARTIAL ss.{id, name}')
@@ -142,9 +142,9 @@ class ServiceRepository extends ServiceEntityRepository
     /**
      * Donne tous les services de l'utilisateur.
      *
-     * @return Service[]|null
+     * @return Service[]
      */
-    public function findServicesOfUser(User $user): ?array
+    public function findServicesOfUser(User $user): array
     {
         return $this->createQueryBuilder('s')
             ->select('PARTIAL s.{id, name, email, phone1}')
@@ -166,9 +166,9 @@ class ServiceRepository extends ServiceEntityRepository
     /**
      * Donne tous les services de l'utilisateur.
      *
-     * @return Service[]|null
+     * @return Service[]
      */
-    public function findServicesAndSubServicesOfUser(User $user): ?array
+    public function findServicesAndSubServicesOfUser(User $user): array
     {
         $qb = $this->createQueryBuilder('s')->select('PARTIAL s.{id, name}')
             ->leftJoin('s.subServices', 'ss')->addSelect('PARTIAL ss.{id, name}')
@@ -214,9 +214,9 @@ class ServiceRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Service[]|null
+     * @return Service[]
      */
-    public function findServices(ServiceIndicatorsSearch $search): ?array
+    public function findServices(ServiceIndicatorsSearch $search): array
     {
         $qb = $this->createQueryBuilder('s')->select('s');
 

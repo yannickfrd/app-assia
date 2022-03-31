@@ -2,7 +2,6 @@
 
 namespace App\Tests\Controller\Organization;
 
-use App\Entity\Organization\Tag;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -16,9 +15,6 @@ class TagControllerTest extends WebTestCase
 
     /** @var array */
     private $fixtures;
-
-    /** @var Tag */
-    private $tag;
 
     protected function setUp(): void
     {
@@ -34,8 +30,6 @@ class TagControllerTest extends WebTestCase
             dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',
             dirname(__DIR__).'/../fixtures/tag_fixtures_test.yaml',
         ]);
-
-        $this->tag = $this->fixtures['tag1'];
     }
 
     public function testTagIndexPageIsUpWithRoleAdmin(): void

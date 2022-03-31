@@ -10,8 +10,8 @@ class TagSearch
     /** @var string|null */
     private $color;
 
-    /** @var array|null */
-    private $categories;
+    /** @var array */
+    private $categories = [];
 
     public function getName(): ?string
     {
@@ -37,12 +37,12 @@ class TagSearch
         return $this;
     }
 
-    public function getCategories(): ?array
+    public function getCategories(): array
     {
         return $this->categories;
     }
 
-    public function setCategories($categories): self
+    public function setCategories(array $categories): self
     {
         $this->categories = $categories;
 

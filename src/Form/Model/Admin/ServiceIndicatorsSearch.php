@@ -12,14 +12,14 @@ class ServiceIndicatorsSearch
     use ReferentServiceDeviceSearchTrait;
 
     /** @var array */
-    private $status;
+    private $status = [];
 
-    public function getStatus(): ?array
+    public function getStatus(): array
     {
         return $this->status;
     }
 
-    public function setStatus(?array $status): self
+    public function setStatus(array $status): self
     {
         $this->status = $status;
 

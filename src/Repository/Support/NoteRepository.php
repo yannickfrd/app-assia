@@ -140,9 +140,9 @@ class NoteRepository extends ServiceEntityRepository
     /**
      *  Donne toutes les notes créées par l'utilisateur.
      *
-     * @return Note[]|null
+     * @return Note[]
      */
-    public function findNotesOfUser(User $user, int $maxResults = 100): ?array
+    public function findNotesOfUser(User $user, int $maxResults = 100): array
     {
         return $this->createQueryBuilder('n')
             ->leftJoin('n.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')

@@ -46,9 +46,9 @@ class PlacePersonRepository extends ServiceEntityRepository
     /**
      * Donne les prises en charge des personnes.
      *
-     * @return PlacePerson[]|null
+     * @return PlacePerson[]
      */
-    public function findPlacePeople(OccupancySearch $search, User $user, Service $service = null, SubService $subService = null): ?array
+    public function findPlacePeople(OccupancySearch $search, User $user, Service $service = null, SubService $subService = null): array
     {
         $qb = $this->createQueryBuilder('pp')->select('pp')
             ->leftJoin('pp.placeGroup', 'pg')->addSelect('PARTIAL pg.{id, place}')
