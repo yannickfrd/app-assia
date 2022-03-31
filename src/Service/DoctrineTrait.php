@@ -18,6 +18,8 @@ trait DoctrineTrait
 
     public function disableFilter(EntityManagerInterface $em, $filter): void
     {
-        $em->getFilters()->disable($filter);
+        if ($this->_em->getFilters()->isEnabled($filter)) {
+            $em->getFilters()->disable($filter);
+        }
     }
 }

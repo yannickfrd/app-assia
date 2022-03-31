@@ -235,7 +235,7 @@ final class NoteController extends AbstractController
         EntityManagerInterface $em,
         TranslatorInterface $translator
     ): JsonResponse {
-        $note = $noteRepo->findNoteDeleted($id);
+        $note = $noteRepo->findNote($id, true);
 
         $this->denyAccessUnlessGranted('EDIT', $note->getSupportGroup());
 
