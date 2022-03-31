@@ -37,7 +37,8 @@
                     <td>{{ payment.typeToString }}</td>
                     <td class="align-middle text-center" style="text-align: center;">
                         {% if payment.startDate %}
-                            <small>{{ payment.startDate|date("d/m/Y") }} - {{ payment.endDate|date("d/m/Y") }}</small>
+                            <span style="text-align: center;">{{ payment.startDate|date("d/m/Y") }} 
+                                - {{ payment.endDate|date("d/m/Y") }}</span> 
                         {% endif %}
                     </td>
                     <td class="align-middle text-right" style="text-align: right;">
