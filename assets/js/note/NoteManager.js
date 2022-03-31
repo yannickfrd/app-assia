@@ -39,6 +39,12 @@ export default class NoteManager {
     init() {
         this.isCardNoteView = Boolean(document.querySelector('div.container[data-view="card-table"]').dataset.isCard)
 
+        document.querySelectorAll('a[data-action="restore-note"]')
+            .forEach(restoreBtn => restoreBtn.addEventListener('click', e => {
+                e.preventDefault()
+                this.requestRestoreNote(restoreBtn)
+            }))
+
         document.querySelectorAll('table#table-notes tbody a[data-action="show"]')
             .forEach(showNoteBtn => showNoteBtn.addEventListener('click', e => {
                 e.preventDefault()
@@ -51,7 +57,7 @@ export default class NoteManager {
             }
         })
 
-        document.querySelectorAll('table#table-notes tbody button[data-action="delete_note"]')
+        document.querySelectorAll('table#table-notes tbody button[data-action="delete-note"]')
             .forEach(btn => btn.addEventListener('click', () => {
                 this.deleteModal.show()
                 this.deleteModalElt.querySelector('button#modal-confirm').dataset.url = btn.dataset.url
@@ -78,7 +84,7 @@ export default class NoteManager {
 
     onclickModalConfirmBtn() {
         switch (this.confirmModalElt.dataset.action) {
-            case 'delete_note':
+            case 'delete-note':
                 this.loader.on()
                 this.ajax.send('GET', this.noteForm.btnDeleteElt.dataset.url, this.responseAjax.bind(this))
                 break;
@@ -87,6 +93,17 @@ export default class NoteManager {
                 break;
         }
         this.confirmModalElt.dataset.action = ''
+    }
+
+    /**
+     * @param {HTMLLinkElement} restoreBtn
+     */
+    requestRestoreNote(restoreBtn) {
+        if (!this.loader.isActive()) {
+            this.loader.on()
+
+            this.ajax.send('GET', restoreBtn.href, this.responseAjax.bind(this))
+        }
     }
 
     /**
@@ -112,7 +129,7 @@ export default class NoteManager {
 
         const modalBody = this.confirmModalElt.querySelector('.modal-body')
         modalBody.innerHTML = "<p>Voulez-vous vraiment supprimer cette note ?</p>"
-        this.confirmModalElt.dataset.action = 'delete_note'
+        this.confirmModalElt.dataset.action = 'delete-note'
         this.confirmModal.show()
     }
 
@@ -135,6 +152,7 @@ export default class NoteManager {
                 this.updateNoteElt(note)
                 break
             case 'delete':
+            case 'restore':
                 this.deleteNoteElt(note)
                 break
         }
@@ -238,14 +256,14 @@ export default class NoteManager {
                     title="Exporter la note au format PDF" data-toggle="tooltip" data-placement="bottom">
                     <i class="fas fa-file-pdf bg-danger fa-lg"></i><span class="sr-only">PDF</span></a><br/>
                 <button class="btn btn-sm btn-danger shadow mt-3" title="Supprimer la note" data-toggle="tooltip" data-placement="bottom"
-                    data-action="delete_note" data-url="${deleteUrl}"><i class="fa-solid fa-trash-can"></i></button></td>`
+                    data-action="delete-note" data-url="${deleteUrl}"><i class="fa-solid fa-trash-can"></i></button></td>`
 
         document.querySelector('table#table-notes tbody')
             .insertBefore(noteTr, document.querySelector('table#table-notes tbody').firstChild)
 
         this.noteModal.hide()
 
-        document.querySelectorAll('table#table-notes tbody button[data-action="delete_note"]')
+        document.querySelectorAll('table#table-notes tbody button[data-action="delete-note"]')
             .forEach(btn => btn.addEventListener('click', () => {
                 this.deleteModal.show()
                 this.deleteModalElt.querySelector('button#modal-confirm').dataset.url = btn.dataset.url

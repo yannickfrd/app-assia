@@ -28,7 +28,8 @@
                     {% if isDeleted %}
                         <a href="{{ path('note_restore', {'id': note.id}) }}"
                             class="btn btn-success btn-sm shadow position-absolute" style="right: 10px;" title="Restaurer la note sociale"
-                            data-toggle="tooltip" data-placement="bottom"><i class="fa-solid fa-trash-arrow-up"></i></a>
+                            data-toggle="tooltip" data-placement="bottom" data-action="restore-note">
+                            <i class="fa-solid fa-trash-arrow-up"></i></a>
                     {% endif %}
 
                     <h3 class="card-title h5 text-{{ theme_color }} {{ isDeleted ? '' : 'cursor-pointer' }}" {{ tooltipCard }}>{{ note.title }}</h3>

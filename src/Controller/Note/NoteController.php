@@ -24,7 +24,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -80,7 +79,7 @@ final class NoteController extends AbstractController
         }
 
         return $this->render('app/note/support_note_index.html.twig', [
-            'is_card_view' => $request->get('_route') === 'support_note_index',
+            'is_card_view' => 'support_note_index' === $request->get('_route'),
             'support' => $supportGroup,
             'form_search' => $formSearch->createView(),
             'form' => $form->createView(),
@@ -234,8 +233,8 @@ final class NoteController extends AbstractController
         int $id,
         NoteRepository $noteRepo,
         EntityManagerInterface $em,
-        Request $request
-    ): RedirectResponse {
+        TranslatorInterface $translator
+    ): JsonResponse {
         $note = $noteRepo->findNoteDeleted($id);
 
         $this->denyAccessUnlessGranted('EDIT', $note->getSupportGroup());
@@ -245,6 +244,11 @@ final class NoteController extends AbstractController
 
         NoteManager::deleteCacheItems($note, true);
 
-        return $this->redirect($request->headers->get('referer'));
+        return $this->json([
+            'action' => 'restore',
+            'alert' => 'success',
+            'msg' => $translator->trans('note.deleted_successfully', ['%note_title%' => $note->getTitle()], 'app'),
+            'note' => ['id' => $note->getId()],
+        ]);
     }
 }
