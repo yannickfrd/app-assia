@@ -16,7 +16,7 @@ class AvdlSupportSearch extends SupportSearch
     private $diagOrSupport;
 
     /** @var array */
-    private $supportType;
+    private $supportType = [];
 
     public function getDiagOrSupport(): ?int
     {
@@ -30,7 +30,7 @@ class AvdlSupportSearch extends SupportSearch
         return $this;
     }
 
-    public function getSupportType(): ?array
+    public function getSupportType(): array
     {
         return $this->supportType;
     }

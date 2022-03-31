@@ -17,7 +17,7 @@ class UserSearch
     private $username;
 
     /** @var array */
-    private $status;
+    private $status = [];
 
     /** @var string|null */
     private $phone;
@@ -76,12 +76,12 @@ class UserSearch
         return $this;
     }
 
-    public function getStatus(): ?array
+    public function getStatus(): array
     {
         return $this->status;
     }
 
-    public function setStatus(?array $status): self
+    public function setStatus(array $status): self
     {
         $this->status = $status;
 

@@ -9,42 +9,42 @@
 {% if nb_people_budget > 1 %}
     <table class="table-bordered mb-2" style="width: 50%; {{ style_table }}">
         <thead>
-            <tr style="{{ style_thead }}">
-                <th>Ménage</th>
-                <th style="text-align: right;">Montant</th>
-            </tr>
+        <tr style="{{ style_thead }}">
+            <th>Ménage</th>
+            <th style="text-align: right;">Montant</th>
+        </tr>
         </thead>
         <tbody>
+        <tr>
+            <td>Ressources</td>
+            <td style="text-align: right;">{{ eval_budget_group.resourcesGroupAmt|amount }}</td>
+        </tr>
+        {% if eval_budget_group.chargesGroupAmt %}
             <tr>
-                <td>Ressources</td>
-                <td style="text-align: right;">{{ eval_budget_group.resourcesGroupAmt|amount }}</td>
+                <td>Charges</td>
+                <td style="text-align: right;">{{ eval_budget_group.chargesGroupAmt|amount }}</td>
             </tr>
-            {% if eval_budget_group.chargesGroupAmt %}
-                <tr>
-                    <td>Charges</td>
-                    <td style="text-align: right;">{{ eval_budget_group.chargesGroupAmt|amount }}</td>
-                </tr>
-            {% endif %}
-            {% if eval_budget_group.contributionAmt %}
-                <tr>
-                    <td>Participation financière</td>
-                    <td style="text-align: right;">{{ eval_budget_group.contributionAmt|amount }}</td>
-                </tr>
-            {% endif %}
+        {% endif %}
+        {% if eval_budget_group.contributionAmt %}
+            <tr>
+                <td>Participation financière</td>
+                <td style="text-align: right;">{{ eval_budget_group.contributionAmt|amount }}</td>
+            </tr>
+        {% endif %}
         </tbody>
         <tfoot>
-            {% if eval_budget_group.budgetBalanceAmt > 0 %}
-                <tr style="font-weight: bold;">
-                    <td>Reste à vivre</td>
-                    <td style="text-align: right;">{{ eval_budget_group.budgetBalanceAmt|amount }}</td>
-                </tr>
-            {% endif %}
-            {% if eval_budget_group.debtsGroupAmt > 0 %}
-                <tr>
-                    <td>Montant total des dettes</td>
-                    <td style="text-align: right;">{{ eval_budget_group.debtsGroupAmt|amount }}</td>
-                </tr>
-            {% endif %}
+        {% if eval_budget_group.budgetBalanceAmt > 0 %}
+            <tr style="font-weight: bold;">
+                <td>Reste à vivre</td>
+                <td style="text-align: right;">{{ eval_budget_group.budgetBalanceAmt|amount }}</td>
+            </tr>
+        {% endif %}
+        {% if eval_budget_group.debtsGroupAmt > 0 %}
+            <tr>
+                <td>Montant total des dettes</td>
+                <td style="text-align: right;">{{ eval_budget_group.debtsGroupAmt|amount }}</td>
+            </tr>
+        {% endif %}
         </tfoot>
     </table>
     <p>&nbsp;</p>
@@ -54,48 +54,48 @@
 
 {% for eval_person in eval_people_budget %}
     {% set eval_budget_person = eval_person.evalBudgetPerson %}
-    {% if eval_budget_person %}	
+    {% if eval_budget_person %}
         {% if nb_people_budget > 1 %}
             <p style="{{ style_h3 }}"><u>{{ eval_person.supportPerson.person.fullname }}</u> :</p>
         {% endif %}
 
-        {{ eval_budget_person.resource != YES or eval_budget_person.resourcesAmt == null ? p_view.get(eval_budget_person.resourceToString, 'Resources', 'evaluation') }}
+        {{ eval_budget_person.resource != YES or eval_budget_person.resourcesAmt == null ? p_view.get(eval_budget_person.resourceToString, 'Ressources', 'evaluation') }}
         {# {{ eval_budget_person.charge != YES or eval_budget_person.chargesAmt == null ? p_view.get(eval_budget_person.chargeToString, 'Charges', 'evaluation') }} #}
-        
+
         {% if eval_budget_person.resource == YES %}
             <table class="table-bordered mb-2" style="width: 50%; {{ style_table }}">
                 <thead>
-                    <tr style="{{ style_thead }}">
-                        <th>Ressources</th>
-                        <th style="text-align: right;">Montant</th>
-                    </tr>
+                <tr style="{{ style_thead }}">
+                    <th>Ressources</th>
+                    <th style="text-align: right;">Montant</th>
+                </tr>
                 </thead>
                 <tbody>
-                    {% for eval_budget_resource in eval_budget_person.evalBudgetResources %}
-                        <tr>
-                            <td scope="row">{{ eval_budget_resource.type == 1000 and eval_budget_resource.comment ? 
-                                eval_budget_resource.comment : eval_budget_resource.typeToString  }}</td>
-                            <td style="text-align: right;">{{ eval_budget_resource.amount > 0 ? eval_budget_resource.amount|amount }}</td>
-                        </tr>
-                    {% endfor %}
+                {% for eval_budget_resource in eval_budget_person.evalBudgetResources %}
+                    <tr>
+                        <td>{{ eval_budget_resource.type == 1000 and eval_budget_resource.comment ?
+                            eval_budget_resource.comment : eval_budget_resource.typeToString }}</td>
+                        <td style="text-align: right;">{{ eval_budget_resource.amount > 0 ? eval_budget_resource.amount|amount }}</td>
+                    </tr>
+                {% endfor %}
                 </tbody>
                 <tfoot>
-                    <tr style="font-weight: bold;">
-                        <td>Total des ressources</td>
-                        <td style="text-align: right;">{{ eval_budget_person.resourcesAmt|amount }}</td>
+                <tr style="font-weight: bold;">
+                    <td>Total des ressources</td>
+                    <td style="text-align: right;">{{ eval_budget_person.resourcesAmt|amount }}</td>
+                </tr>
+                {% if eval_budget_person.incomeN1Amt is not null %}
+                    <tr>
+                        <td>Impôts sur le revenu n-1</td>
+                        <td style="text-align: right;">{{ eval_budget_person.incomeN1Amt|amount }}</td>
                     </tr>
-                    {% if eval_budget_person.incomeN1Amt is not null %}
-                        <tr>
-                            <td>Impôts sur le revenu n-1</td>
-                            <td style="text-align: right;">{{ eval_budget_person.incomeN1Amt|amount }}</td>
-                        </tr>							
-                    {% endif %}
-                    {% if eval_budget_person.incomeN2Amt is not null %}
-                        <tr>
-                            <td>Impôts sur le revenu n-2</td>
-                            <td style="text-align: right;">{{ eval_budget_person.incomeN2Amt|amount }}</td>
-                        </tr>
-                    {% endif %}
+                {% endif %}
+                {% if eval_budget_person.incomeN2Amt is not null %}
+                    <tr>
+                        <td>Impôts sur le revenu n-2</td>
+                        <td style="text-align: right;">{{ eval_budget_person.incomeN2Amt|amount }}</td>
+                    </tr>
+                {% endif %}
                 </tfoot>
             </table>
         {% endif %}
@@ -106,25 +106,25 @@
             <p>&nbsp;</p>
             <table class="table-bordered mb-2" style="width: 50%; {{ style_table }}">
                 <thead>
-                    <tr style="{{ style_thead }}">
-                        <th>Charges</th>
-                        <th style="text-align: right;">Montant</th>
-                    </tr>
+                <tr style="{{ style_thead }}">
+                    <th>Charges</th>
+                    <th style="text-align: right;">Montant</th>
+                </tr>
                 </thead>
                 <tbody>
-                    {% for eval_budget_charge in eval_budget_person.evalBudgetCharges %}
-                        <tr>
-                            <td>{{ eval_budget_charge.type == 1000 and eval_budget_charge.comment ? 
-                                eval_budget_charge.comment : eval_budget_charge.typeToString  }}</td>
-                            <td style="text-align: right;">{{ eval_budget_charge.amount > 0 ? eval_budget_charge.amount|amount }}</td>
-                        </tr>
-                    {% endfor %}
+                {% for eval_budget_charge in eval_budget_person.evalBudgetCharges %}
+                    <tr>
+                        <td>{{ eval_budget_charge.type == 1000 and eval_budget_charge.comment ?
+                            eval_budget_charge.comment : eval_budget_charge.typeToString }}</td>
+                        <td style="text-align: right;">{{ eval_budget_charge.amount > 0 ? eval_budget_charge.amount|amount }}</td>
+                    </tr>
+                {% endfor %}
                 </tbody>
                 <tfoot>
-                    <tr style="font-weight: bold;">
-                        <td>Total des charges</td>
-                        <td style="text-align: right;">{{ eval_budget_person.chargesAmt|amount }}</td>
-                    </tr>
+                <tr style="font-weight: bold;">
+                    <td>Total des charges</td>
+                    <td style="text-align: right;">{{ eval_budget_person.chargesAmt|amount }}</td>
+                </tr>
                 </tfoot>
             </table>
         {% endif %}
@@ -134,11 +134,11 @@
         {% endif %}
 
         {% if eval_budget_person.debt == YES %}
-            {{ p_view.get(eval_budget_person.debtToString ~ (eval_budget_person.evalBudgetDebts|length > 0 ? 
+            {{ p_view.get(eval_budget_person.debtToString ~ (eval_budget_person.evalBudgetDebts|length > 0 ?
                 ' (' ~ eval_budget_person.evalBudgetDebtsToString|lower ~ ')'), 'Debts', 'evaluation') }}
             {{ p_view.get(eval_budget_person.debtsAmt|amount(0), 'Debts amt', 'evaluation') }}
             {{ p_view.get(eval_budget_person.debtComment, 'Debt comment', 'evaluation') }}
-            {{ p_view.get(eval_budget_person.overIndebtRecord ? eval_budget_person.overIndebtRecordToString ~ (eval_budget_person.overIndebtRecordDate ? 
+            {{ p_view.get(eval_budget_person.overIndebtRecord ? eval_budget_person.overIndebtRecordToString ~ (eval_budget_person.overIndebtRecordDate ?
                 ' (date de dépôt : ' ~ eval_budget_person.overIndebtRecordDate|date('d/m/Y') ~ ')'), 'Over indebt record', 'evaluation') }}
             {{ p_view.get(eval_budget_person.settlementPlanToString, 'Settlement plan', 'evaluation') }}
             {{ p_view.get(eval_budget_person.moratoriumToString, 'Moratorium', 'evaluation') }}
@@ -148,3 +148,7 @@
     {% endif %}
 
 {% endfor %}
+
+{% if payments %}
+    {% include 'app/evaluation/export/_eval_budget_payments.html.twig' %}
+{% endif %}

@@ -4,8 +4,11 @@ namespace App\Service\SupportGroup;
 
 use App\Entity\Evaluation\EvaluationGroup;
 use App\Entity\Event\Rdv;
+use App\Entity\Organization\Referent;
 use App\Entity\People\PeopleGroup;
+use App\Entity\Support\Payment;
 use App\Entity\Support\SupportGroup;
+use App\Form\Utils\Choices;
 use App\Repository\Evaluation\EvaluationGroupRepository;
 use App\Repository\Event\RdvRepository;
 use App\Repository\Event\TaskRepository;
@@ -62,8 +65,10 @@ class SupportCollections
 
     /**
      * Donne les référents du suivi.
+     *
+     * @return Referent[]
      */
-    public function getReferents(SupportGroup $supportGroup)
+    public function getReferents(SupportGroup $supportGroup): array
     {
         $peopleGroup = $supportGroup->getPeopleGroup();
 
@@ -150,11 +155,43 @@ class SupportCollections
     }
 
     /**
+     * @return Payment[]
+     */
+    public function getAllPayments(SupportGroup $supportGroup): array
+    {
+        if (Choices::YES !== $supportGroup->getService()->getContribution()) {
+            return [];
+        }
+
+        return $this->cache->get(SupportGroup::CACHE_SUPPORT_PAYMENTS_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup) {
+            $item->expiresAfter(\DateInterval::createFromDateString('1 month'));
+
+            return $this->paymentRepo->findPaymentsOfSupport($supportGroup);
+        });
+    }
+
+    /**
+     * @return Payment[]
+     */
+    public function getPaymentsOrderedByStartDate(SupportGroup $supportGroup): array
+    {
+        if (Choices::YES !== $supportGroup->getService()->getContribution()) {
+            return [];
+        }
+
+        return $this->cache->get(SupportGroup::CACHE_SUPPORT_PAYMENTS_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup) {
+            $item->expiresAfter(\DateInterval::createFromDateString('1 month'));
+
+            return $this->paymentRepo->findPaymentsOfSupportOrderedByStartDate($supportGroup);
+        });
+    }
+
+    /**
      * Donne le nombre de paiements du suivi social.
      */
     public function getNbPayments(SupportGroup $supportGroup): ?int
     {
-        if (!$supportGroup->getPlaceGroups()) {
+        if (Choices::YES !== $supportGroup->getService()->getContribution()) {
             return null;
         }
 

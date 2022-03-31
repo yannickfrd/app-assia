@@ -1,5 +1,8 @@
-CHANGELOG
-=========
+# CHANGELOG
+
+## Version 3.15.0 - 31/03/2022
+
+Export payments inside pdf, word and note documents
 
 ## Version 3.14.0 - 30/03/2022
 

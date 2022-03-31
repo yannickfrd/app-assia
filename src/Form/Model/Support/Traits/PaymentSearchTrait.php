@@ -6,27 +6,21 @@ use App\Form\Model\Support\PaymentSearch;
 
 trait PaymentSearchTrait
 {
-    /**
-     * @var array|null
-     */
-    private $type;
+    /** @var array */
+    private $type = [];
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $dateType = PaymentSearch::DATE_TYPE_DEFAULT;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $export;
 
-    public function getType(): ?array
+    public function getType(): array
     {
         return $this->type;
     }
 
-    public function setType(?array $type): self
+    public function setType(array $type): self
     {
         $this->type = $type;
 

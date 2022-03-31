@@ -108,12 +108,10 @@ final class PaymentController extends AbstractController
             'form' => $form->createView(),
             'nbTotalPayments' => $request->query->count() ? $this->paymentRepo->count(['supportGroup' => $supportGroup]) : null,
             'payments' => $pagination->paginate(
-                $this->paymentRepo->findPaymentsOfSupportQuery(
-                    $supportGroup->getId(),
-                    $search
-                ),
+                $this->paymentRepo->findPaymentsOfSupportQuery($supportGroup, $search),
                 $request,
-                200),
+                200
+            ),
         ]);
     }
 

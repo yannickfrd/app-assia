@@ -160,9 +160,9 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Trouve les utilisateurs pour l'export des données.
      *
-     * @return User[]|null
+     * @return User[]
      */
-    public function findUsersToExport(UserSearch $search): ?array
+    public function findUsersToExport(UserSearch $search): array
     {
         return $this->findUsersQuery($search)
             ->getResult();
@@ -206,9 +206,9 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Donne les utilisateurs des services de l'utilisateur actuel.
      *
-     * @return User[]|null
+     * @return User[]
      */
-    public function findUsersOfServices(User $user): ?array
+    public function findUsersOfServices(User $user): array
     {
         $qb = $this->createQueryBuilder('u')->select('PARTIAL u.{id, firstname, lastname, disabledAt}')
             ->leftJoin('u.userDevices', 'ud')->addSelect('ud')
@@ -237,9 +237,9 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Donne les utilisateurs d'un service.
      *
-     * @return User[]|null
+     * @return User[]
      */
-    public function getUsersOfService(Service $service): ?array
+    public function getUsersOfService(Service $service): array
     {
         return $this->getReferentsQueryBuilder()
 
@@ -312,9 +312,9 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Donne tous les utilisateurs du service.
      *
-     * @return User[]|null
+     * @return User[]
      */
-    public function findUsersOfService(Service $service): ?array
+    public function findUsersOfService(Service $service): array
     {
         return $this->createQueryBuilder('u')
             ->select('PARTIAL u.{id, firstname, lastname, status, phone1, email, disabledAt}')
@@ -334,9 +334,9 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Donne les utilisateurs selon différents critères.
      *
-     * @return User[]|null
+     * @return User[]
      */
-    public function findUsers(array $criteria = null): ?array
+    public function findUsers(array $criteria = null): array
     {
         $qb = $this->createQueryBuilder('u')
         ->andWhere('u.disabledAt IS NULL');
@@ -424,9 +424,9 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Donne les utilisateurs qui ont des tâches avec des alertes.
      *
-     * @return User[]|null
+     * @return User[]
      */
-    public function getUsersWithAlerts(\DateTime $date): ?array
+    public function getUsersWithAlerts(\DateTime $date): array
     {
         return $this->createQueryBuilder('u')
             ->leftJoin('u.setting', 's')->addSelect('s')

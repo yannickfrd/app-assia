@@ -43,7 +43,8 @@ class EvaluationExporter
         $pathImage = 'pdf' === $exportType ? $export->getPathImage($logoPath) : null;
         $fullnameSupport = $supportGroup->getHeader()->getFullname();
 
-        $content = $this->getContent($supportGroup, $evaluation, $exportType, $pathImage, $fullnameSupport);
+        $payments = $this->supportCollections->getPaymentsOrderedByStartDate($supportGroup);
+        $content = $this->getContent($supportGroup, $evaluation, $exportType, $pathImage, $fullnameSupport, $payments);
 
         $export->createDocument($content, self::TITLE, $logoPath, $fullnameSupport);
 
@@ -58,15 +59,24 @@ class EvaluationExporter
             return null;
         }
 
+        $payments = $this->supportCollections->getPaymentsOrderedByStartDate($supportGroup);
+        $content = $this->getContent($supportGroup, $evaluation, 'note', null, null, $payments);
+
         return (new Note())
             ->setTitle(self::TITLE.' '.(new \DateTime())->format('d/m/Y'))
-            ->setContent($this->getContent($supportGroup, $evaluation, 'note'))
+            ->setContent($content)
             ->setType(Note::TYPE_NOTE)
             ->setSupportGroup($supportGroup);
     }
 
-    private function getContent(SupportGroup $supportGroup, EvaluationGroup $evaluation, string $exportType, string $pathImage = null, string $fullnameSupport = null): string
-    {
+    private function getContent(
+        SupportGroup $supportGroup,
+        EvaluationGroup $evaluation,
+        string $exportType,
+        string $pathImage = null,
+        string $fullnameSupport = null,
+        array $payments = []
+    ): string {
         $organization = $supportGroup->getService()->getPole()->getOrganization()->getName();
 
         return $this->renderer->render('app/evaluation/export/evaluation_export.html.twig', [
@@ -74,6 +84,7 @@ class EvaluationExporter
             'support' => $supportGroup,
             'referents' => $this->supportCollections->getReferents($supportGroup),
             'evaluation' => $evaluation,
+            'payments' => $payments,
             'lastRdv' => $this->supportCollections->getLastRdvs($supportGroup),
             'nextRdv' => $this->supportCollections->getNextRdvs($supportGroup),
             'title' => self::TITLE,

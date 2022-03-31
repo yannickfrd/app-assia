@@ -56,9 +56,9 @@ class PlaceRepository extends ServiceEntityRepository
     /**
      * Retourne toutes les places pour l'export.
      *
-     * @return Place[]|null
+     * @return Place[]
      */
-    public function findPlacesToExport(PlaceSearch $search = null): ?array
+    public function findPlacesToExport(PlaceSearch $search = null): array
     {
         $qb = $this->getPlacesAlterQueryBuilder();
 
@@ -116,9 +116,9 @@ class PlaceRepository extends ServiceEntityRepository
     /**
      * Donne toutes les places du service.
      *
-     * @return Place[]|null
+     * @return Place[]
      */
-    public function findPlacesOfService(Service $service): ?array
+    public function findPlacesOfService(Service $service): array
     {
         return $this->createQueryBuilder('pl')->select('pl')
             ->leftJoin('pl.service', 's')->addSelect('PARTIAL s.{id, name}')
@@ -137,9 +137,9 @@ class PlaceRepository extends ServiceEntityRepository
     /**
      * Donne toutes les places du sous-service.
      *
-     * @return Place[]|null
+     * @return Place[]
      */
-    public function findPlacesOfSubService(SubService $subService): ?array
+    public function findPlacesOfSubService(SubService $subService): array
     {
         return $this->createQueryBuilder('pl')->select('pl')
             ->innerJoin('pl.device', 'd')->addSelect('PARTIAL d.{id,name}')
@@ -157,9 +157,9 @@ class PlaceRepository extends ServiceEntityRepository
     /**
      * Donne toutes les groupes de places pour les taux d'occupation.
      *
-     * @return Place[]|null
+     * @return Place[]
      */
-    public function findPlacesForOccupancy(OccupancySearch $search, User $user, Service $service = null, SubService $subService = null): ?array
+    public function findPlacesForOccupancy(OccupancySearch $search, User $user, Service $service = null, SubService $subService = null): array
     {
         $qb = $this->createQueryBuilder('pl')->select('pl')
             ->innerJoin('pl.service', 's')->addSelect('PARTIAL s.{id, name}')

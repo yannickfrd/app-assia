@@ -30,9 +30,9 @@ class SubServiceRepository extends ServiceEntityRepository
     /**
      * Donne tous les sous-services du service.
      *
-     * @return SubService[]|null
+     * @return SubService[]
      */
-    public function findSubServicesOfService(Service $service): ?array
+    public function findSubServicesOfService(Service $service): array
     {
         return $this->createQueryBuilder('ss')
             ->select('PARTIAL ss.{id, name, phone1, email, disabledAt}')
@@ -53,9 +53,9 @@ class SubServiceRepository extends ServiceEntityRepository
     /**
      * Donne tous les sous-services du service.
      *
-     * @return SubService[]|null
+     * @return SubService[]
      */
-    public function getSubServicesOfService(Service $service): ?array
+    public function getSubServicesOfService(Service $service): array
     {
         return $this->getSubServicesOfServiceQueryBuilder($service)
             ->getQuery()
@@ -108,9 +108,9 @@ class SubServiceRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return SubService[]|null
+     * @return SubService[]
      */
-    public function findSubServicesWithPlace(OccupancySearch $search, User $user, ?Service $service = null): ?array
+    public function findSubServicesWithPlace(OccupancySearch $search, User $user, ?Service $service = null): array
     {
         $qb = $this->createQueryBuilder('ss')->select('ss')
             ->leftJoin('ss.service', 's')->addSelect('s')

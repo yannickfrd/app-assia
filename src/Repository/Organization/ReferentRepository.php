@@ -45,16 +45,21 @@ class ReferentRepository extends ServiceEntityRepository
 
         return $qb
             ->orderBy('ref.createdAt', 'DESC')
-            ->getQuery();
+            ->getQuery()
+        ;
     }
 
-    public function findReferentsOfPeopleGroup(PeopleGroup $peopleGroup): ?array
+    /**
+     * @return Referent[]
+     */
+    public function findReferentsOfPeopleGroup(PeopleGroup $peopleGroup): array
     {
         return $this->createQueryBuilder('r')->select('r')
             ->where('r.peopleGroup = :peopleGroup')
             ->setParameter('peopleGroup', $peopleGroup)
             ->orderBy('r.id', 'DESC')
             ->getQuery()
-            ->getResult();
+            ->getResult()
+        ;
     }
 }

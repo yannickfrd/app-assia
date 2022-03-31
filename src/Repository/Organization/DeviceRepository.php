@@ -70,9 +70,9 @@ class DeviceRepository extends ServiceEntityRepository
     /**
      * Donne les dispositifs du service.
      *
-     * @return Device[]|null
+     * @return Device[]
      */
-    public function getDevicesOfService(Service $service): ?array
+    public function getDevicesOfService(Service $service): array
     {
         return $this->createQueryBuilder('d')->select('PARTIAL d.{id, name}')
             ->leftJoin('d.serviceDevices', 'sd')
@@ -132,9 +132,9 @@ class DeviceRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Device[]|null
+     * @return Device[]
      */
-    public function findDevicesWithPlace(OccupancySearch $search, User $user, Service $service = null): ?array
+    public function findDevicesWithPlace(OccupancySearch $search, User $user, Service $service = null): array
     {
         $qb = $this->createQueryBuilder('d')->select('d')
             ->leftJoin('d.places', 'pl')->addSelect('PARTIAL pl.{id, name, startDate, endDate, nbPlaces, service}')
@@ -166,9 +166,9 @@ class DeviceRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Device[]|null
+     * @return Device[]
      */
-    public function findDevicesForDashboard(User $user): ?array
+    public function findDevicesForDashboard(User $user): array
     {
         $qb = $this->createQueryBuilder('d')
             ->leftJoin('d.serviceDevices', 'sd')->addSelect('sd')
