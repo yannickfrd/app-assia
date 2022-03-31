@@ -29,10 +29,12 @@
                         role="button" data-toggle="tooltip" title="Passer en vue carte"><i class="fa-solid fa-grip-vertical"></i></a>
                 {% endif %}
 
-                <button class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-action="new_note"
-                    title="Créer une nouvelle note" data-toggle="tooltip" data-placement="bottom">
-                    <i class="fas fa-plus-square mr-2"></i>Nouvelle note
-                </button>
+                {% if not restore_is_clicked %}
+                    <button class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-action="new_note"
+                        title="Créer une nouvelle note" data-toggle="tooltip" data-placement="bottom">
+                        <i class="fas fa-plus-square mr-2"></i>Nouvelle note
+                    </button>
+                {% endif %}
                 <div class="d-inline align-middle">Total :
                     <span id="count-notes" data-nb-total-notes="{{ nb_total_notes }}">
 					{{ nb_notes }} note{% if nb_notes > 1 %}s{% endif %}

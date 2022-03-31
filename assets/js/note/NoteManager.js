@@ -63,8 +63,10 @@ export default class NoteManager {
                 this.deleteModalElt.querySelector('button#modal-confirm').dataset.url = btn.dataset.url
             }))
 
-        document.querySelector('button[data-action="new_note"]')
-            .addEventListener('click', () => this.noteForm.resetForm())
+        if (document.querySelector('button[data-action="new_note"]')) {
+            document.querySelector('button[data-action="new_note"]')
+                .addEventListener('click', () => this.noteForm.resetForm())
+        }
 
         this.confirmModalElt.querySelector('#modal-confirm-btn')
             .addEventListener('click', () => this.onclickModalConfirmBtn())
@@ -153,7 +155,7 @@ export default class NoteManager {
                 break
             case 'delete':
             case 'restore':
-                this.deleteNoteElt(note)
+                this.deleteNoteElt(note, response.action)
                 break
         }
 
@@ -345,16 +347,27 @@ export default class NoteManager {
 
     /**
      * @param {Object} note
+     * @param {String} action
      */
-    deleteNoteElt(note) {
+    deleteNoteElt(note, action) {
+        let listNotes
+
         if (this.isCardNoteView) {
             this.containerNotesElt.querySelector(`div[data-note-id="${note.id}"]`).remove()
             this.noteModal.hide()
+
+            listNotes = document.querySelectorAll('div#container-notes .card')
         } else {
             const rowElt = document.getElementById('note-' + note.id)
             rowElt.remove()
+
+            listNotes = document.querySelectorAll('table#table-notes tbody tr')
         }
         this.updateCounter(-1)
+
+        if (action === 'restore' && listNotes.length === 0) {
+            setTimeout(() => document.location.href = location.pathname, 1000)
+        }
     }
 
     /**

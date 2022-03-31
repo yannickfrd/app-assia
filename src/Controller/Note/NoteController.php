@@ -247,7 +247,7 @@ final class NoteController extends AbstractController
         return $this->json([
             'action' => 'restore',
             'alert' => 'success',
-            'msg' => $translator->trans('note.deleted_successfully', ['%note_title%' => $note->getTitle()], 'app'),
+            'msg' => $translator->trans('note.restored_successfully', ['%note_title%' => $note->getTitle()], 'app'),
             'note' => ['id' => $note->getId()],
         ]);
     }
