@@ -350,7 +350,7 @@ export default class NoteManager {
      * @param {String} action
      */
     deleteNoteElt(note, action) {
-        let listNotes
+        let listNotes = []
 
         if (this.isCardNoteView) {
             this.containerNotesElt.querySelector(`div[data-note-id="${note.id}"]`).remove()
