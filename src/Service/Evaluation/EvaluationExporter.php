@@ -43,7 +43,7 @@ class EvaluationExporter
         $pathImage = 'pdf' === $exportType ? $export->getPathImage($logoPath) : null;
         $fullnameSupport = $supportGroup->getHeader()->getFullname();
 
-        $payments = $this->supportCollections->getAllPayments($supportGroup);
+        $payments = $this->supportCollections->getPaymentsOrderedByStartDate($supportGroup);
         $content = $this->getContent($supportGroup, $evaluation, $exportType, $pathImage, $fullnameSupport, $payments);
 
         $export->createDocument($content, self::TITLE, $logoPath, $fullnameSupport);
@@ -59,7 +59,7 @@ class EvaluationExporter
             return null;
         }
 
-        $payments = $this->supportCollections->getAllPayments($supportGroup);
+        $payments = $this->supportCollections->getPaymentsOrderedByStartDate($supportGroup);
         $content = $this->getContent($supportGroup, $evaluation, 'note', null, null, $payments);
 
         return (new Note())

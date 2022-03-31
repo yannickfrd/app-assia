@@ -167,6 +167,22 @@ class SupportCollections
     }
 
     /**
+     * @return Payment[]
+     */
+    public function getPaymentsOrderedByStartDate(SupportGroup $supportGroup): array
+    {
+        if (Choices::YES !== $supportGroup->getService()->getContribution()) {
+            return [];
+        }
+
+        return $this->cache->get(SupportGroup::CACHE_SUPPORT_PAYMENTS_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup) {
+            $item->expiresAfter(\DateInterval::createFromDateString('1 month'));
+
+            return $this->paymentRepo->findPaymentsOfSupportOrderedByStartDate($supportGroup);
+        });
+    }
+
+    /**
      * Donne le nombre de paiements du suivi social.
      */
     public function getNbPayments(SupportGroup $supportGroup): ?int
