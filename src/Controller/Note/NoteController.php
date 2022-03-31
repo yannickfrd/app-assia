@@ -246,6 +246,8 @@ final class NoteController extends AbstractController
         $note->setDeletedAt(null);
         $em->flush();
 
+        NoteManager::deleteCacheItems($note, true);
+
         return $this->redirect($request->headers->get('referer'));
     }
 }

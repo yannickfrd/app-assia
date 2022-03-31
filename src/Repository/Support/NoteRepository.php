@@ -176,6 +176,7 @@ class NoteRepository extends ServiceEntityRepository
     public function findNote(int $id): ?Note
     {
         return $this->createQueryBuilder('n')->select('n')
+            ->leftJoin('n.createdBy', 'u')->addSelect('PARTIAL u.{id}')
             ->leftJoin('n.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
             ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name, logoPath}')
