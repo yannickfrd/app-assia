@@ -25,16 +25,21 @@
                     {{ knp_pagination_sortable(notes, 'Service', 's.name') }}</th>
             {% endif %}
 
-            <th scope="col" class="align-middle th-date">
-                {{ knp_pagination_sortable(notes, 'Créé le', 'n.createdAt') }}</th>
+            {% if restore_is_clicked %}
+                <th scope="col" class="align-middle th-date">
+                    {{ knp_pagination_sortable(notes, 'Supprimée le', 'n.deletedAt') }}</th>
+            {% else %}
+                <th scope="col" class="align-middle th-date">
+                    {{ knp_pagination_sortable(notes, 'Créée le', 'n.createdAt') }}</th>
+            {% endif %}
 
             {% if support is not defined %}
                 <th scope="col" class="align-middle th-w-80">
-                    {{ knp_pagination_sortable(notes, 'Créé par', 'u.lastname') }}</th>
+                    {{ knp_pagination_sortable(notes, 'Créée par', 'u.lastname') }}</th>
                 <th scope="col" class="align-middle th-date">
-                    {{ knp_pagination_sortable(notes, 'Modifié le', 'n.updatedAt') }}</th>
+                    {{ knp_pagination_sortable(notes, 'Modifiée le', 'n.updatedAt') }}</th>
                 <th scope="col" class="align-middle th-w-80">
-                    {{ knp_pagination_sortable(notes, 'Modifié par', 'u2.lastname') }}</th>
+                    {{ knp_pagination_sortable(notes, 'Modifiée par', 'u2.lastname') }}</th>
             {% endif %}
 
             <th scope="col" class="align-middle th-w-80" data-get-url="action"
@@ -90,7 +95,11 @@
                     </td>
                 {% endif %}
 
-                <td class="align-middle" data-cell="createdAt">{{ note.createdAt|date('d/m/Y') }}</td>
+                {% if isSoftDeletable %}
+                    <td class="align-middle" data-cell="createdAt">{{ note.deletedAtToString }}</td>
+                {% else %}
+                    <td class="align-middle" data-cell="createdAt">{{ note.createdAtToString }}</td>
+                {% endif %}
 
                 {% if support is not defined %}
                     <td class="align-middle">{{ note.createdBy ? note.createdBy.fullname }}</td>
