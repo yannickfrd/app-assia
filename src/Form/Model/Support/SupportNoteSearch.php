@@ -2,11 +2,13 @@
 
 namespace App\Form\Model\Support;
 
+use App\Entity\Traits\DeletedTrait;
 use App\Form\Model\Support\Traits\NoteSearchTrait;
 
 class SupportNoteSearch
 {
     use NoteSearchTrait;
+    use DeletedTrait;
 
     /** @var int|null */
     private $noteId;
@@ -14,8 +16,8 @@ class SupportNoteSearch
     /** @var bool */
     private $export;
 
-    /** @var bool */
-    private $deleted = false;
+//    /** @var bool */
+//    private $deleted = false;
 
     public function getNoteId(): ?int
     {
@@ -40,17 +42,17 @@ class SupportNoteSearch
 
         return $this;
     }
-
-    public function getDeleted(): bool
-    {
-        return $this->deleted;
-    }
-
-    public function setDeleted(bool $deleted): self
-    {
-        $this->deleted = $deleted;
-
-        return $this;
-    }
+//
+//    public function getDeleted(): bool
+//    {
+//        return $this->deleted;
+//    }
+//
+//    public function setDeleted(bool $deleted): self
+//    {
+//        $this->deleted = $deleted;
+//
+//        return $this;
+//    }
 
 }
