@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## Version 3.16.0 - 31/03/2022
+
+New feature: switch all supports of user to other referent:
+
+* [SupportGroupController] Create method 'switchReferent'
+* [SupportReferentSwitcher] Create service 'SupportReferentSwitcher'
+* Create view 'switch_support_referent.html.twig
+* [User][SupportGroup] Rename properties and methods 'referentSupports', 'referent2Supports'
+* Add select-advanced JS file
+* Create tests
+
 ## Version 3.15.0 - 31/03/2022
 
 Export payments inside pdf, word and note documents

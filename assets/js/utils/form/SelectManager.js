@@ -51,7 +51,7 @@ export default class SelectManager {
     getDefaultOptions() {
         if (!this.selectElt.getAttribute('multiple')) {
             return {
-                width: 'resolve',
+                width: '100%',
                 theme: 'bootstrap4',
                 language: {
                     'noResults': () => 'Aucun résultat.',

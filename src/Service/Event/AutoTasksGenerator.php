@@ -84,7 +84,7 @@ class AutoTasksGenerator
 
     private function checkSupportsOfUser(User $user): void
     {
-        foreach ($user->getReferentSupport() as $supportGroup) {
+        foreach ($user->getReferentSupports() as $supportGroup) {
             /** @var EvaluationGroup */
             $evaluationGroup = $supportGroup->getEvaluationsGroup()->first();
 

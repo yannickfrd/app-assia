@@ -16,6 +16,7 @@ use App\Form\Support\Support\SupportCoefficientType;
 use App\Form\Support\Support\SupportGroupType;
 use App\Form\Support\Support\SupportSearchType;
 use App\Form\Support\Support\SupportsInMonthSearchType;
+use App\Form\Support\Support\SwitchSupportReferentType;
 use App\Repository\Support\PaymentRepository;
 use App\Repository\Support\SupportGroupRepository;
 use App\Repository\Support\SupportPersonRepository;
@@ -26,6 +27,7 @@ use App\Service\SupportGroup\SupportChecker;
 use App\Service\SupportGroup\SupportCollections;
 use App\Service\SupportGroup\SupportDuplicator;
 use App\Service\SupportGroup\SupportManager;
+use App\Service\SupportGroup\SupportReferentSwitcher;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -299,6 +301,28 @@ final class SupportGroupController extends AbstractController
         }
 
         return $this->redirectToRoute('support_show', ['id' => $supportGroup->getId()]);
+    }
+
+    /**
+     * @Route("/supports/switch-referent", name="supports_switch_referent")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function switchReferent(Request $request, SupportReferentSwitcher $supportReferentSwitcher): Response
+    {
+        $form = $this->createForm(SwitchSupportReferentType::class)
+            ->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $count = $supportReferentSwitcher->switch(
+                $form->get('_oldReferent')->getData(),
+                $newReferent = $form->get('_newReferent')->getData(),
+            );
+
+            $this->addFlash('success', $count." suivis ont été transférés 
+                vers {$newReferent->getFullname()}.");
+        }
+
+        return $this->renderForm('app/support/switch_support_referent.html.twig', ['form' => $form]);
     }
 
     /**

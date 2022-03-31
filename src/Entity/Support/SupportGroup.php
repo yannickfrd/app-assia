@@ -192,13 +192,13 @@ class SupportGroup
     private $statusToString;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User", inversedBy="referentSupport")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User", inversedBy="referentSupports")
      * @Groups("export")
      */
     private $referent;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User", inversedBy="referent2Support")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User", inversedBy="referent2Supports")
      * @Groups("export")
      */
     private $referent2;
@@ -267,7 +267,7 @@ class SupportGroup
 
     /**
      * @Gedmo\Blameable(on="create")
-     * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User", inversedBy="supports")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User", inversedBy="createdSupports")
      * @MaxDepth(1)
      */
     protected $createdBy; // NE PAS SUPPRIMER

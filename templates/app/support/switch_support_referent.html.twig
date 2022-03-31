@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% set title = 'Transfert de suivis' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+	<div class="container">
+        <h1 class="h2 mb-3">{{ title }}</h1>
+
+		{% include 'model/_msgFlash.html.twig' %}
+
+		<div class="my-5">
+			{{ form_start(form) }}
+			<p class="mb-4 text-secondary">
+				Vous pouvez transférer automatiquement tous les suivis en cours d'un travailleur social vers un autre 
+				en sélectionnant ci-dessous l'ancien et le nouveau référent.
+			</p>
+			<div class="row">
+				<div class="col-md-6">{{ form_row(form._oldReferent) }}</div>
+				<div class="col-md-6">{{ form_row(form._newReferent) }}</div>
+			</div>
+			<div class="float-right">
+				{{ form_widget(form.save, {attr: {class: 'btn btn-' ~ theme_color ~ ' shadow'}, label: 'Valider'}) }}
+			</div>
+			{{ form_end(form) }}
+		</div>
+	</div>		
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('select-advanced') }}
+{% endblock javascripts %}

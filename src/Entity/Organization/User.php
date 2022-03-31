@@ -174,7 +174,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Support\SupportGroup", mappedBy="createdBy")
      */
-    private $supports;
+    private $createdSupports;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Organization\ServiceUser", mappedBy="user", orphanRemoval=true, cascade={"persist"})
@@ -231,12 +231,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Support\SupportGroup", mappedBy="referent")
      */
-    private $referentSupport;
+    private $referentSupports;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Support\SupportGroup", mappedBy="referent2")
      */
-    private $referent2Support;
+    private $referent2Supports;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Support\Note", mappedBy="createdBy")
@@ -284,11 +284,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
-        $this->supports = new ArrayCollection();
+        $this->createdSupports = new ArrayCollection();
         $this->serviceUser = new ArrayCollection();
         $this->userConnections = new ArrayCollection();
-        $this->referentSupport = new ArrayCollection();
-        $this->referent2Support = new ArrayCollection();
+        $this->referentSupports = new ArrayCollection();
+        $this->referent2Supports = new ArrayCollection();
         $this->notes = new ArrayCollection();
         $this->rdvs = new ArrayCollection();
         $this->documents = new ArrayCollection();
@@ -581,13 +581,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getSupports(): ?Collection
     {
-        return $this->supports;
+        return $this->createdSupports;
     }
 
     public function addSupports(SupportGroup $supports): self
     {
-        if (!$this->supports->contains($supports)) {
-            $this->supports[] = $supports;
+        if (!$this->createdSupports->contains($supports)) {
+            $this->createdSupports[] = $supports;
             $supports->setCreatedBy($this);
         }
 
@@ -596,8 +596,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeSupports(SupportGroup $supports): self
     {
-        if ($this->supports->contains($supports)) {
-            $this->supports->removeElement($supports);
+        if ($this->createdSupports->contains($supports)) {
+            $this->createdSupports->removeElement($supports);
             // set the owning side to null (unless already changed)
             if ($supports->getCreatedBy() === $this) {
                 $supports->setCreatedBy(null);
@@ -698,15 +698,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<SupportGroup>|null
      */
-    public function getReferentSupport(): ?Collection
+    public function getReferentSupports(): ?Collection
     {
-        return $this->referentSupport;
+        return $this->referentSupports;
     }
 
     public function addReferentSupport(SupportGroup $referentSupport): self
     {
-        if (!$this->referentSupport->contains($referentSupport)) {
-            $this->referentSupport[] = $referentSupport;
+        if (!$this->referentSupports->contains($referentSupport)) {
+            $this->referentSupports[] = $referentSupport;
             $referentSupport->setReferent($this);
         }
 
@@ -715,8 +715,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeReferentSupport(SupportGroup $referentSupport): self
     {
-        if ($this->referentSupport->contains($referentSupport)) {
-            $this->referentSupport->removeElement($referentSupport);
+        if ($this->referentSupports->contains($referentSupport)) {
+            $this->referentSupports->removeElement($referentSupport);
             // set the owning side to null (unless already changed)
             if ($referentSupport->getReferent() === $this) {
                 $referentSupport->setReferent(null);
@@ -731,13 +731,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getReferent2Support(): ?Collection
     {
-        return $this->referent2Support;
+        return $this->referent2Supports;
     }
 
     public function addReferent2Support(SupportGroup $referent2Support): self
     {
-        if (!$this->referent2Support->contains($referent2Support)) {
-            $this->referent2Support[] = $referent2Support;
+        if (!$this->referent2Supports->contains($referent2Support)) {
+            $this->referent2Supports[] = $referent2Support;
             $referent2Support->setReferent2($this);
         }
 
@@ -746,8 +746,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeReferent2Support(SupportGroup $referent2Support): self
     {
-        if ($this->referent2Support->contains($referent2Support)) {
-            $this->referent2Support->removeElement($referent2Support);
+        if ($this->referent2Supports->contains($referent2Support)) {
+            $this->referent2Supports->removeElement($referent2Support);
             // set the owning side to null (unless already changed)
             if ($referent2Support->getReferent2() === $this) {
                 $referent2Support->setReferent2(null);

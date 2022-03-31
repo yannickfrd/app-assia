@@ -55,7 +55,7 @@ class UserRepository extends ServiceEntityRepository
     public function findUserById(int $id): ?User
     {
         return $this->createQueryBuilder('u')->select('u')
-            ->leftJoin('u.referentSupport', 'sg')->addSelect('PARTIAL sg.{id, status, startDate, endDate, updatedAt}')
+            ->leftJoin('u.referentSupports', 'sg')->addSelect('PARTIAL sg.{id, status, startDate, endDate, updatedAt}')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, email, phone1}')
             ->leftJoin('sg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople, createdAt, updatedAt}')
             ->leftJoin('g.rolePeople', 'r')->addSelect('PARTIAL r.{id, role, head}')
@@ -393,7 +393,7 @@ class UserRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('u')
             ->leftJoin('u.setting', 's')->addSelect('s')
-            ->leftJoin('u.referentSupport', 'sg')->addSelect('PARTIAL sg.{id, status}')
+            ->leftJoin('u.referentSupports', 'sg')->addSelect('PARTIAL sg.{id, status}')
             ->leftJoin('sg.evaluationsGroup', 'eg')->addSelect('PARTIAL eg.{id}')
             ->leftJoin('eg.evaluationPeople', 'ep')->addSelect('PARTIAL ep.{id}')
 
