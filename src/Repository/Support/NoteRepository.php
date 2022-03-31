@@ -192,6 +192,15 @@ class NoteRepository extends ServiceEntityRepository
             ->getSingleResult();
     }
 
+    public function findNoteDeleted(int $id): ?Note
+    {
+        if ($this->_em->getFilters()->isEnabled('softdeleteable')) {
+            $this->_em->getFilters()->disable('softdeleteable');
+        }
+
+        return $this->findNote($id);
+    }
+
     /**
      * Compte le nombre de notes.
      */

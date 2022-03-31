@@ -24,10 +24,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class NoteController extends AbstractController
@@ -128,9 +128,12 @@ final class NoteController extends AbstractController
      * @Route("/note/{id}/edit", name="note_edit", methods="POST")
      * @IsGranted("EDIT", subject="note")
      */
-    public function edit(Note $note, Request $request, EntityManagerInterface $em,  NormalizerInterface $normalizer,
-        TranslatorInterface $translator): JsonResponse
-    {
+    public function edit(
+        Note $note,
+        Request $request,
+        EntityManagerInterface $em,
+        TranslatorInterface $translator
+    ): JsonResponse {
         $form = $this->createForm(NoteType::class, $note)
             ->handleRequest($request);
 
@@ -226,13 +229,23 @@ final class NoteController extends AbstractController
 
     /**
      * @Route("/support/{supportId}/note/{id}/restore", name="note_restore", methods="GET")
-     * @IsGranted("ROLE_ADMIN")
      */
-    public function restore(int $supportId, int $id, SupportGroupRepository $groupRepo)
-    {
-        $supportGroup = $groupRepo->findSupportById($supportId, true);
+    public function restore(
+        int $supportId,
+        int $id,
+        SupportGroupRepository $groupRepo,
+        NoteRepository $noteRepo,
+        EntityManagerInterface $em,
+        Request $request
+    ): RedirectResponse {
+        $supportGroup = $groupRepo->findSupportById($supportId);
+        $note = $noteRepo->findNoteDeleted($id);
+
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        dd($supportGroup->getNotes());
+        $note->setDeletedAt(null);
+        $em->flush();
+
+        return $this->redirect($request->headers->get('referer'));
     }
 }
