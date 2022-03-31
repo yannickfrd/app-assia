@@ -219,16 +219,16 @@ export default class NoteManager {
                     class="btn btn-${this.themeColor} btn-sm shadow" title="Voir la note sociale" type="button"
                     data-toggle="tooltip" data-placement="bottom"><i class="fas fa-eye"></i></a></td>`
 
+        const content = note.content.length >= 200 ? note.content.substr(0, 200) + ' [...]' : note.content
         let titleTd = `<td class="align-middle justify" data-cell="title-content" data-title="${note.title}" data-content="${note.content}">`
         titleTd += note.title !== null ? `<span class="font-weight-bold">${note.title} : </span>` : ``
-        titleTd += `${note.content.length >= 200 ? note.content.substr(0, 200) + ' [...]' : note.content}</td>`
+        titleTd += `${this.striptags(content)}</td>`
         noteTr.innerHTML += titleTd
 
         noteTr.innerHTML += `
             <td class="align-middle" data-cell="type">${note.typeToString}</td>
             <td class="align-middle" data-cell="status">${note.statusToString}</td>
             <td class="align-middle" data-cell="tags">${this.createTags(note)}</td>
-            <td class="align-middle" data-cell="support">${note.supportGroup ? note.supportGroup.header.fullname : ''}</td>
             <td class="align-middle" data-cell="createdAt">${note.createdAtToString}</td>
             <td class="align-middle text-center p-1">
                 <a href="${wordUrl}" class="btn btn-${this.themeColor} btn-sm mb-1 shadow" 
@@ -290,15 +290,16 @@ export default class NoteManager {
     updateRowNote(note) {
         const noteRow = document.querySelector('tr#note-' + note.id)
 
+        const content = note.content.length >= 200 ? note.content.substr(0, 200) + ' [...]' : note.content
+
         noteRow.querySelector('td[data-cell="title-content"]').dataset.title = note.title
         noteRow.querySelector('td[data-cell="title-content"]').dataset.content = note.content
-        noteRow.querySelector('td[data-cell="title-content"]').innerHTML = note.title !== null ? `<span class="font-weight-bold">${note.title} : </span>` : ``
-            + `${note.content.length >= 200 ? note.content.substr(0, 200) + ' [...]' : note.content}`
+        noteRow.querySelector('td[data-cell="title-content"]').innerHTML = (note.title !== null
+            ? `<span class="font-weight-bold">${note.title} : </span>` : ``) + `${this.striptags(content)}`
 
         noteRow.querySelector('td[data-cell="type"]').innerHTML = note.typeToString ?? ''
         noteRow.querySelector('td[data-cell="status"]').innerHTML = note.statusToString ?? ''
         noteRow.querySelector('td[data-cell="tags"]').innerHTML = this.createTags(note)
-        noteRow.querySelector('td[data-cell="support"]').innerHTML = note.supportGroup ? note.supportGroup.header.fullname : ''
         noteRow.querySelector('td[data-cell="createdAt"]').innerHTML = note.createdAtToString
     }
 
@@ -354,5 +355,9 @@ export default class NoteManager {
             return this.searchSupportNotesElt.classList.remove('d-none')
         }
         return this.searchSupportNotesElt.classList.add('d-none')
+    }
+
+    striptags(text) {
+        return text.replace(/(<([^>]+)>)/gi, ' ')
     }
 }

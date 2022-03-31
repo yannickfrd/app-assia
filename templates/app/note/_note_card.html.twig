@@ -26,7 +26,7 @@
             <div class="card h-100 shadow">
                 <div class="card-header">
                     {% if isDeleted %}
-                        <a href="{{ path('note_restore', {'supportId': support.id, 'id': note.id}) }}"
+                        <a href="{{ path('note_restore', {'id': note.id}) }}"
                             class="btn btn-success btn-sm shadow position-absolute" style="right: 10px;" title="Restaurer la note sociale"
                             data-toggle="tooltip" data-placement="bottom"><i class="fa-solid fa-trash-arrow-up"></i></a>
                     {% endif %}

@@ -1,12 +1,17 @@
 {% extends 'base.html.twig' %}
 
 {% set nb_notes = notes|length %}
+{% set restore_is_clicked = form_search.deleted.children.deleted.vars.data %}
 
 {% block title %}Notes sociales{% endblock %}
 
 {% block body %}
     <div class="container" data-view="card-table" data-is-card="{{ is_card_view }}">
         {% set title = 'Notes sociales' %}
+        {% if restore_is_clicked %}
+            {% set title = title ~ ' (Corbeille)' %}
+        {% endif %}
+
         {% include 'app/support/_partials/_support_nav.html.twig' %}
 
         <div class="row mb-2">

@@ -228,20 +228,17 @@ final class NoteController extends AbstractController
     }
 
     /**
-     * @Route("/support/{supportId}/note/{id}/restore", name="note_restore", methods="GET")
+     * @Route("/note/{id}/restore", name="note_restore", methods="GET")
      */
     public function restore(
-        int $supportId,
         int $id,
-        SupportGroupRepository $groupRepo,
         NoteRepository $noteRepo,
         EntityManagerInterface $em,
         Request $request
     ): RedirectResponse {
-        $supportGroup = $groupRepo->findSupportById($supportId);
         $note = $noteRepo->findNoteDeleted($id);
 
-        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
+        $this->denyAccessUnlessGranted('EDIT', $note->getSupportGroup());
 
         $note->setDeletedAt(null);
         $em->flush();
