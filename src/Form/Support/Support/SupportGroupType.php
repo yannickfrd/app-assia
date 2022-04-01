@@ -322,7 +322,7 @@ class SupportGroupType extends AbstractType
     }
 
     /**
-     * Retourne les options du champ Référent.
+     * Retourne les options du champ Intervenant.
      */
     protected function optionsReferent(SupportGroup $supportGroup): array
     {

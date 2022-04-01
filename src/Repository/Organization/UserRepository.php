@@ -169,7 +169,7 @@ class UserRepository extends ServiceEntityRepository
     }
 
     /**
-     * Donne la liste des référents possibles dans la page d'édition du suivi.
+     * Donne la liste des intervanants disponibles dans la page d'édition du suivi.
      */
     public function getSupportReferentsQueryBuilder(Service $service = null, User $user, User $referent = null): QueryBuilder
     {

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 3.16.1 - 01/04/2022
+
+Rename word 'référent'/'professionnel' to 'intervenant'
+
 ## Version 3.16.0 - 31/03/2022
 
 New feature: switch all supports of user to other referent:

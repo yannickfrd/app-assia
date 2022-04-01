@@ -7,14 +7,15 @@
 {% block body %}
 	<div class="container">
         <h1 class="h2 mb-3">{{ title }}</h1>
-
+		<hr>
+		
 		{% include 'model/_msgFlash.html.twig' %}
 
 		<div class="my-5">
 			{{ form_start(form) }}
 			<p class="mb-4 text-secondary">
-				Vous pouvez transférer automatiquement tous les suivis en cours d'un travailleur social vers un autre 
-				en sélectionnant ci-dessous l'ancien et le nouveau référent.
+				Vous pouvez transférer automatiquement tous les suivis en cours d'un·e intervenant·e social·e vers un·e autre 
+				en sélectionnant ci-dessous l'ancien·ne et le/la nouvel·le intervenant·e.
 			</p>
 			<div class="row">
 				<div class="col-md-6">{{ form_row(form._oldReferent) }}</div>

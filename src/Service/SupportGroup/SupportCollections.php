@@ -64,7 +64,7 @@ class SupportCollections
     }
 
     /**
-     * Donne les référents du suivi.
+     * Donne les intervants sociaux du suivi.
      *
      * @return Referent[]
      */

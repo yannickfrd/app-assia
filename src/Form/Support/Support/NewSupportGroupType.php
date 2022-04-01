@@ -148,7 +148,7 @@ class NewSupportGroupType extends AbstractType
     }
 
     /**
-     * Retourne les options du champ Référent.
+     * Retourne les options du champ Intervenant.
      */
     protected function optionsReferent(?Service $service = null): array
     {

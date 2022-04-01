@@ -131,7 +131,7 @@ final class SupportGroupController extends AbstractController
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
-        // Récupère le référent social (actuel) avant la mise à jour du formulaire.
+        // Récupère l'intervenant social (actuel) avant la mise à jour du formulaire.
         $currentReferent = $supportGroup->getReferent();
 
         $form = $this->createForm(SupportGroupType::class, $supportGroup)
@@ -318,8 +318,12 @@ final class SupportGroupController extends AbstractController
                 $newReferent = $form->get('_newReferent')->getData(),
             );
 
-            $this->addFlash('success', $count." suivis ont été transférés 
-                vers {$newReferent->getFullname()}.");
+            if ($count > 0) {
+                $this->addFlash('success', $count." suivis ont été transférés 
+                    vers {$newReferent->getFullname()}.");
+            } else {
+                $this->addFlash('warning', "Aucun suivi n'a été transféré.");
+            }
         }
 
         return $this->renderForm('app/support/switch_support_referent.html.twig', ['form' => $form]);

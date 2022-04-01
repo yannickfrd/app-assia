@@ -53,7 +53,7 @@ class TaskExport extends ExportExcel
             'Statut' => $task->getStatusToString(),
             'Priorité' => $task->getLevelToString(),
             'Étiquette(s)' => $task->getTagsToString(),
-            'Professionnel·le(s)' => $task->getUsersToString(),
+            'Intervenant·e·s' => $task->getUsersToString(),
             'Suivi' => $supportGroup ? $supportGroup->getHeader()->getFullname() : null,
             'Service' => $supportGroup ? $supportGroup->getService()->getName() : null,
             'Dispositif' => $supportGroup ? $supportGroup->getDevice()->getName() : null,

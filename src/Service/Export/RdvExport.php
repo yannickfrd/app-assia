@@ -54,7 +54,7 @@ class RdvExport extends ExportExcel
             'Statut' => $rdv->getStatusToString(),
             'Lieu' => $rdv->getLocation(),
             'Étiquette(s)' => $rdv->getTagsToString(),
-            'Professionnel·le(s)' => $rdv->getUsersToString(),
+            'Intervenant·e·s' => $rdv->getUsersToString(),
             'Suivi' => $supportGroup ? $supportGroup->getHeader()->getFullname() : null,
             'Service' => $supportGroup ? $supportGroup->getService()->getName() : null,
             'Dispositif' => $supportGroup ? $supportGroup->getDevice()->getName() : null,
