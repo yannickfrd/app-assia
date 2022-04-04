@@ -44,6 +44,7 @@ class EvalFamilyPersonType extends AbstractType
             ])
             ->add('unbornChild', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
+                'attr' => ['data-important' => 'true'],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
@@ -92,11 +93,13 @@ class EvalFamilyPersonType extends AbstractType
         $builder
             ->add('childcareOrSchool', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
+                'attr' => ['data-important' => 'true'],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('childcareSchoolType', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalFamilyPerson::CHILDCARE_SCHOOL),
+                'attr' => ['data-important' => 'true'],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])

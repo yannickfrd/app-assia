@@ -171,7 +171,7 @@ class PaymentType extends AbstractType
 
         $types = new ArrayCollection(Payment::TYPES);
 
-        if (Service::RENT_CONTRIBUTION != $service->getContributionType()) {
+        if (Service::RENT_CONTRIBUTION !== $service->getContributionType()) {
             $types->remove(Payment::RENT);
         }
 

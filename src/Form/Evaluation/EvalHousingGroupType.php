@@ -83,6 +83,7 @@ class EvalHousingGroupType extends AbstractType
             ])
             ->add('daloAction', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS),
+                'attr' => ['data-important' => 'true'],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
@@ -141,10 +142,12 @@ class EvalHousingGroupType extends AbstractType
             ->add('hsgActionRecordId')
             ->add('domiciliation', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS),
+                'attr' => ['data-important' => 'true'],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('domiciliationType', ChoiceType::class, [
+                'attr' => ['data-important' => 'true'],
                 'choices' => Choices::getChoices(EvalHousingGroup::DOMICILIATION_TYPE),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
@@ -200,7 +203,7 @@ class EvalHousingGroupType extends AbstractType
                 ],
             ]);
 
-        if (Choices::YES != $service->getPlace() && Service::SERVICE_TYPE_HOTEL != $service->getType()) {
+        if (Choices::YES !== $service->getPlace() && Service::SERVICE_TYPE_HOTEL !== $service->getType()) {
             $builder
                 ->add('housingStatus', ChoiceType::class, [
                     'choices' => Choices::getChoices(EvalHousingGroup::HOUSING_STATUS),

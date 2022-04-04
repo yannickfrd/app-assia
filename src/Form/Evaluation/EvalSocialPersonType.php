@@ -21,7 +21,7 @@ class EvalSocialPersonType extends AbstractType
         /** @var SupportPerson */
         $supportPerson = $options['attr']['supportPerson'];
 
-        if (RolePerson::ROLE_CHILD != $supportPerson->getRole()) {
+        if (RolePerson::ROLE_CHILD !== $supportPerson->getRole()) {
             $this->addAdultFields($builder);
         }
 

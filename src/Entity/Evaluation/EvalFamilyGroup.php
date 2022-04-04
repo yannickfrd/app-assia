@@ -57,12 +57,12 @@ class EvalFamilyGroup
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $pmiFollowUp; // To DELETE
+    private $pmiFollowUp; // TO DELETE
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $pmiName;
+    private $pmiName; // TO DELETE
 
     /**
      * @ORM\Column(type="text", nullable=true)

@@ -102,7 +102,7 @@ class EvaluationManager extends EvaluationCreator
         $supportGroup = $evaluationGroup->getSupportGroup();
         $supportPeople = $supportGroup->getSupportPeople();
 
-        if ($evaluationGroup->getEvaluationPeople()->count() != $supportPeople->count()) {
+        if ($evaluationGroup->getEvaluationPeople()->count() !== $supportPeople->count()) {
             foreach ($supportPeople as $supportPerson) {
                 if (false === $this->personIsInEvaluation($supportPerson, $evaluationGroup)) {
                     $person = $supportPerson->getPerson();
