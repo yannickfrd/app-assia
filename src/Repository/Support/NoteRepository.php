@@ -106,8 +106,8 @@ class NoteRepository extends ServiceEntityRepository
      */
     public function findNotesOfSupportQuery(int $supportGroupId, SupportNoteSearch $search): Query
     {
-        if ($search->getDeleted() && $this->_em->getFilters()->isEnabled('softdeleteable')) {
-            $this->_em->getFilters()->disable('softdeleteable');
+        if ($search->getDeleted()) {
+            $this->disableFilter($this->_em, 'softdeleteable');
         }
 
         $qb = $this->createQueryBuilder('n')

@@ -57,7 +57,7 @@
                     {% include 'model/button/_show_button.html.twig' with {
                         'path_route': path('note_show', {'id': note.id}),
                         'disabled': isSoftDeletable,
-                        'title': 'Voir la note sociale'
+                        'title': 'Voir la note'
                     } %}
                 </td>
 
@@ -65,8 +65,7 @@
                     <td class="align-middle text-center p-1">
                         <a href="{{ path('note_export_word', {'id': note.id}) }}"
                             class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" title="Exporter la note au format Word"
-                            data-toggle="tooltip" data-placement="bottom"><i
-                                class="fas fa-file-word bg-primary fa-lg"></i>
+                            data-toggle="tooltip" data-placement="bottom"><i class="fas fa-file-word bg-primary fa-lg"></i>
                             <span class="sr-only">Word</span>
                         </a><br/>
                         <a href="{{ path('note_export_pdf', {'id': note.id}) }}"

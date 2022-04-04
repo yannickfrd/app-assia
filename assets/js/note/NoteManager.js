@@ -39,7 +39,7 @@ export default class NoteManager {
     init() {
         this.isCardNoteView = Boolean(document.querySelector('div.container[data-view="card-table"]').dataset.isCard)
 
-        document.querySelectorAll('a[data-action="restore-note"]')
+        document.querySelectorAll('a[data-action="restore"]')
             .forEach(restoreBtn => restoreBtn.addEventListener('click', e => {
                 e.preventDefault()
                 this.requestRestoreNote(restoreBtn)
@@ -365,22 +365,22 @@ export default class NoteManager {
      * @param {String} action
      */
     deleteNoteElt(note, action) {
-        let listNotes = []
+        let nbNotes
 
         if (this.isCardNoteView) {
             this.containerNotesElt.querySelector(`div[data-note-id="${note.id}"]`).remove()
             this.noteModal.hide()
 
-            listNotes = document.querySelectorAll('div#container-notes .card')
+            nbNotes = document.querySelectorAll('div#container-notes .card').length
         } else {
             const rowElt = document.getElementById('note-' + note.id)
             rowElt.remove()
 
-            listNotes = document.querySelectorAll('table#table-notes tbody tr')
+            nbNotes = document.querySelectorAll('table#table-notes tbody tr').length
         }
         this.updateCounter(-1)
 
-        if (action === 'restore' && listNotes.length === 0) {
+        if (action === 'restore' && nbNotes === 0) {
             setTimeout(() => document.location.href = location.pathname, 1000)
         }
     }
