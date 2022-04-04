@@ -449,6 +449,33 @@ class UserRepository extends ServiceEntityRepository
     }
 
     /**
+     * Donne les utilisateurs qui ont des rdvs avec des alertes.
+     *
+     * @return User[]
+     */
+    public function getUsersWithRdvAlerts(\DateTime $date)
+    {
+        return $this->createQueryBuilder('u')
+            ->leftJoin('u.setting', 's')->addSelect('s')
+            ->leftJoin('u.rdvs', 'r')->addSelect('r')
+            ->leftJoin('r.alerts', 'a')->addSelect('a')
+            ->leftJoin('r.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
+            ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id}')
+            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
+
+            ->where('a.sended <> TRUE')
+            ->andWhere('a.date <= :date')
+            ->setParameter(':date', $date)
+            ->andWhere('a.type = :type')
+            ->setParameter('type', Alert::EMAIL_TYPE)
+
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult()
+        ;
+    }
+
+    /**
      * Compte le nombre d'utilisateurs actifs.
      */
     public function countActiveUsers(): int
