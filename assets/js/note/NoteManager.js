@@ -45,15 +45,16 @@ export default class NoteManager {
                 this.requestRestoreNote(restoreBtn)
             }))
 
+        // show note in table
         document.querySelectorAll('table#table-notes tbody a[data-action="show"]')
             .forEach(showNoteBtn => showNoteBtn.addEventListener('click', e => {
                 e.preventDefault()
-                this.noteForm.show(e.currentTarget.parentElement.parentElement)
+                this.requestShowNote(e.currentTarget.href)
             }))
-
+        // show note in card
         this.noteElts.forEach(noteElt => {
             if (!noteElt.dataset.noteDeleted) {
-                noteElt.addEventListener('click', () => this.noteForm.show(noteElt))
+                noteElt.addEventListener('click', () => this.requestShowNote(noteElt.dataset.showUrl))
             }
         })
 
@@ -95,6 +96,17 @@ export default class NoteManager {
                 break;
         }
         this.confirmModalElt.dataset.action = ''
+    }
+
+    /**
+     * @param {String} url
+     */
+    requestShowNote(url) {
+        if (!this.loader.isActive()) {
+            this.loader.on()
+
+            this.ajax.send('GET', url, this.responseAjax.bind(this))
+        }
     }
 
     /**
@@ -149,6 +161,9 @@ export default class NoteManager {
         switch (response.action) {
             case 'create':
                 this.createNoteElt(note)
+                break
+            case 'show':
+                this.noteForm.show(note)
                 break
             case 'update':
                 this.updateNoteElt(note)

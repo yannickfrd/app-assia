@@ -22,7 +22,7 @@
         {% set isDeleted = note.deletedAt is not null %}
         {% set tooltipCard = isDeleted ? '' : 'title="Voir la note" data-toggle="tooltip" data-placement="bottom"' %}
 
-        <div class="col-sm-12 col-lg-6 mb-4 reveal" data-note-id="{{ note.id }}" data-note-deleted="{{ isDeleted }}">
+        <div class="col-sm-12 col-lg-6 mb-4 reveal" data-show-url="{{ path('note_show', {'id': note.id}) }}" data-note-id="{{ note.id }}" data-note-deleted="{{ isDeleted }}">
             <div class="card h-100 shadow">
                 <div class="card-header">
                     <div class="row">

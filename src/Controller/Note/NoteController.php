@@ -124,6 +124,23 @@ final class NoteController extends AbstractController
     }
 
     /**
+     * Donne un objet pour la requête ajax.
+     *
+     * @Route("/note/{id}/show", name="note_show", methods="GET")
+     */
+    public function show(int $id, NoteRepository $noteRepo): JsonResponse
+    {
+        $note = $noteRepo->findNote($id);
+
+        $this->denyAccessUnlessGranted('VIEW', $note);
+
+        return $this->json([
+            'action' => 'show',
+            'note' => $note
+        ], 200, [], ['groups' => Note::SERIALIZER_GROUPS]);
+    }
+
+    /**
      * @Route("/note/{id}/edit", name="note_edit", methods="POST")
      * @IsGranted("EDIT", subject="note")
      */

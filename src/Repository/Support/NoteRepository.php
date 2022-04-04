@@ -188,6 +188,7 @@ class NoteRepository extends ServiceEntityRepository
             ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name, logoPath}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, head}')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
+            ->leftJoin('n.tags', 'tags')->addSelect('tags')
 
             ->where('n.id = :id')
             ->setParameter('id', $id)

@@ -54,10 +54,11 @@
             {% set isSoftDeletable = note.deletedAt is not null %}
             <tr id="note-{{ note.id }}">
                 <td class="align-middle text-center">
-                    <a href="{{ path('support_note_index', {'id': support is defined ? support.id : note.supportGroup.id, 'noteId': note.id}) }}"
-                        class="btn btn-{{ isSoftDeletable ? 'secondary' : theme_color }} btn-sm shadow {{ isSoftDeletable ? 'disabled' : '' }}"
-                        title="Voir la note sociale" type="button"
-                        data-toggle="tooltip" data-placement="bottom" data-action="show"><i class="fas fa-eye"></i></a>
+                    {% include 'model/button/_show_button.html.twig' with {
+                        'path_route': path('note_show', {'id': note.id}),
+                        'disabled': isSoftDeletable,
+                        'title': 'Voir la note sociale'
+                    } %}
                 </td>
 
                 {% if not isSoftDeletable %}
