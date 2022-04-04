@@ -112,9 +112,7 @@
 
                 {% if isSoftDeletable %}
                     <td class="align-middle text-center p-1">
-                        {% include 'model/button/_restore_button.html.twig' with {
-                            title: 'Restaurer la note sociale', path_route: path('note_restore', {'id': note.id})
-                        } %}
+                        {% include 'model/button/_restore_button.html.twig' with {path_route: path('note_restore', {'id': note.id})} %}
                     </td>
                 {% elseif restore_is_clicked is defined %}
                     <td class="align-middle text-center p-1">

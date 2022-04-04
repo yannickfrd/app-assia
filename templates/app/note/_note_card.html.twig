@@ -25,16 +25,17 @@
         <div class="col-sm-12 col-lg-6 mb-4 reveal" data-note-id="{{ note.id }}" data-note-deleted="{{ isDeleted }}">
             <div class="card h-100 shadow">
                 <div class="card-header">
-                    {% if isDeleted %}
-                        {% include 'model/button/_restore_button.html.twig' with {
-                            title: 'Restaurer la note sociale',
-                            path_route: path('note_restore', {'id': note.id}),
-                            more_class: 'position-absolute',
-                            more_style: 'right: 10px;'
-                        } %}
-                    {% endif %}
+                    <div class="row">
+                        <div class="col-10">
+                            <h3 class="card-title h5 text-{{ theme_color }} {{ isDeleted ? '' : 'cursor-pointer' }}" {{ tooltipCard }}>{{ note.title }}</h3>
+                        </div>
+                        <div class="col-2 d-flex justify-content-end">
+                            {% if isDeleted %}
+                                {% include 'model/button/_restore_button.html.twig' with {path_route: path('note_restore', {'id': note.id}),} %}
+                            {% endif %}
+                        </div>
+                    </div>
 
-                    <h3 class="card-title h5 text-{{ theme_color }} {{ isDeleted ? '' : 'cursor-pointer' }}" {{ tooltipCard }}>{{ note.title }}</h3>
                     <span data-note-type={{ note.type }}>{{ note.typeToString }}</span>
                     (<span data-note-status={{ note.status }}>{{ note.statusToString }}</span>)
                     <span class="small text-secondary" data-note-created="true">
