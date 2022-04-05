@@ -39,11 +39,8 @@ export default class NoteManager {
     init() {
         this.isCardNoteView = Boolean(document.querySelector('div.container[data-view="card-table"]').dataset.isCard)
 
-        document.querySelectorAll('a[data-action="restore"]')
-            .forEach(restoreBtn => restoreBtn.addEventListener('click', e => {
-                e.preventDefault()
-                this.requestRestoreNote(restoreBtn)
-            }))
+        document.querySelectorAll('button[data-action="restore"]').forEach(restoreBtn => restoreBtn
+            .addEventListener('click', () => this.requestRestoreNote(restoreBtn)))
 
         // show note in table
         document.querySelectorAll('table#table-notes tbody a[data-action="show"]')
@@ -70,7 +67,7 @@ export default class NoteManager {
         }
 
         this.confirmModalElt.querySelector('#modal-confirm-btn')
-            .addEventListener('click', () => this.onclickModalConfirmBtn())
+            .addEventListener('click', () => this.requestConfirmModal())
 
         this.deleteModalElt.querySelector('button#modal-confirm')
             .addEventListener('click', e => this.requestDeleteNote(e))
@@ -85,7 +82,7 @@ export default class NoteManager {
         }
     }
 
-    onclickModalConfirmBtn() {
+    requestConfirmModal() {
         switch (this.confirmModalElt.dataset.action) {
             case 'delete-note':
                 this.loader.on()
@@ -116,7 +113,7 @@ export default class NoteManager {
         if (!this.loader.isActive()) {
             this.loader.on()
 
-            this.ajax.send('GET', restoreBtn.href, this.responseAjax.bind(this))
+            this.ajax.send('GET', restoreBtn.dataset.url, this.responseAjax.bind(this))
         }
     }
 

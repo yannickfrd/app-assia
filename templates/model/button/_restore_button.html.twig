@@ -1,3 +1,4 @@
-<a href="{{ path_route }}" class="btn btn-success btn-sm shadow" title="{{ title is defined ? title : 'Restaurer' }}"
-    data-action="restore" data-toggle="tooltip" data-placement="bottom"><i class="fa-solid fa-trash-arrow-up"></i>
-</a>
+<button class="btn btn-success btn-sm shadow" title="{{ restore_title is defined ? restore_title : 'Restaurer' }}"
+    data-action="restore" data-url="{{ path_route }}" data-toggle="tooltip" data-placement="bottom">
+    <i class="fa-solid fa-trash-arrow-up"></i>
+</button>

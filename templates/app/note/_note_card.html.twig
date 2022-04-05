@@ -29,7 +29,7 @@
                         <div class="col-10">
                             <h3 class="card-title h5 text-{{ theme_color }} {{ isDeleted ? '' : 'cursor-pointer' }}" {{ tooltipCard }}>{{ note.title }}</h3>
                         </div>
-                        <div class="col-2 d-flex justify-content-end">
+                        <div class="col-2 d-flex justify-content-end align-items-center">
                             {% if isDeleted %}
                                 {% include 'model/button/_restore_button.html.twig' with {path_route: path('note_restore', {'id': note.id}),} %}
                             {% endif %}
