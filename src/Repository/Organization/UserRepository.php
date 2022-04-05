@@ -463,9 +463,11 @@ class UserRepository extends ServiceEntityRepository
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id}')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
 
+            ->andWhere('r.start >= :date')
             ->where('a.sended <> TRUE')
             ->andWhere('a.date <= :date')
             ->setParameter(':date', $date)
+
             ->andWhere('a.type = :type')
             ->setParameter('type', Alert::EMAIL_TYPE)
 

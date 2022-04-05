@@ -1,40 +1,27 @@
 {% extends 'emails/baseEmail.html.twig' %}
 
-{% set plural_codition = nb_user_alerts > 1 ? 's' %}
+{% set with_support = rdv.supportGroup is not null %}
 
 {% block greeting %}
     <p class="mb-4">Bonjour {{ user.firstname }}, </p>
 {% endblock %}
 
 {% block body %}
-    <p>Vous avez <b>{{ nb_user_alerts }} rendez-vous</b> :</p>
+    <p>
+        Vous avez rendez-vous le <b>{{ rdv.start|date('d/m/Y \\à\\ H:i') }}</b>
+        {% if with_support %}
+            avec <b>{{ rdv.supportGroup.header.fullname }}</b>
+        {% endif %}
+    </p>
+    <p>Intitulé du rendez-vous :
+        <a href="{{ with_support ? path('support_calendar', {'id': rdv.supportGroup.id, 'rdv_id': rdv.id}) : path('calendar', {'rdv_id': rdv.id}) }}">
+            "{{ rdv.title }}"</a> <small>(Cliquez sur le lien pour accéder au rendez-vous.)</small></p>
 
-    {% if rdvs.without_support|length > 0 %}
-        <p>Voici le{{ plural_codition }} rendez-vous sans suivi :</p>
-
-        {% for rdv in rdvs.without_support %}
-            <ul>
-                <li>
-                    <a href="{{ path('calendar', {'rdv_id': rdv.id}) }}" class="dropdown-item">"{{ rdv.title }}"</a>
-                    pour le {{ rdv.startToString }}
-                </li>
-            </ul>
-        {% endfor %}
+    {% if rdv.location is not null %}
+        <p>Lieu : {{ rdv.location }}</p>
     {% endif %}
 
-    {% if rdvs.with_support|length > 0 %}
-        <p>Voici le{{ plural_codition }} rendez-vous rattaché{{ plural_codition }} à un suivi :</p>
-
-        {% for rdv in rdvs.with_support %}
-            <ul>
-                <li>
-                    <a href="{{ path('support_calendar', {'id': rdv.supportGroup.id, 'rdv_id': rdv.id}) }}"
-                        class="dropdown-item">"{{ rdv.title }}"
-                    </a> pour le {{ rdv.startToString }} {{ rdv.location is not null ? 'à '~rdv.location }}
-                    <br>Pour le suivi de "{{ rdv.supportGroup.header.fullname }}"
-                </li>
-            </ul>
-        {% endfor %}
+    {% if rdv.content %}
+        <p>Note : {{ rdv.content }}</p>
     {% endif %}
-
 {% endblock %}
