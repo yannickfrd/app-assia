@@ -145,11 +145,14 @@ final class NoteController extends AbstractController
      * @IsGranted("EDIT", subject="note")
      */
     public function edit(
-        Note $note,
+        int $id,
         Request $request,
         EntityManagerInterface $em,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        NoteRepository $noteRepo
     ): JsonResponse {
+        $note = $noteRepo->findNote($id);
+
         $form = $this->createForm(NoteType::class, $note)
             ->handleRequest($request);
 
