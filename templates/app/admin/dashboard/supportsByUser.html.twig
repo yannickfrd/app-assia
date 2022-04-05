@@ -16,7 +16,7 @@
     <div class="container{{ datas and devices|length > 8 ? '-fluid mt-4' }}">
 
         <h1 class="h2 mb-3">{{ title }}</h1>
-        <p>Nombre de suivis en cours par travailleur social en fonction du dispositif d'accompagnement.</p>
+        <p>Nombre de suivis en cours par Intervenant·e social·e en fonction du dispositif d'accompagnement.</p>
 
     </div>
 
@@ -48,7 +48,7 @@
                                         <td scope="row" class="align-middle text-center">
                                             <a href="{{ path('support_index', {'status': [2], 'service': {'referents': [datasUser.user.id]}, 'head': true}) }}" 
                                                 class="btn btn-{{ theme_color }} btn-sm shadow" 
-                                                data-placement="bottom" title="Voir les suivis du travailleur social"><!--
+                                                data-placement="bottom" title="Voir les suivis de l'intervenant·e social·e"><!--
                                                 --><span class="fas fa-eye fa-sm"></span>
                                             </a>
                                         </td>

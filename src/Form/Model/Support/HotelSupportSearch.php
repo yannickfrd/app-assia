@@ -7,13 +7,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 class HotelSupportSearch extends SupportSearch
 {
     /** @var array */
-    private $levelSupport;
+    private $levelSupport = [];
 
     /** @var int|null */
     private $departmentAnchor;
 
     /** @var array */
-    private $endReasons;
+    private $endReasons = [];
 
     /** @var ArrayCollection */
     private $hotels;
@@ -23,12 +23,12 @@ class HotelSupportSearch extends SupportSearch
         $this->hotels = new ArrayCollection();
     }
 
-    public function getLevelSupport(): ?array
+    public function getLevelSupport(): array
     {
         return $this->levelSupport;
     }
 
-    public function setLevelSupport(?array $levelSupport): self
+    public function setLevelSupport(array $levelSupport): self
     {
         $this->levelSupport = $levelSupport;
 
@@ -47,12 +47,12 @@ class HotelSupportSearch extends SupportSearch
         return $this;
     }
 
-    public function getEndReasons(): ?array
+    public function getEndReasons(): array
     {
         return $this->endReasons;
     }
 
-    public function setEndReasons(?array $endReasons): self
+    public function setEndReasons(array $endReasons): self
     {
         $this->endReasons = $endReasons;
 

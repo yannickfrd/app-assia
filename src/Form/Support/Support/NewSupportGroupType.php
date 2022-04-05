@@ -12,7 +12,6 @@ use App\Repository\Organization\DeviceRepository;
 use App\Repository\Organization\PlaceRepository;
 use App\Repository\Organization\ServiceRepository;
 use App\Repository\Organization\UserRepository;
-use App\Security\CurrentUserService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -23,14 +22,16 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Security;
 
 class NewSupportGroupType extends AbstractType
 {
-    private $currentUserService;
+    /** @var User */
+    private $user;
 
-    public function __construct(CurrentUserService $currentUserService)
+    public function __construct(Security $security)
     {
-        $this->currentUserService = $currentUserService;
+        $this->user = $security->getUser();
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -42,7 +43,7 @@ class NewSupportGroupType extends AbstractType
                 'class' => Service::class,
                 'choice_label' => 'name',
                 'query_builder' => function (ServiceRepository $repo) {
-                    return $repo->getServicesOfUserQueryBuilder($this->currentUserService);
+                    return $repo->getServicesOfUserQueryBuilder($this->user);
                 },
                 'placeholder' => 'placeholder.select',
             ])
@@ -86,7 +87,7 @@ class NewSupportGroupType extends AbstractType
         return $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             /** @var SupportGroup $supportGroup */
             $supportGroup = $event->getData();
-            $supportGroup->setReferent($this->currentUserService->getUser());
+            $supportGroup->setReferent($this->user);
         });
     }
 
@@ -106,7 +107,7 @@ class NewSupportGroupType extends AbstractType
                 'choice_label' => 'name',
                 'choice_value' => 'code',
                 'query_builder' => function (DeviceRepository $repo) use ($service) {
-                    return $repo->getDevicesOfUserQueryBuilder($this->currentUserService, $service);
+                    return $repo->getDevicesOfUserQueryBuilder($this->user, $service);
                 },
                 'placeholder' => 'placeholder.select',
             ])
@@ -147,7 +148,7 @@ class NewSupportGroupType extends AbstractType
     }
 
     /**
-     * Retourne les options du champ Référent.
+     * Retourne les options du champ Intervenant.
      */
     protected function optionsReferent(?Service $service = null): array
     {
@@ -155,7 +156,7 @@ class NewSupportGroupType extends AbstractType
             'class' => User::class,
             'choice_label' => 'fullname',
             'query_builder' => function (UserRepository $repo) use ($service) {
-                return $repo->getSupportReferentsQueryBuilder($service, $this->currentUserService->getUser());
+                return $repo->getSupportReferentsQueryBuilder($service, $this->user);
             },
             'placeholder' => 'placeholder.select',
             'required' => false,

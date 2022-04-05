@@ -7,7 +7,6 @@ use App\Entity\Support\Note;
 use App\Form\Model\Support\NoteSearch;
 use App\Form\Model\Support\SupportNoteSearch;
 use App\Repository\Traits\QueryTrait;
-use App\Security\CurrentUserService;
 use App\Service\DoctrineTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
@@ -32,7 +31,7 @@ class NoteRepository extends ServiceEntityRepository
     /**
      * Return all notes of group support.
      */
-    public function findNotesQuery(NoteSearch $search, ?CurrentUserService $currentUser = null): Query
+    public function findNotesQuery(NoteSearch $search, ?User $user = null): Query
     {
         $qb = $this->createQueryBuilder('n')
             ->leftJoin('n.tags', 't')->addSelect('PARTIAL t.{id, name}')
@@ -47,9 +46,9 @@ class NoteRepository extends ServiceEntityRepository
 
             ->where('sg.id IS NULL OR sp.head = TRUE');
 
-        if ($currentUser && !$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+        if ($user && !$user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->andWhere('sg.service IN (:services)')
-                ->setParameter('services', $currentUser->getServices());
+                ->setParameter('services', $user->getServices());
         }
 
         if ($search->getId()) {
@@ -106,10 +105,6 @@ class NoteRepository extends ServiceEntityRepository
      */
     public function findNotesOfSupportQuery(int $supportGroupId, SupportNoteSearch $search): Query
     {
-        if ($search->getDeleted()) {
-            $this->disableFilter($this->_em, 'softdeleteable');
-        }
-
         $qb = $this->createQueryBuilder('n')
             ->leftJoin('n.tags', 't')->addSelect('t')
             ->leftJoin('n.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
@@ -118,9 +113,6 @@ class NoteRepository extends ServiceEntityRepository
             ->andWhere('n.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroupId);
 
-        if ($search->getDeleted()) {
-            $qb->andWhere('n.deletedAt IS NOT null');
-        }
         if ($search->getNoteId()) {
             $qb->andWhere('n.id = :id')
                 ->setParameter('id', $search->getNoteId());
@@ -150,9 +142,9 @@ class NoteRepository extends ServiceEntityRepository
     /**
      *  Donne toutes les notes créées par l'utilisateur.
      *
-     * @return Note[]|null
+     * @return Note[]
      */
-    public function findNotesOfUser(User $user, int $maxResults = 100): ?array
+    public function findNotesOfUser(User $user, int $maxResults = 100): array
     {
         return $this->createQueryBuilder('n')
             ->leftJoin('n.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')

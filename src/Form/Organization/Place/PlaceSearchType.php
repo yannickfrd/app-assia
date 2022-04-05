@@ -3,8 +3,8 @@
 namespace App\Form\Organization\Place;
 
 use App\Entity\Organization\Pole;
+use App\Form\Model\Event\EventSearch;
 use App\Form\Model\Organization\PlaceSearch;
-use App\Form\Model\Support\RdvSearch;
 use App\Form\Type\DateSearchType;
 use App\Form\Type\ServiceDeviceReferentSearchType;
 use App\Form\Utils\Choices;
@@ -30,7 +30,7 @@ class PlaceSearchType extends AbstractType
     {
         $builder
             ->add('service', ServiceDeviceReferentSearchType::class, [
-                'data_class' => RdvSearch::class,
+                'data_class' => EventSearch::class,
             ])
             ->add('name', null, [
                 'label_attr' => [
@@ -66,7 +66,7 @@ class PlaceSearchType extends AbstractType
                 ],
             ])
             ->add('date', DateSearchType::class, [
-                'data_class' => RdvSearch::class,
+                'data_class' => EventSearch::class,
             ])
             ->add('disabled', ChoiceType::class, [
                 'label_attr' => ['class' => 'sr-only'],

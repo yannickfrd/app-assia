@@ -2,14 +2,15 @@
 
 namespace App\Tests\Repository;
 
-use App\Entity\Organization\Place;
 use App\Entity\Organization\Pole;
+use App\Entity\Organization\User;
+use App\Entity\Organization\Place;
 use App\Entity\Organization\Service;
 use App\Form\Model\Organization\PlaceSearch;
 use App\Repository\Organization\PlaceRepository;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class PlaceRepositoryTest extends WebTestCase
 {
@@ -19,14 +20,11 @@ class PlaceRepositoryTest extends WebTestCase
     /** @var PlaceRepository */
     protected $placeRepo;
 
-    /** @var Place */
-    protected $place;
+    /** @var User */
+    protected $user;
 
     /** @var Service */
     protected $service;
-
-    /** @var Pole */
-    protected $pole;
 
     /** @var PlaceSearch */
     protected $search;
@@ -50,6 +48,8 @@ class PlaceRepositoryTest extends WebTestCase
 
         $this->placeRepo = $this->entityManager->getRepository(Place::class);
 
+        $this->user = $fixtures['john_user'];
+
         $this->service = $fixtures['service1'];
         $this->search = (new PlaceSearch())
             ->setName('Logement')
@@ -67,13 +67,13 @@ class PlaceRepositoryTest extends WebTestCase
 
     public function testFindAllPlacesQueryWithoutFilters(): void
     {
-        $qb = $this->placeRepo->findPlacesQuery(new PlaceSearch());
+        $qb = $this->placeRepo->findPlacesQuery(new PlaceSearch(), $this->user);
         $this->assertGreaterThanOrEqual(5, count($qb->getResult()));
     }
 
     public function testFindAllPlacesQueryWithFilters(): void
     {
-        $qb = $this->placeRepo->findPlacesQuery($this->search);
+        $qb = $this->placeRepo->findPlacesQuery($this->search, $this->user);
         $this->assertGreaterThanOrEqual(1, count($qb->getResult()));
     }
 

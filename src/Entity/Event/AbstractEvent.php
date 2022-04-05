@@ -3,11 +3,11 @@
 namespace App\Entity\Event;
 
 use App\Entity\Organization\User;
-use App\Entity\Support\SupportGroup;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -21,28 +21,26 @@ abstract class AbstractEvent
         1 => 'Tâche',
     ];
 
-    public const TYPE_TASK = 1;
-
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups("show_event")
+     * @Groups({"show_event", "show_rdv"})
      */
     protected $id;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups("show_event")
-     * @Assert\NotBlank()
-     */
-    protected $title;
 
     /**
      * @ORM\Column(type="smallint")
      * @Groups("show_event")
      */
-    protected $type = self::TYPE_TASK;
+    protected $type;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Groups({"show_event", "show_rdv"})
+     * @Assert\NotBlank()
+     */
+    protected $title;
 
     /**
      * @ORM\Column(type="datetime",  nullable=true)
@@ -52,44 +50,33 @@ abstract class AbstractEvent
     /**
      * @ORM\Column(type="datetime")
      * @Assert\NotNull()
-     * @Groups("show_event")
+     * @Groups({"show_event", "show_rdv"})
      */
     protected $end;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups("show_event")
+     * @Groups({"show_event", "show_rdv"})
      */
     protected $content;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups("show_event")
+     * @Groups({"show_event", "show_rdv"})
      */
     protected $location;
 
     /**
      * @Gedmo\Blameable(on="create", on="update")
      * @ORM\ManyToOne(targetEntity=User::class)
-     * @Groups("show_user")
+     * @Groups({"show_user", "show_rdv"})
      * @MaxDepth(1)
      */
     protected $updatedBy; // NE PAS SUPPRIMER
 
-    /**
-     * @var Collection<Alert>
-     * @ORM\OneToMany(targetEntity=Alert::class, mappedBy="task", orphanRemoval=true, cascade={"persist"})
-     * @ORM\JoinColumn(name="alert", nullable=true)
-     * @ORM\OrderBy({"date": "ASC"})
-     * @Groups("show_alert")
-     */
-    protected $alerts;
-
     public function __construct()
     {
-        $this->users = new ArrayCollection();
-        $this->supportPeople = new ArrayCollection();
-        $this->tags = new ArrayCollection();
+        $this->type = get_class($this)::TYPE_EVENT;
         $this->alerts = new ArrayCollection();
     }
 
@@ -200,18 +187,6 @@ abstract class AbstractEvent
         return $this;
     }
 
-    public function getSupportGroup(): ?SupportGroup
-    {
-        return $this->supportGroup;
-    }
-
-    public function setSupportGroup(?SupportGroup $supportGroup): self
-    {
-        $this->supportGroup = $supportGroup;
-
-        return $this;
-    }
-
     /**
      * @return Collection<User>|null
      */
@@ -220,9 +195,13 @@ abstract class AbstractEvent
         return $this->users;
     }
 
-    /** @Groups("show_event") */
+    /** @Groups({"show_event", "show_rdv"}) */
     public function getUsersToString(): string
     {
+        if (null === $this->users) {
+            return '';
+        }
+
         $userNames = [];
 
         foreach ($this->users as $user) {
@@ -289,13 +268,13 @@ abstract class AbstractEvent
         return $countViewedAlerts;
     }
 
-    /** @Groups("show_event") */
+    /** @Groups({"show_event", "show_rdv"}) */
     public function getCreatedAtToString(string $format = 'd/m/Y H:i'): string
     {
         return $this->createdAt ? $this->createdAt->format($format) : '';
     }
 
-    /** @Groups("show_event") */
+    /** @Groups({"show_event", "show_rdv"}) */
     public function getUpdatedAtToString(string $format = 'd/m/Y H:i'): string
     {
         return $this->updatedAt ? $this->updatedAt->format($format) : '';

@@ -84,7 +84,7 @@ class AutoTasksGenerator
 
     private function checkSupportsOfUser(User $user): void
     {
-        foreach ($user->getReferentSupport() as $supportGroup) {
+        foreach ($user->getReferentSupports() as $supportGroup) {
             /** @var EvaluationGroup */
             $evaluationGroup = $supportGroup->getEvaluationsGroup()->first();
 
@@ -166,11 +166,11 @@ class AutoTasksGenerator
 
         /** @var Task $task */
         $task = (new Task())
+            ->setSupportGroup($supportGroup)
             ->setAutoTaskId($autoTaskId)
             ->setTitle($this->translator->trans($title, [], 'forms').' - '.(isset($supportPerson)
                 ? $supportPerson->getPerson()->getFullname() : $supportGroup->getHeader()->getFullname()))
             ->addUser($user)
-            ->setSupportGroup($supportGroup)
             ->setStart($alertDate)
             ->setEnd($endDate)
         ;

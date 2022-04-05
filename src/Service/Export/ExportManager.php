@@ -102,7 +102,7 @@ class ExportManager
         $search->getSupportDates() ? $comment[] = $search->getSupportDatesToString() : null;
         $search->getStart() ? $comment[] = 'Début : '.$search->getStart()->format('d/m/Y') : null;
         $search->getEnd() ? $comment[] = 'Fin : '.$search->getEnd()->format('d/m/Y') : null;
-        $comment[] = 'Référent(s) : '.($search->getReferentsToString() ? join(', ', $search->getReferentsToString()) : 'tous');
+        $comment[] = 'Intervenant(s) : '.($search->getReferentsToString() ? join(', ', $search->getReferentsToString()) : 'tous');
         $comment[] = 'Service(s) : '.($search->getServicesToString() ? join(', ', $search->getServicesToString()) : 'tous');
         $comment[] = 'Dispositif(s) : '.($search->getDevicesToString() ? join(', ', $search->getDevicesToString()) : 'tous');
 

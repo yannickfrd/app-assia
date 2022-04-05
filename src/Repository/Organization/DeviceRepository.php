@@ -4,11 +4,11 @@ namespace App\Repository\Organization;
 
 use App\Entity\Organization\Device;
 use App\Entity\Organization\Service;
+use App\Entity\Organization\User;
 use App\Form\Model\Admin\OccupancySearch;
 use App\Form\Model\Organization\DeviceSearch;
 use App\Form\Utils\Choices;
 use App\Repository\Traits\QueryTrait;
-use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -32,16 +32,16 @@ class DeviceRepository extends ServiceEntityRepository
     /**
      * Retourne tous les dispositifs.
      */
-    public function findDevicesQuery(CurrentUserService $currentUser, DeviceSearch $search): Query
+    public function findDevicesQuery(DeviceSearch $search, $user): Query
     {
         $qb = $this->createQueryBuilder('d')->select('d')
             ->leftJoin('d.serviceDevices', 'sd')->addSelect('sd')
             ->leftJoin('sd.service', 's')->addSelect('PARTIAL s.{id, name}')
             ->leftJoin('s.pole', 'p')->addSelect('PARTIAL p.{id, name}');
 
-        if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+        if (!$user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->andWhere('sd.service IN (:services)')
-                ->setParameter('services', $currentUser->getServices());
+                ->setParameter('services', $user->getServices());
         }
 
         if ($search->getName()) {
@@ -70,9 +70,9 @@ class DeviceRepository extends ServiceEntityRepository
     /**
      * Donne les dispositifs du service.
      *
-     * @return Device[]|null
+     * @return Device[]
      */
-    public function getDevicesOfService(Service $service): ?array
+    public function getDevicesOfService(Service $service): array
     {
         return $this->createQueryBuilder('d')->select('PARTIAL d.{id, name}')
             ->leftJoin('d.serviceDevices', 'sd')
@@ -106,7 +106,7 @@ class DeviceRepository extends ServiceEntityRepository
     /**
      * Donne la liste des dispositifs de l'utilisateur.
      */
-    public function getDevicesOfUserQueryBuilder(CurrentUserService $currentUser, Service $service = null, string $dataClass = null): QueryBuilder
+    public function getDevicesOfUserQueryBuilder(User $user, Service $service = null, string $dataClass = null): QueryBuilder
     {
         $qb = $this->createQueryBuilder('d')->select('d')
             ->leftJoin('d.serviceDevices', 'sd')->addSelect('sd')
@@ -121,9 +121,9 @@ class DeviceRepository extends ServiceEntityRepository
                 ->setParameter('service', $service);
         }
 
-        if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+        if (!$user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->andWhere('sd.service IN (:services)')
-                ->setParameter('services', $currentUser->getServices());
+                ->setParameter('services', $user->getServices());
         }
 
         return $qb
@@ -132,9 +132,9 @@ class DeviceRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Device[]|null
+     * @return Device[]
      */
-    public function findDevicesWithPlace(OccupancySearch $search, CurrentUserService $currentUser, Service $service = null): ?array
+    public function findDevicesWithPlace(OccupancySearch $search, User $user, Service $service = null): array
     {
         $qb = $this->createQueryBuilder('d')->select('d')
             ->leftJoin('d.places', 'pl')->addSelect('PARTIAL pl.{id, name, startDate, endDate, nbPlaces, service}')
@@ -148,9 +148,9 @@ class DeviceRepository extends ServiceEntityRepository
         //         ->setParameter('pole', $search->getPole());
         // }
 
-        if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+        if (!$user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->andWhere('pl.service IN (:services)')
-                ->setParameter('services', $currentUser->getServices());
+                ->setParameter('services', $user->getServices());
         }
         if ($service) {
             $qb->andWhere('pl.service = :service')
@@ -166,9 +166,9 @@ class DeviceRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Device[]|null
+     * @return Device[]
      */
-    public function findDevicesForDashboard(CurrentUserService $currentUser): ?array
+    public function findDevicesForDashboard(User $user): array
     {
         $qb = $this->createQueryBuilder('d')
             ->leftJoin('d.serviceDevices', 'sd')->addSelect('sd')
@@ -176,9 +176,9 @@ class DeviceRepository extends ServiceEntityRepository
 
             ->where('d.disabledAt IS NULL');
 
-        if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+        if (!$user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->andWhere('sd.service IN (:services)')
-                ->setParameter('services', $currentUser->getServices());
+                ->setParameter('services', $user->getServices());
         }
 
         return $qb

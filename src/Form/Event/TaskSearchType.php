@@ -78,14 +78,13 @@ class TaskSearchType extends AbstractType
                 'required' => false,
             ])
             ->add('status', ChoiceType::class, [
-                'label_attr' => ['class' => 'sr-only'],
+                'multiple' => true,
                 'choices' => Choices::getChoices(Task::STATUS),
                 'attr' => [
-                    'size' => 1,
-                    'class' => 'w-max-160',
+                    'class' => 'multi-select w-min-160',
                     'placeholder' => 'placeholder.status',
+                    'size' => 1,
                 ],
-                'placeholder' => 'placeholder.status',
                 'required' => false,
             ])
             ->add('date', DateSearchType::class, [

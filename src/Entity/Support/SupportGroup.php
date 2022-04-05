@@ -4,6 +4,7 @@ namespace App\Entity\Support;
 
 use App\Entity\Evaluation\EvalInitGroup;
 use App\Entity\Evaluation\EvaluationGroup;
+use App\Entity\Event\Rdv;
 use App\Entity\Event\Task;
 use App\Entity\Organization\Device;
 use App\Entity\Organization\Service;
@@ -191,13 +192,13 @@ class SupportGroup
     private $statusToString;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User", inversedBy="referentSupport")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User", inversedBy="referentSupports")
      * @Groups("export")
      */
     private $referent;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User", inversedBy="referent2Support")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User", inversedBy="referent2Supports")
      * @Groups("export")
      */
     private $referent2;
@@ -266,7 +267,7 @@ class SupportGroup
 
     /**
      * @Gedmo\Blameable(on="create")
-     * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User", inversedBy="supports")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User", inversedBy="createdSupports")
      * @MaxDepth(1)
      */
     protected $createdBy; // NE PAS SUPPRIMER
@@ -287,7 +288,7 @@ class SupportGroup
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Organization\Service", inversedBy="supportGroup")
-     * @Groups({"export", "show_service"})
+     * @Groups({"export", "show_service", "show_rdv"})
      */
     private $service;
 
@@ -310,7 +311,7 @@ class SupportGroup
     private $notes;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Support\Rdv", mappedBy="supportGroup", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity=Rdv::class, mappedBy="supportGroup", cascade={"persist", "remove"})
      * @MaxDepth(1)
      */
     private $rdvs;

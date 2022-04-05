@@ -44,7 +44,7 @@ class SupportNoteSearchType extends AbstractType
                 'label_attr' => [
                     'class' => 'sr-only',
                 ],
-                'choices' => Choices::getchoices(Note::TYPE),
+                'choices' => Choices::getChoices(Note::TYPE),
                 'attr' => [
                     'class' => 'w-max-150',
                 ],
@@ -55,7 +55,7 @@ class SupportNoteSearchType extends AbstractType
                 'label_attr' => [
                     'class' => 'sr-only',
                 ],
-                'choices' => Choices::getchoices(Note::STATUS),
+                'choices' => Choices::getChoices(Note::STATUS),
                 'attr' => [
                     'class' => 'w-max-150',
                 ],

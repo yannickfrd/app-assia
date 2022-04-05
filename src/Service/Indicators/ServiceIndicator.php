@@ -7,6 +7,7 @@ use App\Entity\Organization\SubService;
 use App\Form\Model\Admin\ServiceIndicatorsSearch;
 use App\Repository\Admin\IndicatorRepository;
 use App\Repository\Evaluation\EvaluationGroupRepository;
+use App\Repository\Event\RdvRepository;
 use App\Repository\Organization\ServiceRepository;
 use App\Repository\Organization\UserConnectionRepository;
 use App\Repository\Organization\UserRepository;
@@ -14,7 +15,6 @@ use App\Repository\People\PeopleGroupRepository;
 use App\Repository\Support\DocumentRepository;
 use App\Repository\Support\NoteRepository;
 use App\Repository\Support\PaymentRepository;
-use App\Repository\Support\RdvRepository;
 use App\Repository\Support\SupportGroupRepository;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
@@ -24,9 +24,6 @@ class ServiceIndicator
     protected $userRepo;
     protected $serviceRepo;
     protected $peopleGroupRepo;
-    /**
-     * @var SupportGroupRepository
-     */
     protected $supportGroupRepo;
     protected $evaluationRepo;
     protected $noteRepo;
@@ -35,10 +32,8 @@ class ServiceIndicator
     protected $paymentRepo;
     protected $ConnectionRepo;
 
-    /**
-     * @var array
-     */
-    protected $criteria;
+    /** @var array */
+    protected $criteria = [];
 
     protected $cache;
 

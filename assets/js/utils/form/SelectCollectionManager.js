@@ -7,6 +7,7 @@ export default class SelectCollectionManager {
      * @param {string} selectId
      * @param {CallableFunction} callbackAfterRemove
      * @param {CallableFunction} callbackAfterAdd
+     * @param {number} delay
      */
     constructor(selectId, callbackAfterAdd = null, callbackAfterRemove = null, delay = 200) {
         this.selectElt = document.getElementById(selectId)
@@ -84,7 +85,7 @@ export default class SelectCollectionManager {
      * @param {HTMLTableRowElement} trElt 
      */
     addEventRemove(trElt) {
-        trElt.querySelector('button[data-action="remove"').addEventListener('click', e => {
+        trElt.querySelector('button[data-action="remove"]').addEventListener('click', e => {
             e.preventDefault()
             trElt.classList.add('fade-out')
             setTimeout(() => {

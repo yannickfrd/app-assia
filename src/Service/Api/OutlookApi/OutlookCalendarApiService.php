@@ -2,8 +2,8 @@
 
 namespace App\Service\Api\OutlookApi;
 
-use App\Entity\Support\Rdv;
-use App\Repository\Support\RdvRepository;
+use App\Entity\Event\Rdv;
+use App\Repository\Event\RdvRepository;
 use App\Service\Api\AbstractApiCalendar;
 use GuzzleHttp\Exception\GuzzleException;
 use Microsoft\Graph\Exception\GraphException;

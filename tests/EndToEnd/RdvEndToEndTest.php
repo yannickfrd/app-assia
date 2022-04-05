@@ -53,7 +53,7 @@ class RdvEndToEndTest extends PantherTestCase
         $this->outputMsg('Create a rdv');
 
         $crawler->selectButton('js-new-rdv')->click();
-        sleep(1); //pop-up effect
+        sleep(1); // pop-up effect
 
         /** @var Crawler */
         $crawler = $this->client->submitForm('js-btn-save', [
@@ -68,7 +68,7 @@ class RdvEndToEndTest extends PantherTestCase
         $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
 
         $crawler->selectButton('btn-close-msg')->click();
-        sleep(1); //pop-up effect
+        sleep(1); // pop-up effect
 
         return $crawler;
     }
@@ -80,7 +80,7 @@ class RdvEndToEndTest extends PantherTestCase
         $crawler->filter('#show-weekend')->click();
 
         $crawler->filter('a.calendar-event')->first()->click();
-        sleep(1); //pop-up effect
+        sleep(1); // pop-up effect
 
         /** @var Crawler */
         $crawler = $this->client->submitForm('js-btn-save', [
@@ -92,7 +92,7 @@ class RdvEndToEndTest extends PantherTestCase
         $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
 
         $crawler->selectButton('btn-close-msg')->click();
-        sleep(1); //pop-up effect
+        sleep(1); // pop-up effect
 
         return $crawler;
     }
@@ -102,7 +102,7 @@ class RdvEndToEndTest extends PantherTestCase
         $this->outputMsg('Delete a rdv');
 
         $crawler->filter('a.calendar-event')->first()->click();
-        sleep(1); //pop-up effect
+        sleep(1); // pop-up effect
 
         $crawler->filter('modal-btn-delete')->click();
 
@@ -110,7 +110,7 @@ class RdvEndToEndTest extends PantherTestCase
         $this->assertSelectorExists('#js-msg-flash.alert.alert-warining');
 
         $crawler->selectButton('btn-close-msg')->click();
-        sleep(1); //pop-up effect
+        sleep(1); // pop-up effect
 
         return $crawler;
     }

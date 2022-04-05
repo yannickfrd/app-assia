@@ -61,7 +61,9 @@ Name: Nom
 Nb people: Nb. de personnes
 NbPeople: Nb. pers.
 New password: Nouveau mot de passe
+New referent: Nouvel·le intervenant·e
 Old password: Ancien mot de passe
+Old referent: Ancien·ne intervenant·e
 organization.name: Organisme
 placeholder:
   action: -- Action --
@@ -79,7 +81,7 @@ placeholder:
   nbSupports: Nb de suivis
   person: -- Personne --
   pole: -- Pôle --
-  referent: -- Référent --
+  referent: -- Intervenant·e --
   select: -- Sélectionner --
   subService: -- Sous-service --
   service: -- Service --
@@ -91,7 +93,7 @@ placeholder:
   tags: -- Étiquettes --
   type: -- Type --
   user: -- Utilisateur --
-  professionals: -- Professionnel·le(s) --
+  professionals: -- Intervenant·e·s --
 Password: Mot de passe
 Phone: Téléphone
 Phone1: Téléphone 1
@@ -100,10 +102,10 @@ Pole: Pôle
 Poles: Pôles
 Pole name: Nom du pôle
 Pre admission: Pré-admission
-Referent: Référent
+Referent: Intervenant·e
 Social referent: Référent social
-Referent2: Référent 2
-Referents: Référents
+Referent2: Intervenant·e 2
+Referents: Intervenant·e·s
 Role: Rôle dans le groupe
 search: Recherche
 Search: Recherche
@@ -131,7 +133,7 @@ user:
   username.help: Remplissage auto. en fonction du nom et prénom.
   password.help: 8 caractères minimum dont 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial (? ! * { } [ ]- + = & < > $)
   confirmPassword.help: Veuillez re-saisir le mot de passe pour confirmation
-professionals: Professionnel·le(s)
+professionals: Intervenant·e·s
 Username: Login
 Usename or maiden name: Nom d'usage ou de jeune fille
 Write a note: Écrire une note
@@ -267,8 +269,8 @@ event:
   support_people: Membre(s) du suivi
   support_people.placeholder: -- Membre(s) du suivi concerné --
   title.placeholder: Ajouter un titre
-  users: Profesionnel·le(s) concerné·e(s)
-  users.placeholder: -- Profesionnel·le(s) --
+  users: Intervenant·e·s
+  users.placeholder: -- Intervenant·e·s --
 
 # Task
 task:

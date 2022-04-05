@@ -35,16 +35,6 @@ class SupportControllerTest extends WebTestCase
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
     }
 
-    protected function loadFixtures(): void
-    {
-        $this->fixtures = $this->databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',
-            dirname(__DIR__).'/../fixtures/service_fixtures_test.yaml',
-            dirname(__DIR__).'/../fixtures/person_fixtures_test.yaml',
-            dirname(__DIR__).'/../fixtures/support_fixtures_test.yaml',
-        ]);
-    }
-
     public function testSearchSupportsIsSuccessful(): void
     {
         $this->loadFixtures();
@@ -343,6 +333,56 @@ class SupportControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Suivis en présence');
+    }
+
+    public function testSwitchReferentPageIsForbidden(): void
+    {
+        $this->loadFixtures();
+
+        $this->client->loginUser($this->fixtures['john_user']);
+
+        $this->client->request('GET', '/supports/switch-referent');
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+    }
+
+    public function testSwitchReferentPageIsUp(): void
+    {
+        $this->loadFixtures();
+
+        $this->client->loginUser($this->fixtures['user_admin']);
+
+        $this->client->request('GET', '/supports/switch-referent');
+
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorTextContains('h1', 'Transfert de suivis');
+    }
+
+    public function testSwitchReferentIsSuccessful(): void
+    {
+        $this->loadFixtures();
+
+        $this->client->loginUser($this->fixtures['user_admin']);
+
+        $this->client->request('GET', '/supports/switch-referent');
+
+        $this->client->submitForm('save', [
+            '_oldReferent' => $this->fixtures['john_user'],
+            '_newReferent' => $this->fixtures['user5'],
+        ]);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorTextContains('.alert.alert-success', '3 suivis ont été transférés');
+    }
+
+    private function loadFixtures(): void
+    {
+        $this->fixtures = $this->databaseTool->loadAliceFixture([
+            dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/service_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/person_fixtures_test.yaml',
+            dirname(__DIR__).'/../fixtures/support_fixtures_test.yaml',
+        ]);
     }
 
     protected function tearDown(): void

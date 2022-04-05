@@ -8,11 +8,11 @@ use App\Entity\Support\SupportGroup;
 use App\Form\Model\Support\SupportsByUserSearch;
 use App\Form\Model\Support\SupportsInMonthSearch;
 use App\Repository\Traits\QueryTrait;
-use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * @method SupportGroup|null find($id, $lockMode = null, $lockVersion = null)
@@ -24,13 +24,14 @@ class SupportGroupRepository extends ServiceEntityRepository
 {
     use QueryTrait;
 
-    private $currentUser;
+    /** @var User */
+    private $user;
 
-    public function __construct(ManagerRegistry $registry, CurrentUserService $currentUser)
+    public function __construct(ManagerRegistry $registry, Security $security)
     {
         parent::__construct($registry, SupportGroup::class);
 
-        $this->currentUser = $currentUser;
+        $this->user = $security->getUser();
     }
 
     /**
@@ -107,9 +108,9 @@ class SupportGroupRepository extends ServiceEntityRepository
     /**
      * Donne tous les suivis sociaux de l'utilisateur.
      *
-     * @return SupportGroup[]|null
+     * @return SupportGroup[]
      */
-    public function findSupportsOfUser(User $user, $maxResults = null): ?array
+    public function findSupportsOfUser(User $user, $maxResults = null): array
     {
         return $this->createQueryBuilder('sg')->select('sg')
             ->leftJoin('sg.service', 'sv')->addSelect('PARTIAL sv.{id, name}')
@@ -180,9 +181,9 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->setParameter('end', $end)
             ->andWhere('sp.head = TRUE');
 
-        if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+        if (!$this->user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->andWhere('s.id IN (:services)')
-                ->setParameter('services', $this->currentUser->getServices());
+                ->setParameter('services', $this->user->getServices());
         }
 
         $qb = $this->addOrganizationFilters($qb, $search);
@@ -196,18 +197,18 @@ class SupportGroupRepository extends ServiceEntityRepository
     /**
      * Donne les suivis pour le tableau de bord.
      *
-     * @return SupportGroup[]|null
+     * @return SupportGroup[]
      */
-    public function findSupportsForDashboard(SupportsByUserSearch $search): ?array
+    public function findSupportsForDashboard(SupportsByUserSearch $search): array
     {
         $qb = $this->createQueryBuilder('sg')->select('PARTIAL sg.{id, status, startDate, referent, service, device, coefficient}')
             ->leftJoin('sg.referent', 'u')->addSelect('PARTIAL u.{id}')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, coefficient}')
             ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}');
 
-        if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+        if (!$this->user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->where('s.id IN (:services)')
-                ->setParameter('services', $this->currentUser->getServices());
+                ->setParameter('services', $this->user->getServices());
         }
 
         $qb = $this->addOrganizationFilters($qb, $search);
@@ -224,9 +225,9 @@ class SupportGroupRepository extends ServiceEntityRepository
     /**
      * Donne les suivis sociaux du ménage.
      *
-     * @return SupportGroup[]|null
+     * @return SupportGroup[]
      */
-    public function findSupportsOfPeopleGroup(PeopleGroup $peopleGroup): ?array
+    public function findSupportsOfPeopleGroup(PeopleGroup $peopleGroup): array
     {
         return $this->createQueryBuilder('sg')->select('sg')
             ->leftJoin('sg.referent', 'ref')->addSelect('PARTIAL ref.{id, firstname, lastname, email, phone1}')
@@ -254,11 +255,11 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->andWhere('sg.peopleGroup = :peopleGroup')
             ->setParameter('peopleGroup', $supportGroup->getPeopleGroup())
             ->andWhere('sg.id != :supportGroup')
-            ->setParameter('supportGroup', $supportGroup);
+            ->setParameter('supportGroup', $supportGroup->getId());
 
-        if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+        if (!$this->user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->andWhere('sg.service IN (:services)')
-                ->setParameter('services', $this->currentUser->getServices());
+                ->setParameter('services', $this->user->getServices());
         }
 
         return $qb

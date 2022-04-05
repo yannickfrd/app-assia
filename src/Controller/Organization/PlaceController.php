@@ -11,7 +11,6 @@ use App\Form\Organization\Place\PlaceSearchType;
 use App\Form\Organization\Place\PlaceType;
 use App\Repository\Organization\PlaceRepository;
 use App\Repository\Support\PlaceGroupRepository;
-use App\Security\CurrentUserService;
 use App\Service\Export\PlaceExport;
 use App\Service\Pagination;
 use App\Service\Place\PlaceManager;
@@ -27,8 +26,7 @@ final class PlaceController extends AbstractController
     /**
      * @Route("/places", name="place_index", methods="GET|POST")
      */
-    public function index(Request $request, PlaceRepository $placeRepo, Pagination $pagination,
-        CurrentUserService $currentUser): Response
+    public function index(Request $request, PlaceRepository $placeRepo, Pagination $pagination): Response
     {
         $form = $this->createForm(PlaceSearchType::class, $search = new PlaceSearch())
             ->handleRequest($request);
@@ -45,7 +43,7 @@ final class PlaceController extends AbstractController
         return $this->renderForm('app/organization/place/place_index.html.twig', [
             'placeSearch' => $search,
             'form' => $form,
-            'places' => $pagination->paginate($placeRepo->findPlacesQuery($search, $currentUser), $request),
+            'places' => $pagination->paginate($placeRepo->findPlacesQuery($search, $this->getUser()), $request),
         ]);
     }
 

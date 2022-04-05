@@ -2,10 +2,10 @@
 
 namespace App\Entity\Organization;
 
+use App\Entity\Event\Rdv;
 use App\Entity\Event\Task;
 use App\Entity\Support\Document;
 use App\Entity\Support\Note;
-use App\Entity\Support\Rdv;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Traits\ContactEntityTrait;
 use App\Entity\Traits\DisableEntityTrait;
@@ -80,7 +80,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups("show_user")
+     * @Groups({"show_user", "show_rdv"})
      */
     private $id;
 
@@ -174,7 +174,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Support\SupportGroup", mappedBy="createdBy")
      */
-    private $supports;
+    private $createdSupports;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Organization\ServiceUser", mappedBy="user", orphanRemoval=true, cascade={"persist"})
@@ -231,22 +231,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Support\SupportGroup", mappedBy="referent")
      */
-    private $referentSupport;
+    private $referentSupports;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Support\SupportGroup", mappedBy="referent2")
      */
-    private $referent2Support;
+    private $referent2Supports;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Support\Note", mappedBy="createdBy")
      */
     private $notes;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Support\Rdv", mappedBy="createdBy")
-     */
-    private $rdvs;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Support\Document", mappedBy="createdBy")
@@ -258,10 +253,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $userDevices;
 
+//    /**
+//     * @ORM\OneToMany(targetEntity=Rdv::class, mappedBy="users")
+//     */
+//    private $rdvs2;
+
     /**
-     * @ORM\OneToMany(targetEntity=Rdv::class, mappedBy="user")
+     * @ORM\ManyToMany(targetEntity=Rdv::class, mappedBy="users")
      */
-    private $rdvs2;
+    private $rdvs;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Rdv::class, mappedBy="createdBy")
+     */
+    private $rdvsCreated;
 
     /**
      * @ORM\ManyToMany(targetEntity=Task::class, mappedBy="users")
@@ -279,16 +284,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
-        $this->supports = new ArrayCollection();
+        $this->createdSupports = new ArrayCollection();
         $this->serviceUser = new ArrayCollection();
         $this->userConnections = new ArrayCollection();
-        $this->referentSupport = new ArrayCollection();
-        $this->referent2Support = new ArrayCollection();
+        $this->referentSupports = new ArrayCollection();
+        $this->referent2Supports = new ArrayCollection();
         $this->notes = new ArrayCollection();
         $this->rdvs = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->userDevices = new ArrayCollection();
-        $this->rdvs2 = new ArrayCollection();
         $this->tasks = new ArrayCollection();
     }
 
@@ -577,13 +581,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getSupports(): ?Collection
     {
-        return $this->supports;
+        return $this->createdSupports;
     }
 
     public function addSupports(SupportGroup $supports): self
     {
-        if (!$this->supports->contains($supports)) {
-            $this->supports[] = $supports;
+        if (!$this->createdSupports->contains($supports)) {
+            $this->createdSupports[] = $supports;
             $supports->setCreatedBy($this);
         }
 
@@ -592,8 +596,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeSupports(SupportGroup $supports): self
     {
-        if ($this->supports->contains($supports)) {
-            $this->supports->removeElement($supports);
+        if ($this->createdSupports->contains($supports)) {
+            $this->createdSupports->removeElement($supports);
             // set the owning side to null (unless already changed)
             if ($supports->getCreatedBy() === $this) {
                 $supports->setCreatedBy(null);
@@ -694,15 +698,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<SupportGroup>|null
      */
-    public function getReferentSupport(): ?Collection
+    public function getReferentSupports(): ?Collection
     {
-        return $this->referentSupport;
+        return $this->referentSupports;
     }
 
     public function addReferentSupport(SupportGroup $referentSupport): self
     {
-        if (!$this->referentSupport->contains($referentSupport)) {
-            $this->referentSupport[] = $referentSupport;
+        if (!$this->referentSupports->contains($referentSupport)) {
+            $this->referentSupports[] = $referentSupport;
             $referentSupport->setReferent($this);
         }
 
@@ -711,8 +715,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeReferentSupport(SupportGroup $referentSupport): self
     {
-        if ($this->referentSupport->contains($referentSupport)) {
-            $this->referentSupport->removeElement($referentSupport);
+        if ($this->referentSupports->contains($referentSupport)) {
+            $this->referentSupports->removeElement($referentSupport);
             // set the owning side to null (unless already changed)
             if ($referentSupport->getReferent() === $this) {
                 $referentSupport->setReferent(null);
@@ -727,13 +731,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getReferent2Support(): ?Collection
     {
-        return $this->referent2Support;
+        return $this->referent2Supports;
     }
 
     public function addReferent2Support(SupportGroup $referent2Support): self
     {
-        if (!$this->referent2Support->contains($referent2Support)) {
-            $this->referent2Support[] = $referent2Support;
+        if (!$this->referent2Supports->contains($referent2Support)) {
+            $this->referent2Supports[] = $referent2Support;
             $referent2Support->setReferent2($this);
         }
 
@@ -742,8 +746,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeReferent2Support(SupportGroup $referent2Support): self
     {
-        if ($this->referent2Support->contains($referent2Support)) {
-            $this->referent2Support->removeElement($referent2Support);
+        if ($this->referent2Supports->contains($referent2Support)) {
+            $this->referent2Supports->removeElement($referent2Support);
             // set the owning side to null (unless already changed)
             if ($referent2Support->getReferent2() === $this) {
                 $referent2Support->setReferent2(null);
@@ -871,36 +875,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($userDevice->getUser() === $this) {
                 $userDevice->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<Rdv>|null
-     */
-    public function getRdvs2(): ?Collection
-    {
-        return $this->rdvs2;
-    }
-
-    public function addRdvs2(Rdv $rdvs2): self
-    {
-        if (!$this->rdvs2->contains($rdvs2)) {
-            $this->rdvs2[] = $rdvs2;
-            $rdvs2->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRdvs2(Rdv $rdvs2): self
-    {
-        if ($this->rdvs2->removeElement($rdvs2)) {
-            // set the owning side to null (unless already changed)
-            if ($rdvs2->getUser() === $this) {
-                $rdvs2->setUser(null);
             }
         }
 

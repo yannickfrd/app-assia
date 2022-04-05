@@ -2,8 +2,8 @@
 
 namespace App\Security\Voter;
 
+use App\Entity\Event\Rdv;
 use App\Entity\Organization\User;
-use App\Entity\Support\Rdv;
 use App\Entity\Support\SupportGroup;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -24,7 +24,7 @@ class RdvVoter extends Voter
     protected function supports(string $attribute, $subject): bool
     {
         return in_array($attribute, ['VIEW', 'EDIT', 'DELETE'])
-            && $subject instanceof \App\Entity\Support\Rdv;
+            && $subject instanceof \App\Entity\Event\Rdv;
     }
 
     protected function voteOnAttribute(string $attribute, $rdv, TokenInterface $token): bool
@@ -52,7 +52,9 @@ class RdvVoter extends Voter
     protected function canView(): bool
     {
         if ($this->isCreatorOrReferent()
+            || $this->rdv->getUsers()->contains($this->user)
             || ($this->supportGroup && $this->isUserOfService($this->supportGroup->getService()))
+            || (0 === $this->rdv->getUsers()->count() && $this->isGranted('ROLE_ADMIN'))
             || $this->isGranted('ROLE_SUPER_ADMIN')
         ) {
             return true;
@@ -74,8 +76,10 @@ class RdvVoter extends Voter
     protected function isCreatorOrReferent(): bool
     {
         if (($this->rdv->getCreatedBy() && $this->rdv->getCreatedBy()->getId() === $this->user->getId())
-            || $this->supportGroup && (($this->supportGroup->getReferent() && $this->supportGroup->getReferent()->getId() === $this->user->getId())
-            || ($this->supportGroup->getReferent2() && $this->supportGroup->getReferent2()->getId() === $this->user->getId()))
+            || $this->supportGroup && (
+                ($this->supportGroup->getReferent() && $this->supportGroup->getReferent()->getId() === $this->user->getId())
+                || ($this->supportGroup->getReferent2() && $this->supportGroup->getReferent2()->getId() === $this->user->getId())
+            )
         ) {
             return true;
         }

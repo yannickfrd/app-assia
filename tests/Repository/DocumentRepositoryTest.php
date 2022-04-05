@@ -63,7 +63,7 @@ class DocumentRepositoryTest extends WebTestCase
 
     public function testFindDocumentsQueryWithoutFilters(): void
     {
-        $qb = $this->documentRepo->findDocumentsQuery(new DocumentSearch());
+        $qb = $this->documentRepo->findDocumentsQuery(new DocumentSearch(), $this->user);
         $this->assertGreaterThanOrEqual(5, count($qb->getResult()));
     }
 

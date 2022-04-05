@@ -6,7 +6,6 @@ parameters:
     excludePaths:
         - src/Entity/Event/AbstractEvent.php
         - src/Service/SiSiao/SiSiaoGlossary.php
-        - src/Security/CurrentUserService.php
     ignoreErrors:
         - '#\$user \(App\\Entity\\Organization\\User\) does not accept Symfony\\Component\\Security\\Core\\User\\UserInterface#'
         #- '#\$id is never written, only read#'

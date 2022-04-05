@@ -54,7 +54,7 @@ class Service
     ];
 
     public const SUPPORT_ACCESS = [
-        1 => 'Uniquement le référent du suivi',
+        1 => 'Uniquement l\'interveant du suivi',
         2 => 'Tou·te·s les salarié·e·s du service',
         3 => 'Tou·te·s les salarié·e·s du pôle',
         4 => "Tou·te·s les salarié·e·s de l'association",
@@ -82,7 +82,7 @@ class Service
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le nom du service ne doit pas être vide.")
-     * @Groups({"export", "show_service"})
+     * @Groups({"export", "show_service", "show_rdv"})
      */
     private $name;
 

@@ -171,8 +171,12 @@ final class EvaluationController extends AbstractController
      *
      * @Route("/support/{id}/evaluation/export/{type}", name="evaluation_export", methods="GET")
      */
-    public function exportEvaluation(int $id, SupportManager $supportManager, EvaluationExporter $evaluationExporter, Request $request): Response
-    {
+    public function exportEvaluation(
+        int $id,
+        SupportManager $supportManager,
+        EvaluationExporter $evaluationExporter,
+        Request $request
+    ): Response {
         $supportGroup = $supportManager->getFullSupportGroup($id);
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);

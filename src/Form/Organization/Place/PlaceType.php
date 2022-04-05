@@ -6,12 +6,12 @@ use App\Entity\Organization\Device;
 use App\Entity\Organization\Place;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\SubService;
+use App\Entity\Organization\User;
 use App\Form\Type\LocationType;
 use App\Form\Utils\Choices;
 use App\Repository\Organization\DeviceRepository;
 use App\Repository\Organization\ServiceRepository;
 use App\Repository\Organization\SubServiceRepository;
-use App\Security\CurrentUserService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -22,14 +22,16 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Security;
 
 class PlaceType extends AbstractType
 {
-    protected $currentUser;
+    /** @var User */
+    private $user;
 
-    public function __construct(CurrentUserService $currentUser)
+    public function __construct(Security $security)
     {
-        $this->currentUser = $currentUser;
+        $this->user = $security->getUser();
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -43,7 +45,7 @@ class PlaceType extends AbstractType
             'class' => Service::class,
             'choice_label' => 'name',
             'query_builder' => function (ServiceRepository $repo) {
-                return $repo->getServicesOfUserQueryBuilder($this->currentUser);
+                return $repo->getServicesOfUserQueryBuilder($this->user);
             },
             'placeholder' => 'placeholder.select',
             ])
@@ -109,7 +111,7 @@ class PlaceType extends AbstractType
                     'class' => SubService::class,
                     'choice_label' => 'name',
                     'query_builder' => function (SubServiceRepository $repo) {
-                        return $repo->getSubServicesOfUserQueryBuilder($this->currentUser);
+                        return $repo->getSubServicesOfUserQueryBuilder($this->user);
                     },
                     'placeholder' => 'placeholder.select',
                     'required' => false,

@@ -2,16 +2,17 @@
 
 namespace App\Repository\Support;
 
+use App\Entity\Organization\User;
 use App\Entity\Support\Payment;
 use App\Entity\Support\SupportGroup;
 use App\Form\Model\Support\PaymentSearch;
 use App\Form\Model\Support\SupportPaymentSearch;
 use App\Repository\Traits\QueryTrait;
-use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * @method Payment|null find($id, $lockMode = null, $lockVersion = null)
@@ -23,13 +24,14 @@ class PaymentRepository extends ServiceEntityRepository
 {
     use QueryTrait;
 
-    private $currentUser;
+    /** @var User */
+    private $user;
 
-    public function __construct(ManagerRegistry $registry, CurrentUserService $currentUser)
+    public function __construct(ManagerRegistry $registry, Security $security)
     {
         parent::__construct($registry, Payment::class);
 
-        $this->currentUser = $currentUser;
+        $this->user = $security->getUser();
     }
 
     /**
@@ -74,9 +76,9 @@ class PaymentRepository extends ServiceEntityRepository
     /**
      * Trouve tous les RDV entre 2 dates.
      *
-     * @return Payment[]|null
+     * @return Payment[]
      */
-    public function findPaymentsBetween(\DateTime $start, \DateTime $end, array $supportsId): ?array
+    public function findPaymentsBetween(\DateTime $start, \DateTime $end, array $supportsId): array
     {
         $qb = $this->createQueryBuilder('p')->select('p')
             ->leftJoin('p.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
@@ -100,9 +102,9 @@ class PaymentRepository extends ServiceEntityRepository
      *
      * @param PaymentSearch|SupportPaymentSearch $search
      *
-     * @return Payment[]|null
+     * @return Payment[]
      */
-    public function findPaymentsToExport($search, SupportGroup $supportGroup = null): ?array
+    public function findPaymentsToExport($search, SupportGroup $supportGroup = null): array
     {
         $qb = $this->getPaymentQuery()
             ->leftJoin('sg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, siSiaoId}')
@@ -127,9 +129,9 @@ class PaymentRepository extends ServiceEntityRepository
      *
      * @param PaymentSearch|SupportPaymentSearch $search
      *
-     * @return Payment[]|null
+     * @return Payment[]
      */
-    public function findHotelContributionsToExport($search, SupportGroup $supportGroup = null): ?array
+    public function findHotelContributionsToExport($search, SupportGroup $supportGroup = null): array
     {
         $qb = $this->getPaymentQuery()
             ->leftJoin('sg.originRequest', 'or')->addSelect('PARTIAL or.{id}')
@@ -153,9 +155,9 @@ class PaymentRepository extends ServiceEntityRepository
     /**
      * Donne les paiements pour les indicateurs stats.
      *
-     * @return Payment[]|null
+     * @return Payment[]
      */
-    public function findPaymentsForIndicators(PaymentSearch $search = null): ?array
+    public function findPaymentsForIndicators(PaymentSearch $search = null): array
     {
         $qb = $this->createQueryBuilder('p')->select('p')
             ->leftJoin('p.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, service, device}')
@@ -195,9 +197,9 @@ class PaymentRepository extends ServiceEntityRepository
      */
     protected function filter(Querybuilder $qb, $search): QueryBuilder
     {
-        if (!$this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+        if (!$this->user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->andWhere('sg.service IN (:services)')
-                ->setParameter('services', $this->currentUser->getServices());
+                ->setParameter('services', $this->user->getServices());
         }
 
         // if ($search->getId()) {
@@ -250,28 +252,57 @@ class PaymentRepository extends ServiceEntityRepository
     /**
      * Return all payments of group support.
      */
-    public function findPaymentsOfSupportQuery(int $supportGroupId, SupportPaymentSearch $search): Query
+    public function findPaymentsOfSupportQuery(SupportGroup $supportGroup, SupportPaymentSearch $search = null): Query
     {
-        $qb = $this->createQueryBuilder('p')->select('p')
+        $qb = $this->createQueryBuilder('p')
             ->andWhere('p.supportGroup = :supportGroup')
-            ->setParameter('supportGroup', $supportGroupId);
+            ->setParameter('supportGroup', $supportGroup);
 
-        if ($search->getType()) {
-            $qb->andWhere('p.type IN (:type)')
-                ->setParameter('type', $search->getType());
-        }
-        if ($search->getStart()) {
-            $qb->andWhere('p.startDate >= :start')
-                ->setParameter('start', $search->getStart());
-        }
-        if ($search->getEnd()) {
-            $qb->andWhere('p.startDate <= :end')
-                ->setParameter('end', $search->getEnd());
+        if (null !== $search) {
+            if ($search->getType()) {
+                $qb->andWhere('p.type IN (:type)')
+                    ->setParameter('type', $search->getType());
+            }
+            if ($search->getStart()) {
+                $qb->andWhere('p.startDate >= :start')
+                    ->setParameter('start', $search->getStart());
+            }
+            if ($search->getEnd()) {
+                $qb->andWhere('p.startDate <= :end')
+                    ->setParameter('end', $search->getEnd());
+            }
         }
 
         return $qb
             ->orderBy('p.createdAt', 'DESC')
             ->getQuery();
+    }
+
+    /**
+     * @return Payment[]
+     */
+    public function findPaymentsOfSupport(SupportGroup $supportGroup): array
+    {
+        return $this->findPaymentsOfSupportQuery($supportGroup)
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult()
+        ;
+    }
+
+    public function findPaymentsOfSupportOrderedByStartDate(SupportGroup $supportGroup): array
+    {
+        return $this->createQueryBuilder('p')
+
+            ->andWhere('p.supportGroup = :supportGroup')
+            ->setParameter('supportGroup', $supportGroup)
+            ->andWhere('p.startDate <= :now')
+            ->setParameter('now', new \DateTime())
+
+            ->orderBy('p.startDate', 'DESC')
+            ->getQuery()
+
+            ->getResult()
+        ;
     }
 
     /**
@@ -314,7 +345,8 @@ class PaymentRepository extends ServiceEntityRepository
 
         return $qb
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getSingleScalarResult()
+        ;
     }
 
     /**
@@ -326,6 +358,7 @@ class PaymentRepository extends ServiceEntityRepository
             ->andWhere('p.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportId)
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getSingleScalarResult()
+        ;
     }
 }

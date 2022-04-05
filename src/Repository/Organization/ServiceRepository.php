@@ -10,7 +10,6 @@ use App\Form\Model\Admin\ServiceIndicatorsSearch;
 use App\Form\Model\Organization\ServiceSearch;
 use App\Form\Utils\Choices;
 use App\Repository\Traits\QueryTrait;
-use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -77,9 +76,9 @@ class ServiceRepository extends ServiceEntityRepository
     /**
      * Donne tous les services à exporter.
      *
-     * @return Service[]|null
+     * @return Service[]
      */
-    public function findServicesToExport(ServiceSearch $serviceSearch): ?array
+    public function findServicesToExport(ServiceSearch $serviceSearch): array
     {
         return $this->findServicesQuery($serviceSearch)->getResult();
     }
@@ -87,7 +86,7 @@ class ServiceRepository extends ServiceEntityRepository
     /**
      * Donne la liste des services de l'utilisateur.
      */
-    public function getServicesOfUserQueryBuilder(CurrentUserService $currentUser, string $dataClass = null): QueryBuilder
+    public function getServicesOfUserQueryBuilder(User $user, string $dataClass = null): QueryBuilder
     {
         $qb = $this->createQueryBuilder('s')->select('PARTIAL s.{id, name, type, preAdmission, coefficient}')
 
@@ -97,18 +96,18 @@ class ServiceRepository extends ServiceEntityRepository
             $qb = $this->filterByServiceType($qb, $dataClass);
         }
 
-        if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+        if (!$user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->andWhere('s.id IN (:services)')
-                ->setParameter('services', $currentUser->getServices());
+                ->setParameter('services', $user->getServices());
         }
 
         return $qb->orderBy('s.name', 'ASC');
     }
 
     /**
-     * @return Service[]|null
+     * @return Service[]
      */
-    public function findServicesWithPlace(OccupancySearch $search, CurrentUserService $currentUser, Device $device = null): ?array
+    public function findServicesWithPlace(OccupancySearch $search, User $user, Device $device = null): array
     {
         $qb = $this->createQueryBuilder('s')->select('s')
             ->leftJoin('s.subServices', 'ss')->addSelect('PARTIAL ss.{id, name}')
@@ -128,9 +127,9 @@ class ServiceRepository extends ServiceEntityRepository
             $qb->andWhere('sd.device = :device')
                 ->setParameter('device', $device);
         }
-        if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+        if (!$user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->andWhere('s.id IN (:services)')
-                ->setParameter('services', $currentUser->getServices());
+                ->setParameter('services', $user->getServices());
         }
 
         return $qb
@@ -143,9 +142,9 @@ class ServiceRepository extends ServiceEntityRepository
     /**
      * Donne tous les services de l'utilisateur.
      *
-     * @return Service[]|null
+     * @return Service[]
      */
-    public function findServicesOfUser(User $user): ?array
+    public function findServicesOfUser(User $user): array
     {
         return $this->createQueryBuilder('s')
             ->select('PARTIAL s.{id, name, email, phone1}')
@@ -167,9 +166,9 @@ class ServiceRepository extends ServiceEntityRepository
     /**
      * Donne tous les services de l'utilisateur.
      *
-     * @return Service[]|null
+     * @return Service[]
      */
-    public function findServicesAndSubServicesOfUser(User $user): ?array
+    public function findServicesAndSubServicesOfUser(User $user): array
     {
         $qb = $this->createQueryBuilder('s')->select('PARTIAL s.{id, name}')
             ->leftJoin('s.subServices', 'ss')->addSelect('PARTIAL ss.{id, name}')
@@ -215,9 +214,9 @@ class ServiceRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Service[]|null
+     * @return Service[]
      */
-    public function findServices(ServiceIndicatorsSearch $search): ?array
+    public function findServices(ServiceIndicatorsSearch $search): array
     {
         $qb = $this->createQueryBuilder('s')->select('s');
 

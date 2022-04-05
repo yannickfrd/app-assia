@@ -25,7 +25,7 @@ class PaymentType extends AbstractType
         $builder
             ->add('type', ChoiceType::class, [
                 'label' => 'payment.type',
-                'choices' => Choices::getchoices($this->getOptionTypes($service)),
+                'choices' => Choices::getChoices($this->getOptionTypes($service)),
                 'placeholder' => 'placeholder.select',
             ])
             ->add('startDate', DateType::class, [
@@ -37,7 +37,7 @@ class PaymentType extends AbstractType
                 'widget' => 'single_text',
             ])
             ->add('repaymentReason', ChoiceType::class, [
-                'choices' => Choices::getchoices(Payment::REPAYMENT_REASONS),
+                'choices' => Choices::getChoices(Payment::REPAYMENT_REASONS),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
@@ -78,7 +78,7 @@ class PaymentType extends AbstractType
                 'required' => false,
             ])
             ->add('paymentType', ChoiceType::class, [
-                'choices' => Choices::getchoices(Payment::PAYMENT_TYPES),
+                'choices' => Choices::getChoices(Payment::PAYMENT_TYPES),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
@@ -149,7 +149,7 @@ class PaymentType extends AbstractType
                 'required' => false,
             ])
             ->add('noContribReason', ChoiceType::class, [
-                'choices' => Choices::getchoices(Payment::NO_CONTRIB_REASONS),
+                'choices' => Choices::getChoices(Payment::NO_CONTRIB_REASONS),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ]);

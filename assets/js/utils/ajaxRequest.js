@@ -54,7 +54,7 @@ export default class AjaxRequest {
         }
         
         if (this.xhr.status === 403) {
-            return new MessageFlash('danger', 'Vous n\'avez pas les droits pour effectuer cette action. \nIl est nécessaire d\'être référent du suivi ou administrateur.')
+            return new MessageFlash('danger', 'Vous n\'avez pas les droits pour effectuer cette action.')
         }
         
         new MessageFlash('danger', `Une erreur s'est produite (${this.xhr.status} ${this.xhr.statusText}).`)

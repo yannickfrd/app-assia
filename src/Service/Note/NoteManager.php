@@ -11,8 +11,8 @@ class NoteManager
 {
     public static function deleteCacheItems(Note $note, bool $deleteNb = false): void
     {
-        $supportGroup = $note->getSupportGroup();
         $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
+        $supportGroup = $note->getSupportGroup();
 
         if (
             null === $note->getId()
@@ -23,8 +23,9 @@ class NoteManager
         }
 
         $cache->deleteItems([
-            SupportGroup::CACHE_SUPPORT_NOTES_KEY.$supportGroup->getId(),
             User::CACHE_USER_NOTES_KEY.$note->getCreatedBy()->getId(),
+            SupportGroup::CACHE_SUPPORT_NOTES_KEY.$supportGroup->getId(),
+            SupportGroup::CACHE_SUPPORT_NB_NOTES_KEY.$supportGroup->getId(),
         ]);
     }
 }

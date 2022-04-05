@@ -9,7 +9,6 @@ use App\Entity\Support\SupportGroup;
 use App\Form\Model\Organization\UserSearch;
 use App\Form\Utils\Choices;
 use App\Repository\Traits\QueryTrait;
-use App\Security\CurrentUserService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -56,7 +55,7 @@ class UserRepository extends ServiceEntityRepository
     public function findUserById(int $id): ?User
     {
         return $this->createQueryBuilder('u')->select('u')
-            ->leftJoin('u.referentSupport', 'sg')->addSelect('PARTIAL sg.{id, status, startDate, endDate, updatedAt}')
+            ->leftJoin('u.referentSupports', 'sg')->addSelect('PARTIAL sg.{id, status, startDate, endDate, updatedAt}')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, email, phone1}')
             ->leftJoin('sg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople, createdAt, updatedAt}')
             ->leftJoin('g.rolePeople', 'r')->addSelect('PARTIAL r.{id, role, head}')
@@ -161,21 +160,21 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Trouve les utilisateurs pour l'export des données.
      *
-     * @return User[]|null
+     * @return User[]
      */
-    public function findUsersToExport(UserSearch $search): ?array
+    public function findUsersToExport(UserSearch $search): array
     {
         return $this->findUsersQuery($search)
             ->getResult();
     }
 
     /**
-     * Donne la liste des référents possibles dans la page d'édition du suivi.
+     * Donne la liste des intervanants disponibles dans la page d'édition du suivi.
      */
-    public function getSupportReferentsQueryBuilder(Service $service = null, User $currentUser, User $referent = null): QueryBuilder
+    public function getSupportReferentsQueryBuilder(Service $service = null, User $user, User $referent = null): QueryBuilder
     {
         $users = [];
-        $users[] = $currentUser->getId();
+        $users[] = $user->getId();
 
         if ($referent) {
             $users[] = $referent->getId();
@@ -207,9 +206,9 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Donne les utilisateurs des services de l'utilisateur actuel.
      *
-     * @return User[]|null
+     * @return User[]
      */
-    public function findUsersOfServices(CurrentUserService $currentUser): ?array
+    public function findUsersOfServices(User $user): array
     {
         $qb = $this->createQueryBuilder('u')->select('PARTIAL u.{id, firstname, lastname, disabledAt}')
             ->leftJoin('u.userDevices', 'ud')->addSelect('ud')
@@ -217,14 +216,14 @@ class UserRepository extends ServiceEntityRepository
 
             ->where('u.disabledAt IS NULL');
 
-        if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
-            if ($currentUser->hasRole('ROLE_ADMIN')) {
+        if (!$user->hasRole('ROLE_SUPER_ADMIN')) {
+            if ($user->hasRole('ROLE_ADMIN')) {
                 $qb->leftJoin('u.serviceUser', 'r')
                     ->andWhere('r.service IN (:services)')
-                    ->setParameter('services', $currentUser->getServices());
+                    ->setParameter('services', $user->getServices());
             } else {
                 $qb->andWhere('u.id = :user')
-                ->setParameter('user', $currentUser->getUser());
+                ->setParameter('user', $user);
             }
         }
 
@@ -238,9 +237,9 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Donne les utilisateurs d'un service.
      *
-     * @return User[]|null
+     * @return User[]
      */
-    public function getUsersOfService(Service $service): ?array
+    public function getUsersOfService(Service $service): array
     {
         return $this->getReferentsQueryBuilder()
 
@@ -255,7 +254,7 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Donne la liste des utilisateurs pour les listes déroulantes.
      */
-    public function getReferentsOfServicesQueryBuilder(CurrentUserService $currentUser, Service $service = null, string $className = null): QueryBuilder
+    public function getReferentsOfServicesQueryBuilder(User $user, Service $service = null, string $className = null): QueryBuilder
     {
         $qb = $this->getReferentsQueryBuilder();
 
@@ -266,10 +265,10 @@ class UserRepository extends ServiceEntityRepository
             $qb->andWhere('su.service = :service')
                 ->setParameter('service', $service);
         }
-        if (!$currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+        if (!$user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->leftJoin('u.serviceUser', 'r')
                 ->andWhere('r.service IN (:services)')
-                ->setParameter('services', $currentUser->getServices());
+                ->setParameter('services', $user->getServices());
         }
 
         return $qb;
@@ -313,9 +312,9 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Donne tous les utilisateurs du service.
      *
-     * @return User[]|null
+     * @return User[]
      */
-    public function findUsersOfService(Service $service): ?array
+    public function findUsersOfService(Service $service): array
     {
         return $this->createQueryBuilder('u')
             ->select('PARTIAL u.{id, firstname, lastname, status, phone1, email, disabledAt}')
@@ -335,9 +334,9 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Donne les utilisateurs selon différents critères.
      *
-     * @return User[]|null
+     * @return User[]
      */
-    public function findUsers(array $criteria = null): ?array
+    public function findUsers(array $criteria = null): array
     {
         $qb = $this->createQueryBuilder('u')
         ->andWhere('u.disabledAt IS NULL');
@@ -394,7 +393,7 @@ class UserRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('u')
             ->leftJoin('u.setting', 's')->addSelect('s')
-            ->leftJoin('u.referentSupport', 'sg')->addSelect('PARTIAL sg.{id, status}')
+            ->leftJoin('u.referentSupports', 'sg')->addSelect('PARTIAL sg.{id, status}')
             ->leftJoin('sg.evaluationsGroup', 'eg')->addSelect('PARTIAL eg.{id}')
             ->leftJoin('eg.evaluationPeople', 'ep')->addSelect('PARTIAL ep.{id}')
 
@@ -425,9 +424,9 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Donne les utilisateurs qui ont des tâches avec des alertes.
      *
-     * @return User[]|null
+     * @return User[]
      */
-    public function getUsersWithAlerts(\DateTime $date): ?array
+    public function getUsersWithAlerts(\DateTime $date): array
     {
         return $this->createQueryBuilder('u')
             ->leftJoin('u.setting', 's')->addSelect('s')

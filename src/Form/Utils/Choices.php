@@ -43,7 +43,7 @@ class Choices
     public const ACTIVE = 1;
     public const DISABLED = 2;
 
-    public static function getchoices($const): array
+    public static function getChoices($const): array
     {
         $output = [];
         foreach ($const as $key => $value) {

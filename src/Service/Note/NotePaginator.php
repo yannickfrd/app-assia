@@ -2,15 +2,16 @@
 
 namespace App\Service\Note;
 
+use App\Entity\Organization\User;
 use App\Entity\Support\SupportGroup;
 use App\Form\Model\Support\NoteSearch;
 use App\Form\Model\Support\SupportNoteSearch;
 use App\Repository\Support\NoteRepository;
-use App\Security\CurrentUserService;
 use App\Service\Pagination;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Security;
 
 class NotePaginator
 {
@@ -18,13 +19,15 @@ class NotePaginator
 
     private $pagination;
     private $noteRepo;
-    private $currentUser;
 
-    public function __construct(Pagination $pagination, NoteRepository $noteRepo, CurrentUserService $currentUser)
+    /** @var User */
+    private $user;
+
+    public function __construct(Pagination $pagination, NoteRepository $noteRepo, Security $security)
     {
         $this->pagination = $pagination;
         $this->noteRepo = $noteRepo;
-        $this->currentUser = $currentUser;
+        $this->user = $security->getUser();
     }
 
     /**
@@ -59,7 +62,7 @@ class NotePaginator
     public function paginateNotes(Request $request, NoteSearch $search): object
     {
         return $this->pagination->paginate(
-            $this->noteRepo->findNotesQuery($search, $this->currentUser),
+            $this->noteRepo->findNotesQuery($search, $this->user),
             $request,
             self::NB_ITEMS
         );

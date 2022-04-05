@@ -6,6 +6,7 @@ use App\Entity\Organization\Traits\TagTrait;
 use App\Entity\Organization\User;
 use App\Entity\Support\SupportGroup;
 use App\Repository\Event\TaskRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -21,6 +22,8 @@ class Task extends AbstractEvent
 
     public const TASK_IS_DONE = true;
     public const TASK_IS_NOT_DONE = false;
+
+    public const TYPE_EVENT = 1;
 
     public const STATUS = [
         false => 'Non réalisée',
@@ -60,15 +63,15 @@ class Task extends AbstractEvent
     /**
      * @var Collection<User>
      * @ORM\ManyToMany(targetEntity=User::class, inversedBy="tasks")
-     * @Groups("show_user")
      * @ORM\OrderBy({"lastname": "ASC"})
+     * @Groups("show_event")
      */
     protected $users;
 
     /**
      * @var SupportGroup
      * @ORM\ManyToOne(targetEntity=SupportGroup::class, inversedBy="tasks")
-     * @Groups({"show_support_group"})
+     * @Groups("show_support_group")
      */
     protected $supportGroup;
 
@@ -87,9 +90,31 @@ class Task extends AbstractEvent
      */
     protected $createdBy; // NE PAS SUPPRIMER
 
+    /**
+     * @var Collection<Alert>
+     * @ORM\OneToMany(targetEntity=Alert::class, mappedBy="task", orphanRemoval=true, cascade={"persist"})
+     * @ORM\JoinColumn(name="alert", nullable=true)
+     * @ORM\OrderBy({"date": "ASC"})
+     * @Groups("show_alert")
+     */
+    protected $alerts;
+
     public function __construct()
     {
         parent::__construct();
+
+        $this->users = new ArrayCollection();
+        $this->tags = new ArrayCollection();
+    }
+
+    public function addAlert(?Alert $alert): self
+    {
+        if (!$this->alerts->contains($alert)) {
+            $alert->setTask($this);
+            $this->alerts[] = $alert;
+        }
+
+        return $this;
     }
 
     public function getStatus(): ?bool
@@ -106,7 +131,7 @@ class Task extends AbstractEvent
 
     public function toggleStatus(): bool
     {
-        return $this->status = $this->status ? false : true;
+        return $this->status = !$this->status;
     }
 
     /** @Groups("show_event") */
@@ -145,12 +170,14 @@ class Task extends AbstractEvent
         return $this;
     }
 
-    public function addAlert(?Alert $alert): self
+    public function getSupportGroup(): ?SupportGroup
     {
-        if (!$this->alerts->contains($alert)) {
-            $alert->setTask($this);
-            $this->alerts[] = $alert;
-        }
+        return $this->supportGroup;
+    }
+
+    public function setSupportGroup(?SupportGroup $supportGroup): self
+    {
+        $this->supportGroup = $supportGroup;
 
         return $this;
     }

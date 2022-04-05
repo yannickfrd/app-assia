@@ -120,7 +120,7 @@ class CreateUserCommand extends Command
             ->setLastName($lastname)
             ->setUsername($this->getUsername($firstname, $lastname))
             ->setPassword($this->passwordHasher->hashPassword($user, $password))
-            ->setStatus(Choices::getchoices(User::STATUS)[$status])
+            ->setStatus(Choices::getChoices(User::STATUS)[$status])
             ->setRoles([$role])
             ->setEmail($email)
             ->setphone1($phone);
@@ -158,7 +158,7 @@ class CreateUserCommand extends Command
 
         $notification = $helper->ask($input, $output, $notificationQuestion);
 
-        if (Choices::YES === Choices::getchoices($notificationChoices)[$notification]) {
+        if (Choices::YES === Choices::getChoices($notificationChoices)[$notification]) {
             $this->userNotification->newUser($user);
 
             $io->success('The email notification is sended !');

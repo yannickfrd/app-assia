@@ -69,7 +69,7 @@ class ExportExcel
         $this->setOptions($options);
         $path = $this->options['modelPath'];
 
-        if ($path && !file_exists($path)) {
+        if ($path && file_exists($path)) {
             $reader = IOFactory::createReader('Xlsx');
 
             $this->spreadsheet = $reader->load($path);

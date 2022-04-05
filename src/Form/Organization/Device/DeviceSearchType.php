@@ -4,10 +4,10 @@ namespace App\Form\Organization\Device;
 
 use App\Entity\Organization\Pole;
 use App\Entity\Organization\Service;
+use App\Entity\Organization\User;
 use App\Form\Model\Organization\DeviceSearch;
 use App\Form\Utils\Choices;
 use App\Repository\Organization\ServiceRepository;
-use App\Security\CurrentUserService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -15,14 +15,16 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Security;
 
 class DeviceSearchType extends AbstractType
 {
-    private $currentUser;
+    /** @var User */
+    private $user;
 
-    public function __construct(CurrentUserService $currentUser)
+    public function __construct(Security $security)
     {
-        $this->currentUser = $currentUser;
+        $this->user = $security->getUser();
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -40,7 +42,7 @@ class DeviceSearchType extends AbstractType
                 'class' => Service::class,
                 'choice_label' => 'name',
                 'query_builder' => function (ServiceRepository $repo) {
-                    return $repo->getServicesOfUserQueryBuilder($this->currentUser);
+                    return $repo->getServicesOfUserQueryBuilder($this->user);
                 },
                 'label_attr' => ['class' => 'sr-only'],
                 'placeholder' => 'placeholder.service',
@@ -56,7 +58,7 @@ class DeviceSearchType extends AbstractType
         $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) {
             $form = $event->getForm();
 
-            if ($this->currentUser->hasRole('ROLE_SUPER_ADMIN')) {
+            if ($this->user->hasRole('ROLE_SUPER_ADMIN')) {
                 $form
                     ->add('pole', EntityType::class, [
                         'class' => Pole::class,

@@ -4,6 +4,7 @@ namespace App\Entity\Organization\Traits;
 
 use App\Entity\Organization\Tag;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 trait TagTrait
@@ -12,7 +13,7 @@ trait TagTrait
      * @var Collection<Tag>|null
      * @ORM\ManyToMany(targetEntity=Tag::class)
      * @ORM\OrderBy({"name": "ASC"})
-     * @Groups("show_tag")
+     * @Groups({"show_tag", "show_rdv"})
      */
     protected $tags;
 

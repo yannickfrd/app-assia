@@ -5,17 +5,19 @@ namespace App\Service\Indicators;
 use App\Entity\Organization\Device;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\SubService;
+use App\Entity\Organization\User;
 use App\Form\Model\Admin\OccupancySearch;
 use App\Repository\Organization\DeviceRepository;
 use App\Repository\Organization\PlaceRepository;
 use App\Repository\Organization\ServiceRepository;
 use App\Repository\Organization\SubServiceRepository;
 use App\Repository\Support\PlacePersonRepository;
-use App\Security\CurrentUserService;
+use Symfony\Component\Security\Core\Security;
 
 class OccupancyIndicators
 {
-    protected $currentUser;
+    /** @var User */
+    protected $user;
     protected $placeRepo;
     protected $placePersonRepo;
     protected $serviceRepo;
@@ -30,14 +32,14 @@ class OccupancyIndicators
     protected $occupancyDays = 0;
 
     public function __construct(
-        CurrentUserService $currentUser,
+        Security $security,
         PlaceRepository $placeRepo,
         PlacePersonRepository $placePersonRepo,
         ServiceRepository $serviceRepo,
         SubServiceRepository $subServiceRepo,
         DeviceRepository $deviceRepo
     ) {
-        $this->currentUser = $currentUser;
+        $this->user = $security->getUser();
         $this->placeRepo = $placeRepo;
         $this->placePersonRepo = $placePersonRepo;
         $this->serviceRepo = $serviceRepo;
@@ -50,8 +52,8 @@ class OccupancyIndicators
      */
     public function getOccupancyRateByDevice(OccupancySearch $search, Service $service = null): array
     {
-        $devices = $this->deviceRepo->findDevicesWithPlace($search, $this->currentUser, $service);
-        $placePeople = $this->placePersonRepo->findPlacePeople($search, $this->currentUser, $service);
+        $devices = $this->deviceRepo->findDevicesWithPlace($search, $this->user, $service);
+        $placePeople = $this->placePersonRepo->findPlacePeople($search, $this->user, $service);
         $interval = date_diff($search->getStart(), $search->getEnd());
         $nbDays = (int) $interval->format('%a');
 
@@ -111,8 +113,8 @@ class OccupancyIndicators
      */
     public function getOccupancyRateByService(OccupancySearch $search, Device $device = null): array
     {
-        $services = $this->serviceRepo->findServicesWithPlace($search, $this->currentUser, $device);
-        $placePeople = $this->placePersonRepo->findPlacePeople($search, $this->currentUser);
+        $services = $this->serviceRepo->findServicesWithPlace($search, $this->user, $device);
+        $placePeople = $this->placePersonRepo->findPlacePeople($search, $this->user);
         $interval = date_diff($search->getStart(), $search->getEnd());
         $nbDays = (int) $interval->format('%a');
 
@@ -173,8 +175,8 @@ class OccupancyIndicators
      */
     public function getOccupancyRateBySubService(OccupancySearch $search, Service $service): array
     {
-        $subServices = $this->subServiceRepo->findSubServicesWithPlace($search, $this->currentUser, $service);
-        $placePeople = $this->placePersonRepo->findPlacePeople($search, $this->currentUser);
+        $subServices = $this->subServiceRepo->findSubServicesWithPlace($search, $this->user, $service);
+        $placePeople = $this->placePersonRepo->findPlacePeople($search, $this->user);
         $interval = date_diff($search->getStart(), $search->getEnd());
         $nbDays = (int) $interval->format('%a');
 
@@ -234,8 +236,8 @@ class OccupancyIndicators
      */
     public function getOccupancyRateByPlace(OccupancySearch $search, Service $service = null, SubService $subService = null): array
     {
-        $places = $this->placeRepo->findPlacesForOccupancy($search, $this->currentUser, $service, $subService);
-        $placePeople = $this->placePersonRepo->findPlacePeople($search, $this->currentUser, $service, $subService);
+        $places = $this->placeRepo->findPlacesForOccupancy($search, $this->user, $service, $subService);
+        $placePeople = $this->placePersonRepo->findPlacePeople($search, $this->user, $service, $subService);
         $interval = date_diff($search->getStart(), $search->getEnd());
         $nbDays = (int) $interval->format('%a');
 
