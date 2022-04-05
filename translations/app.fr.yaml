@@ -12,3 +12,10 @@ task:
   updated_successfully: "La tâche « %task_title% » a bien été modifiée."
   deleted_successfully: "La tâche « %task_title% » a bien été supprimée."
   toogle_status: "La tâche « %task_title% » est %task_status%."
+
+# Payment
+payment:
+  created_successfully: "La paiement a bien été créé."
+  updated_successfully: "La paiement a bien été modifié."
+  deleted_successfully: "La paiement a bien été supprimé."
+  restored_successfully: "La paiement a bien été restauré."

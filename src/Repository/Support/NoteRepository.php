@@ -105,6 +105,10 @@ class NoteRepository extends ServiceEntityRepository
      */
     public function findNotesOfSupportQuery(int $supportGroupId, SupportNoteSearch $search): Query
     {
+        if ($search->getDeleted()) {
+            $this->disableFilter($this->_em, 'softdeleteable');
+        }
+
         $qb = $this->createQueryBuilder('n')
             ->leftJoin('n.tags', 't')->addSelect('t')
             ->leftJoin('n.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
@@ -113,6 +117,9 @@ class NoteRepository extends ServiceEntityRepository
             ->andWhere('n.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroupId);
 
+        if ($search->getDeleted()) {
+            $qb->andWhere('n.deletedAt IS NOT null');
+        }
         if ($search->getNoteId()) {
             $qb->andWhere('n.id = :id')
                 ->setParameter('id', $search->getNoteId());

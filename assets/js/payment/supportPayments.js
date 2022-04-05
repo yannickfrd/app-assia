@@ -17,7 +17,7 @@ export default class SupportPayments {
 
         this.paymentModalElt = new Modal(document.getElementById('payment-modal'))
 
-        this.btnNewElt = document.querySelector('button[data-action="new_payment"')
+        this.btnNewElt = document.querySelector('button[data-action="new_payment"]')
         this.trElt = null
 
         this.confirmBtnElt = document.getElementById('modal-confirm')
@@ -71,6 +71,10 @@ export default class SupportPayments {
     }
 
     init() {
+        document.querySelectorAll('button[data-action="restore"]').forEach(restoreBtn => restoreBtn
+            .addEventListener('click', () => this.requestRestorePayment(restoreBtn)))
+
+
         document.querySelectorAll('div[data-parent-field]').forEach(elt => {
             this.displayedFields.push(new FieldDisplayer(elt))
         })
@@ -90,11 +94,12 @@ export default class SupportPayments {
                 }
             })
             const btnDeleteElt = trElt.querySelector('button[data-action="delete"]')
-            btnDeleteElt.addEventListener('click', () => {
-                this.trElt = trElt
-                this.confirmBtnElt.dataset.url = btnDeleteElt.dataset.url
-            })
-
+            if (btnDeleteElt) {
+                btnDeleteElt.addEventListener('click', () => {
+                    this.trElt = trElt
+                    this.confirmBtnElt.dataset.url = btnDeleteElt.dataset.url
+                });
+            }
         })
 
         this.resourcesAmtInputElt.addEventListener('input', () => this.checkResources())
@@ -172,6 +177,17 @@ export default class SupportPayments {
                 this.ajax.send('GET', url, this.responseAjax.bind(this))
             }
         })
+    }
+
+    /**
+     * @param {HTMLLinkElement} restoreBtn
+     */
+    requestRestorePayment(restoreBtn) {
+        if (!this.loader.isActive()) {
+            this.loader.on()
+
+            this.ajax.send('GET', restoreBtn.dataset.url, this.responseAjax.bind(this))
+        }
     }
 
     /**
@@ -514,6 +530,9 @@ export default class SupportPayments {
                 this.updatePayment(response.data.payment)
                 new MessageFlash(response.alert, response.msg)
                 break
+            case 'restore':
+                this.deletedPaymentTr(response.payment)
+                break
             case 'delete':
                 this.trElt.remove()
                 this.updateCounts(-1)
@@ -784,16 +803,12 @@ export default class SupportPayments {
         switch (type) {
             case 'date':
                 return date.toLocaleDateString(locale)
-                break
             case 'd/m':
                 return date.toLocaleDateString(locale).substring(3, 10)
-                break
             case 'time':
                 return date.toLocaleTimeString(locale).substring(0, 5)
-                break
             default:
                 return date.toLocaleDateString(locale) + ' ' + date.toLocaleTimeString(locale).substring(0, 5)
-                break
         }
     }
 
@@ -809,6 +824,21 @@ export default class SupportPayments {
         } else {
             elt.classList.remove('text-danger')
             elt.classList.add('text-success')
+        }
+    }
+
+    /**
+     * @param {Object} payment
+     */
+    deletedPaymentTr(payment) {
+        console.log(payment.id)
+        document.getElementById('payment-'+payment.id).remove()
+
+        this.updateCounts(-1)
+
+        const nbPayments = document.querySelectorAll('table#table-payments tbody tr').length
+        if (nbPayments === 0) {
+            setTimeout(() => document.location.href = location.pathname, 1000)
         }
     }
 }

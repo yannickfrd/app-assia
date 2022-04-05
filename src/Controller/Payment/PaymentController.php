@@ -32,6 +32,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class PaymentController extends AbstractController
 {
@@ -83,8 +84,11 @@ final class PaymentController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function showSupportPayments(int $id, SupportManager $supportManager, Request $request, Pagination $pagination): Response
-    {
+    public function showSupportPayments(
+        int $id,
+        SupportManager $supportManager,
+        Request $request,
+        Pagination $pagination): Response {
         $supportGroup = $supportManager->getSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
@@ -156,18 +160,19 @@ final class PaymentController extends AbstractController
      *
      * @Route("/payment/{id}/get", name="payment_get", methods="GET")
      */
-    public function getPayment(Payment $payment, NormalizerInterface $normalizer): JsonResponse
+    public function getPayment(int $id, PaymentRepository $paymentRepo): JsonResponse
     {
+        $payment = $paymentRepo->findPayment($id);
         $this->denyAccessUnlessGranted('VIEW', $payment);
 
         return $this->json([
             'action' => 'show',
             'data' => [
-                'payment' => $normalizer->normalize($payment, null, ['groups' => ['get', 'view']]),
+                'payment' => $payment,
                 'createdBy' => $payment->getCreatedBy()->getFullname(),
                 'updatedBy' => $payment->getUpdatedBy()->getFullname(),
             ],
-        ]);
+        ], 200, [], ['groups' => ['get', 'view']]);
     }
 
     /**
@@ -328,5 +333,31 @@ final class PaymentController extends AbstractController
         }
 
         return $search;
+    }
+
+    /**
+     * @Route("/payment/{id}/restore", name="payment_restore", methods="GET")
+     */
+    public function restore(
+        int $id,
+        PaymentRepository $paymentRepo,
+        EntityManagerInterface $em,
+        TranslatorInterface $translator
+    ): JsonResponse {
+        $payment = $paymentRepo->findPayment($id, true);
+
+        $this->denyAccessUnlessGranted('EDIT', $payment->getSupportGroup());
+
+        $payment->setDeletedAt(null);
+        $em->flush();
+
+        PaymentManager::deleteCacheItems($payment);
+
+        return $this->json([
+            'action' => 'restore',
+            'alert' => 'success',
+            'msg' => $translator->trans('payment.restored_successfully', [], 'app'),
+            'payment' => ['id' => $id]
+        ]);
     }
 }
