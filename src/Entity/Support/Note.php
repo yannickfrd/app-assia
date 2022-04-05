@@ -248,4 +248,12 @@ class Note
     {
         return $this->deletedAt ? $this->deletedAt->format($format) : '';
     }
+
+    /**
+     * @Groups("show_note")
+     */
+    public function shortContent(): string
+    {
+        return substr($this->getContent(), 0, 200).' [...]';
+    }
 }
