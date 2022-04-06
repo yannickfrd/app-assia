@@ -142,7 +142,6 @@ final class NoteController extends AbstractController
 
     /**
      * @Route("/note/{id}/edit", name="note_edit", methods="POST")
-     * @IsGranted("EDIT", subject="note")
      */
     public function edit(
         int $id,
@@ -152,6 +151,8 @@ final class NoteController extends AbstractController
         NoteRepository $noteRepo
     ): JsonResponse {
         $note = $noteRepo->findNote($id);
+
+        $this->denyAccessUnlessGranted('EDIT', $note);
 
         $form = $this->createForm(NoteType::class, $note)
             ->handleRequest($request);

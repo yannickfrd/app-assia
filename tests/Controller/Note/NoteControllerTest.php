@@ -58,7 +58,7 @@ class NoteControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertGreaterThanOrEqual(4, $crawler->filter('td[scope="row"]')->count());
+        $this->assertGreaterThanOrEqual(4, $crawler->filter('tbody td')->count());
     }
 
     public function testSearchSupportNotesIsSuccessful(): void
@@ -67,7 +67,7 @@ class NoteControllerTest extends WebTestCase
         $this->client->loginUser($this->fixtures['john_user']);
 
         $id = $this->supportGroup->getId();
-        $this->client->request('GET', "/support/$id/notes");
+        $this->client->request('GET', "/support/$id/notes/card-view");
 
         // Page is up
         $this->assertResponseIsSuccessful();
@@ -91,7 +91,7 @@ class NoteControllerTest extends WebTestCase
         $this->client->loginUser($this->fixtures['john_user']);
 
         $id = $this->supportGroup->getId();
-        $this->client->request('GET', "/support/$id/notes");
+        $this->client->request('GET', "/support/$id/notes/card-view");
 
         $this->client->submitForm('export', [], 'GET');
 
@@ -107,7 +107,7 @@ class NoteControllerTest extends WebTestCase
 
         $id = $this->supportGroup->getId();
         /** @var Crawler */
-        $crawler = $this->client->request('GET', "/support/$id/notes");
+        $crawler = $this->client->request('GET', "/support/$id/notes/card-view");
         $csrfToken = $crawler->filter('#note__token')->attr('value');
 
         // Fail without token
@@ -139,13 +139,13 @@ class NoteControllerTest extends WebTestCase
 
         $id = $this->supportGroup->getId();
         /** @var Crawler */
-        $crawler = $this->client->request('GET', "/support/$id/notes");
+        $crawler = $this->client->request('GET', "/support/$id/notes/card-view");
         $csrfToken = $crawler->filter('#note__token')->attr('value');
 
         $id = $this->note->getId();
-        // Fail without token
-        $this->client->request('POST', "/note/$id/edit");
 
+//        // Fail without token
+        $this->client->request('POST', "/note/$id/edit");
         $data = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('danger', $data['alert']);
 
@@ -170,7 +170,7 @@ class NoteControllerTest extends WebTestCase
         $this->loadFixtures();
         $this->client->loginUser($this->fixtures['user4']);
 
-        $crawler = $this->client->request('GET', '/support/1/notes');
+        $crawler = $this->client->request('GET', '/support/1/notes/card-view');
 
         $this->client->request('POST', '/note/1/edit', [
             'note' => [

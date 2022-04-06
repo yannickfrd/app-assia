@@ -252,7 +252,7 @@ class Note
     /**
      * @Groups("show_note")
      */
-    public function shortContent(): string
+    public function getShortContent(): string
     {
         return substr($this->getContent(), 0, 200).' [...]';
     }
