@@ -8,7 +8,9 @@ export default class CheckboxSelector {
     }
 
     init() {
-        this.checkboxAllInputElt.addEventListener('click', () => this.toggle())
+        if (this.checkboxAllInputElt) {
+            this.checkboxAllInputElt.addEventListener('click', () => this.toggle());
+        }
     }
 
     /**

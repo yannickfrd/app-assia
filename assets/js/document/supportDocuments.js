@@ -236,7 +236,7 @@ export default class SupportDocuments {
                 break
             case 'restore':
             case 'delete':
-                this.deleteDocumentTr(response.document)
+                this.deleteDocumentTr(response.document, response.action)
                 break
             case 'download':
                 return this.getFile(response.data)
@@ -283,13 +283,18 @@ export default class SupportDocuments {
 
     /**
      * @param {Object} documentResponse
+     * @param {string} action
      */
-    deleteDocumentTr(documentResponse) {
+    deleteDocumentTr(documentResponse, action) {
         if (this.documentModalElt._isShown) {
             this.documentModalElt.hide()
         }
         document.querySelector(`tr[data-document-id="${documentResponse.id}"]`).remove()
         this.updateCounter(-1)
+
+        if (action === 'restore' && document.querySelectorAll('table#table-documents tbody tr').length === 0) {
+            setTimeout(() => document.location.href = location.pathname, 1000)
+        }
     }
 
     /**

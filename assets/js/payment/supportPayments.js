@@ -690,7 +690,7 @@ export default class SupportPayments {
      */
     getPrototypePayment(payment) {
         return `
-            <td scope="row" class="align-middle text-center">
+            <td class="align-middle text-center">
                 <button class="btn btn-${this.themeColor} btn-sm shadow" data-action="get" data-id="${payment.id}" 
                     data-url="/payment/${payment.id}/get" data-toggle="tooltip" 
                     data-placement="bottom" title="Voir l'enregistrement"><span class="fas fa-eye"></span>
@@ -831,13 +831,11 @@ export default class SupportPayments {
      * @param {Object} payment
      */
     deletedPaymentTr(payment) {
-        console.log(payment.id)
         document.getElementById('payment-'+payment.id).remove()
 
         this.updateCounts(-1)
 
-        const nbPayments = document.querySelectorAll('table#table-payments tbody tr').length
-        if (nbPayments === 0) {
+        if (document.querySelectorAll('table#table-payments tbody tr').length === 0) {
             setTimeout(() => document.location.href = location.pathname, 1000)
         }
     }
