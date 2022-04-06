@@ -61,13 +61,16 @@ class NoteControllerTest extends WebTestCase
         $this->assertGreaterThanOrEqual(4, $crawler->filter('tbody td')->count());
     }
 
-    public function testSearchSupportNotesIsSuccessful(): void
+    /**
+     * @dataProvider provideView
+     */
+    public function testSearchSupportNotesIsSuccessful(string $view): void
     {
         $this->loadFixtures();
         $this->client->loginUser($this->fixtures['john_user']);
 
         $id = $this->supportGroup->getId();
-        $this->client->request('GET', "/support/$id/notes/card-view");
+        $this->client->request('GET', "/support/$id/notes/$view");
 
         // Page is up
         $this->assertResponseIsSuccessful();
@@ -82,16 +85,20 @@ class NoteControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertGreaterThanOrEqual(5, $crawler->filter('div[data-note-id]')->count());
+        $selector = ($view === 'card-view') ? 'div[data-note-id]' : 'tbody tr';
+        $this->assertGreaterThanOrEqual(5, $crawler->filter($selector)->count());
     }
 
-    public function testExportNotesOfSupportIsSuccessful(): void
+    /**
+     * @dataProvider provideView
+     */
+    public function testExportNotesOfSupportIsSuccessful(string $view): void
     {
         $this->loadFixtures();
         $this->client->loginUser($this->fixtures['john_user']);
 
         $id = $this->supportGroup->getId();
-        $this->client->request('GET', "/support/$id/notes/card-view");
+        $this->client->request('GET', "/support/$id/notes/$view");
 
         $this->client->submitForm('export', [], 'GET');
 
@@ -99,7 +106,10 @@ class NoteControllerTest extends WebTestCase
         $this->assertSame('application/vnd.ms-word', $this->client->getResponse()->headers->get('content-type'));
     }
 
-    public function testCreateNoteIsSuccessful(): void
+    /**
+     * @dataProvider provideView
+     */
+    public function testCreateNoteIsSuccessful(string $view): void
     {
         $this->loadFixtures();
 
@@ -107,7 +117,7 @@ class NoteControllerTest extends WebTestCase
 
         $id = $this->supportGroup->getId();
         /** @var Crawler */
-        $crawler = $this->client->request('GET', "/support/$id/notes/card-view");
+        $crawler = $this->client->request('GET', "/support/$id/notes/$view");
         $csrfToken = $crawler->filter('#note__token')->attr('value');
 
         // Fail without token
@@ -132,19 +142,22 @@ class NoteControllerTest extends WebTestCase
         $this->assertSame('create', $content['action']);
     }
 
-    public function testEditNoteIsSuccessful(): void
+    /**
+     * @dataProvider provideView
+     */
+    public function testEditNoteIsSuccessful(string $view): void
     {
         $this->loadFixtures();
         $this->client->loginUser($this->fixtures['john_user']);
 
         $id = $this->supportGroup->getId();
         /** @var Crawler */
-        $crawler = $this->client->request('GET', "/support/$id/notes/card-view");
+        $crawler = $this->client->request('GET', "/support/$id/notes/$view");
         $csrfToken = $crawler->filter('#note__token')->attr('value');
 
         $id = $this->note->getId();
 
-//        // Fail without token
+        // Fail without token
         $this->client->request('POST', "/note/$id/edit");
         $data = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('danger', $data['alert']);
@@ -165,12 +178,15 @@ class NoteControllerTest extends WebTestCase
         $this->assertSame('update', $content['action']);
     }
 
-    public function testUpdateNoteWithOtherUserIsSuccessful(): void
+    /**
+     * @dataProvider provideView
+     */
+    public function testUpdateNoteWithOtherUserIsSuccessful(string $view): void
     {
         $this->loadFixtures();
         $this->client->loginUser($this->fixtures['user4']);
 
-        $crawler = $this->client->request('GET', '/support/1/notes/card-view');
+        $crawler = $this->client->request('GET', "/support/1/notes/$view");
 
         $this->client->request('POST', '/note/1/edit', [
             'note' => [
@@ -251,6 +267,12 @@ class NoteControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h3.card-title', 'Grille d\'évaluation sociale');
+    }
+
+    public function provideView(): \Generator
+    {
+        yield ['card-view'];
+        yield ['table-view'];
     }
 
     protected function loadFixtures(): void
