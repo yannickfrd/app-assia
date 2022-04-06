@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -57,9 +58,12 @@ final class TaskController extends AbstractController
     /**
      * @Route("/support/{id}/tasks", name="support_task_index", methods="GET|POST")
      */
-    public function indexSupportTasks(int $id, SupportManager $supportManager,
-        Request $request, TaskPaginator $paginator): Response
-    {
+    public function indexSupportTasks(
+        int $id,
+        SupportManager $supportManager,
+        Request $request,
+        TaskPaginator $paginator
+    ): Response {
         $supportGroup = $supportManager->getSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
@@ -219,7 +223,34 @@ final class TaskController extends AbstractController
             ], 200, [], ['groups' => Task::SERIALIZER_GROUPS]);
     }
 
-    private function exportData(TaskSearch $search, TaskRepository $taskRepo, User $user, ?SupportGroup $supportGroup = null): Response
+    /**
+     * @Route("/task/{id}/restore", name="task_restore", methods="GET")
+     */
+    public function restore(
+        int $id,
+        TaskRepository $taskRepo,
+        EntityManagerInterface $em,
+        TranslatorInterface $translator
+    ): JsonResponse {
+        $task = $taskRepo->findTask($id, true);
+
+        $this->denyAccessUnlessGranted('EDIT', $task->getSupportGroup());
+
+        $task->setDeletedAt(null);
+        $em->flush();
+
+        TaskManager::deleteCacheItems($task);
+
+        return $this->json([
+            'action' => 'restore',
+            'alert' => 'success',
+            'msg' => $translator->trans('note.restored_successfully', ['%note_title%' => $task->getTitle()], 'app'),
+            'task' => ['id' => $task->getId()]
+        ]);
+    }
+
+    private function exportData(TaskSearch $search, TaskRepository $taskRepo, UserInterface $user, ?SupportGroup
+    $supportGroup = null): Response
     {
         if ($supportGroup) {
             $search->setSupportGroup($supportGroup);

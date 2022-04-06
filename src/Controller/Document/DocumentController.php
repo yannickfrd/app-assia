@@ -156,8 +156,12 @@ final class DocumentController extends AbstractController
      *
      * @Route("/support/{id}/documents/download", name="documents_download", methods="GET|POST")
      */
-    public function downloadDocuments(int $id, Request $request, SupportManager $supportManager, FileDownloader $downloader): JsonResponse
-    {
+    public function downloadDocuments(
+        int $id,
+        Request $request,
+        SupportManager $supportManager,
+        FileDownloader $downloader
+    ): JsonResponse {
         $this->denyAccessUnlessGranted('VIEW', $supportGroup = $supportManager->getSupportGroup($id));
 
         $form = $this->createForm(ActionType::class, null)

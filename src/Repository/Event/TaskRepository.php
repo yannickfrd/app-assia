@@ -7,10 +7,12 @@ use App\Entity\Organization\User;
 use App\Entity\Support\SupportGroup;
 use App\Form\Model\Event\TaskSearch;
 use App\Repository\Traits\QueryTrait;
+use App\Service\DoctrineTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @method Task|null find($id, $lockMode = null, $lockVersion = null)
@@ -21,6 +23,7 @@ use Doctrine\Persistence\ManagerRegistry;
 class TaskRepository extends ServiceEntityRepository
 {
     use QueryTrait;
+    use DoctrineTrait;
 
     public function __construct(ManagerRegistry $registry)
     {
@@ -32,12 +35,20 @@ class TaskRepository extends ServiceEntityRepository
      */
     public function findTasksQuery(TaskSearch $search, User $user, ?SupportGroup $supportGroup = null): Query
     {
+        if ($search->getDeleted()) {
+            $this->disableFilter($this->_em, 'softdeleteable');
+        }
+
         $qb = $this->getTasksQuery();
         $qb = $this->filter($qb, $search, $user);
 
         if ($supportGroup) {
             $qb->andWhere('t.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroup);
+        }
+
+        if ($search->getDeleted()) {
+            $qb->andWhere('t.deletedAt IS NOT null');
         }
 
         return $qb
@@ -50,8 +61,12 @@ class TaskRepository extends ServiceEntityRepository
     /**
      * Donne une tâche.
      */
-    public function findTask(int $id): ?Task
+    public function findTask(int $id, bool $deleted = false): ?Task
     {
+        if ($deleted) {
+            $this->disableFilter($this->_em, 'softdeleteable');
+        }
+
         return $this->createQueryBuilder('t')
             ->leftJoin('t.users', 'u1')->addSelect('PARTIAL u1.{id, firstname, lastname}')
             ->leftJoin('t.createdBy', 'u2')->addSelect('PARTIAL u2.{id, firstname, lastname}')
@@ -78,7 +93,7 @@ class TaskRepository extends ServiceEntityRepository
     /**
      * Donne tous les évenements à exporter.
      */
-    public function findTasksToExport(TaskSearch $search, User $user): array
+    public function findTasksToExport(TaskSearch $search, UserInterface $user): array
     {
         $qb = $this->getTasksQuery()
             ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
@@ -139,7 +154,7 @@ class TaskRepository extends ServiceEntityRepository
         ;
     }
 
-    protected function filter(QueryBuilder $qb, TaskSearch $search, User $user): QueryBuilder
+    protected function filter(QueryBuilder $qb, TaskSearch $search, UserInterface $user): QueryBuilder
     {
         if (!$user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->where('t.createdBy IN (:user)')

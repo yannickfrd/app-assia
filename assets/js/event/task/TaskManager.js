@@ -31,10 +31,13 @@ export default class TaskManager {
     }
 
     init() {
+        document.querySelectorAll('button[data-action="restore"]').forEach(restoreBtn => restoreBtn
+            .addEventListener('click', () => this.requestRestoreTask(restoreBtn)))
+
         document.getElementById('js_new_task').addEventListener('click', () => this.taskForm.resetForm())
 
         document.querySelectorAll('button[data-action="edit_task"]').forEach(btnElt => {
-            btnElt.addEventListener('click', () => this.requestShowTask(btnElt))
+            btnElt.addEventListener('click', () => this.requestShowTask(btnElt));
         })
 
         document.querySelectorAll('button[data-action="delete_task"]').forEach(btnElt => {
@@ -59,6 +62,14 @@ export default class TaskManager {
         document.querySelectorAll('input[data-action="toggle_task_status"]').forEach(checkboxElt => {
             checkboxElt.addEventListener('click', () => this.requestToggleStatusTask(checkboxElt))
         })
+    }
+
+    requestRestoreTask(restoreBtn) {
+        if (!this.loader.isActive()) {
+            this.loader.on()
+
+            this.ajax.send('GET', restoreBtn.dataset.url, this.responseAjax.bind(this))
+        }
     }
 
     /**
@@ -97,8 +108,9 @@ export default class TaskManager {
                 case 'edit':
                     this.editTaskTr(task)
                     break
+                case 'restore':
                 case 'delete':
-                    this.deleteTaskTr(task)
+                    this.deleteTaskTr(task, response.action)
                     break
                 case 'toggle_status':
                     this.checkStatus(task)
@@ -287,8 +299,9 @@ export default class TaskManager {
     /**
      * Supprime la ligne <tr> correspondant tâche.
      * @param {Object} task
+     * @param {String} action
      */
-    deleteTaskTr(task) {
+    deleteTaskTr(task, action) {
         const rowElt = document.getElementById(`task_${task.id}`)
 
         if (rowElt) {
@@ -301,6 +314,10 @@ export default class TaskManager {
 
         this.taskModal.hide()
         document.getElementById('js-btn-cancel').click()
+
+        if (action === 'restore' && document.querySelectorAll('table#table_tasks tbody tr').length === 0) {
+            setTimeout(() => document.location.href = location.pathname, 1000)
+        }
     }
 
     /**

@@ -26,25 +26,26 @@
         <tbody>
             {% set now = 'now'|date('Y-m-d-H-i') %}
             {% for task in tasks %}
+                {% set disabled = task.deletedAt is not null %}
                 {% set support = task.supportGroup %}
                 <tr id="task_{{ task.id }}" class="{% if task.status == true %}text-secondary delete{% endif %}">
                     <td class="align-middle text-center">
-                        <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} text-dark pl-0" 
-                            title="Cliquer pour changer le statut" data-toggle="tooltip" data-placement="bottom">
+                        <div class="custom-control custom-checkbox custom-checkbox-{{ disabled ? 'secondary disabled' : theme_color }} text-dark pl-0"
+                            title="{{ disabled == false ? 'Cliquer pour changer le statut' }}" data-toggle="tooltip" data-placement="bottom">
                             <div class="form-check">
-                                <input type="checkbox" class="custom-control-input checkbox form-check-input" 
+                                <input type="checkbox" class="custom-control-input checkbox form-check-input"
                                     id="toggle_task_status_{{ task.id }}" {% if task.status == 1 %}checked{% endif %}
-                                    data-action="toggle_task_status" 
-                                    data-url="{{ path('task_toggle_status', {'id': task.id}) }}">
-                                <label class="custom-control-label form-check-label ml-2 cursor-pointer" 
+                                    data-action="toggle_task_status"
+                                    data-url="{{ path('task_toggle_status', {'id': task.id}) }}" {{ disabled ? 'disabled' }}>
+                                <label class="custom-control-label form-check-label ml-2 {{ disabled == false ? 'cursor-pointer' }}"
                                     for="toggle_task_status_{{ task.id }}"></label>
                             </div>
                         </div>
                     </td>
                     <td class="align-middle text-center">
-                        <button data-url="{{ path('task_show', {'id': task.id}) }}"
-                            class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-action="edit_task"
-                            title="Voir/Modifier la tâche" data-toggle="tooltip" data-placement="bottom">
+                        <button data-url="{{ path('task_show', {'id': task.id}) }}" {{ disabled ? 'disabled' }}
+                            class="btn btn-{{ disabled ? 'secondary disabled' : theme_color }} btn-sm shadow my-1"
+                            data-action="edit_task" title="{{ disabled == false ? 'Voir/Modifier la tâche' }}" data-toggle="tooltip" data-placement="bottom">
                             <span class="fas fa-eye"></span>
                         </button>
                     </td>
@@ -94,10 +95,14 @@
                     {% endif %}
                     <td class="align-middle text-center">
                         {% if is_granted('DELETE', task) %}
-                            <button class="btn btn-danger btn-sm shadow my-1" data-action="delete_task" 
-                                data-url="{{ path('task_delete', {'id': task.id}) }}" title="Supprimer la tâche" 
-                                data-toggle="tooltip" data-placement="bottom"><span class="fas fa-trash-alt"></span>
-                            </button>
+                            {% if disabled %}
+                                {% include 'model/button/_restore_button.html.twig' with {path_route: path('task_restore', {'id': task.id})} %}
+                            {% else %}
+                                <button class="btn btn-danger btn-sm shadow my-1" data-action="delete_task"
+                                    data-url="{{ path('task_delete', {'id': task.id}) }}" title="Supprimer la tâche"
+                                    data-toggle="tooltip" data-placement="bottom"><span class="fas fa-trash-alt"></span>
+                                </button>
+                            {% endif %}
                         {% endif %}
                     </td>
                 </tr>

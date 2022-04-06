@@ -22,4 +22,9 @@
             {{ form_widget(form_search.tags, {attr: {class: 'w-min-200'}}) }}
         </div>
     </div>
+    <div class="col-auto my-auto">
+        <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-0">
+            {{ form_widget(form_search.deleted.deleted) }}
+        </div>
+    </div>
 {% endblock %}
