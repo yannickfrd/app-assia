@@ -19,3 +19,10 @@ payment:
   updated_successfully: "La paiement a bien été modifié."
   deleted_successfully: "La paiement a bien été supprimé."
   restored_successfully: "La paiement a bien été restauré."
+
+# Document
+document:
+  created_successfully: "Le document « %document_title% » a bien été créé."
+  updated_successfully: "Le document « %document_title% » a bien été modifié."
+  deleted_successfully: "Le document « %document_title% » a bien été supprimé."
+  restored_successfully: "Le document « %document_title% » a bien été restauré."

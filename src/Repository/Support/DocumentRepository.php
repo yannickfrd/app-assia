@@ -8,9 +8,11 @@ use App\Entity\Support\SupportGroup;
 use App\Form\Model\Support\DocumentSearch;
 use App\Form\Model\Support\SupportDocumentSearch;
 use App\Repository\Traits\QueryTrait;
+use App\Service\DoctrineTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @method Document|null find($id, $lockMode = null, $lockVersion = null)
@@ -21,6 +23,7 @@ use Doctrine\Persistence\ManagerRegistry;
 class DocumentRepository extends ServiceEntityRepository
 {
     use QueryTrait;
+    use DoctrineTrait;
 
     public function __construct(ManagerRegistry $registry)
     {
@@ -30,7 +33,7 @@ class DocumentRepository extends ServiceEntityRepository
     /**
      * Return all documents of group support.
      */
-    public function findDocumentsQuery(DocumentSearch $search, User $user): Query
+    public function findDocumentsQuery(DocumentSearch $search, UserInterface $user): Query
     {
         $qb = $this->createQueryBuilder('d')
             ->leftJoin('d.tags', 't')->addSelect('t')
@@ -82,6 +85,10 @@ class DocumentRepository extends ServiceEntityRepository
      */
     public function findSupportDocumentsQuery(SupportGroup $supportGroup, SupportDocumentSearch $search): Query
     {
+        if ($search->getDeleted()) {
+            $this->disableFilter($this->_em, 'softdeleteable');
+        }
+
         $qb = $this->createQueryBuilder('d')->select('d')
             ->leftJoin('d.tags', 't')->addSelect('t')
             ->leftJoin('d.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
@@ -89,6 +96,9 @@ class DocumentRepository extends ServiceEntityRepository
             ->where('d.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroup);
 
+        if ($search->getDeleted()) {
+            $qb->andWhere('d.deletedAt IS NOT null');
+        }
         if ($search->getName()) {
             $qb->andWhere('d.name LIKE :name OR d.content LIKE :name')
             ->setParameter('name', '%'.$search->getName().'%');
@@ -100,6 +110,29 @@ class DocumentRepository extends ServiceEntityRepository
             ->orderBy('d.createdAt', 'DESC')
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+        ;
+    }
+
+    /**
+     * Donne un document.
+     */
+    public function findDocument($id, bool $deleted = false): ?Document
+    {
+        if ($deleted) {
+            $this->disableFilter($this->_em, 'softdeleteable');
+        }
+
+        return $this->createQueryBuilder('d')->select('d')
+            ->join('d.peopleGroup', 'pg')->addSelect('PARTIAL pg.{id}')
+            ->join('d.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
+
+            ->andWhere('d.id IN (:id)')
+            ->setParameter('id', $id)
+
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getSingleResult()
         ;
     }
 
