@@ -33,6 +33,9 @@ export default class RdvManager {
     }
 
     init() {
+        document.querySelectorAll('button[data-action="restore"]').forEach(restoreBtn => restoreBtn
+            .addEventListener('click', () => this.requestRestoreNote(restoreBtn)))
+
         this.newRdvBtn.addEventListener('click', e => this.rdvForm.resetForm(e))
 
         this.editRdvBtn.forEach(btnElt => {
@@ -70,6 +73,14 @@ export default class RdvManager {
         btnConfirmDelete.addEventListener('click', () => this.rdvForm.requestDeleteRdv())
     }
 
+    requestRestoreNote(restoreBtn) {
+        if (!this.loader.isActive()) {
+            this.loader.on()
+
+            this.ajax.send('GET', restoreBtn.dataset.url, this.responseAjax.bind(this))
+        }
+    }
+
     /**
      * @param {Object} response
      */
@@ -79,8 +90,9 @@ export default class RdvManager {
 
         if (response.action) {
             switch (response.action) {
+                case 'restore':
                 case 'delete':
-                    this.deleteRdvTr(rdv, apiUrls)
+                    this.deleteRdvTr(rdv, response.action, apiUrls)
                     break
                 case 'create':
                     this.createRdvTr(rdv, apiUrls)
@@ -235,16 +247,22 @@ export default class RdvManager {
     /**
      * Delete rdv's row.
      * @param {Object} rdv
+     * @param {string} action
      * @param {Object} apiUrls
      */
-    deleteRdvTr(rdv, apiUrls) {
+    deleteRdvTr(rdv, action, apiUrls) {
         document.getElementById('rdv-' + rdv.id).remove()
 
-        this.apiCalendar.execute('delete', apiUrls)
+        if (action === 'delete') {
+            this.apiCalendar.execute('delete', apiUrls)
+            this.rdvForm.closeModal()
+        }
 
-        this.rdvForm.closeModal()
+        this.total.decrement();
 
-        this.total.decrement()
+        if (action === 'restore' && document.querySelectorAll('table#table-rdvs tbody tr').length === 0) {
+            setTimeout(() => document.location.href = location.pathname, 1000)
+        }
     }
 
     /**

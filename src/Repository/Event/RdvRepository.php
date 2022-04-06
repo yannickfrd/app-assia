@@ -7,10 +7,12 @@ use App\Entity\Organization\User;
 use App\Entity\Support\SupportGroup;
 use App\Form\Model\Event\EventSearch;
 use App\Repository\Traits\QueryTrait;
+use App\Service\DoctrineTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @method Rdv|null find($id, $lockMode = null, $lockVersion = null)
@@ -21,6 +23,7 @@ use Doctrine\Persistence\ManagerRegistry;
 class RdvRepository extends ServiceEntityRepository
 {
     use QueryTrait;
+    use DoctrineTrait;
 
     public function __construct(ManagerRegistry $registry)
     {
@@ -32,7 +35,14 @@ class RdvRepository extends ServiceEntityRepository
      */
     public function findRdvsQuery(EventSearch $search, User $user, ?SupportGroup $supportGroup = null): Query
     {
+        if ($search->getDeleted()) {
+            $this->disableFilter($this->_em, 'softdeleteable');
+        }
         $qb = $this->getRdvsQuery();
+
+        if ($search->getDeleted()) {
+            $qb->andWhere('r.deletedAt IS NOT null');
+        }
 
         return $this->filter($qb, $search, $user, $supportGroup)
             ->orderBy('r.start', 'ASC')
@@ -44,8 +54,12 @@ class RdvRepository extends ServiceEntityRepository
     /**
      * Donne un rendez-vous.
      */
-    public function findRdv(int $id): ?Rdv
+    public function findRdv(int $id, bool $deleted = false): ?Rdv
     {
+        if ($deleted) {
+            $this->disableFilter($this->_em, 'softdeleteable');
+        }
+
         return $this->getBaseQuery()
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, head}')
             ->leftJoin('r.updatedBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
@@ -65,7 +79,7 @@ class RdvRepository extends ServiceEntityRepository
     /**
      * Donne tous les RDVs à exporter.
      */
-    public function findRdvsToExport(EventSearch $search, User $user, ?SupportGroup $supportGroup = null): array
+    public function findRdvsToExport(EventSearch $search, UserInterface $user, ?SupportGroup $supportGroup = null): array
     {
         $qb = $this->getRdvsQuery()
             ->leftJoin('r.updatedBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}');
@@ -102,7 +116,8 @@ class RdvRepository extends ServiceEntityRepository
         ;
     }
 
-    protected function filter(QueryBuilder $qb, EventSearch $search, User $user, ?SupportGroup $supportGroup = null): QueryBuilder
+    protected function filter(QueryBuilder $qb, EventSearch $search, UserInterface $user, ?SupportGroup $supportGroup =
+    null): QueryBuilder
     {
         if (!$user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->where('r.createdBy = :user')
@@ -159,10 +174,17 @@ class RdvRepository extends ServiceEntityRepository
      */
     public function findRdvsQueryOfSupport(EventSearch $search, SupportGroup $supportGroup): Query
     {
+        if ($search->getDeleted()) {
+            $this->disableFilter($this->_em, 'softdeleteable');
+        }
+
         $qb = $this->getBaseQuery()
             ->andWhere('sg.id = :supportGroup')
             ->setParameter('supportGroup', $supportGroup->getId());
 
+        if ($search->getDeleted()) {
+            $qb->andWhere('r.deletedAt IS NOT null');
+        }
         if ($search->getTitle()) {
             $qb->andWhere('r.title LIKE :title')
                 ->setParameter('title', '%'.$search->getTitle().'%');

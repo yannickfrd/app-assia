@@ -3,6 +3,7 @@
 namespace App\Form\Model\Event;
 
 use App\Entity\Support\SupportGroup;
+use App\Entity\Traits\DeletedTrait;
 use App\Form\Model\Organization\ReferentServiceDeviceSearchTrait;
 use App\Form\Model\Traits\DateSearchTrait;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -11,6 +12,7 @@ class EventSearch
 {
     use ReferentServiceDeviceSearchTrait;
     use DateSearchTrait;
+    use DeletedTrait;
 
     /** @var int */
     protected $id;

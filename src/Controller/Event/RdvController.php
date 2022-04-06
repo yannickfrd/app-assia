@@ -11,11 +11,13 @@ use App\Form\Event\RdvType;
 use App\Form\Event\SupportRdvSearchType;
 use App\Form\Model\Event\EventSearch;
 use App\Repository\Event\RdvRepository;
+use App\Repository\Support\NoteRepository;
 use App\Repository\Support\SupportGroupRepository;
 use App\Service\Api\ApiCalendarRouter;
 use App\Service\Event\RdvManager;
 use App\Service\Event\RdvPaginator;
 use App\Service\Export\RdvExport;
+use App\Service\Note\NoteManager;
 use App\Service\SupportGroup\SupportManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,6 +25,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class RdvController extends AbstractController
 {
@@ -255,6 +258,32 @@ final class RdvController extends AbstractController
                 'google' => $rdv->getGoogleEventId(),
                 'outlook' => $rdv->getOutlookEventId(),
             ]),
+        ]);
+    }
+
+    /**
+     * @Route("/rdv/{id}/restore", name="rdv_restore", methods="GET")
+     */
+    public function restore(
+        int $id,
+        RdvRepository $rdvRepo,
+        EntityManagerInterface $em,
+        TranslatorInterface $translator
+    ): JsonResponse {
+        $rdv = $rdvRepo->findRdv($id, true);
+
+        $this->denyAccessUnlessGranted('EDIT', $rdv->getSupportGroup());
+
+        $rdv->setDeletedAt(null);
+        $em->flush();
+
+        RdvManager::deleteCacheItems($rdv);
+
+        return $this->json([
+            'action' => 'restore',
+            'alert' => 'success',
+            'msg' => $translator->trans('rdv.restored_successfully', ['%rdv_title%' => $rdv->getTitle()], 'app'),
+            'rdv' => ['id' => $rdv->getId()],
         ]);
     }
 }
