@@ -64,6 +64,36 @@ class NoteControllerTest extends WebTestCase
     /**
      * @dataProvider provideView
      */
+    public function testRestoreNoteIsSuccessful(string $view)
+    {
+        $this->loadFixtures();
+        $this->client->loginUser($this->fixtures['john_user']);
+
+        $noteId = $this->note->getId();
+        $this->client->request('GET', "/note/$noteId/delete");
+
+        $id = $this->supportGroup->getId();
+        // Page is up
+        $crawler = $this->client->request('GET', "/support/$id/notes/$view", [
+            'deleted' => [
+                'deleted' => true
+            ]
+        ]);
+
+        $this->assertResponseIsSuccessful();
+        $selector = ($view === 'card-view') ? 'div[data-note-id]' : 'tbody tr';
+        $this->assertGreaterThanOrEqual(1, $crawler->filter($selector)->count());
+
+        $this->client->request('GET', "/note/$noteId/restore");
+
+        $this->assertGreaterThanOrEqual(1, $crawler->filter($selector)->count());
+        $content = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertSame('restore', $content['action']);
+    }
+
+    /**
+     * @dataProvider provideView
+     */
     public function testSearchSupportNotesIsSuccessful(string $view): void
     {
         $this->loadFixtures();
