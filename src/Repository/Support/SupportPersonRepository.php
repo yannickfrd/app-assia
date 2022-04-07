@@ -13,6 +13,7 @@ use App\Form\Model\Support\AvdlSupportSearch;
 use App\Form\Model\Support\HotelSupportSearch;
 use App\Form\Model\Support\SupportSearch;
 use App\Repository\Traits\QueryTrait;
+use App\Service\DoctrineTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -28,6 +29,7 @@ use Symfony\Component\Security\Core\Security;
 class SupportPersonRepository extends ServiceEntityRepository
 {
     use QueryTrait;
+    use DoctrineTrait;
 
     public const EXPORT_LIMIT = 15_000;
 
@@ -46,6 +48,10 @@ class SupportPersonRepository extends ServiceEntityRepository
      */
     public function findSupportsQuery(SupportSearch $search): Query
     {
+        if ($search->getDeleted()) {
+            $this->disableFilter($this->_em, 'softdeleteable');
+        }
+
         $qb = $this->getSupportsQuery();
 
         if ($search) {
@@ -322,6 +328,9 @@ class SupportPersonRepository extends ServiceEntityRepository
                 ->setParameter('services', $this->user->getServices());
         }
 
+        if ($search->getDeleted()) {
+            $qb->andWhere('sp.deletedAt IS NOT null');
+        }
         if ($search->getHead()) {
             $qb->andWhere('sp.head = :head')
                 ->setParameter('head', $search->getHead());

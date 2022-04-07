@@ -157,6 +157,21 @@ class DocumentRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findDocumentOfSupportDeleted(int $supportGroupId)
+    {
+        $this->disableFilter($this->_em, 'softdeleteable');
+
+        return $this->createQueryBuilder('d')->select('d')
+
+            ->where('d.deletedAt IS NOT null')
+
+            ->andwhere('d.supportGroup = :id')
+            ->setParameter('id', $supportGroupId)
+
+            ->getQuery()
+            ->getResult();
+    }
+
     /**
      * @return Document[]
      */

@@ -53,7 +53,11 @@ class SupportSearchType extends AbstractType
                 'label_attr' => ['class' => 'custom-control-label'],
                 'attr' => ['class' => 'custom-control-input checkbox'],
             ])
-            ->add('export');
+            ->add('export')
+            ->add('deleted', DeletedSearchType::class, [
+                'label' => false,
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

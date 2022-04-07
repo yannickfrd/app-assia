@@ -4,6 +4,7 @@ namespace App\Repository\Support;
 
 use App\Entity\Organization\Place;
 use App\Entity\Support\PlaceGroup;
+use App\Service\DoctrineTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
@@ -16,6 +17,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class PlaceGroupRepository extends ServiceEntityRepository
 {
+    use DoctrineTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, PlaceGroup::class);
@@ -75,5 +78,20 @@ class PlaceGroupRepository extends ServiceEntityRepository
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult()
         ;
+    }
+
+    public function findPlaceGroupOfSupportDeleted(int $supportGroupId)
+    {
+        $this->disableFilter($this->_em, 'softdeleteable');
+
+        return $this->createQueryBuilder('pg')->select('pg')
+
+            ->where('pg.deletedAt IS NOT null')
+
+            ->andwhere('pg.supportGroup = :id')
+            ->setParameter('id', $supportGroupId)
+
+            ->getQuery()
+            ->getResult();
     }
 }

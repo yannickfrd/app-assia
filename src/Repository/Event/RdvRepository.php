@@ -208,6 +208,21 @@ class RdvRepository extends ServiceEntityRepository
         ;
     }
 
+    public function findRdvOfSupportDeleted(int $supportGroupId)
+    {
+        $this->disableFilter($this->_em, 'softdeleteable');
+
+        return $this->createQueryBuilder('r')->select('r')
+
+            ->where('r.deletedAt IS NOT null')
+
+            ->andwhere('r.supportGroup = :id')
+            ->setParameter('id', $supportGroupId)
+
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findLastRdvOfSupport(int $supportGroupId): ?Rdv
     {
         return $this->createQueryBuilder('r')->select('r')

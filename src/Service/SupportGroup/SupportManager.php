@@ -3,9 +3,16 @@
 namespace App\Service\SupportGroup;
 
 use App\Entity\Evaluation\EvaluationGroup;
+use App\Entity\Event\Rdv;
+use App\Entity\Event\Task;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\User;
 use App\Entity\People\PeopleGroup;
+use App\Entity\Support\Avdl;
+use App\Entity\Support\Document;
+use App\Entity\Support\HotelSupport;
+use App\Entity\Support\Note;
+use App\Entity\Support\Payment;
 use App\Entity\Support\PlaceGroup;
 use App\Entity\Support\SupportGroup;
 use App\Repository\Support\SupportGroupRepository;
@@ -15,6 +22,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
@@ -99,7 +107,7 @@ class SupportManager
     /**
      * Créé un nouveau suivi.
      */
-    public function create(SupportGroup $supportGroup, ?Form $form): ?SupportGroup
+    public function create(SupportGroup $supportGroup, ?FormInterface $form): ?SupportGroup
     {
         // Vérifie si un suivi est déjà en cours pour ce ménage dans ce service.
         if (SupportGroup::STATUS_ENDED !== $supportGroup->getStatus() && $this->activeSupportExists($supportGroup)) {
@@ -223,7 +231,7 @@ class SupportManager
             $cache->deleteItem(User::CACHE_USER_SUPPORTS_KEY.$supportGroup->getReferent()->getId());
         }
 
-        if ($currentReferent && $currentReferent != $supportGroup->getReferent()) {
+        if ($currentReferent && $currentReferent !== $supportGroup->getReferent()) {
             $cache->deleteItem(User::CACHE_USER_SUPPORTS_KEY.$currentReferent->getId());
         }
 
@@ -234,6 +242,38 @@ class SupportManager
             EvaluationGroup::CACHE_EVALUATION_KEY.$supportGroupId,
             Service::CACHE_INDICATORS_KEY.$supportGroup->getService()->getId(),
         ]);
+    }
+
+    public function restore(SupportGroup $support): void
+    {
+        $supportId = $support->getId();
+
+        $entitiesElement = $this->getElementsBeforeRestore($supportId);
+        foreach ($entitiesElement as $elements) {
+            foreach ($elements as $element) {
+                $element->setDeletedAt(null);
+            }
+        }
+
+        foreach ($support->getSupportPeople() as $supportPerson) {
+            $supportPerson->setDeletedAt(null);
+        }
+        $support->setDeletedAt(null);
+    }
+
+    private function getElementsBeforeRestore(int $supportId): array
+    {
+        return [
+            $this->em->getRepository(Note::class)->findNotesOfSupportDeleted($supportId),
+            $this->em->getRepository(Rdv::class)->findRdvOfSupportDeleted($supportId),
+            $this->em->getRepository(Task::class)->findTaskOfSupportDeleted($supportId),
+            $this->em->getRepository(Payment::class)->findRdvOfSupportDeleted($supportId),
+            $this->em->getRepository(Document::class)->findDocumentOfSupportDeleted($supportId),
+            $this->em->getRepository(PlaceGroup::class)->findPlaceGroupOfSupportDeleted($supportId),
+            $this->em->getRepository(EvaluationGroup::class)->findEvaluationOfSupportDeleted($supportId),
+            $this->em->getRepository(Avdl::class)->findAvdlOfSupportDeleted($supportId),
+            $this->em->getRepository(HotelSupport::class)->findHoteOfSupportDeleted($supportId),
+        ];
     }
 
     /**

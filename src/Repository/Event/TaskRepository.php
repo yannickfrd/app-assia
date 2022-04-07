@@ -246,6 +246,21 @@ class TaskRepository extends ServiceEntityRepository
         ;
     }
 
+    public function findTaskOfSupportDeleted(int $supportGroupId)
+    {
+        $this->disableFilter($this->_em, 'softdeleteable');
+
+        return $this->createQueryBuilder('t')->select('t')
+
+            ->where('t.deletedAt IS NOT null')
+
+            ->andwhere('t.supportGroup = :id')
+            ->setParameter('id', $supportGroupId)
+
+            ->getQuery()
+            ->getResult();
+    }
+
     /**
      * Compte le nombre de Tasks selon des critères.
      */

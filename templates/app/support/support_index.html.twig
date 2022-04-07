@@ -3,13 +3,12 @@
 {% set title = 'Suivis' %}
 {% set ROLE_CHILD = constant('App\\Entity\\People\\RolePerson::ROLE_CHILD') %}
 {% set form_head = form.vars.value.head == true %}          
+{% set deleted_is_checked = form.deleted.deleted.vars.checked %}
 
 {% block title %}{{ title }}{% endblock %}
 
 {% block body %}
-
     <section class="mt-0">
-
         <div class="container-fluid pt-4">
             {% include 'model/_msgFlash.html.twig' %}
             <h1 class="h2 mb-3">{{ title }}</h1>
@@ -21,7 +20,7 @@
 
             <div class="row align-items-baseline">
                 <div class="col-md-4 count align-middle mb-2">
-                    <span class="align-middle">Résultat : {{ supports.getTotalItemCount|number }} <!--
+                    <span id="count-supports" class="align-middle" data-count-supports="{{ supports.getTotalItemCount }}">Résultat : {{ supports.getTotalItemCount|number }} <!--
                     -->{% if form_head %}ménage{% else %}personne{% endif %}{% if supports.getTotalItemCount > 1 %}s{% endif %}.</span>
                 </div>
                 <div class="col-md-8">
@@ -30,7 +29,7 @@
             </div>
 
             <div class="table-responsive">
-                <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                <table id="table-supports" class="table table-bordered table-striped table-hover text-dark shadow-sm">
                     <thead>
                         <tr>
                             <th scope="col" class="align-middle th-w-20"></th>
@@ -43,18 +42,21 @@
                             <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, 'Début de suivi', 'sg.startDate') }}</th>
                             <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, 'Fin de suivi', 'sg.endDate') }}</th>
                             <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, 'Commune', 'sg.city') }}</th>
+                            {% if deleted_is_checked %}
+                                <th scope="col" class="align-middle th-w-20"></th>
+                            {% endif %}
                         </tr>
                     </thead>
                     <tbody>  
                         {% for support_person in supports %}
                             {% set support_group = support_person.supportGroup %}
                             {% set person = support_person.person %}
-                            <tr class="{% if form_head == false and support_person.head %}font-weight-bold{% endif %}">
-                                <td scope="row" class="align-middle text-center">
+                            {% set disabled = support_person.deletedAt is not null %}
+
+                            <tr id="support-{{ support_group.id }}" class="{% if form_head == false and support_person.head %}font-weight-bold{% endif %}">
+                                <td class="align-middle text-center">
                                     {% if is_granted('VIEW', support_group) %}
-                                        <a href="{{ path('support_show', {'id': support_group.id}) }}" class="btn btn-{{ theme_color }} btn-sm my-1 shadow" 
-                                            data-toggle="tooltip" data-placement="bottom" title="Voir la fiche du suivi"><span class="fas fa-eye"></span>
-                                        </a>
+                                        {% include 'model/button/_show_button.html.twig' with {'path_route': path('support_show', {'id': support_group.id})} %}
                                     {% endif %}
                                 </td>
                                 <td class="align-middle">{{ person.fullname ~ (person.usename ? ' (' ~ person.usename ~ ')') }}</td>
@@ -62,18 +64,20 @@
                                 <td class="align-middle">{{ support_group.peopleGroup.familyTypologyToString }}<!--
                                     -->{{ support_group.nbPeople > 1 ? ', ' ~ support_group.nbPeople ~ ' pers.' }}
                                     {% if support_group.nbPeople != support_group.peopleGroup.nbPeople %}
-                                        <span class="fas fa-exclamation-triangle text-warning" 
+                                        <span class="fas fa-exclamation-triangle text-warning"
                                             title="Le nombre de personnes rattachées au suivi ne correspond pas à la composition familiale."></span>
                                     {% endif %}
                                 </td>
                                 <td class="align-middle">
-                                    {{ support_group.service.name }}{{ support_group.subService ? ' | ' ~ support_group.subService.name }}<br/>
+                                    {{ support_group.service.name }}{{ support_group.subService ? ' | ' ~ support_group.subService.name }}
+                                    <br/>
                                     <span class="text-secondary">{{ support_group.device ? '(' ~ support_group.device.name ~ ')' }}</span>
                                 </td>
                                 <td class="align-middle">{{ support_group.referent ? support_group.referent.fullname }}</td>
                                 <td class="align-middle">{{ support_person.statusToString }}<!--
                                     -->{% if support_group.service.coefficient == YES %}<!--
-                                        --><br/><span class="text-secondary">{{ support_group.coefficient ? '(coeff. ' ~ support_group.coefficient ~ ')' }}</span><!--
+                                        -->
+                                    <br/><span class="text-secondary">{{ support_group.coefficient ? '(coeff. ' ~ support_group.coefficient ~ ')' }}</span><!--
                                     -->{% endif %}
                                 </td>
                                 <td class="align-middle">{{ support_person.startDate ? support_person.startDate|date('d/m/Y') }}</td>
@@ -81,8 +85,13 @@
                                     {% if support_group.endDate == null and support_group.theoreticalEndDate %}
                                         <span class="text-secondary">{{ support_group.theoreticalEndDate|date('d/m/Y') }}<br/>(Fin théorique)</span>
                                     {% endif %}
-                                    </td>
+                                </td>
                                 <td class="align-middle">{{ support_group.city }}</td>
+                                {% if disabled %}
+                                    <td class="align-middle text-center">
+                                        {% include 'model/button/_restore_button.html.twig' with {path_route: path('support_restore', {'id': support_group.id})} %}
+                                    </td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -96,4 +105,5 @@
 
 {% block javascripts %}
     {{ encore_entry_script_tags('search') }}
+    {{ encore_entry_script_tags('support_list_index') }}
 {% endblock javascripts %}

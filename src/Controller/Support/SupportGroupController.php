@@ -17,10 +17,13 @@ use App\Form\Support\Support\SupportGroupType;
 use App\Form\Support\Support\SupportSearchType;
 use App\Form\Support\Support\SupportsInMonthSearchType;
 use App\Form\Support\Support\SwitchSupportReferentType;
+use App\Repository\Event\TaskRepository;
+use App\Repository\Support\NoteRepository;
 use App\Repository\Support\PaymentRepository;
 use App\Repository\Support\SupportGroupRepository;
 use App\Repository\Support\SupportPersonRepository;
 use App\Service\Calendar;
+use App\Service\Event\TaskManager;
 use App\Service\Export\SupportPersonExport;
 use App\Service\Pagination;
 use App\Service\SupportGroup\SupportChecker;
@@ -37,6 +40,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class SupportGroupController extends AbstractController
 {
@@ -56,6 +60,7 @@ final class SupportGroupController extends AbstractController
             return $this->exportData($search, $supportPersonRepo);
         }
 
+//        dd($supportPersonRepo->findSupportsQuery($search)->getResult());
         return $this->renderForm('app/support/support_index.html.twig', [
             'form' => $form,
             'supports' => $pagination->paginate($supportPersonRepo->findSupportsQuery($search), $request),
@@ -164,15 +169,42 @@ final class SupportGroupController extends AbstractController
      */
     public function delete(SupportGroup $supportGroup, EntityManagerInterface $em): Response
     {
-        SupportManager::deleteCacheItems($supportGroup);
-
         $em->getFilters()->disable('softdeleteable');
         $em->remove($supportGroup);
         $em->flush();
 
+        SupportManager::deleteCacheItems($supportGroup);
+
         $this->addFlash('warning', 'Le suivi social est supprimé.');
 
         return $this->redirectToRoute('people_group_show', ['id' => $supportGroup->getPeopleGroup()->getId()]);
+    }
+
+    /**
+     * @Route("/support/{id}/restore", name="support_restore", methods="GET")
+     */
+    public function restore(
+        int $id,
+        SupportGroupRepository $supportGroupRepo,
+        EntityManagerInterface $em,
+        TranslatorInterface $translator,
+        SupportManager $supportManager
+    ): JsonResponse {
+        $support = $supportGroupRepo->findFullSupportById($id, true);
+
+        $this->denyAccessUnlessGranted('EDIT', $support);
+
+        $supportManager->restore($support);
+        $em->flush();
+
+        SupportManager::deleteCacheItems($support);
+
+        return $this->json([
+            'action' => 'restore',
+            'alert' => 'success',
+            'msg' => $translator->trans('support.restored_successfully', ['%support_referent%' => $support->getReferent()], 'app'),
+            'support' => ['id' => $support->getId()]
+        ]);
     }
 
     /**

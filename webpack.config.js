@@ -47,6 +47,7 @@ Encore
     .addEntry('search', './assets/js/searchIndex.js')
     .addEntry('service', './assets/js/service/service.js')
     .addEntry('support', './assets/js/support/support.js')
+    .addEntry('support_list_index', './assets/js/support/support-list-index.js')
     .addEntry('select-advanced', './assets/js/utils/form/select-advanced.js')
     .addEntry('tag', './assets/js/tag/tagIndex.js')
     .addEntry('task', './assets/js/event/task/taskIndex.js')
