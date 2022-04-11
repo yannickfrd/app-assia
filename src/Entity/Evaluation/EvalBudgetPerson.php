@@ -32,6 +32,7 @@ class EvalBudgetPerson
         2 => 'Accepté',
         3 => 'Refusé',
         4 => 'En cours',
+        98 => 'Non concerné',
         99 => 'Non évalué',
     ];
 

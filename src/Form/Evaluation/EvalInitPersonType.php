@@ -25,38 +25,22 @@ class EvalInitPersonType extends AbstractType
         $builder
             ->add('paper', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS),
-                'attr' => [
-                    'data-important' => 'true',
-                    'data-twin-field' => 'true',
-                ],
                 'placeholder' => 'placeholder.select',
                 'help' => 'evalAdmPerson.paper.help',
                 'required' => false,
             ])
             ->add('paperType', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalAdmPerson::PAPER_TYPE),
-                'attr' => [
-                    'data-important' => 'true',
-                    'data-twin-field' => 'true',
-                ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('rightSocialSecurity', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS),
-                'attr' => [
-                    'data-important' => 'true',
-                    'data-twin-field' => 'true',
-                ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('socialSecurity', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalSocialPerson::SOCIAL_SECURITY),
-                'attr' => [
-                    'data-important' => 'true',
-                    'data-twin-field' => 'true',
-                ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
@@ -96,28 +80,16 @@ class EvalInitPersonType extends AbstractType
             ])
             ->add('profStatus', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalProfPerson::PROF_STATUS),
-                'attr' => [
-                    'data-important' => 'true',
-                    'data-twin-field' => 'true',
-                ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('contractType', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalProfPerson::CONTRACT_TYPE),
-                'attr' => [
-                    'data-important' => 'true',
-                    'data-twin-field' => 'true',
-                ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('resource', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalBudgetPerson::RESOURCES),
-                'attr' => [
-                    'data-twin-field' => 'true',
-                    'data-important' => 'true',
-                ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
@@ -128,15 +100,7 @@ class EvalInitPersonType extends AbstractType
                 'mapped' => false,
                 'required' => false,
             ])
-            ->add('resourcesAmt', MoneyType::class, [
-                'attr' => [
-                    'class' => 'text-right',
-                    'data-amount' => 'resourcesAmt',
-                    'data-important' => 'true',
-                    'data-twin-field' => 'true',
-                    'placeholder' => 'Amount',
-                ],
-            ])
+            ->add('resourcesAmt', MoneyType::class)
             ->add('evalBudgetResources', CollectionType::class, [
                 'entry_type' => EvalInitResourceType::class,
                 'allow_add' => true,
@@ -147,21 +111,10 @@ class EvalInitPersonType extends AbstractType
             ])
             ->add('debt', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
-                'attr' => [
-                    'data-important' => 'true',
-                    'data-twin-field' => 'true',
-                ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
-            ->add('debtsAmt', MoneyType::class, [
-                'attr' => [
-                    'class' => 'text-right',
-                    'data-amount' => 'debtsAmt',
-                    'data-twin-field' => 'true',
-                    'placeholder' => 'Amount',
-                ],
-            ])
+            ->add('debtsAmt', MoneyType::class)
         ;
     }
 

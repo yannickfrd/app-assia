@@ -18,29 +18,17 @@ class EvalInitGroupType extends AbstractType
         $builder
             ->add('housingStatus', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalHousingGroup::HOUSING_STATUS),
-                'attr' => [
-                    'data-important' => 'true',
-                    'data-twin-field' => 'true',
-                ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
                 'help' => 'evalInitGroup.housingStatus.help',
             ])
             ->add('siaoRequest', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS_NC),
-                'attr' => [
-                    'data-important' => 'true',
-                    'data-twin-field' => 'true',
-                ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('socialHousingRequest', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS_NC),
-                'attr' => [
-                    'data-important' => 'true',
-                    'data-twin-field' => 'true',
-                ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ]);

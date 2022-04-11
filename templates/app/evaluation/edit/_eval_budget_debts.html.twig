@@ -12,7 +12,11 @@
 
 <div class="col-md-6">
     <div class="row mb-3">
-        <div class="col-md-12">{{ form_row(form_eval_budget_person.debt) }}</div>
+        <div class="col-md-12">
+            {{ form_row(form_eval_budget_person.debt, {
+                attr: {'data-important': 'true', 'data-twin-field': 'debt'}
+            }) }}
+        </div>
         <div class="col-md-12" data-parent-field="{{ prefix_id }}_debt" data-options="1|3">
             {{ form_row(form_eval_budget_person.debtType) }}
         </div>
@@ -50,7 +54,15 @@
                             <td class="align-middle">Total des dettes</td>
                             <td class="align-middle">
                                 <div data-parent-field="{{ prefix_id }}_debt" data-options="1|3">
-                                    {{ form_widget(form_eval_budget_person.debtsAmt) }}</div>
+                                    {{ form_widget(form_eval_budget_person.debtsAmt, {
+                                        attr: {
+                                            'class': 'text-right', 
+                                            'data-amount': 'debtsAmt',
+                                            'data-twin-field': 'true',
+                                            'placeholder': 'Amount',
+                                        }
+                                    }) }}
+                                </div>
                             </td>
                         </tr>
                     </tfoot>

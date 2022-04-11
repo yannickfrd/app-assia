@@ -15,7 +15,11 @@
                 <div id="collapse_{{ prefix_id }}" class="collapse {% if loop.first %}show{% endif %} my-3"
                     aria-labelledby="heading_{{ prefix_id }}" data-parent="#accordion_evalProf">
                     <div class="row">
-                        <div class="col-md-6">{{ form_row(eval_person.evalProfPerson.profStatus) }}</div>
+                        <div class="col-md-6">
+                            {{ form_row(eval_person.evalProfPerson.profStatus, {
+                                attr: {'data-important': 'true', 'data-twin-field': 'true'}
+                            }) }}
+                        </div>
                         <div class="col-md-6" data-parent-field="{{ prefix_id }}_profStatus" 
                             data-options="2|3|8|97">
                             {{ form_row(eval_person.evalProfPerson.jobCenterId) }}</div>
@@ -23,9 +27,15 @@
                     <div class="row mb-3" data-parent-field="{{ prefix_id }}_profStatus" 
                         data-options="3|5|8">   
                         <div class="col-md-6" data-parent-field="{{ prefix_id }}_profStatus" data-options="3|5|8">
-                            {{ form_row(eval_person.evalProfPerson.contractType) }}</div>
+                            {{ form_row(eval_person.evalProfPerson.contractType, {
+                                attr: {'data-important': 'true', 'data-twin-field': 'true'}
+                            }) }}
+                        </div>
                         <div class="col-md-6" data-parent-field="{{ prefix_id }}_profStatus" data-options="3|5|8">
-                            {{ form_row(eval_person.evalProfPerson.workingTime) }}</div>
+                            {{ form_row(eval_person.evalProfPerson.workingTime, {
+                                attr: {'data-important': 'true'}
+                            }) }}
+                        </div>
                         <div class="col-md-6">{{ form_row(eval_person.evalProfPerson.contractStartDate) }}</div>
                         <div class="col-md-6">{{ form_row(eval_person.evalProfPerson.contractEndDate) }}</div>
                         <div class="col-md-6">{{ form_row(eval_person.evalProfPerson.nbWorkingHours) }}</div>
@@ -41,9 +51,15 @@
                     </div>
                     <div class="row mb-3" data-parent-field="{{ prefix_id }}_profStatus" data-options="1|2|3|4|8|9|97">
                         <div class="col-md-6" title="Reconnaissance de la qualité de travailleur handicapé">
-                            {{ form_row(eval_person.evalProfPerson.rqth) }}</div>
+                            {{ form_row(eval_person.evalProfPerson.rqth, {
+                                attr: {'data-important': 'true'}
+                            }) }}
+                        </div>
                         <div class="col-md-6" data-parent-field="{{ prefix_id }}_rqth" data-options="1">
-                            {{ form_row(eval_person.evalProfPerson.endRqthDate) }}</div>
+                            {{ form_row(eval_person.evalProfPerson.endRqthDate, {
+                                attr: {'data-important': 'true'}
+                            }) }}
+                        </div>
                     </div>
                      <div class="row mb-3">
                         <div class="col-md-6">{{ form_row(eval_person.evalProfPerson.schoolLevel) }}</div>

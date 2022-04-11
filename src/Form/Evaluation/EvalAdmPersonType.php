@@ -42,36 +42,23 @@ class EvalAdmPersonType extends AbstractType
             ->add('country')
             ->add('paper', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS),
-                'attr' => [
-                    'data-important' => 'true',
-                    'data-twin-field' => 'true',
-                ],
                 'placeholder' => 'placeholder.select',
                 'help' => 'evalAdmPerson.paper.help',
                 'required' => false,
             ])
             ->add('paperType', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalAdmPerson::PAPER_TYPE),
-                'attr' => [
-                    'data-important' => 'true',
-                    'data-twin-field' => 'true',
-                ],
                 'placeholder' => 'placeholder.select',
                 'help' => 'evalAdmPerson.paperType.help',
                 'required' => false,
             ])
             ->add('asylumBackground', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
-                'attr' => ['data-important' => 'true'],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('asylumStatus', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalAdmPerson::ASYLUM_STATUS),
-                'attr' => [
-                    'data-important' => 'true',
-                    'data-twin-field' => 'true',
-                ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
