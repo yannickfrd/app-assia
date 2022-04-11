@@ -22,8 +22,8 @@ class AppExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('ratio', [$this, 'ratio']),
-            new TwigFunction('alert_color', [$this, 'alertColor']),
+            new TwigFunction('ratio', [$this, 'getRatio']),
+            new TwigFunction('color', [$this, 'getColor']),
         ];
     }
 
@@ -82,7 +82,7 @@ class AppExtension extends AbstractExtension
         return $sum;
     }
 
-    public function ratio(int $value1, int $value2): ?float
+    public function GetRatio(int $value1, int $value2): ?float
     {
         if (0 === $value2) {
             return null;
@@ -91,24 +91,24 @@ class AppExtension extends AbstractExtension
         return ($value1 / $value2) * 100;
     }
 
-    public function alertColor($value): string
+    public function getColor(?int $value = null): string
     {
         if ($value > 150) {
-            return 'alert-danger';
+            return 'danger';
         }
         if ($value > 100) {
-            return 'alert-warning';
+            return 'warning';
         }
         if ($value >= 95) {
-            return 'alert-success';
+            return 'success';
         }
         if ($value >= 80) {
-            return 'alert-info';
+            return 'info';
         }
         if ($value >= 60) {
-            return 'alert-warning';
+            return 'warning';
         }
 
-        return 'alert-danger';
+        return 'danger';
     }
 }

@@ -81,7 +81,7 @@
                                     <td class="align-middle text-right">{{ service.occupancyDays|number }}</td>
                                     <td class="align-middle text-right">{{ service.averageCapacity|round(2) }}</td>
                                     <td class="align-middle text-right">{{ service.averageOccupancy|round(2) }}</td>
-                                    <td class="align-middle {{ alert_color(ocupancyRate) }} text-right">
+                                    <td class="align-middle alert-{{ color(ocupancyRate) }} text-right">
                                         <span class="font-weight-bold font-italic">{{ ocupancyRate|percent }}</span>
                                     </td>
                                 </tr>
@@ -97,7 +97,7 @@
                                 <td class="align-middle text-right">{{ datas.averageCapacity|round(2) }}</td>
                                 <td class="align-middle text-right">{{ datas.averageOccupancy|round(2) }}</td>
                                 {% set ocupancyRate = ratio(datas.occupancyDays, datas.capacityDays) %}
-                                <td class="align-middle {{ alert_color( ocupancyRate) }} text-right">
+                                <td class="align-middle alert-{{ color(ocupancyRate) }} text-right">
                                     <span class="font-weight-bold font-italic">{{ ocupancyRate|percent }}</span>
                                 </td>
                             </tr>
