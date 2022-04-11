@@ -206,7 +206,7 @@ class ContributionCalculator
                 $evalBudgetPerson = $evaluationPerson->getEvalBudgetPerson();
                 if ($evalBudgetPerson) {
                     $resourcesGroupAmt += $this->getSumAmt($evalBudgetPerson->getEvalBudgetResources(), $resourceTypes);
-                    $chargesGroupAmt += $this->getSumAmt($evalBudgetPerson->getEvalBudgetCharges(), $chargeTypes) + $evalBudgetPerson->getMonthlyRepaymentAmt();
+                    $chargesGroupAmt += $this->getSumAmt($evalBudgetPerson->getEvalBudgetCharges(), $chargeTypes);
                 }
             }
         }

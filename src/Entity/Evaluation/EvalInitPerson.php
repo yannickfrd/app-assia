@@ -18,7 +18,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 class EvalInitPerson
 {
-    use CreatedUpdatedEntityTrait; // A supprimer après test
     use ResourcesEntityTrait;
     use SoftDeleteableEntity;
 

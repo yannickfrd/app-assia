@@ -675,7 +675,6 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
             ->setSettlementPlan($this->findInArray($diagSocial->apurementDette, SiSiaoItems::YES_NO_BOOL))
             ->setMoratorium($this->findInArray($diagSocial->moratoire, SiSiaoItems::YES_NO_BOOL))
             ->setChargeComment($diagSocial->commentaireCharge)
-            // ->setMonthlyRepaymentAmt($diagSocial->remboursementDettes)
             ->setDebtComment($diagSocial->commentairesSituationBudgetaire)
         ;
 

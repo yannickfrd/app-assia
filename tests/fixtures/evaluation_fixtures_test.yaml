@@ -121,9 +121,6 @@ App\Entity\Evaluation\EvalInitPerson:
         contractType: 1
         resource: 1
         resourcesAmt: 1100
-        ressourceOther: 1
-        ressourceOtherPrecision: Aide famille
-        ressourceOtherAmt: 100
         debt: 1
         debtsAmt: 10000
         comment: XXX

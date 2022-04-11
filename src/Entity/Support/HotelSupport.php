@@ -172,11 +172,6 @@ class HotelSupport
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $endSupportReason;  // A supprimer
-
-    /**
-     * @ORM\Column(type="smallint", nullable=true)
-     */
     private $endSupportDepartment;
 
     /** @Groups("export") */
@@ -366,18 +361,6 @@ class HotelSupport
     public function setDepartmentAnchor(?int $departmentAnchor): self
     {
         $this->departmentAnchor = $departmentAnchor;
-
-        return $this;
-    }
-
-    public function getEndSupportReason(): ?int // A supprimer
-    {
-        return $this->endSupportReason;
-    }
-
-    public function setEndSupportReason(?int $endSupportReason): self  // A supprimer
-    {
-        $this->endSupportReason = $endSupportReason;
 
         return $this;
     }

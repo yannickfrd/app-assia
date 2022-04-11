@@ -75,7 +75,6 @@ class EvalBudgetPersonType extends AbstractType
                 ],
                 'required' => false,
             ])
-            ->add('chargeOtherPrecision', null, ['attr' => ['placeholder' => 'Other charge(s)...']])
             ->add('chargeComment')
             ->add('debt', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
@@ -96,7 +95,6 @@ class EvalBudgetPersonType extends AbstractType
                     'placeholder' => 'Amount',
                 ],
             ])
-            ->add('debtOtherPrecision', null, ['attr' => ['placeholder' => 'Other debt(s)...']])
             ->add('debtComment')
             ->add('overIndebtRecord', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS),
