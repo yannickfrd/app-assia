@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
- * Commande pour mettre à jour l'adresse des suivis à partir du groupe de places ou de l'évaluaiton sociale (TEMPORAIRE, A SUPPRIMER).
+ * Commande pour mettre à jour l'adresse des suivis à partir du groupe de places ou de l'évaluation sociale (TEMPORAIRE, A SUPPRIMER).
  */
 class UpdateLocationSupportsCommand extends Command
 {
