@@ -13,7 +13,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class CalculateEvaluationCompletionCommand extends Command
+class CheckEvaluationCompletionCommand extends Command
 {
     protected static $defaultName = 'app:evaluation:calculate-completion';
     protected static $defaultDescription = 'Add a short description for your command';
