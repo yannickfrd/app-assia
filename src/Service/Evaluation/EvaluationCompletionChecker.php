@@ -107,7 +107,7 @@ class EvaluationCompletionChecker
             return;
         }
 
-        if (in_array($this->isFilled($evalHousingGroup->getSiaoRequest()), self::YES_OR_IN_PROGRESS)) {
+        if ($this->isFilled($evalHousingGroup->getSiaoRequest(), self::YES_OR_IN_PROGRESS)) {
             $this->checkValues([
                 $evalHousingGroup->getSiaoRequestDate(),
                 $evalHousingGroup->getSiaoUpdatedRequestDate(),
@@ -116,7 +116,7 @@ class EvaluationCompletionChecker
             ]);
         }
 
-        if (in_array($this->isFilled($evalHousingGroup->getSocialHousingRequest()), self::YES_OR_IN_PROGRESS)) {
+        if ($this->isFilled($evalHousingGroup->getSocialHousingRequest(), self::YES_OR_IN_PROGRESS)) {
             $this->checkValues([
                 $evalHousingGroup->getSocialHousingRequestId(),
                 $evalHousingGroup->getSocialHousingRequestDate(),
@@ -124,22 +124,22 @@ class EvaluationCompletionChecker
             ]);
         }
 
-        if (in_array($this->isFilled($evalHousingGroup->getSyplo()), self::YES_OR_IN_PROGRESS)) {
+        if ($this->isFilled($evalHousingGroup->getSyplo(), self::YES_OR_IN_PROGRESS)) {
             $this->checkValues([
                 $evalHousingGroup->getSyploDate(),
                 $evalHousingGroup->getSyploId(),
             ]);
         }
 
-        if (in_array($this->isFilled($evalHousingGroup->getDaloAction()), self::YES_OR_IN_PROGRESS)) {
+        if ($this->isFilled($evalHousingGroup->getDaloAction(), self::YES_OR_IN_PROGRESS)) {
             $this->checkValues([
                 $evalHousingGroup->getDaloType(),
                 $evalHousingGroup->getDaloTribunalAction(),
             ]);
         }
 
-        if (in_array($this->isFilled($evalHousingGroup->getDomiciliation()), self::YES_OR_IN_PROGRESS)) {
-            if (in_array($this->isFilled($evalHousingGroup->getDomiciliationType()), [1, 2])) {
+        if ($this->isFilled($evalHousingGroup->getDomiciliation(), self::YES_OR_IN_PROGRESS)) {
+            if ($this->isFilled($evalHousingGroup->getDomiciliationType(), [1, 2])) {
                 $this->checkValues([
                     $evalHousingGroup->getDomiciliationDept(),
                     $evalHousingGroup->getEndDomiciliationDate(),
@@ -156,7 +156,7 @@ class EvaluationCompletionChecker
             return;
         }
 
-        if (in_array($this->isFilled($evalInitPerson->getPaper()), self::YES_OR_IN_PROGRESS)) {
+        if ($this->isFilled($evalInitPerson->getPaper(), self::YES_OR_IN_PROGRESS)) {
             $this->isFilled($evalInitPerson->getPaperType());
         }
 
@@ -166,11 +166,11 @@ class EvaluationCompletionChecker
 
         $this->isFilled($evalInitPerson->getProfStatus());
 
-        if (in_array($this->isFilled($evalInitPerson->getRightSocialSecurity()), self::YES_OR_IN_PROGRESS)) {
+        if ($this->isFilled($evalInitPerson->getRightSocialSecurity(), self::YES_OR_IN_PROGRESS)) {
             $this->isFilled($evalInitPerson->getSocialSecurity());
         }
 
-        if (in_array($this->isFilled($evalInitPerson->getResource()), self::YES_OR_IN_PROGRESS)) {
+        if ($this->isFilled($evalInitPerson->getResource(), self::YES_OR_IN_PROGRESS)) {
             $this->checkValues([
                 $evalInitPerson->getEvalBudgetResources()->count(),
                 $evalInitPerson->getResourcesAmt(),
@@ -190,17 +190,16 @@ class EvaluationCompletionChecker
             return;
         }
 
-        if (in_array($this->isFilled(
-                $evalAdmPerson->getNationality()),
-                [EvalAdmPerson::NATIONALITY_EU, EvalAdmPerson::NATIONALITY_OUTSIDE_EU]
-            )
+        if ($this->isFilled(
+            $evalAdmPerson->getNationality(),
+            [EvalAdmPerson::NATIONALITY_EU, EvalAdmPerson::NATIONALITY_OUTSIDE_EU])
         ) {
             if (Choices::YES === $this->isFilled($evalAdmPerson->getAsylumBackground())) {
                 $this->isFilled($evalAdmPerson->getAsylumStatus());
             }
         }
 
-        if (in_array($this->isFilled($evalAdmPerson->getPaper()), self::YES_OR_IN_PROGRESS)) {
+        if ($this->isFilled($evalAdmPerson->getPaper(), self::YES_OR_IN_PROGRESS)) {
             $this->isFilled($evalAdmPerson->getPaperType());
         }
     }
@@ -249,7 +248,7 @@ class EvaluationCompletionChecker
             return;
         }
 
-        if (in_array($this->isFilled($evalSocialPerson->getRightSocialSecurity()), self::YES_OR_IN_PROGRESS)) {
+        if ($this->isFilled($evalSocialPerson->getRightSocialSecurity(), self::YES_OR_IN_PROGRESS)) {
             $this->checkValues([
                 $evalSocialPerson->getRightSocialSecurity(),
                 $evalSocialPerson->getEndRightsSocialSecurityDate(),
@@ -309,7 +308,7 @@ class EvaluationCompletionChecker
             return;
         }
 
-        if (in_array($this->isFilled($evalBudgetPerson->getResource()), self::YES_OR_IN_PROGRESS)) {
+        if ($this->isFilled($evalBudgetPerson->getResource(), self::YES_OR_IN_PROGRESS)) {
             $this->checkValues([
                 $evalBudgetPerson->getEvalBudgetResources()->count(),
                 $evalBudgetPerson->getResourcesAmt(),
@@ -362,10 +361,7 @@ class EvaluationCompletionChecker
         }
     }
 
-    /**
-     * @param int|string|null $value
-     */
-    private function isFilled($value)
+    private function isFilled($value, ?array $choices = null): bool
     {
         ++$this->maxScore;
 
@@ -373,7 +369,11 @@ class EvaluationCompletionChecker
             || (null !== $value)) {
             ++$this->score;
 
-            return $value;
+            if ($choices) {
+                return in_array($value, $choices, true);
+            }
+
+            return true;
         }
 
         return false;
