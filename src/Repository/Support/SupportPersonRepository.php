@@ -43,6 +43,28 @@ class SupportPersonRepository extends ServiceEntityRepository
         $this->user = $security->getUser();
     }
 
+    public function findSupportPerson(int $id, bool $deleted = false): ?SupportPerson
+    {
+        if ($deleted) {
+            $this->disableFilter($this->_em, 'softdeleteable');
+        }
+
+        return $this->createQueryBuilder('sp')
+            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id}')
+            ->leftJoin('sp.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, referent, deletedAt}')
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
+            ->leftJoin('sg.peopleGroup', 'pg')->addSelect('PARTIAL pg.{id}')
+            ->leftJoin('sg.supportPeople', 'sp2')->addSelect('PARTIAL sp2.{id, head, deletedAt}')
+
+            ->where('sp.id = :id')
+            ->setParameter('id', $id)
+
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getSingleResult()
+        ;
+    }
+
     /**
      * Trouve les suivis sociaux.
      */

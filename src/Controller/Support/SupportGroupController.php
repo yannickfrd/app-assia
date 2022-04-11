@@ -181,33 +181,6 @@ final class SupportGroupController extends AbstractController
     }
 
     /**
-     * @Route("/support/{id}/restore", name="support_restore", methods="GET")
-     */
-    public function restore(
-        int $id,
-        SupportGroupRepository $supportGroupRepo,
-        EntityManagerInterface $em,
-        TranslatorInterface $translator,
-        SupportManager $supportManager
-    ): JsonResponse {
-        $support = $supportGroupRepo->findFullSupportById($id, true);
-
-        $this->denyAccessUnlessGranted('EDIT', $support);
-
-        $supportManager->restore($support);
-        $em->flush();
-
-        SupportManager::deleteCacheItems($support);
-
-        return $this->json([
-            'action' => 'restore',
-            'alert' => 'success',
-            'msg' => $translator->trans('support.restored_successfully', ['%support_referent%' => $support->getReferent()], 'app'),
-            'support' => ['id' => $support->getId()]
-        ]);
-    }
-
-    /**
      * Donne le formulaire pour créer un nouveau suivi social au groupe (via AJAX).
      *
      * @Route("/group/{id}/new_support", name="group_new_support", methods="GET")

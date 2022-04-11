@@ -16,7 +16,6 @@ export default class SupportListManager {
                 .addEventListener('click', () => this.requestRestoreSupport(restoreBtn)))
     }
 
-
     /**
      * @param {HTMLLinkElement} restoreBtn
      */
@@ -40,10 +39,12 @@ export default class SupportListManager {
      * @param {Object} support
      */
     deleteSupportTr(support) {
-        const rowElt = document.getElementById('support-'+support.id)
-        rowElt.remove()
-
-        this.updateCounterSupports(-1)
+        document.querySelectorAll('table#table-supports tbody tr').forEach(trElt => {
+            if ('support' in trElt.dataset && trElt.dataset.support === 'support-'+support.id) {
+                trElt.remove()
+                this.updateCounterSupports(-1)
+            }
+        })
     }
 
     /**
@@ -53,7 +54,8 @@ export default class SupportListManager {
         const counterSupportElt = document.getElementById('count-supports')
         const calcul = parseInt(counterSupportElt.dataset.countSupports)+value
 
-        counterSupportElt.textContent = counterSupportElt.textContent.replace(counterSupportElt.dataset.countSupports, calcul.toString())
+        counterSupportElt.textContent = counterSupportElt.textContent
+            .replace(counterSupportElt.dataset.countSupports, calcul.toString())
         counterSupportElt.dataset.countSupports = calcul.toString()
     }
 }

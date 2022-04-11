@@ -244,38 +244,6 @@ class SupportManager
         ]);
     }
 
-    public function restore(SupportGroup $support): void
-    {
-        $supportId = $support->getId();
-
-        $entitiesElement = $this->getElementsBeforeRestore($supportId);
-        foreach ($entitiesElement as $elements) {
-            foreach ($elements as $element) {
-                $element->setDeletedAt(null);
-            }
-        }
-
-        foreach ($support->getSupportPeople() as $supportPerson) {
-            $supportPerson->setDeletedAt(null);
-        }
-        $support->setDeletedAt(null);
-    }
-
-    private function getElementsBeforeRestore(int $supportId): array
-    {
-        return [
-            $this->em->getRepository(Note::class)->findNotesOfSupportDeleted($supportId),
-            $this->em->getRepository(Rdv::class)->findRdvOfSupportDeleted($supportId),
-            $this->em->getRepository(Task::class)->findTaskOfSupportDeleted($supportId),
-            $this->em->getRepository(Payment::class)->findRdvOfSupportDeleted($supportId),
-            $this->em->getRepository(Document::class)->findDocumentOfSupportDeleted($supportId),
-            $this->em->getRepository(PlaceGroup::class)->findPlaceGroupOfSupportDeleted($supportId),
-            $this->em->getRepository(EvaluationGroup::class)->findEvaluationOfSupportDeleted($supportId),
-            $this->em->getRepository(Avdl::class)->findAvdlOfSupportDeleted($supportId),
-            $this->em->getRepository(HotelSupport::class)->findHoteOfSupportDeleted($supportId),
-        ];
-    }
-
     /**
      * Vérifie si un suivi social est déjà en cours dans le même service.
      */

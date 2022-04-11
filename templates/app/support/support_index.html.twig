@@ -53,10 +53,14 @@
                             {% set person = support_person.person %}
                             {% set disabled = support_person.deletedAt is not null %}
 
-                            <tr id="support-{{ support_group.id }}" class="{% if form_head == false and support_person.head %}font-weight-bold{% endif %}">
+                            <tr class="{% if form_head == false and support_person.head %}font-weight-bold{% endif %}"
+                                data-support="support-{{ support_group.id }}">
                                 <td class="align-middle text-center">
                                     {% if is_granted('VIEW', support_group) %}
-                                        {% include 'model/button/_show_button.html.twig' with {'path_route': path('support_show', {'id': support_group.id})} %}
+                                        {% include 'model/button/_show_button.html.twig' with {
+                                            'path_route': path('support_show', {'id': support_group.id}),
+                                            'disabled': support_person.head == false and support_group.deletedAt is null ? false : disabled
+                                        } %}
                                     {% endif %}
                                 </td>
                                 <td class="align-middle">{{ person.fullname ~ (person.usename ? ' (' ~ person.usename ~ ')') }}</td>
@@ -89,7 +93,8 @@
                                 <td class="align-middle">{{ support_group.city }}</td>
                                 {% if disabled %}
                                     <td class="align-middle text-center">
-                                        {% include 'model/button/_restore_button.html.twig' with {path_route: path('support_restore', {'id': support_group.id})} %}
+                                        {% include 'model/button/_restore_button.html.twig' with {path_route: path('support_person_restore', {'id': support_person.id})} %}
+{#                                        {% include 'model/button/_restore_button.html.twig' with {path_route: path('support_restore', {'id': support_group.id})} %}#}
                                     </td>
                                 {% endif %}
                             </tr>

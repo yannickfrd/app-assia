@@ -7,15 +7,20 @@ namespace App\Controller\Support;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Support\SupportPerson;
 use App\Form\Support\Support\AddPersonToSupportType;
+use App\Repository\Support\SupportGroupRepository;
+use App\Repository\Support\SupportPersonRepository;
 use App\Service\Grammar;
 use App\Service\SupportGroup\SupportManager;
 use App\Service\SupportGroup\SupportPeopleAdder;
+use App\Service\SupportGroup\SupportRestorer;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class SupportPersonController extends AbstractController
 {
@@ -90,6 +95,50 @@ final class SupportPersonController extends AbstractController
 
         return $this->redirectToRoute('support_edit', ['id' => $supportGroup->getId()]);
     }
+
+
+    /**
+     * @Route("/support-person/{id}/restore", name="support_person_restore", methods="GET")
+     */
+    public function restore(
+        int $id,
+        SupportPersonRepository $supportPersonRepo,
+        SupportGroupRepository $supportGroupRepo,
+        EntityManagerInterface $em,
+        TranslatorInterface $translator,
+        SupportRestorer $supportRestorer
+    ): JsonResponse {
+        $supportPerson = $supportPersonRepo->findSupportPerson($id, true);
+        $support = $supportPerson->getSupportGroup();
+
+        $this->denyAccessUnlessGranted('EDIT', $support);
+
+        if (null !== $supportPerson->getSupportGroup()->getDeletedAt()) {
+            $supportRestorer->restore($support);
+
+            $msg = $translator->trans('support.restored_successfully', [
+                    '%support_referent%' => $support->getReferent(),
+                ], 'app');
+        } else {
+            $supportPerson->setDeletedAt(null);
+
+            $msg = $translator->trans('support_person.restored_successfully', [
+                '%support_name%' => $supportPerson->getPerson()->getFullname(),
+            ], 'app');
+        }
+
+        $em->flush();
+
+        SupportManager::deleteCacheItems($support);
+
+        return $this->json([
+            'action' => 'restore',
+            'alert' => 'success',
+            'msg' => $msg,
+            'support' => ['id' => $support->getId()]
+        ]);
+    }
+
 
     /**
      * Récupère la liste des personnes rattachées à un suivi.
