@@ -60,7 +60,6 @@ final class SupportGroupController extends AbstractController
             return $this->exportData($search, $supportPersonRepo);
         }
 
-//        dd($supportPersonRepo->findSupportsQuery($search)->getResult());
         return $this->renderForm('app/support/support_index.html.twig', [
             'form' => $form,
             'supports' => $pagination->paginate($supportPersonRepo->findSupportsQuery($search), $request),

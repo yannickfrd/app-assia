@@ -4,6 +4,7 @@ namespace App\Tests\Controller\Support;
 
 use App\Entity\Organization\User;
 use App\Entity\Support\SupportGroup;
+use App\Entity\Support\SupportPerson;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -295,6 +296,39 @@ class SupportControllerTest extends WebTestCase
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Groupe');
         $this->assertSelectorExists('.alert.alert-warning');
+    }
+
+    public function testRestoreSupportIsSuccessful(): void
+    {
+        $this->loadFixtures();
+
+        /** @var User $admin */
+        $admin = $this->fixtures['user_admin'];
+        $this->client->loginUser($admin);
+
+        /** @var SupportGroup $support */
+        $support = $this->fixtures['support_group2'];
+
+        $id = $support->getId();
+        $this->client->request('GET', "/support/$id/delete");
+
+        // After delete a support
+        $crawler = $this->client->request('GET', "/supports", [
+            'deleted' => ['deleted' => true]
+        ]);
+        $this->assertResponseIsSuccessful();
+        $this->assertCount(1, $crawler->filter('tbody tr'));
+
+        $id = $support->getSupportPeople()->first()->getId();
+        $this->client->request('GET', "/support-person/$id/restore");
+        $content = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertSame('restore', $content['action']);
+
+        // After restore a support
+        $crawler = $this->client->request('GET', "/supports", [
+            'deleted' => ['deleted' => true]
+        ]);
+        $this->assertCount(0, $crawler->filter('tbody tr'));
     }
 
     public function testCloneSupportIsFailed(): void

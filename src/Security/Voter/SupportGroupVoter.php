@@ -35,13 +35,10 @@ class SupportGroupVoter extends Voter
         switch ($attribute) {
             case 'VIEW':
                 return $this->canView();
-                break;
             case 'EDIT':
                 return $this->canEdit();
-                break;
             case 'DELETE':
                 return $this->canDelete();
-                break;
         }
 
         return false;

@@ -91,10 +91,9 @@
                                     {% endif %}
                                 </td>
                                 <td class="align-middle">{{ support_group.city }}</td>
-                                {% if disabled %}
+                                {% if disabled and is_granted('DELETE', support_group) %}
                                     <td class="align-middle text-center">
                                         {% include 'model/button/_restore_button.html.twig' with {path_route: path('support_person_restore', {'id': support_person.id})} %}
-{#                                        {% include 'model/button/_restore_button.html.twig' with {path_route: path('support_restore', {'id': support_group.id})} %}#}
                                     </td>
                                 {% endif %}
                             </tr>

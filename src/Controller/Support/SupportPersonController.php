@@ -14,6 +14,7 @@ use App\Service\SupportGroup\SupportManager;
 use App\Service\SupportGroup\SupportPeopleAdder;
 use App\Service\SupportGroup\SupportRestorer;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -99,6 +100,7 @@ final class SupportPersonController extends AbstractController
 
     /**
      * @Route("/support-person/{id}/restore", name="support_person_restore", methods="GET")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function restore(
         int $id,
@@ -110,7 +112,7 @@ final class SupportPersonController extends AbstractController
         $supportPerson = $supportPersonRepo->findSupportPerson($id, true);
         $support = $supportPerson->getSupportGroup();
 
-        $this->denyAccessUnlessGranted('EDIT', $support);
+        $this->denyAccessUnlessGranted('DELETE', $support);
 
         if (null !== $supportPerson->getSupportGroup()->getDeletedAt()) {
             $supportRestorer->restore($support);
