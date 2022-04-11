@@ -206,9 +206,6 @@ class EvaluationCompletionChecker
         if ($this->isFilled($evalAdmPerson->getPaper(), 'paper', self::YES_OR_IN_PROGRESS)) {
             $this->isFilled($evalAdmPerson->getPaperType(), 'paperType');
         }
-
-
-        
     }
 
     private function checkEvalFamilyPerson(?EvalFamilyPerson $evalFamilyPerson = null, int $role): void
