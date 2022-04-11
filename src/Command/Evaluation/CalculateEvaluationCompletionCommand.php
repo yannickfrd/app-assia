@@ -4,7 +4,7 @@ namespace App\Command\Evaluation;
 
 use App\Entity\Support\SupportGroup;
 use App\Repository\Support\SupportGroupRepository;
-use App\Service\Evaluation\EvaluationCompletionCalculator;
+use App\Service\Evaluation\EvaluationCompletionChecker;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -19,18 +19,18 @@ class CalculateEvaluationCompletionCommand extends Command
     protected static $defaultDescription = 'Add a short description for your command';
 
     private $supportGroupRepo;
-    private $evaluationCompletionCalculator;
+    private $evaluationCompletionChecker;
     private $em;
 
     public function __construct(
         SupportGroupRepository $supportGroupRepo,
-        EvaluationCompletionCalculator $evaluationCompletionCalculator,
+        EvaluationCompletionChecker $evaluationCompletionChecker,
         EntityManagerInterface $em
     ) {
         parent::__construct();
 
         $this->supportGroupRepo = $supportGroupRepo;
-        $this->evaluationCompletionCalculator = $evaluationCompletionCalculator;
+        $this->evaluationCompletionChecker = $evaluationCompletionChecker;
         $this->em = $em;
     }
 
@@ -63,7 +63,7 @@ class CalculateEvaluationCompletionCommand extends Command
 
         foreach ($supports as $supportGroup) {
             $evaluationGroup = $supportGroup->getEvaluationsGroup()->first();
-            [$score, $ratio] = $this->evaluationCompletionCalculator->calculate($evaluationGroup ? $evaluationGroup : null);
+            [$score, $ratio] = $this->evaluationCompletionChecker->getScore($evaluationGroup ? $evaluationGroup : null);
 
             echo PHP_EOL.$ratio.' %';
             // $io->progressAdvance();

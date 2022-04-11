@@ -19,7 +19,7 @@ use App\Entity\People\RolePerson;
 use App\Form\Utils\Choices;
 use App\Form\Utils\EvaluationChoices;
 
-class EvaluationCompletionCalculator
+class EvaluationCompletionChecker
 {
     private const YES_OR_IN_PROGRESS = [Choices::YES, EvaluationChoices::IN_PROGRESS];
 
@@ -29,7 +29,7 @@ class EvaluationCompletionCalculator
     private ?Service $service = null;
     private int $nbChildren = 0;
 
-    public function calculate(?EvaluationGroup $evaluationGroup = null): array
+    public function getScore(?EvaluationGroup $evaluationGroup = null): array
     {
         if (!$evaluationGroup) {
             return [0, 0];
@@ -70,8 +70,8 @@ class EvaluationCompletionCalculator
         }
 
         return [
-            $this->score,
-            round(($this->score / $this->maxScore) * 100),
+            'score' => $this->score,
+            'scoreRate' => round(($this->score / $this->maxScore) * 100),
         ];
     }
 
