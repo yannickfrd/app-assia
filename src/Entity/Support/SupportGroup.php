@@ -260,6 +260,11 @@ class SupportGroup
     private $nbPeople;
 
     /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $evaluationScore;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      * @Groups("view")
      */
@@ -615,6 +620,18 @@ class SupportGroup
     public function setNbPeople(?int $nbPeople): self
     {
         $this->nbPeople = $nbPeople;
+
+        return $this;
+    }
+
+    public function getEvaluationScore(): ?float
+    {
+        return $this->evaluationScore;
+    }
+
+    public function setEvaluationScore(?float $evaluationScore): self
+    {
+        $this->evaluationScore = $evaluationScore;
 
         return $this;
     }

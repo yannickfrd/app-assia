@@ -17,12 +17,18 @@ class EvaluationManager extends EvaluationCreator
 {
     private $security;
     private $em;
+    private $evaluationCompletionChecker;
     private $flasgBag;
 
-    public function __construct(Security $security, EntityManagerInterface $em, FlashBagInterface $flashBag)
-    {
+    public function __construct(
+        Security $security,
+        EntityManagerInterface $em,
+        EvaluationCompletionChecker $evaluationCompletionChecker,
+        FlashBagInterface $flashBag
+    ) {
         $this->security = $security;
         $this->em = $em;
+        $this->evaluationCompletionChecker = $evaluationCompletionChecker;
         $this->flasgBag = $flashBag;
 
         parent::__construct($em);
@@ -38,6 +44,7 @@ class EvaluationManager extends EvaluationCreator
             ->setUpdatedBy($user);
 
         $evaluationGroup->getSupportGroup()
+            ->setEvaluationScore($this->evaluationCompletionChecker->getScore($evaluationGroup)['score'])
             ->setUpdatedAt($now)
             ->setUpdatedBy($user);
 
