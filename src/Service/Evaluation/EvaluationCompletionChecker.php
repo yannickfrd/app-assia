@@ -23,8 +23,8 @@ class EvaluationCompletionChecker
 {
     private const YES_OR_IN_PROGRESS = [Choices::YES, EvaluationChoices::IN_PROGRESS];
 
-    private int $maxScore = 0;
-    private int $score = 0;
+    private int $points = 0;
+    private int $maxPoints = 0;
 
     private ?Service $service = null;
     private int $nbChildren = 0;
@@ -32,7 +32,10 @@ class EvaluationCompletionChecker
     public function getScore(?EvaluationGroup $evaluationGroup = null): array
     {
         if (!$evaluationGroup) {
-            return [0, 0];
+            return [
+                'points' => 0,
+                'score' => 0,
+            ];
         }
 
         $this->reinitProperties();
@@ -70,15 +73,15 @@ class EvaluationCompletionChecker
         }
 
         return [
-            'score' => $this->score,
-            'scoreRate' => round(($this->score / $this->maxScore) * 100),
+            'points' => $this->points,
+            'score' => round(($this->points / $this->maxPoints) * 100),
         ];
     }
 
     private function checkEvalInitGroup(?EvalInitGroup $evalInitGroup = null): void
     {
         if (null === $evalInitGroup) {
-            $this->maxScore += 2;
+            $this->maxPoints += 2;
 
             return;
         }
@@ -90,7 +93,7 @@ class EvaluationCompletionChecker
     private function checkEvalSocialGroup(?EvalSocialGroup $evalSocialGroup = null): void
     {
         if (null === $evalSocialGroup) {
-            $this->maxScore += 2;
+            $this->maxPoints += 2;
 
             return;
         }
@@ -102,7 +105,7 @@ class EvaluationCompletionChecker
     private function checkEvalHousingGroup(?EvalHousingGroup $evalHousingGroup = null): void
     {
         if (null === $evalHousingGroup) {
-            $this->maxScore += 5;
+            $this->maxPoints += 5;
 
             return;
         }
@@ -151,7 +154,7 @@ class EvaluationCompletionChecker
     private function checkEvalInitPerson(?EvalInitPerson $evalInitPerson = null, int $age = null): void
     {
         if (null === $evalInitPerson) {
-            $this->maxScore += 4;
+            $this->maxPoints += 4;
 
             return;
         }
@@ -185,7 +188,7 @@ class EvaluationCompletionChecker
     private function checkEvalAdmPerson(?EvalAdmPerson $evalAdmPerson = null): void
     {
         if (null === $evalAdmPerson) {
-            $this->maxScore += 2;
+            $this->maxPoints += 2;
 
             return;
         }
@@ -207,7 +210,7 @@ class EvaluationCompletionChecker
     private function checkEvalFamilyPerson(?EvalFamilyPerson $evalFamilyPerson = null, int $role): void
     {
         if (null === $evalFamilyPerson) {
-            $this->maxScore += 2;
+            $this->maxPoints += 2;
 
             return;
         }
@@ -243,7 +246,7 @@ class EvaluationCompletionChecker
     private function checkEvalSocialPerson(?EvalSocialPerson $evalSocialPerson = null, int $role): void
     {
         if (null === $evalSocialPerson) {
-            $this->maxScore += 4;
+            $this->maxPoints += 4;
 
             return;
         }
@@ -279,7 +282,7 @@ class EvaluationCompletionChecker
     private function checkEvalProfPerson(?EvalProfPerson $evalProfPerson = null): void
     {
         if (null === $evalProfPerson) {
-            $this->maxScore += 2;
+            $this->maxPoints += 2;
 
             return;
         }
@@ -303,7 +306,7 @@ class EvaluationCompletionChecker
     private function checkEvalBudgetPerson(?EvalBudgetPerson $evalBudgetPerson = null): void
     {
         if (null === $evalBudgetPerson) {
-            $this->maxScore += 4;
+            $this->maxPoints += 4;
 
             return;
         }
@@ -337,7 +340,7 @@ class EvaluationCompletionChecker
     private function checkEvalJusticePerson(?EvalJusticePerson $evalJusticePerson = null): void
     {
         if (null === $evalJusticePerson) {
-            $this->maxScore += 2;
+            $this->maxPoints += 2;
 
             return;
         }
@@ -348,8 +351,8 @@ class EvaluationCompletionChecker
 
     private function reinitProperties(): void
     {
-        $this->maxScore = 0;
-        $this->score = 0;
+        $this->maxPoints = 0;
+        $this->points = 0;
         $this->service = null;
         $this->nbChildren = 0;
     }
@@ -363,11 +366,11 @@ class EvaluationCompletionChecker
 
     private function isFilled($value, ?array $choices = null): bool
     {
-        ++$this->maxScore;
+        ++$this->maxPoints;
 
         if ((is_integer($value) && !in_array($value, [Choices::NO_INFORMATION, null]))
             || (null !== $value)) {
-            ++$this->score;
+            ++$this->points;
 
             if ($choices) {
                 return in_array($value, $choices, true);
