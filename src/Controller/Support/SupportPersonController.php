@@ -103,7 +103,6 @@ final class SupportPersonController extends AbstractController
     public function restore(
         int $id,
         SupportPersonRepository $supportPersonRepo,
-        SupportGroupRepository $supportGroupRepo,
         EntityManagerInterface $em,
         TranslatorInterface $translator,
         SupportRestorer $supportRestorer
