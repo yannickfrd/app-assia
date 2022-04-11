@@ -7,6 +7,7 @@ namespace App\Controller\Evaluation;
 use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Evaluation\EvaluationGroup;
 use App\Entity\Organization\User;
+use App\Entity\Support\SupportGroup;
 use App\Form\Evaluation\EvaluationGroupType;
 use App\Repository\Evaluation\EvaluationGroupRepository;
 use App\Repository\Support\SupportGroupRepository;
@@ -147,9 +148,10 @@ final class EvaluationController extends AbstractController
 
         $this->addFlash('warning', "L'évaluation sociale est supprimée.");
 
-        (new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']))->deleteItem(
-            EvaluationGroup::CACHE_EVALUATION_KEY.$supportGroup->getId()
-        );
+        (new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']))->deleteItems([
+            SupportGroup::CACHE_FULLSUPPORT_KEY.$supportGroup->getId(),
+            EvaluationGroup::CACHE_EVALUATION_KEY.$supportGroup->getId(),
+        ]);
 
         return $this->redirectToRoute('support_show', ['id' => $supportGroup->getId()]);
     }

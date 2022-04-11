@@ -192,7 +192,6 @@ class EvaluationControllerTest extends WebTestCase
                     'cafId' => 1,
                 ],
                 'evalFamilyGroup' => [
-                    'pmiFollowUp' => 1,
                     'famlReunification' => 1,
                     'commentEvalFamilyGroup' => 'XXX',
                 ],
