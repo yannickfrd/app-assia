@@ -43,6 +43,9 @@
                             <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, 'Début de suivi', 'sg.startDate') }}</th>
                             <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, 'Fin de suivi', 'sg.endDate') }}</th>
                             <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, 'Commune', 'sg.city') }}</th>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <th scope="col" class="align-middle th-w-20">{{ knp_pagination_sortable(supports, "Complétude de l'évaluation", 'sg.evaluationScore') }}</th>
+                            {% endif %}
                         </tr>
                     </thead>
                     <tbody>  
@@ -83,6 +86,13 @@
                                     {% endif %}
                                     </td>
                                 <td class="align-middle">{{ support_group.city }}</td>
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <td class="align-middle">
+                                        <span class="badge badge-{{ evaluationScoreColor(support_group.evaluationScore) }}">
+                                            {{ support_group.evaluationScore|percent(0) }}
+                                        </span>
+                                    </td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                     </tbody>

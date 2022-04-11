@@ -140,6 +140,8 @@ final class EvaluationController extends AbstractController
             }
         }
 
+        $supportGroup->setEvaluationScore(null);
+
         $em->remove($evaluationGroup);
         $em->flush();
 

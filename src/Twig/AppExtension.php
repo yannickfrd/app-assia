@@ -24,6 +24,7 @@ class AppExtension extends AbstractExtension
         return [
             new TwigFunction('ratio', [$this, 'getRatio']),
             new TwigFunction('color', [$this, 'getColor']),
+            new TwigFunction('evaluationScoreColor', [EvaluationScoreColor::class, 'getColor']),
         ];
     }
 
