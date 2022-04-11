@@ -86,8 +86,8 @@ class EvaluationCompletionChecker
             return;
         }
 
-        $this->isFilled($evalInitGroup->getSiaoRequest());
-        $this->isFilled($evalInitGroup->getSocialHousingRequest());
+        $this->isFilled($evalInitGroup->getSiaoRequest(), 'siaoRequest');
+        $this->isFilled($evalInitGroup->getSocialHousingRequest(), 'socialHousingRequest');
     }
 
     private function checkEvalSocialGroup(?EvalSocialGroup $evalSocialGroup = null): void
@@ -98,8 +98,8 @@ class EvaluationCompletionChecker
             return;
         }
 
-        $this->isFilled($evalSocialGroup->getWanderingTime());
-        $this->isFilled($evalSocialGroup->getReasonRequest());
+        $this->isFilled($evalSocialGroup->getWanderingTime(), 'wanderingTime');
+        $this->isFilled($evalSocialGroup->getReasonRequest(), 'reasonRequest');
     }
 
     private function checkEvalHousingGroup(?EvalHousingGroup $evalHousingGroup = null): void
@@ -110,43 +110,43 @@ class EvaluationCompletionChecker
             return;
         }
 
-        if ($this->isFilled($evalHousingGroup->getSiaoRequest(), self::YES_OR_IN_PROGRESS)) {
+        if ($this->isFilled($evalHousingGroup->getSiaoRequest(), 'siaoRequest', self::YES_OR_IN_PROGRESS)) {
             $this->checkValues([
                 $evalHousingGroup->getSiaoRequestDate(),
                 $evalHousingGroup->getSiaoUpdatedRequestDate(),
                 $evalHousingGroup->getSiaoRequestDept(),
                 $evalHousingGroup->getSiaoRecommendation(),
-            ]);
+            ], 'siaoRequest');
         }
 
-        if ($this->isFilled($evalHousingGroup->getSocialHousingRequest(), self::YES_OR_IN_PROGRESS)) {
+        if ($this->isFilled($evalHousingGroup->getSocialHousingRequest(), 'socialHousingRequest', self::YES_OR_IN_PROGRESS)) {
             $this->checkValues([
                 $evalHousingGroup->getSocialHousingRequestId(),
                 $evalHousingGroup->getSocialHousingRequestDate(),
                 $evalHousingGroup->getSocialHousingUpdatedRequestDate(),
-            ]);
+            ], 'socialHousingRequest');
         }
 
-        if ($this->isFilled($evalHousingGroup->getSyplo(), self::YES_OR_IN_PROGRESS)) {
+        if ($this->isFilled($evalHousingGroup->getSyplo(), 'syplo', self::YES_OR_IN_PROGRESS)) {
             $this->checkValues([
                 $evalHousingGroup->getSyploDate(),
                 $evalHousingGroup->getSyploId(),
-            ]);
+            ], 'syplo');
         }
 
-        if ($this->isFilled($evalHousingGroup->getDaloAction(), self::YES_OR_IN_PROGRESS)) {
+        if ($this->isFilled($evalHousingGroup->getDaloAction(), 'daloAction', self::YES_OR_IN_PROGRESS)) {
             $this->checkValues([
                 $evalHousingGroup->getDaloType(),
                 $evalHousingGroup->getDaloTribunalAction(),
-            ]);
+            ], 'daloAction');
         }
 
-        if ($this->isFilled($evalHousingGroup->getDomiciliation(), self::YES_OR_IN_PROGRESS)) {
-            if ($this->isFilled($evalHousingGroup->getDomiciliationType(), [1, 2])) {
+        if ($this->isFilled($evalHousingGroup->getDomiciliation(), 'domiciliation', self::YES_OR_IN_PROGRESS)) {
+            if ($this->isFilled($evalHousingGroup->getDomiciliationType(), 'domiciliationType', [1, 2])) {
                 $this->checkValues([
                     $evalHousingGroup->getDomiciliationDept(),
                     $evalHousingGroup->getEndDomiciliationDate(),
-                ]);
+                ], 'domiciliationType');
             }
         }
     }
@@ -159,29 +159,29 @@ class EvaluationCompletionChecker
             return;
         }
 
-        if ($this->isFilled($evalInitPerson->getPaper(), self::YES_OR_IN_PROGRESS)) {
-            $this->isFilled($evalInitPerson->getPaperType());
+        if ($this->isFilled($evalInitPerson->getPaper(), 'paper', self::YES_OR_IN_PROGRESS)) {
+            $this->isFilled($evalInitPerson->getPaperType(), 'paperType');
         }
 
         if ($age < 16) {
             return;
         }
 
-        $this->isFilled($evalInitPerson->getProfStatus());
+        $this->isFilled($evalInitPerson->getProfStatus(), 'profStatus');
 
-        if ($this->isFilled($evalInitPerson->getRightSocialSecurity(), self::YES_OR_IN_PROGRESS)) {
-            $this->isFilled($evalInitPerson->getSocialSecurity());
+        if ($this->isFilled($evalInitPerson->getRightSocialSecurity(), 'rightSocialSecurity', self::YES_OR_IN_PROGRESS)) {
+            $this->isFilled($evalInitPerson->getSocialSecurity(), 'socialSecurity');
         }
 
-        if ($this->isFilled($evalInitPerson->getResource(), self::YES_OR_IN_PROGRESS)) {
+        if ($this->isFilled($evalInitPerson->getResource(), 'resource', self::YES_OR_IN_PROGRESS)) {
             $this->checkValues([
                 $evalInitPerson->getEvalBudgetResources()->count(),
                 $evalInitPerson->getResourcesAmt(),
-            ]);
+            ], 'resource');
         }
 
-        if (Choices::YES === $this->isFilled($evalInitPerson->getDebt())) {
-            $this->isFilled($evalInitPerson->getDebtsAmt());
+        if (Choices::YES === $this->isFilled($evalInitPerson->getDebt(), 'debt')) {
+            $this->isFilled($evalInitPerson->getDebtsAmt(), 'debtsAmt');
         }
     }
 
@@ -195,16 +195,20 @@ class EvaluationCompletionChecker
 
         if ($this->isFilled(
             $evalAdmPerson->getNationality(),
+            'nationality',
             [EvalAdmPerson::NATIONALITY_EU, EvalAdmPerson::NATIONALITY_OUTSIDE_EU])
         ) {
-            if (Choices::YES === $this->isFilled($evalAdmPerson->getAsylumBackground())) {
-                $this->isFilled($evalAdmPerson->getAsylumStatus());
+            if (Choices::YES === $this->isFilled($evalAdmPerson->getAsylumBackground(), 'asylumBackground')) {
+                $this->isFilled($evalAdmPerson->getAsylumStatus(), 'asylumStatus');
             }
         }
 
-        if ($this->isFilled($evalAdmPerson->getPaper(), self::YES_OR_IN_PROGRESS)) {
-            $this->isFilled($evalAdmPerson->getPaperType());
+        if ($this->isFilled($evalAdmPerson->getPaper(), 'paper', self::YES_OR_IN_PROGRESS)) {
+            $this->isFilled($evalAdmPerson->getPaperType(), 'paperType');
         }
+
+
+        
     }
 
     private function checkEvalFamilyPerson(?EvalFamilyPerson $evalFamilyPerson = null, int $role): void
@@ -218,26 +222,26 @@ class EvaluationCompletionChecker
         $supportPerson = $evalFamilyPerson->getEvaluationPerson()->getSupportPerson();
 
         if (RolePerson::ROLE_CHILD === $role) {
-            if (Choices::YES === $this->isFilled($evalFamilyPerson->getChildcareOrSchool())) {
-                $this->isFilled($evalFamilyPerson->getChildcareSchoolType());
+            if (Choices::YES === $this->isFilled($evalFamilyPerson->getChildcareOrSchool(), 'childcareOrSchool')) {
+                $this->isFilled($evalFamilyPerson->getChildcareSchoolType(), 'childcareSchoolType');
             }
 
-            $this->isFilled($evalFamilyPerson->getPmiFollowUp());
+            $this->isFilled($evalFamilyPerson->getPmiFollowUp(), 'pmiFollowUp');
         } else {
-            if (6 === $this->isFilled($evalFamilyPerson->getMaritalStatus())) {
-                $this->isFilled($evalFamilyPerson->getNoConciliationOrder());
+            if (6 === $this->isFilled($evalFamilyPerson->getMaritalStatus(), 'maritalStatus')) {
+                $this->isFilled($evalFamilyPerson->getNoConciliationOrder(), 'noConciliationOrder');
             }
 
             if (Person::GENDER_FEMALE === $supportPerson->getPerson()->getGender()) {
-                if (Choices::YES === $this->isFilled($evalFamilyPerson->getUnbornChild())) {
+                if (Choices::YES === $this->isFilled($evalFamilyPerson->getUnbornChild(), 'unbornChild')) {
                     $this->checkValues([
                         $evalFamilyPerson->getExpDateChildbirth(),
                         $evalFamilyPerson->getPregnancyType(),
-                    ]);
+                    ], 'unbornChild');
                 }
 
                 if ($this->nbChildren > 0) {
-                    $this->isFilled($evalFamilyPerson->getPmiFollowUp());
+                    $this->isFilled($evalFamilyPerson->getPmiFollowUp(), 'pmiFollowUp');
                 }
             }
         }
@@ -251,21 +255,21 @@ class EvaluationCompletionChecker
             return;
         }
 
-        if ($this->isFilled($evalSocialPerson->getRightSocialSecurity(), self::YES_OR_IN_PROGRESS)) {
+        if ($this->isFilled($evalSocialPerson->getRightSocialSecurity(), 'rightSocialSecurity', self::YES_OR_IN_PROGRESS)) {
             $this->checkValues([
                 $evalSocialPerson->getRightSocialSecurity(),
                 $evalSocialPerson->getEndRightsSocialSecurityDate(),
-            ]);
+            ], 'rightSocialSecurity');
         }
 
         if ($this->nbChildren > 0) {
-            if (Choices::YES === $this->isFilled($evalSocialPerson->getAseFollowUp())) {
-                $this->isFilled($evalSocialPerson->getAseMeasureType());
+            if (Choices::YES === $this->isFilled($evalSocialPerson->getAseFollowUp(), 'aseFollowUp')) {
+                $this->isFilled($evalSocialPerson->getAseMeasureType(), 'aseMeasureType');
             }
         }
 
-        if (Choices::YES === $this->isFilled($evalSocialPerson->getHealthProblem())) {
-            $this->isFilled($evalSocialPerson->getMedicalFollowUp());
+        if (Choices::YES === $this->isFilled($evalSocialPerson->getHealthProblem(), 'healthProblem')) {
+            $this->isFilled($evalSocialPerson->getMedicalFollowUp(), 'medicalFollowUp');
         }
 
         if (RolePerson::ROLE_CHILD !== $role) {
@@ -273,8 +277,8 @@ class EvaluationCompletionChecker
             //     $evalSocialPerson->getFamilyBreakdown(),
             //     $evalSocialPerson->getFriendshipBreakdown(),
             // ]);
-            if (Choices::YES === $this->isFilled($evalSocialPerson->getViolenceVictim())) {
-                $this->isFilled($evalSocialPerson->getDomViolenceVictim());
+            if (Choices::YES === $this->isFilled($evalSocialPerson->getViolenceVictim(), 'violenceVictim')) {
+                $this->isFilled($evalSocialPerson->getDomViolenceVictim(), 'domViolenceVictim');
             }
         }
     }
@@ -287,18 +291,18 @@ class EvaluationCompletionChecker
             return;
         }
 
-        $this->isFilled($evalProfPerson->getProfStatus());
+        $this->isFilled($evalProfPerson->getProfStatus(), 'profStatus');
 
         if (EvalProfPerson::PROF_STATUS_EMPLOYEE === $evalProfPerson->getProfStatus()) {
             $this->checkValues([
                 $evalProfPerson->getContractType(),
                 $evalProfPerson->getWorkingTime(),
-            ]);
+            ], 'profStatus');
         }
 
         if (in_array($evalProfPerson->getProfStatus(), [1, 2, 3, 4, 8, 9, 97])) {
-            if (Choices::YES === $this->isFilled($evalProfPerson->getRqth())) {
-                $this->isFilled($evalProfPerson->getEndRqthDate());
+            if (Choices::YES === $this->isFilled($evalProfPerson->getRqth(), 'rqth')) {
+                $this->isFilled($evalProfPerson->getEndRqthDate(), 'endRqthDate');
             }
         }
     }
@@ -311,29 +315,29 @@ class EvaluationCompletionChecker
             return;
         }
 
-        if ($this->isFilled($evalBudgetPerson->getResource(), self::YES_OR_IN_PROGRESS)) {
+        if ($this->isFilled($evalBudgetPerson->getResource(), 'resource', self::YES_OR_IN_PROGRESS)) {
             $this->checkValues([
                 $evalBudgetPerson->getEvalBudgetResources()->count(),
                 $evalBudgetPerson->getResourcesAmt(),
                 $evalBudgetPerson->getIncomeTax(),
-            ]);
+            ], 'resource');
         }
 
-        if (Choices::YES === $this->isFilled($evalBudgetPerson->getCharge())) {
+        if (Choices::YES === $this->isFilled($evalBudgetPerson->getCharge(), 'charge')) {
             $this->checkValues([
                 $evalBudgetPerson->getEvalBudgetCharges()->count(),
                 $evalBudgetPerson->getChargesAmt(),
-            ]);
+            ], 'charge');
         }
 
-        if (Choices::YES === $this->isFilled($evalBudgetPerson->getDebt())) {
+        if (Choices::YES === $this->isFilled($evalBudgetPerson->getDebt(), 'debt')) {
             $this->checkValues([
                 $evalBudgetPerson->getEvalBudgetDebts()->count(),
                 $evalBudgetPerson->getDebtsAmt(),
                 $evalBudgetPerson->getOverIndebtRecord(),
                 $evalBudgetPerson->getSettlementPlan(),
                 $evalBudgetPerson->getMoratorium(),
-            ]);
+            ], 'debt');
         }
     }
 
@@ -345,8 +349,8 @@ class EvaluationCompletionChecker
             return;
         }
 
-        $this->isFilled($evalJusticePerson->getJusticeStatus());
-        $this->isFilled($evalJusticePerson->getJusticeAct());
+        $this->isFilled($evalJusticePerson->getJusticeStatus(), 'justiceStatus');
+        $this->isFilled($evalJusticePerson->getJusticeAct(), 'justiceAct');
     }
 
     private function reinitProperties(): void
@@ -357,14 +361,17 @@ class EvaluationCompletionChecker
         $this->nbChildren = 0;
     }
 
-    private function checkValues(array $values): void
+    private function checkValues(array $values, ?string $name = null): void
     {
         foreach ($values as $value) {
-            $this->isFilled($value);
+            $this->isFilled($value, $name);
         }
     }
 
-    private function isFilled($value, ?array $choices = null): bool
+    /**
+     * @param int|string|null $value
+     */
+    private function isFilled($value, ?string $name = null, ?array $choices = null): bool
     {
         ++$this->maxPoints;
 

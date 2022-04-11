@@ -58,11 +58,15 @@ class EvaluationManager extends EvaluationCreator
     public static function deleteCacheItems(EvaluationGroup $evaluationGroup): bool
     {
         $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
-        $supportGroupId = $evaluationGroup->getSupportGroup()->getId();
+        $supportGroup = $evaluationGroup->getSupportGroup();
+
+        if ($supportGroup->getReferent()) {
+            $cache->deleteItem(User::CACHE_USER_SUPPORTS_KEY.$supportGroup->getReferent()->getId());
+        }
 
         return $cache->deleteItems([
-            EvaluationGroup::CACHE_EVALUATION_KEY.$supportGroupId,
-            SupportGroup::CACHE_FULLSUPPORT_KEY.$supportGroupId,
+            EvaluationGroup::CACHE_EVALUATION_KEY.$supportGroup->getId(),
+            SupportGroup::CACHE_FULLSUPPORT_KEY.$supportGroup->getId(),
         ]);
     }
 
