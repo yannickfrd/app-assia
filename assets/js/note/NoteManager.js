@@ -389,10 +389,9 @@ export default class NoteManager {
     updateCounter(nb) {
         const selector = this.isCardNoteView ? '.card' : 'table#table-notes tbody tr'
         const nbNotes = this.containerNotesElt.querySelectorAll(selector).length
-        const nbTotalNotes = parseInt(this.countNotesElt.dataset.nbTotalNotes) + nb
-        this.countNotesElt.dataset.nbTotalNotes = nbTotalNotes
+        this.countNotesElt.dataset.nbTotalNotes = parseInt(this.countNotesElt.dataset.nbTotalNotes) + nb
 
-        this.countNotesElt.textContent = `${nbNotes} note${nbNotes > 1 ? 's' : ''} sur ${nbTotalNotes}`
+        this.countNotesElt.textContent = `${nbNotes} note${nbNotes > 1 ? 's' : ''}`
 
         if (parseInt(this.countNotesElt.textContent) > 0) {
             return this.searchSupportNotesElt.classList.remove('d-none')
