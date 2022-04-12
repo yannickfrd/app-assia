@@ -24,20 +24,6 @@ class Document
     use SoftDeleteableEntity;
     use TagTrait;
 
-    public const TYPE = [
-        2 => 'Administratif',
-        10 => 'Dettes',
-        9 => 'Emploi',
-        1 => 'Identité/Etat civil',
-        4 => 'Impôts',
-        6 => 'Logement',
-        8 => 'Orientation',
-        5 => 'Redevance',
-        3 => 'Ressources',
-        7 => 'Santé',
-        97 => 'Autre',
-    ];
-
     public const TYPE_EXTENSIONS = [
         'cvs' => 'CSV',
         'doc' => 'Word',
@@ -70,11 +56,6 @@ class Document
      * @Groups("show_document")
      */
     private $name;
-
-    /**
-     * @ORM\Column(type="smallint", nullable=true)
-     */
-    private $type;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -132,16 +113,6 @@ class Document
         $this->name = $name;
 
         return $this;
-    }
-
-    public function getType(): ?int
-    {
-        return $this->type;
-    }
-
-    public function getTypeToString(): ?string
-    {
-        return $this->type ? self::TYPE[$this->type] : '';
     }
 
     public function setType(?int $type): self
