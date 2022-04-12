@@ -12,7 +12,6 @@ use App\Service\DoctrineTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @method Document|null find($id, $lockMode = null, $lockVersion = null)
@@ -33,7 +32,7 @@ class DocumentRepository extends ServiceEntityRepository
     /**
      * Return all documents of group support.
      */
-    public function findDocumentsQuery(DocumentSearch $search, UserInterface $user): Query
+    public function findDocumentsQuery(DocumentSearch $search, User $user): Query
     {
         $qb = $this->createQueryBuilder('d')
             ->leftJoin('d.tags', 't')->addSelect('t')
@@ -154,21 +153,6 @@ class DocumentRepository extends ServiceEntityRepository
 
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getResult();
-    }
-
-    public function findDocumentOfSupportDeleted(int $supportGroupId)
-    {
-        $this->disableFilter($this->_em, 'softdeleteable');
-
-        return $this->createQueryBuilder('d')->select('d')
-
-            ->where('d.deletedAt IS NOT null')
-
-            ->andwhere('d.supportGroup = :id')
-            ->setParameter('id', $supportGroupId)
-
-            ->getQuery()
             ->getResult();
     }
 

@@ -12,7 +12,6 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @method Task|null find($id, $lockMode = null, $lockVersion = null)
@@ -93,7 +92,7 @@ class TaskRepository extends ServiceEntityRepository
     /**
      * Donne tous les évenements à exporter.
      */
-    public function findTasksToExport(TaskSearch $search, UserInterface $user): array
+    public function findTasksToExport(TaskSearch $search, User $user): array
     {
         $qb = $this->getTasksQuery()
             ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
@@ -154,7 +153,7 @@ class TaskRepository extends ServiceEntityRepository
         ;
     }
 
-    protected function filter(QueryBuilder $qb, TaskSearch $search, UserInterface $user): QueryBuilder
+    protected function filter(QueryBuilder $qb, TaskSearch $search, User $user): QueryBuilder
     {
         if (!$user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->where('t.createdBy IN (:user)')
@@ -244,21 +243,6 @@ class TaskRepository extends ServiceEntityRepository
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
         ;
-    }
-
-    public function findTaskOfSupportDeleted(int $supportGroupId)
-    {
-        $this->disableFilter($this->_em, 'softdeleteable');
-
-        return $this->createQueryBuilder('t')->select('t')
-
-            ->where('t.deletedAt IS NOT null')
-
-            ->andwhere('t.supportGroup = :id')
-            ->setParameter('id', $supportGroupId)
-
-            ->getQuery()
-            ->getResult();
     }
 
     /**

@@ -21,20 +21,4 @@ class HotelSupportRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, HotelSupport::class);
     }
-
-    public function findHoteOfSupportDeleted(int $supportGroupId)
-    {
-        $this->disableFilter($this->_em, 'softdeleteable');
-
-        return $this->createQueryBuilder('h')->select('h')
-
-            ->where('h.deletedAt IS NOT null')
-
-            ->andwhere('h.supportGroup = :id')
-            ->setParameter('id', $supportGroupId)
-
-            ->getQuery()
-            ->getResult();
-    }
-
 }

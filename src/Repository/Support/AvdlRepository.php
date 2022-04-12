@@ -21,20 +21,4 @@ class AvdlRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Avdl::class);
     }
-
-    public function findAvdlOfSupportDeleted(int $supportGroupId)
-    {
-        $this->disableFilter($this->_em, 'softdeleteable');
-
-        return $this->createQueryBuilder('a')->select('a')
-
-            ->where('a.deletedAt IS NOT null')
-
-            ->andwhere('a.supportGroup = :id')
-            ->setParameter('id', $supportGroupId)
-
-            ->getQuery()
-            ->getResult();
-    }
-
 }

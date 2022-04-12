@@ -12,7 +12,6 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @method Rdv|null find($id, $lockMode = null, $lockVersion = null)
@@ -79,7 +78,7 @@ class RdvRepository extends ServiceEntityRepository
     /**
      * Donne tous les RDVs à exporter.
      */
-    public function findRdvsToExport(EventSearch $search, UserInterface $user, ?SupportGroup $supportGroup = null): array
+    public function findRdvsToExport(EventSearch $search, User $user, ?SupportGroup $supportGroup = null): array
     {
         $qb = $this->getRdvsQuery()
             ->leftJoin('r.updatedBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}');
@@ -116,7 +115,7 @@ class RdvRepository extends ServiceEntityRepository
         ;
     }
 
-    protected function filter(QueryBuilder $qb, EventSearch $search, UserInterface $user, ?SupportGroup $supportGroup =
+    protected function filter(QueryBuilder $qb, EventSearch $search, User $user, ?SupportGroup $supportGroup =
     null): QueryBuilder
     {
         if (!$user->hasRole('ROLE_SUPER_ADMIN')) {
@@ -206,21 +205,6 @@ class RdvRepository extends ServiceEntityRepository
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
         ;
-    }
-
-    public function findRdvOfSupportDeleted(int $supportGroupId)
-    {
-        $this->disableFilter($this->_em, 'softdeleteable');
-
-        return $this->createQueryBuilder('r')->select('r')
-
-            ->where('r.deletedAt IS NOT null')
-
-            ->andwhere('r.supportGroup = :id')
-            ->setParameter('id', $supportGroupId)
-
-            ->getQuery()
-            ->getResult();
     }
 
     public function findLastRdvOfSupport(int $supportGroupId): ?Rdv

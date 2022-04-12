@@ -101,24 +101,6 @@ class NoteRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Note[]
-     */
-    public function findNotesOfSupportDeleted(int $supportGroupId): array
-    {
-        $this->disableFilter($this->_em, 'softdeleteable');
-
-        return $this->createQueryBuilder('n')->select('n')
-
-            ->where('n.deletedAt IS NOT null')
-
-            ->andwhere('n.supportGroup = :id')
-            ->setParameter('id', $supportGroupId)
-
-            ->getQuery()
-            ->getResult();
-    }
-
-    /**
      * Return all notes of group support.
      */
     public function findNotesOfSupportQuery(int $supportGroupId, SupportNoteSearch $search): Query

@@ -105,41 +105,19 @@ final class SupportPersonController extends AbstractController
     public function restore(
         int $id,
         SupportPersonRepository $supportPersonRepo,
-        EntityManagerInterface $em,
-        TranslatorInterface $translator,
         SupportRestorer $supportRestorer
     ): JsonResponse {
         $supportPerson = $supportPersonRepo->findSupportPerson($id, true);
-        $support = $supportPerson->getSupportGroup();
 
-        $this->denyAccessUnlessGranted('DELETE', $support);
-
-        if (null !== $supportPerson->getSupportGroup()->getDeletedAt()) {
-            $supportRestorer->restore($support);
-
-            $msg = $translator->trans('support.restored_successfully', [
-                    '%support_referent%' => $support->getReferent(),
-                ], 'app');
-        } else {
-            $supportPerson->setDeletedAt(null);
-
-            $msg = $translator->trans('support_person.restored_successfully', [
-                '%support_name%' => $supportPerson->getPerson()->getFullname(),
-            ], 'app');
-        }
-
-        $em->flush();
-
-        SupportManager::deleteCacheItems($support);
+        $this->denyAccessUnlessGranted('DELETE',$supportPerson->getSupportGroup());
 
         return $this->json([
             'action' => 'restore',
             'alert' => 'success',
-            'msg' => $msg,
-            'support' => ['id' => $support->getId()]
+            'msg' => $supportRestorer->restore($supportPerson),
+            'support' => ['id' => $id]
         ]);
     }
-
 
     /**
      * Récupère la liste des personnes rattachées à un suivi.

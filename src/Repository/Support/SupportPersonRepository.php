@@ -60,7 +60,7 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->setParameter('id', $id)
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+//            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getSingleResult()
         ;
     }

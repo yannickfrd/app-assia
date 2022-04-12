@@ -9,7 +9,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -214,7 +213,7 @@ abstract class AbstractEvent
         return join(', ', $userNames);
     }
 
-    public function addUser(?UserInterface $user): self
+    public function addUser(?User $user): self
     {
         if (!$this->users->contains($user)) {
             $this->users[] = $user;
@@ -223,7 +222,7 @@ abstract class AbstractEvent
         return $this;
     }
 
-    public function removeUser(UserInterface $user): self
+    public function removeUser(User $user): self
     {
         $this->users->removeElement($user);
 

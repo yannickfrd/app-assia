@@ -79,19 +79,4 @@ class PlaceGroupRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-
-    public function findPlaceGroupOfSupportDeleted(int $supportGroupId)
-    {
-        $this->disableFilter($this->_em, 'softdeleteable');
-
-        return $this->createQueryBuilder('pg')->select('pg')
-
-            ->where('pg.deletedAt IS NOT null')
-
-            ->andwhere('pg.supportGroup = :id')
-            ->setParameter('id', $supportGroupId)
-
-            ->getQuery()
-            ->getResult();
-    }
 }

@@ -290,21 +290,6 @@ class PaymentRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findRdvOfSupportDeleted(int $supportGroupId)
-    {
-        $this->disableFilter($this->_em, 'softdeleteable');
-
-        return $this->createQueryBuilder('p')->select('p')
-
-            ->where('p.deletedAt IS NOT null')
-
-            ->andwhere('p.supportGroup = :id')
-            ->setParameter('id', $supportGroupId)
-
-            ->getQuery()
-            ->getResult();
-    }
-
     /**
      * @return Payment[]
      */

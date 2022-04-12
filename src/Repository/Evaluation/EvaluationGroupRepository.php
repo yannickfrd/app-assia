@@ -83,21 +83,6 @@ class EvaluationGroupRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function findEvaluationOfSupportDeleted(int $supportGroupId)
-    {
-        $this->disableFilter($this->_em, 'softdeleteable');
-
-        return $this->createQueryBuilder('eg')->select('eg')
-
-            ->where('eg.deletedAt IS NOT null')
-
-            ->andwhere('eg.supportGroup = :id')
-            ->setParameter('id', $supportGroupId)
-
-            ->getQuery()
-            ->getResult();
-    }
-
     /**
      * Donne les ressources.
      */

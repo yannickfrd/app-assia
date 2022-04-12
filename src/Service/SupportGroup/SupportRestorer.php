@@ -4,96 +4,74 @@ declare(strict_types=1);
 
 namespace App\Service\SupportGroup;
 
-use App\Entity\Evaluation\EvaluationGroup;
-use App\Entity\Event\Rdv;
-use App\Entity\Event\Task;
-use App\Entity\Support\Avdl;
-use App\Entity\Support\Document;
-use App\Entity\Support\HotelSupport;
-use App\Entity\Support\Note;
-use App\Entity\Support\Payment;
 use App\Entity\Support\PlaceGroup;
 use App\Entity\Support\SupportGroup;
-use App\Repository\Evaluation\EvaluationGroupRepository;
-use App\Repository\Event\RdvRepository;
-use App\Repository\Event\TaskRepository;
-use App\Repository\Support\AvdlRepository;
-use App\Repository\Support\DocumentRepository;
-use App\Repository\Support\HotelSupportRepository;
-use App\Repository\Support\NoteRepository;
-use App\Repository\Support\PaymentRepository;
-use App\Repository\Support\PlaceGroupRepository;
+use App\Entity\Support\SupportPerson;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SupportRestorer
 {
-    private NoteRepository $noteRepo;
-    private RdvRepository $rdvRepo;
-    private TaskRepository $taskRepo;
-    private AvdlRepository $avdlRepo;
-    private PaymentRepository $paymentRepo;
-    private DocumentRepository $documentRepo;
-    private PlaceGroupRepository $placeGroupRepo;
-    private HotelSupportRepository $hotelSupportRepo;
-    private EvaluationGroupRepository $evaluationGroupRepo;
+    private TranslatorInterface $translator;
+    private EntityManagerInterface $em;
 
-    public function __construct(
-        NoteRepository $noteRepo,
-        RdvRepository $rdvRepo,
-        TaskRepository $taskRepo,
-        AvdlRepository $avdlRepo,
-        PaymentRepository $paymentRepo,
-        DocumentRepository $documentRepo,
-        PlaceGroupRepository $placeGroupRepo,
-        HotelSupportRepository $hotelSupportRepo,
-        EvaluationGroupRepository $evaluationGroupRepo
-    ) {
-        $this->noteRepo = $noteRepo;
-        $this->rdvRepo = $rdvRepo;
-        $this->taskRepo = $taskRepo;
-        $this->avdlRepo = $avdlRepo;
-        $this->paymentRepo = $paymentRepo;
-        $this->documentRepo = $documentRepo;
-        $this->placeGroupRepo = $placeGroupRepo;
-        $this->hotelSupportRepo = $hotelSupportRepo;
-        $this->evaluationGroupRepo = $evaluationGroupRepo;
+    public function __construct(TranslatorInterface $translator, EntityManagerInterface $em) {
+        $this->translator = $translator;
+        $this->em = $em;
     }
 
-    public function restore(SupportGroup $support): void
+    public function restore(SupportPerson $supportPerson): string
     {
-        $supportId = $support->getId();
-        $supportDeletedAt = $support->getDeletedAt();
+        $supportGroup = $supportPerson->getSupportGroup();
 
-        $entitiesElement = $this->getElementsBeforeRestore($supportId);
-        foreach ($entitiesElement as $elements) {
-            foreach ($elements as $element) {
-                if ($element->getDeletedAt() == $supportDeletedAt) {
-                $element->setDeletedAt(null);
-                }
-            }
+        if (null === $supportPerson->getSupportGroup()->getDeletedAt()) {
+            $supportPerson->setDeletedAt(null);
+
+            return $this->translator->trans('support_person.restored_successfully', [
+                '%support_name%' => $supportPerson->getPerson()->getFullname(),
+            ], 'app');
         }
 
-        foreach ($support->getSupportPeople() as $supportPerson) {
-            if ($supportPerson->getDeletedAt() == $supportDeletedAt) {
-                $supportPerson->setDeletedAt(null);
+        $entitiesElement = $this->getElementsBeforeRestore($supportGroup);
+        $this->resetDeletedAt($entitiesElement, $supportGroup->getDeletedAt());
+
+        $supportGroup->setDeletedAt(null);
+
+        SupportManager::deleteCacheItems($supportGroup);
+
+        $this->em->flush();
+
+        return $this->translator->trans('support.restored_successfully', [
+            '%support_referent%' => $supportGroup->getHeader()->getFullname(),
+        ], 'app');
+    }
+
+    private function resetDeletedAt(\Generator $collection, $supportDeletedAt) {
+        foreach ($collection->current() as $entity) {
+            if (null !== $entity->getDeletedAt() && $entity->getDeletedAt() == $supportDeletedAt) {
+                $entity->setDeletedAt(null);
             }
         }
-
-        $support->setDeletedAt(null);
     }
 
-    private function getElementsBeforeRestore(int $supportId): array
+    private function getElementsBeforeRestore(SupportGroup $supportGroup): \Generator
     {
-        return [
-            $this->noteRepo->findNotesOfSupportDeleted($supportId),
-            $this->rdvRepo->findRdvOfSupportDeleted($supportId),
-            $this->taskRepo->findTaskOfSupportDeleted($supportId),
-            $this->avdlRepo->findAvdlOfSupportDeleted($supportId),
-            $this->paymentRepo->findRdvOfSupportDeleted($supportId),
-            $this->documentRepo->findDocumentOfSupportDeleted($supportId),
-            $this->hotelSupportRepo->findHoteOfSupportDeleted($supportId),
-            $this->placeGroupRepo->findPlaceGroupOfSupportDeleted($supportId),
-            $this->evaluationGroupRepo->findEvaluationOfSupportDeleted($supportId),
-        ];
-    }
+        yield $supportGroup->getSupportPeople();
+        yield $supportGroup->getNotes();
+        yield $supportGroup->getRdvs();
+        yield $supportGroup->getTasks();
+        yield $supportGroup->getDocuments();
+        yield $supportGroup->getHotelSupport();
+        yield $supportGroup->getEvaluationsGroup();
+        yield $supportGroup->getEvalInitGroup();
+        yield $supportGroup->getOriginRequest();
+        yield $supportGroup->getPeopleGroup();
 
+        yield $supportGroup->getPlaceGroups();
+
+        /** @var PlaceGroup $placeGroup */
+        foreach ($supportGroup->getPlaceGroups() as $placeGroup) {
+            yield $placeGroup->getPlacePeople();
+        }
+    }
 }
