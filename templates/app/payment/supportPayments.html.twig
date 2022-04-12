@@ -1,5 +1,7 @@
 {% extends "base.html.twig" %}
 
+{% set restore_is_clicked = form_search.deleted.deleted.vars.checked %}
+
 {% block title %}Paiements{% endblock %}
 
 {% block body %}
@@ -57,8 +59,13 @@
 									{{ knp_pagination_sortable(payments, "Mode de règlement", "p.paymentType") }}</th>
 								<th scope="col" class="align-middle th-w-140">
 									{{ knp_pagination_sortable(payments, "Commentaire", "p.comment") }}</th>
-								<th scope="col" class="align-middle th-w-100">
-									{{ knp_pagination_sortable(payments, "Date de création", "p.createdAt") }}</th>
+								{% if restore_is_clicked %}
+									<th scope="col" class="align-middle th-w-100">
+										{{ knp_pagination_sortable(payments, "Supprimé le", "p.deletedAt") }}</th>
+								{% else %}
+									<th scope="col" class="align-middle th-w-100">
+										{{ knp_pagination_sortable(payments, "Date de création", "p.createdAt") }}</th>
+								{% endif %}
 								<th scope="col" class="align-middle th-w-20">
 									{{ knp_pagination_sortable(payments, "PDF", "p.pdfGenerateAt") }}</th>
 								<th scope="col" class="align-middle th-w-20">
@@ -102,7 +109,12 @@
 									<td class="align-middle small" data-payment="comment">
 										{{ payment.noContrib ? "PAF à zéro (" ~ payment.noContribReasonToString ~ ")" }}
 										{{ (payment.comment ~ "\n" ~ payment.commentExport)|u.truncate(50, " [...]", false) }}</td>
-									<td class="align-middle" data-payment="createdAt">{{ payment.createdAt|date("d/m/Y") }}</td>
+
+									{% if disabled %}
+										<td class="align-middle" data-payment="deletedAt">{{ payment.deletedAtToString }}</td>
+									{% else %}
+										<td class="align-middle" data-payment="createdAt">{{ payment.createdAt|date("d/m/Y") }}</td>
+									{% endif %}
 									<td class="align-middle text-center" data-payment="pdfGenerate">
 										<a href="{{ path('payment_export_pdf', {'id': payment.id}) }}" 
 										data-toggle="tooltip" data-placement="bottom" title="{{ payment.pdfGenerate ? 

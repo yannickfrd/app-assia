@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% set nb_notes = notes|length %}
-{% set restore_is_clicked = form_search.deleted.children.deleted.vars.data %}
+{% set restore_is_clicked = form_search.deleted.deleted.vars.checked %}
 
 {% block title %}Notes sociales{% endblock %}
 

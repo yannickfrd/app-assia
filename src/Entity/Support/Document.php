@@ -224,4 +224,12 @@ class Document
 
         return $this;
     }
+
+    /**
+     * @Groups("show_document")
+     */
+    public function getDeletedAtToString(string $format = 'd/m/Y'): string
+    {
+        return $this->deletedAt ? $this->deletedAt->format($format.' H:i') : '';
+    }
 }
