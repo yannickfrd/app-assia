@@ -5,7 +5,7 @@ namespace App\Tests\EndToEnd;
 use App\Tests\EndToEnd\Traits\AppPantherTestTrait;
 use Symfony\Component\DomCrawler\Field\FormField;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Panther\Client as PantherClient;
+use Symfony\Component\Panther\Client;
 use Symfony\Component\Panther\DomCrawler\Crawler;
 use Symfony\Component\Panther\PantherTestCase;
 
@@ -13,8 +13,7 @@ class DocumentEndToEndTest extends PantherTestCase
 {
     use AppPantherTestTrait;
 
-    /** @var PantherClient */
-    protected $client;
+    protected Client $client;
 
     public function testDocument(): void
     {

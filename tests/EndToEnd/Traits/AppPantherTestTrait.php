@@ -2,17 +2,15 @@
 
 namespace App\Tests\EndToEnd\Traits;
 
+use Facebook\WebDriver\WebDriverExpectedCondition;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Panther\Client;
 
 trait AppPantherTestTrait
 {
-    /** @var ConsoleOutput */
-    protected $output;
-
-    /** @var PantherClient */
-    protected $client;
+    protected ConsoleOutput $output;
+    protected Client $client;
 
     protected function loginUser(string $username = 'john_user'): Client
     {
@@ -37,5 +35,11 @@ trait AppPantherTestTrait
     protected function outputMsg(string $message, bool $newline = false): void
     {
         $this->output->write("\e[34mtest : \e[36m".$message."\e[0m \n", $newline);
+    }
+
+    protected function acceptWindowConfirm(): void
+    {
+        $this->client->wait()->until(WebDriverExpectedCondition::alertIsPresent());
+        $this->client->getWebDriver()->switchTo()->alert()->accept();
     }
 }
