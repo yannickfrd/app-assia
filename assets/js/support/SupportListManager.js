@@ -1,11 +1,12 @@
 import Loader from "../utils/loader";
 import Ajax from "../utils/ajax";
+import MessageFlash from "../utils/messageFlash";
 
 export default class SupportListManager {
 
     constructor() {
         this.loader = new Loader()
-        this.ajax = new Ajax(this.loader)
+        this.ajax = new Ajax(this.loader, 45)
 
         this.init()
     }
@@ -28,10 +29,19 @@ export default class SupportListManager {
     }
 
     responseAjax(response) {
+        let shouldBeRedirect = false
         switch (response.action) {
             case 'restore':
                 this.deleteSupportTr(response.support)
+                shouldBeRedirect = true
                 break
+        }
+
+        if (response.msg) {
+            this.messageFlash = new MessageFlash(response.alert, response.msg)
+            if (shouldBeRedirect) {
+                this.shouldBeRedirect(this.messageFlash.delay);
+            }
         }
     }
 
@@ -57,5 +67,15 @@ export default class SupportListManager {
         counterSupportElt.textContent = counterSupportElt.textContent
             .replace(counterSupportElt.dataset.countSupports, calcul.toString())
         counterSupportElt.dataset.countSupports = calcul.toString()
+    }
+
+    /**
+     * Redirects if there are no more lines.
+     * @param {number} delay
+     */
+    shouldBeRedirect(delay) {
+        if (document.querySelectorAll('table#table-supports tbody tr').length === 0) {
+            setTimeout(() => document.location.href = location.pathname, delay*1000);
+        }
     }
 }

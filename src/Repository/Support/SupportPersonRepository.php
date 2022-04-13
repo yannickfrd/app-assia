@@ -50,7 +50,7 @@ class SupportPersonRepository extends ServiceEntityRepository
         }
 
         return $this->createQueryBuilder('sp')
-            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id}')
+            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
             ->leftJoin('sp.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, referent, deletedAt}')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
             ->leftJoin('sg.peopleGroup', 'pg')->addSelect('PARTIAL pg.{id}')
@@ -60,7 +60,6 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->setParameter('id', $id)
 
             ->getQuery()
-//            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getSingleResult()
         ;
     }

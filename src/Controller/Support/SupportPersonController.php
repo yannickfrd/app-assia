@@ -114,8 +114,9 @@ final class SupportPersonController extends AbstractController
         return $this->json([
             'action' => 'restore',
             'alert' => 'success',
-            'msg' => $supportRestorer->restore($supportPerson),
-            'support' => ['id' => $id]
+            'msg' => '$supportRestorer->restore($supportPerson)',
+//            'msg' => $supportRestorer->restore($supportPerson),
+            'support' => ['id' => $supportPerson->getSupportGroup()->getId()]
         ]);
     }
 
