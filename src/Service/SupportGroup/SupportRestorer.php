@@ -30,8 +30,10 @@ class SupportRestorer
 
         $this->em->flush();
 
-        if (null === $supportPerson->getSupportGroup()->getDeletedAt()) {
+        if (null == $supportPerson->getSupportGroup()->getDeletedAt()) {
             $supportPerson->setDeletedAt(null);
+
+            $this->flushAndDeleteCache($supportGroup);
 
             return $this->translator->trans('support_person.restored_successfully', [
                 '%support_name%' => $supportPerson->getPerson()->getFullname(),
@@ -40,21 +42,18 @@ class SupportRestorer
 
         $this->resetDeletedAt($supportGroup);
 
-        $this->em->flush();
-
-        SupportManager::deleteCacheItems($supportGroup);
+        $this->flushAndDeleteCache($supportGroup);
 
         return $this->translator->trans('support.restored_successfully', [
-            '%support_referent%' => $supportGroup->getHeader()->getFullname(),
+            '%support_name%' => $supportGroup->getHeader()->getFullname(),
         ], 'app');
     }
 
-    private function resetDeletedAt($supportGroup)
+    private function resetDeletedAt($supportGroup): void
     {
-        $entitiesElements = $this->getElementsBeforeRestore($supportGroup);
+        $entitiesElements = $this->supportGroupGenerator($supportGroup);
         foreach ($entitiesElements as $entities) {
             foreach ($entities as $entity) {
-                dump($entity);
                 if (null !== $entity && $entity->getDeletedAt() == $supportGroup->getDeletedAt()) {
                     $entity->setDeletedAt(null);
                 }
@@ -64,10 +63,13 @@ class SupportRestorer
         $supportGroup->setDeletedAt(null);
     }
 
-    private function getElementsBeforeRestore(SupportGroup $supportGroup): Generator
+    /**
+     * Collect all the getters for the SupportGroup
+     */
+    private function supportGroupGenerator(SupportGroup $supportGroup): Generator
     {
-        yield from $this->getElementsPlaceGroups($supportGroup->getPlaceGroups());
-        yield from $this->getElementsEvaluationGroup($supportGroup->getEvaluationsGroup());
+        yield from $this->placeGroupsGenerator($supportGroup->getPlaceGroups());
+        yield from $this->evaluationGroupGenerator($supportGroup->getEvaluationsGroup());
 
         yield $supportGroup->getPlaceGroups();
         yield $supportGroup->getEvaluationsGroup();
@@ -87,7 +89,10 @@ class SupportRestorer
         ];
     }
 
-    private function getElementsPlaceGroups(?Collection $getPlaceGroups): Generator
+    /**
+     * Collect all the getters for the PlaceGroup
+     */
+    private function placeGroupsGenerator(?Collection $getPlaceGroups): Generator
     {
         /** @var PlaceGroup $placeGroup */
         foreach ($getPlaceGroups as $placeGroup) {
@@ -95,11 +100,14 @@ class SupportRestorer
         }
     }
 
-    private function getElementsEvaluationGroup(?Collection $evaluations): Generator
+    /**
+     * Collect all the getters for the EvaluationGroup
+     */
+    private function evaluationGroupGenerator(?Collection $evaluations): Generator
     {
         /** @var EvaluationGroup $evaluation */
         foreach ($evaluations as $evaluation) {
-            yield from $this->getElementsEvaluationPeople($evaluation->getEvaluationPeople());
+            yield from $this->evaluationPeopleGenerator($evaluation->getEvaluationPeople());
             yield $evaluation->getEvaluationPeople();
 
             yield [
@@ -112,7 +120,10 @@ class SupportRestorer
         }
     }
 
-    private function getElementsEvaluationPeople(?Collection $evaluationPeople): Generator
+    /**
+     * Collect all the getters for the EvaluationPeople
+     */
+    private function evaluationPeopleGenerator(?Collection $evaluationPeople): Generator
     {
         /** @var EvaluationPerson $evaluationPerson */
         foreach ($evaluationPeople as $evaluationPerson) {
@@ -125,5 +136,11 @@ class SupportRestorer
                 $evaluationPerson->getEvalJusticePerson(),
             ];
         }
+    }
+
+    private function flushAndDeleteCache(?SupportGroup $supportGroup): void
+    {
+        $this->em->flush();
+        SupportManager::deleteCacheItems($supportGroup);
     }
 }

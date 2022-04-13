@@ -37,10 +37,10 @@ rdv:
 
 # SupportGroup
 support:
-    created_successfully: "Le support « %support_referent% » a bien été créé."
-    updated_successfully: "Le support « %support_referent% » a bien été modifié."
-    deleted_successfully: "Le support « %support_referent% » a bien été supprimé."
-    restored_successfully: "Le support « %support_referent% » a bien été restauré."
+    created_successfully: "Le support « %support_name% » a bien été créé."
+    updated_successfully: "Le support « %support_name% » a bien été modifié."
+    deleted_successfully: "Le support « %support_name% » a bien été supprimé."
+    restored_successfully: "Le support « %support_name% » a bien été restauré."
 
 # SupportPerson
 support_person:
