@@ -126,20 +126,20 @@ class RdvEndToEndTest extends PantherTestCase
     {
         $this->outputMsg('Restore a rdv');
 
-        $this->cssClick('a[data-original-title="Passer en vue liste"]');
+        $this->clickElement('a[data-original-title="Passer en vue liste"]');
 
-        $this->cssClick('button[data-action="delete-rdv"]');
+        $this->clickElement('button[data-action="delete-rdv"]');
 
         $this->client->waitForVisibility('#modal-block', 1);
-        $this->cssClick('#modal-block button#modal-confirm');
+        $this->clickElement('#modal-block button#modal-confirm');
 
         $this->client->waitFor('.alert', 3);
         $this->assertSelectorExists('.alert.alert-warning');
 
-        $this->cssClick('button[aria-label="Close"]');
+        $this->clickElement('button[aria-label="Close"]');
 
-        $this->cssClick('label[for="deleted_deleted"]');
-        $this->cssClick('button[id="search"]');
+        $this->clickElement('label[for="deleted_deleted"]');
+        $this->clickElement('button[id="search"]');
 
         $this->client->waitFor('table', 1);
         $this->client->getWebDriver()->findElement(WebDriverBy::name('restore'))->click();

@@ -35,6 +35,8 @@ class NoteEndToEndTest extends PantherTestCase
         $crawler = $this->deleteNote($crawler);
         $this->restoreCardNote($crawler);
         $this->restoreTableNote();
+
+        $this->client->quit();
     }
 
     private function goToNotesPage(Crawler $crawler): Crawler
@@ -112,10 +114,10 @@ class NoteEndToEndTest extends PantherTestCase
     {
         $this->outputMsg('Edit a note');
 
-        $this->client->waitForVisibility('#container-notes div[data-note-id]');
-//        sleep(1); //pop-up effect
+        $this->client->waitForVisibility('#container-notes div[data-note-id]', 1);
+        sleep(1); //pop-up effect
 
-        $this->client->waitFor('#container-notes', 1);
+        $this->client->waitForVisibility('#container-notes', 1);
         $crawler->filter('#container-notes div[data-note-id]')->eq(1)->click();
         sleep(1); //pop-up effect
 
@@ -178,10 +180,7 @@ class NoteEndToEndTest extends PantherTestCase
 
         $this->client->waitFor('#container-notes', 1);
 
-        $this->client->getWebDriver()->findElement(WebDriverBy::name('restore'))->click();
-
-        $this->client->waitFor('.alert', 3);
-        $this->assertSelectorExists('.alert.alert-success');
+        $this->restoreNote();
     }
 
     private function restoreTableNote(): void
@@ -190,27 +189,19 @@ class NoteEndToEndTest extends PantherTestCase
 
         $this->client->getWebDriver()->findElement(WebDriverBy::id('table-view'))->click();
 
-        $this->client->getWebDriver()
-            ->findElement(WebDriverBy::cssSelector('button[data-action="delete-note"]'))->click();
-
-        $this->client->waitForVisibility('#modal-block', 1);
-        $this->client->getWebDriver()
-            ->findElement(WebDriverBy::cssSelector('#modal-block button#modal-confirm'))->click();
-
-        $this->client->waitFor('.alert', 1);
-
-        $this->client->getWebDriver()
-            ->findElement(WebDriverBy::cssSelector('button[aria-label="Close"]'))->click();
-
-        $this->client->getWebDriver()
-            ->findElement(WebDriverBy::cssSelector('label[for="deleted_deleted"]'))->click();
-        $this->client->getWebDriver()
-            ->findElement(WebDriverBy::cssSelector('button[id="search"]'))->click();
+        $this->clickElement('label[for="deleted_deleted"]');
+        $this->clickElement('button[id="search"]');
 
         $this->client->waitFor('table', 1);
+
+        $this->restoreNote();
+    }
+
+    private function restoreNote(): void
+    {
         $this->client->getWebDriver()->findElement(WebDriverBy::name('restore'))->click();
 
-        $this->client->waitFor('.alert', 3);
-        $this->assertSelectorExists('.alert.alert-success');
+        $this->client->waitFor('#js-msg-flash.alert', 3);
+        $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
     }
 }

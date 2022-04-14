@@ -39,8 +39,8 @@ class PaymentEndToEndTest extends PantherTestCase
     {
         $this->outputMsg('Restore a payment');
 
-        $this->cssClick('label[for="deleted_deleted"]');
-        $this->cssClick('button[id="search"]');
+        $this->clickElement('label[for="deleted_deleted"]');
+        $this->clickElement('button[id="search"]');
 
         $this->client->waitFor('table', 1);
         $this->client->getWebDriver()->findElement(WebDriverBy::name('restore'))->click();

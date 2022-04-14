@@ -168,15 +168,15 @@ class DocumentEndToEndTest extends PantherTestCase
     {
         $this->outputMsg('Restore a document');
 
-        $crawler->filter('label[for="search_deleted_deleted"]')->click();
-        $crawler->filter('button[id="search"]')->click();
+        $this->clickElement('label[for="search_deleted_deleted"]');
+        $this->clickElement('button[id="search"]');
 
         $this->client->waitForVisibility('table', 1);
 
         $this->client->getWebDriver()->findElement(WebDriverBy::name('restore'))->click();
 
-        $this->client->waitFor('.alert', 3);
-        $this->assertSelectorExists('.alert.alert-success');
+        $this->client->waitFor('#js-msg-flash', 3);
+        $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
     }
 
     private function downloadAllDocuments(Crawler $crawler): Crawler

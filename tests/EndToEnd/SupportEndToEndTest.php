@@ -78,7 +78,7 @@ class SupportEndToEndTest extends PantherTestCase
         /** @var Crawler */
         $crawler = $this->client->request('GET', '/supports');
 
-        $this->restoreSupport($crawler);
+        $this->restoreSupport();
 
         $this->client->quit();
     }
@@ -104,12 +104,12 @@ class SupportEndToEndTest extends PantherTestCase
         $this->acceptWindowConfirm();
     }
 
-    private function restoreSupport(Crawler $crawler): void
+    private function restoreSupport(): void
     {
         $this->outputMsg('Restore a support');
 
-        $crawler->filter('label[for="deleted_deleted"]')->click();
-        $crawler->filter('button[id="search"]')->click();
+        $this->clickElement('label[for="deleted_deleted"]');
+        $this->clickElement('button[id="search"]');
 
         $this->client->waitForVisibility('table', 1);
 

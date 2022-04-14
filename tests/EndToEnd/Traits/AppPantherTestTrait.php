@@ -44,7 +44,7 @@ trait AppPantherTestTrait
         $this->client->getWebDriver()->switchTo()->alert()->accept();
     }
 
-    protected function cssClick(string $selector)
+    protected function clickElement(string $selector)
     {
         $this->client
             ->getWebDriver()

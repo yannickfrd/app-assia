@@ -144,9 +144,9 @@ class TaskEndToEndTest extends PantherTestCase
     {
         $this->outputMsg('Restore a task');
 
-        $this->cssClick('button[type="reset"]');
-        $this->cssClick('label[for="deleted_deleted"]');
-        $this->cssClick('button[id="search"]');
+        $this->clickElement('button[type="reset"]');
+        $this->clickElement('label[for="deleted_deleted"]');
+        $this->clickElement('button[id="search"]');
 
         $this->client->waitFor('table', 1);
         $this->client->getWebDriver()->findElement(WebDriverBy::name('restore'))->click();
