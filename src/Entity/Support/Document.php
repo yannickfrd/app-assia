@@ -115,13 +115,6 @@ class Document
         return $this;
     }
 
-    public function setType(?int $type): self
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
     public function getContent(): ?string
     {
         return $this->content;

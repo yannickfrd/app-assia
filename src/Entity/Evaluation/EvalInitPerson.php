@@ -3,7 +3,6 @@
 namespace App\Entity\Evaluation;
 
 use App\Entity\Support\SupportPerson;
-use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use App\Form\Utils\EvaluationChoices;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

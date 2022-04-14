@@ -391,11 +391,6 @@ class EvalBudgetPerson
         return join(', ', $this->getEvalBudgetDebtsToArray());
     }
 
-    public function getDebtRental(): ?int
-    {
-        return $this->debtRental;
-    }
-
     public function getDebtsAmt(): ?float
     {
         return $this->debtsAmt;
