@@ -96,7 +96,9 @@ final class EvaluationController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
-        $this->denyAccessUnlessGranted('EDIT', $evaluationGroup->getSupportGroup());
+        $supportGroup = $evaluationGroup->getSupportGroup();
+
+        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
         $form = $this->createForm(EvaluationGroupType::class, $evaluationGroup)
             ->handleRequest($request);
@@ -109,7 +111,7 @@ final class EvaluationController extends AbstractController
 
             return $this->json([
                 'alert' => 'success',
-                'msg' => 'Les modifications sont enregistrées.',
+                'msg' => "Les modifications sont enregistrées ({$supportGroup->getEvaluationScore()}% de complétude).",
                 'data' => [
                     'updatedAt' => $evaluationGroup->getUpdatedAt()->format('d/m/Y à H:i'),
                     'updatedBy' => $user->getFullname(),
