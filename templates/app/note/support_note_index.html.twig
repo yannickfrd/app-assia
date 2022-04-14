@@ -22,10 +22,10 @@
         <div class="row mb-3">
             <div class="col-md-12">
                 {% if is_card_view %}
-                    <a href="{{ path('support_note_index_table', {'id': support.id}) }}" class="btn btn-sm btn-{{ theme_color }}"
+                    <a href="{{ path('support_note_index_table', {'id': support.id}) }}" id="table-view" class="btn btn-sm btn-{{ theme_color }}"
                         role="button" data-toggle="tooltip" title="Passer en vue liste"><i class="fa-solid fa-list"></i></a>
                 {% else %}
-                    <a href="{{ path('support_note_index', {'id': support.id}) }}" class="btn btn-sm btn-{{ theme_color }}"
+                    <a href="{{ path('support_note_index', {'id': support.id}) }}" id="card-view" class="btn btn-sm btn-{{ theme_color }}"
                         role="button" data-toggle="tooltip" title="Passer en vue carte"><i class="fa-solid fa-grip-vertical"></i></a>
                 {% endif %}
 

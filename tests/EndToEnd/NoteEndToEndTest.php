@@ -3,6 +3,7 @@
 namespace App\Tests\EndToEnd;
 
 use App\Tests\EndToEnd\Traits\AppPantherTestTrait;
+use Facebook\WebDriver\WebDriverBy;
 use Symfony\Component\Panther\Client;
 use Symfony\Component\Panther\DomCrawler\Crawler;
 use Symfony\Component\Panther\PantherTestCase;
@@ -29,9 +30,11 @@ class NoteEndToEndTest extends PantherTestCase
 
         $crawler = $this->goToNotesPage($crawler);
         $crawler = $this->failToCreateNote($crawler);
-        // $crawler = $this->createNote($crawler);
+//         $crawler = $this->createNote($crawler);
         $crawler = $this->editNote($crawler);
         $crawler = $this->deleteNote($crawler);
+        $this->restoreCardNote($crawler);
+        $this->restoreTableNote();
     }
 
     private function goToNotesPage(Crawler $crawler): Crawler
@@ -110,11 +113,13 @@ class NoteEndToEndTest extends PantherTestCase
         $this->outputMsg('Edit a note');
 
         $this->client->waitForVisibility('#container-notes div[data-note-id]');
-        sleep(1); //pop-up effect
+//        sleep(1); //pop-up effect
+
+        $this->client->waitFor('#container-notes', 1);
         $crawler->filter('#container-notes div[data-note-id]')->eq(1)->click();
         sleep(1); //pop-up effect
 
-        $this->client->waitForVisibility('button[data-action="save"]');
+        $this->client->waitForVisibility('button[data-action="save"]', 1);
         $form = $crawler->filter('button[data-action="save"]')->form([
             'note[title]' => $this->faker->sentence(mt_rand(5, 10), true),
             'note[editor]' => join('. ', $this->faker->paragraphs(mt_rand(1, 2))),
@@ -123,13 +128,15 @@ class NoteEndToEndTest extends PantherTestCase
         /** @var Crawler */
         $crawler = $this->client->submit($form);
 
-        $this->client->waitForVisibility('#js-msg-flash');
+        $this->client->waitFor('#js-msg-flash', 3);
         $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
 
         $crawler->selectButton('btn-close-msg')->click();
-        $crawler->filter('button[data-action="close"]')->click();
+//        sleep(5);
+//        $crawler->filter('button[data-action="close"]')->click();
+//        $this->outputMsg('__ okok __');
 
-        sleep(1);
+//        sleep(1);
 
         return $crawler;
     }
@@ -160,5 +167,51 @@ class NoteEndToEndTest extends PantherTestCase
         sleep(1);
 
         return $crawler;
+    }
+
+    private function restoreCardNote(Crawler $crawler): void
+    {
+        $this->outputMsg('Restore a note from card view');
+
+        $crawler->filter('label[for="deleted_deleted"]')->click();
+        $crawler->filter('button[id="search"]')->click();
+
+        $this->client->waitFor('#container-notes', 1);
+
+        $this->client->getWebDriver()->findElement(WebDriverBy::name('restore'))->click();
+
+        $this->client->waitFor('.alert', 3);
+        $this->assertSelectorExists('.alert.alert-success');
+    }
+
+    private function restoreTableNote(): void
+    {
+        $this->outputMsg('Restore a note from table view');
+
+        $this->client->getWebDriver()->findElement(WebDriverBy::id('table-view'))->click();
+
+        $this->client->getWebDriver()
+            ->findElement(WebDriverBy::cssSelector('button[data-action="delete-note"]'))->click();
+
+        $this->client->waitForVisibility('#modal-block', 1);
+
+        $this->client->getWebDriver()
+            ->findElement(WebDriverBy::cssSelector('button#modal-confirm'))->click();
+
+        $this->client->waitFor('.alert', 1);
+
+        $this->client->getWebDriver()
+            ->findElement(WebDriverBy::cssSelector('button[aria-label="Close"]'))->click();
+
+        $this->client->getWebDriver()
+            ->findElement(WebDriverBy::cssSelector('label[for="deleted_deleted"]'))->click();
+        $this->client->getWebDriver()
+            ->findElement(WebDriverBy::cssSelector('button[id="search"]'))->click();
+
+        $this->client->waitFor('table', 1);
+        $this->client->getWebDriver()->findElement(WebDriverBy::name('restore'))->click();
+
+        $this->client->waitFor('.alert', 3);
+        $this->assertSelectorExists('.alert.alert-success');
     }
 }
