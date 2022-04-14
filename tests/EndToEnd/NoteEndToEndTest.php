@@ -194,9 +194,8 @@ class NoteEndToEndTest extends PantherTestCase
             ->findElement(WebDriverBy::cssSelector('button[data-action="delete-note"]'))->click();
 
         $this->client->waitForVisibility('#modal-block', 1);
-
         $this->client->getWebDriver()
-            ->findElement(WebDriverBy::cssSelector('button#modal-confirm'))->click();
+            ->findElement(WebDriverBy::cssSelector('#modal-block button#modal-confirm'))->click();
 
         $this->client->waitFor('.alert', 1);
 
