@@ -105,8 +105,11 @@ class ImportPAFDatas extends ImportDatas
             (!$userReferent && $paf['TS'] ? 'TS : '.$paf['TS']."\n" : null).
             ($paf['Commentaire'] ?? null);
 
+        $startDate = $paf['Date PAF'] ? new \DateTime($paf['Date PAF']) : null;
+
         $payment = (new Payment())
-            ->setMonthContrib($paf['Date PAF'] ? new \DateTime($paf['Date PAF']) : null)
+            ->setStartDate($startDate)
+            ->setEndDate($startDate ? (clone $startDate)->modify('+1 month -1 day') : null)
             ->setResourcesAmt((float) $paf['Montant ressources'])
             ->setToPayAmt((float) $paf['Montant à payer'])
             ->setPaidAmt((float) $paf['Montant réglé'])

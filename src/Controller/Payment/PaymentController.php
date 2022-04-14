@@ -96,9 +96,7 @@ final class PaymentController extends AbstractController
             return $this->exportFullData($search, $supportGroup);
         }
 
-        $payment = (new Payment())
-            ->setSupportGroup($supportGroup)
-            ->setMonthContrib((new \DateTime())->modify('first day of last month'));
+        $payment = (new Payment())->setSupportGroup($supportGroup);
 
         $form = $this->createForm(PaymentType::class, $payment);
 
