@@ -532,6 +532,8 @@ export default class SupportPayments {
                 break
             case 'restore':
                 this.deletedPaymentTr(response.payment)
+                this.messageFlash = new MessageFlash(response.alert, response.msg)
+                this.shouldBeRedirect(this.messageFlash.delay);
                 break
             case 'delete':
                 this.trElt.remove()
@@ -717,7 +719,7 @@ export default class SupportPayments {
             <td class="align-middle text-center">
                 <button data-url="/payment/${payment.id}/delete" data-action="delete"
                     class="btn btn-danger btn-sm shadow my-1" data-placement="bottom" 
-                        title="Supprimer l"enregistrement" data-toggle="modal" data-target="#modal-block">
+                        title="Supprimer l\'enregistrement" data-toggle="modal" data-target="#modal-block">
                     <span class="fas fa-trash-alt"></span>
                 </button>
             </td>`
@@ -832,11 +834,16 @@ export default class SupportPayments {
      */
     deletedPaymentTr(payment) {
         document.getElementById('payment-'+payment.id).remove()
-
         this.updateCounts(-1)
+    }
 
+    /**
+     * Redirects if there are no more lines.
+     * @param {number} delay
+     */
+    shouldBeRedirect(delay) {
         if (document.querySelectorAll('table#table-payments tbody tr').length === 0) {
-            setTimeout(() => document.location.href = location.pathname, 1000)
+            setTimeout(() => document.location.href = location.pathname, delay*1000)
         }
     }
 }

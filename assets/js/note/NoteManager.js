@@ -172,8 +172,12 @@ export default class NoteManager {
         }
 
         if (!this.noteForm.autoSaver.active && response.msg) {
-            new MessageFlash(response.alert, response.msg)
+            this.messageFlash = new MessageFlash(response.alert, response.msg)
             this.loader.off()
+
+            if (response.action === 'restore') {
+                this.shouldBeRedirect(this.messageFlash.delay);
+            }
         }
     }
 
@@ -362,24 +366,14 @@ export default class NoteManager {
      * @param {String} action
      */
     deleteNoteElt(note, action) {
-        let nbNotes
-
         if (this.isCardNoteView) {
             this.containerNotesElt.querySelector(`div[data-note-id="${note.id}"]`).remove()
             this.noteModal.hide()
-
-            nbNotes = document.querySelectorAll('div#container-notes .card').length
         } else {
             const rowElt = document.getElementById('note-' + note.id)
             rowElt.remove()
-
-            nbNotes = document.querySelectorAll('table#table-notes tbody tr').length
         }
         this.updateCounter(-1)
-
-        if (action === 'restore' && nbNotes === 0) {
-            setTimeout(() => document.location.href = location.pathname, 1000)
-        }
     }
 
     /**
@@ -401,5 +395,19 @@ export default class NoteManager {
 
     striptags(text) {
         return text.replace(/(<([^>]+)>)/gi, ' ')
+    }
+
+    /**
+     * Redirects if there are no more lines/card.
+     * @param {number} delay
+     */
+    shouldBeRedirect(delay) {
+        const selector = this.isCardNoteView
+            ? document.querySelectorAll('div#container-notes .card')
+            : document.querySelectorAll('table#table-notes tbody tr')
+
+        if (selector.length === 0) {
+            setTimeout(() => document.location.href = location.pathname, delay*1000);
+        }
     }
 }

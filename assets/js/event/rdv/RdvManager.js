@@ -107,7 +107,11 @@ export default class RdvManager {
         }
 
         if (response.msg !== undefined) {
-            new MessageFlash(response.alert, response.msg)
+            this.messageFlash = new MessageFlash(response.alert, response.msg)
+
+            if (response.action === 'restore') {
+                this.shouldBeRedirect(this.messageFlash.delay);
+            }
         }
 
         this.loader.off()
@@ -259,10 +263,6 @@ export default class RdvManager {
         }
 
         this.total.decrement();
-
-        if (action === 'restore' && document.querySelectorAll('table#table-rdvs tbody tr').length === 0) {
-            setTimeout(() => document.location.href = location.pathname, 1000)
-        }
     }
 
     /**
@@ -277,5 +277,15 @@ export default class RdvManager {
         }
 
         return alerts
+    }
+
+    /**
+     * Redirects if there are no more lines.
+     * @param {number} delay
+     */
+    shouldBeRedirect(delay) {
+        if (document.querySelectorAll('table#table-rdvs tbody tr').length === 0) {
+            setTimeout(() => document.location.href = location.pathname, delay*1000)
+        }
     }
 }

@@ -121,7 +121,11 @@ export default class TaskManager {
             }
         }
         if (response.msg) {
-            new MessageFlash(response.alert, response.msg)
+            this.messageFlash = new MessageFlash(response.alert, response.msg)
+
+            if (response.action === 'restore') {
+                this.shouldBeRedirect(this.messageFlash.delay);
+            }
         }
     }
 
@@ -314,10 +318,6 @@ export default class TaskManager {
 
         this.taskModal.hide()
         document.getElementById('js-btn-cancel').click()
-
-        if (action === 'restore' && document.querySelectorAll('table#table_tasks tbody tr').length === 0) {
-            setTimeout(() => document.location.href = location.pathname, 1000)
-        }
     }
 
     /**
@@ -354,5 +354,15 @@ export default class TaskManager {
      */
     getUrlTaskShow(taskId) {
         return this.modalTaskElt.dataset.urlTaskShow.replace('__id__', taskId)
+    }
+
+    /**
+     * Redirects if there are no more lines.
+     * @param {number} delay
+     */
+    shouldBeRedirect(delay) {
+        if (document.querySelectorAll('table#table_tasks tbody tr').length === 0) {
+            setTimeout(() => document.location.href = location.pathname, delay*1000)
+        }
     }
 }

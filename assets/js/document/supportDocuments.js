@@ -243,7 +243,11 @@ export default class SupportDocuments {
         }
 
         if (response.msg) {
-            new MessageFlash(response.alert, response.msg)
+            this.messageFlash = new MessageFlash(response.alert, response.msg)
+
+            if (response.action === 'restore') {
+                this.shouldBeRedirect(this.messageFlash.delay);
+            }
         }
 
         this.loader.off()
@@ -291,10 +295,6 @@ export default class SupportDocuments {
         }
         document.querySelector(`tr[data-document-id="${documentResponse.id}"]`).remove()
         this.updateCounter(-1)
-
-        if (action === 'restore' && document.querySelectorAll('table#table-documents tbody tr').length === 0) {
-            setTimeout(() => document.location.href = location.pathname, 1000)
-        }
     }
 
     /**
@@ -349,5 +349,15 @@ export default class SupportDocuments {
      */
     updateCounter(number) {
         this.countDocumentsElt.textContent = parseInt(this.countDocumentsElt.textContent) + number
+    }
+
+    /**
+     * Redirects if there are no more lines.
+     * @param {number} delay
+     */
+    shouldBeRedirect(delay) {
+        if (document.querySelectorAll('table#table-documents tbody tr').length === 0) {
+            setTimeout(() => document.location.href = location.pathname, delay*1000)
+        }
     }
 }
