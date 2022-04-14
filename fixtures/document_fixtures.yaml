@@ -1,7 +1,6 @@
 App\Entity\Support\Document:
     document1:
         name: Document 666
-        type: 1
         content: Description du document
         internalFileName: <slug()>
         size: <numberBetween(200000, 4000000)>
@@ -12,7 +11,6 @@ App\Entity\Support\Document:
         supportGroup: "@support_group1"
     document{2..200}:
         name: <sentence(5, true)>
-        type: <numberBetween(1, 9)>
         content: <sentence(5, true)>
         internalFileName: <slug()>
         size: <numberBetween(200000, 4000000)>

@@ -32,14 +32,15 @@ class DocumentFixtures extends Fixture implements DependentFixtureInterface, Fix
                 $user = $support->getReferent();
 
                 $document = (new Document())
-                ->setName($name = $faker->words(3, true))
-                ->setInternalFileName('/documents/'.$createdAt->format('Y/m/d/').strtolower($this->slugger->slug($name)))
-                ->setPeopleGroup($support->getPeopleGroup())
-                ->setSupportGroup($support)
-                ->setCreatedAt($createdAt)
-                ->setCreatedBy($user)
-                ->setUpdatedAt($createdAt)
-                ->setUpdatedBy($user);
+                    ->setName($name = $faker->words(3, true))
+                    ->setInternalFileName('/documents/'.$createdAt->format('Y/m/d/').strtolower($this->slugger->slug($name)))
+                    ->setPeopleGroup($support->getPeopleGroup())
+                    ->setSupportGroup($support)
+                    ->setCreatedAt($createdAt)
+                    ->setCreatedBy($user)
+                    ->setUpdatedAt($createdAt)
+                    ->setUpdatedBy($user)
+                ;
 
                 $objectManager->persist($document);
             }
