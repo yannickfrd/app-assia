@@ -13,7 +13,9 @@ use App\Entity\Evaluation\EvalProfPerson;
 use App\Entity\Evaluation\EvalSocialGroup;
 use App\Entity\Evaluation\EvalSocialPerson;
 use App\Entity\Evaluation\EvaluationGroup;
+use App\Entity\Evaluation\EvaluationPerson;
 use App\Entity\Event\Rdv;
+use App\Entity\Event\Task;
 use App\Entity\Organization\Place;
 use App\Entity\Organization\Pole;
 use App\Entity\Organization\Referent;
@@ -29,7 +31,9 @@ use App\Entity\Support\Note;
 use App\Entity\Support\OriginRequest;
 use App\Entity\Support\Payment;
 use App\Entity\Support\PlaceGroup;
+use App\Entity\Support\PlacePerson;
 use App\Entity\Support\SupportGroup;
+use App\Entity\Support\SupportPerson;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -87,10 +91,10 @@ class GlossaryService
                         $values = $this->getConstValues($typeName, $shortName, $reflectionClass, $propertyName);
 
                         $properties[$propertyName] = [
-                            'name' => $propertyName,
-                            'trans_name' => $this->trans($propertyName),
                             'entity' => $className,
                             'trans_entity' => $transClassName,
+                            'name' => lcfirst($propertyName),
+                            'trans_name' => $this->trans($propertyName),
                             'type' => $typeName,
                             'trans_type' => self::TRANSLATED_TYPES[$typeName],
                             'values' => $values ?? null,
@@ -108,14 +112,17 @@ class GlossaryService
     protected function getEntities(): array
     {
         return [
+            new User(),
             new Person(),
             new RolePerson(),
             new PeopleGroup(),
             new SupportGroup(),
+            new SupportPerson(),
+            new OriginRequest(),
             new Avdl(),
             new HotelSupport(),
-            new OriginRequest(),
             new EvaluationGroup(),
+            new EvaluationPerson(),
             new EvalAdmPerson(),
             new EvalProfPerson(),
             new EvalBudgetGroup(),
@@ -129,13 +136,14 @@ class GlossaryService
             new Referent(),
             new Note(),
             new Rdv(),
-            new Payment(),
+            new Task(),
             new Document(),
-            new User(),
+            new Payment(),
             new Service(),
             new Pole(),
             new Place(),
             new PlaceGroup(),
+            new PlacePerson(),
         ];
     }
 
@@ -173,7 +181,7 @@ class GlossaryService
     /**
      * Inverse l'écriture en camelCase.
      */
-    public function trans(string $content, string $separator = ' ', array $translationFiles = ['forms', 'evaluation']): string
+    public function trans(string $content, string $separator = ' ', array $translationFiles = ['app', 'forms', 'evaluation']): string
     {
         $content = preg_replace('#(?<=[a-zA-Z])([A-Z])(?=[a-zA-Z])#', $separator.'$1', $content);
         $content = ucfirst(strtolower($content));

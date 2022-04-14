@@ -11,3 +11,36 @@ task:
   updated_successfully: "La tâche « %task_title% » a bien été modifiée."
   deleted_successfully: "La tâche « %task_title% » a bien été supprimée."
   toogle_status: "La tâche « %task_title% » est %task_status%."
+
+
+Person: Personne
+Role person: Rôle personne
+People group: Groupe ménage
+Support group: Suivi groupe
+Support person: Suivi personne
+Avdl: AVDL
+Hotel support: Suivi hôtel
+Origin request: Origine de la demande
+Evaluation group: Évaluation sociale du groupe
+Eval adm person: Évaluation administrative de la personne
+Eval prof person: Évaluation professionnelle de la personne
+Eval budget group: Évaluation budgétaire du groupe
+Eval budget person: Évaluation budgétaire de la personne
+Eval family group: Évaluation familiale du groupe
+Eval family person: Évaluation familiale de la personne
+Eval social group: Évaluation sociale du groupe
+Eval social person: Évaluation sociale de la personne
+Eval housing group: Évaluation situation au regard du logement
+Eval justice person: Évaluation situation judiciaire de la personne
+Referent: Référent social
+Note: Note
+Rdv: Rendez-vous
+Task: Tâche à faire
+Payment: Paiement
+Document: Document
+User: Utilisateur
+Service: Service
+Pole: Pôle
+Place: Place d'hébergement/logement
+Place group: Hébergement groupe
+Place person: Hébergement personne
