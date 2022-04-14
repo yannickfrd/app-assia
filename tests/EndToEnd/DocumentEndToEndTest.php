@@ -3,6 +3,7 @@
 namespace App\Tests\EndToEnd;
 
 use App\Tests\EndToEnd\Traits\AppPantherTestTrait;
+use Facebook\WebDriver\WebDriverBy;
 use Symfony\Component\DomCrawler\Field\FormField;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Panther\Client;
@@ -31,6 +32,9 @@ class DocumentEndToEndTest extends PantherTestCase
         // $crawler = $this->downloadAllDocuments($crawler);
         $crawler = $this->deleteDocumentInModal($crawler);
         $crawler = $this->deleteDocument($crawler);
+        $this->restoreDocument($crawler);
+
+        $this->client->quit();
     }
 
     private function goToSupportDocumentPage(Crawler $crawler): Crawler
@@ -158,6 +162,21 @@ class DocumentEndToEndTest extends PantherTestCase
         sleep(1); //pop-up effect
 
         return $crawler;
+    }
+
+    private function restoreDocument(Crawler $crawler): void
+    {
+        $this->outputMsg('Restore a document');
+
+        $crawler->filter('label[for="search_deleted_deleted"]')->click();
+        $crawler->filter('button[id="search"]')->click();
+
+        $this->client->waitForVisibility('table', 1);
+
+        $this->client->getWebDriver()->findElement(WebDriverBy::name('restore'))->click();
+
+        $this->client->waitFor('.alert', 3);
+        $this->assertSelectorExists('.alert.alert-success');
     }
 
     private function downloadAllDocuments(Crawler $crawler): Crawler
