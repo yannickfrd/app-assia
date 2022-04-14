@@ -65,8 +65,9 @@ class RdvEndToEndTest extends PantherTestCase
             'end' => '12:30',
             'rdv[content]' => join('. ', $this->faker->paragraphs(mt_rand(1, 2))),
         ]);
+        sleep(1);
 
-        $this->client->waitForVisibility('#js-msg-flash', 1);
+        $this->client->waitFor('#js-msg-flash', 1);
         $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
 
         $crawler->selectButton('btn-close-msg')->click();
@@ -90,9 +91,10 @@ class RdvEndToEndTest extends PantherTestCase
             'rdv[content]' => join('. ', $this->faker->paragraphs(mt_rand(1, 2))),
             'rdv[users]' => [1],
         ]);
+        sleep(1);
 
-        $this->client->waitFor('.alert', 1);
-        $this->assertSelectorExists('.alert.alert-success');
+        $this->client->waitFor('#js-msg-flash', 1);
+        $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
 
         $crawler->selectButton('btn-close-msg')->click();
         sleep(1); // pop-up effect
@@ -122,26 +124,20 @@ class RdvEndToEndTest extends PantherTestCase
     {
         $this->outputMsg('Restore a rdv');
 
-        $this->client->getWebDriver()
-            ->findElement(WebDriverBy::cssSelector('a[data-original-title="Passer en vue liste"]'))->click();
+        $this->cssClick('a[data-original-title="Passer en vue liste"]');
 
-        $this->client->getWebDriver()
-            ->findElement(WebDriverBy::cssSelector('button[data-action="delete-rdv"]'))->click();
+        $this->cssClick('button[data-action="delete-rdv"]');
 
         $this->client->waitForVisibility('#modal-block', 1);
-        $this->client->getWebDriver()
-            ->findElement(WebDriverBy::cssSelector('#modal-block button#modal-confirm'))->click();
+        $this->cssClick('#modal-block button#modal-confirm');
 
         $this->client->waitFor('.alert', 1);
         $this->assertSelectorExists('.alert.alert-warning');
 
-        $this->client->getWebDriver()
-            ->findElement(WebDriverBy::cssSelector('button[aria-label="Close"]'))->click();
+        $this->cssClick('button[aria-label="Close"]');
 
-        $this->client->getWebDriver()
-            ->findElement(WebDriverBy::cssSelector('label[for="deleted_deleted"]'))->click();
-        $this->client->getWebDriver()
-            ->findElement(WebDriverBy::cssSelector('button[id="search"]'))->click();
+        $this->cssClick('label[for="deleted_deleted"]');
+        $this->cssClick('button[id="search"]');
 
         $this->client->waitFor('table', 1);
         $this->client->getWebDriver()->findElement(WebDriverBy::name('restore'))->click();

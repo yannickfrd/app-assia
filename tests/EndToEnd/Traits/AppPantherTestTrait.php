@@ -2,6 +2,7 @@
 
 namespace App\Tests\EndToEnd\Traits;
 
+use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverExpectedCondition;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -41,5 +42,13 @@ trait AppPantherTestTrait
     {
         $this->client->wait()->until(WebDriverExpectedCondition::alertIsPresent());
         $this->client->getWebDriver()->switchTo()->alert()->accept();
+    }
+
+    protected function cssClick(string $selector)
+    {
+        $this->client
+            ->getWebDriver()
+            ->findElement(WebDriverBy::cssSelector($selector))
+            ->click();
     }
 }
