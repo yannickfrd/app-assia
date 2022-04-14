@@ -3,6 +3,7 @@
 namespace App\Tests\EndToEnd;
 
 use App\Tests\EndToEnd\Traits\AppPantherTestTrait;
+use Facebook\WebDriver\WebDriverBy;
 use Symfony\Component\Panther\Client;
 use Symfony\Component\Panther\DomCrawler\Crawler;
 use Symfony\Component\Panther\PantherTestCase;
@@ -25,6 +26,7 @@ class TaskEndToEndTest extends PantherTestCase
         $crawler = $this->editTask($crawler);
         $crawler = $this->toggleStatusTask($crawler);
         $crawler = $this->deleteTask($crawler);
+        $this->restoreTask();
     }
 
     private function goToIndex(Crawler $crawler): Crawler
@@ -136,5 +138,20 @@ class TaskEndToEndTest extends PantherTestCase
         sleep(1); //pop-up effect
 
         return $crawler;
+    }
+
+    private function restoreTask()
+    {
+        $this->outputMsg('Restore a task');
+
+        $this->cssClick('button[type="reset"]');
+        $this->cssClick('label[for="deleted_deleted"]');
+        $this->cssClick('button[id="search"]');
+
+        $this->client->waitFor('table', 1);
+        $this->client->getWebDriver()->findElement(WebDriverBy::name('restore'))->click();
+
+        $this->client->waitFor('.alert', 3);
+        $this->assertSelectorExists('.alert.alert-success');
     }
 }

@@ -33,6 +33,8 @@ class RdvEndToEndTest extends PantherTestCase
 //         $crawler = $this->deleteRdv($crawler);
 
          $this->restoreRdv();
+
+         $this->client->quit();
     }
 
     private function goToCalendar(Crawler $crawler): Crawler
@@ -131,7 +133,7 @@ class RdvEndToEndTest extends PantherTestCase
         $this->client->waitForVisibility('#modal-block', 1);
         $this->cssClick('#modal-block button#modal-confirm');
 
-        $this->client->waitFor('.alert', 1);
+        $this->client->waitFor('.alert', 3);
         $this->assertSelectorExists('.alert.alert-warning');
 
         $this->cssClick('button[aria-label="Close"]');
