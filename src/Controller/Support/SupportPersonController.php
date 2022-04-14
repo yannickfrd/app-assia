@@ -7,13 +7,11 @@ namespace App\Controller\Support;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Support\SupportPerson;
 use App\Form\Support\Support\AddPersonToSupportType;
-use App\Repository\Support\SupportGroupRepository;
 use App\Repository\Support\SupportPersonRepository;
 use App\Service\Grammar;
 use App\Service\SupportGroup\SupportManager;
 use App\Service\SupportGroup\SupportPeopleAdder;
 use App\Service\SupportGroup\SupportRestorer;
-use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,7 +19,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class SupportPersonController extends AbstractController
 {
@@ -97,7 +94,6 @@ final class SupportPersonController extends AbstractController
         return $this->redirectToRoute('support_edit', ['id' => $supportGroup->getId()]);
     }
 
-
     /**
      * @Route("/support-person/{id}/restore", name="support_person_restore", methods="GET")
      * @IsGranted("ROLE_ADMIN")
@@ -109,13 +105,13 @@ final class SupportPersonController extends AbstractController
     ): JsonResponse {
         $supportPerson = $supportPersonRepo->findSupportPerson($id, true);
 
-        $this->denyAccessUnlessGranted('DELETE',$supportPerson->getSupportGroup());
+        $this->denyAccessUnlessGranted('DELETE', $supportPerson->getSupportGroup());
 
         return $this->json([
             'action' => 'restore',
             'alert' => 'success',
             'msg' => $supportRestorer->restore($supportPerson),
-            'support' => ['id' => $supportPerson->getSupportGroup()->getId()]
+            'support' => ['id' => $supportPerson->getSupportGroup()->getId()],
         ]);
     }
 

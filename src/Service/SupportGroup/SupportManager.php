@@ -3,16 +3,9 @@
 namespace App\Service\SupportGroup;
 
 use App\Entity\Evaluation\EvaluationGroup;
-use App\Entity\Event\Rdv;
-use App\Entity\Event\Task;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\User;
 use App\Entity\People\PeopleGroup;
-use App\Entity\Support\Avdl;
-use App\Entity\Support\Document;
-use App\Entity\Support\HotelSupport;
-use App\Entity\Support\Note;
-use App\Entity\Support\Payment;
 use App\Entity\Support\PlaceGroup;
 use App\Entity\Support\SupportGroup;
 use App\Repository\Support\SupportGroupRepository;

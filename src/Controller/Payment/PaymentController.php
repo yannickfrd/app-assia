@@ -88,7 +88,8 @@ final class PaymentController extends AbstractController
         int $id,
         SupportManager $supportManager,
         Request $request,
-        Pagination $pagination): Response {
+        Pagination $pagination): Response
+    {
         $supportGroup = $supportManager->getSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
@@ -357,7 +358,7 @@ final class PaymentController extends AbstractController
             'action' => 'restore',
             'alert' => 'success',
             'msg' => $translator->trans('payment.restored_successfully', [], 'app'),
-            'payment' => ['id' => $id]
+            'payment' => ['id' => $id],
         ]);
     }
 }

@@ -136,7 +136,7 @@ final class NoteController extends AbstractController
 
         return $this->json([
             'action' => 'show',
-            'note' => $note
+            'note' => $note,
         ], 200, [], ['groups' => Note::SERIALIZER_GROUPS]);
     }
 

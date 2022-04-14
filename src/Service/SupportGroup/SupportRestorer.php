@@ -19,7 +19,8 @@ class SupportRestorer
     private TranslatorInterface $translator;
     private EntityManagerInterface $em;
 
-    public function __construct(TranslatorInterface $translator, EntityManagerInterface $em) {
+    public function __construct(TranslatorInterface $translator, EntityManagerInterface $em)
+    {
         $this->translator = $translator;
         $this->em = $em;
     }
@@ -64,7 +65,7 @@ class SupportRestorer
     }
 
     /**
-     * Collect all the getters for the SupportGroup
+     * Collect all the getters for the SupportGroup.
      */
     private function supportGroupGenerator(SupportGroup $supportGroup): Generator
     {
@@ -85,12 +86,12 @@ class SupportRestorer
             $supportGroup->getHotelSupport(),
             $supportGroup->getEvalInitGroup(),
             $supportGroup->getOriginRequest(),
-            $supportGroup->getAvdl()
+            $supportGroup->getAvdl(),
         ];
     }
 
     /**
-     * Collect all the getters for the PlaceGroup
+     * Collect all the getters for the PlaceGroup.
      */
     private function placeGroupsGenerator(?Collection $getPlaceGroups): Generator
     {
@@ -101,7 +102,7 @@ class SupportRestorer
     }
 
     /**
-     * Collect all the getters for the EvaluationGroup
+     * Collect all the getters for the EvaluationGroup.
      */
     private function evaluationGroupGenerator(?Collection $evaluations): Generator
     {
@@ -121,7 +122,7 @@ class SupportRestorer
     }
 
     /**
-     * Collect all the getters for the EvaluationPeople
+     * Collect all the getters for the EvaluationPeople.
      */
     private function evaluationPeopleGenerator(?Collection $evaluationPeople): Generator
     {

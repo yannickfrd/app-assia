@@ -244,12 +244,11 @@ final class TaskController extends AbstractController
             'action' => 'restore',
             'alert' => 'success',
             'msg' => $translator->trans('note.restored_successfully', ['%note_title%' => $task->getTitle()], 'app'),
-            'task' => ['id' => $task->getId()]
+            'task' => ['id' => $task->getId()],
         ]);
     }
 
-    private function exportData(TaskSearch $search, TaskRepository $taskRepo, User $user, ?SupportGroup
-    $supportGroup = null): Response
+    private function exportData(TaskSearch $search, TaskRepository $taskRepo, User $user, ?SupportGroup $supportGroup = null): Response
     {
         if ($supportGroup) {
             $search->setSupportGroup($supportGroup);

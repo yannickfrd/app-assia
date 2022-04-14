@@ -17,13 +17,10 @@ use App\Form\Support\Support\SupportGroupType;
 use App\Form\Support\Support\SupportSearchType;
 use App\Form\Support\Support\SupportsInMonthSearchType;
 use App\Form\Support\Support\SwitchSupportReferentType;
-use App\Repository\Event\TaskRepository;
-use App\Repository\Support\NoteRepository;
 use App\Repository\Support\PaymentRepository;
 use App\Repository\Support\SupportGroupRepository;
 use App\Repository\Support\SupportPersonRepository;
 use App\Service\Calendar;
-use App\Service\Event\TaskManager;
 use App\Service\Export\SupportPersonExport;
 use App\Service\Pagination;
 use App\Service\SupportGroup\SupportChecker;
@@ -40,7 +37,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class SupportGroupController extends AbstractController
 {

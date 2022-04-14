@@ -54,5 +54,4 @@ class SupportNoteSearch
 //
 //        return $this;
 //    }
-
 }
