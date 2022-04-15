@@ -434,11 +434,6 @@ class EvalHousingGroup
     private $domiciliationComment;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
-     */
-    private $housingAccessType; // TO DELETE ?
-
-    /**
      * @ORM\Column(type="date", nullable=true)
      * @Groups("export")
      */
@@ -1219,18 +1214,6 @@ class EvalHousingGroup
     public function setDomiciliationComment(?string $domiciliationComment): self
     {
         $this->domiciliationComment = $domiciliationComment;
-
-        return $this;
-    }
-
-    public function getHousingAccessType(): ?int
-    {
-        return $this->housingAccessType;
-    }
-
-    public function setHousingAccessType(?int $housingAccessType): self
-    {
-        $this->housingAccessType = $housingAccessType;
 
         return $this;
     }

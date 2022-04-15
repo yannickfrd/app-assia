@@ -118,16 +118,6 @@ class HotelSupport
     private $entryHotelDate;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
-     */
-    private $originDept; // TO DELETE
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $gipId; // TO DELETE
-
-    /**
      * @ORM\Column(type="string", nullable=true)
      * @Groups("export")
      */

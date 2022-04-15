@@ -458,7 +458,6 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         }
 
         $evalSocialPerson
-            // ->setChildWelfareBackground(null)
             // ->setMentalHealthProblem(null)
             // ->setAddictionProblem(null)
             // ->setHomeCareSupport(null)
