@@ -24,6 +24,7 @@ use App\Entity\Support\SupportPerson;
 use App\Form\Utils\Choices;
 use App\Form\Utils\EvaluationChoices;
 use App\Notification\ExceptionNotification;
+use App\Service\Evaluation\EvaluationCompletionChecker;
 use App\Service\Evaluation\EvaluationDuplicator;
 use App\Service\Note\NoteManager;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -41,6 +42,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
 {
     protected $em;
     protected $evaluationDuplicator;
+    protected $evaluationCompletionChecker;
     protected $user;
     protected $flashBag;
     protected $exceptionNotification;
@@ -65,6 +67,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         RequestStack $requestStack,
         EntityManagerInterface $em,
         EvaluationDuplicator $evaluationDuplicator,
+        EvaluationCompletionChecker $evaluationCompletionChecker,
         Security $security,
         FlashBagInterface $flashBag,
         ExceptionNotification $exceptionNotification,
@@ -74,6 +77,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
 
         $this->em = $em;
         $this->evaluationDuplicator = $evaluationDuplicator;
+        $this->evaluationCompletionChecker = $evaluationCompletionChecker;
         $this->user = $security->getUser();
         $this->flashBag = $flashBag;
         $this->exceptionNotification = $exceptionNotification;
@@ -140,6 +144,8 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         if (!$evaluationGroup->getEvalInitGroup()) {
             $this->evaluationDuplicator->createEvalInitGroup($supportGroup, $evaluationGroup);
         }
+
+        $supportGroup->setEvaluationScore($this->evaluationCompletionChecker->getScore($evaluationGroup)['score']);
 
         $this->importNotes($supportGroup);
 

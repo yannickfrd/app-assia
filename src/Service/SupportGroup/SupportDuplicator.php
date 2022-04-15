@@ -15,6 +15,7 @@ use App\Repository\Support\NoteRepository;
 use App\Repository\Support\SupportGroupRepository;
 use App\Repository\Support\SupportPersonRepository;
 use App\Service\Document\DocumentManager;
+use App\Service\Evaluation\EvaluationCompletionChecker;
 use App\Service\Evaluation\EvaluationDuplicator;
 use App\Service\Note\NoteManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,6 +25,7 @@ class SupportDuplicator
     private $em;
 
     private $evaluationDuplicator;
+    private $evaluationCompletionChecker;
     private $supportGroupRepo;
     private $supportPersonRepo;
     private $evaluationGroupRepo;
@@ -37,6 +39,7 @@ class SupportDuplicator
     public function __construct(
         EntityManagerInterface $em,
         EvaluationDuplicator $evaluationDuplicator,
+        EvaluationCompletionChecker $evaluationCompletionChecker,
         SupportGroupRepository $supportGroupRepo,
         SupportPersonRepository $supportPersonRepo,
         EvaluationGroupRepository $evaluationGroupRepo,
@@ -46,6 +49,7 @@ class SupportDuplicator
     ) {
         $this->em = $em;
         $this->evaluationDuplicator = $evaluationDuplicator;
+        $this->evaluationCompletionChecker = $evaluationCompletionChecker;
         $this->supportGroupRepo = $supportGroupRepo;
         $this->supportPersonRepo = $supportPersonRepo;
         $this->evaluationGroupRepo = $evaluationGroupRepo;
@@ -70,6 +74,8 @@ class SupportDuplicator
                     $this->em->persist($evaluationPerson);
                 }
             }
+
+            $supportGroup->setEvaluationScore($this->evaluationCompletionChecker->getScore($this->evaluationGroup)['score']);
 
             $this->em->flush();
 
@@ -124,6 +130,8 @@ class SupportDuplicator
                     }
                 }
             }
+
+            $newSupportGroup->setEvaluationScore($this->evaluationCompletionChecker->getScore($evaluationGroup)['score']);
         }
     }
 
