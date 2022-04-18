@@ -227,6 +227,10 @@ export default class SupportDocuments {
      * @param {Object} response
      */
     responseAjax(response) {
+        if (response.msg) {
+            this.messageFlash = new MessageFlash(response.alert, response.msg)
+        }
+
         switch (response.action) {
             case 'create':
                 this.createDocumentTr(response.data)
@@ -234,20 +238,15 @@ export default class SupportDocuments {
             case 'update':
                 this.updateDocumentTr(response.data)
                 break
-            case 'restore':
             case 'delete':
-                this.deleteDocumentTr(response.document, response.action)
+                this.deleteDocumentTr(response.document)
+                break
+            case 'restore':
+                this.deleteDocumentTr(response.document)
+                this.checkToRedirect(this.messageFlash.delay)
                 break
             case 'download':
                 return this.getFile(response.data)
-        }
-
-        if (response.msg) {
-            this.messageFlash = new MessageFlash(response.alert, response.msg)
-
-            if (response.action === 'restore') {
-                this.shouldBeRedirect(this.messageFlash.delay);
-            }
         }
 
         this.loader.off()
@@ -287,9 +286,8 @@ export default class SupportDocuments {
 
     /**
      * @param {Object} documentResponse
-     * @param {string} action
      */
-    deleteDocumentTr(documentResponse, action) {
+    deleteDocumentTr(documentResponse) {
         if (this.documentModalElt._isShown) {
             this.documentModalElt.hide()
         }
@@ -355,9 +353,11 @@ export default class SupportDocuments {
      * Redirects if there are no more lines.
      * @param {number} delay
      */
-    shouldBeRedirect(delay) {
+    checkToRedirect(delay) {
         if (document.querySelectorAll('table#table-documents tbody tr').length === 0) {
-            setTimeout(() => document.location.href = location.pathname, delay*1000)
+            setTimeout(() => {
+                document.location.href = location.pathname
+            }, delay * 1000)
         }
     }
 }

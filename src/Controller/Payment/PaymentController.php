@@ -234,6 +234,32 @@ final class PaymentController extends AbstractController
     }
 
     /**
+     * @Route("/payment/{id}/restore", name="payment_restore", methods="GET")
+     */
+    public function restore(
+        int $id,
+        PaymentRepository $paymentRepo,
+        EntityManagerInterface $em,
+        TranslatorInterface $translator
+    ): JsonResponse {
+        $payment = $paymentRepo->findPayment($id, true);
+
+        $this->denyAccessUnlessGranted('EDIT', $payment->getSupportGroup());
+
+        $payment->setDeletedAt(null);
+        $em->flush();
+
+        PaymentManager::deleteCacheItems($payment);
+
+        return $this->json([
+            'action' => 'restore',
+            'alert' => 'success',
+            'msg' => $translator->trans('payment.restored_successfully', [], 'app'),
+            'payment' => ['id' => $id],
+        ]);
+    }
+
+    /**
      * Affiche les indicateurs mensuels des participations financières.
      *
      * @Route("/payment/indicators", name="payment_indicators", methods="GET|POST")
@@ -334,31 +360,5 @@ final class PaymentController extends AbstractController
         }
 
         return $search;
-    }
-
-    /**
-     * @Route("/payment/{id}/restore", name="payment_restore", methods="GET")
-     */
-    public function restore(
-        int $id,
-        PaymentRepository $paymentRepo,
-        EntityManagerInterface $em,
-        TranslatorInterface $translator
-    ): JsonResponse {
-        $payment = $paymentRepo->findPayment($id, true);
-
-        $this->denyAccessUnlessGranted('EDIT', $payment->getSupportGroup());
-
-        $payment->setDeletedAt(null);
-        $em->flush();
-
-        PaymentManager::deleteCacheItems($payment);
-
-        return $this->json([
-            'action' => 'restore',
-            'alert' => 'success',
-            'msg' => $translator->trans('payment.restored_successfully', [], 'app'),
-            'payment' => ['id' => $id],
-        ]);
     }
 }

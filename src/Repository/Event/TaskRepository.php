@@ -34,20 +34,12 @@ class TaskRepository extends ServiceEntityRepository
      */
     public function findTasksQuery(TaskSearch $search, User $user, ?SupportGroup $supportGroup = null): Query
     {
-        if ($search->getDeleted()) {
-            $this->disableFilter($this->_em, 'softdeleteable');
-        }
-
         $qb = $this->getTasksQuery();
         $qb = $this->filter($qb, $search, $user);
 
         if ($supportGroup) {
             $qb->andWhere('t.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroup);
-        }
-
-        if ($search->getDeleted()) {
-            $qb->andWhere('t.deletedAt IS NOT null');
         }
 
         return $qb
@@ -160,6 +152,10 @@ class TaskRepository extends ServiceEntityRepository
                 ->setParameter('user', $user);
             $qb->orWhere('sg.service IN (:services)')
                 ->setParameter('services', $user->getServices());
+        }
+        if ($search->getDeleted()) {
+            $this->disableFilter($this->_em, 'softdeleteable');
+            $qb->andWhere('t.deletedAt IS NOT NULL');
         }
         if ($search->getId()) {
             return $qb->andWhere('t.id = :id')

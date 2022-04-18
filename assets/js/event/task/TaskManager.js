@@ -95,6 +95,10 @@ export default class TaskManager {
      * @param {Object} response
      */
     responseAjax(response) {
+        if (response.msg) {
+            this.messageFlash = new MessageFlash(response.alert, response.msg)
+        }
+
         if (response.action) {
             const task = response.task
 
@@ -108,9 +112,12 @@ export default class TaskManager {
                 case 'edit':
                     this.editTaskTr(task)
                     break
-                case 'restore':
                 case 'delete':
                     this.deleteTaskTr(task, response.action)
+                    break
+                case 'restore':
+                    this.deleteTaskTr(task, response.action)
+                    this.checkToRedirect(this.messageFlash.delay)
                     break
                 case 'toggle_status':
                     this.checkStatus(task)
@@ -118,13 +125,6 @@ export default class TaskManager {
                 // case 'get_support_people':
                 // this.changeSupportPeopleSelect(response.supportPeople)
                 // break
-            }
-        }
-        if (response.msg) {
-            this.messageFlash = new MessageFlash(response.alert, response.msg)
-
-            if (response.action === 'restore') {
-                this.shouldBeRedirect(this.messageFlash.delay);
             }
         }
     }
@@ -360,9 +360,11 @@ export default class TaskManager {
      * Redirects if there are no more lines.
      * @param {number} delay
      */
-    shouldBeRedirect(delay) {
+    checkToRedirect(delay) {
         if (document.querySelectorAll('table#table_tasks tbody tr').length === 0) {
-            setTimeout(() => document.location.href = location.pathname, delay*1000)
+            setTimeout(() => {
+                document.location.href = location.pathname
+            }, delay * 1000)    
         }
     }
 }

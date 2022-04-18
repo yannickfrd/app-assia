@@ -1,6 +1,6 @@
 {% extends "base.html.twig" %}
 
-{% set restore_is_clicked = form_search.deleted.deleted.vars.checked %}
+{% set restoration_mode = form_search.deleted.deleted.vars.checked %}
 
 {% block title %}Documents{% endblock %}
 
@@ -26,7 +26,7 @@
 		</div>
 
 		<div class="row">
-			{% if restore_is_clicked == false %}
+			{% if restoration_mode == false %}
 				<div class="col-md-5">
 					{% include "app/document/_actionForm.html.twig" %}
 				</div>
@@ -42,7 +42,7 @@
 				<table id="table-documents" class="table table-bordered table-striped table-hover text-dark shadow-sm">
 					<thead>
 						<tr>
-							{% if restore_is_clicked == false %}
+							{% if restoration_mode == false %}
 								<th scope="col" class="align-middle text-center th-w-20 px-1">
 									<div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} text-dark pl-0"
 										title="Tout sélectionner">
@@ -62,7 +62,7 @@
 							<th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(documents, "Taille", "d.size") }}</th>
 							<th scope="col" class="align-middle th-w-60">Type</th>
 
-							{% if restore_is_clicked %}
+							{% if restoration_mode %}
 								<th scope="col" class="d-none d-lg-table-cell align-middle th-date">
 									{{ knp_pagination_sortable(documents, "Supprimé le", "d.deletedAt") }}</th>
 							{% else %}
@@ -78,9 +78,9 @@
 
 					<tbody id="container-documents" data-support="{{ support.id }}">
 						{% for document in documents %}
-							{% set disabled = document.deletedAt is not null %}
+							{% set is_deleted = document.deletedAt is not null %}
 							<tr data-document-id="{{ document.id }}">
-								{% if disabled == false %}
+								{% if is_deleted == false %}
 									<td class="align-middle text-center px-1">
 										<div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} text-dark pl-0"
 											title="Sélectionner le document">
@@ -94,7 +94,7 @@
 								{% endif %}
 								<td class="align-middle text-center">
 									<a href="{{ path('document_download', {'id': document.id }) }}"
-										class="btn btn-{{ disabled ? 'secondary disabled' : theme_color }} btn-sm shadow my-1"
+										class="btn btn-{{ is_deleted ? 'secondary disabled' : theme_color }} btn-sm shadow my-1"
 										data-toggle="tooltip" data-placement="bottom" title="Télécharger le document">
 										<i class="fas fa-file-download"></i>
 									</a>
@@ -110,16 +110,14 @@
 								<td class="align-middle cursor-pointer" data-document="content">{{ document.content }}</td>
 								<td class="align-middle text-right">{{ (document.size / 1000000)|round(2) }} Mo</td>
 								<td class="align-middle">{{ document.fileType }}</td>
-
-								{% if disabled %}
+								{% if is_deleted %}
 									<td class="d-none d-lg-table-cell align-middle">{{ document.deletedAtToString }}</td>
 								{% else %}
 									<td class="d-none d-lg-table-cell align-middle">{{ document.createdAt|date("d/m/Y H:i") }}</td>
 								{% endif %}
-
 								<td class="d-none d-lg-table-cell align-middle">{{ document.createdby ? document.createdby.fullname }}</td>
 								<td class="align-middle text-center">
-									{% if disabled %}
+									{% if is_deleted %}
 										{% include 'model/button/_restore_button.html.twig' with {path_route: path('document_restore', {'id': document.id})} %}
 									{% else %}
 										<button data-url="{{ path('document_delete', {'id': document.id}) }}" class="btn btn-danger btn-sm shadow my-1"
@@ -137,14 +135,13 @@
 
 			</div>
 		</div>
-		
 		{% include "app/document/_dropzoneModal.html.twig" %}
 		{% include "app/document/_documentModal.html.twig" %}
 		{% include "app/document/_deleteDocumentModal.html.twig" %}
-
 	</div>
+{% endblock %}
 
-{% endblock %}{% block javascripts %}
+{% block javascripts %}
 	{{ encore_entry_script_tags("search") }}
 	{{ encore_entry_script_tags("document") }}
 {% endblock javascripts %}

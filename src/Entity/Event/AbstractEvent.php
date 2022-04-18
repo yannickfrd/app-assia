@@ -282,11 +282,6 @@ abstract class AbstractEvent
         return $this->updatedAt ? $this->updatedAt->format($format) : '';
     }
 
-    /** @Groups({"show_event", "show_rdv"}) */
-    public function getDeletedAtToString(string $format = 'd/m/Y'): string
-    {
-        return $this->deletedAt ? $this->deletedAt->format($format) : '';
-    }
     // /**
     //  * @return Collection<SupportPerson>|null
     //  */

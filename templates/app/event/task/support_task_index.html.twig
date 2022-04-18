@@ -1,8 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% set restore_is_clicked = form_search.deleted.deleted.vars.checked %}
-
-{% set title = 'Tâches' %}
+{% set restoration_mode = form_search.deleted.deleted.vars.checked %}
+{% set title = 'Tâches' ~ (restoration_mode ? ' (Corbeille)') %}
 
 {% block title %}{{ title }}{% endblock %}
 

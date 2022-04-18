@@ -530,17 +530,17 @@ export default class SupportPayments {
                 this.updatePayment(response.data.payment)
                 new MessageFlash(response.alert, response.msg)
                 break
-            case 'restore':
-                this.deletedPaymentTr(response.payment)
-                this.messageFlash = new MessageFlash(response.alert, response.msg)
-                this.shouldBeRedirect(this.messageFlash.delay);
-                break
             case 'delete':
                 this.trElt.remove()
                 this.updateCounts(-1)
                 this.loader.off()
                 this.paymentModalElt.hide()
                 new MessageFlash(response.alert, response.msg)
+                break
+            case 'restore':
+                this.messageFlash = new MessageFlash(response.alert, response.msg)
+                this.deletedPaymentTr(response.payment)
+                this.checkToRedirect(this.messageFlash.delay)
                 break
             default:
                 this.loader.off()
@@ -841,9 +841,11 @@ export default class SupportPayments {
      * Redirects if there are no more lines.
      * @param {number} delay
      */
-    shouldBeRedirect(delay) {
+    checkToRedirect(delay) {
         if (document.querySelectorAll('table#table-payments tbody tr').length === 0) {
-            setTimeout(() => document.location.href = location.pathname, delay*1000)
+            setTimeout(() => {
+                document.location.href = location.pathname
+            }, delay * 1000)    
         }
     }
 }

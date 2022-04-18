@@ -1,16 +1,13 @@
 {% extends 'base.html.twig' %}
 
 {% set nb_notes = notes|length %}
-{% set restore_is_clicked = form_search.deleted.deleted.vars.checked %}
+{% set restoration_mode = form_search.deleted.deleted.vars.checked %}
+{% set title = 'Notes sociales' ~ (restoration_mode ? ' (Corbeille)') %}
 
-{% block title %}Notes sociales{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block body %}
     <div class="container" data-view="card-table" data-is-card="{{ is_card_view }}">
-        {% set title = 'Notes sociales' %}
-        {% if restore_is_clicked %}
-            {% set title = title ~ ' (Corbeille)' %}
-        {% endif %}
 
         {% include 'app/support/_partials/_support_nav.html.twig' %}
 
@@ -29,7 +26,7 @@
                         role="button" data-toggle="tooltip" title="Passer en vue carte"><i class="fa-solid fa-grip-vertical"></i></a>
                 {% endif %}
 
-                {% if not restore_is_clicked %}
+                {% if not restoration_mode %}
                     <button class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-action="new_note"
                         title="Créer une nouvelle note" data-toggle="tooltip" data-placement="bottom">
                         <i class="fas fa-plus-square mr-2"></i>Nouvelle note

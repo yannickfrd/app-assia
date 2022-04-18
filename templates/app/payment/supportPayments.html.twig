@@ -1,14 +1,13 @@
 {% extends "base.html.twig" %}
 
-{% set restore_is_clicked = form_search.deleted.deleted.vars.checked %}
+{% set restoration_mode = form_search.deleted.deleted.vars.checked %}
+{% set title = "Paiements" ~ (restoration_mode ? ' (Corbeille)') %}
 
-{% block title %}Paiements{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block body %}
-
 	<div class="container">
 
-		{% set title = "Paiements" %}
 		{% include "app/support/_partials/_support_nav.html.twig" %}
 
 		<div class="row">
@@ -44,41 +43,53 @@
 							<tr>
 								<th scope="col" class="align-middle th-w-20"></th>
 								<th scope="col" class="align-middle th-w-100">
-									{{ knp_pagination_sortable(payments, "payment.type"|trans({}, "forms"), "p.type") }}</th>
+									{{ knp_pagination_sortable(payments, "payment.type"|trans({}, "forms"), "p.type") }}
+								</th>
 								<th scope="col" class="align-middle th-w-120">
-									{{ knp_pagination_sortable(payments, "Période de la PF", "p.startDate") }}</th>
+									{{ knp_pagination_sortable(payments, "Période de la PF", "p.startDate") }}
+								</th>
 								<th scope="col" class="align-middle th-w-100">
-									{{ knp_pagination_sortable(payments, "Montant à régler", "p.toPayAmt") }}</th>
+									{{ knp_pagination_sortable(payments, "Montant à régler", "p.toPayAmt") }}
+								</th>
 								<th scope="col" class="align-middle th-w-100">
-									{{ knp_pagination_sortable(payments, "Montant réglé", "p.paidAmt") }}</th>
+									{{ knp_pagination_sortable(payments, "Montant réglé", "p.paidAmt") }}
+								</th>
 								<th scope="col" class="align-middle th-w-100">
-									{{ knp_pagination_sortable(payments, "Restant dû (différentiel)", "p.stillToPayAmt") }}</th>
+									{{ knp_pagination_sortable(payments, "Restant dû (différentiel)", "p.stillToPayAmt") }}
+								</th>
 								<th scope="col" class="align-middle th-date">
-									{{ knp_pagination_sortable(payments, "Date de l\'opération", "p.paymentDate") }}</th>
+									{{ knp_pagination_sortable(payments, "Date de l\'opération", "p.paymentDate") }}
+								</th>
 								<th scope="col" class="align-middle th-w-100">
-									{{ knp_pagination_sortable(payments, "Mode de règlement", "p.paymentType") }}</th>
+									{{ knp_pagination_sortable(payments, "Mode de règlement", "p.paymentType") }}
+								</th>
 								<th scope="col" class="align-middle th-w-140">
-									{{ knp_pagination_sortable(payments, "Commentaire", "p.comment") }}</th>
-								{% if restore_is_clicked %}
+									{{ knp_pagination_sortable(payments, "Commentaire", "p.comment") }}
+								</th>
+								{% if restoration_mode %}
 									<th scope="col" class="align-middle th-w-100">
-										{{ knp_pagination_sortable(payments, "Supprimé le", "p.deletedAt") }}</th>
+										{{ knp_pagination_sortable(payments, "Supprimé le", "p.deletedAt") }}
+									</th>
 								{% else %}
 									<th scope="col" class="align-middle th-w-100">
-										{{ knp_pagination_sortable(payments, "Date de création", "p.createdAt") }}</th>
+										{{ knp_pagination_sortable(payments, "Date de création", "p.createdAt") }}
+									</th>
 								{% endif %}
 								<th scope="col" class="align-middle th-w-20">
-									{{ knp_pagination_sortable(payments, "PDF", "p.pdfGenerateAt") }}</th>
+									{{ knp_pagination_sortable(payments, "PDF", "p.pdfGenerateAt") }}
+								</th>
 								<th scope="col" class="align-middle th-w-20">
-									{{ knp_pagination_sortable(payments, "Mail", "p.mailSentAt") }}</th>
+									{{ knp_pagination_sortable(payments, "Mail", "p.mailSentAt") }}
+								</th>
 								<th scope="col" class="align-middle th-w-20"></th>
 							</tr>
 						</thead>
 						<tbody id="container-payments">
 							{% for payment in payments %}
-								{% set disabled = payment.deletedAt is not null %}
+								{% set is_deleted = payment.deletedAt is not null %}
 								<tr id="payment-{{ payment.id }}" class="payment">
 									<td class="align-middle text-center">
-										<button class="btn btn-{{ disabled ? 'secondary disabled' : theme_color }} btn-sm shadow"
+										<button class="btn btn-{{ is_deleted ? 'secondary disabled' : theme_color }} btn-sm shadow"
 											data-action="get" data-url="{{ path('payment_get', {'id': payment.id}) }}"
 											data-id="{{ payment.id }}" data-toggle="tooltip" data-placement="bottom"
 											title="Voir l'enregistrement"><span class="fas fa-eye"></span>
@@ -109,8 +120,7 @@
 									<td class="align-middle small" data-payment="comment">
 										{{ payment.noContrib ? "PAF à zéro (" ~ payment.noContribReasonToString ~ ")" }}
 										{{ (payment.comment ~ "\n" ~ payment.commentExport)|u.truncate(50, " [...]", false) }}</td>
-
-									{% if disabled %}
+									{% if is_deleted %}
 										<td class="align-middle" data-payment="deletedAt">{{ payment.deletedAtToString }}</td>
 									{% else %}
 										<td class="align-middle" data-payment="createdAt">{{ payment.createdAt|date("d/m/Y") }}</td>
@@ -128,7 +138,7 @@
 										class="fas fa-envelope{{ payment.mailSent ? '-open text-success' : ' text-secondary' }} fa-lg"></i></span>
 									</td>
 									<td class="align-middle text-center">
-										{% if disabled %}
+										{% if is_deleted %}
 											{% include 'model/button/_restore_button.html.twig' with {path_route: path('payment_restore', {'id': payment.id})} %}
 										{% else %}
 											<button class="btn btn-danger btn-sm shadow my-1" data-action="delete"
@@ -137,7 +147,6 @@
 												<span class="fas fa-trash-alt"></span>
 											</button>
 										{% endif %}
-
 									</td>
 								</tr>
 							{% endfor %}
@@ -147,13 +156,10 @@
 				<div class="navigation">{{ knp_pagination_render(payments) }}</div>
 			</div>
 		</div>
-
 	</div>
-
 	{% include "app/payment/_paymentModal.html.twig" %}
 	{% include "app/payment/_contributionCalculModal.html.twig" %}
 	{% include "app/payment/_deletePaymentModal.html.twig" %}
-
 {% endblock %}
 
 {% block javascripts %}

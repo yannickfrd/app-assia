@@ -196,6 +196,32 @@ final class TaskController extends AbstractController
     }
 
     /**
+     * @Route("/task/{id}/restore", name="task_restore", methods="GET")
+     */
+    public function restore(
+        int $id,
+        TaskRepository $taskRepo,
+        EntityManagerInterface $em,
+        TranslatorInterface $translator
+    ): JsonResponse {
+        $task = $taskRepo->findTask($id, true);
+
+        $this->denyAccessUnlessGranted('EDIT', $task->getSupportGroup());
+
+        $task->setDeletedAt(null);
+        $em->flush();
+
+        TaskManager::deleteCacheItems($task);
+
+        return $this->json([
+            'action' => 'restore',
+            'alert' => 'success',
+            'msg' => $translator->trans('note.restored_successfully', ['%note_title%' => $task->getTitle()], 'app'),
+            'task' => ['id' => $task->getId()],
+        ]);
+    }
+
+    /**
      *@Route("/task/{id}/toggle-status", name="task_toggle_status")
      */
     public function toggleStatus(int $id, TaskRepository $taskRepo, EntityManagerInterface $em,
@@ -220,32 +246,6 @@ final class TaskController extends AbstractController
             ], 'app'),
             'task' => $task,
             ], 200, [], ['groups' => Task::SERIALIZER_GROUPS]);
-    }
-
-    /**
-     * @Route("/task/{id}/restore", name="task_restore", methods="GET")
-     */
-    public function restore(
-        int $id,
-        TaskRepository $taskRepo,
-        EntityManagerInterface $em,
-        TranslatorInterface $translator
-    ): JsonResponse {
-        $task = $taskRepo->findTask($id, true);
-
-        $this->denyAccessUnlessGranted('EDIT', $task->getSupportGroup());
-
-        $task->setDeletedAt(null);
-        $em->flush();
-
-        TaskManager::deleteCacheItems($task);
-
-        return $this->json([
-            'action' => 'restore',
-            'alert' => 'success',
-            'msg' => $translator->trans('note.restored_successfully', ['%note_title%' => $task->getTitle()], 'app'),
-            'task' => ['id' => $task->getId()],
-        ]);
     }
 
     private function exportData(TaskSearch $search, TaskRepository $taskRepo, User $user, ?SupportGroup $supportGroup = null): Response

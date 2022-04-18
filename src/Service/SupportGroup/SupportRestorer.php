@@ -11,137 +11,155 @@ use App\Entity\Support\SupportGroup;
 use App\Entity\Support\SupportPerson;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
-use Generator;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SupportRestorer
 {
-    private TranslatorInterface $translator;
-    private EntityManagerInterface $em;
+    private $em;
+    private $translator;
+    private bool $supportGroupIsDeleted = false;
 
-    public function __construct(TranslatorInterface $translator, EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, TranslatorInterface $translator)
     {
-        $this->translator = $translator;
         $this->em = $em;
+        $this->translator = $translator;
     }
 
     public function restore(SupportPerson $supportPerson): string
     {
         $supportGroup = $supportPerson->getSupportGroup();
+        $this->supportGroupIsDeleted = $supportGroup->isDeleted();
+
+        $this->resetDeletedAt($supportGroup, $supportPerson);
 
         $this->em->flush();
 
-        if (null == $supportPerson->getSupportGroup()->getDeletedAt()) {
-            $supportPerson->setDeletedAt(null);
+        SupportManager::deleteCacheItems($supportGroup);
 
-            $this->flushAndDeleteCache($supportGroup);
-
-            return $this->translator->trans('support_person.restored_successfully', [
-                '%support_name%' => $supportPerson->getPerson()->getFullname(),
+        if ($this->supportGroupIsDeleted) {
+            return $this->translator->trans('support_group.restored_successfully', [
+                '%support_name%' => $supportGroup->getHeader()->getFullname(),
             ], 'app');
         }
 
-        $this->resetDeletedAt($supportGroup);
-
-        $this->flushAndDeleteCache($supportGroup);
-
-        return $this->translator->trans('support.restored_successfully', [
-            '%support_name%' => $supportGroup->getHeader()->getFullname(),
-        ], 'app');
+        return $this->translator->trans('support_person.restored_successfully', [
+                '%support_name%' => $supportPerson->getPerson()->getFullname(),
+            ], 'app');
     }
 
-    private function resetDeletedAt($supportGroup): void
+    private function resetDeletedAt(SupportGroup $supportGroup, SupportPerson $supportPerson): void
     {
-        $entitiesElements = $this->supportGroupGenerator($supportGroup);
-        foreach ($entitiesElements as $entities) {
+        foreach ($this->supportGroupGenerator($supportGroup) as $entities) {
             foreach ($entities as $entity) {
-                if (null !== $entity && $entity->getDeletedAt() == $supportGroup->getDeletedAt()) {
+                if (null !== $entity && $entity->getDeletedAt() == $supportPerson->getDeletedAt()) {
                     $entity->setDeletedAt(null);
                 }
             }
         }
 
+        $supportDeletedAt = $supportPerson->getDeletedAt();
+
+        foreach ($supportGroup->getSupportPeople() as $sp) {
+            $person = $sp->getPerson();
+
+            if ($supportGroup->isDeleted() || (false === $sp->isDeleted() && $person->isDeleted())
+                || $sp->getId() === $supportPerson->getId()) {
+                foreach ($person->getRolesPerson() as $rolePerson) {
+                    if ($rolePerson->getDeletedAt() == $supportDeletedAt
+                        || $rolePerson->getDeletedAt() == $person->getDeletedAt()) {
+                        $rolePerson->setDeletedAt(null);
+                    }
+                }
+                $person->setDeletedAt(null);
+            }
+            if ($supportGroup->isDeleted() && $sp->getDeletedAt() == $supportDeletedAt) {
+                $sp->setDeletedAt(null);
+            }
+        }
+
+        $supportPerson->setDeletedAt(null);
         $supportGroup->setDeletedAt(null);
+        $supportGroup->getPeopleGroup()->setDeletedAt(null);
     }
 
     /**
      * Collect all the getters for the SupportGroup.
      */
-    private function supportGroupGenerator(SupportGroup $supportGroup): Generator
+    private function supportGroupGenerator(SupportGroup $supportGroup): \Generator
     {
         yield from $this->placeGroupsGenerator($supportGroup->getPlaceGroups());
         yield from $this->evaluationGroupGenerator($supportGroup->getEvaluationsGroup());
 
-        yield $supportGroup->getPlaceGroups();
-        yield $supportGroup->getEvaluationsGroup();
+        if ($this->supportGroupIsDeleted) {
+            yield $supportGroup->getPlaceGroups();
+            yield $supportGroup->getEvaluationsGroup();
 
-        yield $supportGroup->getSupportPeople();
-        yield $supportGroup->getNotes();
-        yield $supportGroup->getRdvs();
-        yield $supportGroup->getTasks();
-        yield $supportGroup->getDocuments();
-        yield $supportGroup->getPeopleGroup();
+            yield $supportGroup->getPeopleGroup()->getReferents();
+            yield $supportGroup->getNotes();
+            yield $supportGroup->getRdvs();
+            yield $supportGroup->getTasks();
+            yield $supportGroup->getDocuments();
+            yield $supportGroup->getPayments();
 
-        yield [
-            $supportGroup->getHotelSupport(),
-            $supportGroup->getEvalInitGroup(),
-            $supportGroup->getOriginRequest(),
-            $supportGroup->getAvdl(),
-        ];
+            yield [
+                $supportGroup->getOriginRequest(),
+                $supportGroup->getEvalInitGroup(),
+                $supportGroup->getAvdl(),
+                $supportGroup->getHotelSupport(),
+            ];
+        }
     }
 
     /**
      * Collect all the getters for the PlaceGroup.
+     *
+     * @param Collection<PlaceGroup> $placeGroups
      */
-    private function placeGroupsGenerator(?Collection $getPlaceGroups): Generator
+    private function placeGroupsGenerator(?Collection $placeGroups): \Generator
     {
-        /** @var PlaceGroup $placeGroup */
-        foreach ($getPlaceGroups as $placeGroup) {
+        foreach ($placeGroups as $placeGroup) {
             yield $placeGroup->getPlacePeople();
         }
     }
 
     /**
      * Collect all the getters for the EvaluationGroup.
+     *
+     * @param Collection<EvaluationGroup> $evaluationGroups
      */
-    private function evaluationGroupGenerator(?Collection $evaluations): Generator
+    private function evaluationGroupGenerator(?Collection $evaluationGroups): \Generator
     {
-        /** @var EvaluationGroup $evaluation */
-        foreach ($evaluations as $evaluation) {
-            yield from $this->evaluationPeopleGenerator($evaluation->getEvaluationPeople());
-            yield $evaluation->getEvaluationPeople();
+        foreach ($evaluationGroups as $evaluationGroup) {
+            yield from $this->evaluationPeopleGenerator($evaluationGroup->getEvaluationPeople());
+            yield $evaluationGroup->getEvaluationPeople();
 
             yield [
-                $evaluation->getEvalSocialGroup(),
-                $evaluation->getEvalFamilyGroup(),
-                $evaluation->getEvalHousingGroup(),
-                $evaluation->getEvalBudgetGroup(),
-                $evaluation->getEvalHotelLifeGroup(),
+                $evaluationGroup->getEvalFamilyGroup(),
+                $evaluationGroup->getEvalSocialGroup(),
+                $evaluationGroup->getEvalBudgetGroup(),
+                $evaluationGroup->getEvalHousingGroup(),
+                $evaluationGroup->getEvalHotelLifeGroup(),
             ];
         }
     }
 
     /**
      * Collect all the getters for the EvaluationPeople.
+     *
+     * @param Collection<EvaluationPerson> $evaluationPeople
      */
-    private function evaluationPeopleGenerator(?Collection $evaluationPeople): Generator
+    private function evaluationPeopleGenerator(Collection $evaluationPeople): \Generator
     {
-        /** @var EvaluationPerson $evaluationPerson */
         foreach ($evaluationPeople as $evaluationPerson) {
             yield [
+                $evaluationPerson->getEvalInitPerson(),
                 $evaluationPerson->getEvalAdmPerson(),
-                $evaluationPerson->getEvalBudgetPerson(),
-                $evaluationPerson->getEvalFamilyPerson(),
-                $evaluationPerson->getEvalProfPerson(),
-                $evaluationPerson->getEvalSocialPerson(),
                 $evaluationPerson->getEvalJusticePerson(),
+                $evaluationPerson->getEvalFamilyPerson(),
+                $evaluationPerson->getEvalSocialPerson(),
+                $evaluationPerson->getEvalProfPerson(),
+                $evaluationPerson->getEvalBudgetPerson(),
             ];
         }
-    }
-
-    private function flushAndDeleteCache(?SupportGroup $supportGroup): void
-    {
-        $this->em->flush();
-        SupportManager::deleteCacheItems($supportGroup);
     }
 }

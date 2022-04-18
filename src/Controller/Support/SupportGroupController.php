@@ -324,6 +324,8 @@ final class SupportGroupController extends AbstractController
             } else {
                 $this->addFlash('warning', "Aucun suivi n'a été transféré.");
             }
+
+            return $this->redirectToRoute('supports_switch_referent');
         }
 
         return $this->renderForm('app/support/switch_support_referent.html.twig', ['form' => $form]);

@@ -1,4 +1,9 @@
-# Note
+document:
+    created_successfully: "Le document « %document_title% » a bien été créé."
+    updated_successfully: "Le document « %document_title% » a bien été modifié."
+    deleted_successfully: "Le document « %document_title% » a bien été supprimé."
+    restored_successfully: "Le document « %document_title% » a bien été restauré."
+
 note:
     created_successfully: "La note « %note_title% » a bien été créée."
     updated_successfully: "La note « %note_title% » a bien été modifiée."
@@ -6,7 +11,17 @@ note:
     restored_successfully: "La note « %note_title% » a bien été restaurée."
     no_evaluation_created: Il n'y a pas d'évaluation sociale créée pour ce suivi.
 
-# Task
+payment:
+    created_successfully: "Le paiement a bien été créé."
+    updated_successfully: "Le paiement a bien été modifié."
+    deleted_successfully: "Le paiement a bien été supprimé."
+    restored_successfully: "Le paiement a bien été restauré."
+rdv:
+    created_successfully: "Le rendez-vous « %rdv_title% » a bien été créé."
+    updated_successfully: "Le rendez-vous « %rdv_title% » a bien été modifié."
+    deleted_successfully: "Le rendez-vous « %rdv_title% » a bien été supprimé."
+    restored_successfully: "Le rendez-vous « %rdv_title% » a bien été restauré."
+
 task:
     created_successfully: "La tâche « %task_title% » a bien été créée."
     updated_successfully: "La tâche « %task_title% » a bien été modifiée."
@@ -14,37 +29,12 @@ task:
     restored_successfully: "La tâche « %task_title% » a bien été restaurée."
     toogle_status: "La tâche « %task_title% » est %task_status%."
 
-# Payment
-payment:
-    created_successfully: "La paiement a bien été créé."
-    updated_successfully: "La paiement a bien été modifié."
-    deleted_successfully: "La paiement a bien été supprimé."
-    restored_successfully: "La paiement a bien été restauré."
+support_group:
+    created_successfully: "Le suivi de %support_name% a bien été créé."
+    updated_successfully: "Le suivi de %support_name% a bien été modifié."
+    deleted_successfully: "Le suivi de %support_name% a bien été supprimé."
+    restored_successfully: "Le suivi de %support_name% a bien été restauré."
 
-# Document
-document:
-    created_successfully: "Le document « %document_title% » a bien été créé."
-    updated_successfully: "Le document « %document_title% » a bien été modifié."
-    deleted_successfully: "Le document « %document_title% » a bien été supprimé."
-    restored_successfully: "Le document « %document_title% » a bien été restauré."
-
-# Rdv
-rdv:
-    created_successfully: "Le rdv « %rdv_title% » a bien été créé."
-    updated_successfully: "Le rdv « %rdv_title% » a bien été modifié."
-    deleted_successfully: "Le rdv « %rdv_title% » a bien été supprimé."
-    restored_successfully: "Le rdv « %rdv_title% » a bien été restauré."
-
-# SupportGroup
-support:
-    created_successfully: "Le support « %support_name% » a bien été créé."
-    updated_successfully: "Le support « %support_name% » a bien été modifié."
-    deleted_successfully: "Le support « %support_name% » a bien été supprimé."
-    restored_successfully: "Le support « %support_name% » a bien été restauré."
-
-# SupportPerson
 support_person:
-    created_successfully: "Le support « %support_name% » a bien été créé."
-    updated_successfully: "Le support « %support_name% » a bien été modifié."
-    deleted_successfully: "Le support « %support_name% » a bien été supprimé."
-    restored_successfully: "Le support « %support_name% » a bien été restauré."
+    deleted_successfully: "%support_name% a bien été supprimé(e)."
+    restored_successfully: "%support_name% a bien été restauré(e)."

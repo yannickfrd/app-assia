@@ -45,8 +45,14 @@
 			</ol>
 		</nav>
 		{% for support_person in support_people %}
-			<a href="{{ path('group_person_show', {'id': people_group.id, 'person_id': support_person.person.id, 'slug': support_person.person.slug}) }}" 
-				class="btn btn-outline-{{ theme_color }} btn-sm rounded-pill mb-2">{{ support_person.person.fullname }}</a>
+			<a href="{{ path('group_person_show', {
+					'id': people_group.id, 
+					'person_id': support_person.person.id, 
+					'slug': support_person.person.slug
+				}) }}" 
+				class="btn btn-outline-{{ theme_color }} btn-sm rounded-pill mb-2">
+				{{ support_person.person.fullname }}
+			</a>
 		{% endfor %}
 
 		<hr>

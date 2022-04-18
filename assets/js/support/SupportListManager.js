@@ -29,19 +29,15 @@ export default class SupportListManager {
     }
 
     responseAjax(response) {
-        let shouldBeRedirect = false
+        if (response.msg) {
+            this.messageFlash = new MessageFlash(response.alert, response.msg)
+        }
+
         switch (response.action) {
             case 'restore':
                 this.deleteSupportTr(response.support)
-                shouldBeRedirect = true
+                this.checkToRedirect(this.messageFlash.delay)
                 break
-        }
-
-        if (response.msg) {
-            this.messageFlash = new MessageFlash(response.alert, response.msg)
-            if (shouldBeRedirect) {
-                this.shouldBeRedirect(this.messageFlash.delay);
-            }
         }
     }
 
@@ -73,9 +69,11 @@ export default class SupportListManager {
      * Redirects if there are no more lines.
      * @param {number} delay
      */
-    shouldBeRedirect(delay) {
+    checkToRedirect(delay) {
         if (document.querySelectorAll('table#table-supports tbody tr').length === 0) {
-            setTimeout(() => document.location.href = location.pathname, delay*1000);
+            setTimeout(() => {
+                document.location.href = location.pathname
+            }, delay * 1000)
         }
     }
 }

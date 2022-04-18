@@ -155,6 +155,11 @@ export default class NoteManager {
 
         const note = response.note
 
+        if (!this.noteForm.autoSaver.active && response.msg) {
+            this.messageFlash = new MessageFlash(response.alert, response.msg)
+            this.loader.off()
+        }
+
         switch (response.action) {
             case 'create':
                 this.createNoteElt(note)
@@ -166,18 +171,12 @@ export default class NoteManager {
                 this.updateNoteElt(note)
                 break
             case 'delete':
-            case 'restore':
-                this.deleteNoteElt(note, response.action)
+                this.deleteNoteElt(note)
                 break
-        }
-
-        if (!this.noteForm.autoSaver.active && response.msg) {
-            this.messageFlash = new MessageFlash(response.alert, response.msg)
-            this.loader.off()
-
-            if (response.action === 'restore') {
-                this.shouldBeRedirect(this.messageFlash.delay);
-            }
+            case 'restore':
+                this.deleteNoteElt(note)
+                this.checkToRedirect(this.messageFlash.delay)
+                break
         }
     }
 
@@ -363,9 +362,8 @@ export default class NoteManager {
 
     /**
      * @param {Object} note
-     * @param {String} action
      */
-    deleteNoteElt(note, action) {
+    deleteNoteElt(note) {
         if (this.isCardNoteView) {
             this.containerNotesElt.querySelector(`div[data-note-id="${note.id}"]`).remove()
             this.noteModal.hide()
@@ -401,13 +399,15 @@ export default class NoteManager {
      * Redirects if there are no more lines/card.
      * @param {number} delay
      */
-    shouldBeRedirect(delay) {
+    checkToRedirect(delay) {
         const selector = this.isCardNoteView
             ? document.querySelectorAll('div#container-notes .card')
             : document.querySelectorAll('table#table-notes tbody tr')
 
         if (selector.length === 0) {
-            setTimeout(() => document.location.href = location.pathname, delay*1000);
+            setTimeout(() => {
+                document.location.href = location.pathname
+            }, delay * 1000)    
         }
     }
 }

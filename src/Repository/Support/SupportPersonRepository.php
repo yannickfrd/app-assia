@@ -50,11 +50,13 @@ class SupportPersonRepository extends ServiceEntityRepository
         }
 
         return $this->createQueryBuilder('sp')
-            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
-            ->leftJoin('sp.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, referent, deletedAt}')
-            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
-            ->leftJoin('sg.peopleGroup', 'pg')->addSelect('PARTIAL pg.{id}')
-            ->leftJoin('sg.supportPeople', 'sp2')->addSelect('PARTIAL sp2.{id, head, deletedAt}')
+            ->leftJoin('sp.person', 'p')->addSelect('p')
+            ->leftJoin('sp.supportGroup', 'sg')->addSelect('sg')
+            ->leftJoin('sg.service', 's')->addSelect('s')
+            ->leftJoin('sg.peopleGroup', 'pg')->addSelect('pg')
+            ->leftJoin('sg.supportPeople', 'sp2')->addSelect('sp2')
+            ->leftJoin('sp2.person', 'p2')->addSelect('p2')
+            ->leftJoin('p2.rolesPerson', 'r')->addSelect('r')
 
             ->where('sp.id = :id')
             ->setParameter('id', $id)
@@ -69,10 +71,6 @@ class SupportPersonRepository extends ServiceEntityRepository
      */
     public function findSupportsQuery(SupportSearch $search): Query
     {
-        if ($search->getDeleted()) {
-            $this->disableFilter($this->_em, 'softdeleteable');
-        }
-
         $qb = $this->getSupportsQuery();
 
         if ($search) {
@@ -350,8 +348,10 @@ class SupportPersonRepository extends ServiceEntityRepository
         }
 
         if ($search->getDeleted()) {
-            $qb->andWhere('sp.deletedAt IS NOT null');
+            $this->disableFilter($this->_em, 'softdeleteable');
+            $qb->andWhere('sp.deletedAt IS NOT NULL');
         }
+
         if ($search->getHead()) {
             $qb->andWhere('sp.head = :head')
                 ->setParameter('head', $search->getHead());

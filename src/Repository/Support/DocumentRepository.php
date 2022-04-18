@@ -84,10 +84,6 @@ class DocumentRepository extends ServiceEntityRepository
      */
     public function findSupportDocumentsQuery(SupportGroup $supportGroup, SupportDocumentSearch $search): Query
     {
-        if ($search->getDeleted()) {
-            $this->disableFilter($this->_em, 'softdeleteable');
-        }
-
         $qb = $this->createQueryBuilder('d')->select('d')
             ->leftJoin('d.tags', 't')->addSelect('t')
             ->leftJoin('d.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
@@ -96,7 +92,8 @@ class DocumentRepository extends ServiceEntityRepository
             ->setParameter('supportGroup', $supportGroup);
 
         if ($search->getDeleted()) {
-            $qb->andWhere('d.deletedAt IS NOT null');
+            $this->disableFilter($this->_em, 'softdeleteable');
+            $qb->andWhere('d.deletedAt IS NOT NULL');
         }
         if ($search->getName()) {
             $qb->andWhere('d.name LIKE :name OR d.content LIKE :name')

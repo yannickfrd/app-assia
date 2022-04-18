@@ -260,16 +260,13 @@ class PaymentRepository extends ServiceEntityRepository
      */
     public function findPaymentsOfSupportQuery(SupportGroup $supportGroup, SupportPaymentSearch $search = null): Query
     {
-        if ($search->getDeleted()) {
-            $this->disableFilter($this->_em, 'softdeleteable');
-        }
-
         $qb = $this->createQueryBuilder('p')
             ->andWhere('p.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroup);
 
         if ($search->getDeleted()) {
-            $qb->andWhere('p.deletedAt IS NOT null');
+            $this->disableFilter($this->_em, 'softdeleteable');
+            $qb->andWhere('p.deletedAt IS NOT NULL');
         }
         if ($search->getType()) {
             $qb->andWhere('p.type IN (:type)')

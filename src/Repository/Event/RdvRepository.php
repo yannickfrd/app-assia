@@ -34,14 +34,7 @@ class RdvRepository extends ServiceEntityRepository
      */
     public function findRdvsQuery(EventSearch $search, User $user, ?SupportGroup $supportGroup = null): Query
     {
-        if ($search->getDeleted()) {
-            $this->disableFilter($this->_em, 'softdeleteable');
-        }
         $qb = $this->getRdvsQuery();
-
-        if ($search->getDeleted()) {
-            $qb->andWhere('r.deletedAt IS NOT null');
-        }
 
         return $this->filter($qb, $search, $user, $supportGroup)
             ->orderBy('r.start', 'ASC')
@@ -127,6 +120,11 @@ class RdvRepository extends ServiceEntityRepository
 
         $qb->andWhere('sg.id IS NULL OR sp.head = TRUE');
 
+        if ($search->getDeleted()) {
+            $this->disableFilter($this->_em, 'softdeleteable');
+            $qb->andWhere('r.deletedAt IS NOT NULL');
+        }
+
         if ($supportGroup) {
             $qb->andWhere('sg.id = :supportGroup')
             ->setParameter('supportGroup', $supportGroup->getId());
@@ -173,22 +171,19 @@ class RdvRepository extends ServiceEntityRepository
      */
     public function findRdvsQueryOfSupport(EventSearch $search, SupportGroup $supportGroup): Query
     {
-        if ($search->getDeleted()) {
-            $this->disableFilter($this->_em, 'softdeleteable');
-        }
-
         $qb = $this->getBaseQuery()
             ->andWhere('sg.id = :supportGroup')
-            ->setParameter('supportGroup', $supportGroup->getId());
+            ->setParameter('supportGroup', $supportGroup->getId())
+        ;
 
         if ($search->getDeleted()) {
-            $qb->andWhere('r.deletedAt IS NOT null');
+            $this->disableFilter($this->_em, 'softdeleteable');
+            $qb->andWhere('r.deletedAt IS NOT NULL');
         }
         if ($search->getTitle()) {
             $qb->andWhere('r.title LIKE :title')
                 ->setParameter('title', '%'.$search->getTitle().'%');
         }
-
         if ($search->getStart()) {
             $qb->andWhere('r.start >= :start')
                 ->setParameter('start', $search->getStart());

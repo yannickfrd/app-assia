@@ -88,29 +88,28 @@ export default class RdvManager {
         const rdv = response.rdv
         const apiUrls = response.apiUrls
 
+        if (response.msg) {
+            this.messageFlash = new MessageFlash(response.alert, response.msg)
+        }
+
         if (response.action) {
             switch (response.action) {
-                case 'restore':
-                case 'delete':
-                    this.deleteRdvTr(rdv, response.action, apiUrls)
-                    break
                 case 'create':
                     this.createRdvTr(rdv, apiUrls)
-                    break;
-                case 'edit':
-                    this.editRdvTr(rdv, apiUrls)
                     break;
                 case 'show':
                     this.showRdv(rdv, response.canEdit)
                     break;
-            }
-        }
-
-        if (response.msg !== undefined) {
-            this.messageFlash = new MessageFlash(response.alert, response.msg)
-
-            if (response.action === 'restore') {
-                this.shouldBeRedirect(this.messageFlash.delay);
+                case 'edit':
+                    this.editRdvTr(rdv, apiUrls)
+                    break;
+                case 'delete':
+                    this.deleteRdvTr(rdv, response.action, apiUrls)
+                    break
+                case 'restore':
+                    this.deleteRdvTr(rdv, response.action, apiUrls)
+                    this.checkToRedirect(this.messageFlash.delay)
+                    break
             }
         }
 
@@ -283,9 +282,11 @@ export default class RdvManager {
      * Redirects if there are no more lines.
      * @param {number} delay
      */
-    shouldBeRedirect(delay) {
+    checkToRedirect(delay) {
         if (document.querySelectorAll('table#table-rdvs tbody tr').length === 0) {
-            setTimeout(() => document.location.href = location.pathname, delay*1000)
+            setTimeout(() => {
+                document.location.href = location.pathname
+            }, delay * 1000)        
         }
     }
 }

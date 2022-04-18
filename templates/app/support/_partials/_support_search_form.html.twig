@@ -3,7 +3,6 @@
 {% form_theme form 'bootstrap_4_layout.html.twig' %}
 
 {% block search_form %}
-
     <div class="col-auto my-1 px-1" title="{{ 'placeholder.name_or_id'|trans({}, 'forms') }}"
         data-toggle="tooltip" data-placement="bottom">{{ form_widget(form.fullname) }}</div>
     {% include '_shared/_service_device_referent_search.html.twig' %}
@@ -21,9 +20,12 @@
             {{ form_widget(form.head) }}
         </div>
     </div>
-    <div class="col-auto my-auto">
-        <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-0">
-            {{ form_widget(form.deleted.deleted) }}
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="col-auto my-auto">
+            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-0"
+                title="Voir les suivis supprimés" data-toggle="tooltip" data-placement="bottom">
+                {{ form_widget(form.deleted.deleted) }}
+            </div>
         </div>
-    </div>
+    {% endif %}
 {% endblock %}

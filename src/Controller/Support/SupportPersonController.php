@@ -102,17 +102,16 @@ final class SupportPersonController extends AbstractController
         int $id,
         SupportPersonRepository $supportPersonRepo,
         SupportRestorer $supportRestorer
-    ): JsonResponse {
+    ): Response {
         $supportPerson = $supportPersonRepo->findSupportPerson($id, true);
 
         $this->denyAccessUnlessGranted('DELETE', $supportPerson->getSupportGroup());
 
-        return $this->json([
-            'action' => 'restore',
-            'alert' => 'success',
-            'msg' => $supportRestorer->restore($supportPerson),
-            'support' => ['id' => $supportPerson->getSupportGroup()->getId()],
-        ]);
+        $message = $supportRestorer->restore($supportPerson);
+
+        $this->addFlash('success', $message);
+
+        return $this->redirectToRoute('support_show', ['id' => $supportPerson->getSupportGroup()->getId()]);
     }
 
     /**

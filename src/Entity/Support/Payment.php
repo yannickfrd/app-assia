@@ -665,12 +665,4 @@ class Payment
     {
         return $value >= 0 ? (new \NumberFormatter('fr-FR', \NumberFormatter::SPELLOUT))->format($value) : null;
     }
-
-    /**
-     * @Groups("get")
-     */
-    public function getDeletedAtToString(string $format = 'd/m/Y'): string
-    {
-        return $this->deletedAt ? $this->deletedAt->format($format) : '';
-    }
 }

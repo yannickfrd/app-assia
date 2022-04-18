@@ -244,14 +244,6 @@ class Note
     /**
      * @Groups("show_note")
      */
-    public function getDeletedAtToString(string $format = 'd/m/Y'): string
-    {
-        return $this->deletedAt ? $this->deletedAt->format($format) : '';
-    }
-
-    /**
-     * @Groups("show_note")
-     */
     public function getShortContent(): string
     {
         return substr($this->getContent(), 0, 200).' [...]';

@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% set title = 'Suivis' %}
 {% set ROLE_CHILD = constant('App\\Entity\\People\\RolePerson::ROLE_CHILD') %}
 {% set form_head = form.vars.value.head == true %}          
-{% set deleted_is_checked = form.deleted.deleted.vars.checked %}
+{% set restoration_mode = form.deleted.deleted.vars.checked %}
+{% set title = 'Suivis' ~ (restoration_mode ? ' (Corbeille)') %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -20,8 +20,9 @@
 
             <div class="row align-items-baseline">
                 <div class="col-md-4 count align-middle mb-2">
-                    <span id="count-supports" class="align-middle" data-count-supports="{{ supports.getTotalItemCount }}">Résultat : {{ supports.getTotalItemCount|number }} <!--
-                    -->{% if form_head %}ménage{% else %}personne{% endif %}{% if supports.getTotalItemCount > 1 %}s{% endif %}.</span>
+                    <span id="count-supports" class="align-middle" 
+                        data-count-supports="{{ supports.getTotalItemCount }}">Résultat : {{ supports.getTotalItemCount|number }}
+                        {% if form_head %}ménage{% else %}personne{% endif %}{% if supports.getTotalItemCount > 1 %}s{% endif %}.</span>
                 </div>
                 <div class="col-md-8">
                     <div class="navigation">{{ knp_pagination_render(supports) }}</div>
@@ -33,16 +34,37 @@
                     <thead>
                         <tr>
                             <th scope="col" class="align-middle th-w-20"></th>
-                            <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, 'Nom et prénom', 'p.lastname') }}</th>
-                            <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, 'Date de naissance', 'p.birthdate') }}</th>
-                            <th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(supports, 'Typologie familiale', 'g.familyTypology') }}</th>
-                            <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, 'Service (Dispositif)', 's.name') }}</th>
-                            <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, 'Intervenant·e', 'u.lastname') }}</th>
-                            <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, 'Statut', 'sg.status') }}</th>
-                            <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, 'Début de suivi', 'sg.startDate') }}</th>
-                            <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, 'Fin de suivi', 'sg.endDate') }}</th>
-                            <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, 'Commune', 'sg.city') }}</th>
-                            {% if deleted_is_checked %}
+                            <th scope="col" class="align-middle th-w-120">
+                                {{ knp_pagination_sortable(supports, 'Nom et prénom', 'p.lastname') }}
+                            </th>
+                            <th scope="col" class="align-middle th-date">
+                                {{ knp_pagination_sortable(supports, 'Date de naissance', 'p.birthdate') }}
+                            </th>
+                            <th scope="col" class="align-middle th-w-80">
+                                {{ knp_pagination_sortable(supports, 'Typologie familiale', 'g.familyTypology') }}
+                            </th>
+                            <th scope="col" class="align-middle th-w-120">
+                                {{ knp_pagination_sortable(supports, 'Service (Dispositif)', 's.name') }}
+                            </th>
+                            <th scope="col" class="align-middle th-w-120">
+                                {{ knp_pagination_sortable(supports, 'Intervenant·e', 'u.lastname') }}
+                            </th>
+                            <th scope="col" class="align-middle th-w-100">
+                                {{ knp_pagination_sortable(supports, 'Statut', 'sg.status') }}
+                            </th>
+                            <th scope="col" class="align-middle th-date">
+                                {{ knp_pagination_sortable(supports, 'Début de suivi', 'sg.startDate') }}
+                            </th>
+                            <th scope="col" class="align-middle th-date">
+                                {{ knp_pagination_sortable(supports, 'Fin de suivi', 'sg.endDate') }}
+                            </th>
+                            <th scope="col" class="align-middle th-w-120">
+                                {{ knp_pagination_sortable(supports, 'Commune', 'sg.city') }}
+                            </th>
+                            {% if restoration_mode %}
+                                <th scope="col" class="align-middle th-date">
+                                    {{ knp_pagination_sortable(supports, 'Supprimé le', 'sg.deletedAt') }}
+                                </th>
                                 <th scope="col" class="align-middle th-w-20"></th>
                             {% endif %}
                         </tr>
@@ -51,15 +73,14 @@
                         {% for support_person in supports %}
                             {% set support_group = support_person.supportGroup %}
                             {% set person = support_person.person %}
-                            {% set disabled = support_person.deletedAt is not null %}
-
+                            {% set is_deleted = support_person.deletedAt is not null %}
                             <tr class="{% if form_head == false and support_person.head %}font-weight-bold{% endif %}"
                                 data-support="support-{{ support_group.id }}">
                                 <td class="align-middle text-center">
                                     {% if is_granted('VIEW', support_group) %}
                                         {% include 'model/button/_show_button.html.twig' with {
                                             'path_route': path('support_show', {'id': support_group.id}),
-                                            'disabled': support_person.head == false and support_group.deletedAt is null ? false : disabled
+                                            'disabled': support_person.head == false and support_group.deletedAt is null ? false : is_deleted
                                         } %}
                                     {% endif %}
                                 </td>
@@ -78,11 +99,11 @@
                                     <span class="text-secondary">{{ support_group.device ? '(' ~ support_group.device.name ~ ')' }}</span>
                                 </td>
                                 <td class="align-middle">{{ support_group.referent ? support_group.referent.fullname }}</td>
-                                <td class="align-middle">{{ support_person.statusToString }}<!--
-                                    -->{% if support_group.service.coefficient == YES %}<!--
-                                        -->
-                                    <br/><span class="text-secondary">{{ support_group.coefficient ? '(coeff. ' ~ support_group.coefficient ~ ')' }}</span><!--
-                                    -->{% endif %}
+                                <td class="align-middle">{{ support_person.statusToString }}
+                                    {% if support_group.service.coefficient == YES %}
+                                        <br/><span class="text-secondary">{{ support_group.coefficient ? 
+                                            '(coeff. ' ~ support_group.coefficient ~ ')' }}</span>
+                                    {% endif %}
                                 </td>
                                 <td class="align-middle">{{ support_person.startDate ? support_person.startDate|date('d/m/Y') }}</td>
                                 <td class="align-middle">{{ support_person.endDate ? support_person.endDate|date('d/m/Y') }}
@@ -91,9 +112,15 @@
                                     {% endif %}
                                 </td>
                                 <td class="align-middle">{{ support_group.city }}</td>
-                                {% if disabled and is_granted('DELETE', support_group) %}
+                                {% if is_deleted %}
+                                    <td class="align-middle">{{ support_person.deletedAtToString }}</td>
                                     <td class="align-middle text-center">
-                                        {% include 'model/button/_restore_button.html.twig' with {path_route: path('support_person_restore', {'id': support_person.id})} %}
+                                        <a href="{{ path('support_person_restore', {'id': support_person.id}) }}"  
+                                            class="btn btn-success btn-sm shadow"
+                                            title="{{ restore_title is defined ? restore_title : 'Restaurer' }}"
+                                            data-toggle="tooltip" data-placement="bottom">
+                                            <i class="fa-solid fa-trash-arrow-up"></i>
+                                        </a>
                                     </td>
                                 {% endif %}
                             </tr>
@@ -104,10 +131,8 @@
             <div class="navigation">{{ knp_pagination_render(supports) }}</div>
         </div>
     </section>
-
 {% endblock %}
 
 {% block javascripts %}
     {{ encore_entry_script_tags('search') }}
-    {{ encore_entry_script_tags('support_list_index') }}
 {% endblock javascripts %}
