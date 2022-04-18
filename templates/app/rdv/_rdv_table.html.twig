@@ -48,9 +48,15 @@
                         <th scope="col" class="align-middle th-w-120">
                             {{ knp_pagination_sortable(rdvs, 'Service', 's.name') }}</th>
                     {% endif %}
-                    <th scope="col" class="align-middle th-w-80">
-                        {{ knp_pagination_sortable(rdvs, 'Créé le', 'r.createdAt') }}
-                    </th>
+                    {% if restoration_mode %}
+                        <th scope="col" class="align-middle th-w-80">
+                            {{ knp_pagination_sortable(rdvs, 'Supprimé le', 'r.deletedAt') }}
+                        </th>
+                    {% else %}
+                        <th scope="col" class="align-middle th-w-80">
+                            {{ knp_pagination_sortable(rdvs, 'Créé le', 'r.createdAt') }}
+                        </th>
+                    {% endif %}
                     {% if support_is_not_defined %}
                         <th scope="col" class="align-middle th-w-80">
                             {{ knp_pagination_sortable(rdvs, 'Créé par', 'u2.lastname') }}</th>
@@ -61,11 +67,12 @@
                 <tbody>
                 {% for rdv in rdvs %}
                     {% set support = rdv.supportGroup %}
+                    {% set is_deleted = rdv.deletedAt is not null %}
                     <tr id="rdv-{{ rdv.id }}">
                         <td class="align-middle text-center">
-                            <button class="btn btn-{{ theme_color }} btn-sm shadow my-1"
-                                title="Voir/Modifier le rendez-vous" data-toggle="tooltip" data-placement="bottom"
-                                data-action="edit-rdv" data-url="{{ path('rdv_show', {'id': rdv.id}) }}">
+                            <button class="btn btn-{{ is_deleted ? 'secondary disabled' : theme_color }} btn-sm shadow my-1"
+                                title="{{ is_deleted == false ? 'Voir/Modifier le rendez-vous' }}" data-toggle="tooltip" data-placement="bottom"
+                                data-action="edit-rdv" data-url="{{ path('rdv_show', {'id': rdv.id}) }}" {{ is_deleted ? 'disabled' }}>
                                 <i class="fas fa-eye"></i>
                             </button>
                         </td>
@@ -91,7 +98,6 @@
                             {% endfor %}
                         </td>
                         <td class="align-middle" data-cell="users">{{ rdv.usersToString }}</td>
-
                         {% if support_is_not_defined %}
                             <td class="align-middle" data-cell="support">{{ support ? support.header.fullname }}</td>
                             <td class="align-middle" data-cell="service">
@@ -100,19 +106,27 @@
                                 <span class="text-secondary">{{ support and support.device ? '(' ~ support.device.name ~ ')' }}</span>
                             </td>
                         {% endif %}
-
-                        <td class="align-middle" data-cell="createdAt">{{ rdv.createdAtToString }}</td>
-
+                        {% if is_deleted %}
+                            <td class="align-middle" data-cell="deletedAt">{{ rdv.deletedAtToString }}</td>
+                        {% else %}
+                            <td class="align-middle" data-cell="createdAt">{{ rdv.createdAtToString }}</td>
+                        {% endif %}
                         {% if support_is_not_defined %}
                             <td class="align-middle">{{ rdv.createdBy ? rdv.createdBy.fullname : 'Auto.' }}</td>
                         {% endif %}
                         <td class="align-middle text-center">
                             {% if is_granted('DELETE', rdv) %}
-                                <button data-url="{{ path('rdv_delete', {'id': rdv.id}) }}"
-                                    class="btn btn-danger btn-sm shadow my-1" title="Supprimer le rendez-vous"
-                                    data-action="delete-rdv" data-toggle="tooltip" data-placement="bottom">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
+                                {% if is_deleted %}
+                                    {% include 'model/button/_restore_button.html.twig' with {
+                                        path_route: path('rdv_restore', {'id': rdv.id})
+                                    } %}
+                                {% else %}
+                                    <button data-url="{{ path('rdv_delete', {'id': rdv.id}) }}"
+                                        class="btn btn-danger btn-sm shadow my-1" title="Supprimer le rendez-vous"
+                                        data-action="delete-rdv" data-toggle="tooltip" data-placement="bottom">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                {% endif %}
                             {% endif %}
                         </td>
                     </tr>

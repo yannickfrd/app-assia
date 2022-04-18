@@ -7,9 +7,12 @@ namespace App\Controller\Support;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Support\SupportPerson;
 use App\Form\Support\Support\AddPersonToSupportType;
+use App\Repository\Support\SupportPersonRepository;
 use App\Service\Grammar;
 use App\Service\SupportGroup\SupportManager;
 use App\Service\SupportGroup\SupportPeopleAdder;
+use App\Service\SupportGroup\SupportRestorer;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -89,6 +92,26 @@ final class SupportPersonController extends AbstractController
         }
 
         return $this->redirectToRoute('support_edit', ['id' => $supportGroup->getId()]);
+    }
+
+    /**
+     * @Route("/support-person/{id}/restore", name="support_person_restore", methods="GET")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function restore(
+        int $id,
+        SupportPersonRepository $supportPersonRepo,
+        SupportRestorer $supportRestorer
+    ): Response {
+        $supportPerson = $supportPersonRepo->findSupportPerson($id, true);
+
+        $this->denyAccessUnlessGranted('DELETE', $supportPerson->getSupportGroup());
+
+        $message = $supportRestorer->restore($supportPerson);
+
+        $this->addFlash('success', $message);
+
+        return $this->redirectToRoute('support_show', ['id' => $supportPerson->getSupportGroup()->getId()]);
     }
 
     /**

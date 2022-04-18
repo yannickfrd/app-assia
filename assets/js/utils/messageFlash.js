@@ -7,10 +7,10 @@ export default class MessageFlash {
         this.msgFlashContentElt = document.getElementById('js-notif-container')
         this.alert = alert
         this.message = message
-        this.delay = delay
         this.time = 0
         this.msg = this.createMsgElt()
         this.init()
+        this._delay = delay;
     }
 
     /**
@@ -52,10 +52,14 @@ export default class MessageFlash {
      * Timer.
      */
     timer() {
-        if (this.time > this.delay) {
+        if (this.time > this._delay) {
             clearInterval(this.timerID)
             this.msg.remove()
         }
         this.time++
+    }
+
+    get delay() {
+        return this._delay;
     }
 }

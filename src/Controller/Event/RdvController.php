@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class RdvController extends AbstractController
 {
@@ -255,6 +256,32 @@ final class RdvController extends AbstractController
                 'google' => $rdv->getGoogleEventId(),
                 'outlook' => $rdv->getOutlookEventId(),
             ]),
+        ]);
+    }
+
+    /**
+     * @Route("/rdv/{id}/restore", name="rdv_restore", methods="GET")
+     */
+    public function restore(
+        int $id,
+        RdvRepository $rdvRepo,
+        EntityManagerInterface $em,
+        TranslatorInterface $translator
+    ): JsonResponse {
+        $rdv = $rdvRepo->findRdv($id, true);
+
+        $this->denyAccessUnlessGranted('EDIT', $rdv->getSupportGroup());
+
+        $rdv->setDeletedAt(null);
+        $em->flush();
+
+        RdvManager::deleteCacheItems($rdv);
+
+        return $this->json([
+            'action' => 'restore',
+            'alert' => 'success',
+            'msg' => $translator->trans('rdv.restored_successfully', ['%rdv_title%' => $rdv->getTitle()], 'app'),
+            'rdv' => ['id' => $rdv->getId()],
         ]);
     }
 }

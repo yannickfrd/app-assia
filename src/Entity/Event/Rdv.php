@@ -9,7 +9,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -21,7 +20,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Rdv extends AbstractEvent
 {
     use TagTrait;
-    use SoftDeleteableEntity;
 
     public const SERIALIZER_GROUPS = [
         'show_rdv', 'show_tag', 'show_support_group', 'show_alert',

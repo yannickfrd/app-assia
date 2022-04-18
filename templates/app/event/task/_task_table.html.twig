@@ -15,10 +15,14 @@
                 {% if support_is_not_defined %}
                     <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(tasks, 'Nom du suivi', 'p.lastname') }}</th>
                     <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(tasks, 'Service', 's.name') }}</th>
-                {% endif %}               
-                <th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(tasks, 'Créé le', 't.createdAt') }}</th>
+                {% endif %}
+                {% if restoration_mode %}
+                    <th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(tasks, 'Supprimée le', 't.deletedAt') }}</th>
+                {% else %}
+                    <th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(tasks, 'Créée le', 't.createdAt') }}</th>
+                {% endif %}
                 {% if support_is_not_defined %}
-                    <th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(tasks, 'Créé par', 'u2.lastname') }}</th>
+                    <th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(tasks, 'Créée par', 'u2.lastname') }}</th>
                 {% endif %}
                 <th scope="col" class="align-middle th-w-20"></th>
             </tr>
@@ -26,25 +30,26 @@
         <tbody>
             {% set now = 'now'|date('Y-m-d-H-i') %}
             {% for task in tasks %}
+                {% set is_deleted = task.deletedAt is not null %}
                 {% set support = task.supportGroup %}
                 <tr id="task_{{ task.id }}" class="{% if task.status == true %}text-secondary delete{% endif %}">
                     <td class="align-middle text-center">
-                        <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} text-dark pl-0" 
-                            title="Cliquer pour changer le statut" data-toggle="tooltip" data-placement="bottom">
+                        <div class="custom-control custom-checkbox custom-checkbox-{{ is_deleted ? 'secondary disabled' : theme_color }} text-dark pl-0"
+                            title="{{ is_deleted == false ? 'Cliquer pour changer le statut' }}" data-toggle="tooltip" data-placement="bottom">
                             <div class="form-check">
-                                <input type="checkbox" class="custom-control-input checkbox form-check-input" 
+                                <input type="checkbox" class="custom-control-input checkbox form-check-input"
                                     id="toggle_task_status_{{ task.id }}" {% if task.status == 1 %}checked{% endif %}
-                                    data-action="toggle_task_status" 
-                                    data-url="{{ path('task_toggle_status', {'id': task.id}) }}">
-                                <label class="custom-control-label form-check-label ml-2 cursor-pointer" 
+                                    data-action="toggle_task_status"
+                                    data-url="{{ path('task_toggle_status', {'id': task.id}) }}" {{ is_deleted ? 'disabled' }}>
+                                <label class="custom-control-label form-check-label ml-2 {{ is_deleted == false ? 'cursor-pointer' }}"
                                     for="toggle_task_status_{{ task.id }}"></label>
                             </div>
                         </div>
                     </td>
                     <td class="align-middle text-center">
-                        <button data-url="{{ path('task_show', {'id': task.id}) }}"
-                            class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-action="edit_task"
-                            title="Voir/Modifier la tâche" data-toggle="tooltip" data-placement="bottom">
+                        <button data-url="{{ path('task_show', {'id': task.id}) }}" {{ is_deleted ? 'disabled' }}
+                            class="btn btn-{{ is_deleted ? 'secondary disabled' : theme_color }} btn-sm shadow my-1"
+                            data-action="edit_task" title="{{ is_deleted == false ? 'Voir/Modifier la tâche' }}" data-toggle="tooltip" data-placement="bottom">
                             <span class="fas fa-eye"></span>
                         </button>
                     </td>
@@ -88,16 +93,26 @@
                             <span class="text-secondary">{{ support and support.device ? '(' ~ support.device.name ~ ')' }}</span>
                         </td>   
                     {% endif %}
-                    <td class="align-middle" data-cell="createdAt">{{ task.createdAtToString }}</td>
+
+                    {% if is_deleted %}
+                        <td class="align-middle" data-cell="createdAt">{{ task.deletedAtToString }}</td>
+                    {% else %}
+                        <td class="align-middle" data-cell="createdAt">{{ task.createdAtToString }}</td>
+                    {% endif %}
+
                     {% if support_is_not_defined %}
                         <td class="align-middle">{{ task.createdBy ? task.createdBy.fullname : 'Auto.' }}</td>
                     {% endif %}
                     <td class="align-middle text-center">
                         {% if is_granted('DELETE', task) %}
-                            <button class="btn btn-danger btn-sm shadow my-1" data-action="delete_task" 
-                                data-url="{{ path('task_delete', {'id': task.id}) }}" title="Supprimer la tâche" 
-                                data-toggle="tooltip" data-placement="bottom"><span class="fas fa-trash-alt"></span>
-                            </button>
+                            {% if is_deleted %}
+                                {% include 'model/button/_restore_button.html.twig' with {path_route: path('task_restore', {'id': task.id})} %}
+                            {% else %}
+                                <button class="btn btn-danger btn-sm shadow my-1" data-action="delete_task"
+                                    data-url="{{ path('task_delete', {'id': task.id}) }}" title="Supprimer la tâche"
+                                    data-toggle="tooltip" data-placement="bottom"><span class="fas fa-trash-alt"></span>
+                                </button>
+                            {% endif %}
                         {% endif %}
                     </td>
                 </tr>

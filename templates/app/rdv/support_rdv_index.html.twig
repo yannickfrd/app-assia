@@ -1,10 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Rendez-vous{% endblock %}
+{% set restoration_mode = form_search.deleted.deleted.vars.checked %}
+{% set title = 'Rendez-vous' ~ (restoration_mode ? ' (Corbeille)') %}
+
+{% block title %}{{ title }}{% endblock %}
 
 {% block body %}
     <div class="container">
-        {% set title = 'Rendez-vous' %}
         {% include 'app/support/_partials/_support_nav.html.twig' %}
 
 		<div class="row mb-2">

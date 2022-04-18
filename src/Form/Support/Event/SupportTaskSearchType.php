@@ -5,6 +5,7 @@ namespace App\Form\Support\Event;
 use App\Entity\Event\Task;
 use App\Entity\Organization\Tag;
 use App\Form\Model\Event\TaskSearch;
+use App\Form\Support\Support\DeletedSearchType;
 use App\Form\Utils\Choices;
 use App\Repository\Organization\TagRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -68,6 +69,9 @@ class SupportTaskSearchType extends AbstractType
                 'required' => false,
             ])
             ->add('export')
+            ->add('deleted', DeletedSearchType::class, [
+                'label' => false,
+            ])
         ;
     }
 

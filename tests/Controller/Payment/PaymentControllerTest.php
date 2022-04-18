@@ -266,6 +266,32 @@ class PaymentControllerTest extends WebTestCase
         $this->assertSame('delete', $content['action']);
     }
 
+    public function testRestorePaymentIsSuccessful(): void
+    {
+        $this->client->loginUser($this->fixtures['john_user']);
+
+        $paymentId = $this->payment->getId();
+        $this->client->request('GET', "/payment/$paymentId/delete");
+
+        // After delete a payment
+        $id = $this->supportGroup->getId();
+        $crawler = $this->client->request('GET', "/support/$id/payments", [
+            'deleted' => ['deleted' => true]
+        ]);
+        $this->assertResponseIsSuccessful();
+        $this->assertSame(1, $crawler->filter('tbody tr')->count());
+
+        $this->client->request('GET', "/payment/$paymentId/restore");
+        $content = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertSame('restore', $content['action']);
+
+        // After restore a payment
+        $crawler = $this->client->request('GET', "/support/$id/payments", [
+            'deleted' => ['deleted' => true]
+        ]);
+        $this->assertSame(0, $crawler->filter('tbody tr')->count());
+    }
+
     public function testExportPaymentToPdfIsSuccessful(): void
     {
         $this->client->loginUser($this->fixtures['john_user']);

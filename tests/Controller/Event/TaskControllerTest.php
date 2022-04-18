@@ -216,6 +216,30 @@ class TaskControllerTest extends WebTestCase
         $this->assertSame('delete', $content['action']);
     }
 
+    public function testRestoreTaskIsSuccessful(): void
+    {
+        $taskId = $this->task->getId();
+        $this->client->request('DELETE', "/task/$taskId/delete");
+
+        // After delete a task
+        $id = $this->supportGroup->getId();
+        $crawler = $this->client->request('GET', "/support/$id/tasks", [
+            'deleted' => ['deleted' => true]
+        ]);
+        $this->assertResponseIsSuccessful();
+        $this->assertSame(1, $crawler->filter('tbody tr')->count());
+
+        $this->client->request('GET', "/task/$taskId/restore");
+        $content = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertSame('restore', $content['action']);
+
+        // After restore a task
+        $crawler = $this->client->request('GET', "/support/$id/tasks", [
+            'deleted' => ['deleted' => true]
+        ]);
+        $this->assertSame(0, $crawler->filter('tbody tr')->count());
+    }
+
     public function testToggleStatusIsSuccessful(): void
     {
         $this->client->request('GET', "/task/{$this->task->getId()}/toggle-status");

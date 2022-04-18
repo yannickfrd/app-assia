@@ -27,7 +27,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class NoteController extends AbstractController
@@ -49,7 +48,8 @@ final class NoteController extends AbstractController
     }
 
     /**
-     * @Route("/support/{id}/notes", name="support_note_index", methods="GET|POST")
+     * @Route("/support/{id}/notes/table-view", name="support_note_index_table", methods="GET|POST")
+     * @Route("/support/{id}/notes/card-view", name="support_note_index", methods="GET|POST")
      *
      * @param int $id // SupportGroup
      */
@@ -79,10 +79,11 @@ final class NoteController extends AbstractController
         }
 
         return $this->render('app/note/support_note_index.html.twig', [
+            'is_card_view' => 'support_note_index' === $request->get('_route'),
             'support' => $supportGroup,
             'form_search' => $formSearch->createView(),
             'form' => $form->createView(),
-            'nb_total_notes' => $supportCollections->getNbNotes($supportGroup),
+            'nb_total_notes' => $supportCollections->getNbNotes($supportGroup, $search->getDeleted()),
             'notes' => $notePaginator->paginateSupportNotes($supportGroup, $request, $search),
         ]);
     }
@@ -94,7 +95,6 @@ final class NoteController extends AbstractController
         SupportGroup $supportGroup,
         Request $request,
         EntityManagerInterface $em,
-        NormalizerInterface $normalizer,
         TranslatorInterface $translator
     ): JsonResponse {
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
@@ -116,20 +116,44 @@ final class NoteController extends AbstractController
                 'action' => 'create',
                 'alert' => 'success',
                 'msg' => $translator->trans('note.created_successfully', ['%note_title%' => $note->getTitle()], 'app'),
-                'note' => $normalizer->normalize($note, 'json', ['groups' => ['show_note', 'show_tag']]),
-            ]);
+                'note' => $note,
+            ], 200, [], ['groups' => Note::SERIALIZER_GROUPS]);
         }
 
         return $this->getErrorMessage($form);
     }
 
     /**
-     * @Route("/note/{id}/edit", name="note_edit", methods="POST")
-     * @IsGranted("EDIT", subject="note")
+     * Donne un objet pour la requête ajax.
+     *
+     * @Route("/note/{id}/show", name="note_show", methods="GET")
      */
-    public function edit(Note $note, Request $request, EntityManagerInterface $em,  NormalizerInterface $normalizer,
-        TranslatorInterface $translator): JsonResponse
+    public function show(int $id, NoteRepository $noteRepo): JsonResponse
     {
+        $note = $noteRepo->findNote($id);
+
+        $this->denyAccessUnlessGranted('VIEW', $note);
+
+        return $this->json([
+            'action' => 'show',
+            'note' => $note,
+        ], 200, [], ['groups' => Note::SERIALIZER_GROUPS]);
+    }
+
+    /**
+     * @Route("/note/{id}/edit", name="note_edit", methods="POST")
+     */
+    public function edit(
+        int $id,
+        Request $request,
+        EntityManagerInterface $em,
+        TranslatorInterface $translator,
+        NoteRepository $noteRepo
+    ): JsonResponse {
+        $note = $noteRepo->findNote($id);
+
+        $this->denyAccessUnlessGranted('EDIT', $note);
+
         $form = $this->createForm(NoteType::class, $note)
             ->handleRequest($request);
 
@@ -142,8 +166,8 @@ final class NoteController extends AbstractController
                 'action' => 'update',
                 'alert' => 'success',
                 'msg' => $translator->trans('note.updated_successfully', ['%note_title%' => $note->getTitle()], 'app'),
-                'note' => $normalizer->normalize($note, 'json', ['groups' => ['show_note', 'show_tag']]),
-            ]);
+                'note' => $note,
+            ], 200, [], ['groups' => Note::SERIALIZER_GROUPS]);
         }
 
         return $this->getErrorMessage($form);
@@ -220,6 +244,32 @@ final class NoteController extends AbstractController
         return $this->redirectToRoute('support_note_index', [
             'id' => $id,
             'noteId' => $note->getId(),
+        ]);
+    }
+
+    /**
+     * @Route("/note/{id}/restore", name="note_restore", methods="GET")
+     */
+    public function restore(
+        int $id,
+        NoteRepository $noteRepo,
+        EntityManagerInterface $em,
+        TranslatorInterface $translator
+    ): JsonResponse {
+        $note = $noteRepo->findNote($id, true);
+
+        $this->denyAccessUnlessGranted('EDIT', $note->getSupportGroup());
+
+        $note->setDeletedAt(null);
+        $em->flush();
+
+        NoteManager::deleteCacheItems($note, true);
+
+        return $this->json([
+            'action' => 'restore',
+            'alert' => 'success',
+            'msg' => $translator->trans('note.restored_successfully', ['%note_title%' => $note->getTitle()], 'app'),
+            'note' => ['id' => $note->getId()],
         ]);
     }
 }

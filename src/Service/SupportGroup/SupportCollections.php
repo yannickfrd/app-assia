@@ -82,8 +82,12 @@ class SupportCollections
     /**
      * Donne le nombre de notes du suivi social.
      */
-    public function getNbNotes(SupportGroup $supportGroup): int
+    public function getNbNotes(SupportGroup $supportGroup, bool $disable = false): int
     {
+        if ($disable) {
+            return $this->noteRepo->countNotesDisabled();
+        }
+
         return $this->cache->get(SupportGroup::CACHE_SUPPORT_NB_NOTES_KEY.$supportGroup->getId(), function (CacheItemInterface $item) use ($supportGroup) {
             $item->expiresAfter(\DateInterval::createFromDateString('1 month'));
 

@@ -210,6 +210,32 @@ class DocumentControllerTest extends WebTestCase
         $this->assertSame('delete', $contentResponse['action']);
     }
 
+    public function testRestoreDocumentIsSuccessful(): void
+    {
+        $this->client->loginUser($this->fixtures['john_user']);
+
+        $documentId = $this->document->getId();
+        $this->client->request('GET', "/document/$documentId/delete");
+
+        // After delete a document
+        $id = $this->supportGroup->getId();
+        $crawler = $this->client->request('GET', "/support/$id/documents", [
+            'search' => ['deleted' => ['deleted' => true]]
+        ]);
+        $this->assertResponseIsSuccessful();
+        $this->assertSame(1, $crawler->filter('tbody tr')->count());
+
+        $this->client->request('GET', "/document/$documentId/restore");
+        $content = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertSame('restore', $content['action']);
+
+        // After restore a document
+        $crawler = $this->client->request('GET', "/support/$id/documents", [
+            'search' => ['deleted' => ['deleted' => true]]
+        ]);
+        $this->assertSame(0, $crawler->filter('tbody tr')->count());
+    }
+
     private function uploadFile(): Response
     {
         $id = $this->supportGroup->getId();

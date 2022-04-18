@@ -3,6 +3,7 @@
 namespace App\Form\Model\Support;
 
 use App\Entity\Support\SupportGroup;
+use App\Entity\Traits\DeletedTrait;
 use App\Form\Model\Organization\ReferentServiceDeviceSearchTrait;
 use App\Form\Model\Traits\DateSearchTrait;
 
@@ -10,6 +11,7 @@ class SupportSearch
 {
     use DateSearchTrait;
     use ReferentServiceDeviceSearchTrait;
+    use DeletedTrait;
 
     public const SUPPORT_DATES = [
         1 => 'Début du suivi',
@@ -105,7 +107,7 @@ class SupportSearch
         return $this;
     }
 
-    public function getSupportDatesToString(): string
+    public function getSupportDatesToString(): ?string
     {
         return $this->supportDates ? self::SUPPORT_DATES[$this->supportDates] : null;
     }

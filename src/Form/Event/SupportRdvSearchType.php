@@ -5,6 +5,7 @@ namespace App\Form\Event;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\Tag;
 use App\Form\Model\Event\EventSearch;
+use App\Form\Support\Support\DeletedSearchType;
 use App\Form\Type\DateSearchType;
 use App\Repository\Organization\TagRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -54,6 +55,9 @@ class SupportRdvSearchType extends AbstractType
                 ],
             ])
             ->add('export')
+            ->add('deleted', DeletedSearchType::class, [
+                'label' => false,
+            ])
         ;
     }
 

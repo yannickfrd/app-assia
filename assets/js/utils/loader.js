@@ -30,7 +30,7 @@ export default class Loader {
      * @param {String} info 
      */
     updateInfo(info) {
-        if (info != this.infoElt.textContent) {
+        if (info !== this.infoElt.textContent) {
             this.infoElt.textContent = info
         }
     }

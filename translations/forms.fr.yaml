@@ -166,6 +166,8 @@ support:
   dates: Date d'accompagnement
   startDate: Date de début d'accompagnement
   endDate: Date de fin d'accompagnement
+  label:
+    soft_deleteable: Corbeille
 Clone support: Je souhaite récupérer les informations du précédent suivi social (évaluation et documents) en accord avec le service concerné.
 
 # OriginRequest

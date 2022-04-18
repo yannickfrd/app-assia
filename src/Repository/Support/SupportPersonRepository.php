@@ -13,6 +13,7 @@ use App\Form\Model\Support\AvdlSupportSearch;
 use App\Form\Model\Support\HotelSupportSearch;
 use App\Form\Model\Support\SupportSearch;
 use App\Repository\Traits\QueryTrait;
+use App\Service\DoctrineTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -28,6 +29,7 @@ use Symfony\Component\Security\Core\Security;
 class SupportPersonRepository extends ServiceEntityRepository
 {
     use QueryTrait;
+    use DoctrineTrait;
 
     public const EXPORT_LIMIT = 15_000;
 
@@ -39,6 +41,29 @@ class SupportPersonRepository extends ServiceEntityRepository
         parent::__construct($registry, SupportPerson::class);
 
         $this->user = $security->getUser();
+    }
+
+    public function findSupportPerson(int $id, bool $deleted = false): ?SupportPerson
+    {
+        if ($deleted) {
+            $this->disableFilter($this->_em, 'softdeleteable');
+        }
+
+        return $this->createQueryBuilder('sp')
+            ->leftJoin('sp.person', 'p')->addSelect('p')
+            ->leftJoin('sp.supportGroup', 'sg')->addSelect('sg')
+            ->leftJoin('sg.service', 's')->addSelect('s')
+            ->leftJoin('sg.peopleGroup', 'pg')->addSelect('pg')
+            ->leftJoin('sg.supportPeople', 'sp2')->addSelect('sp2')
+            ->leftJoin('sp2.person', 'p2')->addSelect('p2')
+            ->leftJoin('p2.rolesPerson', 'r')->addSelect('r')
+
+            ->where('sp.id = :id')
+            ->setParameter('id', $id)
+
+            ->getQuery()
+            ->getSingleResult()
+        ;
     }
 
     /**
@@ -320,6 +345,11 @@ class SupportPersonRepository extends ServiceEntityRepository
         if (!$this->user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->andWhere('s.id IN (:services)')
                 ->setParameter('services', $this->user->getServices());
+        }
+
+        if ($search->getDeleted()) {
+            $this->disableFilter($this->_em, 'softdeleteable');
+            $qb->andWhere('sp.deletedAt IS NOT NULL');
         }
 
         if ($search->getHead()) {

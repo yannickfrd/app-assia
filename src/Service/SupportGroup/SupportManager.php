@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
@@ -99,7 +100,7 @@ class SupportManager
     /**
      * Créé un nouveau suivi.
      */
-    public function create(SupportGroup $supportGroup, ?Form $form): ?SupportGroup
+    public function create(SupportGroup $supportGroup, ?FormInterface $form): ?SupportGroup
     {
         // Vérifie si un suivi est déjà en cours pour ce ménage dans ce service.
         if (SupportGroup::STATUS_ENDED !== $supportGroup->getStatus() && $this->activeSupportExists($supportGroup)) {
@@ -223,7 +224,7 @@ class SupportManager
             $cache->deleteItem(User::CACHE_USER_SUPPORTS_KEY.$supportGroup->getReferent()->getId());
         }
 
-        if ($currentReferent && $currentReferent != $supportGroup->getReferent()) {
+        if ($currentReferent && $currentReferent !== $supportGroup->getReferent()) {
             $cache->deleteItem(User::CACHE_USER_SUPPORTS_KEY.$currentReferent->getId());
         }
 
