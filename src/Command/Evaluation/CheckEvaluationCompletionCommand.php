@@ -2,7 +2,6 @@
 
 namespace App\Command\Evaluation;
 
-use App\Entity\Support\SupportGroup;
 use App\Repository\Support\SupportGroupRepository;
 use App\Service\Evaluation\EvaluationCompletionChecker;
 use Doctrine\ORM\EntityManagerInterface;
