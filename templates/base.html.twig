@@ -1,57 +1,58 @@
 <!DOCTYPE html>
 <html lang="fr">
-	<head>
-		<title>{% block title %}{% endblock %} | Application Assia</title>
-		<meta charset="utf-8" />
-		<meta name="robots" content="noindex">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css" 
-			integrity="sha384-Bfad6CLCknfcloXFOyFnlgtENryhrpZCe29RTifKEixXQZ38WheV+i/6YWSzkz3V" crossorigin="anonymous">
-		{{ encore_entry_link_tags("app") }}
-		{% block stylesheets %}{% endblock %}
-		<link rel="icon" href="{{ asset("images/logo_assia.ico") }}" />
-		<meta property="og:title" content="Application Assia" />
-		<meta property="og:type" content="application" />
-		<meta property="og:url" content="https://app-assia.org" />
-		<meta property="og:image" content="" />
-		<meta name="description" content="Application d’Accompagnement Social et Solidaire Inter-Associative" />
-	</head>
+<head>
+    <title>{% block title %}{% endblock %} | Application Assia</title>
+    <meta charset="utf-8"/>
+    <meta name="robots" content="noindex">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+        integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    {{ encore_entry_link_tags("app") }}
+    {% block stylesheets %}{% endblock %}
+    <link rel="icon" href="{{ asset("images/logo_assia.ico") }}"/>
+    <meta property="og:title" content="Application Assia"/>
+    <meta property="og:type" content="application"/>
+    <meta property="og:url" content="https://app-assia.org"/>
+    <meta property="og:image" content=""/>
+    <meta name="description" content="Application d’Accompagnement Social et Solidaire Inter-Associative"/>
+</head>
 
-	{% set theme_color = app.request.hasPreviousSession and app.session.get("theme_color") ? app.session.get("theme_color") : "dark" %}
+{% set theme_color = app.request.hasPreviousSession and app.session.get("theme_color") ? app.session.get("theme_color") : "dark" %}
 
-	<body id="top-body">
-		<div id="loader" role="status">
-			<div class="d-flex flex-column align-items-center text-{{ theme_color }}">
-				<span class="fas fa-circle-notch"></span>
-				<span class="small" data-value="Chargement...">Chargement...</span>
-			</div>
-		</div>
+<body id="top-body">
+<div id="loader" role="status">
+    <div class="d-flex flex-column align-items-center text-{{ theme_color }}">
+        <span class="fas fa-circle-notch"></span>
+        <span class="small" data-value="Chargement...">Chargement...</span>
+    </div>
+</div>
 
-		<main class="min-vh-100">
-			<header id="header" data-color="{{ theme_color }}">
-				{% include "_shared/_navbar.html.twig" %}
-			</header>
+<main class="min-vh-100">
+    <header id="header" data-color="{{ theme_color }}">
+        {% include "_shared/_navbar.html.twig" %}
+    </header>
 
-			<div class="z-index-9999 fixed-bottom">
-				<div id="js-notif-container" class="container py-0 d-none"></div>
-			</div>
+    <div class="z-index-9999 fixed-bottom">
+        <div id="js-notif-container" class="container py-0 d-none"></div>
+    </div>
 
-			{% include "_shared/_autoLogout.html.twig" %}
+    {% include "_shared/_autoLogout.html.twig" %}
 
-			{% block body %}{% endblock %}
+    {% block body %}{% endblock %}
 
-			{% if APP_ENV != 'test' %}
-				<a id="scroll-top" href="#top-body">
-					<span class="fa fa-chevron-up"></span>
-				</a>
-			{% endif %}
+    {% if APP_ENV != 'test' %}
+        <a id="scroll-top" href="#top-body">
+            <span class="fa fa-chevron-up"></span>
+        </a>
+    {% endif %}
 
-		</main>
+</main>
 
-		{% include "_shared/_footer.html.twig" %}
+{% include "_shared/_footer.html.twig" %}
 
-	{{ encore_entry_script_tags("app") }}
-	{% block javascripts %}{% endblock %}
+{{ encore_entry_script_tags("app") }}
+{% block javascripts %}{% endblock %}
 
-	</body>
+</body>
 </html>

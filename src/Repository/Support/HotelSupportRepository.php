@@ -3,6 +3,7 @@
 namespace App\Repository\Support;
 
 use App\Entity\Support\HotelSupport;
+use App\Service\DoctrineTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -14,6 +15,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class HotelSupportRepository extends ServiceEntityRepository
 {
+    use DoctrineTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, HotelSupport::class);

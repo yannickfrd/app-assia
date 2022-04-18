@@ -8,6 +8,7 @@ use App\Entity\Support\SupportGroup;
 use App\Form\Model\Support\SupportsByUserSearch;
 use App\Form\Model\Support\SupportsInMonthSearch;
 use App\Repository\Traits\QueryTrait;
+use App\Service\DoctrineTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -23,6 +24,7 @@ use Symfony\Component\Security\Core\Security;
 class SupportGroupRepository extends ServiceEntityRepository
 {
     use QueryTrait;
+    use DoctrineTrait;
 
     /** @var User */
     private $user;
@@ -37,8 +39,12 @@ class SupportGroupRepository extends ServiceEntityRepository
     /**
      * Donne le suivi social avec le groupe et les personnes rattachées.
      */
-    public function findSupportById(int $id): ?SupportGroup
+    public function findSupportById(int $id, bool $deleted = false): ?SupportGroup
     {
+        if ($deleted) {
+            $this->disableFilter($this->_em, 'softdeleteable');
+        }
+
         $qb = $this->getsupportQuery();
 
         return $qb
@@ -53,8 +59,12 @@ class SupportGroupRepository extends ServiceEntityRepository
     /**
      * Donne le suivi social complet avec le groupe et les personnes rattachées.
      */
-    public function findFullSupportById(int $id): ?SupportGroup
+    public function findFullSupportById(int $id, bool $deleted = false): ?SupportGroup
     {
+        if ($deleted) {
+            $this->disableFilter($this->_em, 'softdeleteable');
+        }
+
         return $this->getsupportQuery()
         ->leftJoin('sg.updatedBy', 'user2')->addSelect('PARTIAL user2.{id, firstname, lastname}')
         ->leftJoin('sg.originRequest', 'origin')->addSelect('origin')
@@ -84,7 +94,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->addOrderBy('p.birthdate', 'ASC')
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+//            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
     }
 

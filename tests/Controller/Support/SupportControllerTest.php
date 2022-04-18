@@ -297,6 +297,38 @@ class SupportControllerTest extends WebTestCase
         $this->assertSelectorExists('.alert.alert-warning');
     }
 
+    public function testRestoreSupportIsSuccessful(): void
+    {
+        $this->loadFixtures();
+
+        /** @var User $admin */
+        $admin = $this->fixtures['user_admin'];
+        $this->client->loginUser($admin);
+
+        /** @var SupportGroup $support */
+        $support = $this->fixtures['support_group2'];
+
+        $id = $support->getId();
+        $this->client->request('GET', "/support/$id/delete");
+
+        // After delete a support
+        $crawler = $this->client->request('GET', '/supports', [
+            'deleted' => ['deleted' => true],
+        ]);
+        $this->assertResponseIsSuccessful();
+        $this->assertCount(1, $crawler->filter('tbody tr'));
+
+        $id = $support->getSupportPeople()->first()->getId();
+        $this->client->request('GET', "/support-person/$id/restore");
+        $this->assertSelectorTextContains('.alert.alert-success', 'a bien été restauré');
+
+        // After restore a support
+        $crawler = $this->client->request('GET', '/supports', [
+            'deleted' => ['deleted' => true],
+        ]);
+        $this->assertCount(0, $crawler->filter('tbody tr'));
+    }
+
     public function testCloneSupportIsFailed(): void
     {
         $this->loadFixtures();

@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class DocumentController extends AbstractController
 {
@@ -88,7 +89,7 @@ final class DocumentController extends AbstractController
             'action' => $this->generateUrl('documents_download', ['id' => $supportGroup->getId()]),
         ]);
 
-        return $this->render('app/document/supportDocuments.html.twig', [
+        return $this->render('app/document/support_document_index.html.twig', [
             'support' => $supportGroup,
             'form_search' => $formSearch->createView(),
             'documentForm' => $documentForm->createView(),
@@ -155,8 +156,12 @@ final class DocumentController extends AbstractController
      *
      * @Route("/support/{id}/documents/download", name="documents_download", methods="GET|POST")
      */
-    public function downloadDocuments(int $id, Request $request, SupportManager $supportManager, FileDownloader $downloader): JsonResponse
-    {
+    public function downloadDocuments(
+        int $id,
+        Request $request,
+        SupportManager $supportManager,
+        FileDownloader $downloader
+    ): JsonResponse {
         $this->denyAccessUnlessGranted('VIEW', $supportGroup = $supportManager->getSupportGroup($id));
 
         $form = $this->createForm(ActionType::class, null)
@@ -214,10 +219,37 @@ final class DocumentController extends AbstractController
             'action' => 'delete',
             'alert' => 'warning',
             'msg' => "Le document \"{$document->getName()}\" est supprimé.",
-            'data' => [
+            'document' => [
                 'id' => $document->getId(),
                 'name' => $document->getName(),
             ],
+        ]);
+    }
+
+    /**
+     * @Route("/document/{id}/restore", name="document_restore", methods="GET")
+     */
+    public function restore(
+        int $id,
+        DocumentRepository $documentRepo,
+        EntityManagerInterface $em,
+        TranslatorInterface $translator
+    ): JsonResponse {
+        $document = $documentRepo->findDocument($id, true);
+        $supportGroup = $document->getSupportGroup();
+
+        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
+
+        $document->setDeletedAt(null);
+        $em->flush();
+
+        DocumentManager::deleteCacheItems($supportGroup);
+
+        return $this->json([
+            'action' => 'restore',
+            'alert' => 'success',
+            'msg' => $translator->trans('document.restored_successfully', ['%document_title%' => $document->getName()], 'app'),
+            'document' => ['id' => $document->getId()],
         ]);
     }
 

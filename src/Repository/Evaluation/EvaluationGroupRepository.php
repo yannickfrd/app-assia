@@ -4,6 +4,7 @@ namespace App\Repository\Evaluation;
 
 use App\Entity\Evaluation\EvaluationGroup;
 use App\Entity\Support\SupportGroup;
+use App\Service\DoctrineTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
@@ -16,6 +17,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class EvaluationGroupRepository extends ServiceEntityRepository
 {
+    use DoctrineTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, EvaluationGroup::class);

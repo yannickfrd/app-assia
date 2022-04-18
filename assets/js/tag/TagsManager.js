@@ -1,9 +1,8 @@
-
 export default class TagsManager {
 
     /**
-     * @param {HTMLElement} containerElt 
-     * @param {Array|Object} tags 
+     * @param {HTMLElement} containerElt
+     * @param {Array|Object} tags
      */
     updateTagsContainer(containerElt, tags) {
         containerElt.textContent = ''
@@ -12,19 +11,19 @@ export default class TagsManager {
             tags.forEach(tag => {
                 containerElt.appendChild(this.createTagElt(tag))
             })
-            return 
+            return
         }
-        
+
         for (const [key, tag] of Object.entries(tags)) {
             containerElt.appendChild(this.createTagElt(tag))
         }
     }
 
-      /**
-     * @param {NodeList} tagElts 
-     * @param {NodeList} tagOptionElts 
-     * @returns {Array} 
-     */  
+    /**
+     * @param {NodeList} tagElts
+     * @param {NodeList} tagOptionElts
+     * @returns {Array}
+     */
     getTagIds(tagElts, tagOptionElts) {
         const ids = []
 
@@ -40,7 +39,7 @@ export default class TagsManager {
     }
 
     /**
-     * @param {Object} tag 
+     * @param {Object} tag
      * @returns {HTMLSpanElement}
      */
     createTagElt(tag) {

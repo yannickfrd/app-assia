@@ -1,4 +1,4 @@
-{% extends 'model/_supportSearch.html.twig' %}
+{% extends 'model/_support_search_form.html.twig' %}
 
 {% form_theme form_search 'bootstrap_4_layout.html.twig' %}
 
@@ -7,20 +7,26 @@
     <div class="col-auto my-1 px-1">{{ form_row(form_search.status) }}</div>
     <div class="col-auto my-1 px-1">{{ form_row(form_search.type) }}</div>
     <div class="col-auto my-1 px-1">
-    <div class="input-group">
-        <div class="input-group-prepend">
-            <div class="input-group-text" title="Étiquettes" data-toggle="tooltip" data-placement="bottom">
-                <i class="fas fa-tag text-black-50"></i>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <div class="input-group-text" title="Étiquettes" data-toggle="tooltip" data-placement="bottom">
+                    <i class="fas fa-tag text-black-50"></i>
+                </div>
             </div>
+            {{ form_widget(form_search.tags) }}
         </div>
-        {{ form_widget(form_search.tags) }}
-    </div>     
+    </div>
+    <div class="col-auto my-auto">
+        <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-0"
+            title="Voir les notes supprimées" data-toggle="tooltip" data-placement="bottom">
+            {{ form_widget(form_search.deleted.deleted) }}
+        </div>
     </div>
 {% endblock %}
 
 {% block form_search_export %}
     <button id="js-btn-export" name="export" value="true" class="btn btn-primary ml-2 shadow"
-        title=" Exporter les notes dans un document Word" data-toggle="tooltip" data-placement="bottom">
-            <i class="fas fa-file-word"></i><span class="sr-only">Exporter</span>
+        title="Exporter les notes dans un document Word" data-toggle="tooltip" data-placement="bottom">
+        <i class="fas fa-file-word"></i><span class="sr-only">Exporter</span>
     </button>
 {% endblock %}

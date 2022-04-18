@@ -20,11 +20,10 @@ export default class Ajax {
 
     /**
      * Envoie la requête Ajax.
-     * @param {String} method 
-     * @param {String} url 
-     * @param {CallableFunction} callback 
-     * @param {Object} data 
-     * @param {Bool} async 
+     * @param {String} method
+     * @param {String} url
+     * @param {CallableFunction} callback
+     * @param {Object} data
      */
     async send(method = 'GET', url, callback, data = null) {
         this.loading = true
@@ -128,8 +127,10 @@ export default class Ajax {
         }, this.delayError * 1000)
     }
 
-    /** 
-     * @param {Blob} blob 
+    /**
+     * @param {Blob} blob
+     * @param {string} filename
+     * @param {string} target
      */
     showFile(blob, filename = 'document.pdf', target = '_blank') {
         const file = new File([blob], filename, {

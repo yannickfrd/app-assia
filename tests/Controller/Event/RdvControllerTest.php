@@ -250,6 +250,32 @@ class RdvControllerTest extends WebTestCase
         $this->assertSame('delete', $content['action']);
     }
 
+    public function testRestoreRdvIsSuccessful(): void
+    {
+        $this->client->loginUser($this->fixtures['john_user']);
+
+        $rdvId = $this->rdv->getId();
+        $this->client->request('DELETE', "/rdv/$rdvId/delete");
+
+        // After delete a rdv
+        $id = $this->supportGroup->getId();
+        $crawler = $this->client->request('GET', "/support/$id/rdvs", [
+            'deleted' => ['deleted' => true]
+        ]);
+        $this->assertResponseIsSuccessful();
+        $this->assertSame(1, $crawler->filter('tbody tr')->count());
+
+        $this->client->request('GET', "/rdv/$rdvId/restore");
+        $content = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertSame('restore', $content['action']);
+
+        // After restore a rdv
+        $crawler = $this->client->request('GET', "/support/$id/rdvs", [
+            'deleted' => ['deleted' => true]
+        ]);
+        $this->assertSame(0, $crawler->filter('tbody tr')->count());
+    }
+
     protected function tearDown(): void
     {
         parent::tearDown();

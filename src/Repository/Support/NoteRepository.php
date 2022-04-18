@@ -7,6 +7,7 @@ use App\Entity\Support\Note;
 use App\Form\Model\Support\NoteSearch;
 use App\Form\Model\Support\SupportNoteSearch;
 use App\Repository\Traits\QueryTrait;
+use App\Service\DoctrineTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
@@ -20,6 +21,7 @@ use Doctrine\Persistence\ManagerRegistry;
 class NoteRepository extends ServiceEntityRepository
 {
     use QueryTrait;
+    use DoctrineTrait;
 
     public function __construct(ManagerRegistry $registry)
     {
@@ -111,6 +113,10 @@ class NoteRepository extends ServiceEntityRepository
             ->andWhere('n.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroupId);
 
+        if ($search->getDeleted()) {
+            $this->disableFilter($this->_em, 'softdeleteable');
+            $qb->andWhere('n.deletedAt IS NOT NULL');
+        }
         if ($search->getNoteId()) {
             $qb->andWhere('n.id = :id')
                 ->setParameter('id', $search->getNoteId());
@@ -165,14 +171,20 @@ class NoteRepository extends ServiceEntityRepository
     /**
      * Donne une note.
      */
-    public function findNote(int $id): ?Note
+    public function findNote(int $id, bool $deleted = false): ?Note
     {
+        if ($deleted) {
+            $this->disableFilter($this->_em, 'softdeleteable');
+        }
+
         return $this->createQueryBuilder('n')->select('n')
+            ->leftJoin('n.createdBy', 'u')->addSelect('PARTIAL u.{id}')
             ->leftJoin('n.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
             ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name, logoPath}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, head}')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
+            ->leftJoin('n.tags', 'tags')->addSelect('tags')
 
             ->where('n.id = :id')
             ->setParameter('id', $id)
@@ -181,7 +193,8 @@ class NoteRepository extends ServiceEntityRepository
 
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getSingleResult();
+            ->getSingleResult()
+        ;
     }
 
     /**
@@ -224,6 +237,18 @@ class NoteRepository extends ServiceEntityRepository
         }
 
         return $qb
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function countNotesDisabled(): int
+    {
+        if ($this->_em->getFilters()->isEnabled('softdeleteable')) {
+            $this->_em->getFilters()->disable('softdeleteable');
+        }
+
+        return $this->createQueryBuilder('n')->select('COUNT(n.id)')
+            ->andWhere('n.deletedAt IS NOT null')
             ->getQuery()
             ->getSingleScalarResult();
     }

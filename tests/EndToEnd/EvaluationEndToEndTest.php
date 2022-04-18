@@ -3,7 +3,7 @@
 namespace App\Tests\EndToEnd;
 
 use App\Tests\EndToEnd\Traits\AppPantherTestTrait;
-use Symfony\Component\Panther\Client as PantherClient;
+use Symfony\Component\Panther\Client;
 use Symfony\Component\Panther\DomCrawler\Crawler;
 use Symfony\Component\Panther\PantherTestCase;
 
@@ -11,8 +11,7 @@ class EvaluationEndToEndTest extends PantherTestCase
 {
     use AppPantherTestTrait;
 
-    /** @var PantherClient */
-    protected $client;
+    protected Client $client;
 
     public function testEvaluation(): void
     {

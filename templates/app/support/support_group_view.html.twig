@@ -45,8 +45,14 @@
 			</ol>
 		</nav>
 		{% for support_person in support_people %}
-			<a href="{{ path('group_person_show', {'id': people_group.id, 'person_id': support_person.person.id, 'slug': support_person.person.slug}) }}" 
-				class="btn btn-outline-{{ theme_color }} btn-sm rounded-pill mb-2">{{ support_person.person.fullname }}</a>
+			<a href="{{ path('group_person_show', {
+					'id': people_group.id, 
+					'person_id': support_person.person.id, 
+					'slug': support_person.person.slug
+				}) }}" 
+				class="btn btn-outline-{{ theme_color }} btn-sm rounded-pill mb-2">
+				{{ support_person.person.fullname }}
+			</a>
 		{% endfor %}
 
 		<hr>
@@ -142,9 +148,11 @@
 			<div class="d-flex mb-3">
 				<h2 class="h4">Rendez-vous</h2>
 				{% set rdv = next_rdv ? next_rdv : last_rdv %}
-				<span class="align-content-center"><a href="{{ path('support_calendar_show', {'id': support.id, 'year': rdv.start|date('Y'),'month': rdv.start|date('m')}) }}" 
-					class="text-{{ theme_color }} ml-2" title="Voir les rendez-vous"><span class="fas fa-edit"></span></a>
-				</span>
+				{% if rdv is not null %}
+					<span class="align-content-center"><a href="{{ path('support_calendar_show', {'id': support.id, 'year': rdv.start|date('Y'),'month': rdv.start|date('m')}) }}"
+							class="text-{{ theme_color }} ml-2" title="Voir les rendez-vous"><span class="fas fa-edit"></span></a>
+					</span>
+				{% endif %}
 			</div>	
 			<div class="row mb-2">
 				{{ view_div.get(last_rdv ? last_rdv.start|date('d/m/Y à H:i'), 'rdv.last') }}

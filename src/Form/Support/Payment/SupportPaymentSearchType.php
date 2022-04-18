@@ -5,6 +5,7 @@ namespace App\Form\Support\Payment;
 use App\Entity\Support\Payment;
 use App\Form\Model\Support\PaymentSearch;
 use App\Form\Model\Support\SupportPaymentSearch;
+use App\Form\Support\Support\DeletedSearchType;
 use App\Form\Type\DateSearchType;
 use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
@@ -37,7 +38,11 @@ class SupportPaymentSearchType extends AbstractType
             ->add('date', DateSearchType::class, [
                 'data_class' => PaymentSearch::class,
             ])
-            ->add('export');
+            ->add('export')
+            ->add('deleted', DeletedSearchType::class, [
+                'label' => false,
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

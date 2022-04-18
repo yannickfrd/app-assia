@@ -1,18 +1,3 @@
-# Note
-note:
-  created_successfully: "La note « %note_title% » a bien été créée."
-  updated_successfully: "La note « %note_title% » a bien été modifiée."
-  deleted_successfully: "La note « %note_title% » a bien été supprimée."
-  no_evaluation_created: Il n'y a pas d'évaluation sociale créée pour ce suivi.
-
-# Task
-task:
-  created_successfully: "La tâche « %task_title% » a bien été créée."
-  updated_successfully: "La tâche « %task_title% » a bien été modifiée."
-  deleted_successfully: "La tâche « %task_title% » a bien été supprimée."
-  toogle_status: "La tâche « %task_title% » est %task_status%."
-
-
 Person: Personne
 Role person: Rôle personne
 People group: Groupe ménage
@@ -44,3 +29,44 @@ Pole: Pôle
 Place: Place d'hébergement/logement
 Place group: Hébergement groupe
 Place person: Hébergement personne
+
+document:
+    created_successfully: "Le document « %document_title% » a bien été créé."
+    updated_successfully: "Le document « %document_title% » a bien été modifié."
+    deleted_successfully: "Le document « %document_title% » a bien été supprimé."
+    restored_successfully: "Le document « %document_title% » a bien été restauré."
+
+note:
+    created_successfully: "La note « %note_title% » a bien été créée."
+    updated_successfully: "La note « %note_title% » a bien été modifiée."
+    deleted_successfully: "La note « %note_title% » a bien été supprimée."
+    restored_successfully: "La note « %note_title% » a bien été restaurée."
+    no_evaluation_created: Il n'y a pas d'évaluation sociale créée pour ce suivi.
+
+payment:
+    created_successfully: "Le paiement a bien été créé."
+    updated_successfully: "Le paiement a bien été modifié."
+    deleted_successfully: "Le paiement a bien été supprimé."
+    restored_successfully: "Le paiement a bien été restauré."
+rdv:
+    created_successfully: "Le rendez-vous « %rdv_title% » a bien été créé."
+    updated_successfully: "Le rendez-vous « %rdv_title% » a bien été modifié."
+    deleted_successfully: "Le rendez-vous « %rdv_title% » a bien été supprimé."
+    restored_successfully: "Le rendez-vous « %rdv_title% » a bien été restauré."
+
+task:
+    created_successfully: "La tâche « %task_title% » a bien été créée."
+    updated_successfully: "La tâche « %task_title% » a bien été modifiée."
+    deleted_successfully: "La tâche « %task_title% » a bien été supprimée."
+    restored_successfully: "La tâche « %task_title% » a bien été restaurée."
+    toogle_status: "La tâche « %task_title% » est %task_status%."
+
+support_group:
+    created_successfully: "Le suivi de %support_name% a bien été créé."
+    updated_successfully: "Le suivi de %support_name% a bien été modifié."
+    deleted_successfully: "Le suivi de %support_name% a bien été supprimé."
+    restored_successfully: "Le suivi de %support_name% a bien été restauré."
+
+support_person:
+    deleted_successfully: "%support_name% a bien été supprimé(e)."
+    restored_successfully: "%support_name% a bien été restauré(e)."

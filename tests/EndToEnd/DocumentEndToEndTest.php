@@ -3,9 +3,10 @@
 namespace App\Tests\EndToEnd;
 
 use App\Tests\EndToEnd\Traits\AppPantherTestTrait;
+use Facebook\WebDriver\WebDriverBy;
 use Symfony\Component\DomCrawler\Field\FormField;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Panther\Client as PantherClient;
+use Symfony\Component\Panther\Client;
 use Symfony\Component\Panther\DomCrawler\Crawler;
 use Symfony\Component\Panther\PantherTestCase;
 
@@ -13,8 +14,7 @@ class DocumentEndToEndTest extends PantherTestCase
 {
     use AppPantherTestTrait;
 
-    /** @var PantherClient */
-    protected $client;
+    protected Client $client;
 
     public function testDocument(): void
     {
@@ -32,6 +32,9 @@ class DocumentEndToEndTest extends PantherTestCase
         // $crawler = $this->downloadAllDocuments($crawler);
         $crawler = $this->deleteDocumentInModal($crawler);
         $crawler = $this->deleteDocument($crawler);
+        $this->restoreDocument($crawler);
+
+        $this->client->quit();
     }
 
     private function goToSupportDocumentPage(Crawler $crawler): Crawler
@@ -159,6 +162,21 @@ class DocumentEndToEndTest extends PantherTestCase
         sleep(1); //pop-up effect
 
         return $crawler;
+    }
+
+    private function restoreDocument(Crawler $crawler): void
+    {
+        $this->outputMsg('Restore a document');
+
+        $this->clickElement('label[for="search_deleted_deleted"]');
+        $this->clickElement('button[id="search"]');
+
+        $this->client->waitForVisibility('table', 1);
+
+        $this->client->getWebDriver()->findElement(WebDriverBy::name('restore'))->click();
+
+        $this->client->waitFor('#js-msg-flash', 3);
+        $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
     }
 
     private function downloadAllDocuments(Crawler $crawler): Crawler

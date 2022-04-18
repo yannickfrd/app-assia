@@ -78,6 +78,8 @@ final class PeopleGroupController extends AbstractController
      */
     public function deletePeopleGroup(PeopleGroup $peopleGroup): Response
     {
+        PeopleGroupManager::deleteCacheItems($peopleGroup);
+
         $this->em->remove($peopleGroup);
         $this->em->flush();
 

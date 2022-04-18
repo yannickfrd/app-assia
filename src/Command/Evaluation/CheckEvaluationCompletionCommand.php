@@ -47,9 +47,7 @@ class CheckEvaluationCompletionCommand extends Command
         $limit = $input->getOption('limit');
         $flush = $input->getOption('flush');
 
-        $supports = $this->supportGroupRepo->findBy([
-            'status' => SupportGroup::STATUS_IN_PROGRESS,
-        ], ['updatedAt' => 'DESC'], $limit);
+        $supports = $this->supportGroupRepo->findBy([], ['updatedAt' => 'DESC'], $limit);
 
         $io->createProgressBar();
         $io->progressStart(count($supports) + ($flush ? 1 : 0));

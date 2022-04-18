@@ -2,6 +2,7 @@
 
 namespace App\Form\Model\Support;
 
+use App\Entity\Traits\DeletedTrait;
 use App\Form\Model\Support\Traits\PaymentSearchTrait;
 use App\Form\Model\Traits\DateSearchTrait;
 
@@ -9,6 +10,7 @@ class SupportPaymentSearch
 {
     use PaymentSearchTrait;
     use DateSearchTrait;
+    use DeletedTrait;
 
     /** @var int|null */
     private $paymentId;

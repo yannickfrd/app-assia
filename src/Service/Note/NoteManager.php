@@ -9,10 +9,18 @@ use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 class NoteManager
 {
-    public static function deleteCacheItems(Note $note): void
+    public static function deleteCacheItems(Note $note, bool $deleteNb = false): void
     {
         $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
         $supportGroup = $note->getSupportGroup();
+
+        if (
+            null === $note->getId()
+            || $note->getCreatedAt()->format('U') === $note->getUpdatedAt()->format('U')
+            || $deleteNb
+        ) {
+            $cache->deleteItem(SupportGroup::CACHE_SUPPORT_NB_NOTES_KEY.$supportGroup->getId());
+        }
 
         $cache->deleteItems([
             User::CACHE_USER_NOTES_KEY.$note->getCreatedBy()->getId(),

@@ -22,7 +22,7 @@ export default class ServiceSwitcher {
 
     init() {
         this.serviceSelectElt.addEventListener('change', () => {
-            this.visibleElt(document.querySelector('div[data-parent-field="service"'), false)
+            this.visibleElt(document.querySelector('div[data-parent-field="service"]'), false)
             this.changeService()
         })
 
@@ -123,7 +123,7 @@ export default class ServiceSwitcher {
      * Vérifie la visibilté des champs Sous-service et Dispositif.
      */
     updateVisibilityFields() {
-        this.visibleElt(document.querySelector(`div[data-parent-field='service'`), parseInt(this.serviceSelectElt.value) >= 1)
+        this.visibleElt(document.querySelector(`div[data-parent-field='service']`), parseInt(this.serviceSelectElt.value) >= 1)
         this.visibleElt(this.subServiceBlockElt, this.subServiceSelectElt.querySelectorAll('option').length > 1)
     }
 
