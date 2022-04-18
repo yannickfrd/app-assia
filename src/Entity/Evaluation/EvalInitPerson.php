@@ -3,7 +3,6 @@
 namespace App\Entity\Evaluation;
 
 use App\Entity\Support\SupportPerson;
-use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use App\Form\Utils\EvaluationChoices;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -18,7 +17,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 class EvalInitPerson
 {
-    use CreatedUpdatedEntityTrait; // A supprimer après test
     use ResourcesEntityTrait;
     use SoftDeleteableEntity;
 

@@ -3,7 +3,7 @@ placeholder:
     select: -- Sélectionner --
     add: -- Ajouter --
 evalInitPerson.comment: Écrire un commentaire relatif à la situation initiale de la personne
-backgroundPeople: Parcours de vie
+Background people: Parcours de vie
 backgroundPeople.placeholder: Présenter le parcours de vie / historique du ménage
 Comment: Commentaire
 conclusion: Conclusion
@@ -20,7 +20,7 @@ Ofpra registration id: Numéro d'enregistrement OFPRA
 Arrival date: Date d'arrivée en France
 Asylum background: Parcours asile
 Asylum status: Statut lié à l'asile
-Comment eval adm: Commentaire relatif à la situation administrative
+Comment eval adm person: Commentaire relatif à la situation administrative
 Country: Pays
 End valid permit date: Date de fin de validité du titre
 Nationality: Nationalité
@@ -63,6 +63,7 @@ Charge other: Autre charge
 Charge type: Type de charge(s)
 Charges amt: Montant total des charges
 Charges group amt: Montant total charges du groupe
+Comment eval bud: Commentaire situation budgétaire
 Eval budget charges: Type de charge(s)
 Childcare amt: Montant garde enfant(s)
 Childcare: Garde d'enfant(s)
@@ -359,7 +360,8 @@ Child welfare background: Parcours institutionnel enfance
 Ase follow up: Suivi ou parcours ASE
 Ase measure type: Type de mesure ASE
 Ase comment: Commentaire concernant le parcours ASE
-Comment eval social: Commentaire relatif à la situation sociale
+Comment eval social group: Commentaire relatif à la situation sociale
+Comment eval social person: Commentaire relatif à la situation sociale
 Dom violence victim: Victime de violence conjugale
 End rights social security date: Date de fin de droits à la Sécurité sociale
 Family breakdown: Rupture des liens familiaux

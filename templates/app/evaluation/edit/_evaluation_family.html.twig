@@ -19,7 +19,11 @@
 
                     {% if support_person.role != ROLE_CHILD %}
                         <div class="row mb-3">
-                            <div class="col-md-6">{{ form_row(eval_person.evalFamilyPerson.maritalStatus) }}</div>
+                            <div class="col-md-6">
+                                {{ form_row(eval_person.evalFamilyPerson.maritalStatus, {
+                                    attr: {'data-important': 'true'}
+                                }) }}
+                            </div>
                             <div class="col-md-6" data-parent-field="{{ prefix_id }}_maritalStatus" data-options="6">
                                 {{ form_row(eval_person.evalFamilyPerson.noConciliationOrder) }}</div>
                         </div>
@@ -33,7 +37,11 @@
                     {% if person.gender == GENDER_FEMALE and 12 > person.age < 60 %}
                         <div class="mb-3">
                             <div class="row">
-                                <div class="col-md-6">{{ form_row(eval_person.evalFamilyPerson.unbornChild) }}</div>
+                                <div class="col-md-6">
+                                    {{ form_row(eval_person.evalFamilyPerson.unbornChild, {
+                                        attr: {'data-important': 'true'}
+                                    }) }}
+                                </div>
                             </div>
                             <div class="row" data-parent-field="{{ prefix_id }}_unbornChild" data-options="1">
                                 <div class="col-md-6">{{ form_row(eval_person.evalFamilyPerson.expDateChildbirth) }}</div>
@@ -44,9 +52,16 @@
                     
                     {% if support_person.role == ROLE_CHILD %}
                         <div class="row">
-                            <div class="col-md-6">{{ form_row(eval_person.evalFamilyPerson.childcareOrSchool) }}</div>
+                            <div class="col-md-6">
+                                {{ form_row(eval_person.evalFamilyPerson.childcareOrSchool, {
+                                    attr: {'data-important': 'true'}
+                                }) }}
+                            </div>
                             <div class="col-md-6" data-parent-field="{{ prefix_id }}_childcareOrSchool" data-options="1">
-                                {{ form_row(eval_person.evalFamilyPerson.childcareSchoolType) }}</div>
+                                {{ form_row(eval_person.evalFamilyPerson.childcareSchoolType, {
+                                    attr: {'data-important': 'true'}
+                                }) }}
+                            </div>
                         </div>
                         <div class="row mb-3" id="school_location_{{ key }}" data-parent-field="{{ prefix_id }}_childcareOrSchool" 
                             data-options="1">
@@ -76,13 +91,6 @@
         </div>
     </div>
     <hr/>
-    {# {% if nb_children > 0 %}
-        <div class="row mb-3">
-            <div class="col-md-6">{{ form_row(form.evalFamilyGroup.pmiFollowUp) }}</div>
-            <div class="col-md-6" data-parent-field="evaluation_evalFamilyGroup_pmiFollowUp"
-                data-options="1">{{ form_row(form.evalFamilyGroup.pmiName) }}</div>
-        </div>
-    {% endif %} #}
     <div class="mb-3">
         <div class="row">
             <div class="col-md-6">{{ form_row(form.evalFamilyGroup.childrenBehind) }}</div>

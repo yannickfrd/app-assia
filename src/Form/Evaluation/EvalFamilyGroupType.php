@@ -15,13 +15,6 @@ class EvalFamilyGroupType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('pmiFollowUp', ChoiceType::class, [
-                'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
-                'placeholder' => 'placeholder.select',
-                'required' => false,
-                // 'help' => 'pmiFollowUp.help',
-            ])
-            ->add('pmiName')
             ->add('childrenBehind', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
                 'placeholder' => 'placeholder.select',

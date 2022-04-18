@@ -23,10 +23,6 @@ class EvalHousingGroupType extends AbstractType
         $builder
             ->add('siaoRequest', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS_NC),
-                'attr' => [
-                    'data-important' => 'true',
-                    'data-twin-field' => 'true',
-                ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
@@ -50,10 +46,6 @@ class EvalHousingGroupType extends AbstractType
             ])
             ->add('socialHousingRequest', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS_NC),
-                'attr' => [
-                    'data-important' => 'true',
-                    'data-twin-field' => 'true',
-                ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
@@ -200,14 +192,10 @@ class EvalHousingGroupType extends AbstractType
                 ],
             ]);
 
-        if (Choices::YES != $service->getPlace() && Service::SERVICE_TYPE_HOTEL != $service->getType()) {
+        if (Choices::YES !== $service->getPlace() && Service::SERVICE_TYPE_HOTEL !== $service->getType()) {
             $builder
                 ->add('housingStatus', ChoiceType::class, [
                     'choices' => Choices::getChoices(EvalHousingGroup::HOUSING_STATUS),
-                    'attr' => [
-                        'data-important' => 'true',
-                    'data-twin-field' => 'true',
-                    ],
                     'placeholder' => 'placeholder.select',
                     'required' => false,
                 ])

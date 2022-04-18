@@ -23,10 +23,6 @@ class EvalBudgetPersonType extends AbstractType
         $builder
             ->add('resource', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalBudgetPerson::RESOURCES),
-                'attr' => [
-                    'data-twin-field' => 'resource',
-                    'data-important' => 'true',
-                ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
@@ -37,15 +33,7 @@ class EvalBudgetPersonType extends AbstractType
                 'mapped' => false,
                 'required' => false,
             ])
-            ->add('resourcesAmt', MoneyType::class, [
-                'attr' => [
-                    'class' => 'text-right',
-                    'data-amount' => 'resourcesAmt',
-                    'data-important' => 'true',
-                    'data-twin-field' => 'true',
-                    'placeholder' => 'Amount',
-                ],
-            ])
+            ->add('resourcesAmt', MoneyType::class)
             ->add('incomeTax', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
                 'placeholder' => 'placeholder.select',
@@ -70,7 +58,6 @@ class EvalBudgetPersonType extends AbstractType
             ->add('resourcesComment')
             ->add('charge', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
-                'attr' => ['data-important' => 'true'],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
@@ -88,14 +75,9 @@ class EvalBudgetPersonType extends AbstractType
                 ],
                 'required' => false,
             ])
-            ->add('chargeOtherPrecision', null, ['attr' => ['placeholder' => 'Other charge(s)...']])
             ->add('chargeComment')
             ->add('debt', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
-                'attr' => [
-                    'data-important' => 'true',
-                    'data-twin-field' => 'debt',
-                ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
@@ -113,7 +95,6 @@ class EvalBudgetPersonType extends AbstractType
                     'placeholder' => 'Amount',
                 ],
             ])
-            ->add('debtOtherPrecision', null, ['attr' => ['placeholder' => 'Other debt(s)...']])
             ->add('debtComment')
             ->add('overIndebtRecord', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS),

@@ -17,12 +17,18 @@ class EvaluationManager extends EvaluationCreator
 {
     private $security;
     private $em;
+    private $evaluationCompletionChecker;
     private $flasgBag;
 
-    public function __construct(Security $security, EntityManagerInterface $em, FlashBagInterface $flashBag)
-    {
+    public function __construct(
+        Security $security,
+        EntityManagerInterface $em,
+        EvaluationCompletionChecker $evaluationCompletionChecker,
+        FlashBagInterface $flashBag
+    ) {
         $this->security = $security;
         $this->em = $em;
+        $this->evaluationCompletionChecker = $evaluationCompletionChecker;
         $this->flasgBag = $flashBag;
 
         parent::__construct($em);
@@ -38,6 +44,7 @@ class EvaluationManager extends EvaluationCreator
             ->setUpdatedBy($user);
 
         $evaluationGroup->getSupportGroup()
+            ->setEvaluationScore($this->evaluationCompletionChecker->getScore($evaluationGroup)['score'])
             ->setUpdatedAt($now)
             ->setUpdatedBy($user);
 
@@ -51,11 +58,15 @@ class EvaluationManager extends EvaluationCreator
     public static function deleteCacheItems(EvaluationGroup $evaluationGroup): bool
     {
         $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
-        $supportGroupId = $evaluationGroup->getSupportGroup()->getId();
+        $supportGroup = $evaluationGroup->getSupportGroup();
+
+        if ($supportGroup->getReferent()) {
+            $cache->deleteItem(User::CACHE_USER_SUPPORTS_KEY.$supportGroup->getReferent()->getId());
+        }
 
         return $cache->deleteItems([
-            EvaluationGroup::CACHE_EVALUATION_KEY.$supportGroupId,
-            SupportGroup::CACHE_FULLSUPPORT_KEY.$supportGroupId,
+            EvaluationGroup::CACHE_EVALUATION_KEY.$supportGroup->getId(),
+            SupportGroup::CACHE_FULLSUPPORT_KEY.$supportGroup->getId(),
         ]);
     }
 
@@ -102,7 +113,7 @@ class EvaluationManager extends EvaluationCreator
         $supportGroup = $evaluationGroup->getSupportGroup();
         $supportPeople = $supportGroup->getSupportPeople();
 
-        if ($evaluationGroup->getEvaluationPeople()->count() != $supportPeople->count()) {
+        if ($evaluationGroup->getEvaluationPeople()->count() !== $supportPeople->count()) {
             foreach ($supportPeople as $supportPerson) {
                 if (false === $this->personIsInEvaluation($supportPerson, $evaluationGroup)) {
                     $person = $supportPerson->getPerson();

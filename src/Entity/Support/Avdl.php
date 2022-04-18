@@ -124,11 +124,6 @@ class Avdl
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $endSupportReason; // A supprimer
-
-    /**
-     * @ORM\Column(type="smallint", nullable=true)
-     */
     private $accessHousingModality;
 
     /**
@@ -291,18 +286,6 @@ class Avdl
     public function setSupportComment(?string $supportComment): self
     {
         $this->supportComment = $supportComment;
-
-        return $this;
-    }
-
-    public function getEndSupportReason(): ?int // A supprimer
-    {
-        return $this->endSupportReason;
-    }
-
-    public function setEndSupportReason(?int $endSupportReason): self // A supprimer
-    {
-        $this->endSupportReason = $endSupportReason;
 
         return $this;
     }

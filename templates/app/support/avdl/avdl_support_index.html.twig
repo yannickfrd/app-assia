@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% set title = 'Suivis AVDL' %}
-{% set form_head = form.vars.value.head == true %}          
+{% set only_headers = form.vars.value.head == true %}          
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -21,7 +21,7 @@
             <div class="row align-items-baseline">
                 <div class="col-md-4 count align-middle mb-2">
                     <span class="align-middle">Résultat : {{ supports.getTotalItemCount|number }} <!--
-                    -->{% if form_head %}ménage{% else %}personne{% endif %}{% if supports.getTotalItemCount > 1 %}s{% endif %}.</span>
+                    -->{% if only_headers %}ménage{% else %}personne{% endif %}{% if supports.getTotalItemCount > 1 %}s{% endif %}.</span>
                 </div>
                 <div class="col-md-8">
                     <div class="navigation">{{ knp_pagination_render(supports) }}</div>
@@ -56,7 +56,7 @@
                         {% for support_person in supports %}
                             {% set person = support_person.person %}
                             {% set support_group = support_person.supportGroup %}
-                            <tr class="{% if form_head == false and support_person.head %}font-weight-bold{% endif %}">
+                            <tr class="{% if only_headers == false and support_person.head %}font-weight-bold{% endif %}">
                                 <td scope="row" class="align-middle text-center">
                                     {% if is_granted('VIEW', support_group) %}
                                         <a href="{{ path('support_show', {'id': support_group.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow my-1" 

@@ -21,26 +21,18 @@ class EvalSocialPersonType extends AbstractType
         /** @var SupportPerson */
         $supportPerson = $options['attr']['supportPerson'];
 
-        if (RolePerson::ROLE_CHILD != $supportPerson->getRole()) {
+        if (RolePerson::ROLE_CHILD !== $supportPerson->getRole()) {
             $this->addAdultFields($builder);
         }
 
         $builder
             ->add('rightSocialSecurity', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS),
-                'attr' => [
-                    'data-important' => 'true',
-                    'data-twin-field' => 'true',
-                ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('socialSecurity', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalSocialPerson::SOCIAL_SECURITY),
-                'attr' => [
-                    'data-important' => 'true',
-                    'data-twin-field' => 'true',
-                ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])

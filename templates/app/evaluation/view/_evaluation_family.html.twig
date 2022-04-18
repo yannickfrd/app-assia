@@ -46,7 +46,7 @@
                     {{ view_div.get(eval_family.unbornChildToString ~ (eval_family.expDateChildbirth ? ' (' 
                         ~ eval_family.expDateChildbirth|date('d/m/Y') ~ ')'), 'Unborn child', 'evaluation') }}
                 </div>
-            {% endif %}    
+            {% endif %}
             {% if support_person.role == ROLE_CHILD %}
                 <div class="row">
                     {{ view_div.get((eval_family.childcareOrSchool == YES ? eval_family.childcareSchoolTypeToString : 

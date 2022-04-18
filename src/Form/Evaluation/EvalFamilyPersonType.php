@@ -64,9 +64,6 @@ class EvalFamilyPersonType extends AbstractType
         $builder
             ->add('maritalStatus', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalFamilyPerson::MARITAL_STATUS),
-                'attr' => [
-                    'data-important' => 'true',
-                ],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])

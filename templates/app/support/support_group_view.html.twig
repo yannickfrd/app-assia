@@ -69,7 +69,9 @@
 			<a id="support-evaluation" class="btn btn-{{ theme_color }} mr-2 mb-2 shadow" 
 				href="{{ path(evaluation ? 'support_evaluation_view' : 'support_evaluation_new', {'id': support.id}) }}" 
 				title="Évaluation sociale" data-toggle="tooltip" data-placement="bottom" >Évaluation
-				<span class="badge badge-light ml-2">{{ evaluation ? 1 : 0 }}</span>
+					<span class="badge badge-{{ evaluationScoreColor(support.evaluationScore) }}">
+						{{ support.evaluationScore|percent(0) }}
+					</span>
 			</a>
 			<a id="support-calendar" class="btn btn-{{ theme_color }} mr-2 mb-2 shadow" 
 				href="{{ path('support_calendar_show', {'id': support.id}) }}" 

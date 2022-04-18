@@ -4,7 +4,7 @@ Application d’Accompagnement Social et Solidaire Inter-Associative
 
 ## Version
 
-3.16.1 01/04/2022
+3.18.0 18/04/2022
 
 ## Author
 
@@ -44,9 +44,9 @@ composer install
 ### 3. Create database and make migration
 
 ```bash
-php bin/console doctrine:database:create
-    php bin/console make:migration
-    php bin/console doctrine:migrations:migrate
+    symfony console doctrine:database:create
+    symfony console make:migration
+    symfony console doctrine:migrations:migrate
 ```
 
 ### 4. Load data fixtures
@@ -54,7 +54,7 @@ php bin/console doctrine:database:create
 Doctrine fixtures:
 
 ```bash
-php bin/console doctrine:fixtures:load
+symfony console doctrine:fixtures:load
 ```
 
 ### 5. Install all JS dependencies and build assets (SCSS, JS)
@@ -76,7 +76,7 @@ yarn install
 ### 6. Clear cache
 
 ```bash
-php bin/console cache:clear
+symfony console cache:clear
 ```
 
 ### 7. Run server
@@ -92,7 +92,7 @@ If you don't have the Symfony binary installed, run `php -S localhost:8000 -t pu
 You can create a new user with this command:
 
 ```bash
-php bin/console app:user:create
+symfony console app:user:create
 ```
 
 Or you can also to log to the app with the test user:
@@ -107,46 +107,47 @@ And go to "https://127.0.0.1:8000/"
 ### 1. Init tests
 
 ```bash
-php bin/console cache:clear -e prod; 
-php bin/console cache:clear -e test; 
-php bin/console doctrine:database:drop -e test --force;
-php bin/console doctrine:database:create -e test;
-php bin/console doctrine:schema:update -e test --force;
-php bin/console hautelook:fixtures:load -e test -n;
+symfony console cache:clear -e prod; 
+symfony console cache:clear -e test; 
+symfony console doctrine:database:drop -e test --force;
+symfony console doctrine:database:create -e test;
+symfony console doctrine:schema:update -e test --force;
+symfony console hautelook:fixtures:load -e test -n;
 ```
 
 ### 2. Unit tests (entities and repositories)
 
 ```bash
-php bin/phpunit tests/Entity; php bin/phpunit tests/Repository;
+symfony php bin/phpunit tests/Entity; 
+symfony php bin/phpunit tests/Repository;
 ```
 
 ### 3. Functionnal tests (controllers)
 
 ```bash
-php bin/phpunit tests/Controller;
+symfony php bin/phpunit tests/Controller;
 ```
 
 Or
 
 ```bash
-php bin/phpunit tests/Controller/App; 
-php bin/phpunit tests/Controller/Admin; 
-php bin/phpunit tests/Controller/Organization; 
-php bin/phpunit tests/Controller/People; 
-php bin/phpunit tests/Controller/Support; 
-php bin/phpunit tests/Controller/Evaluation; 
-php bin/phpunit tests/Controller/Note; 
-php bin/phpunit tests/Controller/Rdv; 
-php bin/phpunit tests/Controller/Event; 
-php bin/phpunit tests/Controller/Document; 
-php bin/phpunit tests/Controller/Payment; 
+symfony php bin/phpunit tests/Controller/App; 
+symfony php bin/phpunit tests/Controller/Admin; 
+symfony php bin/phpunit tests/Controller/Organization; 
+symfony php bin/phpunit tests/Controller/People; 
+symfony php bin/phpunit tests/Controller/Support; 
+symfony php bin/phpunit tests/Controller/Evaluation; 
+symfony php bin/phpunit tests/Controller/Note; 
+symfony php bin/phpunit tests/Controller/Rdv; 
+symfony php bin/phpunit tests/Controller/Event; 
+symfony php bin/phpunit tests/Controller/Document; 
+symfony php bin/phpunit tests/Controller/Payment; 
 ```
 
 ### 4. EndToEnd tests
 
 ```bash
-php bin/phpunit tests/EndToEnd;
+symfony php bin/phpunit tests/EndToEnd;
 ```
 
 ### 5. All tests
@@ -154,7 +155,7 @@ php bin/phpunit tests/EndToEnd;
 You can use this script with Composer to execute all tests:
 
 ```bash
-phpunit-tests-dev
+composer tests-dev
 ```
 
 ### PHPStan

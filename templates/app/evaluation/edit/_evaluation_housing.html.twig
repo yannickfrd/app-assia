@@ -11,7 +11,11 @@
 		{% set housing_status_options = '200|201|202|203|204|205|206|207|300|301|302|303|304' %}
 			<div class="mb-3">
 				<div class="row">
-					<div class="col-md-6">{{ form_row(form.evalHousingGroup.housingStatus) }}</div>
+					<div class="col-md-6">
+						{{ form_row(form.evalHousingGroup.housingStatus, {
+							attr: {'data-important': 'true', 'data-twin-field': 'true'}
+						}) }}
+					</div>
 					<div class="col-md-6" data-parent-field="{{ prefix_id }}_housingStatus" 
 					data-options="{{ housing_status_options }}">
 						{{ form_row(form.evalHousingGroup.housingArrivalDate) }}</div>
@@ -31,7 +35,11 @@
 		{% endif %}
 		<div class="mb-3">
 			<div class="row">
-				<div class="col-md-6">{{ form_row(form.evalHousingGroup.siaoRequest) }}</div>
+				<div class="col-md-6">
+					{{ form_row(form.evalHousingGroup.siaoRequest, {
+						attr: {'data-important': 'true', 'data-twin-field': 'true'}
+					}) }}
+				</div>
 			</div>
 			<div class="row" data-parent-field="{{ prefix_id }}_siaoRequest" data-options="1">
 				<div class="col-md-6">{{ form_row(form.evalHousingGroup.siaoRequestDate) }}</div>
@@ -43,7 +51,11 @@
 		<hr class="my-4"/>
 		<div class="mb-3">
 			<div class="row">
-				<div class="col-md-6">{{ form_row(form.evalHousingGroup.socialHousingRequest) }}</div>
+				<div class="col-md-6">
+					{{ form_row(form.evalHousingGroup.socialHousingRequest, {
+						attr: {'data-important': 'true', 'data-twin-field': 'true'}
+					}) }}
+				</div>
 			</div>
 			<div class="row" data-parent-field="{{ prefix_id }}_socialHousingRequest" data-options="1">
 				<div class="col-md-6" >{{ form_row(form.evalHousingGroup.socialHousingRequestId) }}</div>
@@ -55,9 +67,13 @@
 			</div>
 		</div>
 		<hr class="my-4"/>
-		<div class="mb-3" data-parent-field="{{ prefix_id }}_socialHousingRequest" data-options="1">
+		<div class="mb-3">
 			<div class="row" >
-				<div class="col-md-6">{{ form_row(form.evalHousingGroup.syplo) }}</div>
+				<div class="col-md-6">
+					{{ form_row(form.evalHousingGroup.syplo, {
+						attr: {'data-important': 'true'}
+					}) }}
+				</div>
 			</div>
 			<div class="row" data-parent-field="{{ prefix_id }}_syplo" data-options="1">
 				<div class="col-md-6">{{ form_row(form.evalHousingGroup.syploId) }}</div>
@@ -67,7 +83,11 @@
 		</div>
 		<div class="mb-3">
 			<div class="row">
-				<div class="col-md-6">{{ form_row(form.evalHousingGroup.daloAction) }}</div>
+				<div class="col-md-6">
+					{{ form_row(form.evalHousingGroup.daloAction, {
+						attr: {'data-important': 'true'}
+					}) }}
+				</div>
 			</div>
 			<div class="row" data-parent-field="{{ prefix_id }}_daloAction" data-options="1">
 				<div class="col-md-6" >{{ form_row(form.evalHousingGroup.daloType) }}</div>
@@ -137,11 +157,19 @@
 		<hr class="my-4"/>
 		<div class="mb-4">
 			<div class="row">
-				<div class="col-md-6">{{ form_row(form.evalHousingGroup.domiciliation) }}</div>
+				<div class="col-md-6">
+					{{ form_row(form.evalHousingGroup.domiciliation, {
+						attr: {'data-important': 'true'}
+					}) }}
+				</div>
 			</div>
 			<div data-parent-field="{{ prefix_id }}_domiciliation" data-options="1">
 				<div class="row">
-					<div class="col-md-6">{{ form_row(form.evalHousingGroup.domiciliationType) }}</div>
+					<div class="col-md-6"  data-parent-field="{{ prefix_id }}_domiciliation" data-options="1">
+						{{ form_row(form.evalHousingGroup.domiciliationType, {
+							attr: {'data-important': 'true'}
+						}) }}
+					</div>
 					<div class="col-md-6">{{ form_row(form.evalHousingGroup.domiciliationComment) }}</div>
 					<div class="col-md-6" >{{ form_row(form.evalHousingGroup.startDomiciliationDate) }}</div>
 					<div class="col-md-6">{{ form_row(form.evalHousingGroup.endDomiciliationDate) }}</div>

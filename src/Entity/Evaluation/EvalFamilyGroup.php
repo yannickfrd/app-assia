@@ -55,16 +55,6 @@ class EvalFamilyGroup
     private $nbPeopleReunification;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
-     */
-    private $pmiFollowUp; // To DELETE
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $pmiName;
-
-    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $commentEvalFamilyGroup;
@@ -134,35 +124,6 @@ class EvalFamilyGroup
     public function setCommentEvalFamilyGroup(?string $commentEvalFamilyGroup): self
     {
         $this->commentEvalFamilyGroup = $commentEvalFamilyGroup;
-
-        return $this;
-    }
-
-    public function getPmiFollowUp(): ?int
-    {
-        return $this->pmiFollowUp;
-    }
-
-    public function getPmiFollowUpToString(): ?string
-    {
-        return $this->pmiFollowUp ? EvaluationChoices::YES_NO_IN_PROGRESS[$this->pmiFollowUp] : null;
-    }
-
-    public function setPmiFollowUp(?int $pmiFollowUp): self
-    {
-        $this->pmiFollowUp = $pmiFollowUp;
-
-        return $this;
-    }
-
-    public function getPmiName(): ?string
-    {
-        return $this->pmiName;
-    }
-
-    public function setPmiName(?string $pmiName): self
-    {
-        $this->pmiName = $pmiName;
 
         return $this;
     }

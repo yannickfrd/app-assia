@@ -14,7 +14,7 @@
                     <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
                         <thead>
                             <tr>
-                                {% set items = ["N°", "Entité", "Variable", "Trad. variable", "Type", "Trad. type", "Valeurs"] %}
+                                {% set items = ["N°", "Entity", "Trad. entité", "Variable", "Trad. variable", "Type", "Trad. type", "Choix"] %}
                                 {% for item in items %}
                                     <th scope="col" class="align-middle th-w-100">{{ item }}</th>
                                 {% endfor %}
@@ -26,7 +26,7 @@
                                 {% for var in entity %}
                                     <tr>
                                         <td class="align-midle">{{ i }}</td>
-                                        {# <td class="align-midle">{{ var["entity"] }}</td> #}
+                                        <td class="align-midle">{{ var["entity"] }}</td>
                                         <td class="align-midle">{{ var["trans_entity"] }}</td>
                                         <td class="align-midle">{{ var["name"] }}</td>
                                         <td class="align-midle">{{ var["trans_name"] }}</td>

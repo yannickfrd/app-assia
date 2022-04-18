@@ -7,6 +7,7 @@ namespace App\Controller\Evaluation;
 use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Evaluation\EvaluationGroup;
 use App\Entity\Organization\User;
+use App\Entity\Support\SupportGroup;
 use App\Form\Evaluation\EvaluationGroupType;
 use App\Repository\Evaluation\EvaluationGroupRepository;
 use App\Repository\Support\SupportGroupRepository;
@@ -95,7 +96,9 @@ final class EvaluationController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
-        $this->denyAccessUnlessGranted('EDIT', $evaluationGroup->getSupportGroup());
+        $supportGroup = $evaluationGroup->getSupportGroup();
+
+        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
         $form = $this->createForm(EvaluationGroupType::class, $evaluationGroup)
             ->handleRequest($request);
@@ -108,7 +111,7 @@ final class EvaluationController extends AbstractController
 
             return $this->json([
                 'alert' => 'success',
-                'msg' => 'Les modifications sont enregistrées.',
+                'msg' => "Les modifications sont enregistrées ({$supportGroup->getEvaluationScore()}% de complétude).",
                 'data' => [
                     'updatedAt' => $evaluationGroup->getUpdatedAt()->format('d/m/Y à H:i'),
                     'updatedBy' => $user->getFullname(),
@@ -140,14 +143,17 @@ final class EvaluationController extends AbstractController
             }
         }
 
+        $supportGroup->setEvaluationScore(null);
+
         $em->remove($evaluationGroup);
         $em->flush();
 
         $this->addFlash('warning', "L'évaluation sociale est supprimée.");
 
-        (new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']))->deleteItem(
-            EvaluationGroup::CACHE_EVALUATION_KEY.$supportGroup->getId()
-        );
+        (new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']))->deleteItems([
+            SupportGroup::CACHE_FULLSUPPORT_KEY.$supportGroup->getId(),
+            EvaluationGroup::CACHE_EVALUATION_KEY.$supportGroup->getId(),
+        ]);
 
         return $this->redirectToRoute('support_show', ['id' => $supportGroup->getId()]);
     }

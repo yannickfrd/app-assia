@@ -72,7 +72,7 @@ class EvaluationCheckPeopleCommand extends Command
                 $evaluationPeople = $evaluationGroup->getEvaluationPeople();
                 $nbEvaluationPeople = $evaluationPeople->count();
 
-                if ($nbEvaluationPeople != $nbSupportPeople) {
+                if ($nbEvaluationPeople !== $nbSupportPeople) {
                     echo PHP_EOL."* SupportId {$supportGroup->getId()}: $nbSupportPeople supportPeople vs $nbEvaluationPeople evaluationPeople".PHP_EOL;
 
                     ++$count;

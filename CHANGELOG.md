@@ -1,12 +1,30 @@
 # CHANGELOG
 
+## Version 3.18.0 - 18/03/2022
+
+Feature to check completion of evaluations and get a score (#147)
+
+* Create service to calcute score of evaluation
+* Command to check the completion of evaluations
+
+## Version 3.17.0 - 18/03/2022
+
+Feature to restore deleted datas (#146)
+
+* Restore support
+* Restore note
+* Restore rdv
+* Restore task
+* Restore document
+* Restore payment
+
 ## Version 3.16.1 - 01/04/2022
 
-Rename word 'référent'/'professionnel' to 'intervenant'
+Rename word 'référent'/'professionnel' to 'intervenant' (#144)
 
 ## Version 3.16.0 - 31/03/2022
 
-New feature: switch all supports of user to other referent:
+New feature: switch all supports of user to other referent (#143):
 
 * [SupportGroupController] Create method 'switchReferent'
 * [SupportReferentSwitcher] Create service 'SupportReferentSwitcher'
@@ -17,7 +35,7 @@ New feature: switch all supports of user to other referent:
 
 ## Version 3.15.0 - 31/03/2022
 
-Export payments inside pdf, word and note documents
+Export payments inside pdf, word and note documents (#142)
 
 ## Version 3.14.0 - 30/03/2022
 
