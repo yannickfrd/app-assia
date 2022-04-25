@@ -37,8 +37,8 @@
                                 {% set query = app.request.query.get('service') %}
                                 {% for month in datas.months %}
                                     <tr>
-                                        <td scope="row" class="align-middle text-center">
-                                            <a href="{{ path('payments', {'type': form.vars.value.type, 
+                                        <td class="align-middle text-center">
+                                            <a href="{{ path('payments_index', {'type': form.vars.value.type,
                                                 'service': {'referents': query.referents ?? '', 'services': query.services ?? '', 'devices': query.devices ?? ''}, 
                                                 'dateType': app.request.query.get('dateType'),
                                                 'date': {'start': month.date|date('Y-m-d'), 'end': month.date|date_modify("last day of this month")|date('Y-m-d')} }) }}" 
@@ -53,7 +53,6 @@
                                         <td class="align-middle text-right">{{ month.sumPaidAmt|amount }}</td>
                                         <td class="align-middle text-right">{{ month.nbPayments ? month.averagePaidAmt|amount }}</td>
                                         <td class="align-middle text-right">{{ month.sumStillToPayAmt|amount }}</td>
-                                        </td>
                                     </tr>
                                 {% endfor %}
                             </tbody>

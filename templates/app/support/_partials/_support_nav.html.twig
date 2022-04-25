@@ -37,7 +37,7 @@
 				<span class="fas fa-file-upload"></span><span class="sr-only">Documents</span>
 			</a>
 			{% if support.device.contribution == YES %}
-				<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_payments', {'id': support.id}) }}" 
+				<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_payments_index', {'id': support.id}) }}"
 					title="Paiements" data-toggle="tooltip" data-placement="bottom">
 					<span class="fas fa-euro-sign px-1"></span><span class="sr-only">Paiements</span>
 				</a>

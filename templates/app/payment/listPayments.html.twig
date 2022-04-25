@@ -62,9 +62,9 @@
                         {% for payment in payments %}
                             {% set person = (payment.supportGroup.supportPeople|first).person %}
                             <tr>
-                                <td scope="row" class="align-middle text-center">
+                                <td class="align-middle text-center">
                                     <a class="btn btn-{{ theme_color }} btn-sm shadow"
-                                        href="{{ path('support_payments', {'id': payment.supportGroup.id, 'paymentId': payment.id}) }}" 
+                                        href="{{ path('support_payments_index', {'id': payment.supportGroup.id, 'paymentId': payment.id}) }}"
                                         data-toggle="tooltip" data-placement="bottom" title="Voir {{ payment.typeToString }}"><span class="fas fa-eye"></span>
                                     </a>
                                 </td>
@@ -102,11 +102,11 @@
                     </tbody>
                     <tfoot>
                         <tr class="font-weight-bold">
-                            <td scope="row" colspan="4" class="align-middle text-right">Sous-total (page)</td>
+                            <td colspan="4" class="align-middle text-right">Sous-total (page)</td>
                             <td id="js-sumToPayAmt" class="align-middle text-right">{{ toPayAmt|amount }}</td>
                             <td id="js-sumPaidAmt" class="align-middle text-right">{{ paidAmt|amount }}</td>
                             <td id="js-sumStillToPayAmt" class="align-middle text-right ">{{ (toPayAmt - paidAmt)|amount }}</td>
-                            <td scope="row" colspan="6" class="align-middle text-center"></td>
+                            <td colspan="6" class="align-middle text-center"></td>
                         </tr>
                     </tfoot>
                 </table>

@@ -14,6 +14,7 @@ use App\Form\Support\Payment\PaymentSearchType;
 use App\Form\Support\Payment\PaymentType;
 use App\Form\Support\Payment\SupportPaymentSearchType;
 use App\Repository\Support\PaymentRepository;
+use App\Repository\Support\SupportGroupRepository;
 use App\Service\Export\HotelContributionlExport;
 use App\Service\Export\PaymentAccountingExport;
 use App\Service\Export\PaymentFullExport;
@@ -41,9 +42,9 @@ final class PaymentController extends AbstractController
     /**
      * Liste des participations financières.
      *
-     * @Route("/payments", name="payments", methods="GET|POST")
+     * @Route("/payments", name="payments_index", methods="GET|POST")
      */
-    public function listPayments(Request $request, Pagination $pagination, PaymentRepository $paymentRepo): Response
+    public function index(Request $request, Pagination $pagination, PaymentRepository $paymentRepo): Response
     {
         $form = $this->createForm(PaymentSearchType::class, $search = new PaymentSearch())
             ->handleRequest($request);
@@ -71,11 +72,11 @@ final class PaymentController extends AbstractController
     /**
      * Liste des participations financières du suivi social.
      *
-     * @Route("/support/{id}/payments", name="support_payments", methods="GET|POST")
+     * @Route("/support/{id}/payments", name="support_payments_index", methods="GET|POST")
      *
      * @param int $id // SupportGroup
      */
-    public function showSupportPayments(
+    public function indexSupportPayments(
         int $id,
         PaymentRepository $paymentRepo,
         SupportManager $supportManager,
@@ -113,15 +114,17 @@ final class PaymentController extends AbstractController
     /**
      * Nouvelle participation financière.
      *
-     * @Route("/support/{id}/payment/new", name="payment_new", methods="POST")
+     * @Route("/support/{id}/payment/create", name="payment_create", methods="POST")
      */
-    public function createPayment(
-        SupportGroup $supportGroup,
+    public function create(
+        int $id,
         Request $request,
+        SupportGroupRepository $groupRepo,
         NormalizerInterface $normalizer,
         Normalisation $normalisation,
         EntityManagerInterface $em
     ): JsonResponse {
+        $supportGroup = $groupRepo->findSupportById($id);
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
         $form = $this->createForm(PaymentType::class, $payment = new Payment())
@@ -153,9 +156,9 @@ final class PaymentController extends AbstractController
     /**
      * Obtenir la redevance.
      *
-     * @Route("/payment/{id}/get", name="payment_get", methods="GET")
+     * @Route("/payment/{id}/show", name="payment_show", methods="GET")
      */
-    public function getPayment(int $id, PaymentRepository $paymentRepo): JsonResponse
+    public function show(int $id, PaymentRepository $paymentRepo): JsonResponse
     {
         $payment = $paymentRepo->findPayment($id);
         $this->denyAccessUnlessGranted('VIEW', $payment);
@@ -175,7 +178,7 @@ final class PaymentController extends AbstractController
      *
      * @Route("/payment/{id}/edit", name="payment_edit", methods="POST")
      */
-    public function editPayment(
+    public function edit(
         Payment $payment,
         Request $request,
         NormalizerInterface $normalizer,
@@ -212,7 +215,7 @@ final class PaymentController extends AbstractController
      *
      * @Route("/payment/{id}/delete", name="payment_delete", methods="GET")
      */
-    public function deletePayment(Payment $payment, EntityManagerInterface $em): JsonResponse
+    public function delete(Payment $payment, EntityManagerInterface $em): JsonResponse
     {
         $this->denyAccessUnlessGranted('DELETE', $payment);
 
@@ -302,7 +305,7 @@ final class PaymentController extends AbstractController
         if (!$payments) {
             $this->addFlash('warning', 'Aucun résultat à exporter.');
 
-            return $this->redirectToRoute('payments');
+            return $this->redirectToRoute('payments_index');
         }
 
         return (new PaymentFullExport($router))->exportData($payments);
@@ -323,7 +326,7 @@ final class PaymentController extends AbstractController
         if (!$payments) {
             $this->addFlash('warning', 'Aucun résultat à exporter.');
 
-            return $this->redirectToRoute('payments');
+            return $this->redirectToRoute('payments_index');
         }
 
         return (new PaymentAccountingExport($router))->exportData($payments);
@@ -344,7 +347,7 @@ final class PaymentController extends AbstractController
         if (!$payments) {
             $this->addFlash('warning', 'Aucun résultat à exporter.');
 
-            return $this->redirectToRoute('payments');
+            return $this->redirectToRoute('payments_index');
         }
 
         return (new HotelContributionlExport($router))->exportData($payments);

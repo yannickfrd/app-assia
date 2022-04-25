@@ -13,7 +13,7 @@
 		<div class="row">
 			<div class="d-flex col-md-6 mb-1 align-items-center">
 				<button class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-action="new_payment"
-					data-url="{{ path('payment_new', {'id': support.id}) }}"
+					data-url="{{ path('payment_create', {'id': support.id}) }}"
 					data-toggle="tooltip" data-placement="bottom" title="Créer un nouvel enregistrement">
 					<span class="fas fa-plus-square mr-2"></span>Nouveau</button>
 				<div class="d-inline align-middle">Total : <!--
@@ -90,7 +90,7 @@
 								<tr id="payment-{{ payment.id }}" class="payment">
 									<td class="align-middle text-center">
 										<button class="btn btn-{{ is_deleted ? 'secondary disabled' : theme_color }} btn-sm shadow"
-											data-action="get" data-url="{{ path('payment_get', {'id': payment.id}) }}"
+											data-action="get" data-url="{{ path('payment_show', {'id': payment.id}) }}"
 											data-id="{{ payment.id }}" data-toggle="tooltip" data-placement="bottom"
 											title="Voir l'enregistrement"><span class="fas fa-eye"></span>
 										</button>

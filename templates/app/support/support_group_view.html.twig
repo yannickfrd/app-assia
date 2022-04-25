@@ -95,7 +95,7 @@
 			</a>
 			{% if support.device.contribution == YES %}
 				<a id="support-payments" class="btn btn-{{ theme_color }} mr-2 mb-2 shadow" 
-					href="{{ path('support_payments', {'id': support.id}) }}" 
+					href="{{ path('support_payments_index', {'id': support.id}) }}"
 					title="Participations financières, redevances, loyers..." data-toggle="tooltip" 
 					data-placement="bottom">Paiements<span class="badge badge-light ml-2">{{ count_payments }}</span>
 				</a>
@@ -118,21 +118,21 @@
 							' Êtes-vous vraiment sûr de vouloir supprimer ce suivi social ?"' %}
 						<a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('support_delete', {'id': support.id}) }}" 
 							title="Supprimer le suivi social" data-toggle="tooltip" data-placement="bottom" 
-							onclick="if(window.confirm({{ alert_text }})){return true;}else{return false;}"><i class="fas fa-trash-alt mr-2"></i>
+							onclick="return window.confirm({{ alert_text }});"><i class="fas fa-trash-alt mr-2"></i>
 							<span class="d-none d-sm-inline">Supprimer</span></a>
 					{% endif %}
 					{% if evaluation == null %}
 						{% set alert_text = '"Êtes-vous vraiment sûr de vouloir récupérer l`évaluation sociale du SI-SIAO ?"' %}
 						<a class="btn btn-{{ theme_color }} d-block mr-3" href="{{ path('api_sisiao_support_import_evaluation', {'id': support.id}) }}" 
 							title="Importer l'évaluation sociale du SI-SIAO" data-toggle="tooltip" data-placement="bottom" 
-							onclick="if(window.confirm({{ alert_text }})){return true;}else{return false;}"><i class="fas fa-cloud-download-alt mr-2"></i>
+							onclick="return window.confirm({{ alert_text }});"><i class="fas fa-cloud-download-alt mr-2"></i>
 							<span class="d-none d-sm-inline">Import SI-SIAO</span></a>
 					{% endif %}
 					{% if is_granted('ROLE_ADMIN') %}	
 						{% set alert_text = '"Êtes-vous vraiment sûr de vouloir récupérer les informations du précédent suivi social ?"' %}
 						<a class="btn btn-{{ theme_color }} d-block mr-3" href="{{ path('support_clone', {'id': support.id}) }}" 
 							title="Récupérer les éléments du précédent suivi social" data-toggle="tooltip" data-placement="bottom" 
-							onclick="if(window.confirm({{ alert_text }})){return true;}else{return false;}"><i class="fas fa-clone mr-2"></i>
+							onclick="return window.confirm({{ alert_text }});"><i class="fas fa-clone mr-2"></i>
 							<span class="d-none d-sm-inline">Copier suivi</span></a>
 					{% endif %}
 				</div>

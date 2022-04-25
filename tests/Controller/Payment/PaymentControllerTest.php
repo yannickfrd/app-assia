@@ -163,7 +163,7 @@ class PaymentControllerTest extends WebTestCase
         $csrfToken = $crawler->filter('#payment__token')->attr('value');
 
         // Fail
-        $this->client->request('POST', "/support/$id/payment/new", [
+        $this->client->request('POST', "/support/$id/payment/create", [
             'payment[type]' => Payment::CONTRIBUTION,
         ]);
 
@@ -172,7 +172,7 @@ class PaymentControllerTest extends WebTestCase
         $this->assertSame('danger', $content['alert']);
 
         // Success
-        $this->client->request('POST', "/support/$id/payment/new", [
+        $this->client->request('POST', "/support/$id/payment/create", [
             'payment' => [
                 'startDate' => '2021-01-01',
                 'endDate' => '2021-01-31',
@@ -249,7 +249,7 @@ class PaymentControllerTest extends WebTestCase
     {
         $this->client->loginUser($this->fixtures['john_user']);
 
-        $this->client->request('GET', "/payment/{$this->payment->getId()}/get");
+        $this->client->request('GET', "/payment/{$this->payment->getId()}/show");
 
         $this->assertResponseIsSuccessful();
         $content = json_decode($this->client->getResponse()->getContent(), true);
