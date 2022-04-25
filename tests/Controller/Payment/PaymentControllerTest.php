@@ -66,7 +66,7 @@ class PaymentControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertGreaterThanOrEqual(4, $crawler->filter('td[scope="row"]')->count());
+        $this->assertGreaterThanOrEqual(4, $crawler->filter('td')->count());
     }
 
     public function testExportPaymentsIsSuccessful(): void
