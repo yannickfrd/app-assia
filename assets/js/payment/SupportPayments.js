@@ -530,7 +530,6 @@ export default class SupportPayments {
     responseAjax(response) {
         const payment = response.payment
 
-        console.log(response)
         switch (response.action) {
             case 'show':
                 this.showPayment(payment)
