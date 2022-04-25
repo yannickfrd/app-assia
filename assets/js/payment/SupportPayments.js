@@ -108,10 +108,10 @@ export default class SupportPayments {
             }
         })
 
-        this.deleteBtnElt.addEventListener('click', (e) => {
-            e.preventDefault()
-            this.confirmBtnElt.dataset.url = this.deleteBtnElt.dataset.url.replace('__id__', this.paymentId)
-        })
+        // this.deleteBtnElt.addEventListener('click', (e) => {
+        //     e.preventDefault()
+        //     this.confirmBtnElt.dataset.url = this.deleteBtnElt.dataset.url.replace('__id__', this.paymentId)
+        // })
 
         this.confirmBtnElt.addEventListener('click', e => {
             e.preventDefault()
@@ -537,30 +537,29 @@ export default class SupportPayments {
                 break
             case 'create':
                 this.createPayment(payment)
-                new MessageFlash(response.alert, response.msg)
                 break
             case 'update':
                 this.updatePayment(payment)
-                new MessageFlash(response.alert, response.msg)
                 break
             case 'delete':
-                this.trElt.remove()
-                this.updateCounts(-1)
-                this.loader.off()
-                this.paymentModalElt.hide()
-                new MessageFlash(response.alert, response.msg)
+                this.deletedPaymentTr(payment)
                 break
             case 'restore':
+                this.deletedPaymentTr(payment)
+
                 this.messageFlash = new MessageFlash(response.alert, response.msg)
-                this.deletedPaymentTr(response.payment)
                 this.checkToRedirect(this.messageFlash.delay)
                 break
-            default:
-                this.loader.off()
-                new MessageFlash(response.alert, response.msg)
-                break
         }
-        this.loading = false
+
+        if (!this.loader.isActive()) {
+            this.loader.off()
+            this.paymentModalElt.hide()
+
+            if (response.msg && !this.messageFlash) {
+                new MessageFlash(response.alert, response.msg)
+            }
+        }
         this.calculateSumAmts()
     }
 
@@ -622,7 +621,11 @@ export default class SupportPayments {
                 elt.classList.remove('d-none')
             })
         }
-        this.loader.off()
+
+        this.deleteBtnElt.addEventListener('click', (e) => {
+            e.preventDefault()
+            this.confirmBtnElt.dataset.url = this.deleteBtnElt.dataset.url.replace('__id__', payment.id)
+        })
     }
 
     /**  
@@ -642,7 +645,6 @@ export default class SupportPayments {
      * @param {Array} payment 
      */
     createPayment(payment) {
-        console.log(payment.id)
         this.paymentId = payment.id
         this.formPaymentElt.action = this.formPaymentElt.dataset.url.replace('__id__', payment.id)
         this.editBtnElts.forEach(elt => {
@@ -670,7 +672,7 @@ export default class SupportPayments {
             this.trElt = paymentElt
             this.confirmBtnElt.dataset.url = btnDeleteElt.dataset.url
         })
-        this.loader.off()
+        // this.loader.off()
     }
 
     /**
@@ -689,7 +691,7 @@ export default class SupportPayments {
         trElt.querySelector('td[data-payment="comment"]').textContent = (payment.noContrib ? 'PAF à zéro (' + payment.noContribReasonToString + ') ' : '')
             + this.sliceComment((payment.comment ?? '') + " \n" + (payment.commentExport ?? ''))
         this.calculateSumAmts()
-        this.loader.off()
+        // this.loader.off()
     }
 
     /**

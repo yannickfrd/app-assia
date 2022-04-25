@@ -120,7 +120,8 @@ final class PaymentController extends AbstractController
         int $id,
         Request $request,
         SupportGroupRepository $groupRepo,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        TranslatorInterface $translator
     ): JsonResponse {
         $supportGroup = $groupRepo->findSupportById($id);
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
@@ -139,7 +140,9 @@ final class PaymentController extends AbstractController
             return $this->json([
                 'action' => 'create',
                 'alert' => 'success',
-                'msg' => 'L\'opération "'.$payment->getTypeToString().'" est enregistrée.',
+                'msg' => $translator->trans('payment.created_successfully', [
+                    '%payment_type%' => $payment->getTypeToString()
+                ], 'app'),
                 'payment' => $payment,
             ], 200, [], ['groups' => array_merge(Payment::SERIALIZER_GROUPS, ['export'])]);
         }
@@ -171,7 +174,8 @@ final class PaymentController extends AbstractController
     public function edit(
         Payment $payment,
         Request $request,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        TranslatorInterface $translator
     ): JsonResponse {
         $this->denyAccessUnlessGranted('EDIT', $payment);
 
@@ -186,7 +190,9 @@ final class PaymentController extends AbstractController
             return $this->json([
                 'action' => 'update',
                 'alert' => 'success',
-                'msg' => 'L\'opération "'.$payment->getTypeToString().'" est modifiée.',
+                'msg' => $translator->trans('payment.updated_successfully', [
+                    '%payment_type%' => $payment->getTypeToString()
+                ], 'app'),
                 'payment' => $payment,
             ], 200, [], ['groups' => array_merge(Payment::SERIALIZER_GROUPS, ['export'])]);
         }
@@ -199,8 +205,10 @@ final class PaymentController extends AbstractController
      *
      * @Route("/payment/{id}/delete", name="payment_delete", methods="GET")
      */
-    public function delete(Payment $payment, EntityManagerInterface $em): JsonResponse
+    public function delete(Payment $payment, EntityManagerInterface $em, TranslatorInterface $translator): JsonResponse
     {
+        $paymentId = $payment->getId();
+
         $this->denyAccessUnlessGranted('DELETE', $payment);
 
         $em->remove($payment);
@@ -211,7 +219,10 @@ final class PaymentController extends AbstractController
         return $this->json([
             'action' => 'delete',
             'alert' => 'warning',
-            'msg' => 'L\'opération "'.$payment->getTypeToString().'" est supprimée.',
+            'msg' => $translator->trans('payment.deleted_successfully', [
+                '%payment_type%' => $payment->getTypeToString()
+            ], 'app'),
+            'payment' => ['id' => $paymentId]
         ]);
     }
 
@@ -236,7 +247,9 @@ final class PaymentController extends AbstractController
         return $this->json([
             'action' => 'restore',
             'alert' => 'success',
-            'msg' => $translator->trans('payment.restored_successfully', [], 'app'),
+            'msg' => $translator->trans('payment.restored_successfully', [
+                '%payment_type%' => $payment->getTypeToString()
+            ], 'app'),
             'payment' => ['id' => $id],
         ]);
     }
