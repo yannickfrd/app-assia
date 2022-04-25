@@ -13,7 +13,7 @@ trait CreatedUpdatedEntityTrait
      * @var \DateTimeInterface
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime", nullable=true)
-     * @Groups({"view", "show_rdv"})
+     * @Groups({"show_created_updated", "view", "show_rdv"})
      */
     protected $createdAt;
 
@@ -22,7 +22,7 @@ trait CreatedUpdatedEntityTrait
      * @Gedmo\Blameable(on="create")
      * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User")
      * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
-     * @Groups("show_rdv")
+     * @Groups("show_created_updated", "show_rdv")
      */
     protected $createdBy;
 
@@ -30,7 +30,7 @@ trait CreatedUpdatedEntityTrait
      * @var \DateTimeInterface
      * @Gedmo\Timestampable(on="create", on="update")
      * @ORM\Column(type="datetime", nullable=true)
-     * @Groups({"view", "show_rdv"})
+     * @Groups({"show_created_updated", "view", "show_rdv"})
      */
     protected $updatedAt;
 
@@ -39,6 +39,7 @@ trait CreatedUpdatedEntityTrait
      * @Gedmo\Blameable(on="create", on="update")
      * @ORM\ManyToOne(targetEntity="App\Entity\Organization\User")
      * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     * @Groups("show_created_updated")
      */
     protected $updatedBy;
 

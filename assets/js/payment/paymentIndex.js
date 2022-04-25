@@ -1,4 +1,4 @@
-import SupportPayments from "./supportPayments"
+import SupportPayments from "./SupportPayments"
 import StopWatch from "../utils/stopWatch"
 
 const stopWatch = new StopWatch()

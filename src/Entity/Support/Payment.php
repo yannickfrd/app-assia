@@ -63,17 +63,21 @@ class Payment
         2 => 'Attribution d\'un logement en cours',
     ];
 
+    public const SERIALIZER_GROUPS = [
+        'show_payment', 'show_support_group', 'show_created_updated', 'show_user'
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups("get")
+     * @Groups({"get", "show_payment"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="smallint")
-     * @Groups("get")
+     * @Groups({"get", "show_payment"})
      */
     private $type = self::DEFAULT_TYPE;
 
@@ -84,55 +88,55 @@ class Payment
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("get")
+     * @Groups({"get", "show_payment"})
      */
     private $startDate;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("get")
+     * @Groups({"get", "show_payment"})
      */
     private $endDate;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups({"get", "export"})
+     * @Groups({"get", "show_payment", "export"})
      */
     private $resourcesAmt;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     * @Groups("get")
+     * @Groups({"get", "show_payment"})
      */
     private $chargesAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups({"get", "export"})
+     * @Groups({"get", "show_payment", "export"})
      */
     private $rentAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups({"get", "export"})
+     * @Groups({"get", "show_payment", "export"})
      */
     private $aplAmt;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"get", "export"})
+     * @Groups({"get", "show_payment", "export"})
      */
     private $credential;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups({"get", "export"})
+     * @Groups({"get", "show_payment", "export"})
      */
     private $toPayAmt;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
-     * @Groups("get")
+     * @Groups({"get", "show_payment"})
      */
     private $paymentType;
 
@@ -143,37 +147,37 @@ class Payment
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups({"get", "export"})
+     * @Groups({"get", "show_payment", "export"})
      */
     private $paidAmt;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups({"get", "export"})
+     * @Groups({"get", "show_payment", "export"})
      */
     private $paymentDate;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups({"get", "export"})
+     * @Groups({"get", "show_payment", "export"})
      */
     private $stillToPayAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups({"get", "export"})
+     * @Groups({"get", "show_payment", "export"})
      */
     private $returnAmt;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"get", "export"})
+     * @Groups({"get", "show_payment", "export"})
      */
     private $comment;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups("get")
+     * @Groups({"get", "show_payment"})
      */
     private $commentExport;
 
@@ -200,19 +204,19 @@ class Payment
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
-     * @Groups("get")
+     * @Groups({"get", "show_payment"})
      */
     private $noContrib;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
-     * @Groups("get")
+     * @Groups({"get", "show_payment"})
      */
     private $noContribReason;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups("get")
+     * @Groups({"get", "show_payment"})
      */
     private $nbConsumUnits;
 
@@ -220,7 +224,7 @@ class Payment
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups("get")
+     * @Groups({"get", "show_payment"})
      */
     private $contributionRate;
 

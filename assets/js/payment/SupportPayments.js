@@ -5,7 +5,7 @@ import FormValidator from '../utils/form/formValidator'
 import ParametersUrl from '../utils/parametersUrl'
 import {Modal} from 'bootstrap'
 import FieldDisplayer from '../utils/form/fieldDisplayer'
-import ContributionCalcul from './contributionCalcul'
+import ContributionCalcul from './ContributionCalcul'
 
 export default class SupportPayments {
 
@@ -85,14 +85,19 @@ export default class SupportPayments {
             }
         })
 
+        document.querySelectorAll('table#table-payments tbody tr button[data-action="show"]')
+            .forEach(showBtnElt => showBtnElt
+                .addEventListener('click', () => this.requestShowPayment(showBtnElt)))
+
         document.querySelectorAll('tr.payment').forEach(trElt => {
-            const getBtnElt = trElt.querySelector('button[data-action="get"]')
-            getBtnElt.addEventListener('click', () => {
-                if (this.loader.isActive() === false) {
-                    this.trElt = trElt
-                    this.getPayment(parseInt(getBtnElt.dataset.id))
-                }
-            })
+            // const getBtnElt = trElt.querySelector('button[data-action="show"]')
+            // getBtnElt.addEventListener('click', () => {
+            //     if (this.loader.isActive() === false) {
+            //         this.trElt = trElt
+            //         console.log(getBtnElt.dataset.url)
+            //         this.getPayment(parseInt(getBtnElt.dataset.id))
+            //     }
+            // })
             const btnDeleteElt = trElt.querySelector('button[data-action="delete"]')
             if (btnDeleteElt) {
                 btnDeleteElt.addEventListener('click', () => {
@@ -362,7 +367,7 @@ export default class SupportPayments {
             this.isValid = false
             return this.formValidator.invalidField(this.returnAmtInputElt, 'Valeur invalide.')
         }
-        if (this.paymentTypeValue == 11 && !this.returnAmtInputElt.value) { // Restitution Caution
+        if (this.paymentTypeValue === 11 && !this.returnAmtInputElt.value) { // Restitution Caution
             this.isValid = false
             return this.formValidator.invalidField(this.returnAmtInputElt, 'Saisie obligatoire.')
         }
@@ -428,7 +433,7 @@ export default class SupportPayments {
     /**
      */
     checkNoContribReason() {
-        if (1 != this.paymentTypeValue || null === this.noContribInputElt) {
+        if (1 !== this.paymentTypeValue || null === this.noContribInputElt) {
             return null
         }
         if (this.noContribInputElt.checked === true && !this.noContribReasonSelectElt.value) {
@@ -457,6 +462,18 @@ export default class SupportPayments {
     }
 
     /**
+     * Permet de voir un paiement
+     * @param {HTMLButtonElement} btnShowElt
+     */
+    requestShowPayment(btnShowElt) {
+        if (!this.loader.isActive()) {
+            this.loader.on()
+
+            this.ajax.send('GET', btnShowElt.dataset.url, this.responseAjax.bind(this))
+        }
+    }
+
+    /**
      * Requête pour obtenir le RDV sélectionné dans le formulaire modal.
      * @param {String} id 
      */
@@ -472,7 +489,7 @@ export default class SupportPayments {
         this.initForm()
         this.checkType()
 
-        this.ajax.send('GET', '/payment/' + id + '/get', this.responseAjax.bind(this))
+        this.ajax.send('GET', '/payment/' + id + '/show', this.responseAjax.bind(this))
     }
 
     /**
@@ -481,7 +498,7 @@ export default class SupportPayments {
     initForm() {
         this.formValidator.reinit()
         this.formPaymentElt.querySelectorAll('input, textarea').forEach(inputElt => {
-            if (inputElt.type != 'hidden') {
+            if (inputElt.type !== 'hidden') {
                 inputElt.value = null
             }
             if (inputElt.type === 'checkbox') {
@@ -518,9 +535,10 @@ export default class SupportPayments {
      * @param {Object} response 
      */
     responseAjax(response) {
+        const payment = response.payment
         switch (response.action) {
             case 'show':
-                this.showPayment(response.data)
+                this.showPayment(payment)
                 break
             case 'create':
                 this.createPayment(response.data.payment)
@@ -573,10 +591,9 @@ export default class SupportPayments {
 
     /**
      * Donne la redevance sélectionnée dans le formulaire modal.
-     * @param {Object} data 
+     * @param {Object} payment
      */
-    showPayment(data) {
-        const payment = data.payment
+    showPayment(payment) {
         this.paymentModalElt.show()
         this.typeSelectElt.value = payment.type
         this.startDateInputElt.value = payment.startDate ? payment.startDate.substring(0, 10) : null
@@ -602,7 +619,7 @@ export default class SupportPayments {
         this.formPaymentElt.querySelector('#payment_contributionRate').value = payment.contributionRate
         this.formPaymentElt.querySelector('#payment_nbConsumUnits').value = payment.nbConsumUnits
 
-        this.infoPaymentDivElt.innerHTML = this.getInfoPaymentElt(data)
+        this.infoPaymentDivElt.innerHTML = this.getInfoPaymentElt(payment)
         this.checkType()
         this.checkResources()
         if (payment.id) {
@@ -615,14 +632,12 @@ export default class SupportPayments {
 
     /**  
      * Donnes les informations sur l'enregistrement (date de création, créateur...).
-     * @param {Object} data
+     * @param {Object} payment
      */
-    getInfoPaymentElt(data) {
-        const payment = data.payment
-
-        let htmlContent = `Créé le ${this.formatDatetime(payment.createdAt)} par ${data.createdBy}`
-        if (payment.createdAt != payment.updatedAt) {
-            htmlContent = htmlContent + `<br/> (modifié le ${this.formatDatetime(payment.updatedAt)} par ${data.updatedBy})`
+    getInfoPaymentElt(payment) {
+        let htmlContent = `Créé le ${this.formatDatetime(payment.createdAt)} par ${payment.createdBy}`
+        if (payment.createdAt !== payment.updatedAt) {
+            htmlContent = htmlContent + `<br/> (modifié le ${this.formatDatetime(payment.updatedAt)} par ${payment.updatedBy})`
         }
         return htmlContent
     }
@@ -652,13 +667,8 @@ export default class SupportPayments {
 
         this.calculateSumAmts()
 
-        const getBtnElt = paymentElt.querySelector('button[data-action="get"]')
-        getBtnElt.addEventListener('click', () => {
-            if (this.loader.isActive() === false) {
-                this.trElt = paymentElt
-                this.getPayment(parseInt(getBtnElt.dataset.id))
-            }
-        })
+        const showBtnElt = paymentElt.querySelector('button[data-action="show"]')
+        showBtnElt.addEventListener('click', () => this.requestShowPayment(showBtnElt))
 
         const btnDeleteElt = paymentElt.querySelector('button[data-action="delete"]')
         btnDeleteElt.addEventListener('click', () => {
@@ -673,7 +683,7 @@ export default class SupportPayments {
      * @param {Object} payment 
      */
     updatePayment(payment) {
-        this.trElt.querySelector('td[data-payment="type"]').textContent = payment.typeToString + (payment.type == 11 ? ' (' + this.formatMoney(payment.returnAmt) + ')' : '')
+        this.trElt.querySelector('td[data-payment="type"]').textContent = payment.typeToString + (payment.type === 11 ? ' (' + this.formatMoney(payment.returnAmt) + ')' : '')
         this.trElt.querySelector('td[data-payment="startDate"]').textContent = this.formatDatetime(payment.startDate, 'date') + ' - ' + this.formatDatetime(payment.endDate, 'date')
         this.trElt.querySelector('td[data-payment="toPayAmt"]').textContent = this.formatMoney(payment.toPayAmt)
         this.trElt.querySelector('td[data-payment="paidAmt"]').textContent = this.formatMoney(payment.paidAmt)
@@ -693,13 +703,13 @@ export default class SupportPayments {
     getPrototypePayment(payment) {
         return `
             <td class="align-middle text-center">
-                <button class="btn btn-${this.themeColor} btn-sm shadow" data-action="get" data-id="${payment.id}" 
-                    data-url="/payment/${payment.id}/get" data-toggle="tooltip" 
+                <button class="btn btn-${this.themeColor} btn-sm shadow" data-action="show" data-id="${payment.id}" 
+                    data-url="/payment/${payment.id}/show" data-toggle="tooltip" 
                     data-placement="bottom" title="Voir l'enregistrement"><span class="fas fa-eye"></span>
                 </button>
             </td>
             <td class="align-middle" data-payment="type">${payment.typeToString}<br/>
-                <span class="text-secondary">${payment.type == 11 ? ' (' + this.formatMoney(payment.returnAmt) + ')' : '' }</span>
+                <span class="text-secondary">${payment.type === 11 ? ' (' + this.formatMoney(payment.returnAmt) + ')' : '' }</span>
             </td>
             <td class="align-middle" data-payment="startDate">${this.formatDatetime(payment.startDate, 'date') + ' - ' + this.formatDatetime(payment.endDate, 'date')}</td>
             <td class="align-middle text-right" data-payment="toPayAmt">${this.formatMoney(payment.toPayAmt)}</td>

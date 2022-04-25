@@ -1,6 +1,6 @@
 import FormValidator from '../utils/form/formValidator'
 import SelectCollectionManager from '../utils/form/SelectCollectionManager'
-import ContributionCalcul from '../payment/contributionCalcul'
+import ContributionCalcul from '../payment/ContributionCalcul'
 
 /**
  * Evaluation sociale.

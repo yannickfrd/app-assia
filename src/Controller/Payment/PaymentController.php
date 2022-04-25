@@ -81,8 +81,8 @@ final class PaymentController extends AbstractController
         PaymentRepository $paymentRepo,
         SupportManager $supportManager,
         Request $request,
-        Pagination $pagination): Response
-    {
+        Pagination $pagination
+    ): Response {
         $supportGroup = $supportManager->getSupportGroup($id);
 
         $this->denyAccessUnlessGranted('VIEW', $supportGroup);
@@ -165,12 +165,8 @@ final class PaymentController extends AbstractController
 
         return $this->json([
             'action' => 'show',
-            'data' => [
-                'payment' => $payment,
-                'createdBy' => $payment->getCreatedBy()->getFullname(),
-                'updatedBy' => $payment->getUpdatedBy()->getFullname(),
-            ],
-        ], 200, [], ['groups' => ['get', 'view']]);
+            'payment' => $payment
+        ], 200, [], ['groups' => Payment::SERIALIZER_GROUPS]);
     }
 
     /**
