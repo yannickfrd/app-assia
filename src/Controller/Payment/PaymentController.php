@@ -38,39 +38,30 @@ final class PaymentController extends AbstractController
 {
     use ErrorMessageTrait;
 
-    private $em;
-    private $paymentRepo;
-
-    public function __construct(EntityManagerInterface $em, PaymentRepository $paymentRepo)
-    {
-        $this->em = $em;
-        $this->paymentRepo = $paymentRepo;
-    }
-
     /**
      * Liste des participations financières.
      *
      * @Route("/payments", name="payments", methods="GET|POST")
      */
-    public function listPayments(Request $request, Pagination $pagination): Response
+    public function listPayments(Request $request, Pagination $pagination, PaymentRepository $paymentRepo): Response
     {
         $form = $this->createForm(PaymentSearchType::class, $search = new PaymentSearch())
             ->handleRequest($request);
 
         if ($search->getExport()) {
-            return $this->exportFullData($search);
+            return $this->exportFullData($search, $paymentRepo);
         }
         if ($request->query->get('export-accounting')) {
-            return $this->exportAccountingData($search);
+            return $this->exportAccountingData($search, $paymentRepo);
         }
         if ($request->query->get('export-delta')) {
-            return $this->exportDeltaData($search);
+            return $this->exportDeltaData($search, $paymentRepo);
         }
 
         return $this->render('app/payment/listPayments.html.twig', [
             'form' => $form->createView(),
             'payments' => $pagination->paginate(
-                $this->paymentRepo->findPaymentsQuery($search),
+                $paymentRepo->findPaymentsQuery($search),
                 $request,
                 20
             ),
@@ -86,6 +77,7 @@ final class PaymentController extends AbstractController
      */
     public function showSupportPayments(
         int $id,
+        PaymentRepository $paymentRepo,
         SupportManager $supportManager,
         Request $request,
         Pagination $pagination): Response
@@ -98,7 +90,7 @@ final class PaymentController extends AbstractController
             ->handleRequest($request);
 
         if ($search->getExport()) {
-            return $this->exportFullData($search, $supportGroup);
+            return $this->exportFullData($search, $paymentRepo, $supportGroup);
         }
 
         $payment = (new Payment())->setSupportGroup($supportGroup);
@@ -109,9 +101,9 @@ final class PaymentController extends AbstractController
             'support' => $supportGroup,
             'form_search' => $formSearch->createView(),
             'form' => $form->createView(),
-            'nbTotalPayments' => $request->query->count() ? $this->paymentRepo->count(['supportGroup' => $supportGroup]) : null,
+            'nbTotalPayments' => $request->query->count() ? $paymentRepo->count(['supportGroup' => $supportGroup]) : null,
             'payments' => $pagination->paginate(
-                $this->paymentRepo->findPaymentsOfSupportQuery($supportGroup, $search),
+                $paymentRepo->findPaymentsOfSupportQuery($supportGroup, $search),
                 $request,
                 200
             ),
@@ -123,9 +115,13 @@ final class PaymentController extends AbstractController
      *
      * @Route("/support/{id}/payment/new", name="payment_new", methods="POST")
      */
-    public function createPayment(SupportGroup $supportGroup, Request $request,NormalizerInterface $normalizer,
-        Normalisation $normalisation): JsonResponse
-    {
+    public function createPayment(
+        SupportGroup $supportGroup,
+        Request $request,
+        NormalizerInterface $normalizer,
+        Normalisation $normalisation,
+        EntityManagerInterface $em
+    ): JsonResponse {
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
         $form = $this->createForm(PaymentType::class, $payment = new Payment())
@@ -134,8 +130,8 @@ final class PaymentController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $payment->setSupportGroup($supportGroup);
 
-            $this->em->persist($payment);
-            $this->em->flush();
+            $em->persist($payment);
+            $em->flush();
 
             PaymentManager::deleteCacheItems($payment);
 
@@ -183,7 +179,8 @@ final class PaymentController extends AbstractController
         Payment $payment,
         Request $request,
         NormalizerInterface $normalizer,
-        Normalisation $normalisation
+        Normalisation $normalisation,
+        EntityManagerInterface $em
     ): JsonResponse {
         $this->denyAccessUnlessGranted('EDIT', $payment);
 
@@ -191,7 +188,7 @@ final class PaymentController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->em->flush();
+            $em->flush();
 
             PaymentManager::deleteCacheItems($payment);
 
@@ -215,12 +212,12 @@ final class PaymentController extends AbstractController
      *
      * @Route("/payment/{id}/delete", name="payment_delete", methods="GET")
      */
-    public function deletePayment(Payment $payment): JsonResponse
+    public function deletePayment(Payment $payment, EntityManagerInterface $em): JsonResponse
     {
         $this->denyAccessUnlessGranted('DELETE', $payment);
 
-        $this->em->remove($payment);
-        $this->em->flush();
+        $em->remove($payment);
+        $em->flush();
 
         PaymentManager::deleteCacheItems($payment);
 
@@ -262,19 +259,22 @@ final class PaymentController extends AbstractController
      *
      * @Route("/payment/indicators", name="payment_indicators", methods="GET|POST")
      */
-    public function showPaymentIndicators(Request $request, PaymentIndicators $indicators): Response
-    {
+    public function showPaymentIndicators(
+        Request $request,
+        PaymentRepository $paymentRepo,
+        PaymentIndicators $indicators
+    ): Response {
         $search = $this->getPaymentSearch();
 
         $form = $this->createForm(PaymentSearchType::class, $search)
             ->handleRequest($request);
 
         if ($search->getExport()) {
-            return $this->exportFullData($search);
+            return $this->exportFullData($search, $paymentRepo);
         }
 
         $datas = $indicators->getIndicators(
-            $this->paymentRepo->findPaymentsForIndicators($search),
+            $paymentRepo->findPaymentsForIndicators($search),
             $search
         );
 
@@ -291,9 +291,13 @@ final class PaymentController extends AbstractController
      *
      * @return Response|RedirectResponse
      */
-    protected function exportFullData($search, $supportGroup = null, UrlGeneratorInterface $router = null): Response
-    {
-        $payments = $this->paymentRepo->findPaymentsToExport($search, $supportGroup);
+    protected function exportFullData(
+        $search,
+        PaymentRepository $paymentRepo,
+        $supportGroup = null,
+        UrlGeneratorInterface $router = null
+    ): Response {
+        $payments = $paymentRepo->findPaymentsToExport($search, $supportGroup);
 
         if (!$payments) {
             $this->addFlash('warning', 'Aucun résultat à exporter.');
@@ -309,9 +313,12 @@ final class PaymentController extends AbstractController
      *
      * @return Response|RedirectResponse
      */
-    protected function exportAccountingData(PaymentSearch $search, UrlGeneratorInterface $router = null): Response
-    {
-        $payments = $this->paymentRepo->findPaymentsToExport($search);
+    protected function exportAccountingData(
+        PaymentSearch $search,
+        PaymentRepository $paymentRepo,
+        UrlGeneratorInterface $router = null
+    ): Response {
+        $payments = $paymentRepo->findPaymentsToExport($search);
 
         if (!$payments) {
             $this->addFlash('warning', 'Aucun résultat à exporter.');
@@ -327,9 +334,12 @@ final class PaymentController extends AbstractController
      *
      * @return Response|RedirectResponse
      */
-    protected function exportDeltaData(PaymentSearch $search, UrlGeneratorInterface $router = null): Response
-    {
-        $payments = $this->paymentRepo->findHotelContributionsToExport($search);
+    protected function exportDeltaData(
+        PaymentSearch $search,
+        PaymentRepository $paymentRepo,
+        UrlGeneratorInterface $router = null
+    ): Response {
+        $payments = $paymentRepo->findHotelContributionsToExport($search);
 
         if (!$payments) {
             $this->addFlash('warning', 'Aucun résultat à exporter.');
