@@ -90,14 +90,6 @@ export default class SupportPayments {
                 .addEventListener('click', () => this.requestShowPayment(showBtnElt)))
 
         document.querySelectorAll('tr.payment').forEach(trElt => {
-            // const getBtnElt = trElt.querySelector('button[data-action="show"]')
-            // getBtnElt.addEventListener('click', () => {
-            //     if (this.loader.isActive() === false) {
-            //         this.trElt = trElt
-            //         console.log(getBtnElt.dataset.url)
-            //         this.getPayment(parseInt(getBtnElt.dataset.id))
-            //     }
-            // })
             const btnDeleteElt = trElt.querySelector('button[data-action="delete"]')
             if (btnDeleteElt) {
                 btnDeleteElt.addEventListener('click', () => {
@@ -467,6 +459,8 @@ export default class SupportPayments {
      */
     requestShowPayment(btnShowElt) {
         if (!this.loader.isActive()) {
+            this.formPaymentElt.action = this.formPaymentElt.dataset.url.replace('__id__', btnShowElt.dataset.id)
+
             this.loader.on()
 
             this.ajax.send('GET', btnShowElt.dataset.url, this.responseAjax.bind(this))
@@ -522,8 +516,7 @@ export default class SupportPayments {
     tryToSave() {
         this.loader.on()
         if (this.isValidForm()) {
-            const url = this.formPaymentElt.getAttribute('action')
-            this.ajax.send('POST', url, this.responseAjax.bind(this), new FormData(this.formPaymentElt))
+            this.ajax.send('POST', this.formPaymentElt.action, this.responseAjax.bind(this), new FormData(this.formPaymentElt))
         } else {
             new MessageFlash('danger', 'Veuillez corriger le(s) erreur(s) avant d\'enregistrer.')
             this.loader.off()
@@ -536,16 +529,18 @@ export default class SupportPayments {
      */
     responseAjax(response) {
         const payment = response.payment
+
+        console.log(response)
         switch (response.action) {
             case 'show':
                 this.showPayment(payment)
                 break
             case 'create':
-                this.createPayment(response.data.payment)
+                this.createPayment(payment)
                 new MessageFlash(response.alert, response.msg)
                 break
             case 'update':
-                this.updatePayment(response.data.payment)
+                this.updatePayment(payment)
                 new MessageFlash(response.alert, response.msg)
                 break
             case 'delete':
@@ -647,7 +642,7 @@ export default class SupportPayments {
      * @param {Array} payment 
      */
     createPayment(payment) {
-
+        console.log(payment.id)
         this.paymentId = payment.id
         this.formPaymentElt.action = this.formPaymentElt.dataset.url.replace('__id__', payment.id)
         this.editBtnElts.forEach(elt => {
@@ -683,14 +678,15 @@ export default class SupportPayments {
      * @param {Object} payment 
      */
     updatePayment(payment) {
-        this.trElt.querySelector('td[data-payment="type"]').textContent = payment.typeToString + (payment.type === 11 ? ' (' + this.formatMoney(payment.returnAmt) + ')' : '')
-        this.trElt.querySelector('td[data-payment="startDate"]').textContent = this.formatDatetime(payment.startDate, 'date') + ' - ' + this.formatDatetime(payment.endDate, 'date')
-        this.trElt.querySelector('td[data-payment="toPayAmt"]').textContent = this.formatMoney(payment.toPayAmt)
-        this.trElt.querySelector('td[data-payment="paidAmt"]').textContent = this.formatMoney(payment.paidAmt)
-        this.trElt.querySelector('td[data-payment="stillToPayAmt"]').textContent = this.formatMoney(this.roundAmount(payment.stillToPayAmt))
-        this.trElt.querySelector('td[data-payment="paymentDate"]').textContent = this.formatDatetime(payment.paymentDate, 'date')
-        this.trElt.querySelector('td[data-payment="paymentType"]').textContent = payment.paymentTypeToString
-        this.trElt.querySelector('td[data-payment="comment"]').textContent = (payment.noContrib ? 'PAF à zéro (' + payment.noContribReasonToString + ') ' : '')
+        const trElt = document.getElementById('payment-' + payment.id)
+        trElt.querySelector('td[data-payment="type"]').textContent = payment.typeToString + (payment.type === 11 && payment.returnAmt !== null ? ' (' + this.formatMoney(payment.returnAmt) + ')' : '')
+        trElt.querySelector('td[data-payment="startDate"]').textContent = this.formatDatetime(payment.startDate, 'date') + ' - ' + this.formatDatetime(payment.endDate, 'date')
+        trElt.querySelector('td[data-payment="toPayAmt"]').textContent = this.formatMoney(payment.toPayAmt)
+        trElt.querySelector('td[data-payment="paidAmt"]').textContent = payment.paidAmt ?? this.formatMoney(payment.paidAmt)
+        trElt.querySelector('td[data-payment="stillToPayAmt"]').textContent = this.formatMoney(this.roundAmount(payment.stillToPayAmt))
+        trElt.querySelector('td[data-payment="paymentDate"]').textContent = this.formatDatetime(payment.paymentDate, 'date')
+        trElt.querySelector('td[data-payment="paymentType"]').textContent = payment.paymentTypeToString ?? ''
+        trElt.querySelector('td[data-payment="comment"]').textContent = (payment.noContrib ? 'PAF à zéro (' + payment.noContribReasonToString + ') ' : '')
             + this.sliceComment((payment.comment ?? '') + " \n" + (payment.commentExport ?? ''))
         this.calculateSumAmts()
         this.loader.off()

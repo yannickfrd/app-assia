@@ -120,8 +120,6 @@ final class PaymentController extends AbstractController
         int $id,
         Request $request,
         SupportGroupRepository $groupRepo,
-        NormalizerInterface $normalizer,
-        Normalisation $normalisation,
         EntityManagerInterface $em
     ): JsonResponse {
         $supportGroup = $groupRepo->findSupportById($id);
@@ -142,15 +140,11 @@ final class PaymentController extends AbstractController
                 'action' => 'create',
                 'alert' => 'success',
                 'msg' => 'L\'opération "'.$payment->getTypeToString().'" est enregistrée.',
-                'data' => [
-                    'payment' => $normalizer->normalize($payment, null, [
-                        'groups' => ['get', 'export'],
-                    ]),
-                ],
-            ]);
+                'payment' => $payment,
+            ], 200, [], ['groups' => array_merge(Payment::SERIALIZER_GROUPS, ['export'])]);
         }
 
-        return $this->getErrorMessage($form, $normalisation);
+        return $this->getErrorMessage($form);
     }
 
     /**
@@ -177,8 +171,6 @@ final class PaymentController extends AbstractController
     public function edit(
         Payment $payment,
         Request $request,
-        NormalizerInterface $normalizer,
-        Normalisation $normalisation,
         EntityManagerInterface $em
     ): JsonResponse {
         $this->denyAccessUnlessGranted('EDIT', $payment);
@@ -195,15 +187,11 @@ final class PaymentController extends AbstractController
                 'action' => 'update',
                 'alert' => 'success',
                 'msg' => 'L\'opération "'.$payment->getTypeToString().'" est modifiée.',
-                'data' => [
-                    'payment' => $normalizer->normalize($payment, null, [
-                        'groups' => ['get', 'export'],
-                    ]),
-                ],
-            ]);
+                'payment' => $payment,
+            ], 200, [], ['groups' => array_merge(Payment::SERIALIZER_GROUPS, ['export'])]);
         }
 
-        return $this->getErrorMessage($form, $normalisation);
+        return $this->getErrorMessage($form);
     }
 
     /**

@@ -562,7 +562,7 @@ class Payment
         return $this->noContribReason;
     }
 
-    /** @Groups("get") */
+    /** @Groups({"get", "show_payment"}) */
     public function getNoContribReasonToString(): ?string
     {
         return $this->noContribReason ? self::NO_CONTRIB_REASONS[$this->noContribReason] : null;
