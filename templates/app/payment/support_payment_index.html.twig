@@ -1,14 +1,14 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
 
 {% set restoration_mode = form_search.deleted.deleted.vars.checked %}
-{% set title = "Paiements" ~ (restoration_mode ? ' (Corbeille)') %}
+{% set title = 'Paiements' ~ (restoration_mode ? ' (Corbeille)') %}
 
 {% block title %}{{ title }}{% endblock %}
 
 {% block body %}
 	<div class="container">
 
-		{% include "app/support/_partials/_support_nav.html.twig" %}
+		{% include 'app/support/_partials/_support_nav.html.twig' %}
 
 		<div class="row">
 			<div class="d-flex col-md-6 mb-1 align-items-center">
@@ -26,7 +26,7 @@
 			</div>
 		</div>
 
-		{% include "app/payment/_searchSupportPayments.html.twig" %}
+		{% include 'app/payment/_support_payment_search_form.html.twig' %}
 
 		<div class="row mb-4">
 			<div class="col-md-12">
@@ -43,43 +43,43 @@
 							<tr>
 								<th scope="col" class="align-middle th-w-20"></th>
 								<th scope="col" class="align-middle th-w-100">
-									{{ knp_pagination_sortable(payments, "payment.type"|trans({}, "forms"), "p.type") }}
+									{{ knp_pagination_sortable(payments, 'payment.type'|trans({}, 'forms'), 'p.type') }}
 								</th>
 								<th scope="col" class="align-middle th-w-120">
-									{{ knp_pagination_sortable(payments, "Période de la PF", "p.startDate") }}
+									{{ knp_pagination_sortable(payments, 'Période de la PF', 'p.startDate') }}
 								</th>
 								<th scope="col" class="align-middle th-w-100">
-									{{ knp_pagination_sortable(payments, "Montant à régler", "p.toPayAmt") }}
+									{{ knp_pagination_sortable(payments, 'Montant à régler', 'p.toPayAmt') }}
 								</th>
 								<th scope="col" class="align-middle th-w-100">
-									{{ knp_pagination_sortable(payments, "Montant réglé", "p.paidAmt") }}
+									{{ knp_pagination_sortable(payments, 'Montant réglé', 'p.paidAmt') }}
 								</th>
 								<th scope="col" class="align-middle th-w-100">
-									{{ knp_pagination_sortable(payments, "Restant dû (différentiel)", "p.stillToPayAmt") }}
+									{{ knp_pagination_sortable(payments, 'Restant dû (différentiel)', 'p.stillToPayAmt') }}
 								</th>
 								<th scope="col" class="align-middle th-date">
-									{{ knp_pagination_sortable(payments, "Date de l\'opération", "p.paymentDate") }}
+									{{ knp_pagination_sortable(payments, 'Date de l\'opération', 'p.paymentDate') }}
 								</th>
 								<th scope="col" class="align-middle th-w-100">
-									{{ knp_pagination_sortable(payments, "Mode de règlement", "p.paymentType") }}
+									{{ knp_pagination_sortable(payments, 'Mode de règlement', 'p.paymentType') }}
 								</th>
 								<th scope="col" class="align-middle th-w-140">
-									{{ knp_pagination_sortable(payments, "Commentaire", "p.comment") }}
+									{{ knp_pagination_sortable(payments, 'Commentaire', 'p.comment') }}
 								</th>
 								{% if restoration_mode %}
 									<th scope="col" class="align-middle th-w-100">
-										{{ knp_pagination_sortable(payments, "Supprimé le", "p.deletedAt") }}
+										{{ knp_pagination_sortable(payments, 'Supprimé le', 'p.deletedAt') }}
 									</th>
 								{% else %}
 									<th scope="col" class="align-middle th-w-100">
-										{{ knp_pagination_sortable(payments, "Date de création", "p.createdAt") }}
+										{{ knp_pagination_sortable(payments, 'Date de création', 'p.createdAt') }}
 									</th>
 								{% endif %}
 								<th scope="col" class="align-middle th-w-20">
-									{{ knp_pagination_sortable(payments, "PDF", "p.pdfGenerateAt") }}
+									{{ knp_pagination_sortable(payments, 'PDF', 'p.pdfGenerateAt') }}
 								</th>
 								<th scope="col" class="align-middle th-w-20">
-									{{ knp_pagination_sortable(payments, "Mail", "p.mailSentAt") }}
+									{{ knp_pagination_sortable(payments, 'Mail', 'p.mailSentAt') }}
 								</th>
 								<th scope="col" class="align-middle th-w-20"></th>
 							</tr>
@@ -97,15 +97,15 @@
 									</td>
 									<td class="align-middle" data-payment="type">{{ payment.typeToString }}
 										<span class="text-secondary">
-											{{ payment.type == constant("RENT", payment) ? "(" ~ payment.rentAmt|amount ~ ")" }}<br/>
-											{{ payment.type == constant("DEPOSIT_REFUNT", payment) ? "(" ~ payment.returnAmt|amount ~ ")" }}
+											{{ payment.type == constant('RENT', payment) ? '(' ~ payment.rentAmt|amount ~ ')' }}<br/>
+											{{ payment.type == constant('DEPOSIT_REFUNT', payment) ? '(' ~ payment.returnAmt|amount ~ ')' }}
 										</span>								
 									</td>
 									<td class="align-middle text-center" data-payment="startDate">
 										{% if payment.startDate %}
 											{% set nbDays = payment.nbDays %}
-											{{ payment.startDate|date("d/m/Y") }} - {{ payment.endDate|date("d/m/Y") }}
-											<span class="small secondary">({{ nbDays }}&nbsp;jour{{ nbDays > 1 ? "s"}})</span>
+											{{ payment.startDate|date('d/m/Y') }} - {{ payment.endDate|date('d/m/Y') }}
+											<span class="small secondary">({{ nbDays }}&nbsp;jour{{ nbDays > 1 ? 's'}})</span>
 										{% endif %}
 									</td>
 									<td class="align-middle text-right" data-payment="toPayAmt"><!--
@@ -115,15 +115,15 @@
 									<td class="align-middle text-right" data-payment="stillToPayAmt"><!--
 										-->{{ payment.stillToPayAmt ? payment.stillToPayAmt|amount }}</td>
 									<td class="align-middle text-center" data-payment="paymentDate"><!--
-										-->{{ payment.paymentDate ? payment.paymentDate|date("d/m/Y") }}
+										-->{{ payment.paymentDate ? payment.paymentDate|date('d/m/Y') }}
 									<td class="align-middle" data-payment="paymentType">{{ payment.paymentTypeToString }}</td>
 									<td class="align-middle small" data-payment="comment">
-										{{ payment.noContrib ? "PAF à zéro (" ~ payment.noContribReasonToString ~ ")" }}
-										{{ (payment.comment ~ "\n" ~ payment.commentExport)|u.truncate(50, " [...]", false) }}</td>
+										{{ payment.noContrib ? 'PAF à zéro (' ~ payment.noContribReasonToString ~ ')' }}
+										{{ (payment.comment ~ '\n' ~ payment.commentExport)|u.truncate(50, ' [...]', false) }}</td>
 									{% if is_deleted %}
 										<td class="align-middle" data-payment="deletedAt">{{ payment.deletedAtToString }}</td>
 									{% else %}
-										<td class="align-middle" data-payment="createdAt">{{ payment.createdAt|date("d/m/Y") }}</td>
+										<td class="align-middle" data-payment="createdAt">{{ payment.createdAt|date('d/m/Y') }}</td>
 									{% endif %}
 									<td class="align-middle text-center" data-payment="pdfGenerate">
 										<a href="{{ path('payment_export_pdf', {'id': payment.id}) }}" 
@@ -157,12 +157,12 @@
 			</div>
 		</div>
 	</div>
-	{% include "app/payment/_paymentModal.html.twig" %}
-	{% include "app/payment/_contributionCalculModal.html.twig" %}
-	{% include "app/payment/_deletePaymentModal.html.twig" %}
+	{% include 'app/payment/_payment_modal.html.twig' %}
+	{% include 'app/payment/_contribution_calcul_modal.html.twig' %}
+	{% include 'app/payment/_payment_delete_modal.html.twig' %}
 {% endblock %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags("search") }}
-	{{ encore_entry_script_tags("payment") }}
+    {{ encore_entry_script_tags('search') }}
+	{{ encore_entry_script_tags('payment') }}
 {% endblock javascripts %}

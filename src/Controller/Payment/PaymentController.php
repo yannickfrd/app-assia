@@ -57,7 +57,7 @@ final class PaymentController extends AbstractController
             return $this->exportDeltaData($search, $paymentRepo);
         }
 
-        return $this->render('app/payment/listPayments.html.twig', [
+        return $this->render('app/payment/payment_index.html.twig', [
             'form' => $form->createView(),
             'payments' => $pagination->paginate(
                 $paymentRepo->findPaymentsQuery($search),
@@ -96,7 +96,7 @@ final class PaymentController extends AbstractController
 
         $form = $this->createForm(PaymentType::class, $payment);
 
-        return $this->render('app/payment/supportPayments.html.twig', [
+        return $this->render('app/payment/support_payment_index.html.twig', [
             'support' => $supportGroup,
             'form_search' => $formSearch->createView(),
             'form' => $form->createView(),
@@ -276,7 +276,7 @@ final class PaymentController extends AbstractController
             $search
         );
 
-        return $this->render('app/payment/paymentIndicators.html.twig', [
+        return $this->render('app/payment/payment_indicators.html.twig', [
             'form' => $form->createView(),
             'datas' => $datas,
         ]);

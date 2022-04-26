@@ -1,4 +1,4 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
 
 {% block title %}Indicateurs paiements{% endblock %}
 
@@ -14,7 +14,7 @@
             </div>
         </div>
 
-        {% include "app/payment/_searchPayment.html.twig" %}
+        {% include 'app/payment/_payment_search_form.html.twig' %}
 
         <div class="container">
             <div class="row">
@@ -78,5 +78,5 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags("search") }}
+    {{ encore_entry_script_tags('search') }}
 {% endblock javascripts %}
