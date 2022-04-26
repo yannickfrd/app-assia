@@ -35,30 +35,19 @@ final class DocumentController extends AbstractController
 {
     use ErrorMessageTrait;
 
-    private $em;
-    private $documentRepo;
-    private $documentsDirectory;
-
-    public function __construct(EntityManagerInterface $em, DocumentRepository $documentRepo, string $documentsDirectory)
-    {
-        $this->em = $em;
-        $this->documentRepo = $documentRepo;
-        $this->documentsDirectory = $documentsDirectory;
-    }
-
     /**
      * Liste des documents.
      *
      * @Route("/admin/documents", name="document_index", methods="GET|POST")
      */
-    public function index(Request $request, Pagination $pagination): Response
+    public function index(Request $request, Pagination $pagination, DocumentRepository $documentRepo): Response
     {
         $form = $this->createForm(DocumentSearchType::class, $search = new DocumentSearch())
             ->handleRequest($request);
 
         return $this->render('app/document/listDocuments.html.twig', [
             'form' => $form->createView(),
-            'documents' => $pagination->paginate($this->documentRepo->findDocumentsQuery($search, $this->getUser()), $request, 20),
+            'documents' => $pagination->paginate($documentRepo->findDocumentsQuery($search, $this->getUser()), $request, 20),
         ]);
     }
 
@@ -69,6 +58,7 @@ final class DocumentController extends AbstractController
      */
     public function indexSupportDocuments(
         int $id,
+        DocumentRepository $documentRepo,
         SupportManager $supportManager,
         Request $request,
         Pagination $pagination
@@ -96,7 +86,7 @@ final class DocumentController extends AbstractController
             'dropzoneForm' => $dropzoneForm->createView(),
             'actionForm' => $actionForm->createView(),
             'documents' => $pagination->paginate(
-                $this->documentRepo->findSupportDocumentsQuery($supportGroup, $search),
+                $documentRepo->findSupportDocumentsQuery($supportGroup, $search),
                 $request
             ),
         ]);
@@ -182,13 +172,17 @@ final class DocumentController extends AbstractController
      * @Route("/document/{id}/edit", name="document_edit", methods="POST")
      * @IsGranted("EDIT", subject="document")
      */
-    public function edit(Document $document, Request $request, NormalizerInterface $normalizer): JsonResponse
-    {
+    public function edit(
+        Document $document,
+        Request $request,
+        EntityManagerInterface $em,
+        NormalizerInterface $normalizer
+    ): JsonResponse {
         $form = $this->createForm(DocumentType::class, $document)
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->em->flush();
+            $em->flush();
 
             DocumentManager::deleteCacheItems($document->getSupportGroup(), true);
 
@@ -208,10 +202,10 @@ final class DocumentController extends AbstractController
      *
      * @Route("/document/{id}/delete", name="document_delete", methods="GET")
      */
-    public function delete(Document $document): JsonResponse
+    public function delete(Document $document, EntityManagerInterface $em): JsonResponse
     {
-        $this->em->remove($document);
-        $this->em->flush();
+        $em->remove($document);
+        $em->flush();
 
         DocumentManager::deleteCacheItems($document->getSupportGroup());
 
@@ -258,6 +252,9 @@ final class DocumentController extends AbstractController
      */
     private function getFilePath(Document $document): string
     {
-        return $this->documentsDirectory.$document->getCreatedAt()->format('Y/m/d/').$document->getPeopleGroup()->getId().'/'.$document->getInternalFileName();
+        return $this->getParameter('documents_directory')
+            .$document->getCreatedAt()->format('Y/m/d/')
+            .$document->getPeopleGroup()->getId().'/'
+            .$document->getInternalFileName();
     }
 }
