@@ -42,6 +42,8 @@ class Document
         'zip' => 'Archive',
     ];
 
+    public const SERIALIZER_GROUPS = ['show_document', 'view', 'show_tag'];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -187,5 +189,10 @@ class Document
         $this->supportGroup = $supportGroup;
 
         return $this;
+    }
+
+    public function getDeletedAtToString(string $format = 'd/m/Y H:i'): string
+    {
+        return $this->deletedAt ? $this->deletedAt->format($format) : '';
     }
 }

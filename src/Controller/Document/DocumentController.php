@@ -28,7 +28,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class DocumentController extends AbstractController
@@ -36,8 +35,6 @@ final class DocumentController extends AbstractController
     use ErrorMessageTrait;
 
     /**
-     * Liste des documents.
-     *
      * @Route("/admin/documents", name="document_index", methods="GET|POST")
      */
     public function index(Request $request, Pagination $pagination, DocumentRepository $documentRepo): Response
@@ -52,8 +49,6 @@ final class DocumentController extends AbstractController
     }
 
     /**
-     * Liste des documents du suivi.
-     *
      * @Route("/support/{id}/documents", name="support_document_index", methods="GET|POST")
      */
     public function indexSupportDocuments(
@@ -93,8 +88,6 @@ final class DocumentController extends AbstractController
     }
 
     /**
-     * Nouveau document.
-     *
      * @Route("/support/{id}/document/create", name="document_create", methods="POST")
      * @IsGranted("EDIT", subject="supportGroup")
      */
@@ -116,7 +109,7 @@ final class DocumentController extends AbstractController
 
             DocumentManager::deleteCacheItems($supportGroup);
 
-            return $this->json($data);
+            return $this->json($data, 200, [], ['groups' => Document::SERIALIZER_GROUPS]);
         }
 
         return $this->getErrorMessage($form);
@@ -167,8 +160,6 @@ final class DocumentController extends AbstractController
     }
 
     /**
-     * Modification d'un document.
-     *
      * @Route("/document/{id}/edit", name="document_edit", methods="POST")
      * @IsGranted("EDIT", subject="document")
      */
@@ -176,7 +167,7 @@ final class DocumentController extends AbstractController
         Document $document,
         Request $request,
         EntityManagerInterface $em,
-        NormalizerInterface $normalizer
+        TranslatorInterface $translator
     ): JsonResponse {
         $form = $this->createForm(DocumentType::class, $document)
             ->handleRequest($request);
@@ -189,20 +180,18 @@ final class DocumentController extends AbstractController
             return $this->json([
                 'action' => 'update',
                 'alert' => 'success',
-                'msg' => 'Les informations du document "'.$document->getName().'" sont mises à jour.',
-                'data' => $normalizer->normalize($document, null, ['groups' => ['show_document', 'show_tag', 'view']]),
-            ]);
+                'msg' => $translator->trans('document.updated_successfully', ['%document_title%' => $document->getName()], 'app'),
+                'document' => $document,
+            ], 200, [], ['groups' => Document::SERIALIZER_GROUPS]);
         }
 
         return $this->getErrorMessage($form);
     }
 
     /**
-     * Supprime un document.
-     *
      * @Route("/document/{id}/delete", name="document_delete", methods="GET")
      */
-    public function delete(Document $document, EntityManagerInterface $em): JsonResponse
+    public function delete(Document $document, EntityManagerInterface $em, TranslatorInterface $translator): JsonResponse
     {
         $em->remove($document);
         $em->flush();
@@ -212,11 +201,8 @@ final class DocumentController extends AbstractController
         return $this->json([
             'action' => 'delete',
             'alert' => 'warning',
-            'msg' => "Le document \"{$document->getName()}\" est supprimé.",
-            'document' => [
-                'id' => $document->getId(),
-                'name' => $document->getName(),
-            ],
+            'msg' => $translator->trans('document.deleted_successfully', ['%document_title%' => $document->getName()], 'app'),
+            'document' => ['id' => $document->getId()],
         ]);
     }
 

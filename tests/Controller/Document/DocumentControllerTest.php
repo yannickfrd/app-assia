@@ -109,7 +109,7 @@ class DocumentControllerTest extends WebTestCase
         $this->assertSame('success', $content['alert']);
 
         $documentRepo = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository(Document::class);
-        $document = $documentRepo->find($content['data'][0]['id']);
+        $document = $documentRepo->find($content['documents'][0]['id']);
         $file = $this->documentsDirectory.$document->getCreatedAt()->format('Y/m/d/').$document->getPeopleGroup()->getId().'/'.$document->getInternalFileName();
         if (file_exists($file)) {
             unlink($file);

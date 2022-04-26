@@ -6,9 +6,7 @@ use App\Entity\Support\Document;
 use App\Entity\Support\SupportGroup;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
@@ -20,20 +18,17 @@ class FileUploader
 
     protected $em;
     protected $targetDirectory;
-    protected $normalizer;
     protected $optimizer;
     protected $slugger;
 
     public function __construct(
         EntityManagerInterface $em,
-        NormalizerInterface $normalizer,
         ImageOptimizer $optimizer,
         SluggerInterface $slugger,
         string $targetDirectory
         ) {
         $this->em = $em;
         $this->optimizer = $optimizer;
-        $this->normalizer = $normalizer;
         $this->slugger = $slugger;
         $this->targetDirectory = $targetDirectory;
     }
@@ -72,17 +67,17 @@ class FileUploader
 
         $this->em->flush();
 
-        $data = [];
-        $names = [];
-        foreach ($documents as $document) {
-            $data[] = $this->normalizer->normalize($document, 'json', ['groups' => ['show_document', 'view']]);
-            $names[] = $document->getName();
-        }
+//        $data = [];
+//        $names = [];
+//        foreach ($documents as $document) {
+//            $data[] = $this->normalizer->normalize($document, 'json', ['groups' => ['show_document', 'view']]);
+//            $names[] = $document->getName();
+//        }
 
         return [
             'action' => 'create',
             'alert' => 'success',
-            'data' => $data,
+            'documents' => $documents,
         ];
     }
 
