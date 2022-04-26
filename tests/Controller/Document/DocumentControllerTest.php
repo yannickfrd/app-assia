@@ -95,7 +95,7 @@ class DocumentControllerTest extends WebTestCase
 
         // Fail
         $id = $this->supportGroup->getId();
-        $this->client->request('POST', "/support/$id/document/new");
+        $this->client->request('POST', "/support/$id/document/create");
 
         $contentResponse = json_decode($this->client->getResponse()->getContent(), true);
 

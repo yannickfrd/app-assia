@@ -57,9 +57,9 @@
 								{% for document in documents %}
 								{% set support = document.supportGroup %}
 									<tr>
-										<td scope="row" class="align-middle text-center">
+										<td class="align-middle text-center">
 											{% if support %}
-												<a href="{{ path('support_documents', {'id': document.supportGroup.id, 
+												<a href="{{ path('support_document_index', {'id': document.supportGroup.id,
 													'documentId': document.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow" 
 													title="Voir le suivi" data-toggle="tooltip" data-placement="bottom">
 													<i class="fas fa-eye"></i>

@@ -49,9 +49,9 @@ final class DocumentController extends AbstractController
     /**
      * Liste des documents.
      *
-     * @Route("/admin/documents", name="documents", methods="GET|POST")
+     * @Route("/admin/documents", name="document_index", methods="GET|POST")
      */
-    public function showListDocuments(Request $request, Pagination $pagination): Response
+    public function index(Request $request, Pagination $pagination): Response
     {
         $form = $this->createForm(DocumentSearchType::class, $search = new DocumentSearch())
             ->handleRequest($request);
@@ -65,9 +65,9 @@ final class DocumentController extends AbstractController
     /**
      * Liste des documents du suivi.
      *
-     * @Route("/support/{id}/documents", name="support_documents", methods="GET|POST")
+     * @Route("/support/{id}/documents", name="support_document_index", methods="GET|POST")
      */
-    public function listSupportDocuments(
+    public function indexSupportDocuments(
         int $id,
         SupportManager $supportManager,
         Request $request,
@@ -83,7 +83,7 @@ final class DocumentController extends AbstractController
         $documentForm = $this->createForm(DocumentType::class, (new Document())->setSupportGroup($supportGroup));
 
         $dropzoneForm = $this->createForm(DropzoneDocumentType::class, null, [
-            'action' => $this->generateUrl('document_new', ['id' => $supportGroup->getId()]),
+            'action' => $this->generateUrl('document_create', ['id' => $supportGroup->getId()]),
         ]);
         $actionForm = $this->createForm(ActionType::class, null, [
             'action' => $this->generateUrl('documents_download', ['id' => $supportGroup->getId()]),
@@ -105,10 +105,10 @@ final class DocumentController extends AbstractController
     /**
      * Nouveau document.
      *
-     * @Route("/support/{id}/document/new", name="document_new", methods="POST")
+     * @Route("/support/{id}/document/create", name="document_create", methods="POST")
      * @IsGranted("EDIT", subject="supportGroup")
      */
-    public function newDocument(SupportGroup $supportGroup, Request $request, FileUploader $fileUploader): JsonResponse
+    public function create(SupportGroup $supportGroup, Request $request, FileUploader $fileUploader): JsonResponse
     {
         $dropzoneDocument = $request->files->get('dropzone_document');
         $files = $request->files->get('files');
@@ -148,7 +148,7 @@ final class DocumentController extends AbstractController
 
         $this->addFlash('danger', 'Ce fichier n\'existe pas.');
 
-        return $this->redirectToRoute('support_documents', ['id' => $document->getSupportGroup()->getId()]);
+        return $this->redirectToRoute('support_document_index', ['id' => $document->getSupportGroup()->getId()]);
     }
 
     /**
@@ -182,7 +182,7 @@ final class DocumentController extends AbstractController
      * @Route("/document/{id}/edit", name="document_edit", methods="POST")
      * @IsGranted("EDIT", subject="document")
      */
-    public function editDocument(Document $document, Request $request, NormalizerInterface $normalizer): JsonResponse
+    public function edit(Document $document, Request $request, NormalizerInterface $normalizer): JsonResponse
     {
         $form = $this->createForm(DocumentType::class, $document)
             ->handleRequest($request);
@@ -208,7 +208,7 @@ final class DocumentController extends AbstractController
      *
      * @Route("/document/{id}/delete", name="document_delete", methods="GET")
      */
-    public function deleteDocument(Document $document): JsonResponse
+    public function delete(Document $document): JsonResponse
     {
         $this->em->remove($document);
         $this->em->flush();
