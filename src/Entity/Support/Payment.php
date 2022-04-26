@@ -64,7 +64,7 @@ class Payment
     ];
 
     public const SERIALIZER_GROUPS = [
-        'show_payment', 'show_support_group', 'show_created_updated', 'show_user'
+        'show_payment', 'show_support_group', 'show_created_updated', 'show_user',
     ];
 
     /**
@@ -656,5 +656,4 @@ class Payment
     {
         return $this->deletedAt ? $this->deletedAt->format($format) : '';
     }
-
 }

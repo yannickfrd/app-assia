@@ -19,7 +19,6 @@ use App\Service\Export\HotelContributionlExport;
 use App\Service\Export\PaymentAccountingExport;
 use App\Service\Export\PaymentFullExport;
 use App\Service\Indicators\PaymentIndicators;
-use App\Service\Normalisation;
 use App\Service\Pagination;
 use App\Service\Payment\PaymentManager;
 use App\Service\SupportGroup\SupportManager;
@@ -32,7 +31,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class PaymentController extends AbstractController
@@ -141,7 +139,7 @@ final class PaymentController extends AbstractController
                 'action' => 'create',
                 'alert' => 'success',
                 'msg' => $translator->trans('payment.created_successfully', [
-                    '%payment_type%' => $payment->getTypeToString()
+                    '%payment_type%' => $payment->getTypeToString(),
                 ], 'app'),
                 'payment' => $payment,
             ], 200, [], ['groups' => array_merge(Payment::SERIALIZER_GROUPS, ['export'])]);
@@ -162,7 +160,7 @@ final class PaymentController extends AbstractController
 
         return $this->json([
             'action' => 'show',
-            'payment' => $payment
+            'payment' => $payment,
         ], 200, [], ['groups' => Payment::SERIALIZER_GROUPS]);
     }
 
@@ -191,7 +189,7 @@ final class PaymentController extends AbstractController
                 'action' => 'update',
                 'alert' => 'success',
                 'msg' => $translator->trans('payment.updated_successfully', [
-                    '%payment_type%' => $payment->getTypeToString()
+                    '%payment_type%' => $payment->getTypeToString(),
                 ], 'app'),
                 'payment' => $payment,
             ], 200, [], ['groups' => array_merge(Payment::SERIALIZER_GROUPS, ['export'])]);
@@ -220,9 +218,9 @@ final class PaymentController extends AbstractController
             'action' => 'delete',
             'alert' => 'warning',
             'msg' => $translator->trans('payment.deleted_successfully', [
-                '%payment_type%' => $payment->getTypeToString()
+                '%payment_type%' => $payment->getTypeToString(),
             ], 'app'),
-            'payment' => ['id' => $paymentId]
+            'payment' => ['id' => $paymentId],
         ]);
     }
 
@@ -248,7 +246,7 @@ final class PaymentController extends AbstractController
             'action' => 'restore',
             'alert' => 'success',
             'msg' => $translator->trans('payment.restored_successfully', [
-                '%payment_type%' => $payment->getTypeToString()
+                '%payment_type%' => $payment->getTypeToString(),
             ], 'app'),
             'payment' => ['id' => $id],
         ]);
