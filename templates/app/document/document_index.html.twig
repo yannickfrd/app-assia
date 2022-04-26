@@ -1,6 +1,6 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
 
-{% set title = "Documents" %}
+{% set title = 'Documents' %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -10,10 +10,10 @@
 
 		<div class="container-fluid mt-4">
 			<h1 class="h2 mb-3">{{ title }}</h1>
-			{% include "model/_msgFlash.html.twig" %}
+			{% include 'model/_msgFlash.html.twig' %}
 		</div>
 
-		{% include "app/document/_searchDocuments.html.twig" %}
+		{% include 'app/document/_document_search_form.twig' %}
 
 		<div class="container-fluid mt-4">
 
@@ -100,5 +100,5 @@
 {% endblock %}
 
 {% block javascripts %}
-	{{ encore_entry_script_tags("search") }}
+	{{ encore_entry_script_tags('search') }}
 {% endblock javascripts %}

@@ -45,7 +45,7 @@ final class DocumentController extends AbstractController
         $form = $this->createForm(DocumentSearchType::class, $search = new DocumentSearch())
             ->handleRequest($request);
 
-        return $this->render('app/document/listDocuments.html.twig', [
+        return $this->render('app/document/document_index.html.twig', [
             'form' => $form->createView(),
             'documents' => $pagination->paginate($documentRepo->findDocumentsQuery($search, $this->getUser()), $request, 20),
         ]);
@@ -84,7 +84,7 @@ final class DocumentController extends AbstractController
             'form_search' => $formSearch->createView(),
             'documentForm' => $documentForm->createView(),
             'dropzoneForm' => $dropzoneForm->createView(),
-            'actionForm' => $actionForm->createView(),
+            'action_form' => $actionForm->createView(),
             'documents' => $pagination->paginate(
                 $documentRepo->findSupportDocumentsQuery($supportGroup, $search),
                 $request
