@@ -329,7 +329,7 @@ final class SupportGroupController extends AbstractController
         }
 
         return $this->render('app/support/switch_support_referent.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
     }
 
