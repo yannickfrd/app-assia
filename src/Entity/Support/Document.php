@@ -167,6 +167,11 @@ class Document
         return self::TYPE_EXTENSIONS[$this->getExtension()] ?? null;
     }
 
+    public function getPath(): ?string
+    {
+        return $this->createdAt->format('Y/m/d/').$this->getPeopleGroup()->getId().'/'.$this->internalFileName;
+    }
+
     public function getPeopleGroup(): ?PeopleGroup
     {
         return $this->peopleGroup;

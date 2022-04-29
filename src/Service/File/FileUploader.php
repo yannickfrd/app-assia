@@ -26,7 +26,7 @@ class FileUploader
         ImageOptimizer $optimizer,
         SluggerInterface $slugger,
         string $targetDirectory
-        ) {
+    ) {
         $this->em = $em;
         $this->optimizer = $optimizer;
         $this->slugger = $slugger;
@@ -49,6 +49,7 @@ class FileUploader
             if (!$file instanceof UploadedFile) {
                 continue;
             }
+
             $path = $now->format('Y/m/d/').$peopleGroup->getId().'/';
             $fileName = $this->upload($file, $path);
             $size = \filesize($this->getTargetDirectory().$path.'/'.$fileName);
@@ -58,7 +59,8 @@ class FileUploader
                 ->setInternalFileName($fileName)
                 ->setSize($size)
                 ->setPeopleGroup($peopleGroup)
-                ->setSupportGroup($supportGroup);
+                ->setSupportGroup($supportGroup)
+            ;
 
             $this->em->persist($document);
 
@@ -66,13 +68,6 @@ class FileUploader
         }
 
         $this->em->flush();
-
-//        $data = [];
-//        $names = [];
-//        foreach ($documents as $document) {
-//            $data[] = $this->normalizer->normalize($document, 'json', ['groups' => ['show_document', 'view']]);
-//            $names[] = $document->getName();
-//        }
 
         return [
             'action' => 'create',
