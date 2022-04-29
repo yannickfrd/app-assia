@@ -123,7 +123,7 @@
                                 </td>
                                 <td class="align-middle">{{ support_group.city }}</td>
                                 {% if is_deleted %}
-                                    <td class="align-middle">{{ support_person.deletedAtToString }}</td>
+                                    <td class="align-middle">{{ support_person.deletedAt|date('d/m/Y H:i') }}</td>
                                     <td class="align-middle text-center">
                                         <a href="{{ path('support_person_restore', {'id': support_person.id}) }}" 
                                             class="btn btn-success btn-sm shadow"

@@ -36,10 +36,6 @@ services:
         arguments:
             $documentsDirectory: "%documents_directory%"
 
-    App\Controller\Document\DocumentController:
-        arguments:
-            $documentsDirectory: "%documents_directory%"
-
     App\DataFixtures\Processor\UserProcessor:
         tags: [{ name: fidry_alice_data_fixtures.processor }]
         arguments:

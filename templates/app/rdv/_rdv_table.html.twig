@@ -106,11 +106,13 @@
                                 <span class="text-secondary">{{ support and support.device ? '(' ~ support.device.name ~ ')' }}</span>
                             </td>
                         {% endif %}
-                        {% if is_deleted %}
-                            <td class="align-middle" data-cell="deletedAt">{{ rdv.deletedAtToString }}</td>
-                        {% else %}
-                            <td class="align-middle" data-cell="createdAt">{{ rdv.createdAtToString }}</td>
-                        {% endif %}
+                        <td class="align-middle" data-cell="createdAt">
+                            {% if is_deleted %}
+                                {{ rdv.deletedAt|date('d/m/Y H:i') }}
+                            {% else %}
+                                {{ rdv.createdAtToString }}
+                            {% endif %}
+                        </td>
                         {% if support_is_not_defined %}
                             <td class="align-middle">{{ rdv.createdBy ? rdv.createdBy.fullname : 'Auto.' }}</td>
                         {% endif %}

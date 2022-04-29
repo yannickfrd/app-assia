@@ -103,11 +103,13 @@
                             <span class="text-secondary">({{ note.supportGroup.device.name }})</span>
                         </td>
                     {% endif %}
-                    {% if is_deleted %}
-                        <td class="align-middle" data-cell="createdAt">{{ note.deletedAtToString }}</td>
-                    {% else %}
-                        <td class="align-middle" data-cell="createdAt">{{ note.createdAtToString }}</td>
-                    {% endif %}
+                    <td class="align-middle" data-cell="createdAt">
+                        {% if is_deleted %}
+                            {{ note.deletedAt|date('d/m/Y H:i') }}
+                        {% else %}
+                            {{ note.createdAtToString }}
+                        {% endif %}
+                    </td>
                     {% if support is not defined %}
                         <td class="align-middle">{{ note.createdBy ? note.createdBy.fullname }}</td>
                         <td class="align-middle">{{ note.updatedAt|date('d/m/Y') }}</td>

@@ -93,13 +93,13 @@
                             <span class="text-secondary">{{ support and support.device ? '(' ~ support.device.name ~ ')' }}</span>
                         </td>   
                     {% endif %}
-
-                    {% if is_deleted %}
-                        <td class="align-middle" data-cell="createdAt">{{ task.deletedAtToString }}</td>
-                    {% else %}
-                        <td class="align-middle" data-cell="createdAt">{{ task.createdAtToString }}</td>
-                    {% endif %}
-
+                    <td class="align-middle" data-cell="createdAt">
+                        {% if is_deleted %}
+                            {{ task.deletedAt|date('d/m/Y H:i') }}
+                        {% else %}
+                            {{ task.createdAtToString }}
+                        {% endif %}
+                    </td>
                     {% if support_is_not_defined %}
                         <td class="align-middle">{{ task.createdBy ? task.createdBy.fullname : 'Auto.' }}</td>
                     {% endif %}
