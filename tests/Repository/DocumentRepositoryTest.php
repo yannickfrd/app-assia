@@ -2,15 +2,15 @@
 
 namespace App\Tests\Repository;
 
-use App\Entity\Support\Document;
 use App\Entity\Organization\User;
+use App\Entity\Support\Document;
 use App\Entity\Support\SupportGroup;
 use App\Form\Model\Support\DocumentSearch;
-use App\Repository\Support\DocumentRepository;
 use App\Form\Model\Support\SupportDocumentSearch;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use App\Repository\Support\DocumentRepository;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class DocumentRepositoryTest extends WebTestCase
 {
@@ -69,19 +69,19 @@ class DocumentRepositoryTest extends WebTestCase
 
     public function testFindSupportDocumentsQueryWithoutFilters(): void
     {
-        $qb = $this->documentRepo->findSupportDocumentsQuery($this->supportGroup, new SupportDocumentSearch());
+        $qb = $this->documentRepo->findSupportDocumentsQuery(new SupportDocumentSearch(), $this->supportGroup);
         $this->assertGreaterThanOrEqual(5, count($qb->getResult()));
     }
 
     public function testFindSupportDocumentsQueryWithFilters(): void
     {
-        $qb = $this->documentRepo->findSupportDocumentsQuery($this->supportGroup, $this->search);
+        $qb = $this->documentRepo->findSupportDocumentsQuery($this->search, $this->supportGroup);
         $this->assertGreaterThanOrEqual(1, count($qb->getResult()));
     }
 
     public function testFindSupportsDocumentsQueryWithFilterByContent(): void
     {
-        $qb = $this->documentRepo->findSupportDocumentsQuery($this->supportGroup, $this->search->setName('Description'));
+        $qb = $this->documentRepo->findSupportDocumentsQuery($this->search->setName('Description'), $this->supportGroup);
         $this->assertGreaterThanOrEqual(1, count($qb->getResult()));
     }
 

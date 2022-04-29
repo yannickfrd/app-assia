@@ -29,7 +29,7 @@ Encore
     .addEntry('payment', './assets/js/payment/payment.js')
     .addEntry('directory', './assets/js/directory/directory.js')
     .addEntry('device', './assets/js/device/device.js')
-    .addEntry('document', './assets/js/document/document.js')
+    .addEntry('document', './assets/js/document/document-index.js')
     .addEntry('evaluation', './assets/js/evaluation/evaluationIndex.js')
     .addEntry('export', './assets/js/export/export-index.js')
     .addEntry('peopleGroup', './assets/js/peopleGroup/peopleGroup.js')
