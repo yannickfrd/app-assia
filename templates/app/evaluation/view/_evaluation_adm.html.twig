@@ -29,6 +29,9 @@
                     ~ (eval_adm.nbRenewals ? ' (' ~ eval_adm.nbRenewals ~ ' renouvellement(s))'), 'Renewal permit date', 'evaluation') }}
                 {{ view_div.get(eval_adm.endValidPermitDate ? eval_adm.endValidPermitDate|date('d/m/Y'), 'End valid permit date', 'evaluation') }}
                 {{ view_div.get(eval_adm.workRightToString, 'Work right', 'evaluation') }}
+                {{ view_div.get(eval_adm.agdrefId, 'Agdref id', 'evaluation') }}
+                {{ view_div.get(eval_adm.ofpraRegistrationId, 'Ofpra registration id', 'evaluation') }}
+                {{ view_div.get(eval_adm.cndaId, 'Numéro CNDA', 'evaluation') }}
             </div>
             <div class="row my-2">
                 <div class="col-md-12 justify">{{ eval_adm.commentEvalAdmPerson|nl2br }}</div>

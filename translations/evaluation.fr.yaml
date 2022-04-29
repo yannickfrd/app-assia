@@ -17,6 +17,7 @@ evalInitGroup:
 Adm: Administratif
 Agdref id: Numéro AGDREF
 Ofpra registration id: Numéro d'enregistrement OFPRA
+Cnda id: Numéro CNDA
 Arrival date: Date d'arrivée en France
 Asylum background: Parcours asile
 Asylum status: Statut lié à l'asile

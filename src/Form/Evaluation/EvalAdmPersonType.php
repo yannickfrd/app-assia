@@ -99,6 +99,9 @@ class EvalAdmPersonType extends AbstractType
             ->add('ofpraRegistrationId', null, [
                 'attr' => ['data-mask-type' => 'number'],
             ])
+            ->add('cndaId', null, [
+                'attr' => ['data-mask-type' => 'number'],
+            ])
             ->add('_country', CountryType::class)
         ;
 
