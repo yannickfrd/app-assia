@@ -20,8 +20,9 @@ class Resource
         100 => 'Allocations familiales (AF)', // 5 familyAllowance
         80 => 'Allocation adulte handicapé (AAH)', // 6 disAdultAllowance
         85 => 'Allocation d\'éducation de l\'enfant handicapé (AEEH)', // 7 disChildAllowance
-        101 => 'Allocation de soutien familial (ASF)', // 8 asf
+        190 => 'Allocation de solidarité aux personnes âgées (ASPA)',
         90 => 'Allocation de solidarité spécifique (ASS)', // 9 solidarityAllowance
+        101 => 'Allocation de soutien familial (ASF)', // 8 asf
         130 => 'Allocation pour demandeur d\'asile (ADA)', // 10 asylumAllowance
         180 => 'Bourse', // 11 scholarships
         102 => 'Complément familial', // 12 familySupplement
@@ -45,8 +46,9 @@ class Resource
         80 => 'AAH',
         85 => 'AEEH',
         101 => 'ASF',
-        90 => 'ASS',
         130 => 'ADA',
+        190 => 'ASPA',
+        90 => 'ASS',
         180 => 'Bourse',
         102 => 'Complément familial',
         40 => 'Formation rémunérée',
