@@ -1,3 +1,3 @@
-import SupportDocuments from './SupportDocuments'
+import DocumentManager from './DocumentManager'
 
-new SupportDocuments()
+new DocumentManager()

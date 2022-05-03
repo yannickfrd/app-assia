@@ -7,15 +7,19 @@ import CheckboxSelector from '../utils/form/checkboxSelector'
 import DateFormater from '../utils/date/dateFormater'
 import TagsManager from '../tag/TagsManager'
 import SelectManager from '../utils/form/SelectManager'
+import DocumentForm from "./DocumentForm";
 
 /**
  * Classe de gestion des documents.
  */
-export default class SupportDocuments {
+export default class DocumentManager {
 
     constructor() {
         this.loader = new Loader()
         this.ajax = new Ajax(this.loader, 60)
+
+        this.themeColor = document.getElementById('header').dataset.color
+
         this.checkboxSelector = new CheckboxSelector()
 
         this.tagsManager = new TagsManager()
@@ -36,7 +40,6 @@ export default class SupportDocuments {
 
         this.actionFormElt = document.querySelector('form[name="action"]')
 
-        this.themeColor = document.getElementById('header').dataset.color
         this.countDocumentsElt = document.getElementById('count-documents')
 
         this.init()
@@ -72,6 +75,8 @@ export default class SupportDocuments {
     }
 
     /**
+     * Show document on click on tr and delete document on click on btn delete
+     *
      * @param {HTMLTableRowElement} documentTrElt
      */
     addEventListenersToTr(documentTrElt) {
