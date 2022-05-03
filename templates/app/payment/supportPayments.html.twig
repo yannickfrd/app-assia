@@ -121,7 +121,7 @@
 										{{ payment.noContrib ? "PAF à zéro (" ~ payment.noContribReasonToString ~ ")" }}
 										{{ (payment.comment ~ "\n" ~ payment.commentExport)|u.truncate(50, " [...]", false) }}</td>
 									{% if is_deleted %}
-										<td class="align-middle" data-payment="deletedAt">{{ payment.deletedAtToString }}</td>
+										<td class="align-middle" data-payment="deletedAt">{{ payment.deletedAt|date('d/m/Y H:i') }}</td>
 									{% else %}
 										<td class="align-middle" data-payment="createdAt">{{ payment.createdAt|date("d/m/Y") }}</td>
 									{% endif %}

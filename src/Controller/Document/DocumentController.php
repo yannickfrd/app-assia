@@ -16,10 +16,10 @@ use App\Form\Support\Document\DropzoneDocumentType;
 use App\Form\Support\Document\SupportDocumentSearchType;
 use App\Repository\Support\DocumentRepository;
 use App\Service\Document\DocumentManager;
+use App\Service\Document\DocumentPaginator;
 use App\Service\File\Downloader;
 use App\Service\File\FileDownloader;
 use App\Service\File\FileUploader;
-use App\Service\Pagination;
 use App\Service\SupportGroup\SupportManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -37,14 +37,14 @@ final class DocumentController extends AbstractController
     /**
      * @Route("/admin/documents", name="document_index", methods="GET|POST")
      */
-    public function index(Request $request, Pagination $pagination, DocumentRepository $documentRepo): Response
+    public function index(Request $request, DocumentPaginator $paginator): Response
     {
         $form = $this->createForm(DocumentSearchType::class, $search = new DocumentSearch())
             ->handleRequest($request);
 
         return $this->render('app/document/document_index.html.twig', [
             'form' => $form->createView(),
-            'documents' => $pagination->paginate($documentRepo->findDocumentsQuery($search, $this->getUser()), $request, 20),
+            'documents' => $paginator->paginate($request, $search),
         ]);
     }
 
@@ -53,10 +53,9 @@ final class DocumentController extends AbstractController
      */
     public function indexSupportDocuments(
         int $id,
-        DocumentRepository $documentRepo,
         SupportManager $supportManager,
         Request $request,
-        Pagination $pagination
+        DocumentPaginator $paginator
     ): Response {
         $this->denyAccessUnlessGranted('VIEW', $supportGroup = $supportManager->getSupportGroup($id));
 
@@ -70,6 +69,7 @@ final class DocumentController extends AbstractController
         $dropzoneForm = $this->createForm(DropzoneDocumentType::class, null, [
             'action' => $this->generateUrl('document_create', ['id' => $supportGroup->getId()]),
         ]);
+
         $actionForm = $this->createForm(ActionType::class, null, [
             'action' => $this->generateUrl('documents_download', ['id' => $supportGroup->getId()]),
         ]);
@@ -80,10 +80,7 @@ final class DocumentController extends AbstractController
             'documentForm' => $documentForm->createView(),
             'dropzoneForm' => $dropzoneForm->createView(),
             'action_form' => $actionForm->createView(),
-            'documents' => $pagination->paginate(
-                $documentRepo->findSupportDocumentsQuery($supportGroup, $search),
-                $request
-            ),
+            'documents' => $paginator->paginate($request, $search, $supportGroup),
         ]);
     }
 
@@ -95,6 +92,7 @@ final class DocumentController extends AbstractController
     {
         $dropzoneDocument = $request->files->get('dropzone_document');
         $files = $request->files->get('files');
+
         if ($dropzoneDocument && !$dropzoneDocument['files'] && $files) {
             $request->files->set('dropzone_document', ['files' => [$files]]);
         }
@@ -116,14 +114,12 @@ final class DocumentController extends AbstractController
     }
 
     /**
-     * Télécharge un fichier.
-     *
      * @Route("/document/{id}/download", name="document_download", methods="GET")
      * @IsGranted("VIEW", subject="document")
      */
     public function download(Document $document, Downloader $downloader): Response
     {
-        $file = $this->getFilePath($document);
+        $file = $this->getParameter('documents_directory').$document->getPath();
 
         if (file_exists($file)) {
             return $downloader->send($file);
@@ -135,8 +131,6 @@ final class DocumentController extends AbstractController
     }
 
     /**
-     * Modification d'un document.
-     *
      * @Route("/support/{id}/documents/download", name="documents_download", methods="GET|POST")
      */
     public function downloadDocuments(
@@ -180,7 +174,9 @@ final class DocumentController extends AbstractController
             return $this->json([
                 'action' => 'update',
                 'alert' => 'success',
-                'msg' => $translator->trans('document.updated_successfully', ['%document_title%' => $document->getName()], 'app'),
+                'msg' => $translator->trans('document.updated_successfully', [
+                    '%document_title%' => $document->getName(),
+                ], 'app'),
                 'document' => $document,
             ], 200, [], ['groups' => Document::SERIALIZER_GROUPS]);
         }
@@ -193,6 +189,8 @@ final class DocumentController extends AbstractController
      */
     public function delete(Document $document, EntityManagerInterface $em, TranslatorInterface $translator): JsonResponse
     {
+        $this->denyAccessUnlessGranted('EDIT', $document->getSupportGroup());
+
         $em->remove($document);
         $em->flush();
 
@@ -201,7 +199,9 @@ final class DocumentController extends AbstractController
         return $this->json([
             'action' => 'delete',
             'alert' => 'warning',
-            'msg' => $translator->trans('document.deleted_successfully', ['%document_title%' => $document->getName()], 'app'),
+            'msg' => $translator->trans('document.deleted_successfully', [
+                '%document_title%' => $document->getName(),
+            ], 'app'),
             'document' => ['id' => $document->getId()],
         ]);
     }
@@ -228,19 +228,10 @@ final class DocumentController extends AbstractController
         return $this->json([
             'action' => 'restore',
             'alert' => 'success',
-            'msg' => $translator->trans('document.restored_successfully', ['%document_title%' => $document->getName()], 'app'),
+            'msg' => $translator->trans('document.restored_successfully', [
+                '%document_title%' => $document->getName(),
+            ], 'app'),
             'document' => ['id' => $document->getId()],
         ]);
-    }
-
-    /**
-     * Return the full path of a document.
-     */
-    private function getFilePath(Document $document): string
-    {
-        return $this->getParameter('documents_directory')
-            .$document->getCreatedAt()->format('Y/m/d/')
-            .$document->getPeopleGroup()->getId().'/'
-            .$document->getInternalFileName();
     }
 }
