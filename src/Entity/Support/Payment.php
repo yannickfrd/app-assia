@@ -86,12 +86,6 @@ class Payment
      * @ORM\Column(type="date", nullable=true)
      * @Groups("get")
      */
-    private $monthContrib;
-
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     * @Groups("get")
-     */
     private $startDate;
 
     /**
@@ -271,18 +265,6 @@ class Payment
     public function setType(int $type): self
     {
         $this->type = $type;
-
-        return $this;
-    }
-
-    public function getMonthContrib(): ?\DateTimeInterface
-    {
-        return $this->monthContrib;
-    }
-
-    public function setMonthContrib(?\DateTimeInterface $monthContrib): self
-    {
-        $this->monthContrib = $monthContrib;
 
         return $this;
     }

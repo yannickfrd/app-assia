@@ -1,6 +1,7 @@
-{% form_theme documentForm "bootstrap_4_layout.html.twig" %}
+{% form_theme documentForm 'bootstrap_4_layout.html.twig' %}
 
-<div id="document-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="documentModalLabel" aria-hidden="true">
+<div id="document-modal" class="modal fade" tabindex="-1" role="dialog" 
+    aria-labelledby="documentModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             {{ form_start(documentForm, {
@@ -13,7 +14,8 @@
                     <div class="col-12">
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <div class="input-group-text" title="Étiquettes" data-toggle="tooltip" data-placement="bottom">
+                                <div class="input-group-text" title="Étiquettes" 
+                                    data-toggle="tooltip" data-placement="bottom">
                                     <i class="fas fa-tag text-black-50"></i>
                                 </div>
                             </div>
@@ -27,13 +29,15 @@
                 <div class="float-left">
                     <button type="button" class="mr-3 btn btn-danger shadow d-block" data-action="delete"
                         data-url-document-delete="{{ path('document_delete', {'id': '__id__'}) }}"
-                        data-toggle="tooltip" data-placement="bottom" title="Supprimer le document"><span
-                        class="fas fa-trash-alt"></span><span class="d-none d-md-inline ml-2">Supprimer</span></button>
+                        data-toggle="tooltip" data-placement="bottom" title="Supprimer le document">
+                        <i class="fas fa-trash-alt"></i>
+                        <span class="d-none d-md-inline ml-2">Supprimer</span>
+                    </button>
                 </div>
                 <div class="float-right">
                     <button type="button" class="btn btn-secondary shadow" data-dismiss="modal">Fermer</button>
                     <button type="submit" name="document_update" class="btn btn-{{ theme_color }} shadow"
-                        data-action="update"><span class="fas fa-save mr-2"></span>Mettre à jour</button>
+                        data-action="update"><i class="fas fa-save mr-2"></i>Mettre à jour</button>
                 </div>
             </div>
             {{ form_row(documentForm._token) }}

@@ -11,8 +11,16 @@
 			{% for eval_person in evaluation_people|filter(a => a.vars.value.supportPerson.head) %}
 				<button type="button" class="btn btn-outline-{{ theme_color }} active mb-4">{{ eval_person.vars.value.supportPerson.person.fullname }}</button>
 				<div class="row mb-3">
-					<div class="col-md-6">{{ form_row(eval_person.evalJusticePerson.justiceStatus) }}</div>
-					<div class="col-md-6">{{ form_row(eval_person.evalJusticePerson.justiceAct) }}</div>
+					<div class="col-md-6">
+						{{ form_row(eval_person.evalJusticePerson.justiceStatus, {
+							attr: {'data-important': 'true'}
+						}) }}
+					</div>
+					<div class="col-md-6">
+						{{ form_row(eval_person.evalJusticePerson.justiceAct, {
+							attr: {'data-important': 'true'}
+						}) }}
+					</div>
 				</div>
 				<div class="row mb-3">
 					<div class="col-md-12">

@@ -4,6 +4,7 @@ namespace App\Repository\Evaluation;
 
 use App\Entity\Evaluation\EvaluationGroup;
 use App\Entity\Support\SupportGroup;
+use App\Service\DoctrineTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
@@ -16,6 +17,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class EvaluationGroupRepository extends ServiceEntityRepository
 {
+    use DoctrineTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, EvaluationGroup::class);
@@ -32,6 +35,7 @@ class EvaluationGroupRepository extends ServiceEntityRepository
         // }
         return $this->createQueryBuilder('eg')->select('eg')
             ->join('eg.supportGroup', 'sg')->addSelect('sg')
+            ->leftJoin('sg.referent', 'r')->addSelect('r')
             ->join('sg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
             ->leftJoin('sg.supportPeople', 'sp1')->addSelect('PARTIAL sp1.{id, person, head, role, status}')
             ->leftJoin('sp1.person', 'p1')->addSelect('PARTIAL p1.{id, firstname, lastname, birthdate, gender}')

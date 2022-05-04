@@ -30,6 +30,10 @@
                         <th scope="col" class="align-middle th-w-100">Typologie familiale</th>
                         <th scope="col" class="align-middle th-w-100">Service (Dispositif)</th>
                         <th scope="col" class="align-middle th-date">Date de début</th>
+                        <th scope="col" class="align-middle th-w-20" 
+                            title="Taux de complétude de l'évaluation sociale"
+                            data-toggle="tooltip" data-placement="bottom">Complétude de l'évaluation
+                        </th>
                         <th scope="col" class="align-middle th-w-20">Tâche(s)</th>
                     </tr>
                 </thead>
@@ -60,6 +64,11 @@
                                     <span class="fas fa-exclamation-triangle text-warning" 
                                         title="Attention, la date de début d'accompagnement n'est pas renseignée."></span>
                                 {% endif %}
+                            </td>
+                            <td class="align-middle">
+                                <span class="badge badge-{{ evaluationScoreColor(support.evaluationScore) }}">
+                                    {{ support.evaluationScore|percent(0) }}
+                                </span>
                             </td>
                             <td class="align-middle">
                                 {% set nb_active_tasks = support.countActiveTasks %}

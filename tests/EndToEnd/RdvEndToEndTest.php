@@ -3,7 +3,8 @@
 namespace App\Tests\EndToEnd;
 
 use App\Tests\EndToEnd\Traits\AppPantherTestTrait;
-use Symfony\Component\Panther\Client as PantherClient;
+use Facebook\WebDriver\WebDriverBy;
+use Symfony\Component\Panther\Client;
 use Symfony\Component\Panther\DomCrawler\Crawler;
 use Symfony\Component\Panther\PantherTestCase;
 
@@ -11,8 +12,7 @@ class RdvEndToEndTest extends PantherTestCase
 {
     use AppPantherTestTrait;
 
-    /** @var PantherClient */
-    protected $client;
+    protected Client $client;
 
     protected function setUp(): void
     {
@@ -29,7 +29,12 @@ class RdvEndToEndTest extends PantherTestCase
         $crawler = $this->goToCalendar($crawler);
         $crawler = $this->createRdv($crawler);
         $crawler = $this->editRdv($crawler);
-        // $crawler = $this->deleteRdv($crawler);
+
+//         $crawler = $this->deleteRdv($crawler);
+
+         $this->restoreRdv();
+
+         $this->client->quit();
     }
 
     private function goToCalendar(Crawler $crawler): Crawler
@@ -53,10 +58,10 @@ class RdvEndToEndTest extends PantherTestCase
         $this->outputMsg('Create a rdv');
 
         $crawler->selectButton('js-new-rdv')->click();
-        sleep(1); // pop-up effect
 
+        $this->client->waitForVisibility('#modal-rdv', 1);
         /** @var Crawler */
-        $crawler = $this->client->submitForm('js-btn-save', [
+        $crawler = $this->client->submitForm('save-rdv', [
             'rdv[title]' => $this->faker->sentence(mt_rand(5, 10), true),
             'start' => '10:30',
             'end' => '12:30',
@@ -64,7 +69,7 @@ class RdvEndToEndTest extends PantherTestCase
         ]);
         sleep(1);
 
-        $this->client->waitForVisibility('#js-msg-flash');
+        $this->client->waitFor('#js-msg-flash', 1);
         $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
 
         $crawler->selectButton('btn-close-msg')->click();
@@ -83,12 +88,14 @@ class RdvEndToEndTest extends PantherTestCase
         sleep(1); // pop-up effect
 
         /** @var Crawler */
-        $crawler = $this->client->submitForm('js-btn-save', [
+        $crawler = $this->client->submitForm('save-rdv', [
             'rdv[title]' => $this->faker->sentence(mt_rand(5, 10), true),
             'rdv[content]' => join('. ', $this->faker->paragraphs(mt_rand(1, 2))),
+            'rdv[users]' => [1],
         ]);
+        sleep(1);
 
-        $this->client->waitForVisibility('#js-msg-flash');
+        $this->client->waitFor('#js-msg-flash', 1);
         $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
 
         $crawler->selectButton('btn-close-msg')->click();
@@ -110,8 +117,34 @@ class RdvEndToEndTest extends PantherTestCase
         $this->assertSelectorExists('#js-msg-flash.alert.alert-warining');
 
         $crawler->selectButton('btn-close-msg')->click();
-        sleep(1); // pop-up effect
+        sleep(5); // pop-up effect
 
         return $crawler;
+    }
+
+    private function restoreRdv(): void
+    {
+        $this->outputMsg('Restore a rdv');
+
+        $this->clickElement('a[data-original-title="Passer en vue liste"]');
+
+        $this->clickElement('button[data-action="delete-rdv"]');
+
+        $this->client->waitForVisibility('#modal-block', 1);
+        $this->clickElement('#modal-block button#modal-confirm');
+
+        $this->client->waitFor('.alert', 3);
+        $this->assertSelectorExists('.alert.alert-warning');
+
+        $this->clickElement('button[aria-label="Close"]');
+
+        $this->clickElement('label[for="deleted_deleted"]');
+        $this->clickElement('button[id="search"]');
+
+        $this->client->waitFor('table', 1);
+        $this->client->getWebDriver()->findElement(WebDriverBy::name('restore'))->click();
+
+        $this->client->waitFor('.alert', 3);
+        $this->assertSelectorExists('.alert.alert-success');
     }
 }

@@ -18,7 +18,6 @@ class DocumentTest extends WebTestCase
 
         $this->document = (new Document())
             ->setName('Document test')
-            ->setType(1)
             ->setInternalFileName($faker->slug());
     }
 
@@ -30,11 +29,6 @@ class DocumentTest extends WebTestCase
     public function testBlankName(): void
     {
         $this->assertHasErrors($this->document->setName(''), 1);
-    }
-
-    public function testNullType(): void
-    {
-        $this->assertHasErrors($this->document->setType(null), 0);
     }
 
     protected function tearDown(): void

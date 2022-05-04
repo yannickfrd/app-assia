@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% set title = 'Documents' %}
+{% set restoration_mode = form_search.deleted.deleted.vars.checked %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+	<div class="container">
+
+		{% include 'app/support/_partials/_support_nav.html.twig' %}
+
+		<div class="row">
+			<div class="col-lg-4 my-2">
+				<button id="btn-new-files" class="btn btn-{{ theme_color }} btn-sm shadow mr-2"
+					data-toggle="tooltip" data-placement="bottom" title="Ajouter des documents">
+					<i class="fas fa-plus-square mr-2"></i>Ajouter des documents</button>
+				<div class="d-inline align-middle">Total :
+					<span id="count-documents">{{ documents.getTotalItemCount|number }}</span>
+				</div>
+			</div>
+			<div class="col-lg-8">
+				{% include 'app/document/_support_document_search_form.html.twig' %}
+			</div>
+		</div>
+
+		<div class="row">
+				<div class="col-md-5">
+					{% if restoration_mode == false %}
+						{% include 'app/document/_document_action_form.html.twig' %}
+					{% endif %}
+				</div>
+			<div class="col-md-7">
+				<div class="navigation">{{ knp_pagination_render(documents) }}</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12">
+
+				{% include 'app/document/_document_table.html.twig' %}
+
+				<div class="navigation">{{ knp_pagination_render(documents) }}</div>
+
+			</div>
+		</div>
+
+		{% include 'app/document/_document_dropzone_modal.html.twig' %}
+		{% include 'app/document/_document_modal.html.twig' %}
+		{% include 'app/document/_document_delete_modal.html.twig' %}
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ encore_entry_script_tags('search') }}
+	{{ encore_entry_script_tags('document') }}
+{% endblock javascripts %}

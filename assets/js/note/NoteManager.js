@@ -2,7 +2,7 @@ import Ajax from '../utils/ajax'
 import MessageFlash from '../utils/messageFlash'
 import Loader from '../utils/loader'
 import ParametersUrl from '../utils/parametersUrl'
-import { Modal } from 'bootstrap'
+import {Modal} from 'bootstrap'
 import NoteForm from './NoteForm'
 
 export default class NoteManager {
@@ -13,12 +13,15 @@ export default class NoteManager {
         this.parametersUrl = new ParametersUrl()
 
         this.noteModalElt = document.getElementById('note-modal')
-        this.noteModal = new Modal(this.noteModalElt, {backdrop: 'static', keyboard: false})
+        this.noteModal = new Modal(this.noteModalElt)
 
         this.noteElts = document.querySelectorAll('div[data-note-id]')
 
-        this.confirmModal = new Modal(document.getElementById('confirm-modal'))
         this.confirmModalElt = document.getElementById('confirm-modal')
+        this.confirmModal = new Modal(this.confirmModalElt)
+
+        this.deleteModalElt = document.getElementById('modal-block')
+        this.deleteModal = new Modal(this.deleteModalElt)
 
         this.searchSupportNotesElt = document.getElementById('js-search-support-notes')
         this.themeColor = document.getElementById('header').dataset.color
@@ -27,20 +30,47 @@ export default class NoteManager {
         this.containerNotesElt = document.getElementById('container-notes')
 
         this.supportId = this.containerNotesElt.dataset.support
-        
+
         this.noteForm = new NoteForm(this)
 
         this.init()
     }
 
     init() {
-        this.noteElts.forEach(noteElt => noteElt.addEventListener('click', () => this.noteForm.show(noteElt)))
-        
-        document.querySelector('button[data-action="new_note"]').addEventListener('click', () => {
-            this.noteForm.resetForm()
+        this.isCardNoteView = Boolean(document.querySelector('div.container[data-view="card-table"]').dataset.isCard)
+
+        document.querySelectorAll('button[data-action="restore"]').forEach(restoreBtn => restoreBtn
+            .addEventListener('click', () => this.requestRestoreNote(restoreBtn)))
+
+        // show note in table
+        document.querySelectorAll('table#table-notes tbody a[data-action="show"]')
+            .forEach(showNoteBtn => showNoteBtn.addEventListener('click', e => {
+                e.preventDefault()
+                this.requestShowNote(e.currentTarget.href)
+            }))
+        // show note in card
+        this.noteElts.forEach(noteElt => {
+            if (!noteElt.dataset.noteDeleted) {
+                noteElt.addEventListener('click', () => this.requestShowNote(noteElt.dataset.showUrl))
+            }
         })
 
-        this.confirmModalElt.querySelector('#modal-confirm-btn').addEventListener('click', () => this.onclickModalConfirmBtn())
+        document.querySelectorAll('table#table-notes tbody button[data-action="delete-note"]')
+            .forEach(btn => btn.addEventListener('click', () => {
+                this.deleteModal.show()
+                this.deleteModalElt.querySelector('button#modal-confirm').dataset.url = btn.dataset.url
+            }))
+
+        if (document.querySelector('button[data-action="new_note"]')) {
+            document.querySelector('button[data-action="new_note"]')
+                .addEventListener('click', () => this.noteForm.resetForm())
+        }
+
+        this.confirmModalElt.querySelector('#modal-confirm-btn')
+            .addEventListener('click', () => this.requestConfirmModal())
+
+        this.deleteModalElt.querySelector('button#modal-confirm')
+            .addEventListener('click', e => this.requestDeleteNote(e))
 
         this.checkIfNoteIdInUrl()
     }
@@ -52,9 +82,9 @@ export default class NoteManager {
         }
     }
 
-    onclickModalConfirmBtn() {
+    requestConfirmModal() {
         switch (this.confirmModalElt.dataset.action) {
-            case 'delete_note':
+            case 'delete-note':
                 this.loader.on()
                 this.ajax.send('GET', this.noteForm.btnDeleteElt.dataset.url, this.responseAjax.bind(this))
                 break;
@@ -63,6 +93,39 @@ export default class NoteManager {
                 break;
         }
         this.confirmModalElt.dataset.action = ''
+    }
+
+    /**
+     * @param {String} url
+     */
+    requestShowNote(url) {
+        if (!this.loader.isActive()) {
+            this.loader.on()
+
+            this.ajax.send('GET', url, this.responseAjax.bind(this))
+        }
+    }
+
+    /**
+     * @param {HTMLLinkElement} restoreBtn
+     */
+    requestRestoreNote(restoreBtn) {
+        if (!this.loader.isActive()) {
+            this.loader.on()
+
+            this.ajax.send('GET', restoreBtn.dataset.url, this.responseAjax.bind(this))
+        }
+    }
+
+    /**
+     * @param {Event} e
+     */
+    requestDeleteNote(e) {
+        if (!this.loader.isActive()) {
+            this.loader.on()
+
+            this.ajax.send('GET', e.target.dataset.url, this.responseAjax.bind(this))
+        }
     }
 
     /**
@@ -77,7 +140,7 @@ export default class NoteManager {
 
         const modalBody = this.confirmModalElt.querySelector('.modal-body')
         modalBody.innerHTML = "<p>Voulez-vous vraiment supprimer cette note ?</p>"
-        this.confirmModalElt.dataset.action = 'delete_note'
+        this.confirmModalElt.dataset.action = 'delete-note'
         this.confirmModal.show()
     }
 
@@ -92,9 +155,17 @@ export default class NoteManager {
 
         const note = response.note
 
+        if (!this.noteForm.autoSaver.active && response.msg) {
+            this.messageFlash = new MessageFlash(response.alert, response.msg)
+            this.loader.off()
+        }
+
         switch (response.action) {
             case 'create':
                 this.createNoteElt(note)
+                break
+            case 'show':
+                this.noteForm.show(note)
                 break
             case 'update':
                 this.updateNoteElt(note)
@@ -102,11 +173,10 @@ export default class NoteManager {
             case 'delete':
                 this.deleteNoteElt(note)
                 break
-        }
-
-        if (!this.noteForm.autoSaver.active && response.msg) {
-            new MessageFlash(response.alert, response.msg)
-            this.loader.off()
+            case 'restore':
+                this.deleteNoteElt(note)
+                this.checkToRedirect(this.messageFlash.delay)
+                break
         }
     }
 
@@ -115,11 +185,26 @@ export default class NoteManager {
      * @param {Object} note
      */
     createNoteElt(note) {
+        if (this.isCardNoteView) {
+            this.createCardNoteElt(note);
+        } else {
+            this.createTableRowNoteTr(note)
+        }
+        this.updateCounter(1)
+
+        this.noteModal.hide()
+    }
+
+    /**
+     * Crée la note dans le container.
+     * @param {Object} note
+     */
+    createCardNoteElt(note) {
         const noteElt = document.createElement('div')
         noteElt.className = 'col-sm-12 col-lg-6 mb-4 reveal'
         noteElt.dataset.noteId = note.id
 
-        noteElt.innerHTML =`
+        noteElt.innerHTML = `
             <div class='card h-100 shadow'>
                 <div class='card-header'>
                     <h3 class='card-title h5 text-${this.themeColor}'>${this.noteModalElt.querySelector('#note_title').value}</h3>
@@ -137,8 +222,6 @@ export default class NoteManager {
         this.noteModalElt.querySelector('form').action = `/note/${note.id}/edit`
 
         this.containerNotesElt.firstChild.before(noteElt)
-        // Met à jour le nombre de notes
-        this.updateCounter(1)
 
         this.noteForm.initModal(noteElt)
 
@@ -149,11 +232,66 @@ export default class NoteManager {
     }
 
     /**
+     * Crée la note dans le tableau.
+     * @param {Object} note
+     */
+    createTableRowNoteTr(note) {
+        const noteId = note.id
+
+        const showUrl = document.querySelector('table#table-notes thead th[data-get-url="show"]').dataset.showUrl
+        const thAction = document.querySelector('table#table-notes thead th[data-get-url="action"]')
+
+        const wordUrl = thAction.dataset.wordUrl.replace('__id__', noteId)
+        const pdfUrl = thAction.dataset.pdfUrl.replace('__id__', noteId)
+        const deleteUrl = thAction.dataset.deleteUrl.replace('__id__', noteId)
+
+        const noteTr = document.createElement('tr')
+        noteTr.id = 'note-' + noteId
+
+        noteTr.innerHTML = `
+            <td class="align-middle text-center">
+                <a href="${showUrl.replace('__id__', noteId)}"
+                    class="btn btn-${this.themeColor} btn-sm shadow" title="Voir la note sociale" type="button"
+                    data-toggle="tooltip" data-placement="bottom"><i class="fas fa-eye"></i></a></td>`
+
+        const content = note.content.length >= 200 ? note.content.substr(0, 200) + ' [...]' : note.content
+        let titleTd = `<td class="align-middle justify" data-cell="title-content" data-title="${note.title}" data-content="${note.content}">`
+        titleTd += note.title !== null ? `<span class="font-weight-bold">${note.title} : </span>` : ``
+        titleTd += `${this.striptags(content)}</td>`
+        noteTr.innerHTML += titleTd
+
+        noteTr.innerHTML += `
+            <td class="align-middle" data-cell="type">${note.typeToString}</td>
+            <td class="align-middle" data-cell="status">${note.statusToString}</td>
+            <td class="align-middle" data-cell="tags">${this.createTags(note)}</td>
+            <td class="align-middle" data-cell="createdAt">${note.createdAtToString}</td>
+            <td class="align-middle text-center p-1">
+                <a href="${wordUrl}" class="btn btn-${this.themeColor} btn-sm mb-1 shadow" 
+                    title="Exporter la note au format Word" data-toggle="tooltip" data-placement="bottom">
+                    <i class="fas fa-file-word bg-primary fa-lg"></i><span class="sr-only">Word</span></a><br/>
+                <a href="${pdfUrl}" class="btn btn-${this.themeColor} btn-sm mb-1 shadow" 
+                    title="Exporter la note au format PDF" data-toggle="tooltip" data-placement="bottom">
+                    <i class="fas fa-file-pdf bg-danger fa-lg"></i><span class="sr-only">PDF</span></a><br/>
+                <button class="btn btn-sm btn-danger shadow mt-3" title="Supprimer la note" data-toggle="tooltip" data-placement="bottom"
+                    data-action="delete-note" data-url="${deleteUrl}"><i class="fa-solid fa-trash-can"></i></button></td>`
+
+        document.querySelector('table#table-notes tbody')
+            .insertBefore(noteTr, document.querySelector('table#table-notes tbody').firstChild)
+
+        this.noteModal.hide()
+
+        document.querySelectorAll('table#table-notes tbody button[data-action="delete-note"]')
+            .forEach(btn => btn.addEventListener('click', () => {
+                this.deleteModal.show()
+                this.deleteModalElt.querySelector('button#modal-confirm').dataset.url = btn.dataset.url
+            }))
+    }
+
+    /**
      * @param {Object} note
      * @returns {string}
      */
-    getEditInfos(note)
-    {
+    getEditInfos(note) {
         return `(modifié le ${note.updatedAtToString} par ${note.updatedByToString})`
     }
 
@@ -161,8 +299,7 @@ export default class NoteManager {
      * @param {Object} note
      * @returns {string}
      */
-    createTags(note)
-    {
+    createTags(note) {
         return note.tags.reduce(
             (tags, tag) => tags + `<span class="badge bg-${tag.color} text-light mr-1" data-tag-id="${tag.id}">${tag.name}</span>`, ''
         )
@@ -173,19 +310,52 @@ export default class NoteManager {
      * @param {Object} note
      */
     updateNoteElt(note) {
+        if (this.isCardNoteView) {
+            this.updateCardNote(note)
+        } else {
+            this.updateRowNote(note)
+        }
+        this.noteModal.hide()
+    }
+
+    /**
+     * Met à jour la ligne dans le tableau.
+     * @param {Object} note
+     */
+    updateRowNote(note) {
+        const noteRow = document.querySelector('tr#note-' + note.id)
+
+        const content = note.content.length >= 200 ? note.content.substr(0, 200) + ' [...]' : note.content
+
+        noteRow.querySelector('td[data-cell="title-content"]').dataset.title = note.title
+        noteRow.querySelector('td[data-cell="title-content"]').dataset.content = note.content
+        noteRow.querySelector('td[data-cell="title-content"]').innerHTML = (note.title !== null
+            ? `<span class="font-weight-bold">${note.title} : </span>` : ``) + `${this.striptags(content)}`
+
+        noteRow.querySelector('td[data-cell="type"]').innerHTML = note.typeToString ?? ''
+        noteRow.querySelector('td[data-cell="status"]').innerHTML = note.statusToString ?? ''
+        noteRow.querySelector('td[data-cell="tags"]').innerHTML = this.createTags(note)
+        noteRow.querySelector('td[data-cell="createdAt"]').innerHTML = note.createdAtToString
+    }
+
+    /**
+     * Met à jour la note dans le container.
+     * @param {Object} note
+     */
+    updateCardNote(note) {
         const noteElt = document.querySelector(`div[data-note-id="${note.id}"]`)
 
         noteElt.querySelector('.card-title').textContent = this.noteModalElt.querySelector('#note_title').value
         noteElt.querySelector('.card-text').innerHTML = this.noteForm.ckEditor.getData()
-        
+
         const noteTypeElt = noteElt.querySelector('[data-note-type]')
         noteTypeElt.textContent = note.typeToString
         noteTypeElt.dataset.noteType = this.noteModalElt.querySelector('#note_type').value
-        
+
         const noteStatusElt = noteElt.querySelector('[data-note-status]')
         noteStatusElt.textContent = note.statusToString
         noteStatusElt.dataset.noteStatus = this.noteModalElt.querySelector('#note_status').value
-        
+
         noteElt.querySelector('[data-note-updated]').textContent = this.getEditInfos(note)
         noteElt.querySelector('.tags-list').innerHTML = this.createTags(note)
     }
@@ -194,9 +364,14 @@ export default class NoteManager {
      * @param {Object} note
      */
     deleteNoteElt(note) {
-        this.containerNotesElt.querySelector(`div[data-note-id="${note.id}"]`).remove()
+        if (this.isCardNoteView) {
+            this.containerNotesElt.querySelector(`div[data-note-id="${note.id}"]`).remove()
+            this.noteModal.hide()
+        } else {
+            const rowElt = document.getElementById('note-' + note.id)
+            rowElt.remove()
+        }
         this.updateCounter(-1)
-        this.noteModal.hide()
     }
 
     /**
@@ -204,15 +379,35 @@ export default class NoteManager {
      * @param {Number} nb
      */
     updateCounter(nb) {
-        const nbNotes = this.containerNotesElt.querySelectorAll('.card').length
-        const nbTotalNotes = parseInt(this.countNotesElt.dataset.nbTotalNotes) + nb
-        this.countNotesElt.dataset.nbTotalNotes = nbTotalNotes
+        const selector = this.isCardNoteView ? '.card' : 'table#table-notes tbody tr'
+        const nbNotes = this.containerNotesElt.querySelectorAll(selector).length
+        this.countNotesElt.dataset.nbTotalNotes = parseInt(this.countNotesElt.dataset.nbTotalNotes) + nb
 
-        this.countNotesElt.textContent = `${nbNotes} note${nbNotes > 1 ? 's' : ''} sur ${nbTotalNotes}`
+        this.countNotesElt.textContent = `${nbNotes} note${nbNotes > 1 ? 's' : ''}`
 
         if (parseInt(this.countNotesElt.textContent) > 0) {
             return this.searchSupportNotesElt.classList.remove('d-none')
         }
         return this.searchSupportNotesElt.classList.add('d-none')
+    }
+
+    striptags(text) {
+        return text.replace(/(<([^>]+)>)/gi, ' ')
+    }
+
+    /**
+     * Redirects if there are no more lines/card.
+     * @param {number} delay
+     */
+    checkToRedirect(delay) {
+        const selector = this.isCardNoteView
+            ? document.querySelectorAll('div#container-notes .card')
+            : document.querySelectorAll('table#table-notes tbody tr')
+
+        if (selector.length === 0) {
+            setTimeout(() => {
+                document.location.href = location.pathname
+            }, delay * 1000)    
+        }
     }
 }

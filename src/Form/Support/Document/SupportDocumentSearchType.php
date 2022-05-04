@@ -5,6 +5,7 @@ namespace App\Form\Support\Document;
 use App\Entity\Organization\Service;
 use App\Entity\Organization\Tag;
 use App\Form\Model\Support\SupportDocumentSearch;
+use App\Form\Support\Support\DeletedSearchType;
 use App\Repository\Organization\TagRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -45,6 +46,9 @@ class SupportDocumentSearchType extends AbstractType
                     'placeholder' => 'placeholder.tags',
                     'size' => 1,
                 ],
+            ])
+            ->add('deleted', DeletedSearchType::class, [
+                'label' => false,
             ])
         ;
     }

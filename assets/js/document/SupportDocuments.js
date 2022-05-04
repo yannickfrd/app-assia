@@ -43,18 +43,32 @@ export default class SupportDocuments {
     }
 
     init() {
-        document.querySelector('main').addEventListener('dragenter', () => this.dropzoneModalElt.show())
-        document.getElementById('btn-new-files').addEventListener('click', () => this.dropzoneModalElt.show())
-        document.querySelectorAll('tr[data-document-id]').forEach(documentTrElt => this.addEventListenersToTr(documentTrElt))
+        document.querySelectorAll('table#table-documents tbody button[data-action="restore"]')
+            .forEach(restoreBtn => restoreBtn
+                .addEventListener('click', () => this.requestToRestore(restoreBtn)))
+
+        document.querySelector('main')
+            .addEventListener('dragenter', () => this.dropzoneModalElt.show())
+
+        document.getElementById('btn-new-files')
+            .addEventListener('click', () => this.dropzoneModalElt.show())
+
+        document.querySelectorAll('tr[data-document-id]')
+            .forEach(documentTrElt => this.addEventListenersToTr(documentTrElt))
+
         this.updateBtnElt.addEventListener('click', e => this.requestToUpdate(e))
         this.deleteBtnElt.addEventListener('click', e => {
             this.requestToDelete(e, this.deleteBtnElt.dataset.documentId)
         })
+
         this.confirmDeleteBtnElt.addEventListener('click', e => {
             e.preventDefault()
             this.ajax.send('GET', this.confirmDeleteBtnElt.dataset.url, this.responseAjax.bind(this))
         })
-        document.getElementById('action-validate').addEventListener('click', e => this.onValidateAction(e))
+
+        if (document.getElementById('action-validate')) {
+            document.getElementById('action-validate').addEventListener('click', e => this.onValidateAction(e));
+        }
     }
 
     /**
@@ -63,11 +77,13 @@ export default class SupportDocuments {
     addEventListenersToTr(documentTrElt) {
         documentTrElt.addEventListener('click', e => this.showDocument(e, documentTrElt))
         const deleteBtnElt = documentTrElt.querySelector('button[data-action="delete"]')
-        deleteBtnElt.addEventListener('click', () => {
-            deleteBtnElt.dataset.documentId = documentTrElt.dataset.documentId
-            const documentName = documentTrElt.querySelector('td[data-document="name"]').textContent
-            this.updateDeleteModal(documentName, deleteBtnElt.dataset.url)
-        })
+        if (deleteBtnElt) {
+            deleteBtnElt.addEventListener('click', () => {
+                deleteBtnElt.dataset.documentId = documentTrElt.dataset.documentId
+                const documentName = documentTrElt.querySelector('td[data-document="name"]').textContent
+                this.updateDeleteModal(documentName, deleteBtnElt.dataset.url)
+            })
+        }
     }
 
     /**    req.onprogress = updateProgress;
@@ -133,7 +149,8 @@ export default class SupportDocuments {
     }
 
     /**
-     * @param {File} file
+     * Request to create document
+     * @param {File|null} file
      */
     uploadFile(file = null) {
         const url = this.dropzoneFormElt.getAttribute('action')
@@ -181,6 +198,17 @@ export default class SupportDocuments {
     }
 
     /**
+     * @param {HTMLLinkElement} restoreBtn
+     */
+    requestToRestore(restoreBtn) {
+        if (!this.loader.isActive()) {
+            this.loader.on()
+
+            this.ajax.send('GET', restoreBtn.dataset.url, this.responseAjax.bind(this))
+        }
+    }
+
+    /**
      * @param {Event} e
      */
     requestToUpdate(e) {
@@ -211,63 +239,73 @@ export default class SupportDocuments {
     responseAjax(response) {
         switch (response.action) {
             case 'create':
-                this.createDocumentTr(response.data)
+                this.createDocumentTr(response.documents)
                 break
             case 'update':
-                this.updateDocumentTr(response.data)
+                this.updateDocumentTr(response.document)
                 break
             case 'delete':
-                this.deleteDocumentTr(response.data)
+                this.deleteDocumentTr(response.document)
+                break
+            case 'restore':
+                this.deleteDocumentTr(response.document)
+
+                this.messageFlash = new MessageFlash(response.alert, response.msg);
+                this.checkToRedirect(this.messageFlash.delay)
                 break
             case 'download':
                 return this.getFile(response.data)
         }
 
-        if (response.msg) {
-            new MessageFlash(response.alert, response.msg)
-        }
+        if (!this.loader.isActive()) {
+            this.loader.off()
 
-        this.loader.off()
+            if (response.msg && !this.messageFlash) {
+                new MessageFlash(response.alert, response.msg);
+            }
+        }
     }
 
     /**
      * Crée la ligne du nouveau document dans le tableau.
-     * @param datas
+     * @param documents
      */
-    createDocumentTr(datas) {
-        datas.forEach(data => {
+    createDocumentTr(documents) {
+        documents.forEach(doc => {
             const containerDocumentsElt = document.getElementById('container-documents')
-            const documentTrElt = this.getDocumentTrPrototype(data)
+            const documentTrElt = this.getDocumentTrPrototype(doc)
 
             containerDocumentsElt.insertBefore(documentTrElt, containerDocumentsElt.firstChild)
 
             this.updateCounter(1)
             this.addEventListenersToTr(documentTrElt)
-            this.dropzone.updateItemInList(data)
+            this.dropzone.updateItemInList(doc)
         })
     }
 
     /**
      * Met à jour la ligne du tableau correspondant au document.
-     * @param {Object} data
+     * @param {Object} doc
      */
-    updateDocumentTr(data) {
-        const documentTrElt = document.querySelector(`tr[data-document-id="${data.id}"]`)
+    updateDocumentTr(doc) {
+        const documentTrElt = document.querySelector(`tr[data-document-id="${doc.id}"]`)
 
-        documentTrElt.querySelector('td[data-document="name"]').textContent = data.name
-        documentTrElt.querySelector('td[data-document="content"]').textContent = data.content
+        documentTrElt.querySelector('td[data-document="name"]').textContent = doc.name
+        documentTrElt.querySelector('td[data-document="content"]').textContent = doc.content
 
-        this.tagsManager.updateTagsContainer(documentTrElt.querySelector('td[data-document="tags"]'), data.tags)
+        this.tagsManager.updateTagsContainer(documentTrElt.querySelector('td[data-document="tags"]'), doc.tags)
 
         this.documentModalElt.hide()
     }
 
     /**
-     * @param {Object} data
+     * @param {Object} documentResponse
      */
-    deleteDocumentTr(data) {
-        this.documentModalElt.hide()
-        document.querySelector(`tr[data-document-id="${data.id}"]`).remove()
+    deleteDocumentTr(documentResponse) {
+        if (this.documentModalElt._isShown) {
+            this.documentModalElt.hide()
+        }
+        document.querySelector(`tr[data-document-id="${documentResponse.id}"]`).remove()
         this.updateCounter(-1)
     }
 
@@ -323,5 +361,17 @@ export default class SupportDocuments {
      */
     updateCounter(number) {
         this.countDocumentsElt.textContent = parseInt(this.countDocumentsElt.textContent) + number
+    }
+
+    /**
+     * Redirects if there are no more lines.
+     * @param {number} delay
+     */
+    checkToRedirect(delay) {
+        if (document.querySelectorAll('table#table-documents tbody tr').length === 0) {
+            setTimeout(() => {
+                document.location.href = location.pathname
+            }, delay * 1000)
+        }
     }
 }

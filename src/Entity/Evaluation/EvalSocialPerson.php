@@ -321,11 +321,6 @@ class EvalSocialPerson
         return $this;
     }
 
-    public function getChildWelfareBackground(): ?int
-    {
-        return $this->childWelfareBackground;
-    }
-
     public function getInfoCrip(): ?int
     {
         return $this->infoCrip;
@@ -380,18 +375,6 @@ class EvalSocialPerson
     public function setInfoCripComment(?string $infoCripComment): self
     {
         $this->infoCripComment = $infoCripComment;
-
-        return $this;
-    }
-
-    public function getChildWelfareBackgroundToString(): ?string
-    {
-        return $this->childWelfareBackground ? EvaluationChoices::YES_NO[$this->childWelfareBackground] : null;
-    }
-
-    public function setChildWelfareBackground(?int $childWelfareBackground): self
-    {
-        $this->childWelfareBackground = $childWelfareBackground;
 
         return $this;
     }

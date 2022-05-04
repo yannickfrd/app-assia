@@ -164,11 +164,11 @@ final class SupportGroupController extends AbstractController
      */
     public function delete(SupportGroup $supportGroup, EntityManagerInterface $em): Response
     {
-        SupportManager::deleteCacheItems($supportGroup);
-
         $em->getFilters()->disable('softdeleteable');
         $em->remove($supportGroup);
         $em->flush();
+
+        SupportManager::deleteCacheItems($supportGroup);
 
         $this->addFlash('warning', 'Le suivi social est supprimé.');
 
@@ -324,9 +324,13 @@ final class SupportGroupController extends AbstractController
             } else {
                 $this->addFlash('warning', "Aucun suivi n'a été transféré.");
             }
+
+            return $this->redirectToRoute('supports_switch_referent');
         }
 
-        return $this->renderForm('app/support/switch_support_referent.html.twig', ['form' => $form]);
+        return $this->render('app/support/switch_support_referent.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
     /**

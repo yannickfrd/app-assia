@@ -20,10 +20,12 @@ class PaymentFixtures extends Fixture implements DependentFixtureInterface, Fixt
             for ($i = 0; $i < mt_rand(5, 10); ++$i) {
                 $createdAt = AppFixtures::getDateTimeBeetwen('-12 months', 'now');
                 $user = $support->getReferent();
+                $startDate = new \DateTime($createdAt->format('Y-m').'-01');
 
                 $payment = (new Payment())
                     ->setType(1)
-                    ->setMonthContrib(new \DateTime($createdAt->format('Y-m').'-01'))
+                    ->setStartDate($startDate)
+                    ->setEndDate((clone $startDate)->modify('+1 month - 1 day'))
                     ->setResourcesAmt($resourcesAmt = mt_rand(0, 1500))
                     ->setToPayAmt($resourcesAmt * 0.1)
                     ->setPaidAmt($resourcesAmt * 0.1)

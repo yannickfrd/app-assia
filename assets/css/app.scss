@@ -298,6 +298,13 @@ th.required:after {
     padding-left: 0.5rem;
 }
 
+.custom-checkbox-secondary .custom-control-input:checked~.custom-control-label::before,
+.custom-checkbox-secondary .custom-control-input:checked~.custom-control-label::after,
+.custom-radio-secondary .custom-control-input:checked~.custom-control-label::before,
+.custom-radio-secondary .custom-control-input:checked~.custom-control-label::after {
+    background-color: var(--secondary);
+}
+
 .custom-checkbox-dark .custom-control-input:checked~.custom-control-label::before,
 .custom-checkbox-dark .custom-control-input:checked~.custom-control-label::after,
 .custom-radio-dark .custom-control-input:checked~.custom-control-label::before,

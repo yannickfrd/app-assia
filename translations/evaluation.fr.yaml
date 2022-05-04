@@ -3,7 +3,7 @@ placeholder:
     select: -- Sélectionner --
     add: -- Ajouter --
 evalInitPerson.comment: Écrire un commentaire relatif à la situation initiale de la personne
-backgroundPeople: Parcours de vie
+Background people: Parcours de vie
 backgroundPeople.placeholder: Présenter le parcours de vie / historique du ménage
 Comment: Commentaire
 conclusion: Conclusion
@@ -17,10 +17,11 @@ evalInitGroup:
 Adm: Administratif
 Agdref id: Numéro AGDREF
 Ofpra registration id: Numéro d'enregistrement OFPRA
+Cnda id: Numéro CNDA
 Arrival date: Date d'arrivée en France
 Asylum background: Parcours asile
 Asylum status: Statut lié à l'asile
-Comment eval adm: Commentaire relatif à la situation administrative
+Comment eval adm person: Commentaire relatif à la situation administrative
 Country: Pays
 End valid permit date: Date de fin de validité du titre
 Nationality: Nationalité
@@ -63,6 +64,7 @@ Charge other: Autre charge
 Charge type: Type de charge(s)
 Charges amt: Montant total des charges
 Charges group amt: Montant total charges du groupe
+Comment eval bud: Commentaire situation budgétaire
 Eval budget charges: Type de charge(s)
 Childcare amt: Montant garde enfant(s)
 Childcare: Garde d'enfant(s)
@@ -70,6 +72,7 @@ Contribution amt: Montant de la participation financière
 Daily allowance: Indemnités journalières
 Daily allowance amt: Montant indemnités journalières
 Debt: Dette(s)
+Debts: Dettes
 Debt amt: Montant total des dettes
 Debt bank old amt: Montant découverts bancaires
 Debt bank overdrafts: Découverts bancaires
@@ -294,7 +297,7 @@ Domiciliation address: Adresse de domiciliation
 Domiciliation city: Ville de domiciliation
 Domiciliation dept: Département de domiciliation
 Domiciliation zipcode: Code postal de domiciliation
-End domiciliation date: Date de fin domiciliation
+End domiciliation date: Date de fin de domiciliation
 Expulsion comment: Commentaire sur l'expulsion location
 Expulsion in progress: Procédure d'expulsion en cours
 Fsl eligibility: Eligibilité aide à l'installation FSL
@@ -330,7 +333,7 @@ Social housing request id: Numéro unique régional (NUR)
 Social housing request: Demande de logement social
 Social housing updated request date: Date de renouvellement
 Specificities: Spécificités à prendre en considération
-Start domiciliation date: Date de début domiciliation
+Start domiciliation date: Date de début de domiciliation
 Syplo date: Date de labellisation SYPLO
 Syplo id: Numéro SYPLO
 Syplo: SYPLO
@@ -359,7 +362,8 @@ Child welfare background: Parcours institutionnel enfance
 Ase follow up: Suivi ou parcours ASE
 Ase measure type: Type de mesure ASE
 Ase comment: Commentaire concernant le parcours ASE
-Comment eval social: Commentaire relatif à la situation sociale
+Comment eval social group: Commentaire relatif à la situation sociale
+Comment eval social person: Commentaire relatif à la situation sociale
 Dom violence victim: Victime de violence conjugale
 End rights social security date: Date de fin de droits à la Sécurité sociale
 Family breakdown: Rupture des liens familiaux

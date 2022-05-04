@@ -8,6 +8,7 @@ use App\Entity\Support\SupportGroup;
 use App\Form\Model\Support\DocumentSearch;
 use App\Form\Model\Support\SupportDocumentSearch;
 use App\Repository\Traits\QueryTrait;
+use App\Service\DoctrineTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
@@ -21,6 +22,7 @@ use Doctrine\Persistence\ManagerRegistry;
 class DocumentRepository extends ServiceEntityRepository
 {
     use QueryTrait;
+    use DoctrineTrait;
 
     public function __construct(ManagerRegistry $registry)
     {
@@ -39,7 +41,8 @@ class DocumentRepository extends ServiceEntityRepository
             ->join('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
             ->join('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
-            ->join('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}');
+            ->join('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
+        ;
 
         if (!$user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->where('d.createdBy = :user')
@@ -80,7 +83,7 @@ class DocumentRepository extends ServiceEntityRepository
     /**
      * Return all documents of group support.
      */
-    public function findSupportDocumentsQuery(SupportGroup $supportGroup, SupportDocumentSearch $search): Query
+    public function findSupportDocumentsQuery(SupportDocumentSearch $search, SupportGroup $supportGroup): Query
     {
         $qb = $this->createQueryBuilder('d')->select('d')
             ->leftJoin('d.tags', 't')->addSelect('t')
@@ -89,6 +92,10 @@ class DocumentRepository extends ServiceEntityRepository
             ->where('d.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroup);
 
+        if ($search->getDeleted()) {
+            $this->disableFilter($this->_em, 'softdeleteable');
+            $qb->andWhere('d.deletedAt IS NOT NULL');
+        }
         if ($search->getName()) {
             $qb->andWhere('d.name LIKE :name OR d.content LIKE :name')
             ->setParameter('name', '%'.$search->getName().'%');
@@ -100,6 +107,29 @@ class DocumentRepository extends ServiceEntityRepository
             ->orderBy('d.createdAt', 'DESC')
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+        ;
+    }
+
+    /**
+     * Donne un document.
+     */
+    public function findDocument($id, bool $deleted = false): ?Document
+    {
+        if ($deleted) {
+            $this->disableFilter($this->_em, 'softdeleteable');
+        }
+
+        return $this->createQueryBuilder('d')->select('d')
+            ->join('d.peopleGroup', 'pg')->addSelect('PARTIAL pg.{id}')
+            ->join('d.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
+
+            ->andWhere('d.id IN (:id)')
+            ->setParameter('id', $id)
+
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getSingleResult()
         ;
     }
 
@@ -121,7 +151,8 @@ class DocumentRepository extends ServiceEntityRepository
 
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getResult();
+            ->getResult()
+        ;
     }
 
     /**
@@ -133,7 +164,8 @@ class DocumentRepository extends ServiceEntityRepository
             ->where('d.deletedAt  <= :date')
             ->setParameter('date', $date)
             ->getQuery()
-            ->getResult();
+            ->getResult()
+        ;
     }
 
     public function countDocuments(array $criteria = null): int
@@ -173,7 +205,8 @@ class DocumentRepository extends ServiceEntityRepository
 
         return $qb
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getSingleScalarResult()
+        ;
     }
 
     public function sumSizeAllDocuments(array $criteria = null): int
@@ -182,6 +215,7 @@ class DocumentRepository extends ServiceEntityRepository
 
         return $qb
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getSingleScalarResult()
+        ;
     }
 }

@@ -38,26 +38,24 @@ export default class NoteForm {
     }
 
     init() {
-        this.noteModalElt.querySelector('button[data-action="save"]').addEventListener('click', e => {
-            e.preventDefault()
-            this.autoSaver.clear()
-            this.requestToSave()
-        })
-        this.noteModalElt.querySelector('button[data-action="close"]').addEventListener('click', e => {
-            e.preventDefault()
-            this.tryCloseModal()
-            this.autoSaver.clear()
-        })
+        this.noteModalElt.querySelector('button[data-action="save"]')
+            .addEventListener('click', e => {
+                e.preventDefault()
+                this.autoSaver.clear()
+                this.requestToSave()
+            })
+        this.noteModalElt.querySelector('button[data-action="close"]')
+            .addEventListener('click', e => {
+                e.preventDefault()
+                this.tryCloseModal()
+                this.autoSaver.clear()
+            })
         this.btnDeleteElt.addEventListener('click', e => {
             e.preventDefault()
             this.requestToDelete()
         })
-        this.noteModalElt.addEventListener('mousedown', e => {
-            if (e.target === this.noteModalElt) {
-                this.tryCloseModal(e)
-            }
-        })
-        this.confirmModalElt.querySelector('#modal-confirm-btn').addEventListener('click', () => this.onclickModalConfirmBtn())
+        this.confirmModalElt.querySelector('#modal-confirm-btn')
+            .addEventListener('click', () => this.onclickModalConfirmBtn())
     }
 
     resetForm() {
@@ -81,53 +79,45 @@ export default class NoteForm {
     }
 
     /**
-     * @param {HTMLElement} noteElt
+     * @param {Object} note
      */
-    show(noteElt) {
-        this.initModal(noteElt)
+    show(note) {
+        this.initModal(note)
 
-        this.noteModalElt.querySelector('#note_title').value = noteElt.querySelector('.card-title').textContent
-        this.noteModalElt.querySelector('#note_type').value = noteElt.querySelector('[data-note-type]').dataset.noteType
-        this.noteModalElt.querySelector('#note_status').value = noteElt.querySelector('[data-note-status]').dataset.noteStatus
+        this.noteModalElt.querySelector('#note_title').value = note.title ?? ''
 
-        this.contentElt.textContent = noteElt.querySelector('.card-text').innerHTML
+        this.noteModalElt.querySelector('#note_type').value = note.type ?? ''
+
+        this.noteModalElt.querySelector('#note_status').value = note.status ?? ''
+
+        this.contentElt.textContent = note.content ?? ''
         this.ckEditor.setData(this.contentElt.textContent)
 
-        this.updateTagsSelect(noteElt)
+        const tagsIds = []
+        note.tags.forEach(tags => tagsIds.push(tags.id))
+        this.tagsSelectManager.updateSelect(tagsIds)
 
         this.noteModal.show()
+
+        this.loader.off()
     }
 
     /**
      * Donne la note sélectionnée dans le formulaire modal.
-     * @param {HTMLElement} noteElt
+     * @param {Object} note
      */
-    initModal(noteElt) {
-        const noteId = noteElt.dataset.noteId
-        this.noteModalElt.querySelector('form').action = `/note/${noteId}/edit`
+    initModal(note) {
+        this.noteModalElt.querySelector('form').action = `/note/${note.id}/edit`
 
         this.btnDeleteElt.classList.remove('d-none')
-        this.btnDeleteElt.dataset.url = `/note/${noteId}/delete`
+        this.btnDeleteElt.dataset.url = `/note/${note.id}/delete`
 
         this.btnExportWordElt.classList.remove('d-none')
-        this.btnExportWordElt.href = `/note/${noteId}/export/word`
+        this.btnExportWordElt.href = `/note/${note.id}/export/word`
         this.btnExportPdfElt.classList.remove('d-none')
-        this.btnExportPdfElt.href = `/note/${noteId}/export/pdf`
+        this.btnExportPdfElt.href = `/note/${note.id}/export/pdf`
 
         this.autoSaver.init()
-    }
-
-
-    /**
-     * Initialise les valeurs dans le multi-select
-     * @param {Object} noteElt
-     */
-    updateTagsSelect(noteElt) {
-        const tagElts = noteElt.querySelectorAll('.tags-list span')
-        const tagOptionElts = this.noteModalElt.querySelectorAll('option')
-        const tagsIds = this.tagsManager.getTagIds(tagElts, tagOptionElts)
-
-        this.tagsSelectManager.showOptionsFromArray(tagsIds)
     }
 
     /**

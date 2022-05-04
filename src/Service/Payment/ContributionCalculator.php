@@ -206,7 +206,7 @@ class ContributionCalculator
                 $evalBudgetPerson = $evaluationPerson->getEvalBudgetPerson();
                 if ($evalBudgetPerson) {
                     $resourcesGroupAmt += $this->getSumAmt($evalBudgetPerson->getEvalBudgetResources(), $resourceTypes);
-                    $chargesGroupAmt += $this->getSumAmt($evalBudgetPerson->getEvalBudgetCharges(), $chargeTypes) + $evalBudgetPerson->getMonthlyRepaymentAmt();
+                    $chargesGroupAmt += $this->getSumAmt($evalBudgetPerson->getEvalBudgetCharges(), $chargeTypes);
                 }
             }
         }
@@ -267,17 +267,15 @@ class ContributionCalculator
     {
         if (!$this->payment->getStartDate()) {
             $this->payment->setStartDate(max(
-               (new \DateTime())->modify('first day of last month'),
-               $this->supportGroup->getStartDate()
+                (new \DateTime())->modify('first day of this month'),
+                $this->supportGroup->getStartDate()
             ));
         }
         if (!$this->payment->getEndDate()) {
             /** @var \Datetime */
             $startDate = $this->payment->getStartDate();
-            $this->payment->setEndDate(min(
-               clone $startDate->modify('last day of this month'),
-               ($this->supportGroup->getEndDate() ?? (new \DateTime()))
-            ));
+            $endMonthDate = (clone $startDate)->modify('last day of this month');
+            $this->payment->setEndDate(min($endMonthDate, $this->supportGroup->getEndDate() ?? $endMonthDate));
             if ($this->payment->getEndDate() < $this->payment->getStartDate()) {
                 $this->payment->setEndDate($this->payment->getStartDate());
             }

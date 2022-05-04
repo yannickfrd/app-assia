@@ -1,6 +1,6 @@
-{% extends "model/_supportSearch.html.twig" %}
+{% extends 'model/_support_search_form.html.twig' %}
 
-{% form_theme form_search "bootstrap_4_layout.html.twig" %}
+{% form_theme form_search 'bootstrap_4_layout.html.twig' %}
 
 {% block search_form %}
     <div class="col-auto my-1 px-1">{{ form_row(form_search.name) }}</div>
@@ -13,5 +13,11 @@
             </div>
             {{ form_widget(form_search.tags) }}
         </div>    
+    </div>
+    <div class="col-auto my-auto">
+        <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-0"
+            title="Voir les documents supprimés" data-toggle="tooltip" data-placement="bottom">
+            {{ form_widget(form_search.deleted.deleted) }}
+        </div>
     </div>
 {% endblock %}

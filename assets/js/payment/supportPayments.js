@@ -17,7 +17,7 @@ export default class SupportPayments {
 
         this.paymentModalElt = new Modal(document.getElementById('payment-modal'))
 
-        this.btnNewElt = document.querySelector('button[data-action="new_payment"')
+        this.btnNewElt = document.querySelector('button[data-action="new_payment"]')
         this.trElt = null
 
         this.confirmBtnElt = document.getElementById('modal-confirm')
@@ -71,6 +71,10 @@ export default class SupportPayments {
     }
 
     init() {
+        document.querySelectorAll('button[data-action="restore"]').forEach(restoreBtn => restoreBtn
+            .addEventListener('click', () => this.requestRestorePayment(restoreBtn)))
+
+
         document.querySelectorAll('div[data-parent-field]').forEach(elt => {
             this.displayedFields.push(new FieldDisplayer(elt))
         })
@@ -90,11 +94,12 @@ export default class SupportPayments {
                 }
             })
             const btnDeleteElt = trElt.querySelector('button[data-action="delete"]')
-            btnDeleteElt.addEventListener('click', () => {
-                this.trElt = trElt
-                this.confirmBtnElt.dataset.url = btnDeleteElt.dataset.url
-            })
-
+            if (btnDeleteElt) {
+                btnDeleteElt.addEventListener('click', () => {
+                    this.trElt = trElt
+                    this.confirmBtnElt.dataset.url = btnDeleteElt.dataset.url
+                });
+            }
         })
 
         this.resourcesAmtInputElt.addEventListener('input', () => this.checkResources())
@@ -172,6 +177,17 @@ export default class SupportPayments {
                 this.ajax.send('GET', url, this.responseAjax.bind(this))
             }
         })
+    }
+
+    /**
+     * @param {HTMLLinkElement} restoreBtn
+     */
+    requestRestorePayment(restoreBtn) {
+        if (!this.loader.isActive()) {
+            this.loader.on()
+
+            this.ajax.send('GET', restoreBtn.dataset.url, this.responseAjax.bind(this))
+        }
     }
 
     /**
@@ -521,6 +537,11 @@ export default class SupportPayments {
                 this.paymentModalElt.hide()
                 new MessageFlash(response.alert, response.msg)
                 break
+            case 'restore':
+                this.messageFlash = new MessageFlash(response.alert, response.msg)
+                this.deletedPaymentTr(response.payment)
+                this.checkToRedirect(this.messageFlash.delay)
+                break
             default:
                 this.loader.off()
                 new MessageFlash(response.alert, response.msg)
@@ -671,7 +692,7 @@ export default class SupportPayments {
      */
     getPrototypePayment(payment) {
         return `
-            <td scope="row" class="align-middle text-center">
+            <td class="align-middle text-center">
                 <button class="btn btn-${this.themeColor} btn-sm shadow" data-action="get" data-id="${payment.id}" 
                     data-url="/payment/${payment.id}/get" data-toggle="tooltip" 
                     data-placement="bottom" title="Voir l'enregistrement"><span class="fas fa-eye"></span>
@@ -698,7 +719,7 @@ export default class SupportPayments {
             <td class="align-middle text-center">
                 <button data-url="/payment/${payment.id}/delete" data-action="delete"
                     class="btn btn-danger btn-sm shadow my-1" data-placement="bottom" 
-                        title="Supprimer l"enregistrement" data-toggle="modal" data-target="#modal-block">
+                        title="Supprimer l\'enregistrement" data-toggle="modal" data-target="#modal-block">
                     <span class="fas fa-trash-alt"></span>
                 </button>
             </td>`
@@ -784,16 +805,12 @@ export default class SupportPayments {
         switch (type) {
             case 'date':
                 return date.toLocaleDateString(locale)
-                break
             case 'd/m':
                 return date.toLocaleDateString(locale).substring(3, 10)
-                break
             case 'time':
                 return date.toLocaleTimeString(locale).substring(0, 5)
-                break
             default:
                 return date.toLocaleDateString(locale) + ' ' + date.toLocaleTimeString(locale).substring(0, 5)
-                break
         }
     }
 
@@ -809,6 +826,26 @@ export default class SupportPayments {
         } else {
             elt.classList.remove('text-danger')
             elt.classList.add('text-success')
+        }
+    }
+
+    /**
+     * @param {Object} payment
+     */
+    deletedPaymentTr(payment) {
+        document.getElementById('payment-'+payment.id).remove()
+        this.updateCounts(-1)
+    }
+
+    /**
+     * Redirects if there are no more lines.
+     * @param {number} delay
+     */
+    checkToRedirect(delay) {
+        if (document.querySelectorAll('table#table-payments tbody tr').length === 0) {
+            setTimeout(() => {
+                document.location.href = location.pathname
+            }, delay * 1000)    
         }
     }
 }

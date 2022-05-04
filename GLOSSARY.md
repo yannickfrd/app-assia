@@ -1,6 +1,7 @@
 # Glossaire
 
 ## Traduction des entités
+
 - Accommodation: Groupe de places
 - AccommodationGroup: Prise en charge du groupe de personnes
 - AccommodationPerson: Prise en charge d'une personne

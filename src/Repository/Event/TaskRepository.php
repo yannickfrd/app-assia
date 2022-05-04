@@ -7,6 +7,7 @@ use App\Entity\Organization\User;
 use App\Entity\Support\SupportGroup;
 use App\Form\Model\Event\TaskSearch;
 use App\Repository\Traits\QueryTrait;
+use App\Service\DoctrineTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -21,6 +22,7 @@ use Doctrine\Persistence\ManagerRegistry;
 class TaskRepository extends ServiceEntityRepository
 {
     use QueryTrait;
+    use DoctrineTrait;
 
     public function __construct(ManagerRegistry $registry)
     {
@@ -50,8 +52,12 @@ class TaskRepository extends ServiceEntityRepository
     /**
      * Donne une tâche.
      */
-    public function findTask(int $id): ?Task
+    public function findTask(int $id, bool $deleted = false): ?Task
     {
+        if ($deleted) {
+            $this->disableFilter($this->_em, 'softdeleteable');
+        }
+
         return $this->createQueryBuilder('t')
             ->leftJoin('t.users', 'u1')->addSelect('PARTIAL u1.{id, firstname, lastname}')
             ->leftJoin('t.createdBy', 'u2')->addSelect('PARTIAL u2.{id, firstname, lastname}')
@@ -146,6 +152,10 @@ class TaskRepository extends ServiceEntityRepository
                 ->setParameter('user', $user);
             $qb->orWhere('sg.service IN (:services)')
                 ->setParameter('services', $user->getServices());
+        }
+        if ($search->getDeleted()) {
+            $this->disableFilter($this->_em, 'softdeleteable');
+            $qb->andWhere('t.deletedAt IS NOT NULL');
         }
         if ($search->getId()) {
             return $qb->andWhere('t.id = :id')

@@ -147,7 +147,7 @@ class EvaluationPersonExport extends ExportExcel
             'Service(s) référent(s) - Type' => join(', ', $referentsType),
             'Service(s) référent(s) - Nom' => $this->anonymized ? 'XXX' : join(', ', $referentsName),
             'ID évaluation groupe' => $evaluationGroup->getId(),
-            'ID évaluation personne' => $evaluationPerson->getId(),
+            'Complétude de l\'évaluation (%)' => (string) $supportGroup->getEvaluationScore(),
         ]);
 
         $this->add($evaluationGroup->getEvalInitGroup() ?? $this->evalInitGroup, 'evalInit');

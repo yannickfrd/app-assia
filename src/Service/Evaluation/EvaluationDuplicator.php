@@ -101,7 +101,6 @@ class EvaluationDuplicator
             $evalInitPerson
                 ->setResource($evalBudgetPerson->getResource())
                 ->setResourcesAmt($evalBudgetPerson->getResourcesAmt())
-                ->setRessourceOtherPrecision($evalBudgetPerson->getRessourceOtherPrecision())
                 ->setDebt($evalBudgetPerson->getDebt())
                 ->setDebtsAmt($evalBudgetPerson->getDebtsAmt())
             ;

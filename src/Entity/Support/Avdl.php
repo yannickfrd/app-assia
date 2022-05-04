@@ -8,7 +8,7 @@ use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ORM\Entity(repositoryClass=AvdlRepository::class)
+ * @ORM\Entity(repositoryClass="App\Repository\Support\AvdlRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class Avdl
@@ -120,11 +120,6 @@ class Avdl
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $supportComment;
-
-    /**
-     * @ORM\Column(type="smallint", nullable=true)
-     */
-    private $endSupportReason; // A supprimer
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -291,18 +286,6 @@ class Avdl
     public function setSupportComment(?string $supportComment): self
     {
         $this->supportComment = $supportComment;
-
-        return $this;
-    }
-
-    public function getEndSupportReason(): ?int // A supprimer
-    {
-        return $this->endSupportReason;
-    }
-
-    public function setEndSupportReason(?int $endSupportReason): self // A supprimer
-    {
-        $this->endSupportReason = $endSupportReason;
 
         return $this;
     }

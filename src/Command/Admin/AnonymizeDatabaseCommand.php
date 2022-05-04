@@ -106,6 +106,7 @@ class AnonymizeDatabaseCommand extends Command
             UPDATE eval_adm_person SET country = "XXX" WHERE country != "";
             UPDATE eval_adm_person SET agdref_id = "XXX" WHERE agdref_id != "";
             UPDATE eval_adm_person SET ofpra_registration_id = "XXX" WHERE ofpra_registration_id != "";
+            UPDATE eval_adm_person SET cnda_id = "XXX" WHERE cnda_id != "";
             UPDATE eval_adm_person SET comment_eval_adm_person = "XXX" WHERE comment_eval_adm_person != "";
             UPDATE eval_prof_person SET job_center_id = "XXX" WHERE job_center_id != "";
             UPDATE eval_prof_person SET comment_eval_prof = "XXX" WHERE comment_eval_prof != "";
@@ -118,6 +119,14 @@ class AnonymizeDatabaseCommand extends Command
             SET r.title = CONCAT("RDV ", p.lastname, " ", p.firstname)
             WHERE sp.head IS TRUE;
             UPDATE rdv SET content = "XXX" WHERE content != "";
+
+            UPDATE task t
+            LEFT JOIN support_group sg ON sg.id = t.support_group_id
+            LEFT JOIN support_person sp ON sg.id = sp.support_group_id
+            LEFT JOIN person p ON p.id = sp.person_id
+            SET t.title = CONCAT("Tâche ", p.lastname, " ", p.firstname)
+            WHERE sp.head IS TRUE;
+            UPDATE task SET content = "XXX" WHERE content != "";
 
             UPDATE note n
             LEFT JOIN support_group sg  ON sg.id = n.support_group_id

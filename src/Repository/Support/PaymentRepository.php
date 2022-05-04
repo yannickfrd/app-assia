@@ -8,6 +8,7 @@ use App\Entity\Support\SupportGroup;
 use App\Form\Model\Support\PaymentSearch;
 use App\Form\Model\Support\SupportPaymentSearch;
 use App\Repository\Traits\QueryTrait;
+use App\Service\DoctrineTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -23,6 +24,7 @@ use Symfony\Component\Security\Core\Security;
 class PaymentRepository extends ServiceEntityRepository
 {
     use QueryTrait;
+    use DoctrineTrait;
 
     /** @var User */
     private $user;
@@ -37,10 +39,14 @@ class PaymentRepository extends ServiceEntityRepository
     /**
      * Donne un paiement.
      */
-    public function findPayment(int $id): ?Payment
+    public function findPayment(int $id, bool $deleted = false): ?Payment
     {
+        if ($deleted) {
+            $this->disableFilter($this->_em, 'softdeleteable');
+        }
+
         return $this->createQueryBuilder('p')->select('p')
-            ->leftJoin('p.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, service, status, startDate, endDate, address, city}')
+            ->leftJoin('p.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, service, status, startDate, endDate, address, city, zipcode}')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, email, phone1, contribution, contributionType, contributionRate, city, address}')
             ->leftJoin('sg.subService', 'ss')->addSelect('PARTIAL ss.{id, name, email, phone1}')
             ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name, logoPath}')
@@ -258,24 +264,27 @@ class PaymentRepository extends ServiceEntityRepository
             ->andWhere('p.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroup);
 
-        if (null !== $search) {
-            if ($search->getType()) {
-                $qb->andWhere('p.type IN (:type)')
-                    ->setParameter('type', $search->getType());
-            }
-            if ($search->getStart()) {
-                $qb->andWhere('p.startDate >= :start')
-                    ->setParameter('start', $search->getStart());
-            }
-            if ($search->getEnd()) {
-                $qb->andWhere('p.startDate <= :end')
-                    ->setParameter('end', $search->getEnd());
-            }
+        if ($search->getDeleted()) {
+            $this->disableFilter($this->_em, 'softdeleteable');
+            $qb->andWhere('p.deletedAt IS NOT NULL');
+        }
+        if ($search->getType()) {
+            $qb->andWhere('p.type IN (:type)')
+                ->setParameter('type', $search->getType());
+        }
+        if ($search->getStart()) {
+            $qb->andWhere('p.startDate >= :start')
+                ->setParameter('start', $search->getStart());
+        }
+        if ($search->getEnd()) {
+            $qb->andWhere('p.startDate <= :end')
+                ->setParameter('end', $search->getEnd());
         }
 
         return $qb
             ->orderBy('p.createdAt', 'DESC')
-            ->getQuery();
+            ->getQuery()
+        ;
     }
 
     /**

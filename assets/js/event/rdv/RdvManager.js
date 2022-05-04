@@ -33,6 +33,9 @@ export default class RdvManager {
     }
 
     init() {
+        document.querySelectorAll('button[data-action="restore"]').forEach(restoreBtn => restoreBtn
+            .addEventListener('click', () => this.requestRestoreNote(restoreBtn)))
+
         this.newRdvBtn.addEventListener('click', e => this.rdvForm.resetForm(e))
 
         this.editRdvBtn.forEach(btnElt => {
@@ -70,6 +73,14 @@ export default class RdvManager {
         btnConfirmDelete.addEventListener('click', () => this.rdvForm.requestDeleteRdv())
     }
 
+    requestRestoreNote(restoreBtn) {
+        if (!this.loader.isActive()) {
+            this.loader.on()
+
+            this.ajax.send('GET', restoreBtn.dataset.url, this.responseAjax.bind(this))
+        }
+    }
+
     /**
      * @param {Object} response
      */
@@ -77,25 +88,29 @@ export default class RdvManager {
         const rdv = response.rdv
         const apiUrls = response.apiUrls
 
+        if (response.msg) {
+            this.messageFlash = new MessageFlash(response.alert, response.msg)
+        }
+
         if (response.action) {
             switch (response.action) {
-                case 'delete':
-                    this.deleteRdvTr(rdv, apiUrls)
-                    break
                 case 'create':
                     this.createRdvTr(rdv, apiUrls)
-                    break;
-                case 'edit':
-                    this.editRdvTr(rdv, apiUrls)
                     break;
                 case 'show':
                     this.showRdv(rdv, response.canEdit)
                     break;
+                case 'edit':
+                    this.editRdvTr(rdv, apiUrls)
+                    break;
+                case 'delete':
+                    this.deleteRdvTr(rdv, response.action, apiUrls)
+                    break
+                case 'restore':
+                    this.deleteRdvTr(rdv, response.action, apiUrls)
+                    this.checkToRedirect(this.messageFlash.delay)
+                    break
             }
-        }
-
-        if (response.msg !== undefined) {
-            new MessageFlash(response.alert, response.msg)
         }
 
         this.loader.off()
@@ -235,16 +250,18 @@ export default class RdvManager {
     /**
      * Delete rdv's row.
      * @param {Object} rdv
+     * @param {string} action
      * @param {Object} apiUrls
      */
-    deleteRdvTr(rdv, apiUrls) {
+    deleteRdvTr(rdv, action, apiUrls) {
         document.getElementById('rdv-' + rdv.id).remove()
 
-        this.apiCalendar.execute('delete', apiUrls)
+        if (action === 'delete') {
+            this.apiCalendar.execute('delete', apiUrls)
+            this.rdvForm.closeModal()
+        }
 
-        this.rdvForm.closeModal()
-
-        this.total.decrement()
+        this.total.decrement();
     }
 
     /**
@@ -259,5 +276,17 @@ export default class RdvManager {
         }
 
         return alerts
+    }
+
+    /**
+     * Redirects if there are no more lines.
+     * @param {number} delay
+     */
+    checkToRedirect(delay) {
+        if (document.querySelectorAll('table#table-rdvs tbody tr').length === 0) {
+            setTimeout(() => {
+                document.location.href = location.pathname
+            }, delay * 1000)        
+        }
     }
 }

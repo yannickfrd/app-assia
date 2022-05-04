@@ -1049,7 +1049,6 @@ class ImportDatasHebergement extends ImportDatas
             ->setSocialSecurity($this->findInArray($this->field['Couverture maladie'], self::SOCIAL_SECURITY))
             ->setFamilyBreakdown($this->findInArray($this->field['Rupture liens familiaux et amicaux'], self::YES_NO))
             ->setFriendshipBreakdown($this->findInArray($this->field['Rupture liens familiaux et amicaux'], self::YES_NO))
-            ->setChildWelfareBackground($this->findInArray($this->field['Parcours institutionnel enfance'], self::YES_NO))
             ->setHealthProblem(Choices::YES === $this->field['Problématique santé mentale'] || Choices::YES === $this->field['Problématique santé - Addiction'] ? Choices::YES : null)
             ->setMentalHealthProblem($this->findInArray($this->field['Problématique santé mentale'], self::YES_NO_BOOLEAN))
             ->setAddictionProblem($this->findInArray($this->field['Problématique santé - Addiction'], self::YES_NO_BOOLEAN))

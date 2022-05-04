@@ -70,7 +70,8 @@ class SupportGroup
 
     public const END_REASONS = [
         100 => 'Accès à une solution d\'hébgt/logt',
-        110 => 'Autonone', // AVDL
+        110 => 'Autonome', // AVDL
+        120 => 'Objectif réalisé',
         200 => 'Non adhésion à l\'accompagnement', // 2
         210 => 'Exclusion disciplinaire',
         220 => 'Fin du contrat de séjour',
@@ -91,6 +92,7 @@ class SupportGroup
 
     public const REGULAR_END_REASONS = [
         100 => 'Accès à une solution d\'hébgt/logt',
+        120 => 'Objectif réalisé',
         200 => 'Non adhésion à l\'accompagnement',
         210 => 'Exclusion disciplinaire',
         220 => 'Fin du contrat de séjour',
@@ -258,6 +260,11 @@ class SupportGroup
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $nbPeople;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $evaluationScore;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -615,6 +622,18 @@ class SupportGroup
     public function setNbPeople(?int $nbPeople): self
     {
         $this->nbPeople = $nbPeople;
+
+        return $this;
+    }
+
+    public function getEvaluationScore(): ?float
+    {
+        return $this->evaluationScore;
+    }
+
+    public function setEvaluationScore(?float $evaluationScore): self
+    {
+        $this->evaluationScore = $evaluationScore;
 
         return $this;
     }

@@ -22,6 +22,7 @@ Confirm password: Confirmation du mot de passe
 ConfirmPassword: Confirmation du mot de passe
 Confirm new password: Confirmation nouveau mot de passe
 Contact other person: Contact autre personne
+Content: Contenu
 Day: Jour
 Dept: Département
 Device: Dispositif
@@ -56,6 +57,7 @@ Lessor: Bailleur/Propriétaire
 Location: Lieu
 Login: Login
 logo path: Chemin du logo
+Maiden name: Nom de jeune fille
 Month: Mois
 Name: Nom
 Nb people: Nb. de personnes
@@ -117,6 +119,8 @@ Si siao id: ID groupe SI-SIAO
 Start: Début
 Start date: Date de début
 Status: Statut
+Soundex firstname: Phonétique prénom
+Soundex lastname: Phonétique nom
 Sub service: Sous-service
 Sub services: Sous-services
 sub_service:
@@ -135,6 +139,7 @@ user:
   confirmPassword.help: Veuillez re-saisir le mot de passe pour confirmation
 professionals: Intervenant·e·s
 Username: Login
+Usename: Nom d'usage
 Usename or maiden name: Nom d'usage ou de jeune fille
 Write a note: Écrire une note
 peopleGroup.comment: Écrire un commentaire concernant le groupe
@@ -166,7 +171,10 @@ support:
   dates: Date d'accompagnement
   startDate: Date de début d'accompagnement
   endDate: Date de fin d'accompagnement
+  label:
+    soft_deleteable: Corbeille
 Clone support: Je souhaite récupérer les informations du précédent suivi social (évaluation et documents) en accord avec le service concerné.
+Nb children under3years: Nombre d'enfant de moins de 3 Anonymis
 
 # OriginRequest
 Decision date: Date de décision
@@ -187,7 +195,9 @@ document:
     mimeMessage: Merci de télécharger un fichier au format valide (doc, docx, jpg, jpeg, pdf, png, rar, xls, xlsx, zip).
     placeholder: Glisser-déposer ici les fichiers ou cliquer pour en choisir...
 Agreement: Consentement de la personne
-
+File type: Type de fichier
+Internal file name: Nom du fichier interne
+Size: Taille
 # Referent
 Social worker: Travailleur social
 Social worker2: Travailleur social suppléant
@@ -226,21 +236,28 @@ Min rest to live: Reste à vivre minimum
 Amount: Montant
 Apl amt: Montant APL
 Charges amt: Montant charges
+Check at: Vérifié le
 Credential: Justificatif de ressources
+Comment export: Commentaire export
 Contrib start date: Date de début de la période
 Contrib end date: Date de fin de la période
 No contrib: PAF à 0 €
 No contrib reason: Motif de la PAF à 0 €
+Mail sent at: Mail envoyé le
 Paid amt: Montant réglé
-Payment date: Date de l\'opération
+Payment date: Date de l'opération
 Payment type: Mode de règlement
 Rent amt: Montant du loyer
 Repayment reason: Motif du remboursement
 Nb consum units: Nb d'unités de consommation
+Nb days: Nombre de jours
+Pdf generate at: PDF généré le
 Resources amt: Montant ressources
+Rest to live: Reste à vivre
 Return amt: Montant restitué
 Salary amt: Montant salaire(s)
 Still to pay amt: Montant restant dû
+Theorical contrib amt: Participation théorique
 To pay amt: Montant à régler
 payment:
   contributionType: Taux de participation appliqué

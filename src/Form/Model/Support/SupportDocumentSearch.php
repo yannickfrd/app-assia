@@ -2,10 +2,13 @@
 
 namespace App\Form\Model\Support;
 
+use App\Entity\Traits\DeletedTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class SupportDocumentSearch
 {
+    use DeletedTrait;
+
     /** @var string|null */
     private $name;
 
