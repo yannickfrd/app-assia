@@ -439,7 +439,7 @@ class UserRepository extends ServiceEntityRepository
 
             ->andWhere('r.start >= :date1')
             ->setParameter(':date1', (clone $date)->modify('-1 hour'))
-            ->andWhere('a.sended != TRUE')
+            ->andWhere('a.sent != TRUE')
             ->andWhere('a.date <= :date2')
             ->setParameter(':date2', (clone $date)->modify('+5 minutes'))
 
@@ -467,7 +467,7 @@ class UserRepository extends ServiceEntityRepository
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id}')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
 
-            ->where('a.sended != TRUE')
+            ->where('a.sent != TRUE')
             ->andWhere('a.date < :date')
             ->setParameter(':date', $date)
             ->andWhere('a.type = :type')

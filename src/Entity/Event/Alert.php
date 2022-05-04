@@ -63,7 +63,7 @@ class Alert
      * @ORM\Column(type="boolean")
      * @Groups("show_alert")
      */
-    private $sended = false;
+    private $sent = false;
 
     /**
      * @ORM\Column(type="boolean")
@@ -164,18 +164,18 @@ class Alert
 
     public function getSended(): ?bool
     {
-        return $this->sended;
+        return $this->sent;
     }
 
-    public function setSended(bool $sended): self
+    public function setSended(bool $sent): self
     {
-        $this->sended = $sended;
+        $this->sent = $sent;
 
         return $this;
     }
 
     public function getSendedToString(): string
     {
-        return self::IS_SENDED[$this->sended];
+        return self::IS_SENDED[$this->sent];
     }
 }
