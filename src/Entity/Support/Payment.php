@@ -82,7 +82,7 @@ class Payment
     private $type = self::DEFAULT_TYPE;
 
     /**
-     * @Groups("export")
+     * @Groups("show_payment")
      */
     private $typeToString;
 
@@ -100,7 +100,7 @@ class Payment
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups({"show_payment", "export"})
+     * @Groups("show_payment")
      */
     private $resourcesAmt;
 
@@ -112,25 +112,25 @@ class Payment
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups({"show_payment", "export"})
+     * @Groups("show_payment")
      */
     private $rentAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups({"show_payment", "export"})
+     * @Groups("show_payment")
      */
     private $aplAmt;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"show_payment", "export"})
+     * @Groups("show_payment")
      */
     private $credential;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups({"show_payment", "export"})
+     * @Groups("show_payment")
      */
     private $toPayAmt;
 
@@ -141,37 +141,37 @@ class Payment
     private $paymentType;
 
     /**
-     * @Groups("export")
+     * @Groups("show_payment")
      */
     private $paymentTypeToString;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups({"show_payment", "export"})
+     * @Groups("show_payment")
      */
     private $paidAmt;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups({"show_payment", "export"})
+     * @Groups("show_payment")
      */
     private $paymentDate;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups({"show_payment", "export"})
+     * @Groups("show_payment")
      */
     private $stillToPayAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups({"show_payment", "export"})
+     * @Groups("show_payment")
      */
     private $returnAmt;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"show_payment", "export"})
+     * @Groups("show_payment")
      */
     private $comment;
 

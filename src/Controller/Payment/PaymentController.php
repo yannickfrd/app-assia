@@ -141,7 +141,7 @@ final class PaymentController extends AbstractController
                     '%payment_type%' => $payment->getTypeToString(),
                 ], 'app'),
                 'payment' => $payment,
-            ], 200, [], ['groups' => array_merge(Payment::SERIALIZER_GROUPS, ['export'])]);
+            ], 200, [], ['groups' => Payment::SERIALIZER_GROUPS]);
         }
 
         return $this->getErrorMessage($form);
@@ -191,7 +191,7 @@ final class PaymentController extends AbstractController
                     '%payment_type%' => $payment->getTypeToString(),
                 ], 'app'),
                 'payment' => $payment,
-            ], 200, [], ['groups' => array_merge(Payment::SERIALIZER_GROUPS, ['export'])]);
+            ], 200, [], ['groups' => Payment::SERIALIZER_GROUPS]);
         }
 
         return $this->getErrorMessage($form);
