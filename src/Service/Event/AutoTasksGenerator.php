@@ -177,6 +177,10 @@ class AutoTasksGenerator
 
         $task->addAlert($this->createAlert($task));
 
+        if ($supportGroup->getReferent2()) {
+            $task->addUser($supportGroup->getReferent2());
+        }
+
         $this->em->persist($task);
 
         ++$this->nbTasks;

@@ -51,8 +51,9 @@ class HotelContributionCalculator
         100 => 'Allocations familiales (AF)', // SI-SIAO => OK
         80 => 'Allocation adulte handicapé (AAH)', // SI-SIAO => OK
         // 85 => 'Allocation d\'éducation de l\'enfant handicapé (AEEH)',
-        101 => 'Allocation de soutien familial (ASF)', // ??
+        190 => 'Allocation de solidarité aux personnes âgées (ASPA)',
         90 => 'Allocation de solidarité spécifique (ASS)', // SI-SIAO => OK
+        101 => 'Allocation de soutien familial (ASF)', // ??
         130 => 'Allocation pour demandeur d\'asile (ADA)', // SI-SIAO => OK
         180 => 'Bourse', // SI-SIAO => OK
         102 => 'Complément familial',

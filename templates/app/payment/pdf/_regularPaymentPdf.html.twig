@@ -18,7 +18,7 @@
     {% endif %}
     relatif {{ payment_type }}{# 
     #}{% if support.city and payment.type in [1, 2, 10] %}
-        au {{ support.address ~ " à " ~ support.city }} ({{ service.name }})<!--
+        au {{ support.fullAddress }} ({{ service.name }})<!--
         -->{% if payment.type in [1, 2] %}<!--
             -->, pour la période du <b>{{ payment.startDate|date("d/m/Y") }}</b> au <b>{{ payment.endDate|date("d/m/Y") }}</b> 
             (soit {{ payment.nbDays }} jours){# 

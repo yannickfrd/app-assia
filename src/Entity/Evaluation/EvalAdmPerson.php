@@ -139,6 +139,11 @@ class EvalAdmPerson
     private $ofpraRegistrationId;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $cndaId;
+
+    /**
      * @ORM\Column(type="date", nullable=true)
      */
     private $endValidPermitDate;
@@ -308,6 +313,18 @@ class EvalAdmPerson
     public function setOfpraRegistrationId(?string $ofpraRegistrationId): self
     {
         $this->ofpraRegistrationId = $ofpraRegistrationId;
+
+        return $this;
+    }
+
+    public function getCndaId(): ?string
+    {
+        return $this->cndaId;
+    }
+
+    public function setCndaId(?string $cndaId): self
+    {
+        $this->cndaId = $cndaId;
 
         return $this;
     }

@@ -71,6 +71,7 @@ class SupportGroup
     public const END_REASONS = [
         100 => 'Accès à une solution d\'hébgt/logt',
         110 => 'Autonome', // AVDL
+        120 => 'Objectif réalisé',
         200 => 'Non adhésion à l\'accompagnement', // 2
         210 => 'Exclusion disciplinaire',
         220 => 'Fin du contrat de séjour',
@@ -91,6 +92,7 @@ class SupportGroup
 
     public const REGULAR_END_REASONS = [
         100 => 'Accès à une solution d\'hébgt/logt',
+        120 => 'Objectif réalisé',
         200 => 'Non adhésion à l\'accompagnement',
         210 => 'Exclusion disciplinaire',
         220 => 'Fin du contrat de séjour',

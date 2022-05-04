@@ -93,7 +93,7 @@
                             <div class="float-left d-flex">
                             {% set msg_confirm = "Êtes-vous vraiment sûr de vouloir supprimer cette personne ?" %}
                                 <a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('person_delete', {'id': person.id}) }}"
-                                    data-toggle="tooltip" title="Supprimer le suivi social" data-placement="bottom"
+                                    data-toggle="tooltip" title="Supprimer la personne" data-placement="bottom"
                                     onclick="if(window.confirm('{{ msg_confirm }}')){return true;}else{return false;}"><span
                                     class="fas fa-trash-alt mr-2"></span>Supprimer</a>
                             </div>
