@@ -47,21 +47,4 @@ class SendRdvAlertsCommandTest extends KernelTestCase
 
         $this->assertStringContainsString('emails were sent!', $output);
     }
-
-    public function testExecuteWithFlushOption(): void
-    {
-        $this->commandTester->execute([
-            'command' => $this->command->getName(),
-            '--flush' => true,
-        ]);
-
-        $output = $this->commandTester->getDisplay();
-
-        $this->assertStringContainsString('emails were sent!', $output);
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-    }
 }
