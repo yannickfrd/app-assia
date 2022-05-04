@@ -78,7 +78,7 @@ export default class NoteManager {
     checkIfNoteIdInUrl() {
         const noteElt = this.containerNotesElt.querySelector(`div[data-note-id="${parseInt(this.parametersUrl.get('noteId'))}"]`)
         if (noteElt) {
-            setTimeout(() => this.noteForm.show(noteElt), 200)
+            this.requestShowNote(noteElt.dataset.showUrl, true)
         }
     }
 
@@ -96,10 +96,11 @@ export default class NoteManager {
     }
 
     /**
-     * @param {String} url
+     * @param {string} url
+     * @param {boolean} force
      */
-    requestShowNote(url) {
-        if (!this.loader.isActive()) {
+    requestShowNote(url, force = false) {
+        if (!this.loader.isActive() || force === true) {
             this.loader.on()
 
             this.ajax.send('GET', url, this.responseAjax.bind(this))
