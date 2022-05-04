@@ -89,15 +89,9 @@ export default class SupportPayments {
             .forEach(showBtnElt => showBtnElt
                 .addEventListener('click', () => this.requestShowPayment(showBtnElt)))
 
-        document.querySelectorAll('tr.payment').forEach(trElt => {
-            const btnDeleteElt = trElt.querySelector('button[data-action="delete"]')
-            if (btnDeleteElt) {
-                btnDeleteElt.addEventListener('click', () => {
-                    this.trElt = trElt
-                    this.confirmBtnElt.dataset.url = btnDeleteElt.dataset.url
-                });
-            }
-        })
+        document.querySelectorAll('table#table-payments tbody tr button[data-action="delete"]')
+            .forEach(btnDeleteElt => btnDeleteElt
+                .addEventListener('click', () => this.confirmBtnElt.dataset.url = btnDeleteElt.dataset.url))
 
         this.resourcesAmtInputElt.addEventListener('input', () => this.checkResources())
 
@@ -108,13 +102,9 @@ export default class SupportPayments {
             }
         })
 
-        // this.deleteBtnElt.addEventListener('click', (e) => {
-        //     e.preventDefault()
-        //     this.confirmBtnElt.dataset.url = this.deleteBtnElt.dataset.url.replace('__id__', this.paymentId)
-        // })
-
         this.confirmBtnElt.addEventListener('click', e => {
             e.preventDefault()
+            console.log(this.confirmBtnElt)
             this.ajax.send('GET', this.confirmBtnElt.dataset.url, this.responseAjax.bind(this))
         })
 
