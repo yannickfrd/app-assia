@@ -161,7 +161,7 @@ class CreateUserCommand extends Command
         if (Choices::YES === Choices::getChoices($notificationChoices)[$notification]) {
             $this->userNotification->newUser($user);
 
-            $io->success('The email notification is sended !');
+            $io->success('The email notification is sent!');
         }
 
         return Command::SUCCESS;

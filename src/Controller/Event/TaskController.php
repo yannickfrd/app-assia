@@ -254,7 +254,7 @@ final class TaskController extends AbstractController
                 '%task_status%' => mb_strtolower($task->getStatusToString()),
             ], 'app'),
             'task' => $task,
-            ], 200, [], ['groups' => Task::SERIALIZER_GROUPS]);
+        ], 200, [], ['groups' => Task::SERIALIZER_GROUPS]);
     }
 
     private function exportData(TaskSearch $search, TaskRepository $taskRepo, User $user,
