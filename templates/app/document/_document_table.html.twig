@@ -50,7 +50,8 @@
 				<th scope="col" class="align-middle th-w-20"></th>
 			</tr>
 		</thead>
-		<tbody id="container-documents" {% if support is defined %}data-support="{{ support.id }}"{% endif %}>
+		<tbody id="container-documents" {% if support is defined %}data-support="{{ support.id }}"{% endif %}
+			data-action-show="{{ path('document_show', {'id': '__id__'}) }}">
 			{% for document in documents %}
 				{% set is_deleted = document.isDeleted %}
 				<tr data-document-id="{{ document.id }}">
