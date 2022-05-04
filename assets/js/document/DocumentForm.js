@@ -16,6 +16,8 @@ export default class DocumentForm {
 
         this.tagsSelectManager = new SelectManager('#document_tags', {name: 'onModal', elementId: 'document-modal'})
 
+        this.btnNewFiles = document.getElementById('btn-new-files')
+
         this.documentModalElt = new Modal(document.getElementById('document-modal'))
         this.documentFormElt = document.querySelector('form[name=document]')
         this.updateBtnElt = this.documentFormElt.querySelector('button[data-action="update"]')
@@ -54,17 +56,19 @@ export default class DocumentForm {
             this.requestDeleteDocument()
         })
 
-        document.forms['action'].addEventListener('submit', e => {
-            e.preventDefault()
-            this.onValidateAction()
-        })
+        if (document.forms['action']) {
+            document.forms['action'].addEventListener('submit', e => {
+                e.preventDefault()
+                this.onValidateAction()
+            })
+        }
 
         document.querySelector('main')
             .addEventListener('dragenter', () => this.showDropZone())
 
-        document.getElementById('btn-new-files')
-            .addEventListener('click', () => this.showDropZone())
-
+        if (this.btnNewFiles) {
+            this.btnNewFiles.addEventListener('click', () => this.showDropZone()) 
+        }
     }
 
     /**

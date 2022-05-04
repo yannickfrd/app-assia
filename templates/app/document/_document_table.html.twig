@@ -5,7 +5,7 @@
 		<thead>
 			<tr>
 				<th scope="col" class="align-middle text-center th-w-20 px-1">
-					{% if document_index_route == false and restoration_mode == false %}
+					{% if document_index_route == false and not restoration_mode %}
 						<div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} text-dark pl-0"
 							title="Tout sélectionner">
 							<div class="form-check">

@@ -168,46 +168,46 @@ export default class DocumentManager {
     }
 
     /**
-     * @param {Object} data
+     * @param {Object} doc
      */
-    getFile(data) {
+    getFile(doc) {
         this.loader.on()
-        this.ajax.showFile(data.file, data.filename)
+        this.ajax.showFile(doc.file, doc.filename)
         this.loader.off()
     }
 
     /**
-     * @param {Object} data
+     * @param {Object} doc
      */
-    getDocumentTrPrototype(data) {
+    getDocumentTrPrototype(doc) {
         const documentTrElt = document.createElement('tr')
-        documentTrElt.dataset.documentId = data.id
+        documentTrElt.dataset.documentId = doc.id
         documentTrElt.innerHTML = `
             <td class="align-middle text-center">
                 <div class="custom-control custom-checkbox custom-checkbox-${this.themeColor} text-dark pl-0" 
                     title="Sélectionner le document">
                     <div class="form-check">
-                        <input type="checkbox" id="checkbox-file-${data.id}" data-checkbox="${data.id}"
-                            name="checkbox-file-${data.id}" class="custom-control-input checkbox form-check-input">
-                        <label class="custom-control-label form-check-label ml-2" for="checkbox-file-${data.id}"></label>
+                        <input type="checkbox" id="checkbox-file-${doc.id}" data-checkbox="${doc.id}"
+                            name="checkbox-file-${doc.id}" class="custom-control-input checkbox form-check-input">
+                        <label class="custom-control-label form-check-label ml-2" for="checkbox-file-${doc.id}"></label>
                     </div>
                 </div>
             </td>
             <td class="align-middle text-center">
-                <a href="/document/${data.id}/download" class="btn btn-${this.themeColor} btn-sm shadow my-1" 
-                    title="Télécharger le document"><span class="fas fa-file-download"></span>
+                <a href="/document/${doc.id}/download" class="btn btn-${this.themeColor} btn-sm shadow my-1" 
+                    title="Télécharger le document"><i class="fas fa-file-download"></i>
                 </a>
             </td>
-            <td class="align-middle cursor-pointer" data-document="name">${data.name}</td>
+            <td class="align-middle cursor-pointer" data-document="name">${doc.name}</td>
             <td class="align-middle cursor-pointer" data-document="tags"></td>
-            <td class="align-middle cursor-pointer" data-document="content">${data.content ?? ''}</td>
-            <td class="align-middle text-right">${((Math.floor(data.size / 10000) / 100).toLocaleString('fr') + ' Mo')}</td>
-            <td class="align-middle" data-document="extension">${data.fileType}</td>
-            <td class="d-none d-lg-table-cell align-middle th-date">${new DateFormater().getDate(data.createdAt)}</td>
-            <td class="d-none d-lg-table-cell align-middle th-w-100">${data.createdBy.fullname}</td>
+            <td class="align-middle cursor-pointer" data-document="content">${doc.content ?? ''}</td>
+            <td class="align-middle text-right">${((Math.floor(doc.size / 10000) / 100).toLocaleString('fr') + ' Mo')}</td>
+            <td class="align-middle" data-document="extension">${doc.fileType}</td>
+            <td class="d-none d-lg-table-cell align-middle th-date">${new DateFormater().getDate(doc.createdAt)}</td>
+            <td class="d-none d-lg-table-cell align-middle th-w-100">${doc.createdBy.fullname}</td>
             <td class="align-middle text-center">
-                <button data-url="/document/${data.id}/delete" class="btn btn-danger btn-sm shadow my-1"
-                    data-action="delete" title="Supprimer le document"><span class="fas fa-trash-alt"></span>
+                <button data-url="/document/${doc.id}/delete" class="btn btn-danger btn-sm shadow my-1"
+                    data-action="delete" title="Supprimer le document"><i class="fas fa-trash-alt"></i>
                 </button>
             </td>`
 
