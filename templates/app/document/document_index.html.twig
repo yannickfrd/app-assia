@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% set title = 'Documents' %}
+{% set restoration_mode = false %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+	<section class="mt-0">
+		<div class="container-fluid mt-4">
+			<h1 class="h2 mb-3">{{ title }}</h1>
+			{% include 'model/_msgFlash.html.twig' %}
+		</div>
+
+		{% include 'app/document/_document_search_form.twig' %}
+
+		<div class="container-fluid mt-4">
+
+			<div class="row align-items-baseline">
+				<div class="col-md-4 count align-middle mb-2">
+					<span class="align-middle">Résultat : {{ documents.getTotalItemCount|number }}
+						document{% if documents.getTotalItemCount > 1 %}s{% endif %}.</span>
+				</div>
+				<div class="col-md-8">
+					<div class="navigation">{{ knp_pagination_render(documents) }}</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-12">
+				
+					{% include 'app/document/_document_table.html.twig' %}
+
+					<div class="navigation">{{ knp_pagination_render(documents) }}</div>
+
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock %}
+
+{% block javascripts %}
+	{{ encore_entry_script_tags('search') }}
+{% endblock javascripts %}

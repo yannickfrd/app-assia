@@ -394,6 +394,7 @@ class UserRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('u')
             ->leftJoin('u.setting', 's')->addSelect('s')
             ->leftJoin('u.referentSupports', 'sg')->addSelect('PARTIAL sg.{id, status}')
+            ->leftJoin('sg.referent2', 'u2')->addSelect('u2')
             ->leftJoin('sg.evaluationsGroup', 'eg')->addSelect('PARTIAL eg.{id}')
             ->leftJoin('eg.evaluationPeople', 'ep')->addSelect('PARTIAL ep.{id}')
 

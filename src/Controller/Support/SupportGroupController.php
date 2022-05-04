@@ -328,7 +328,9 @@ final class SupportGroupController extends AbstractController
             return $this->redirectToRoute('supports_switch_referent');
         }
 
-        return $this->renderForm('app/support/switch_support_referent.html.twig', ['form' => $form]);
+        return $this->render('app/support/switch_support_referent.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
     /**

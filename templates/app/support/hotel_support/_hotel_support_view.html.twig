@@ -44,7 +44,7 @@
     {% if support.placeGroups|length %}
         <div class="row my-2">
             {% set place = support.placeGroups|length > 0 ? support.placeGroups[support.placeGroups|length - 1].place %}
-            {{ view_div.get(place ? place.name ~ ' (' ~ place.address ~ ' - ' ~ place.city ~ ')', 'Hotel') }}
+            {{ view_div.get(place ? place.name ~ ' (' ~ place.fullAddress ~ ')', 'Hotel') }}
             {{ view_div.get(place ? place.comment, 'Comment') }}
         </div>
     {% endif %}

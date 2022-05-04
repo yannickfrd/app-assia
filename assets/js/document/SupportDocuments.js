@@ -43,20 +43,29 @@ export default class SupportDocuments {
     }
 
     init() {
-        const listRestoreBtn = document.querySelectorAll('table#table-documents tbody button[data-action="restore"]')
-        listRestoreBtn.forEach(restoreBtn => restoreBtn.addEventListener('click', () => this.requestToRestore(restoreBtn)))
+        document.querySelectorAll('table#table-documents tbody button[data-action="restore"]')
+            .forEach(restoreBtn => restoreBtn
+                .addEventListener('click', () => this.requestToRestore(restoreBtn)))
 
-        document.querySelector('main').addEventListener('dragenter', () => this.dropzoneModalElt.show())
-        document.getElementById('btn-new-files').addEventListener('click', () => this.dropzoneModalElt.show())
-        document.querySelectorAll('tr[data-document-id]').forEach(documentTrElt => this.addEventListenersToTr(documentTrElt))
+        document.querySelector('main')
+            .addEventListener('dragenter', () => this.dropzoneModalElt.show())
+
+        document.getElementById('btn-new-files')
+            .addEventListener('click', () => this.dropzoneModalElt.show())
+
+        document.querySelectorAll('tr[data-document-id]')
+            .forEach(documentTrElt => this.addEventListenersToTr(documentTrElt))
+
         this.updateBtnElt.addEventListener('click', e => this.requestToUpdate(e))
         this.deleteBtnElt.addEventListener('click', e => {
             this.requestToDelete(e, this.deleteBtnElt.dataset.documentId)
         })
+
         this.confirmDeleteBtnElt.addEventListener('click', e => {
             e.preventDefault()
             this.ajax.send('GET', this.confirmDeleteBtnElt.dataset.url, this.responseAjax.bind(this))
         })
+
         if (document.getElementById('action-validate')) {
             document.getElementById('action-validate').addEventListener('click', e => this.onValidateAction(e));
         }
@@ -140,7 +149,8 @@ export default class SupportDocuments {
     }
 
     /**
-     * @param {File} file
+     * Request to create document
+     * @param {File|null} file
      */
     uploadFile(file = null) {
         const url = this.dropzoneFormElt.getAttribute('action')
@@ -227,59 +237,63 @@ export default class SupportDocuments {
      * @param {Object} response
      */
     responseAjax(response) {
-        if (response.msg) {
-            this.messageFlash = new MessageFlash(response.alert, response.msg)
-        }
-
         switch (response.action) {
             case 'create':
-                this.createDocumentTr(response.data)
+                this.createDocumentTr(response.documents)
                 break
             case 'update':
-                this.updateDocumentTr(response.data)
+                this.updateDocumentTr(response.document)
                 break
             case 'delete':
                 this.deleteDocumentTr(response.document)
                 break
             case 'restore':
                 this.deleteDocumentTr(response.document)
+
+                this.messageFlash = new MessageFlash(response.alert, response.msg);
                 this.checkToRedirect(this.messageFlash.delay)
                 break
             case 'download':
                 return this.getFile(response.data)
         }
 
-        this.loader.off()
+        if (!this.loader.isActive()) {
+            this.loader.off()
+
+            if (response.msg && !this.messageFlash) {
+                new MessageFlash(response.alert, response.msg);
+            }
+        }
     }
 
     /**
      * Crée la ligne du nouveau document dans le tableau.
-     * @param datas
+     * @param documents
      */
-    createDocumentTr(datas) {
-        datas.forEach(data => {
+    createDocumentTr(documents) {
+        documents.forEach(doc => {
             const containerDocumentsElt = document.getElementById('container-documents')
-            const documentTrElt = this.getDocumentTrPrototype(data)
+            const documentTrElt = this.getDocumentTrPrototype(doc)
 
             containerDocumentsElt.insertBefore(documentTrElt, containerDocumentsElt.firstChild)
 
             this.updateCounter(1)
             this.addEventListenersToTr(documentTrElt)
-            this.dropzone.updateItemInList(data)
+            this.dropzone.updateItemInList(doc)
         })
     }
 
     /**
      * Met à jour la ligne du tableau correspondant au document.
-     * @param {Object} data
+     * @param {Object} doc
      */
-    updateDocumentTr(data) {
-        const documentTrElt = document.querySelector(`tr[data-document-id="${data.id}"]`)
+    updateDocumentTr(doc) {
+        const documentTrElt = document.querySelector(`tr[data-document-id="${doc.id}"]`)
 
-        documentTrElt.querySelector('td[data-document="name"]').textContent = data.name
-        documentTrElt.querySelector('td[data-document="content"]').textContent = data.content
+        documentTrElt.querySelector('td[data-document="name"]').textContent = doc.name
+        documentTrElt.querySelector('td[data-document="content"]').textContent = doc.content
 
-        this.tagsManager.updateTagsContainer(documentTrElt.querySelector('td[data-document="tags"]'), data.tags)
+        this.tagsManager.updateTagsContainer(documentTrElt.querySelector('td[data-document="tags"]'), doc.tags)
 
         this.documentModalElt.hide()
     }

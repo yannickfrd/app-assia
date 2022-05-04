@@ -41,7 +41,8 @@ class DocumentRepository extends ServiceEntityRepository
             ->join('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
             ->join('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
-            ->join('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}');
+            ->join('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
+        ;
 
         if (!$user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->where('d.createdBy = :user')
@@ -82,7 +83,7 @@ class DocumentRepository extends ServiceEntityRepository
     /**
      * Return all documents of group support.
      */
-    public function findSupportDocumentsQuery(SupportGroup $supportGroup, SupportDocumentSearch $search): Query
+    public function findSupportDocumentsQuery(SupportDocumentSearch $search, SupportGroup $supportGroup): Query
     {
         $qb = $this->createQueryBuilder('d')->select('d')
             ->leftJoin('d.tags', 't')->addSelect('t')
@@ -150,7 +151,8 @@ class DocumentRepository extends ServiceEntityRepository
 
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getResult();
+            ->getResult()
+        ;
     }
 
     /**
@@ -162,7 +164,8 @@ class DocumentRepository extends ServiceEntityRepository
             ->where('d.deletedAt  <= :date')
             ->setParameter('date', $date)
             ->getQuery()
-            ->getResult();
+            ->getResult()
+        ;
     }
 
     public function countDocuments(array $criteria = null): int
@@ -202,7 +205,8 @@ class DocumentRepository extends ServiceEntityRepository
 
         return $qb
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getSingleScalarResult()
+        ;
     }
 
     public function sumSizeAllDocuments(array $criteria = null): int
@@ -211,6 +215,7 @@ class DocumentRepository extends ServiceEntityRepository
 
         return $qb
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getSingleScalarResult()
+        ;
     }
 }

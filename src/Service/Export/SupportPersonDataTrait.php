@@ -18,12 +18,22 @@ trait SupportPersonDataTrait
         $placesEndReasons = [];
         $placesNames = [];
 
-        foreach ($supportPerson->getPlacesPerson() as $placePerson) {
-            $placesStartDates[] = $placePerson->getStartDate();
-            $placesEndDates[] = $placePerson->getEndDate();
-            $placePerson->getEndReason() ? $placesEndReasons[] = $placePerson->getEndReasonToString() : null;
-            $place = $placePerson->getPlaceGroup()->getPlace();
-            $placesNames[] = (string) $place->getName().' ';
+        if ($supportPerson->getPlacesPerson() && $supportPerson->getPlacesPerson()->count() > 0) {
+            foreach ($supportPerson->getPlacesPerson() as $placePerson) {
+                $placesStartDates[] = $placePerson->getStartDate();
+                $placesEndDates[] = $placePerson->getEndDate();
+                $placePerson->getEndReason() ? $placesEndReasons[] = $placePerson->getEndReasonToString() : null;
+                $place = $placePerson->getPlaceGroup()->getPlace();
+                $placesNames[] = (string) $place->getName().' ';
+            }
+        } elseif ($supportGroup->getPlaceGroups() && $supportGroup->getPlaceGroups()->count() > 0) {
+            foreach ($supportGroup->getPlaceGroups() as $placeGroup) {
+                $placesStartDates[] = $placeGroup->getStartDate();
+                $placesEndDates[] = $placeGroup->getEndDate();
+                $placeGroup->getEndReason() ? $placesEndReasons[] = $placeGroup->getEndReasonToString() : null;
+                $place = $placeGroup->getPlace();
+                $placesNames[] = (string) $place->getName().' ';
+            }
         }
 
         $datas = [
