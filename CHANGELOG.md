@@ -1,13 +1,46 @@
 # CHANGELOG
 
-## Version 3.18.0 - 18/03/2022
+## Version 3.18.3 - 04/05/2022
+
+Add command to send rdv alerts (#151)
+
+## Version 3.18.2 - 04/05/2022
+
+Fix and miscellaneous updates (#152)
+
+* Remove Country Entity and use CountryType
+* Add CNDA ID
+* Add Referent n°2 to auto-task
+* Fix error typo
+* Fix getPayment
+* Fix indendation in home page view
+* [LocationEntityTrait] Create helper 'fullAdress'
+* Edit views with address
+* [Resource] Add item ASPA
+* [SupportGroup] Add item 'Objectif réalisé'
+* Fix title tooltip delete person
+* Fix translation 'Debts'
+* [TaskController] Remove NormalizerInterface and refactor
+* Add Evaluation score inside full export Excel
+* Edit full export to have hotel name
+* Edit AnonymizeDatabaseCommand
+* Edit visibily overIndebt informations inside evaluation
+
+## Version 3.18.1 - 29/04/2022
+
+Refactor document feature (#149)
+
+* DocumentController
+* Twig views
+
+## Version 3.18.0 - 18/04/2022
 
 Feature to check completion of evaluations and get a score (#147)
 
 * Create service to calcute score of evaluation
 * Command to check the completion of evaluations
 
-## Version 3.17.0 - 18/03/2022
+## Version 3.17.0 - 18/04/2022
 
 Feature to restore deleted datas (#146)
 

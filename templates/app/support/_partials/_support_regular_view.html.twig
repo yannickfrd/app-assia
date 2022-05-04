@@ -30,11 +30,10 @@
         {% if loop.last %}
                 {{ view_div.get(placeGroup.startDate ? placeGroup.startDate|date('d/m/Y') 
                     ~ (placeGroup.endDate ? ' - ' ~ placeGroup.endDate|date('d/m/Y')), 'Date d\'hébergement') }}
-                {# {{ view_div.get(placeGroup.place ? placeGroup.place.name, 'Nom du groupe de places') }} #}
                 {{ view_div.get(placeGroup.endReasonToString, 'Motif de fin d\'hébergement') }}
         {% endif %}	
     {% endfor %}
-    {{ view_div.get(support.city or support.address ? support.address ~ ', ' ~ support.dept ~ ' ' ~ support.city, 'Adresse') }}
+    {{ view_div.get(support.fullAddress, 'Adresse') }}
 </div>
 <div class="row">
     {{ view_div.get(support.comment) }}

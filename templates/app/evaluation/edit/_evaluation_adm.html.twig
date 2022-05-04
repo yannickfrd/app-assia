@@ -69,6 +69,8 @@
 						{% if support.service.type == constant('SERVICE_TYPE_ASYLUM', support.service) %}
 							<div class="col-md-6" data-parent-field="{{ prefix_id }}_asylumBackground" data-options="1">
 								{{ form_row(eval_person.evalAdmPerson.ofpraRegistrationId) }}</div>
+							<div class="col-md-6" data-parent-field="{{ prefix_id }}_asylumBackground" data-options="1">
+								{{ form_row(eval_person.evalAdmPerson.cndaId) }}</div>
 						{% endif %}
 					</div>
 					<div class="row mt-2">

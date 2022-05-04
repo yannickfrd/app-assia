@@ -56,12 +56,7 @@
 									{{ placeGroup.supportGroup.endStatus ? " (" ~ placeGroup.supportGroup.endStatusToString ~ ")" }}
 								</td>
 								<td class="align-middle">{{ placeGroup.placePeople|length }}</td>
-								<td class="align-middle">
-									{% if placeGroup.place %}
-										{{ placeGroup.place.address }}<br/>
-										{{ placeGroup.place.dept }} {{ placeGroup.place.city }}
-									{% endif %}
-								</td>
+								<td class="align-middle">{{ placeGroup.place ? placeGroup.place.fullAddress }}</td>
 								<td class="align-middle text-center">
 									<a href="{{ path('support_group_people_place_delete', {'id': placeGroup.id}) }}" 
 										class="btn btn-danger btn-sm shadow my-1" data-placement="bottom" title="Supprimer cette prise en charge" 

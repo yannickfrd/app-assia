@@ -46,7 +46,7 @@ class PaymentRepository extends ServiceEntityRepository
         }
 
         return $this->createQueryBuilder('p')->select('p')
-            ->leftJoin('p.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, service, status, startDate, endDate, address, city}')
+            ->leftJoin('p.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, service, status, startDate, endDate, address, city, zipcode}')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, email, phone1, contribution, contributionType, contributionRate, city, address}')
             ->leftJoin('sg.subService', 'ss')->addSelect('PARTIAL ss.{id, name, email, phone1}')
             ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name, logoPath}')

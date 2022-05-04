@@ -25,7 +25,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class TaskController extends AbstractController
@@ -90,12 +89,15 @@ final class TaskController extends AbstractController
      * @Route("/task/create", name="task_create", methods="POST")
      * @Route("/support/{id}/task/create", name="support_task_create", methods="POST")
      */
-    public function create(?int $id = null, Request $request, EntityManagerInterface $em,
-        TranslatorInterface $translator): JsonResponse
-    {
+    public function create(
+        ?int $id = null,
+        Request $request,
+        EntityManagerInterface $em,
+        TranslatorInterface $translator
+    ): JsonResponse {
         $task = new Task();
 
-        // If new support task
+        // If new task with supportGroup
         if ($id) {
             /** @var SupportGroupRepository $supportGroupRepo */
             $supportGroupRepo = $em->getRepository(SupportGroup::class);
@@ -133,7 +135,7 @@ final class TaskController extends AbstractController
      *
      * @Route("/task/{id}/show", name="task_show", methods="GET")
      */
-    public function show(int $id, TaskRepository $taskRepo, NormalizerInterface $normalizer): JsonResponse
+    public function show(int $id, TaskRepository $taskRepo): JsonResponse
     {
         $task = $taskRepo->findTask($id);
 
@@ -141,16 +143,20 @@ final class TaskController extends AbstractController
 
         return $this->json([
             'action' => 'show',
-            'task' => $normalizer->normalize($task, 'json', ['groups' => Task::SERIALIZER_GROUPS]),
-        ]);
+            'task' => $task,
+        ], 200, [], ['groups' => Task::SERIALIZER_GROUPS]);
     }
 
     /**
      * @Route("/task/{id}/edit", name="task_edit", methods="POST")
      */
-    public function edit(int $id, TaskRepository $taskRepo, Request $request, EntityManagerInterface $em,
-        TranslatorInterface $translator): JsonResponse
-    {
+    public function edit(
+        int $id,
+        TaskRepository $taskRepo,
+        Request $request,
+        EntityManagerInterface $em,
+        TranslatorInterface $translator
+    ): JsonResponse {
         $task = $taskRepo->findTask($id);
 
         $this->denyAccessUnlessGranted('EDIT', $task);
@@ -224,9 +230,12 @@ final class TaskController extends AbstractController
     /**
      *@Route("/task/{id}/toggle-status", name="task_toggle_status")
      */
-    public function toggleStatus(int $id, TaskRepository $taskRepo, EntityManagerInterface $em,
-        TranslatorInterface $translator): JsonResponse
-    {
+    public function toggleStatus(
+        int $id,
+        TaskRepository $taskRepo,
+        EntityManagerInterface $em,
+        TranslatorInterface $translator
+    ): JsonResponse {
         $task = $taskRepo->findTask($id);
 
         $this->denyAccessUnlessGranted('EDIT', $task);
@@ -245,10 +254,11 @@ final class TaskController extends AbstractController
                 '%task_status%' => mb_strtolower($task->getStatusToString()),
             ], 'app'),
             'task' => $task,
-            ], 200, [], ['groups' => Task::SERIALIZER_GROUPS]);
+        ], 200, [], ['groups' => Task::SERIALIZER_GROUPS]);
     }
 
-    private function exportData(TaskSearch $search, TaskRepository $taskRepo, User $user, ?SupportGroup $supportGroup = null): Response
+    private function exportData(TaskSearch $search, TaskRepository $taskRepo, User $user,
+        ?SupportGroup $supportGroup = null): Response
     {
         if ($supportGroup) {
             $search->setSupportGroup($supportGroup);

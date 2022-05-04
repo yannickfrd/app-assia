@@ -124,15 +124,15 @@
 						</div>
 					</div>
 
-					<div data-parent-field="{{ prefix_id }}_debt"  data-options="1">
+					<div>
 						<div class="row mb-3">
 							<div class="col-md-6">{{ form_row(form_eval_budget_person.overIndebtRecord) }}</div>
 							<div class="col-md-6" data-parent-field="{{ prefix_id }}_overIndebtRecord" data-options="1">
 								{{ form_row(form_eval_budget_person.overIndebtRecordDate) }}</div>
-						</div>
-						<div class="row mb-3">
-							<div class="col-md-6">{{ form_row(form_eval_budget_person.settlementPlan) }}</div>
-							<div class="col-md-6">{{ form_row(form_eval_budget_person.moratorium) }}</div>
+							<div class="col-md-6" data-parent-field="{{ prefix_id }}_overIndebtRecord" data-options="1">
+								{{ form_row(form_eval_budget_person.settlementPlan) }}</div>
+							<div class="col-md-6" data-parent-field="{{ prefix_id }}_overIndebtRecord" data-options="1">
+								{{ form_row(form_eval_budget_person.moratorium) }}</div>
 						</div>
 					</div>
 					<div class="row mb-3">

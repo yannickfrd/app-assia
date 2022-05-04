@@ -1,0 +1,27 @@
+{% extends 'emails/baseEmail.html.twig' %}
+
+{% set with_support = rdv.supportGroup is not null %}
+
+{% block greeting %}
+    <p class="mb-4">Bonjour {{ user.firstname }}, </p>
+{% endblock %}
+
+{% block body %}
+    <p>
+        Vous avez un rendez-vous le <b>{{ rdv.start|date('d/m/Y \\à\\ H:i') }}</b>{#
+        #}{% if with_support %} avec <b>{{ rdv.supportGroup.header.fullname }}</b>{% endif %}.
+    </p>
+    <p> <b>Titre :</b> 
+        <a href="{{ with_support ? 
+            url('support_calendar', {'id': rdv.supportGroup.id, 'rdv_id': rdv.id}) : 
+            url('calendar', {'rdv_id': rdv.id}) }}">{{ rdv.title }}
+        </a> 
+            <small class="small text-secondary">(Cliquez sur le lien pour accéder au rendez-vous)</small>
+    </p>
+    {% if rdv.location %}
+        <p> <b>Lieu :</b> {{ rdv.location }}</p>
+    {% endif %}
+    {% if rdv.content %}
+        <p> <b>Note :</b> {{ rdv.content }}</p>
+    {% endif %}
+{% endblock %}

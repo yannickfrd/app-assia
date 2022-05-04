@@ -19,7 +19,7 @@ class Alert
         // 0 => 'Notification',
     ];
 
-    public const IS_SENDED = [
+    public const IS_SENT = [
         false => 'En attente',
         true => 'Envoyé',
     ];
@@ -63,7 +63,7 @@ class Alert
      * @ORM\Column(type="boolean")
      * @Groups("show_alert")
      */
-    private $sended = false;
+    private $sent = false;
 
     /**
      * @ORM\Column(type="boolean")
@@ -162,20 +162,20 @@ class Alert
         return self::IS_VIEWED[$this->viewed];
     }
 
-    public function getSended(): ?bool
+    public function getSent(): ?bool
     {
-        return $this->sended;
+        return $this->sent;
     }
 
-    public function setSended(bool $sended): self
+    public function setSent(bool $sent): self
     {
-        $this->sended = $sended;
+        $this->sent = $sent;
 
         return $this;
     }
 
-    public function getSendedToString(): string
+    public function getSentToString(): string
     {
-        return self::IS_SENDED[$this->sended];
+        return self::IS_SENT[$this->sent];
     }
 }
