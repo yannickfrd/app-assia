@@ -120,6 +120,7 @@ symfony console hautelook:fixtures:load -e test -n;
 ```bash
 symfony php bin/phpunit tests/Entity; 
 symfony php bin/phpunit tests/Repository;
+symfony php bin/phpunit tests/Command;
 ```
 
 ### 3. Functionnal tests (controllers)

@@ -8,6 +8,7 @@ tests:
 	symfony console hautelook:fixtures:load -e test -n
 	symfony php bin/phpunit tests/Entity
 	symfony php bin/phpunit tests/Repository
+	symfony php bin/phpunit tests/Command
 	symfony php bin/phpunit tests/Controller
 	symfony php bin/phpunit tests/EndToEnd
 .PHONY: tests
