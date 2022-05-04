@@ -453,7 +453,7 @@ class UserRepository extends ServiceEntityRepository
      *
      * @return User[]
      */
-    public function getUsersWithRdvAlerts(\DateTime $date)
+    public function getUsersWithRdvAlerts(\DateTime $date): array
     {
         return $this->createQueryBuilder('u')
             ->leftJoin('u.setting', 's')->addSelect('s')

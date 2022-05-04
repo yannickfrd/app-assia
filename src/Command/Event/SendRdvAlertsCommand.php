@@ -12,7 +12,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -24,14 +23,13 @@ class SendRdvAlertsCommand extends Command
     protected static $defaultName = 'app:rdv:send-rdv-alerts';
     protected static $defaultDescription = 'Send email about rdv alerts to users.';
 
-    protected $em;
-    protected $userRepo;
-    protected $mailer;
+    protected EntityManagerInterface $em;
+    protected UserRepository $userRepo;
+    protected MailerInterface $mailer;
 
-    /** @var SymfonyStyle */
-    protected $io;
+    protected SymfonyStyle $io;
 
-    protected $nbEmails = 0;
+    protected int $nbEmails = 0;
 
     public function __construct(EntityManagerInterface $em, UserRepository $userRepo, MailerInterface $mailer)
     {
