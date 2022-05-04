@@ -7,7 +7,6 @@ namespace App\Controller\Payment;
 use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Organization\User;
 use App\Entity\Support\Payment;
-use App\Entity\Support\SupportGroup;
 use App\Form\Model\Support\PaymentSearch;
 use App\Form\Model\Support\SupportPaymentSearch;
 use App\Form\Support\Payment\PaymentSearchType;

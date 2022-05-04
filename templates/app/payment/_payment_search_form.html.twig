@@ -1,9 +1,9 @@
-{% extends "model/_search.html.twig" %}
+{% extends 'model/_search.html.twig' %}
 
 {% block search_form %}
 
     <div class="col-auto my-1 px-1">{{ form_row(form.fullname) }}</div>
-    {% include "_shared/_service_device_referent_search.html.twig" %}
+    {% include '_shared/_service_device_referent_search.html.twig' %}
     <div class="col-auto my-1 px-1">{{ form_row(form.type) }}</div>
     <div class="col-auto my-1 px-1">{{ form_row(form.dateType) }}</div>
     <div class="col-auto my-1 px-1 d-inline-flex" data-toggle="tooltip" data-placement="bottom"
@@ -12,19 +12,19 @@
         <div class="col-auto my-1 px-1 d-inline-flex" data-toggle="tooltip" data-placement="bottom"
         title="Date de fin"><span class="my-2 pr-2">et</span>{{ form_widget(form.date.end) }}
     </div>
-    {% if is_granted("ROLE_SUPER_ADMIN") %}
+    {% if is_granted('ROLE_SUPER_ADMIN') %}
         <div class="col-auto my-1 px-1">{{ form_widget(form.id) }}</div>
     {% endif %}    
 {% endblock %}
 
 {% block search_form_buttons %}
     {{ parent() }}
-    {% if app.session.get("userServices")|length > 1 or false == app.session.get("haveServiceHotel") %}       
+    {% if app.session.get('userServices')|length > 1 or false == app.session.get('haveServiceHotel') %}
         <button id="export-accounting-btn" name="export-accounting" value="true" class="btn btn-success ml-2 shadow" 
             data-toggle="tooltip" data-placement="bottom" title="Exporter sur Excel les données pour la comptabilité"><span
                 class="fas fa-file-excel mr-2"></span>Compta</button>
     {% endif %}
-    {% if is_granted("ROLE_SUPER_ADMIN") or YES == app.session.get("haveServiceHotel") %}       
+    {% if is_granted('ROLE_SUPER_ADMIN') or YES == app.session.get('haveServiceHotel') %}
         <button id="export-delta-btn" name="export-delta" value="true" class="btn btn-success ml-2 shadow" 
             data-toggle="tooltip" data-placement="bottom" title="Exporter sur Excel les données destinées à DELTA"><span
                 class="fas fa-file-excel mr-2"></span>DELTA</button>

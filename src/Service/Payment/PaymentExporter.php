@@ -84,7 +84,7 @@ class PaymentExporter
         $title = $this->getTitle($payment);
         $logoPath = $supportGroup->getService()->getPole()->getLogoPath();
 
-        $content = $this->renderer->render('app/payment/pdf/paymentPdf.html.twig', [
+        $content = $this->renderer->render('app/payment/pdf/payment_pdf.html.twig', [
             'title' => $title,
             'logo_path' => $this->exportPDF->getPathImage($logoPath),
             'payment' => $payment,
