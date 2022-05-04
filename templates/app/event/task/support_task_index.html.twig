@@ -12,11 +12,16 @@
 
         <div class="row">
             <div class="d-flex col-md-6 mb-1 align-items-center">
-                <button id="js_new_task" class="btn btn-{{ theme_color }} shadow align-middle mr-2"
-                    title="Ajouter une tâche" data-toggle="modal" data-placement="bottom"
-                    data-target="#modal-task">
-                    <span class="fas fa-plus-square mr-2"></span>Nouvelle tâche
-                </button>
+                {% if not restoration_mode %}
+                    <button id="js_new_task" class="btn btn-{{ theme_color }} shadow align-middle mr-2"
+                        title="Ajouter une tâche" data-toggle="modal" data-placement="bottom"
+                        data-target="#modal-task"><i class="fas fa-plus-square mr-2"></i>Nouvelle tâche
+                    </button>
+				{% else %}
+					<a href="{{ app.request.pathInfo }}" class="btn btn-{{ theme_color }} btn-sm shadow mr-2">
+						<i class="fa-solid fa-arrow-rotate-left mr-2"></i>Retour
+					</a>
+				{% endif %}
                 <span>
                     Résultat : <span id="count_tasks" data-count-tasks="{{ tasks.getTotalItemCount }}">
                     {{ tasks.getTotalItemCount|number }}</span>
@@ -29,9 +34,8 @@
 
         {% include 'app/event/task/_support_task_search_form.html.twig' %}
         
-        <div class="row mb-4">
-            {% include 'app/event/task/_task_table.html.twig' %}
-        </div>
+        {% include 'app/event/task/_task_table.html.twig' %}
+        
         <div class="navigation">{{ knp_pagination_render(tasks) }}</div>
     </div>
     {% include 'app/event/task/_task_form_modal.html.twig' %}
