@@ -13,7 +13,7 @@ trait CreatedUpdatedEntityTrait
      * @var \DateTimeInterface
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime", nullable=true)
-     * @Groups({"show_created_updated", "view", "show_rdv"})
+     * @Groups({"show_created_updated", "show_rdv"})
      */
     protected $createdAt;
 
@@ -30,7 +30,7 @@ trait CreatedUpdatedEntityTrait
      * @var \DateTimeInterface
      * @Gedmo\Timestampable(on="create", on="update")
      * @ORM\Column(type="datetime", nullable=true)
-     * @Groups({"show_created_updated", "view", "show_rdv"})
+     * @Groups({"show_created_updated", "show_rdv"})
      */
     protected $updatedAt;
 
