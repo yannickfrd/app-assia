@@ -27,7 +27,7 @@ abstract class AbstractEvent
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"show_event", "show_rdv"})
+     * @Groups("show_event")
      */
     protected $id;
 
@@ -39,7 +39,7 @@ abstract class AbstractEvent
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"show_event", "show_rdv"})
+     * @Groups("show_event")
      * @Assert\NotBlank()
      */
     protected $title;
@@ -52,26 +52,26 @@ abstract class AbstractEvent
     /**
      * @ORM\Column(type="datetime")
      * @Assert\NotNull()
-     * @Groups({"show_event", "show_rdv"})
+     * @Groups("show_event")
      */
     protected $end;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"show_event", "show_rdv"})
+     * @Groups("show_event")
      */
     protected $content;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"show_event", "show_rdv"})
+     * @Groups("show_event")
      */
     protected $location;
 
     /**
      * @Gedmo\Blameable(on="create", on="update")
      * @ORM\ManyToOne(targetEntity=User::class)
-     * @Groups({"show_user", "show_rdv"})
+     * @Groups({"show_user"})
      * @MaxDepth(1)
      */
     protected $updatedBy; // NE PAS SUPPRIMER
@@ -197,7 +197,7 @@ abstract class AbstractEvent
         return $this->users;
     }
 
-    /** @Groups({"show_event", "show_rdv"}) */
+    /** @Groups("show_event") */
     public function getUsersToString(): string
     {
         if (null === $this->users) {
@@ -270,13 +270,13 @@ abstract class AbstractEvent
         return $countViewedAlerts;
     }
 
-    /** @Groups({"show_event", "show_rdv"}) */
+    /** @Groups("show_event") */
     public function getCreatedAtToString(string $format = 'd/m/Y H:i'): string
     {
         return $this->createdAt ? $this->createdAt->format($format) : '';
     }
 
-    /** @Groups({"show_event", "show_rdv"}) */
+    /** @Groups("show_event") */
     public function getUpdatedAtToString(string $format = 'd/m/Y H:i'): string
     {
         return $this->updatedAt ? $this->updatedAt->format($format) : '';

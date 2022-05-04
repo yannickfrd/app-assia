@@ -80,7 +80,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"show_user", "show_rdv"})
+     * @Groups("show_user")
      */
     private $id;
 
@@ -137,7 +137,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $firstname;
 
     /**
-     * @Groups({"export", "view", "show_user", "show_rdv"})
+     * @Groups({"export", "view", "show_user"})
      */
     private $fullname;
 

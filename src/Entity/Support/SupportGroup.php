@@ -295,7 +295,7 @@ class SupportGroup
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Organization\Service", inversedBy="supportGroup")
-     * @Groups({"export", "show_service", "show_rdv"})
+     * @Groups({"export", "show_service"})
      */
     private $service;
 
@@ -1047,7 +1047,7 @@ class SupportGroup
     /**
      * Donne le demandeur principal du suivi.
      *
-     * @Groups({"show_support_group", "show_rdv"})
+     * @Groups("show_support_group")
      */
     public function getHeader(): ?Person
     {
