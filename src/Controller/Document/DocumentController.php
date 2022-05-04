@@ -164,7 +164,7 @@ final class DocumentController extends AbstractController
 
         return $this->json([
             'action' => 'show',
-            'document' => $document
+            'document' => $document,
         ], 200, [], ['groups' => Document::SERIALIZER_GROUPS]);
     }
 
