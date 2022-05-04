@@ -45,7 +45,7 @@ class SendTaskAlertsCommand extends Command
             ->setDescription(self::$defaultDescription)
             ->addArgument('notif-type', InputArgument::REQUIRED,
                 'Type of notification : daily-alerts, weekly-alerts or a custom delay (example: "+5 hours")')
-            ->addOption('flush', 'f', InputArgument::OPTIONAL, 'Flush all modifications to alerts and tasks', false)
+            ->addOption('flush', 'f', InputArgument::OPTIONAL, 'Flush all modifications to alerts and tasks', true)
         ;
     }
 
@@ -55,7 +55,7 @@ class SendTaskAlertsCommand extends Command
         $this->notifType = $input->getArgument('notif-type');
         $flushOption = (bool) $input->getOption('flush');
 
-        $users = $this->userRepo->getUsersWithAlerts((new \DateTime())->modify($this->getDelay()));
+        $users = $this->userRepo->getUsersWithTaskAlerts((new \DateTime())->modify($this->getDelay()));
 
         $this->io->progressStart(count($users));
 
@@ -97,11 +97,11 @@ class SendTaskAlertsCommand extends Command
 
         $this->io->progressFinish();
 
-        if (true === $flushOption) {
+        if ($flushOption) {
             $this->em->flush();
         }
 
-        $this->io->success("{$this->nbEmails} emails were sended!");
+        $this->io->success("{$this->nbEmails} emails were sent!");
 
         return Command::SUCCESS;
     }
@@ -110,16 +110,16 @@ class SendTaskAlertsCommand extends Command
     {
         try {
             $email = (new TemplatedEmail())
-                    ->to($user->getEmail())
-                    ->subject('Application Assia | '.$this->getEmailSubject())
-                    ->htmlTemplate('emails/alert_email.html.twig')
-                    ->context([
-                        'user' => $user,
-                        'alerts_groups' => $alertsGroups,
-                        'nb_user_alerts' => $nbUserAlerts,
-                        'notif_type' => $this->notifType,
-                    ])
-                ;
+                ->to($user->getEmail())
+                ->subject('Application Assia | '.$this->getEmailSubject())
+                ->htmlTemplate('emails/task_alert_email.html.twig')
+                ->context([
+                    'user' => $user,
+                    'alerts_groups' => $alertsGroups,
+                    'nb_user_alerts' => $nbUserAlerts,
+                    'notif_type' => $this->notifType,
+                ])
+            ;
 
             $this->mailer->send($email);
 

@@ -8,7 +8,6 @@ use App\Entity\Event\Alert;
 use App\Entity\Event\Rdv;
 use App\Entity\Organization\User;
 use App\Repository\Organization\UserRepository;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Console\Command\Command;
@@ -49,14 +48,11 @@ class SendRdvAlertsCommand extends Command
     {
         $this->io = new SymfonyStyle($input, $output);
 
-        /** @var Collection<User> $users */
         $users = $this->userRepo->getUsersWithRdvAlerts(new \DateTime());
 
         $this->io->progressStart(count($users));
 
         foreach ($users as $user) {
-            $nbUserAlerts = 0;
-
             foreach ($user->getRdvs() as $rdv) {
                 foreach ($rdv->getAlerts() as $alert) {
                     if (Alert::EMAIL_TYPE !== $alert->getType()) {
@@ -66,7 +62,6 @@ class SendRdvAlertsCommand extends Command
                     $this->sendEmail($user, $rdv);
 
                     $alert->setSended(true);
-                    ++$nbUserAlerts;
                 }
             }
 
@@ -77,7 +72,7 @@ class SendRdvAlertsCommand extends Command
 
         $this->em->flush();
 
-        $this->io->success("$this->nbEmails emails were sent!");
+        $this->io->success("{$this->nbEmails} emails were sent!");
 
         return Command::SUCCESS;
     }

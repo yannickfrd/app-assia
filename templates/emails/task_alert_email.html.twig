@@ -20,20 +20,20 @@
             {% for alert in alerts_group.alerts %}
                 {% set task = alert.task %}
                 <li>
-                    <a href="{% if task.supportGroup %}{#
-                            #}{{ url('support_task_index', {'id': task.supportGroup.id, 'task_id': task.id}) }}{#
-                        #}{% else %}{#
-                            #}{{ url('task_index', {'task_id': task.id}) }}{#
-                        #}{% endif %}" class="dropdown-item" >"{{ task.title }}"
+                    <a href="{{ task.supportGroup ?
+                        url('support_task_index', {'id': task.supportGroup.id, 'task_id': task.id}) :
+                        url('task_index', {'task_id': task.id}) }}" 
+                        class="dropdown-item" >"{{ task.title }}"
                     </a> à faire avant le {{ task.endToString }}
                 </li>
+                
             {% endfor %}
         </ul>
     {% endfor %}
 
     {% if notif_type in ['daily-alerts', 'weekly-alerts'] %}
         <br/>
-        <p class="text-secondary">Si vous souhaitez désactiver ces emails automatiques, allez dans la section "Paramètres" 
+        <p class="text-secondary">Si vous souhaitez désactiver ces emails automatiques, allez dans la section « Paramètres »
             de votre page utilisateur en cliquant <a href="{{ url('my_profile') }}">ici</a> 
             ou sur notre nom en haut à droite de l'application.
         </p>

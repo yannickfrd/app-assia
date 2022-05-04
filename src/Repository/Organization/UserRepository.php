@@ -423,33 +423,6 @@ class UserRepository extends ServiceEntityRepository
     }
 
     /**
-     * Donne les utilisateurs qui ont des tâches avec des alertes.
-     *
-     * @return User[]
-     */
-    public function getUsersWithAlerts(\DateTime $date): array
-    {
-        return $this->createQueryBuilder('u')
-            ->leftJoin('u.setting', 's')->addSelect('s')
-            ->leftJoin('u.tasks', 't')->addSelect('t')
-            ->leftJoin('t.alerts', 'a')->addSelect('a')
-            ->leftJoin('t.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
-            ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id}')
-            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
-
-            ->where('a.sended <> TRUE')
-            ->andWhere('a.date < :date')
-            ->setParameter(':date', $date)
-            ->andWhere('a.type = :type')
-            ->setParameter('type', Alert::EMAIL_TYPE)
-
-            ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getResult()
-        ;
-    }
-
-    /**
      * Donne les utilisateurs qui ont des rdvs avec des alertes.
      *
      * @return User[]
@@ -464,11 +437,39 @@ class UserRepository extends ServiceEntityRepository
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id}')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
 
-            ->andWhere('r.start >= :date')
-            ->where('a.sended <> TRUE')
-            ->andWhere('a.date <= :date')
-            ->setParameter(':date', $date)
+            ->andWhere('r.start >= :date1')
+            ->setParameter(':date1', (clone $date)->modify('-1 hour'))
+            ->andWhere('a.sended != TRUE')
+            ->andWhere('a.date <= :date2')
+            ->setParameter(':date2', (clone $date)->modify('+5 minutes'))
 
+            ->andWhere('a.type = :type')
+            ->setParameter('type', Alert::EMAIL_TYPE)
+
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult()
+        ;
+    }
+
+    /**
+     * Donne les utilisateurs qui ont des tâches avec des alertes.
+     *
+     * @return User[]
+     */
+    public function getUsersWithTaskAlerts(\DateTime $date): array
+    {
+        return $this->createQueryBuilder('u')
+            ->leftJoin('u.setting', 's')->addSelect('s')
+            ->leftJoin('u.tasks', 't')->addSelect('t')
+            ->leftJoin('t.alerts', 'a')->addSelect('a')
+            ->leftJoin('t.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
+            ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id}')
+            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
+
+            ->where('a.sended != TRUE')
+            ->andWhere('a.date < :date')
+            ->setParameter(':date', $date)
             ->andWhere('a.type = :type')
             ->setParameter('type', Alert::EMAIL_TYPE)
 

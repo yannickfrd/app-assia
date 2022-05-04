@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 3.18.3 - 04/05/2022
+
+Add command to send rdv alerts (#151)
+
 ## Version 3.18.2 - 04/05/2022
 
 Fix and miscellaneous updates (#152)
