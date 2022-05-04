@@ -27,10 +27,8 @@
             <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(payments, 'Commentaire', 'p.comment') }}</th>
             {% if support_is_not_defined %}
                 <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(payments, 'Service (Dispositif)', 's.name') }}</th>
-            {% else %}
-                <th scope="col" class="align-middle th-w-20">{{ knp_pagination_sortable(payments, 'PDF', 'p.pdfGenerateAt') }}</th>
-                <th scope="col" class="align-middle th-w-20">{{ knp_pagination_sortable(payments, 'Mail', 'p.mailSentAt') }}</th>
             {% endif %}
+
             {% if restoration_mode is defined and restoration_mode == true %}
                 <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(payments, 'Supprimé le', 'p.deletedAt') }}</th>
             {% else %}
@@ -38,6 +36,8 @@
             {% endif %}
 
             {% if support is defined %}
+                <th scope="col" class="align-middle th-w-20">{{ knp_pagination_sortable(payments, 'PDF', 'p.pdfGenerateAt') }}</th>
+                <th scope="col" class="align-middle th-w-20">{{ knp_pagination_sortable(payments, 'Mail', 'p.mailSentAt') }}</th>
                 <th scope="col" class="align-middle th-w-20"></th>
             {% else %}
                 <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(payments, 'Créé par', 'u.lastname') }}</th>
@@ -50,12 +50,19 @@
         {% for payment in payments %}
             {% set is_deleted = payment.deletedAt is not null %}
             {% set person = (payment.supportGroup.supportPeople|first).person %}
-            <tr>
+            <tr id="payment-{{payment.id}}">
                 <td class="align-middle text-center">
-                    <a class="btn btn-{{ is_deleted ? 'secondary disabled' : theme_color }} btn-sm shadow"
-                        href="{{ path('support_payments_index', {'id': payment.supportGroup.id, 'paymentId': payment.id}) }}"
-                        data-toggle="tooltip" data-placement="bottom" title="Voir {{ payment.typeToString }}"><span class="fas fa-eye"></span>
-                    </a>
+                    {% if support_is_not_defined %}
+                        <a class="btn btn-{{ is_deleted ? 'secondary disabled' : theme_color }} btn-sm shadow"
+                            href="{{ path('support_payments_index', {'id': payment.supportGroup.id, 'paymentId': payment.id}) }}"
+                            data-toggle="tooltip" data-placement="bottom" title="Voir {{ payment.typeToString }}"><span class="fas fa-eye"></span>
+                        </a>
+                    {% else %}
+                        <button class="btn btn-{{ is_deleted ? 'secondary disabled' : theme_color }} btn-sm shadow"
+                            data-action="show" data-id="{{ payment.id }}" data-url="{{ path('payment_show', {'id': payment.id}) }}"
+                            data-placement="bottom" title="Voir l'enregistrement"><span class="fas fa-eye"></span>
+                        </button>
+                    {% endif %}
                 </td>
                 {% if support_is_not_defined %}
                     <td class="align-middle">{{ person ? person.fullname }}</td>
