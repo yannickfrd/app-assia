@@ -93,7 +93,10 @@ class SupportPersonRepository extends ServiceEntityRepository
         $qb = $this->getSupportsQuery()
             ->leftJoin('sp.placesPerson', 'pp')->addSelect('pp')
             ->leftJoin('pp.placeGroup', 'pg')->addSelect('pg')
-            ->leftJoin('pg.place', 'pl')->addSelect('pl');
+            ->leftJoin('pg.place', 'pl')->addSelect('pl')
+            ->leftJoin('sg.placeGroups', 'pg2')->addSelect('pg2')
+            ->leftJoin('pg2.place', 'pl2')->addSelect('PARTIAL pl2.{id, name}')
+        ;
 
         if ($search) {
             $qb = $this->filters($qb, $search);
@@ -227,6 +230,8 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->leftJoin('sp.placesPerson', 'pp')->addSelect('pp')
             ->leftJoin('pp.placeGroup', 'pg')->addSelect('PARTIAL pg.{id}')
             ->leftJoin('pg.place', 'pl')->addSelect('PARTIAL pl.{id, name}')
+            ->leftJoin('sg.placeGroups', 'pg2')->addSelect('pg2')
+            ->leftJoin('pg2.place', 'pl2')->addSelect('PARTIAL pl2.{id, name}')
 
             ->leftJoin('g.referents', 'ref')->addSelect('PARTIAL ref.{id, name, type}')
 
