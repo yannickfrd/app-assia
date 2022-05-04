@@ -19,7 +19,7 @@ class Alert
         // 0 => 'Notification',
     ];
 
-    public const IS_SENDED = [
+    public const IS_SENT = [
         false => 'En attente',
         true => 'Envoyé',
     ];
@@ -162,20 +162,20 @@ class Alert
         return self::IS_VIEWED[$this->viewed];
     }
 
-    public function getSended(): ?bool
+    public function getSent(): ?bool
     {
         return $this->sent;
     }
 
-    public function setSended(bool $sent): self
+    public function setSent(bool $sent): self
     {
         $this->sent = $sent;
 
         return $this;
     }
 
-    public function getSendedToString(): string
+    public function getSentToString(): string
     {
-        return self::IS_SENDED[$this->sent];
+        return self::IS_SENT[$this->sent];
     }
 }

@@ -61,7 +61,7 @@ class SendRdvAlertsCommand extends Command
 
                     $this->sendEmail($user, $rdv);
 
-                    $alert->setSended(true);
+                    $alert->setSent(true);
                 }
             }
 

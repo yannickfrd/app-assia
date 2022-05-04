@@ -83,7 +83,7 @@ class SendTaskAlertsCommand extends Command
                         $alertsGroups[0]['name'] = 'Non-défini';
                         $alertsGroups[0]['alerts'][$task->getId()] = $alert;
                     }
-                    $alert->setSended(true);
+                    $alert->setSent(true);
                     ++$nbUserAlerts;
                 }
             }
