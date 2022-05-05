@@ -6,7 +6,6 @@ namespace App\Controller\Organization;
 
 use App\Entity\Organization\Referent;
 use App\Entity\People\PeopleGroup;
-use App\Entity\Support\SupportGroup;
 use App\Form\Organization\Referent\ReferentType;
 use App\Repository\People\PeopleGroupRepository;
 use App\Repository\Support\SupportGroupRepository;
@@ -28,14 +27,12 @@ final class ReferentController extends AbstractController
     }
 
     /**
-     * Nouveau service référent.
-     *
      * @Route("/group/{group_id}/referent/new", name="group_referent_new", methods="GET|POST")
      * @Route("/support/{support_id}/referent/new", name="support_referent_new", methods="GET|POST")
      * @ParamConverter("peopleGroup", options={"id" = "group_id"})
      * @ParamConverter("supportGroup", options={"id" = "support_id"})
      */
-    public function newReferent(
+    public function new(
         ?int $group_id,
         ?int $support_id,
         Request $request,
@@ -49,7 +46,23 @@ final class ReferentController extends AbstractController
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            return $this->createReferent($peopleGroup, $referent, $support);
+            $referent->setPeopleGroup($peopleGroup);
+
+            $this->em->persist($referent);
+            $this->em->flush();
+
+            $this->addFlash('success', "Le service social {$referent->getName()} est créé.");
+
+            $this->deleteCacheItems($peopleGroup);
+
+            if ($support) {
+                return $this->redirectToRoute('support_referent_edit', [
+                    'support_id' => $support->getId(),
+                    'id' => $referent->getId(),
+                ]);
+            }
+
+            return $this->redirectToRoute('group_referent_edit', ['id' => $referent->getId()]);
         }
 
         return $this->render('app/organization/referent/referent_edit.html.twig', [
@@ -60,13 +73,11 @@ final class ReferentController extends AbstractController
     }
 
     /**
-     * Modification d'un service référent.
-     *
      * @Route("/referent/{id}/edit", name="group_referent_edit", methods="GET|POST")
      * @Route("/support/{support_id}/referent/{id}/edit", name="support_referent_edit", methods="GET|POST")
      * @ParamConverter("supportGroup", options={"id" = "support_id"})
      */
-    public function editReferent(
+    public function edit(
         Referent $referent,
         ?int $support_id = null,
         Request $request,
@@ -80,7 +91,7 @@ final class ReferentController extends AbstractController
 
             $this->addFlash('success', "Le service social {$referent->getName()} est mis à jour.");
 
-            $this->discache($referent->getPeopleGroup());
+            $this->deleteCacheItems($referent->getPeopleGroup());
         }
 
         return $this->render('app/organization/referent/referent_edit.html.twig', [
@@ -91,12 +102,10 @@ final class ReferentController extends AbstractController
     }
 
     /**
-     * Supprime un service référent.
-     *
      * @Route("/referent/{id}/delete", name="referent_delete", methods="GET")
      * @Route("/support/{supportId}/referent/{id}/delete", name="support_referent_delete", methods="GET")
      */
-    public function deleteReferent(int $supportId = null, Referent $referent): Response
+    public function delete(int $supportId = null, Referent $referent): Response
     {
         $referent->setUpdatedBy($this->getUser());
         $this->em->flush();
@@ -108,7 +117,7 @@ final class ReferentController extends AbstractController
 
         $this->addFlash('warning', "Le service social $name est supprimé.");
 
-        $this->discache($referent->getPeopleGroup());
+        $this->deleteCacheItems($referent->getPeopleGroup());
 
         if ($supportId) {
             return $this->redirectToRoute('support_show', ['id' => $supportId]);
@@ -118,33 +127,9 @@ final class ReferentController extends AbstractController
     }
 
     /**
-     * Crée un service référent une fois le formulaire soumis et validé.
-     */
-    protected function createReferent(PeopleGroup $peopleGroup, Referent $referent, ?SupportGroup $support = null): Response
-    {
-        $referent->setPeopleGroup($peopleGroup);
-
-        $this->em->persist($referent);
-        $this->em->flush();
-
-        $this->addFlash('success', "Le service social {$referent->getName()} est créé.");
-
-        $this->discache($peopleGroup);
-
-        if ($support) {
-            return $this->redirectToRoute('support_referent_edit', [
-                'support_id' => $support->getId(),
-                'id' => $referent->getId(),
-            ]);
-        }
-
-        return $this->redirectToRoute('group_referent_edit', ['id' => $referent->getId()]);
-    }
-
-    /**
      * Supprime les référents en cache du groupe.
      */
-    protected function discache(PeopleGroup $peopleGroup): bool
+    protected function deleteCacheItems(PeopleGroup $peopleGroup): bool
     {
         return (new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']))->deleteItem(PeopleGroup::CACHE_GROUP_REFERENTS_KEY.$peopleGroup->getId());
     }

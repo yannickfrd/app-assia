@@ -10,13 +10,13 @@
 				<span class="fas fa-home"></span><span class="sr-only">Page d'accueil du suivi</span>
 			</a>
 			{% if support.device.place == YES %}
-				<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_places', {'id': support.id}) }}" 
+				<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_place_group_index', {'id': support.id}) }}" 
 					title="Prise(s) en charge hébergement"
 					data-toggle="tooltip" data-placement="bottom">
 					<span class="fas fa-bed"></span><span class="sr-only">Hébergement</span>
 				</a>
 			{% endif %}
-			<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_evaluation_view', {'id': support.id}) }}" 
+			<a class="btn btn-{{ theme_color }} shadow px-2 mr-1 mb-2" href="{{ path('support_evaluation_show', {'id': support.id}) }}" 
 				title="Évaluation sociale" data-toggle="tooltip" data-placement="bottom">
 				<span class="fas fa-clipboard"></span><span class="sr-only">Évaluation</span>
 			</a>

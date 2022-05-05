@@ -23,9 +23,9 @@ final class AvdlController extends AbstractController
     /**
      * Liste des suivis AVDL.
      *
-     * @Route("/avdl-supports", name="avdl_supports", methods="GET|POST")
+     * @Route("/avdl-supports", name="avdl_support_index", methods="GET|POST")
      */
-    public function viewListAvdlSupports(Request $request, Pagination $pagination, SupportPersonRepository $supportPersonRepo): Response
+    public function index(Request $request, Pagination $pagination, SupportPersonRepository $supportPersonRepo): Response
     {
         $form = $this->createForm(AvdlSupportSearchType::class, $search = new AvdlSupportSearch())
             ->handleRequest($request);
@@ -50,7 +50,7 @@ final class AvdlController extends AbstractController
         if (!$supports) {
             $this->addFlash('warning', 'Aucun résultat à exporter.');
 
-            return $this->redirectToRoute('avdl_supports');
+            return $this->redirectToRoute('avdl_support_index');
         }
 
         return (new AvdlSupportPersonExport())->exportData($supports);

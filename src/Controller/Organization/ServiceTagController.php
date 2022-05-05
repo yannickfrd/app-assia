@@ -27,7 +27,7 @@ final class ServiceTagController extends AbstractController
      *
      * @Route("/service/{service}/add-tags", name="service_add_tags", methods="POST")
      */
-    public function serviceAddTags(Service $service, Request $request): JsonResponse
+    public function add(Service $service, Request $request): JsonResponse
     {
         $this->denyAccessUnlessGranted('EDIT', $service);
 
@@ -50,7 +50,7 @@ final class ServiceTagController extends AbstractController
      *
      * @Route("/service/{service}/delete-tag/{tag}", name="service_delete_tag", methods="GET|DELETE")
      */
-    public function deleteTagService(Service $service, Tag $tag): JsonResponse
+    public function delete(Service $service, Tag $tag): JsonResponse
     {
         $this->denyAccessUnlessGranted('EDIT', $service);
 

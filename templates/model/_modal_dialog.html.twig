@@ -1,4 +1,4 @@
-<div id="{{ modal_id is defined ? modal_id : 'modal-block' }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalConfirmation" aria-hidden="true">
+<div id="{{ modal_id ?? 'modal-block' }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalConfirmation" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content {% block modal_bg %}{% endblock %}">
 

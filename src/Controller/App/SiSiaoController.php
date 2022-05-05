@@ -173,7 +173,7 @@ final class SiSiaoController extends AbstractController
             EvaluationManager::deleteCacheItems($evaluationGroup);
         }
 
-        return $this->redirectToRoute('support_evaluation_view', ['id' => $supportGroup->getId()]);
+        return $this->redirectToRoute('support_evaluation_show', ['id' => $supportGroup->getId()]);
     }
 
     /**

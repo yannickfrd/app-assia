@@ -59,14 +59,14 @@
 		<div id="support_navbar" class="row justify-content-center my-4">
 			{% if support.device and support.device.place == YES %}
 				<a id="support-places" class="btn btn-{{ theme_color }} mr-2 mb-2 shadow" 
-					href="{{ path('support_places', {'id': support.id}) }}" 
+					href="{{ path('support_place_group_index', {'id': support.id}) }}" 
 					title="Prise(s) en charge hébergement" data-toggle="tooltip" data-placement="bottom" >
 					{% if support.service.type == SERVICE_TYPE_HOTEL %}PEC Hôtel{% else %}Hébergement{% endif %}<!--
 					--><span class="badge badge-light ml-2">{{ support.placeGroups|length }}</span>
 				</a>
 			{% endif %}
 			<a id="support-evaluation" class="btn btn-{{ theme_color }} mr-2 mb-2 shadow" 
-				href="{{ path(evaluation ? 'support_evaluation_view' : 'support_evaluation_new', {'id': support.id}) }}" 
+				href="{{ path(evaluation ? 'support_evaluation_show' : 'support_evaluation_new', {'id': support.id}) }}" 
 				title="Évaluation sociale" data-toggle="tooltip" data-placement="bottom" >Évaluation
 					<span class="badge badge-{{ evaluationScoreColor(support.evaluationScore) }}">
 						{{ support.evaluationScore|percent(0) }}

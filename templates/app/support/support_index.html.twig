@@ -127,7 +127,7 @@
                                     <td class="align-middle text-center">
                                         <a href="{{ path('support_person_restore', {'id': support_person.id}) }}" 
                                             class="btn btn-success btn-sm shadow"
-                                            title="{{ restore_title is defined ? restore_title : 'Restaurer' }}"
+                                            title="{{ restore_title ?? 'Restaurer' }}"
                                             data-toggle="tooltip" data-placement="bottom">
                                             <i class="fa-solid fa-trash-arrow-up"></i>
                                         </a>

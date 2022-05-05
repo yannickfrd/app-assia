@@ -25,7 +25,7 @@ class SupportEndToEndTest extends PantherTestCase
 
         $this->outputMsg('Show supports search page');
 
-        /** @var Crawler */
+        /* @var Crawler */
         $this->client->request('GET', '/supports');
 
         $this->assertSelectorTextContains('h1', 'Suivis');
@@ -99,7 +99,7 @@ class SupportEndToEndTest extends PantherTestCase
         $this->outputMsg('Delete a support');
 
         $this->client->waitForVisibility('a#modal-btn-delete');
-        $crawler->filter('a#modal-btn-delete')->click();
+        $crawler->filter('a#modal-btn-delete')->first()->click();
 
         $this->acceptWindowConfirm();
     }

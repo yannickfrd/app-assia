@@ -124,8 +124,6 @@ final class NoteController extends AbstractController
     }
 
     /**
-     * Donne un objet pour la requête ajax.
-     *
      * @Route("/note/{id}/show", name="note_show", methods="GET")
      */
     public function show(int $id, NoteRepository $noteRepo): JsonResponse

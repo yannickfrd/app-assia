@@ -25,8 +25,7 @@
                         <tr class="{{ is_dp ? 'font-weight-bold' }}">
                             <td class="align-middle" scope="row">{{ personne.nom }}</td>
                             <td class="align-middle">{{ personne.prenom }}</td>
-                            <td class="align-middle">{{ personne.datenaissance is defined ? 
-                                personne.datenaissance : (is_dp ? dp.datenaissance) }}</td>
+                            <td class="align-middle">{{ personne.datenaissance ?? (is_dp ? dp.datenaissance) }}</td>
                             <td class="align-middle">{{ personne.age }} an{{ personne.age > 1 ? 's' }}</td>
                             <td class="align-middle">{{ personne.sexe|capitalize }}</td>
                             <td class="align-middle">{{ personne.situation.libelle }}</td>

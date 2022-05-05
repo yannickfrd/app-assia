@@ -33,10 +33,10 @@ final class DatabaseBackupController extends AbstractController
     /**
      * Sauvegardes de la base de données.
      *
-     * @Route("/admin/database-backups", name="database_backups", methods="GET|POST")
+     * @Route("/admin/database-backups", name="database_backup_index", methods="GET|POST")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
-    public function listBackups(Request $request, Pagination $pagination): Response
+    public function index(Request $request, Pagination $pagination): Response
     {
         return $this->render('app/admin/backup/backup_database.html.twig', [
             'backups' => $pagination->paginate($this->databaseBackupRepo->findBackupsQuery(), $request, 10),
@@ -49,7 +49,7 @@ final class DatabaseBackupController extends AbstractController
      * @Route("/admin/database-backup/create", name="database_backup_create")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
-    public function createBackup(DatabaseDumper $databaseDumper): Response
+    public function create(DatabaseDumper $databaseDumper): Response
     {
         $backupDatas = $databaseDumper->dump();
 
@@ -69,10 +69,10 @@ final class DatabaseBackupController extends AbstractController
     /**
      * Donne le fichier de sauvegarde la base de données.
      *
-     * @Route("/admin/database-backup/{id}/get", name="database_backup_get", methods="GET")
+     * @Route("/admin/database-backup/{id}/download", name="database_backup_download", methods="GET")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
-    public function getDatabaseBackup(DatabaseBackup $databaseBackup, Downloader $downloader): Response
+    public function download(DatabaseBackup $databaseBackup, Downloader $downloader): Response
     {
         if (file_exists($databaseBackup->getPath())) {
             return $downloader->send($databaseBackup->getPath());
@@ -89,7 +89,7 @@ final class DatabaseBackupController extends AbstractController
      * @Route("/admin/database-backup/{id}/delete", name="database_backup_delete", methods="GET")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
-    public function deleteDatabase(DatabaseBackup $databaseBackup): Response
+    public function delete(DatabaseBackup $databaseBackup): Response
     {
         if (file_exists($databaseBackup->getPath())) {
             unlink($databaseBackup->getPath());

@@ -26,11 +26,9 @@ final class OrganizationController extends AbstractController
     }
 
     /**
-     * Affiche la liste des dispositifs.
-     *
-     * @Route("/organizations", name="organizations", methods="GET|POST")
+     * @Route("/organizations", name="organization_index", methods="GET|POST")
      */
-    public function listOrganization(Request $request, Pagination $pagination): Response
+    public function index(Request $request, Pagination $pagination): Response
     {
         return $this->render('app/organization/organization/organization_index.html.twig', [
             'organizations' => $pagination->paginate($this->organizationRepo->findOrganizationsQuery(), $request) ?? null,
@@ -38,11 +36,9 @@ final class OrganizationController extends AbstractController
     }
 
     /**
-     * Nouveau dispositif.
-     *
      * @Route("/admin/organization/new", name="admin_organization_new", methods="GET|POST")
      */
-    public function newOrganization(Request $request): Response
+    public function new(Request $request): Response
     {
         $form = $this->createForm(OrganizationType::class, $organization = new Organization())
             ->handleRequest($request);
@@ -53,7 +49,7 @@ final class OrganizationController extends AbstractController
 
             $this->addFlash('success', 'Le dispositif est créé.');
 
-            return $this->redirectToRoute('organizations');
+            return $this->redirectToRoute('organization_index');
         }
 
         return $this->render('app/organization/organization/organization.html.twig', [
@@ -62,11 +58,9 @@ final class OrganizationController extends AbstractController
     }
 
     /**
-     * Modification d'un dispositif.
-     *
      * @Route("/admin/organization/{id}", name="admin_organization_edit", methods="GET|POST")
      */
-    public function editOrganization(Organization $organization, Request $request): Response
+    public function edit(Organization $organization, Request $request): Response
     {
         $form = $this->createForm(OrganizationType::class, $organization)
             ->handleRequest($request);

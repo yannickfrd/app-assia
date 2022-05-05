@@ -44,7 +44,7 @@
                                 {% for backup in backups %}
                                     <tr id="backup-{{ backup.id }}" class="js-backup">
                                         <td scope="row" class="align-middle text-center">
-                                            <a href="{{ path('database_backup_get', {'id': backup.id }) }}" class="btn btn-{{ theme_color }} btn-sm shadow my-1" 
+                                            <a href="{{ path('database_backup_download', {'id': backup.id }) }}" class="btn btn-{{ theme_color }} btn-sm shadow my-1" 
                                                 data-toggle="tooltip" data-placement="bottom" title="Exporter la sauvegarde de la base de données"><span class="fas fa-file-download"></span>
                                             </a>
                                         </td>

@@ -25,11 +25,9 @@ final class SubServiceController extends AbstractController
     }
 
     /**
-     * Nouveau sous-service.
-     *
      * @Route("/service/{id}/sub-service/new", name="sub_service_new", methods="GET|POST")
      */
-    public function newSubService(Service $service, Request $request): Response
+    public function new(Service $service, Request $request): Response
     {
         $this->denyAccessUnlessGranted('EDIT', $service);
 
@@ -44,7 +42,7 @@ final class SubServiceController extends AbstractController
 
             $this->addFlash('success', 'Le sous-service est créé.');
 
-            $this->discache($subService->getService());
+            $this->deleteCacheItems($subService->getService());
 
             return $this->redirectToRoute('service_edit', ['id' => $service->getId()]);
         }
@@ -56,11 +54,9 @@ final class SubServiceController extends AbstractController
     }
 
     /**
-     * Modification d'un sous-service.
-     *
      * @Route("/sub-service/{id}", name="sub_service_edit", methods="GET|POST")
      */
-    public function editSubService(SubService $subService, PlaceRepository $placeRepo, Request $request): Response
+    public function edit(SubService $subService, PlaceRepository $placeRepo, Request $request): Response
     {
         $this->denyAccessUnlessGranted('EDIT', $subService->getService());
 
@@ -72,7 +68,7 @@ final class SubServiceController extends AbstractController
 
             $this->em->flush();
 
-            $this->discache($subService->getService());
+            $this->deleteCacheItems($subService->getService());
 
             $this->addFlash('success', 'Les modifications sont enregistrées.');
         }
@@ -94,11 +90,9 @@ final class SubServiceController extends AbstractController
     }
 
     /**
-     * Désactive ou réactive le sous-service.
-     *
      * @Route("/sub-service/{id}/disable", name="sub_service_disable", methods="GET")
      */
-    public function disableSubService(SubService $subService): Response
+    public function disable(SubService $subService): Response
     {
         $this->denyAccessUnlessGranted('DISABLE', $subService->getService());
 
@@ -110,17 +104,14 @@ final class SubServiceController extends AbstractController
             $this->addFlash('warning', 'Le sous-service "'.$subService->getName().'" est désactivé.');
         }
 
-        $this->discache($subService->getService());
+        $this->deleteCacheItems($subService->getService());
 
         $this->em->flush();
 
         return $this->redirectToRoute('service_edit', ['id' => $subService->getService()->getId()]);
     }
 
-    /**
-     * Supprime les sous-services en cache du service.
-     */
-    protected function discache(Service $service): bool
+    protected function deleteCacheItems(Service $service): bool
     {
         $cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
 

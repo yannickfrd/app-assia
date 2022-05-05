@@ -21,7 +21,7 @@
 {% set style_h3 = 'font-size: 16px; font-weight: bold;' %}
 {% set style_table = 'border: 1px #b5b5b5 solid;' %}
 {% set style_thead = 'background-color: #e9ecef; font-weight: bold;' %}
-{% set type = type is defined ? type : null %}
+{% set type = type ?? null %}
 
 <html lang="fr">
     {% if type == 'pdf' %}
