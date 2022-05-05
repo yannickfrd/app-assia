@@ -43,6 +43,12 @@ export default class PaymentManager {
             .forEach(showBtnElt => showBtnElt
                 .addEventListener('click', () => this.requestShowPayment(showBtnElt)))
 
+        document.querySelectorAll('table#table-payments tbody tr td a[data-action="mail-sent"]')
+            .forEach(mailBtnElt => mailBtnElt.addEventListener('click', e => {
+                e.preventDefault()
+                this.requestSentMail(mailBtnElt.dataset.url)
+            }))
+
         document.querySelectorAll('table#table-payments tbody tr button[data-action="delete"]')
             .forEach(btnDeleteElt => btnDeleteElt
                 .addEventListener('click', () => this.confirmBtnElt.dataset.url = btnDeleteElt.dataset.url))
@@ -112,6 +118,15 @@ export default class PaymentManager {
     }
 
     /**
+     * @param {String} url
+     */
+    requestSentMail(url) {
+        if (window.confirm('Confirmer l\'envoi du reçu par email au suivi ?')) {
+            this.ajax.send('GET', url, this.responseAjax.bind(this))
+        }
+    }
+
+    /**
      * Réponse du serveur.
      * @param {Object} response 
      */
@@ -127,6 +142,9 @@ export default class PaymentManager {
                 break
             case 'update':
                 this.updatePayment(payment)
+                break
+            case 'send_receipt':
+                this.updatePaymentPictoMail(payment)
                 break
             case 'delete':
                 this.deletedPaymentTr(payment)
@@ -364,6 +382,21 @@ export default class PaymentManager {
             setTimeout(() => {
                 document.location.href = location.pathname
             }, delay * 1000)    
+        }
+    }
+
+    /**
+     * @param {Object} payment
+     */
+    updatePaymentPictoMail(payment) {
+        console.log(payment)
+        const trElt = document.getElementById('payment-'+payment.id)
+        const picto = trElt.querySelector('td a[data-action="mail-sent"] i')
+        console.log(picto)
+
+        if (picto.classList.contains('fa-envelope')) {
+            picto.classList.replace('fa-envelope', 'fa-envelope-open')
+            picto.classList.replace('text-secondary', 'text-success')
         }
     }
 }

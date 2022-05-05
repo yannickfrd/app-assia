@@ -113,10 +113,10 @@
                         </a>
                     </td>
                     <td class="align-middle text-center" data-payment="mailSent">
-                        <span data-url="{{ path('payment_send_pdf', {'id': payment.id}) }}" data-toggle="tooltip" data-placement="bottom"
+                        <a class="btn" data-url="{{ path('payment_send_pdf', {'id': payment.id}) }}" data-action="mail-sent" data-toggle="tooltip" data-placement="bottom"
                             title="{{ payment.mailSent ? 'Mail envoyé le ' ~ payment.mailSentAt|date('d/m/Y à H:i') }}">
                             <i class="fas fa-envelope{{ payment.mailSent ? '-open text-success' : ' text-secondary' }} fa-lg"></i>
-                        </span>
+                        </a>
                     </td>
                     <td class="align-middle text-center">
                         {% if is_deleted %}
