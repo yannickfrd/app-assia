@@ -3,7 +3,6 @@
 {% form_theme form 'bootstrap_4_layout.html.twig' %}
 
 {% block search_form %}
-
     {% if is_granted('ROLE_SUPER_ADMIN') %}
         <div class="col-auto my-1 px-1">{{ form_widget(form.service.poles) }}</div>
     {% endif %}

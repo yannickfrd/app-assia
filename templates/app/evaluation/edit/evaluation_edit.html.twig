@@ -3,7 +3,6 @@
 {% block title %}Évaluation sociale{% endblock %}
 
 {% block body %}
-
 	{% set role_child = constant('App\\Entity\\People\\RolePerson::ROLE_CHILD') %}
 	{% set GENDER_FEMALE = constant('App\\Entity\\People\\Person::GENDER_FEMALE') %}
 	{% set SERVICE_TYPE_AVDL = support.service.type == constant('App\\Entity\\Organization\\Service::SERVICE_TYPE_AVDL') %}
@@ -88,7 +87,6 @@
 	</div>
 
 	{% include 'app/payment/_contributionCalculModal.html.twig' %}
-
 {% endblock %}
 
 {% block javascripts %}

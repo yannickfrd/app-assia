@@ -8,7 +8,6 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block body %}
-
     <div class="container">
 
         <h1 class="h2 mb-3">{{ place.service.name }}<span class="fas fa-angle-right fa-xs mx-1"></span>{{ title }}</h1>
@@ -160,8 +159,7 @@
 
     </div>
 
-{% include 'app/organization/place/_place_delete_modal.html.twig' %}
-
+    {% include 'app/organization/place/_place_delete_modal.html.twig' %}
 {% endblock %}
 
 {% block javascripts %}
