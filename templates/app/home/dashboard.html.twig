@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% set title = 'Tableau de bord' %}
-{% set is_social_worker = app.user.status == constant("STATUS_SOCIAL_WORKER", app.user) %}
+{% set is_social_worker = app.user.status == constant('STATUS_SOCIAL_WORKER', app.user) %}
 
 {% block title %}{{ title }}{% endblock %}
 

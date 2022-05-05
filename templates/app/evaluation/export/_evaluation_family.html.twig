@@ -20,7 +20,7 @@
     {% if nb_adults_family > 1 %}
         <p style="{{ style_h3 }}"><u>{{ eval_person.supportPerson.person.fullname }}</u> :</p>
     {% endif %}
-    {% if eval_person.supportPerson.role != ROLE_CHILD %}
+    {% if eval_person.supportPerson.role != role_child %}
         {{ p_view.get(eval_family.maritalStatusToString, 'Marital status', 'evaluation') }}
         {{ p_view.get(eval_family.noConciliationOrderToString, 'No conciliation order', 'evaluation') }}
         {{ p_view.get(eval_family.protectiveMeasure == YES and eval_family.protectiveMeasureType ? 
@@ -30,7 +30,7 @@
         {{ p_view.get(eval_family.unbornChildToString ~ (eval_family.expDateChildbirth ? ' (' 
             ~ eval_family.expDateChildbirth|date('d/m/Y') ~ ')'), 'Unborn child', 'evaluation') }}
     {% endif %}
-    {% if eval_person.supportPerson.role == ROLE_CHILD %}
+    {% if eval_person.supportPerson.role == role_child %}
         {{ p_view.get((eval_family.childcareOrSchool == YES ? eval_family.childcareSchoolTypeToString : 
             eval_family.childcareOrSchoolToString) ~ (eval_family.schoolCity or eval_family.schoolChildCarePrecision ? ' (' ~ eval_family.schoolCity 
             ~ ( eval_family.schoolChildCarePrecision ? ' - ' ~ eval_family.schoolChildCarePrecision) ~ ')'), 'Childcare or school', 'evaluation') }}

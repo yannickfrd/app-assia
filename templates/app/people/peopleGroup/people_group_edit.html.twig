@@ -1,7 +1,7 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
 
 {% set people_group = form.vars.value %}
-{% set is_granted_ROLE_ADMIN = is_granted("ROLE_ADMIN") %}
+{% set is_granted_ROLE_ADMIN = is_granted('ROLE_ADMIN') %}
 
 {% block title %}Fiche de groupe{% endblock %}
 
@@ -11,11 +11,11 @@
         <div>
             <h1 class="h2 mb-3">Groupe</h1>
             <div class="small text-secondary">
-                <p>Créé le {{ people_group.createdAt|date("d/m/Y à H:i") }}
-                    {{ people_group.createdBy ? " par " ~ people_group.createdBy.fullname }}
+                <p>Créé le {{ people_group.createdAt|date('d/m/Y à H:i') }}
+                    {{ people_group.createdBy ? ' par ' ~ people_group.createdBy.fullname }}
                     {% if people_group.updatedAt != people_group.createdAt %}
-                        (modifié le {{ people_group.updatedAt|date("d/m/Y à H:i") }}
-                        {{ people_group.updatedBy ? " par " ~ people_group.updatedBy.fullname }})
+                        (modifié le {{ people_group.updatedAt|date('d/m/Y à H:i') }}
+                        {{ people_group.updatedBy ? ' par ' ~ people_group.updatedBy.fullname }})
                     {% endif %}
                 </p>
             </div>
@@ -27,7 +27,7 @@
         </div>
         {{ form_start(form) }}
         <div>
-            {% include "model/_flash_message.html.twig" %}
+            {% include 'model/_flash_message.html.twig' %}
             <div id="js-msg-flash-content"></div>
             <div class="row">
                 <div class="col-md-12 mb-3">
@@ -60,8 +60,8 @@
                                     {% set person = form_person.vars.value.person %}
                                     <tr id="js-person-{{ person.id }}" class="js-tr-person">
                                         <td  class="align-middle" scope="row">
-                                            <a href="{{ path("group_person_show", 
-                                                {"id": people_group.id, "person_id": person.id, "slug": person.slug}) }}"
+                                            <a href="{{ path('group_person_show', 
+                                                {'id': people_group.id, 'person_id': person.id, 'slug': person.slug}) }}"
                                                 class="btn btn-{{ theme_color }} shadow" data-toggle="tooltip" data-placement="bottom"
                                                 title="Voir la fiche individuelle"><span class="fas fa-eye"></span>
                                             </a>
@@ -76,7 +76,7 @@
                                             {{ form_errors(form_person.person.firstname) }}</td>
                                         <td class="px-1 align-middle">{{ form_widget(form_person.person.birthdate) }}
                                             {{ form_errors(form_person.person.birthdate) }}</td>
-                                        <td class="text-center px-1 align-middle">{{ person.age }} an{{ person.age > 1 ? "s" }}</td>
+                                        <td class="text-center px-1 align-middle">{{ person.age }} an{{ person.age > 1 ? 's' }}</td>
                                         <td class="px-1 align-middle">{{ form_widget(form_person.person.gender) }}</td>
                                         <td class="px-1 align-middle">{{ form_widget(form_person.role) }}
                                             {{ form_errors(form_person.role) }}</td>
@@ -98,12 +98,12 @@
                 </div>
             </div>
             <div class="row">
-            {% set withSupports = supports|length > 0 %}
+            {% set with_supports = supports|length > 0 %}
                 <div class="col-md-12">
-                    <a href="{{ path('group_search_person', {'id': people_group.id, 'supports': withSupports}) }}"
+                    <a href="{{ path('group_search_person', {'id': people_group.id, 'supports': with_supports}) }}"
                         class="btn btn-{{ theme_color }} btn-sm my-2">
                         <span class="fas fa-plus-square mr-2"></span>Ajouter une personne</a>
-                    <a href="{{ path('group_create_person', {'id': people_group.id, 'supports': withSupports, 'role': 3}) }}" class="btn btn-secondary btn-sm my-2"
+                    <a href="{{ path('group_create_person', {'id': people_group.id, 'supports': with_supports, 'role': 3}) }}" class="btn btn-secondary btn-sm my-2"
                         data-toggle="tooltip" title="Ajouter un enfant" data-placement="bottom">
                         <span class="fas fa-plus-square mr-2"></span>Naissance</a>
                 </div>
@@ -122,7 +122,7 @@
                 <div class="col-md-12">
                     {% if is_granted_ROLE_ADMIN %}
                         <div class="float-left d-flex">
-                        {% set msg_confirm = "Êtes-vous vraiment sûr de vouloir supprimer ce groupe ?" %}
+                        {% set msg_confirm = 'Êtes-vous vraiment sûr de vouloir supprimer ce groupe ?' %}
                             <a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" 
                                 href="{{ path('people_group_delete', {'id': people_group.id}) }}"
                                 data-toggle="tooltip" title="Supprimer le groupe" data-placement="bottom"
@@ -139,22 +139,22 @@
             </div>
         </div>
         {{ form_row(form._token) }}
-        {{ form_end(form, {"render_rest": false}) }}
+        {{ form_end(form, {'render_rest': false}) }}
         <hr>
-        {% include "app/support/_partials/_supports_index_table.html.twig" %}
+        {% include 'app/support/_partials/_supports_index_table.html.twig' %}
         <hr>
-        {% include "app/organization/referent/_group_referent_index.html.twig" %}
+        {% include 'app/organization/referent/_group_referent_index.html.twig' %}
     </div>
 
-    {% include "app/people/peopleGroup/_remove_person_modal.html.twig" %}
-    {% include "app/support/_partials/_support_new_modal.html.twig" %}
+    {% include 'app/people/peopleGroup/_remove_person_modal.html.twig' %}
+    {% include 'app/support/_partials/_support_new_modal.html.twig' %}
 
     {% if siSiaoLoginForm is defined %}
-        {% include "app/si_siao/_si_siao_login_modal.html.twig" with {"modal_id": "modal-si-siao-login"} %}
+        {% include 'app/si_siao/_si_siao_login_modal.html.twig' with {'modal_id': 'modal-si-siao-login'} %}
     {% endif %}
 
 {% endblock %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags("peopleGroup") }}
+    {{ encore_entry_script_tags('peopleGroup') }}
 {% endblock %}

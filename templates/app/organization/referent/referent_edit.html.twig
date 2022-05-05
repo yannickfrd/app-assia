@@ -1,12 +1,12 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
 
 {% set referent = form.vars.value %}
-{% if referent.id %}{% set EDIT_MODE = true %}{% else %}{% set EDIT_MODE = false %}{% endif %}
+{% if referent.id %}{% set edit_mode = true %}{% else %}{% set edit_mode = false %}{% endif %}
 
-{% if EDIT_MODE %}
-{% set title = "Référent | " ~ referent.name %}
+{% if edit_mode %}
+{% set title = 'Référent | ' ~ referent.name %}
 {% else %}
-{% set title = "Nouveau service social référent" %}
+{% set title = 'Nouveau service social référent' %}
 {% endif %}
 
 {% block title %}{{ title }}{% endblock %}
@@ -16,18 +16,18 @@
     <div class="container">
 
         {% if support %}
-            {% include "app/support/_partials/_support_nav.html.twig" %}
+            {% include 'app/support/_partials/_support_nav.html.twig' %}
         {% else %}
-            {% include "app/people/peopleGroup/_nav_group.html.twig" %}
+            {% include 'app/people/peopleGroup/_nav_group.html.twig' %}
             <hr>
         {% endif %}
         
-        {% if EDIT_MODE %}
+        {% if edit_mode %}
             <div class="small text-secondary">
-                <p> Créé le {{ referent.createdAt|date("d/m/Y à H:i") }}
-                    {{ referent.createdBy ? " par " ~ referent.createdBy.fullname }}
-                    (modifié le {{ referent.updatedAt|date("d/m/Y à H:i") }}
-                    {{ referent.updatedBy ? " par " ~ referent.updatedBy.fullname }})
+                <p> Créé le {{ referent.createdAt|date('d/m/Y à H:i') }}
+                    {{ referent.createdBy ? ' par ' ~ referent.createdBy.fullname }}
+                    (modifié le {{ referent.updatedAt|date('d/m/Y à H:i') }}
+                    {{ referent.updatedBy ? ' par ' ~ referent.updatedBy.fullname }})
                 </p>
             </div>
         {% else %}
@@ -61,7 +61,7 @@
 
             <div class="row mb-3">
                 <div class="col-md-12">
-                    {% if EDIT_MODE %}
+                    {% if edit_mode %}
                     <div class="float-left d-flex">
                         <a id="btn-delete" class="mr-3 btn btn-danger d-block"
                             href="{{ support ? path('support_referent_delete', {'supportId': support.id, 'id': referent.id}) 
@@ -73,13 +73,13 @@
                     {% endif %}
                     <div class="mb-4 float-right">
                         <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"><span 
-                            class="fas fa-edit mr-2"></span>{% if EDIT_MODE %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+                            class="fas fa-edit mr-2"></span>{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
                     </div>
                 </div>
             </div>
 
             {{ form_row(form._token) }}
-            {{ form_end(form, {"render_rest": false}) }}
+            {{ form_end(form, {'render_rest': false}) }}
 
         </section>
 
@@ -88,5 +88,5 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags("referent") }}
+    {{ encore_entry_script_tags('referent') }}
 {% endblock javascripts %}

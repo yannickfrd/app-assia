@@ -2,7 +2,7 @@
 
     <h1 class="h2 mb-3">Groupe<span class="fas fa-angle-right fa-xs mx-1"></span>{{ title }}</h1>
 
-    {% include "model/_flash_message.html.twig" %}
+    {% include 'model/_flash_message.html.twig' %}
     <div id="js-msg-flash-content"></div>
     
     <nav aria-label="breadcrumb">
@@ -18,8 +18,8 @@
     </nav> 
 	<div id="js-people">
 		{% for rolePerson in people_group.rolePeople %}
-            {% set btn_outline = person is not defined or person.id != rolePerson.person.id ? "outline-" %}
-			<a href="{{ path("group_person_show", {"id": people_group.id, "person_id": rolePerson.person.id, "slug": rolePerson.person.slug}) }}" 
+            {% set btn_outline = person is not defined or person.id != rolePerson.person.id ? 'outline-' %}
+			<a href="{{ path('group_person_show', {'id': people_group.id, 'person_id': rolePerson.person.id, 'slug': rolePerson.person.slug}) }}" 
 				class="btn btn-{{ btn_outline }}secondary btn-sm rounded-pill mb-2">{{ rolePerson.person.fullname }}</a>
 		{% endfor %}
 	</div>

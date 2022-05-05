@@ -1,11 +1,11 @@
-{% extends "emails/base_email.html.twig" %}
+{% extends 'emails/base_email.html.twig' %}
 
-{% set ROLE_CHILD = constant("App\\Entity\\People\\RolePerson::ROLE_CHILD") %}
+{% set role_child = constant('App\\Entity\\People\\RolePerson::ROLE_CHILD') %}
 
 {% block greeting %}
     <p class="mb-4">
-        {% for supportPerson in support.supportPeople|filter(s => s.role != ROLE_CHILD)|sort ((a, b) => b.head <=> a.head) %}
-            <b>{{ supportPerson.person.civilityToString }} {{ supportPerson.person.fullname }}</b>, <br/>
+        {% for support_person in support.supportPeople|filter(s => s.role != role_child)|sort ((a, b) => b.head <=> a.head) %}
+            <b>{{ support_person.person.civilityToString }} {{ support_person.person.fullname }}</b>, <br/>
         {% endfor %}
         Bonjour, 
 {% endblock %}
@@ -22,8 +22,8 @@
         {% endif %}
         d'un montant de <b>{{ payment.paidAmt|amount }}</b>{#
         #}{% if payment.type in [1, 2] %}{#
-            #} pour la période du <b>{{ payment.startDate|date("d/m/Y") }}</b> au <b>{{ payment.endDate|date("d/m/Y") }}</b> 
-            (soit {{ payment.nbDays }} jour{{ payment.nbDays > 1 ? "s" }}){#
+            #} pour la période du <b>{{ payment.startDate|date('d/m/Y') }}</b> au <b>{{ payment.endDate|date('d/m/Y') }}</b> 
+            (soit {{ payment.nbDays }} jour{{ payment.nbDays > 1 ? 's' }}){#
         #}{% endif %}.
     </p>
     <br/>

@@ -1,9 +1,9 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
 
 {% set device = form.vars.value %}
 {% set disabled = device.isDisabled %}
-{% set EDIT_MODE = device.id != null %}
-{% set title = EDIT_MODE ? 'Dispositif ' ~ device.name ~ (disabled ? ' (désactivé)') : 'Nouveau dispositif' %}
+{% set edit_mode = device.id != null %}
+{% set title = edit_mode ? 'Dispositif ' ~ device.name ~ (disabled ? ' (désactivé)') : 'Nouveau dispositif' %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -12,10 +12,10 @@
     <div class="container">
 
         <h1 class="h2 mb-3">{{ title }}</h1>
-        {% if EDIT_MODE %}
+        {% if edit_mode %}
             <div class="small text-secondary">
-                <p> Créé le {{ device.createdAt|date("d/m/Y à H:i") }}{{ device.createdBy ? " par " ~ device.createdBy.fullname }}
-                    (modifié le {{ device.updatedAt|date("d/m/Y à H:i") }}{{ device.updatedBy ? " par " ~ device.updatedBy.fullname }})
+                <p> Créé le {{ device.createdAt|date('d/m/Y à H:i') }}{{ device.createdBy ? ' par ' ~ device.createdBy.fullname }}
+                    (modifié le {{ device.updatedAt|date('d/m/Y à H:i') }}{{ device.updatedBy ? ' par ' ~ device.updatedBy.fullname }})
                 </p>
             </div>
         {% else %}
@@ -32,7 +32,7 @@
         <hr>
 
         <section>
-            {% include "model/_flash_message.html.twig" %}
+            {% include 'model/_flash_message.html.twig' %}
             <div id="js-msg-flash-content"></div>
 
             {{ form_start(form) }}
@@ -60,10 +60,10 @@
                 <div class="col-md-12">{{ form_widget(form.comment) }}</div>
             </div>
             {{ form_row(form._token) }}
-            {% if is_granted("ROLE_ADMIN") %}
+            {% if is_granted('ROLE_ADMIN') %}
                 <div class="row mb-3">
                     <div class="col-md-12">
-                        {% if EDIT_MODE and is_granted("ROLE_SUPER_ADMIN") %}
+                        {% if edit_mode and is_granted('ROLE_SUPER_ADMIN') %}
                             <div class="float-left d-flex">
                                 <a class="mr-3 btn btn-{{ disabled ? 'success' : 'warning' }} d-block" href="{{ path('admin_device_disable', {'id':form.vars.value.id}) }}"
                                     title="{{ disabled ? 'Réactiver' : 'Désactiver' }} le dispositif" data-toggle="tooltip" data-placement="bottom"
@@ -72,15 +72,15 @@
                             </div>
                         {% endif %}
                         <div class="float-right">
-                            <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">{% if EDIT_MODE %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+                            <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
                         </div>
                     </div>
                 </div>
             {% endif %}
-            {{ form_end(form, {"render_rest": false}) }}
+            {{ form_end(form, {'render_rest': false}) }}
         </section>
 
-        {% if EDIT_MODE %}
+        {% if edit_mode %}
         <hr>
         <section>
             <h2 class="h4 my-4">Services rattachés</h2>
@@ -125,5 +125,5 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags("device") }}
+    {{ encore_entry_script_tags('device') }}
 {% endblock javascripts %}

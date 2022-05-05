@@ -1,6 +1,6 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
 
-{% set title = "Indicateurs quotidiens d'activité" %}
+{% set title = 'Indicateurs quotidiens d\'activité' %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -16,18 +16,18 @@
                         <thead>
                             <tr>
                                 {% set items = {
-                                    "Date" : "i.date",
-                                    "Nb de personnes créées" : "i.nbCreatedPeople",
-                                    "Nb de groupes créés" : "i.nbCreatedGroups",
-                                    "Nb de suivis créés" : "i.nbCreatedSupportsGroup",
-                                    "Nb de suivis mis à jour" : "i.nbUpdatedSupportsGroup",
-                                    "Nb d'évaluations créés" : "i.nbCreatedEvaluations",
-                                    "Nb de notes créées" : "i.nbNCreatedotes",
-                                    "Nb de notes mises à jour" : "i.nbUpdatedNotes",
-                                    "Nb de RDVs créés" : "i.nbCreatedRdvs",
-                                    "Nb de documents créés" : "i.nbCreatedDocuments",
-                                    "Nb de paiements créés" : "i.nbCreatedPayments",
-                                    "Nb de connexions" : "i.nbConnections",
+                                    'Date': 'i.date',
+                                    'Nb de personnes créées': 'i.nbCreatedPeople',
+                                    'Nb de groupes créés': 'i.nbCreatedGroups',
+                                    'Nb de suivis créés': 'i.nbCreatedSupportsGroup',
+                                    'Nb de suivis mis à jour': 'i.nbUpdatedSupportsGroup',
+                                    'Nb d\'évaluations créés': 'i.nbCreatedEvaluations',
+                                    'Nb de notes créées': 'i.nbNCreatedotes',
+                                    'Nb de notes mises à jour': 'i.nbUpdatedNotes',
+                                    'Nb de RDVs créés': 'i.nbCreatedRdvs',
+                                    'Nb de documents créés': 'i.nbCreatedDocuments',
+                                    'Nb de paiements créés': 'i.nbCreatedPayments',
+                                    'Nb de connexions': 'i.nbConnections',
                                 } %}
                                 {% for key, item in items %}
                                     <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(indicators, key, item ) }}</th>

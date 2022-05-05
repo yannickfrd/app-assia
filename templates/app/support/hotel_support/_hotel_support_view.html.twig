@@ -12,7 +12,7 @@
     </div>
     {% if hotel_support %}
         {{ view_div.get(hotel_support.statusToString 
-            ~ (support.service.coefficient == YES and support.status == STATUS_IN_PROGRESS ? ' (coeff. ' ~ support.coefficient ~ ')' )
+            ~ (support.service.coefficient == YES and support.status == status_in_progress ? ' (coeff. ' ~ support.coefficient ~ ')' )
             ~ (hotel_support.reasonNoInclusionToString ? ' (' ~ hotel_support.reasonNoInclusionToString ~ ')')
             ~ (support.endStatus ? ' (' ~ support.endStatusToString ~ ')' ), 'Status') }}
     {% endif %}

@@ -1,9 +1,9 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
 
 {% set person = form.vars.value %}
-{% set EDIT_MODE = person.id != null %}
-{% set title = EDIT_MODE ? person.fullname ~ (person.usename ? " (" ~ person.usename ~ ")") : 'Création d\'une personne' %}
-{% set form_person = EDIT_MODE ? form : form.person %}
+{% set edit_mode = person.id != null %}
+{% set title = edit_mode ? person.fullname ~ (person.usename ? ' (' ~ person.usename ~ ')') : 'Création d\'une personne' %}
+{% set form_person = edit_mode ? form : form.person %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -12,21 +12,21 @@
     <div class="container">
 
         {% if people_group is defined %}
-            {% include "app/people/peopleGroup/_nav_group.html.twig" %}
+            {% include 'app/people/peopleGroup/_nav_group.html.twig' %}
         {% else %}
             <h1 class="h2 mb-3">{{ title }}</h1>
-            {% include "model/_flash_message.html.twig" %}
+            {% include 'model/_flash_message.html.twig' %}
             <div id="js-msg-flash-content"></div>
         {% endif %}
         
-        {% if EDIT_MODE %}
+        {% if edit_mode %}
             <div class="small text-secondary my-2">
-                <p> Créé le {{ person.createdAt|date("d/m/Y à H:i") }}
-                    {{ person.createdBy ? " par " ~ person.createdBy.fullname }}
+                <p> Créé le {{ person.createdAt|date('d/m/Y à H:i') }}
+                    {{ person.createdBy ? ' par ' ~ person.createdBy.fullname }}
                     <span id="js-person-updated">
                         {% if person.createdAt != person.updatedAt %}
-                            (modifié le {{ person.updatedAt|date("d/m/Y à H:i") }}
-                            {{ person.updatedBy ? " par " ~ person.updatedBy.fullname }})
+                            (modifié le {{ person.updatedAt|date('d/m/Y à H:i') }}
+                            {{ person.updatedBy ? ' par ' ~ person.updatedBy.fullname }})
                         {% endif %}
                     </span>
                 </p>
@@ -37,7 +37,7 @@
 
         <hr>
 
-        <div id="person" data-edit-mode="{{ EDIT_MODE ? 'true' : 'false' }}">
+        <div id="person" data-edit-mode="{{ edit_mode ? 'true' : 'false' }}">
 
             {{ form_start(form) }}
 
@@ -52,7 +52,7 @@
                 <div class="col-md-6"> {{ form_row(form_person.gender) }}</div>
             </div>
 
-            {% if false == EDIT_MODE %}
+            {% if false == edit_mode %}
                 <hr class="my-4">
                 <div class="row mb-3">
                     {% if people_group is not defined %}
@@ -60,7 +60,7 @@
                         <div class="col-md-6">{{ form_row(form.peopleGroup.nbPeople) }}</div>
                     {% endif %}
                     <div class="col-md-6">{{ form_row(form.role) }}</div>
-                    {% if people_group is defined and (app.request.get("supports") or people_group.supports|length > 0) %}
+                    {% if people_group is defined and (app.request.get('supports') or people_group.supports|length > 0) %}
                         <div class="col-md-6">
                             <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} mb-3 pl-2 text-dark">
                                 {{ form_row(form.addPersonToSupport) }}
@@ -76,7 +76,7 @@
                 <hr class="my-4">
             {% endif %}
 
-            {% if false == EDIT_MODE or canEdit %}
+            {% if false == edit_mode or canEdit %}
                 <div class="row mb-3">
                     <div class="col-md-6">{{ form_row(form_person.phone1) }}</div>
                     <div class="col-md-6">{{ form_row(form_person.phone2) }}</div>
@@ -89,9 +89,9 @@
 
                 <div class="row mb-3">
                     <div class="col-md-12">
-                        {% if true == EDIT_MODE and is_granted("ROLE_ADMIN") %}
+                        {% if true == edit_mode and is_granted('ROLE_ADMIN') %}
                             <div class="float-left d-flex">
-                            {% set msg_confirm = "Êtes-vous vraiment sûr de vouloir supprimer cette personne ?" %}
+                            {% set msg_confirm = 'Êtes-vous vraiment sûr de vouloir supprimer cette personne ?' %}
                                 <a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('person_delete', {'id': person.id}) }}"
                                     data-toggle="tooltip" title="Supprimer la personne" data-placement="bottom"
                                     onclick="if(window.confirm('{{ msg_confirm }}')){return true;}else{return false;}"><span
@@ -99,7 +99,7 @@
                             </div>
                         {% endif %}
                         <div class="mb-4 float-right">
-                            {% if true == EDIT_MODE %}
+                            {% if true == edit_mode %}
                                 <button type="submit" id="updatePerson" name="updatePerson" class="btn btn-{{ theme_color }} shadow"
                                     data-url="{{ path('person_edit_ajax', {'id': person.id}) }}">
                                     <span class="fas fa-save mr-2"></span>Mettre à jour
@@ -115,13 +115,13 @@
             {% endif %}
 
             {{ form_row(form._token) }}
-            {{ form_end(form, {"render_rest": false}) }}
+            {{ form_end(form, {'render_rest': false}) }}
 
         </div>
 
         <hr>
 
-        {% if EDIT_MODE %}
+        {% if edit_mode %}
 
             <section>
 
@@ -165,9 +165,9 @@
                                         <td class="d-table-row d-sm-table-cell">{{ role.peopleGroup.nbPeople }}</td>
                                         <td>{{ role.roleToString }}{% if role.head %} (DP){% endif %}</td>
                                         <td class="d-none d-sm-table-cell">
-                                            {{ role.peopleGroup.createdAt|date("d/m/Y H:i") }}</td>
+                                            {{ role.peopleGroup.createdAt|date('d/m/Y H:i') }}</td>
                                         <td class="d-none d-sm-table-cell">
-                                            {{ role.peopleGroup.updatedAt|date("d/m/Y H:i") }}</td>
+                                            {{ role.peopleGroup.updatedAt|date('d/m/Y H:i') }}</td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -182,22 +182,22 @@
 
             <hr>
 
-            {% include "app/support/_partials/_supports_index_table.html.twig" %}
+            {% include 'app/support/_partials/_supports_index_table.html.twig' %}
 
         {% endif %}
 
     </div>
 
     {% if people_group is defined %}
-        {% include "app/support/_partials/_support_new_modal.html.twig" %}
+        {% include 'app/support/_partials/_support_new_modal.html.twig' %}
     {% endif %}
 
-    {% if EDIT_MODE == true %}
-        {% include "app/people/person/_new_group_form_modal.html.twig" %}
+    {% if edit_mode == true %}
+        {% include 'app/people/person/_new_group_form_modal.html.twig' %}
     {% endif %}
 
 {% endblock %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags("person") }}
+    {{ encore_entry_script_tags('person') }}
 {% endblock javascripts %}

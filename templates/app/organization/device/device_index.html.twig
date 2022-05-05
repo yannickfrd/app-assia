@@ -1,6 +1,6 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
 
-{% set IS_ROLE_SUPER_ADMIN = is_granted("ROLE_SUPER_ADMIN") %}
+{% set is_role_super_admin = is_granted('ROLE_SUPER_ADMIN') %}
 
 {% block title %}Dispositifs{% endblock %}
 
@@ -8,11 +8,11 @@
 
     <section class="mt-0 mb-4">
         <div class="container">
-            {% include "model/_flash_message.html.twig" %}
+            {% include 'model/_flash_message.html.twig' %}
             <h1 class="h2 mb-3">Dispositifs</h1>
         </div>
 
-            {% include "app/organization/device/_search_devices.html.twig" %}
+            {% include 'app/organization/device/_search_devices.html.twig' %}
 
         <div class="container">
             <div class="row align-items-baseline">
@@ -31,31 +31,31 @@
                         <tr>
                             <th scope="col" class="align-middle th-w-20"></th>
                             <th scope="col" class="align-middle th-w-120">
-                                {{ knp_pagination_sortable(devices, "Nom du dispositif", "d.name") }}
+                                {{ knp_pagination_sortable(devices, 'Nom du dispositif', 'd.name') }}
                             </th>
                             <th scope="col" class="align-middle th-w-120">
-                                {{ knp_pagination_sortable(devices, "Coefficient", "d.coefficient") }}
+                                {{ knp_pagination_sortable(devices, 'Coefficient', 'd.coefficient') }}
                             </th>
                             <th scope="col" class="align-middle th-w-120">
-                                {{ knp_pagination_sortable(devices, "Hébergement", "d.place") }}
+                                {{ knp_pagination_sortable(devices, 'Hébergement', 'd.place') }}
                             </th>
                             <th scope="col" class="align-middle th-w-150">
-                                {{ knp_pagination_sortable(devices, "Description", "d.comment") }}  
+                                {{ knp_pagination_sortable(devices, 'Description', 'd.comment') }}  
                             </th>
                             <th scope="col" class="align-middle th-w-80">
-                                {{ knp_pagination_sortable(devices, "Date de création", "d.createdAt") }}
+                                {{ knp_pagination_sortable(devices, 'Date de création', 'd.createdAt') }}
                             </th>
                             <th scope="col" class="align-middle th-w-80">
-                                {{ knp_pagination_sortable(devices, "Créé par", "d.createdBy") }}
+                                {{ knp_pagination_sortable(devices, 'Créé par', 'd.createdBy') }}
                             </th>
                             <th scope="col" class="align-middle th-w-80">
-                                {{ knp_pagination_sortable(devices, "Date de mise à jour", "d.updatedAt") }}
+                                {{ knp_pagination_sortable(devices, 'Date de mise à jour', 'd.updatedAt') }}
                             </th>
                             <th scope="col" class="align-middle th-w-80">
-                                {{ knp_pagination_sortable(devices, "Modifié par", "d.updatedBy") }}
+                                {{ knp_pagination_sortable(devices, 'Modifié par', 'd.updatedBy') }}
                             </th>
                             <th scope="col" class="align-middle th-w-60">
-                                {{ knp_pagination_sortable(devices, "Désactivé", "d.disabledAt") }}
+                                {{ knp_pagination_sortable(devices, 'Désactivé', 'd.disabledAt') }}
                             </th>
                         </tr>
                     </thead>
@@ -64,7 +64,7 @@
                         {% for device in devices %}
                         <tr class="{% if device.disabled %}text-secondary{% endif %}">
                             <td  class="align-middle" scope="row">
-                                {% if IS_ROLE_SUPER_ADMIN %}
+                                {% if is_role_super_admin %}
                                     <a href="{{ path('admin_device_edit', {'id': device.id}) }}"
                                         class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip"
                                         data-placement="bottom" title="Voir la fiche du dispositif">
@@ -76,11 +76,11 @@
                             <td class="align-middle">{{ device.coefficient }}</td>
                             <td class="align-middle">{{ device.placeToString }}</td>
                             <td class="align-middle">{{ device.comment }}</td>
-                            <td class="align-middle">{{ device.createdAt|date("d/m/Y H:i") }}</td>
+                            <td class="align-middle">{{ device.createdAt|date('d/m/Y H:i') }}</td>
                             <td class="align-middle">{{ device.createdBy ? device.createdBy.fullname }}</td>
-                            <td class="align-middle">{{ device.updatedAt|date("d/m/Y H:i") }}</td>
+                            <td class="align-middle">{{ device.updatedAt|date('d/m/Y H:i') }}</td>
                             <td class="align-middle">{{ device.updatedBy ? device.updatedBy.fullname }}</td>
-                            <td class="align-middle">{{ device.disabledAt ? "Oui" }}</td>
+                            <td class="align-middle">{{ device.disabledAt ? 'Oui' }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -89,7 +89,7 @@
             <div class="navigation">
                 {{ knp_pagination_render(devices) }}
             </div>
-            {% if IS_ROLE_SUPER_ADMIN %}
+            {% if is_role_super_admin %}
                 <p><a href="{{ path('admin_device_new') }}" class="btn btn-{{ theme_color }} btn-sm shadow js-create-device">
                     <span class="fas fa-plus-square mr-2"></span>Créer un nouveau dispositif</a>
                 </p>
@@ -99,5 +99,5 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags("search") }}
+    {{ encore_entry_script_tags('search') }}
 {% endblock javascripts %}

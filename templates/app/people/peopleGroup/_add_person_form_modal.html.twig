@@ -6,7 +6,7 @@
     {{ form_start(form_role_person) }}
     <p>Avant d'ajoPuter la persone au groupe, merci de préciser son rôle dans le groupe.</p>
     {{ form_row(form_role_person.role) }}
-    {% if app.request.get("supports") %}
+    {% if app.request.get('supports') %}
         <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} mb-3 pl-2 text-dark">
             {{ form_row(form_role_person.addPersonToSupport) }}
         </div>

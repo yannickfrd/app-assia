@@ -4,8 +4,8 @@
 
 {% set service = form.vars.value %}
 {% set disabled = service.isDisabled %}
-{% set EDIT_MODE = service.id != null %}
-{% set title = EDIT_MODE ? service.name ~ (disabled ? ' (désactivé)') : 'Nouveau service' %}
+{% set edit_mode = service.id != null %}
+{% set title = edit_mode ? service.name ~ (disabled ? ' (désactivé)') : 'Nouveau service' %}
 {% set is_granted_edit_service = is_granted('EDIT', service) %}
 
 {% block title %}{{ title }}{% endblock %}
@@ -18,7 +18,7 @@
 
         <section>
             <h1 class="h2 mb-3">{{ title }}</h1>
-            {% if EDIT_MODE %}
+            {% if edit_mode %}
                 <div class="small text-secondary">
                     <p> Créé le {{ service.createdAt|date('d/m/Y à H:i') }}{{ service.createdBy ? ' par ' ~ service.createdBy.fullname }}
                         {% if service.updatedAt %}(modifié le {{ service.updatedAt|date('d/m/Y à H:i') }}{{ service.updatedBy ? ' par ' ~ service.updatedBy.fullname }}{% endif %})
@@ -90,7 +90,7 @@
             {% if is_granted_edit_service %}
                 <div class="row mb-3">
                     <div class="col-md-12">
-                        {% if EDIT_MODE and is_granted('DISABLE', service) %}
+                        {% if edit_mode and is_granted('DISABLE', service) %}
                             <div class="float-left d-flex">
                                 <a class="mr-3 btn btn-{{ disabled ? 'success' : 'danger' }} d-block" href="{{ path('service_disable', {'id':form.vars.value.id}) }}"
                                     title="{{ disabled ? 'Réactiver' : 'Désactiver' }} le service" data-toggle="tooltip" data-placement="bottom"
@@ -99,14 +99,14 @@
                             </div>
                         {% endif %}
                         <div class="float-right">
-                            <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">{% if EDIT_MODE %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+                            <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
                         </div>
                     </div>
                 </div>
             {% endif %}
         </section>
 
-        {% if EDIT_MODE %}
+        {% if edit_mode %}
             {% include 'app/organization/service/_service_sub_services.html.twig' with {accordion_id: 'sub_services'} %}
         {% endif %}
 
@@ -119,7 +119,7 @@
             {% endif %}
         {% endif %}
 
-        {% if EDIT_MODE %}
+        {% if edit_mode %}
             {% include 'app/organization/service/_service_places.html.twig' with {accordion_id: 'places'} %}
             {% include 'app/organization/service/_service_users.html.twig' with {accordion_id: 'users'} %}
         {% endif %}
@@ -129,7 +129,7 @@
         {% endif %}
 
         {{ form_row(form._token) }}
-        {{ form_end(form, {"render_rest": false}) }}
+        {{ form_end(form, {'render_rest': false}) }}
 
         {% if is_granted_edit_service %}
             {% if form.organizations is defined and is_granted('ROLE_SUPER_ADMIN') %}
@@ -137,7 +137,7 @@
             {% endif %}
         {% endif %}
 
-        {% if EDIT_MODE %}
+        {% if edit_mode %}
             {% include 'app/organization/service/_service_tags.html.twig' with {accordion_id: 'tags'} %}
         {% endif %}
     </div>

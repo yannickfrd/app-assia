@@ -1,10 +1,10 @@
-{% extends "model/_search.html.twig" %}
+{% extends 'model/_search.html.twig' %}
 
-{% form_theme form "bootstrap_4_layout.html.twig" %}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
 
 {% block search_form %}
 
-    {% if is_granted("ROLE_SUPER_ADMIN") %}
+    {% if is_granted('ROLE_SUPER_ADMIN') %}
         <div class="col-auto my-1 px-1">{{ form_widget(form.service.poles) }}</div>
     {% endif %}
     {% if form.service.devices.vars.choices|length > 1 %}

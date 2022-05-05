@@ -1,8 +1,8 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
 
 {% set support_group_places = support.placeGroups %}
-{% set SERVICE_TYPE_HOTEL = constant("App\\Entity\\Organization\\Service::SERVICE_TYPE_HOTEL") %}
-{% set title = support.service.type == SERVICE_TYPE_HOTEL ? "Prises en charge hôtelières" : "Logement/hébergement" %}
+{% set SERVICE_TYPE_HOTEL = constant('App\\Entity\\Organization\\Service::SERVICE_TYPE_HOTEL') %}
+{% set title = support.service.type == SERVICE_TYPE_HOTEL ? 'Prises en charge hôtelières' : 'Logement/hébergement' %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -10,10 +10,10 @@
 
 	<div class="container">
 
-		{% include "app/support/_partials/_support_nav.html.twig" %}
+		{% include 'app/support/_partials/_support_nav.html.twig' %}
 
-		{% include "model/_flash_message.html.twig" %}
-		<a href="{{ path("support_place_new", {'id': support.id}) }}" class="btn btn-{{ theme_color }} btn-sm mb-3">
+		{% include 'model/_flash_message.html.twig' %}
+		<a href="{{ path('support_place_new', {'id': support.id}) }}" class="btn btn-{{ theme_color }} btn-sm mb-3">
 			<span class="fas fa-plus-square mr-2"></span>Ajouter une prise en charge</a>
 		{% if support_group_places|length == 0 %}
 			<p>Aucun hébergement.</p>
@@ -50,10 +50,10 @@
 									{% endif %}
 								</td>
 								<td class="align-middle">{{ placeGroup.supportGroup.device.name }}</td>
-								<td class="align-middle">{{ placeGroup.startDate ? placeGroup.startDate|date("d/m/Y") }}</td>
-								<td class="align-middle">{{ placeGroup.endDate ? placeGroup.endDate|date("d/m/Y") }}</td>
+								<td class="align-middle">{{ placeGroup.startDate ? placeGroup.startDate|date('d/m/Y') }}</td>
+								<td class="align-middle">{{ placeGroup.endDate ? placeGroup.endDate|date('d/m/Y') }}</td>
 								<td class="align-middle">{{ placeGroup.endReasonToString }}
-									{{ placeGroup.supportGroup.endStatus ? " (" ~ placeGroup.supportGroup.endStatusToString ~ ")" }}
+									{{ placeGroup.supportGroup.endStatus ? ' (' ~ placeGroup.supportGroup.endStatusToString ~ ')' }}
 								</td>
 								<td class="align-middle">{{ placeGroup.placePeople|length }}</td>
 								<td class="align-middle">{{ placeGroup.place ? placeGroup.place.fullAddress }}</td>

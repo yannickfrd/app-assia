@@ -16,19 +16,19 @@
             </thead>
             <tbody>
                 {% for form_person_place in form.placePeople.children|sort ((a, b) => b.vars.value.person.age <=> a.vars.value.person.age) %}
-                    {% set supportPerson = form_person_place.vars.value.supportPerson %}
-                    {% set head = supportPerson ? supportPerson.head %}
+                    {% set support_person = form_person_place.vars.value.supportPerson %}
+                    {% set is_header = support_person ? support_person.head %}
                     {% set placePersonId = form_person_place.vars.value.id %}
                     <tr data-place-person="{{ placePersonId }}">
                         <td class="align-middle font-weight-bold text-center" scope="row">
-                            {% if head %}<i class="fas fa-dot-circle"></i>{% endif %}</td>
+                            {% if is_header %}<i class="fas fa-dot-circle"></i>{% endif %}</td>
                         <td class="align-middle">{{ form_person_place.vars.data.person.fullname }}</td>
                         <td class="align-middle">{{ form_widget(form_person_place.startDate) }}</td>
                         <td class="align-middle">{{ form_widget(form_person_place.endDate) }}</td>
                         <td class="align-middle">{{ form_widget(form_person_place.endReason) }}</td>
                         <td class="align-middle">{{ form_widget(form_person_place.commentEndReason) }}</td>
                         <td class="align-middle text-center">
-							{% if false == head %}
+							{% if not is_header %}
                                 <button data-action="remove" data-url="{{ path('support_person_place_delete', {'id': placePersonId}) }}" 
                                     class="btn btn-danger btn-sm shadow my-1" title="Supprimer la personne de la prise en charge" 
                                     data-toggle="modal" data-target="#modal-block">
@@ -44,10 +44,10 @@
     <div class="row">
         <div class="col-md-12">
             <div class="float-right">
-                <button type="submit" id="send2" name="send2" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>{% if EDIT_MODE %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+                <button type="submit" id="send2" name="send2" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
             </div>
         </div>
     </div>
 </section>
 
-{% include "app/place_group/_place_person_remove_modal.html.twig" %}
+{% include 'app/place_group/_place_person_remove_modal.html.twig' %}

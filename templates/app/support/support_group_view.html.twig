@@ -2,8 +2,8 @@
 
 {% import 'macros/div_view.html.twig' as view_div %}
 
-{% set ROLE_CHILD = constant('App\\Entity\\People\\RolePerson::ROLE_CHILD') %}
-{% set STATUS_IN_PROGRESS = constant('App\\Entity\\Support\\SupportGroup::STATUS_IN_PROGRESS') %}
+{% set role_child = constant('App\\Entity\\People\\RolePerson::ROLE_CHILD') %}
+{% set status_in_progress = constant('App\\Entity\\Support\\SupportGroup::STATUS_IN_PROGRESS') %}
 {% set SERVICE_TYPE_AVDL = constant('App\\Entity\\Organization\\Service::SERVICE_TYPE_AVDL') %}
 {% set SERVICE_TYPE_HOTEL = constant('App\\Entity\\Organization\\Service::SERVICE_TYPE_HOTEL') %}
 {% set support_people = support.supportPeople|filter(s => s.status == support.status) %}

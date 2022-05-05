@@ -1,4 +1,4 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
 
 {% block title %}Pôles{% endblock %}
 
@@ -8,7 +8,7 @@
 
         <div class="container">
 
-            {% include "model/_flash_message.html.twig" %}
+            {% include 'model/_flash_message.html.twig' %}
             <h1 class="h2 mb-3">Pôles</h1>
 
             <div class="row align-items-baseline">
@@ -24,13 +24,13 @@
                         <tr>
                             <th scope="col" class="align-middle th-w-20"></th>
                             <th scope="col" class="align-middle th-w-120">
-                                {{ knp_pagination_sortable(poles, "Pôle", "p.name") }}
+                                {{ knp_pagination_sortable(poles, 'Pôle', 'p.name') }}
                             </th>
                             <th scope="col" class="align-middle th-w-120">Téléphone</th>
                             <th scope="col" class="align-middle th-w-150">Email</th>
                             <th scope="col" class="align-middle th-w-120">Adresse</th>
                             <th scope="col" class="align-middle th-w-120">
-                                {{ knp_pagination_sortable(poles, "Ville", "p.city") }}
+                                {{ knp_pagination_sortable(poles, 'Ville', 'p.city') }}
                             </th>
                         </tr>
                     </thead>
@@ -39,7 +39,7 @@
                         {% for pole in poles %}
                         <tr>
                             <td scope="row" class="align-middle text-center">
-                                {% if is_granted("EDIT", pole) %}
+                                {% if is_granted('EDIT', pole) %}
                                 <a href="{{ path('pole_edit', {'id':pole.id}) }}"
                                     class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
                                     title="Voir la fiche du pôle"><span class="fas fa-eye"></span>
@@ -56,8 +56,8 @@
                     </tbody>
                 </table>
             </div>
-            {% if is_granted("ROLE_SUPER_ADMIN") %}
-            <p><a href="{{ path("pole_new") }}" class="btn btn-{{ theme_color }} btn-sm shadow js-create-pole">
+            {% if is_granted('ROLE_SUPER_ADMIN') %}
+            <p><a href="{{ path('pole_new') }}" class="btn btn-{{ theme_color }} btn-sm shadow js-create-pole">
                     <span class="fas fa-plus-square mr-2"></span>Créer un nouveau pôle</a>
             </p>
             {% endif %}

@@ -1,8 +1,8 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
 
 {% set pole = form.vars.value %}
-{% set EDIT_MODE = pole.id != null %}
-{% set title = EDIT_MODE ? pole.name : 'Nouveau pôle' %}
+{% set edit_mode = pole.id != null %}
+{% set title = edit_mode ? pole.name : 'Nouveau pôle' %}
 {% block title %}{{ title }}{% endblock %}
 
 {% block body %}
@@ -10,11 +10,11 @@
     <div class="container">
 
         <h1 class="h2 mb-3">{{ title }}</h1>
-        {% if EDIT_MODE %}
+        {% if edit_mode %}
         <div class="small text-secondary">
-            <p> Créé le {{ pole.createdAt|date("d/m/Y à H:i") }}
-                {{ pole.createdBy ?  " par " ~ pole.createdBy.fullname }}
-                {% if pole.updatedAt %}(modifié le {{ pole.updatedAt|date("d/m/Y à H:i") }}
+            <p> Créé le {{ pole.createdAt|date('d/m/Y à H:i') }}
+                {{ pole.createdBy ?  ' par ' ~ pole.createdBy.fullname }}
+                {% if pole.updatedAt %}(modifié le {{ pole.updatedAt|date('d/m/Y à H:i') }}
                 {{ pole.updatedBy ? pole.updatedBy.fullname }}){% endif %}
             </p>
         </div>
@@ -31,7 +31,7 @@
 
         <hr>
 
-        {% include "model/_flash_message.html.twig" %}
+        {% include 'model/_flash_message.html.twig' %}
         <div id="js-msg-flash-content"></div>
 
         {{ form_start(form) }}
@@ -61,16 +61,16 @@
         <div class="row mb-3">
             <div class="col-md-12">
                 <div class="mb-4 float-right">
-                    <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">{% if EDIT_MODE %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+                    <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
                 </div>
             </div>
         </div>
 
         {{ form_row(form._token) }}
-        {{ form_end(form, {"render_rest": false}) }}
+        {{ form_end(form, {'render_rest': false}) }}
 
 
-        {% if EDIT_MODE %}
+        {% if edit_mode %}
 
         <hr>
 
@@ -113,7 +113,7 @@
             {% endif %}
             <div class="row">
                 <div class="col-md-12">
-                    <a href="{{ path("service_new") }}" class="btn btn-{{ theme_color }} btn-sm shadow"><span
+                    <a href="{{ path('service_new') }}" class="btn btn-{{ theme_color }} btn-sm shadow"><span
                             class="fas fa-plus-square mr-2"></span>Créer un nouveau service</a>
                 </div>
             </div>
@@ -127,5 +127,5 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags("directory") }}
+    {{ encore_entry_script_tags('directory') }}
 {% endblock javascripts %}

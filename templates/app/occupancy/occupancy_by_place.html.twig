@@ -1,16 +1,16 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
 
 {% block title %}Taux d'occupation{% endblock %}
 
 {% block body %}
 
     <div class="container">
-        {% include "model/_flash_message.html.twig" %}
+        {% include 'model/_flash_message.html.twig' %}
         <h1 class="h2 mb-3">Taux d'occupation<span class="fas fa-angle-right fa-xs mx-1"></span><!--
-        -->{{ service ? service.name : " Groupes de places" }}</h1>
+        -->{{ service ? service.name : ' Groupes de places' }}</h1>
     </div>
 
-    {% include "app/occupancy/_search_occupancy.html.twig" %}
+    {% include 'app/occupancy/_search_occupancy.html.twig' %}
 
     <div class="container">
         <div class="row">
@@ -20,8 +20,8 @@
                     {% if service %}Retour {% else %}Accès{% endif %} aux taux d'ocupation par service.</a>
                 </p>
                 {% set interval = date(search.start).diff(date(search.end)) %}
-                <p>Période du {{ search.start|date("d/m/Y") }} au {{ search.end|date("d/m/Y") }},<!--
-                --> soit {{ interval.days }} nuit{{ interval.days > 1 ? "s" }}.</p>
+                <p>Période du {{ search.start|date('d/m/Y') }} au {{ search.end|date('d/m/Y') }},<!--
+                --> soit {{ interval.days }} nuit{{ interval.days > 1 ? 's' }}.</p>
             </div>
         </div>
         <div class="row">
@@ -59,9 +59,9 @@
                                     <td class="align-middle text-right">{{ place.occupancyDays|number }}</td>
                                     <td class="align-middle text-right">{{ place.averageCapacity|round(2) }}</td>
                                     <td class="align-middle text-right">{{ place.averageOccupancy|round(2) }}</td>
-                                    {% set ocupancyRate = ratio(place.occupancyDays, place.capacityDays) %}
-                                    <td class="align-middle alert-{{ color(ocupancyRate) }} text-right">
-                                        <span class="font-weight-bold font-italic">{{ ocupancyRate|percent }}</span>
+                                    {% set ocupancy_rate = ratio(place.occupancyDays, place.capacityDays) %}
+                                    <td class="align-middle alert-{{ color(ocupancy_rate) }} text-right">
+                                        <span class="font-weight-bold font-italic">{{ ocupancy_rate|percent }}</span>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -75,9 +75,9 @@
                                 <td class="align-middle text-right">{{ datas.occupancyDays|number }}</td>
                                 <td class="align-middle text-right">{{ datas.averageCapacity|round(2) }}</td>
                                 <td class="align-middle text-right">{{ datas.averageOccupancy|round(2) }}</td>
-                                {% set ocupancyRate = ratio(datas.occupancyDays, datas.capacityDays) %}
-                                <td class="align-middle alert-{{ color(ocupancyRate) }} text-right">
-                                    <span class="font-weight-bold font-italic">{{ ocupancyRate|percent }}</span>
+                                {% set ocupancy_rate = ratio(datas.occupancyDays, datas.capacityDays) %}
+                                <td class="align-middle alert-{{ color(ocupancy_rate) }} text-right">
+                                    <span class="font-weight-bold font-italic">{{ ocupancy_rate|percent }}</span>
                                 </td>
                             </tr>
                         </tfoot>
@@ -90,6 +90,6 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags("search") }}
-    {{ encore_entry_script_tags("occupancy") }}
+    {{ encore_entry_script_tags('search') }}
+    {{ encore_entry_script_tags('occupancy') }}
 {% endblock javascripts %}

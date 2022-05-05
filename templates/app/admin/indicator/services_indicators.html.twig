@@ -1,6 +1,6 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
 
-{% set title = "Indicateurs d'activité des services" %}
+{% set title = 'Indicateurs d\'activité des services' %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -10,7 +10,7 @@
         <h1 class="h2 mb-3">{{ title }}</h1>
     </div>
 
-    {% include "app/admin/indicator/_service_indicator_search.html.twig" %}
+    {% include 'app/admin/indicator/_service_indicator_search.html.twig' %}
     
     <div class="container">
         <div class="row">
@@ -20,12 +20,12 @@
                         <tr>
                             <th scope="row" class="align-middle th-w-140">Service</th>
                             {% set items = [
-                                "Nb de TS",
-                                "Nb de suivis mis à jour",
-                                "Nb de notes créés", 
-                                "Nb de rendez-vous créés", 
-                                "Nb de documents créés", 
-                                "Nb de paiements créés",
+                                'Nb de TS',
+                                'Nb de suivis mis à jour',
+                                'Nb de notes créés', 
+                                'Nb de rendez-vous créés', 
+                                'Nb de documents créés', 
+                                'Nb de paiements créés',
                             ] %}
                             {% for item in items %}
                                 <th class="align-middle text-right th-w-100 w-min-80">{{ item }}</th>
@@ -34,43 +34,43 @@
                         </tr>
                     </thead>
                     <tbody>
-                    {% set sumActiveSupports = 0 %}
-                    {% set sumNotes = 0 %}
-                    {% set sumRdvs = 0 %}
-                    {% set sumDocuments = 0 %}
-                    {% set sumPaiments = 0 %}
+                    {% set sum_active_supports = 0 %}
+                    {% set sum_notes = 0 %}
+                    {% set sum_rdvs = 0 %}
+                    {% set sum_documents = 0 %}
+                    {% set sum_paiments = 0 %}
                         {% for service_id, service in servicesIndicators %}  
-                            {% set nbSupports = service["nbSupports"] %}
-                            {% if nbSupports > 0 %}
-                                {% set sumActiveSupports = sumActiveSupports + nbSupports %}
-                                {% set sumNotes = sumNotes + service["nbNotes"] %}
-                                {% set sumRdvs = sumRdvs + service["nbRdvs"] %}
-                                {% set sumDocuments = sumDocuments + service["nbDocuments"] %}
-                                {% set sumPaiments = sumPaiments + service["nbPayments"] %}
-                                {% set nbTrCollapsed = service.subServices|length %}
-                                <tr class="{{ nbTrCollapsed ? 'cursor-pointer' }}" data-toggle="collapse" data-target=".multi-collapse-service-{{ service_id }}" 
+                            {% set nb_supports = service['nbSupports'] %}
+                            {% if nb_supports > 0 %}
+                                {% set sum_active_supports = sum_active_supports + nb_supports %}
+                                {% set sum_notes = sum_notes + service['nbNotes'] %}
+                                {% set sum_rdvs = sum_rdvs + service['nbRdvs'] %}
+                                {% set sum_documents = sum_documents + service['nbDocuments'] %}
+                                {% set sum_paiments = sum_paiments + service['nbPayments'] %}
+                                {% set nb_collapsed_tr = service.subServices|length %}
+                                <tr class="{{ nb_collapsed_tr ? 'cursor-pointer' }}" data-toggle="collapse" data-target=".multi-collapse-service-{{ service_id }}" 
                                     aria-expanded="false" aria-controls="multi-collapse-service-{{ service_id }}">
-                                    <td scope="row" class="align-middle"><span class="font-weight-bold">{{ service["name"] }}</span>
-                                        {% if nbTrCollapsed %}<span class="badge badge-pill badge-secondary">{{ nbTrCollapsed }}</span>{% endif %}
+                                    <td scope="row" class="align-middle"><span class="font-weight-bold">{{ service['name'] }}</span>
+                                        {% if nb_collapsed_tr %}<span class="badge badge-pill badge-secondary">{{ nb_collapsed_tr }}</span>{% endif %}
                                     </td>
-                                    <td class="align-middle text-right">{{ service["nbSocialWorkers"]|number }}</td>
-                                    <td class="align-middle text-right">{{ nbSupports|number }}</td>
-                                    <td class="align-middle text-right">{{ service["nbNotes"]|number }}</td>
-                                    <td class="align-middle text-right">{{ service["nbRdvs"]|number }}</td>
-                                    <td class="align-middle text-right">{{ service["nbDocuments"]|number }}</td>
-                                    <td class="align-middle text-right">{{ service["nbPayments"]|number }}</td>
+                                    <td class="align-middle text-right">{{ service['nbSocialWorkers']|number }}</td>
+                                    <td class="align-middle text-right">{{ nb_supports|number }}</td>
+                                    <td class="align-middle text-right">{{ service['nbNotes']|number }}</td>
+                                    <td class="align-middle text-right">{{ service['nbRdvs']|number }}</td>
+                                    <td class="align-middle text-right">{{ service['nbDocuments']|number }}</td>
+                                    <td class="align-middle text-right">{{ service['nbPayments']|number }}</td>
                                     <td></td>
                                 </tr>
                                 {% for sub_service_id, sub_service in service.subServices %}
-                                    {% set nbSupports = sub_service["nbSupports"] %}
+                                    {% set nb_supports = sub_service['nbSupports'] %}
                                     <tr class="collapse multi-collapse-service-{{ service_id }}" id="multi-collapse-service-{{ service_id }}">
-                                        <td scope="row" class="align-middle">{{ service["name"] }}<span class="fa fa-chevron-right mx-1"></span>{{ sub_service["name"] }}</td>
+                                        <td scope="row" class="align-middle">{{ service['name'] }}<span class="fa fa-chevron-right mx-1"></span>{{ sub_service['name'] }}</td>
                                         <td class="align-middle text-right">-</td>
-                                        <td class="align-middle text-right">{{ sub_service["nbSupports"]|number }}</td>
-                                        <td class="align-middle text-right">{{ sub_service["nbNotes"]|number }}</td>
-                                        <td class="align-middle text-right">{{ sub_service["nbRdvs"]|number }}</td>
-                                        <td class="align-middle text-right">{{ sub_service["nbDocuments"]|number }}</td>
-                                        <td class="align-middle text-right">{{ sub_service["nbPayments"]|number }}</td>
+                                        <td class="align-middle text-right">{{ nb_supports|number }}</td>
+                                        <td class="align-middle text-right">{{ sub_service['nbNotes']|number }}</td>
+                                        <td class="align-middle text-right">{{ sub_service['nbRdvs']|number }}</td>
+                                        <td class="align-middle text-right">{{ sub_service['nbDocuments']|number }}</td>
+                                        <td class="align-middle text-right">{{ sub_service['nbPayments']|number }}</td>
                                         <td></td>
                                     </tr>
                                 {% endfor %}
@@ -81,11 +81,11 @@
                         <tr class="font-weight-bold">
                             <td class="align-middle text-center">Total</td>
                             <td class="align-middle text-right"></td>
-                            <td class="align-middle text-right">{{ sumActiveSupports|number }}</td>
-                            <td class="align-middle text-right">{{ sumNotes|number }}</td>
-                            <td class="align-middle text-right">{{ sumRdvs|number }}</td>
-                            <td class="align-middle text-right">{{ sumDocuments|number }}</td>
-                            <td class="align-middle text-right">{{ sumPaiments|number }}</td>
+                            <td class="align-middle text-right">{{ sum_active_supports|number }}</td>
+                            <td class="align-middle text-right">{{ sum_notes|number }}</td>
+                            <td class="align-middle text-right">{{ sum_rdvs|number }}</td>
+                            <td class="align-middle text-right">{{ sum_documents|number }}</td>
+                            <td class="align-middle text-right">{{ sum_paiments|number }}</td>
                             <td></td>
                         </tr>
                     </tfooter>
@@ -97,6 +97,6 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags("home") }}
-    {{ encore_entry_script_tags("search") }}
+    {{ encore_entry_script_tags('home') }}
+    {{ encore_entry_script_tags('search') }}
 {% endblock javascripts %}

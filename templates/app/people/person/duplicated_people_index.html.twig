@@ -1,4 +1,4 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
 
 {% block title %}Doublons | Personnes{% endblock %}
 
@@ -7,11 +7,11 @@
     <section class="my-0">
 
         <div class="container">
-            {% include "model/_flash_message.html.twig" %}
+            {% include 'model/_flash_message.html.twig' %}
             <h1 class="h2 mb-3">Doublons | Personnes</h1>
         </div>
 
-        {% include "app/people/person/_duplicated_people_search_form.html.twig" %}
+        {% include 'app/people/person/_duplicated_people_search_form.html.twig' %}
 
         <div class="container">
 
@@ -49,19 +49,19 @@
                                         <span class="fas fa-eye"></span>
                                     </a>
                                 </td>
-                                <td>{{ person.lastname }} {{ person.usename ? " (" ~ person.usename ~ ")" }}</td>
+                                <td>{{ person.lastname }} {{ person.usename ? ' (' ~ person.usename ~ ')' }}</td>
                                 <td class="text-capitalize">{{ person.firstname }}</td>
-                                <td>{% if person.birthdate %} {{ person.birthdate|date("d/m/Y") }}<br/>
+                                <td>{% if person.birthdate %} {{ person.birthdate|date('d/m/Y') }}<br/>
                                     ({{ person.age }}{% if person.age > 1 %} ans{% elseif person.age %}
                                     an{% endif %}){% endif %}</td>
-                                <td>{% if person.gender == constant("GENDER_FEMALE", person) %}
+                                <td>{% if person.gender == constant('GENDER_FEMALE', person) %}
                                         <span class="fas fa-female fa-2x text-dark" data-placement="bottom" title="Femme"></span>
-                                    {% elseif person.gender == constant("GENDER_MALE", person) %}
+                                    {% elseif person.gender == constant('GENDER_MALE', person) %}
                                         <span class="fas fa-male fa-2x text-dark" data-placement="bottom" title="Homme"></span>
                                     {% endif %} 
                                 </td>
-                                <td>{{ person.createdAt|date("d/m/Y H:i") }}</td>
-                                <td>{{ person.updatedAt|date("d/m/Y H:i") }}</td>
+                                <td>{{ person.createdAt|date('d/m/Y H:i') }}</td>
+                                <td>{{ person.updatedAt|date('d/m/Y H:i') }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -74,5 +74,5 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags("search") }}
+    {{ encore_entry_script_tags('search') }}
 {% endblock javascripts %}

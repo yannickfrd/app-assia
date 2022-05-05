@@ -68,7 +68,7 @@
                                 <th scope="col" class="align-middle th-w-20"></th>
                             {% elseif is_granted('ROLE_ADMIN') %}
                                 <th scope="col" class="align-middle th-w-20">
-                                    {{ knp_pagination_sortable(supports, "Complétude de l'évaluation", 'sg.evaluationScore') }}
+                                    {{ knp_pagination_sortable(supports, 'Complétude de l\'évaluation', 'sg.evaluationScore') }}
                                 </th>
                             {% endif %}
                         </tr>

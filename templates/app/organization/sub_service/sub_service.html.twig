@@ -2,8 +2,8 @@
 
 {% set sub_service = form.vars.value %}
 {% set disabled = sub_service.isDisabled %}
-{% set EDIT_MODE = sub_service.id != null %}
-{% set title = EDIT_MODE ? 'Sous-service ' ~ sub_service.name ~ (disabled ? ' (désactivé)') : 'Nouveau sous-service' %}
+{% set edit_mode = sub_service.id != null %}
+{% set title = edit_mode ? 'Sous-service ' ~ sub_service.name ~ (disabled ? ' (désactivé)') : 'Nouveau sous-service' %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -12,7 +12,7 @@
     <div class="container">
 
         <h1 class="h2 mb-3">{{ title }}</h1>
-        {% if EDIT_MODE %}
+        {% if edit_mode %}
             <div class="small text-secondary">
                 <p> Créé le {{ sub_service.createdAt|date('d/m/Y à H:i') }}{{ sub_service.createdBy ? ' par ' ~ sub_service.createdBy.fullname }}
                     (modifié le {{ sub_service.updatedAt|date('d/m/Y à H:i') }}{{ sub_service.updatedBy ? ' par ' ~ sub_service.updatedBy.fullname }})
@@ -55,7 +55,7 @@
             
             <div class="row mb-3">
                 <div class="col-md-12"> 
-                    {% if EDIT_MODE and is_granted('DISABLE', sub_service.service) %}
+                    {% if edit_mode and is_granted('DISABLE', sub_service.service) %}
                         <div class="float-left d-flex">
                             <a class="mr-3 btn btn-{{ disabled ? 'success' : 'danger' }} d-block" href="{{ path('sub_service_disable', {'id': sub_service.id}) }}"
                                 title="{{ disabled ? 'Réactiver' : 'Désactiver' }} le sous-service" data-toggle="tooltip" data-placement="bottom"
@@ -64,14 +64,14 @@
                         </div>
                     {% endif %}
                     <div class="mb-4 float-right">
-                        <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">{% if EDIT_MODE %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+                        <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
                     </div>
                 </div>
             </div>
             {{ form_end(form) }}
         </section>
 
-        {% if EDIT_MODE == true and service.place == YES %}
+        {% if edit_mode == true and service.place == YES %}
             <section>
                 <h2 class="h4 my-4">Groupes de places rattachés</h2>
                 <p class="align-middle">{{ places|length }} groupe{% if places|length > 0 %}s{% endif %}<!--

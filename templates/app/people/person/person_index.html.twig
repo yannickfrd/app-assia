@@ -1,6 +1,6 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
 
-{% set title = app.request.get("_route") == "people" ? "Rechercher une personne" : (people_group is defined ? "Ajouter" : "Nouveau suivi : rechercher") ~ " une personne" %}
+{% set title = app.request.get('_route') == 'people' ? 'Rechercher une personne' : (people_group is defined ? 'Ajouter' : 'Nouveau suivi : rechercher') ~ ' une personne' %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -10,14 +10,14 @@
 
         <div class="container">
             {% if people_group is defined %}
-                {% include "app/people/peopleGroup/_nav_group.html.twig" %}
+                {% include 'app/people/peopleGroup/_nav_group.html.twig' %}
             {% else %}
                 <h1 class="h2 mb-3">{{ title }}</h1>
-                {% include "model/_flash_message.html.twig" %}
+                {% include 'model/_flash_message.html.twig' %}
             {% endif %}
         </div>
 
-        {% include "app/people/person/_people_search_form.html.twig" %}
+        {% include 'app/people/person/_people_search_form.html.twig' %}
 
         <div class="container">
             <div class="row justify-content-center">
@@ -32,7 +32,7 @@
             </div>
             <div class="row justify-content-center">
                 <div class="col-12 col-lg-8">
-                    <div class="table-responsive {% if app.request.get("_route") != "people" %}d-none{% endif %}">     
+                    <div class="table-responsive {% if app.request.get('_route') != 'people' %}d-none{% endif %}">     
                         <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
                             <thead>
                                 <tr>
@@ -65,16 +65,16 @@
                                         <td class="align-middle">
                                             <a href="{{ path('person_show_slug', {'id':person.id, 'slug':person.slug}) }}"
                                                 class="text-{{ theme_color }} text-uppercase font-weight-bold">
-                                                {{ person.lastname }}{{ person.usename ? " (" ~ person.usename ~ ")" }}
+                                                {{ person.lastname }}{{ person.usename ? ' (' ~ person.usename ~ ')' }}
                                             </a>
                                         </td>
                                         <td class="align-middle text-capitalize">{{ person.firstname }}</td>
-                                        <td>{{ person.birthdate ? person.birthdate|date("d/m/Y") }}</td>
+                                        <td>{{ person.birthdate ? person.birthdate|date('d/m/Y') }}</td>
                                         <td>{{ person.birthdate ? person.age ~ ' an' ~ (person.age > 1 ? 's') }}</td>
                                         <td class="align-middle">
-                                            {% if person.gender == constant("GENDER_FEMALE", person) %}
+                                            {% if person.gender == constant('GENDER_FEMALE', person) %}
                                                 <span class="fas fa-female fa-2x text-dark" data-placement="bottom" title="Femme"></span>
-                                            {% elseif person.gender == constant("GENDER_MALE", person) %}
+                                            {% elseif person.gender == constant('GENDER_MALE', person) %}
                                                 <span class="fas fa-male fa-2x text-dark" data-placement="bottom" title="Homme"></span>
                                             {% endif %} 
                                         </td>
@@ -89,16 +89,16 @@
     </section>
 
     {% if form_role_person is defined %}
-        {% include "app/people/peopleGroup/_add_person_form_modal.html.twig" %}
+        {% include 'app/people/peopleGroup/_add_person_form_modal.html.twig' %}
     {% endif %}
 
     {% if siSiaoLoginForm is defined %}
-        {% include "app/si_siao/_si_siao_login_modal.html.twig" with {"modal_id": "modal-si-siao-login"} %}
-        {% include "app/si_siao/_si_siao_group_modal.html.twig" %}
+        {% include 'app/si_siao/_si_siao_login_modal.html.twig' with {'modal_id': 'modal-si-siao-login'} %}
+        {% include 'app/si_siao/_si_siao_group_modal.html.twig' %}
     {% endif %}
 
 {% endblock %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags("listPeople") }}
+    {{ encore_entry_script_tags('listPeople') }}
 {% endblock javascripts %}

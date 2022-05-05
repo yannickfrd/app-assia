@@ -1,7 +1,7 @@
-{% set nbPersonnes = personnes|length %}
+{% set nb_personnes = personnes|length %}
 
 <div class="row my-3">
-    <div class="col-md-6">{{ composition ? composition.libelle : 'Non renseigné' }}, {{ nbPersonnes }} personne{{ nbPersonnes > 1 ? "s" }}</div>
+    <div class="col-md-6">{{ composition ? composition.libelle : 'Non renseigné' }}, {{ nb_personnes }} personne{{ nb_personnes > 1 ? 's' }}</div>
     <div class="col-md-6">ID Groupe SI-SIAO : {{ idGroupe }}</div>
 </div>
 
@@ -27,7 +27,7 @@
                             <td class="align-middle">{{ personne.prenom }}</td>
                             <td class="align-middle">{{ personne.datenaissance is defined ? 
                                 personne.datenaissance : (is_dp ? dp.datenaissance) }}</td>
-                            <td class="align-middle">{{ personne.age }} an{{ personne.age > 1 ? "s" }}</td>
+                            <td class="align-middle">{{ personne.age }} an{{ personne.age > 1 ? 's' }}</td>
                             <td class="align-middle">{{ personne.sexe|capitalize }}</td>
                             <td class="align-middle">{{ personne.situation.libelle }}</td>
                         </tr>

@@ -3,13 +3,13 @@
     <div class="mb-4">
         {% for key, eval_person in people %}
             {% set prefix_id = 'evaluation_evaluationPeople_' ~ key ~ '_' ~ entity_name ~ 'Person' %}
-            {% set supportPerson = eval_person.vars.value.supportPerson %}
-            {% set active = supportPerson.status == support.status %}
+            {% set support_person = eval_person.vars.value.supportPerson %}
+            {% set active = support_person.status == support.status %}
             <button type="button" id="heading_{{ prefix_id }}" class="btn btn-outline-{{ active ? theme_color : 'secondary' }} 
                 {{ active == false ? 'delete' }} {{ loop.first ? 'active' }} mb-2" 
-                title="{{ supportPerson.roleToString }} - {{ supportPerson.person.age }} an(s)" 
+                title="{{ support_person.roleToString }} - {{ support_person.person.age }} an(s)" 
                 data-toggle="collapse" data-target="#collapse_{{ prefix_id }}" aria-expanded="false" 
-                aria-controls="collapse_{{ prefix_id }}" data-person-key="{{ key }}">{{ supportPerson.person.fullname }}
+                aria-controls="collapse_{{ prefix_id }}" data-person-key="{{ key }}">{{ support_person.person.fullname }}
             </button>
         {% endfor %}
     </div>

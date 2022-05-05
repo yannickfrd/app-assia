@@ -1,4 +1,4 @@
-{% set modal_id = "modal-new-group" %}
+{% set modal_id = 'modal-new-group' %}
 
 {% extends 'model/_modal_dialog.html.twig' %}
 
@@ -26,6 +26,6 @@
 </div>
 
 {{ form_row(form_new_group._token) }}
-{{ form_end(form_new_group, {"render_rest": false}) }}
+{{ form_end(form_new_group, {'render_rest': false}) }}
 
 {% endblock %}

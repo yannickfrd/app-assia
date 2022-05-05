@@ -109,7 +109,7 @@
                                         <div class="text-dark calendar-day">{{ day|date('d') }}
                                             {{ calendar.otherMonth(day) }}
                                         </div>
-                                        {% if day|date("Y-m-d") in rdvs %}
+                                        {% if day|date('Y-m-d') in rdvs %}
                                             {% for rdv in rdvs[day|date('Y-m-d')] %}
                                                 <a class="calendar-event bg-{{ theme_color }} text-light"
                                                     id="rdv-{{ rdv.id }}" href="{{ path('rdv_show', {'id': rdv.id}) }}"

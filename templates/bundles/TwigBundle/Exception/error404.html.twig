@@ -1,4 +1,4 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
 
 {% block title %}Erreur 404{% endblock %}
 
@@ -6,7 +6,7 @@
 <div class="container">
     <section class="row min-vh-80">
         <div class="m-auto text-center">
-            {% include "model/_flash_message.html.twig" %}
+            {% include 'model/_flash_message.html.twig' %}
             <h1 class="h2 mb-4">Erreur 404<br/>Page non trouvée</h1>
             <p class="mb-4">La page demandée n'existe pas.</p>
             <a href="{{ path('home') }}" class="btn btn-{{ theme_color }} mt-2 p-2 shadow">Retour à la page d'accueil</a>

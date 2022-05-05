@@ -4,17 +4,17 @@
 
 {% block body %}
 
-	{% set ROLE_CHILD = constant('App\\Entity\\People\\RolePerson::ROLE_CHILD') %}
+	{% set role_child = constant('App\\Entity\\People\\RolePerson::ROLE_CHILD') %}
 	{% set GENDER_FEMALE = constant('App\\Entity\\People\\Person::GENDER_FEMALE') %}
 	{% set SERVICE_TYPE_AVDL = support.service.type == constant('App\\Entity\\Organization\\Service::SERVICE_TYPE_AVDL') %}
 	{% set SERVICE_TYPE_HOTEL = support.service.type == constant('App\\Entity\\Organization\\Service::SERVICE_TYPE_HOTEL') %}
 	
 	{% set title = 'Évaluation sociale' %}
 	{% set evaluation_group = form.vars.value %}
-	{% set EDIT_MODE = evaluation_group.updatedAt != evaluation_group.createdAt %}
+	{% set edit_mode = evaluation_group.updatedAt != evaluation_group.createdAt %}
 	{% set evaluation_people = form.evaluationPeople %}
 	{% set nb_people = evaluation_people|length %}
-	{% set people_adults = evaluation_people|filter(e => e.vars.value.supportPerson.role != ROLE_CHILD) %}
+	{% set people_adults = evaluation_people|filter(e => e.vars.value.supportPerson.role != role_child) %}
 	{% set people_over_16 = evaluation_people|filter(e => e.vars.value.supportPerson.person.age >= 16) %}
 	{% set nb_children = nb_people - people_adults|length %}
 
@@ -28,7 +28,7 @@
 		<div id="js-msg-flash-content"></div>
 
 		<div class="row mb-3 align-items-center">
-			<div class="col-md-6 my-2 small text-secondary" data-edit-mode="{{ EDIT_MODE ? 'true' : 'false' }}">
+			<div class="col-md-6 my-2 small text-secondary" data-edit-mode="{{ edit_mode ? 'true' : 'false' }}">
 				Créée le {{ evaluation_group.createdAt|date('d/m/Y à H:i') }}
 				<span id="evaluation-updateAt">
 					{% if evaluation_group.updatedAt != evaluation_group.createdAt %}

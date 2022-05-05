@@ -1,4 +1,4 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
 
 {% block title %}Sauvegarde et export base de données{% endblock %}
 
@@ -10,7 +10,7 @@
 
         <hr>
 
-        {% include "model/_flash_message.html.twig" %}
+        {% include 'model/_flash_message.html.twig' %}
         
         <div id="js-msg-flash-content"></div>
         <a href="{{ path('database_backup_create') }}" class="btn btn-{{ theme_color }} btn-sm shadow my-1" 
@@ -33,10 +33,10 @@
                             <thead>
                                 <tr>
                                     <th scope="row" class="align-middle th-w-20"></th>
-                                    <th scope="col" class="align-middle th-w-140">{{ knp_pagination_sortable(backups, "Nom", "b.createdAt") }}</th>
-                                    <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(backups, "Taille", "b.size") }}</th>
-                                    <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(backups, "Créé le", "b.createdAt") }}</th>
-                                    <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(backups, "Créé par", "u.lastname") }}</th>
+                                    <th scope="col" class="align-middle th-w-140">{{ knp_pagination_sortable(backups, 'Nom', 'b.createdAt') }}</th>
+                                    <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(backups, 'Taille', 'b.size') }}</th>
+                                    <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(backups, 'Créé le', 'b.createdAt') }}</th>
+                                    <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(backups, 'Créé par', 'u.lastname') }}</th>
                                     <th scope="col" class="align-middle th-w-20"></th>
                                 </tr>
                             </thead>
@@ -49,9 +49,9 @@
                                                 data-toggle="tooltip" data-placement="bottom" title="Exporter la sauvegarde de la base de données"><span class="fas fa-file-download"></span>
                                             </a>
                                         </td>
-                                        <td class="align-middle js-backup-title">Sauvegarde {{ backup.createdBy ? 'manuelle' : 'automatique' }} du {{ backup.createdAt|date("d/m/Y") }}</td>
+                                        <td class="align-middle js-backup-title">Sauvegarde {{ backup.createdBy ? 'manuelle' : 'automatique' }} du {{ backup.createdAt|date('d/m/Y') }}</td>
                                         <td class="align-middle js-backup-size text-right">{{ (backup.size / 1000 / 1000)|round }} Mo</td>
-                                        <td class="align-middle js-backup-createdAt">{{ backup.createdAt|date("d/m/Y H:i") }}</td>
+                                        <td class="align-middle js-backup-createdAt">{{ backup.createdAt|date('d/m/Y H:i') }}</td>
                                         <td class="align-middle js-backup-createdAt">{{ backup.createdBy ? backup.createdBy.fullname : '[Système]' }}</td>
                                         <td class="align-middle text-center">
                                             <a href="{{ path('database_backup_delete', {'id':backup.id}) }}" class="js-delete btn btn-danger btn-sm shadow my-1"
