@@ -38,7 +38,7 @@ final class DeviceController extends AbstractController
         $form = $this->createForm(DeviceSearchType::class, $search = new DeviceSearch())
             ->handleRequest($request);
 
-        return $this->render('app/organization/device/listDevices.html.twig', [
+        return $this->render('app/organization/device/device_index.html.twig', [
             'deviceSearch' => $search,
             'form' => $form->createView(),
             'devices' => $pagination->paginate($this->deviceRepo->findDevicesQuery($search, $this->getUser()), $request),
@@ -63,7 +63,7 @@ final class DeviceController extends AbstractController
             $this->addFlash('success', 'Le dispositif est créé.');
         }
 
-        return $this->render('app/organization/device/device.html.twig', [
+        return $this->render('app/organization/device/device_edit.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -85,7 +85,7 @@ final class DeviceController extends AbstractController
             $this->addFlash('success', 'Les modifications sont enregistrées.');
         }
 
-        return $this->render('app/organization/device/device.html.twig', [
+        return $this->render('app/organization/device/device_edit.html.twig', [
             'form' => $form->createView(),
         ]);
     }

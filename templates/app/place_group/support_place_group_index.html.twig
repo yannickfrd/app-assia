@@ -1,0 +1,78 @@
+{% extends "base.html.twig" %}
+
+{% set support_group_places = support.placeGroups %}
+{% set SERVICE_TYPE_HOTEL = constant("App\\Entity\\Organization\\Service::SERVICE_TYPE_HOTEL") %}
+{% set title = support.service.type == SERVICE_TYPE_HOTEL ? "Prises en charge hôtelières" : "Logement/hébergement" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+
+	<div class="container">
+
+		{% include "app/support/_partials/_support_nav.html.twig" %}
+
+		{% include "model/_flash_message.html.twig" %}
+		<a href="{{ path("support_place_new", {'id': support.id}) }}" class="btn btn-{{ theme_color }} btn-sm mb-3">
+			<span class="fas fa-plus-square mr-2"></span>Ajouter une prise en charge</a>
+		{% if support_group_places|length == 0 %}
+			<p>Aucun hébergement.</p>
+		{% else %}
+			<div class="table-responsive mb-5">
+				<table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+					<thead>
+						<tr>
+							<th scope="row" class="align-middle th-w-20"></th>
+							<th scope="col" class="align-middle th-w-150">{% if support.service.type == SERVICE_TYPE_HOTEL %}Hôtel{% else %}Nom du groupe de places{% endif %}</th>
+							<th scope="col" class="align-middle th-w-120">Dispositif</th>
+							<th scope="col" class="align-middle th-date">Date de début</th>
+							<th scope="col" class="align-middle th-date">Date de fin</th>
+							<th scope="col" class="align-middle th-w-140">Motif de fin</th>
+							<th scope="col" class="align-middle th-w-140">Nombre de personnes prises en charge</th>
+							<th scope="col" class="align-middle th-w-180">Adresse</th>
+							<th scope="col" class="align-middle th-w-20"></th>
+						</tr>
+					</thead>
+
+					<tbody id="container-placeGroups" data-support="{{ support.id }}">
+						{% for placeGroup in support_group_places|sort ((a, b) => b.startDate <=> a.startDate) %}
+							<tr id="placeGroup-{{ placeGroup.id }}">
+								<td scope="row" class="align-middle text-center">
+									<a href="{{ path('support_place_edit', {'id': placeGroup.id}) }}" 
+										class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-toggle="tooltip" data-placement="bottom" 
+										title="Voir le détail de l'hébergement"><span class="fas fa-eye"></span>
+									</a>
+								</td>
+								<td class="align-middle">
+									{% if placeGroup.place %}
+										<a href="{{ path('place_edit', {'id': placeGroup.place.id}) }}"
+										class="text-{{ theme_color }}">{{ placeGroup.place.name }}</a>
+									{% endif %}
+								</td>
+								<td class="align-middle">{{ placeGroup.supportGroup.device.name }}</td>
+								<td class="align-middle">{{ placeGroup.startDate ? placeGroup.startDate|date("d/m/Y") }}</td>
+								<td class="align-middle">{{ placeGroup.endDate ? placeGroup.endDate|date("d/m/Y") }}</td>
+								<td class="align-middle">{{ placeGroup.endReasonToString }}
+									{{ placeGroup.supportGroup.endStatus ? " (" ~ placeGroup.supportGroup.endStatusToString ~ ")" }}
+								</td>
+								<td class="align-middle">{{ placeGroup.placePeople|length }}</td>
+								<td class="align-middle">{{ placeGroup.place ? placeGroup.place.fullAddress }}</td>
+								<td class="align-middle text-center">
+									<a href="{{ path('support_group_people_place_delete', {'id': placeGroup.id}) }}" 
+										class="btn btn-danger btn-sm shadow my-1" data-placement="bottom" title="Supprimer cette prise en charge" 
+										onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer cette prise en charge ?'))
+										{return true;}else{return false;}"><span class="fas fa-trash-alt"></span>
+									</a>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		{% endif %}
+
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+{% endblock javascripts %}

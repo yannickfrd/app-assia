@@ -15,7 +15,7 @@ class UserNotification extends MailNotifier
         $email = (new TemplatedEmail())
             ->to($user->getEmail())
             ->subject('Application Assia'.('prod' != $this->appVersion ? ' version DEMO' : null).' : Création de compte | '.$user->getFullname())
-            ->htmlTemplate('emails/newUserEmail.html.twig')
+            ->htmlTemplate('emails/email_new_user.html.twig')
             ->context([
                 'user' => $user,
                 'app_version' => $this->appVersion,
@@ -32,7 +32,7 @@ class UserNotification extends MailNotifier
         $email = (new TemplatedEmail())
             ->to($user->getEmail())
             ->subject('Application Assia : Réinitialisation du mot de passe | '.$user->getFullname())
-            ->htmlTemplate('emails/reinitPasswordEmail.html.twig')
+            ->htmlTemplate('emails/email_reinit_password.html.twig')
             ->context(['user' => $user]);
 
         if ($this->send($email)) {

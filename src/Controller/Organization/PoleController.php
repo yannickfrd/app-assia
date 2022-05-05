@@ -33,7 +33,7 @@ final class PoleController extends AbstractController
      */
     public function listPole(Request $request, Pagination $pagination): Response
     {
-        return $this->render('app/organization/pole/listPoles.html.twig', [
+        return $this->render('app/organization/pole/pole_index.html.twig', [
             'poles' => $pagination->paginate($this->poleRepo->findPolesQuery(), $request) ?? null,
         ]);
     }
@@ -58,7 +58,7 @@ final class PoleController extends AbstractController
             return $this->redirectToRoute('pole_edit', ['id' => $pole->getId()]);
         }
 
-        return $this->render('app/organization/pole/pole.html.twig', [
+        return $this->render('app/organization/pole/pole_edit.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -81,7 +81,7 @@ final class PoleController extends AbstractController
             $this->addFlash('success', 'Les modifications sont enregistrées.');
         }
 
-        return $this->render('app/organization/pole/pole.html.twig', [
+        return $this->render('app/organization/pole/pole_edit.html.twig', [
             'form' => $form->createView(),
         ]);
     }

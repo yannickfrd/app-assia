@@ -1,0 +1,69 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Pôles{% endblock %}
+
+{% block body %}
+
+    <section class="mt-0 mb-4">
+
+        <div class="container">
+
+            {% include "model/_flash_message.html.twig" %}
+            <h1 class="h2 mb-3">Pôles</h1>
+
+            <div class="row align-items-baseline">
+                <div class="col-md-4 count align-middle">
+                    <p class="align-middle">{{ poles.getTotalItemCount|number }} <!--
+                    -->pôle{% if poles.getTotalItemCount > 1 %}s{% endif %}.</p>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="align-middle th-w-20"></th>
+                            <th scope="col" class="align-middle th-w-120">
+                                {{ knp_pagination_sortable(poles, "Pôle", "p.name") }}
+                            </th>
+                            <th scope="col" class="align-middle th-w-120">Téléphone</th>
+                            <th scope="col" class="align-middle th-w-150">Email</th>
+                            <th scope="col" class="align-middle th-w-120">Adresse</th>
+                            <th scope="col" class="align-middle th-w-120">
+                                {{ knp_pagination_sortable(poles, "Ville", "p.city") }}
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for pole in poles %}
+                        <tr>
+                            <td scope="row" class="align-middle text-center">
+                                {% if is_granted("EDIT", pole) %}
+                                <a href="{{ path('pole_edit', {'id':pole.id}) }}"
+                                    class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
+                                    title="Voir la fiche du pôle"><span class="fas fa-eye"></span>
+                                </a>
+                                {% endif %}
+                            </td>
+                            <td class="align-middle">{{ pole.name }}</td>
+                            <td class="align-middle">{{ pole.phone1}}</td>
+                            <td class="align-middle">{{ pole.email }}</td>
+                            <td class="align-middle">{{ pole.address }}</td>
+                            <td class="align-middle">{{ pole.city }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% if is_granted("ROLE_SUPER_ADMIN") %}
+            <p><a href="{{ path("pole_new") }}" class="btn btn-{{ theme_color }} btn-sm shadow js-create-pole">
+                    <span class="fas fa-plus-square mr-2"></span>Créer un nouveau pôle</a>
+            </p>
+            {% endif %}
+            
+        </div>
+
+    </section>
+
+{% endblock %}

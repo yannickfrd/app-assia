@@ -13,10 +13,10 @@
 		{% if support.id %}
 			{% include 'app/support/_partials/_support_nav.html.twig' %}
 		{% else %}
-			{% include 'app/people/peopleGroup/_navGroup.html.twig' %}
+			{% include 'app/people/peopleGroup/_nav_group.html.twig' %}
 		{% endif %}
 
-		{% include 'model/_msgFlash.html.twig' %}
+		{% include 'model/_flash_message.html.twig' %}
 		<div id="js-msg-flash-content"></div>
 
 		{% if support.service.coefficient == YES and coef_form is defined and is_granted('ROLE_ADMIN') %}

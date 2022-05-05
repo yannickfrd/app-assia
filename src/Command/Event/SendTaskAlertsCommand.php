@@ -112,7 +112,7 @@ class SendTaskAlertsCommand extends Command
             $email = (new TemplatedEmail())
                 ->to($user->getEmail())
                 ->subject('Application Assia | '.$this->getEmailSubject())
-                ->htmlTemplate('emails/task_alert_email.html.twig')
+                ->htmlTemplate('emails/email_task_alert.html.twig')
                 ->context([
                     'user' => $user,
                     'alerts_groups' => $alertsGroups,

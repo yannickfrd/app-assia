@@ -38,7 +38,7 @@ final class DatabaseBackupController extends AbstractController
      */
     public function listBackups(Request $request, Pagination $pagination): Response
     {
-        return $this->render('app/admin/backupDatabase/backupDatabase.html.twig', [
+        return $this->render('app/admin/backup/backup_database.html.twig', [
             'backups' => $pagination->paginate($this->databaseBackupRepo->findBackupsQuery(), $request, 10),
         ]);
     }

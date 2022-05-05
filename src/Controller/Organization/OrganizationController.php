@@ -32,7 +32,7 @@ final class OrganizationController extends AbstractController
      */
     public function listOrganization(Request $request, Pagination $pagination): Response
     {
-        return $this->render('app/organization/organization/listOrganizations.html.twig', [
+        return $this->render('app/organization/organization/organization_index.html.twig', [
             'organizations' => $pagination->paginate($this->organizationRepo->findOrganizationsQuery(), $request) ?? null,
         ]);
     }

@@ -52,7 +52,7 @@ final class ReferentController extends AbstractController
             return $this->createReferent($peopleGroup, $referent, $support);
         }
 
-        return $this->render('app/organization/referent/referent.html.twig', [
+        return $this->render('app/organization/referent/referent_edit.html.twig', [
             'people_group' => $peopleGroup,
             'support' => $support,
             'form' => $form->createView(),
@@ -83,7 +83,7 @@ final class ReferentController extends AbstractController
             $this->discache($referent->getPeopleGroup());
         }
 
-        return $this->render('app/organization/referent/referent.html.twig', [
+        return $this->render('app/organization/referent/referent_edit.html.twig', [
             'people_group' => $referent->getPeopleGroup(),
             'support' => $support_id ? $supportRepo->findSupportById($support_id) : null,
             'form' => $form->createView(),

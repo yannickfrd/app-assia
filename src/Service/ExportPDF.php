@@ -119,7 +119,7 @@ class ExportPDF
 
         $logoPath = $this->getPathImage($logoPath);
 
-        $headerFooter = $renderer->render('pdf/_headerFooterPdf.html.twig', [
+        $headerFooter = $renderer->render('pdf/_header_footer_pdf.html.twig', [
             'logo_path' => $logoPath,
             'header_info' => $title.' | '.$infoAdd,
         ]);

@@ -64,7 +64,7 @@ final class PersonController extends AbstractController
 
         $siSiaoLoginForm = $this->createForm(SiSiaoLoginType::class, new SiSiaoLogin());
 
-        return $this->render('app/people/person/listPeople.html.twig', [
+        return $this->render('app/people/person/person_index.html.twig', [
             'personSearch' => $search,
             'form' => $form->createView(),
             'siSiaoLoginForm' => $siSiaoLoginForm->createView(),
@@ -119,7 +119,7 @@ final class PersonController extends AbstractController
             'attr' => ['supports' => $request->get('supports')],
         ])->handleRequest($request);
 
-        return $this->render('app/people/person/listPeople.html.twig', [
+        return $this->render('app/people/person/person_index.html.twig', [
             'form' => $form->createView(),
             'form_role_person' => $formRolePerson->createView() ?? null,
             'people_group' => $peopleGroup,
@@ -145,7 +145,7 @@ final class PersonController extends AbstractController
             $this->addFlash('danger', "Attention, une erreur s'est produite.");
         }
 
-        return $this->render('app/people/person/person.html.twig', [
+        return $this->render('app/people/person/person_edit.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -180,7 +180,7 @@ final class PersonController extends AbstractController
             $this->addFlash('danger', "Attention, une erreur s'est produite.");
         }
 
-        return $this->render('app/people/person/person.html.twig', [
+        return $this->render('app/people/person/person_edit.html.twig', [
             'people_group' => $peopleGroup,
             'form' => $form->createView(),
         ]);
@@ -207,7 +207,7 @@ final class PersonController extends AbstractController
 
         $supports = $supportRepo->findSupportsOfPerson($person);
 
-        return $this->render('app/people/person/person.html.twig', [
+        return $this->render('app/people/person/person_edit.html.twig', [
             'form' => $form->createView(),
             'people_group' => $peopleGroupRepo->findPeopleGroupById($id),
             'supports' => $supports,
@@ -238,7 +238,7 @@ final class PersonController extends AbstractController
 
         $supports = $supportRepo->findSupportsOfPerson($person);
 
-        return $this->render('app/people/person/person.html.twig', [
+        return $this->render('app/people/person/person_edit.html.twig', [
             'form' => $form->createView(),
             'supports' => $supports,
             'form_new_group' => $formNewGroup->createView(),
@@ -340,7 +340,7 @@ final class PersonController extends AbstractController
         $form = $this->createForm(DuplicatedPeopleType::class, $search = new DuplicatedPeopleSearch())
             ->handleRequest($request);
 
-        return $this->render('app/people/person/listDuplicatedPeople.html.twig', [
+        return $this->render('app/people/person/duplicated_people_index.html.twig', [
             'form' => $form->createView(),
             'people' => $this->personRepo->findDuplicatedPeople($search),
         ]);

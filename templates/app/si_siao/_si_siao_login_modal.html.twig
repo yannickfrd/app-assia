@@ -1,0 +1,33 @@
+{% extends 'model/_modal_dialog.html.twig' %}
+
+{% block modal_title %}Connexion au SI-SIAO{% endblock %}
+
+{% block modal_bg %}bg-light{% endblock %}
+
+{% block modal_body %}
+    <div class="form-signin m-auto">
+        {{ form_start(siSiaoLoginForm, {"action": path("api_sisiao_login_ajax")}) }}
+        <div class="alert alert-danger alert-dismissible mb-3 fade d-none" role="alert">
+            Identifiant SI-SIAO ou mot de passe incorrect.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        {% include "app/si_siao/_si_siao_login_form.html.twig" %}
+
+        <a href="https://sisiao.social.gouv.fr" target="_blank" class="text-{{ theme_color }} mb-4">Mot de passe SI-SIAO oublié ?</a>
+    </div>
+{% endblock %}
+
+{% block modal_footer %}
+    <div class="float-left">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+    </div>
+    <div class="float-right">
+        <button type="submit" id="si-siao-connection" name="si-siao-connection" data-url="{{ path("api_sisiao_check_connection") }}"
+        class="btn btn-lg btn-{{ theme_color }} btn-block shadow">Se connecter</button>
+    </div>
+    {{ form_row(siSiaoLoginForm._token) }}
+    {{ form_end(siSiaoLoginForm) }}
+{% endblock %}

@@ -1,0 +1,131 @@
+{% extends "base.html.twig" %}
+
+{% set pole = form.vars.value %}
+{% set EDIT_MODE = pole.id != null %}
+{% set title = EDIT_MODE ? pole.name : 'Nouveau pôle' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+
+        <h1 class="h2 mb-3">{{ title }}</h1>
+        {% if EDIT_MODE %}
+        <div class="small text-secondary">
+            <p> Créé le {{ pole.createdAt|date("d/m/Y à H:i") }}
+                {{ pole.createdBy ?  " par " ~ pole.createdBy.fullname }}
+                {% if pole.updatedAt %}(modifié le {{ pole.updatedAt|date("d/m/Y à H:i") }}
+                {{ pole.updatedBy ? pole.updatedBy.fullname }}){% endif %}
+            </p>
+        </div>
+        {% else %}
+        <div class="mb-4"></div>
+        {% endif %}
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a class="text-{{ theme_color }}" href="{{ path('poles') }}">Liste des pôles</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Fiche pôle</li>
+            </ol>
+        </nav>
+
+        <hr>
+
+        {% include "model/_flash_message.html.twig" %}
+        <div id="js-msg-flash-content"></div>
+
+        {{ form_start(form) }}
+
+        <div class="row mb-3">
+            <div class="col-md-6">{{ form_row(form.name) }}</div>
+            <div class="col-md-6">{{ form_row(form.organization) }}</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">{{ form_row(form.phone1) }}</div>
+            <div class="col-md-6">{{ form_row(form.email) }}</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">{{ form_row(form.chief) }}</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">{{ form_row(form.location._search) }}</div>
+            <div class="col-md-6">{{ form_row(form.location.address) }}</div>
+            <div class="col-md-6">{{ form_row(form.location.city) }}</div>
+            <div class="col-md-6">{{ form_row(form.location.zipcode) }}</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">{{ form_row(form.color) }}</div>
+            <div class="col-md-6">{{ form_row(form.logoPath) }}</div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <div class="mb-4 float-right">
+                    <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">{% if EDIT_MODE %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+                </div>
+            </div>
+        </div>
+
+        {{ form_row(form._token) }}
+        {{ form_end(form, {"render_rest": false}) }}
+
+
+        {% if EDIT_MODE %}
+
+        <hr>
+
+        <section>
+
+            <h2 class="h4 my-4">Services rattachés</h2>
+            {% if pole.services %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="align-middle th-w-20"></th>
+                            <th scope="col" class="align-middle th-w-150">Nom</th>
+                            <th scope="col" class="align-middle th-w-140">Téléphone</th>
+                            <th scope="col" class="align-middle th-w-140">Email</th>
+                            <th scope="col" class="align-middle th-w-140">Adresse</th>
+                            <th scope="col" class="align-middle th-w-140">Ville</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for service in pole.services %}
+                        <tr>
+                            <td scope="row">
+                                <a href="{{ path('service_edit', {'id':service.id}) }}"
+                                    class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" data-placement="bottom"
+                                    title="Voir la fiche du service">
+                                    <span class="fas fa-eye"></span>
+                                </a>
+                            </td>
+                            <td>{{ service.name }}</td>
+                            <td>{{ service.phone1}}</td>
+                            <td>{{ service.email }}</td>
+                            <td>{{ service.address }}</td>
+                            <td>{{ service.city }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+            <div class="row">
+                <div class="col-md-12">
+                    <a href="{{ path("service_new") }}" class="btn btn-{{ theme_color }} btn-sm shadow"><span
+                            class="fas fa-plus-square mr-2"></span>Créer un nouveau service</a>
+                </div>
+            </div>
+
+        </section>
+
+        {% endif %}
+
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags("directory") }}
+{% endblock javascripts %}

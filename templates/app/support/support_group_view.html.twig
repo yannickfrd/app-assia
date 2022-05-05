@@ -22,7 +22,7 @@
 			</div>
 		</div>
 
-		{% include 'model/_msgFlash.html.twig' %}
+		{% include 'model/_flash_message.html.twig' %}
 		<div id="js-msg-flash-content"></div>
 
 		{% set people_group = support.peopleGroup %}
@@ -162,7 +162,7 @@
 
 		<hr>
 
-		{% include 'app/organization/referent/_historyReferents.html.twig' %}
+		{% include 'app/organization/referent/_group_referent_index.html.twig' %}
 
 		{% if evaluation %}
 			<hr>
