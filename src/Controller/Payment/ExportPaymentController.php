@@ -67,7 +67,7 @@ final class ExportPaymentController extends AbstractController
             'action' => 'send_receipt',
             'alert' => 'success',
             'msg' => 'Le reçu du paiement a été envoyé par email.',
-            'payment' => ['id' => $id]
+            'payment' => ['id' => $id],
         ]);
     }
 }

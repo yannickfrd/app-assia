@@ -23,7 +23,7 @@ class Rdv extends AbstractEvent
 
     public const SERIALIZER_GROUPS = [
         'show_rdv', 'show_created_updated', 'show_tag', 'show_support_group',
-        'show_service', 'show_event', 'show_alert', 'show_user'
+        'show_service', 'show_event', 'show_alert', 'show_user',
     ];
 
     public const TYPE_EVENT = 0;
