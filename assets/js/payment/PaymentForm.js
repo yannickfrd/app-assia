@@ -210,8 +210,6 @@ export default class PaymentForm {
      * @param {Object} payment
      */
     getInfoPaymentElt(payment) {
-        console.log(payment)
-        console.log(payment.updatedBy)
         let htmlContent = `Créé le ${this.paymentManager.formatDatetime(payment.createdAt)} par ${payment.createdBy.fullname}`
         if (payment.createdAt !== payment.updatedAt) {
             htmlContent = htmlContent + `<br/> (modifié le ${this.paymentManager.formatDatetime(payment.updatedAt)} par ${payment.updatedBy.fullname})`

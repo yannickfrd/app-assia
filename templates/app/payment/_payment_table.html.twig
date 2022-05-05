@@ -37,7 +37,8 @@
 
             {% if support is defined %}
                 <th scope="col" class="align-middle th-w-20">{{ knp_pagination_sortable(payments, 'PDF', 'p.pdfGenerateAt') }}</th>
-                <th scope="col" class="align-middle th-w-20">{{ knp_pagination_sortable(payments, 'Mail', 'p.mailSentAt') }}</th>
+                <th scope="col" class="align-middle th-w-20" data-get="mail-sent" data-mail-sent-url="{{ path('payment_send_pdf', {'id': '__id__'}) }}">
+                    {{ knp_pagination_sortable(payments, 'Mail', 'p.mailSentAt') }}</th>
                 <th scope="col" class="align-middle th-w-20"></th>
             {% else %}
                 <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(payments, 'Créé par', 'u.lastname') }}</th>
@@ -113,7 +114,7 @@
                         </a>
                     </td>
                     <td class="align-middle text-center" data-payment="mailSent">
-                        <a class="btn" data-url="{{ path('payment_send_pdf', {'id': payment.id}) }}" data-action="mail-sent" data-toggle="tooltip" data-placement="bottom"
+                        <a href="{{ path('payment_send_pdf', {'id': payment.id}) }}" data-action="mail-sent" data-toggle="tooltip" data-placement="bottom"
                             title="{{ payment.mailSent ? 'Mail envoyé le ' ~ payment.mailSentAt|date('d/m/Y à H:i') }}">
                             <i class="fas fa-envelope{{ payment.mailSent ? '-open text-success' : ' text-secondary' }} fa-lg"></i>
                         </a>

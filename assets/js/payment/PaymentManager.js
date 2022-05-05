@@ -46,7 +46,7 @@ export default class PaymentManager {
         document.querySelectorAll('table#table-payments tbody tr td a[data-action="mail-sent"]')
             .forEach(mailBtnElt => mailBtnElt.addEventListener('click', e => {
                 e.preventDefault()
-                this.requestSentMail(mailBtnElt.dataset.url)
+                this.requestSentMail(mailBtnElt.href)
             }))
 
         document.querySelectorAll('table#table-payments tbody tr button[data-action="delete"]')
@@ -188,6 +188,7 @@ export default class PaymentManager {
         this.paymentForm.saveBtnElt.querySelector('span').textContent = 'Mettre à jour'
 
         const paymentElt = document.createElement('tr')
+        paymentElt.id = 'payment-'+payment.id
         paymentElt.className = 'js-payment'
         paymentElt.innerHTML = this.getPrototypePayment(payment)
 
@@ -199,6 +200,12 @@ export default class PaymentManager {
 
         const showBtnElt = paymentElt.querySelector('button[data-action="show"]')
         showBtnElt.addEventListener('click', () => this.requestShowPayment(showBtnElt))
+
+        document.querySelectorAll('table#table-payments tbody tr td a[data-action="mail-sent"]')
+            .forEach(mailBtnElt => mailBtnElt.addEventListener('click', e => {
+                e.preventDefault()
+                this.requestSentMail(mailBtnElt.href)
+            }))
 
         const btnDeleteElt = paymentElt.querySelector('button[data-action="delete"]')
         btnDeleteElt.addEventListener('click', () => this.confirmBtnElt.dataset.url = btnDeleteElt.dataset.url)
@@ -227,6 +234,9 @@ export default class PaymentManager {
      * @param {Object} payment 
      */
     getPrototypePayment(payment) {
+        const urlMailSend = document.querySelector('table#table-payments thead tr th[data-get="mail-sent"]')
+            .dataset.mailSentUrl.replace('__id__', payment.id)
+
         return `
             <td class="align-middle text-center">
                 <button class="btn btn-${this.themeColor} btn-sm shadow" data-action="show" data-id="${payment.id}" 
@@ -250,7 +260,9 @@ export default class PaymentManager {
                 <span><i class="fas fa-file-pdf text-secondary fa-lg"></i></span>
             </td>
             <td class="align-middle text-center" data-payment="mailSent">
-                <span><i class="fas fa-envelope text-secondary fa-lg"></i></span>
+                <a href="${urlMailSend}" data-action="mail-sent" data-toggle="tooltip" data-placement="bottom">
+                    <i class="fas fa-envelope text-secondary fa-lg"></i>
+                </a>
             </td>
             <td class="align-middle text-center">
                 <button data-url="/payment/${payment.id}/delete" data-action="delete"
@@ -389,10 +401,8 @@ export default class PaymentManager {
      * @param {Object} payment
      */
     updatePaymentPictoMail(payment) {
-        console.log(payment)
         const trElt = document.getElementById('payment-'+payment.id)
         const picto = trElt.querySelector('td a[data-action="mail-sent"] i')
-        console.log(picto)
 
         if (picto.classList.contains('fa-envelope')) {
             picto.classList.replace('fa-envelope', 'fa-envelope-open')
