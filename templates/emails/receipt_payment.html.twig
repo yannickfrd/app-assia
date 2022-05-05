@@ -36,7 +36,7 @@
         {{ support.service.pole.organization.name }}<br/>
         <i>{{ support.subService ? support.subService.phone1 : support.service.phone1 }}</i><br/>
         <i>{{ support.subService ? support.subService.email : support.service.email }}</i><br/><br/>
-        {% set logoPath = support.service.pole.logoPath ?? support.service.pole.logoPath ?? 'images/logo_assia_mail.png'  %}
+        {% set logoPath = support.service.pole.logoPath ?? 'images/logo_assia_mail.png' %}
         <img class="mb-2" src="{{ email.image('@' ~ logoPath) }}" width="120" alt="{{ support.service.pole.organization.name }}">
     </p>
 {% endblock %}

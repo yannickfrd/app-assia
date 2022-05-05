@@ -13,7 +13,7 @@
             </tr>
         {% endif %}
         <tr>
-            <th scope="col" class="align-middle th-w-20"></th>
+            <th scope="col" class="align-middle th-w-20" data-get="show-url" data-show-url="{{path('payment_show', {'id': '__id__'})}}"></th>
             {% if support_is_not_defined %}
                 <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(payments, 'Suivi', 'person.lastname') }}</th>
             {% endif %}

@@ -152,9 +152,8 @@ final class PaymentController extends AbstractController
      *
      * @Route("/payment/{id}/show", name="payment_show", methods="GET")
      */
-    public function show(int $id, PaymentRepository $paymentRepo): JsonResponse
+    public function show(Payment $payment): JsonResponse
     {
-        $payment = $paymentRepo->findPayment($id);
         $this->denyAccessUnlessGranted('VIEW', $payment);
 
         return $this->json([
