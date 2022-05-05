@@ -1,6 +1,6 @@
-{% extends "emails/baseEmail.html.twig" %}
+{% extends 'emails/baseEmail.html.twig' %}
 
-{% set ROLE_CHILD = constant("App\\Entity\\People\\RolePerson::ROLE_CHILD") %}
+{% set ROLE_CHILD = constant('App\\Entity\\People\\RolePerson::ROLE_CHILD') %}
 
 {% block greeting %}
     <p class="mb-4">
@@ -22,8 +22,8 @@
         {% endif %}
         d'un montant de <b>{{ payment.paidAmt|amount }}</b>{#
         #}{% if payment.type in [1, 2] %}{#
-            #} pour la période du <b>{{ payment.startDate|date("d/m/Y") }}</b> au <b>{{ payment.endDate|date("d/m/Y") }}</b> 
-            (soit {{ payment.nbDays }} jour{{ payment.nbDays > 1 ? "s" }}){#
+            #} pour la période du <b>{{ payment.startDate|date('d/m/Y') }}</b> au <b>{{ payment.endDate|date('d/m/Y') }}</b>
+            (soit {{ payment.nbDays }} jour{{ payment.nbDays > 1 ? 's' }}){#
         #}{% endif %}.
     </p>
     <br/>
@@ -36,7 +36,7 @@
         {{ support.service.pole.organization.name }}<br/>
         <i>{{ support.subService ? support.subService.phone1 : support.service.phone1 }}</i><br/>
         <i>{{ support.subService ? support.subService.email : support.service.email }}</i><br/><br/>
-        {% set logoPath = support.service.pole.logoPath ? support.service.pole.logoPath ? 'images/logo_assia_mail.png'  %}
+        {% set logoPath = support.service.pole.logoPath ?? support.service.pole.logoPath ?? 'images/logo_assia_mail.png'  %}
         <img class="mb-2" src="{{ email.image('@' ~ logoPath) }}" width="120" alt="{{ support.service.pole.organization.name }}">
     </p>
 {% endblock %}
