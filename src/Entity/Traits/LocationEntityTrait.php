@@ -76,4 +76,13 @@ trait LocationEntityTrait
 
         return $this;
     }
+
+    public function getFullAddress(): ?string
+    {
+        if (null === $this->address && null === $this->city) {
+            return null;
+        }
+
+        return ($this->address ? $this->address.', ' : '').$this->zipcode.' '.$this->city;
+    }
 }

@@ -71,6 +71,7 @@ class SupportGroup
     public const END_REASONS = [
         100 => 'Accès à une solution d\'hébgt/logt',
         110 => 'Autonome', // AVDL
+        120 => 'Objectif réalisé',
         200 => 'Non adhésion à l\'accompagnement', // 2
         210 => 'Exclusion disciplinaire',
         220 => 'Fin du contrat de séjour',
@@ -91,6 +92,7 @@ class SupportGroup
 
     public const REGULAR_END_REASONS = [
         100 => 'Accès à une solution d\'hébgt/logt',
+        120 => 'Objectif réalisé',
         200 => 'Non adhésion à l\'accompagnement',
         210 => 'Exclusion disciplinaire',
         220 => 'Fin du contrat de séjour',
@@ -293,7 +295,7 @@ class SupportGroup
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Organization\Service", inversedBy="supportGroup")
-     * @Groups({"export", "show_service", "show_rdv"})
+     * @Groups({"export", "show_service"})
      */
     private $service;
 
@@ -1045,7 +1047,7 @@ class SupportGroup
     /**
      * Donne le demandeur principal du suivi.
      *
-     * @Groups({"show_support_group", "show_rdv"})
+     * @Groups("show_support_group")
      */
     public function getHeader(): ?Person
     {

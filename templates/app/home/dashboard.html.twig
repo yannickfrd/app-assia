@@ -6,40 +6,37 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block body %}
+    <div class="container">
 
-  <div class="container">
+        <h1 class="h2 mb-3">{{ title }}</h1>
+        <p class="small text-secondary">Dernière connexion le {{ app.user.lastLogin|date('d/m/Y à H:i') }}</p>
 
-    <h1 class="h2 mb-3">{{ title }}</h1>
-    <p class="small text-secondary">Dernière connexion le {{ app.user.lastLogin|date('d/m/Y à H:i') }}</p>
+        {% include 'model/_msgFlash.html.twig' %}
 
-    {% include 'model/_msgFlash.html.twig' %}
+        <hr>
 
-    <hr>
-
-    <div class="my-5">
-      {% include 'app/admin/managing/_managing_services.html.twig' %}
-          {% if is_social_worker or supports|length > 0 %}
-            {% include 'app/home/_user_support_index.html.twig' with {accordion_id: 'list_supports'} %}
-          {% endif %}
-          {% if is_social_worker or rdvs|length > 0 %}
-            {% include 'app/home/_user_rdv_index.html.twig' with {accordion_id: 'list_rdvs'}  %}
-          {% endif %}
-          {% if is_social_worker or tasks|length > 0 %}
-            {% include 'app/home/_user_task_index.html.twig' with {accordion_id: 'list_tasks'}  %}
-          {% endif %}
-          {% if is_social_worker or notes|length > 0 %}
-            {% include 'app/home/_user_note_index.html.twig' with {accordion_id: 'list_notes'} %}
-          {% endif %}
-          {% if is_granted('ROLE_SUPER_ADMIN') %}
-            {% include 'app/home/_indicators.html.twig' with {accordion_id: 'indicators'} %}
-          {% endif %}
-        {% include 'app/home/_services_indicators.html.twig' with {accordion_id: 'list_services'} %}
+        <div class="my-5">
+            {% include 'app/admin/managing/_managing_services.html.twig' %}
+            {% if is_social_worker or supports|length > 0 %}
+                {% include 'app/home/_user_support_index.html.twig' with {accordion_id: 'list_supports'} %}
+            {% endif %}
+            {% if is_social_worker or rdvs|length > 0 %}
+                {% include 'app/home/_user_rdv_index.html.twig' with {accordion_id: 'list_rdvs'}  %}
+            {% endif %}
+            {% if is_social_worker or tasks|length > 0 %}
+                {% include 'app/home/_user_task_index.html.twig' with {accordion_id: 'list_tasks'}  %}
+            {% endif %}
+            {% if is_social_worker or notes|length > 0 %}
+                {% include 'app/home/_user_note_index.html.twig' with {accordion_id: 'list_notes'} %}
+            {% endif %}
+            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                {% include 'app/home/_indicators.html.twig' with {accordion_id: 'indicators'} %}
+            {% endif %}
+            {% include 'app/home/_services_indicators.html.twig' with {accordion_id: 'list_services'} %}
+        </div>
     </div>
-
-  </div>
-
 {% endblock %}
 
 {% block javascripts %}
-  {{ encore_entry_script_tags('home') }}
+    {{ encore_entry_script_tags('home') }}
 {% endblock javascripts %}

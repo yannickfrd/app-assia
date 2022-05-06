@@ -1,6 +1,6 @@
 {% set service = support.service %}
 {% set device = support.device %}
-{% set RENT_CONTRIBUTION = constant("RENT_CONTRIBUTION", service) == service.contributionType %}
+{% set RENT_CONTRIBUTION = constant('RENT_CONTRIBUTION', service) == service.contributionType %}
 
 {% set contribution_rate_description %}
     - Le taux de participation appliqué sur le montant total des ressources prises en compte, déduction faite des charges.</br>
@@ -85,7 +85,7 @@
                         <td class="align-middle">{{ (payment.contributionRate * 100)|percent(0) }}</td>
                     </tr>
                 {% endif %}
-                {% if constant("SERVICE_TYPE_HOTEL", service) != service.type %}
+                {% if constant('SERVICE_TYPE_HOTEL', service) != service.type %}
                     <tr title="Prorata présence" data-content="Le prorata correspond au rapport entre 
                         le nombre de jours de présence et le nombre de jours dans le mois." 
                         data-toggle="popover" data-trigger="hover" data-placement="bottom" data-html="true">
@@ -110,7 +110,7 @@
                 {% if false == RENT_CONTRIBUTION %}
                     <tr>
                         {% set minRestToLive = service.minRestToLive ? service.minRestToLive : 
-                            constant("App\\Service\\Payment\\ContributionCalculator::MIN_REST_TO_LIVE")  %}
+                            constant('App\\Service\\Payment\\ContributionCalculator::MIN_REST_TO_LIVE')  %}
                         {% if payment.restToLive < minRestToLive %}
                             <td class="align-middle alert-danger" colspan="2">
                                 Reste à vivre journalier inférieur à {{ minRestToLive }} euros par jour et par personne</td>

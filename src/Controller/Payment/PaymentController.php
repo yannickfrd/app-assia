@@ -7,7 +7,6 @@ namespace App\Controller\Payment;
 use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Organization\User;
 use App\Entity\Support\Payment;
-use App\Entity\Support\SupportGroup;
 use App\Form\Model\Support\PaymentSearch;
 use App\Form\Model\Support\SupportPaymentSearch;
 use App\Form\Support\Payment\PaymentSearchType;
@@ -142,7 +141,7 @@ final class PaymentController extends AbstractController
                     '%payment_type%' => $payment->getTypeToString(),
                 ], 'app'),
                 'payment' => $payment,
-            ], 200, [], ['groups' => array_merge(Payment::SERIALIZER_GROUPS, ['export'])]);
+            ], 200, [], ['groups' => Payment::SERIALIZER_GROUPS]);
         }
 
         return $this->getErrorMessage($form);
@@ -153,9 +152,8 @@ final class PaymentController extends AbstractController
      *
      * @Route("/payment/{id}/show", name="payment_show", methods="GET")
      */
-    public function show(int $id, PaymentRepository $paymentRepo): JsonResponse
+    public function show(Payment $payment): JsonResponse
     {
-        $payment = $paymentRepo->findPayment($id);
         $this->denyAccessUnlessGranted('VIEW', $payment);
 
         return $this->json([
@@ -192,7 +190,7 @@ final class PaymentController extends AbstractController
                     '%payment_type%' => $payment->getTypeToString(),
                 ], 'app'),
                 'payment' => $payment,
-            ], 200, [], ['groups' => array_merge(Payment::SERIALIZER_GROUPS, ['export'])]);
+            ], 200, [], ['groups' => Payment::SERIALIZER_GROUPS]);
         }
 
         return $this->getErrorMessage($form);
