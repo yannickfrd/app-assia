@@ -29,16 +29,14 @@ final class DeviceController extends AbstractController
     }
 
     /**
-     * Affiche la liste des dispositifs.
-     *
      * @Route("/admin/devices", name="admin_devices", methods="GET")
      */
-    public function listDevice(Request $request, Pagination $pagination): Response
+    public function index(Request $request, Pagination $pagination): Response
     {
         $form = $this->createForm(DeviceSearchType::class, $search = new DeviceSearch())
             ->handleRequest($request);
 
-        return $this->render('app/organization/device/listDevices.html.twig', [
+        return $this->render('app/organization/device/device_index.html.twig', [
             'deviceSearch' => $search,
             'form' => $form->createView(),
             'devices' => $pagination->paginate($this->deviceRepo->findDevicesQuery($search, $this->getUser()), $request),
@@ -46,12 +44,10 @@ final class DeviceController extends AbstractController
     }
 
     /**
-     * Nouveau dispositif.
-     *
      * @Route("/admin/device/new", name="admin_device_new", methods="GET|POST")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
-    public function newDevice(Request $request): Response
+    public function new(Request $request): Response
     {
         $form = $this->createForm(DeviceType::class, $device = new Device())
             ->handleRequest($request);
@@ -63,18 +59,16 @@ final class DeviceController extends AbstractController
             $this->addFlash('success', 'Le dispositif est créé.');
         }
 
-        return $this->render('app/organization/device/device.html.twig', [
+        return $this->render('app/organization/device/device_edit.html.twig', [
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * Modification d'un dispositif.
-     *
      * @Route("/admin/device/{id}", name="admin_device_edit", methods="GET|POST")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
-    public function editDevice(Device $device, Request $request): Response
+    public function edit(Device $device, Request $request): Response
     {
         $form = $this->createForm(DeviceType::class, $device)
             ->handleRequest($request);
@@ -85,22 +79,20 @@ final class DeviceController extends AbstractController
             $this->addFlash('success', 'Les modifications sont enregistrées.');
         }
 
-        return $this->render('app/organization/device/device.html.twig', [
+        return $this->render('app/organization/device/device_edit.html.twig', [
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * Désactive ou réactive le dispositif.
-     *
      * @Route("/admin/device/{id}/disable", name="admin_device_disable", methods="GET")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
-    public function disableDevice(Device $device): Response
+    public function disable(Device $device): Response
     {
         $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
 
-        if ($device->getDisabledAt()) {
+        if ($device->isDisabled()) {
             $device->setDisabledAt(null);
             $this->addFlash('success', 'Le dispositif est ré-activé.');
         } else {

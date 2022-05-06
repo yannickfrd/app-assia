@@ -14,12 +14,12 @@
                     {% endif %}
                     {% if is_granted('ROLE_SUPER_ADMIN') or YES == app.session.get('haveServiceAVDL') %}
                         <li class="mb-2 text-{{ theme_color }}">
-                            <a class="text-dark" href="{{ path('avdl_supports') }}">Tableau de suivi AVDL</a>
+                            <a class="text-dark" href="{{ path('avdl_support_index') }}">Tableau de suivi AVDL</a>
                         </li>
                     {% endif %}   
                     {% if is_granted('ROLE_SUPER_ADMIN') or YES == app.session.get('haveServiceHotel') %}
                         <li class="mb-2 text-{{ theme_color }}">
-                            <a class="text-dark" href="{{ path('hotel_supports') }}">Tableau de suivi PASH</a>
+                            <a class="text-dark" href="{{ path('hotel_support_index') }}">Tableau de suivi PASH</a>
                         </li>
                     {% endif %}   
                 </ul>

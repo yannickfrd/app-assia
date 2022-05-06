@@ -1,6 +1,6 @@
 {% set service = support.service %}
 {% set device = support.device %}
-{% set RENT_CONTRIBUTION = constant('RENT_CONTRIBUTION', service) == service.contributionType %}
+{% set rent_contribution = constant('RENT_CONTRIBUTION', service) == service.contributionType %}
 
 {% set contribution_rate_description %}
     - Le taux de participation appliqué sur le montant total des ressources prises en compte, déduction faite des charges.</br>
@@ -35,7 +35,7 @@
     déduction faite des charges fixes mensuelles.
 {% endset %}
 
-{% set restToLive_description %}
+{% set rest_to_live_description %}
     Le reste à vivre journalier unitaire correspond au reste à vivre mensuel (ressources - charges fixes) par jour et par personne,
     après application de la participation financière calculée (en prenant compte des unités de consommation).
 {% endset %}
@@ -65,7 +65,7 @@
         </table>
         <table class="table table-bordered table-striped">
             <tbody>
-                {% if RENT_CONTRIBUTION %}
+                {% if rent_contribution %}
                     <tr title="Montant du loyer" 
                         data-content="Le loyer correspond au montant indiqué dans la fiche descriptive du logement." 
                         data-toggle="popover" data-trigger="hover" data-placement="bottom" data-html="true">
@@ -93,13 +93,13 @@
                         <td class="align-middle">{{ (payment.ratioNbDays * 100)|percent }}</td>
                     </tr>
                 {% endif %}
-                {% if false == RENT_CONTRIBUTION %}
+                {% if false == rent_contribution %}
                     <tr title="Calcul des unité de consommation" data-content="{{ uc_description }}" 
                         data-toggle="popover" data-trigger="hover" data-placement="bottom" data-html="true">
                         <td class="align-middle">Nombre d'unités de consommation</td>
                         <td class="align-middle">{{ payment.nbConsumUnits }}</td>
                     </tr>
-                    <tr title="Reste à vivre journalier unitaire" data-content="{{ restToLive_description }}" 
+                    <tr title="Reste à vivre journalier unitaire" data-content="{{ rest_to_live_description }}" 
                         data-toggle="popover" data-trigger="hover" data-placement="bottom" data-html="true">
                         <td class="align-middle">Reste à vivre journalier unitaire</td>
                         <td class="align-middle text-right">{{ payment.restToLive|amount }}</td>
@@ -107,24 +107,24 @@
                 {% endif %}
             </tbody>
             <tfoot>
-                {% if false == RENT_CONTRIBUTION %}
+                {% if false == rent_contribution %}
                     <tr>
-                        {% set minRestToLive = service.minRestToLive ? service.minRestToLive : 
-                            constant('App\\Service\\Payment\\ContributionCalculator::MIN_REST_TO_LIVE')  %}
-                        {% if payment.restToLive < minRestToLive %}
+                        {% set min_rest_to_live = service.minRestToLive ?? 
+                            constant('App\\Service\\Payment\\ContributionCalculator::MIN_REST_TO_LIVE') %}
+                        {% if payment.restToLive < min_rest_to_live %}
                             <td class="align-middle alert-danger" colspan="2">
-                                Reste à vivre journalier inférieur à {{ minRestToLive }} euros par jour et par personne</td>
+                                Reste à vivre journalier inférieur à {{ min_rest_to_live }} euros par jour et par personne</td>
                         {% elseif payment.noContrib == true %}
                             <td class="align-middle alert-warning" colspan="2">PAF à 0 € fixée par l'intervernant·e social·e</td>
                         {% else %}
                             <td class="align-middle alert-success" colspan="2">
-                                Reste à vivre supérieur à {{ minRestToLive }} euros par jour et par personne</td>
+                                Reste à vivre supérieur à {{ min_rest_to_live }} euros par jour et par personne</td>
                         {% endif %}
                     </tr>
                 {% endif %} 
                 <tr class="font-weight-bold alert-secondary">
                     <td class="align-middle">
-                        {% if RENT_CONTRIBUTION %}Montant du loyer {% else %} Montant de la participation financière {% endif %}à payer
+                        {% if rent_contribution %}Montant du loyer {% else %} Montant de la participation financière {% endif %}à payer
                     </td>
                     <td class="align-middle text-right">{{ payment.toPayAmt|amount(2) }}</td>
                 </tr>

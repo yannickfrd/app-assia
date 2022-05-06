@@ -15,7 +15,7 @@
 				<button class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-action="new_payment"
 					data-url="{{ path('payment_create', {'id': support.id}) }}"
 					data-toggle="tooltip" data-placement="bottom" title="Créer un nouvel enregistrement">
-					<span class="fas fa-plus-square mr-2"></span>Nouveau</button>
+					<i class="fas fa-plus-square mr-2"></i>Nouveau</button>
 				<div class="d-inline align-middle">Total : <!--
 				--><span id="count-payments">{{ payments.getTotalItemCount|number }}</span><!--
 				-->{% if nbTotalPayments and form_search.deleted.deleted.vars.checked != true %} sur <span id="nb-total-payments">{{ nbTotalPayments }}</span>{% endif %}

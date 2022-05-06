@@ -15,7 +15,7 @@ class PaymentNotification extends MailNotifier
             ->to(...$to)
             ->priority(Email::PRIORITY_HIGH)
             ->subject($subject)
-            ->htmlTemplate('emails/receipt_payment.html.twig')
+            ->htmlTemplate('emails/email_receipt_payment.html.twig')
             ->context($context)
             ->bcc($emailUser)
             ->replyTo($emailUser)

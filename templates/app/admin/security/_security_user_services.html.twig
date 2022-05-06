@@ -23,7 +23,7 @@
                         <td class="align-middle">
                             <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }}">
                                 <div class="form-check">
-                                    {% if is_granted("EDIT", service) %}
+                                    {% if is_granted('EDIT', service) %}
                                         <input type="checkbox" id="service_user_main_{{ service_user.id }}" 
                                             name="service_user_main_{{ service_user.id }}" data-action="toggle_main"
                                             class="custom-control-input checkbox form-check-input"

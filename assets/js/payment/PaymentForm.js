@@ -1,3 +1,4 @@
+import PaymentManager from './PaymentManager'
 import FormValidator from "../utils/form/formValidator";
 import ParametersUrl from "../utils/parametersUrl";
 import MessageFlash from "../utils/messageFlash";
@@ -346,7 +347,7 @@ export default class PaymentForm {
         if (!isNaN(this.toPayAmtInputElt.value) && !isNaN(this.paidAmtInputElt.value)) {
             this.stillToPayAmtInputElt.value = Math.round((this.toPayAmtInputElt.value - this.paidAmtInputElt.value) * 100) / 100
         }
-        this.changeTextColor(this.stillToPayAmtInputElt, this.stillToPayAmtInputElt.value)
+        this.paymentManager.changeTextColor(this.stillToPayAmtInputElt, this.stillToPayAmtInputElt.value)
     }
 
     /**

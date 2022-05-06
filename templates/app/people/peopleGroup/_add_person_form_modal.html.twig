@@ -1,0 +1,25 @@
+{% extends 'model/_modal_dialog.html.twig' %}
+
+{% block modal_title %}Demande de confirmation{% endblock %}
+
+{% block modal_body %}
+    {{ form_start(form_role_person) }}
+    <p>Avant d'ajoPuter la persone au groupe, merci de préciser son rôle dans le groupe.</p>
+    {{ form_row(form_role_person.role) }}
+    {% if app.request.get('supports') %}
+        <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} mb-3 pl-2 text-dark">
+            {{ form_row(form_role_person.addPersonToSupport) }}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block modal_footer %}
+    <div class="float-left">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+    </div>
+    <div class="float-right">
+        <button type="submit" id="js-btn-confirm" class="btn btn-{{ theme_color }}">Ajouter la personne</button>
+    </div>
+    {{ form_row(form_role_person._token) }}
+    {{ form_end(form_role_person, {'render_rest': false}) }}
+{% endblock %}

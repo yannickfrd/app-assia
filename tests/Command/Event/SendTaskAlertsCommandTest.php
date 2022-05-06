@@ -47,7 +47,7 @@ class SendTaskAlertsCommandTest extends KernelTestCase
 
         $output = $this->commandTester->getDisplay();
 
-        $this->assertStringContainsString('emails were sended!', $output);
+        $this->assertStringContainsString('emails were sent!', $output);
     }
 
     public function testExecuteWithFlushOption(): void
@@ -60,7 +60,7 @@ class SendTaskAlertsCommandTest extends KernelTestCase
 
         $output = $this->commandTester->getDisplay();
 
-        $this->assertStringContainsString('emails were sended!', $output);
+        $this->assertStringContainsString('emails were sent!', $output);
     }
 
     public function provideArgument(): \Generator

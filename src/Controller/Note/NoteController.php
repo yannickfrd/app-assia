@@ -117,15 +117,13 @@ final class NoteController extends AbstractController
                 'alert' => 'success',
                 'msg' => $translator->trans('note.created_successfully', ['%note_title%' => $note->getTitle()], 'app'),
                 'note' => $note,
-            ], 200, [], ['groups' => Note::SERIALIZER_GROUPS]);
+            ], 200, [], ['groups' => ['show_note', 'show_tag']]);
         }
 
         return $this->getErrorMessage($form);
     }
 
     /**
-     * Donne un objet pour la requête ajax.
-     *
      * @Route("/note/{id}/show", name="note_show", methods="GET")
      */
     public function show(int $id, NoteRepository $noteRepo): JsonResponse
@@ -137,7 +135,7 @@ final class NoteController extends AbstractController
         return $this->json([
             'action' => 'show',
             'note' => $note,
-        ], 200, [], ['groups' => Note::SERIALIZER_GROUPS]);
+        ], 200, [], ['groups' => ['show_note', 'show_note_content', 'show_tag']]);
     }
 
     /**
@@ -167,7 +165,7 @@ final class NoteController extends AbstractController
                 'alert' => 'success',
                 'msg' => $translator->trans('note.updated_successfully', ['%note_title%' => $note->getTitle()], 'app'),
                 'note' => $note,
-            ], 200, [], ['groups' => Note::SERIALIZER_GROUPS]);
+            ], 200, [], ['groups' => ['show_note', 'show_tag']]);
         }
 
         return $this->getErrorMessage($form);
@@ -202,7 +200,7 @@ final class NoteController extends AbstractController
      */
     public function export(int $id, NoteRepository $noteRepo, Request $request, NoteExporter $noteExporter): Response
     {
-        if (null === $note = $noteRepo->findNote($id)) {
+        if (null === $note = $noteRepo->findNoteToExport($id)) {
             throw $this->createAccessDeniedException();
         }
 
@@ -263,7 +261,7 @@ final class NoteController extends AbstractController
         $note->setDeletedAt(null);
         $em->flush();
 
-        NoteManager::deleteCacheItems($note, true);
+        NoteManager::deleteCacheItems($note);
 
         return $this->json([
             'action' => 'restore',

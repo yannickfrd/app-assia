@@ -1,5 +1,22 @@
 # CHANGELOG
 
+## Version 3.18.5 - 06/05/2022
+
+Fix feature Note
+
+## Version 3.18.4 - 06/05/2022
+
+Refactor and apply code convention (#153)
+
+* Rename twig files with code convention (snake_case)
+* [twig] Change double to simple quotes and Rename variables to snake_case
+* Add 'tests/Command' in github ci
+* Refactor Controller (rename methods and routes)
+
+## Version 3.18.3 - 04/05/2022
+
+Add command to send rdv alerts (#151)
+
 ## Version 3.18.2 - 04/05/2022
 
 Fix and miscellaneous updates (#152)

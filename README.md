@@ -4,7 +4,7 @@ Application d’Accompagnement Social et Solidaire Inter-Associative
 
 ## Version
 
-3.18.2 04/05/2022
+3.18.4 06/05/2022
 
 ## Author
 
@@ -120,6 +120,7 @@ symfony console hautelook:fixtures:load -e test -n;
 ```bash
 symfony php bin/phpunit tests/Entity; 
 symfony php bin/phpunit tests/Repository;
+symfony php bin/phpunit tests/Command;
 ```
 
 ### 3. Functionnal tests (controllers)

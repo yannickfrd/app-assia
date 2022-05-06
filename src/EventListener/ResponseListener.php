@@ -33,7 +33,7 @@ class ResponseListener
     {
         $content = $response->getContent();
 
-        $toastContent = $this->renderer->render('_shared/_betaTest.html.twig');
+        $toastContent = $this->renderer->render('_shared/_beta_test.html.twig');
 
         $content = str_replace(
           '</body>',

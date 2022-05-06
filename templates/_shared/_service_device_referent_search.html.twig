@@ -1,4 +1,4 @@
-{% if poles is not defined and is_granted("ROLE_SUPER_ADMIN") %}
+{% if poles is not defined and is_granted('ROLE_SUPER_ADMIN') %}
     <div class="col-auto my-1 px-1">{{ form_widget(form.service.poles) }}</div>
 {% endif %}
 {% if form.service.services.vars.choices|length > 1 %}

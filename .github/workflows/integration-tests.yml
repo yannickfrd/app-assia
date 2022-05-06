@@ -117,4 +117,5 @@ jobs:
               run: |
                   php bin/phpunit tests/Entity;
                   php bin/phpunit tests/Repository;
+                  php bin/phpunit tests/Command;
                   php bin/phpunit tests/Controller --exclude-group=api;

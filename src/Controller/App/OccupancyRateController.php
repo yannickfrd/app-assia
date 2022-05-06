@@ -28,7 +28,7 @@ final class OccupancyRateController extends AbstractController
         $form = $this->createForm(OccupancySearchType::class, $search = new OccupancySearch())
             ->handleRequest($request);
 
-        return $this->render('app/occupancy/occupancyByDevice.html.twig', [
+        return $this->render('app/occupancy/occupancy_by_device.html.twig', [
             'service' => $service,
             'search' => $search,
             'form' => $form->createView(),
@@ -47,7 +47,7 @@ final class OccupancyRateController extends AbstractController
         $form = $this->createForm(OccupancySearchType::class, $search = new OccupancySearch())
             ->handleRequest($request);
 
-        return $this->render('app/occupancy/occupancyByService.html.twig', [
+        return $this->render('app/occupancy/occupancy_by_service.html.twig', [
             'device' => $device,
             'search' => $search,
             'form' => $form->createView(),
@@ -65,7 +65,7 @@ final class OccupancyRateController extends AbstractController
         $form = $this->createForm(OccupancySearchType::class, $search = new OccupancySearch())
             ->handleRequest($request);
 
-        return $this->render('app/occupancy/occupancyBySubService.html.twig', [
+        return $this->render('app/occupancy/occupancy_by_sub_service.html.twig', [
             'service' => $service,
             'search' => $search,
             'form' => $form->createView(),
@@ -84,7 +84,7 @@ final class OccupancyRateController extends AbstractController
         $form = $this->createForm(OccupancySearchType::class, $search = new OccupancySearch())
             ->handleRequest($request);
 
-        return $this->render('app/occupancy/occupancyByPlace.html.twig', [
+        return $this->render('app/occupancy/occupancy_by_place.html.twig', [
             'service' => $service,
             'search' => $search,
             'form' => $form->createView(),
@@ -102,7 +102,7 @@ final class OccupancyRateController extends AbstractController
         $form = $this->createForm(OccupancySearchType::class, $search = new OccupancySearch())
             ->handleRequest($request);
 
-        return $this->render('app/occupancy/occupancySubServiceByPlace.html.twig', [
+        return $this->render('app/occupancy/occupancy_sub_service_by_place.html.twig', [
             'subService' => $subService,
             'search' => $search,
             'form' => $form->createView(),

@@ -28,6 +28,48 @@ class NoteRepository extends ServiceEntityRepository
         parent::__construct($registry, Note::class);
     }
 
+    public function findNote(int $id, bool $deleted = false): ?Note
+    {
+        if ($deleted) {
+            $this->disableFilter($this->_em, 'softdeleteable');
+        }
+
+        return $this->createQueryBuilder('n')
+            ->leftJoin('n.createdBy', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
+            ->leftJoin('n.updatedBy', 'u2')->addSelect('PARTIAL u2.{id, firstname, lastname}')
+            ->leftJoin('n.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
+            ->leftJoin('n.tags', 'tags')->addSelect('tags')
+
+            ->where('n.id = :id')
+            ->setParameter('id', $id)
+
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getOneOrNullResult()
+        ;
+    }
+
+    public function findNoteToExport(int $id): ?Note
+    {
+        return $this->createQueryBuilder('n')
+            ->leftJoin('n.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
+            ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name, logoPath}')
+            ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, head}')
+            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
+
+            ->where('n.id = :id')
+            ->setParameter('id', $id)
+
+            ->orderBy('sp.head', 'DESC')
+
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getOneOrNullResult()
+        ;
+    }
+
     /**
      * Return all notes of group support.
      */
@@ -165,35 +207,7 @@ class NoteRepository extends ServiceEntityRepository
 
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getResult();
-    }
-
-    /**
-     * Donne une note.
-     */
-    public function findNote(int $id, bool $deleted = false): ?Note
-    {
-        if ($deleted) {
-            $this->disableFilter($this->_em, 'softdeleteable');
-        }
-
-        return $this->createQueryBuilder('n')->select('n')
-            ->leftJoin('n.createdBy', 'u')->addSelect('PARTIAL u.{id}')
-            ->leftJoin('n.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
-            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
-            ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name, logoPath}')
-            ->leftJoin('sg.supportPeople', 'sp')->addSelect('PARTIAL sp.{id, head}')
-            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
-            ->leftJoin('n.tags', 'tags')->addSelect('tags')
-
-            ->where('n.id = :id')
-            ->setParameter('id', $id)
-
-            ->orderBy('sp.head', 'DESC')
-
-            ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getSingleResult()
+            ->getResult()
         ;
     }
 
@@ -238,7 +252,8 @@ class NoteRepository extends ServiceEntityRepository
 
         return $qb
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getSingleScalarResult()
+        ;
     }
 
     public function countNotesDisabled(): int
@@ -250,6 +265,7 @@ class NoteRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('n')->select('COUNT(n.id)')
             ->andWhere('n.deletedAt IS NOT null')
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getSingleScalarResult()
+        ;
     }
 }

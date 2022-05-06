@@ -97,6 +97,10 @@ section {
     }
 }
 
+.fas {
+    line-height: normal; // Fix problem with background color
+}
+
 // Animation de synchronisation
 .fas.fa-sync-alt,
 .fas.fa-spinner {

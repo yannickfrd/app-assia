@@ -3,12 +3,11 @@
 {% block title %}Administration{% endblock %}
 
 {% block body %}
-
     <div class="container">
 
         <h1 class="h2 mb-3">Administration</h1>
 
-        {% include 'model/_msgFlash.html.twig' %}
+        {% include 'model/_flash_message.html.twig' %}
 
         <hr>
 
@@ -32,7 +31,7 @@
                         <a class="text-dark" href="{{ path('admin_organization_new') }}">Créer un organisme prescripteur</a>
                     </li>
                     <li class="mb-2 text-{{ theme_color }}">
-                        <a class="text-dark" href="{{ path('organizations') }}">Gérer les organismes prescripteurs</a>
+                        <a class="text-dark" href="{{ path('organization_index') }}">Gérer les organismes prescripteurs</a>
                     </li>
                 </ul>
 
@@ -95,7 +94,7 @@
 
                 <hr class="my-3">
 
-                {% if is_granted("ROLE_SUPER_ADMIN") %}
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
 
                     <h2 class="h5">Cache</h2>
                     <ul>
@@ -109,7 +108,7 @@
                     <h2 class="h5">Base de données</h2>
                     <ul>
                         <li class="mb-2 text-{{ theme_color }}">
-                            <a class="text-dark" href="{{ path('database_backups') }}">Sauvegarder et exporter la base de données</a>
+                            <a class="text-dark" href="{{ path('database_backup_index') }}">Sauvegarder et exporter la base de données</a>
                         </li>
                     </ul>
 
@@ -133,7 +132,7 @@
                     <h2 class="h5">Doublons</h2>
                     <ul>
                         <li class="mb-2 text-{{ theme_color }}">
-                            <a class="text-dark" href="{{ path('duplicated_people') }}">Rechercher les personnes en doublon</a>
+                            <a class="text-dark" href="{{ path('duplicated_people_index') }}">Rechercher les personnes en doublon</a>
                         </li>
                     </ul>
 
@@ -151,7 +150,6 @@
             </div>
         </div>
     </div>
-
 {% endblock %}
 
 {% block javascripts %}

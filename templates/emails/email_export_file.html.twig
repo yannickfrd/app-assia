@@ -1,0 +1,8 @@
+{% extends 'emails/base_email.html.twig' %}
+
+{% block body %}
+    <p>Votre <b>fichier d'export</b> est prêt.</p>
+    <p>Vous pouvez le télécharger en cliquant sur <a href="{{ url('export_download', {'id': export.id}) }}">
+        ce lien</a> si vous êtes déjà connecté à l'application.</p>
+    <p>Dans le cas contraire, veuillez vous connecter au préalable.</p>
+{% endblock %}

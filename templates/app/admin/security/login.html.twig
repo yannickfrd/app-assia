@@ -1,15 +1,14 @@
 {% extends 'base.html.twig' %}
-{# {% form_theme form "bootstrap_4_layout.html.twig" %} #}
+{# {% form_theme form 'bootstrap_4_layout.html.twig' %} #}
 
 {% block title %}Connexion{% endblock %}
 
 {% block body %}
-
     <div class="container">
         <section class="row min-vh-80">
             <div class="form-signin m-auto text-center">
                 {{ form_start(form) }}
-                    {% include 'model/_msgFlash.html.twig' %}
+                    {% include 'model/_flash_message.html.twig' %}
                     {% if error %}
                         <div class="alert alert-danger alert-dismissible mb-3 fade show" role="alert">
                             {{ error.messageKey|trans(error.messageData, 'security')|raw }}
@@ -42,7 +41,6 @@
             </div>
         </section>
     </div>
-
 {% endblock %}
 
 {% block javascripts %}
