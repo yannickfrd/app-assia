@@ -17,46 +17,46 @@
     </div>
 </div>
 
-<div id="container-notes" class="row" data-support="{{ support.id }}">
+<div id="container-notes" class="row" data-support="{{ support.id }}"
+    data-path-show="{{ path('note_show', {'id': '__id__'}) }}">
     {% for note in notes %}
-        {% set isDeleted = note.deletedAt is not null %}
-        {% set tooltipCard = isDeleted ? '' : 'title="Voir la note" data-toggle="tooltip" data-placement="bottom"' %}
-
-        <div class="col-sm-12 col-lg-6 mb-4 reveal" data-show-url="{{ path('note_show', {'id': note.id}) }}" data-note-id="{{ note.id }}" data-note-deleted="{{ isDeleted }}">
-            <div class="card h-100 shadow">
+        {% set is_deleted = note.isDeleted %}
+        <div class="col-sm-12 col-lg-6 mb-4 reveal" data-note-id="{{ note.id }}" 
+            {% if not is_deleted %}data-path-show="{{ path('note_show', {'id': note.id}) }}"{% endif %}>
+            <div class="card h-100 shadow {{ not is_deleted ? 'cursor-pointer' }}" {% if not is_deleted %}
+                title="Voir la note" data-toggle="tooltip" data-placement="bottom"{% endif %}>
                 <div class="card-header">
                     <div class="row">
                         <div class="col-10">
-                            <h3 class="card-title h5 text-{{ theme_color }} {{ isDeleted ? '' : 'cursor-pointer' }}" {{ tooltipCard }}>{{ note.title }}</h3>
+                            <h3 class="card-title h5 text-{{ theme_color }}">{{ note.title }}</h3>
                         </div>
                         <div class="col-2 d-flex justify-content-end align-items-center">
-                            {% if isDeleted %}
-                                {% include 'model/button/_restore_button.html.twig' with {path_route: path('note_restore', {'id': note.id}),} %}
+                            {% if is_deleted %}
+                                {% include 'model/button/_restore_button.html.twig' with {
+                                    path_route: path('note_restore', {'id': note.id})} %}
                             {% endif %}
                         </div>
                     </div>
-
                     <span data-note-type={{ note.type }}>{{ note.typeToString }}</span>
                     (<span data-note-status={{ note.status }}>{{ note.statusToString }}</span>)
                     <span class="small text-secondary" data-note-created="true">
                         | Créé le {{ note.createdAt|date('d/m/Y à H:i') }} par {{ note.createdBy.fullname }}
                     </span>
-                    <span class="small text-secondary" data-note-updated="true">
-                        {% if note.updatedAt != note.createdAt and note.updatedBy %}
+                    {% if note.updatedAt != note.createdAt and note.updatedBy %}
+                        <span class="small text-secondary" data-note-updated="true">
                             (modifié le {{ note.updatedAt|date('d/m/Y à H:i') }} par {{ note.updatedBy.fullname }})
-                        {% endif %}
+                    {% endif %}
                     </span>
-
                     <div class="mt-2 tags-list">
                         {% for tag in note.tags %}
                             <span class="badge bg-{{ tag.color }} text-light"
-                                data-tag-id="{{ tag.id }}">{{ tag.name }}</span>
+                                data-tag-id="{{ tag.id }}">{{ tag.name }}
+                            </span>
                         {% endfor %}
                     </div>
-
                 </div>
-                <div class="card-body note-content {{ isDeleted ? '' : 'cursor-pointer' }}" {{ tooltipCard }}>
-                    <div class="card-text">{{ note.content|raw }}</div>
+                <div class="card-body note-content">
+                    <div class="card-text">{{ note.content|u.truncate(600, ' [...]', false)|raw }}</div>
                     <span class="note-fadeout"></span>
                 </div>
             </div>
