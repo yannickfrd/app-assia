@@ -3,15 +3,15 @@
 {% import 'macros/li_view.html.twig' as li_view %}
 {% import 'macros/textarea_view.html.twig' as textarea_view %}
 
-{% set ROLE_CHILD = constant('App\\Entity\\People\\RolePerson::ROLE_CHILD') %}
+{% set role_child = constant('App\\Entity\\People\\RolePerson::ROLE_CHILD') %}
 {% set IN_PROGRESS = constant('App\\Form\\Utils\\EvaluationChoices::IN_PROGRESS') %}
 {% set theme_color = app.request.hasPreviousSession and app.session.get('theme_color') ? app.session.get('theme_color') : '#555c64;' %}
 
 {% set support_people = support.supportPeople|filter(s => s.status == support.status) %}
 {% set person = support.header %}
 {% set eval_people = evaluation.evaluationPeople|filter(e => e.supportPerson.status == support.status)  %}
-{% set eval_adults = eval_people|filter(e => e.supportPerson.role != ROLE_CHILD) %}
-{% set eval_children = eval_people|filter(e => e.supportPerson.role == ROLE_CHILD) %}
+{% set eval_adults = eval_people|filter(e => e.supportPerson.role != role_child) %}
+{% set eval_children = eval_people|filter(e => e.supportPerson.role == role_child) %}
 {% set people_over_16 = eval_people|filter(e => e.supportPerson.person.age >= 16) %}
 {% set nb_people = support_people|length %}
 {% set eval_housing = evaluation.evalHousingGroup %}
@@ -21,7 +21,7 @@
 {% set style_h3 = 'font-size: 16px; font-weight: bold;' %}
 {% set style_table = 'border: 1px #b5b5b5 solid;' %}
 {% set style_thead = 'background-color: #e9ecef; font-weight: bold;' %}
-{% set type = type is defined ? type : null %}
+{% set type = type ?? null %}
 
 <html lang="fr">
     {% if type == 'pdf' %}
@@ -36,7 +36,7 @@
 
     <body>
         {% if type == 'pdf' %}
-            {% include 'pdf/_headerFooterPdf.html.twig' %}
+            {% include 'pdf/_header_footer_pdf.html.twig' %}
             <h1>{{ title }}</h1>
         {% endif %}
 

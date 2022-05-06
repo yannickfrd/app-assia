@@ -1,3 +1,4 @@
+import NoteManager from './NoteManager'
 import MessageFlash from '../utils/messageFlash'
 import AutoSaver from '../utils/form/autoSaver'
 import ParametersUrl from '../utils/parametersUrl'
@@ -27,7 +28,7 @@ export default class NoteForm {
         this.btnExportWordElt = this.noteModalElt.querySelector('#export-note-word')
         this.btnExportPdfElt = this.noteModalElt.querySelector('#export-note-pdf')
         this.btnDeleteElt = this.noteModalElt.querySelector('#modal-btn-delete')
-
+        
         this.autoSaveElt = document.getElementById('js-auto-save')
 
         this.tagsManager = new TagsManager()
@@ -53,6 +54,11 @@ export default class NoteForm {
         this.btnDeleteElt.addEventListener('click', e => {
             e.preventDefault()
             this.requestToDelete()
+        })
+        this.noteModalElt.addEventListener('mousedown', e => {
+            if (e.target === this.noteModalElt) {
+                this.tryCloseModal(e)
+            }
         })
         this.confirmModalElt.querySelector('#modal-confirm-btn')
             .addEventListener('click', () => this.onclickModalConfirmBtn())
@@ -85,11 +91,8 @@ export default class NoteForm {
         this.initModal(note)
 
         this.noteModalElt.querySelector('#note_title').value = note.title ?? ''
-
         this.noteModalElt.querySelector('#note_type').value = note.type ?? ''
-
         this.noteModalElt.querySelector('#note_status').value = note.status ?? ''
-
         this.contentElt.textContent = note.content ?? ''
         this.ckEditor.setData(this.contentElt.textContent)
 
@@ -103,14 +106,13 @@ export default class NoteForm {
     }
 
     /**
-     * Donne la note sélectionnée dans le formulaire modal.
      * @param {Object} note
      */
     initModal(note) {
         this.noteModalElt.querySelector('form').action = `/note/${note.id}/edit`
 
         this.btnDeleteElt.classList.remove('d-none')
-        this.btnDeleteElt.dataset.url = `/note/${note.id}/delete`
+        this.btnDeleteElt.dataset.path = `/note/${note.id}/delete`
 
         this.btnExportWordElt.classList.remove('d-none')
         this.btnExportWordElt.href = `/note/${note.id}/export/word`
@@ -158,10 +160,10 @@ export default class NoteForm {
             case 'delete_note':
                 this.loader.on()
                 this.ajax.send('GET', this.btnDeleteElt.dataset.url, this.noteManager.responseAjax.bind(this.noteManager))
-                break;
+                break
             case 'hide_note_modal':
                 this.noteModal.hide()
-                break;
+                break
         }
         this.confirmModalElt.dataset.action = ''
     }

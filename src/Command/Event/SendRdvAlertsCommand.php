@@ -83,7 +83,7 @@ class SendRdvAlertsCommand extends Command
             $email = (new TemplatedEmail())
                 ->to($user->getEmail())
                 ->subject('Application Assia | Rappel rendez-vous : '.$rdv->getTitle())
-                ->htmlTemplate('emails/rdv_alert_email.html.twig')
+                ->htmlTemplate('emails/email_rdv_alert.html.twig')
                 ->context([
                     'user' => $user,
                     'rdv' => $rdv,

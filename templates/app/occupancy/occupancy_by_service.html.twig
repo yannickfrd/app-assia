@@ -1,0 +1,119 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Taux d'occupation{% endblock %}
+
+{% block body %}
+    <div class="container">
+        {% include 'model/_flash_message.html.twig' %}
+        <h1 class="h2 mb-3">Taux d'occupation<span class="fas fa-angle-right fa-xs mx-1"></span>Services</h1>
+    </div>
+
+    {% include 'app/occupancy/_search_occupancy.html.twig' %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <p><a href="{{ path('occupancy_devices', {'year': search.year, 'date': {'start': search.start|date('Y-m-d'), 
+                    'end': search.end|date('Y-m-d')}, 'pole': search.pole ? search.pole.id}) }}" class="text-{{ theme_color }}">
+                    <span class="fas fa-undo mr-2"></span>{% if device %}Retour{% else %}Accès
+                    {% endif %} aux taux d'ocupation par dispositif.</a>
+                </p>
+                {% set interval = date(search.start).diff(date(search.end)) %}
+                <p>Période du {{ search.start|date('d/m/Y') }} au {{ search.end|date('d/m/Y') }},<!--
+                --> soit {{ interval.days }} nuit{{ interval.days > 1 ? 's' }}.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive-sm">
+                    <table class="table table-sm table-bordered table-striped table-hover text-dark shadow">
+                        <thead>
+                            <tr>
+                                <th scope="row" class="align-middle th-w-20"></th>
+                                <th class="align-middle th-w-150">Service</th>
+                                <th class="align-middle th-w-100 text-right">Nombre de groupes de places</th>
+                                <th class="align-middle th-w-100 text-right">Nombre de places</th>
+                                <th class="align-middle th-w-100 text-right">Nb de nuitées théoriques</th>
+                                <th class="align-middle th-w-100 text-right">Nb de nuitées réalisées</th>
+                                <th class="align-middle th-w-100 text-right">Nb moyen de places/nuit</th>
+                                <th class="align-middle th-w-100 text-right">Nb moyen de personnes/nuit</th>
+                                <th class="align-middle th-w-100 text-right">Taux d'occupation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% set example = '' %}
+                            {% for service_id, service in datas.services|filter(a => a.capacityDays > 0) %}
+                                {% set ocupancy_rate = ratio(service.occupancyDays, service.capacityDays) %}
+                                {% if loop.first %}
+                                    {% set example %}
+                                        {% apply spaceless %}
+                                            Le service {{ service.name }} dispose de {{ service.nbPlaces }} groupes de places
+                                            (soit {{ service.sumPlaces }} places). Sur la période sélectionnée ({{ interval.days }} nuits), 
+                                            sa capacité d'accueil maximale représente {{ service.capacityDays|number }} 
+                                            nuitées (soit une moyenne de {{ service.averageCapacity|round(2) }} places par nuit).
+                                            Sur ces places, {{ service.occupancyDays|number }} nuitées ont été réalisées, 
+                                            soit une occupation moyenne de {{ service.averageOccupancy|round(2) }} personnes par nuit. 
+                                            Le rapport occupation/capacité nous donne un taux d'occupation moyen de {{ ocupancy_rate|percent }}.
+                                        {% endapply %}
+                                    {% endset %}
+                                {% endif %}
+                                <tr>
+                                    <td class="align-middle text-center" scope="row">
+                                        {% if service.nbSubServices > 1 %}
+                                            <a href="{{ path('occupancy_sub_services', {'id': service_id, 'year': search.year, 
+                                                'date': {'start': search.start|date('Y-m-d'), 'end': search.end|date('Y-m-d') }} ) }}" 
+                                                class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" 
+                                                title="Voir le détail par sous-service"><span class="fas fa-eye fa-sm"></span>
+                                            </a>
+                                        {% else %}
+                                            <a href="{{ path('occupancy_service_places', {'id': service_id, 'year': search.year, 
+                                                'date': {'start': search.start|date('Y-m-d'), 'end': search.end|date('Y-m-d') }} ) }}" 
+                                                class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" 
+                                                title="Voir le détail par groupe de places du service"><span class="fas fa-eye fa-sm"></span>
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                    <td class="align-middle">{{ service.name }}</td>
+                                    <td class="align-middle text-right">{{ service.nbPlaces }}</td>
+                                    <td class="align-middle text-right">{{ service.sumPlaces }}</td>
+                                    <td class="align-middle text-right">{{ service.capacityDays|number }}</td>
+                                    <td class="align-middle text-right">{{ service.occupancyDays|number }}</td>
+                                    <td class="align-middle text-right">{{ service.averageCapacity|round(2) }}</td>
+                                    <td class="align-middle text-right">{{ service.averageOccupancy|round(2) }}</td>
+                                    <td class="align-middle alert-{{ color(ocupancy_rate) }} text-right">
+                                        <span class="font-weight-bold font-italic">{{ ocupancy_rate|percent }}</span>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                            <tr class="font-weight-bold">
+                                <td class="align-middle text-center" scope="row">Total</td>
+                                <td class="align-middle">{{ datas.services|length }}</td>
+                                <td class="align-middle text-right">{{ datas.nbPlaces|number }}</td>
+                                <td class="align-middle text-right">{{ datas.sumPlaces|number }}</td>
+                                <td class="align-middle text-right">{{ datas.capacityDays|number }}</td>
+                                <td class="align-middle text-right">{{ datas.occupancyDays|number }}</td>
+                                <td class="align-middle text-right">{{ datas.averageCapacity|round(2) }}</td>
+                                <td class="align-middle text-right">{{ datas.averageOccupancy|round(2) }}</td>
+                                {% set ocupancy_rate = ratio(datas.occupancyDays, datas.capacityDays) %}
+                                <td class="align-middle alert-{{ color(ocupancy_rate) }} text-right">
+                                    <span class="font-weight-bold font-italic">{{ ocupancy_rate|percent }}</span>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <p class="justify small text-secondary"><span class="font-weight-bold">Note de lecture : </span>{{ example }}</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('search') }}
+    {{ encore_entry_script_tags('occupancy') }}
+{% endblock javascripts %}

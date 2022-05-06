@@ -20,9 +20,9 @@ final class HotelSupportController extends AbstractController
     /**
      * Liste des suivis AVDL.
      *
-     * @Route("/hotel-supports", name="hotel_supports", methods="GET|POST")
+     * @Route("/hotel-supports", name="hotel_support_index", methods="GET|POST")
      */
-    public function viewListHotelSupports(Request $request, Pagination $pagination, SupportPersonRepository $supportPersonRepo): Response
+    public function index(Request $request, Pagination $pagination, SupportPersonRepository $supportPersonRepo): Response
     {
         $form = $this->createForm(HotelSupportSearchType::class, $search = new HotelSupportSearch())
             ->handleRequest($request);
@@ -31,7 +31,7 @@ final class HotelSupportController extends AbstractController
             return $this->exportData($search, $supportPersonRepo);
         }
 
-        return $this->render('app/support/hotel_support/hotel_supports_index.html.twig', [
+        return $this->render('app/support/hotel_support/hotel_support_index.html.twig', [
             'form' => $form->createView(),
             'supports' => $pagination->paginate(
                 $supportPersonRepo->findHotelSupportsQuery($search),
@@ -50,7 +50,7 @@ final class HotelSupportController extends AbstractController
         if (!$supports) {
             $this->addFlash('warning', 'Aucun résultat à exporter.');
 
-            return $this->redirectToRoute('hotel_supports');
+            return $this->redirectToRoute('hotel_support_index');
         }
 
         return (new HotelSupportPersonExport())->exportData($supports);

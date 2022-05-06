@@ -1,55 +1,56 @@
 <div class="table-responsive" id="container-notes" data-support="{{ support is defined ? support.id : '' }}">
     <table id="table-notes" class="table table-bordered table-striped table-hover text-dark shadow-sm">
         <thead>
-        <tr>
-            <th scope="col" class="align-middle th-w-80" data-get-url="show" 
-                data-show-url="{{ path('note_edit', {'id': '__id__'}) }}"></th>
-            {% if not restoration_mode %}
-                <th scope="col" class="align-middle th-w-80"
-                    data-word-url="{{ path('note_export_word', {'id': '__id__'}) }}"
-                    data-pdf-url="{{ path('note_export_pdf', {'id': '__id__'}) }}"></th>
-            {% endif %}
-            <th scope="col" class="align-middle th-w-auto">
-                {{ knp_pagination_sortable(notes, 'Nom de la note', 'n.title') }}
-            </th>
-            <th scope="col" class="align-middle th-w-80">
-                {{ knp_pagination_sortable(notes, 'Type', 'n.type') }}
-            </th>
-            <th scope="col" class="align-middle th-w-80">
-                {{ knp_pagination_sortable(notes, 'Statut', 'n.status') }}
+            <tr>
+                <th scope="col" class="align-middle th-w-80" 
+                    data-path-show="{{ path('note_show', {'id': '__id__'}) }}"
+                    data-path-delete="{{ path('note_delete', {'id': '__id__'}) }}"
+                    data-path-export-word="{{ path('note_export_word', {'id': '__id__'}) }}"
+                    data-path-export-pdf="{{ path('note_export_pdf', {'id': '__id__'}) }}">
                 </th>
-            <th scope="col" class="align-middle th-w-120">Étiquette(s)</th>
-            {% if support is not defined %}
-                <th scope="col" class="align-middle th-w-120">
-                    {{ knp_pagination_sortable(notes, 'Nom du suivi', 'p.lastname') }}
+                <th scope="col" class="align-middle th-w-auto">
+                    {{ knp_pagination_sortable(notes, 'Nom de la note', 'n.title') }}
                 </th>
-                <th scope="col" class="align-middle th-w-120">
-                    {{ knp_pagination_sortable(notes, 'Service', 's.name') }}
+                <th scope="col" class="align-middle th-w-80">
+                    {{ knp_pagination_sortable(notes, 'Type', 'n.type') }}
                 </th>
-            {% endif %}
-            {% if restoration_mode %}
-                <th scope="col" class="align-middle th-date">
-                    {{ knp_pagination_sortable(notes, 'Supprimée le', 'n.deletedAt') }}
-                </th>
-            {% else %}
-                <th scope="col" class="align-middle th-date">
-                    {{ knp_pagination_sortable(notes, 'Créée le', 'n.createdAt') }}
-                </th>
-            {% endif %}
-            {% if support is not defined %}
-                <th scope="col" class="align-middle th-w-120">
-                    {{ knp_pagination_sortable(notes, 'Créée par', 'u.lastname') }}
-                </th>
-                <th scope="col" class="align-middle th-date th-w-120">
-                    {{ knp_pagination_sortable(notes, 'Modifiée le', 'n.updatedAt') }}
-                </th>
-                <th scope="col" class="align-middle th-w-120">
-                    {{ knp_pagination_sortable(notes, 'Modifiée par', 'u2.lastname') }}
-                </th>
-            {% endif %}
-            <th scope="col" class="align-middle th-w-80" data-get-url="action"
-                data-delete-url="{{ path('note_delete', {'id': '__id__'}) }}"></th>
-        </tr>
+                <th scope="col" class="align-middle th-w-80">
+                    {{ knp_pagination_sortable(notes, 'Statut', 'n.status') }}
+                    </th>
+                <th scope="col" class="align-middle th-w-120">Étiquette(s)</th>
+                {% if support is not defined %}
+                    <th scope="col" class="align-middle th-w-120">
+                        {{ knp_pagination_sortable(notes, 'Nom du suivi', 'p.lastname') }}
+                    </th>
+                    <th scope="col" class="align-middle th-w-120">
+                        {{ knp_pagination_sortable(notes, 'Service', 's.name') }}
+                    </th>
+                {% endif %}
+                {% if restoration_mode %}
+                    <th scope="col" class="align-middle th-date">
+                        {{ knp_pagination_sortable(notes, 'Supprimée le', 'n.deletedAt') }}
+                    </th>
+                {% else %}
+                    <th scope="col" class="align-middle th-date">
+                        {{ knp_pagination_sortable(notes, 'Créée le', 'n.createdAt') }}
+                    </th>
+                {% endif %}
+                {% if support is not defined %}
+                    <th scope="col" class="align-middle th-w-120">
+                        {{ knp_pagination_sortable(notes, 'Créée par', 'u.lastname') }}
+                    </th>
+                    <th scope="col" class="align-middle th-date th-w-120">
+                        {{ knp_pagination_sortable(notes, 'Modifiée le', 'n.updatedAt') }}
+                    </th>
+                    <th scope="col" class="align-middle th-w-120">
+                        {{ knp_pagination_sortable(notes, 'Modifiée par', 'u2.lastname') }}
+                    </th>
+                {% endif %}
+                {% if not restoration_mode %}
+                    <th scope="col" class="align-middle th-w-80">Export</th>
+                {% endif %}
+                <th scope="col" class="align-middle th-w-80"></th>
+            </tr>
         </thead>
         <tbody>
             {% for note in notes %}
@@ -59,7 +60,7 @@
                         {% if support is not defined %}
                             <a href="{{ path('support_note_index', {'id': support is defined ? support.id : note.supportGroup.id, 'noteId': note.id}) }}"
                                 class="btn btn-{{ is_deleted ? 'secondary' : theme_color }} btn-sm shadow {{ is_deleted ? 'disabled' : '' }}"
-                                title="Voir la note sociale" type="button" data-toggle="tooltip" data-placement="bottom" 
+                                type="button" title="Voir la note sociale" data-toggle="tooltip" data-placement="bottom" 
                                 data-action="show"><i class="fas fa-eye"></i>
                             </a>
                         {% else %}
@@ -70,23 +71,9 @@
                             } %}
                         {% endif %}
                     </td>
-                    {% if not is_deleted %}
-                        <td class="align-middle text-center p-1">
-                            <a href="{{ path('note_export_word', {'id': note.id}) }}"
-                                class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" title="Exporter la note au format Word"
-                                data-toggle="tooltip" data-placement="bottom"><i class="fas fa-file-word bg-primary fa-lg"></i>
-                                <span class="sr-only">Word</span>
-                            </a><br/>
-                            <a href="{{ path('note_export_pdf', {'id': note.id}) }}"
-                                class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" title="Exporter la note au format PDF"
-                                data-toggle="tooltip" data-placement="bottom"><i class="fas fa-file-pdf bg-danger fa-lg"></i>
-                                <span class="sr-only">PDF</span>
-                            </a><br/>
-                        </td>
-                    {% endif %}
-                    <td class="align-middle justify" data-cell="title-content" data-title="{{ note.title }}" data-content="{{ note.content }}">
+                    <td class="align-middle justify" data-cell="title-content">
                         {% if note.title %}<span class="font-weight-bold">{{ note.title }} : </span>{% endif %}
-                        {{ note.shortContent }}</td>
+                        {{ note.content|u.truncate(200, ' [...]', false)|striptags|raw }}</td>
                     <td class="align-middle" data-cell="type" data-note-type="{{ note.type }}">{{ note.typeToString }}</td>
                     <td class="align-middle" data-cell="status" data-note-status="{{ note.status }}">{{ note.statusToString }}</td>
                     <td class="align-middle" data-cell="tags">
@@ -104,23 +91,34 @@
                         </td>
                     {% endif %}
                     <td class="align-middle" data-cell="createdAt">
-                        {% if is_deleted %}
-                            {{ note.deletedAt|date('d/m/Y H:i') }}
-                        {% else %}
-                            {{ note.createdAtToString }}
-                        {% endif %}
+                        {{ is_deleted ? note.deletedAt|date('d/m/Y H:i') : note.createdAtToString }}
                     </td>
                     {% if support is not defined %}
                         <td class="align-middle">{{ note.createdBy ? note.createdBy.fullname }}</td>
                         <td class="align-middle">{{ note.updatedAt|date('d/m/Y') }}</td>
                         <td class="align-middle">{{ note.updatedBy ? note.updatedBy.fullname }}</td>
                     {% endif %}
-                    <td class="align-middle text-center p-1">
+                     {% if not is_deleted %}
+                        <td class="align-middle text-center p-1">
+                            <a href="{{ path('note_export_word', {'id': note.id}) }}"
+                                class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" title="Exporter la note au format Word"
+                                data-toggle="tooltip" data-placement="bottom">
+                                    <i class="fas fa-file-word fa-lg bg-primary"></i><span class="sr-only">Word</span>
+                            </a>
+                            <a href="{{ path('note_export_pdf', {'id': note.id}) }}"
+                                class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" title="Exporter la note au format PDF"
+                                data-toggle="tooltip" data-placement="bottom">
+                                    <i class="fas fa-file-pdf fa-lg bg-danger"></i><span class="sr-only">PDF</span>
+                            </a>
+                        </td>
+                    {% endif %}                   
+                    <td class="align-middle text-center">
                         {% if is_deleted %}
-                            {% include 'model/button/_restore_button.html.twig' with {path_route: path('note_restore', {'id': note.id})} %}
+                            {% include 'model/button/_restore_button.html.twig' with {
+                                path_route: path('note_restore', {'id': note.id})} %}
                         {% else %}
-                            <button class="btn btn-sm btn-danger shadow mt-3" 
-                                data-action="delete-note" data-url="{{ path('note_delete', {'id': note.id}) }}"
+                            <button class="btn btn-sm btn-danger shadow" 
+                                data-action="delete-note" data-path="{{ path('note_delete', {'id': note.id}) }}"
                                 title="Supprimer la note" data-toggle="tooltip" data-placement="bottom">
                                 <i class="fa-solid fa-trash-can"></i>
                             </button>

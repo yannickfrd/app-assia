@@ -1,0 +1,8 @@
+<img src="{{ logo_path }}" width="150" class="pos-absolute" style="top: -30px;"/>
+{% if header_info is defined %}
+    <p class="header pos-fixed text-right" style="top: -30px;">{{ header_info }}</p>
+{% endif %}
+<div class="footer">
+    <p class="text-center pos-fixed b-0">{{ 'now'|date('d/m/Y') }}<p>
+    <p class="text-right pos-fixed b-0"><span id="page-number"></span><p>
+</div>

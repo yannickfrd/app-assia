@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% set title = 'Tableau de bord' %}
-{% set is_social_worker = app.user.status == constant("STATUS_SOCIAL_WORKER", app.user) %}
+{% set is_social_worker = app.user.status == constant('STATUS_SOCIAL_WORKER', app.user) %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -11,7 +11,7 @@
         <h1 class="h2 mb-3">{{ title }}</h1>
         <p class="small text-secondary">Dernière connexion le {{ app.user.lastLogin|date('d/m/Y à H:i') }}</p>
 
-        {% include 'model/_msgFlash.html.twig' %}
+        {% include 'model/_flash_message.html.twig' %}
 
         <hr>
 

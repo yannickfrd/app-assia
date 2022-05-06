@@ -9,7 +9,7 @@
 {% block body %}
     <section class="mt-0">
         <div class="container-fluid pt-4">
-            {% include 'model/_msgFlash.html.twig' %}
+            {% include 'model/_flash_message.html.twig' %}
             <h1 class="h2 mb-3">{{ title }}</h1>
         </div>
 
@@ -68,7 +68,7 @@
                                 <th scope="col" class="align-middle th-w-20"></th>
                             {% elseif is_granted('ROLE_ADMIN') %}
                                 <th scope="col" class="align-middle th-w-20">
-                                    {{ knp_pagination_sortable(supports, "Complétude de l'évaluation", 'sg.evaluationScore') }}
+                                    {{ knp_pagination_sortable(supports, 'Complétude de l\'évaluation', 'sg.evaluationScore') }}
                                 </th>
                             {% endif %}
                         </tr>
@@ -127,7 +127,7 @@
                                     <td class="align-middle text-center">
                                         <a href="{{ path('support_person_restore', {'id': support_person.id}) }}" 
                                             class="btn btn-success btn-sm shadow"
-                                            title="{{ restore_title is defined ? restore_title : 'Restaurer' }}"
+                                            title="{{ restore_title ?? 'Restaurer' }}"
                                             data-toggle="tooltip" data-placement="bottom">
                                             <i class="fa-solid fa-trash-arrow-up"></i>
                                         </a>

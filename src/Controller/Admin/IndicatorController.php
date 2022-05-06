@@ -42,7 +42,7 @@ final class IndicatorController extends AbstractController
      */
     public function indicators(Request $request, Pagination $pagination): Response
     {
-        return $this->render('app/admin/indicator/dailyIndicators.html.twig', [
+        return $this->render('app/admin/indicator/daily_indicators.html.twig', [
             'indicators' => $pagination->paginate($this->indicatorRepo->findIndicatorsQuery(), $request, 30),
         ]);
     }
@@ -58,7 +58,7 @@ final class IndicatorController extends AbstractController
         $form = $this->createForm(ServiceIndicatorsSearchType::class, $search = new ServiceIndicatorsSearch())
             ->handleRequest($request);
 
-        return $this->render('app/admin/indicator/servicesIndicators.html.twig', [
+        return $this->render('app/admin/indicator/services_indicators.html.twig', [
             'search' => $search,
             'form' => $form->createView(),
             'servicesIndicators' => $indicators->getServicesIndicators($search),

@@ -7,7 +7,6 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block body %}
-
     <div class="container">
 
         <h1 class="h2 mb-3">{{ title }}</h1>
@@ -28,7 +27,7 @@
             </ol>
         </nav>
 
-        {% include 'model/_msgFlash.html.twig' %}
+        {% include 'model/_flash_message.html.twig' %}
         <div id="js-msg-flash-content"></div>
 
         <hr>
@@ -45,7 +44,6 @@
             {% include 'app/admin/security/_security_user_devices.html.twig' %}
         {% endif %}
     </div>
-
 {% endblock %}
 
 {% block javascripts %}

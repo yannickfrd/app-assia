@@ -52,19 +52,17 @@ final class PersonController extends AbstractController
     }
 
     /**
-     * Voir la liste des personnes.
-     *
-     * @Route("/people", name="people", methods="GET|POST")
+     * @Route("/people", name="person_index", methods="GET|POST")
      * @Route("/new_support/search/person", name="new_support_search_person", methods="GET|POST")
      */
-    public function listPeople(Request $request, Pagination $pagination): Response
+    public function index(Request $request, Pagination $pagination): Response
     {
         $form = $this->createForm(PersonSearchType::class, $search = new PersonSearch())
             ->handleRequest($request);
 
         $siSiaoLoginForm = $this->createForm(SiSiaoLoginType::class, new SiSiaoLogin());
 
-        return $this->render('app/people/person/listPeople.html.twig', [
+        return $this->render('app/people/person/person_index.html.twig', [
             'personSearch' => $search,
             'form' => $form->createView(),
             'siSiaoLoginForm' => $siSiaoLoginForm->createView(),
@@ -73,6 +71,97 @@ final class PersonController extends AbstractController
                 $request
             ) : null,
         ]);
+    }
+
+    /**
+     * Créer une nouvelle personne.
+     *
+     * @Route("/person/new", name="person_new", methods="GET|POST")
+     */
+    public function new(Request $request): Response
+    {
+        $form = $this->createForm(RolePersonGroupType::class, $rolePerson = new RolePerson())
+            ->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            return $this->createPerson($rolePerson);
+        }
+        if ($form->isSubmitted() && !$form->isValid()) {
+            $this->addFlash('danger', "Attention, une erreur s'est produite.");
+        }
+
+        return $this->render('app/people/person/person_edit.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/person/{id}-{slug}", name="person_show_slug", requirements={"slug" : "[a-z0-9\-]*"}, methods="GET")
+     * @Route("/person/{id}", name="person_show", methods="GET")
+     */
+    public function show(int $id, Request $request, SupportPersonRepository $supportRepo): Response
+    {
+        if (null === $person = $this->personRepo->findPersonById($id)) {
+            throw $this->createAccessDeniedException('Cette personne n\'existe pas.');
+        }
+
+        $form = $this->createForm(PersonType::class, $person, [])
+            ->handleRequest($request);
+
+        // Formulaire pour ajouter un nouveau groupe à la personne
+        $formNewGroup = $this->createForm(PersonNewGroupType::class, new RolePerson(), [
+            'action' => $this->generateUrl('person_new_group', ['id' => $person->getId()]),
+        ]);
+
+        $supports = $supportRepo->findSupportsOfPerson($person);
+
+        return $this->render('app/people/person/person_edit.html.twig', [
+            'form' => $form->createView(),
+            'supports' => $supports,
+            'form_new_group' => $formNewGroup->createView(),
+            'canEdit' => $this->canEdit($person, $supports),
+        ]);
+    }
+
+    /**
+     * @Route("/person/{id}/edit", name="person_edit_ajax", methods="POST")
+     */
+    public function edit(Person $person, Request $request): JsonResponse
+    {
+        $form = $this->createForm(PersonType::class, $person)
+            ->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->em->flush();
+
+            $this->discacheSupport($person);
+
+            /** @var User $user */
+            $user = $this->getUser();
+
+            return $this->json([
+                'alert' => 'success',
+                'msg' => 'Les modifications sont enregistrées.',
+                'user' => $user->getFullname(),
+                'date' => $person->getUpdatedAt()->format('d/m/Y à H:i'),
+            ]);
+        }
+
+        return $this->getErrorMessage($form);
+    }
+
+    /**
+     * @Route("/person/{id}/delete", name="person_delete", methods="GET")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function delete(Person $person): Response
+    {
+        $this->em->remove($person);
+        $this->em->flush();
+
+        $this->addFlash('warning', 'La personne est supprimée.');
+
+        return $this->redirectToRoute('home');
     }
 
     /**
@@ -119,34 +208,12 @@ final class PersonController extends AbstractController
             'attr' => ['supports' => $request->get('supports')],
         ])->handleRequest($request);
 
-        return $this->render('app/people/person/listPeople.html.twig', [
+        return $this->render('app/people/person/person_index.html.twig', [
             'form' => $form->createView(),
             'form_role_person' => $formRolePerson->createView() ?? null,
             'people_group' => $peopleGroup,
             'personSearch' => $search,
             'people' => $request->query->all() ? $pagination->paginate($this->personRepo->findPeopleQuery($search), $request) : null,
-        ]);
-    }
-
-    /**
-     * Créer une nouvelle personne.
-     *
-     * @Route("/person/new", name="person_new", methods="GET|POST")
-     */
-    public function newPerson(Request $request): Response
-    {
-        $form = $this->createForm(RolePersonGroupType::class, $rolePerson = new RolePerson())
-            ->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            return $this->createPerson($rolePerson);
-        }
-        if ($form->isSubmitted() && !$form->isValid()) {
-            $this->addFlash('danger', "Attention, une erreur s'est produite.");
-        }
-
-        return $this->render('app/people/person/person.html.twig', [
-            'form' => $form->createView(),
         ]);
     }
 
@@ -180,7 +247,7 @@ final class PersonController extends AbstractController
             $this->addFlash('danger', "Attention, une erreur s'est produite.");
         }
 
-        return $this->render('app/people/person/person.html.twig', [
+        return $this->render('app/people/person/person_edit.html.twig', [
             'people_group' => $peopleGroup,
             'form' => $form->createView(),
         ]);
@@ -207,72 +274,13 @@ final class PersonController extends AbstractController
 
         $supports = $supportRepo->findSupportsOfPerson($person);
 
-        return $this->render('app/people/person/person.html.twig', [
+        return $this->render('app/people/person/person_edit.html.twig', [
             'form' => $form->createView(),
             'people_group' => $peopleGroupRepo->findPeopleGroupById($id),
             'supports' => $supports,
             'form_new_group' => $formNewGroup->createView(),
             'canEdit' => $this->canEdit($person, $supports),
         ]);
-    }
-
-    /**
-     * Voir la fiche individuelle.
-     *
-     * @Route("/person/{id}-{slug}", name="person_show_slug", requirements={"slug" : "[a-z0-9\-]*"}, methods="GET")
-     * @Route("/person/{id}", name="person_show", methods="GET")
-     */
-    public function showPerson(int $id, Request $request, SupportPersonRepository $supportRepo): Response
-    {
-        if (null === $person = $this->personRepo->findPersonById($id)) {
-            throw $this->createAccessDeniedException('Cette personne n\'existe pas.');
-        }
-
-        $form = $this->createForm(PersonType::class, $person, [])
-            ->handleRequest($request);
-
-        // Formulaire pour ajouter un nouveau groupe à la personne
-        $formNewGroup = $this->createForm(PersonNewGroupType::class, new RolePerson(), [
-            'action' => $this->generateUrl('person_new_group', ['id' => $person->getId()]),
-        ]);
-
-        $supports = $supportRepo->findSupportsOfPerson($person);
-
-        return $this->render('app/people/person/person.html.twig', [
-            'form' => $form->createView(),
-            'supports' => $supports,
-            'form_new_group' => $formNewGroup->createView(),
-            'canEdit' => $this->canEdit($person, $supports),
-        ]);
-    }
-
-    /**
-     * Met à jour les informations d'une personne via Ajax.
-     *
-     * @Route("/person/{id}/edit", name="person_edit_ajax", methods="POST")
-     */
-    public function editPerson(Person $person, Request $request): JsonResponse
-    {
-        $form = $this->createForm(PersonType::class, $person)
-            ->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->em->flush();
-
-            $this->discacheSupport($person);
-
-            /** @var User $user */
-            $user = $this->getUser();
-
-            return $this->json([
-                'alert' => 'success',
-                'msg' => 'Les modifications sont enregistrées.',
-                'user' => $user->getFullname(),
-                'date' => $person->getUpdatedAt()->format('d/m/Y à H:i'),
-            ]);
-        }
-
-        return $this->getErrorMessage($form);
     }
 
     /**
@@ -291,22 +299,6 @@ final class PersonController extends AbstractController
         $this->addFlash('danger', "Une erreur s'est produite");
 
         return $this->redirectToRoute('person_show', ['id' => $person->getId()]);
-    }
-
-    /**
-     * Supprime la personne.
-     *
-     * @Route("/person/{id}/delete", name="person_delete", methods="GET")
-     * @IsGranted("ROLE_ADMIN")
-     */
-    public function deletePerson(Person $person): Response
-    {
-        $this->em->remove($person);
-        $this->em->flush();
-
-        $this->addFlash('warning', 'La personne est supprimée.');
-
-        return $this->redirectToRoute('home');
     }
 
     /**
@@ -332,7 +324,7 @@ final class PersonController extends AbstractController
     /**
      * Liste des personnes en doublons.
      *
-     * @Route("/duplicated_people", name="duplicated_people", methods="GET|POST")
+     * @Route("/duplicated_people", name="duplicated_people_index", methods="GET|POST")
      * @IsGranted("ROLE_ADMIN")
      */
     public function listDuplicatedPeople(Request $request): Response
@@ -340,7 +332,7 @@ final class PersonController extends AbstractController
         $form = $this->createForm(DuplicatedPeopleType::class, $search = new DuplicatedPeopleSearch())
             ->handleRequest($request);
 
-        return $this->render('app/people/person/listDuplicatedPeople.html.twig', [
+        return $this->render('app/people/person/duplicated_people_index.html.twig', [
             'form' => $form->createView(),
             'people' => $this->personRepo->findDuplicatedPeople($search),
         ]);

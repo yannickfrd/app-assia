@@ -22,8 +22,6 @@ class Note
     use TagTrait;
     use SoftDeleteableEntity;
 
-    public const SERIALIZER_GROUPS = ['show_note', 'show_tag', 'show_support_group', 'show_person'];
-
     public const TYPE_NOTE = 1;
     public const TYPE_REPORT = 2;
 
@@ -59,7 +57,7 @@ class Note
     /**
      * @ORM\Column(type="text")
      * @Assert\NotBlank()
-     * @Groups("show_note")
+     * @Groups("show_note_content")
      */
     private $content;
 
@@ -88,7 +86,6 @@ class Note
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Support\SupportGroup", inversedBy="notes")
-     * @Groups("show_note")
      */
     private $supportGroup;
 
@@ -220,6 +217,14 @@ class Note
     /**
      * @Groups("show_note")
      */
+    public function getCreatedAtToString(string $format = 'd/m/Y à H:i'): string
+    {
+        return $this->createdAt ? $this->createdAt->format($format) : '';
+    }
+
+    /**
+     * @Groups("show_note")
+     */
     public function getUpdatedAtToString(string $format = 'd/m/Y à H:i'): string
     {
         return $this->updatedAt ? $this->updatedAt->format($format) : '';
@@ -231,21 +236,5 @@ class Note
     public function getUpdatedByToString(): string
     {
         return $this->updatedBy ? $this->updatedBy->getFullname() : '';
-    }
-
-    /**
-     * @Groups("show_note")
-     */
-    public function getCreatedAtToString(string $format = 'd/m/Y'): string
-    {
-        return $this->createdAt ? $this->createdAt->format($format) : '';
-    }
-
-    /**
-     * @Groups("show_note")
-     */
-    public function getShortContent(): string
-    {
-        return substr($this->getContent(), 0, 200).' [...]';
     }
 }

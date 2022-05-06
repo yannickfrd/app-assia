@@ -57,7 +57,7 @@ final class AppController extends AbstractController
         $form = $this->createForm(SupportsByUserSearchType::class, $search)
             ->handleRequest($request);
 
-        return $this->render('app/admin/dashboard/supportsByUser.html.twig', [
+        return $this->render('app/admin/dashboard/supports_by_user.html.twig', [
             'form' => $form->createView(),
             'datas' => $form->isSubmitted() || !$this->isGranted('ROLE_SUPER_ADMIN') ? $indicators->getSupportsbyDevice($search) : null,
         ]);

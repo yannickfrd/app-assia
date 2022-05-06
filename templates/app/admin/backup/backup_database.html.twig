@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sauvegarde et export base de données{% endblock %}
+
+{% block body %}
+    <div class="container">
+
+        <h1 class="h2 mb-3">Sauvegarde et export base de données</h1>
+
+        <hr>
+
+        {% include 'model/_flash_message.html.twig' %}
+        
+        <div id="js-msg-flash-content"></div>
+        <a href="{{ path('database_backup_create') }}" class="btn btn-{{ theme_color }} btn-sm shadow my-1" 
+            data-toggle="tooltip" data-placement="bottom" title="Créer une nouvelle sauvegarde"><span class="fas fa-cloud-upload-alt mr-2"></span>Créer backup
+        </a>
+
+        <section class="mb-5">
+            <div class="row align-items-baseline">
+                <div class="col-md-4 count align-middle mb-2">
+                    <span class="align-middle">Résultat : {{ backups.getTotalItemCount|number }}.</span>
+                </div>
+                <div class="col-md-8">
+                    <div class="navigation">{{ knp_pagination_render(backups) }}</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped table-hover text-dark shadow-sm">
+                            <thead>
+                                <tr>
+                                    <th scope="row" class="align-middle th-w-20"></th>
+                                    <th scope="col" class="align-middle th-w-140">{{ knp_pagination_sortable(backups, 'Nom', 'b.createdAt') }}</th>
+                                    <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(backups, 'Taille', 'b.size') }}</th>
+                                    <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(backups, 'Créé le', 'b.createdAt') }}</th>
+                                    <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(backups, 'Créé par', 'u.lastname') }}</th>
+                                    <th scope="col" class="align-middle th-w-20"></th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="container-backups">
+                                {% for backup in backups %}
+                                    <tr id="backup-{{ backup.id }}" class="js-backup">
+                                        <td scope="row" class="align-middle text-center">
+                                            <a href="{{ path('database_backup_download', {'id': backup.id }) }}" class="btn btn-{{ theme_color }} btn-sm shadow my-1" 
+                                                data-toggle="tooltip" data-placement="bottom" title="Exporter la sauvegarde de la base de données"><span class="fas fa-file-download"></span>
+                                            </a>
+                                        </td>
+                                        <td class="align-middle js-backup-title">Sauvegarde {{ backup.createdBy ? 'manuelle' : 'automatique' }} du {{ backup.createdAt|date('d/m/Y') }}</td>
+                                        <td class="align-middle js-backup-size text-right">{{ (backup.size / 1000 / 1000)|round }} Mo</td>
+                                        <td class="align-middle js-backup-createdAt">{{ backup.createdAt|date('d/m/Y H:i') }}</td>
+                                        <td class="align-middle js-backup-createdAt">{{ backup.createdBy ? backup.createdBy.fullname : '[Système]' }}</td>
+                                        <td class="align-middle text-center">
+                                            <a href="{{ path('database_backup_delete', {'id':backup.id}) }}" class="js-delete btn btn-danger btn-sm shadow my-1"
+                                                onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer cette sauvegarde ?')){return true;}else{return false;}">
+                                                <span class="fas fa-trash-alt"></span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="navigation">{{ knp_pagination_render(backups) }}</div>
+        </section>
+    </div>
+    
+{% endblock %}

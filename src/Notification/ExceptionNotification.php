@@ -17,7 +17,7 @@ class ExceptionNotification extends MailNotifier
         $email = (new TemplatedEmail())
             ->to($this->getAdminEmail())
             ->subject($subject)
-            ->htmlTemplate('emails/exceptionEmail.html.twig')
+            ->htmlTemplate('emails/email_exception.html.twig')
             ->context([
                 'code' => $exception->getCode(),
                 'message' => $exception->getMessage(),

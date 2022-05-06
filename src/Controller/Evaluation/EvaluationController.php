@@ -36,30 +36,26 @@ final class EvaluationController extends AbstractController
     }
 
     /**
-     * Créer une évaluation sociale.
-     *
      * @Route("/support/{id}/evaluation/new", name="support_evaluation_new", methods="GET")
      */
-    public function createEvaluation(int $id, SupportGroupRepository $supportGroupRepo,
+    public function new(int $id, SupportGroupRepository $supportGroupRepo,
         EvaluationCreator $evaluationCreator): Response
     {
         if ($this->evaluationRepo->count(['supportGroup' => $id])) {
-            return $this->redirectToRoute('support_evaluation_view', ['id' => $id]);
+            return $this->redirectToRoute('support_evaluation_show', ['id' => $id]);
         }
 
         $this->denyAccessUnlessGranted('EDIT', $supportGroup = $supportGroupRepo->find($id));
 
         $evaluationCreator->create($supportGroup);
 
-        return $this->redirectToRoute('support_evaluation_view', ['id' => $supportGroup]);
+        return $this->redirectToRoute('support_evaluation_show', ['id' => $supportGroup]);
     }
 
     /**
-     * Voir une évaluation sociale.
-     *
-     * @Route("/support/{id}/evaluation/view", name="support_evaluation_view", methods="GET|POST")
+     * @Route("/support/{id}/evaluation/show", name="support_evaluation_show", methods="GET|POST")
      */
-    public function showEvaluation(int $id, Request $request): Response
+    public function show(int $id, Request $request): Response
     {
         $evaluationGroup = $this->evaluationRepo->findEvaluationOfSupport($id);
 
@@ -85,11 +81,9 @@ final class EvaluationController extends AbstractController
     }
 
     /**
-     * Modifier une évaluation sociale.
-     *
      * @Route("/support/{id}/evaluation/edit", name="support_evaluation_edit", methods="POST")
      */
-    public function editEvaluation(int $id, Request $request, EvaluationManager $evaluationManager,
+    public function edit(int $id, Request $request, EvaluationManager $evaluationManager,
         Normalisation $normalisation): JsonResponse
     {
         if (null === $evaluationGroup = $this->evaluationRepo->findEvaluationOfSupport($id)) {
@@ -123,11 +117,9 @@ final class EvaluationController extends AbstractController
     }
 
     /**
-     * Supprime l'évaluation sociale du suivi.
-     *
      * @Route("/evaluation/{id}/delete", name="evaluation_delete", methods="GET")
      */
-    public function deleteEvaluationGroup(EvaluationGroup $evaluationGroup, EntityManagerInterface $em): Response
+    public function delete(EvaluationGroup $evaluationGroup, EntityManagerInterface $em): Response
     {
         $supportGroup = $evaluationGroup->getSupportGroup();
 
@@ -169,7 +161,7 @@ final class EvaluationController extends AbstractController
 
         $evaluationManager->addEvaluationPeople($evaluationGroup);
 
-        return $this->redirectToRoute('support_evaluation_view', ['id' => $evaluationGroup->getSupportGroup()->getId()]);
+        return $this->redirectToRoute('support_evaluation_show', ['id' => $evaluationGroup->getSupportGroup()->getId()]);
     }
 
     /**
@@ -177,7 +169,7 @@ final class EvaluationController extends AbstractController
      *
      * @Route("/support/{id}/evaluation/export/{type}", name="evaluation_export", methods="GET")
      */
-    public function exportEvaluation(
+    public function export(
         int $id,
         SupportManager $supportManager,
         EvaluationExporter $evaluationExporter,

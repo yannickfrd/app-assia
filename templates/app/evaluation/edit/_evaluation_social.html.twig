@@ -97,7 +97,7 @@
                         </div>
                         <hr class="my-3"/>
                     {% endif %}
-                    {% if support_person.role != ROLE_CHILD %}
+                    {% if support_person.role != role_child %}
                         <div class="row mb-3">
                             <div class="col-md-6">{{ form_row(form_eval_social_person.familyBreakdown) }}</div>
                             <div class="col-md-6">{{ form_row(form_eval_social_person.friendshipBreakdown) }}</div>
@@ -109,7 +109,7 @@
                                     attr: {'data-important': 'true'}
                                 }) }}
                             </div>
-                            {% if support_person.role != ROLE_CHILD %}
+                            {% if support_person.role != role_child %}
                                 <div class="col-md-6" data-parent-field="{{ prefix_id }}_violenceVictim" data-options="1">
                                     {{ form_row(form_eval_social_person.domViolenceVictim, {
                                         attr: {'data-important': 'true'}
