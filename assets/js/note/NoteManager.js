@@ -13,10 +13,8 @@ export default class NoteManager {
         this.parametersUrl = new ParametersUrl()
 
         this.noteModalElt = document.getElementById('note-modal')
-        this.noteModal = new Modal(this.noteModalElt)
-
-        this.noteElts = document.querySelectorAll('div[data-note-id]')
-
+        this.noteModal = new Modal(this.noteModalElt, {backdrop: 'static', keyboard: false})
+        
         this.confirmModalElt = document.getElementById('confirm-modal')
         this.confirmModal = new Modal(this.confirmModalElt)
 
@@ -42,23 +40,24 @@ export default class NoteManager {
         document.querySelectorAll('button[data-action="restore"]').forEach(restoreBtn => restoreBtn
             .addEventListener('click', () => this.requestRestoreNote(restoreBtn)))
 
-        // show note in table
+        // table view
         document.querySelectorAll('table#table-notes tbody a[data-action="show"]')
             .forEach(showNoteBtn => showNoteBtn.addEventListener('click', e => {
                 e.preventDefault()
-                this.requestShowNote(e.currentTarget.href)
+                this.requestToShow(e.currentTarget.href)
             }))
-        // show note in card
-        this.noteElts.forEach(noteElt => {
-            if (!noteElt.dataset.noteDeleted) {
-                noteElt.addEventListener('click', () => this.requestShowNote(noteElt.dataset.showUrl))
+        // card view
+        document.querySelectorAll('div[data-note-id]').forEach(noteElt => {
+            const pathShow = noteElt.dataset.pathShow
+            if (pathShow) {
+                noteElt.addEventListener('click', () => this.requestToShow(pathShow))
             }
         })
 
         document.querySelectorAll('table#table-notes tbody button[data-action="delete-note"]')
             .forEach(btn => btn.addEventListener('click', () => {
                 this.deleteModal.show()
-                this.deleteModalElt.querySelector('button#modal-confirm').dataset.url = btn.dataset.url
+                this.deleteModalElt.querySelector('button#modal-confirm').dataset.path = btn.dataset.path
             }))
 
         if (document.querySelector('button[data-action="new_note"]')) {
@@ -78,7 +77,7 @@ export default class NoteManager {
     checkIfNoteIdInUrl() {
         const noteElt = this.containerNotesElt.querySelector(`div[data-note-id="${parseInt(this.parametersUrl.get('noteId'))}"]`)
         if (noteElt) {
-            setTimeout(() => this.noteForm.show(noteElt), 200)
+            this.requestToShow(noteElt.dataset.pathShow, true)
         }
     }
 
@@ -86,23 +85,24 @@ export default class NoteManager {
         switch (this.confirmModalElt.dataset.action) {
             case 'delete-note':
                 this.loader.on()
-                this.ajax.send('GET', this.noteForm.btnDeleteElt.dataset.url, this.responseAjax.bind(this))
-                break;
+                this.ajax.send('GET', this.noteForm.btnDeleteElt.dataset.path, this.responseAjax.bind(this))
+                break
             case 'hide_note_modal':
                 this.noteModal.hide()
-                break;
+                break
         }
         this.confirmModalElt.dataset.action = ''
     }
 
     /**
-     * @param {String} url
+     * @param {string} path
+     * @param {boolean} force
      */
-    requestShowNote(url) {
-        if (!this.loader.isActive()) {
+    requestToShow(path, force = false) {
+        if (!this.loader.isActive() || force === true) {
             this.loader.on()
 
-            this.ajax.send('GET', url, this.responseAjax.bind(this))
+            this.ajax.send('GET', path, this.responseAjax.bind(this))
         }
     }
 
@@ -113,7 +113,7 @@ export default class NoteManager {
         if (!this.loader.isActive()) {
             this.loader.on()
 
-            this.ajax.send('GET', restoreBtn.dataset.url, this.responseAjax.bind(this))
+            this.ajax.send('GET', restoreBtn.dataset.path, this.responseAjax.bind(this))
         }
     }
 
@@ -124,7 +124,7 @@ export default class NoteManager {
         if (!this.loader.isActive()) {
             this.loader.on()
 
-            this.ajax.send('GET', e.target.dataset.url, this.responseAjax.bind(this))
+            this.ajax.send('GET', e.target.dataset.path, this.responseAjax.bind(this))
         }
     }
 
@@ -186,13 +186,14 @@ export default class NoteManager {
      */
     createNoteElt(note) {
         if (this.isCardNoteView) {
-            this.createCardNoteElt(note);
+            this.createCardNoteElt(note)
         } else {
             this.createTableRowNoteTr(note)
         }
-        this.updateCounter(1)
 
-        this.noteModal.hide()
+        this.noteForm.initModal(note)
+
+        this.updateCounter(1)
     }
 
     /**
@@ -203,17 +204,19 @@ export default class NoteManager {
         const noteElt = document.createElement('div')
         noteElt.className = 'col-sm-12 col-lg-6 mb-4 reveal'
         noteElt.dataset.noteId = note.id
+        noteElt.dataset.pathShow = this.containerNotesElt.dataset.pathShow.replace('__id__', note.id)
 
         noteElt.innerHTML = `
-            <div class='card h-100 shadow'>
+            <div class='card h-100 shadow cursor-pointer'>
                 <div class='card-header'>
-                    <h3 class='card-title h5 text-${this.themeColor}'>${this.noteModalElt.querySelector('#note_title').value}</h3>
-                    <span data-note-type="1">${note.typeToString}</span> (<span data-note-status="1">${note.statusToString}</span>)
-                    <span class="small text-secondary" data-note-created="true">${this.getEditInfos(note)}</span>
+                    <h3 class='card-title h5 text-${this.themeColor}'>${note.title}</h3>
+                    <span data-note-type="${note.type}">${note.typeToString}</span> 
+                    (<span data-note-status="${note.status}">${note.statusToString}</span>)
+                    <span class="small text-secondary" data-note-created="true">Créé le ${note.createdAtToString}</span>
                     <span class="small text-secondary" data-note-updated="true"></span>
                     <div class="mt-2 tags-list">${this.createTags(note)}</div>
                 </div>
-                <div class='card-body note-content cursor-pointer' data-placement='bottom' title='Voir la note'>
+                <div class='card-body note-content'>
                     <div class='card-text'>${this.noteForm.ckEditor.getData()}</div>
                     <span class='note-fadeout'></span>
                 </div>
@@ -223,12 +226,10 @@ export default class NoteManager {
 
         this.containerNotesElt.firstChild.before(noteElt)
 
-        this.noteForm.initModal(noteElt)
-
         // Créé l'animation d'apparition
         setTimeout(() => noteElt.classList.add('reveal-on'), 100)
 
-        noteElt.addEventListener('click', () => this.noteForm.show(noteElt))
+        noteElt.addEventListener('click', () => this.requestToShow(noteElt.dataset.pathShow))
     }
 
     /**
@@ -237,61 +238,78 @@ export default class NoteManager {
      */
     createTableRowNoteTr(note) {
         const noteId = note.id
-
-        const showUrl = document.querySelector('table#table-notes thead th[data-get-url="show"]').dataset.showUrl
-        const thAction = document.querySelector('table#table-notes thead th[data-get-url="action"]')
-
-        const wordUrl = thAction.dataset.wordUrl.replace('__id__', noteId)
-        const pdfUrl = thAction.dataset.pdfUrl.replace('__id__', noteId)
-        const deleteUrl = thAction.dataset.deleteUrl.replace('__id__', noteId)
-
+        const thElt = document.querySelector('table#table-notes thead th')
+        const pathShow = thElt.dataset.pathShow.replace('__id__', noteId)
+        const pathExportWord = thElt.dataset.pathExportWord.replace('__id__', noteId)
+        const pathExportPdf = thElt.dataset.pathExportPdf.replace('__id__', noteId)
+        const pathDelete = thElt.dataset.pathDelete.replace('__id__', noteId)
         const noteTr = document.createElement('tr')
-        noteTr.id = 'note-' + noteId
 
+        noteTr.id = 'note-' + noteId
         noteTr.innerHTML = `
             <td class="align-middle text-center">
-                <a href="${showUrl.replace('__id__', noteId)}"
-                    class="btn btn-${this.themeColor} btn-sm shadow" title="Voir la note sociale" type="button"
-                    data-toggle="tooltip" data-placement="bottom"><i class="fas fa-eye"></i></a></td>`
-
-        const content = note.content.length >= 200 ? note.content.substr(0, 200) + ' [...]' : note.content
-        let titleTd = `<td class="align-middle justify" data-cell="title-content" data-title="${note.title}" data-content="${note.content}">`
-        titleTd += note.title !== null ? `<span class="font-weight-bold">${note.title} : </span>` : ``
-        titleTd += `${this.striptags(content)}</td>`
-        noteTr.innerHTML += titleTd
-
-        noteTr.innerHTML += `
+                <a href="${pathShow.replace('__id__', noteId)}" type="button"
+                    class="btn btn-${this.themeColor} btn-sm shadow" title="Voir la note sociale" 
+                    data-toggle="tooltip" data-placement="bottom" data-action="show"><i class="fas fa-eye"></i>
+                </a>
+            </td>
+            <td class="align-middle justify" data-cell="title-content">
+                <span class="font-weight-bold">${note.title ? note.title : ''} : </span>${this.getNoteContent()}
+            </td>
             <td class="align-middle" data-cell="type">${note.typeToString}</td>
             <td class="align-middle" data-cell="status">${note.statusToString}</td>
             <td class="align-middle" data-cell="tags">${this.createTags(note)}</td>
             <td class="align-middle" data-cell="createdAt">${note.createdAtToString}</td>
             <td class="align-middle text-center p-1">
-                <a href="${wordUrl}" class="btn btn-${this.themeColor} btn-sm mb-1 shadow" 
-                    title="Exporter la note au format Word" data-toggle="tooltip" data-placement="bottom">
-                    <i class="fas fa-file-word bg-primary fa-lg"></i><span class="sr-only">Word</span></a><br/>
-                <a href="${pdfUrl}" class="btn btn-${this.themeColor} btn-sm mb-1 shadow" 
-                    title="Exporter la note au format PDF" data-toggle="tooltip" data-placement="bottom">
-                    <i class="fas fa-file-pdf bg-danger fa-lg"></i><span class="sr-only">PDF</span></a><br/>
-                <button class="btn btn-sm btn-danger shadow mt-3" title="Supprimer la note" data-toggle="tooltip" data-placement="bottom"
-                    data-action="delete-note" data-url="${deleteUrl}"><i class="fa-solid fa-trash-can"></i></button></td>`
+                <a href="${pathExportWord}"
+                    class="btn btn-${this.themeColor} btn-sm mb-1 shadow" title="Exporter la note au format Word"
+                    data-toggle="tooltip" data-placement="bottom">
+                        <i class="fas fa-file-word fa-lg bg-primary"></i><span class="sr-only">Word</span>
+                </a>
+                <a href="${pathExportPdf}"
+                    class="btn btn-${this.themeColor} btn-sm mb-1 shadow" title="Exporter la note au format PDF"
+                    data-toggle="tooltip" data-placement="bottom">
+                        <i class="fas fa-file-pdf fa-lg bg-danger"></i><span class="sr-only">PDF</span>
+                </a>
+            </td>
+            <td class="align-middle text-center">
+                <button class="btn btn-sm btn-danger shadow" title="Supprimer la note" data-toggle="tooltip" 
+                    data-placement="bottom" data-action="delete-note" data-path="${pathDelete}">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+            </td>
+        `
 
         document.querySelector('table#table-notes tbody')
             .insertBefore(noteTr, document.querySelector('table#table-notes tbody').firstChild)
 
-        this.noteModal.hide()
-
         document.querySelectorAll('table#table-notes tbody button[data-action="delete-note"]')
             .forEach(btn => btn.addEventListener('click', () => {
                 this.deleteModal.show()
-                this.deleteModalElt.querySelector('button#modal-confirm').dataset.url = btn.dataset.url
+                this.deleteModalElt.querySelector('button#modal-confirm').dataset.path = btn.dataset.path
             }))
+
+        noteTr.querySelector('a[data-action="show"]').addEventListener('click', e => {
+            e.preventDefault()
+            this.requestToShow(e.currentTarget.href)
+        })
+    }
+
+    /**
+     * @returns {string}
+     */
+    getNoteContent() {
+        let content = this.noteForm.ckEditor.getData()
+        content = content.replace(/(<([^>]+)>)/gi, ' ')
+
+        return content.length >= 200 ? content.substr(0, 200) + ' [...]' : content
     }
 
     /**
      * @param {Object} note
      * @returns {string}
      */
-    getEditInfos(note) {
+     getUpdateInfos(note) {
         return `(modifié le ${note.updatedAtToString} par ${note.updatedByToString})`
     }
 
@@ -311,11 +329,9 @@ export default class NoteManager {
      */
     updateNoteElt(note) {
         if (this.isCardNoteView) {
-            this.updateCardNote(note)
-        } else {
-            this.updateRowNote(note)
-        }
-        this.noteModal.hide()
+            return this.updateCardNote(note)
+        } 
+        return this.updateRowNote(note)
     }
 
     /**
@@ -325,12 +341,8 @@ export default class NoteManager {
     updateRowNote(note) {
         const noteRow = document.querySelector('tr#note-' + note.id)
 
-        const content = note.content.length >= 200 ? note.content.substr(0, 200) + ' [...]' : note.content
-
-        noteRow.querySelector('td[data-cell="title-content"]').dataset.title = note.title
-        noteRow.querySelector('td[data-cell="title-content"]').dataset.content = note.content
         noteRow.querySelector('td[data-cell="title-content"]').innerHTML = (note.title !== null
-            ? `<span class="font-weight-bold">${note.title} : </span>` : ``) + `${this.striptags(content)}`
+            ? `<span class="font-weight-bold">${note.title} : </span>` : ``) + `${this.getNoteContent()}`
 
         noteRow.querySelector('td[data-cell="type"]').innerHTML = note.typeToString ?? ''
         noteRow.querySelector('td[data-cell="status"]').innerHTML = note.statusToString ?? ''
@@ -344,7 +356,6 @@ export default class NoteManager {
      */
     updateCardNote(note) {
         const noteElt = document.querySelector(`div[data-note-id="${note.id}"]`)
-
         noteElt.querySelector('.card-title').textContent = this.noteModalElt.querySelector('#note_title').value
         noteElt.querySelector('.card-text').innerHTML = this.noteForm.ckEditor.getData()
 
@@ -356,7 +367,7 @@ export default class NoteManager {
         noteStatusElt.textContent = note.statusToString
         noteStatusElt.dataset.noteStatus = this.noteModalElt.querySelector('#note_status').value
 
-        noteElt.querySelector('[data-note-updated]').textContent = this.getEditInfos(note)
+        noteElt.querySelector('[data-note-updated]').textContent = this.getUpdateInfos(note)
         noteElt.querySelector('.tags-list').innerHTML = this.createTags(note)
     }
 
@@ -389,10 +400,6 @@ export default class NoteManager {
             return this.searchSupportNotesElt.classList.remove('d-none')
         }
         return this.searchSupportNotesElt.classList.add('d-none')
-    }
-
-    striptags(text) {
-        return text.replace(/(<([^>]+)>)/gi, ' ')
     }
 
     /**
