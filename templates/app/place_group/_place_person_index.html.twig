@@ -1,0 +1,53 @@
+<section class="mb-1">
+    <h2 class="h5 my-4">Personnes logées/hébergées</h2>
+    <div class="table-responsive">
+        <table class="table table-sm table-striped table-hover text-dark shadow-sm">
+            <thead>
+                <tr>
+                    <th scope="col" class="align-middle text-center th-w-20" title="Demandeur/euse principal·e"
+                        data-toggle="tooltip" data-placement="bottom" >DP</th>                    
+                    <th scope="col" class="align-middle th-w-150">Nom et prénom</th>
+                    <th scope="col" class="align-middle th-date">Date de début</th>
+                    <th scope="col" class="align-middle th-date">Date de fin</th>
+                    <th scope="col" class="align-middle th-w-150">Motif de fin</th>
+                    <th scope="col" class="align-middle th-w-150">Commentaire</th>
+                    <th scope="col" class="align-middle th-w-20"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for form_person_place in form.placePeople.children|sort ((a, b) => b.vars.value.person.age <=> a.vars.value.person.age) %}
+                    {% set support_person = form_person_place.vars.value.supportPerson %}
+                    {% set is_header = support_person ? support_person.head %}
+                    {% set placePersonId = form_person_place.vars.value.id %}
+                    <tr data-place-person="{{ placePersonId }}">
+                        <td class="align-middle font-weight-bold text-center" scope="row">
+                            {% if is_header %}<i class="fas fa-dot-circle"></i>{% endif %}</td>
+                        <td class="align-middle">{{ form_person_place.vars.data.person.fullname }}</td>
+                        <td class="align-middle">{{ form_widget(form_person_place.startDate) }}</td>
+                        <td class="align-middle">{{ form_widget(form_person_place.endDate) }}</td>
+                        <td class="align-middle">{{ form_widget(form_person_place.endReason) }}</td>
+                        <td class="align-middle">{{ form_widget(form_person_place.commentEndReason) }}</td>
+                        <td class="align-middle text-center">
+							{% if not is_header %}
+                                <button data-action="remove" data-url="{{ path('support_person_place_delete', {'id': placePersonId}) }}" 
+                                    class="btn btn-danger btn-sm shadow my-1" title="Supprimer la personne de la prise en charge" 
+                                    data-toggle="modal" data-target="#modal-block">
+                                    <span class="fas fa-trash-alt"><span class="sr-only">Supprimer</span></span>
+                                </button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="float-right">
+                <button type="submit" id="send2" name="send2" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% include 'app/place_group/_place_person_remove_modal.html.twig' %}

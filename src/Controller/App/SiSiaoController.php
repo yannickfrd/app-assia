@@ -58,7 +58,7 @@ final class SiSiaoController extends AbstractController
             $this->addFlash('danger', 'si_siao.login_failed');
         }
 
-        return $this->render('app/siSiao/si_siao_login.html.twig', [
+        return $this->render('app/si_siao/si_siao_login.html.twig', [
             'form' => $form->createView(),
             'target_path' => $this->getTargetPath($request->getSession(), 'main'),
         ]);
@@ -130,7 +130,7 @@ final class SiSiaoController extends AbstractController
         if (is_array($data) && 'success' === $data['alert']) {
             return $this->json([
                 'alert' => 'success',
-                'html' => $this->render('app/siSiao/_si_siao_group.html.twig', $data['group']),
+                'html' => $this->render('app/si_siao/_si_siao_group.html.twig', $data['group']),
                 'idGroup' => $data['group']['idGroupe'],
             ]);
         }
@@ -173,7 +173,7 @@ final class SiSiaoController extends AbstractController
             EvaluationManager::deleteCacheItems($evaluationGroup);
         }
 
-        return $this->redirectToRoute('support_evaluation_view', ['id' => $supportGroup->getId()]);
+        return $this->redirectToRoute('support_evaluation_show', ['id' => $supportGroup->getId()]);
     }
 
     /**

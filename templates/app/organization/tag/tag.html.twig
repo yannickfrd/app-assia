@@ -1,22 +1,21 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
 
 
 {% set tag = form.vars.value %}
-{% set EDIT_MODE = tag.id != null %}
-{% set title = EDIT_MODE ? "Étiquette " ~ tag.name : "Nouvelle étiquette" %}
+{% set edit_mode = tag.id != null %}
+{% set title = edit_mode ? 'Étiquette ' ~ tag.name : 'Nouvelle étiquette' %}
 
 {% block title %}{{ title }}{% endblock %}
 
 {% block body %}
-        <div class="container">
-
+    <div class="container">
         <h1 class="h2 mb-3">{{ title }}</h1>
-        {% if EDIT_MODE %}
+        {% if edit_mode %}
             <div class="small text-secondary">
-                <p> Créé le {{ tag.createdAt|date("d/m/Y à H:i") }}
-                    {{ tag.createdBy ? " par " ~ tag.createdBy.fullname }}
-                    (modifié le {{ tag.updatedAt|date("d/m/Y à H:i") }}<!--
-                    -->{{ tag.createdBy ? " par " ~ tag.updatedBy.fullname }})
+                <p> Créé le {{ tag.createdAt|date('d/m/Y à H:i') }}
+                    {{ tag.createdBy ? ' par ' ~ tag.createdBy.fullname }}
+                    (modifié le {{ tag.updatedAt|date('d/m/Y à H:i') }}<!--
+                    -->{{ tag.createdBy ? ' par ' ~ tag.updatedBy.fullname }})
                 </p>
             </div>
         {% else %}
@@ -33,7 +32,7 @@
         <hr>
 
         <section>
-            {% include "model/_msgFlash.html.twig" %}
+            {% include 'model/_flash_message.html.twig' %}
             <div id="js-msg-flash-content"></div>
 
             {{ form_start(form) }}
@@ -51,17 +50,17 @@
                     <div class="mb-4 float-right">
                         <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">
                             <span class="fas fa-save mr-2"></span>
-                            {% if EDIT_MODE %}Mettre à jour{% else %}Enregistrer{% endif %}
+                            {% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}
                         </button>
                     </div>
                 </div>
             </div>
-            {{ form_end(form, {"render_rest": false}) }}
+            {{ form_end(form, {'render_rest': false}) }}
         </section>
 
     </div>
 {% endblock %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags("tag") }}
+    {{ encore_entry_script_tags('tag') }}
 {% endblock javascripts %}

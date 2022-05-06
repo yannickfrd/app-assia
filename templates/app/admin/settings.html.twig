@@ -5,7 +5,6 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block body %}
-
     <div class="container">
 
         {{ form_start(form) }}
@@ -19,7 +18,7 @@
                 </ol>
             </nav>
 
-            {% include "model/_msgFlash.html.twig" %}
+            {% include 'model/_flash_message.html.twig' %}
 
             <hr>
 
@@ -87,6 +86,5 @@
         {{ form_end(form) }}
 
     </div>
-
 {% endblock %}
 

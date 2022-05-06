@@ -62,7 +62,7 @@ final class PeopleGroupController extends AbstractController
             $this->addFlash('success', 'Les modifications sont enregistrées.');
         }
 
-        return $this->render('app/people/peopleGroup/peopleGroup.html.twig', [
+        return $this->render('app/people/peopleGroup/people_group_edit.html.twig', [
             'form' => $form->createView(),
             'supports' => $supports,
             'referents' => $peopleGroupCollections->getReferents($peopleGroup),

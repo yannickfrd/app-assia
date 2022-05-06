@@ -1,0 +1,38 @@
+{% set nb_personnes = personnes|length %}
+
+<div class="row my-3">
+    <div class="col-md-6">{{ composition ? composition.libelle : 'Non renseigné' }}, {{ nb_personnes }} personne{{ nb_personnes > 1 ? 's' }}</div>
+    <div class="col-md-6">ID Groupe SI-SIAO : {{ idGroupe }}</div>
+</div>
+
+<div class="row mb-2">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Nom</th>
+                        <th>Prénom</th>
+                        <th>Date de naissance</th>
+                        <th>Âge</th>
+                        <th>Sexe</th>
+                        <th>Situation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for personne in personnes|sort((a, b) => b.age <=> a.age) %}
+                        {% set is_dp = dp.id == personne.id %}
+                        <tr class="{{ is_dp ? 'font-weight-bold' }}">
+                            <td class="align-middle" scope="row">{{ personne.nom }}</td>
+                            <td class="align-middle">{{ personne.prenom }}</td>
+                            <td class="align-middle">{{ personne.datenaissance ?? (is_dp ? dp.datenaissance) }}</td>
+                            <td class="align-middle">{{ personne.age }} an{{ personne.age > 1 ? 's' }}</td>
+                            <td class="align-middle">{{ personne.sexe|capitalize }}</td>
+                            <td class="align-middle">{{ personne.situation.libelle }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

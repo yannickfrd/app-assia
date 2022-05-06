@@ -81,7 +81,7 @@ class EvaluationControllerTest extends WebTestCase
         $this->client->loginUser($this->fixtures['john_user']);
 
         $id = $this->fixtures['support_group_with_eval']->getId();
-        $this->client->request('GET', "/support/$id/evaluation/view");
+        $this->client->request('GET', "/support/$id/evaluation/show");
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Évaluation sociale');
@@ -93,7 +93,7 @@ class EvaluationControllerTest extends WebTestCase
         $this->client->loginUser($this->fixtures['john_user']);
 
         $id = $this->supportGroup->getId();
-        $this->client->request('GET', "/support/$id/evaluation/view");
+        $this->client->request('GET', "/support/$id/evaluation/show");
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Évaluation sociale');
@@ -106,7 +106,7 @@ class EvaluationControllerTest extends WebTestCase
 
         $id = $this->fixtures['support_group_with_eval']->getId();
         /** @var Crawler */
-        $crawler = $this->client->request('GET', "/support/$id/evaluation/view");
+        $crawler = $this->client->request('GET', "/support/$id/evaluation/show");
         $csrfToken = $crawler->filter('#evaluation__token')->attr('value');
 
         // Fail

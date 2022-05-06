@@ -1,6 +1,6 @@
 <nav class="navbar fixed-top navbar-expand-xl navbar-light bg-{{ theme_color }} mb-0 shadow">
     <a class="navbar-brand py-0 text-light" href="{{ path('home') }}">
-        {% if app.request.server.get('APP_VERSION') == "prod" %}
+        {% if app.request.server.get('APP_VERSION') == 'prod' %}
             <img id="logo-site" src="{{ asset('images/logo_assia_white.png') }}" height="56" width="144" alt="Application Assia"
                 title="Application Assia">
         {% else %}
@@ -48,8 +48,8 @@
                     </a>
                     <div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownMenuDirectory">
                         <a class="dropdown-item" href="{{ path('user_index') }}">Utilisateurs</a>
-                        <a class="dropdown-item" href="{{ path('services') }}">Services</a>
-                        <a class="dropdown-item" href="{{ path('poles') }}">Pôles</a>
+                        <a class="dropdown-item" href="{{ path('service_index') }}">Services</a>
+                        <a class="dropdown-item" href="{{ path('pole_index') }}">Pôles</a>
                     </div>
                 </li>
                 <li class="nav-item">
@@ -61,7 +61,7 @@
                     </li>
                 {% endif %}
             </ul>
-            <form action="{{ path('people') }}" method="get" class="form-inline mr-3 my-2 my-lg-0">
+            <form action="{{ path('person_index') }}" method="get" class="form-inline mr-3 my-2 my-lg-0">
                 <div class="position-relative">
                     <label for="search-person" class="sr-only col-form-label">Recherche d'une personne</label>
                     <input name="search-person" id="search-person" class="form-control mr-sm-2" type="text"

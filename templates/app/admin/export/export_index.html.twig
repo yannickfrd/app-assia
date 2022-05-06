@@ -3,7 +3,6 @@
 {% block title %}Export des données{% endblock %}
 
 {% block body %}
-
     <div class="container">
 
         <h1 class="h2 mb-3">Export des données</h1>
@@ -11,7 +10,7 @@
         <hr/>
 
         <section>
-            {% include 'model/_msgFlash.html.twig' %}
+            {% include 'model/_flash_message.html.twig' %}
             <div id="js-msg-flash-content"></div>
             
             {% include 'app/admin/export/export_form.html.twig' %}
@@ -28,7 +27,6 @@
         {% include 'app/admin/export/export_table.html.twig' %}
 
     </div>
-    
 {% endblock %}
 
 {% block javascripts %}

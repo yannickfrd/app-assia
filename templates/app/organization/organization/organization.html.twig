@@ -1,22 +1,21 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
 
 {% set organization = form.vars.value %}
-{% set EDIT_MODE = organization.id != null %}
-{% set title = EDIT_MODE ? 'Organisme ' ~ organization.name : 'Nouvel organisme' %}
+{% set edit_mode = organization.id != null %}
+{% set title = edit_mode ? 'Organisme ' ~ organization.name : 'Nouvel organisme' %}
 
 {% block title %}{{ title }}{% endblock %}
 
 {% block body %}
-
     <div class="container">
 
         <h1 class="h2 mb-3">{{ title }}</h1>
-        {% if EDIT_MODE %}
+        {% if edit_mode %}
         <div class="small text-secondary">
-            <p> Créé le {{ organization.createdAt|date("d/m/Y à H:i") }}
-                {{ organization.createdBy ? " par " ~ organization.createdBy.fullname }}
-                (modifié le {{ organization.updatedAt|date("d/m/Y à H:i") }}
-                {{ organization.createdBy ? " par " ~ organization.updatedBy.fullname }})
+            <p> Créé le {{ organization.createdAt|date('d/m/Y à H:i') }}
+                {{ organization.createdBy ? ' par ' ~ organization.createdBy.fullname }}
+                (modifié le {{ organization.updatedAt|date('d/m/Y à H:i') }}
+                {{ organization.createdBy ? ' par ' ~ organization.updatedBy.fullname }})
             </p>
         </div>
         {% else %}
@@ -25,7 +24,7 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
-                    href="{{ path('organizations') }}">Liste des organismes</a></li>
+                    href="{{ path('organization_index') }}">Liste des organismes</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Fiche organisme</li>
             </ol>
         </nav>
@@ -33,7 +32,7 @@
         <hr>
 
         <section>
-            {% include "model/_msgFlash.html.twig" %}
+            {% include 'model/_flash_message.html.twig' %}
             <div id="js-msg-flash-content"></div>
 
             {{ form_start(form) }}
@@ -47,11 +46,11 @@
             <div class="row mb-3">
                 <div class="col-md-12"> 
                     <div class="mb-4 float-right">
-                        <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>{% if EDIT_MODE %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+                        <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
                     </div>
                 </div>
             </div>
-            {{ form_end(form, {"render_rest": false}) }}
+            {{ form_end(form, {'render_rest': false}) }}
         </section>
 
     </div>
@@ -59,5 +58,5 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags("directory") }}
+    {{ encore_entry_script_tags('directory') }}
 {% endblock javascripts %}

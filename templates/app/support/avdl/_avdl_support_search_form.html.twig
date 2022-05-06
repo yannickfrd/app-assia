@@ -1,7 +1,6 @@
 {% extends 'model/_search.html.twig' %}
 
 {% block search_form %}
-
     <div class="col-auto my-1 px-1">{{ form_widget(form.fullname) }}</div>
     {% include '_shared/_service_device_referent_search.html.twig' with {'poles': false} %}
     <div class="col-auto my-1 px-1">{{ form_widget(form.status) }}</div>

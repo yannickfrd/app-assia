@@ -4,7 +4,7 @@
 <section>
     <div class="d-flex mb-3">
         <h2 class="h4">Famille</h2>
-        <span class="align-content-center"><a href="{{ path('support_evaluation_view', {'id': support.id }) }}" 
+        <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
             class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
         </span>
     </div>
@@ -33,7 +33,7 @@
                 </div>
             {% endif %}
         <div class="my-3">
-            {% if support_person.role != ROLE_CHILD %}
+            {% if support_person.role != role_child %}
                 <div class="row">
                     {{ view_div.get(eval_family.maritalStatusToString, 'Marital status', 'evaluation') }}
                     {{ view_div.get(eval_family.noConciliationOrderToString, 'No conciliation order', 'evaluation') }}
@@ -47,7 +47,7 @@
                         ~ eval_family.expDateChildbirth|date('d/m/Y') ~ ')'), 'Unborn child', 'evaluation') }}
                 </div>
             {% endif %}
-            {% if support_person.role == ROLE_CHILD %}
+            {% if support_person.role == role_child %}
                 <div class="row">
                     {{ view_div.get((eval_family.childcareOrSchool == YES ? eval_family.childcareSchoolTypeToString : 
                         eval_family.childcareOrSchoolToString) ~ (eval_family.schoolCity or eval_family.schoolChildCarePrecision ? ' (' ~ eval_family.schoolCity 

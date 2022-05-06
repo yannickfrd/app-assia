@@ -3,12 +3,11 @@
 {% block title %}{{ form.vars.value.fullname }}{% endblock %}
 
 {% block body %}
-
     <div class="container">
 
         <section>
 
-            {% include 'model/_msgFlash.html.twig' %}
+            {% include 'model/_flash_message.html.twig' %}
 
             <h1 class="h2 mb-3">{{ form.vars.value.fullname }}</h1>
 
@@ -78,7 +77,6 @@
 
         </section>
     </div>
-
 {% endblock %}
 
 {% block javascripts %}

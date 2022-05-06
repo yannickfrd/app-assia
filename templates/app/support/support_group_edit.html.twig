@@ -7,16 +7,15 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block body %}
-
 	<div class="container">
 
 		{% if support.id %}
 			{% include 'app/support/_partials/_support_nav.html.twig' %}
 		{% else %}
-			{% include 'app/people/peopleGroup/_navGroup.html.twig' %}
+			{% include 'app/people/peopleGroup/_nav_group.html.twig' %}
 		{% endif %}
 
-		{% include 'model/_msgFlash.html.twig' %}
+		{% include 'model/_flash_message.html.twig' %}
 		<div id="js-msg-flash-content"></div>
 
 		{% if support.service.coefficient == YES and coef_form is defined and is_granted('ROLE_ADMIN') %}
@@ -107,14 +106,13 @@
 		{{ form_row(form._cloneSupport) }}
 		{{ form_row(form._siSiaoImport) }}
 		{{ form_row(form._token) }}
-		{{ form_end(form, {"render_rest": false}) }}
+		{{ form_end(form, {'render_rest': false}) }}
 
 		{% if support.id %}
 			{% include 'app/support/_partials/_support_add_person_form.html.twig' %}
 		{% endif %}
 
 	</div>		
-
 {% endblock %}
 
 {% block javascripts %}

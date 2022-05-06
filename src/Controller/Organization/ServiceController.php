@@ -36,11 +36,9 @@ final class ServiceController extends AbstractController
     }
 
     /**
-     * Liste des services.
-     *
-     * @Route("/services", name="services", methods="GET")
+     * @Route("/services", name="service_index", methods="GET")
      */
-    public function listServices(Request $request, Pagination $pagination): Response
+    public function index(Request $request, Pagination $pagination): Response
     {
         $form = $this->createForm(ServiceSearchType::class, $search = new ServiceSearch())
             ->handleRequest($request);
@@ -57,12 +55,10 @@ final class ServiceController extends AbstractController
     }
 
     /**
-     * Nouveau service.
-     *
      * @Route("/service/new", name="service_new", methods="GET|POST")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
-    public function newService(Request $request, ServiceManager $serviceManager): Response
+    public function new(Request $request, ServiceManager $serviceManager): Response
     {
         $form = $this->createForm(ServiceType::class, $service = $serviceManager->createService())
             ->handleRequest($request);
@@ -82,13 +78,11 @@ final class ServiceController extends AbstractController
     }
 
     /**
-     * Modification d'un service.
-     *
      * @Route("/service/{id}", name="service_edit", methods="GET|POST")
      *
      * @param int $id from Service
      */
-    public function showService(
+    public function edit(
         int $id,
         Request $request,
         SubServiceRepository $subServiceRepo,
@@ -135,11 +129,9 @@ final class ServiceController extends AbstractController
     }
 
     /**
-     * Désactive ou réactive le service.
-     *
      * @Route("/admin/service/{id}/disable", name="service_disable", methods="GET")
      */
-    public function disableService(Service $service): Response
+    public function disable(Service $service): Response
     {
         $this->denyAccessUnlessGranted('DISABLE', $service);
 

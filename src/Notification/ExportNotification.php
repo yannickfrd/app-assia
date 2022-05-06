@@ -12,7 +12,7 @@ class ExportNotification extends MailNotifier
         $email = (new TemplatedEmail())
             ->to($to)
             ->subject('Application Assia | Export de données')
-            ->htmlTemplate('emails/exportFileEmail.html.twig')
+            ->htmlTemplate('emails/email_export_file.html.twig')
             ->context(['export' => $export]);
 
         $this->mailer->send($email);
