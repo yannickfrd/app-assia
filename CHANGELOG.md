@@ -1,8 +1,12 @@
 # CHANGELOG
 
+## Version 3.18.5 - 06/05/2022
+
+Fix feature Note
+
 ## Version 3.18.4 - 06/05/2022
 
-Refactor and apply code convention
+Refactor and apply code convention (#153)
 
 * Rename twig files with code convention (snake_case)
 * [twig] Change double to simple quotes and Rename variables to snake_case
