@@ -42,10 +42,10 @@
                     <span class="small text-secondary" data-note-created="true">
                         | Créé le {{ note.createdAt|date('d/m/Y à H:i') }} par {{ note.createdBy.fullname }}
                     </span>
-                    {% if note.updatedAt != note.createdAt and note.updatedBy %}
-                        <span class="small text-secondary" data-note-updated="true">
+                    <span class="small text-secondary" data-note-updated="true">
+                        {% if note.updatedAt != note.createdAt and note.updatedBy %}
                             (modifié le {{ note.updatedAt|date('d/m/Y à H:i') }} par {{ note.updatedBy.fullname }})
-                    {% endif %}
+                        {% endif %}
                     </span>
                     <div class="mt-2 tags-list">
                         {% for tag in note.tags %}
