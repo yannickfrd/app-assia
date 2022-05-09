@@ -108,7 +108,9 @@ export default class DocumentForm {
      * @param {Object} doc
      */
     showDocument(doc) {
-        this.documentFormElt.action = this.documentFormElt.action.replace('__id__', doc.id)
+        const editPth = document.querySelector('table#table-documents tbody').dataset.actionEdit
+        this.documentFormElt.action = editPth.replace('__id__', doc.id)
+
         this.documentFormElt.querySelector('input[name="document[name]"]').value = doc.name
         this.documentFormElt.querySelector('textarea[name="document[content]"]').value = doc.content ?? ''
 
@@ -179,10 +181,12 @@ export default class DocumentForm {
      * @param {Array} items
      */
     deleteFiles(items) {
-        this.loader.on()
-        const url = this.deleteBtnElt.dataset.urlDocumentDelete
-        items.forEach(id => {
-            this.ajax.send('GET', url.replace('__id__', id), this.responseAjax)
-        })
+        if (!this.loader.isActive()) {
+            this.loader.on()
+
+            const url = document.querySelector('table#table-documents tbody tr td[data-get="delete-document"]')
+                .dataset.actionDelete
+            items.forEach(id => this.ajax.send('GET', url.replace('__id__', id), this.responseAjax))
+        }
     }
 }

@@ -51,11 +51,11 @@
 			</tr>
 		</thead>
 		<tbody id="container-documents" {% if support is defined %}data-support="{{ support.id }}"{% endif %}
-			data-action-show="{{ path('document_show', {'id': '__id__'}) }}">
+			data-action-show="{{ path('document_show', {'id': '__id__'}) }}" data-action-edit="{{ path('document_edit', {'id': '__id__'}) }}">
 			{% for document in documents %}
 				{% set is_deleted = document.isDeleted %}
 				<tr data-document-id="{{ document.id }}">
-					<td class="align-middle text-center px-1">
+					<td class="align-middle text-center px-1" data-get="delete-document" data-action-delete="{{path('document_delete', {'id':'__id__'})}}">
 						{% if is_deleted == false %}
 							<div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} text-dark pl-0"
 								title="Sélectionner le document">

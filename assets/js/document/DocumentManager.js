@@ -82,23 +82,23 @@ export default class DocumentManager {
      * @param {Object} response
      */
     responseAjax(response) {
-        const doc = response.document
+        console.log(response)
 
         switch (response.action) {
             case 'create':
                 this.createDocumentTr(response.documents)
                 break
             case 'show':
-                this.showDocument(doc)
+                this.showDocument(response.document)
                 break
             case 'update':
-                this.updateDocumentTr(doc)
+                this.updateDocumentTr(response.document)
                 break
             case 'delete':
-                this.deleteDocumentTr(doc)
+                this.deleteDocumentTr(response.document)
                 break
             case 'restore':
-                this.deleteDocumentTr(doc)
+                this.deleteDocumentTr(response.document)
 
                 this.messageFlash = new MessageFlash(response.alert, response.msg);
                 this.checkToRedirect(this.messageFlash.delay)
@@ -146,7 +146,10 @@ export default class DocumentManager {
      * @param {Object} doc
      */
     updateDocumentTr(doc) {
+        console.log(doc.id)
         const documentTrElt = document.querySelector(`tr[data-document-id="${doc.id}"]`)
+        console.log(documentTrElt)
+
 
         documentTrElt.querySelector('td[data-document="name"]').textContent = doc.name
         documentTrElt.querySelector('td[data-document="content"]').textContent = doc.content

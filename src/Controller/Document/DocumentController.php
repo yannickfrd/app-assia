@@ -156,10 +156,8 @@ final class DocumentController extends AbstractController
     /**
      * @Route("/document/{id}/show", name="document_show", methods="GET")
      */
-    public function show(int $id, DocumentRepository $documentRepo): JsonResponse
+    public function show(Document $document): JsonResponse
     {
-        $document = $documentRepo->findDocument($id);
-
         $this->denyAccessUnlessGranted('VIEW', $document);
 
         return $this->json([
