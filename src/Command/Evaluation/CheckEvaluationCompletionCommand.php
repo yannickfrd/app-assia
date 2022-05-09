@@ -3,6 +3,7 @@
 namespace App\Command\Evaluation;
 
 use App\Repository\Support\SupportGroupRepository;
+use App\Service\DoctrineTrait;
 use App\Service\Evaluation\EvaluationCompletionChecker;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -13,6 +14,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class CheckEvaluationCompletionCommand extends Command
 {
+    use DoctrineTrait;
+
     protected static $defaultName = 'app:evaluation:check-completion';
     protected static $defaultDescription = 'Check the completion of evaluation and return a score';
 
@@ -61,7 +64,10 @@ class CheckEvaluationCompletionCommand extends Command
         }
 
         if ($flush) {
+            $this->disableListeners($this->em);
+
             $this->em->flush();
+
             $io->progressAdvance();
         }
 

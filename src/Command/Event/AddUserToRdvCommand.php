@@ -3,6 +3,7 @@
 namespace App\Command\Event;
 
 use App\Repository\Event\RdvRepository;
+use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,6 +16,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 class AddUserToRdvCommand extends Command
 {
+    use DoctrineTrait;
+
     protected static $defaultName = 'app:rdv:add-user';
     protected static $defaultDescription = 'Add users to rdv by created date.';
 
@@ -55,6 +58,8 @@ class AddUserToRdvCommand extends Command
         }
 
         if ($input->getOption('flush')) {
+            $this->disableListeners($this->em);
+
             $this->em->flush();
 
             $io->progressAdvance();
