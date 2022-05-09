@@ -82,8 +82,6 @@ export default class DocumentManager {
      * @param {Object} response
      */
     responseAjax(response) {
-        console.log(response)
-
         switch (response.action) {
             case 'create':
                 this.createDocumentTr(response.documents)
@@ -146,10 +144,7 @@ export default class DocumentManager {
      * @param {Object} doc
      */
     updateDocumentTr(doc) {
-        console.log(doc.id)
         const documentTrElt = document.querySelector(`tr[data-document-id="${doc.id}"]`)
-        console.log(documentTrElt)
-
 
         documentTrElt.querySelector('td[data-document="name"]').textContent = doc.name
         documentTrElt.querySelector('td[data-document="content"]').textContent = doc.content
