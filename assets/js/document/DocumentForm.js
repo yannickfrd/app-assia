@@ -123,7 +123,9 @@ export default class DocumentForm {
         }
 
         const deleteBtn = this.documentFormElt.querySelector('button[data-action="delete"]')
-        deleteBtn.dataset.urlDocumentDelete = deleteBtn.dataset.urlDocumentDelete.replace('__id__', doc.id)
+        deleteBtn.addEventListener('click', () => {
+            this.confirmDeleteBtnElt.dataset.url = deleteBtn.dataset.urlDocumentDelete.replace('__id__', doc.id)
+        })
     }
 
     /**
