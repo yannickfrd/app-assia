@@ -4,6 +4,7 @@ import autoLogout from './utils/autoLogout'
 import {Tooltip, Popover, Toast} from 'bootstrap'
 
 require('bootstrap')
+require('@fortawesome/fontawesome-free/css/all.min.css')
 
 // Lorsque le DOM est chargé
 window.onload = () => {
