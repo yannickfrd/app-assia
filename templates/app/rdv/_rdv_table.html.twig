@@ -13,8 +13,8 @@
                 <i class="fas fa-plus-square mr-2"></i>Nouveau RDV
             </button>
             {% else %}
-                <a href="{{ app.request.pathInfo }}" class="btn btn-{{ theme_color }} btn-sm shadow mr-2">
-                    <i class="fa-solid fa-arrow-rotate-left mr-2"></i>Retour
+                <a href="{{ app.request.pathInfo }}" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" 
+                    id="return_index"><i class="fa-solid fa-arrow-rotate-left mr-2"></i>Retour
                 </a>
             {% endif %}
         <span class="align-middle">Total :
