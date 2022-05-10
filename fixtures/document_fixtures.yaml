@@ -1,7 +1,7 @@
 App\Entity\Support\Document:
-    document1:
-        name: Document 666
-        content: Description du document
+    document{1..10}:
+        name: <sentence(5, true)>
+        content: <sentence(5, true)>
         internalFileName: <slug()>
         size: <numberBetween(200000, 4000000)>
         createdAt: <dateTimeBetween("-2 years", "now")>
@@ -9,7 +9,8 @@ App\Entity\Support\Document:
         createdBy: "@john_user"
         peopleGroup: "@people_group1"
         supportGroup: "@support_group1"
-    document{2..200}:
+        tags: ["@tag*"]
+    document{11..200}:
         name: <sentence(5, true)>
         content: <sentence(5, true)>
         internalFileName: <slug()>
@@ -19,3 +20,4 @@ App\Entity\Support\Document:
         createdBy: "@user*"
         peopleGroup: "@people_group*"
         supportGroup: "@support_group*"
+        tags: ["@tag*"]

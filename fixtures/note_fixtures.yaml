@@ -1,5 +1,5 @@
 App\Entity\Support\Note:
-    note{1..5}:
+    note{1..10}:
         title: <sentence(10, true)>
         content: <paragraphs(6, true)>
         type: <numberBetween(1, 2)>
@@ -9,7 +9,7 @@ App\Entity\Support\Note:
         createdBy: "@john_user"
         updatedBy: "@john_user"
         supportGroup: "@support_group1"
-    note{6..200}:
+    note{11..200}:
         title: <sentence(10, true)>
         content: <paragraphs(6, true)>
         type: <numberBetween(1, 2)>
