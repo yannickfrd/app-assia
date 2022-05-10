@@ -3,11 +3,8 @@
 namespace App\Tests\EndToEnd;
 
 use App\Tests\EndToEnd\Traits\AppPantherTestTrait;
-use Facebook\WebDriver\WebDriverBy;
 use Symfony\Component\DomCrawler\Field\FormField;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Panther\Client;
-use Symfony\Component\Panther\DomCrawler\Crawler;
 use Symfony\Component\Panther\PantherTestCase;
 
 class DocumentEndToEndTest extends PantherTestCase
@@ -20,53 +17,40 @@ class DocumentEndToEndTest extends PantherTestCase
     {
         $this->client = $this->loginUser();
 
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', '/support/1/show');
+        $this->client->request('GET', '/support/1/show');
 
         $this->assertSelectorTextContains('h1', 'Suivi');
 
-        $crawler = $this->goToSupportDocumentPage($crawler);
-        $crawler = $this->addFile($crawler);
-        $crawler = $this->editDocument($crawler);
-        $crawler = $this->downloadDocument($crawler);
-        // $crawler = $this->downloadAllDocuments($crawler);
-        $crawler = $this->deleteDocumentInModal($crawler);
-        $crawler = $this->deleteDocument($crawler);
-        $this->restoreDocument($crawler);
+        $this->goToSupportDocumentPage();
+        $this->editDocument();
+        $this->addFile();
+        $this->editDocument();
+        $this->downloadDocument();
+        $this->deleteDocumentInModal();
+        $this->deleteDocument();
+        $this->restoreDocument();
+        $this->downloadAllDocuments();
 
         $this->client->quit();
     }
 
-    private function goToSupportDocumentPage(Crawler $crawler): Crawler
+    private function goToSupportDocumentPage(): void
     {
         $this->outputMsg('Show support documents page');
 
-        $this->client->waitForVisibility('#support-documents');
-        $link = $crawler->filter('#support-documents')->link();
-
-        /** @var Crawler */
-        $crawler = $this->client->click($link);
+        $this->clickElement('#support-documents');
 
         $this->assertSelectorTextContains('h1', 'Documents');
-
-        return $crawler;
     }
 
-    private function addFile(Crawler $crawler)
+    private function addFile(): void
     {
         $this->outputMsg('Add a new document');
 
-        $this->client->waitForVisibility('#btn-new-files');
-        $crawler->selectButton('btn-new-files')->click();
-        sleep(1); //pop-up effect
+        $this->clickElement('#btn-new-files');
 
-        // $uploadedFile = new UploadedFile(
-        //     dirname(__DIR__).'\fixtures\files\doc.docx',
-        //     'doc.docx', null, 1, true
-        // );
-
-        $this->client->waitForVisibility('button[name="send"]');
-        $form = $crawler->selectButton('send')->form([]);
+        $crawler = $this->client->waitForVisibility('#dropzone');
+        $form = $crawler->filter('form[name="dropzone_document"]')->form();
 
         /** @var FormField $fileFormField */
         $fileFormField = $form['dropzone_document[files]'];
@@ -75,96 +59,84 @@ class DocumentEndToEndTest extends PantherTestCase
         $this->client->waitForVisibility('#dropzone ul li.list-group-item-success');
         $this->assertSelectorExists('#dropzone ul li.list-group-item-success');
 
-        $crawler->selectButton('close')->click();
-        sleep(1); //pop-up effect
-
-        return $crawler;
+        $this->clickElement('button[name="close"]');
     }
 
-    private function editDocument(Crawler $crawler): Crawler
+    private function editDocument(): void
     {
         $this->outputMsg('Select a document');
 
-        $this->client->waitForVisibility('td[data-document="name"]');
-        $crawler->filter('td[data-document="name"]')->first()->click();
-        sleep(1); //pop-up effect
+        $this->clickElement('td[data-cell="name"]');
 
         $this->outputMsg('Edit a document');
 
         $this->client->waitForVisibility('button[name="document_update"]');
 
-        /** @var Crawler */
-        $crawler = $this->client->submitForm('document_update', [
+        $this->client->submitForm('document_update', [
             'document[name]' => 'Document test',
-            // 'document[type]' => [mt_rand(1, 9)],
+            'document[tags]' => [1, 2],
             'document[content]' => 'Content test...',
         ]);
 
         $this->client->waitForVisibility('#js-msg-flash');
         $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
 
-        $crawler->selectButton('btn-close-msg')->click();
-        sleep(1); //pop-up effect
-
-        return $crawler;
+        $this->clickElement('#btn-close-msg');
     }
 
-    private function downloadDocument(Crawler $crawler): Crawler
+    private function downloadDocument(): void
     {
         $this->outputMsg('Download a document');
 
-        $this->client->waitForVisibility('tr>td>a');
-        $crawler->filter('tr>td>a')->first()->click();
-
-        return $crawler;
+        $this->clickElement('tr>td>a');
     }
 
-    private function deleteDocument(Crawler $crawler): Crawler
+    private function downloadAllDocuments(): void
+    {
+        $this->outputMsg('Download all documents');
+
+        $this->clickElement('#table-documents div.form-check');
+
+        $this->client->submitForm('action-validate', [
+            'action[type]' => 1,
+        ]);
+
+        $this->client->waitForVisibility('#js-msg-flash');
+        $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
+
+        $this->clickElement('#btn-close-msg');
+    }
+
+    private function deleteDocument(): void
     {
         $this->outputMsg('Delete a document');
-
-        $this->client->waitForVisibility('button[data-action="delete"]');
-        $crawler->filter('button[data-action="delete"]')->first()->click();
-        sleep(1); //pop-up effect
-
-        $this->client->waitForVisibility('#modal-confirm');
-        $crawler->filter('#modal-confirm')->click();
+        $this->clickElement('#container-documents button[data-action="delete"]');
+        sleep(1);
+        $this->clickElement('#modal-confirm');
 
         $this->client->waitForVisibility('#js-msg-flash.alert.alert-warning');
         $this->assertSelectorExists('#js-msg-flash.alert.alert-warning');
 
-        $crawler->selectButton('btn-close-msg')->click();
-        sleep(1);
-
-        return $crawler;
+        $this->clickElement('#btn-close-msg');
     }
 
-    private function deleteDocumentInModal(Crawler $crawler): Crawler
+    private function deleteDocumentInModal(): void
     {
         $this->outputMsg('Delete a document in modal');
 
-        $this->client->waitForVisibility('td[data-document="name"]');
-        $crawler->filter('td[data-document="name"]')->first()->click();
-        sleep(1); //pop-up effect
-
-        $this->client->waitForVisibility('button[data-action="delete"]');
-        $crawler->filter('button[data-url-document-delete]')->click();
-        sleep(1); //pop-up effect
-
-        $this->client->waitForVisibility('#modal-confirm');
-        $crawler->filter('#modal-confirm')->click();
+        $this->clickElement('td[data-cell="name"]');
         sleep(1);
+        $this->clickElement('#document-modal button[data-action="delete"]');
+        sleep(1);
+        $this->clickElement('#modal-confirm');
 
         $this->client->waitForVisibility('#js-msg-flash.alert.alert-warning');
         $this->assertSelectorExists('#js-msg-flash.alert.alert-warning');
 
-        $crawler->selectButton('btn-close-msg')->click();
-        sleep(1); //pop-up effect
-
-        return $crawler;
+        $this->clickElement('#btn-close-msg');
     }
 
-    private function restoreDocument(Crawler $crawler): void
+    private function restoreDocument(): void
     {
         $this->outputMsg('Restore a document');
 
@@ -173,29 +145,12 @@ class DocumentEndToEndTest extends PantherTestCase
 
         $this->client->waitForVisibility('table', 1);
 
-        $this->client->getWebDriver()->findElement(WebDriverBy::name('restore'))->click();
+        $this->clickElement('button[name="restore"]');
 
         $this->client->waitFor('#js-msg-flash', 3);
         $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
-    }
 
-    private function downloadAllDocuments(Crawler $crawler): Crawler
-    {
-        $this->outputMsg('Download all documents');
-
-        $crawler->filter('#checkbox-all-files')->click();
-
-        /** @var Crawler */
-        $crawler = $this->client->submitForm('action-validate', [
-            'action[type]' => 1,
-        ]);
-
-        $this->client->waitForVisibility('#js-msg-flash');
-        $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
-
-        $crawler->selectButton('btn-close-msg')->click();
-        sleep(1); //pop-up effect
-
-        return $crawler;
+        $this->clickElement('button[name="restore"]');
+        $this->clickElement('a#return_index');
     }
 }

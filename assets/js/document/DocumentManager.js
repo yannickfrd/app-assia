@@ -1,10 +1,12 @@
-import MessageFlash from '../utils/messageFlash'
-import Loader from '../utils/loader'
-import {Modal} from 'bootstrap'
 import Ajax from '../utils/ajax'
+import CheckboxSelector from "../utils/form/checkboxSelector";
 import DateFormater from '../utils/date/dateFormater'
-import TagsManager from '../tag/TagsManager'
 import DocumentForm from "./DocumentForm";
+import Dropzone from "../utils/file/dropzone";
+import Loader from '../utils/loader'
+import MessageFlash from '../utils/messageFlash'
+import TagsManager from '../tag/TagsManager'
+import {Modal} from 'bootstrap'
 
 /**
  * Classe de gestion des documents.
@@ -21,9 +23,18 @@ export default class DocumentManager {
 
         this.tagsManager = new TagsManager()
 
-        this.documentModalElt = new Modal(document.getElementById('document-modal'))
+        this.documentModal =  this.documentForm.documentModal
 
         this.countDocumentsElt = document.getElementById('count-documents')
+
+        this.actionFormElt = document.querySelector('form[name="action"]')
+        this.checkboxSelector = new CheckboxSelector()
+
+        this.btnNewFiles = document.getElementById('btn-new-files')
+
+        this.dropzoneModal = new Modal(document.getElementById('dropzone-modal'))
+        this.dropzoneFormElt = document.querySelector('form[name="dropzone_document"]')
+        this.dropzone = new Dropzone(this.dropzoneFormElt, this.uploadFile.bind(this))
 
         this.init()
     }
@@ -32,28 +43,113 @@ export default class DocumentManager {
         document.querySelectorAll('table#table-documents tbody button[data-action="restore"]')
             .forEach(restoreBtn => restoreBtn
                 .addEventListener('click', () => this.requestToRestore(restoreBtn)))
+
         document.querySelectorAll('table#table-documents tbody tr')
             .forEach(trElt => this.addEventListenersToTr(trElt))
+
+        if (this.btnNewFiles) {
+            this.btnNewFiles.addEventListener('click', () => this.showDropZone()) 
+        }
+
+        document.querySelector('main')
+            .addEventListener('dragenter', () => this.showDropZone())
+
+        if (document.forms['action']) {
+            document.forms['action'].addEventListener('submit', e => {
+                e.preventDefault()
+                this.onValidateAction()
+            })
+        }
     }
 
+    /**
+     * Request to create document
+     * @param {File|null} file
+     */
+     uploadFile(file = null) {
+        const url = this.dropzoneFormElt.action
+        const formData = new FormData(this.dropzoneFormElt)
+
+        if (file) {
+            formData.append('files', file)
+        }
+        // const ajax = new AjaxRequest(this.loader, 60)
+        this.ajax.send('POST', url, this.responseAjax.bind(this), formData)
+    }
+
+    showDropZone() {
+        this.dropzone.clearDropzoneContent()
+        this.dropzoneModal.show()
+    }
+
+    /**
+     * req.onprogress = updateProgress;
+     */
+     onValidateAction() {
+        const actionTypeSelect = document.getElementById('action_type')
+        const option = parseInt(actionTypeSelect.value)
+        const items = this.checkboxSelector.getItems()
+
+        // Check if items are selected.
+        if (0 === items.length) {
+            return new MessageFlash('danger', 'Aucun document n\'est sélectionné.')
+        }
+        // If 'download' action
+        if (1 === option) {
+            return this.downloadFiles(items)
+        }
+        // If 'delete' action
+        if (2 === option && window.confirm('Attention, vous allez supprimer ces documents. Confirmer ?')) {
+            return this.deleteFiles(items)
+        }
+    }
+
+    /**
+     * @param {Array} items
+     */
+    downloadFiles(items) {
+        this.loader.on()
+
+        const formData = new FormData(this.actionFormElt)
+        formData.append('items', JSON.stringify(items))
+
+        this.ajax.send('POST', this.actionFormElt.action, this.responseAjax.bind(this), formData)
+        return new MessageFlash('success', 'Le téléchargement est en cours. Veuillez patienter...')
+    }
+
+    /**
+     * @param {Array} items
+     */
+    deleteFiles(items) {
+        if (!this.loader.isActive()) {
+            this.loader.on()
+
+            const url = document.getElementById('container-documents').dataset.pathDelete
+            items.forEach(id => this.ajax.send('GET', url.replace('__id__', id), this.responseAjax.bind(this)))
+        }
+    }
+    
     /**
      * Show document on click on tr and delete document on click on btn delete
      * @param {HTMLTableRowElement} documentTrElt
      */
     addEventListenersToTr(documentTrElt) {
-        documentTrElt.childNodes
-            .forEach(tdElt => tdElt.addEventListener('click', () => {
-                const deleteBtnElt = tdElt.querySelector('button[data-action="delete"]')
-                if (deleteBtnElt) {
-                    deleteBtnElt.dataset.documentId = documentTrElt.dataset.documentId
-                    const documentName = documentTrElt.querySelector('td[data-document="name"]').textContent
-                    this.documentForm.showDeleteModal(documentName, deleteBtnElt.dataset.url)
-                } else if (!tdElt.querySelector('a') && !tdElt.querySelector('input[type="checkbox"]')) {
-                    const url = document.querySelector('table#table-documents tbody').dataset.actionShow
-                        .replace('__id__', tdElt.parentNode.dataset.documentId)
-                    this.requestShowRdv(url)
-                }
-            }))
+        const url = document.getElementById('container-documents').dataset.pathShow
+        const deleteBtnElt = documentTrElt.querySelector('button[data-action="delete"]')
+
+        documentTrElt.querySelectorAll('td.cursor-pointer').forEach(tdElt => {
+            tdElt.addEventListener('click', () => {
+                this.requestShowRdv(url.replace('__id__', documentTrElt.dataset.documentId))
+            })
+        })
+
+        if (deleteBtnElt) {
+            deleteBtnElt.addEventListener('click', () => {
+                deleteBtnElt.dataset.documentId = documentTrElt.dataset.documentId
+                const documentName = documentTrElt.querySelector('td[data-cell="name"]').textContent
+                this.documentForm.showDeleteModal(documentName, deleteBtnElt.dataset.url)
+            })
+        }
     }
 
     /**
@@ -127,7 +223,7 @@ export default class DocumentManager {
 
             this.updateCounter(1)
             this.addEventListenersToTr(documentTrElt)
-            this.documentForm.dropzone.updateItemInList(doc)
+            this.dropzone.updateItemInList(doc)
         })
     }
 
@@ -136,7 +232,6 @@ export default class DocumentManager {
      */
     showDocument(doc) {
         this.documentForm.showDocument(doc)
-        this.documentModalElt.show()
     }
 
     /**
@@ -146,20 +241,20 @@ export default class DocumentManager {
     updateDocumentTr(doc) {
         const documentTrElt = document.querySelector(`tr[data-document-id="${doc.id}"]`)
 
-        documentTrElt.querySelector('td[data-document="name"]').textContent = doc.name
-        documentTrElt.querySelector('td[data-document="content"]').textContent = doc.content
+        documentTrElt.querySelector('td[data-cell="name"]').textContent = doc.name
+        documentTrElt.querySelector('td[data-cell="content"]').textContent = doc.content
 
-        this.tagsManager.updateTagsContainer(documentTrElt.querySelector('td[data-document="tags"]'), doc.tags)
+        this.tagsManager.updateTagsContainer(documentTrElt.querySelector('td[data-cell="tags"]'), doc.tags)
 
-        this.documentModalElt.hide()
+        this.documentModal.hide()
     }
 
     /**
      * @param {Object} documentResponse
      */
     deleteDocumentTr(documentResponse) {
-        if (this.documentModalElt._isShown) {
-            this.documentModalElt.hide()
+        if (this.documentModal._isShown) {
+            this.documentModal.hide()
         }
         document.querySelector(`tr[data-document-id="${documentResponse.id}"]`).remove()
         this.updateCounter(-1)
@@ -196,11 +291,11 @@ export default class DocumentManager {
                     title="Télécharger le document"><i class="fas fa-file-download"></i>
                 </a>
             </td>
-            <td class="align-middle cursor-pointer" data-document="name">${doc.name}</td>
-            <td class="align-middle cursor-pointer" data-document="tags"></td>
-            <td class="align-middle cursor-pointer" data-document="content">${doc.content ?? ''}</td>
+            <td class="align-middle cursor-pointer" data-cell="name">${doc.name}</td>
+            <td class="align-middle cursor-pointer" data-cell="tags"></td>
+            <td class="align-middle cursor-pointer" data-cell="content">${doc.content ?? ''}</td>
             <td class="align-middle text-right">${((Math.floor(doc.size / 10000) / 100).toLocaleString('fr') + ' Mo')}</td>
-            <td class="align-middle" data-document="extension">${doc.fileType}</td>
+            <td class="align-middle">${doc.fileType}</td>
             <td class="d-none d-lg-table-cell align-middle th-date">${new DateFormater().getDate(doc.createdAt)}</td>
             <td class="d-none d-lg-table-cell align-middle th-w-100">${doc.createdBy.fullname}</td>
             <td class="align-middle text-center">

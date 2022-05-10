@@ -1,38 +1,27 @@
-import {Modal} from "bootstrap";
+import DocumentManager from "./DocumentManager";
 import SelectManager from "../utils/form/SelectManager";
-import MessageFlash from "../utils/messageFlash";
-import CheckboxSelector from "../utils/form/checkboxSelector";
-import Dropzone from "../utils/file/dropzone";
+import {Modal} from "bootstrap";
 
 export default class DocumentForm {
 
     /**
-     *  @param {DocumentManager} documentManager
+     *  @param {DocumentManager} manager
      */
-    constructor(documentManager) {
-        this.loader = documentManager.loader
-        this.ajax = documentManager.ajax
-        this.responseAjax = documentManager.responseAjax.bind(documentManager)
+    constructor(manager) {
+        this.loader = manager.loader
+        this.ajax = manager.ajax
+        this.responseAjax = manager.responseAjax.bind(manager)
 
-        this.tagsSelectManager = new SelectManager('#document_tags', {name: 'onModal', elementId: 'document-modal'})
-
-        this.btnNewFiles = document.getElementById('btn-new-files')
-
-        this.documentModalElt = new Modal(document.getElementById('document-modal'))
+        this.documentModal = new Modal(document.getElementById('document-modal'))
         this.documentFormElt = document.querySelector('form[name=document]')
         this.updateBtnElt = this.documentFormElt.querySelector('button[data-action="update"]')
         this.deleteBtnElt = this.documentFormElt.querySelector('button[data-action="delete"]')
 
+        this.tagsSelectManager = new SelectManager('#document_tags', {name: 'onModal', elementId: 'document-modal'})
+
         this.modalBlockElt = document.getElementById('modal-block')
-        this.deleteModalElt = new Modal(this.modalBlockElt)
+        this.deleteModal = new Modal(this.modalBlockElt)
         this.confirmDeleteBtnElt = document.getElementById('modal-confirm')
-
-        this.dropzoneModalElt = new Modal(document.getElementById('dropzone-modal'))
-        this.dropzoneFormElt = document.querySelector('form[name="dropzone_document"]')
-        this.dropzone = new Dropzone(this.dropzoneFormElt, this.uploadFile.bind(this))
-
-        this.actionFormElt = document.querySelector('form[name="action"]')
-        this.checkboxSelector = new CheckboxSelector()
 
         this.init()
     }
@@ -55,35 +44,32 @@ export default class DocumentForm {
             e.preventDefault()
             this.requestDeleteDocument()
         })
-
-        if (document.forms['action']) {
-            document.forms['action'].addEventListener('submit', e => {
-                e.preventDefault()
-                this.onValidateAction()
-            })
-        }
-
-        document.querySelector('main')
-            .addEventListener('dragenter', () => this.showDropZone())
-
-        if (this.btnNewFiles) {
-            this.btnNewFiles.addEventListener('click', () => this.showDropZone()) 
-        }
     }
 
     /**
-     * Request to create document
-     * @param {File|null} file
+     * @param {Object} doc
      */
-    uploadFile(file = null) {
-        const url = this.dropzoneFormElt.action
-        const formData = new FormData(this.dropzoneFormElt)
+     showDocument(doc) {
+        const pathEdit = document.getElementById('container-documents').dataset.pathEdit
+        this.documentFormElt.action = pathEdit.replace('__id__', doc.id)
 
-        if (file) {
-            formData.append('files', file)
+        this.documentFormElt.querySelector('input[name="document[name]"]').value = doc.name
+        this.documentFormElt.querySelector('textarea[name="document[content]"]').value = doc.content ?? ''
+
+        if (doc.tags !== null) {
+            const tagIds = [];
+            doc.tags.forEach(tag => tagIds.push(tag.id));
+            this.tagsSelectManager.updateSelect(tagIds);
+        } else {
+            this.tagsSelectManager.clearSelect()
         }
-        // const ajax = new AjaxRequest(this.loader, 60)
-        this.ajax.send('POST', url, this.responseAjax, formData)
+
+        const deleteBtn = this.documentFormElt.querySelector('button[data-action="delete"]')
+        deleteBtn.addEventListener('click', () => {
+            this.confirmDeleteBtnElt.dataset.url = deleteBtn.dataset.urlDocumentDelete.replace('__id__', doc.id)
+        })
+
+        this.documentModal.show()
     }
 
     requestUpdateDocument() {
@@ -104,91 +90,13 @@ export default class DocumentForm {
     }
 
     /**
-     * Use of the term "file" instead of "document" by conflicts with the DOM.
-     * @param {Object} doc
-     */
-    showDocument(doc) {
-        const editPth = document.querySelector('table#table-documents tbody').dataset.actionEdit
-        this.documentFormElt.action = editPth.replace('__id__', doc.id)
-
-        this.documentFormElt.querySelector('input[name="document[name]"]').value = doc.name
-        this.documentFormElt.querySelector('textarea[name="document[content]"]').value = doc.content ?? ''
-
-        if (doc.tags !== null) {
-            const tagIds = [];
-            doc.tags.forEach(tag => tagIds.push(tag.id));
-            this.tagsSelectManager.updateSelect(tagIds);
-        } else {
-            this.tagsSelectManager.clearSelect()
-        }
-
-        const deleteBtn = this.documentFormElt.querySelector('button[data-action="delete"]')
-        deleteBtn.addEventListener('click', () => {
-            this.confirmDeleteBtnElt.dataset.url = deleteBtn.dataset.urlDocumentDelete.replace('__id__', doc.id)
-        })
-    }
-
-    /**
-     * @param {String} documentName
-     * @param {String} url
+     * @param {string} documentName
+     * @param {string} url
      */
     showDeleteModal(documentName, url) {
         const modalBodyElt = this.modalBlockElt.querySelector('div.modal-body')
         modalBodyElt.innerHTML = `<br/><p>Êtes-vous vraiment sûr de vouloir supprimer le document <b>${documentName}</b> ?</p><br/>`
         this.confirmDeleteBtnElt.dataset.url = url
-        this.deleteModalElt.show()
-    }
-
-    /**
-     * req.onprogress = updateProgress;
-     */
-    onValidateAction() {
-        const actionTypeSelect = document.getElementById('action_type')
-        const option = parseInt(actionTypeSelect.value)
-        const items = this.checkboxSelector.getItems()
-
-        // Check if items are selected.
-        if (0 === items.length) {
-            return new MessageFlash('danger', 'Aucun document n\'est sélectionné.')
-        }
-        // If 'download' action
-        if (1 === option) {
-            return this.downloadFiles(items)
-        }
-        // If 'delete' action
-        if (2 === option && window.confirm('Attention, vous allez supprimer ces documents. Confirmer ?')) {
-            return this.deleteFiles(items)
-        }
-    }
-
-    showDropZone() {
-        this.dropzone.clearDropzoneContent()
-        this.dropzoneModalElt.show()
-    }
-
-    /**
-     * @param {Array} items
-     */
-    downloadFiles(items) {
-        this.loader.on()
-
-        const formData = new FormData(this.actionFormElt)
-        formData.append('items', JSON.stringify(items))
-
-        this.ajax.send('POST', this.actionFormElt.action, this.responseAjax, formData)
-        return new MessageFlash('success', 'Le téléchargement est en cours. Veuillez patienter...')
-    }
-
-    /**
-     * @param {Array} items
-     */
-    deleteFiles(items) {
-        if (!this.loader.isActive()) {
-            this.loader.on()
-
-            const url = document.querySelector('table#table-documents tbody tr td[data-get="delete-document"]')
-                .dataset.actionDelete
-            items.forEach(id => this.ajax.send('GET', url.replace('__id__', id), this.responseAjax))
-        }
+        this.deleteModal.show()
     }
 }
