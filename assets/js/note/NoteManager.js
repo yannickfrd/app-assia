@@ -37,8 +37,8 @@ export default class NoteManager {
     init() {
         this.isCardNoteView = Boolean(document.querySelector('div.container[data-view="card-table"]').dataset.isCard)
 
-        document.querySelectorAll('button[data-action="restore"]').forEach(restoreBtn => restoreBtn
-            .addEventListener('click', () => this.requestRestoreNote(restoreBtn)))
+        document.querySelectorAll('button[data-action="restore"]').forEach(btnRestoreElt => btnRestoreElt
+            .addEventListener('click', () => this.requestRestoreNote(btnRestoreElt)))
 
         // table view
         document.querySelectorAll('table#table-notes tbody a[data-action="show"]')
@@ -55,9 +55,9 @@ export default class NoteManager {
         })
 
         document.querySelectorAll('table#table-notes tbody button[data-action="delete-note"]')
-            .forEach(btn => btn.addEventListener('click', () => {
+            .forEach(btnElt => btnElt.addEventListener('click', () => {
                 this.deleteModal.show()
-                this.deleteModalElt.querySelector('button#modal-confirm').dataset.path = btn.dataset.path
+                this.deleteModalElt.querySelector('button#modal-confirm').dataset.pathDelete = btnElt.dataset.pathDelete
             }))
 
         if (document.querySelector('button[data-action="new_note"]')) {
@@ -85,7 +85,7 @@ export default class NoteManager {
         switch (this.confirmModalElt.dataset.action) {
             case 'delete-note':
                 this.loader.on()
-                this.ajax.send('GET', this.noteForm.btnDeleteElt.dataset.path, this.responseAjax.bind(this))
+                this.ajax.send('GET', this.noteForm.btnDeleteElt.dataset.pathDelete, this.responseAjax.bind(this))
                 break
             case 'hide_note_modal':
                 this.noteModal.hide()
@@ -107,13 +107,13 @@ export default class NoteManager {
     }
 
     /**
-     * @param {HTMLLinkElement} restoreBtn
+     * @param {HTMLLinkElement} btnRestoreElt
      */
-    requestRestoreNote(restoreBtn) {
+    requestRestoreNote(btnRestoreElt) {
         if (!this.loader.isActive()) {
             this.loader.on()
 
-            this.ajax.send('GET', restoreBtn.dataset.path, this.responseAjax.bind(this))
+            this.ajax.send('GET', btnRestoreElt.dataset.url, this.responseAjax.bind(this))
         }
     }
 
@@ -124,7 +124,7 @@ export default class NoteManager {
         if (!this.loader.isActive()) {
             this.loader.on()
 
-            this.ajax.send('GET', e.target.dataset.path, this.responseAjax.bind(this))
+            this.ajax.send('GET', e.target.dataset.pathDelete, this.responseAjax.bind(this))
         }
     }
 
@@ -238,11 +238,10 @@ export default class NoteManager {
      */
     createTableRowNoteTr(note) {
         const noteId = note.id
-        const thElt = document.querySelector('table#table-notes thead th')
-        const pathShow = thElt.dataset.pathShow.replace('__id__', noteId)
-        const pathExportWord = thElt.dataset.pathExportWord.replace('__id__', noteId)
-        const pathExportPdf = thElt.dataset.pathExportPdf.replace('__id__', noteId)
-        const pathDelete = thElt.dataset.pathDelete.replace('__id__', noteId)
+        const pathShow = this.containerNotesElt.dataset.pathShow.replace('__id__', noteId)
+        const pathExportWord = this.containerNotesElt.dataset.pathExportWord.replace('__id__', noteId)
+        const pathExportPdf = this.containerNotesElt.dataset.pathExportPdf.replace('__id__', noteId)
+        const pathDelete = this.containerNotesElt.dataset.pathDelete.replace('__id__', noteId)
         const noteTr = document.createElement('tr')
 
         noteTr.id = 'note-' + noteId
@@ -274,7 +273,7 @@ export default class NoteManager {
             </td>
             <td class="align-middle text-center">
                 <button class="btn btn-sm btn-danger shadow" title="Supprimer la note" data-toggle="tooltip" 
-                    data-placement="bottom" data-action="delete-note" data-path="${pathDelete}">
+                    data-placement="bottom" data-action="delete-note" data-path-delete="${pathDelete}">
                     <i class="fa-solid fa-trash-can"></i>
                 </button>
             </td>
@@ -284,9 +283,9 @@ export default class NoteManager {
             .insertBefore(noteTr, document.querySelector('table#table-notes tbody').firstChild)
 
         document.querySelectorAll('table#table-notes tbody button[data-action="delete-note"]')
-            .forEach(btn => btn.addEventListener('click', () => {
+            .forEach(btnElt => btnElt.addEventListener('click', () => {
                 this.deleteModal.show()
-                this.deleteModalElt.querySelector('button#modal-confirm').dataset.path = btn.dataset.path
+                this.deleteModalElt.querySelector('button#modal-confirm').dataset.pathDelete = btnElt.dataset.pathDelete
             }))
 
         noteTr.querySelector('a[data-action="show"]').addEventListener('click', e => {

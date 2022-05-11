@@ -1,15 +1,14 @@
-<div class="table-responsive" id="container-notes" data-support="{{ support is defined ? support.id : '' }}">
+<div class="table-responsive" id="container-notes" data-support="{{ support is defined ? support.id }}"
+    data-path-show="{{ path('note_show', {'id': '__id__'}) }}"
+    data-path-delete="{{ path('note_delete', {'id': '__id__'}) }}"
+    data-path-export-word="{{ path('note_export_word', {'id': '__id__'}) }}"
+    data-path-export-pdf="{{ path('note_export_pdf', {'id': '__id__'}) }}">
     <table id="table-notes" class="table table-bordered table-striped table-hover text-dark shadow-sm">
         <thead>
             <tr>
-                <th scope="col" class="align-middle th-w-80" 
-                    data-path-show="{{ path('note_show', {'id': '__id__'}) }}"
-                    data-path-delete="{{ path('note_delete', {'id': '__id__'}) }}"
-                    data-path-export-word="{{ path('note_export_word', {'id': '__id__'}) }}"
-                    data-path-export-pdf="{{ path('note_export_pdf', {'id': '__id__'}) }}">
-                </th>
+                <th scope="col" class="align-middle th-w-80"></th>
                 <th scope="col" class="align-middle th-w-auto">
-                    {{ knp_pagination_sortable(notes, 'Nom de la note', 'n.title') }}
+                    {{ knp_pagination_sortable(notes, 'Note', 'n.title') }}
                 </th>
                 <th scope="col" class="align-middle th-w-80">
                     {{ knp_pagination_sortable(notes, 'Type', 'n.type') }}
@@ -59,7 +58,7 @@
                     <td class="align-middle text-center">
                         {% if support is not defined %}
                             <a href="{{ path('support_note_index', {'id': support is defined ? support.id : note.supportGroup.id, 'noteId': note.id}) }}"
-                                class="btn btn-{{ is_deleted ? 'secondary' : theme_color }} btn-sm shadow {{ is_deleted ? 'disabled' : '' }}"
+                                class="btn btn-{{ is_deleted ? 'secondary' : theme_color }} btn-sm shadow {{ is_deleted ? 'disabled' }}"
                                 type="button" title="Voir la note sociale" data-toggle="tooltip" data-placement="bottom" 
                                 data-action="show"><i class="fas fa-eye"></i>
                             </a>
@@ -72,7 +71,7 @@
                         {% endif %}
                     </td>
                     <td class="align-middle justify" data-cell="title-content">
-                        {% if note.title %}<span class="font-weight-bold">{{ note.title }} : </span>{% endif %}
+                        {% if note.title %}<span class="font-weight-bold">{{ note.title }}</span> {% endif %}
                         {{ note.content|u.truncate(200, ' [...]', false)|striptags|raw }}</td>
                     <td class="align-middle" data-cell="type" data-note-type="{{ note.type }}">{{ note.typeToString }}</td>
                     <td class="align-middle" data-cell="status" data-note-status="{{ note.status }}">{{ note.statusToString }}</td>
@@ -118,7 +117,7 @@
                                 path_route: path('note_restore', {'id': note.id})} %}
                         {% else %}
                             <button class="btn btn-sm btn-danger shadow" 
-                                data-action="delete-note" data-path="{{ path('note_delete', {'id': note.id}) }}"
+                                data-action="delete-note" data-path-delete="{{ path('note_delete', {'id': note.id}) }}"
                                 title="Supprimer la note" data-toggle="tooltip" data-placement="bottom">
                                 <i class="fa-solid fa-trash-can"></i>
                             </button>
