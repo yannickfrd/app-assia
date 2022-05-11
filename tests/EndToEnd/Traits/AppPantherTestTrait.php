@@ -46,7 +46,7 @@ trait AppPantherTestTrait
 
     protected function clickElement(string $selector, int $timeoutInSecond = 10): void
     {
-        $this->client->waitForVisibility($selector, $timeoutInSecond);
+        $this->client->waitFor($selector, $timeoutInSecond);
 
         $this->client
             ->getWebDriver()
