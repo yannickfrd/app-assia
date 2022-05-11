@@ -1,4 +1,18 @@
 App\Entity\Event\Task:
+    task{1..11}:
+        title: <sentence(10, true)>
+        start: <dateTimeBetween("-1 months", "+ 6 months")>
+        end: $start
+        status: <numberBetween(0, 1)>
+        type: <numberBetween(0, 1)>
+        level: <numberBetween(1, 3)>
+        content: <paragraphs(6, true)>
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        createdBy: "@john_user"
+        updatedBy: "@john_user"
+        supportGroup: "@support_group1"
+        users: ["@john_user"]
     task{1..200}:
         title: <sentence(10, true)>
         start: <dateTimeBetween("-1 months", "+ 6 months")>

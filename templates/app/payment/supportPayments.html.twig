@@ -12,10 +12,17 @@
 
 		<div class="row">
 			<div class="d-flex col-md-6 mb-1 align-items-center">
-				<button class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-action="new_payment"
-					data-url="{{ path('payment_new', {'id': support.id}) }}"
-					data-toggle="tooltip" data-placement="bottom" title="Créer un nouvel enregistrement">
-					<span class="fas fa-plus-square mr-2"></span>Nouveau</button>
+				{% if not restoration_mode %}
+					<button class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-action="new_payment"
+						data-url="{{ path('payment_new', {'id': support.id}) }}"
+						data-toggle="tooltip" data-placement="bottom" title="Créer un nouvel enregistrement">
+						<i class="fas fa-plus-square mr-2"></i>Nouveau
+					</button>
+				{% else %}
+					<a href="{{ app.request.pathInfo }}" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" 
+						id="return_index"><i class="fa-solid fa-arrow-rotate-left mr-2"></i>Retour
+					</a>
+				{% endif %}
 				<div class="d-inline align-middle">Total : <!--
 				--><span id="count-payments">{{ payments.getTotalItemCount|number }}</span><!--
 				-->{% if nbTotalPayments and form_search.deleted.deleted.vars.checked != true %} sur <span id="nb-total-payments">{{ nbTotalPayments }}</span>{% endif %}

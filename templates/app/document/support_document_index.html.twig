@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% set title = 'Documents' %}
 {% set restoration_mode = form_search.deleted.deleted.vars.checked %}
+{% set title = 'Documents' ~ (restoration_mode ? ' (Corbeille)') %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -12,9 +12,16 @@
 
 		<div class="row">
 			<div class="col-lg-4 my-2">
-				<button id="btn-new-files" class="btn btn-{{ theme_color }} btn-sm shadow mr-2"
-					data-toggle="tooltip" data-placement="bottom" title="Ajouter des documents">
-					<i class="fas fa-plus-square mr-2"></i>Ajouter des documents</button>
+				{% if not restoration_mode %}
+					<button id="btn-new-files" class="btn btn-{{ theme_color }} btn-sm shadow mr-2"
+						title="Ajouter des documents" data-toggle="tooltip" data-placement="bottom">
+						<i class="fas fa-plus-square mr-2"></i>Ajouter des documents
+					</button>
+				{% else %}
+					<a href="{{ app.request.pathInfo }}" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" 
+						id="return_index"><i class="fa-solid fa-arrow-rotate-left mr-2"></i>Retour
+					</a>
+				{% endif %}
 				<div class="d-inline align-middle">Total :
 					<span id="count-documents">{{ documents.getTotalItemCount|number }}</span>
 				</div>
@@ -26,7 +33,7 @@
 
 		<div class="row">
 				<div class="col-md-5">
-					{% if restoration_mode == false %}
+					{% if not restoration_mode %}
 						{% include 'app/document/_document_action_form.html.twig' %}
 					{% endif %}
 				</div>

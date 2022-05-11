@@ -10,6 +10,7 @@ export default class TaskManager {
         this.loader = new Loader()
         this.ajax = new Ajax(this.loader)
 
+        this.btnNewTask = document.getElementById('js_new_task')
         this.modalTaskElt = document.getElementById('modal-task')
 
         if (!this.modalTaskElt) {
@@ -34,7 +35,9 @@ export default class TaskManager {
         document.querySelectorAll('button[data-action="restore"]').forEach(restoreBtn => restoreBtn
             .addEventListener('click', () => this.requestRestoreTask(restoreBtn)))
 
-        document.getElementById('js_new_task').addEventListener('click', () => this.taskForm.resetForm())
+        if (this.btnNewTask) {
+            this.btnNewTask.addEventListener('click', () => this.taskForm.resetForm())
+        }
 
         document.querySelectorAll('button[data-action="edit_task"]').forEach(btnElt => {
             btnElt.addEventListener('click', () => this.requestShowTask(btnElt));

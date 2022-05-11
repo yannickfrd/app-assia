@@ -11,5 +11,5 @@ twig:
             "form/bootstrap_4_horizontal.html.twig",
         ]
     globals:
-        APP_ENV: "%app_env%"
+        app_env: "%app_env%"
         YES: 1
