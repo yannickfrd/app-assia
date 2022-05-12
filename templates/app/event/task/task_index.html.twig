@@ -17,11 +17,17 @@
         <div class="container-fluid mt-4">
             <div class="row align-items-baseline">
                 <div class="col-md-6 align-middle mb-2">
-                    <button id="js_new_task" class="btn btn-{{ theme_color }} shadow align-middle mr-2"
-                        title="Ajouter une tâche" data-toggle="modal" data-placement="bottom"
-                        data-target="#modal-task">
-                        <span class="fas fa-plus-square mr-2"></span>Nouvelle tâche
-                    </button>
+                    {% if not restoration_mode == false %}
+                        <button id="js_new_task" class="btn btn-{{ theme_color }} shadow align-middle mr-2"
+                            title="Ajouter une tâche" data-toggle="modal" data-placement="bottom"
+                            data-target="#modal-task">
+                            <span class="fas fa-plus-square mr-2"></span>Nouvelle tâche
+                        </button>
+                    {% else %}
+                        <a href="{{ app.request.pathInfo }}" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" 
+                            id="return_index"><i class="fa-solid fa-arrow-rotate-left mr-2"></i>Retour
+                        </a>
+                    {% endif %}
                     <span>
                         Résultat : <span id="count_tasks" data-count-tasks="{{ tasks.getTotalItemCount }}">
                         {{ tasks.getTotalItemCount|number }}</span>

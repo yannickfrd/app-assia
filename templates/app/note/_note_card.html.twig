@@ -56,7 +56,7 @@
                     </div>
                 </div>
                 <div class="card-body note-content">
-                    <div class="card-text">{{ note.content|u.truncate(600, ' [...]', false)|raw }}</div>
+                    <div class="card-text">{{ note.content|u.truncate(600, ' [...]', false)|striptags|raw }}</div>
                     <span class="note-fadeout"></span>
                 </div>
             </div>

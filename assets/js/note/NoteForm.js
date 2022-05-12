@@ -19,6 +19,7 @@ export default class NoteForm {
         this.supportId = noteManager.supportId
         this.confirmModal = noteManager.confirmModal
         this.confirmModalElt = noteManager.confirmModalElt
+        this.responseAjax = this.noteManager.responseAjax.bind(this.noteManager)
 
         this.parametersUrl = new ParametersUrl()
         this.ckEditor = new CkEditor('#editor')
@@ -112,7 +113,7 @@ export default class NoteForm {
         this.noteModalElt.querySelector('form').action = `/note/${note.id}/edit`
 
         this.btnDeleteElt.classList.remove('d-none')
-        this.btnDeleteElt.dataset.path = `/note/${note.id}/delete`
+        this.btnDeleteElt.dataset.pathDelete = `/note/${note.id}/delete`
 
         this.btnExportWordElt.classList.remove('d-none')
         this.btnExportWordElt.href = `/note/${note.id}/export/word`
@@ -143,7 +144,7 @@ export default class NoteForm {
         }
 
         const url = this.formNoteElt.action
-        this.ajax.send('POST', url, this.noteManager.responseAjax.bind(this.noteManager), new FormData(this.formNoteElt))
+        this.ajax.send('POST', url, this.responseAjax, new FormData(this.formNoteElt))
     }
 
     autoSave() {
@@ -159,7 +160,7 @@ export default class NoteForm {
         switch (this.confirmModalElt.dataset.action) {
             case 'delete_note':
                 this.loader.on()
-                this.ajax.send('GET', this.btnDeleteElt.dataset.url, this.noteManager.responseAjax.bind(this.noteManager))
+                this.ajax.send('GET', this.btnDeleteElt.dataset.pathDelete, this.responseAjax)
                 break
             case 'hide_note_modal':
                 this.noteModal.hide()

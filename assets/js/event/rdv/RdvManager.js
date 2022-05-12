@@ -36,7 +36,9 @@ export default class RdvManager {
         document.querySelectorAll('button[data-action="restore"]').forEach(restoreBtn => restoreBtn
             .addEventListener('click', () => this.requestRestoreNote(restoreBtn)))
 
-        this.newRdvBtn.addEventListener('click', e => this.rdvForm.resetForm(e))
+        if (this.newRdvBtn) {
+            this.newRdvBtn.addEventListener('click', e => this.rdvForm.resetForm(e))
+        }
 
         this.editRdvBtn.forEach(btnElt => {
             btnElt.addEventListener('click', () => this.getRdv(btnElt))
