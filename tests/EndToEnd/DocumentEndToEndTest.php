@@ -11,15 +11,34 @@ class DocumentEndToEndTest extends PantherTestCase
 {
     use AppPantherTestTrait;
 
+    public const BUTTON_NEW = '#btn-new-files';
+    public const BUTTON_SHOW = 'td[data-cell="name"]';
+    public const BUTTON_DELETE = 'button[data-action="delete"]';
+    public const BUTTON_RESTORE = 'button[name="restore"]';
+
+    public const MODAL_BUTTON_SAVE = 'button[name="document_update"]';
+    public const MODAL_BUTTON_CLOSE = 'button[type="button" data-dismiss="modal"]';
+    public const FORM_DOCUMENT = 'form[name="document"]';
+
+    public const MSG_FLASH = '#js-msg-flash';
+    public const BUTTON_CLOSE_MSG = '#btn-close-msg';
+    public const ALERT_SUCCESS = '.alert.alert-success';
+    public const ALERT_WARNING = '.alert.alert-warning';
+
     protected Client $client;
+
+    /** @var \Faker\Generator */
+    protected $faker;
+
+    protected function setUp(): void
+    {
+        $this->client = $this->loginUser();
+        $this->faker = \Faker\Factory::create('fr_FR');
+    }
 
     public function testDocument(): void
     {
-        $this->client = $this->loginUser();
-
         $this->client->request('GET', '/support/1/show');
-
-        $this->assertSelectorTextContains('h1', 'Suivi');
 
         $this->goToSupportDocumentPage();
         $this->editDocument();
@@ -47,16 +66,16 @@ class DocumentEndToEndTest extends PantherTestCase
     {
         $this->outputMsg('Add a new document');
 
-        $this->clickElement('#btn-new-files');
+        $this->clickElement(self::BUTTON_NEW);
 
-        $crawler = $this->client->waitForVisibility('#dropzone');
+        $crawler = $this->client->waitFor('#dropzone');
         $form = $crawler->filter('form[name="dropzone_document"]')->form();
 
         /** @var FormField $fileFormField */
         $fileFormField = $form['dropzone_document[files]'];
         $fileFormField->setValue(dirname(__DIR__).'/fixtures/files/doc.docx');
 
-        $this->client->waitForVisibility('#dropzone ul li.list-group-item-success');
+        $this->client->waitFor('#dropzone ul li.list-group-item-success');
         $this->assertSelectorExists('#dropzone ul li.list-group-item-success');
 
         $this->clickElement('button[name="close"]');
@@ -66,22 +85,25 @@ class DocumentEndToEndTest extends PantherTestCase
     {
         $this->outputMsg('Select a document');
 
-        $this->clickElement('td[data-cell="name"]');
+        $this->clickElement(self::BUTTON_SHOW);
 
         $this->outputMsg('Edit a document');
 
-        $this->client->waitForVisibility('button[name="document_update"]');
+        $this->client->waitFor(self::MODAL_BUTTON_SAVE);
+        sleep(1); // animation effect
 
-        $this->client->submitForm('document_update', [
-            'document[name]' => 'Document test',
+        $this->setForm(self::FORM_DOCUMENT, [
+            'document[name]' => $this->faker->words(mt_rand(3, 5), true),
             'document[tags]' => [1, 2],
-            'document[content]' => 'Content test...',
+            'document[content]' => $this->faker->sentence(),
         ]);
 
-        $this->client->waitForVisibility('#js-msg-flash');
-        $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
+        $this->clickElement(self::MODAL_BUTTON_SAVE);
 
-        $this->clickElement('#btn-close-msg');
+        $this->client->waitFor(self::ALERT_SUCCESS);
+        $this->assertSelectorExists(self::ALERT_SUCCESS);
+
+        $this->clickElement(self::BUTTON_CLOSE_MSG);
     }
 
     private function downloadDocument(): void
@@ -101,39 +123,39 @@ class DocumentEndToEndTest extends PantherTestCase
             'action[type]' => 1,
         ]);
 
-        $this->client->waitForVisibility('#js-msg-flash');
-        $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
+        $this->client->waitFor(self::ALERT_SUCCESS);
+        $this->assertSelectorExists(self::ALERT_SUCCESS);
 
-        $this->clickElement('#btn-close-msg');
+        $this->clickElement(self::BUTTON_CLOSE_MSG);
     }
 
     private function deleteDocument(): void
     {
         $this->outputMsg('Delete a document');
         $this->clickElement('#container-documents button[data-action="delete"]');
-        sleep(1);
+        sleep(1); // animation effect
         $this->clickElement('#modal-confirm');
 
-        $this->client->waitForVisibility('#js-msg-flash.alert.alert-warning');
-        $this->assertSelectorExists('#js-msg-flash.alert.alert-warning');
+        $this->client->waitFor(self::ALERT_WARNING);
+        $this->assertSelectorExists(self::ALERT_WARNING);
 
-        $this->clickElement('#btn-close-msg');
+        $this->clickElement(self::BUTTON_CLOSE_MSG);
     }
 
     private function deleteDocumentInModal(): void
     {
         $this->outputMsg('Delete a document in modal');
 
-        $this->clickElement('td[data-cell="name"]');
-        sleep(1);
+        $this->clickElement(self::BUTTON_SHOW);
+        sleep(1); // animation effect
         $this->clickElement('#document-modal button[data-action="delete"]');
-        sleep(1);
+        sleep(1); // animation effect
         $this->clickElement('#modal-confirm');
 
-        $this->client->waitForVisibility('#js-msg-flash.alert.alert-warning');
-        $this->assertSelectorExists('#js-msg-flash.alert.alert-warning');
+        $this->client->waitFor(self::ALERT_WARNING);
+        $this->assertSelectorExists(self::ALERT_WARNING);
 
-        $this->clickElement('#btn-close-msg');
+        $this->clickElement(self::BUTTON_CLOSE_MSG);
     }
 
     private function restoreDocument(): void
@@ -143,14 +165,14 @@ class DocumentEndToEndTest extends PantherTestCase
         $this->clickElement('label[for="search_deleted_deleted"]');
         $this->clickElement('button[id="search"]');
 
-        $this->client->waitForVisibility('table', 1);
+        $this->client->waitFor('table', 1);
 
-        $this->clickElement('button[name="restore"]');
+        $this->clickElement(self::BUTTON_RESTORE);
 
-        $this->client->waitFor('#js-msg-flash', 3);
-        $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
+        $this->client->waitFor(self::ALERT_SUCCESS);
+        $this->assertSelectorExists(self::ALERT_SUCCESS);
 
-        $this->clickElement('button[name="restore"]');
+        $this->clickElement(self::BUTTON_RESTORE);
         $this->clickElement('a#return_index');
     }
 }

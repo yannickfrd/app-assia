@@ -24,18 +24,18 @@ class NoteEndToEndTest extends PantherTestCase
 
     protected Client $client;
 
+    /** @var \Faker\Generator */
+    protected $faker;
+
     protected function setUp(): void
     {
+        $this->client = $this->loginUser();
         $this->faker = \Faker\Factory::create('fr_FR');
     }
 
     public function testNote(): void
     {
-        $this->client = $this->loginUser();
-
         $this->client->request('GET', '/support/1/show');
-
-        $this->assertSelectorTextContains('h1', 'Suivi');
 
         $this->showNotesPage();
         $this->failToCreateNote();
@@ -64,21 +64,16 @@ class NoteEndToEndTest extends PantherTestCase
         $this->outputMsg('Fail to create a note');
 
         $this->clickElement(self::BUTTON_NEW_NOTE);
-
-        $this->client->waitFor(self::FORM_NOTE);
         sleep(1);
-        $this->client
-            ->getCrawler()
-            ->filter(self::FORM_NOTE)
-            ->form([
-                'note[title]' => $this->faker->sentence(mt_rand(5, 10), true),
-            ])
-        ;
+
+        $this->setForm(self::FORM_NOTE, [
+            'note[title]' => $this->faker->sentence(mt_rand(5, 10), true),
+        ]);
 
         $this->clickElement(self::MODAL_BUTTON_SAVE);
 
-        $this->client->waitFor(self::MSG_FLASH);
-        $this->assertSelectorExists(self::MSG_FLASH.self::ALERT_DANGER);
+        $this->client->waitFor(self::ALERT_DANGER);
+        $this->assertSelectorExists(self::ALERT_DANGER);
 
         $this->clickElement(self::BUTTON_CLOSE_MSG);
         $this->clickElement(self::MODAL_BUTTON_CLOSE);
@@ -89,23 +84,18 @@ class NoteEndToEndTest extends PantherTestCase
         $this->outputMsg('Create a note');
 
         $this->clickElement(self::BUTTON_NEW_NOTE);
-
-        $this->client->waitFor(self::FORM_NOTE);
         sleep(1);
-        $this->client
-            ->getCrawler()
-            ->filter(self::FORM_NOTE)
-            ->form([
-                'note[title]' => $this->faker->sentence(mt_rand(5, 10), true),
-                'note[editor]' => join('. ', $this->faker->paragraphs(mt_rand(1, 2))),
-                'note[tags]' => [1, 2],
-            ])
-        ;
+
+        $this->setForm(self::FORM_NOTE, [
+            'note[title]' => $this->faker->sentence(mt_rand(5, 10), true),
+            'note[editor]' => join('. ', $this->faker->paragraphs(mt_rand(1, 2))),
+            'note[tags]' => [1, 2],
+        ]);
 
         $this->clickElement(self::MODAL_BUTTON_SAVE);
 
-        $this->client->waitFor(self::MSG_FLASH);
-        $this->assertSelectorExists(self::MSG_FLASH.self::ALERT_SUCCESS);
+        $this->client->waitFor(self::ALERT_SUCCESS);
+        $this->assertSelectorExists(self::ALERT_SUCCESS);
 
         $this->clickElement(self::BUTTON_CLOSE_MSG);
         $this->clickElement(self::MODAL_BUTTON_CLOSE);
@@ -116,23 +106,18 @@ class NoteEndToEndTest extends PantherTestCase
         $this->outputMsg('Edit a note');
 
         $this->clickElement(self::CONTAINER_NOTES.' div[data-note-id]');
-
-        $this->client->waitFor(self::FORM_NOTE);
         sleep(1);
-        $this->client
-            ->getCrawler()
-            ->filter(self::FORM_NOTE)
-            ->form([
-                'note[title]' => $this->faker->sentence(mt_rand(5, 10), true),
-                'note[editor]' => join('. ', $this->faker->paragraphs(mt_rand(1, 2))),
-                'note[tags]' => [1, 2],
-            ])
-        ;
+
+        $this->setForm(self::FORM_NOTE, [
+            'note[title]' => $this->faker->sentence(mt_rand(5, 10), true),
+            'note[editor]' => join('. ', $this->faker->paragraphs(mt_rand(1, 2))),
+            'note[tags]' => [1, 2],
+        ]);
 
         $this->clickElement(self::MODAL_BUTTON_SAVE);
 
-        $this->client->waitFor(self::MSG_FLASH);
-        $this->assertSelectorExists(self::MSG_FLASH.self::ALERT_SUCCESS);
+        $this->client->waitFor(self::ALERT_SUCCESS);
+        $this->assertSelectorExists(self::ALERT_SUCCESS);
 
         $this->clickElement(self::BUTTON_CLOSE_MSG);
         $this->clickElement(self::MODAL_BUTTON_CLOSE);
@@ -149,8 +134,8 @@ class NoteEndToEndTest extends PantherTestCase
         sleep(1);
         $this->clickElement('#modal-confirm-btn');
 
-        $this->client->waitFor(self::MSG_FLASH);
-        $this->assertSelectorExists(self::MSG_FLASH.self::ALERT_WARNING);
+        $this->client->waitFor(self::ALERT_WARNING);
+        $this->assertSelectorExists(self::ALERT_WARNING);
 
         $this->clickElement(self::BUTTON_CLOSE_MSG);
     }
@@ -164,8 +149,8 @@ class NoteEndToEndTest extends PantherTestCase
         sleep(1);
         $this->clickElement('#modal-confirm');
 
-        $this->client->waitFor(self::MSG_FLASH.self::ALERT_WARNING);
-        $this->assertSelectorExists(self::MSG_FLASH.self::ALERT_WARNING);
+        $this->client->waitFor(self::ALERT_WARNING);
+        $this->assertSelectorExists(self::ALERT_WARNING);
 
         $this->clickElement(self::BUTTON_CLOSE_MSG);
     }
@@ -198,7 +183,7 @@ class NoteEndToEndTest extends PantherTestCase
     {
         $this->clickElement('button[name="restore"]');
 
-        $this->client->waitFor(self::MSG_FLASH);
-        $this->assertSelectorExists(self::MSG_FLASH.self::ALERT_SUCCESS);
+        $this->client->waitFor(self::ALERT_SUCCESS);
+        $this->assertSelectorExists(self::ALERT_SUCCESS);
     }
 }
