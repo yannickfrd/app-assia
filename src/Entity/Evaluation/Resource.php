@@ -7,7 +7,7 @@ class Resource
     public const SALARY = 10;
     public const ARE = 30;
     public const IJ = 170;
-    public const RSA = [60, 70];
+    public const RSA = 60;
     public const AF = 100;
     public const OTHER = 1000;
 
@@ -15,8 +15,8 @@ class Resource
         10 => 'Salaire', // 1 salary
         50 => 'Prime d\'activité', // 2 activityBonus
         30 => 'Allocation chômage (ARE)', // 3 unemplBenefit
-        60 => 'RSA socle', // 4 minimumIncome
-        70 => 'RSA majoré', // 4 minimumIncome
+        60 => 'RSA', // 4 minimumIncome
+        // 70 => 'RSA majoré', // 4 minimumIncome
         100 => 'Allocations familiales (AF)', // 5 familyAllowance
         80 => 'Allocation adulte handicapé (AAH)', // 6 disAdultAllowance
         85 => 'Allocation d\'éducation de l\'enfant handicapé (AEEH)', // 7 disChildAllowance

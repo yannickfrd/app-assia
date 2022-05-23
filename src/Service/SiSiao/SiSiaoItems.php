@@ -110,23 +110,6 @@ class SiSiaoItems
         220 => 27, // Violences familiales-conjugales
     ];
 
-    // DUREE_ERRANCES
-    public const WANDERING_TIME = [
-        10 => 1, // Jour même
-        20 => 1, // Moins d’une semaine
-        30 => 2, // 1 semaine - 1 mois
-        40 => 3, // 1 mois - 6 mois
-        50 => 4, // 6 mois - 1 an
-        60 => 5, // 1 an - 2 ans
-        70 => 6, // 2 ans - 5 ans
-        80 => 7, // 5 ans – 10 ans
-        90 => 8, // Plus de 10 ans
-        100 => null, // NSP
-        110 => null, // Non Renseigné
-        120 => null, // Refus de répondre
-        130 => null, // Prochainement en demande
-    ];
-
     // COMPOSITIONS
     public const FAMILY_TYPOLOGY = [
         100 => 6, // Couple avec enfant
@@ -257,47 +240,25 @@ class SiSiaoItems
         60 => 21, // Carte de séjour temporaire
         10 => 10, // Demandeur d'asile
         120 => 40, // Document de circulation pour mineur étranger
-        90 => 01, // Français
+        90 => 1, // Français
         50 => null, // Non renseignée
         48 => 30, // Récépissé de demande de titre de séjour (1ère demande + renouvellement)
         81 => 97, // Situation administrative non régulière
-        100 => 03, // UE
+        100 => 3, // UE
     ];
 
     // statutAdministratifParticulier
     public const ASYLUM = [
         'DEMANDEUR_ASILE' => Choices::YES, // Demandeur d'asile
         'BENEFICIAIRE_PROTECTION_INTERNATIONALE_REFUGIE' => Choices::YES, // Bénéficiaire protection internationale/réfugié
+        'NON' => Choices::NO,
     ];
-
-    // // DROIT_SEJOURS
-    // public const ASYLUM_BACKGROUND = [
-    //     70 => null, // Autre
-    //     20 => Choices::YES, // Bénéficiaire protection internationale/réfugié
-    //     40 => null, // Carte de résident
-    //     60 => null, // Carte de séjour temporaire
-    //     30 => Choices::YES, // Débouté du droit d'asile
-    //     10 => Choices::YES, // Demandeur d'asile
-    //     50 => null, // Non renseignée
-    //     48 => null, // Récépissé première demande de titre de séjour
-    //     47 => null, // Récépissé renouvellement titre
-    //     81 => null, // Situation administrative non régularisée
-    //     80 => null, // Situation administrative régulière
-    // ];
 
     // DROIT_SEJOURS
     public const ASYLUM_STATUS = [
-        70 => null, // Autre
-        20 => 4, // Bénéficiaire protection internationale/réfugié
-        40 => null, // Carte de résident
-        60 => null, // Carte de séjour temporaire
-        30 => 1, // Débouté du droit d'asile
-        10 => 2, // Demandeur d'asile
-        50 => null, // Non renseignée
-        48 => null, // Récépissé première demande de titre de séjour
-        47 => null, // Récépissé renouvellement titre
-        81 => null, // Situation administrative non régularisée
-        80 => null, // Situation administrative régulière
+        'DEMANDEUR_ASILE' => 2, // Demande d'asile - Procédure normale
+        'BENEFICIAIRE_PROTECTION_INTERNATIONALE_REFUGIE' => 4, // Réfugié statutaire
+        'NON' => null,
     ];
 
     // TYPE_HEBERGEMENT_ENFANT
@@ -404,13 +365,13 @@ class SiSiaoItems
     ];
 
     public const RESOURCES = [
-        10 => 10, // Ressources d'activité
+        // 10 => 10, // Ressources d'activité
         20 => 20, // Retraite
         30 => 30,  // Allocations chômage
-        40 => 40, // Formation
+        // 40 => 40, // Formation
         50 => 50, // Prime d'activité
-        60 => 60, // RSA Socle
-        70 => 70, // RSA Majoré
+        // 60 => 60, // RSA Socle
+        // 70 => 70, // RSA Majoré
         80 => 80, // AAH
         90 => 90, // ASS
         100 => 100, // Allocations familliales
@@ -418,38 +379,32 @@ class SiSiaoItems
         120 => 120, // Garantie jeune
         130 => 130, // Allocation pour demandeur d'asile
         140 => 60, // En attente RSA
-        150 => 1000, // Non renseigné
-        160 => null, // Refus de répondre
+        // 150 => 1000, // Non renseigné
+        // 160 => null, // Refus de répondre
         170 => 170, // Indemnités journalières
-        180 => 180, // Bourses
+        // 180 => 180, // Bourses
+        190 => 60, // RSA
+        200 => 10, // Rémunération
         1000 => 1000, // Autres ressources
     ];
 
     public const CHARGES = [
-        10 => 10, // Loyer
-        20 => 20, // EDF
-        30 => 30, // GDF
-        40 => 40, // Eau
-        50 => 50, // Assurance
-        60 => 60, // Mutuelle
-        70 => 70, // Impôts
-        80 => 80, // Transports
-        90 => 90, // Garde enfant(s)
-        100 => 100, // Pension alimentaire
-        110 => 110, // Téléphone
-        120 => 1000, //  Non renseigné
-        1000 => 1000, // Autres charges
-    ];
-
-    public const DEBTS = [
-        10 => 10, // Dettes locatives
-        20 => 20, // Dettes de crédits à la consommation
-        30 => 30, // Dettes de crédits immobiliers
-        40 => 40,  // Pension alimentaire non réglée
-        50 => 50, // Amendes
-        60 => 60, // Retards d'impôts
-        70 => 70, // Découverts bancaires
-        1000 => 1000, // Autres dettes
+        // 10 => 10, // Loyer
+        // 20 => 20, // EDF
+        // 30 => 30, // GDF
+        // 40 => 40, // Eau
+        // 50 => 50, // Assurance
+        // 60 => 60, // Mutuelle
+        // 70 => 70, // Impôts
+        // 80 => 80, // Transports
+        // 90 => 90, // Garde enfant(s)
+        100 => 100, // Pension alimentaire versée
+        // 110 => 110, // Téléphone
+        // 120 => 1000, //  Non renseigné
+        130 => 10, // Charges locatives
+        140 => 290, // Charges de vie courante
+        150 => 260, // Charges crédits et dettes
+        // 1000 => 1000, // Autres charges
     ];
 
     // EVOLUTIONS_BUDGETAIRES
@@ -464,11 +419,6 @@ class SiSiaoItems
         'SIMPLE' => 1,
         'JUMEAUX' => 2,
         'MULTIPLE' => 3,
-    ];
-
-    public const DOM_VIOLENCE_VICTIM = [
-        'FEMME_VVC' => Choices::YES,
-        'HOMME_VVC' => Choices::YES,
     ];
 
     public const ASE_STATUS = [
