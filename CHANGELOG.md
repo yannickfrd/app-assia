@@ -107,6 +107,13 @@ Fix (#141)
 * Fix Check valid field with Select2
 * Create EvaluationDuplicator, update SupportDuplicator and refactor
 
+## Version 3.13.5 - 23/05/2022
+
+Fix error import after SI-SIAO update (v3.43)
+
+* Update SI-SIAO import (SI-SIAO v3.43)
+* Edit lists resources and charges
+
 ## Version 3.13.4 - 28/03/2022
 
 Remove current user service (#140)

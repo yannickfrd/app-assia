@@ -21,11 +21,11 @@
                 </thead>
                 <tbody>
                     {% for personne in personnes|sort((a, b) => b.age <=> a.age) %}
-                        {% set is_dp = dp.id == personne.id %}
-                        <tr class="{{ is_dp ? 'font-weight-bold' }}">
+                        {% set is_contact_principal = contactPrincipal.id == personne.id %}
+                        <tr class="{{ is_contact_principal ? 'font-weight-bold' }}">
                             <td class="align-middle" scope="row">{{ personne.nom }}</td>
                             <td class="align-middle">{{ personne.prenom }}</td>
-                            <td class="align-middle">{{ personne.datenaissance ?? (is_dp ? dp.datenaissance) }}</td>
+                            <td class="align-middle">{{ personne.datenaissance }}</td>
                             <td class="align-middle">{{ personne.age }} an{{ personne.age > 1 ? 's' }}</td>
                             <td class="align-middle">{{ personne.sexe|capitalize }}</td>
                             <td class="align-middle">{{ personne.situation.libelle }}</td>

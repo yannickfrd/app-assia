@@ -111,19 +111,21 @@ class SiSiaoClient
         /** @var object $data */
         $data = $this->get("/fiches/ficheIdentite/{$id}");
 
-        $dp = $data->demandeurprincipal;
+        $contactPrincipal = $data->contactPrincipal;
         $personnes = $data->personnes;
         $idGroupe = $data->id;
 
         if ('Personne' === $data->typefiche) {
-            foreach ($dp->fiches as $fiche) {
-                if ('Groupe' === $fiche->typefiche) {
-                    $personnes = $fiche->personnes;
-                    $idGroupe = $fiche->id;
+            if ($contactPrincipal) {
+                foreach ($contactPrincipal->fiches as $fiche) {
+                    if ('Groupe' === $fiche->typefiche) {
+                        $personnes = $fiche->personnes;
+                        $idGroupe = $fiche->id;
+                    }
                 }
             }
             if (!isset($personnes)) {
-                $fiche = $dp->fiches[count($dp->fiches) - 1];
+                $fiche = $contactPrincipal->fiches[count($contactPrincipal->fiches) - 1];
                 $personnes = $fiche->personnes;
                 $idGroupe = $fiche->id;
             }
@@ -133,7 +135,7 @@ class SiSiaoClient
             'alert' => 'success',
             'group' => [
                 'composition' => $data->composition,
-                'dp' => $dp,
+                'contactPrincipal' => $contactPrincipal,
                 'personnes' => $personnes,
                 'idGroupe' => $idGroupe,
             ],
@@ -148,7 +150,7 @@ class SiSiaoClient
         /** @var object $ficheGroupe */
         $ficheGroupe = $this->get("/fiches/ficheIdentite/{$id}");
         dump($ficheGroupe);
-        $diagSocialId = $ficheGroupe ? $ficheGroupe->demandeurprincipal->diagnosticSocial->id : null;
+        $diagSocialId = $ficheGroupe ? $ficheGroupe->contactPrincipal->diagnosticSocial->id : null;
 
         if (null === $diagSocialId) {
             exit;
@@ -324,6 +326,9 @@ class SiSiaoClient
             $dateArray = explode('/', $date);
             if (3 === count($dateArray)) {
                 return new \DateTime($dateArray[2].'-'.$dateArray[1].'-'.$dateArray[0]);
+            }
+            if (2 === count($dateArray)) {
+                return new \DateTime($dateArray[1].'-'.$dateArray[0].'-01');
             }
         }
 
