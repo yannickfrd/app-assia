@@ -21,6 +21,7 @@ class EvalBudgetCharge extends AbstractFinance
         50 => 'Assurance(s)', // 1 | insurance
         220 => 'Cantine', // 2 | canteen
         270 => 'Carburant',
+        290 => 'Charges de vie courante',
         230 => 'Crédit(s) à la consommation', // 3 | consumerCredit
         40 => 'Eau', // 4 | water
         20 => 'Electricité', // 5 | electricityGas
@@ -31,7 +32,7 @@ class EvalBudgetCharge extends AbstractFinance
         10 => 'Loyer', // 8 | rent
         60 => 'Mutuelle(s)', // 9 | mutual
         240 => 'Participation financière',
-        100 => 'Pension alimentaire', // 10 | alimony
+        100 => 'Pension alimentaire versée', // 10 | alimony
         260 => 'Remboursement de dette(s)', // 13 | repaymentDebts
         110 => 'Téléphone', // 11 | phone
         80 => 'Transport', // 12 | transport

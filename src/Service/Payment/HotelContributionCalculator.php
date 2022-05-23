@@ -46,8 +46,7 @@ class HotelContributionCalculator
         10 => 'Salaire', // SI-SIAO => OK
         50 => 'Prime d\'activité', // SI-SIAO => OK
         30 => 'Allocation chômage (ARE)', // SI-SIAO => OK
-        60 => 'RSA socle', // SI-SIAO => OK
-        70 => 'RSA majoré', // SI-SIAO => OK
+        60 => 'RSA', // SI-SIAO => OK
         100 => 'Allocations familiales (AF)', // SI-SIAO => OK
         80 => 'Allocation adulte handicapé (AAH)', // SI-SIAO => OK
         // 85 => 'Allocation d\'éducation de l\'enfant handicapé (AEEH)',
@@ -70,6 +69,7 @@ class HotelContributionCalculator
         50 => 'Assurance(s)', // SI-SIAO => OK
         // 220 => 'Cantine',
         // 270 => 'Carburant',
+        290 => 'Charges de vie courante',
         230 => 'Crédit(s) à la consommation', // ??t
         40 => 'Eau', // SI-SIAO => OK
         20 => 'Electricité', // SI-SIAO => OK
@@ -80,7 +80,7 @@ class HotelContributionCalculator
         // 10 => 'Loyer', // SI-SIAO => OK
         60 => 'Mutuelle(s)', // SI-SIAO => OK
         // 240 => 'Participation financière',
-        100 => 'Pension alimentaire', // SI-SIAO => OK
+        100 => 'Pension alimentaire versée', // SI-SIAO => OK
         260 => 'Remboursement de dette(s)', // SI-SIAO => OK
         110 => 'Téléphone', // SI-SIAO => OK
         80 => 'Transport', // SI-SIAO => OK
