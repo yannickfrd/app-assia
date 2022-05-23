@@ -251,13 +251,10 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         $evalSocialGroup
             ->setReasonRequest($this->findInArray($demandeSiao && is_object($demandeSiao) ?
                 $demandeSiao->motifDemande : null, SiSiaoItems::REASON_REQUEST))
+            ->setWanderingTime($this->getWanderingTime())
             ->setAnimal(count($animaux) > 0 ? Choices::YES : Choices::NO)
             ->setAnimalType($this->getAnimalType())
         ;
-
-        if ($this->ficheGroupe->contactPrincipal) {
-            $evalSocialGroup->setWanderingTime($this->getWanderingTime());
-        }
 
         $evaluationGroup->setEvalSocialGroup($evalSocialGroup);
 
@@ -266,6 +263,10 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
 
     protected function getWanderingTime(): ?int
     {
+        if (null === $this->ficheGroupe->contactPrincipal) {
+            return null;
+        }
+
         $wanderingDate = $this->convertDate($this->ficheGroupe->contactPrincipal->dateDebutErrance);
 
         if (!$wanderingDate) {
