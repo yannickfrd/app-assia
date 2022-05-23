@@ -60,12 +60,16 @@
         break-inside: avoid-page;
     }
     .header, .footer {
+        position: fixed;
         font-size: 0.8rem;
         font-style: italic;
         color: grey;
     }
+    .header {
+        top: -30px;
+    }
     .footer {
-        position: fixed;
+        bottom: -15px;
     }
     .pos-absolute {position: absolute;}
     .pos-fixed {position: fixed;}
