@@ -47,7 +47,7 @@ class SiSiaoUpdater extends SiSiaoClient
         // dump($data);
 
         // Diagnostic social
-        // $diagSocialId = $data->demandeurprincipal->diagnosticSocial->id;
+        // $diagSocialId = $data->diagnosticSocial->id;
         // $this->set('diagnosticSocials/'.$diagSocialId, $this->getDiagnosticSocial($diagSocialId));
         // // dump($this->get("/diagnosticSocials/{$diagSocialId}"));
 

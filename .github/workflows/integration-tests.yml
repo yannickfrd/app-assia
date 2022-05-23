@@ -3,10 +3,12 @@ name: Integration tests
 on:
     push:
         branches:
+            - prod
             - main
             - dev
     pull_request:
         branches:
+            - prod
             - main
             - dev
 jobs:
