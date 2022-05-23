@@ -10,6 +10,8 @@ use App\Entity\Evaluation\EvalBudgetResource;
 use App\Entity\Evaluation\EvalFamilyGroup;
 use App\Entity\Evaluation\EvalFamilyPerson;
 use App\Entity\Evaluation\EvalHousingGroup;
+use App\Entity\Evaluation\EvalInitPerson;
+use App\Entity\Evaluation\EvalInitResource;
 use App\Entity\Evaluation\EvalProfPerson;
 use App\Entity\Evaluation\EvalSocialGroup;
 use App\Entity\Evaluation\EvalSocialPerson;
@@ -868,7 +870,6 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
             $evalInitPerson
                 ->setResource($evalBudgetPerson->getResource())
                 ->setResourcesAmt($evalBudgetPerson->getResourcesAmt())
-                ->setRessourceOtherPrecision($evalBudgetPerson->getRessourceOtherPrecision())
                 ->setDebt($evalBudgetPerson->getDebt())
                 ->setDebtsAmt($evalBudgetPerson->getDebtsAmt())
             ;
