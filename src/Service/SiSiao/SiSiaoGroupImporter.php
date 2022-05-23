@@ -128,10 +128,13 @@ class SiSiaoGroupImporter extends SiSiaoClient
             ->setMaidenName($personne->nomJeuneFille ?? $personne->nomUsage)
             ->setSiSiaoId($this->getFichePersonneId($personne))
             ->setPhone1(preg_match('^0[1-9]([-._/ ]?[0-9]{2}){4}$^', $personne->telephone) ? $personne->telephone : null)
-            ->setEmail($personne->id === $ficheGroupe->contactPrincipal->id
-                && preg_match('^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$^', $ficheGroupe->courrielDemandeur) ? $ficheGroupe->courrielDemandeur : null)
             ->setCreatedBy($this->user)
             ->setUpdatedBy($this->user);
+
+            if (null !== $ficheGroupe->contactPrincipal && $ficheGroupe->contactPrincipal->id === $personne->id) {
+                $person->setEmail(preg_match('^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$^', $ficheGroupe->courrielDemandeur) ?
+                    $ficheGroupe->courrielDemandeur : null);
+            }
 
             $this->em->persist($person);
         }
@@ -146,7 +149,8 @@ class SiSiaoGroupImporter extends SiSiaoClient
         }
 
         $rolePerson = (new RolePerson())
-            ->setHead($personne->id === $ficheGroupe->contactPrincipal->id)
+            ->setHead((null !== $ficheGroupe->contactPrincipal && $ficheGroupe->contactPrincipal->id === $personne->id)
+                || 1 === count($ficheGroupe->personnes))
             ->setRole($this->getRole($ficheGroupe, $personne))
             ->setPerson($person)
             ->setPeopleGroup($peopleGroup);

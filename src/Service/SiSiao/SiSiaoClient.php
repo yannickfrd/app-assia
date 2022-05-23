@@ -124,7 +124,7 @@ class SiSiaoClient
                     }
                 }
             }
-            if (!isset($personnes)) {
+            if (!isset($personnes) && $contactPrincipal) {
                 $fiche = $contactPrincipal->fiches[count($contactPrincipal->fiches) - 1];
                 $personnes = $fiche->personnes;
                 $idGroupe = $fiche->id;
@@ -150,7 +150,8 @@ class SiSiaoClient
         /** @var object $ficheGroupe */
         $ficheGroupe = $this->get("/fiches/ficheIdentite/{$id}");
         dump($ficheGroupe);
-        $diagSocialId = $ficheGroupe ? $ficheGroupe->contactPrincipal->diagnosticSocial->id : null;
+
+        $diagSocialId = $ficheGroupe ? $ficheGroupe->diagnosticSocial->id : null;
 
         if (null === $diagSocialId) {
             exit;

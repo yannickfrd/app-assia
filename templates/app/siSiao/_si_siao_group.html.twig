@@ -21,7 +21,7 @@
                 </thead>
                 <tbody>
                     {% for personne in personnes|sort((a, b) => b.age <=> a.age) %}
-                        {% set is_contact_principal = contactPrincipal.id == personne.id %}
+                        {% set is_contact_principal = contactPrincipal is not null and contactPrincipal.id == personne.id %}
                         <tr class="{{ is_contact_principal ? 'font-weight-bold' }}">
                             <td class="align-middle" scope="row">{{ personne.nom }}</td>
                             <td class="align-middle">{{ personne.prenom }}</td>
