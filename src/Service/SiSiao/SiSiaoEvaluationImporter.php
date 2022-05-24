@@ -413,8 +413,12 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         return $evalHousingGroup;
     }
 
-    protected function getSocialHousingRequestId(array $numerosUniqueLogementSocial): ?string
+    protected function getSocialHousingRequestId(?array $numerosUniqueLogementSocial): ?string
     {
+        if (null === $numerosUniqueLogementSocial) {
+            return null;
+        }
+
         foreach ($numerosUniqueLogementSocial as $numeroUniqueLogementSocial) {
             return $numeroUniqueLogementSocial->numeroUnique;
         }
