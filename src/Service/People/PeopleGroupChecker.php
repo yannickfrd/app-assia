@@ -15,7 +15,7 @@ class PeopleGroupChecker
     }
 
     /**
-     * Vérifie la validité du demandeur principal.
+     * Check is the header is valid.
      */
     public function checkValidHeader(PeopleGroup $peopleGroup): void
     {
@@ -37,7 +37,8 @@ class PeopleGroupChecker
             }
         }
 
-        if (1 != $nbHeads || true === $minorHead) {
+        // If more of 1 header or header is a child, then set the older person as header
+        if (1 !== $nbHeads || true === $minorHead) {
             foreach ($peopleGroup->getRolePeople() as $rolePerson) {
                 $rolePerson->setHead(false);
             }
