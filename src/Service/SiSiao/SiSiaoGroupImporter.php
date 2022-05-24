@@ -8,6 +8,7 @@ use App\Entity\People\RolePerson;
 use App\Notification\ExceptionNotification;
 use App\Repository\People\PeopleGroupRepository;
 use App\Repository\People\PersonRepository;
+use App\Service\People\PeopleGroupChecker;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
@@ -23,6 +24,7 @@ class SiSiaoGroupImporter extends SiSiaoClient
     protected $user;
     protected $personRepo;
     protected $peopleGroupRepo;
+    protected $peopleGroupChecker;
     protected $flashBag;
     protected $exceptionNotification;
 
@@ -33,6 +35,7 @@ class SiSiaoGroupImporter extends SiSiaoClient
         Security $security,
         PersonRepository $personRepo,
         PeopleGroupRepository $peopleGroupRepo,
+        PeopleGroupChecker $peopleGroupChecker,
         FlashBagInterface $flashBag,
         ExceptionNotification $exceptionNotification,
         string $url
@@ -43,6 +46,7 @@ class SiSiaoGroupImporter extends SiSiaoClient
         $this->user = $security->getUser();
         $this->personRepo = $personRepo;
         $this->peopleGroupRepo = $peopleGroupRepo;
+        $this->peopleGroupChecker = $peopleGroupChecker;
         $this->flashBag = $flashBag;
         $this->exceptionNotification = $exceptionNotification;
     }
@@ -86,6 +90,8 @@ class SiSiaoGroupImporter extends SiSiaoClient
             $rolePerson = $this->createPerson($ficheGroupe, $personne, $peopleGroup);
             $peopleGroup->addRolePerson($rolePerson);
         }
+
+        $this->peopleGroupChecker->checkValidHeader($peopleGroup);
 
         $this->em->flush();
 

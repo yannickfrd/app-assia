@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+## Version 3.13.6 - 24/05/2022
+
+Fix SI-SIAO import
+
+* [SiSiaoGroupImporter] Add a header to group if no 'contactPrincipal' in SI-SIAO
+* [SiSiaoEvaluationImporter] Fix error if 'numerosUniqueLogementSocial' is null
+
 ## Version 3.13.5 - 23/05/2022
 
 Fix error import after SI-SIAO update (v3.43)
