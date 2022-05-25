@@ -9,6 +9,7 @@ Update tests end-to-ends
 * [JS] Fix error to delete Rdv
 * Edit tests end-to-end for Note
 * [MakeFile] Reinit database for tests end-to-end
+* Update PHP dependencies (fix 1 vulnerability)
 
 ## Version 3.18.5 - 06/05/2022
 
