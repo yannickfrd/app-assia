@@ -4,7 +4,6 @@ namespace App\Tests\EndToEnd;
 
 use App\Tests\EndToEnd\Traits\AppPantherTestTrait;
 use Symfony\Component\Panther\Client;
-use Symfony\Component\Panther\DomCrawler\Crawler;
 use Symfony\Component\Panther\PantherTestCase;
 
 class PersonEndToEndTest extends PantherTestCase
@@ -19,72 +18,60 @@ class PersonEndToEndTest extends PantherTestCase
 
         $this->outputMsg('Show people search page');
 
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', '/people');
+        $this->client->request('GET', '/people');
 
         $this->assertSelectorTextContains('h1', 'Rechercher une personne');
 
-        $crawler = $this->searchPerson($crawler);
-        $crawler = $this->editPerson($crawler);
-        $crawler = $this->createNewGroupForPerson($crawler);
+        $this->searchPerson();
+        $this->editPerson();
+        $this->createNewGroupForPerson();
+
+        $this->client->quit();
     }
 
-    private function searchPerson(Crawler $crawler): Crawler
+    private function searchPerson(): void
     {
         $this->outputMsg('Search a person');
 
+        $crawler = $this->client->waitFor('form#people_search');
         $crawler->selectButton('search')->form([
             'firstname' => 'John',
             'lastname' => 'DOE',
         ]);
 
-        $this->client->waitForVisibility('a.btn[title="Voir la fiche de la personne"]');
-        $link = $crawler->filter('a.btn[title="Voir la fiche de la personne"]')->link();
-
-        $this->outputMsg('Show person page');
-
-        /** @var Crawler */
-        $crawler = $this->client->click($link);
-
-        return $crawler;
+        $this->clickElement('a.btn[title="Voir la fiche de la personne"]');
     }
 
-    private function editPerson(Crawler $crawler): Crawler
+    private function editPerson(): void
     {
         $this->outputMsg('Edit person');
 
-        $this->client->waitFor('#updatePerson');
-        $crawler->selectButton('updatePerson')->click();
+        $this->fixScrollBehavior();
 
-        $this->client->waitForVisibility('#js-msg-flash');
+        $this->clickElement('#updatePerson');
+
+        $this->client->waitFor('#js-msg-flash');
         $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
 
-        $crawler->selectButton('btn-close-msg')->click();
-
-        return $crawler;
+        $this->clickElement('#btn-close-msg');
     }
 
-    private function createNewGroupForPerson(Crawler $crawler): Crawler
+    private function createNewGroupForPerson(): void
     {
         $this->outputMsg('Create a new group for the person');
 
+        $this->clickElement('#btn-new-group');
+
+        $crawler = $this->client->waitFor('form[name="person_new_group"]');
         sleep(1);
-
-        $this->client->waitForVisibility('#btn-new-group');
-        $crawler->filter('#btn-new-group')->click();
-
-        sleep(1);
-
-        $this->client->waitForVisibility('#js-btn-confirm');
-
-        $crawler = $this->client->submitForm('js-btn-confirm', [
+        $crawler->selectButton('js-btn-confirm')->form([
             'person_new_group[peopleGroup][familyTypology]' => 1,
             'person_new_group[peopleGroup][nbPeople]' => 1,
             'person_new_group[role]' => 1,
         ]);
 
-        $this->assertSelectorTextContains('.alert.alert-success', 'Le nouveau groupe est créé.');
+        $this->clickElement('#js-btn-confirm');
 
-        return $crawler;
+        $this->assertSelectorTextContains('.alert.alert-success', 'Le nouveau groupe est créé.');
     }
 }

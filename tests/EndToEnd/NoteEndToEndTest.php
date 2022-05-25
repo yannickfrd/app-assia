@@ -11,10 +11,14 @@ class NoteEndToEndTest extends PantherTestCase
     use AppPantherTestTrait;
 
     public const CONTAINER_NOTES = '#container-notes';
+
     public const BUTTON_NEW_NOTE = 'button[data-action="new_note"]';
     public const MODAL_BUTTON_SAVE = 'button[data-action="save"]';
     public const MODAL_BUTTON_CLOSE = 'button[data-action="close"]';
     public const FORM_NOTE = 'form[name="note"]';
+
+    public const NOTES_TABLE = '#table-notes';
+    public const BUTTON_SHOW_NOTE = '#table-notes a[data-action="show"]';
 
     public const MSG_FLASH = '#js-msg-flash';
     public const BUTTON_CLOSE_MSG = '#btn-close-msg';
@@ -24,27 +28,33 @@ class NoteEndToEndTest extends PantherTestCase
 
     protected Client $client;
 
+    /** @var \Faker\Generator */
+    protected $faker;
+
     protected function setUp(): void
     {
+        $this->client = $this->loginUser();
         $this->faker = \Faker\Factory::create('fr_FR');
     }
 
     public function testNote(): void
     {
-        $this->client = $this->loginUser();
-
         $this->client->request('GET', '/support/1/show');
 
-        $this->assertSelectorTextContains('h1', 'Suivi');
-
         $this->showNotesPage();
+
         $this->failToCreateNote();
         $this->createNote();
         $this->editNote();
         $this->deleteNoteByModal();
-        $this->restoreCardNote();
-        $this->deleteNoteByTable();
-        $this->restoreTableNote();
+        $this->restoreNoteByCardsView();
+
+        $this->showNotesByTableView();
+        $this->createNoteByTableView();
+        $this->editNoteByTableView();
+        $this->deleteNoteByTableView();
+
+        $this->restoreNoteByTableView();
 
         $this->client->quit();
     }
@@ -59,26 +69,31 @@ class NoteEndToEndTest extends PantherTestCase
         $this->assertSelectorTextContains('h1', 'Notes sociales');
     }
 
+    private function showNotesByTableView(): void
+    {
+        $this->outputMsg('Show the notes by table-view');
+
+        $this->clickElement('a#table-view');
+
+        $this->client->waitFor(self::CONTAINER_NOTES.'.table-responsive');
+        $this->assertSelectorTextContains('h1', 'Notes sociales');
+    }
+
     private function failToCreateNote(): void
     {
         $this->outputMsg('Fail to create a note');
 
         $this->clickElement(self::BUTTON_NEW_NOTE);
+        sleep(1); // transition delay
 
-        $this->client->waitFor(self::FORM_NOTE);
-        sleep(1);
-        $this->client
-            ->getCrawler()
-            ->filter(self::FORM_NOTE)
-            ->form([
-                'note[title]' => $this->faker->sentence(mt_rand(5, 10), true),
-            ])
-        ;
+        $this->setForm(self::FORM_NOTE, [
+            'note[title]' => $this->faker->sentence(mt_rand(5, 10), true),
+        ]);
 
         $this->clickElement(self::MODAL_BUTTON_SAVE);
 
-        $this->client->waitFor(self::MSG_FLASH);
-        $this->assertSelectorExists(self::MSG_FLASH.self::ALERT_DANGER);
+        $this->client->waitFor(self::ALERT_DANGER);
+        $this->assertSelectorExists(self::ALERT_DANGER);
 
         $this->clickElement(self::BUTTON_CLOSE_MSG);
         $this->clickElement(self::MODAL_BUTTON_CLOSE);
@@ -86,26 +101,14 @@ class NoteEndToEndTest extends PantherTestCase
 
     private function createNote(): void
     {
-        $this->outputMsg('Create a note');
+        $this->outputMsg('Create a note by card-view');
 
         $this->clickElement(self::BUTTON_NEW_NOTE);
 
-        $this->client->waitFor(self::FORM_NOTE);
-        sleep(1);
-        $this->client
-            ->getCrawler()
-            ->filter(self::FORM_NOTE)
-            ->form([
-                'note[title]' => $this->faker->sentence(mt_rand(5, 10), true),
-                'note[editor]' => join('. ', $this->faker->paragraphs(mt_rand(1, 2))),
-                'note[tags]' => [1, 2],
-            ])
-        ;
+        $this->setNoteForm();
 
-        $this->clickElement(self::MODAL_BUTTON_SAVE);
-
-        $this->client->waitFor(self::MSG_FLASH);
-        $this->assertSelectorExists(self::MSG_FLASH.self::ALERT_SUCCESS);
+        $this->client->waitFor(self::ALERT_SUCCESS);
+        $this->assertSelectorExists(self::ALERT_SUCCESS);
 
         $this->clickElement(self::BUTTON_CLOSE_MSG);
         $this->clickElement(self::MODAL_BUTTON_CLOSE);
@@ -113,26 +116,14 @@ class NoteEndToEndTest extends PantherTestCase
 
     private function editNote(): void
     {
-        $this->outputMsg('Edit a note');
+        $this->outputMsg('Edit a note by card-view');
 
         $this->clickElement(self::CONTAINER_NOTES.' div[data-note-id]');
 
-        $this->client->waitFor(self::FORM_NOTE);
-        sleep(1);
-        $this->client
-            ->getCrawler()
-            ->filter(self::FORM_NOTE)
-            ->form([
-                'note[title]' => $this->faker->sentence(mt_rand(5, 10), true),
-                'note[editor]' => join('. ', $this->faker->paragraphs(mt_rand(1, 2))),
-                'note[tags]' => [1, 2],
-            ])
-        ;
+        $this->setNoteForm();
 
-        $this->clickElement(self::MODAL_BUTTON_SAVE);
-
-        $this->client->waitFor(self::MSG_FLASH);
-        $this->assertSelectorExists(self::MSG_FLASH.self::ALERT_SUCCESS);
+        $this->client->waitFor(self::ALERT_SUCCESS);
+        $this->assertSelectorExists(self::ALERT_SUCCESS);
 
         $this->clickElement(self::BUTTON_CLOSE_MSG);
         $this->clickElement(self::MODAL_BUTTON_CLOSE);
@@ -143,36 +134,51 @@ class NoteEndToEndTest extends PantherTestCase
         $this->outputMsg('Delete a note by modal');
 
         $this->clickElement(self::CONTAINER_NOTES.' div[data-note-id]');
-        sleep(1);
+        sleep(1); // transition delay
         $this->client->waitFor('#confirm-modal');
         $this->clickElement('#modal-btn-delete');
-        sleep(1);
+        sleep(1); // transition delay
         $this->clickElement('#modal-confirm-btn');
 
-        $this->client->waitFor(self::MSG_FLASH);
-        $this->assertSelectorExists(self::MSG_FLASH.self::ALERT_WARNING);
+        $this->client->waitFor(self::ALERT_WARNING);
+        $this->assertSelectorExists(self::ALERT_WARNING);
 
         $this->clickElement(self::BUTTON_CLOSE_MSG);
     }
 
-    private function deleteNoteByTable(): void
+    private function createNoteByTableView(): void
     {
-        $this->outputMsg('Delete a note by table');
+        $this->outputMsg('Create a note by table-view');
 
-        $this->clickElement('a#table-view');
-        $this->clickElement(self::CONTAINER_NOTES.' tbody>tr button[data-action="delete-note"]');
-        sleep(1);
-        $this->clickElement('#modal-confirm');
+        $this->clickElement(self::BUTTON_NEW_NOTE);
 
-        $this->client->waitFor(self::MSG_FLASH.self::ALERT_WARNING);
-        $this->assertSelectorExists(self::MSG_FLASH.self::ALERT_WARNING);
+        $this->setNoteForm();
+
+        $this->client->waitFor(self::ALERT_SUCCESS);
+        $this->assertSelectorExists(self::ALERT_SUCCESS);
 
         $this->clickElement(self::BUTTON_CLOSE_MSG);
+        $this->clickElement(self::MODAL_BUTTON_CLOSE);
     }
 
-    private function restoreCardNote(): void
+    private function editNoteByTableView(): void
     {
-        $this->outputMsg('Restore a note from card view');
+        $this->outputMsg('Edit a note by table-view');
+
+        $this->clickElement(self::BUTTON_SHOW_NOTE);
+
+        $this->setNoteForm();
+
+        $this->client->waitFor(self::ALERT_SUCCESS);
+        $this->assertSelectorExists(self::ALERT_SUCCESS);
+
+        $this->clickElement(self::BUTTON_CLOSE_MSG);
+        $this->clickElement(self::MODAL_BUTTON_CLOSE);
+    }
+
+    private function restoreNoteByCardsView(): void
+    {
+        $this->outputMsg('Restore a note from card-view');
 
         $this->clickElement('label[for="deleted_deleted"]');
         $this->clickElement('button[id="search"]');
@@ -182,23 +188,51 @@ class NoteEndToEndTest extends PantherTestCase
         $this->restoreNote();
     }
 
-    private function restoreTableNote(): void
+    private function deleteNoteByTableView(): void
     {
-        $this->outputMsg('Restore a note from table view');
+        $this->outputMsg('Delete a note by table-view');
+
+        $this->clickElement(self::CONTAINER_NOTES.' tbody>tr button[data-action="delete-note"]');
+        sleep(1); // transition delay
+        $this->clickElement('#modal-confirm');
+
+        $this->client->waitFor(self::ALERT_WARNING);
+        $this->assertSelectorExists(self::ALERT_WARNING);
+
+        $this->clickElement(self::BUTTON_CLOSE_MSG);
+    }
+
+    private function restoreNoteByTableView(): void
+    {
+        $this->outputMsg('Restore a note from table-view');
 
         $this->clickElement('label[for="deleted_deleted"]');
         $this->clickElement('button[id="search"]');
 
-        $this->client->waitFor('table');
+        $this->client->waitFor(self::NOTES_TABLE);
 
         $this->restoreNote();
     }
 
     private function restoreNote(): void
     {
+        sleep(1); // transition delay
         $this->clickElement('button[name="restore"]');
 
-        $this->client->waitFor(self::MSG_FLASH);
-        $this->assertSelectorExists(self::MSG_FLASH.self::ALERT_SUCCESS);
+        $this->client->waitFor(self::ALERT_SUCCESS);
+        $this->assertSelectorExists(self::ALERT_SUCCESS);
+    }
+
+    private function setNoteForm(): void
+    {
+        sleep(1); // transition delay
+
+        $this->setForm(self::FORM_NOTE, [
+            'note[title]' => $this->faker->sentence(mt_rand(5, 10), true),
+            'note[editor]' => join('. ', $this->faker->paragraphs(mt_rand(1, 2))),
+            'note[tags]' => [1, 2],
+        ]);
+
+        $this->clickElement(self::MODAL_BUTTON_SAVE);
     }
 }

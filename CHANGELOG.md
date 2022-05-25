@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## Version 3.18.6 - 25/05/2022
+
+Update tests end-to-ends
+
+* Update tests end-to-end
+* Fix error condition in view 'task_index'
+* [JS] Fix error to delete Rdv
+* Edit tests end-to-end for Note
+* [MakeFile] Reinit database for tests end-to-end
+* Update PHP dependencies (fix 1 vulnerability)
+
 ## Version 3.18.5 - 06/05/2022
 
 Fix feature Note
@@ -95,7 +106,7 @@ Update Rdv feature (#138)
 * Update tests
 * Create command to add user to rdvs
 
-## Version 3.13.5 - 30/03/2022
+## Version 3.13.7 - 30/03/2022
 
 Fix (#141)
 
