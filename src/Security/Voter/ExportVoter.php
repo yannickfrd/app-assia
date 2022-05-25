@@ -3,6 +3,7 @@
 namespace App\Security\Voter;
 
 use App\Entity\Admin\Export;
+use App\Entity\Organization\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
