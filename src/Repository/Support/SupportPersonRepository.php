@@ -352,7 +352,7 @@ class SupportPersonRepository extends ServiceEntityRepository
                 ->setParameter('services', $this->user->getServices());
         }
 
-        if ($search->getDeleted()) {
+        if ($search->getDeleted() && $this->user->hasRole('ROLE_SUPER_ADMIN')) {
             $this->disableFilter($this->_em, 'softdeleteable');
             $qb->andWhere('sp.deletedAt IS NOT NULL');
         }

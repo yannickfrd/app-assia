@@ -43,7 +43,8 @@ class TaskRepository extends ServiceEntityRepository
         }
 
         return $qb
-            ->orderBy('t.end', 'ASC')
+            ->addOrderBy('t.status', 'ASC')
+            ->addOrderBy('t.end', 'ASC')
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
         ;
@@ -102,7 +103,7 @@ class TaskRepository extends ServiceEntityRepository
 
     protected function getTasksQuery(): QueryBuilder
     {
-        return $this->createQueryBuilder('t     ')->select('t')
+        return $this->createQueryBuilder('t')
             ->leftJoin('t.users', 'u1')->addSelect('PARTIAL u1.{id, firstname, lastname}')
             ->leftJoin('t.createdBy', 'u2')->addSelect('PARTIAL u2.{id, firstname, lastname}')
             ->leftJoin('t.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
@@ -153,7 +154,7 @@ class TaskRepository extends ServiceEntityRepository
             $qb->orWhere('sg.service IN (:services)')
                 ->setParameter('services', $user->getServices());
         }
-        if ($search->getDeleted()) {
+        if ($search->getDeleted() && $user->hasRole('ROLE_SUPER_ADMIN')) {
             $this->disableFilter($this->_em, 'softdeleteable');
             $qb->andWhere('t.deletedAt IS NOT NULL');
         }

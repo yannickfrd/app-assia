@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% set restoration_mode = form_search.deleted.deleted.vars.checked %}
+{% set restoration_mode = form_search.deleted.deleted.vars.checked and is_granted('ROLE_SUPER_ADMIN') %}
 {% set title = 'Documents' ~ (restoration_mode ? ' (Corbeille)') %}
 
 {% block title %}{{ title }}{% endblock %}

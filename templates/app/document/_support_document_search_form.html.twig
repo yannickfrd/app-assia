@@ -14,10 +14,12 @@
             {{ form_widget(form_search.tags) }}
         </div>    
     </div>
-    <div class="col-auto my-auto">
-        <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-0"
-            title="Voir les documents supprimés" data-toggle="tooltip" data-placement="bottom">
-            {{ form_widget(form_search.deleted.deleted) }}
+    {% if is_granted('ROLE_SUPER_ADMIN') %}
+        <div class="col-auto my-auto">
+            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-0"
+                title="Voir les documents supprimés" data-toggle="tooltip" data-placement="bottom">
+                {{ form_widget(form_search.deleted.deleted) }}
+            </div>
         </div>
-    </div>
+    {% endif %}
 {% endblock %}

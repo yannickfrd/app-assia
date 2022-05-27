@@ -32,12 +32,13 @@ class DocumentEndToEndTest extends PantherTestCase
 
     protected function setUp(): void
     {
-        $this->client = $this->loginUser();
         $this->faker = \Faker\Factory::create('fr_FR');
     }
 
     public function testDocument(): void
     {
+        $this->client = $this->loginUser('john_user');
+
         $this->client->request('GET', '/support/1/show');
 
         $this->goToSupportDocumentPage();
@@ -47,10 +48,16 @@ class DocumentEndToEndTest extends PantherTestCase
         $this->downloadDocument();
         $this->deleteDocumentInModal();
         $this->deleteDocument();
-        $this->restoreDocument();
         $this->downloadAllDocuments();
+    }
 
-        $this->client->quit();
+    public function testRestoreRdv(): void
+    {
+        $this->client = $this->loginUser('user_super_admin');
+
+        $this->client->request('GET', '/support/1/documents');
+
+        $this->restoreDocument();
     }
 
     private function goToSupportDocumentPage(): void
@@ -90,7 +97,7 @@ class DocumentEndToEndTest extends PantherTestCase
         $this->outputMsg('Edit a document');
 
         $this->client->waitFor(self::MODAL_BUTTON_SAVE);
-        sleep(1); // animation effect
+        sleep(2); // animation effect
 
         $this->setForm(self::FORM_DOCUMENT, [
             'document[name]' => $this->faker->words(mt_rand(3, 5), true),
@@ -147,7 +154,7 @@ class DocumentEndToEndTest extends PantherTestCase
         $this->outputMsg('Delete a document in modal');
 
         $this->clickElement(self::BUTTON_SHOW);
-        sleep(1); // animation effect
+        sleep(2); // animation effect
         $this->clickElement('#document-modal button[data-action="delete"]');
         sleep(1); // animation effect
         $this->clickElement('#modal-confirm');
@@ -174,5 +181,12 @@ class DocumentEndToEndTest extends PantherTestCase
 
         $this->clickElement(self::BUTTON_RESTORE);
         $this->clickElement('a#return_index');
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        $this->client->quit();
     }
 }

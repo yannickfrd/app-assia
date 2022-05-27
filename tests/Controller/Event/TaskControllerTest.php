@@ -7,12 +7,14 @@ use App\Entity\Support\SupportGroup;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\DomCrawler\Crawler;
 
 class TaskControllerTest extends WebTestCase
 {
     /** @var KernelBrowser */
     protected $client;
+
+    /** @var array */
+    protected $fixtures;
 
     /** @var SupportGroup */
     protected $supportGroup;
@@ -29,7 +31,7 @@ class TaskControllerTest extends WebTestCase
 
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
 
-        $fixtures = $this->databaseTool->loadAliceFixture([
+        $this->fixtures = $this->databaseTool->loadAliceFixture([
             dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',
             dirname(__DIR__).'/../fixtures/service_fixtures_test.yaml',
             dirname(__DIR__).'/../fixtures/person_fixtures_test.yaml',
@@ -37,15 +39,15 @@ class TaskControllerTest extends WebTestCase
             dirname(__DIR__).'/../fixtures/task_fixtures_test.yaml',
         ]);
 
-        $this->client->loginUser($fixtures['john_user']);
-
-        $this->user = $fixtures['john_user'];
-        $this->supportGroup = $fixtures['support_group1'];
-        $this->task = $fixtures['task1'];
+        $this->user = $this->fixtures['john_user'];
+        $this->supportGroup = $this->fixtures['support_group1'];
+        $this->task = $this->fixtures['task1'];
     }
 
     public function testSearchTasksIsSuccessful(): void
     {
+        $this->client->loginUser($this->fixtures['john_user']);
+
         $this->client->request('GET', '/tasks');
 
         // Page is up
@@ -63,11 +65,13 @@ class TaskControllerTest extends WebTestCase
 
     public function testExportTasksIsSuccessful(): void
     {
+        $this->client->loginUser($this->fixtures['john_user']);
+
         $this->client->request('GET', '/tasks');
 
         // Export with no result
         $this->client->submitForm('export', [
-            'date[start]' => (new \Datetime())->modify('+10 year')->format('Y-m-d'),
+            'date[start]' => (new \DateTime())->modify('+10 year')->format('Y-m-d'),
         ], 'GET');
 
         $this->assertResponseIsSuccessful();
@@ -82,13 +86,18 @@ class TaskControllerTest extends WebTestCase
 
     public function testSupportTasksIndexIsUp(): void
     {
+        $this->client->loginUser($this->fixtures['john_user']);
+
         $this->client->request('GET', "/support/{$this->supportGroup->getId()}/tasks");
+
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Tâches');
     }
 
     public function testExportSupportTasksIsSuccessful(): void
     {
+        $this->client->loginUser($this->fixtures['john_user']);
+
         $id = $this->supportGroup->getId();
         $this->client->request('GET', "/support/$id/tasks");
 
@@ -100,7 +109,8 @@ class TaskControllerTest extends WebTestCase
 
     public function testCreateNewTaskIsSuccessful(): void
     {
-        /** @var Crawler */
+        $this->client->loginUser($this->fixtures['john_user']);
+
         $crawler = $this->client->request('GET', '/tasks');
         $csrfToken = $crawler->filter('#task__token')->attr('value');
         $now = new \DateTime();
@@ -133,8 +143,10 @@ class TaskControllerTest extends WebTestCase
 
     public function testCreateNewTaskWithSupportIsSuccessful(): void
     {
+        $this->client->loginUser($this->fixtures['john_user']);
+
         $id = $this->supportGroup->getId();
-        /** @var Crawler */
+
         $crawler = $this->client->request('GET', "/support/$id/tasks");
 
         $this->assertResponseIsSuccessful();
@@ -168,6 +180,8 @@ class TaskControllerTest extends WebTestCase
 
     public function testShowTaskIsSuccessful(): void
     {
+        $this->client->loginUser($this->fixtures['john_user']);
+
         $id = $this->task->getId();
         $this->client->request('GET', "/task/$id/show");
         $this->assertResponseIsSuccessful();
@@ -178,7 +192,8 @@ class TaskControllerTest extends WebTestCase
 
     public function testEditTaskIsSuccessful(): void
     {
-        /** @var Crawler */
+        $this->client->loginUser($this->fixtures['john_user']);
+
         $crawler = $this->client->request('GET', '/tasks');
         $id = $this->task->getId();
 
@@ -210,6 +225,8 @@ class TaskControllerTest extends WebTestCase
 
     public function testDeleteTaskIsSuccessful(): void
     {
+        $this->client->loginUser($this->fixtures['john_user']);
+
         $this->client->request('DELETE', "/task/{$this->task->getId()}/delete");
 
         $content = json_decode($this->client->getResponse()->getContent(), true);
@@ -218,13 +235,15 @@ class TaskControllerTest extends WebTestCase
 
     public function testRestoreTaskIsSuccessful(): void
     {
+        $this->client->loginUser($this->fixtures['user_super_admin']);
+
         $taskId = $this->task->getId();
         $this->client->request('DELETE', "/task/$taskId/delete");
 
         // After delete a task
         $id = $this->supportGroup->getId();
         $crawler = $this->client->request('GET', "/support/$id/tasks", [
-            'deleted' => ['deleted' => true]
+            'deleted' => ['deleted' => true],
         ]);
         $this->assertResponseIsSuccessful();
         $this->assertSame(1, $crawler->filter('tbody tr')->count());
@@ -235,13 +254,15 @@ class TaskControllerTest extends WebTestCase
 
         // After restore a task
         $crawler = $this->client->request('GET', "/support/$id/tasks", [
-            'deleted' => ['deleted' => true]
+            'deleted' => ['deleted' => true],
         ]);
         $this->assertSame(0, $crawler->filter('tbody tr')->count());
     }
 
     public function testToggleStatusIsSuccessful(): void
     {
+        $this->client->loginUser($this->fixtures['john_user']);
+
         $this->client->request('GET', "/task/{$this->task->getId()}/toggle-status");
 
         $content = json_decode($this->client->getResponse()->getContent(), true);

@@ -96,7 +96,7 @@ final class SupportPersonController extends AbstractController
 
     /**
      * @Route("/support-person/{id}/restore", name="support_person_restore", methods="GET")
-     * @IsGranted("ROLE_ADMIN")
+     * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function restore(
         int $id,
@@ -104,8 +104,6 @@ final class SupportPersonController extends AbstractController
         SupportRestorer $supportRestorer
     ): Response {
         $supportPerson = $supportPersonRepo->findSupportPerson($id, true);
-
-        $this->denyAccessUnlessGranted('DELETE', $supportPerson->getSupportGroup());
 
         $message = $supportRestorer->restore($supportPerson);
 

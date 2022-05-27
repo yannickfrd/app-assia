@@ -33,12 +33,13 @@ class TaskEndToEndTest extends PantherTestCase
 
     protected function setUp(): void
     {
-        $this->client = $this->loginUser();
         $this->faker = \Faker\Factory::create('fr_FR');
     }
 
     public function testTask(): void
     {
+        $this->client = $this->loginUser('john_user');
+
         $this->client->request('GET', '/support/1/show');
 
         $this->showTasksIndex();
@@ -46,9 +47,15 @@ class TaskEndToEndTest extends PantherTestCase
         $this->editTask();
         $this->toggleStatusTask();
         $this->deleteTaskByModal();
-        $this->restoreTask();
+    }
 
-        $this->client->quit();
+    public function testRestoreTask(): void
+    {
+        $this->client = $this->loginUser('user_super_admin');
+
+        $this->client->request('GET', '/support/1/tasks');
+
+        $this->restoreTask();
     }
 
     private function showTasksIndex(): void
@@ -67,7 +74,7 @@ class TaskEndToEndTest extends PantherTestCase
         $this->outputMsg('Create a task');
 
         $this->clickElement(self::BUTTON_NEW);
-        sleep(1); //animation effect
+        sleep(1); // animation effect
 
         $this->setForm(self::FORM_TASK, [
             'task[title]' => $this->faker->sentence(mt_rand(5, 10), true),
@@ -92,7 +99,7 @@ class TaskEndToEndTest extends PantherTestCase
         $this->outputMsg('Edit a task');
 
         $this->clickElement(self::BUTTON_SHOW);
-        sleep(1); //animation effect
+        sleep(1); // animation effect
 
         $this->setForm(self::FORM_TASK, [
             'task[title]' => $this->faker->sentence(mt_rand(5, 10), true),
@@ -125,10 +132,10 @@ class TaskEndToEndTest extends PantherTestCase
         $this->outputMsg('Delete a task');
 
         $this->clickElement(self::BUTTON_SHOW);
-        sleep(1); //animation effect
+        sleep(1); // animation effect
 
         $this->clickElement('#modal-btn-delete');
-        sleep(1); //animation effect
+        sleep(1); // animation effect
 
         $this->clickElement('#modal-block #modal-confirm');
 
@@ -151,5 +158,12 @@ class TaskEndToEndTest extends PantherTestCase
 
         $this->client->waitFor(self::ALERT_SUCCESS);
         $this->assertSelectorExists(self::ALERT_SUCCESS);
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        $this->client->quit();
     }
 }

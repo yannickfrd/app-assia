@@ -247,6 +247,7 @@ final class NoteController extends AbstractController
 
     /**
      * @Route("/note/{id}/restore", name="note_restore", methods="GET")
+     * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function restore(
         int $id,
@@ -255,8 +256,6 @@ final class NoteController extends AbstractController
         TranslatorInterface $translator
     ): JsonResponse {
         $note = $noteRepo->findNote($id, true);
-
-        $this->denyAccessUnlessGranted('EDIT', $note->getSupportGroup());
 
         $note->setDeletedAt(null);
         $em->flush();

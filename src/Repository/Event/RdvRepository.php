@@ -108,8 +108,7 @@ class RdvRepository extends ServiceEntityRepository
         ;
     }
 
-    protected function filter(QueryBuilder $qb, EventSearch $search, User $user, ?SupportGroup $supportGroup =
-    null): QueryBuilder
+    protected function filter(QueryBuilder $qb, EventSearch $search, User $user, ?SupportGroup $supportGroup = null): QueryBuilder
     {
         if (!$user->hasRole('ROLE_SUPER_ADMIN')) {
             $qb->where('r.createdBy = :user')
@@ -120,7 +119,7 @@ class RdvRepository extends ServiceEntityRepository
 
         $qb->andWhere('sg.id IS NULL OR sp.head = TRUE');
 
-        if ($search->getDeleted()) {
+        if ($search->getDeleted() && $user->hasRole('ROLE_SUPER_ADMIN')) {
             $this->disableFilter($this->_em, 'softdeleteable');
             $qb->andWhere('r.deletedAt IS NOT NULL');
         }
@@ -169,14 +168,14 @@ class RdvRepository extends ServiceEntityRepository
     /**
      * Return all rdvs of group support.
      */
-    public function findRdvsQueryOfSupport(EventSearch $search, SupportGroup $supportGroup): Query
+    public function findRdvsQueryOfSupport(EventSearch $search, SupportGroup $supportGroup, ?User $user = null): Query
     {
         $qb = $this->getBaseQuery()
             ->andWhere('sg.id = :supportGroup')
             ->setParameter('supportGroup', $supportGroup->getId())
         ;
 
-        if ($search->getDeleted()) {
+        if ($search->getDeleted() && $user && $user->hasRole('ROLE_SUPER_ADMIN')) {
             $this->disableFilter($this->_em, 'softdeleteable');
             $qb->andWhere('r.deletedAt IS NOT NULL');
         }

@@ -264,7 +264,7 @@ class PaymentRepository extends ServiceEntityRepository
             ->andWhere('p.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroup);
 
-        if ($search->getDeleted()) {
+        if ($search->getDeleted() && $this->user->hasRole('ROLE_SUPER_ADMIN')) {
             $this->disableFilter($this->_em, 'softdeleteable');
             $qb->andWhere('p.deletedAt IS NOT NULL');
         }

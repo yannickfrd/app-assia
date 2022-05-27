@@ -83,7 +83,7 @@ class DocumentRepository extends ServiceEntityRepository
     /**
      * Return all documents of group support.
      */
-    public function findSupportDocumentsQuery(SupportDocumentSearch $search, SupportGroup $supportGroup): Query
+    public function findSupportDocumentsQuery(SupportDocumentSearch $search, SupportGroup $supportGroup, ?User $user = null): Query
     {
         $qb = $this->createQueryBuilder('d')->select('d')
             ->leftJoin('d.tags', 't')->addSelect('t')
@@ -92,7 +92,7 @@ class DocumentRepository extends ServiceEntityRepository
             ->where('d.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroup);
 
-        if ($search->getDeleted()) {
+        if ($search->getDeleted() && $user && $user->hasRole('ROLE_SUPER_ADMIN')) {
             $this->disableFilter($this->_em, 'softdeleteable');
             $qb->andWhere('d.deletedAt IS NOT NULL');
         }

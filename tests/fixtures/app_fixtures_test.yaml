@@ -2,7 +2,7 @@ App\Entity\Organization\User:
     user_super_admin:
         firstname: ROLE
         lastname: SUPER_ADMIN
-        username: r.super_admin
+        username: user_super_admin
         plainPassword: password
         email: $username@mail.fr
         status: 6
@@ -12,7 +12,7 @@ App\Entity\Organization\User:
     user_admin:
         firstname: Role
         lastname: ADMIN
-        username: r.admin
+        username: user_admin
         plainPassword: password
         email: $username@mail.fr
         status: 3

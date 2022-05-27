@@ -31,12 +31,13 @@ class RdvEndToEndTest extends PantherTestCase
 
     protected function setUp(): void
     {
-        $this->client = $this->loginUser();
         $this->faker = \Faker\Factory::create('fr_FR');
     }
 
     public function testRdv(): void
     {
+        $this->client = $this->loginUser('john_user');
+
         $this->client->request('GET', '/support/1/show');
 
         $this->showCalendar();
@@ -44,9 +45,15 @@ class RdvEndToEndTest extends PantherTestCase
         $this->editRdv();
         $this->deleteRdvByModal();
         $this->deleteRdvByTable();
-        $this->restoreRdv();
+    }
 
-        $this->client->quit();
+    public function testRestoreRdv(): void
+    {
+        $this->client = $this->loginUser('user_super_admin');
+
+        $this->client->request('GET', '/support/1/rdvs');
+
+        $this->restoreRdv();
     }
 
     private function showCalendar(): void
@@ -68,7 +75,7 @@ class RdvEndToEndTest extends PantherTestCase
         $this->clickElement(self::BUTTON_NEW);
 
         $this->client->waitFor(self::MODAL_BUTTON_SAVE);
-        sleep(1); //animation effect
+        sleep(1); // animation effect
 
         $this->setForm(self::FORM_RDV, [
             'rdv[title]' => $this->faker->sentence(mt_rand(5, 10), true),
@@ -93,7 +100,7 @@ class RdvEndToEndTest extends PantherTestCase
         $this->clickElement(self::BUTTON_SHOW);
 
         $this->client->waitFor(self::MODAL_BUTTON_SAVE);
-        sleep(1); //animation effect
+        sleep(1); // animation effect
 
         $this->setForm(self::FORM_RDV, [
             'rdv[title]' => $this->faker->sentence(mt_rand(5, 10), true),
@@ -115,10 +122,10 @@ class RdvEndToEndTest extends PantherTestCase
         $this->outputMsg('Delete a rdv by modal');
 
         $this->clickElement(self::BUTTON_SHOW);
-        sleep(1); //animation effect
+        sleep(1); // animation effect
 
         $this->clickElement('#modal-btn-delete');
-        sleep(1); //animation effect
+        sleep(1); // animation effect
 
         $this->clickElement('#modal-block #modal-confirm');
 
@@ -134,7 +141,7 @@ class RdvEndToEndTest extends PantherTestCase
 
         $this->clickElement('a[data-original-title="Passer en vue liste"]');
         $this->clickElement(self::BUTTON_DELETE);
-        sleep(1); //animation effect
+        sleep(1); // animation effect
 
         $this->clickElement('#modal-block #modal-confirm');
 
@@ -146,6 +153,8 @@ class RdvEndToEndTest extends PantherTestCase
 
     private function restoreRdv(): void
     {
+        $this->outputMsg('Restore a rdv');
+
         $this->clickElement('label[for="deleted_deleted"]');
         $this->clickElement('button[id="search"]');
 
@@ -156,5 +165,12 @@ class RdvEndToEndTest extends PantherTestCase
         $this->assertSelectorExists(self::ALERT_SUCCESS);
 
         $this->clickElement(self::BUTTON_CLOSE_MSG);
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        $this->client->quit();
     }
 }

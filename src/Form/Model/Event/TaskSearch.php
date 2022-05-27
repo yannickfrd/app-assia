@@ -2,12 +2,10 @@
 
 namespace App\Form\Model\Event;
 
-use App\Entity\Event\Task;
-
 class TaskSearch extends EventSearch
 {
     /** @var array */
-    protected $status = [Task::TASK_IS_NOT_DONE];
+    protected $status = [];
 
     /** @var array */
     protected $level = [];

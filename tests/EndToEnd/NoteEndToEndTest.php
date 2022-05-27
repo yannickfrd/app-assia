@@ -33,12 +33,13 @@ class NoteEndToEndTest extends PantherTestCase
 
     protected function setUp(): void
     {
-        $this->client = $this->loginUser();
         $this->faker = \Faker\Factory::create('fr_FR');
     }
 
     public function testNote(): void
     {
+        $this->client = $this->loginUser('john_user');
+
         $this->client->request('GET', '/support/1/show');
 
         $this->showNotesPage();
@@ -47,16 +48,24 @@ class NoteEndToEndTest extends PantherTestCase
         $this->createNote();
         $this->editNote();
         $this->deleteNoteByModal();
-        $this->restoreNoteByCardsView();
 
         $this->showNotesByTableView();
         $this->createNoteByTableView();
         $this->editNoteByTableView();
         $this->deleteNoteByTableView();
+    }
+
+    public function testRestoreNote(): void
+    {
+        $this->client = $this->loginUser('user_super_admin');
+
+        $this->client->request('GET', '/support/1/notes/card-view');
+
+        $this->restoreNoteByCardsView();
+
+        $this->client->request('GET', '/support/1/notes/table-view');
 
         $this->restoreNoteByTableView();
-
-        $this->client->quit();
     }
 
     private function showNotesPage(): void
@@ -234,5 +243,12 @@ class NoteEndToEndTest extends PantherTestCase
         ]);
 
         $this->clickElement(self::MODAL_BUTTON_SAVE);
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        $this->client->quit();
     }
 }

@@ -91,7 +91,7 @@ class UserControllerTest extends WebTestCase
     {
         $this->client->loginUser($this->fixtures['john_user']);
 
-        $this->client->request('GET', '/user/username_exists/r.super_admin');
+        $this->client->request('GET', '/user/username_exists/user_super_admin');
 
         $result = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertTrue($result['response']);
