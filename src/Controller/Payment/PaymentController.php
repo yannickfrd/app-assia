@@ -4,35 +4,36 @@ declare(strict_types=1);
 
 namespace App\Controller\Payment;
 
-use App\Controller\Traits\ErrorMessageTrait;
-use App\Entity\Organization\User;
-use App\Entity\Support\Payment;
-use App\Entity\Support\SupportGroup;
-use App\Form\Model\Support\PaymentSearch;
-use App\Form\Model\Support\SupportPaymentSearch;
-use App\Form\Support\Payment\PaymentSearchType;
-use App\Form\Support\Payment\PaymentType;
-use App\Form\Support\Payment\SupportPaymentSearchType;
-use App\Repository\Support\PaymentRepository;
-use App\Service\Export\HotelContributionlExport;
-use App\Service\Export\PaymentAccountingExport;
-use App\Service\Export\PaymentFullExport;
-use App\Service\Indicators\PaymentIndicators;
-use App\Service\Normalisation;
 use App\Service\Pagination;
+use App\Service\Normalisation;
+use App\Entity\Support\Payment;
+use App\Entity\Organization\User;
+use App\Entity\Support\SupportGroup;
 use App\Service\Payment\PaymentManager;
-use App\Service\SupportGroup\SupportManager;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use App\Form\Model\Support\PaymentSearch;
+use App\Form\Support\Payment\PaymentType;
+use App\Service\Export\PaymentFullExport;
+use App\Controller\Traits\ErrorMessageTrait;
+use App\Service\SupportGroup\SupportManager;
+use App\Repository\Support\PaymentRepository;
+use App\Service\Indicators\PaymentIndicators;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Form\Support\Payment\PaymentSearchType;
+use App\Service\Export\PaymentAccountingExport;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use App\Form\Model\Support\SupportPaymentSearch;
+use App\Service\Export\HotelContributionlExport;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Form\Support\Payment\SupportPaymentSearchType;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 final class PaymentController extends AbstractController
 {
@@ -232,6 +233,7 @@ final class PaymentController extends AbstractController
 
     /**
      * @Route("/payment/{id}/restore", name="payment_restore", methods="GET")
+     * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function restore(
         int $id,
@@ -240,8 +242,6 @@ final class PaymentController extends AbstractController
         TranslatorInterface $translator
     ): JsonResponse {
         $payment = $paymentRepo->findPayment($id, true);
-
-        $this->denyAccessUnlessGranted('EDIT', $payment->getSupportGroup());
 
         $payment->setDeletedAt(null);
         $em->flush();

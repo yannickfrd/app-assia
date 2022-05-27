@@ -25,8 +25,6 @@ class PersonEndToEndTest extends PantherTestCase
         $this->searchPerson();
         $this->editPerson();
         $this->createNewGroupForPerson();
-
-        $this->client->quit();
     }
 
     private function searchPerson(): void
@@ -73,5 +71,12 @@ class PersonEndToEndTest extends PantherTestCase
         $this->clickElement('#js-btn-confirm');
 
         $this->assertSelectorTextContains('.alert.alert-success', 'Le nouveau groupe est créé.');
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        $this->client->quit();
     }
 }

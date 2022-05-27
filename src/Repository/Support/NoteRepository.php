@@ -145,7 +145,7 @@ class NoteRepository extends ServiceEntityRepository
     /**
      * Return all notes of group support.
      */
-    public function findNotesOfSupportQuery(int $supportGroupId, SupportNoteSearch $search): Query
+    public function findNotesOfSupportQuery(int $supportGroupId, SupportNoteSearch $search, ?User $user = null): Query
     {
         $qb = $this->createQueryBuilder('n')
             ->leftJoin('n.tags', 't')->addSelect('t')
@@ -155,7 +155,7 @@ class NoteRepository extends ServiceEntityRepository
             ->andWhere('n.supportGroup = :supportGroup')
             ->setParameter('supportGroup', $supportGroupId);
 
-        if ($search->getDeleted()) {
+        if ($search->getDeleted() && $user && $user->hasRole('ROLE_SUPER_ADMIN')) {
             $this->disableFilter($this->_em, 'softdeleteable');
             $qb->andWhere('n.deletedAt IS NOT NULL');
         }

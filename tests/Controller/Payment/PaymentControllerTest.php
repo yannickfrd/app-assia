@@ -35,7 +35,6 @@ class PaymentControllerTest extends WebTestCase
         $this->client = static::createClient();
         $this->client->followRedirects();
 
-        /** @var AbstractDatabaseTool */
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
 
         $this->fixtures = $this->databaseTool->loadAliceFixture([
@@ -77,7 +76,7 @@ class PaymentControllerTest extends WebTestCase
 
         // Empty export 1
         $this->client->submitForm('export', [
-            'date[start]' => (new \Datetime())->modify('+1 year')->format('Y-m-d'),
+            'date[start]' => (new \DateTime())->modify('+1 year')->format('Y-m-d'),
         ], 'GET');
 
         $this->assertResponseIsSuccessful();
@@ -93,7 +92,7 @@ class PaymentControllerTest extends WebTestCase
 
         // Empty export 2
         $this->client->submitForm('export-accounting', [
-            'date[start]' => (new \Datetime())->modify('+1 year')->format('Y-m-d'),
+            'date[start]' => (new \DateTime())->modify('+1 year')->format('Y-m-d'),
         ], 'GET');
 
         $this->assertResponseIsSuccessful();
@@ -268,7 +267,7 @@ class PaymentControllerTest extends WebTestCase
 
     public function testRestorePaymentIsSuccessful(): void
     {
-        $this->client->loginUser($this->fixtures['john_user']);
+        $this->client->loginUser($this->fixtures['user_super_admin']);
 
         $paymentId = $this->payment->getId();
         $this->client->request('GET', "/payment/$paymentId/delete");
@@ -276,7 +275,7 @@ class PaymentControllerTest extends WebTestCase
         // After delete a payment
         $id = $this->supportGroup->getId();
         $crawler = $this->client->request('GET', "/support/$id/payments", [
-            'deleted' => ['deleted' => true]
+            'deleted' => ['deleted' => true],
         ]);
         $this->assertResponseIsSuccessful();
         $this->assertSame(1, $crawler->filter('tbody tr')->count());
@@ -287,7 +286,7 @@ class PaymentControllerTest extends WebTestCase
 
         // After restore a payment
         $crawler = $this->client->request('GET', "/support/$id/payments", [
-            'deleted' => ['deleted' => true]
+            'deleted' => ['deleted' => true],
         ]);
         $this->assertSame(0, $crawler->filter('tbody tr')->count());
     }

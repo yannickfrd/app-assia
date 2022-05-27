@@ -38,8 +38,6 @@ class EvaluationEndToEndTest extends PantherTestCase
 
         $this->showEvaluation();
         $this->editEvaluation();
-
-        $this->client->quit();
     }
 
     private function showEvaluation(): void
@@ -72,5 +70,12 @@ class EvaluationEndToEndTest extends PantherTestCase
         $this->assertSelectorExists(self::ALERT_SUCCESS);
 
         $this->clickElement(self::BUTTON_CLOSE_MSG);
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        $this->client->quit();
     }
 }

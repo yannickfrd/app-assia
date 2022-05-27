@@ -302,7 +302,7 @@ class SupportControllerTest extends WebTestCase
         $this->loadFixtures();
 
         /** @var User $admin */
-        $admin = $this->fixtures['user_admin'];
+        $admin = $this->fixtures['user_super_admin'];
         $this->client->loginUser($admin);
 
         /** @var SupportGroup $support */

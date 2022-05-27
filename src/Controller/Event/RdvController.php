@@ -4,26 +4,27 @@ declare(strict_types=1);
 
 namespace App\Controller\Event;
 
-use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Event\Rdv;
-use App\Form\Event\RdvSearchType;
 use App\Form\Event\RdvType;
-use App\Form\Event\SupportRdvSearchType;
-use App\Form\Model\Event\EventSearch;
-use App\Repository\Event\RdvRepository;
-use App\Repository\Support\SupportGroupRepository;
-use App\Service\Api\ApiCalendarRouter;
+use App\Form\Event\RdvSearchType;
 use App\Service\Event\RdvManager;
-use App\Service\Event\RdvPaginator;
 use App\Service\Export\RdvExport;
-use App\Service\SupportGroup\SupportManager;
+use App\Service\Event\RdvPaginator;
+use App\Form\Model\Event\EventSearch;
+use App\Service\Api\ApiCalendarRouter;
+use App\Repository\Event\RdvRepository;
+use App\Form\Event\SupportRdvSearchType;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Controller\Traits\ErrorMessageTrait;
+use App\Service\SupportGroup\SupportManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\Support\SupportGroupRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 final class RdvController extends AbstractController
 {
@@ -261,6 +262,7 @@ final class RdvController extends AbstractController
 
     /**
      * @Route("/rdv/{id}/restore", name="rdv_restore", methods="GET")
+     * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function restore(
         int $id,
@@ -269,8 +271,6 @@ final class RdvController extends AbstractController
         TranslatorInterface $translator
     ): JsonResponse {
         $rdv = $rdvRepo->findRdv($id, true);
-
-        $this->denyAccessUnlessGranted('EDIT', $rdv->getSupportGroup());
 
         $rdv->setDeletedAt(null);
         $em->flush();

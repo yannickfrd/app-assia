@@ -60,13 +60,11 @@ class SupportEndToEndTest extends PantherTestCase
         $this->clickElement('#send');
 
         $this->assertSelectorExists('.alert.alert-success');
-
-        $this->client->quit();
     }
 
     public function testDeleteAndRestoreSupport(): void
     {
-        $this->client = $this->loginUser('r.admin');
+        $this->client = $this->loginUser('user_super_admin');
 
         $this->outputMsg('Show supports search page');
 
@@ -79,8 +77,6 @@ class SupportEndToEndTest extends PantherTestCase
         $this->client->request('GET', '/supports');
 
         $this->restoreSupport();
-
-        $this->client->quit();
     }
 
     private function deleteSupport(): void
@@ -115,5 +111,12 @@ class SupportEndToEndTest extends PantherTestCase
 
         $this->client->waitFor('.alert');
         $this->assertSelectorExists('.alert.alert-success');
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        $this->client->quit();
     }
 }

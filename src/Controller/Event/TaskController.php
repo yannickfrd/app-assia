@@ -203,6 +203,7 @@ final class TaskController extends AbstractController
 
     /**
      * @Route("/task/{id}/restore", name="task_restore", methods="GET")
+     * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function restore(
         int $id,
@@ -211,8 +212,6 @@ final class TaskController extends AbstractController
         TranslatorInterface $translator
     ): JsonResponse {
         $task = $taskRepo->findTask($id, true);
-
-        $this->denyAccessUnlessGranted('EDIT', $task->getSupportGroup());
 
         $task->setDeletedAt(null);
         $em->flush();

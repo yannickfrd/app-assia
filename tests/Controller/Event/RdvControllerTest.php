@@ -9,7 +9,6 @@ use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\DomCrawler\Crawler;
 
 class RdvControllerTest extends WebTestCase
 {
@@ -74,7 +73,7 @@ class RdvControllerTest extends WebTestCase
 
         // Export with no result
         $this->client->submitForm('export', [
-            'date[start]' => (new \Datetime())->modify('+10 year')->format('Y-m-d'),
+            'date[start]' => (new \DateTime())->modify('+10 year')->format('Y-m-d'),
         ], 'GET');
 
         $this->assertResponseIsSuccessful();
@@ -82,7 +81,7 @@ class RdvControllerTest extends WebTestCase
 
         // Export with results
         $this->client->submitForm('export', [
-            'date[start]' => (new \Datetime())->format('Y-m-d'),
+            'date[start]' => (new \DateTime())->format('Y-m-d'),
         ], 'GET');
 
         $this->assertResponseIsSuccessful();
@@ -105,7 +104,6 @@ class RdvControllerTest extends WebTestCase
         $user = $this->fixtures['john_user'];
         $this->client->loginUser($user);
 
-        /** @var Crawler */
         $crawler = $this->client->request('GET', '/calendar/month');
         $csrfToken = $crawler->filter('#rdv__token')->attr('value');
         $now = new \DateTime();
@@ -140,7 +138,7 @@ class RdvControllerTest extends WebTestCase
         $this->client->loginUser($user);
 
         $id = $this->supportGroup->getId();
-        /** @var Crawler */
+
         $crawler = $this->client->request('GET', "/support/$id/calendar/month");
         $csrfToken = $crawler->filter('#rdv__token')->attr('value');
         $now = new \DateTime();
@@ -187,7 +185,6 @@ class RdvControllerTest extends WebTestCase
 
         $this->client->loginUser($user);
 
-        /** @var Crawler */
         $crawler = $this->client->request('GET', '/calendar/month');
         $csrfToken = $crawler->filter('#rdv__token')->attr('value');
         $id = $this->rdv->getId();
@@ -252,7 +249,7 @@ class RdvControllerTest extends WebTestCase
 
     public function testRestoreRdvIsSuccessful(): void
     {
-        $this->client->loginUser($this->fixtures['john_user']);
+        $this->client->loginUser($this->fixtures['user_super_admin']);
 
         $rdvId = $this->rdv->getId();
         $this->client->request('DELETE', "/rdv/$rdvId/delete");
@@ -260,19 +257,22 @@ class RdvControllerTest extends WebTestCase
         // After delete a rdv
         $id = $this->supportGroup->getId();
         $crawler = $this->client->request('GET', "/support/$id/rdvs", [
-            'deleted' => ['deleted' => true]
+            'deleted' => ['deleted' => true],
         ]);
+
         $this->assertResponseIsSuccessful();
         $this->assertSame(1, $crawler->filter('tbody tr')->count());
 
         $this->client->request('GET', "/rdv/$rdvId/restore");
         $content = json_decode($this->client->getResponse()->getContent(), true);
+
         $this->assertSame('restore', $content['action']);
 
         // After restore a rdv
         $crawler = $this->client->request('GET', "/support/$id/rdvs", [
-            'deleted' => ['deleted' => true]
+            'deleted' => ['deleted' => true],
         ]);
+
         $this->assertSame(0, $crawler->filter('tbody tr')->count());
     }
 

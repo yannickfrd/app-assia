@@ -221,6 +221,7 @@ final class DocumentController extends AbstractController
 
     /**
      * @Route("/document/{id}/restore", name="document_restore", methods="GET")
+     * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function restore(
         int $id,
@@ -230,8 +231,6 @@ final class DocumentController extends AbstractController
     ): JsonResponse {
         $document = $documentRepo->findDocument($id, true);
         $supportGroup = $document->getSupportGroup();
-
-        $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
         $document->setDeletedAt(null);
         $em->flush();

@@ -35,7 +35,6 @@ class DocumentControllerTest extends WebTestCase
         $this->client = static::createClient();
         $this->client->followRedirects();
 
-        /** @var AbstractDatabaseTool */
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
 
         $this->fixtures = $this->databaseTool->loadAliceFixture([
@@ -212,7 +211,7 @@ class DocumentControllerTest extends WebTestCase
 
     public function testRestoreDocumentIsSuccessful(): void
     {
-        $this->client->loginUser($this->fixtures['john_user']);
+        $this->client->loginUser($this->fixtures['user_super_admin']);
 
         $documentId = $this->document->getId();
         $this->client->request('GET', "/document/$documentId/delete");
@@ -220,7 +219,7 @@ class DocumentControllerTest extends WebTestCase
         // After delete a document
         $id = $this->supportGroup->getId();
         $crawler = $this->client->request('GET', "/support/$id/documents", [
-            'search' => ['deleted' => ['deleted' => true]]
+            'search' => ['deleted' => ['deleted' => true]],
         ]);
         $this->assertResponseIsSuccessful();
         $this->assertSame(1, $crawler->filter('tbody tr')->count());
@@ -231,7 +230,7 @@ class DocumentControllerTest extends WebTestCase
 
         // After restore a document
         $crawler = $this->client->request('GET', "/support/$id/documents", [
-            'search' => ['deleted' => ['deleted' => true]]
+            'search' => ['deleted' => ['deleted' => true]],
         ]);
         $this->assertSame(0, $crawler->filter('tbody tr')->count());
     }
