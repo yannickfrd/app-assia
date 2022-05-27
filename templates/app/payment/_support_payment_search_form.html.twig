@@ -6,13 +6,15 @@
     <div class="col-auto my-1 px-1 d-inline-flex" data-toggle="tooltip" data-placement="bottom"
         title="Date de début"><span class="my-2 px-1">Entre</span>{{ form_widget(form_search.date.start) }}
     </div>
-    <div class="col-auto my-1 px-1 d-inline-flex" data-toggle="tooltip" data-placement="bottom"
-        title="Date de fin"><span class="my-2 pr-2">et</span>{{ form_widget(form_search.date.end) }}
+    <div class="col-auto my-1 px-1 d-inline-flex" title="Date de fin" data-toggle="tooltip" data-placement="bottom">
+        <span class="my-2 pr-2">et</span>{{ form_widget(form_search.date.end) }}
     </div>
-    <div class="col-auto my-auto">
-        <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-0"
-             title="Voir les paiements supprimés" data-toggle="tooltip" data-placement="bottom">
-            {{ form_widget(form_search.deleted.deleted) }}
+    {% if is_granted('ROLE_SUPER_ADMIN') %}
+        <div class="col-auto my-auto">
+            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-0"
+                title="Voir les paiements supprimés" data-toggle="tooltip" data-placement="bottom">
+                {{ form_widget(form_search.deleted.deleted) }}
+            </div>
         </div>
-    </div>
+    {% endif %}
 {% endblock %}

@@ -23,6 +23,7 @@ use App\Service\Payment\PaymentManager;
 use App\Service\SupportGroup\SupportManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -224,6 +225,7 @@ final class PaymentController extends AbstractController
 
     /**
      * @Route("/payment/{id}/restore", name="payment_restore", methods="GET")
+     * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function restore(
         int $id,
@@ -232,8 +234,6 @@ final class PaymentController extends AbstractController
         TranslatorInterface $translator
     ): JsonResponse {
         $payment = $paymentRepo->findPayment($id, true);
-
-        $this->denyAccessUnlessGranted('EDIT', $payment->getSupportGroup());
 
         $payment->setDeletedAt(null);
         $em->flush();

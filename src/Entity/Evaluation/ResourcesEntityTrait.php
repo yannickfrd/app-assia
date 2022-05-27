@@ -77,7 +77,7 @@ trait ResourcesEntityTrait
 
     public function getRsaAmt(): ?float
     {
-        return $this->getEvalBudgetResourceAmt(Resource::RSA);
+        return $this->getEvalBudgetResourceAmt([Resource::RSA]);
     }
 
     public function getIjAmt(): ?float

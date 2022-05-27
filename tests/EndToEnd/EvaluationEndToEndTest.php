@@ -4,57 +4,78 @@ namespace App\Tests\EndToEnd;
 
 use App\Tests\EndToEnd\Traits\AppPantherTestTrait;
 use Symfony\Component\Panther\Client;
-use Symfony\Component\Panther\DomCrawler\Crawler;
 use Symfony\Component\Panther\PantherTestCase;
 
 class EvaluationEndToEndTest extends PantherTestCase
 {
     use AppPantherTestTrait;
 
+    public const BUTTON_SHOW = 'a.calendar-event';
+
+    public const FORM_RDV = 'form[name="evaluation"]';
+    public const BUTTON_SAVE = 'button[name="send"]';
+    public const BUTTON_DELETE = 'a#modal-btn-delete';
+
+    public const MSG_FLASH = '#js-msg-flash';
+    public const BUTTON_CLOSE_MSG = '#btn-close-msg';
+    public const ALERT_SUCCESS = '.alert.alert-success';
+    public const ALERT_WARNING = '.alert.alert-warning';
+
     protected Client $client;
+
+    /** @var \Faker\Generator */
+    protected $faker;
+
+    protected function setUp(): void
+    {
+        $this->client = $this->loginUser();
+        $this->faker = \Faker\Factory::create('fr_FR');
+    }
 
     public function testEvaluation(): void
     {
-        $this->client = $this->loginUser();
+        $this->client->request('GET', '/support/1/show');
 
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', '/support/1/show');
-
-        $crawler = $this->showEvaluation($crawler);
-        $crawler = $this->editEvaluation($crawler);
+        $this->showEvaluation();
+        $this->editEvaluation();
     }
 
-    private function showEvaluation(Crawler $crawler): Crawler
+    private function showEvaluation(): void
     {
         $this->outputMsg('Show the evaluation page');
 
-        sleep(1);
-        $link = $crawler->filter('a#support-evaluation')->link();
-
-        $crawler = $this->client->click($link);
+        $this->clickElement('a#support-evaluation');
 
         $this->assertSelectorTextContains('h1', 'Évaluation sociale');
 
-        return $crawler;
+        $this->fixScrollBehavior();
     }
 
-    private function editEvaluation(Crawler $crawler): Crawler
+    private function editEvaluation(): void
     {
         $this->outputMsg('Edit the evaluation');
 
-        $this->client->waitForVisibility('#card-evalHousing');
-        $crawler->filter('#card-evalHousing')->click();
+        $this->clickElement('#card-evalHousing');
+        sleep(1);
+        $this->clickElement('#card-evalHousing button[type="submit"]');
 
-        $crawler->filter('#card-evalBackground')->click();
+        $this->client->waitFor(self::ALERT_SUCCESS);
+        $this->assertSelectorExists(self::ALERT_SUCCESS);
 
-        $this->client->waitForVisibility('#card-evalBackground button[type="submit"]');
-        $crawler->filter('#card-evalBackground button[type="submit"]')->click();
+        $this->clickElement(self::BUTTON_CLOSE_MSG);
 
-        $this->client->waitForVisibility('#js-msg-flash');
-        $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
+        $this->clickElement(self::BUTTON_SAVE);
 
-        $crawler->selectButton('btn-close-msg')->click();
+        $this->client->waitFor(self::ALERT_SUCCESS);
+        $this->assertSelectorExists(self::ALERT_SUCCESS);
 
-        return $crawler;
+        $this->clickElement(self::BUTTON_CLOSE_MSG);
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        $this->client->quit();
     }
 }

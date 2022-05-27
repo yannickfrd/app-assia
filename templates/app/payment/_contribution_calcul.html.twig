@@ -93,7 +93,7 @@
                         <td class="align-middle">{{ (payment.ratioNbDays * 100)|percent }}</td>
                     </tr>
                 {% endif %}
-                {% if false == rent_contribution %}
+                {% if rent_contribution == false %}
                     <tr title="Calcul des unité de consommation" data-content="{{ uc_description }}" 
                         data-toggle="popover" data-trigger="hover" data-placement="bottom" data-html="true">
                         <td class="align-middle">Nombre d'unités de consommation</td>
@@ -107,7 +107,7 @@
                 {% endif %}
             </tbody>
             <tfoot>
-                {% if false == rent_contribution %}
+                {% if rent_contribution == false %}
                     <tr>
                         {% set min_rest_to_live = service.minRestToLive ?? 
                             constant('App\\Service\\Payment\\ContributionCalculator::MIN_REST_TO_LIVE') %}

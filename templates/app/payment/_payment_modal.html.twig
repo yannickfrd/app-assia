@@ -1,5 +1,5 @@
 {% set contribution = form.vars.value %}
-{% set serviceTypeHotel = support.service.type == constant('SERVICE_TYPE_HOTEL', support.service) %}
+{% set service_type_hotel = support.service.type == constant('SERVICE_TYPE_HOTEL', support.service) %}
 
 <div class="modal fade" id="payment-modal" tabindex="-1" role="dialog" 
     aria-labelledby="paymentModalLabel" aria-hidden="true">
@@ -53,7 +53,7 @@
             <div class="row" data-payment="toPayAmt"
                 data-parent-field="payment_type" data-options="1|2|10|20">
                 <div class="col-lg-4">{{ form_row(form.toPayAmt) }}</div>
-                    {% if true == serviceTypeHotel %}
+                    {% if service_type_hotel == true %}
                         <div class="col-lg-4" data-parent-field="payment_toPayAmt" data-type="no_contrib">
                             <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2">
                                 {{ form_row(form.noContrib) }}</div>
@@ -93,16 +93,16 @@
                     <button class="btn btn-danger mr-3 mb-1" data-action="delete"
                         data-toggle="modal" data-target="#modal-block"
                         data-edit="true" data-url="{{ path('payment_delete', {'id': '__id__'}) }}"
-                        data-placement="bottom" title="Supprimer"><i class="fas fa-trash-alt"></i><span 
+                        title="Supprimer" data-placement="bottom"><i class="fas fa-trash-alt"></i><span 
                         class="d-none d-md-inline ml-2">Supprimer</span></button>
                     <button class="btn btn-{{ theme_color }} mr-2 mb-1 shadow" data-action="create_pdf"
                         data-edit="true" data-url="{{ path('payment_export_pdf', {'id': '__id__'}) }}"
-                        data-toggle="tooltip" data-placement="bottom" title="Générer le reçu en PDF">
+                        title="Générer le reçu en PDF" data-toggle="tooltip" data-placement="bottom">
                         <i class="fas fa-file-pdf bg-secondary fa-lg"></i>
                         <span class="d-none d-md-inline ml-2">PDF</span></button>
                     <button class="btn btn-{{ theme_color }} mb-1 shadow" data-action="send_email"
                         data-edit="true" data-url="{{ path('payment_send_pdf', {'id': '__id__'}) }}"
-                        data-toggle="tooltip" data-placement="bottom" title="Envoyer un email avec le reçu en PDF">
+                        title="Envoyer un email avec le reçu en PDF" data-toggle="tooltip" data-placement="bottom" >
                         <i class="fas fa-envelope bg-secondary fa-lg"></i>
                         <span class="d-none d-md-inline ml-2">Email</span></button>
                 </div>

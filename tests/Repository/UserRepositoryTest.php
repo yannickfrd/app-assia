@@ -72,12 +72,12 @@ class UserRepositoryTest extends WebTestCase
 
     public function testFindUserByUsername(): void
     {
-        $this->assertNotNull($this->userRepo->findUser('r.super_admin'));
+        $this->assertNotNull($this->userRepo->findUser('user_super_admin'));
     }
 
     public function testFindUserByEmail(): void
     {
-        $this->assertNotNull($this->userRepo->findUser('r.super_admin@mail.fr'));
+        $this->assertNotNull($this->userRepo->findUser('user_super_admin@mail.fr'));
     }
 
     public function testFindUserById(): void

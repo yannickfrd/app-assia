@@ -182,7 +182,7 @@ export default class CalendarManager {
                     this.updateRdv(data);
                     break;
                 case 'delete':
-                    this.deleteRdv(data.rdvId, data.apiUrls);
+                    this.deleteRdv(data.rdv, data.apiUrls);
                     break;
             }
         }
@@ -259,11 +259,11 @@ export default class CalendarManager {
 
     /**
      * Supprime le RDV dans l'agenda.
-     * @param {number} rdvId
+     * @param {Object} rdv
      * @param {Object} apiUrls
      */
-    deleteRdv(rdvId, apiUrls) {
-        const rdvElt = document.getElementById('rdv-' + rdvId)
+    deleteRdv(rdv, apiUrls) {
+        const rdvElt = document.getElementById('rdv-' + rdv.id)
         rdvElt.remove()
         // this.hideRdvElts(dayElt)
 

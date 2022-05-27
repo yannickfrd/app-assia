@@ -43,7 +43,7 @@ class RdvPaginator
 
         if ($request->query->count() > 0) {
             return $this->pagination->paginate(
-                $this->rdvRepo->findRdvsQueryOfSupport($search, $supportGroup),
+                $this->rdvRepo->findRdvsQueryOfSupport($search, $supportGroup, $this->user),
                 $request
             );
         }

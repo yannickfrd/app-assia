@@ -8,6 +8,7 @@ use App\Entity\People\RolePerson;
 use App\Notification\ExceptionNotification;
 use App\Repository\People\PeopleGroupRepository;
 use App\Repository\People\PersonRepository;
+use App\Service\People\PeopleGroupChecker;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
@@ -23,6 +24,7 @@ class SiSiaoGroupImporter extends SiSiaoClient
     protected $user;
     protected $personRepo;
     protected $peopleGroupRepo;
+    protected $peopleGroupChecker;
     protected $flashBag;
     protected $exceptionNotification;
 
@@ -33,6 +35,7 @@ class SiSiaoGroupImporter extends SiSiaoClient
         Security $security,
         PersonRepository $personRepo,
         PeopleGroupRepository $peopleGroupRepo,
+        PeopleGroupChecker $peopleGroupChecker,
         FlashBagInterface $flashBag,
         ExceptionNotification $exceptionNotification,
         string $url
@@ -43,6 +46,7 @@ class SiSiaoGroupImporter extends SiSiaoClient
         $this->user = $security->getUser();
         $this->personRepo = $personRepo;
         $this->peopleGroupRepo = $peopleGroupRepo;
+        $this->peopleGroupChecker = $peopleGroupChecker;
         $this->flashBag = $flashBag;
         $this->exceptionNotification = $exceptionNotification;
     }
@@ -87,6 +91,8 @@ class SiSiaoGroupImporter extends SiSiaoClient
             $peopleGroup->addRolePerson($rolePerson);
         }
 
+        $this->peopleGroupChecker->checkValidHeader($peopleGroup);
+
         $this->em->flush();
 
         if ($peopleGroup->getCreatedAt() > (new \DateTime())->modify('-10 sec')) {
@@ -128,10 +134,13 @@ class SiSiaoGroupImporter extends SiSiaoClient
             ->setMaidenName($personne->nomJeuneFille ?? $personne->nomUsage)
             ->setSiSiaoId($this->getFichePersonneId($personne))
             ->setPhone1(preg_match('^0[1-9]([-._/ ]?[0-9]{2}){4}$^', $personne->telephone) ? $personne->telephone : null)
-            ->setEmail($personne->id === $ficheGroupe->demandeurprincipal->id
-                && preg_match('^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$^', $ficheGroupe->courrielDemandeur) ? $ficheGroupe->courrielDemandeur : null)
             ->setCreatedBy($this->user)
             ->setUpdatedBy($this->user);
+
+            if (null !== $ficheGroupe->contactPrincipal && $ficheGroupe->contactPrincipal->id === $personne->id) {
+                $person->setEmail(preg_match('^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$^', $ficheGroupe->courrielDemandeur) ?
+                    $ficheGroupe->courrielDemandeur : null);
+            }
 
             $this->em->persist($person);
         }
@@ -146,7 +155,8 @@ class SiSiaoGroupImporter extends SiSiaoClient
         }
 
         $rolePerson = (new RolePerson())
-            ->setHead($personne->id === $ficheGroupe->demandeurprincipal->id)
+            ->setHead((null !== $ficheGroupe->contactPrincipal && $ficheGroupe->contactPrincipal->id === $personne->id)
+                || 1 === count($ficheGroupe->personnes))
             ->setRole($this->getRole($ficheGroupe, $personne))
             ->setPerson($person)
             ->setPeopleGroup($peopleGroup);

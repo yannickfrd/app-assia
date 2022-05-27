@@ -36,7 +36,7 @@ class DocumentPaginator
     {
         if ($supportGroup) {
             return $this->pagination->paginate(
-                $this->documentRepo->findSupportDocumentsQuery($search, $supportGroup),
+                $this->documentRepo->findSupportDocumentsQuery($search, $supportGroup, $this->user),
                 $request
             );
         }

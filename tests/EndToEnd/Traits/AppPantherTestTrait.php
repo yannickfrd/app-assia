@@ -53,4 +53,23 @@ trait AppPantherTestTrait
             ->findElement(WebDriverBy::cssSelector($selector))
             ->click();
     }
+
+    protected function setForm(string $selector, ?array $values = null): void
+    {
+        $this->client->waitFor($selector);
+
+        $this->client
+            ->getCrawler()
+            ->filter($selector)
+            ->form($values)
+        ;
+    }
+
+    /**
+     * Fix the bug with scroll-behavior ('element click intercepted: Element is not clickable at point').
+     */
+    protected function fixScrollBehavior(): void
+    {
+        $this->client->executeScript('document.querySelector("html").style.scrollBehavior = "auto";');
+    }
 }

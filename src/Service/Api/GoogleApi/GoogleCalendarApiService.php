@@ -5,9 +5,9 @@ namespace App\Service\Api\GoogleApi;
 use App\Entity\Event\Rdv;
 use App\Repository\Event\RdvRepository;
 use App\Service\Api\AbstractApiCalendar;
-use Google_Client;
-use Google_Service_Calendar;
-use Google_Service_Calendar_Event;
+use Google\Client as GoogleClient;
+use Google\Service\Calendar as GoogleCalendar;
+use Google\Service\Calendar\Event as GoogleCalendarEvent;
 
 class GoogleCalendarApiService extends AbstractApiCalendar
 {
@@ -128,21 +128,21 @@ class GoogleCalendarApiService extends AbstractApiCalendar
     /**
      * Create a new Calendar Service.
      */
-    private function createServiceCalendar(): Google_Service_Calendar
+    private function createServiceCalendar(): GoogleCalendar
     {
-        return new Google_Service_Calendar($this->getClient());
+        return new GoogleCalendar($this->getClient());
     }
 
     /**
      * Make a new Google Client by default.
      */
-    private function getClientDefault(): Google_Client
+    private function getClientDefault(): GoogleClient
     {
-        $client = new Google_Client();
+        $client = new GoogleClient();
         $client->setAuthConfig($this->config);
         $client->setApplicationName('app-assia');
 //        $client->setPrompt('select_account');
-        $client->addScope(Google_Service_Calendar::CALENDAR);
+        $client->addScope(GoogleCalendar::CALENDAR);
         $client->setRedirectUri('https://'.$_SERVER['HTTP_HOST'].'/add-event-google-calendar');
         $client->setAccessType('offline');
         $client->setIncludeGrantedScopes(true);
@@ -153,7 +153,7 @@ class GoogleCalendarApiService extends AbstractApiCalendar
     /**
      * Init Google Client.
      */
-    private function getClient(string $authCode = null): Google_Client
+    private function getClient(string $authCode = null): GoogleClient
     {
         $client = $this->getClientDefault();
 
@@ -182,7 +182,7 @@ class GoogleCalendarApiService extends AbstractApiCalendar
         return $client;
     }
 
-    private function getToken(Google_Client $client, string $authCode = null): array
+    private function getToken(GoogleClient $client, string $authCode = null): array
     {
         if ($authCode) {
             $accessToken = $client->fetchAccessTokenWithAuthCode($authCode);
@@ -215,13 +215,13 @@ class GoogleCalendarApiService extends AbstractApiCalendar
     /**
      * Get the id of the rdv recorded in session or in parameter to hydrate a new event.
      */
-    private function createEvent(Rdv $rdv = null): Google_Service_Calendar_Event
+    private function createEvent(Rdv $rdv = null): GoogleCalendarEvent
     {
         if (!$rdv) {
             $rdv = $this->getRdv('google');
         }
 
-        return new Google_Service_Calendar_Event([
+        return new GoogleCalendarEvent([
             'summary' => $this->createTitleEvent($rdv),
             'location' => $rdv->getLocation(),
             'description' => $this->createBodyEvent(

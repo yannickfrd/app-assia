@@ -220,7 +220,7 @@ class NoteControllerTest extends WebTestCase
     public function testRestoreNoteIsSuccessful(string $view)
     {
         $this->loadFixtures();
-        $this->client->loginUser($this->fixtures['john_user']);
+        $this->client->loginUser($this->fixtures['user_super_admin']);
 
         $noteId = $this->note->getId();
         $this->client->request('GET', "/note/$noteId/delete");

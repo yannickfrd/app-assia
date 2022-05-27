@@ -3,148 +3,174 @@
 namespace App\Tests\EndToEnd;
 
 use App\Tests\EndToEnd\Traits\AppPantherTestTrait;
-use Facebook\WebDriver\WebDriverBy;
 use Symfony\Component\Panther\Client;
-use Symfony\Component\Panther\DomCrawler\Crawler;
 use Symfony\Component\Panther\PantherTestCase;
 
 class RdvEndToEndTest extends PantherTestCase
 {
     use AppPantherTestTrait;
 
+    public const BUTTON_NEW = '#js-new-rdv';
+    public const BUTTON_SHOW = 'a.calendar-event';
+    public const BUTTON_DELETE = 'button[data-action="delete-rdv"]';
+    public const BUTTON_RESTORE = 'button[name="restore"]';
+
+    public const MODAL_BUTTON_SAVE = 'button[name="save-rdv"]';
+    public const MODAL_BUTTON_CLOSE = '#js-btn-cancel';
+    public const FORM_RDV = 'form[name="rdv"]';
+
+    public const MSG_FLASH = '#js-msg-flash';
+    public const BUTTON_CLOSE_MSG = '#btn-close-msg';
+    public const ALERT_SUCCESS = '.alert.alert-success';
+    public const ALERT_WARNING = '.alert.alert-warning';
+
     protected Client $client;
+
+    /** @var \Faker\Generator */
+    protected $faker;
 
     protected function setUp(): void
     {
-        $this->client = $this->loginUser();
-
         $this->faker = \Faker\Factory::create('fr_FR');
     }
 
     public function testRdv(): void
     {
-        /** @var Crawler */
-        $crawler = $this->client->request('GET', '/support/1/show');
+        $this->client = $this->loginUser('john_user');
 
-        $crawler = $this->goToCalendar($crawler);
-        $crawler = $this->createRdv($crawler);
-        $crawler = $this->editRdv($crawler);
+        $this->client->request('GET', '/support/1/show');
 
-//         $crawler = $this->deleteRdv($crawler);
-
-         $this->restoreRdv();
-
-         $this->client->quit();
+        $this->showCalendar();
+        $this->createRdv();
+        $this->editRdv();
+        $this->deleteRdvByModal();
+        $this->deleteRdvByTable();
     }
 
-    private function goToCalendar(Crawler $crawler): Crawler
+    public function testRestoreRdv(): void
+    {
+        $this->client = $this->loginUser('user_super_admin');
+
+        $this->client->request('GET', '/support/1/rdvs');
+
+        $this->restoreRdv();
+    }
+
+    private function showCalendar(): void
     {
         $this->outputMsg('Show calendar page');
 
-        $link = $crawler->filter('#support-calendar')->link();
-
-        /** @var Crawler */
-        $crawler = $this->client->click($link);
+        $this->clickElement('#support-calendar');
 
         $this->assertSelectorTextContains('h1', 'Rendez-vous');
-        // $this->client->waitForVisibility('#js-new-rdv');
-        sleep(1);
 
-        return $crawler;
+        $this->fixScrollBehavior();
+        $this->clickElement('#show-weekend');
     }
 
-    private function createRdv(Crawler $crawler): Crawler
+    private function createRdv(): void
     {
         $this->outputMsg('Create a rdv');
 
-        $crawler->selectButton('js-new-rdv')->click();
+        $this->clickElement(self::BUTTON_NEW);
 
-        $this->client->waitForVisibility('#modal-rdv', 1);
-        /** @var Crawler */
-        $crawler = $this->client->submitForm('save-rdv', [
+        $this->client->waitFor(self::MODAL_BUTTON_SAVE);
+        sleep(1); // animation effect
+
+        $this->setForm(self::FORM_RDV, [
             'rdv[title]' => $this->faker->sentence(mt_rand(5, 10), true),
             'start' => '10:30',
             'end' => '12:30',
+            'rdv[tags]' => [1],
             'rdv[content]' => join('. ', $this->faker->paragraphs(mt_rand(1, 2))),
         ]);
-        sleep(1);
 
-        $this->client->waitFor('#js-msg-flash', 1);
-        $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
+        $this->clickElement(self::MODAL_BUTTON_SAVE);
 
-        $crawler->selectButton('btn-close-msg')->click();
-        sleep(1); // pop-up effect
+        $this->client->waitFor(self::ALERT_SUCCESS);
+        $this->assertSelectorExists(self::ALERT_SUCCESS);
 
-        return $crawler;
+        $this->clickElement(self::BUTTON_CLOSE_MSG);
     }
 
-    private function editRdv(Crawler $crawler): Crawler
+    private function editRdv(): void
     {
         $this->outputMsg('Edit a rdv');
 
-        $crawler->filter('#show-weekend')->click();
+        $this->clickElement(self::BUTTON_SHOW);
 
-        $crawler->filter('a.calendar-event')->first()->click();
-        sleep(1); // pop-up effect
+        $this->client->waitFor(self::MODAL_BUTTON_SAVE);
+        sleep(1); // animation effect
 
-        /** @var Crawler */
-        $crawler = $this->client->submitForm('save-rdv', [
+        $this->setForm(self::FORM_RDV, [
             'rdv[title]' => $this->faker->sentence(mt_rand(5, 10), true),
+            'rdv[tags]' => [1, 2],
             'rdv[content]' => join('. ', $this->faker->paragraphs(mt_rand(1, 2))),
             'rdv[users]' => [1],
         ]);
-        sleep(1);
 
-        $this->client->waitFor('#js-msg-flash', 1);
-        $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
+        $this->clickElement(self::MODAL_BUTTON_SAVE);
 
-        $crawler->selectButton('btn-close-msg')->click();
-        sleep(1); // pop-up effect
+        $this->client->waitFor(self::ALERT_SUCCESS);
+        $this->assertSelectorExists(self::ALERT_SUCCESS);
 
-        return $crawler;
+        $this->clickElement(self::BUTTON_CLOSE_MSG);
     }
 
-    private function deleteRdv(Crawler $crawler): Crawler
+    private function deleteRdvByModal(): void
     {
-        $this->outputMsg('Delete a rdv');
+        $this->outputMsg('Delete a rdv by modal');
 
-        $crawler->filter('a.calendar-event')->first()->click();
-        sleep(1); // pop-up effect
+        $this->clickElement(self::BUTTON_SHOW);
+        sleep(1); // animation effect
 
-        $crawler->filter('modal-btn-delete')->click();
+        $this->clickElement('#modal-btn-delete');
+        sleep(1); // animation effect
 
-        sleep(1);
-        $this->assertSelectorExists('#js-msg-flash.alert.alert-warining');
+        $this->clickElement('#modal-block #modal-confirm');
 
-        $crawler->selectButton('btn-close-msg')->click();
-        sleep(5); // pop-up effect
+        $this->client->waitFor(self::MSG_FLASH);
+        $this->assertSelectorExists(self::ALERT_WARNING);
 
-        return $crawler;
+        $this->clickElement(self::BUTTON_CLOSE_MSG);
+    }
+
+    private function deleteRdvByTable(): void
+    {
+        $this->outputMsg('Delete a rdv by table');
+
+        $this->clickElement('a[data-original-title="Passer en vue liste"]');
+        $this->clickElement(self::BUTTON_DELETE);
+        sleep(1); // animation effect
+
+        $this->clickElement('#modal-block #modal-confirm');
+
+        $this->client->waitFor(self::ALERT_WARNING);
+        $this->assertSelectorExists(self::ALERT_WARNING);
+
+        $this->clickElement(self::BUTTON_CLOSE_MSG);
     }
 
     private function restoreRdv(): void
     {
         $this->outputMsg('Restore a rdv');
 
-        $this->clickElement('a[data-original-title="Passer en vue liste"]');
-
-        $this->clickElement('button[data-action="delete-rdv"]');
-
-        $this->client->waitForVisibility('#modal-block', 1);
-        $this->clickElement('#modal-block button#modal-confirm');
-
-        $this->client->waitFor('.alert', 3);
-        $this->assertSelectorExists('.alert.alert-warning');
-
-        $this->clickElement('button[aria-label="Close"]');
-
         $this->clickElement('label[for="deleted_deleted"]');
         $this->clickElement('button[id="search"]');
 
-        $this->client->waitFor('table', 1);
-        $this->client->getWebDriver()->findElement(WebDriverBy::name('restore'))->click();
+        $this->client->waitFor('table');
+        $this->clickElement(self::BUTTON_RESTORE);
 
-        $this->client->waitFor('.alert', 3);
-        $this->assertSelectorExists('.alert.alert-success');
+        $this->client->waitFor(self::ALERT_SUCCESS);
+        $this->assertSelectorExists(self::ALERT_SUCCESS);
+
+        $this->clickElement(self::BUTTON_CLOSE_MSG);
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        $this->client->quit();
     }
 }

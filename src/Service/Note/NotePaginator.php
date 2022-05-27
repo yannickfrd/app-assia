@@ -38,7 +38,7 @@ class NotePaginator
         // Si filtre ou tri utilisé, n'utilise pas le cache.
         if ($request->query->count() > 0 || $search->getNoteId()) {
             return $this->pagination->paginate(
-                $this->noteRepo->findNotesOfSupportQuery($supportGroup->getId(), $search),
+                $this->noteRepo->findNotesOfSupportQuery($supportGroup->getId(), $search, $this->user),
                 $request,
                 self::NB_ITEMS
             );
@@ -51,7 +51,7 @@ class NotePaginator
                 $item->expiresAfter(\DateInterval::createFromDateString('7 days'));
 
                 return $this->pagination->paginate(
-                    $this->noteRepo->findNotesOfSupportQuery($supportGroup->getId(), $search),
+                    $this->noteRepo->findNotesOfSupportQuery($supportGroup->getId(), $search, $this->user),
                     $request,
                     self::NB_ITEMS
                 );

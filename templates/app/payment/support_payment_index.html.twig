@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% set restoration_mode = form_search.deleted.deleted.vars.checked %}
+{% set restoration_mode = form_search.deleted.deleted.vars.checked and is_granted('ROLE_SUPER_ADMIN') %}
 {% set title = 'Paiements' ~ (restoration_mode ? ' (Corbeille)') %}
 
 {% block title %}{{ title }}{% endblock %}
@@ -14,7 +14,7 @@
 			<div class="d-flex col-md-6 mb-1 align-items-center">
 				<button class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-action="new_payment"
 					data-url="{{ path('payment_create', {'id': support.id}) }}"
-					data-toggle="tooltip" data-placement="bottom" title="Créer un nouvel enregistrement">
+					title="Créer un nouvel enregistrement" data-toggle="tooltip" data-placement="bottom">
 					<i class="fas fa-plus-square mr-2"></i>Nouveau</button>
 				<div class="d-inline align-middle">Total : <!--
 				--><span id="count-payments">{{ payments.getTotalItemCount|number }}</span><!--
