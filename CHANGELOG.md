@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 3.18.7 - 27/05/2022
+
+Edit restoration mode (only for user super admin)
+
 ## Version 3.18.6 - 25/05/2022
 
 Update tests end-to-ends
