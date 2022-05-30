@@ -32,7 +32,9 @@ trait SupportPersonDataTrait
                 $placesEndDates[] = $placeGroup->getEndDate();
                 $placeGroup->getEndReason() ? $placesEndReasons[] = $placeGroup->getEndReasonToString() : null;
                 $place = $placeGroup->getPlace();
-                $placesNames[] = (string) $place->getName().' ';
+                if ($place) {
+                    $placesNames[] = (string) $place->getName().' ';
+                }
             }
         }
 

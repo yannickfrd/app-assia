@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% set title = 'Paiements' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+    <section class="mt-0">
+
+        <div class="container-fluid mt-4">
+            {% include 'model/_flash_message.html.twig' %}
+            <div class="d-flex mb-3 align-items-center">
+                <h1 class="h2 mr-1">{{ title }}</h1>
+                <span class="text-secondary">(redevances, PF, caution...)</span>
+            </div>
+        </div>
+
+        {% include 'app/payment/_payment_search_form.html.twig' %}
+
+        <div class="container-fluid mt-4">
+
+        <div class="row mb-2">
+            <div class="col-md-12">
+                <a href="{{ path('payment_indicators') }}" class="text-{{ theme_color }} float-right">
+                    <i class="fas fa-chart-bar mr-2"></i>Indicateurs statistiques</a>
+            </div>
+        </div>
+
+            <div class="row align-items-baseline">
+                <div class="col-md-4 count align-middle mb-2">
+                    <span class="align-middle">Résultat : {{ payments.getTotalItemCount|number }}<!--
+                    --> entrée{% if payments.getTotalItemCount > 1 %}s{% endif %}.</span>
+                </div>
+                <div class="col-md-8">
+                    <div class="navigation">{{ knp_pagination_render(payments) }}</div>
+                </div>
+            </div>
+
+            {% include 'app/payment/_payment_table.html.twig' %}
+
+        </div>
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('search') }}
+{% endblock javascripts %}

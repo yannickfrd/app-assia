@@ -94,7 +94,7 @@
 			</a>
 			{% if support.device.contribution == YES %}
 				<a id="support-payments" class="btn btn-{{ theme_color }} mr-2 mb-2 shadow" 
-					href="{{ path('support_payments', {'id': support.id}) }}" 
+					href="{{ path('support_payments_index', {'id': support.id}) }}"
 					title="Participations financières, redevances, loyers..." data-toggle="tooltip" 
 					data-placement="bottom">Paiements<span class="badge badge-light ml-2">{{ count_payments }}</span>
 				</a>

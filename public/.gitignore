@@ -5,5 +5,4 @@
 /build.zip
 /build.rar
 /images/*
-!/images/logo_assia_white.png
-!/images/logo_assia.ico
+!/images/logo_assia*

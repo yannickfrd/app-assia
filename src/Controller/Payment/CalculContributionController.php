@@ -40,7 +40,7 @@ final class CalculContributionController extends AbstractController
 
         $newPayment = $this->paymentCalculator->calculate($supportGroup, $initPayment);
 
-        $view = $this->renderView('app/payment/_contributionCalcul.html.twig', [
+        $view = $this->renderView('app/payment/_contribution_calcul.html.twig', [
             'support' => $supportGroup,
             'payment' => $newPayment,
         ]);

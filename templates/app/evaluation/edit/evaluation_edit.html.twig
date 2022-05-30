@@ -65,14 +65,14 @@
 						{% set alert_text = '"Êtes-vous vraiment sûr de vouloir supprimer cette évaluation sociale ?"' %}
 						<a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('evaluation_delete', {'id': evaluation_group.id}) }}" 
 							title="Supprimer l'évaluation sociale" data-toggle="tooltip" data-placement="bottom" 
-							onclick="if(window.confirm({{ alert_text }})){return true;}else{return false;}">
+							onclick="return window.confirm({{ alert_text }});">
 							<i class="fas fa-trash-alt mr-2"></i>Supprimer</a>
 					{% endif %}
 					{% set alert_text = '"Attention, cela va écraser les données de cette évaluation sociale.' ~ 
 						' Êtes-vous vraiment sûr de vouloir récupérer l\'évaluation sociale du SI-SIAO ?"' %}
 					<a class="btn btn-{{ theme_color }} d-block mr-3" href="{{ path('api_sisiao_support_import_evaluation', {'id': support.id}) }}" 
 						title="Importer l'évaluation sociale du SI-SIAO" data-toggle="tooltip" data-placement="bottom" 
-						onclick="if(window.confirm({{ alert_text }})){return true;}else{return false;}"><i class="fas fa-cloud-download-alt mr-2"></i>
+						onclick="return window.confirm({{ alert_text }});"><i class="fas fa-cloud-download-alt mr-2"></i>
 						<span class="d-none d-sm-inline">Importer SI-SIAO</span></a>
 				</div>
 				<div class="mb-4 float-right">
@@ -86,7 +86,8 @@
 		{{ form_end(form, {'render_rest': false}) }}
 	</div>
 
-	{% include 'app/payment/_contributionCalculModal.html.twig' %}
+	{% include 'app/payment/_contribution_calcul_modal.html.twig' %}
+
 {% endblock %}
 
 {% block javascripts %}

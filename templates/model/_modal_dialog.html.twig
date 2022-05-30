@@ -3,7 +3,6 @@
         <div class="modal-content {% block modal_bg %}{% endblock %}">
 
             {% block modal_content %}
-
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalConfirmation">
                         {% block modal_title %}Demande de confirmation{% endblock %}
@@ -14,7 +13,6 @@
                 </div>
 
                 {% block modal_body_and_footer %}
-
                     <div class="modal-body">
                         {% block modal_body %}Êtes-vous vraiment sûr ?{% endblock %}
                     </div>
@@ -26,13 +24,11 @@
                             </div>
                             <div class="float-right">
                                 <button type="button" id="modal-confirm" class="btn btn-{% block modal_alert %}{{ theme_color }} text-white{% endblock %}"
-                                href="{% block modal_href %}{% endblock %}" data-dismiss="modal">{% block modal_confirm %}Confirmer{% endblock %}</button>
+                                    href="{% block modal_href %}{% endblock %}" data-dismiss="modal">{% block modal_confirm %}Confirmer{% endblock %}</button>
                             </div>
                         {% endblock %}
                     </div>
-
                 {% endblock %}  
-                
             {% endblock %}
         </div>
     </div>

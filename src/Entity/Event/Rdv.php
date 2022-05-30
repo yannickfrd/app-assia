@@ -22,7 +22,8 @@ class Rdv extends AbstractEvent
     use TagTrait;
 
     public const SERIALIZER_GROUPS = [
-        'show_rdv', 'show_tag', 'show_support_group', 'show_alert',
+        'show_rdv', 'show_created_updated', 'show_tag', 'show_support_group',
+        'show_service', 'show_event', 'show_alert', 'show_user', 'show_person',
     ];
 
     public const TYPE_EVENT = 0;

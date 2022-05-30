@@ -44,10 +44,10 @@ note:
     no_evaluation_created: Il n'y a pas d'évaluation sociale créée pour ce suivi.
 
 payment:
-    created_successfully: "Le paiement a bien été créé."
-    updated_successfully: "Le paiement a bien été modifié."
-    deleted_successfully: "Le paiement a bien été supprimé."
-    restored_successfully: "Le paiement a bien été restauré."
+    created_successfully: "Le paiement « %payment_type% » a bien été créé."
+    updated_successfully: "Le paiement « %payment_type% » a bien été modifié."
+    deleted_successfully: "Le paiement « %payment_type% » a bien été supprimé."
+    restored_successfully: "Le paiement « %payment_type% » a bien été restauré."
 rdv:
     created_successfully: "Le rendez-vous « %rdv_title% » a bien été créé."
     updated_successfully: "Le rendez-vous « %rdv_title% » a bien été modifié."

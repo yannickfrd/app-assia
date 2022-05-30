@@ -49,8 +49,9 @@
                         <div class="col-md-6" data-parent-field="{{ prefix_id }}_transportMeansType" data-options="*">
                             {{ form_row(eval_person.evalProfPerson.transportMeans) }}</div>
                     </div>
-                    <div class="row mb-3" data-parent-field="{{ prefix_id }}_profStatus" data-options="1|2|3|4|8|9|97">
-                        <div class="col-md-6" title="Reconnaissance de la qualité de travailleur handicapé">
+                    <div class="row mb-3">
+                        <div class="col-md-6" title="Reconnaissance de la qualité de travailleur handicapé"
+                            data-parent-field="{{ prefix_id }}_profStatus" data-options="1|2|3|4|8|9|97">
                             {{ form_row(eval_person.evalProfPerson.rqth, {
                                 attr: {'data-important': 'true'}
                             }) }}

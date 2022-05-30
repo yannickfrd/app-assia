@@ -3,6 +3,7 @@ App\Entity\Organization\Device:
         name: Insertion
         code: 5
         coefficient: 1
+        contribution: true
         createdAt: <dateTimeBetween("-2 years", "now")>
         updatedAt: <dateTimeBetween($createdAt, "now")>
         createdBy: "@user_super_admin"

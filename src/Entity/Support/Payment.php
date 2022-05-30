@@ -63,117 +63,121 @@ class Payment
         2 => 'Attribution d\'un logement en cours',
     ];
 
+    public const SERIALIZER_GROUPS = [
+        'show_payment', 'show_support_group', 'show_created_updated', 'show_user',
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups("get")
+     * @Groups("show_payment")
      */
     private $id;
 
     /**
      * @ORM\Column(type="smallint")
-     * @Groups("get")
+     * @Groups("show_payment")
      */
     private $type = self::DEFAULT_TYPE;
 
     /**
-     * @Groups("export")
+     * @Groups("show_payment")
      */
     private $typeToString;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("get")
+     * @Groups("show_payment")
      */
     private $startDate;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups("get")
+     * @Groups("show_payment")
      */
     private $endDate;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups({"get", "export"})
+     * @Groups("show_payment")
      */
     private $resourcesAmt;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     * @Groups("get")
+     * @Groups("show_payment")
      */
     private $chargesAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups({"get", "export"})
+     * @Groups("show_payment")
      */
     private $rentAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups({"get", "export"})
+     * @Groups("show_payment")
      */
     private $aplAmt;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"get", "export"})
+     * @Groups("show_payment")
      */
     private $credential;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups({"get", "export"})
+     * @Groups("show_payment")
      */
     private $toPayAmt;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
-     * @Groups("get")
+     * @Groups("show_payment")
      */
     private $paymentType;
 
     /**
-     * @Groups("export")
+     * @Groups("show_payment")
      */
     private $paymentTypeToString;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups({"get", "export"})
+     * @Groups("show_payment")
      */
     private $paidAmt;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups({"get", "export"})
+     * @Groups("show_payment")
      */
     private $paymentDate;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups({"get", "export"})
+     * @Groups("show_payment")
      */
     private $stillToPayAmt;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups({"get", "export"})
+     * @Groups("show_payment")
      */
     private $returnAmt;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"get", "export"})
+     * @Groups("show_payment")
      */
     private $comment;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups("get")
+     * @Groups("show_payment")
      */
     private $commentExport;
 
@@ -200,19 +204,19 @@ class Payment
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
-     * @Groups("get")
+     * @Groups("show_payment")
      */
     private $noContrib;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
-     * @Groups("get")
+     * @Groups("show_payment")
      */
     private $noContribReason;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups("get")
+     * @Groups("show_payment")
      */
     private $nbConsumUnits;
 
@@ -220,7 +224,7 @@ class Payment
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups("get")
+     * @Groups("show_payment")
      */
     private $contributionRate;
 
@@ -558,7 +562,7 @@ class Payment
         return $this->noContribReason;
     }
 
-    /** @Groups("get") */
+    /** @Groups("show_payment") */
     public function getNoContribReasonToString(): ?string
     {
         return $this->noContribReason ? self::NO_CONTRIB_REASONS[$this->noContribReason] : null;
@@ -646,5 +650,10 @@ class Payment
     private function formatAmountToString(?float $value)
     {
         return $value >= 0 ? (new \NumberFormatter('fr-FR', \NumberFormatter::SPELLOUT))->format($value) : null;
+    }
+
+    public function getDeletedAtToString(string $format = 'd/m/Y H:i'): ?string
+    {
+        return $this->deletedAt ? $this->deletedAt->format($format) : '';
     }
 }

@@ -1,24 +1,24 @@
-{% import "macros/p_view.html.twig" as p_view %}
+{% import 'macros/p_view.html.twig' as p_view %}
 
-{% set theme_color = app.request.hasPreviousSession and app.session.get("theme_color") ? app.session.get("theme_color") : "#555c64;" %}
-{% set ROLE_CHILD = constant("App\\Entity\\People\\RolePerson::ROLE_CHILD") %}
-{% set people = support.supportPeople|filter(s => s.role != ROLE_CHILD and s.status == support.status)|sort ((a, b) => b.head <=> a.head) %}
+{% set theme_color = app.request.hasPreviousSession and app.session.get('theme_color') ? app.session.get('theme_color') : '#555c64;' %}
+{% set role_child = constant('App\\Entity\\People\\RolePerson::ROLE_CHILD') %}
+{% set people = support.supportPeople|filter(s => s.role != role_child and s.status == support.status)|sort ((a, b) => b.head <=> a.head) %}
 {% set service = support.service %}
-{% set subService = support.subService %}
+{% set sub_service = support.subService %}
 {% set payment_type %}{% apply spaceless %}
-    {% if payment.type == constant("CONTRIBUTION", payment) %}
+    {% if payment.type == constant('CONTRIBUTION', payment) %}
         à la participation à l'hébergement
-    {% elseif payment.type == constant("RENT", payment) %}
+    {% elseif payment.type == constant('RENT', payment) %}
         au loyer
-    {% elseif payment.type == constant("DEPOSIT", payment) %}
+    {% elseif payment.type == constant('DEPOSIT', payment) %}
         à la caution
-    {% elseif payment.type == constant("REPAYMENT", payment) %}
+    {% elseif payment.type == constant('REPAYMENT', payment) %}
         à un remboursement
     {% endif %}
 {% endapply %}{% endset %}
 
-{% if payment.type == constant("DEPOSIT_REFUNT", payment) %}
-    {% set title = "Restitution de caution" %}
+{% if payment.type == constant('DEPOSIT_REFUNT', payment) %}
+    {% set title = 'Restitution de caution' %}
 {% endif %}
 
 <html lang="fr">
@@ -56,7 +56,7 @@
         <h1>{{ title }}</h1>
 
         <main>
-            <p class="text-right">{{ service.city ? service.city : "Pontoise" }}, le {{ "now"|date("d/m/Y") }}</p>
+            <p class="text-right">{{ service.city ? service.city : 'Pontoise' }}, le {{ 'now'|date('d/m/Y') }}</p>
 
             <br/>
 
@@ -69,20 +69,20 @@
             <br/>
 
             <p>N° de dossier : {{ support.id }}</p>
-            <p>N° de {{ title|lower }} : {{ payment.createdAt|date("Ymd_") }}{{ payment.id }}</p>
+            <p>N° de {{ title|lower }} : {{ payment.createdAt|date('Ymd_') }}{{ payment.id }}</p>
             <p>Service : {{ service.name }}</p>
-            <p>{{ service.phone1 ? "Téléphone : " ~ (subService and subService.email ? subService.phone1 : service.phone1) }}</p>
-            <p>{{ service.email ? "Email : " ~ (subService and subService.email ? subService.email : service.email) }}</p>
+            <p>{{ service.phone1 ? 'Téléphone : ' ~ (sub_service and sub_service.email ? sub_service.phone1 : service.phone1) }}</p>
+            <p>{{ service.email ? 'Email : ' ~ (sub_service and sub_service.email ? sub_service.email : service.email) }}</p>
 
 
             <br/>
 
-            {% if payment.type == constant("DEPOSIT_REFUNT", payment) %}
-                {% include "app/payment/pdf/_depositRefuntPdf.html.twig" %}
-            {% elseif payment.type == constant("LOAN", payment) %}
-                {% include "app/payment/pdf/_loanPdf.html.twig" %}
+            {% if payment.type == constant('DEPOSIT_REFUNT', payment) %}
+                {% include 'app/payment/pdf/_deposit_refunt_pdf.html.twig' %}
+            {% elseif payment.type == constant('LOAN', payment) %}
+                {% include 'app/payment/pdf/_loan_pdf.html.twig' %}
             {% else %}
-                {% include "app/payment/pdf/_regularPaymentPdf.html.twig" %}
+                {% include 'app/payment/pdf/_regular_payment_pdf.html.twig' %}
             {% endif %}
 
             <br/>

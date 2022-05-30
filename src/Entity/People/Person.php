@@ -211,7 +211,7 @@ class Person
     }
 
     /**
-     * @Groups({"show_person", "show_rdv"})
+     * @Groups("show_person")
      */
     public function getFullname(): ?string
     {

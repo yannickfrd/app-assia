@@ -10,7 +10,9 @@
         Bonjour, 
 {% endblock %}
 {% block body %}
-    <p>Je vous prie de trouver en pièce-jointe <b>le reçu du paiement</b> concernant 
+    <p>Je vous prie de trouver en pièce-jointe 
+        <b>{% if payment.paymentDate %}le reçu{% else %}l'avis d'échéance{% endif %}</b> 
+        concernant 
         {% if payment.type == 1 %}
             la participation à l'hébergement
         {% elseif payment.type == 2 %}
@@ -20,7 +22,8 @@
         {% elseif payment.type in [30, 31, 32] %}
             le remboursement
         {% endif %}
-        d'un montant de <b>{{ payment.paidAmt|amount }}</b>{#
+        d'un montant de 
+        <b>{{ payment.paymentDate ? payment.paidAmt|amount : payment.toPayAmt|amount }}</b>{#
         #}{% if payment.type in [1, 2] %}{#
             #} pour la période du <b>{{ payment.startDate|date('d/m/Y') }}</b> au <b>{{ payment.endDate|date('d/m/Y') }}</b> 
             (soit {{ payment.nbDays }} jour{{ payment.nbDays > 1 ? 's' }}){#
@@ -36,7 +39,7 @@
         {{ support.service.pole.organization.name }}<br/>
         <i>{{ support.subService ? support.subService.phone1 : support.service.phone1 }}</i><br/>
         <i>{{ support.subService ? support.subService.email : support.service.email }}</i><br/><br/>
-        {% set logoPath = support.service.pole.logoPath ? support.service.pole.logoPath ? 'images/logo_assia_mail.png'  %}
+        {% set logoPath = support.service.pole.logoPath ?? 'images/logo_assia_mail.png' %}
         <img class="mb-2" src="{{ email.image('@' ~ logoPath) }}" width="120" alt="{{ support.service.pole.organization.name }}">
     </p>
 {% endblock %}

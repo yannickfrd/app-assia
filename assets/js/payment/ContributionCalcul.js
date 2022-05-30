@@ -17,9 +17,9 @@ export default class ContributionCalcul {
         this.loader = new Loader()
         this.ajax = null
 
-        this.calculContribBtnElt = document.getElementById('calcul-contribution-btn')
-        this.showCalculContribBtnElt = document.getElementById('show-calcul-contribution-btn')
-        this.contribCalculModal = new Modal(document.getElementById('contribution-calcul-modal'))
+        this.calculContribBtnElt = document.getElementById('calcul_contribution_btn')
+        this.showCalculContribBtnElt = document.getElementById('show_calcul_contribution_btn')
+        this.contribCalculModal = new Modal(document.getElementById('contribution_calcul_modal'))
 
         this.paymentFormElt = document.querySelector('form[name=payment]')
 
@@ -40,10 +40,10 @@ export default class ContributionCalcul {
                     this.ajax = new Ajax(this.loader)
                 }
                 this.loader.on() 
-                const url = this.calculContribBtnElt.dataset.url
+                const path = this.calculContribBtnElt.dataset.path
                 const data = this.formElt ? new FormData(this.formElt) : null
 
-                this.ajax.send('POST', url, this.responseAjax.bind(this), data)
+                this.ajax.send('POST', path, this.responseAjax.bind(this), data)
             }
         })
 
@@ -72,7 +72,7 @@ export default class ContributionCalcul {
      * @param {Object} data 
      */
     getContribution(data) {
-        const modalBody = document.getElementById('contribution-calcul-modal').querySelector('.modal-body')
+        const modalBody = document.getElementById('contribution_calcul_modal').querySelector('.modal-body')
         modalBody.innerHTML = data.view
         modalBody.querySelectorAll('[data-toggle="popover"]').forEach(popover => {  
             new Popover(popover)

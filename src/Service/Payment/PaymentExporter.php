@@ -51,9 +51,7 @@ class PaymentExporter
 
         $title = $this->getTitle($payment);
         $path = $this->create($payment);
-        $date = $payment->getPaymentDate() ? $payment->getPaymentDate()->format('d-m-Y') :
-            $payment->getCreatedAt()->format('d-m-Y');
-
+        $date = ($payment->getPaymentDate() ?? $payment->getCreatedAt())->format('d/m/Y');
         $organizationName = $supportGroup->getService()->getPole()->getOrganization()->getName();
 
         $this->paymentNotification->sendPayment(
@@ -84,7 +82,7 @@ class PaymentExporter
         $title = $this->getTitle($payment);
         $logoPath = $supportGroup->getService()->getPole()->getLogoPath();
 
-        $content = $this->renderer->render('app/payment/pdf/paymentPdf.html.twig', [
+        $content = $this->renderer->render('app/payment/pdf/payment_pdf.html.twig', [
             'title' => $title,
             'logo_path' => $this->exportPDF->getPathImage($logoPath),
             'payment' => $payment,
@@ -96,36 +94,21 @@ class PaymentExporter
         return $this->exportPDF->save($this->downloadsDirectory);
     }
 
-    private function getTitle(Payment $payment)
+    private function getTitle(Payment $payment): string
     {
         switch ($payment->getType()) {
             case Payment::CONTRIBUTION:
-                if ($payment->getPaymentDate()) {
-                    return 'Reçu de paiement';
-                }
-
-                return 'Avis d\'échéance';
-                break;
-
+                return $payment->getPaymentDate() ? 'Reçu de paiement' : 'Avis d\'échéance';
             case Payment::LOAN:
                 return 'Avance financière';
-                break;
-
             case Payment::DEPOSIT:
                 return 'Reçu de caution';
-                break;
-
             case Payment::REPAYMENT:
                 return 'Reçu de paiement';
-                break;
-
             case Payment::DEPOSIT_REFUNT:
                 return 'Reçu de restitution de caution';
-                break;
-
             default:
                 return 'Reçu';
-                break;
         }
     }
 }

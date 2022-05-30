@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% set restoration_mode = form_search.deleted.deleted.vars.checked and is_granted('ROLE_SUPER_ADMIN') %}
+{% set title = 'Paiements' ~ (restoration_mode ? ' (Corbeille)') %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+	<div class="container">
+
+		{% include 'app/support/_partials/_support_nav.html.twig' %}
+
+		<div class="row">
+			<div class="d-flex col-md-6 mb-1 align-items-center">
+				<button class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-action="new_payment"
+					data-path="{{ path('payment_create', {'id': support.id}) }}"
+					title="Créer un nouvel enregistrement" data-toggle="tooltip" data-placement="bottom">
+					<i class="fas fa-plus-square mr-2"></i>Nouveau</button>
+				<div class="d-inline align-middle">Total : <!--
+				--><span id="count_payments">{{ payments.getTotalItemCount|number }}</span><!--
+				-->{% if nbTotalPayments and form_search.deleted.deleted.vars.checked != true %} sur <span id="nb_total_payments">{{ nbTotalPayments }}</span>{% endif %}
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="navigation">{{ knp_pagination_render(payments) }}</div>
+			</div>
+		</div>
+
+		{% include 'app/payment/_support_payment_search_form.html.twig' %}
+
+		<div class="row mb-4">
+			<div class="col-md-12">
+
+				{% include 'app/payment/_payment_table.html.twig' %}
+
+			</div>
+		</div>
+	</div>
+	{% include 'app/payment/_payment_modal.html.twig' %}
+	{% include 'app/payment/_contribution_calcul_modal.html.twig' %}
+	{% include 'app/payment/_payment_delete_modal.html.twig' %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('search') }}
+	{{ encore_entry_script_tags('payment') }}
+{% endblock javascripts %}
