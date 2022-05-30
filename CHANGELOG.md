@@ -1,12 +1,20 @@
 # CHANGELOG
 
+## Version 3.18.8 - 30/05/2022
+
+Refactor feature 'Payment' (#148)
+
+* Refactor controller
+* Refactor twig
+* Refactor JS
+
 ## Version 3.18.7 - 27/05/2022
 
-Edit restoration mode (only for user super admin)
+Edit restoration mode (only for user super admin) (#165)
 
 ## Version 3.18.6 - 25/05/2022
 
-Update tests end-to-ends
+Update tests end-to-ends (#163)
 
 * Update tests end-to-end
 * Fix error condition in view 'task_index'
@@ -17,7 +25,7 @@ Update tests end-to-ends
 
 ## Version 3.18.5 - 06/05/2022
 
-Fix feature Note
+Fix feature Note (#158)
 
 ## Version 3.18.4 - 06/05/2022
 
@@ -124,14 +132,14 @@ Fix (#141)
 
 ## Version 3.13.6 - 24/05/2022
 
-Fix SI-SIAO import
+Fix SI-SIAO import (#160, #161, #162)
 
 * [SiSiaoGroupImporter] Add a header to group if no 'contactPrincipal' in SI-SIAO
 * [SiSiaoEvaluationImporter] Fix error if 'numerosUniqueLogementSocial' is null
 
 ## Version 3.13.5 - 23/05/2022
 
-Fix error import after SI-SIAO update (v3.43)
+Fix error import after SI-SIAO update (v3.43) (#159)
 
 * Update SI-SIAO import (SI-SIAO v3.43)
 * Edit lists resources and charges
