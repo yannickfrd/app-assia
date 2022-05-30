@@ -31,7 +31,7 @@ export default class evaluationBudget {
             amountElt.addEventListener('focusout', () => this.formValidator.checkAmount(amountElt, 0, 999999, true))
         })
 
-        if (document.getElementById('calcul-contribution-btn')) {
+        if (document.getElementById('calcul_contribution_btn')) {
             new ContributionCalcul(null, this.afterCalculContribution.bind(this))
         }
     }
@@ -128,8 +128,8 @@ export default class evaluationBudget {
                 this.updateAmtGroup(type)
             })
             inputElt.addEventListener('focusout', () => {
-                this.resourcesAmtElts.forEach(ressourcesAmtElt => {
-                    ressourcesAmtElt.click()
+                this.resourcesAmtElts.forEach(resourcesAmtElt => {
+                    resourcesAmtElt.click()
                 })
             })
         })
@@ -163,7 +163,7 @@ export default class evaluationBudget {
         let sumAmts = 0
         inputElts.forEach(inputElt => {
             if (inputElt.value) {
-                sumAmts += parseFloat(inputElt.value.replace(' ', '').replace(',', '.'))
+                sumAmts += parseFloat(inputElt.value.replaceAll(' ', '').replace(',', '.'))
             }
         })
         if (!isNaN(sumAmts)) {

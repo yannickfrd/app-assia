@@ -13,7 +13,7 @@ export default class PaymentManager {
         this.formValidator = new FormValidator()
         this.paymentForm = new PaymentForm(this)
 
-        this.paymentModalElt = new Modal(document.getElementById('payment-modal'))
+        this.paymentModalElt = new Modal(document.getElementById('payment_modal'))
 
         this.btnNewElt = document.querySelector('button[data-action="new_payment"]')
 
@@ -25,8 +25,8 @@ export default class PaymentManager {
         this.sumStillToPayAmtElt = document.querySelector('td[data-payment="sumStillToPayAmt"]')
 
         this.themeColor = document.getElementById('header').dataset.color
-        this.countPaymentsElt = document.getElementById('count-payments')
-        this.nbTotalPaymentsElt = document.getElementById('nb-total-payments')
+        this.countPaymentsElt = document.getElementById('count_payments')
+        this.nbTotalPaymentsElt = document.getElementById('nb_total_payments')
 
         this.now = new Date()
         this.init()
@@ -39,26 +39,32 @@ export default class PaymentManager {
             }
         })
 
-        document.querySelectorAll('table#table-payments tbody tr button[data-action="show"]')
+        document.querySelectorAll('table#table_payments tbody tr button[data-action="show"]')
             .forEach(showBtnElt => showBtnElt
                 .addEventListener('click', () => this.requestShowPayment(showBtnElt)))
 
-        document.querySelectorAll('table#table-payments tbody tr td a[data-action="mail-sent"]')
-            .forEach(mailBtnElt => mailBtnElt.addEventListener('click', e => {
+        document.querySelectorAll('table#table_payments tbody tr td a[data-action="generate-pdf"]')
+            .forEach(aElt => aElt.addEventListener('click', () => {
+                setTimeout(() => {
+                    aElt.querySelector('i').classList.replace('text-secondary', 'text-success')
+                }, 1000)
+            }))
+        document.querySelectorAll('table#table_payments tbody tr td a[data-action="send-mail"]')
+            .forEach(aElt => aElt.addEventListener('click', e => {
                 e.preventDefault()
-                this.requestSentMail(mailBtnElt.href)
+                this.requestSendMail(aElt.href)
             }))
 
-        document.querySelectorAll('table#table-payments tbody tr button[data-action="delete"]')
+        document.querySelectorAll('table#table_payments tbody tr button[data-action="delete"]')
             .forEach(btnDeleteElt => btnDeleteElt
-                .addEventListener('click', () => this.confirmBtnElt.dataset.url = btnDeleteElt.dataset.url))
+                .addEventListener('click', () => this.confirmBtnElt.dataset.path = btnDeleteElt.dataset.path))
 
         document.querySelectorAll('button[data-action="restore"]').forEach(restoreBtn => restoreBtn
             .addEventListener('click', () => this.requestRestorePayment(restoreBtn)))
 
         this.confirmBtnElt.addEventListener('click', e => {
             e.preventDefault()
-            this.ajax.send('GET', this.confirmBtnElt.dataset.url, this.responseAjax.bind(this))
+            this.ajax.send('GET', this.confirmBtnElt.dataset.path, this.responseAjax.bind(this))
         })
 
         this.calculateSumAmts()
@@ -71,7 +77,7 @@ export default class PaymentManager {
         if (!this.loader.isActive()) {
             this.loader.on()
 
-            this.ajax.send('GET', restoreBtn.dataset.url, this.responseAjax.bind(this))
+            this.ajax.send('GET', restoreBtn.dataset.path, this.responseAjax.bind(this))
         }
     }
 
@@ -108,21 +114,21 @@ export default class PaymentManager {
      */
     requestShowPayment(btnShowElt) {
         if (!this.loader.isActive()) {
-            this.paymentForm.formPaymentElt.action = this.paymentForm.formPaymentElt.dataset.url
+            this.paymentForm.formPaymentElt.action = this.paymentForm.formPaymentElt.dataset.path
                 .replace('__id__', btnShowElt.dataset.id)
 
             this.loader.on()
 
-            this.ajax.send('GET', btnShowElt.dataset.url, this.responseAjax.bind(this))
+            this.ajax.send('GET', btnShowElt.dataset.path, this.responseAjax.bind(this))
         }
     }
 
     /**
-     * @param {String} url
+     * @param {string} path
      */
-    requestSentMail(url) {
+    requestSendMail(path) {
         if (window.confirm('Confirmer l\'envoi du reçu par email au suivi ?')) {
-            this.ajax.send('GET', url, this.responseAjax.bind(this))
+            this.ajax.send('GET', path, this.responseAjax.bind(this))
         }
     }
 
@@ -182,7 +188,7 @@ export default class PaymentManager {
      * @param {Array} payment 
      */
     createPayment(payment) {
-        this.paymentForm.formPaymentElt.action = this.paymentForm.formPaymentElt.dataset.url.replace('__id__', payment.id)
+        this.paymentForm.formPaymentElt.action = this.paymentForm.formPaymentElt.dataset.path.replace('__id__', payment.id)
         this.paymentForm.editBtnElts.forEach(elt => elt.classList.remove('d-none'))
 
         this.paymentForm.saveBtnElt.querySelector('span').textContent = 'Mettre à jour'
@@ -192,23 +198,23 @@ export default class PaymentManager {
         paymentElt.className = 'js-payment'
         paymentElt.innerHTML = this.getPrototypePayment(payment)
 
-        const containerPaymentsElt = document.getElementById('container-payments')
+        const containerPaymentsElt = document.getElementById('container_payments')
         containerPaymentsElt.insertBefore(paymentElt, containerPaymentsElt.firstChild)
         this.updateCounts(1)
 
         this.calculateSumAmts()
 
-        const showBtnElt = paymentElt.querySelector('button[data-action="show"]')
-        showBtnElt.addEventListener('click', () => this.requestShowPayment(showBtnElt))
+        const btnShowElt = paymentElt.querySelector('button[data-action="show"]')
+        btnShowElt.addEventListener('click', () => this.requestShowPayment(btnShowElt))
 
-        document.querySelectorAll('table#table-payments tbody tr td a[data-action="mail-sent"]')
-            .forEach(mailBtnElt => mailBtnElt.addEventListener('click', e => {
-                e.preventDefault()
-                this.requestSentMail(mailBtnElt.href)
-            }))
+        const btnSendMail = paymentElt.querySelector('a[data-action="send-mail"]')
+        btnSendMail.addEventListener('click', e => {
+            e.preventDefault()
+            this.requestSendMail(btnSendMail.href)
+        })
 
         const btnDeleteElt = paymentElt.querySelector('button[data-action="delete"]')
-        btnDeleteElt.addEventListener('click', () => this.confirmBtnElt.dataset.url = btnDeleteElt.dataset.url)
+        btnDeleteElt.addEventListener('click', () => this.confirmBtnElt.dataset.path = btnDeleteElt.dataset.path)
     }
 
     /**
@@ -220,7 +226,7 @@ export default class PaymentManager {
         trElt.querySelector('td[data-payment="type"]').textContent = payment.typeToString + (payment.type === 11 && payment.returnAmt !== null ? ' (' + this.formatMoney(payment.returnAmt) + ')' : '')
         trElt.querySelector('td[data-payment="startDate"]').textContent = this.formatDatetime(payment.startDate, 'date') + ' - ' + this.formatDatetime(payment.endDate, 'date')
         trElt.querySelector('td[data-payment="toPayAmt"]').textContent = this.formatMoney(payment.toPayAmt)
-        trElt.querySelector('td[data-payment="paidAmt"]').textContent = payment.paidAmt ?? this.formatMoney(payment.paidAmt)
+        trElt.querySelector('td[data-payment="paidAmt"]').textContent = payment.paidAmt ? this.formatMoney(payment.paidAmt) : ''
         trElt.querySelector('td[data-payment="stillToPayAmt"]').textContent = this.formatMoney(this.roundAmount(payment.stillToPayAmt))
         trElt.querySelector('td[data-payment="paymentDate"]').textContent = this.formatDatetime(payment.paymentDate, 'date')
         trElt.querySelector('td[data-payment="paymentType"]').textContent = payment.paymentTypeToString ?? ''
@@ -234,13 +240,13 @@ export default class PaymentManager {
      * @param {Object} payment 
      */
     getPrototypePayment(payment) {
-        const urlMailSend = document.querySelector('table#table-payments thead tr th[data-get="mail-sent"]')
-            .dataset.mailSentUrl.replace('__id__', payment.id)
+        const pathSendMail = document.querySelector('table#table_payments')
+            .dataset.pathSendMail.replace('__id__', payment.id)
 
         return `
             <td class="align-middle text-center">
                 <button class="btn btn-${this.themeColor} btn-sm shadow" data-action="show" data-id="${payment.id}" 
-                    data-url="/payment/${payment.id}/show" data-toggle="tooltip" 
+                    data-path="/payment/${payment.id}/show" data-toggle="tooltip" 
                     data-placement="bottom" title="Voir l'enregistrement"><span class="fas fa-eye"></span>
                 </button>
             </td>
@@ -257,25 +263,28 @@ export default class PaymentManager {
                 ${this.sliceComment((payment.comment ?? '') + " \n" + (payment.commentExport ?? ''))}</td>
             <td class="align-middle" data-payment="createdAt">${this.formatDatetime(new Date(), 'date')}</td>
             <td class="align-middle text-center" data-payment="pdfGenerate">
-                <span><i class="fas fa-file-pdf text-secondary fa-lg"></i></span>
+                <a href="/payment/${payment.id}/export/pdf"
+                    <i class="fas fa-file-pdf text-secondary fa-lg"></i>
+                </a>
             </td>
             <td class="align-middle text-center" data-payment="mailSent">
-                <a href="${urlMailSend}" data-action="mail-sent" data-toggle="tooltip" data-placement="bottom">
+                <a href="${pathSendMail}" data-action="send-mail">
                     <i class="fas fa-envelope text-secondary fa-lg"></i>
                 </a>
             </td>
             <td class="align-middle text-center">
-                <button data-url="/payment/${payment.id}/delete" data-action="delete"
+                <button data-path="/payment/${payment.id}/delete" data-action="delete"
                     class="btn btn-danger btn-sm shadow my-1" data-placement="bottom" 
                         title="Supprimer l\'enregistrement" data-toggle="modal" data-target="#modal-block">
                     <span class="fas fa-trash-alt"></span>
                 </button>
-            </td>`
+            </td>
+        `
     }
 
     /**
      * Arrondi un nombre en valeur monétaire.
-     * @param {Number} amount 
+     * @param {number} amount 
      */
     roundAmount(amount) {
         return amount ? Math.round(amount * 100) / 100 : ''
@@ -283,11 +292,11 @@ export default class PaymentManager {
 
     /**
      * Coupe un texte en un nombre maximum de caractères.
-     * @param {String} comment 
-     * @param {Number} limit 
+     * @param {string} comment 
+     * @param {number} limit 
      */
     sliceComment(comment, limit = 65) {
-        if (' ' === comment) {
+        if (comment === '') {
             return ''
         }
 
@@ -300,7 +309,7 @@ export default class PaymentManager {
 
     /**
      * Met à jour le nombre d'enregistrements.
-     * @param {Number} value 
+     * @param {number} value 
      */
     updateCounts(value) {
         this.countPaymentsElt.textContent = parseInt(this.countPaymentsElt.textContent) + value
@@ -312,14 +321,14 @@ export default class PaymentManager {
     /**
      * Donne la somme des montants.
      * @param {HTMLElement} elts 
-     * @return {Number|String}
+     * @return {number|string}
      */
     getSumAmts(elts) {
         let sumAmts = 0
         elts.forEach(elt => {
-            let amount = elt.textContent
-            if (amount) {
-                sumAmts += parseFloat(amount.replace(' ', '').replace(',', '.'))
+            let amount = parseFloat(elt.textContent.replaceAll(' ', '').replace(',', '.'))
+            if (!isNaN(amount)) {
+                sumAmts += amount
             }
         })
         if (!isNaN(sumAmts)) {
@@ -330,8 +339,8 @@ export default class PaymentManager {
 
     /**
      * Formate un nombre en valeur monétaire.
-     * @param {Number} number 
-     * @param {String} locale 
+     * @param {number} number 
+     * @param {string} locale 
      */
     formatMoney(number, locale = 'fr') {
         return number || number === 0 ? number.toFixed(2).replace('.', ',') + ' €' : ''
@@ -339,9 +348,9 @@ export default class PaymentManager {
 
     /**
      * Formate une valeur texte en date.
-     * @param {String} date 
-     * @param {String} type 
-     * @param {String} locale 
+     * @param {string} date 
+     * @param {string} type 
+     * @param {string} locale 
      */
     formatDatetime(date, type = 'datetime', locale = 'fr') {
         if (date === null) {
@@ -365,7 +374,7 @@ export default class PaymentManager {
     /**
      * Change la couleur du texte d'un élément on fonction de la valeur d'un nombre.
      * @param {HTMLElement} elt 
-     * @param {String} value 
+     * @param {string} value 
      */
     changeTextColor(elt, value) {
         if (parseFloat(value) > 0) {
@@ -390,7 +399,7 @@ export default class PaymentManager {
      * @param {number} delay
      */
     checkToRedirect(delay) {
-        if (document.querySelectorAll('table#table-payments tbody tr').length === 0) {
+        if (document.querySelectorAll('table#table_payments tbody tr').length === 0) {
             setTimeout(() => {
                 document.location.href = location.pathname
             }, delay * 1000)    
@@ -402,11 +411,10 @@ export default class PaymentManager {
      */
     updatePaymentPictoMail(payment) {
         const trElt = document.getElementById('payment-'+payment.id)
-        const picto = trElt.querySelector('td a[data-action="mail-sent"] i')
+        const pictoElt = trElt.querySelector('td a[data-action="send-mail"] i')
 
-        if (picto.classList.contains('fa-envelope')) {
-            picto.classList.replace('fa-envelope', 'fa-envelope-open')
-            picto.classList.replace('text-secondary', 'text-success')
+        if (pictoElt.classList.contains('fa-envelope')) {
+            pictoElt.classList.replace('text-secondary', 'text-success')
         }
     }
 }

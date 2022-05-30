@@ -51,9 +51,7 @@ class PaymentExporter
 
         $title = $this->getTitle($payment);
         $path = $this->create($payment);
-        $date = $payment->getPaymentDate() ? $payment->getPaymentDate()->format('d-m-Y') :
-            $payment->getCreatedAt()->format('d-m-Y');
-
+        $date = ($payment->getPaymentDate() ?? $payment->getCreatedAt())->format('d/m/Y');
         $organizationName = $supportGroup->getService()->getPole()->getOrganization()->getName();
 
         $this->paymentNotification->sendPayment(

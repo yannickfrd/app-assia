@@ -76,6 +76,9 @@ App\Entity\Organization\Service:
         preAdmission: 1
         coefficient: 2
         place: true
+        contribution: true
+        contributionType: 1
+        contributionRate: 0.1
         pole: "@pole1"
         createdAt: <date_create()>
         updatedAt: <date_create()>
@@ -102,8 +105,9 @@ App\Entity\Organization\ServiceUser:
 App\Entity\Organization\Device:
     device1:
         name: Insertion
-        place: true
         code: 5
+        place: true
+        contribution: true
 
 App\Entity\Organization\ServiceDevice:
     serv_device1:

@@ -9,7 +9,6 @@ use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\DomCrawler\Crawler;
 
 class PaymentControllerTest extends WebTestCase
 {
@@ -58,7 +57,6 @@ class PaymentControllerTest extends WebTestCase
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Paiements');
 
-        /** @var Crawler */
         $crawler = $this->client->submitForm('search', [
             'date[start]' => '2020-04-01',
             'date[end]' => '2020-04-30',
@@ -157,7 +155,7 @@ class PaymentControllerTest extends WebTestCase
         $this->client->loginUser($this->fixtures['john_user']);
 
         $id = $this->supportGroup->getId();
-        /** @var Crawler */
+
         $crawler = $this->client->request('GET', "/support/$id/payments");
         $csrfToken = $crawler->filter('#payment__token')->attr('value');
 
@@ -176,7 +174,7 @@ class PaymentControllerTest extends WebTestCase
                 'startDate' => '2021-01-01',
                 'endDate' => '2021-01-31',
                 'type' => Payment::CONTRIBUTION,
-                'ressourcesAmt' => 1000,
+                'resourcesAmt' => 1000,
                 'toPayAmt' => 100,
                 '_token' => $csrfToken,
             ],
@@ -193,7 +191,7 @@ class PaymentControllerTest extends WebTestCase
 
         $id = $this->payment->getId();
         $supportId = $this->supportGroup->getId();
-        /** @var Crawler */
+
         $crawler = $this->client->request('GET', "/support/$supportId/payments");
         $csrfToken = $crawler->filter('#payment__token')->attr('value');
 
@@ -210,7 +208,7 @@ class PaymentControllerTest extends WebTestCase
                 'startDate' => '2021-01-01',
                 'endDate' => '2021-01-31',
                 'type' => Payment::CONTRIBUTION,
-                'ressourcesAmt' => 1000,
+                'ressurcesAmt' => 1000,
                 'toPayAmt' => 100,
                 '_token' => $csrfToken,
             ],
@@ -233,7 +231,7 @@ class PaymentControllerTest extends WebTestCase
                 'startDate' => '2021-01-01',
                 'endDate' => '2021-01-31',
                 'type' => Payment::CONTRIBUTION,
-                'ressourcesAmt' => 1000,
+                'resourcesAmt' => 1000,
                 'toPayAmt' => 100,
                 '_token' => $crawler->filter('#payment__token')->attr('value'),
             ],

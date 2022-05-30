@@ -1,19 +1,19 @@
 {% set contribution = form.vars.value %}
 {% set service_type_hotel = support.service.type == constant('SERVICE_TYPE_HOTEL', support.service) %}
 
-<div class="modal fade" id="payment-modal" tabindex="-1" role="dialog" 
+<div class="modal fade" id="payment_modal" tabindex="-1" role="dialog" 
     aria-labelledby="paymentModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
     <div class="modal-content">
         <div class="modal-header">
             <h2 class="mb-0">Paiement</h2>
             <div class="small text-secondary">
-                <p class="mb-0 ml-3 text-right" id="js-info-payment">
+                <p class="mb-0 ml-3 text-right" id="js_info_payment">
                 </p>
             </div>
         </div>
         {{ form_start(form, {
-            'attr': {'data-url': path('payment_edit', {'id': '__id__'})} 
+            'attr': {'data-path': path('payment_edit', {'id': '__id__'})} 
         }) }}
         <div class="modal-body">
             <div class="row">
@@ -21,11 +21,11 @@
                 <div class="col-lg-6" data-payment="true" data-parent-field="payment_type" 
                     data-options="30">{{ form_row(form.repaymentReason) }}</div>
                 <div class="col-lg-6 mb-3" data-payment="true" data-parent-field="payment_type" data-options="1|2">
-                    <button id="calcul-contribution-btn" class="btn btn-secondary" 
+                    <button id="calcul_contribution_btn" class="btn btn-secondary" 
                         title="Calculer le montant à régler" data-toggle="tooltip" data-placement="bottom" 
-                        data-url="{{ path('support_payment_calcul', {'id': support.id}) }}">
+                        data-path="{{ path('support_payment_calcul', {'id': support.id}) }}">
                         <i class="fas fa-sync mr-2"></i>Calculer</button>
-                    <button id="show-calcul-contribution-btn" class="btn btn-{{ theme_color }} ml-2 d-none" 
+                    <button id="show_calcul_contribution_btn" class="btn btn-{{ theme_color }} ml-2 d-none" 
                         title="Voir le détail du montant à régler" data-toggle="tooltip" data-placement="bottom">
                         <i class="fas fa-eye mr-2"></i>Voir le détail</button>
                 </div>
@@ -92,16 +92,16 @@
                 <div class="d-flex float-left mr-3">
                     <button class="btn btn-danger mr-3 mb-1" data-action="delete"
                         data-toggle="modal" data-target="#modal-block"
-                        data-edit="true" data-url="{{ path('payment_delete', {'id': '__id__'}) }}"
+                        data-edit="true" data-path="{{ path('payment_delete', {'id': '__id__'}) }}"
                         title="Supprimer" data-placement="bottom"><i class="fas fa-trash-alt"></i><span 
                         class="d-none d-md-inline ml-2">Supprimer</span></button>
                     <button class="btn btn-{{ theme_color }} mr-2 mb-1 shadow" data-action="create_pdf"
-                        data-edit="true" data-url="{{ path('payment_export_pdf', {'id': '__id__'}) }}"
+                        data-edit="true" data-path="{{ path('payment_export_pdf', {'id': '__id__'}) }}"
                         title="Générer le reçu en PDF" data-toggle="tooltip" data-placement="bottom">
                         <i class="fas fa-file-pdf bg-secondary fa-lg"></i>
                         <span class="d-none d-md-inline ml-2">PDF</span></button>
                     <button class="btn btn-{{ theme_color }} mb-1 shadow" data-action="send_email"
-                        data-edit="true" data-url="{{ path('payment_send_pdf', {'id': '__id__'}) }}"
+                        data-edit="true" data-path="{{ path('payment_send_pdf', {'id': '__id__'}) }}"
                         title="Envoyer un email avec le reçu en PDF" data-toggle="tooltip" data-placement="bottom" >
                         <i class="fas fa-envelope bg-secondary fa-lg"></i>
                         <span class="d-none d-md-inline ml-2">Email</span></button>
@@ -110,7 +110,7 @@
                     <button type="button" class="btn btn-secondary mr-2 mb-1" 
                         data-action="close" data-dismiss="modal">Fermer</button>
                     <button type="submit" class="btn btn-{{ theme_color }} mb-1 shadow" data-action="save"
-                        data-url="{{ path('payment_edit', {'id': '__id__'}) }}">
+                        data-path="{{ path('payment_edit', {'id': '__id__'}) }}">
                         <i class="fas fa-save d-none d-md-inline mr-2"></i><span>Enregistrer</span></button>
                 </div>
             </div>

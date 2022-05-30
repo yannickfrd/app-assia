@@ -264,11 +264,11 @@ payment:
   startDate: Début de période
   endDate: Fin de période
   comment:
-    placeholder: Ajouter un commentaire destiné à l'interne (service)...
-    help: Ce commentaire est destiné à l'interne (service).
+    placeholder: Ajouter un commentaire pour l'interne (service)...
+    help: Ce commentaire est uniquement visible dans les exports Excel.
   commentExport:
-    placeholder: Ajouter un commentaire visible dans le PDF...
-    help: Ce commentaire s'afichera dans le document PDF.
+    placeholder: Ajouter un commentaire à l'intention du ménage...
+    help: Ce commentaire est uniquement visible dans le reçu en PDF.
   type: Type d'opération
 contribution.rate.help: Nombre entre 0 et 1.
 

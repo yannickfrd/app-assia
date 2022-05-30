@@ -9,6 +9,9 @@ App\Entity\Organization\Service:
         city: Pontoise
         zipcode: 95 000
         place: true
+        contribution: true
+        contributionType: 1
+        contributionRate: 0.1
         createdAt: <date_create()>
         updatedAt: <date_create()>
         createdBy: "@user*"

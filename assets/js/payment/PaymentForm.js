@@ -18,8 +18,10 @@ export default class PaymentForm {
         this.formValidator = new FormValidator()
         this.parametersUrl = new ParametersUrl()
 
+        this.payment = null
+
         // Formulaire modal
-        this.modalPaymentElt = document.getElementById('payment-modal')
+        this.modalPaymentElt = document.getElementById('payment_modal')
         this.formPaymentElt = this.modalPaymentElt.querySelector('form[name=payment]')
         this.typeSelectElt = document.getElementById('payment_type')
         this.startDateInputElt = document.getElementById('payment_startDate')
@@ -38,7 +40,7 @@ export default class PaymentForm {
         this.returnAmtInputElt = document.getElementById('payment_returnAmt')
         this.commentInputElt = document.getElementById('payment_comment')
         this.commentExportInputElt = document.getElementById('payment_commentExport')
-        this.infoPaymentDivElt = document.getElementById('js-info-payment')
+        this.infoPaymentDivElt = document.getElementById('js_info_payment')
 
         this.pdfBtnElt = this.formPaymentElt.querySelector('button[data-action="create_pdf"]')
         this.mailBtnElt = this.formPaymentElt.querySelector('button[data-action="send_email"]')
@@ -60,7 +62,7 @@ export default class PaymentForm {
         // If paymentId is in url "get"
         const paymentId = this.parametersUrl.get('paymentId')
         this.paymentManager.trElt = document.getElementById('payment-' + paymentId)
-        document.querySelectorAll('table#table-payments tbody tr')
+        document.querySelectorAll('table#table_payments tbody tr')
             .forEach(trElt => {
                 if (trElt.id === 'payment-'+paymentId) {
                     this.requestShowPayment(paymentId)
@@ -93,6 +95,23 @@ export default class PaymentForm {
             this.tryToSave()
         })
 
+        this.pdfBtnElt.addEventListener('click', e => {
+            e.preventDefault()
+            window.open(this.pdfBtnElt.dataset.path.replace('__id__', this.payment.id))
+        })
+        
+        this.mailBtnElt.addEventListener('click', e => {
+            e.preventDefault()
+            if (window.confirm('Confirmer l\'envoi du reçu par email au suivi ?')) {
+                this.ajax.send('GET', this.mailBtnElt.dataset.path.replace('__id__',  this.payment.id), this.responseAjax)
+            }
+        })
+
+        this.deleteBtnElt.addEventListener('click', e => {
+            e.preventDefault()
+            this.confirmBtnElt.dataset.path = this.deleteBtnElt.dataset.path.replace('__id__',  this.payment.id)
+        })
+
         if (this.rentAmtInputElt) {
             [this.rentAmtInputElt, this.aplAmtInputElt].forEach(elt => {
                 elt.addEventListener('input', () => this.calculateAmountToPay())
@@ -105,7 +124,6 @@ export default class PaymentForm {
                 }
             })
         }
-
     }
 
     /**
@@ -133,9 +151,8 @@ export default class PaymentForm {
         if (!this.loader.isActive()) {
             this.loader.on()
 
-            const url = document.querySelector('table#table-payments thead tr th[data-get="show-url"]')
-                .dataset.showUrl.replace('__id__', paymentId)
-            this.ajax.send('GET', url, this.responseAjax)
+            const path = document.querySelector('table#table_payments').dataset.pathShow.replace('__id__', paymentId)
+            this.ajax.send('GET', path, this.responseAjax)
         }
     }
 
@@ -144,6 +161,7 @@ export default class PaymentForm {
      * @param {Object} payment
      */
     showPayment(payment) {
+        this.payment = payment
         this.typeSelectElt.value = payment.type
         this.startDateInputElt.value = payment.startDate ? payment.startDate.substring(0, 10) : null
         this.endDateInputElt.value = payment.endDate ? payment.endDate.substring(0, 10) : null
@@ -176,21 +194,6 @@ export default class PaymentForm {
                 elt.classList.remove('d-none')
             })
         }
-
-        this.pdfBtnElt.addEventListener('click', e => {
-            e.preventDefault()
-            window.open(this.pdfBtnElt.dataset.url.replace('__id__', payment.id))
-        })
-        this.mailBtnElt.addEventListener('click', e => {
-            e.preventDefault()
-            if (window.confirm('Confirmer l\'envoi du reçu par email au suivi ?')) {
-                this.ajax.send('GET', this.mailBtnElt.dataset.url.replace('__id__', payment.id), this.responseAjax)
-            }
-        })
-        this.deleteBtnElt.addEventListener('click', e => {
-            e.preventDefault()
-            this.confirmBtnElt.dataset.url = this.deleteBtnElt.dataset.url.replace('__id__', payment.id)
-        })
     }
 
     newPayment() {
@@ -199,8 +202,8 @@ export default class PaymentForm {
         this.checkType()
         this.deleteBtnElt.classList.replace('d-block', 'd-none')
         this.saveBtnElt.querySelector('span').textContent = 'Enregistrer'
-        this.modalPaymentElt.querySelector('form').action = this.paymentManager.btnNewElt.dataset.url
-        document.getElementById('show-calcul-contribution-btn').classList.add('d-none')
+        this.modalPaymentElt.querySelector('form').action = this.paymentManager.btnNewElt.dataset.path
+        document.getElementById('show_calcul_contribution_btn').classList.add('d-none')
         this.editBtnElts.forEach(elt => {
             elt.classList.add('d-none')
         })
@@ -244,7 +247,7 @@ export default class PaymentForm {
     getPayment(id) {
         this.loader.on()
 
-        this.formPaymentElt.action = this.formPaymentElt.dataset.url.replace('__id__', id)
+        this.formPaymentElt.action = this.formPaymentElt.dataset.path.replace('__id__', id)
 
         this.deleteBtnElt.classList.replace('d-none', 'd-block')
         this.saveBtnElt.querySelector('span').textContent = 'Mettre à jour'

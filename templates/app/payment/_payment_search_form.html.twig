@@ -19,14 +19,14 @@
 
 {% block search_form_buttons %}
     {{ parent() }}
-    {% if app.session.get('userServices')|length > 1 or app.session.get('haveServiceHotel') == false %}
-        <button id="export-accounting-btn" name="export-accounting" value="true" class="btn btn-success ml-2 shadow" 
+    {% if app.session.get('haveServiceHotel') == false %}
+        <button id="export_accounting_btn" name="export-accounting" value="true" class="btn btn-success ml-2 shadow" 
             title="Exporter sur Excel les données pour la comptabilité" data-toggle="tooltip" data-placement="bottom">
                 <span class="fas fa-file-excel mr-2"></span>Compta
         </button>
     {% endif %}
     {% if is_granted('ROLE_SUPER_ADMIN') or YES == app.session.get('haveServiceHotel') %}
-        <button id="export-delta-btn" name="export-delta" value="true" class="btn btn-success ml-2 shadow" 
+        <button id="export_delta_btn" name="export-delta" value="true" class="btn btn-success ml-2 shadow" 
             title="Exporter sur Excel les données destinées à DELTA" data-toggle="tooltip" data-placement="bottom">
                 <span class="fas fa-file-excel mr-2"></span>DELTA
             </button>
