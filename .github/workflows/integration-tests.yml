@@ -73,14 +73,13 @@ jobs:
                   composer require --working-dir=tools/php-cs-fixer friendsofphp/php-cs-fixer
 
             - name: Analyse PHP Code standard via PHP CS Fixer (PSR-12 et Symfony code style)
+              id: php_cs_fixer
               run: ./tools/php-cs-fixer/vendor/bin/php-cs-fixer fix src --dry-run --verbose
 
             - name: Lint YAML files
-              if: always() && steps.install.outcome == 'success'
               run: php bin/console lint:yaml config --parse-tags
 
             - name: Lint Twig templates
-              if: always() && steps.install.outcome == 'success'
               run: php bin/console lint:twig templates --env=prod
 
             - name: Create database
@@ -111,7 +110,7 @@ jobs:
             #   with:
             #     name: build
             #     path: public/build
-            - name: Execute tests via PHPUnit
+            - name: Execute PHPUnit tests
               env:
                   SISIAO_LOGIN: ${{ secrets.SISIAO_LOGIN }}
                   SISIAO_PASSWORD: ${{ secrets.SISIAO_PASSWORD }}
@@ -121,3 +120,27 @@ jobs:
                   php bin/phpunit tests/Repository;
                   php bin/phpunit tests/Command;
                   php bin/phpunit tests/Controller --exclude-group=api;
+
+            - name: Execute PHPUnit tests API
+              continue-on-error: true
+              env:
+                  SISIAO_LOGIN: ${{ secrets.SISIAO_LOGIN }}
+                  SISIAO_PASSWORD: ${{ secrets.SISIAO_PASSWORD }}
+                  SISIAO_GROUP_ID: ${{ secrets.SISIAO_GROUP_ID }}
+              run: |
+                  php bin/phpunit tests/Controller/Api;
+
+            - name: Install ChromeDriver and geckodriver
+              run: |
+                composer require --dev dbrekelmans/bdi
+                vendor/bin/bdi detect drivers
+
+            - name: Execute Panther tests end-to-end 
+              continue-on-error: true
+              run: |
+                  php bin/console cache:clear --env=test;
+                  php bin/console doctrine:database:drop -e test --force;
+                  php bin/console doctrine:database:create -e test;
+                  php bin/console doctrine:schema:update -e test --force;
+                  php bin/console hautelook:fixtures:load -e test -n;
+                  php bin/phpunit tests/EndToEnd;
