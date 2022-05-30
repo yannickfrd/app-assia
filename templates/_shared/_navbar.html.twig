@@ -60,6 +60,13 @@
                         <a class="nav-link text-light" href="{{ path('admin') }}">Admin</a>
                     </li>
                 {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link text-light" target="_blank"
+                        href="https://drive.google.com/drive/folders/1-B1pHYyNhp2tHFxwcSOWfsYD0qxjJLLs" 
+                        title="Accéder aux fiches pratiques utilisateurs" data-toggle="tooltip" data-placement="bottom">
+                        <i class="fas fa-question"></i>
+                    </a>
+                </li>
             </ul>
             <form action="{{ path('person_index') }}" method="get" class="form-inline mr-3 my-2 my-lg-0">
                 <div class="position-relative">
@@ -70,7 +77,7 @@
                     <div id="results_search" class="w-100 list-group pr-sm-2 d-block fade-in"></div>
                 </div>
                 <button class="btn btn-{{ theme_color }} border-light my-2 my-sm-0" 
-                    data-toggle="tooltip" data-placement="bottom" title="Rechercher" type="submit">
+                    title="Rechercher" data-toggle="tooltip" data-placement="bottom" type="submit">
                     <span class="fas fa-search"><span class="sr-only">Rechercher</span></span>
                 </button>
             </form>

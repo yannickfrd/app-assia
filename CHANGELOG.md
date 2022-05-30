@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 3.18.9 - 30/05/2022
+
+Add link 'help' in navbar
+
 ## Version 3.18.8 - 30/05/2022
 
 Refactor feature 'Payment' (#148)
