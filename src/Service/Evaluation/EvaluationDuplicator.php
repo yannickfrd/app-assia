@@ -75,20 +75,29 @@ class EvaluationDuplicator
 
     public function createEvalInitPerson(SupportPerson $supportPerson, EvaluationPerson $evaluationPerson): ?EvalInitPerson
     {
+        $evalInitPerson = (new EvalInitPerson())
+            ->setSupportPerson($supportPerson);
+
         $evalAdmPerson = $evaluationPerson->getEvalAdmPerson();
         $evalSocialPerson = $evaluationPerson->getEvalSocialPerson();
         $evalProfPerson = $evaluationPerson->getEvalProfPerson();
         $evalBudgetPerson = $evaluationPerson->getEvalBudgetPerson();
 
-        $evalInitPerson = (new EvalInitPerson())
-            ->setPaper($evalAdmPerson->getPaper())
-            ->setPaperType($evalAdmPerson->getPaperType())
-            ->setRightSocialSecurity($evalSocialPerson->getRightSocialSecurity())
-            ->setSocialSecurity($evalSocialPerson->getSocialSecurity())
-            ->setFamilyBreakdown($evalSocialPerson->getFamilyBreakdown())
-            ->setFriendshipBreakdown($evalSocialPerson->getFriendshipBreakdown())
-            ->setSupportPerson($supportPerson)
-        ;
+        if ($evalAdmPerson) {
+            $evalInitPerson
+                ->setPaper($evalAdmPerson->getPaper())
+                ->setPaperType($evalAdmPerson->getPaperType())
+            ;
+        }
+
+        if ($evalSocialPerson) {
+            $evalInitPerson
+                ->setRightSocialSecurity($evalSocialPerson->getRightSocialSecurity())
+                ->setSocialSecurity($evalSocialPerson->getSocialSecurity())
+                ->setFamilyBreakdown($evalSocialPerson->getFamilyBreakdown())
+                ->setFriendshipBreakdown($evalSocialPerson->getFriendshipBreakdown())
+            ;
+        }
 
         if ($evalProfPerson) {
             $evalInitPerson
