@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Version 3.18.10 - 31/05/2022
+
+Fix
+
+* [navbar] Edit size icon 'help'
+* [EvaluationDuplicator] Fix error if evalAdmPerson or evalSocialPerson is null
+* [EvaluationPersonDataTrait] Edit export light
+
 ## Version 3.18.9 - 30/05/2022
 
 Add link 'help' in navbar
