@@ -17,7 +17,8 @@
             ~ (support.endStatus ? ' (' ~ support.endStatusToString ~ ')' ), 'Status') }}
     {% endif %}
     {{ view_div.get(support.startDate ? support.startDate|date('d/m/Y') 
-        ~ (support.endDate ? ' - ' ~ support.endDate|date('d/m/Y')), 'Date de suivi') }}
+        ~ (support.endDate ? ' - ' ~ support.endDate|date('d/m/Y'))
+        ~ (support.startDate ? ' (' ~ support.duration|number ~ ' jours)'), 'Date de suivi') }}
     {{ view_div.get(support.referent ? support.referent.fullname ~ (support.referent2 ? ' | ' ~ support.referent2.fullname), 'Referent') }}
 </div>
 

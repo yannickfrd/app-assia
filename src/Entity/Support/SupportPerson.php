@@ -4,10 +4,10 @@ namespace App\Entity\Support;
 
 use App\Entity\Evaluation\EvalInitPerson;
 use App\Entity\Evaluation\EvaluationPerson;
-use App\Entity\Event\Task;
 use App\Entity\People\Person;
 use App\Entity\People\RolePerson;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
+use App\Entity\Traits\DurationSupportTrait;
 use App\Form\Utils\Choices;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -24,6 +24,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class SupportPerson
 {
     use CreatedUpdatedEntityTrait;
+    use DurationSupportTrait;
     use SoftDeleteableEntity;
 
     /**
@@ -415,12 +416,4 @@ class SupportPerson
 
         return $this;
     }
-
-    // /**
-    //  * @return Collection<Task>|null
-    //  */
-    // public function getTasks(): ?Collection
-    // {
-    //     return $this->tasks;
-    // }
 }

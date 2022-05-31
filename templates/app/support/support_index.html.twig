@@ -112,7 +112,10 @@
                                     {% endif %}
                                 </td>
                                 <td class="align-middle">
-                                    {{ support_person.startDate ? support_person.startDate|date('d/m/Y') }}
+                                    {% if support_person.startDate %}
+                                        {{ support_person.startDate|date('d/m/Y') }}<br/>
+                                        <span class="text-secondary">({{ support_person.duration|number }} jours)</span>
+                                    {% endif %}
                                 </td>
                                 <td class="align-middle">{{ support_person.endDate ? support_person.endDate|date('d/m/Y') }}
                                     {% if support_group.endDate == null and support_group.theoreticalEndDate %}

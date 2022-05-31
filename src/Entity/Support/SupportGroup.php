@@ -13,6 +13,7 @@ use App\Entity\Organization\User;
 use App\Entity\People\PeopleGroup;
 use App\Entity\People\Person;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
+use App\Entity\Traits\DurationSupportTrait;
 use App\Entity\Traits\GeoLocationEntityTrait;
 use App\Entity\Traits\LocationEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -31,6 +32,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class SupportGroup
 {
     use CreatedUpdatedEntityTrait;
+    use DurationSupportTrait;
     use SoftDeleteableEntity;
     use LocationEntityTrait;
     use GeoLocationEntityTrait;
