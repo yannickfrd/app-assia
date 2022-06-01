@@ -85,12 +85,7 @@
                                     <td class="align-middle">{{ support_group.originRequest and support_group.originRequest.organization and 
                                         support_group.originRequest.organization ? support_group.originRequest.organization.name ~ 
                                         (hotel_support.ssd ? ' (' ~  hotel_support.ssd ~ ')') }}</td>
-                                    <td class="align-middle">
-                                        {% if support_person.startDate %}
-                                            {{ support_person.startDate|date('d/m/Y') }}<br/>
-                                            <span class="text-secondary">({{ support_person.duration|number }} jours)</span>
-                                        {% endif %}
-                                    </td>
+                                    <td class="align-middle">{{ support_person.startDate ? support_person.startDate|date('d/m/Y') }}</td>
                                     <td class="align-middle">{{ hotel_support.evaluationDate ? hotel_support.evaluationDate|date('d/m/Y') }}</td>
                                     <td class="align-middle">{{ hotel_support.levelSupportToString }}</td>
                                     <td class="align-middle">{{ hotel_support.agreementDate ? hotel_support.agreementDate|date('d/m/Y') }}</td>
