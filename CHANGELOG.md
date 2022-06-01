@@ -1,8 +1,12 @@
 # CHANGELOG
 
+## Version 3.18.10 - 01/06/2022
+
+Add support duration (delay) in views and exports
+
 ## Version 3.18.9 - 30/05/2022
 
-Add link 'help' in navbar
+Add link 'help' in navbar (#166)
 
 ## Version 3.18.8 - 30/05/2022
 
