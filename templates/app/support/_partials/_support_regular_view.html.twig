@@ -18,8 +18,11 @@
     {% endif %}
 </div>
 <div class="row">
+    {% set support_duration = support.duration %}
     {{ view_div.get(support.startDate ? support.startDate|date('d/m/Y') 
-        ~ (support.endDate ? ' - ' ~ support.endDate|date('d/m/Y')), 'Date de suivi') }}
+        ~ (support.endDate ? ' - ' ~ support.endDate|date('d/m/Y'))
+        ~ (support_duration ? ' (' ~ support_duration|number ~ ' jour' 
+        ~ (support_duration > 1 ? 's')  ~ ')'), 'Date de suivi') }}
     {{ view_div.get(support.referent ? support.referent.fullname ~ (support.referent2 ? ' | ' ~ support.referent2.fullname), 'Referent') }}
 </div>
 <div class="row">

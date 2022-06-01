@@ -59,6 +59,7 @@ trait SupportPersonDataTrait
             'Date début suivi' => $this->formatDate($supportPerson->getStartDate()),
             'Date fin théorique suivi' => $this->formatDate($supportGroup->getTheoreticalEndDate()),
             'Date fin suivi' => $this->formatDate($supportPerson->getEndDate()),
+            'Durée suivi (nb de jours)' => $supportPerson->getDuration(),
             'Motif de fin de suivi' => $supportPerson->getEndReasonToString(),
             'Situation à la fin' => $supportPerson->getEndStatusToString(),
             'Commentaire situation à la fin' => $anonymized ? 'XXX' : $supportPerson->getEndStatusComment(),

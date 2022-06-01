@@ -53,8 +53,9 @@ class HotelSupportPersonExport extends ExportExcel
         $placeGroup = $supportGroup->getPlaceGroups()[0];
 
         $datas = [
-            'N° Suivi' => $supportGroup->getId(),
-            'ID personne' => $person->getId(),
+            'N° suivi' => $supportGroup->getId(),
+            'N° personne' => $person->getId(),
+            'ID groupe SI-SIAO' => (string) $peopleGroup->getSiSiaoId(),
             'Nom' => $person->getLastname(),
             'Prénom' => $person->getFirstname(),
             'Date de naissance' => $this->formatDate($person->getBirthdate()),
@@ -63,9 +64,10 @@ class HotelSupportPersonExport extends ExportExcel
             'Nb de personnes' => $peopleGroup->getNbPeople(),
             'Rôle dans le groupe' => $supportPerson->getRoleToString(),
             'DP' => $supportPerson->getHeadToString(),
+            'Statut suivi' => $supportPerson->getStatusHotelToString(),
             'Date début suivi' => $this->formatDate($supportPerson->getStartDate()),
             'Date fin suivi' => $this->formatDate($supportPerson->getEndDate()),
-            'Statut suivi' => $supportPerson->getStatusHotelToString(),
+            'Durée suivi (nb de jours)' => $supportPerson->getDuration(),
             'Motif de la non inclusion' => $hotelSupport->getReasonNoInclusionToString(),
             'Coefficient' => $supportGroup->getCoefficient(),
             'Secteur' => $supportGroup->getSubService() ? $supportGroup->getSubService()->getName() : '',
