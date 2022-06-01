@@ -1,8 +1,16 @@
 # CHANGELOG
 
-## Version 3.18.10 - 01/06/2022
+## Version 3.18.11 - 01/06/2022
 
 Add support duration (delay) in views and exports
+
+## Version 3.18.10 - 31/05/2022
+
+Fix (#168)
+
+* [navbar] Edit size icon 'help'
+* [EvaluationDuplicator] Fix error if evalAdmPerson or evalSocialPerson is null
+* [EvaluationPersonDataTrait] Edit export light
 
 ## Version 3.18.9 - 30/05/2022
 
