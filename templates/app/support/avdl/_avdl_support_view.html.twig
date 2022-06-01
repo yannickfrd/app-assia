@@ -10,9 +10,11 @@
     {{ view_div.get(support.statusToString 
         ~ (support.service.coefficient == YES and support.status == status_in_progress ? ' (coeff. ' ~ support.coefficient ~ ')' )
         ~ (support.endStatus ? ' (' ~ support.endStatusToString ~ ')' ), 'Status') }}
+    {% set support_duration = support.duration %}
     {{ view_div.get(support.startDate ? support.startDate|date('d/m/Y') 
         ~ (support.endDate ? ' - ' ~ support.endDate|date('d/m/Y'))
-        ~ (support.startDate ? ' (' ~ support.duration|number ~ ' jours)'), 'Date de suivi') }}    
+        ~ (support_duration ? ' (' ~ support_duration|number ~ ' jour' 
+        ~ (support_duration > 1 ? 's')  ~ ')'), 'Date de suivi') }}
     {{ view_div.get(support.referent ? support.referent.fullname ~ (support.referent2 ? ' | ' ~ support.referent2.fullname), 'Referent') }}
 </div>
 
