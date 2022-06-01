@@ -55,7 +55,7 @@ class AvdlSupportPersonExport extends ExportExcel
         $avdlSupport = $supportGroup->getAvdl() ?? new Avdl();
 
         $datas = [
-            'N° Suivi' => $supportGroup->getId(),
+            'N° suivi' => $supportGroup->getId(),
             'Nom' => $person->getLastname(),
             'Prénom' => $person->getFirstname(),
             'Date de naissance' => $this->formatDate($person->getBirthdate()),
@@ -64,9 +64,10 @@ class AvdlSupportPersonExport extends ExportExcel
             'Nb de personnes' => $peopleGroup->getNbPeople(),
             'Rôle dans le groupe' => $supportPerson->getRoleToString(),
             'DP' => $supportPerson->getHeadToString(),
+            'Statut suivi' => $supportGroup->getStatusToString(),
             'Date début suivi' => $this->formatDate($supportGroup->getStartDate()),
             'Date fin suivi' => $this->formatDate($supportGroup->getEndDate()),
-            'Statut suivi' => $supportGroup->getStatusToString(),
+            'Durée suivi (nb de jours)' => $supportGroup->getDuration(),
             'Coefficient' => $supportGroup->getCoefficient(),
             'Dispositif' => $supportGroup->getDevice() ? $supportGroup->getDevice()->getName() : '',
             'Intervenant·e principal·e' => $supportGroup->getReferent() ? $supportGroup->getReferent()->getFullname() : null,
