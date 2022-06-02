@@ -42,7 +42,7 @@ class Document
         'zip' => 'Archive',
     ];
 
-    public const SERIALIZER_GROUPS = ['show_document', 'view', 'show_tag'];
+    public const SERIALIZER_GROUPS = ['show_document', 'show_created_updated', 'view', 'show_tag'];
 
     /**
      * @ORM\Id()

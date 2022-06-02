@@ -156,14 +156,16 @@ final class DocumentController extends AbstractController
     /**
      * @Route("/document/{id}/show", name="document_show", methods="GET")
      */
-    public function show(Document $document): JsonResponse
+    public function show(int $id, DocumentRepository $documentRepo): JsonResponse
     {
+        $document = $documentRepo->findDocument($id);
+
         $this->denyAccessUnlessGranted('VIEW', $document);
 
         return $this->json([
             'action' => 'show',
             'document' => $document,
-        ], 200, [], ['groups' => Document::SERIALIZER_GROUPS]);
+        ], 200, [], ['groups' => ['show_document', 'show_tag']]);
     }
 
     /**
@@ -191,7 +193,7 @@ final class DocumentController extends AbstractController
                     '%document_title%' => $document->getName(),
                 ], 'app'),
                 'document' => $document,
-            ], 200, [], ['groups' => Document::SERIALIZER_GROUPS]);
+            ], 200, [], ['groups' => ['show_document', 'show_tag']]);
         }
 
         return $this->getErrorMessage($form);

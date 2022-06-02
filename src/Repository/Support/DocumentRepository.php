@@ -110,16 +110,14 @@ class DocumentRepository extends ServiceEntityRepository
         ;
     }
 
-    /**
-     * Donne un document.
-     */
     public function findDocument($id, bool $deleted = false): ?Document
     {
         if ($deleted) {
             $this->disableFilter($this->_em, 'softdeleteable');
         }
 
-        return $this->createQueryBuilder('d')->select('d')
+        return $this->createQueryBuilder('d')
+            ->leftJoin('d.tags', 't')->addSelect('t')
             ->join('d.peopleGroup', 'pg')->addSelect('PARTIAL pg.{id}')
             ->join('d.supportGroup', 'sg')->addSelect('PARTIAL sg.{id}')
             ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name}')
