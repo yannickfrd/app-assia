@@ -220,9 +220,10 @@ export default class CalendarManager {
 
         const rdvTime = () => {
             const rdvDate = new Date(rdv.start)
-            const min = rdvDate.getMinutes().toString().length === 1 ? '0' + rdvDate.getMinutes() : rdvDate.getMinutes()
+            const hours = rdvDate.getHours().toString().length === 1 ? '0' + rdvDate.getHours() : rdvDate.getHours()
+            const minutes = rdvDate.getMinutes().toString().length === 1 ? '0' + rdvDate.getMinutes() : rdvDate.getMinutes()
 
-            return rdvDate.getHours() + ':' + min
+            return hours + ':' + minutes
         }
 
         rdvElt.innerHTML = rdv.day ? rdv.start + ' ' + title : rdvTime() + ' ' + rdv.title
@@ -265,9 +266,8 @@ export default class CalendarManager {
     deleteRdv(rdv, apiUrls) {
         const rdvElt = document.getElementById('rdv-' + rdv.id)
         rdvElt.remove()
-        // this.hideRdvElts(dayElt)
 
-        this.apiCalendar.execute('delete', apiUrls)
+        // this.apiCalendar.execute('delete', apiUrls)
 
         this.rdvForm.closeModal()
     }
