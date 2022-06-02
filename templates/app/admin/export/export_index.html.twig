@@ -13,10 +13,10 @@
             {% include 'model/_flash_message.html.twig' %}
             <div id="js-msg-flash-content"></div>
             
-            {% include 'app/admin/export/export_form.html.twig' %}
+            {% include 'app/admin/export/_export_form.html.twig' %}
             
             <div>
-                <a href="{{ absolute_url('documentation/models/modele-export.xlsx') }}" 
+                <a href="{{ path('export_download_model') }}"
                     class="text-{{ theme_color }}"><i class="fas fa-file-download mr-1"></i>
                     Télécharger le modèle vierge Excel de traitement statistique.</a>
             </div>
@@ -24,7 +24,7 @@
 
         <hr/>
 
-        {% include 'app/admin/export/export_table.html.twig' %}
+        {% include 'app/admin/export/_export_table.html.twig' %}
 
     </div>
 {% endblock %}

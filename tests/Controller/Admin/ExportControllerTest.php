@@ -30,7 +30,6 @@ class ExportControllerTest extends WebTestCase
         $this->client = static::createClient();
         $this->client->followRedirects();
 
-        /** @var AbstractDatabaseTool */
         $this->databaseTool = $this->getContainer()->get(DatabaseToolCollection::class)->get();
 
         $this->fixtures = $this->databaseTool->loadAliceFixture([
@@ -89,6 +88,13 @@ class ExportControllerTest extends WebTestCase
         $this->assertResponseIsSuccessful();
         $content = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertSame('count', $content['action']);
+    }
+
+    public function testDownloadModel(): void
+    {
+        $this->client->request('GET', '/export/download-model');
+
+        $this->assertResponseIsSuccessful();
     }
 
     private function getFormData(): array

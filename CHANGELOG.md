@@ -1,8 +1,21 @@
 # CHANGELOG
 
+## Version 3.18.11 - 02/06/2022
+
+Fix (#171)
+
+* Edit scss files and entry points
+* Delete alert js files
+* [CalendarManager][RdvManager] Fix error 500 after delete rdv (remove call api)
+* [export] Rename twig files
+* [export] Fix link to model export (absolute_path to relative_path)
+* [DatabaseBackupController] Fix error route 'database_backup' to 'database_backup_index'
+* [ExportController] Create route to export model excel
+* Update PHP dependencies
+
 ## Version 3.18.10 - 31/05/2022
 
-Fix
+Fix (#168)
 
 * [navbar] Edit size icon 'help'
 * [EvaluationDuplicator] Fix error if evalAdmPerson or evalSocialPerson is null
@@ -10,7 +23,7 @@ Fix
 
 ## Version 3.18.9 - 30/05/2022
 
-Add link 'help' in navbar
+Add link 'help' in navbar (#166)
 
 ## Version 3.18.8 - 30/05/2022
 

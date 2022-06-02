@@ -63,7 +63,7 @@ final class DatabaseBackupController extends AbstractController
 
         $this->addFlash('success', 'La sauvegarde de la base de données est créée.');
 
-        return $this->redirectToRoute('database_backups');
+        return $this->redirectToRoute('database_backup_index');
     }
 
     /**
@@ -80,7 +80,7 @@ final class DatabaseBackupController extends AbstractController
 
         $this->addFlash('danger', 'Ce fichier n\'existe pas.');
 
-        return $this->redirectToRoute('database_backups');
+        return $this->redirectToRoute('database_backup_index');
     }
 
     /**
@@ -100,6 +100,6 @@ final class DatabaseBackupController extends AbstractController
 
         $this->addFlash('warning', 'La sauvegarde de la base de données est supprimée.');
 
-        return $this->redirectToRoute('database_backups');
+        return $this->redirectToRoute('database_backup_index');
     }
 }
