@@ -201,7 +201,7 @@ final class ExportController extends AbstractController
     public function downloadModel(Downloader $downloader): Response
     {
         try {
-            return $downloader->send(\dirname(__DIR__).'/../../public/documesntation/models/modele-export.xlsx');
+            return $downloader->send(\dirname(__DIR__).'/../../public/documentation/models/modele-export.xlsx');
         } catch (\Exception $e) {
             $this->addFlash('danger', "Une erreur s'est produite : {$e->getMessage()}");
 
