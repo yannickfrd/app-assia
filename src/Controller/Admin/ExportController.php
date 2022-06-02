@@ -156,7 +156,7 @@ final class ExportController extends AbstractController
             return $downloader->send($export->getFileName());
         }
 
-        return $this->redirectToRoute('export');
+        return $this->redirectToRoute('export_index');
     }
 
     /**
@@ -190,6 +190,22 @@ final class ExportController extends AbstractController
                 'msg' => 'Une erreur s\'est produite.',
                 'error' => $e->getMessage(),
             ]);
+        }
+    }
+
+    /**
+     * Donne le fichier modèle Excel de traitement statistique.
+     *
+     * @Route("/export/download-model", name="export_download_model", methods="GET")
+     */
+    public function downloadModel(Downloader $downloader): Response
+    {
+        try {
+            return $downloader->send(\dirname(__DIR__).'/../../public/documentation/models/modele-export.xlsx');
+        } catch (\Exception $e) {
+            $this->addFlash('danger', "Une erreur s'est produite : {$e->getMessage()}");
+
+            return $this->redirectToRoute('export_index');
         }
     }
 }

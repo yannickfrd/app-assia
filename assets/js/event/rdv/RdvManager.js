@@ -259,8 +259,8 @@ export default class RdvManager {
         document.getElementById('rdv-' + rdv.id).remove()
 
         if (action === 'delete') {
-            this.apiCalendar.execute('delete', apiUrls)
             this.rdvForm.closeModal()
+            //this.apiCalendar.execute('delete', apiUrls)
         }
 
         this.total.decrement();

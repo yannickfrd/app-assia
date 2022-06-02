@@ -1,8 +1,21 @@
 # CHANGELOG
 
-## Version 3.18.11 - 01/06/2022
+## Version 3.18.11 - 02/06/2022
 
-Add support duration (delay) in views and exports
+Fix (#171)
+
+* Edit scss files and entry points
+* Delete alert js files
+* [CalendarManager][RdvManager] Fix error 500 after delete rdv (remove call api)
+* [export] Rename twig files
+* [export] Fix link to model export (absolute_path to relative_path)
+* [DatabaseBackupController] Fix error route 'database_backup' to 'database_backup_index'
+* [ExportController] Create route to export model excel
+* Update PHP dependencies
+
+## Version 3.19.0 - 01/06/2022
+
+Add support duration (delay) in views and exports (#169)
 
 ## Version 3.18.10 - 31/05/2022
 

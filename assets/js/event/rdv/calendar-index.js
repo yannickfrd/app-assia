@@ -1,3 +1,5 @@
+require('../../../css/_calendar.scss')
+
 import CalendarManager from './CalendarManager'
 import SearchLocation from '../../utils/searchLocation'
 
