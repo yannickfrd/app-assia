@@ -13,7 +13,7 @@
             {% include 'model/_flash_message.html.twig' %}
             <div id="js-msg-flash-content"></div>
             
-            {% include 'app/admin/export/export_form.html.twig' %}
+            {% include 'app/admin/export/_export_form.html.twig' %}
             
             <div>
                 <a href="{{ absolute_url('documentation/models/modele-export.xlsx') }}" 
@@ -24,7 +24,7 @@
 
         <hr/>
 
-        {% include 'app/admin/export/export_table.html.twig' %}
+        {% include 'app/admin/export/_export_table.html.twig' %}
 
     </div>
 {% endblock %}
