@@ -95,7 +95,7 @@ class Avdl
     private $recommendationSupport;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $diagComment;
 
@@ -117,7 +117,7 @@ class Avdl
     private $supportType;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $supportComment;
 

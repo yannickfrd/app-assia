@@ -12,6 +12,8 @@ Fix (#171)
 * [DatabaseBackupController] Fix error route 'database_backup' to 'database_backup_index'
 * [ExportController] Create route to export model excel
 * Update PHP dependencies
+* [Avdl] Edit column type 'diagComment' and 'supportComment': string to text
+* [Document] Fix error serialization (createdAt)
 
 ## Version 3.19.0 - 01/06/2022
 
