@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 3.20.0 - 03/06/2022
+
+Create a JS class to add uppercase after a dot (evaluation view)
+
 ## Version 3.18.11 - 02/06/2022
 
 Fix (#171)
