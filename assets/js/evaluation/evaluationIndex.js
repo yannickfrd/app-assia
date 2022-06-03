@@ -9,6 +9,7 @@ import  '../utils/maskNumber'
 import AutoSizer from '../utils/form/autoSizer'
 import StopWatch from '../utils/stopWatch'
 import CountryManager from './CountryManager'
+import UpperCaseAfterDot from '../utils/form/UpperCaseAfterDot'
 // import SelectManager from '../utils/form/SelectManager'
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -22,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     new CountryManager()
     new changeChecker('evaluation')
     new AutoSizer('textarea')
+    new UpperCaseAfterDot('textarea')
     
     // document.querySelectorAll('select').forEach(selectElt => {
     //     new SelectManager('#' + selectElt.id)
