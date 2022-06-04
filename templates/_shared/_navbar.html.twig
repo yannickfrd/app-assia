@@ -1,6 +1,6 @@
 <nav class="navbar fixed-top navbar-expand-xl navbar-light bg-{{ theme_color }} mb-0 shadow">
     <a class="navbar-brand py-0 text-light" href="{{ path('home') }}">
-        {% if app.request.server.get('APP_VERSION') == 'prod' %}
+        {% if app_env == 'prod' %}
             <img id="logo-site" src="{{ asset('images/logo_assia_white.png') }}" height="56" width="144" alt="Application Assia"
                 title="Application Assia">
         {% else %}

@@ -14,11 +14,10 @@ class UserNotification extends MailNotifier
     {
         $email = (new TemplatedEmail())
             ->to($user->getEmail())
-            ->subject('Application Assia'.('prod' != $this->appVersion ? ' version DEMO' : null).' : Création de compte | '.$user->getFullname())
+            ->subject('Application Assia'.('prod' != $this->appEnv ? ' version DEMO' : '').' : Création de compte | '.$user->getFullname())
             ->htmlTemplate('emails/email_new_user.html.twig')
             ->context([
                 'user' => $user,
-                'app_version' => $this->appVersion,
             ]);
 
         return $this->send($email);

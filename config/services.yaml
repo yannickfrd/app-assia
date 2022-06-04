@@ -10,6 +10,7 @@ parameters:
     downloads_directory: "%kernel.project_dir%/public/downloads/"
     app_env: "%env(APP_ENV)%"
     admin_email: "%env(ADMIN_EMAIL)%"
+    maintenance: false
 
 services:
     # default configuration for services in *this* file
@@ -66,15 +67,7 @@ services:
                   method: "onKernelRequest",
               }
         arguments:
-            $maintenance: "%env(MAINTENANCE)%"
-
-    # App\EventListener\ResponseListener:
-    #     tags:
-    #         - {
-    #               name: "kernel.event_listener",
-    #               event: "kernel.response",
-    #               method: "onKernelResponse",
-    #           }
+            $maintenance: '%env(default:maintenance:MAINTENANCE)%' 
 
     App\EventListener\TerminateListener:
         tags:
@@ -82,7 +75,6 @@ services:
 
     App\Notification\MailNotifier:
         arguments:
-            $appVersion: "%env(APP_VERSION)%"
             $appEnv: "%app_env%"
 
     App\Service\DatabaseDumper:
