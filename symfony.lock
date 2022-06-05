@@ -141,6 +141,9 @@
     "ezyang/htmlpurifier": {
         "version": "v4.13.0"
     },
+    "fakerphp/faker": {
+        "version": "v1.19.0"
+    },
     "firebase/php-jwt": {
         "version": "v5.5.1"
     },
@@ -158,9 +161,6 @@
     },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.3"
-    },
-    "fzaninotto/faker": {
-        "version": "v1.8.0"
     },
     "gedmo/doctrine-extensions": {
         "version": "v2.4.39"
@@ -215,6 +215,9 @@
     "laminas/laminas-code": {
         "version": "3.5.1"
     },
+    "laminas/laminas-escaper": {
+        "version": "2.10.0"
+    },
     "liip/test-fixtures-bundle": {
         "version": "2.1.0"
     },
@@ -226,6 +229,9 @@
     },
     "markbaker/matrix": {
         "version": "1.2.0"
+    },
+    "masterminds/html5": {
+        "version": "2.7.5"
     },
     "microsoft/microsoft-graph": {
         "version": "1.47.0"
@@ -261,9 +267,6 @@
     "paragonie/sodium_compat": {
         "version": "v1.12.2"
     },
-    "pclzip/pclzip": {
-        "version": "2.8.2"
-    },
     "phenx/php-font-lib": {
         "version": "0.5.2"
     },
@@ -287,9 +290,6 @@
     },
     "phpmailer/phpmailer": {
         "version": "v6.1.4"
-    },
-    "phpoffice/common": {
-        "version": "0.2.9"
     },
     "phpoffice/phpspreadsheet": {
         "version": "1.10.1"
@@ -601,9 +601,6 @@
     "symfony/polyfill-php72": {
         "version": "v1.12.0"
     },
-    "symfony/polyfill-php73": {
-        "version": "v1.12.0"
-    },
     "symfony/polyfill-php80": {
         "version": "v1.17.0"
     },
@@ -662,9 +659,6 @@
         "version": "v4.3.4"
     },
     "symfony/security-csrf": {
-        "version": "v4.3.4"
-    },
-    "symfony/security-guard": {
         "version": "v4.3.4"
     },
     "symfony/security-http": {
@@ -807,8 +801,5 @@
     },
     "webmozart/assert": {
         "version": "1.5.0"
-    },
-    "zendframework/zend-escaper": {
-        "version": "2.6.1"
     }
 }
