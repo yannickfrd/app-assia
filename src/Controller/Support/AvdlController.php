@@ -45,7 +45,7 @@ final class AvdlController extends AbstractController
      */
     protected function exportData(AvdlSupportSearch $search, SupportPersonRepository $supportPersonRepo)
     {
-        $supports = $supportPersonRepo->findSupportsOfServiceToExport($search, Service::SERVICE_TYPE_AVDL);
+        $supports = $supportPersonRepo->findSupportsOfServiceToExport(Service::SERVICE_TYPE_AVDL, $search);
 
         if (!$supports) {
             $this->addFlash('warning', 'Aucun résultat à exporter.');

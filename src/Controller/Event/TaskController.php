@@ -90,10 +90,10 @@ final class TaskController extends AbstractController
      * @Route("/support/{id}/task/create", name="support_task_create", methods="POST")
      */
     public function create(
-        ?int $id = null,
         Request $request,
         EntityManagerInterface $em,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        ?int $id = null
     ): JsonResponse {
         $task = new Task();
 

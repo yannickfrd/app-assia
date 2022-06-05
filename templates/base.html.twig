@@ -45,6 +45,10 @@
         </a>
     {% endif %}
 
+    {% if app_env == 'demo' %}
+        {% include '_shared/_demo_toast.html.twig' %}
+    {% endif %}
+
 </main>
 
 {% include '_shared/_footer.html.twig' %}

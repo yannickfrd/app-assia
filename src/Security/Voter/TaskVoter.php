@@ -21,13 +21,13 @@ class TaskVoter extends Voter
     /** @var SupportGroup */
     protected $supportGroup;
 
-    protected function supports(string $attribute, $subject)
+    protected function supports(string $attribute, $subject): bool
     {
         return in_array($attribute, ['VIEW', 'EDIT', 'DELETE'])
             && $subject instanceof \App\Entity\Event\Task;
     }
 
-    protected function voteOnAttribute(string $attribute, $task, TokenInterface $token)
+    protected function voteOnAttribute(string $attribute, $task, TokenInterface $token): bool
     {
         $this->user = $token->getUser();
         $this->task = $task;
