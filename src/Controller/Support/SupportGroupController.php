@@ -181,8 +181,8 @@ final class SupportGroupController extends AbstractController
      * @Route("/group/{id}/new_support", name="group_new_support", methods="GET")
      * @Route("support/switch_service", name="support_switch_service", methods="POST")
      */
-    public function newSupportGroupAjax(?PeopleGroup $peopleGroup = null, Request $request,
-        SupportPersonRepository $supportPersonRepo): JsonResponse
+    public function newSupportGroupAjax(Request $request,
+        SupportPersonRepository $supportPersonRepo, ?PeopleGroup $peopleGroup = null): JsonResponse
     {
         $form = $this->createForm(NewSupportGroupType::class, new SupportGroup())
             ->handleRequest($request);

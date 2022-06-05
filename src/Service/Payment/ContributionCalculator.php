@@ -205,8 +205,8 @@ class ContributionCalculator
 
                 $evalBudgetPerson = $evaluationPerson->getEvalBudgetPerson();
                 if ($evalBudgetPerson) {
-                    $resourcesGroupAmt += $this->getSumAmt($evalBudgetPerson->getEvalBudgetResources(), $resourceTypes);
-                    $chargesGroupAmt += $this->getSumAmt($evalBudgetPerson->getEvalBudgetCharges(), $chargeTypes);
+                    $resourcesGroupAmt += $this->getSumAmt($resourceTypes, $evalBudgetPerson->getEvalBudgetResources());
+                    $chargesGroupAmt += $this->getSumAmt($chargeTypes, $evalBudgetPerson->getEvalBudgetCharges());
                 }
             }
         }
@@ -229,7 +229,7 @@ class ContributionCalculator
     /**
      * @param Collection<EvalBudgetResource>|Collection<EvalBudgetCharge>|Collection<EvalBudgetDebt>|null $finances
      */
-    protected function getSumAmt(?Collection $finances = null, array $values): float
+    protected function getSumAmt(array $values, ?Collection $finances = null): float
     {
         if (!$finances) {
             return 0;

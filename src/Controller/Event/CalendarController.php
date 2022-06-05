@@ -51,7 +51,7 @@ final class CalendarController extends AbstractController
     /**
      * Affiche l'agenda d'un suivi (vue mensuelle).
      *
-     * @Route("/support/{id}/calendar/month/{year}/{month}", name="support_calendar_show", methods="GET", requirements={
+     * @Route("/support/{id}/calendar/month/{?year}/{?month}", name="support_calendar_show", methods="GET", requirements={
      * "year" : "\d{4}",
      * "month" : "0?[1-9]|1[0-2]",
      * })
@@ -59,7 +59,7 @@ final class CalendarController extends AbstractController
      *
      * @param int $id // SupportGroup
      */
-    public function showSupportCalendar(int $id, int $year = null, int $month = null, SupportManager $supportManager): Response
+    public function showSupportCalendar(SupportManager $supportManager, int $id, ?int $year = null, ?int $month = null): Response
     {
         $supportGroup = $supportManager->getSupportGroup($id);
 
