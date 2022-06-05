@@ -9,17 +9,21 @@ use App\Entity\Support\SupportGroup;
 use App\Entity\Support\SupportPerson;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class PlaceGroupManager
 {
     private $em;
     private $flashBag;
 
-    public function __construct(EntityManagerInterface $em, FlashBagInterface $flashBag)
+    public function __construct(EntityManagerInterface $em, RequestStack $requestStack)
     {
         $this->em = $em;
-        $this->flashBag = $flashBag;
+
+        /** @var Session */
+        $session = $requestStack->getSession();
+        $this->flashBag = $session->getFlashBag();
     }
 
     /**

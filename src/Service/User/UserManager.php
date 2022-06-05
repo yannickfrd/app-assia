@@ -13,18 +13,22 @@ use App\Notification\UserNotification;
 use App\Repository\Organization\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserManager
 {
     private $em;
-    private $flashbag;
+    private $flashBag;
 
-    public function __construct(EntityManagerInterface $em, FlashBagInterface $flashbag)
+    public function __construct(EntityManagerInterface $em, RequestStack $requestStack)
     {
         $this->em = $em;
-        $this->flashbag = $flashbag;
+
+        /** @var Session */
+        $session = $requestStack->getSession();
+        $this->flashBag = $session->getFlashBag();
     }
 
     /**
@@ -43,7 +47,7 @@ class UserManager
 
         $userNotification->newUser($user);
 
-        $this->flashbag->add('success', 'Le compte de '.$user->getFirstname().' est créé. Un e-mail lui a été envoyé.');
+        $this->flashBag->add('success', 'Le compte de '.$user->getFirstname().' est créé. Un e-mail lui a été envoyé.');
     }
 
     public function getUserSetting(User $user): UserSetting
@@ -77,9 +81,9 @@ class UserManager
         $this->em->flush();
 
         if ($userNotification->newUser($user)) {
-            $this->flashbag->add('success', 'Un e-mail a été envoyé à l\'utilisateur. Le lien est valide durant 24 heures.');
+            $this->flashBag->add('success', 'Un e-mail a été envoyé à l\'utilisateur. Le lien est valide durant 24 heures.');
         } else {
-            $this->flashbag->add('danger', 'L\'email n\'a pu être envoyé.');
+            $this->flashBag->add('danger', 'L\'email n\'a pu être envoyé.');
         }
     }
 
@@ -93,7 +97,7 @@ class UserManager
 
         $this->em->flush();
 
-        $this->flashbag->add('success', 'Votre mot de passe est mis à jour !');
+        $this->flashBag->add('success', 'Votre mot de passe est mis à jour !');
     }
 
     /**
@@ -107,14 +111,14 @@ class UserManager
 
         $this->em->flush();
 
-        $this->flashbag->add('success', 'Les modifications sont enregistrées.');
+        $this->flashBag->add('success', 'Les modifications sont enregistrées.');
     }
 
     public function updateSetting(): void
     {
         $this->em->flush();
 
-        $this->flashbag->add('success', 'Les paramètres sont bien enregistrés.');
+        $this->flashBag->add('success', 'Les paramètres sont bien enregistrés.');
     }
 
     /**
@@ -148,9 +152,9 @@ class UserManager
         if ($this->isValidTokenDate($user, 24 * 60 * 60)) { // 24 heures
             $this->setPassword($user, $passwordHasher, $userResetPassword->getPassword());
 
-            $this->flashbag->add('success', 'Votre mot de passe est créé !');
+            $this->flashBag->add('success', 'Votre mot de passe est créé !');
         } else {
-            $this->flashbag->add('danger', 'Le lien de création est périmé.');
+            $this->flashBag->add('danger', 'Le lien de création est périmé.');
         }
     }
 
@@ -167,9 +171,9 @@ class UserManager
 
             $this->em->flush();
 
-            $this->flashbag->add('success', 'Votre mot de passe est réinitialisé !');
+            $this->flashBag->add('success', 'Votre mot de passe est réinitialisé !');
         } else {
-            $this->flashbag->add('danger', 'Le lien de réinitialisation est périmé.');
+            $this->flashBag->add('danger', 'Le lien de réinitialisation est périmé.');
         }
     }
 
@@ -185,7 +189,7 @@ class UserManager
 
         $message = $userNotification->reinitPassword($user); // Envoie l'email
 
-        $this->flashbag->add($message['type'], $message['content']);
+        $this->flashBag->add($message['type'], $message['content']);
 
         return $message;
     }

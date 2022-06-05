@@ -13,19 +13,23 @@ use App\Entity\Support\SupportPerson;
 use App\Repository\Evaluation\EvaluationGroupRepository;
 use App\Service\Grammar;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class SupportPeopleAdder
 {
     use SupportPersonCreator;
 
     private $em;
-    private $flashbag;
+    private $flashBag;
 
-    public function __construct(EntityManagerInterface $em, FlashBagInterface $flashbag)
+    public function __construct(EntityManagerInterface $em, RequestStack $requestStack)
     {
         $this->em = $em;
-        $this->flashbag = $flashbag;
+
+        /** @var Session */
+        $session = $requestStack->getSession();
+        $this->flashBag = $session->getFlashBag();
     }
 
     public function addPersonToSupport(SupportGroup $supportGroup, RolePerson $rolePerson): ?SupportPerson
@@ -33,7 +37,7 @@ class SupportPeopleAdder
         $person = $rolePerson->getPerson();
 
         if ($this->personIsInSupport($person, $supportGroup)) {
-            $this->flashbag->add('warning', $person->getFullname().' est déjà rattaché'.Grammar::gender($person->getGender()).' au suivi.');
+            $this->flashBag->add('warning', $person->getFullname().' est déjà rattaché'.Grammar::gender($person->getGender()).' au suivi.');
 
             return null;
         }
@@ -49,7 +53,7 @@ class SupportPeopleAdder
 
         $this->em->flush();
 
-        $this->flashbag->add('success', $person->getFullname().' est ajouté'.Grammar::gender($person->getGender()).' au suivi en cours.');
+        $this->flashBag->add('success', $person->getFullname().' est ajouté'.Grammar::gender($person->getGender()).' au suivi en cours.');
 
         return $supportPerson;
     }

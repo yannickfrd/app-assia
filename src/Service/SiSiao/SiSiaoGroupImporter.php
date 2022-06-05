@@ -11,7 +11,7 @@ use App\Repository\People\PersonRepository;
 use App\Service\People\PeopleGroupChecker;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -36,7 +36,6 @@ class SiSiaoGroupImporter extends SiSiaoClient
         PersonRepository $personRepo,
         PeopleGroupRepository $peopleGroupRepo,
         PeopleGroupChecker $peopleGroupChecker,
-        FlashBagInterface $flashBag,
         ExceptionNotification $exceptionNotification,
         string $url
     ) {
@@ -47,8 +46,11 @@ class SiSiaoGroupImporter extends SiSiaoClient
         $this->personRepo = $personRepo;
         $this->peopleGroupRepo = $peopleGroupRepo;
         $this->peopleGroupChecker = $peopleGroupChecker;
-        $this->flashBag = $flashBag;
         $this->exceptionNotification = $exceptionNotification;
+
+        /** @var Session */
+        $session = $requestStack->getSession();
+        $this->flashBag = $session->getFlashBag();
     }
 
     /**

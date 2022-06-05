@@ -10,7 +10,8 @@ use App\Entity\Support\SupportPerson;
 use App\Service\Grammar;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Security;
 
 class EvaluationManager extends EvaluationCreator
@@ -18,18 +19,23 @@ class EvaluationManager extends EvaluationCreator
     private $security;
     private $em;
     private $evaluationCompletionChecker;
-    private $flasgBag;
+
+    private $flashBag;
 
     public function __construct(
         Security $security,
         EntityManagerInterface $em,
         EvaluationCompletionChecker $evaluationCompletionChecker,
-        FlashBagInterface $flashBag
+        RequestStack $requestStack
     ) {
         $this->security = $security;
         $this->em = $em;
         $this->evaluationCompletionChecker = $evaluationCompletionChecker;
-        $this->flasgBag = $flashBag;
+
+        /** @var Session */
+        $session = $requestStack->getSession();
+        $flashBag = $session->getFlashBag();
+        $this->flashBag = $flashBag;
 
         parent::__construct($em);
     }
@@ -119,7 +125,7 @@ class EvaluationManager extends EvaluationCreator
                     $person = $supportPerson->getPerson();
                     $this->createEvaluationPerson($supportPerson, $evaluationGroup);
 
-                    $this->flasgBag->add('success', "{$person->getFullname()} a été ajouté".
+                    $this->flashBag->add('success', "{$person->getFullname()} a été ajouté".
                         Grammar::gender($person->getGender())." à l'évaluation sociale.");
                 }
             }

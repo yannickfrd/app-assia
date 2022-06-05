@@ -17,7 +17,8 @@ use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class SupportManager
 {
@@ -28,6 +29,7 @@ class SupportManager
     private $supportDuplicator;
     private $siSiaoEvalImporter;
     private $supportChecker;
+    private $requestStack;
     private $flashBag;
 
     public function __construct(
@@ -36,14 +38,18 @@ class SupportManager
         SupportDuplicator $supportDuplicator,
         SiSiaoEvaluationImporter $siSiaoEvalImporter,
         SupportChecker $supportChecker,
-        FlashBagInterface $flashBag
+        RequestStack $requestStack
     ) {
         $this->supportDuplicator = $supportDuplicator;
         $this->em = $em;
         $this->siSiaoEvalImporter = $siSiaoEvalImporter;
         $this->supportChecker = $supportChecker;
-        $this->flashBag = $flashBag;
         $this->supportGroupRepo = $supportGroupRepo;
+        $this->requestStack = $requestStack;
+
+        /** @var Session */
+        $session = $requestStack->getSession();
+        $this->flashBag = $session->getFlashBag();
     }
 
     /**
@@ -138,7 +144,7 @@ class SupportManager
         $this->flashBag->add('success', 'Le suivi social est créé.');
 
         if ($form && $form->has('_place') && $place = $form->get('_place')->getData()) {
-            (new PlaceGroupManager($this->em, $this->flashBag))->createPlaceGroup($supportGroup, null, $place);
+            (new PlaceGroupManager($this->em, $this->requestStack))->createPlaceGroup($supportGroup, null, $place);
         }
 
         $supportGroup->setNbPeople($supportGroup->getSupportPeople()->count());

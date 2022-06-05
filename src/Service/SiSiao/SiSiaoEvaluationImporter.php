@@ -32,7 +32,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -45,6 +45,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
     protected $evaluationDuplicator;
     protected $evaluationCompletionChecker;
     protected $user;
+    protected $requestStack;
     protected $flashBag;
     protected $exceptionNotification;
 
@@ -70,7 +71,6 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         EvaluationDuplicator $evaluationDuplicator,
         EvaluationCompletionChecker $evaluationCompletionChecker,
         Security $security,
-        FlashBagInterface $flashBag,
         ExceptionNotification $exceptionNotification,
         string $url
     ) {
@@ -80,8 +80,12 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         $this->evaluationDuplicator = $evaluationDuplicator;
         $this->evaluationCompletionChecker = $evaluationCompletionChecker;
         $this->user = $security->getUser();
-        $this->flashBag = $flashBag;
         $this->exceptionNotification = $exceptionNotification;
+        $this->requestStack = $requestStack;
+
+        /** @var Session */
+        $session = $requestStack->getSession();
+        $this->flashBag = $session->getFlashBag();
     }
 
     /**

@@ -4,7 +4,7 @@ namespace App\Service\SiSiao;
 
 use App\Notification\ExceptionNotification;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
@@ -23,14 +23,16 @@ class SiSiaoUpdater extends SiSiaoClient
     public function __construct(
         HttpClientInterface $client,
         RequestStack $requestStack,
-        FlashBagInterface $flashBag,
         ExceptionNotification $exceptionNotification,
         string $url
     ) {
         parent::__construct($client, $requestStack, $url);
 
-        $this->flashBag = $flashBag;
         $this->exceptionNotification = $exceptionNotification;
+
+        /** @var Session */
+        $session = $requestStack->getSession();
+        $this->flashBag = $session->getFlashBag();
     }
 
     /*
