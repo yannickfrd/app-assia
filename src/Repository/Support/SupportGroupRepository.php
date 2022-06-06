@@ -375,7 +375,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
 
-        return round($result);
+        return $result ? round($result) : null;
     }
 
     /**

@@ -4,13 +4,13 @@ namespace App\Service;
 
 class Phone
 {
-    public static function getPhoneFormat($phone): string
+    public static function getPhoneFormat(?string $phone): ?string
     {
-        return preg_replace('#(..)(..)(..)(..)(..)#', '$1 $2 $3 $4 $5', $phone);
+        return $phone ? preg_replace('#(..)(..)(..)(..)(..)#', '$1 $2 $3 $4 $5', $phone) : null;
     }
 
-    public static function formatPhone($phone): string
+    public static function formatPhone(?string $phone): ?string
     {
-        return preg_replace('#[-./_, ]#', '', $phone);
+        return $phone ?  preg_replace('#[-./_, ]#', '', $phone) : null;
     }
 }

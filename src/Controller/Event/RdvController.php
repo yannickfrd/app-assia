@@ -122,7 +122,7 @@ final class RdvController extends AbstractController
                 'msg' => 'Le RDV est enregistré.',
                 'rdv' => $rdv,
                 'apiUrls' => $calendarRouter->getUrls(
-                    'create', $rdv->getId(), (array) $request->request->get('rdv')
+                    'create', $rdv->getId(), (array) $form->getData()
                 ),
             ], 200, [], ['groups' => Rdv::SERIALIZER_GROUPS]);
         }
@@ -164,7 +164,7 @@ final class RdvController extends AbstractController
                 'msg' => 'Le RDV est enregistré.',
                 'rdv' => $rdv,
                 'apiUrls' => $calendarRouter->getUrls(
-                    'create', $rdv->getId(), (array) $request->request->get('rdv')
+                    'create', $rdv->getId(), (array) $form->getData()
                 ),
             ], 200, [], ['groups' => Rdv::SERIALIZER_GROUPS]);
         }
@@ -222,7 +222,7 @@ final class RdvController extends AbstractController
                 'apiUrls' => $calendarRouter->getUrls(
                     'update',
                     $rdv->getId(),
-                    (array) $request->request->get('rdv')
+                    (array) $form->getData()
                 ),
             ], 200, [], ['groups' => Rdv::SERIALIZER_GROUPS]);
         }

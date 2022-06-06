@@ -613,7 +613,7 @@ class SupportGroup
 
     public function getEndLocationDept(): ?string
     {
-        return substr($this->endLocationZipcode, 0, 2);
+        return $this->endLocationZipcode ? substr($this->endLocationZipcode, 0, 2) : null;
     }
 
     public function getNbPeople(): ?int

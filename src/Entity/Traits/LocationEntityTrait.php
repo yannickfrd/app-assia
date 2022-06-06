@@ -62,7 +62,7 @@ trait LocationEntityTrait
 
     public function getDept(): ?string
     {
-        return substr($this->zipcode, 0, 2);
+        return $this->zipcode ? substr($this->zipcode, 0, 2) : null;
     }
 
     public function getCommentLocation(): ?string
