@@ -60,7 +60,7 @@ class SupportManager
         $supportGroup = (new SupportGroup())->setPeopleGroup($peopleGroup);
 
         /** @var array|null */
-        $support = $request->request->get('support');
+        $support = $request->get('support');
         $serviceId = null;
 
         if ($support) {
