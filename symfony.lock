@@ -339,6 +339,9 @@
     "ralouphie/getallheaders": {
         "version": "3.0.3"
     },
+    "rector/rector": {
+        "version": "0.13.4"
+    },
     "sabberworm/php-css-parser": {
         "version": "8.3.1"
     },
