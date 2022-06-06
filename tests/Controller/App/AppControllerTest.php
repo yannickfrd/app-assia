@@ -35,9 +35,8 @@ class AppControllerTest extends WebTestCase
         ]);
     }
 
-    public function tesLoginPageIsUp(): void
+    public function testLoginPageIsUp(): void
     {
-        $this->client->followRedirects(true);
         $this->client->request('GET', '/');
 
         $this->assertResponseIsSuccessful();

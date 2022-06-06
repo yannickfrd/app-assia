@@ -31,7 +31,6 @@ class AvdlControllerTest extends WebTestCase
         $this->client = static::createClient();
         $this->client->followRedirects();
 
-        /* @var AbstractDatabaseTool */
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
 
         $this->fixtures = $this->databaseTool->loadAliceFixture([
