@@ -8,6 +8,7 @@ use App\Form\Utils\Choices;
 use App\Repository\Organization\ServiceRepository;
 use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -16,11 +17,13 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand(
+    name: 'app:tag:create_one',
+    description: 'Create a new tag.',
+)]
 class CreateTagCommand extends Command
 {
     use DoctrineTrait;
-
-    protected static $defaultName = 'app:tag:create_one';
 
     /** @var EntityManagerInterface */
     private $em;

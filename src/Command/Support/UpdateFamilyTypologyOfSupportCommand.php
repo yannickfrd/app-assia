@@ -6,6 +6,7 @@ use App\Entity\People\RolePerson;
 use App\Repository\Support\SupportGroupRepository;
 use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,15 +15,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Stopwatch\Stopwatch;
 
-/**
- * Commande pour mettre à jour le nombre de personnes par suivi (TEMPORAIRE, A SUPPRIMER).
- */
+#[AsCommand(
+    name: 'app:support:update_family_typology',
+    description: 'Update family typology and number of people in supports (temp - to delete)',
+)]
 class UpdateFamilyTypologyOfSupportCommand extends Command
 {
     use DoctrineTrait;
-
-    protected static $defaultName = 'app:support:update_family_typology';
-    protected static $defaultDescription = 'Update family typology and number of people in support';
 
     protected $supportGroupRepo;
     protected $em;
@@ -41,7 +40,6 @@ class UpdateFamilyTypologyOfSupportCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription(self::$defaultDescription)
             ->addArgument('fix', InputArgument::OPTIONAL, 'Fix the problem')
             ->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Query limit', 1000)
         ;

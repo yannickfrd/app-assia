@@ -5,20 +5,19 @@ namespace App\Command\Admin;
 use App\Repository\Admin\IndicatorRepository;
 use App\Service\Indicators\IndicatorsService;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-/**
- * Commande pour créer les indicateurs généraux.
- */
+#[AsCommand(
+    name: 'app:indicator:create-all',
+    description: 'Create all daily indicators.',
+)]
 class CreateIndicatorsCommand extends Command
 {
-    protected static $defaultName = 'app:indicator:create-all';
-    protected static $defaultDescription = 'Create all daily indicators.';
-
     protected $em;
     protected $indicatorRepo;
     protected $indicators;
@@ -34,10 +33,7 @@ class CreateIndicatorsCommand extends Command
 
     protected function configure(): void
     {
-        $this
-            ->setDescription(self::$defaultDescription)
-            ->addOption('start', 's', InputOption::VALUE_OPTIONAL, 'Query limit')
-        ;
+        $this->addOption('start', 's', InputOption::VALUE_OPTIONAL, 'Query limit');
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int

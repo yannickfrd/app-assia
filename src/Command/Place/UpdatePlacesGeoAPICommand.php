@@ -5,6 +5,7 @@ namespace App\Command\Place;
 use App\Repository\Organization\PlaceRepository;
 use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -12,15 +13,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-/**
- * Commande pour mettre à jour l'adresse des groupes de places via l'API adresse.data.gouv.fr (TEMPORAIRE, A SUPPRIMER).
- */
+#[AsCommand(
+    name: 'app:place:update_geo_api',
+    description: 'Update location in places with API adresse.data.gouv.fr (temp - to delete)',
+)]
 class UpdatePlacesGeoAPICommand extends Command
 {
     use DoctrineTrait;
-
-    protected static $defaultName = 'app:place:update_geo_api';
-    protected static $defaultDescription = 'Update location in places with API adresse.data.gouv.fr';
 
     protected $placeRepo;
     protected $client;
@@ -38,10 +37,7 @@ class UpdatePlacesGeoAPICommand extends Command
 
     protected function configure(): void
     {
-        $this
-            ->setDescription(self::$defaultDescription)
-            ->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Query limit', 1000)
-        ;
+        $this->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Query limit', 1000);
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int

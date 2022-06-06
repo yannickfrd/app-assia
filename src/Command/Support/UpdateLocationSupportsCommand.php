@@ -7,6 +7,7 @@ use App\Entity\Support\PlaceGroup;
 use App\Repository\Support\SupportGroupRepository;
 use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,15 +15,13 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-/**
- * Commande pour mettre à jour l'adresse des suivis à partir du groupe de places ou de l'évaluation sociale (TEMPORAIRE, A SUPPRIMER).
- */
+#[AsCommand(
+    name: 'app:support:update_location',
+    description: 'Update/ location in supports (temp - to delete).',
+)]
 class UpdateLocationSupportsCommand extends Command
 {
     use DoctrineTrait;
-
-    protected static $defaultName = 'app:support:update_location';
-    protected static $defaultDescription = 'Update location in supports';
 
     protected $supportGroupRepo;
     protected $em;
@@ -39,7 +38,6 @@ class UpdateLocationSupportsCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription(self::$defaultDescription)
             ->addArgument('fix', InputArgument::OPTIONAL, 'Fix the problem')
             ->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Query limit', 1000)
         ;

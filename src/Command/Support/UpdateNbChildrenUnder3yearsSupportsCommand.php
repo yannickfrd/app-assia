@@ -6,6 +6,7 @@ use App\Entity\People\RolePerson;
 use App\Repository\Support\SupportGroupRepository;
 use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,15 +15,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Stopwatch\Stopwatch;
 
-/**
- * Commande pour mettre à jour le nombre d'enfants de moins de 3 ans.
- */
+#[AsCommand(
+    name: 'app:support:update_nb_children_under_3_years',
+    description: 'Update the number of children under 3 years in supports',
+)]
 class UpdateNbChildrenUnder3yearsSupportsCommand extends Command
 {
     use DoctrineTrait;
-
-    protected static $defaultName = 'app:support:update_nb_children_under_3_years';
-    protected static $defaultDescription = 'Update the number of children under 3 years in supports';
 
     protected $supportGroupRepo;
     protected $em;
@@ -41,7 +40,6 @@ class UpdateNbChildrenUnder3yearsSupportsCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription(self::$defaultDescription)
             ->addArgument('fix', InputArgument::OPTIONAL, 'Fix the problem')
             ->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Query limit', 1000)
         ;

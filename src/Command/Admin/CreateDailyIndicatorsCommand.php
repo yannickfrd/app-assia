@@ -5,18 +5,18 @@ namespace App\Command\Admin;
 use App\Repository\Admin\IndicatorRepository;
 use App\Service\Indicators\IndicatorsService;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-/**
- * Commande pour créer les indicateurs de la veille.
- */
+#[AsCommand(
+    name: 'app:indicator:create-last-day',
+    description: 'Commande pour créer les indicateurs de la veille.',
+)]
 class CreateDailyIndicatorsCommand extends Command
 {
-    protected static $defaultName = 'app:indicator:create-last-day';
-
     protected $em;
     protected $indicatorRepo;
     protected $indicators;

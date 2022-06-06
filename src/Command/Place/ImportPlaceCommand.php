@@ -7,6 +7,7 @@ use App\Service\DoctrineTrait;
 use App\Service\Import\ImportPlaceDatas;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,14 +15,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-/**
- * Commande pour importer des groupes de places.
- */
+#[AsCommand(
+    name: 'app:place:import',
+    description: 'Import places from csv file.',
+)]
 class ImportPlaceCommand extends Command
 {
     use DoctrineTrait;
-
-    protected static $defaultName = 'app:place:import';
 
     protected $em;
     protected $serviceRepo;
@@ -37,11 +37,6 @@ class ImportPlaceCommand extends Command
         $this->importPlaceDatas = $importPlaceDatas;
 
         parent::__construct();
-    }
-
-    protected function configure(): void
-    {
-        $this->setDescription('Import places.');
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int

@@ -3,19 +3,18 @@
 namespace App\Command\Admin;
 
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-/**
- * Commande pour supprimer toutes les items en cache dans le pool.
- */
+#[AsCommand(
+    name: 'app:cache:clear',
+    description: 'Delete all items in the cache pool.',
+)]
 class CacheClearCommand extends Command
 {
-    protected static $defaultName = 'app:cache:clear';
-    protected static $defaultDescription = 'Delete all items in the pool.';
-
     protected $cache;
 
     public function __construct()
@@ -23,11 +22,6 @@ class CacheClearCommand extends Command
         $this->cache = new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']);
 
         parent::__construct();
-    }
-
-    protected function configure(): void
-    {
-        $this->setDescription(self::$defaultDescription);
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int

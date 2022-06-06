@@ -5,6 +5,7 @@ namespace App\Command\Place;
 use App\Repository\Support\PlaceGroupRepository;
 use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -12,15 +13,13 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-/**
- * Commande pour mettre à jour les prises en charges individuelles.
- */
+#[AsCommand(
+    name: 'app:placePerson:update_supportPerson',
+    description: 'Update the supportPerson item in the place-person entities.',
+)]
 class UpdatePlacePersonCommand extends Command
 {
     use DoctrineTrait;
-
-    protected static $defaultName = 'app:placePerson:update_supportPerson';
-    protected static $defaultDescription = 'Update the supportPerson item in the AccommpdationPerson entities.';
 
     protected $placeGroupRepo;
     protected $em;
@@ -37,7 +36,6 @@ class UpdatePlacePersonCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription(self::$defaultDescription)
             ->addArgument('fix', InputArgument::OPTIONAL, 'Fix the problem')
             ->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Query limit', 1000)
         ;

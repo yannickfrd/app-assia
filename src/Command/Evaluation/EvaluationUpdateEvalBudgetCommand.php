@@ -11,6 +11,7 @@ use App\Form\Utils\Choices;
 use App\Repository\Evaluation\EvaluationGroupRepository;
 use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,15 +19,13 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-/**
- * Corrige les incohérences dans la situation budgétaire de l'évaluation.
- */
+#[AsCommand(
+    name: 'app:evaluation:evalBudget:update',
+    description: 'Fix invalid datas in evaluation budget.',
+)]
 class EvaluationUpdateEvalBudgetCommand extends Command
 {
     use DoctrineTrait;
-
-    protected static $defaultName = 'app:evaluation:evalBudget:update';
-    protected static $defaultDescription = 'Fix invalid datas in evaluation budget.';
 
     protected $evaluationGroupRepo;
     protected $em;
@@ -44,7 +43,6 @@ class EvaluationUpdateEvalBudgetCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription(self::$defaultDescription)
             ->addArgument('fix', InputArgument::OPTIONAL, 'Fix the problem')
             ->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Query limit', 1000)
         ;

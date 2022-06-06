@@ -6,21 +6,20 @@ use App\Repository\People\PersonRepository;
 use App\Service\DoctrineTrait;
 use App\Service\SoundexFr;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-/**
- * Commande pour mettre à jour le nom Soundex des personnes.
- */
+#[AsCommand(
+    name: 'app:person:update_soundex_name',
+    description: 'Update the soundex name of people.',
+)]
 class UpdateSoundexNamePersonCommand extends Command
 {
     use DoctrineTrait;
-
-    protected static $defaultName = 'app:person:update_soundex_name';
-    protected static $defaultDescription = 'Update the soundex name of people.';
 
     protected $em;
     protected $personRepo;
@@ -38,10 +37,7 @@ class UpdateSoundexNamePersonCommand extends Command
 
     protected function configure(): void
     {
-        $this
-            ->setDescription(self::$defaultDescription)
-            ->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Query limit', 1000)
-        ;
+        $this->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Query limit', 1000);
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int

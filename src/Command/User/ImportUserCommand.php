@@ -6,6 +6,7 @@ use App\Repository\Organization\ServiceRepository;
 use App\Service\Import\ImportUserDatas;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -13,13 +14,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-/**
- * Commande pour importer des utilisateurs.
- */
+#[AsCommand(
+    name: 'app:user:import',
+    description: 'Import users from csv file.',
+)]
 class ImportUserCommand extends Command
 {
-    protected static $defaultName = 'app:user:import';
-
     protected $em;
     protected $serviceRepo;
     protected $importUserDatas;
@@ -34,11 +34,6 @@ class ImportUserCommand extends Command
         $this->importUserDatas = $importUserDatas;
 
         parent::__construct();
-    }
-
-    protected function configure(): void
-    {
-        $this->setDescription('Import users.');
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int
