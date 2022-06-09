@@ -66,6 +66,7 @@ class Device
         507 => 'Justice | CHRS sortants de prison',
         508 => 'Justice | Suivi socio-judiciaire (SSJ)',
         601 => 'LHSS',
+        602 => 'Équipe Mobile Santé Précarité (EMSP)',
     ];
 
     public const AVDL_DALO = 10;

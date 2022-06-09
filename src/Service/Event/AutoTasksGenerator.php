@@ -93,7 +93,7 @@ class AutoTasksGenerator
             }
 
             foreach ($this->getEvalGroupProperties($evaluationGroup) as [$entity, $property, $title, $delay]) {
-                $this->createTaskOrNot($entity, $property, $title, $delay, $user);
+                $this->createTaskOrNot($property, $title, $user, $entity, $delay);
             }
 
             if (!$evaluationGroup->getEvaluationPeople()) {
@@ -102,7 +102,7 @@ class AutoTasksGenerator
 
             foreach ($evaluationGroup->getEvaluationPeople() as $evaluationPerson) {
                 foreach ($this->getEvalPersonProperties($evaluationPerson) as [$entity, $property, $title, $delay]) {
-                    $this->createTaskOrNot($entity, $property, $title, $delay, $user);
+                    $this->createTaskOrNot($property, $title, $user, $entity, $delay);
                 }
             }
 
@@ -137,8 +137,8 @@ class AutoTasksGenerator
     /**
      * @param EvalHousingGroup|EvalAdmPerson|EvalSocialPerson|EvalProfPerson|EvalBudgetPerson|null $evalEntity
      */
-    private function createTaskOrNot(?object $evalEntity = null, string $property, string $title,
-        int $delay = null, User $user): void
+    private function createTaskOrNot(string $property, string $title, User $user,
+        ?object $evalEntity = null, int $delay = null): void
     {
         $method = 'get'.ucfirst($property);
 

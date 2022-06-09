@@ -58,8 +58,8 @@ class EvaluationCompletionChecker
 
             $this->checkEvalInitPerson($evaluationPerson->getEvalInitPerson(), $age);
             $this->checkEvalAdmPerson($evaluationPerson->getEvalAdmPerson());
-            $this->checkEvalFamilyPerson($evaluationPerson->getEvalFamilyPerson(), $role);
-            $this->checkEvalSocialPerson($evaluationPerson->getEvalSocialPerson(), $role);
+            $this->checkEvalFamilyPerson($role, $evaluationPerson->getEvalFamilyPerson());
+            $this->checkEvalSocialPerson($role, $evaluationPerson->getEvalSocialPerson());
 
             if ($age >= 16) {
                 $this->checkEvalProfPerson($evaluationPerson->getEvalProfPerson());
@@ -208,7 +208,7 @@ class EvaluationCompletionChecker
         }
     }
 
-    private function checkEvalFamilyPerson(?EvalFamilyPerson $evalFamilyPerson = null, int $role): void
+    private function checkEvalFamilyPerson(int $role, ?EvalFamilyPerson $evalFamilyPerson = null): void
     {
         if (null === $evalFamilyPerson) {
             $this->maxPoints += 2;
@@ -244,7 +244,7 @@ class EvaluationCompletionChecker
         }
     }
 
-    private function checkEvalSocialPerson(?EvalSocialPerson $evalSocialPerson = null, int $role): void
+    private function checkEvalSocialPerson(int $role, ?EvalSocialPerson $evalSocialPerson = null): void
     {
         if (null === $evalSocialPerson) {
             $this->maxPoints += 4;

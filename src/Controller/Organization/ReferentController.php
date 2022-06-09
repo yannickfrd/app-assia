@@ -33,11 +33,11 @@ final class ReferentController extends AbstractController
      * @ParamConverter("supportGroup", options={"id" = "support_id"})
      */
     public function new(
-        ?int $group_id,
-        ?int $support_id,
         Request $request,
         PeopleGroupRepository $peopleGroupRepo,
-        SupportGroupRepository $supportRepo
+        SupportGroupRepository $supportRepo,
+        ?int $group_id,
+        ?int $support_id
     ): Response {
         $support = $support_id ? $supportRepo->findSupportById($support_id) : null;
         $peopleGroup = $group_id ? $peopleGroupRepo->findPeopleGroupById($group_id) : $support->getPeopleGroup();
@@ -79,9 +79,9 @@ final class ReferentController extends AbstractController
      */
     public function edit(
         Referent $referent,
-        ?int $support_id = null,
         Request $request,
-        SupportGroupRepository $supportRepo
+        SupportGroupRepository $supportRepo,
+        ?int $support_id = null
     ): Response {
         $form = $this->createForm(ReferentType::class, $referent)
             ->handleRequest($request);
@@ -105,7 +105,7 @@ final class ReferentController extends AbstractController
      * @Route("/referent/{id}/delete", name="referent_delete", methods="GET")
      * @Route("/support/{supportId}/referent/{id}/delete", name="support_referent_delete", methods="GET")
      */
-    public function delete(int $supportId = null, Referent $referent): Response
+    public function delete(Referent $referent, int $supportId = null): Response
     {
         $referent->setUpdatedBy($this->getUser());
         $this->em->flush();

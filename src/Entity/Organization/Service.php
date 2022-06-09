@@ -41,6 +41,7 @@ class Service
     public const SERVICE_TYPE_AVDL = 2;
     public const SERVICE_TYPE_HOTEL = 3;
     public const SERVICE_TYPE_ASYLUM = 4;
+    public const SERVICE_TYPE_HEALTH = 6;
 
     public const SERVICE_TYPE = [
         1 => 'Accompagnement social',
@@ -48,7 +49,7 @@ class Service
         3 => 'Accompagnement hôtel',
         4 => 'Asile',
         5 => 'Socio-judiciaire',
-        6 => 'Socio-médical',
+        6 => 'Médico-social',
         7 => 'IAE',
         97 => 'Autre',
     ];

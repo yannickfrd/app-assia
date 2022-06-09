@@ -49,7 +49,7 @@ class SendTaskAlertsCommand extends Command
         ;
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->io = new SymfonyStyle($input, $output);
         $this->notifType = $input->getArgument('notif-type');

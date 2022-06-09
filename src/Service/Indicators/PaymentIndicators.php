@@ -55,7 +55,7 @@ class PaymentIndicators
             $sumPaidAmt = 0;
             $sumStillToPayAmt = 0;
             foreach ($payments as $payment) {
-                if ($this->withinMonth($payment->{$date}(), $month)) {
+                if ($this->withinMonth($month, $payment->{$date}())) {
                     ++$nbPayments;
                     $sumToPayAmt += $payment->getToPayAmt();
                     $sumPaidAmt += $payment->getPaidAmt();
@@ -94,7 +94,7 @@ class PaymentIndicators
     /**
      * Retourne si la participation financière est à l'intérieur du mois.
      */
-    public function withinMonth(?\DateTime $date = null, \DateTime $month): bool
+    public function withinMonth(\DateTime $month, ?\DateTime $date = null): bool
     {
         return $date ? $date->format('Y-m') === $month->format('Y-m') : false;
     }

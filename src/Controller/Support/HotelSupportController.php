@@ -45,7 +45,7 @@ final class HotelSupportController extends AbstractController
      */
     protected function exportData(HotelSupportSearch $search, SupportPersonRepository $supportPersonRepo)
     {
-        $supports = $supportPersonRepo->findSupportsOfServiceToExport($search, Service::SERVICE_TYPE_HOTEL);
+        $supports = $supportPersonRepo->findSupportsOfServiceToExport(Service::SERVICE_TYPE_HOTEL, $search);
 
         if (!$supports) {
             $this->addFlash('warning', 'Aucun résultat à exporter.');

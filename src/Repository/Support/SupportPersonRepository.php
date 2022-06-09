@@ -114,7 +114,7 @@ class SupportPersonRepository extends ServiceEntityRepository
      *
      * @return SupportPerson[]
      */
-    public function findSupportsOfServiceToExport($search = null, int $serviceType): array
+    public function findSupportsOfServiceToExport(int $serviceType, $search = null): array
     {
         $qb = $this->getSupportsOfServiceQuery()
             ->leftJoin('sg.placeGroups', 'pg')->addSelect('PARTIAL pg.{id, place}')

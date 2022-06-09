@@ -13,15 +13,13 @@ class MailNotifier
     protected $mailer;
     protected $security;
     protected $appEnv;
-    protected $appVersion;
     protected $adminEmail;
 
-    public function __construct(MailerInterface $mailer, Security $security, string $appEnv, string $appVersion = 'prod', string $adminEmail)
+    public function __construct(MailerInterface $mailer, Security $security, string $appEnv, string $adminEmail)
     {
         $this->security = $security;
         $this->mailer = $mailer;
         $this->appEnv = $appEnv;
-        $this->appVersion = $appVersion;
         $this->adminEmail = $adminEmail;
     }
 
@@ -38,11 +36,6 @@ class MailNotifier
         }
 
         return true;
-    }
-
-    public function getAppVersion(): string
-    {
-        return $this->appVersion;
     }
 
     public function getAdminEmail(): string
