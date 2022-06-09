@@ -45,6 +45,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public const STATUS_ADMINISTRATIVE = 5;
     public const STATUS_PSYCHO = 9;
     public const STATUS_TRAINEE = 7;
+    public const STATUS_DOCTOR = 11;
+    public const STATUS_NURSE = 12;
 
     public const STATUS = [
         1 => 'Travailleur social',
@@ -54,6 +56,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         2 => 'Coordinatrice/teur',
         4 => 'Directrice/teur',
         10 => 'Directrice/teur adjoint·e',
+        12 => 'Infirmier·e',
+        13 => 'Juriste',
+        11 => 'Médecin',
         9 => 'Psychologue',
         8 => 'Responsable informatique',
         7 => 'Stagiaire',
