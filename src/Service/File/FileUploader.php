@@ -4,6 +4,7 @@ namespace App\Service\File;
 
 use App\Entity\Support\Document;
 use App\Entity\Support\SupportGroup;
+use App\Repository\Support\DocumentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -17,17 +18,20 @@ class FileUploader
     public const IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png'];
 
     protected $em;
+    protected $documentRepo;
     protected $targetDirectory;
     protected $optimizer;
     protected $slugger;
 
     public function __construct(
         EntityManagerInterface $em,
+        DocumentRepository $documentRepo,
         ImageOptimizer $optimizer,
         SluggerInterface $slugger,
         string $targetDirectory
     ) {
         $this->em = $em;
+        $this->documentRepo = $documentRepo;
         $this->optimizer = $optimizer;
         $this->slugger = $slugger;
         $this->targetDirectory = $targetDirectory;
@@ -51,18 +55,21 @@ class FileUploader
             }
 
             $path = $now->format('Y/m/d/').$peopleGroup->getId().'/';
-            $fileName = $this->upload($file, $path);
-            $size = \filesize($this->getTargetDirectory().$path.'/'.$fileName);
+            $fileName = $this->normalizeFilename($file);
 
             $document = (new Document())
                 ->setName(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))
                 ->setInternalFileName($fileName)
-                ->setSize($size)
+                ->setSize($file->getSize())
                 ->setPeopleGroup($peopleGroup)
                 ->setSupportGroup($supportGroup)
             ;
 
-            $this->em->persist($document);
+            if (false === $this->checkDocumentExists($document)) {
+                $this->upload($file, $path);
+
+                $this->em->persist($document);
+            }
 
             $documents[] = $document;
         }
@@ -105,10 +112,6 @@ class FileUploader
         $slug = $this->slugger->slug($filename);
 
         return $slug.'.'.$file->guessExtension();
-
-        // $filename = str_replace([' ', '/'], '-', $filename);
-        // $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_-] remove; Lower()', $filename);
-        // $extensionFile = $file->guessExtension();
     }
 
     /**
@@ -125,5 +128,14 @@ class FileUploader
     public function getTargetDirectory()
     {
         return $this->targetDirectory;
+    }
+
+    protected function checkDocumentExists(Document $document): bool
+    {
+        return 0 !== $this->documentRepo->count([
+            'supportGroup' => $document->getSupportGroup(),
+            'internalFileName' => $document->getInternalFileName(),
+            'size' => $document->getSize(),
+        ]);
     }
 }

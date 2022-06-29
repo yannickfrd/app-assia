@@ -18,6 +18,7 @@ use App\Repository\Support\DocumentRepository;
 use App\Service\Document\DocumentManager;
 use App\Service\Document\DocumentPaginator;
 use App\Service\File\Downloader;
+use App\Service\File\FileConverter;
 use App\Service\File\FileDownloader;
 use App\Service\File\FileUploader;
 use App\Service\SupportGroup\SupportManager;
@@ -114,20 +115,43 @@ final class DocumentController extends AbstractController
     }
 
     /**
+     * @Route("/document/{id}/preview", name="document_preview", methods="GET")
+     * @IsGranted("VIEW", subject="document")
+     */
+    public function preview(Document $document, FileConverter $fileConverter, Downloader $downloader): Response
+    {
+        $file = $fileConverter->convert($document);
+
+        if ($file) {
+            return $downloader->send($file, [
+                'action-type' => 'preview',
+                'document-id' => $document->getId(),
+                'document-extension' => $document->getExtension(),
+            ]);
+        }
+
+        return $this->json([
+            'alert' => 'danger',
+            'msg' => 'Ce fichier n\'existe pas.',
+        ]);
+    }
+
+    /**
      * @Route("/document/{id}/download", name="document_download", methods="GET")
      * @IsGranted("VIEW", subject="document")
      */
     public function download(Document $document, Downloader $downloader): Response
     {
-        $file = $this->getParameter('documents_directory').$document->getPath();
+        $file = $this->getParameter('documents_directory').$document->getFilePath();
 
         if (file_exists($file)) {
-            return $downloader->send($file);
+            return $downloader->send($file, ['action-type' => 'download']);
         }
 
-        $this->addFlash('danger', 'Ce fichier n\'existe pas.');
-
-        return $this->redirectToRoute('support_document_index', ['id' => $document->getSupportGroup()->getId()]);
+        return $this->json([
+            'alert' => 'danger',
+            'msg' => 'Ce fichier n\'existe pas.',
+        ]);
     }
 
     /**

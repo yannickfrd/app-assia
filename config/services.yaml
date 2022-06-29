@@ -128,6 +128,11 @@ services:
             $googleClientId: "%env(GOOGLE_CLIENT_ID)%"
             $googleProjectId: "%env(GOOGLE_PROJECT_ID)%"
 
+    App\Service\File\FileConverter:
+        arguments:
+            $documentsDirectory: "%documents_directory%"
+            $downloadsDirectory: "%downloads_directory%"
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
     Tinify\Tinify: ~

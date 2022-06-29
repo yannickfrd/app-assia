@@ -1,16 +1,14 @@
 import Ajax from '../utils/ajax'
-import CheckboxSelector from "../utils/form/checkboxSelector";
+import CheckboxSelector from "../utils/form/checkboxSelector"
 import DateFormater from '../utils/date/dateFormater'
-import DocumentForm from "./DocumentForm";
-import Dropzone from "../utils/file/dropzone";
+import DocumentForm from "./DocumentForm"
+import DocumentViewer from "./DocumentViewer"
+import Dropzone from "../utils/file/dropzone"
 import Loader from '../utils/loader'
 import MessageFlash from '../utils/messageFlash'
 import TagsManager from '../tag/TagsManager'
-import {Modal} from 'bootstrap'
+import {Modal, Tooltip} from 'bootstrap'
 
-/**
- * Classe de gestion des documents.
- */
 export default class DocumentManager {
 
     constructor() {
@@ -18,13 +16,15 @@ export default class DocumentManager {
         this.ajax = new Ajax(this.loader, 60)
 
         this.documentForm = new DocumentForm(this)
+        this.documentViewer = new DocumentViewer(this)
 
         this.themeColor = document.getElementById('header').dataset.color
 
         this.tagsManager = new TagsManager()
 
-        this.documentModal =  this.documentForm.documentModal
+        this.documentModal = this.documentForm.documentModal
 
+        this.containerDocumentsElt = document.getElementById('container-documents')
         this.countDocumentsElt = document.getElementById('count-documents')
 
         this.actionFormElt = document.querySelector('form[name="action"]')
@@ -63,6 +63,16 @@ export default class DocumentManager {
     }
 
     /**
+     * @param {string} url 
+     */
+    requesDownload(url) {
+        if (!this.loader.isActive()) {
+             this.loader.on()
+             this.ajax.send('GET', url, this.responseAjax.bind(this))
+         }
+    }
+
+    /**
      * Request to create document
      * @param {File|null} file
      */
@@ -73,7 +83,6 @@ export default class DocumentManager {
         if (file) {
             formData.append('files', file)
         }
-        // const ajax = new AjaxRequest(this.loader, 60)
         this.ajax.send('POST', url, this.responseAjax.bind(this), formData)
     }
 
@@ -124,30 +133,46 @@ export default class DocumentManager {
         if (!this.loader.isActive()) {
             this.loader.on()
 
-            const url = document.getElementById('container-documents').dataset.pathDelete
+            const url = this.containerDocumentsElt.dataset.pathDelete
             items.forEach(id => this.ajax.send('GET', url.replace('__id__', id), this.responseAjax.bind(this)))
         }
     }
     
     /**
-     * Show document on click on tr and delete document on click on btn delete
      * @param {HTMLTableRowElement} documentTrElt
      */
     addEventListenersToTr(documentTrElt) {
-        const url = document.getElementById('container-documents').dataset.pathShow
+        const documentId = documentTrElt.dataset.documentId
         const deleteBtnElt = documentTrElt.querySelector('button[data-action="delete"]')
+
+        documentTrElt.querySelector('a[data-action="preview"]').addEventListener('click', e => {
+            e.preventDefault()
+
+            if ('ontouchstart' in document.documentElement && navigator.userAgent.match(/Mobi/) !== null) {
+                const pathDownload = this.containerDocumentsElt.dataset.pathDownload
+                return this.requesDownload(pathDownload.replace('__id__', documentId))
+            }
+
+            this.documentViewer.requestPreview(e.currentTarget.href)
+        })
+
+        documentTrElt.querySelector('a[data-action="download"]').addEventListener('click', e => {
+            e.preventDefault()
+            this.requesDownload(e.currentTarget.href)
+        })
 
         documentTrElt.querySelectorAll('td.cursor-pointer').forEach(tdElt => {
             tdElt.addEventListener('click', () => {
-                this.requestShowRdv(url.replace('__id__', documentTrElt.dataset.documentId))
+                const pathShow = this.containerDocumentsElt.dataset.pathShow
+                this.requestShowDocument(pathShow.replace('__id__', documentId))
             })
         })
 
         if (deleteBtnElt) {
             deleteBtnElt.addEventListener('click', () => {
-                deleteBtnElt.dataset.documentId = documentTrElt.dataset.documentId
+                deleteBtnElt.dataset.documentId = documentId
                 const documentName = documentTrElt.querySelector('td[data-cell="name"]').textContent
-                this.documentForm.showDeleteModal(documentName, deleteBtnElt.dataset.url)
+                this.documentForm.showDeleteModal(documentName, deleteBtnElt.dataset.path)
             })
         }
     }
@@ -155,7 +180,7 @@ export default class DocumentManager {
     /**
      * @param {string} url
      */
-    requestShowRdv(url) {
+     requestShowDocument(url) {
         if (!this.loader.isActive()) {
             this.loader.on()
             this.ajax.send('GET', url, this.responseAjax.bind(this))
@@ -181,6 +206,9 @@ export default class DocumentManager {
         switch (response.action) {
             case 'create':
                 this.createDocumentTr(response.documents)
+                break
+            case 'preview':
+                this.documentViewer.preview(response.data)
                 break
             case 'show':
                 this.showDocument(response.document)
@@ -216,13 +244,19 @@ export default class DocumentManager {
      */
     createDocumentTr(documents) {
         documents.forEach(doc => {
-            const containerDocumentsElt = document.getElementById('container-documents')
+            if (doc.id === null) {
+                return this.dropzone.updateItemInList(doc, 'warning')
+            }
+
             const documentTrElt = this.getDocumentTrPrototype(doc)
 
-            containerDocumentsElt.insertBefore(documentTrElt, containerDocumentsElt.firstChild)
+            this.containerDocumentsElt.insertBefore(documentTrElt, this.containerDocumentsElt.firstChild)
 
             this.updateCounter(1)
             this.addEventListenersToTr(documentTrElt)
+
+            documentTrElt.querySelectorAll('[data-toggle="tooltip"]').forEach(tooltip => new Tooltip(tooltip))
+
             this.dropzone.updateItemInList(doc)
         })
     }
@@ -278,7 +312,7 @@ export default class DocumentManager {
         documentTrElt.innerHTML = `
             <td class="align-middle text-center">
                 <div class="custom-control custom-checkbox custom-checkbox-${this.themeColor} text-dark pl-0" 
-                    title="Sélectionner le document">
+                    title="Sélectionner le document" data-toggle="tooltip" data-placement="bottom">
                     <div class="form-check">
                         <input type="checkbox" id="checkbox-file-${doc.id}" data-checkbox="${doc.id}"
                             name="checkbox-file-${doc.id}" class="custom-control-input checkbox form-check-input">
@@ -287,8 +321,15 @@ export default class DocumentManager {
                 </div>
             </td>
             <td class="align-middle text-center">
-                <a href="/document/${doc.id}/download" class="btn btn-${this.themeColor} btn-sm shadow my-1" 
-                    title="Télécharger le document"><i class="fas fa-file-download"></i>
+                <a href="${this.containerDocumentsElt.dataset.pathPreview.replace('__id__', doc.id)}" type="button"
+                    data-action="preview" class="btn btn-${this.themeColor} btn-sm shadow"
+                    title="Prévisualiser le document" type="button" data-toggle="tooltip" data-placement="bottom">
+                    <i class="fas fa-eye"></i>
+                </a>
+                <a href="${this.containerDocumentsElt.dataset.pathDownload.replace('__id__', doc.id)}" type="button"
+                    data-action="download" class="btn btn-${this.themeColor} btn-sm shadow m-1" 
+                    title="Télécharger le document" data-toggle="tooltip" data-placement="bottom">
+                    <i class="fas fa-file-download"></i>
                 </a>
             </td>
             <td class="align-middle cursor-pointer" data-cell="name">${doc.name}</td>
@@ -299,8 +340,10 @@ export default class DocumentManager {
             <td class="d-none d-lg-table-cell align-middle th-date">${new DateFormater().getDate(doc.createdAt)}</td>
             <td class="d-none d-lg-table-cell align-middle th-w-100">${doc.createdBy.fullname}</td>
             <td class="align-middle text-center">
-                <button data-url="/document/${doc.id}/delete" class="btn btn-danger btn-sm shadow my-1"
-                    data-action="delete" title="Supprimer le document"><i class="fas fa-trash-alt"></i>
+                <button data-path="${this.containerDocumentsElt.dataset.pathDelete.replace('__id__', doc.id)}" 
+                    class="btn btn-danger btn-sm shadow my-1" data-action="delete" 
+                    title="Supprimer le document" data-toggle="tooltip" data-placement="bottom">
+                    <i class="fas fa-trash-alt"></i>
                 </button>
             </td>`
 

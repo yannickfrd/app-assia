@@ -4,6 +4,7 @@ namespace App\Tests\Controller\Document;
 
 use App\Entity\Support\Document;
 use App\Entity\Support\SupportGroup;
+use App\Service\File\FileConverter;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -109,9 +110,45 @@ class DocumentControllerTest extends WebTestCase
 
         $documentRepo = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository(Document::class);
         $document = $documentRepo->find($content['documents'][0]['id']);
-        $file = $this->documentsDirectory.$document->getCreatedAt()->format('Y/m/d/').$document->getPeopleGroup()->getId().'/'.$document->getInternalFileName();
+        $file = $this->documentsDirectory.$document->getFilePath();
         if (file_exists($file)) {
             unlink($file);
+        }
+    }
+
+    public function testPreviewDocumentIsSuccessful(): void
+    {
+        $this->client->loginUser($this->fixtures['john_user']);
+
+        $id = $this->document->getId();
+
+        // Fail
+        $this->client->request('GET', "/document/$id/preview");
+
+        $contentResponse = json_decode($this->client->getResponse()->getContent(), true);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertSame('Ce fichier n\'existe pas.', $contentResponse['msg']);
+
+        // Success
+        $newFile = $this->moveFile();
+
+        $this->client->request('GET', "/document/$id/preview");
+
+        $this->assertResponseIsSuccessful();
+        $this->assertResponseHasHeader('content-name', $this->document->getInternalFileName());
+
+        /** @var FileConverter $fileConverter */
+        $fileConverter = $this->client->getContainer()->get(FileConverter::class);
+
+        $convertedFile = $fileConverter->convert($this->document);
+
+        if (file_exists($convertedFile)) {
+            unlink($convertedFile);
+        }
+
+        if (file_exists($newFile)) {
+            unlink($newFile);
         }
     }
 
@@ -124,8 +161,10 @@ class DocumentControllerTest extends WebTestCase
         // Fail
         $this->client->request('GET', "/document/$id/download");
 
+        $contentResponse = json_decode($this->client->getResponse()->getContent(), true);
+
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('div.alert.alert-danger');
+        $this->assertSame('Ce fichier n\'existe pas.', $contentResponse['msg']);
 
         // Success
         $newFile = $this->moveFile();
@@ -161,6 +200,20 @@ class DocumentControllerTest extends WebTestCase
         if (file_exists($newFile)) {
             unlink($newFile);
         }
+    }
+
+    public function testShowDocumentIsSuccessful(): void
+    {
+        $this->client->loginUser($this->fixtures['john_user']);
+
+        $id = $this->document->getId();
+
+        $this->client->request('GET', "/document/$id/show");
+
+        $content = json_decode($this->client->getResponse()->getContent(), true);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertSame('show', $content['action']);
     }
 
     public function testEditDocumentIsSuccessful(): void
@@ -259,7 +312,7 @@ class DocumentControllerTest extends WebTestCase
             return null;
         }
 
-        $newPath = $this->documentsDirectory.$this->document->getCreatedAt()->format('Y/m/d/').$this->document->getPeopleGroup()->getId().'/';
+        $newPath = $this->documentsDirectory.$this->document->getPath();
         $newFile = $newPath.$this->document->getInternalFileName();
 
         if (!file_exists($newPath)) {
