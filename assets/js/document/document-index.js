@@ -1,3 +1,7 @@
+require('../../css/_document.scss')
+
 import DocumentManager from './DocumentManager'
 
-new DocumentManager()
+document.addEventListener('DOMContentLoaded', () => {
+    new DocumentManager()
+})

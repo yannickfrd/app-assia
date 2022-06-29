@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## Version 3.21.0 - 29/06/2022
+
+Feature preview document (#170)
+
+* feat: [preview] document
+* Edit php and js dependencies
+* Rename document.scss and remove entrypoint
+* Fix yarn.lock
+* Check if file already exists before to save
+* Disable preview document for phone or tab
+* Fix and refactor
+* Update tests for Document feat
+* Edit github action 'integration-tests': comment test end-to-end
+
 ## Version 3.20.0 - 03/06/2022
 
 Create a JS class to add uppercase after a dot (evaluation view)

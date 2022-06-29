@@ -35,6 +35,14 @@
                     </li>
                 </ul>
 
+                <hr class="my-3">
+
+                <h2 class="h5">Documents</h2>
+                <ul>
+                    <li class="mb-2 text-{{ theme_color }}">
+                        <a class="text-dark" href="{{ path('document_index') }}">Rechercher des documents</a>
+                    </li>
+                </ul>
 
                 {% if is_granted('ROLE_SUPER_ADMIN') %}
 
@@ -56,15 +64,6 @@
                         </li>
                         <li class="mb-2 text-{{ theme_color }}">
                             <a class="text-dark" href="{{ path('admin_tag_index') }}">Gérer les étiquettes</a>
-                        </li>
-                    </ul>
-
-                    <hr class="my-3">
-
-                    <h2 class="h5">Documents</h2>
-                    <ul>
-                        <li class="mb-2 text-{{ theme_color }}">
-                            <a class="text-dark" href="{{ path('document_index') }}">Rechercher des documents</a>
                         </li>
                     </ul>
 

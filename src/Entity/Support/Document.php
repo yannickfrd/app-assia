@@ -169,7 +169,12 @@ class Document
 
     public function getPath(): ?string
     {
-        return $this->createdAt->format('Y/m/d/').$this->getPeopleGroup()->getId().'/'.$this->internalFileName;
+        return $this->createdAt->format('Y/m/d/').$this->getPeopleGroup()->getId().'/';
+    }
+
+    public function getFilePath(): ?string
+    {
+        return $this->getPath().$this->internalFileName;
     }
 
     public function getPeopleGroup(): ?PeopleGroup

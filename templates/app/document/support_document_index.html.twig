@@ -5,6 +5,10 @@
 
 {% block title %}{{ title }}{% endblock %}
 
+{% block stylesheets %}
+	{{ encore_entry_link_tags('document') }}
+{% endblock %}
+
 {% block body %}
 	<div class="container">
 
@@ -18,7 +22,7 @@
 						<i class="fas fa-plus-square mr-2"></i>Ajouter des documents
 					</button>
 				{% else %}
-					<a href="{{ app.request.pathInfo }}" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" 
+					<a href="{{ app.request.pathInfo }}" class="btn btn-{{ theme_color }} btn-sm shadow mr-2"
 						id="return_index"><i class="fa-solid fa-arrow-rotate-left mr-2"></i>Retour
 					</a>
 				{% endif %}
@@ -48,10 +52,9 @@
 				{% include 'app/document/_document_table.html.twig' %}
 
 				<div class="navigation">{{ knp_pagination_render(documents) }}</div>
-
 			</div>
 		</div>
-
+		{% include 'app/document/_document_preview_modal.html.twig' %}
 		{% include 'app/document/_document_dropzone_modal.html.twig' %}
 		{% include 'app/document/_document_modal.html.twig' %}
 		{% include 'app/document/_document_delete_modal.html.twig' %}

@@ -19,6 +19,7 @@ trait TagTrait
 
     /**
      * @return Collection<Tag>|null
+     * @Groups("show_tag")
      */
     public function getTags(): ?Collection
     {
