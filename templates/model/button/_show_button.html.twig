@@ -1,7 +1,7 @@
 {% set disabled = disabled is defined and disabled == true ? 'disabled' : '' %}
 <a href="{{ path_route }}"
     class="btn btn-{{ disabled ? 'secondary disabled' : theme_color }} btn-sm shadow"
-    title="{{ show_title is defined ? title : 'Voir l\'élément' }}" type="button"
+    title="{{ show_title is defined ? show_title : 'Voir l\'élément' }}" type="button"
     data-toggle="tooltip" data-placement="bottom" data-action="show">
     <i class="fas fa-eye"></i>
 </a>

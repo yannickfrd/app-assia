@@ -12,18 +12,24 @@ class FileDownloader extends Downloader
     private $downloadsDirectory;
     private $documentsDirectory;
 
-    public function __construct(DocumentRepository $documentRepo, string $downloadsDirectory, string $documentsDirectory)
-    {
+    public function __construct(
+        DocumentRepository $documentRepo,
+        string $downloadsDirectory,
+        string $documentsDirectory,
+        string $appEnv
+    ) {
         $this->documentRepo = $documentRepo;
         $this->downloadsDirectory = $downloadsDirectory;
         $this->documentsDirectory = $documentsDirectory;
+
+        parent::__construct($appEnv);
     }
 
-    public function sendDocuments(array $idDocuments, SupportGroup $supportGroup): StreamedResponse
+    public function sendDocuments(array $documentIds, SupportGroup $supportGroup): StreamedResponse
     {
         $now = new \DateTime();
 
-        $documents = $this->documentRepo->findDocumentsById($idDocuments, $supportGroup);
+        $documents = $this->documentRepo->findDocumentsById($documentIds, $supportGroup);
         $path = $this->downloadsDirectory.$now->format('Y/m/d/').$supportGroup->getId().'/';
 
         if (!file_exists($path)) {
@@ -38,7 +44,7 @@ class FileDownloader extends Downloader
         }
 
         foreach ($documents as $document) {
-            $path = $this->documentsDirectory.$document->getCreatedAt()->format('Y/m/d/').$document->getPeopleGroup()->getId().'/';
+            $path = $this->documentsDirectory.$document->getPath();
             $filename = $document->getInternalFileName();
             $file = $path.$filename;
             if (file_exists($file)) {
@@ -47,7 +53,7 @@ class FileDownloader extends Downloader
         }
         $zip->close();
 
-        return $this->send($zipFile);
+        return $this->send($zipFile, ['action-type' => 'download']);
     }
 
     public function getDownloadDirectory(): string

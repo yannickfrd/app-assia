@@ -8,15 +8,12 @@ class Downloader
 {
     protected $appEnv;
 
-    public function __construct(string $appEnv = 'prod')
+    public function __construct(string $appEnv)
     {
         $this->appEnv = $appEnv;
     }
 
-    /**
-     * Envoie le fichier à télécharger à l'utilisateur.
-     */
-    public function send(string $file): StreamedResponse
+    public function send(string $file, array $headers = []): StreamedResponse
     {
         if (!file_exists($file)) {
             throw new \Exception('This file doesn\'t exist.');
@@ -36,10 +33,14 @@ class Downloader
             $response->headers->addCacheControlDirective('no-cache', true);
             $response->headers->addCacheControlDirective('must-revalidate', true);
             $response->setCallback(function () use ($file) {
-                if ('test' != $this->appEnv) {
+                if ('test' !== $this->appEnv) {
                     readfile($file);
                 }
             });
+
+            foreach ($headers as $key => $value) {
+                $response->headers->set($key, $value);
+            }
 
             return $response->send();
         } catch (\Exception $e) {

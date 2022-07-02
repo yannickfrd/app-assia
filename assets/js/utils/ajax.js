@@ -97,17 +97,16 @@ export default class Ajax {
             return callback(JSON.parse(result))
         }
 
-        if (contentType && contentType.includes('application')) {
+        if (response.headers.get('action-type') || contentType && contentType.includes('application')) {
             return callback({
-                    'action': 'download',
-                    'alert': 'success',
-                    'msg': 'Le fichier est téléchargé.',
+                    'action': response.headers.get('action-type') ?? 'download',
                     'data': {
-                        'filename': response.headers.get('content-name'),
                         'file': new Blob(chunks, {
                             type: contentType,
                             name: 'document_name'
                         }),
+                        'filename': response.headers.get('content-name'),
+                        'headers': response.headers,
                     }
                 }
             )

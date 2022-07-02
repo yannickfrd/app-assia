@@ -60,7 +60,7 @@ class DeleteHardDocumentsCommand extends Command
                 'internalFileName' => $document->getInternalFileName(),
             ]);
 
-            $path = $this->documentsDirectory.$document->getCreatedAt()->format('Y/m/d/').$document->getPeopleGroup()->getId().'/';
+            $path = $this->documentsDirectory.$document->getPath();
             $file = $path.$document->getInternalFileName();
 
             if (1 === $nbFiles && \file_exists($file)) {

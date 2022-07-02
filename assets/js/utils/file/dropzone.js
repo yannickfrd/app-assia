@@ -1,5 +1,6 @@
 import FileChecker from './fileChecker'
 import MessageFlash from '../messageFlash'
+import { Tooltip } from 'bootstrap'
 
 /**
  * Dropzone for files.
@@ -177,18 +178,50 @@ export default class Dropzone {
             if (fileItem.filename === fullFilename) {
                 const liElt = this.dropzoneElt.querySelector(`[data-file-name="${fullFilename}"]`)
                 const classname = (status === 'success' ? 'far fa-check-circle' : 'fas fa-exclamation-triangle') + ' ml-2'
+
                 if (liElt) {
                     liElt.classList.replace('list-group-item-light', 'list-group-item-' + status)
-                    liElt.title = (status === 'success' ? 'Succès : Le fichier est enregistré.' : 'Échec : Le fichier est invalide.')
+                    liElt.title = this.getMessage(file, status)
+                    liElt.dataset.placement = 'bottom'
+
                     const spanElt = liElt.querySelector('span.fas.fa-sync-alt')
                     if (spanElt) {
                         spanElt.className = classname
-                    }   
+                    }
+                    new Tooltip(liElt)
                 }
+                
                 fileItem.status = status
             }
         })
         return this.filesInProgress()
+    }
+
+    /**
+     * 
+     * @param {Object} file 
+     * @param {string} status 
+     */
+    getMessage(file, status) {
+        let message = ''
+
+        switch (status) {
+            case 'success':
+                message = 'Le fichier est enregistré.'
+                break
+            case 'warning':
+                message =  `Le fichier « ${file.name} » a déjà été ajouté.`
+                break
+            default:
+                message = `Le fichier « ${file.name} » est invalide.`
+                break
+        }
+
+        if (status !== 'success') {
+            new MessageFlash(status, message)
+        }
+
+        return message;
     }
 
     /**
