@@ -10,6 +10,7 @@ use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -20,10 +21,10 @@ class SupportSearchType extends AbstractType
         $dataClass = $builder->getDataClass();
 
         $builder
-            ->add('fullname', null, [
+            ->add('fullname', SearchType::class, [
                 'attr' => [
                     'placeholder' => 'placeholder.name_or_id',
-                    'class' => 'w-min-180 w-max-180',
+                    'class' => 'w-min-200',
                 ],
             ])
             ->add('status', ChoiceType::class, [

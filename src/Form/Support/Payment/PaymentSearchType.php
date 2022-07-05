@@ -11,6 +11,7 @@ use App\Form\Utils\Choices;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -31,14 +32,14 @@ class PaymentSearchType extends AbstractType
     {
         $this->setFormData($builder);
         $builder
-            ->add('id', null, [
+            ->add('id', SearchType::class, [
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'placeholder' => 'ID',
                     'class' => 'w-max-80',
                 ],
             ])
-            ->add('fullname', null, [
+            ->add('fullname', SearchType::class, [
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'placeholder' => 'search.fullname.placeholder',

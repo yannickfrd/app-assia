@@ -8,6 +8,7 @@ use App\Form\Type\ServiceDeviceReferentSearchType;
 use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -16,14 +17,14 @@ class UserSearchType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('lastname', null, [
+            ->add('lastname', SearchType::class, [
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'class' => 'w-max-140 text-uppercase',
                     'placeholder' => 'Lastname',
                 ],
             ])
-            ->add('firstname', null, [
+            ->add('firstname', SearchType::class, [
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'class' => 'w-max-140 text-capitalize',

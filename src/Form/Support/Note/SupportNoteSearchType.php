@@ -12,6 +12,7 @@ use App\Repository\Organization\TagRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -31,8 +32,8 @@ class SupportNoteSearchType extends AbstractType
         $service = $options['service'];
 
         $builder
-            ->add('noteId')
-            ->add('content', null, [
+            ->add('noteId', SearchType::class)
+            ->add('content', SearchType::class, [
                 'label_attr' => [
                     'class' => 'sr-only',
                 ],
