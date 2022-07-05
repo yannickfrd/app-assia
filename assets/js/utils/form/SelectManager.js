@@ -99,11 +99,11 @@ export default class SelectManager {
                 },
             } : null,
             render: {
-                option_create: function(data, escape) {
+                option_create: (data, escape) => {
                     return '<div class="create">Créér <strong>' + escape(data.input) + '</strong>&hellip;</div>';
                 },
-                no_results:function(data,escape){
-                    return '<div class="no-results text-secondary small">Pas de résultat pour "'+escape(data.input)+'"</div>';
+                no_results: (data, escape) => {
+                    return '<div class="no-results text-secondary small">Pas de résultat pour "' + escape(data.input) + '"</div>';
                 },
             }
         }
