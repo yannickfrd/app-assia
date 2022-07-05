@@ -21,6 +21,7 @@ export default class Username {
 
         this.ajax = new Ajax()
         this.formValidator = new FormValidator()
+
         this.init()
     }
 

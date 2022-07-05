@@ -37,7 +37,7 @@ class SupportTaskSearchType extends AbstractType
                 'multiple' => true,
                 'choices' => Choices::getChoices(Task::STATUS),
                 'attr' => [
-                    'class' => 'multi-select w-min-160',
+                    'class' => 'multi-select w-max-220',
                     'placeholder' => 'placeholder.status',
                     'size' => 1,
                 ],
@@ -62,7 +62,7 @@ class SupportTaskSearchType extends AbstractType
                 'choice_label' => 'name',
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
-                    'class' => 'multi-select w-min-200 w-max-220',
+                    'class' => 'multi-select w-max-220',
                     'placeholder' => 'placeholder.tags',
                     'size' => 1,
                 ],

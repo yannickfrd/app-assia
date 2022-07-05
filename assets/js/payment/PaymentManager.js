@@ -1,7 +1,6 @@
 import Ajax from '../utils/ajax'
 import MessageFlash from '../utils/messageFlash'
 import Loader from '../utils/loader'
-import FormValidator from '../utils/form/formValidator'
 import {Modal} from 'bootstrap'
 import PaymentForm from "./PaymentForm";
 
@@ -10,10 +9,9 @@ export default class PaymentManager {
     constructor() {
         this.loader = new Loader()
         this.ajax = new Ajax(this.loader)
-        this.formValidator = new FormValidator()
         this.paymentForm = new PaymentForm(this)
 
-        this.paymentModalElt = new Modal(document.getElementById('payment_modal'))
+        this.paymentModal = new Modal(document.getElementById('payment_modal'))
 
         this.btnNewElt = document.querySelector('button[data-action="new_payment"]')
 
@@ -105,7 +103,7 @@ export default class PaymentManager {
      */
     newPayment() {
         this.paymentForm.newPayment()
-        this.paymentModalElt.show()
+        this.paymentModal.show()
     }
 
     /**
@@ -165,7 +163,7 @@ export default class PaymentManager {
 
         if (!this.loader.isActive()) {
             this.loader.off()
-            this.paymentModalElt.hide()
+            this.paymentModal.hide()
 
             if (response.msg && !this.messageFlash) {
                 new MessageFlash(response.alert, response.msg)
@@ -180,7 +178,7 @@ export default class PaymentManager {
      */
     showPayment(payment) {
         this.paymentForm.showPayment(payment)
-        this.paymentModalElt.show()
+        this.paymentModal.show()
     }
 
     /**

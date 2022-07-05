@@ -29,7 +29,7 @@ export default class SiSiaoLogin {
         new SeePassword()
         
 
-        this.siSiaoLoginModalElt = new Modal(document.getElementById('modal-si-siao-login'))
+        this.siSiaoLoginModal = new Modal(document.getElementById('modal-si-siao-login'))
         this.siSiaoLoginFormElt = document.querySelector('form[name="si_siao_login"')
         this.sisiaoConnectionBtnElt = document.getElementById('si-siao-connection')
 
@@ -78,7 +78,7 @@ export default class SiSiaoLogin {
     }
 
     showModal() {
-        this.siSiaoLoginModalElt.show()
+        this.siSiaoLoginModal.show()
     }
 
     tryLogin() {
@@ -92,7 +92,7 @@ export default class SiSiaoLogin {
      */
     response(data) {
         if (data.alert && data.alert === 'success') {
-            this.siSiaoLoginModalElt.hide()
+            this.siSiaoLoginModal.hide()
             this.siSiaoLoginCheckboxElt.checked = true
             this.isConnected = true
         } else {

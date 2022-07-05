@@ -23,14 +23,14 @@ class SupportSearchType extends AbstractType
             ->add('fullname', null, [
                 'attr' => [
                     'placeholder' => 'placeholder.name_or_id',
-                    'class' => 'w-max-170',
+                    'class' => 'w-min-180 w-max-180',
                 ],
             ])
             ->add('status', ChoiceType::class, [
                 'multiple' => true,
                 'choices' => Choices::getChoices(SupportGroup::STATUS),
                 'attr' => [
-                    'class' => 'multi-select',
+                    'class' => 'multi-select w-max-260',
                     'placeholder' => 'placeholder.status',
                     'size' => 1,
                 ],

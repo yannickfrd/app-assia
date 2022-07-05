@@ -1,206 +1,132 @@
-import 'select2'
+import TomSelect from 'tom-select'
 
 /**
- * Gestion des selects (actuellement via la librairie "select2").
- * https://select2.org/
+ * Manage selects with tom-select library (https://tom-select.js.org).
  */
 export default class SelectManager {
     /**
      * @param {string} selector
-     * @param {{name: string, elementId: string}} event
-     * @param {Object} options
+     * @param {Object} settings
      */
-    constructor(selector, event = {}, options = {}) {
-        this.options = options
-        this.event = event
+    constructor(selector, settings = {}) {
         this.selectElt = document.querySelector(selector)
+        this.settings = settings
 
         if (this.selectElt === null) {
             return
         }
-        this.select2 = $(selector)
+
+        this.tomSelect = new TomSelect(this.selectElt, this.#getSettings())
+
         this.listSelectOptions = this.selectElt.options
-
-        this.init()
     }
 
-    init() {
-        this.initOptions()
-
-        this.switchEvent()
-    }
-
-    initOptions() {
-        // Permet de savoir si un objet est vide ou pas.
-        const isObjEmpty = (obj) => Object.keys(obj).length === 0
-        const defaultOptions = this.getDefaultOptions()
-        // Init les options du select2 si pas d'options en paramètre.
-        if (isObjEmpty(this.options)) {
-            this.options = defaultOptions
-        } else {
-            for (let key in this.options) {
-                defaultOptions[key] = this.options[key]
-            }
-        }
-        this.options = defaultOptions;
-    }
     /**
-     * Retourne les options par défaut du select2.
-     * @returns {Object}
+     * @returns {HTMLOptionElement}
      */
-    getDefaultOptions() {
-        if (!this.selectElt.getAttribute('multiple')) {
-            return {
-                width: '100%',
-                theme: 'bootstrap4',
-                language: {
-                    'noResults': () => 'Aucun résultat.',
-                },
-            }
-        }
-
-        return {
-            placeholder: ' ' + (this.selectElt.getAttribute('placeholder') ?? '-- Sélectionner --'),
-            allowClear: true,
-            width: 'resolve',
-            'language': {
-                'noResults': () => '<span class="text-secondary">Aucun résultat.</span>',
-                'removeAllItems': () => 'Tout effacer',
-            },
-            escapeMarkup: (markup) => {
-                return markup
-            }
-        }
+    getOption() {
+        return this.tomSelect.getOption(this.selectElt.value)
     }
 
     /**
-     * Efface toutes les sélections.
+     * Add a selected item to the list.
+     * 
+     * @param {string} value 
      */
-    clearSelect() {
-        this.select2.val(null).trigger('change')
+     addItem(value) {
+        this.tomSelect.addItem(value)
     }
 
     /**
-     * Met à jour la sélection.
+     * Clear all selected items and add new selected items.
      */
-    updateSelect(values) {
-        this.clearSelect()
-        this.select2.val(values).trigger('change')
+    updateItems(values) {
+        this.tomSelect.clear()
+        this.tomSelect.addItems(values)
     }
 
     /**
-     * Supprime les options du select en fonction d'un tableau contenant des ids.
+     * Clear all selected items.
+     */
+     clearItems() {
+        this.tomSelect.clear()
+    }
+
+    /**
+     * Cleart all options based on the list of ids.
+     * 
      * @param {[{id: number}]} elts
      */
     clearOptionsList(elts) {
         elts.forEach(element => {
-            Array.from(this.listSelectOptions).forEach(option => {
-                if (parseInt(option.value) === parseInt(element.id)) {
-                    option.remove()
+            Array.from(this.listSelectOptions).forEach(optionElt => {
+                if (parseInt(optionElt.value) === parseInt(element.id)) {
+                    optionElt.remove()
+                    this.tomSelect.removeOption(optionElt.value)
                 }
             })
         })
     }
 
     /**
-     * Crée et ajoute une option au select.
+     * Add a new option into the select.
      *
      * @param {string|number} value
      * @param {string} text
      */
     addOption(value, text) {
-        const optionElt = this.createOption(value, text)
+        const optionElt = this.#createOption(value, text)
 
         this.selectElt.add(optionElt, null)
+        this.tomSelect.addOption(optionElt)
     }
 
     /**
-     * Permet de créer une option pour le select.
+     * Get settings (merge default and custom settings).
+     */
+    #getSettings() {
+        const defaultSettings = {
+            // create: true,
+            // hideSelected: true,
+            allowEmptyOption: true,
+            plugins: this.selectElt.multiple ? {
+                // dropdown_input: true,
+                clear_button: {
+                    title: 'Tout effacer',
+                },
+                remove_button: {
+                    title:'Retirer cette option',
+                },
+            } : null,
+            render: {
+                option_create: function(data, escape) {
+                    return '<div class="create">Créér <strong>' + escape(data.input) + '</strong>&hellip;</div>';
+                },
+                no_results:function(data,escape){
+                    return '<div class="no-results text-secondary small">Pas de résultat pour "'+escape(data.input)+'"</div>';
+                },
+            }
+        }
+
+        return {
+            ...defaultSettings,
+            ...this.settings,
+        }
+    }
+
+    /**
+     * Create a new option element.
      *
      * @param {string|number} value
      * @param {string} text
      *
      * @returns {HTMLOptionElement}
      */
-    createOption(value, text) {
-        const option = document.createElement('option')
-        option.value = value.toString()
-        option.text = text
+    #createOption(value, text) {
+        const optionElt = document.createElement('option')
+        optionElt.value = value.toString()
+        optionElt.text = text
 
-        return option
-    }
-
-    /**
-     * Affiche dans le select en fonction d'un liste d'ids.
-     *
-     * @param {Array} arrayList
-     */
-    showOptionsFromArray(arrayList) {
-        if (arrayList.length !== 0) {
-            return this.select2.val(arrayList).trigger('change')
-        }
-
-        return this.clearSelect()
-    }
-
-    /**
-     * Permet de gérer les différents évènements demandés.
-     */
-    switchEvent() {
-        switch (this.event.name) {
-            case 'onCollapse':
-                this.onCollapseEvent()
-                break
-            case 'onModal':
-                this.onModalEvent()
-                break
-            default:
-                this.defaultEvent()
-                break
-        }
-    }
-
-    /**
-     * Event: "on collapse".
-     * */
-    onCollapseEvent() {
-        if (!this.event.elementId) {
-            console.error(
-                'L\'id du collapse est maquant. Veuillez le renseigner dans les options. ' +
-                '"collapseId" doit être renseigné dans les options si l\'event "onCollapse" est appelé.'
-            )
-        }
-
-        $('#' + this.event.elementId).on('shown.bs.collapse', () => this.defaultEvent())
-    }
-
-    /**
-     * Event: "on modal" .
-     */
-    onModalEvent() {
-        if (!this.event.elementId) {
-            console.error(
-                'L\'id du modal est maquant. Veuillez le renseigner dans les options. ' +
-                '"modalId" doit être renseigné dans les options si l\'event "onCollapse" est appelé."'
-            )
-        }
-
-        this.clearSelect()
-
-        $('#' + this.event.elementId).on('shown.bs.modal', () => this.defaultEvent())
-    }
-
-    /**
-     * Event: initialisation par défaut.
-     */
-    defaultEvent() {
-        this.select2.select2(this.options)
-    }
-
-    checkSelect2Style() {
-        if (this.selectElt.nextElementSibling === null) return;
-        this.selectElt.nextElementSibling.querySelectorAll('.select2-search__field').forEach(select2Elt => {
-            select2Elt.style.width = '100%'
-        })
+        return optionElt
     }
 }

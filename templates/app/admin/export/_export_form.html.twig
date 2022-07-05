@@ -2,15 +2,15 @@
     {{ form_start(form) }}
     <div class="row mb-3">
         {% if is_granted('ROLE_SUPER_ADMIN') %}
-            <div class="col-md-6">{{ form_row(form.service.poles) }}</div>
+            <div class="col-md-6">{{ form_row(form.service.poles, {attr: {class: 'w-100'}}) }}</div>
         {% endif %}
-        <div class="col-md-6">{{ form_row(form.service.services) }}</div>
-        <div class="col-md-6">{{ form_row(form.service.subServices) }}</div>
-        <div class="col-md-6">{{ form_row(form.service.devices) }}</div>
-        <div class="col-md-6">{{ form_row(form.service.referents) }}</div>
+        <div class="col-md-6">{{ form_row(form.service.services, {attr: {class: 'w-100'}}) }}</div>
+        <div class="col-md-6">{{ form_row(form.service.subServices, {attr: {class: 'w-100'}}) }}</div>
+        <div class="col-md-6">{{ form_row(form.service.devices, {attr: {class: 'w-100'}}) }}</div>
+        <div class="col-md-6">{{ form_row(form.service.referents, {attr: {class: 'w-100'}}) }}</div>
     </div>
     <div class="row mb-3">
-        <div class="col-md-6">{{ form_row(form.status) }}</div>
+        <div class="col-md-6">{{ form_row(form.status, {attr: {class: 'w-100'}}) }}</div>
         <div class="col-md-6">{{ form_row(form.supportDates) }}</div>
         <div class="col-md-6">{{ form_row(form.date.start) }}</div>
         <div class="col-md-6">{{ form_row(form.date.end) }}</div>

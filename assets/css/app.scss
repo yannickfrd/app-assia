@@ -1,6 +1,6 @@
 @import "./bootstrap-custom";
+@import "./_form";
 @import "./_table";
-@import "./_select2";
 
 html {
     scroll-behavior: smooth;
@@ -33,9 +33,7 @@ section {
 }
 
 .btn,
-.form-control,
-.dropdown-menu,
-.input-group-text {
+.dropdown-menu {
     font-size: $font-size-base;
 }
 
@@ -200,132 +198,83 @@ th.required:after {
 .w-max-80 {
     max-width: 80px;
 }
-
 .w-max-100 {
     max-width: 100px;
 }
-
 .w-max-120 {
     max-width: 120px;
 }
-
 .w-max-140 {
     max-width: 140px;
 }
-
 .w-max-150 {
     max-width: 140px;
 }
-
 .w-max-160 {
     max-width: 160px;
 }
-
 .w-max-165 {
     max-width: 165px;
 }
-
 .w-max-170 {
     max-width: 170px;
 }
-
 .w-max-180 {
     max-width: 180px;
 }
-
 .w-max-200 {
     max-width: 200px;
 }
-
 .w-max-220 {
     max-width: 220px;
+}
+.w-max-240 {
+    max-width: 240px;
+}
+.w-max-260 {
+    max-width: 260px;
 }
 
 /* Largeur minimale */
 .w-min-70 {
     min-width: 70px;
 }
-
 .w-min-80 {
     min-width: 80px;
 }
-
 .w-min-100 {
     min-width: 100px;
 }
-
 .w-min-120 {
     min-width: 120px;
 }
-
 .w-min-140 {
     min-width: 140px;
 }
-
 .w-min-150 {
     min-width: 150px;
 }
-
 .w-min-160 {
     min-width: 160px;
 }
-
 .w-min-180 {
-    min-width: 180px !important;
+    min-width: 180px;
 }
-
 .w-min-200 {
-    min-width: 200px !important;
+    min-width: 200px;
+}
+.w-min-220 {
+    min-width: 220px;
+}
+.w-min-240 {
+    min-width: 240px;
 }
 
 .h-max-38 {
     max-height: 38px;
 }
-
 .h-max-76 {
     max-height: 76px;
-}
-
-
-// Bouton case à cocher
-.custom-checkbox .custom-control-input:checked~.custom-control-label::after {
-    border-radius: 4px;
-}
-
-.form-check-label.custom-control-label:after,
-.form-check-label.custom-control-label:before {
-    width: 1.25rem;
-    height: 1.25rem;
-}
-
-.custom-control-label {
-    padding-left: 0.5rem;
-}
-
-.custom-checkbox-secondary .custom-control-input:checked~.custom-control-label::before,
-.custom-checkbox-secondary .custom-control-input:checked~.custom-control-label::after,
-.custom-radio-secondary .custom-control-input:checked~.custom-control-label::before,
-.custom-radio-secondary .custom-control-input:checked~.custom-control-label::after {
-    background-color: var(--secondary);
-}
-
-.custom-checkbox-dark .custom-control-input:checked~.custom-control-label::before,
-.custom-checkbox-dark .custom-control-input:checked~.custom-control-label::after,
-.custom-radio-dark .custom-control-input:checked~.custom-control-label::before,
-.custom-radio-dark .custom-control-input:checked~.custom-control-label::after {
-    background-color: var(--dark);
-}
-
-.custom-checkbox-brown .custom-control-input:checked~.custom-control-label::before,
-.custom-checkbox-brown .custom-control-input:checked~.custom-control-label::after,
-.custom-radio-brown .custom-control-input:checked~.custom-control-label::before,
-.custom-radio-brown .custom-control-input:checked~.custom-control-label::after {
-    background-color: var(--brown);
-}
-
-// Bouton radio
-.custom-radio .custom-control-input:checked~.custom-control-label::after {
-    border-radius: 8px;
 }
 
 .justify {
@@ -424,7 +373,7 @@ th.required:after {
     top: 50%;
     transform: translate(50%, -50%);
     font-size: 30px;
-    color: #fff;
+    color: var(--white);
 }
 
 #scroll-top:hover {
@@ -575,6 +524,10 @@ button.btn-outline-secondary a:hover {
     transition-delay: .3s;
 }
 
+.accordion > .card {
+    overflow: visible !important;
+}
+
 #card-tags span.tag {
     font-size: .85rem;
     font-weight: normal;
@@ -633,10 +586,5 @@ button.btn-outline-secondary a:hover {
 
     body {
         padding-top: 50px;
-    }
-
-    .form-group,
-    .form-control {
-        font-size: .9rem;
     }
 }

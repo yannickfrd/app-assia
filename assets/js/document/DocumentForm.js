@@ -17,7 +17,7 @@ export default class DocumentForm {
         this.updateBtnElt = this.documentFormElt.querySelector('button[data-action="update"]')
         this.deleteBtnElt = this.documentFormElt.querySelector('button[data-action="delete"]')
 
-        this.tagsSelectManager = new SelectManager('#document_tags', {name: 'onModal', elementId: 'document-modal'})
+        this.tagsSelectManager = new SelectManager('#document_tags')
 
         this.modalBlockElt = document.getElementById('modal-block')
         this.deleteModal = new Modal(this.modalBlockElt)
@@ -59,9 +59,9 @@ export default class DocumentForm {
         if (doc.tags !== null) {
             const tagIds = [];
             doc.tags.forEach(tag => tagIds.push(tag.id));
-            this.tagsSelectManager.updateSelect(tagIds);
+            this.tagsSelectManager.updateItems(tagIds);
         } else {
-            this.tagsSelectManager.clearSelect()
+            this.tagsSelectManager.clearItems()
         }
 
         const deleteBtn = this.documentFormElt.querySelector('button[data-action="delete"]')

@@ -37,18 +37,15 @@ export default class TaskForm
 
         this.currentUserId = document.getElementById('user-name').dataset.userId
 
-        this.usersSelectManager = new SelectManager('#task_users', {
-            name: 'onModal',
-            elementId: 'modal-task'
-        }, {width: '100%'})
-        this.tagsSelectManager = new SelectManager('#task_tags', {name: 'onModal', elementId: 'modal-task'})
+        this.usersSelectManager = new SelectManager('#task_users')
+        this.tagsSelectManager = new SelectManager('#task_tags')
 
         this.alertsCollectionManager = new WidgetCollectionManager(this.afterToAddAlert.bind(this), null, 3)
 
-        this.formValidator = new FormValidator(this.modalTaskElt)
+        this.formValidator = new FormValidator(this.formTaskElt)
 
         // this.supportPeopleSelectElt = document.getElementById('task_supportPeople')
-        // this.supportPeopleSelect = new SelectManager('#task_supportPeople', {name: 'onModal', elementId: 'modal-task'}, {width: '100%'})
+        // this.supportPeopleSelect = new SelectManager('#task_supportPeople')
         this.init()
     }
 
@@ -82,15 +79,13 @@ export default class TaskForm
         this.contentTextAreaElt.value = ''
         this.levelSelectElt.value = this.levelSelectElt.dataset.defaultLevel
 
-        this.usersSelectManager.updateSelect(this.currentUserId)
-        this.usersSelectManager.select2.on('select2:select', e => {
-            this.formValidator.validField(e.currentTarget, false)
-        })
+        this.usersSelectManager.updateItems(this.currentUserId)
+
         // this.supportPeopleId = []
         // this.supportPeopleSelectElt.value = ''
         // this.supportPeopleSelectElt.parentNode.classList.add('d-none')
 
-        this.tagsSelectManager.clearSelect()
+        this.tagsSelectManager.clearItems()
 
         this.resetAlerts()
 
@@ -158,11 +153,11 @@ export default class TaskForm
 
         const userIds = []
         task.users.forEach(user => userIds.push(user.id))
-        this.usersSelectManager.updateSelect(userIds)
+        this.usersSelectManager.updateItems(userIds)
 
         const tagsIds = []
         task.tags.forEach(tags => tagsIds.push(tags.id))
-        this.tagsSelectManager.updateSelect(tagsIds)
+        this.tagsSelectManager.updateItems(tagsIds)
 
         this.supportSelectElt.value = ''
         this.supportSelectElt.disabled = task.supportGroup !== null
@@ -180,7 +175,7 @@ export default class TaskForm
         // if (task.supportPeople) {
         //     const supportPeopleIds = new Array()
         //     task.supportPeople.forEach(supportPerson => supportPeopleIds.push(supportPerson.id + ''))
-        //     this.supportPeopleSelect.updateSelect(supportPeopleIds)
+        //     this.supportPeopleSelect.updateItems(supportPeopleIds)
         // }
 
         this.initAlerts(task)
@@ -270,6 +265,8 @@ export default class TaskForm
             this.levelSelectElt,
             this.usersSelecElt,
         ]
+
+        this.formTaskElt.classList.add('was-validated')
 
         document.querySelector('#alerts-fields-list').querySelectorAll('input, select').forEach(fieldElt => fieldElts.push(fieldElt))
 

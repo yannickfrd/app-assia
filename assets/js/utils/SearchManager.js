@@ -84,7 +84,7 @@ export default class SearchManager {
         })
 
         this.selectManagers.forEach(selectManager => {
-            selectManager.clearSelect()
+            selectManager.clearItems()
         })
 
         if (this.resultsElt) {

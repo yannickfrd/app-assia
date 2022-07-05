@@ -19,7 +19,7 @@
                     <i class="fas fa-tag text-black-50"></i>
                 </div>
             </div>
-            {{ form_widget(form_search.tags, {attr: {class: 'w-min-200'}}) }}
+            {{ form_widget(form_search.tags) }}
         </div>
     </div>
     {% if is_granted('ROLE_SUPER_ADMIN') %}

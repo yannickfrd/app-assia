@@ -42,7 +42,7 @@ class SupportDocumentSearchType extends AbstractType
                 'choice_label' => 'name',
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
-                    'class' => 'multi-select w-min-200 w-max-220',
+                    'class' => 'multi-select w-max-220',
                     'placeholder' => 'placeholder.tags',
                     'size' => 1,
                 ],
