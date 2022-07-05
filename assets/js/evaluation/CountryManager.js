@@ -17,21 +17,16 @@ export default class CountryManager {
                 return
             }
 
-            const selectManager = new SelectManager('#' + selectElt.id, {}, {
-                theme: 'bootstrap4',
-                'language': {
-                    'noResults': () => 'Aucun résultat',
-                },
-            })
+            const selectManager = new SelectManager('#' + selectElt.id)
     
             selectElt.querySelectorAll('option').forEach(option => {
                 if (option.textContent == inputElt.value) {
-                    selectManager.select2.val(option.value).trigger('change')
+                    selectManager.addItem(option.value)
                 }
             })
     
-            selectManager.select2.on('change', () => {
-                inputElt.value = selectElt.querySelector(`option[value="${selectElt.value }"]`).textContent
+            selectElt.addEventListener('change', () => {
+                inputElt.value = selectManager.getOption().textContent
             })
         } )
     }

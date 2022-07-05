@@ -15,10 +15,6 @@ export default class PaymentForm {
         this.loader = paymentManager.loader
         this.ajax = paymentManager.ajax
         this.responseAjax = paymentManager.responseAjax.bind(paymentManager)
-        this.formValidator = new FormValidator()
-        this.parametersUrl = new ParametersUrl()
-
-        this.payment = null
 
         // Formulaire modal
         this.modalPaymentElt = document.getElementById('payment_modal')
@@ -50,8 +46,11 @@ export default class PaymentForm {
 
         this.confirmBtnElt = document.getElementById('modal-confirm')
 
+        this.parametersUrl = new ParametersUrl()
+        this.formValidator = new FormValidator(this.formPaymentElt)
         this.contributionCalcul = new ContributionCalcul(this.formPaymentElt, this.afterCalculContribution.bind(this))
 
+        this.payment = null
         this.isValid = true
         this.displayedFields = []
 

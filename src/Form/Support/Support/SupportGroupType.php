@@ -223,7 +223,7 @@ class SupportGroupType extends AbstractType
                         return $repo->getPlacesQueryBuilder($service, $subService);
                     },
                     'label' => 'place.name',
-                    'attr' => ['data-select' => 'advanced'],
+                    'attr' => ['autocomplete' => true],
                     'placeholder' => 'placeholder.select',
                     'help' => 'placeGroup.help',
                     'mapped' => false,
@@ -336,7 +336,7 @@ class SupportGroupType extends AbstractType
                     $supportGroup->getReferent()
                 );
             },
-            'attr' => ['data-select' => 'advanced'],
+             'attr' => ['autocomplete' => true],
             'placeholder' => 'placeholder.select',
             'required' => false,
         ];

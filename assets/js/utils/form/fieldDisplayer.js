@@ -49,14 +49,6 @@ export default class FieldDisplayer {
         this.checkSelect()
         this.parentFieldElt.addEventListener('click', () => this.checkSelect())
         this.parentFieldElt.addEventListener('change', () => this.checkSelect())
-
-        // this.select2 = $('#' + this.parentFieldElt.id)
-        // if (this.select2) {
-        //     this.select2.on('select2:select', e => { 
-        //         this.optionSelected = e.params.data.id;
-        //         this.checkSelect()
-        //     })       
-        // }
     }
 
     /**

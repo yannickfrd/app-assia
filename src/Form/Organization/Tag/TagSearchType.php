@@ -8,6 +8,7 @@ use App\Form\Utils\Choices;
 use App\Repository\Organization\TagRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -24,7 +25,7 @@ class TagSearchType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', null, [
+            ->add('name', SearchType::class, [
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => ['placeholder' => 'Search'],
             ])
@@ -37,7 +38,7 @@ class TagSearchType extends AbstractType
                 'multiple' => true,
                 'choices' => Choices::getChoices(Tag::CATEGORIES),
                 'attr' => [
-                    'class' => 'multi-select w-min-180',
+                    'class' => 'multi-select w-max-220',
                     'placeholder' => 'placeholder.categories',
                     'size' => 1,
                 ],

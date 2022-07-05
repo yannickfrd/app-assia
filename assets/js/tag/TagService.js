@@ -16,7 +16,7 @@ export default class TagService {
         this.listBadge = document.getElementById('tags-list')
         this.formTags = document.forms['service_tag']
         this.selectTags = document.getElementById('service_tag_tags')
-        this.selectManager = new SelectManager('#service_tag_tags', {name: 'onCollapse', elementId: 'collapse_tags'})
+        this.selectManager = new SelectManager('#service_tag_tags')
 
         this.init()
     }
@@ -130,18 +130,18 @@ export default class TagService {
             return new MessageFlash(response.alert, response.msg)
         }
 
-        const tag = document.querySelector(`#tags-list span[data-tag-id="${response.data.tagId}"]`)
+        const tagElt = document.querySelector(`#tags-list span[data-tag-id="${response.data.tagId}"]`)
 
-        if (tag) {
-            this.selectManager.addOption(tag.dataset.tagId, tag.dataset.tagName)
-            tag.remove()
+        if (tagElt) {
+            this.selectManager.addOption(tagElt.dataset.tagId, tagElt.dataset.tagName)
+            tagElt.remove()
         }
     }
 
     initTagsTemp() {
         this.tagsTemp = []
-        this.listBadge.querySelectorAll('span[data-tag-id]').forEach(tag => {
-            this.tagsTemp.push(new Tag(tag.dataset.tagId, tag.dataset.tagName))
+        this.listBadge.querySelectorAll('span[data-tag-id]').forEach(tagElt => {
+            this.tagsTemp.push(new Tag(tagElt.dataset.tagId, tagElt.dataset.tagName))
         })
     }
 

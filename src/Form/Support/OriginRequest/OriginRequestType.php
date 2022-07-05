@@ -38,6 +38,7 @@ class OriginRequestType extends AbstractType
                 'query_builder' => function (OrganizationRepository $repo) use ($service) {
                     return $repo->getOrganizationsQueryBuilder($service);
                 },
+                'attr' => ['autocomplete' => true],
                 'placeholder' => 'placeholder.select',
                 'required' => $required,
             ])

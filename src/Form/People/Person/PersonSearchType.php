@@ -6,6 +6,7 @@ use App\Form\Model\People\PersonSearch;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -14,7 +15,7 @@ class PersonSearchType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-        ->add('lastname', null, [
+        ->add('lastname', SearchType::class, [
             'label_attr' => ['class' => 'sr-only'],
             'attr' => [
                 'class' => 'w-max-140 text-uppercase',
@@ -22,7 +23,7 @@ class PersonSearchType extends AbstractType
                 'autocomplete' => 'off',
             ],
             ])
-        ->add('firstname', null, [
+        ->add('firstname', SearchType::class, [
             'label_attr' => ['class' => 'sr-only'],
             'attr' => [
                 'class' => 'w-max-140 text-capitalize',
@@ -41,10 +42,10 @@ class PersonSearchType extends AbstractType
             ],
             'required' => false,
             ])
-        ->add('siSiaoId', null, [
+        ->add('siSiaoId', SearchType::class, [
             'label_attr' => ['class' => 'sr-only'],
             'attr' => [
-                'class' => 'w-max-160',
+                'class' => 'w-min-180 w-max-180',
                 'data-mask-type' => 'number',
                 'placeholder' => 'si_siao_id.placeholder',
             ],

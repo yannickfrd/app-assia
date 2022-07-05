@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Version 3.22.0 - 05/07/2022
+
+Use 'tom-select' JS library for multi-selects and autocomplete selects:
+
+* Install 'tom-select' JS library
+* Remove 'select2' JS library
+* Use SearchType for search input
+
 ## Version 3.21.0 - 29/06/2022
 
 Feature preview document (#170)

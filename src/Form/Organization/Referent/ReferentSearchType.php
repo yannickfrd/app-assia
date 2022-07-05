@@ -7,6 +7,7 @@ use App\Form\Model\Organization\ReferentSearch;
 use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -15,13 +16,13 @@ class ReferentSearchType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name', null, [
+            ->add('name', SearchType::class, [
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'placeholder' => 'Service name',
                 ],
             ])
-            ->add('socialWorker', null, [
+            ->add('socialWorker', SearchType::class, [
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'placeholder' => 'SocialWorker name',
