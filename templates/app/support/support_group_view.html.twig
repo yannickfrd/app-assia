@@ -62,41 +62,41 @@
 					href="{{ path('support_place_group_index', {'id': support.id}) }}" 
 					title="Prise(s) en charge hébergement" data-toggle="tooltip" data-placement="bottom" >
 					{% if support.service.type == SERVICE_TYPE_HOTEL %}PEC Hôtel{% else %}Hébergement{% endif %}<!--
-					--><span class="badge badge-light ml-2">{{ support.placeGroups|length }}</span>
+					--><span class="badge bg-light text-dark ml-2">{{ support.placeGroups|length }}</span>
 				</a>
 			{% endif %}
 			<a id="support-evaluation" class="btn btn-{{ theme_color }} me-2 mb-2 shadow" 
 				href="{{ path(evaluation ? 'support_evaluation_show' : 'support_evaluation_new', {'id': support.id}) }}" 
 				title="Évaluation sociale" data-toggle="tooltip" data-placement="bottom" >Évaluation
-					<span class="badge badge-{{ evaluationScoreColor(support.evaluationScore) }}">
+					<span class="badge bg-{{ evaluationScoreColor(support.evaluationScore) }}">
 						{{ support.evaluationScore|percent(0) }}
 					</span>
 			</a>
 			<a id="support-calendar" class="btn btn-{{ theme_color }} me-2 mb-2 shadow" 
 				href="{{ path('support_calendar_show', {'id': support.id}) }}" 
 				title="Rendez-vous" data-toggle="tooltip" data-placement="bottom">Rendez-vous
-				<span class="badge badge-light ml-2">{{ count_rdvs }}</span>
+				<span class="badge bg-light text-dark ml-2">{{ count_rdvs }}</span>
 			</a>
 			<a id="support-tasks" class="btn btn-{{ theme_color }} me-2 mb-2 shadow" 
 				href="{{ path('support_task_index', {'id': support.id}) }}" 
 				title="Tâches" data-toggle="tooltip" data-placement="bottom">Tâches
-				<span class="badge badge-light ml-2">{{ count_tasks }}</span>
+				<span class="badge bg-light text-dark ml-2">{{ count_tasks }}</span>
 			</a>
 			<a id="support-notes" class="btn btn-{{ theme_color }} me-2 mb-2 shadow" 
 				href="{{ path('support_note_index', {'id': support.id}) }}" 
 				title="Notes sociales et rapports" data-toggle="tooltip" data-placement="bottom">Notes
-				<span class="badge badge-light ml-2">{{ count_notes }}</span>
+				<span class="badge bg-light text-dark ml-2">{{ count_notes }}</span>
 			</a>
 			<a id="support-documents" class="btn btn-{{ theme_color }} me-2 mb-2 shadow" 
 				href="{{ path('support_document_index', {'id': support.id}) }}"
 				title="Documents administratifs" data-toggle="tooltip" data-placement="bottom">Documents
-				<span class="badge badge-light ml-2">{{ count_documents }}</span>
+				<span class="badge bg-light text-dark ml-2">{{ count_documents }}</span>
 			</a>
 			{% if support.device.contribution == YES %}
 				<a id="support-payments" class="btn btn-{{ theme_color }} me-2 mb-2 shadow" 
 					href="{{ path('support_payments_index', {'id': support.id}) }}"
 					title="Participations financières, redevances, loyers..." data-toggle="tooltip" 
-					data-placement="bottom">Paiements<span class="badge badge-light ml-2">{{ count_payments }}</span>
+					data-placement="bottom">Paiements<span class="badge bg-light text-dark ml-2">{{ count_payments }}</span>
 				</a>
 			{% endif %}
 		</div>

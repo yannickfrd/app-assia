@@ -66,14 +66,14 @@
                                 {% endif %}
                             </td>
                             <td class="align-middle">
-                                <span class="badge badge-{{ evaluationScoreColor(support.evaluationScore) }}">
+                                <span class="badge bg-{{ evaluationScoreColor(support.evaluationScore) }}">
                                     {{ support.evaluationScore|percent(0) }}
                                 </span>
                             </td>
                             <td class="align-middle">
                                 {% set nb_active_tasks = support.countActiveTasks %}
                                 {% if nb_active_tasks %}
-                                    <span class="badge badge-pill badge-secondary"
+                                    <span class="badge rounded-pill bg-secondary"
                                         title="{{ nb_active_tasks }} tâche(s) à faire pour ce suivi" data-toggle="tooltip">
                                         {{ nb_active_tasks }}
                                     </span>

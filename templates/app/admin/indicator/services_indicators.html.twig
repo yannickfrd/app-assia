@@ -50,7 +50,7 @@
                                 <tr class="{{ nb_collapsed_tr ? 'cursor-pointer' }}" data-toggle="collapse" data-target=".multi-collapse-service-{{ service_id }}" 
                                     aria-expanded="false" aria-controls="multi-collapse-service-{{ service_id }}">
                                     <td scope="row" class="align-middle"><span class="font-weight-bold">{{ service['name'] }}</span>
-                                        {% if nb_collapsed_tr %}<span class="badge badge-pill badge-secondary">{{ nb_collapsed_tr }}</span>{% endif %}
+                                        {% if nb_collapsed_tr %}<span class="badge rounded-pill bg-secondary">{{ nb_collapsed_tr }}</span>{% endif %}
                                     </td>
                                     <td class="align-middle text-right">{{ service['nbSocialWorkers']|number }}</td>
                                     <td class="align-middle text-right">{{ nb_supports|number }}</td>

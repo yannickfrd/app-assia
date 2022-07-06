@@ -174,7 +174,7 @@ export default class FormValidator {
         const elt = document.createElement('div')
         elt.className = 'invalid-feedback d-block js-invalid'
         elt.innerHTML = `
-                <span class='form-error-icon badge badge-danger text-uppercase'>Erreur</span> 
+                <span class='form-error-icon badge bg-danger text-uppercase'>Erreur</span> 
                 <span class='form-error-message'>${msg}</span>`
 
         return elt

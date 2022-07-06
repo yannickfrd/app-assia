@@ -187,7 +187,7 @@ export default class TagService {
             this.tryDelete(aElt.href)
         }
         const spanElt = document.createElement('span')
-        spanElt.classList.add('badge', 'badge-danger', 'ms-2')
+        spanElt.classList.add('badge', 'bg-danger', 'ms-2')
         spanElt.innerHTML = '<i class="fas fa-times"></i>'
 
         aElt.appendChild(spanElt)

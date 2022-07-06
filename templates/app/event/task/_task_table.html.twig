@@ -67,12 +67,12 @@
                             {{ task.alerts.first.date|date('d/m/Y H:i') }}
                             <i class="fas fa-bell text-secondary"></i>
                             {# {% if task.countActiveAlerts > 0 %}
-                                <span class="badge badge-pill badge-warning"
+                                <span class="badge rounded-pill bg-warning"
                                     title="{{ task.countActiveAlerts }} rappel(s) actif(s) pour cette tâche"
                                     data-toggle="tooltip" data-placement="bottom">{{ task.countActiveAlerts }}
                                 </span>
                             {% elseif task.countViewedAlerts > 0 %}
-                                <span class="badge badge-pill badge-secondary"
+                                <span class="badge rounded-pill bg-secondary"
                                     title="{{ task.countViewedAlerts }} rappel(s) pour cette tâche"
                                     data-toggle="tooltip" data-placement="bottom">{{ task.countViewedAlerts }}
                                 </span>

@@ -10,7 +10,7 @@
 					<span class="badge bg-{{ theme_color }} mb-1 text-light tag" data-tag-id="{{ tag.id }}" 
 						data-tag-name="{{ tag.name }}">{{ tag.name }}<!--
 						--><a href="{{ path('service_delete_tag', {service: service.id, tag: tag.id}) }}">
-							<span class="badge badge-danger ms-2"><i class="fas fa-times"></i></span>
+							<span class="badge bg-danger ms-2"><i class="fas fa-times"></i></span>
 						</a>
 					</span>
 				{% else %}

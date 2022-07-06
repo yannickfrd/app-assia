@@ -97,7 +97,7 @@
                                             {% set nb_people = nb_people + nb_place_people %}
                                         {% endfor %}
                                         {% if nb_people == 0 %}
-                                            <span class="badge badge-danger" title="Ce groupe de places est innocupé.">Vacant</span>
+                                            <span class="badge bg-danger" title="Ce groupe de places est innocupé.">Vacant</span>
                                         {% elseif place.nbPlaces != nb_people %}
                                             <span class="fas fa-exclamation-triangle text-warning" 
                                                 title="Le nombre de personnes ne correspond pas au nombre de places"></span>

@@ -121,7 +121,7 @@
                         </td>
                     {% elseif is_granted('ROLE_ADMIN') %}
                         <td class="align-middle">
-                            <span class="badge badge-{{ evaluationScoreColor(support_group.evaluationScore) }}">
+                            <span class="badge bg-{{ evaluationScoreColor(support_group.evaluationScore) }}">
                                 {{ support_group.evaluationScore|percent(0) }}
                             </span>
                         </td>
