@@ -28,13 +28,13 @@
 				{% if edit_mode and is_granted('DELETE', support) %}
 					<div class="float-left d-flex">
 						<a href="{{ path('support_group_people_place_delete', {'id': form.vars.value.id}) }}" 
-							class="mr-3 btn btn-danger d-block" data-toggle="tooltip" title="Supprimer la prise en charge" data-placement="bottom"
+							class="me-3 btn btn-danger d-block" data-toggle="tooltip" title="Supprimer la prise en charge" data-placement="bottom"
 							onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer cette prise en charge ?')){return true;}else{return false;}">
-							<span class="fas fa-trash-alt mr-2"></span>Supprimer</a>
+							<span class="fas fa-trash-alt me-2"></span>Supprimer</a>
 					</div>
 				{% endif %}
 				<div class="mb-4 float-right">
-					<button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+					<button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save me-2"></span>{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
 				</div>
 			</div>
 		</div>

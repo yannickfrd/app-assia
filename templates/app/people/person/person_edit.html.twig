@@ -61,7 +61,7 @@
                     <div class="col-md-6">{{ form_row(form.role) }}</div>
                     {% if people_group is defined and (app.request.get('supports') or people_group.supports|length > 0) %}
                         <div class="col-md-6">
-                            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} mb-3 pl-2 text-dark">
+                            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} mb-3 ps-2 text-dark">
                                 {{ form_row(form.addPersonToSupport) }}
                             </div>
                         </div>
@@ -91,21 +91,21 @@
                         {% if true == edit_mode and is_granted('ROLE_ADMIN') %}
                             <div class="float-left d-flex">
                             {% set msg_confirm = 'Êtes-vous vraiment sûr de vouloir supprimer cette personne ?' %}
-                                <a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('person_delete', {'id': person.id}) }}"
+                                <a id="modal-btn-delete" class="me-3 btn btn-danger d-block" href="{{ path('person_delete', {'id': person.id}) }}"
                                     data-toggle="tooltip" title="Supprimer la personne" data-placement="bottom"
                                     onclick="if(window.confirm('{{ msg_confirm }}')){return true;}else{return false;}"><span
-                                    class="fas fa-trash-alt mr-2"></span>Supprimer</a>
+                                    class="fas fa-trash-alt me-2"></span>Supprimer</a>
                             </div>
                         {% endif %}
                         <div class="mb-4 float-right">
                             {% if true == edit_mode %}
                                 <button type="submit" id="updatePerson" name="updatePerson" class="btn btn-{{ theme_color }} shadow"
                                     data-url="{{ path('person_edit_ajax', {'id': person.id}) }}">
-                                    <span class="fas fa-save mr-2"></span>Mettre à jour
+                                    <span class="fas fa-save me-2"></span>Mettre à jour
                                 </button>
                             {% else %}
                                 <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">
-                                    <span class="fas fa-save mr-2"></span>Enregistrer</button>
+                                    <span class="fas fa-save me-2"></span>Enregistrer</button>
                             {% endif %}
                         </div>
                     </div>
@@ -175,7 +175,7 @@
                 {% endif %}
                 <button id="btn-new-group" class="m-2 btn btn-{{ theme_color }} btn-sm" 
                     data-toggle="modal" data-target="#modal-new-group">
-                    <span class="fas fa-plus-square pr-2"></span>Créer un nouveau groupe
+                    <span class="fas fa-plus-square pe-2"></span>Créer un nouveau groupe
                 </button>
             </section>
 

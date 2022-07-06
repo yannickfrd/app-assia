@@ -13,13 +13,13 @@
         <div class="row">
             <div class="d-flex col-md-6 mb-1 align-items-center">
                 {% if not restoration_mode %}
-                    <button id="js_new_task" class="btn btn-{{ theme_color }} shadow align-middle mr-2"
+                    <button id="js_new_task" class="btn btn-{{ theme_color }} shadow align-middle me-2"
                         title="Ajouter une tâche" data-toggle="modal" data-placement="bottom"
-                        data-target="#modal-task"><i class="fas fa-plus-square mr-2"></i>Nouvelle tâche
+                        data-target="#modal-task"><i class="fas fa-plus-square me-2"></i>Nouvelle tâche
                     </button>
 				{% else %}
-					<a href="{{ app.request.pathInfo }}" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" 
-                        id="return_index"><i class="fa-solid fa-arrow-rotate-left mr-2"></i>Retour
+					<a href="{{ app.request.pathInfo }}" class="btn btn-{{ theme_color }} btn-sm shadow me-2" 
+                        id="return_index"><i class="fa-solid fa-arrow-rotate-left me-2"></i>Retour
 					</a>
 				{% endif %}
                 <span>

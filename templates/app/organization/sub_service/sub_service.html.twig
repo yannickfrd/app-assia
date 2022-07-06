@@ -56,7 +56,7 @@
                 <div class="col-md-12"> 
                     {% if edit_mode and is_granted('DISABLE', sub_service.service) %}
                         <div class="float-left d-flex">
-                            <a class="mr-3 btn btn-{{ disabled ? 'success' : 'danger' }} d-block" href="{{ path('sub_service_disable', {'id': sub_service.id}) }}"
+                            <a class="me-3 btn btn-{{ disabled ? 'success' : 'danger' }} d-block" href="{{ path('sub_service_disable', {'id': sub_service.id}) }}"
                                 title="{{ disabled ? 'Réactiver' : 'Désactiver' }} le sous-service" data-toggle="tooltip" data-placement="bottom"
                                 {% if disabled == false %}onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir désactiver ce sous-service ?')){return true;}else{return false;}"{% endif %}>
                                 {% if disabled %}Réactiver{% else %}Désactiver{% endif %}</a>
@@ -118,7 +118,7 @@
                 <div class="row my-3">
                     <div class="col-md-12">
                         <a href="{{ path('service_place_new', {'id': service.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow">
-                        <span class="fas fa-plus-square pr-2"></span>Créer un nouveau groupe de places</a>
+                        <span class="fas fa-plus-square pe-2"></span>Créer un nouveau groupe de places</a>
                     </div>
                 </div>
                 {% endif %}

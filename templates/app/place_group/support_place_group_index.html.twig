@@ -13,7 +13,7 @@
 
 		{% include 'model/_flash_message.html.twig' %}
 		<a href="{{ path('support_place_new', {'id': support.id}) }}" class="btn btn-{{ theme_color }} btn-sm mb-3">
-			<span class="fas fa-plus-square mr-2"></span>Ajouter une prise en charge</a>
+			<span class="fas fa-plus-square me-2"></span>Ajouter une prise en charge</a>
 		{% if support_group_places|length == 0 %}
 			<p>Aucun hébergement.</p>
 		{% else %}

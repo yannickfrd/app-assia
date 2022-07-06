@@ -13,16 +13,16 @@
                 {% set title = 'Rendez-vous' %}
                 {% include 'app/support/_partials/_support_nav.html.twig' %}
             {% endif %}
-            <div class="d-flex flex-row align-items-center justify-content-between ml-1 mb-2">
+            <div class="d-flex flex-row align-items-center justify-content-between ms-1 mb-2">
                 <div class="d-flex align-items-center">
-                    <h2 class="h2 mr-3 mb-0 d-none d-sm-block">Agenda</h2>
-                    <a class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-toggle="tooltip"
+                    <h2 class="h2 me-3 mb-0 d-none d-sm-block">Agenda</h2>
+                    <a class="btn btn-{{ theme_color }} btn-sm shadow me-2" data-toggle="tooltip"
                         data-placement="bottom" title="Passer en vue liste"
                         href="{% if support is defined %}{{ path('support_rdv_index', {'id': support.id}) }}
                         {% else %}{{ path('rdv_index', {'date[start]': 'now'|date('Y-m-d') }) }}{% endif %}"
                         ><i class="far fa-list-alt"></i>
                     </a>
-                    <button id="js-new-rdv" class="btn btn-{{ theme_color }} btn-sm shadow mr-2"
+                    <button id="js-new-rdv" class="btn btn-{{ theme_color }} btn-sm shadow me-2"
                         data-toggle="tooltip" data-placement="bottom" data-url="{{ path('rdv_create') }}"
                         title="Ajouter un rendez-vous"><i class="far fa-calendar-plus"></i>
                     </button>
@@ -33,8 +33,8 @@
                 </h3>
                 <div class="float-right">
                     <div class="d-none d-lg-inline-flex">
-                        <div class="mb-3  mr-2">
-                            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} text-dark pl-0"
+                        <div class="mb-3  me-2">
+                            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} text-dark ps-0"
                                  title="Afficher le calendrier sur toute la largeur">
                                 <div class="form-check">
                                     <input type="checkbox" id="full-width" name="full-width"
@@ -43,8 +43,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="mb-3  mr-2">
-                            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} text-dark pl-0"
+                        <div class="mb-3  me-2">
+                            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} text-dark ps-0"
                                  title="Afficher les week-end">
                                 <div class="form-check">
                                     <input type="checkbox" id="show-weekend" name="show-weekend"
@@ -57,7 +57,7 @@
                     <a href="{% if support is defined %}{{ path('support_calendar', {'id': support.id}) }}{% else %}{{ path('calendar') }}{% endif %}"
                        class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-toggle="tooltip"
                        data-placement="bottom" title="Mois actuel"><i class="fas fa-calendar-day"></i>
-                        <span class="d-none d-md-inline ml-2">Mois actuel</span></a>
+                        <span class="d-none d-md-inline ms-2">Mois actuel</span></a>
                     <a href="{% if support is defined %}{{ path('support_calendar_show',
                         {'id': support.id, 'year': calendar.previousMonth.year, 'month': calendar.previousMonth.month}) }}
 						{% else %}{{ path('calendar_show', {'year': calendar.previousMonth.year, 'month': calendar.previousMonth.month}) }}{% endif %}"

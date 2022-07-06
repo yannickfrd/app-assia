@@ -244,7 +244,7 @@ export default class SearchPerson {
                 ${person.lastname}${person.usename ? ' ('+ person.usename + ')' : ''}</a`
         }
 
-        return person.lastname + '<span class="ml-1">(<i class="fas fa-map-marker-alt mr-1"></i>' + person.deptCode + ')</span>'
+        return person.lastname + '<span class="ms-1">(<i class="fas fa-map-marker-alt me-1"></i>' + person.deptCode + ')</span>'
     }
 
     /**

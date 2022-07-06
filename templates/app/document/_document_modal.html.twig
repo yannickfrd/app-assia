@@ -27,17 +27,17 @@
             </div>
             <div class="modal-footer d-flex justify-content-between">
                 <div class="float-left">
-                    <button type="button" class="mr-3 btn btn-danger shadow d-block" data-action="delete"
+                    <button type="button" class="me-3 btn btn-danger shadow d-block" data-action="delete"
                         data-url-document-delete="{{ path('document_delete', {'id': '__id__'}) }}"
                         title="Supprimer le document" data-toggle="tooltip" data-placement="bottom">
                         <i class="fas fa-trash-alt"></i>
-                        <span class="d-none d-md-inline ml-2">Supprimer</span>
+                        <span class="d-none d-md-inline ms-2">Supprimer</span>
                     </button>
                 </div>
                 <div class="float-right">
                     <button type="button" class="btn btn-secondary shadow" data-dismiss="modal">Fermer</button>
                     <button type="submit" name="document_update" class="btn btn-{{ theme_color }} shadow"
-                        data-action="update"><i class="fas fa-save mr-2"></i>Mettre à jour</button>
+                        data-action="update"><i class="fas fa-save me-2"></i>Mettre à jour</button>
                 </div>
             </div>
             {{ form_row(documentForm._token) }}

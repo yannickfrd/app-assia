@@ -27,7 +27,7 @@
                 {% if user.id %}
                     <div class="float-left d-flex">
                         {% set alert_msg = '"Êtes-vous vraiment sûr de vouloir désactiver cet utilisateur ?"' %}
-                        <a class="mr-3 btn btn-{{ is_disabled ? 'success' : 'danger' }} d-block"
+                        <a class="me-3 btn btn-{{ is_disabled ? 'success' : 'danger' }} d-block"
                             href="{{ path('security_user_disable', {'id':user.id}) }}"
                             title="{{ is_disabled ? 'Réactiver' : 'Désactiver' }} l'utilisateur"
                             data-toggle="tooltip" data-placement="bottom"
@@ -35,7 +35,7 @@
                             {% if is_disabled %}Réactiver{% else %}Désactiver{% endif %}</a>
                         {% if is_disabled == false %}
                             {% set alert_msg = '"Êtes-vous vraiment sûr de vouloir envoyer un e-mail à l\'utilisateur ?"' %}
-                            <a class="mr-3 btn btn-{{ theme_color }} d-block"
+                            <a class="me-3 btn btn-{{ theme_color }} d-block"
                                 href="{{ path('security_user_send_new_email', {'id':user.id}) }}"
                                 title="Envoyer un nouvel e-mail à l'utilisateur afin de définir son mot de passe"
                                 data-toggle="tooltip" data-placement="bottom"
@@ -45,7 +45,7 @@
                 {% endif %} 
                 <div class="float-right">
                     <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">
-                        <i class="fas fa-save mr-2"></i>Enregistrer</button>
+                        <i class="fas fa-save me-2"></i>Enregistrer</button>
                 </div>
             </div>
         </div>

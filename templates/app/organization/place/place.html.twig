@@ -86,13 +86,13 @@
                         {% if edit_mode and is_granted('DELETE', place) %}
                             <div class="float-left d-flex">
                                 {% set alert_text = '"Êtes-vous vraiment sûr de vouloir supprimer ce groupe de places ?"' %}
-                                <a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" 
+                                <a id="modal-btn-delete" class="me-3 btn btn-danger d-block" 
                                     href="{{ path('place_delete', {'id': place.id}) }}"
                                    title="Supprimer le groupe de places" data-toggle="tooltip" data-placement="bottom"
                                     onclick="if(window.confirm({{ alert_text }})){return true;}else{return false;}">
-                                        <span class="fas fa-trash-alt mr-2"></span>Supprimer</a>
+                                        <span class="fas fa-trash-alt me-2"></span>Supprimer</a>
                                 {% set alert_text = '"Êtes-vous vraiment sûr de vouloir désactiver ce groupe de places ?"' %}
-                                <a class="mr-3 btn btn-{{ disabled ? 'success' : 'warning' }} d-block" 
+                                <a class="me-3 btn btn-{{ disabled ? 'success' : 'warning' }} d-block" 
                                     href="{{ path('place_disable', {'id': form.vars.value.id}) }}"
                                     title="{{ disabled ? 'Réactiver' : 'Désactiver' }} le groupe de place" 
                                     data-toggle="tooltip" data-placement="bottom"
@@ -102,7 +102,7 @@
                         {% endif %}
                         <div class="mb-4 float-right">
                             <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">
-                                <span class="fas fa-save mr-2"></span>Enregistrer</button>
+                                <span class="fas fa-save me-2"></span>Enregistrer</button>
                         </div>
                     </div>
                 </div>

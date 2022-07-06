@@ -6,12 +6,12 @@
 			<tr>
 				<th scope="col" class="align-middle text-center th-w-20 px-1">
 					{% if document_index_route == false and not restoration_mode %}
-						<div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} text-dark pl-0"
+						<div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} text-dark ps-0"
 							title="Tout sélectionner" data-toggle="tooltip" data-placement="bottom">
 							<div class="form-check">
 								<input type="checkbox" id="checkbox-all-files" data-checkbox-all="true"
 									name="checkbox-all-files" class="custom-control-input checkbox form-check-input">
-								<label class="custom-control-label form-check-label ml-2"
+								<label class="custom-control-label form-check-label ms-2"
 									for="checkbox-all-files" data-checkbox-all="true"></label>
 							</div>
 						</div>
@@ -61,13 +61,13 @@
 				<tr data-document-id="{{ document.id }}">
 					<td class="align-middle text-center px-1">
 						{% if is_deleted == false %}
-							<div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} text-dark pl-0"
+							<div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} text-dark ps-0"
 								title="Sélectionner le document" data-toggle="tooltip" data-placement="bottom">
 								<div class="form-check">
 									<input type="checkbox" id="checkbox-file-{{ document.id }}" 
 										data-checkbox="{{ document.id }}" name="checkbox-file-{{ document.id }}" 
 										class="custom-control-input checkbox form-check-input">
-									<label class="custom-control-label form-check-label ml-2" 
+									<label class="custom-control-label form-check-label ms-2" 
 										for="checkbox-file-{{ document.id }}"></label>
 								</div>
 							</div>

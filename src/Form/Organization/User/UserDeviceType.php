@@ -33,12 +33,12 @@ class UserDeviceType extends AbstractType
                 },
                 'placeholder' => 'placeholder.device',
                 'attr' => [
-                    'class' => 'col-auto mr-1 w-min-200',
+                    'class' => 'col-auto me-1 w-min-200',
                 ],
             ])
             ->add('nbSupports', null, [
                 'attr' => [
-                    'class' => 'col-auto mr-1',
+                    'class' => 'col-auto me-1',
                     'placeholder' => 'placeholder.nbSupports',
                 ],
             ]);

@@ -12,17 +12,17 @@
         data-placement="bottom"><span class="my-2 px-1">Entre</span>{{ form_widget(form.date.start) }}
     </div>
     <div class="col-auto my-1 px-1 d-inline-flex" title="Date de fin" data-toggle="tooltip" 
-        data-placement="bottom"><span class="my-2 pr-2">et</span>{{ form_widget(form.date.end) }}
+        data-placement="bottom"><span class="my-2 pe-2">et</span>{{ form_widget(form.date.end) }}
     </div>
     <div class="col-auto my-1 px-1 d-inline-flex">
-        <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark"
+        <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} ps-2 py-2 text-dark"
             title="Demandeur/euse principal·e" data-toggle="tooltip" data-placement="bottom"> 
             {{ form_widget(form.head) }}
         </div>
     </div>
     {% if is_granted('ROLE_ADMIN') %}
         <div class="col-auto my-auto">
-            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-0"
+            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} ps-0"
                 title="Voir les suivis supprimés" data-toggle="tooltip" data-placement="bottom">
                 {{ form_widget(form.deleted.deleted) }}
             </div>

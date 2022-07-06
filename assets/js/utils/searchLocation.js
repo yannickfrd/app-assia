@@ -145,7 +145,7 @@ export default class SearchLocation {
     createItem(result, i) {
         const itemElt = document.createElement('a')
         itemElt.innerHTML = `<span class='text-secondary small'>${this.getLabel(result)}</span>`
-        itemElt.className = 'list-group-item list-group-item-action pl-3 pr-1 py-1 cursor-pointer'
+        itemElt.className = 'list-group-item list-group-item-action ps-3 pe-1 py-1 cursor-pointer'
         itemElt.dataset.result = i
 
         return itemElt
@@ -209,7 +209,7 @@ export default class SearchLocation {
     displayNoResult() {
         const spanElt = document.createElement('p')
         spanElt.textContent = 'Aucun résultat.'
-        spanElt.className = 'list-group-item pl-3 py-2 text-secondary small'
+        spanElt.className = 'list-group-item ps-3 py-2 text-secondary small'
         this.resultsSearchElt.appendChild(spanElt)
     }
 

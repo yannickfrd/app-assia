@@ -318,7 +318,7 @@ export default class NoteManager {
      */
     createTags(note) {
         return note.tags.reduce(
-            (tags, tag) => tags + `<span class="badge bg-${tag.color} text-light mr-1" data-tag-id="${tag.id}">${tag.name}</span>`, ''
+            (tags, tag) => tags + `<span class="badge bg-${tag.color} text-light me-1" data-tag-id="${tag.id}">${tag.name}</span>`, ''
         )
     }
 

@@ -20,7 +20,7 @@
                     <div class="col-12" id="modalRdvLabel">{{ form_widget(form_rdv.title) }}</div>
                 </div>
                 <div class="form-inline justify-content-md-right mb-2">
-                    <div class="col-auto my-1 pr-1 pl-0 d-inline-flex">
+                    <div class="col-auto my-1 pe-1 ps-0 d-inline-flex">
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <div class="input-group-text" title="Date" data-toggle="tooltip"
@@ -31,7 +31,7 @@
                             <input type="date" id="date" name="date" required="required" class="form-control">
                         </div>
                     </div>
-                    <div class="col-auto my-1 pr-1 pl-0 d-inline-flex">
+                    <div class="col-auto my-1 pe-1 ps-0 d-inline-flex">
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <div class="input-group-text" title="Heure de début" data-toggle="tooltip"
@@ -54,7 +54,7 @@
                             <input type="time" id="end" name="end" required="required" class="form-control">
                         </div>
                     </div>
-                    <div class="col-auto my-1 pr-1 pl-0 d-inline-flex">{{ form_widget(form_rdv.status) }}</div>
+                    <div class="col-auto my-1 pe-1 ps-0 d-inline-flex">{{ form_widget(form_rdv.status) }}</div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-12 col-lg-6 d-none">{{ form_widget(form_rdv.start) }}</div>
@@ -101,7 +101,7 @@
 
                 {% set alert_widget %}
                     <div class="form-inline mb-1">
-                        <div class="d-inline-flex mr-2 mb-2">
+                        <div class="d-inline-flex me-2 mb-2">
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <div class="input-group-text" title="Alerte" data-toggle="tooltip"
@@ -110,7 +110,7 @@
                                 </div>{{ form_widget(form_rdv.alerts.vars.prototype.date) }}
                             </div>
                         </div>
-                        <div class="d-inline-flex mr-2 mb-2">{{ form_widget(form_rdv.alerts.vars.prototype.type) }}</div>
+                        <div class="d-inline-flex me-2 mb-2">{{ form_widget(form_rdv.alerts.vars.prototype.type) }}</div>
                         <div class="d-inline-flex mb-2">
                             <button class="btn btn-sm btn-danger" data-action="remove"><i class="fas fa-trash-alt"></i>
                             </button>
@@ -126,7 +126,7 @@
                         <button type="button" class="btn btn-{{ theme_color }} btn-sm"
                                 data-list-selector="#alerts-fields-list" data-add-widget="alert"
                                 data-url="/alert/__id__/toggle-status">
-                            <i class="fas fa-plus-square mr-2"></i>Ajouter un rappel
+                            <i class="fas fa-plus-square me-2"></i>Ajouter un rappel
                         </button>
                     </div>
                 </div>
@@ -150,17 +150,17 @@
             </div>
             <div class="modal-footer d-flex justify-content-between">
                 <div class="float-left">
-                    <button id="modal-btn-delete" class="mr-3 btn btn-danger" data-placement="bottom"
+                    <button id="modal-btn-delete" class="me-3 btn btn-danger" data-placement="bottom"
                             data-action="delete-rdv-modal" data-url="{{ path('rdv_delete', {'id': '__id__'}) }}"
                             title="Supprimer le rendez-vous"><i class="fas fa-trash-alt"></i>
-                        <span class="d-md-inline ml-2">Supprimer</span>
+                        <span class="d-md-inline ms-2">Supprimer</span>
                     </button>
                 </div>
                 <div class="float-right">
                     <button type="button" id="js-btn-cancel" class="btn btn-secondary" data-dismiss="modal">Fermer
                     </button>
                     <button name="save-rdv" type="button" class="btn btn-{{ theme_color }} shadow" data-action="save-rdv">
-                        <i class="fas fa-save mr-2"></i>Enregistrer
+                        <i class="fas fa-save me-2"></i>Enregistrer
                     </button>
                 </div>
             </div>

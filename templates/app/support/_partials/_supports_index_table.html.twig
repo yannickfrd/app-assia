@@ -74,9 +74,9 @@
     {% if people_group is defined %}
         <button id="btn-new-support" class="m-2 btn btn-{{ theme_color }} btn-sm" 
         data-url="{{ path('group_new_support', {'id': people_group.id}) }}">
-        <span class="fas fa-plus-square pr-2"></span>Créer un nouveau suivi</button>
+        <span class="fas fa-plus-square pe-2"></span>Créer un nouveau suivi</button>
     {% else %}
-        <p class="ml-2 text-secondary"><span class="fas fa-info-circle mr-2"></span>
+        <p class="ms-2 text-secondary"><span class="fas fa-info-circle me-2"></span>
             Pour créer un nouveau suivi, aller sur la fiche du groupe ou créer un nouveau groupe (ci-dessus).<p>
     {% endif %}
 </section>

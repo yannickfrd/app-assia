@@ -26,13 +26,13 @@
                         role="button" data-toggle="tooltip" title="Passer en vue carte"><i class="fa-solid fa-grip-vertical"></i></a>
                 {% endif %}
                 {% if not restoration_mode %}
-                    <button class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-action="new_note"
+                    <button class="btn btn-{{ theme_color }} btn-sm shadow me-2" data-action="new_note"
                         title="Créer une nouvelle note" data-toggle="tooltip" data-placement="bottom">
-                        <i class="fas fa-plus-square mr-2"></i>Nouvelle note
+                        <i class="fas fa-plus-square me-2"></i>Nouvelle note
                     </button>
 				{% else %}
-					<a href="{{ app.request.pathInfo }}" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" 
-                        id="return_index"><i class="fa-solid fa-arrow-rotate-left mr-2"></i>Retour
+					<a href="{{ app.request.pathInfo }}" class="btn btn-{{ theme_color }} btn-sm shadow me-2" 
+                        id="return_index"><i class="fa-solid fa-arrow-rotate-left me-2"></i>Retour
 					</a>
 				{% endif %}
                 <div class="d-inline align-middle">Total :

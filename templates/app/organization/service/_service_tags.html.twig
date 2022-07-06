@@ -10,7 +10,7 @@
 					<span class="badge bg-{{ theme_color }} mb-1 text-light tag" data-tag-id="{{ tag.id }}" 
 						data-tag-name="{{ tag.name }}">{{ tag.name }}<!--
 						--><a href="{{ path('service_delete_tag', {service: service.id, tag: tag.id}) }}">
-							<span class="badge badge-danger ml-2"><i class="fas fa-times"></i></span>
+							<span class="badge badge-danger ms-2"><i class="fas fa-times"></i></span>
 						</a>
 					</span>
 				{% else %}
@@ -26,7 +26,7 @@
 				<div class="col-sm-4">
 					<button type="submit" name="add_tags" class="btn btn-{{ theme_color }}" 
 						title="Ajouter une ou plusieurs étiquettes" data-toggle="tooltip" data-placement="bottom">
-						<span class="fas fa-plus-square mr-2"></span>Ajouter
+						<span class="fas fa-plus-square me-2"></span>Ajouter
 					</button>
 				</div>
 			</div>

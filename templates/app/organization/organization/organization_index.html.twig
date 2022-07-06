@@ -20,7 +20,7 @@
 
             {% if is_granted('ROLE_ADMIN') %}
             <a href="{{ path('admin_organization_new') }}" class="btn btn-{{ theme_color }} btn-sm mb-3 shadow js-create-organization">
-                <span class="fas fa-plus-square mr-2"></span>Ajouter un nouvel organisme</a>
+                <span class="fas fa-plus-square me-2"></span>Ajouter un nouvel organisme</a>
             {% endif %}
 
             <div class="table-responsive">
@@ -69,7 +69,7 @@
             <div class="navigation">{{ knp_pagination_render(organizations) }}</div>
             {% if is_granted('ROLE_ADMIN') %}
                 <a href="{{ path('admin_organization_new') }}" class="btn btn-{{ theme_color }} btn-sm mb-2 shadow js-create-organization">
-                    <span class="fas fa-plus-square mr-2"></span>Ajouter un nouvel organisme</a>
+                    <span class="fas fa-plus-square me-2"></span>Ajouter un nouvel organisme</a>
             {% endif %}
     </section>
 {% endblock %}

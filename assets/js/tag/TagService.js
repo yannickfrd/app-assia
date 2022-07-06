@@ -174,7 +174,7 @@ export default class TagService {
      */
     createTag(tag) {
         const tagSpanElt = document.createElement('span')
-        tagSpanElt.classList.add('badge', 'bg-' + this.colorTheme, 'text-light', 'mr-1', 'tag')
+        tagSpanElt.classList.add('badge', 'bg-' + this.colorTheme, 'text-light', 'me-1', 'tag')
         tagSpanElt.dataset.tagId = tag.id
         tagSpanElt.dataset.tagName = tag.name
         tagSpanElt.innerText = ' ' + tag.name + ' '
@@ -187,7 +187,7 @@ export default class TagService {
             this.tryDelete(aElt.href)
         }
         const spanElt = document.createElement('span')
-        spanElt.classList.add('badge', 'badge-danger', 'ml-2')
+        spanElt.classList.add('badge', 'badge-danger', 'ms-2')
         spanElt.innerHTML = '<i class="fas fa-times"></i>'
 
         aElt.appendChild(spanElt)

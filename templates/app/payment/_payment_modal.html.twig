@@ -8,7 +8,7 @@
         <div class="modal-header">
             <h2 class="mb-0">Paiement</h2>
             <div class="small text-secondary">
-                <p class="mb-0 ml-3 text-right" id="js_info_payment">
+                <p class="mb-0 ms-3 text-right" id="js_info_payment">
                 </p>
             </div>
         </div>
@@ -24,10 +24,10 @@
                     <button id="calcul_contribution_btn" class="btn btn-secondary" 
                         title="Calculer le montant à régler" data-toggle="tooltip" data-placement="bottom" 
                         data-path="{{ path('support_payment_calcul', {'id': support.id}) }}">
-                        <i class="fas fa-sync mr-2"></i>Calculer</button>
-                    <button id="show_calcul_contribution_btn" class="btn btn-{{ theme_color }} ml-2 d-none" 
+                        <i class="fas fa-sync me-2"></i>Calculer</button>
+                    <button id="show_calcul_contribution_btn" class="btn btn-{{ theme_color }} ms-2 d-none" 
                         title="Voir le détail du montant à régler" data-toggle="tooltip" data-placement="bottom">
-                        <i class="fas fa-eye mr-2"></i>Voir le détail</button>
+                        <i class="fas fa-eye me-2"></i>Voir le détail</button>
                 </div>
             </div>
             <div class="row" data-payment="true"
@@ -55,7 +55,7 @@
                 <div class="col-lg-4">{{ form_row(form.toPayAmt) }}</div>
                     {% if service_type_hotel == true %}
                         <div class="col-lg-4" data-parent-field="payment_toPayAmt" data-type="no_contrib">
-                            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2">
+                            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} ps-2 py-2">
                                 {{ form_row(form.noContrib) }}</div>
                         </div>
                         <div class="col-lg-4" data-parent-field="payment_noContrib" data-type="no_contrib_reason">
@@ -89,29 +89,29 @@
         </div>
         <div class="modal-footer d-block">
             <div class="d-flex justify-content-between">
-                <div class="d-flex float-left mr-3">
-                    <button class="btn btn-danger mr-3 mb-1" data-action="delete"
+                <div class="d-flex float-left me-3">
+                    <button class="btn btn-danger me-3 mb-1" data-action="delete"
                         data-toggle="modal" data-target="#modal-block"
                         data-edit="true" data-path="{{ path('payment_delete', {'id': '__id__'}) }}"
                         title="Supprimer" data-placement="bottom"><i class="fas fa-trash-alt"></i><span 
-                        class="d-none d-md-inline ml-2">Supprimer</span></button>
-                    <button class="btn btn-{{ theme_color }} mr-2 mb-1 shadow" data-action="create_pdf"
+                        class="d-none d-md-inline ms-2">Supprimer</span></button>
+                    <button class="btn btn-{{ theme_color }} me-2 mb-1 shadow" data-action="create_pdf"
                         data-edit="true" data-path="{{ path('payment_export_pdf', {'id': '__id__'}) }}"
                         title="Générer le reçu en PDF" data-toggle="tooltip" data-placement="bottom">
                         <i class="fas fa-file-pdf bg-secondary fa-lg"></i>
-                        <span class="d-none d-md-inline ml-2">PDF</span></button>
+                        <span class="d-none d-md-inline ms-2">PDF</span></button>
                     <button class="btn btn-{{ theme_color }} mb-1 shadow" data-action="send_email"
                         data-edit="true" data-path="{{ path('payment_send_pdf', {'id': '__id__'}) }}"
                         title="Envoyer un email avec le reçu en PDF" data-toggle="tooltip" data-placement="bottom" >
                         <i class="fas fa-envelope bg-secondary fa-lg"></i>
-                        <span class="d-none d-md-inline ml-2">Email</span></button>
+                        <span class="d-none d-md-inline ms-2">Email</span></button>
                 </div>
                 <div class="d-flex float-right">
-                    <button type="button" class="btn btn-secondary mr-2 mb-1" 
+                    <button type="button" class="btn btn-secondary me-2 mb-1" 
                         data-action="close" data-dismiss="modal">Fermer</button>
                     <button type="submit" class="btn btn-{{ theme_color }} mb-1 shadow" data-action="save"
                         data-path="{{ path('payment_edit', {'id': '__id__'}) }}">
-                        <i class="fas fa-save d-none d-md-inline mr-2"></i><span>Enregistrer</span></button>
+                        <i class="fas fa-save d-none d-md-inline me-2"></i><span>Enregistrer</span></button>
                 </div>
             </div>
         </div>

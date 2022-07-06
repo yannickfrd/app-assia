@@ -36,7 +36,7 @@
 							<td class="align-middle">{{ sub_service.email }}</td>
 							<td class="align-middle text-center">
 								{% if is_granted('DISABLE', service) %}
-									<a id="modal-btn-disable" class="mr-3 btn btn-danger" href="{{ path('sub_service_disable', {'id':sub_service.id}) }}"
+									<a id="modal-btn-disable" class="me-3 btn btn-danger" href="{{ path('sub_service_disable', {'id':sub_service.id}) }}"
 										title="Supprimer le sous-service" data-toggle="tooltip" data-placement="bottom"
 										onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer ce sous-service ?')){return true;}else{return false;}">
 										<span class="fas fa-trash-alt"></span>
@@ -55,7 +55,7 @@
 		<div class="row">
 			<div class="col-md-12">
 				<a href="{{ path('sub_service_new', {'id':service.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow"><span
-					class="fas fa-plus-square pr-2"></span>Créer un sous-service</a>
+					class="fas fa-plus-square pe-2"></span>Créer un sous-service</a>
 			</div>
 		</div>
 	{% endif %}

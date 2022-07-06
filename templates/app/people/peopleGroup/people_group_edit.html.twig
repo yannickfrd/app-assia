@@ -20,7 +20,7 @@
             </div>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item active" aria-current="page"><span class="fas fa-users mr-2"></span>Groupe</li>
+                    <li class="breadcrumb-item active" aria-current="page"><span class="fas fa-users me-2"></span>Groupe</li>
                 </ol>
             </nav>
         </div>
@@ -32,7 +32,7 @@
                 <div class="col-md-12 mb-3">
                     <div class="float-right">
                         <button type="submit" name="send" class="btn btn-{{ theme_color }} shadow">
-                            <span class="fas fa-save mr-2"></span>Mettre à jour</button>
+                            <span class="fas fa-save me-2"></span>Mettre à jour</button>
                     </div>
                 </div>
             </div>
@@ -66,7 +66,7 @@
                                             </a>
                                         </td>
                                         <td class="px-1 align-middle">
-                                            <div class="custom-control custom-radio custom-radio-{{ theme_color }} pl-3">
+                                            <div class="custom-control custom-radio custom-radio-{{ theme_color }} ps-3">
                                                 {{ form_widget(form_person.head) }}
                                             </div>
                                         </td>
@@ -101,10 +101,10 @@
                 <div class="col-md-12">
                     <a href="{{ path('group_search_person', {'id': people_group.id, 'supports': with_supports}) }}"
                         class="btn btn-{{ theme_color }} btn-sm my-2">
-                        <span class="fas fa-plus-square mr-2"></span>Ajouter une personne</a>
+                        <span class="fas fa-plus-square me-2"></span>Ajouter une personne</a>
                     <a href="{{ path('group_create_person', {'id': people_group.id, 'supports': with_supports, 'role': 3}) }}" class="btn btn-secondary btn-sm my-2"
                         data-toggle="tooltip" title="Ajouter un enfant" data-placement="bottom">
-                        <span class="fas fa-plus-square mr-2"></span>Naissance</a>
+                        <span class="fas fa-plus-square me-2"></span>Naissance</a>
                 </div>
             </div>
         </div>
@@ -122,16 +122,16 @@
                     {% if is_granted_ROLE_ADMIN %}
                         <div class="float-left d-flex">
                         {% set msg_confirm = 'Êtes-vous vraiment sûr de vouloir supprimer ce groupe ?' %}
-                            <a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" 
+                            <a id="modal-btn-delete" class="me-3 btn btn-danger d-block" 
                                 href="{{ path('people_group_delete', {'id': people_group.id}) }}"
                                 data-toggle="tooltip" title="Supprimer le groupe" data-placement="bottom"
                                 onclick="if(window.confirm('{{ msg_confirm }}')){return true;}else{return false;}"><span
-                                class="fas fa-trash-alt mr-2"></span><span class="">Supprimer</span></a>
+                                class="fas fa-trash-alt me-2"></span><span class="">Supprimer</span></a>
                         </div>
                     {% endif %}
                     <div class="float-right">
                         <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">
-                            <span class="fas fa-save mr-2"></span>Mettre à jour
+                            <span class="fas fa-save me-2"></span>Mettre à jour
                         </button>
                     </div>
                 </div>

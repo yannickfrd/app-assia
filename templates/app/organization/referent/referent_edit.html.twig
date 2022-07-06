@@ -62,17 +62,17 @@
                 <div class="col-md-12">
                     {% if edit_mode %}
                     <div class="float-left d-flex">
-                        <a id="btn-delete" class="mr-3 btn btn-danger d-block"
+                        <a id="btn-delete" class="me-3 btn btn-danger d-block"
                             href="{{ support ? path('support_referent_delete', {'supportId': support.id, 'id': referent.id}) 
                             : path('referent_delete', {'id': referent.id})  }}"
                             title="Supprimer le service social référent" data-toggle="tooltip" data-placement="bottom"
                             onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer ce service social référent ?')){return true;}else{return false;}"><span
-                                class="fas fa-trash-alt mr-2"></span>Supprimer</a>
+                                class="fas fa-trash-alt me-2"></span>Supprimer</a>
                     </div>
                     {% endif %}
                     <div class="mb-4 float-right">
                         <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"><span 
-                            class="fas fa-edit mr-2"></span>{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+                            class="fas fa-edit me-2"></span>{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
                     </div>
                 </div>
             </div>

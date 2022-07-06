@@ -15,7 +15,7 @@
             <div class="col-md-12">
                 <p><a href="{{ path('occupancy_devices', {'year': search.year, 'date': {'start': search.start|date('Y-m-d'), 
                     'end': search.end|date('Y-m-d')}, 'pole': search.pole ? search.pole.id}) }}" class="text-{{ theme_color }}">
-                    <span class="fas fa-undo mr-2"></span>{% if device %}Retour{% else %}Accès
+                    <span class="fas fa-undo me-2"></span>{% if device %}Retour{% else %}Accès
                     {% endif %} aux taux d'ocupation par dispositif.</a>
                 </p>
                 {% set interval = date(search.start).diff(date(search.end)) %}

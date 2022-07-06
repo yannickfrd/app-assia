@@ -1,7 +1,7 @@
 <section id="referents">
     <div class="d-flex align-items-center mb-3">
         <h2 class="h4">Autre service ou référent social</h2>
-        <span class="ml-2 d-none d-md-inline small text-secondary"> (SSD, CCAS, service médico-social...)</span>
+        <span class="ms-2 d-none d-md-inline small text-secondary"> (SSD, CCAS, service médico-social...)</span>
     </div>
     {% if referents|length > 0 %}
         <div class="table-responsive">
@@ -44,5 +44,5 @@
     {% endif %}
     <a href="{{ support is defined ? path('support_referent_new', {'support_id':support.id}) : path('group_referent_new', 
         {'group_id':people_group.id}) }}" class="m-2 btn btn-{{ theme_color }} btn-sm" title="Ajouter un service ou référent" 
-        data-toggle="tooltip" data-placement="bottom"><span class="fas fa-plus-square mr-2"></span>Ajouter</a>
+        data-toggle="tooltip" data-placement="bottom"><span class="fas fa-plus-square me-2"></span>Ajouter</a>
 </section>

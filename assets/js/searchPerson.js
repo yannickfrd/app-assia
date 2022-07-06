@@ -74,7 +74,7 @@ export default class SearchPerson {
             const aElt = document.createElement('a')
             aElt.innerHTML = `<span class="text-capitalize text-secondary small">${person.fullname} (${person.birthdate})</span>`
             aElt.href = '/person/' + person.id
-            aElt.className = 'list-group-item list-group-item-action pl-3 pr-1 py-1'
+            aElt.className = 'list-group-item list-group-item-action ps-3 pe-1 py-1'
             this.resultsSearchElt.appendChild(aElt)
             aElt.addEventListener('click', () => {
                 this.loader.on()
@@ -88,7 +88,7 @@ export default class SearchPerson {
     noResult() {
         const spanElt = document.createElement('p')
         spanElt.textContent = 'Aucun résultat.'
-        spanElt.className = 'list-group-item pl-3 py-2'
+        spanElt.className = 'list-group-item ps-3 py-2'
         this.resultsSearchElt.appendChild(spanElt)
     }
 

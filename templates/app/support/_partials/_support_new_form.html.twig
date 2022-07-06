@@ -12,12 +12,12 @@
         <div id="sub-service-block">{{ form_row(form.subService) }}</div>
         {{ form_row(form.device) }}
         {% if nb_supports > 0 %}
-            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 text-dark">
+            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} ps-2 text-dark">
                 {{ form_row(form._cloneSupport) }}
             </div>
         {% endif %}
         {% if people_group and people_group.siSiaoId %}
-            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 text-dark">
+            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} ps-2 text-dark">
                 {{ form_row(form._siSiaoImport) }}
             </div>
         {% endif %}

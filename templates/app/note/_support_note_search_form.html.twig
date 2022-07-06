@@ -18,7 +18,7 @@
     </div>
     {% if is_granted('ROLE_SUPER_ADMIN') %}
         <div class="col-auto my-auto">
-            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-0"
+            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} ps-0"
                 title="Voir les notes supprimées" data-toggle="tooltip" data-placement="bottom">
                 {{ form_widget(form_search.deleted.deleted) }}
             </div>
@@ -27,7 +27,7 @@
 {% endblock %}
 
 {% block form_search_export %}
-    <button id="js-btn-export" name="export" value="true" class="btn btn-primary ml-2 shadow"
+    <button id="js-btn-export" name="export" value="true" class="btn btn-primary ms-2 shadow"
         title="Exporter les notes dans un document Word" data-toggle="tooltip" data-placement="bottom">
         <i class="fas fa-file-word"></i><span class="sr-only">Exporter</span>
     </button>
