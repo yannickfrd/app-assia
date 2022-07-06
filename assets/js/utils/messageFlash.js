@@ -21,8 +21,8 @@ export default class MessageFlash {
         this.msgFlashContentElt.classList.replace('d-none', 'd-block')
         this.msgFlashContentElt.insertBefore(this.msg, this.msgFlashContentElt.firstChild)
 
-        this.msg.querySelector('button.close').addEventListener('click', () => {
-            if (this.msgFlashContentElt.querySelectorAll('button.close').length === 1) {
+        this.msg.querySelector('button.btn-close').addEventListener('click', () => {
+            if (this.msgFlashContentElt.querySelectorAll('button.btn-close').length === 1) {
                 this.msg.remove()
                 this.msgFlashContentElt.classList.replace('d-block', 'd-none')
             }
@@ -40,9 +40,7 @@ export default class MessageFlash {
             `<div id='js-msg-flash' class='mb-2 msg-flash alert alert-${this.alert} alert-dismissible fade show align-items-center'
                 role='alert' aria-live='assertive' aria-atomic='true'>
                 <div>${this.message}</div>
-                <button type='button' id='btn-close-msg' class='close' data-dismiss='alert' aria-label='Close'>
-                    <span aria-hidden='true'>&times</span>
-                </button>
+                <button type="button" id="btn-close-msg" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 <span id='timeline' class='bg-${this.alert}'></span>
             </div>`
         return msgElt
