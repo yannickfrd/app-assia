@@ -1,9 +1,9 @@
 require('../css/app.scss')
 import SearchPerson from './searchPerson'
 import autoLogout from './utils/autoLogout'
-import {Tooltip, Popover, Toast} from 'bootstrap'
+import {Tooltip, Popover, Toast} from '../../node_modules/bootstrap'
 
-require('bootstrap')
+require('../../node_modules/bootstrap')
 require('@fortawesome/fontawesome-free/css/all.min.css')
 
 // Lorsque le DOM est chargé
@@ -16,7 +16,7 @@ window.onload = () => {
         new Popover(popover)
     })
     document.querySelectorAll('.toast').forEach(toast => {
-        (new Toast(toast)).show()
+        new Toast(toast).show()
     })
     // Stop le spinner loader 
     document.getElementById('loader').classList.add('d-none')
