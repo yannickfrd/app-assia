@@ -89,15 +89,15 @@
                 <div class="row mb-3">
                     <div class="col-md-12">
                         {% if true == edit_mode and is_granted('ROLE_ADMIN') %}
-                            <div class="float-left d-flex">
+                            <div class="float-start d-flex">
                             {% set msg_confirm = 'Êtes-vous vraiment sûr de vouloir supprimer cette personne ?' %}
-                                <a id="modal-btn-delete" class="me-3 btn btn-danger d-block" href="{{ path('person_delete', {'id': person.id}) }}"
+                                <a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('person_delete', {'id': person.id}) }}"
                                     data-toggle="tooltip" title="Supprimer la personne" data-placement="bottom"
                                     onclick="if(window.confirm('{{ msg_confirm }}')){return true;}else{return false;}"><span
                                     class="fas fa-trash-alt me-2"></span>Supprimer</a>
                             </div>
                         {% endif %}
-                        <div class="mb-4 float-right">
+                        <div class="mb-4 float-end">
                             {% if true == edit_mode %}
                                 <button type="submit" id="updatePerson" name="updatePerson" class="btn btn-{{ theme_color }} shadow"
                                     data-url="{{ path('person_edit_ajax', {'id': person.id}) }}">

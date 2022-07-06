@@ -4,11 +4,9 @@
     <div class="col-auto my-1 px-1">{{ form_row(form.content) }}</div>
     <div class="col-auto my-1 px-1">
         <div class="input-group">
-            <div class="input-group-prepend">
-                <div class="input-group-text" title="Étiquettes" data-toggle="tooltip" data-placement="bottom">
-                    <i class="fas fa-tag text-black-50"></i>
-                </div>
-            </div>
+            <span class="input-group-text" title="Étiquettes" data-toggle="tooltip" data-placement="bottom">
+                <i class="fas fa-tag text-black-50"></i>
+            </span>
             {{ form_widget(form.tags) }}
         </div>
     </div>

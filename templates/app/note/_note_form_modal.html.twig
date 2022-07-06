@@ -26,18 +26,16 @@
                     <label class="col-form-label d-none d-sm-block col-sm-2" for="note_tags">Étiquettes</label>
                     <div class="col-sm-10">
                         <div class="input-group">
-                            <div class="input-group-prepend">
-                                <div class="input-group-text" title="Étiquettes" data-toggle="tooltip" data-placement="bottom">
-                                    <i class="fas fa-tag text-black-50"></i>
-                                </div>
-                            </div>
+                            <span class="input-group-text" title="Étiquettes" data-toggle="tooltip" data-placement="bottom">
+                                <i class="fas fa-tag text-black-50"></i>
+                            </span>
                             {{ form_widget(form.tags) }}
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-between">
-                <div class="d-flex float-left">
+                <div class="d-flex float-start">
                     <button id="modal-btn-delete" class="btn btn-danger me-2 me-md-3"
                         title="Supprimer la note" data-toggle="tooltip" data-placement="bottom">
                         <i class="fas fa-trash-alt"></i><span class="d-none d-md-inline ms-2">Supprimer</span>
@@ -55,7 +53,7 @@
                         <span class="d-none d-sm-inline">Sauv. auto.</span>
                     </div>
                 </div>
-                <div class="float-right">
+                <div class="float-end">
                     <button type="button" data-action="close" class="btn btn-secondary">Fermer</button>
                     <button type="submit" data-action="save" class="btn btn-{{ theme_color }} shadow">
                         <i class="fas fa-save d-none d-sm-inline me-2"></i>Enregistrer</button>

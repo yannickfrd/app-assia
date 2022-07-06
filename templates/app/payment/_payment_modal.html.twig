@@ -89,7 +89,7 @@
         </div>
         <div class="modal-footer d-block">
             <div class="d-flex justify-content-between">
-                <div class="d-flex float-left me-3">
+                <div class="d-flex float-start me-3">
                     <button class="btn btn-danger me-3 mb-1" data-action="delete"
                         data-toggle="modal" data-target="#modal-block"
                         data-edit="true" data-path="{{ path('payment_delete', {'id': '__id__'}) }}"
@@ -106,7 +106,7 @@
                         <i class="fas fa-envelope bg-secondary fa-lg"></i>
                         <span class="d-none d-md-inline ms-2">Email</span></button>
                 </div>
-                <div class="d-flex float-right">
+                <div class="d-flex float-end">
                     <button type="button" class="btn btn-secondary me-2 mb-1" 
                         data-action="close" data-dismiss="modal">Fermer</button>
                     <button type="submit" class="btn btn-{{ theme_color }} mb-1 shadow" data-action="save"

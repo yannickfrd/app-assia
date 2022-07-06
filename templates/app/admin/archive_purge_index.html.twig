@@ -27,7 +27,7 @@
             {% set text_confirm = '"Êtes-vous sûr de vouloir procéder à ' ~ (is_archive ? 'l\'archive' : 'la suppression') ~ '"' %}
             <div class="row">
                 <div class="col-md-12 mt-3 mb-2">
-                    <div class="float-right">
+                    <div class="float-end">
                         <a href="{{ path('admin_' ~ (is_archive ? 'archive' : 'purge')) }}" class="btn btn-{{ theme_color }} shadow"
                             onclick="return window.confirm({{ text_confirm }});">
                             {{ title }}</a>

@@ -14,10 +14,10 @@
 {% endblock %}
 
 {% block modal_footer %}
-    <div class="float-left">
+    <div class="float-start">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
     </div>
-    <div class="float-right">
+    <div class="float-end">
         <button type="submit" id="js-btn-confirm" class="btn btn-{{ theme_color }}">Ajouter la personne</button>
     </div>
     {{ form_row(form_role_person._token) }}

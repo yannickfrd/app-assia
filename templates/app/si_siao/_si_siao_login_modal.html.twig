@@ -21,10 +21,10 @@
 {% endblock %}
 
 {% block modal_footer %}
-    <div class="float-left">
+    <div class="float-start">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
     </div>
-    <div class="float-right">
+    <div class="float-end">
         <button type="submit" id="si-siao-connection" name="si-siao-connection" data-url="{{ path('api_sisiao_check_connection') }}"
         class="btn btn-lg btn-{{ theme_color }} btn-block shadow">Se connecter</button>
     </div>

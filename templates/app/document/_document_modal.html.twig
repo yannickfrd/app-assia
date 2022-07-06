@@ -13,12 +13,9 @@
                 <div class="row mb-3">
                     <div class="col-12">
                         <div class="input-group">
-                            <div class="input-group-prepend">
-                                <div class="input-group-text" title="Étiquettes" 
-                                    data-toggle="tooltip" data-placement="bottom">
-                                    <i class="fas fa-tag text-black-50"></i>
-                                </div>
-                            </div>
+                            <span class="input-group-text" title="Étiquettes" data-toggle="tooltip" 
+                                data-placement="bottom"><i class="fas fa-tag text-black-50"></i>
+                            </span>
                             {{ form_widget(documentForm.tags) }}
                         </div>
                     </div>
@@ -26,15 +23,15 @@
                 {{ form_row(documentForm.content) }}
             </div>
             <div class="modal-footer d-flex justify-content-between">
-                <div class="float-left">
-                    <button type="button" class="me-3 btn btn-danger shadow d-block" data-action="delete"
+                <div class="float-start">
+                    <button type="button" class="mr-3 btn btn-danger shadow d-block" data-action="delete"
                         data-url-document-delete="{{ path('document_delete', {'id': '__id__'}) }}"
                         title="Supprimer le document" data-toggle="tooltip" data-placement="bottom">
                         <i class="fas fa-trash-alt"></i>
                         <span class="d-none d-md-inline ms-2">Supprimer</span>
                     </button>
                 </div>
-                <div class="float-right">
+                <div class="float-end">
                     <button type="button" class="btn btn-secondary shadow" data-dismiss="modal">Fermer</button>
                     <button type="submit" name="document_update" class="btn btn-{{ theme_color }} shadow"
                         data-action="update"><i class="fas fa-save me-2"></i>Mettre à jour</button>

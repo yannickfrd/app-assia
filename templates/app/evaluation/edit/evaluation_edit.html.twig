@@ -60,10 +60,10 @@
 
 		<div class="row mb-3">
 			<div class="col-md-12">
-				<div class="float-left d-flex">
+				<div class="float-start d-flex">
 					{% if is_granted('ROLE_ADMIN') %}
 						{% set alert_text = '"Êtes-vous vraiment sûr de vouloir supprimer cette évaluation sociale ?"' %}
-						<a id="modal-btn-delete" class="me-3 btn btn-danger d-block" href="{{ path('evaluation_delete', {'id': evaluation_group.id}) }}" 
+						<a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('evaluation_delete', {'id': evaluation_group.id}) }}" 
 							title="Supprimer l'évaluation sociale" data-toggle="tooltip" data-placement="bottom" 
 							onclick="return window.confirm({{ alert_text }});">
 							<i class="fas fa-trash-alt me-2"></i>Supprimer</a>
@@ -75,7 +75,7 @@
 						onclick="return window.confirm({{ alert_text }});"><i class="fas fa-cloud-download-alt me-2"></i>
 						<span class="d-none d-sm-inline">Importer SI-SIAO</span></a>
 				</div>
-				<div class="mb-4 float-right">
+				<div class="mb-4 float-end">
 					<button type="submit" name="send" id="send" class="btn btn-{{ theme_color }} shadow" 
 						data-url="{{ path('support_evaluation_edit', {'id': support.id}) }}">
 						<i class="fas fa-save me-2"></i>Enregistrer</button>

@@ -5,12 +5,11 @@
     <div class="col-auto my-1 px-1">{{ form_row(form.pole) }}</div>
     <div class="col-auto my-1 px-1 d-inline-flex">
         <div class="input-group">
-            <div class="input-group-prepend">
-                <div class="input-group-text d-none d-sm-block" title="Téléphone" data-toggle="tooltip"
-                    data-placement="bottom" ><i class=" fas fa-phone text-black-50"></i>
-                </div>
-            </div>
-            {{ form_row(form.phone) }}
+            <span class="input-group-text d-none d-sm-block" title="Téléphone" data-toggle="tooltip"
+                data-placement="bottom" ><i class=" fas fa-phone text-black-50"></i>
+            </span>
+            {{ form_label(form.phone) }}
+            {{ form_widget(form.phone) }}
         </div>
     </div>
     <div class="col-auto my-1 px-1">{{ form_row(form.city) }}</div>
