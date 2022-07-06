@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Version 3.23.1 - 06/07/2022
+
+* Install cleave.js (Vanilla JS)
+* Remove jquery-mask-plugin
+* Create a pure JS script to mask input 'number'
+* Fix required 'false' for all SearchTypes
+* Add maxlength for phone mask
+
 ## Version 3.23.0 - 06/07/2022
 
 New feature to archive and purge datas (#157)
