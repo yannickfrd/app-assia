@@ -20,7 +20,7 @@
                     {% if is_granted_view_support or support_person.status != constant('STATUS_PRE_ADD_FAILED', support_group) %}
                         {% if support_group.referent %}
                             {% set contact_user %}
-                                <div class='text-left p-2'>
+                                <div class='text-start  p-2'>
                                     <b>Coordonnées :</b>
                                     <br/>Téléphone : {{ support_group.referent.phone1}}
                                     <br/>Email : {{ support_group.referent.email }}
@@ -28,7 +28,7 @@
                             {% endset %}
                         {% endif %}
                         {% set contact_service %}
-                            <div class='text-left p-2'>
+                            <div class='text-start  p-2'>
                                 <b>Coordonnées du service :</b>
                                 <br/>Téléphone : {{ support_group.service.phone1}}
                                 <br/>Email : {{ support_group.service.email }}
