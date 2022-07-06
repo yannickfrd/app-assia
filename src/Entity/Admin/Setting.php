@@ -4,6 +4,7 @@ namespace App\Entity\Admin;
 
 use App\Repository\Admin\SettingRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=SettingRepository::class)
@@ -28,6 +29,12 @@ class Setting
      * @ORM\Column(type="string", length=255)
      */
     private $organizationName;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     * @Assert\Range(min=0, max=120)
+     */
+    private $hardDeletionDelay = Setting::DEFAULT_HARD_DELETION_DELAY;
 
     /*
      * @ORM\Column(type="integer", nullable=true)
@@ -54,6 +61,18 @@ class Setting
     public function setOrganizationName(string $organizationName): self
     {
         $this->organizationName = $organizationName;
+
+        return $this;
+    }
+
+    public function getHardDeletionDelay(): ?int
+    {
+        return $this->hardDeletionDelay;
+    }
+
+    public function setHardDeletionDelay(?int $hardDeletionDelay): self
+    {
+        $this->hardDeletionDelay = $hardDeletionDelay;
 
         return $this;
     }

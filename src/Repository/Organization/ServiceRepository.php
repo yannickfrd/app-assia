@@ -214,6 +214,22 @@ class ServiceRepository extends ServiceEntityRepository
     }
 
     /**
+     * Donne l'id des services et ses settings.
+     *
+     * @return Service[]
+     */
+    public function findServicesWithSetting(): array
+    {
+        return $this->createQueryBuilder('s')->select('s')
+            ->leftJoin('s.setting', 'setting')->addSelect('setting')
+
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult()
+        ;
+    }
+
+    /**
      * @return Service[]
      */
     public function findServices(ServiceIndicatorsSearch $search): array

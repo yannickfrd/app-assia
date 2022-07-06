@@ -3,6 +3,7 @@
 namespace App\Repository\Evaluation;
 
 use App\Entity\Evaluation\EvaluationPerson;
+use App\Repository\Traits\QueryTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
@@ -15,6 +16,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class EvaluationPersonRepository extends ServiceEntityRepository
 {
+    use QueryTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, EvaluationPerson::class);

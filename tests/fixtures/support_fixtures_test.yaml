@@ -36,6 +36,30 @@ App\Entity\Support\SupportGroup:
         createdBy: $referent
         updatedAt: <dateTimeBetween($createdAt, "now")>
         updatedBy: $referent
+    support_group4:
+        startDate: <date_create("2019-04-03")>
+        endDate: <dateTimeBetween("-3 years", "-2 years")>
+        status: 4
+        referent: "@john_user"
+        service: "@service2"
+        device: "@device*"
+        peopleGroup: "@people_group4"
+        createdAt: <date_create("2010-04-03")>
+        createdBy: $referent
+        updatedAt: $endDate
+        updatedBy: $referent
+    support_group5:
+        startDate: <date_create("2016-04-03")>
+        endDate: <dateTimeBetween("-5 years", "-4 years")>
+        status: 4
+        referent: "@john_user"
+        service: "@service2"
+        device: "@device*"
+        peopleGroup: "@people_group5"
+        createdAt: <date_create("2010-04-03")>
+        createdBy: $referent
+        updatedAt: $endDate
+        updatedBy: $referent
 
 App\Entity\Support\SupportPerson:
     support_person1:

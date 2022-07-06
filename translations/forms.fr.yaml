@@ -409,17 +409,15 @@ Hard deletion delay: Délai de suppression
 
 setting:
   soft_deletion_delay:
-    service_help: Nombre de mois avant l'archivage.
     label: Délai minimum d'archivage
     placeholder: "Exemple : 24 mois"
-    help: Par mois.
+    help: Nombre de mois avant l'archivage.
     error.expiry_delai: La valeur du champ, ne peut pas être inférieur à
   hard_deletion_delay:
-    service_help: Nombre de mois avant la suppression définitive à partir de la fin du délai d'archivage.
-    label: Délai minimum de suppression
+    label: Délai minimum de suppression définitive
     placeholder: "Exemple : 24 mois"
-    help: Nombre de mois à partir de la fin du délai d'archivage.
-  delay_update.placeholder: "Exemple : 3 mois."
+    help: Nombre de mois avant la suppression définitive à partir de la date de suppression soft.
+  delay_update.placeholder: "Exemple : 3 mois"
   auto_evaluation_alerts.label: Rappels automatiques relatifs à l'évaluation sociale
   update_siao_request.help: Nombre de mois avant la date limite de renouvellement de la demande SIAO
   update_social_housing_request.help: Nombre de mois avant la date limite de renouvellement de la demande de logement social

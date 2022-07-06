@@ -4,6 +4,7 @@ namespace App\Repository\Organization;
 
 use App\Entity\Organization\Referent;
 use App\Entity\People\PeopleGroup;
+use App\Repository\Traits\QueryTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
@@ -16,6 +17,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ReferentRepository extends ServiceEntityRepository
 {
+    use QueryTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Referent::class);

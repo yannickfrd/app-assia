@@ -11,7 +11,19 @@ trait DoctrineTrait
         $listenersType = $em->getEventManager()->getListeners();
         foreach ($listenersType as $listenerType) {
             foreach ($listenerType as $listener) {
-                $em->getEventManager()->removeEventListener(['onFlush', 'onFlush'], $listener);
+                $em->getEventManager()->removeEventListener(['onFlush'], $listener);
+            }
+        }
+    }
+
+    public function disableListener(EntityManagerInterface $em, string $listenerClassName): void
+    {
+        foreach ($em->getEventManager()->getListeners() as $listeners) {
+            foreach ($listeners as $listener) {
+                if ($listener instanceof $listenerClassName) {
+                    $em->getEventManager()->removeEventListener(['onFlush'], $listener);
+                    break;
+                }
             }
         }
     }
@@ -20,6 +32,13 @@ trait DoctrineTrait
     {
         if ($em->getFilters()->isEnabled($filter)) {
             $em->getFilters()->disable($filter);
+        }
+    }
+
+    public function enableFilter(EntityManagerInterface $em, string $filter): void
+    {
+        if (!$em->getFilters()->isEnabled($filter)) {
+            $em->getFilters()->enable($filter);
         }
     }
 }

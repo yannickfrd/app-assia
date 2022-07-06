@@ -5,6 +5,7 @@ namespace App\Repository\People;
 use App\Entity\People\PeopleGroup;
 use App\Entity\People\RolePerson;
 use App\Entity\Support\SupportGroup;
+use App\Repository\Traits\QueryTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -16,6 +17,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class RolePersonRepository extends ServiceEntityRepository
 {
+    use QueryTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, RolePerson::class);

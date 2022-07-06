@@ -40,4 +40,32 @@ App\Entity\Support\Payment:
         updatedAt: $createdAt
         createdBy: "@user*"
         updatedBy: "@user*"
-        supportGroup: "@support_group*"
+        supportGroup: "@support_group1"
+    payment6:
+        startDate: <dateTimeBetween("-2 years", "now")>
+        endDate: <dateTimeBetween($startDate, "+1 month")>
+        type: <numberBetween(1, 2)>
+        resourcesAmt: <numberBetween(0, 1500)>
+        toPayAmt: <numberBetween(0, 200)>
+        paidAmt: $toPayAmt
+        paymentDate: <dateTimeBetween($startDate, "+1 month")>
+        paymentType: <numberBetween(3, 4)>
+        createdAt: <dateTimeBetween($paymentDate, "+1 month")>
+        updatedAt: $createdAt
+        createdBy: "@user*"
+        updatedBy: "@user*"
+        supportGroup: "@support_group4"
+    payment7:
+        startDate: <dateTimeBetween("-2 years", "now")>
+        endDate: <dateTimeBetween($startDate, "+1 month")>
+        type: <numberBetween(1, 2)>
+        resourcesAmt: <numberBetween(0, 1500)>
+        toPayAmt: <numberBetween(0, 200)>
+        paidAmt: $toPayAmt
+        paymentDate: <dateTimeBetween($startDate, "+1 month")>
+        paymentType: <numberBetween(3, 4)>
+        createdAt: <dateTimeBetween($paymentDate, "+1 month")>
+        updatedAt: $createdAt
+        createdBy: "@user*"
+        updatedBy: "@user*"
+        supportGroup: "@support_group5"

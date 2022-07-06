@@ -28,8 +28,8 @@ use Symfony\Component\Security\Core\Security;
  */
 class SupportPersonRepository extends ServiceEntityRepository
 {
-    use QueryTrait;
     use DoctrineTrait;
+    use QueryTrait;
 
     public const EXPORT_LIMIT = 15_000;
 
@@ -76,6 +76,23 @@ class SupportPersonRepository extends ServiceEntityRepository
         if ($search) {
             $qb = $this->filters($qb, $search);
         }
+
+        return $qb
+            ->orderBy('sg.updatedAt', 'DESC')
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+    }
+
+    public function findSupportPeopleBySupportGroupIdsQuery(array $ids, SupportSearch $search): Query
+    {
+        $this->disableFilter($this->_em, 'softdeleteable');
+
+        $qb = $this->getSupportsQuery()
+            ->andWhere('sg.id IN (:ids)')
+            ->setParameter('ids', $ids)
+        ;
+
+        $qb = $this->filters($qb, $search);
 
         return $qb
             ->orderBy('sg.updatedAt', 'DESC')

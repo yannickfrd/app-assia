@@ -201,6 +201,26 @@ class RdvRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+     * Return all rdvs of group support.
+     */
+    public function findAllRdvsOfSupport(int $supportGroupId, bool $soft = false): ?array
+    {
+        $query = $this->createQueryBuilder('r')->select('r')
+            ->andWhere('r.supportGroup = :supportGroup')
+            ->setParameter('supportGroup', $supportGroupId);
+
+        if ($soft) {
+            $query->andWhere('r.deletedAt IS NULL');
+        }
+
+        return $query
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult()
+        ;
+    }
+
     public function findLastRdvOfSupport(int $supportGroupId): ?Rdv
     {
         return $this->createQueryBuilder('r')->select('r')
@@ -320,10 +340,10 @@ class RdvRepository extends ServiceEntityRepository
      */
     public function countRdvs(array $criteria = null): int
     {
-        $qb = $this->createQueryBuilder('rdv')->select('COUNT(rdv.id)');
+        $qb = $this->createQueryBuilder('r')->select('COUNT(r.id)');
 
         if ($criteria) {
-            $qb->leftJoin('rdv.supportGroup', 'sg');
+            $qb->leftJoin('r.supportGroup', 'sg');
 
             foreach ($criteria as $key => $value) {
                 if ('service' === $key) {
@@ -339,15 +359,15 @@ class RdvRepository extends ServiceEntityRepository
                     $qb = $this->addOrWhere($qb, 'sg.status', $value);
                 }
                 if ('startDate' === $key) {
-                    $qb->andWhere('rdv.createdAt >= :startDate')
+                    $qb->andWhere('r.createdAt >= :startDate')
                         ->setParameter('startDate', $value);
                 }
                 if ('endDate' === $key) {
-                    $qb->andWhere('rdv.createdAt <= :endDate')
+                    $qb->andWhere('r.createdAt <= :endDate')
                         ->setParameter('endDate', $value);
                 }
                 if ('createdBy' === $key) {
-                    $qb->andWhere('rdv.createdBy = :createdBy')
+                    $qb->andWhere('r.createdBy = :createdBy')
                         ->setParameter('createdBy', $value);
                 }
             }

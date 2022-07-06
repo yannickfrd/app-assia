@@ -56,31 +56,10 @@ class ServiceSettingType extends AbstractType
                         },
                     ]),
                 ],
-                'help' => 'setting.soft_deletion_delay.service_help',
+                'help' => 'setting.soft_deletion_delay.help',
                 'attr' => [
                     'placeholder' => 'setting.soft_deletion_delay.placeholder',
                     'min' => $this->minimumDeletionDelay['soft'],
-                ],
-                'required' => false,
-            ])
-            ->add('hardDeletionDelay', IntegerType::class, [
-                'constraints' => [
-                    new Assert\Callback([
-                        'callback' => function (?int $value, ExecutionContextInterface $context) {
-                            if ($value < $this->minimumDeletionDelay['soft']) {
-                                $context->buildViolation(
-                                    'La valeur du champ, ne peut pas être inférieur à '
-                                    .$this->minimumDeletionDelay['hard']
-                                )
-                                ->addViolation();
-                            }
-                        },
-                    ]),
-                ],
-                'help' => 'setting.hard_deletion_delay.service_help',
-                'attr' => [
-                    'placeholder' => 'setting.hard_deletion_delay.placeholder',
-                    'min' => $this->minimumDeletionDelay['hard'],
                 ],
                 'required' => false,
             ])

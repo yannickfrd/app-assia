@@ -12,6 +12,7 @@ use App\Entity\Organization\SubService;
 use App\Entity\Organization\User;
 use App\Entity\People\PeopleGroup;
 use App\Entity\People\Person;
+use App\Entity\Traits\ArchivedTrait;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use App\Entity\Traits\DurationSupportTrait;
 use App\Entity\Traits\GeoLocationEntityTrait;
@@ -31,11 +32,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class SupportGroup
 {
+    use ArchivedTrait;
     use CreatedUpdatedEntityTrait;
     use DurationSupportTrait;
-    use SoftDeleteableEntity;
-    use LocationEntityTrait;
     use GeoLocationEntityTrait;
+    use LocationEntityTrait;
+    use SoftDeleteableEntity;
 
     public const CACHE_SUPPORT_KEY = 'support_group';
     public const CACHE_FULLSUPPORT_KEY = 'support_group_full';
@@ -363,7 +365,7 @@ class SupportGroup
     private $originRequest;
 
     /**
-     * @ORM\OneToMany(targetEntity=Payment::class, mappedBy="supportGroup", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Payment::class, mappedBy="supportGroup", orphanRemoval=true, cascade={"persist", "remove"})
      */
     private $payments;
 

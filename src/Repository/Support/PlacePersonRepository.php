@@ -7,6 +7,7 @@ use App\Entity\Organization\SubService;
 use App\Entity\Organization\User;
 use App\Entity\Support\PlacePerson;
 use App\Form\Model\Admin\OccupancySearch;
+use App\Repository\Traits\QueryTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
@@ -19,6 +20,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class PlacePersonRepository extends ServiceEntityRepository
 {
+    use QueryTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, PlacePerson::class);

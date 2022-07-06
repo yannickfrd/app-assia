@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
+use Symfony\Component\DomCrawler\Crawler;
 
 class PlaceGroupControllerTest extends WebTestCase
 {

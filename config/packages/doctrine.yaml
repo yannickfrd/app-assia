@@ -24,3 +24,6 @@ doctrine:
             softdeleteable:
                 class: Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter
                 enabled: true
+            archive_filter:
+                class: App\ORM\Filter\ArchiveFilter
+                enabled: true

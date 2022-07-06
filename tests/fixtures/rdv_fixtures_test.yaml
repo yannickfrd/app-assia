@@ -24,3 +24,29 @@ App\Entity\Event\Rdv:
         updatedBy: "@john_user"
         users: ["@john_user"]
         supportGroup: "@support_group1"
+    rdv6:
+        title: RDV test
+        content: Contenu du RDV
+        status: <numberBetween(1, 2)>
+        start: <dateTimeBetween("now", "+1 month")>
+        end: $start
+        location: Houilles
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        createdBy: "@john_user"
+        updatedBy: "@john_user"
+        users: ["@john_user"]
+        supportGroup: "@support_group4"
+    rdv7:
+        title: RDV test
+        content: Contenu du RDV
+        status: <numberBetween(1, 2)>
+        start: <dateTimeBetween("now", "+1 month")>
+        end: $start
+        location: Houilles
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        createdBy: "@john_user"
+        updatedBy: "@john_user"
+        users: ["@john_user"]
+        supportGroup: "@support_group5"

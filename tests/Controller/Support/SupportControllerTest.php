@@ -400,7 +400,7 @@ class SupportControllerTest extends WebTestCase
 
         $this->client->submitForm('save', [
             '_oldReferent' => $this->fixtures['john_user'],
-            '_newReferent' => $this->fixtures['user5'],
+            '_newReferent' => $this->fixtures['user_admin'],
         ]);
 
         $this->assertResponseIsSuccessful();

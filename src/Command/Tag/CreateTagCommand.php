@@ -34,6 +34,9 @@ class CreateTagCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $this->em->getFilters()->disable('softdeleteable');
+        $this->disableListeners($this->em);
+
         $io = new SymfonyStyle($input, $output);
 
         /** @var QuestionHelper $helper */

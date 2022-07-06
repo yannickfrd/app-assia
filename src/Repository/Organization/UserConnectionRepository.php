@@ -43,4 +43,17 @@ class UserConnectionRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+
+    /**
+     * @return UserConnection[]
+     */
+    public function findConnectionsBeforeDate(\DateTimeInterface $limitDate): array
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.connectionAt < :limitDate')
+            ->setParameter('limitDate', $limitDate)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

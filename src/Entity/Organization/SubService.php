@@ -20,6 +20,7 @@ class SubService
     use ContactEntityTrait;
     use CreatedUpdatedEntityTrait;
     use DisableEntityTrait;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

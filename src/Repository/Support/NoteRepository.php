@@ -20,8 +20,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class NoteRepository extends ServiceEntityRepository
 {
-    use QueryTrait;
     use DoctrineTrait;
+    use QueryTrait;
 
     public function __construct(ManagerRegistry $registry)
     {
@@ -186,6 +186,27 @@ class NoteRepository extends ServiceEntityRepository
     }
 
     /**
+     * Return all notes of group support.
+     */
+    public function findAllNotesOfSupport(int $supportGroupId, bool $soft = false): ?array
+    {
+        $query = $this->createQueryBuilder('n')
+            ->select('n')
+            ->andWhere('n.supportGroup = :supportGroup')
+            ->setParameter('supportGroup', $supportGroupId);
+
+        if ($soft) {
+            $query->andWhere('n.deletedAt IS NULL');
+        }
+
+        return $query
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult()
+        ;
+    }
+
+    /**
      *  Donne toutes les notes créées par l'utilisateur.
      *
      * @return Note[]
@@ -263,7 +284,7 @@ class NoteRepository extends ServiceEntityRepository
         }
 
         return $this->createQueryBuilder('n')->select('COUNT(n.id)')
-            ->andWhere('n.deletedAt IS NOT null')
+            ->andWhere('n.deletedAt IS NOT NULL')
             ->getQuery()
             ->getSingleScalarResult()
         ;

@@ -1,8 +1,17 @@
 # CHANGELOG
 
+## Version 3.23.0 - 06/07/2022
+
+New feature to archive and purge datas (#157)
+
+* Create a Class 'Archiver'
+* Create a new ArchivePurgeController
+* Create a Command to archive and purge datas
+* Create views to show stats and datas to archive
+
 ## Version 3.22.0 - 05/07/2022
 
-Use 'tom-select' JS library for multi-selects and autocomplete selects:
+Use 'tom-select' JS library for multi-selects and autocomplete selects (#179)
 
 * Install 'tom-select' JS library
 * Remove 'select2' JS library
@@ -24,7 +33,7 @@ Feature preview document (#170)
 
 ## Version 3.20.0 - 03/06/2022
 
-Create a JS class to add uppercase after a dot (evaluation view)
+Create a JS class to add uppercase after a dot (evaluation view) (#173)
 
 ## Version 3.18.11 - 02/06/2022
 

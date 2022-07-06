@@ -4,6 +4,7 @@ namespace App\Tests\Controller\Document;
 
 use App\Entity\Support\Document;
 use App\Entity\Support\SupportGroup;
+use App\Repository\Support\DocumentRepository;
 use App\Service\File\FileConverter;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
@@ -108,6 +109,7 @@ class DocumentControllerTest extends WebTestCase
 
         $this->assertSame('success', $content['alert']);
 
+        /** @var DocumentRepository $documentRepo */
         $documentRepo = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository(Document::class);
         $document = $documentRepo->find($content['documents'][0]['id']);
         $file = $this->documentsDirectory.$document->getFilePath();

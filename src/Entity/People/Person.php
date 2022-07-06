@@ -4,6 +4,7 @@ namespace App\Entity\People;
 
 use App\Entity\Support\PlacePerson;
 use App\Entity\Support\SupportPerson;
+use App\Entity\Traits\ArchivedTrait;
 use App\Entity\Traits\ContactEntityTrait;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -26,8 +27,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Person
 {
-    use CreatedUpdatedEntityTrait;
+    use ArchivedTrait;
     use ContactEntityTrait;
+    use CreatedUpdatedEntityTrait;
     use SoftDeleteableEntity;
 
     public const CACHE_PERSON_SUPPORTS_KEY = 'person.supports';

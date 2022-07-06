@@ -19,3 +19,23 @@ App\Entity\Support\Document:
         createdBy: "@john_user"
         peopleGroup: "@people_group1"
         supportGroup: "@support_group1"
+    document6:
+        name: Document
+        content: Description du document
+        internalFileName: doc.docx
+        size: <numberBetween(200000, 4000000)>
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        createdBy: "@john_user"
+        peopleGroup: "@people_group4"
+        supportGroup: "@support_group4"
+    document7:
+        name: Document
+        content: Description du document
+        internalFileName: doc.docx
+        size: <numberBetween(200000, 4000000)>
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        createdBy: "@john_user"
+        peopleGroup: "@people_group5"
+        supportGroup: "@support_group5"

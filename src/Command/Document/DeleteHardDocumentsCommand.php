@@ -51,7 +51,7 @@ class DeleteHardDocumentsCommand extends Command
         $this->disableListeners($this->em);
         $this->em->getFilters()->disable('softdeleteable');
 
-        $documents = $this->documentRepo->findSoftDeletedDocuments($date);
+        $documents = $this->documentRepo->findDeletedObjects($date);
         $count = 0;
 
         foreach ($documents as $document) {
