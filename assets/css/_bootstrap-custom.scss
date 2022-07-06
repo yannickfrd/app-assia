@@ -38,6 +38,13 @@ $theme-colors: map-merge(( //
 
 $theme-colors: map-remove($theme-colors, "info");
 
+// Breadcrumb
+$breadcrumb-bg: $light-gray;
+$breadcrumb-margin-bottom: 1rem;
+$breadcrumb-padding-x: 1rem;
+$breadcrumb-padding-y: 1rem;
+$breadcrumb-border-radius: 0.5rem;
+
 // Layout & components
 @import "bootstrap/scss/root";
 @import "bootstrap/scss/reboot";
