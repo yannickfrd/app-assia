@@ -158,16 +158,16 @@ section {
 
 // Pagination
 .page-item.active .page-link {
-    background-color: var(--primary);
-    border-color: var(--primary);
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
 }
 
 .page-link {
-    color: var(--primary);
+    color: var(--bs-primary);
 }
 
 .btn>.sortable {
-    color: var(--dark);
+    color: var(--bs-dark);
 }
 
 .btn>.sortable:hover {
@@ -188,7 +188,7 @@ section {
 label.required:after,
 th.required:after {
     content: " *";
-    color: var(--red);
+    color: var(--bs-danger);
 }
 
 /* Affichage de l'oeil pour voir le mot de passe */
@@ -381,7 +381,7 @@ th.required:after {
     top: 50%;
     transform: translate(50%, -50%);
     font-size: 30px;
-    color: var(--white);
+    color: var(--bs-white);
 }
 
 #scroll-top:hover {
@@ -448,16 +448,16 @@ th.required:after {
 
 // Modification des couleurs des liens de tri de Paginator
 thead a {
-    color: var(--dark) !important;
+    color: var(--bs-dark) !important;
     text-decoration: none;
 }
 
 thead a:hover {
-    color: var(--black) !important;
+    color: var(--bs-black) !important;
 }
 
 button.btn-outline-secondary a {
-    color: var(--gray) !important;
+    color: var(--bs-gray) !important;
 }
 
 button.btn-outline-secondary a:hover {
@@ -465,16 +465,16 @@ button.btn-outline-secondary a:hover {
 }
 
 .page-item.active .page-link {
-    background-color: var(--gray);
-    border-color: var(--gray);
+    background-color: var(--bs-gray);
+    border-color: var(--bs-gray);
 }
 
 .page-link {
-    color: var(--gray);
+    color: var(--bs-gray);
 }
 
 .page-link:hover {
-    color: var(--dark);
+    color: var(--bs-dark);
 }
 
 /* petit espace gris pour la timeline */

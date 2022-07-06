@@ -29,33 +29,33 @@
 .custom-checkbox-dark .custom-control-input:checked~.custom-control-label::after,
 .custom-radio-dark .custom-control-input:checked~.custom-control-label::before,
 .custom-radio-dark .custom-control-input:checked~.custom-control-label::after {
-    background-color: var(--dark);
+    background-color: var(--bs-dark);
 }
 
 .custom-checkbox-secondary .custom-control-input:checked~.custom-control-label::before,
 .custom-checkbox-secondary .custom-control-input:checked~.custom-control-label::after,
 .custom-radio-secondary .custom-control-input:checked~.custom-control-label::before,
 .custom-radio-secondary .custom-control-input:checked~.custom-control-label::after {
-    background-color: var(--secondary);
+    background-color: var(--bs-secondary);
 }
 
 .custom-checkbox-brown .custom-control-input:checked~.custom-control-label::before,
 .custom-checkbox-brown .custom-control-input:checked~.custom-control-label::after,
 .custom-radio-brown .custom-control-input:checked~.custom-control-label::before,
 .custom-radio-brown .custom-control-input:checked~.custom-control-label::after {
-    background-color: var(--brown);
+    background-color: var(--bs-brown);
 }
 
 .custom-checkbox-orange2 .custom-control-input:checked~.custom-control-label::before,
 .custom-checkbox-orange2 .custom-control-input:checked~.custom-control-label::after,
 .custom-radio-orange2 .custom-control-input:checked~.custom-control-label::before,
 .custom-radio-orange2 .custom-control-input:checked~.custom-control-label::after {
-    background-color: var(--orange2);
+    background-color: var(--bs-orange2);
 }
 
 .was-validated .custom-control-input:valid:checked ~ .custom-control-label::before {
-    border-color: var(--dark);
-    background-color: var(--white);
+    border-color: var(--bs-dark);
+    background-color: var(--bs-white);
 }
 
 // Small devices (landscape phones, 576px and up)
@@ -91,7 +91,7 @@
 }
 
 .was-validated .form-check-input:valid ~ .form-check-label {
-    color: var(--dark);
+    color: var(--bs-dark);
 }
 
 .is-invalid .ts-control,
@@ -102,7 +102,7 @@
 .focus .is-invalid .ts-control,
 .was-validated .ts-wrapper.form-control.invalid.focus,
 .focus .was-validated .invalid .ts-control {
-    border-color: var(--danger);
+    border-color: var(--bs-danger);
     box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
     border-radius: 0.25rem;
 }
