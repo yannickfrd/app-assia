@@ -7,8 +7,8 @@ twig:
     strict_variables: "%kernel.debug%"
     form_themes:
         [
-            "bootstrap_4_layout.html.twig",
-            "form/bootstrap_4_horizontal.html.twig",
+            "bootstrap_5_layout.html.twig",
+            "form/bootstrap_5_horizontal.html.twig",
         ]
     globals:
         app_env: "%app_env%"
