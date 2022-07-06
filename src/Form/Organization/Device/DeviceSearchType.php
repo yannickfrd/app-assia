@@ -38,6 +38,7 @@ class DeviceSearchType extends AbstractType
                     'placeholder' => 'device.name',
                     'autocomplete' => 'off',
                 ],
+                'required' => false,
             ])
             ->add('service', EntityType::class, [
                 'class' => Service::class,

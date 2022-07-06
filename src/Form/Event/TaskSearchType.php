@@ -46,6 +46,7 @@ class TaskSearchType extends AbstractType
                     'placeholder' => 'ID',
                     'class' => 'w-max-80',
                 ],
+                'required' => false,
             ])
             ->add('title', SearchType::class, [
                 'label_attr' => ['class' => 'sr-only'],
@@ -53,6 +54,7 @@ class TaskSearchType extends AbstractType
                     'placeholder' => 'search',
                     'class' => 'w-max-170',
                 ],
+                'required' => false,
             ])
             ->add('fullname', SearchType::class, [
                 'label_attr' => ['class' => 'sr-only'],
@@ -60,6 +62,7 @@ class TaskSearchType extends AbstractType
                     'placeholder' => 'search.fullname.placeholder',
                     'class' => 'w-max-170',
                 ],
+                'required' => false,
             ])
             ->add('location', null, [
                 'label_attr' => ['class' => 'sr-only'],

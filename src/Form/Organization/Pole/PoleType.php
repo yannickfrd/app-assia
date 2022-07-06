@@ -23,7 +23,7 @@ class PoleType extends AbstractType
             ->add('name')
             ->add('email')
             ->add('phone1', null, [
-                'attr' => ['class' => 'js-phone'],
+                'attr' => ['data-phone' => 'on'],
             ])
             ->add('chief', EntityType::class, [
                 'class' => User::class,

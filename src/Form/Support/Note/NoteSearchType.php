@@ -45,6 +45,7 @@ class NoteSearchType extends AbstractType
                     'placeholder' => 'ID',
                     'class' => 'w-max-80',
                 ],
+                'required' => false,
             ])
             ->add('content', SearchType::class, [
                 'label_attr' => ['class' => 'sr-only'],
@@ -52,6 +53,7 @@ class NoteSearchType extends AbstractType
                     'placeholder' => 'Search',
                     'class' => 'w-max-170',
                 ],
+                'required' => false,
             ])
             ->add('fullname', SearchType::class, [
                 'label_attr' => ['class' => 'sr-only'],
@@ -59,6 +61,7 @@ class NoteSearchType extends AbstractType
                     'placeholder' => 'search.fullname.placeholder',
                     'class' => 'w-max-170',
                 ],
+                'required' => false,
             ])
             ->add('type', ChoiceType::class, [
                 'label_attr' => ['class' => 'sr-only'],

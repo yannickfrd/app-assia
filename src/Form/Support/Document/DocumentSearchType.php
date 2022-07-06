@@ -30,9 +30,11 @@ class DocumentSearchType extends AbstractType
                     'placeholder' => 'ID',
                     'class' => 'w-max-80',
                 ],
+                'required' => false,
             ])
             ->add('name', SearchType::class, [
                 'attr' => ['placeholder' => 'Search'],
+                'required' => false,
             ])
             ->add('date', DateSearchType::class, [
                 'data_class' => DocumentSearch::class,

@@ -52,7 +52,7 @@ class SecurityUserType extends AbstractType
             ])
             ->add('phone1', null, [
                 'attr' => [
-                    'class' => 'js-phone',
+                    'data-phone' => 'true',
                     'placeholder' => 'Phone',
                 ],
             ])

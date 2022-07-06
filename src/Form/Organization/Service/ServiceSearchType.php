@@ -26,6 +26,7 @@ class ServiceSearchType extends AbstractType
                     'placeholder' => 'Service name',
                     'autocomplete' => 'off',
                 ],
+                'required' => false,
             ])
             ->add('city', SearchType::class, [
                 'label_attr' => [
@@ -36,6 +37,7 @@ class ServiceSearchType extends AbstractType
                     'placeholder' => 'City',
                     'autocomplete' => 'off',
                 ],
+                'required' => false,
             ])
             ->add('phone', null, [
                 'label_attr' => [
@@ -43,7 +45,8 @@ class ServiceSearchType extends AbstractType
                 ],
                 'attr' => [
                     'placeholder' => 'Phone',
-                    'class' => 'js-phone w-max-140',
+                    'class' => 'w-max-140',
+                    'data-phone' => 'true',
                     'autocomplete' => 'off',
                 ],
             ])

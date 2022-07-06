@@ -47,6 +47,7 @@ class RdvSearchType extends AbstractType
                     'placeholder' => 'ID',
                     'class' => 'w-max-80',
                 ],
+                'required' => false,
             ])
             ->add('title', SearchType::class, [
                 'label_attr' => ['class' => 'sr-only'],
@@ -54,6 +55,7 @@ class RdvSearchType extends AbstractType
                     'placeholder' => 'Title',
                     'class' => 'w-max-170',
                 ],
+                'required' => false,
             ])
             ->add('fullname', SearchType::class, [
                 'label_attr' => ['class' => 'sr-only'],
@@ -61,6 +63,7 @@ class RdvSearchType extends AbstractType
                     'placeholder' => 'search.fullname.placeholder',
                     'class' => 'w-max-170',
                 ],
+                'required' => false,
             ])
             ->add('status', ChoiceType::class, [
                 'multiple' => true,
