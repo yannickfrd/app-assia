@@ -68,10 +68,10 @@
                         </a>
                     </li>
                 </ul>
-                <form action="{{ path('person_index') }}" method="get" class="form-inline me-3 my-2 my-lg-0">
-                    <div class="position-relative">
+                <form action="{{ path('person_index') }}" method="get" class="row row-cols-lg-auto align-items-center me-3 my-2 my-lg-0">
+                    <div class="position-relative px-0 me-sm-2">
                         <label for="search-person" class="sr-only col-form-label">Recherche d'une personne</label>
-                        <input name="search-person" id="search-person" class="form-control me-sm-2" type="search"
+                        <input name="search-person" id="search-person" class="form-control" type="search"
                             placeholder="Recherche personne" autocomplete="off" 
                             title="Recherche instantanée à partir des 3 premières lettres saisies">
                         <div id="results_search" class="w-100 list-group pe-sm-2 d-block fade-in"></div>
@@ -81,7 +81,7 @@
                         <span class="fas fa-search"><span class="sr-only">Rechercher</span></span>
                     </button>
                 </form>
-                <div class="text-light text-endw-min-160">
+                <div class="text-light text-end w-min-160">
                     <a id="user-name" class="text-light fw-bold" href="{{ path('my_profile') }}" data-toggle="popover"
                         data-trigger="hover" data-placement="bottom" data-html="true" data-user-id="{{ app.user.id }}"
                         title="{{ app.user.firstname }} {{ app.user.lastname }}" data-content="Dernière connexion : {{ app.user.lastLogin|date('d/m/Y H:i') }}
