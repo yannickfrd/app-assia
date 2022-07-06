@@ -28,7 +28,7 @@
 				{% if edit_mode and is_granted('DELETE', support) %}
 					<div class="float-start d-flex">
 						<a href="{{ path('support_group_people_place_delete', {'id': form.vars.value.id}) }}" 
-							class="mr-3 btn btn-danger d-block" data-toggle="tooltip" title="Supprimer la prise en charge" data-placement="bottom"
+							class="me-3 btn btn-danger d-block" data-toggle="tooltip" title="Supprimer la prise en charge" data-placement="bottom"
 							onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer cette prise en charge ?')){return true;}else{return false;}">
 							<span class="fas fa-trash-alt me-2"></span>Supprimer</a>
 					</div>

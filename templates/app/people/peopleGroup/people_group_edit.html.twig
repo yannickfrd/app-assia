@@ -122,7 +122,7 @@
                     {% if is_granted_ROLE_ADMIN %}
                         <div class="float-start d-flex">
                         {% set msg_confirm = 'Êtes-vous vraiment sûr de vouloir supprimer ce groupe ?' %}
-                            <a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" 
+                            <a id="modal-btn-delete" class="me-3 btn btn-danger d-block" 
                                 href="{{ path('people_group_delete', {'id': people_group.id}) }}"
                                 data-toggle="tooltip" title="Supprimer le groupe" data-placement="bottom"
                                 onclick="if(window.confirm('{{ msg_confirm }}')){return true;}else{return false;}"><span

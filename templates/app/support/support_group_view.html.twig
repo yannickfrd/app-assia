@@ -17,7 +17,7 @@
 		<div class="d-flex mb-2">
 			<h1 class="h2">{{ title }}</h1>
 			<div class="align-content-center"><a href="{{ path('support_edit', {'id': support.id }) }}" 
-				class="text-{{ theme_color }} ml-2" title="Modifier le suivi"><span class="fas fa-edit"></span></a>
+				class="text-{{ theme_color }} ms-2" title="Modifier le suivi"><span class="fas fa-edit"></span></a>
 			</div>
 		</div>
 
@@ -62,7 +62,7 @@
 					href="{{ path('support_place_group_index', {'id': support.id}) }}" 
 					title="Prise(s) en charge hébergement" data-toggle="tooltip" data-placement="bottom" >
 					{% if support.service.type == SERVICE_TYPE_HOTEL %}PEC Hôtel{% else %}Hébergement{% endif %}<!--
-					--><span class="badge bg-light text-dark ml-2">{{ support.placeGroups|length }}</span>
+					--><span class="badge bg-light text-dark ms-2">{{ support.placeGroups|length }}</span>
 				</a>
 			{% endif %}
 			<a id="support-evaluation" class="btn btn-{{ theme_color }} me-2 mb-2 shadow" 
@@ -75,28 +75,28 @@
 			<a id="support-calendar" class="btn btn-{{ theme_color }} me-2 mb-2 shadow" 
 				href="{{ path('support_calendar_show', {'id': support.id}) }}" 
 				title="Rendez-vous" data-toggle="tooltip" data-placement="bottom">Rendez-vous
-				<span class="badge bg-light text-dark ml-2">{{ count_rdvs }}</span>
+				<span class="badge bg-light text-dark ms-2">{{ count_rdvs }}</span>
 			</a>
 			<a id="support-tasks" class="btn btn-{{ theme_color }} me-2 mb-2 shadow" 
 				href="{{ path('support_task_index', {'id': support.id}) }}" 
 				title="Tâches" data-toggle="tooltip" data-placement="bottom">Tâches
-				<span class="badge bg-light text-dark ml-2">{{ count_tasks }}</span>
+				<span class="badge bg-light text-dark ms-2">{{ count_tasks }}</span>
 			</a>
 			<a id="support-notes" class="btn btn-{{ theme_color }} me-2 mb-2 shadow" 
 				href="{{ path('support_note_index', {'id': support.id}) }}" 
 				title="Notes sociales et rapports" data-toggle="tooltip" data-placement="bottom">Notes
-				<span class="badge bg-light text-dark ml-2">{{ count_notes }}</span>
+				<span class="badge bg-light text-dark ms-2">{{ count_notes }}</span>
 			</a>
 			<a id="support-documents" class="btn btn-{{ theme_color }} me-2 mb-2 shadow" 
 				href="{{ path('support_document_index', {'id': support.id}) }}"
 				title="Documents administratifs" data-toggle="tooltip" data-placement="bottom">Documents
-				<span class="badge bg-light text-dark ml-2">{{ count_documents }}</span>
+				<span class="badge bg-light text-dark ms-2">{{ count_documents }}</span>
 			</a>
 			{% if support.device.contribution == YES %}
 				<a id="support-payments" class="btn btn-{{ theme_color }} me-2 mb-2 shadow" 
 					href="{{ path('support_payments_index', {'id': support.id}) }}"
 					title="Participations financières, redevances, loyers..." data-toggle="tooltip" 
-					data-placement="bottom">Paiements<span class="badge bg-light text-dark ml-2">{{ count_payments }}</span>
+					data-placement="bottom">Paiements<span class="badge bg-light text-dark ms-2">{{ count_payments }}</span>
 				</a>
 			{% endif %}
 		</div>
@@ -115,7 +115,7 @@
 					{% if is_granted('DELETE', support) %}
 						{% set alert_text = '"Tous les éléments rattachés au suivi vont être supprimés (évaluation sociale, RDVs, notes, documents...).' ~ 
 							' Êtes-vous vraiment sûr de vouloir supprimer ce suivi social ?"' %}
-						<a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('support_delete', {'id': support.id}) }}" 
+						<a id="modal-btn-delete" class="me-3 btn btn-danger d-block" href="{{ path('support_delete', {'id': support.id}) }}" 
 							title="Supprimer le suivi social" data-toggle="tooltip" data-placement="bottom" 
 							onclick="return window.confirm({{ alert_text }});"><i class="fas fa-trash-alt me-2"></i>
 							<span class="d-none d-sm-inline">Supprimer</span></a>
@@ -149,7 +149,7 @@
 				{% set rdv = next_rdv ? next_rdv : last_rdv %}
 				{% if rdv is not null %}
 					<span class="align-content-center"><a href="{{ path('support_calendar_show', {'id': support.id, 'year': rdv.start|date('Y'),'month': rdv.start|date('m')}) }}"
-							class="text-{{ theme_color }} ml-2" title="Voir les rendez-vous"><span class="fas fa-edit"></span></a>
+							class="text-{{ theme_color }} ms-2" title="Voir les rendez-vous"><span class="fas fa-edit"></span></a>
 					</span>
 				{% endif %}
 			</div>	

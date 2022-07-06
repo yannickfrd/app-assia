@@ -63,7 +63,7 @@
 				<div class="float-start d-flex">
 					{% if is_granted('ROLE_ADMIN') %}
 						{% set alert_text = '"Êtes-vous vraiment sûr de vouloir supprimer cette évaluation sociale ?"' %}
-						<a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('evaluation_delete', {'id': evaluation_group.id}) }}" 
+						<a id="modal-btn-delete" class="me-3 btn btn-danger d-block" href="{{ path('evaluation_delete', {'id': evaluation_group.id}) }}" 
 							title="Supprimer l'évaluation sociale" data-toggle="tooltip" data-placement="bottom" 
 							onclick="return window.confirm({{ alert_text }});">
 							<i class="fas fa-trash-alt me-2"></i>Supprimer</a>
