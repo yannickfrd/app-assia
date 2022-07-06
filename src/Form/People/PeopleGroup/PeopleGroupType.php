@@ -22,7 +22,9 @@ class PeopleGroupType extends AbstractType
             ])
             ->add('nbPeople')
             ->add('siSiaoId', null, [
-                'attr' => ['data-mask-type' => 'number'],
+                'attr' => [
+                    'data-mask-type' => 'number',
+                ],
             ])
             ->add('rolePeople', CollectionType::class, [
                 'entry_type' => RolePersonMinType::class,

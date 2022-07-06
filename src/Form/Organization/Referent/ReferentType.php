@@ -47,13 +47,13 @@ class ReferentType extends AbstractType
             ])
             ->add('phone1', null, [
                 'attr' => [
-                    'class' => 'js-phone',
+                    'data-phone' => 'true',
                     'placeholder' => 'Phone1',
                 ],
             ])
             ->add('phone2', null, [
                 'attr' => [
-                    'class' => 'js-phone',
+                    'data-phone' => 'true',
                     'placeholder' => 'Phone2',
                 ],
             ])

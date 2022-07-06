@@ -43,7 +43,8 @@ class ServiceSearchType extends AbstractType
                 ],
                 'attr' => [
                     'placeholder' => 'Phone',
-                    'class' => 'js-phone w-max-140',
+                    'class' => 'w-max-140',
+                    'data-phone' => 'true',
                     'autocomplete' => 'off',
                 ],
             ])

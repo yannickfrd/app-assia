@@ -1,10 +1,14 @@
-import 'jquery-mask-plugin'
+import Cleave from 'cleave.js'
+import 'cleave.js/dist/addons/cleave-phone.fr.js'
 
 /** 
  * Masque de saisie pour le numéro de téléphone
  */
 document.addEventListener('DOMContentLoaded', () => {
-    $('.js-phone').mask('99 99 99 99 99', {
-        placeholder: '__ __ __ __ __'
+    document.querySelectorAll('input[data-phone]').forEach(inpuElt => {
+        new Cleave(inpuElt, {
+            phone: true,
+            phoneRegionCode: 'fr'
+        })
     })
 })
