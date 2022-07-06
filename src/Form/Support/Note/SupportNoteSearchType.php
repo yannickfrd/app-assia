@@ -48,7 +48,7 @@ class SupportNoteSearchType extends AbstractType
                 'required' => false,
             ])
             ->add('status', ChoiceType::class, [
-                'label_attr' => [ 'class' => 'sr-only'],
+                'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getChoices(Note::STATUS),
                 'attr' => ['class' => 'w-max-150'],
                 'placeholder' => 'placeholder.status',
