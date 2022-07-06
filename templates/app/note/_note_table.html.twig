@@ -71,7 +71,7 @@
                         {% endif %}
                     </td>
                     <td class="align-middle justify" data-cell="title-content">
-                        {% if note.title %}<span class="font-weight-bold">{{ note.title }}</span> {% endif %}
+                        {% if note.title %}<span class="fw-bold">{{ note.title }}</span> {% endif %}
                         {{ note.content|u.truncate(200, ' [...]', false)|striptags|raw }}</td>
                     <td class="align-middle" data-cell="type" data-note-type="{{ note.type }}">{{ note.typeToString }}</td>
                     <td class="align-middle" data-cell="status" data-note-status="{{ note.status }}">{{ note.statusToString }}</td>

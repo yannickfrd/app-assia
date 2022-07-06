@@ -240,7 +240,7 @@ export default class SearchPerson {
      */
     getLastname(person) {
         if (person.id) {
-            return `<a href="/person/${person.id}" class="text-dark text-uppercase font-weight-bold">
+            return `<a href="/person/${person.id}" class="text-dark text-uppercase fw-bold">
                 ${person.lastname}${person.usename ? ' ('+ person.usename + ')' : ''}</a`
         }
 

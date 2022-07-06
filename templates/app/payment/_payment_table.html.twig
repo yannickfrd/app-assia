@@ -7,7 +7,7 @@
     >
         <thead>
             {% if support_is_defined %}
-                <tr class="font-weight-bold">
+                <tr class="fw-bold">
                     <td colspan="3" class="align-middle text-right">Total</td>
                     <td class="align-middle text-right" data-payment="sumToPayAmt"></td>
                     <td class="align-middle text-right" data-payment="sumPaidAmt"></td>
@@ -181,7 +181,7 @@
         </tbody>
         {% if not support_is_defined %}
             <tfoot>
-                <tr class="font-weight-bold">
+                <tr class="fw-bold">
                     <td colspan="4" class="align-middle text-right">Sous-total (page)</td>
                     <td class="align-middle text-right">{{ to_pay_amt|amount }}</td>
                     <td class="align-middle text-right">{{ paid_amt|amount }}</td>

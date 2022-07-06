@@ -50,7 +50,7 @@ class TaskType extends AbstractType
         $builder
             ->add('title', null, [
                 'attr' => [
-                    'class' => 'font-weight-bold',
+                    'class' => 'fw-bold',
                     'placeholder' => 'task.title.placeholder',
                 ],
             ])

@@ -88,7 +88,7 @@
                         </tbody>
                         {% if is_granted('ROLE_ADMIN') %}
                             <tfoot>
-                                <tr class="font-weight-bold">
+                                <tr class="fw-bold">
                                     <td scope="row" class="align-middle">Total</td>
                                     <td class="align-middle">{{ users_datas|length }}</td>
                                     <td class="align-middle text-right">{{ nb_supports }}
@@ -108,7 +108,7 @@
                                     <td></td>
                                 </tr>
                                 {% if users_datas|length > 0 %} 
-                                    <tr class="font-weight-bold">
+                                    <tr class="fw-bold">
                                         <td scope="row" colspan="2" class="align-middle">Moyenne</td>
                                         <td class="align-middle text-right">{{ (nb_supports / users_datas|length)|round(1) }}
                                             {% if nb_supports != sum_coef_supports %}
@@ -127,7 +127,7 @@
             <div class="row">
                 <div class="col-md-12">
                     {% apply spaceless %}
-                        <p class="small text-secondary justify"><span class="font-weight-bold">Note de lecture : </span>
+                        <p class="small text-secondary justify"><span class="fw-bold">Note de lecture : </span>
                         le nombre entre parenthèses correspond à la valeur attribuée à la somme des suivis après application du coefficient.
                         Exemple : 10 (15) = 10 suivis réels, soit 15 suivis après pondération (coefficient de 1,5 par suivi).</p>
                     {% endapply %}

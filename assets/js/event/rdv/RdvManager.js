@@ -168,7 +168,7 @@ export default class RdvManager {
                     data-action="edit-rdv" data-url="${url}"><i class="fas fa-eye"></i>
                 </button>
             </td>
-            <td class="align-middle justify" data-cell="title"><span class="font-weight-bold">${rdv.title}</span></td>
+            <td class="align-middle justify" data-cell="title"><span class="fw-bold">${rdv.title}</span></td>
             <td class="align-middle" data-cell="start">${this.rdvDateToString(rdv)}
             <td class="align-middle" data-cell="alerts">${this.createAlerts(rdv)}
             <td class="align-middle" data-cell="status">${rdv.statusToString ?? ''}</td>

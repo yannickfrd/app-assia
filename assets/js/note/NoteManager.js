@@ -253,7 +253,7 @@ export default class NoteManager {
                 </a>
             </td>
             <td class="align-middle justify" data-cell="title-content">
-                <span class="font-weight-bold">${note.title ? note.title : ''} : </span>${this.getNoteContent()}
+                <span class="fw-bold">${note.title ? note.title : ''} : </span>${this.getNoteContent()}
             </td>
             <td class="align-middle" data-cell="type">${note.typeToString}</td>
             <td class="align-middle" data-cell="status">${note.statusToString}</td>
@@ -341,7 +341,7 @@ export default class NoteManager {
         const noteRow = document.querySelector('tr#note-' + note.id)
 
         noteRow.querySelector('td[data-cell="title-content"]').innerHTML = (note.title !== null
-            ? `<span class="font-weight-bold">${note.title} : </span>` : ``) + `${this.getNoteContent()}`
+            ? `<span class="fw-bold">${note.title} : </span>` : ``) + `${this.getNoteContent()}`
 
         noteRow.querySelector('td[data-cell="type"]').innerHTML = note.typeToString ?? ''
         noteRow.querySelector('td[data-cell="status"]').innerHTML = note.statusToString ?? ''

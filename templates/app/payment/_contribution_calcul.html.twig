@@ -56,7 +56,7 @@
                 </tr>
             </tbody>
             <tfoot>
-                <tr class="font-weight-bold alert-secondary" title="Total reste à vivre mensuel" data-toggle="popover" 
+                <tr class="fw-bold alert-secondary" title="Total reste à vivre mensuel" data-toggle="popover" 
                     data-content="{{ budget_balance_description }}" data-trigger="hover" data-placement="bottom" data-html="true">
                     <td class="align-middle">Total reste à vivre mensuel</td>
                     <td class="align-middle text-right">{{ (payment.resourcesAmt - payment.chargesAmt)|amount(0) }}</td>
@@ -122,7 +122,7 @@
                         {% endif %}
                     </tr>
                 {% endif %} 
-                <tr class="font-weight-bold alert-secondary">
+                <tr class="fw-bold alert-secondary">
                     <td class="align-middle">
                         {% if rent_contribution %}Montant du loyer {% else %} Montant de la participation financière {% endif %}à payer
                     </td>

@@ -54,6 +54,14 @@ section {
     padding-bottom: 1px;
 }
 
+.bg-brown {
+    background-color: $brown;
+}
+
+.bg-orange {
+    background-color: $orange;
+}
+
 .bg-light-gray {
     background-color: $light-gray;
 }
@@ -438,16 +446,10 @@ th.required:after {
     transition: all 0.2s ease-in-out;
 }
 
-a {
-    text-decoration: none;
-}
-a:hover {
-    text-decoration: underline;
-}
-
 // Modification des couleurs des liens de tri de Paginator
 thead a {
     color: var(--dark) !important;
+    text-decoration: none;
 }
 
 thead a:hover {

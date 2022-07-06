@@ -20,7 +20,7 @@
                     {% set is_header = support_person ? support_person.head %}
                     {% set placePersonId = form_person_place.vars.value.id %}
                     <tr data-place-person="{{ placePersonId }}">
-                        <td class="align-middle font-weight-bold text-center" scope="row">
+                        <td class="align-middle fw-bold text-center" scope="row">
                             {% if is_header %}<i class="fas fa-dot-circle"></i>{% endif %}</td>
                         <td class="align-middle">{{ form_person_place.vars.data.person.fullname }}</td>
                         <td class="align-middle">{{ form_widget(form_person_place.startDate) }}</td>

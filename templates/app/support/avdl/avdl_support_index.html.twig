@@ -55,7 +55,7 @@
                         {% for support_person in supports %}
                             {% set person = support_person.person %}
                             {% set support_group = support_person.supportGroup %}
-                            <tr class="{% if only_headers == false and support_person.head %}font-weight-bold{% endif %}">
+                            <tr class="{% if only_headers == false and support_person.head %}fw-bold{% endif %}">
                                 <td scope="row" class="align-middle text-center">
                                     {% if is_granted('VIEW', support_group) %}
                                         <a href="{{ path('support_show', {'id': support_group.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow my-1" 

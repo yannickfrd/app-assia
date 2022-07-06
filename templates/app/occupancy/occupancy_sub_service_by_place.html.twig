@@ -60,13 +60,13 @@
                                     <td class="align-middle text-right">{{ place.averageOccupancy|round(2) }}</td>
                                     {% set ocupancy_rate = ratio(place.occupancyDays, place.capacityDays) %}
                                     <td class="align-middle alert-{{ color(ocupancy_rate) }} text-right">
-                                        <span class="font-weight-bold font-italic">{{ ocupancy_rate|percent }}</span>
+                                        <span class="fw-bold font-italic">{{ ocupancy_rate|percent }}</span>
                                     </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
                         <tfoot>
-                            <tr class="font-weight-bold">
+                            <tr class="fw-bold">
                                 <td class="align-middle text-center" scope="row">Total</td>
                                 <td class="align-middle py-2" colspan="3">{{ datas.places|length }}</td>
                                 <td class="align-middle text-right">{{ datas.sumPlaces|number }}</td>
@@ -76,7 +76,7 @@
                                 <td class="align-middle text-right">{{ datas.averageOccupancy|round(2) }}</td>
                                 {% set ocupancy_rate = ratio(datas.occupancyDays, datas.capacityDays) %}
                                 <td class="align-middle alert-{{ color(ocupancy_rate) }} text-right">
-                                    <span class="font-weight-bold font-italic">{{ ocupancy_rate|percent }}</span>
+                                    <span class="fw-bold font-italic">{{ ocupancy_rate|percent }}</span>
                                 </td>
                             </tr>
                         </tfoot>

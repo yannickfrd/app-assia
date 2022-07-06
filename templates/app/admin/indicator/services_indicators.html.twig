@@ -49,7 +49,7 @@
                                 {% set nb_collapsed_tr = service.subServices|length %}
                                 <tr class="{{ nb_collapsed_tr ? 'cursor-pointer' }}" data-toggle="collapse" data-target=".multi-collapse-service-{{ service_id }}" 
                                     aria-expanded="false" aria-controls="multi-collapse-service-{{ service_id }}">
-                                    <td scope="row" class="align-middle"><span class="font-weight-bold">{{ service['name'] }}</span>
+                                    <td scope="row" class="align-middle"><span class="fw-bold">{{ service['name'] }}</span>
                                         {% if nb_collapsed_tr %}<span class="badge rounded-pill bg-secondary">{{ nb_collapsed_tr }}</span>{% endif %}
                                     </td>
                                     <td class="align-middle text-right">{{ service['nbSocialWorkers']|number }}</td>
@@ -77,7 +77,7 @@
                         {% endfor %}
                     </tbody>
                     <tfooter>
-                        <tr class="font-weight-bold">
+                        <tr class="fw-bold">
                             <td class="align-middle text-center">Total</td>
                             <td class="align-middle text-right"></td>
                             <td class="align-middle text-right">{{ sum_active_supports|number }}</td>

@@ -40,7 +40,7 @@
                         {% endif %}
                     </tbody>
                     <tfoot>
-                        <tr class="font-weight-bold">
+                        <tr class="fw-bold">
                             <td scope="row">Reste à vivre</td>
                             <td class="text-right">{{ eval_budget_group.budgetBalanceAmt|amount }}</td>
                         </tr>
@@ -63,7 +63,7 @@
         <div class="my-3">
             {% if nb_people_budget > 1 %}
                 <div class="row mb-2">
-                    <div class="col-md-12 font-weight-bold"><span class="text-underline">{{ eval_person.supportPerson.person.fullname }}</span> :</div>
+                    <div class="col-md-12 fw-bold"><span class="text-underline">{{ eval_person.supportPerson.person.fullname }}</span> :</div>
                 </div>
             {% endif %}
             <div class="row">
@@ -92,7 +92,7 @@
                                 {% endfor %}
                             </tbody>
                             <tfoot>
-                                <tr class="font-weight-bold">
+                                <tr class="fw-bold">
                                     <td scope="row">Total des ressources</td>
                                     <td class="text-right">{{ eval_budget_person.resourcesAmt|amount }}</td>
                                 </tr>
@@ -119,7 +119,7 @@
                             <thead>
                                 <tr>
                                     <th scope="col">Charges</th>
-                                    <td class="text-endfont-weight-bold">Montant</td>
+                                    <td class="text-endfw-bold">Montant</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -132,7 +132,7 @@
                                 {% endfor %}
                             </tbody>
                             <tfoot>
-                                <tr class="font-weight-bold">
+                                <tr class="fw-bold">
                                     <td scope="row">Total des charges</td>
                                     <td class="text-right">{{ eval_budget_person.chargesAmt|amount }}</td>
                                 </tr>

@@ -65,7 +65,7 @@
                 {% set support_group = support_person.supportGroup %}
                 {% set person = support_person.person %}
                 {% set is_deleted = support_person.deletedAt is not null %}
-                <tr class="{% if only_headers == false and support_person.head %}font-weight-bold{% endif %}"
+                <tr class="{% if only_headers == false and support_person.head %}fw-bold{% endif %}"
                     data-support="support-{{ support_group.id }}">
                     <td class="align-middle text-center">
                         {% if is_granted('VIEW', support_group) %}

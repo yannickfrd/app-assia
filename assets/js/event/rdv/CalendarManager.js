@@ -315,7 +315,7 @@ export default class CalendarManager {
 
         if (sumHeightdivElts > dayElt.clientHeight && rdvElts.length > maxHeight) {
             const divElt = document.createElement('a')
-            divElt.className = 'calendar-others-events bg-' + this.themeColor + ' text-light font-weight-bold'
+            divElt.className = 'calendar-others-events bg-' + this.themeColor + ' text-light fw-bold'
             let date = dayElt.id.replace('-', '/')
             date = date.replace('-', '/')
             divElt.href = '/calendar/day/' + date
