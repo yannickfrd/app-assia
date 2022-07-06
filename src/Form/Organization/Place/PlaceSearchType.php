@@ -41,6 +41,7 @@ class PlaceSearchType extends AbstractType
                     'class' => 'w-max-140',
                     'placeholder' => 'Name',
                 ],
+                'required' => false,
             ])
             ->add('nbPlaces', null, [
                 'label_attr' => [
@@ -65,6 +66,7 @@ class PlaceSearchType extends AbstractType
                     'class' => 'w-max-140',
                     'placeholder' => 'City',
                 ],
+                'required' => false,
             ])
             ->add('date', DateSearchType::class, [
                 'data_class' => EventSearch::class,

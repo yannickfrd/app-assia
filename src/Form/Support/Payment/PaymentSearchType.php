@@ -38,6 +38,7 @@ class PaymentSearchType extends AbstractType
                     'placeholder' => 'ID',
                     'class' => 'w-max-80',
                 ],
+                'required' => false,
             ])
             ->add('fullname', SearchType::class, [
                 'label_attr' => ['class' => 'sr-only'],
@@ -45,6 +46,7 @@ class PaymentSearchType extends AbstractType
                     'placeholder' => 'search.fullname.placeholder',
                     'class' => 'w-max-180',
                 ],
+                'required' => false,
             ])
             ->add('type', ChoiceType::class, [
                 'label_attr' => ['class' => 'sr-only'],

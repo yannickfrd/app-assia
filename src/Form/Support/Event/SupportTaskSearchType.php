@@ -33,6 +33,7 @@ class SupportTaskSearchType extends AbstractType
                     'placeholder' => 'search',
                     'class' => 'w-max-170',
                 ],
+                'required' => false,
             ])
             ->add('status', ChoiceType::class, [
                 'multiple' => true,

@@ -23,6 +23,7 @@ class UserSearchType extends AbstractType
                     'class' => 'w-max-140 text-uppercase',
                     'placeholder' => 'Lastname',
                 ],
+                'required' => false,
             ])
             ->add('firstname', SearchType::class, [
                 'label_attr' => ['class' => 'sr-only'],
@@ -30,6 +31,7 @@ class UserSearchType extends AbstractType
                     'class' => 'w-max-140 text-capitalize',
                     'placeholder' => 'Firstname',
                 ],
+                'required' => false,
             ])
             ->add('status', ChoiceType::class, [
                 'choices' => Choices::getChoices(User::STATUS),
@@ -46,7 +48,7 @@ class UserSearchType extends AbstractType
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'placeholder' => 'Phone',
-                    'class' => 'js-phone w-max-140',
+                    'class' => 'w-max-140',
                     'data-phone' => 'true',
                     'autocomplete' => 'off',
                 ],

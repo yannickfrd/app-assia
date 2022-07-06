@@ -32,34 +32,25 @@ class SupportNoteSearchType extends AbstractType
         $service = $options['service'];
 
         $builder
-            ->add('noteId', SearchType::class)
+            ->add('noteId', SearchType::class, [
+                'required' => false,
+            ])
             ->add('content', SearchType::class, [
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
-                'attr' => [
-                    'placeholder' => 'Search',
-                ],
+                'label_attr' => ['class' => 'sr-only'],
+                'attr' => ['placeholder' => 'Search'],
+                'required' => false,
             ])
             ->add('type', ChoiceType::class, [
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
+                'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getChoices(Note::TYPE),
-                'attr' => [
-                    'class' => 'w-max-150',
-                ],
+                'attr' => ['class' => 'w-max-150'],
                 'placeholder' => 'placeholder.type',
                 'required' => false,
             ])
             ->add('status', ChoiceType::class, [
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
+                'label_attr' => [ 'class' => 'sr-only'],
                 'choices' => Choices::getChoices(Note::STATUS),
-                'attr' => [
-                    'class' => 'w-max-150',
-                ],
+                'attr' => ['class' => 'w-max-150'],
                 'placeholder' => 'placeholder.status',
                 'required' => false,
             ])

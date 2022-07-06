@@ -32,6 +32,7 @@ class SupportDocumentSearchType extends AbstractType
             ->add('name', SearchType::class, [
                 'label_attr' => ['class' => 'sr-only'],
                 'attr' => ['placeholder' => 'Search'],
+                'required' => false,
             ])
             ->add('tags', EntityType::class, [
                 'class' => Tag::class,

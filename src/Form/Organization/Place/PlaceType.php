@@ -41,6 +41,7 @@ class PlaceType extends AbstractType
         ->add('name', SearchType::class, [
             'attr' => ['placeholder' => 'place.name.placeholder'],
             'help' => 'place.name.help',
+            'required' => false,
         ])
         ->add('service', EntityType::class, [
             'class' => Service::class,

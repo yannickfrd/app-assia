@@ -36,6 +36,7 @@ class SupportRdvSearchType extends AbstractType
                     'placeholder' => 'Title',
                     'class' => 'w-max-170',
                 ],
+                'required' => false,
             ])
             ->add('date', DateSearchType::class, [
                 'data_class' => EventSearch::class,

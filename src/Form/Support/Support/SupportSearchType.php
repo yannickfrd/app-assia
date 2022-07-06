@@ -26,6 +26,7 @@ class SupportSearchType extends AbstractType
                     'placeholder' => 'placeholder.name_or_id',
                     'class' => 'w-min-200',
                 ],
+                'required' => false,
             ])
             ->add('status', ChoiceType::class, [
                 'multiple' => true,
