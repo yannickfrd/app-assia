@@ -68,8 +68,8 @@
                             <td scope="row" class="align-middle text-center">
                                 {% if is_granted('ROLE_SUPER_ADMIN') %}
                                     <a href="{{ path('admin_tag_edit', {'id': tag.id}) }}"
-                                       class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip"
-                                       data-placement="bottom" title="Voir la fiche de l'étiquette">
+                                       class="btn btn-{{ theme_color }} btn-sm shadow" data-bs-toggle="tooltip"
+                                       data-bs-placement="bottom" title="Voir la fiche de l'étiquette">
                                         <span class="fas fa-eye"></span>
                                     </a>
                                 {% endif %}

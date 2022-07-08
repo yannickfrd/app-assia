@@ -244,8 +244,8 @@ export default class PaymentManager {
         return `
             <td class="align-middle text-center">
                 <button class="btn btn-${this.themeColor} btn-sm shadow" data-action="show" data-id="${payment.id}" 
-                    data-path="/payment/${payment.id}/show" data-toggle="tooltip" 
-                    data-placement="bottom" title="Voir l'enregistrement"><span class="fas fa-eye"></span>
+                    data-path="/payment/${payment.id}/show" data-bs-toggle="tooltip" 
+                    data-bs-placement="bottom" title="Voir l'enregistrement"><span class="fas fa-eye"></span>
                 </button>
             </td>
             <td class="align-middle" data-payment="type">${payment.typeToString}<br/>
@@ -272,8 +272,8 @@ export default class PaymentManager {
             </td>
             <td class="align-middle text-center">
                 <button data-path="/payment/${payment.id}/delete" data-action="delete"
-                    class="btn btn-danger btn-sm shadow my-1" data-placement="bottom" 
-                        title="Supprimer l\'enregistrement" data-toggle="modal" data-target="#modal-block">
+                    class="btn btn-danger btn-sm shadow my-1" data-bs-placement="bottom" 
+                        title="Supprimer l\'enregistrement" data-bs-toggle="modal" data-bs-target="#modal-block">
                     <span class="fas fa-trash-alt"></span>
                 </button>
             </td>

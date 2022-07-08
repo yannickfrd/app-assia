@@ -2,10 +2,10 @@
 
 {% block search_form %}
     <div class="col-auto my-1 px-1 d-inline-flex">{{ form_widget(form.year) }}</div>
-    <div class="col-auto my-1 px-1 d-inline-flex" data-toggle="tooltip" data-placement="bottom"
+    <div class="col-auto my-1 px-1 d-inline-flex" data-bs-toggle="tooltip" data-bs-placement="bottom"
         title="Date de début"><span class="my-2 px-1">Entre</span>{{ form_widget(form.date.start) }}
     </div>
-    <div class="col-auto my-1 px-1 d-inline-flex" data-toggle="tooltip" data-placement="bottom"
+    <div class="col-auto my-1 px-1 d-inline-flex" data-bs-toggle="tooltip" data-bs-placement="bottom"
         title="Date de fin"><span class="my-2 pe-2">et</span>{{ form_widget(form.date.end) }}
     </div>
     {% if is_granted('ROLE_SUPER_ADMIN') %}

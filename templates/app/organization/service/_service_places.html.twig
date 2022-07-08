@@ -51,12 +51,12 @@
 							<td class="align-middle text-center" scope="row">
 								{% if is_granted_edit_service %}
 									<a href="{{ path('place_edit', {'id': place.id}) }}"
-										class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" 
-										data-placement="bottom" title="Voir le groupe de places">
+										class="btn btn-{{ theme_color }} btn-sm shadow" data-bs-toggle="tooltip" 
+										data-bs-placement="bottom" title="Voir le groupe de places">
 										<span class="fas fa-eye"></span>
 									</a>
 								{% else %}
-									<span class="btn btn-secondary btn-sm shadow cursor-default" data-toggle="tooltip" data-placement="bottom" 
+									<span class="btn btn-secondary btn-sm shadow cursor-default" data-bs-toggle="tooltip" data-bs-placement="bottom" 
 										title="Vous n'avez pas les droits pour accéder à la fiche"><span class="fas fa-ban"></span></span>                           
 								{% endif %}
 							</td>

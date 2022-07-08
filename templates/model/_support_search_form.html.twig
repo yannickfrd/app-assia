@@ -14,7 +14,7 @@
 					{% if is_granted('ROLE_SUPER_ADMIN') %}
 						<div class="col-auto my-1">
 							<div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} ps-0"
-								title="Voir les paiements supprimés" data-toggle="tooltip" data-placement="bottom">
+								title="Voir les paiements supprimés" data-bs-toggle="tooltip" data-bs-placement="bottom">
 								{{ form_widget(form_search.deleted.deleted) }}
 							</div>
 						</div>

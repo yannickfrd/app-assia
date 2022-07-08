@@ -23,7 +23,7 @@
                             <td class="align-middle text-center" scope="row">
                                 <a href="{{ support is defined ? path('support_referent_edit', {'support_id': support.id, 'id': referent.id}) : 
                                     path('group_referent_edit', {'id': referent.id}) }}"
-                                    class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-toggle="tooltip" data-placement="bottom"
+                                    class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-bs-toggle="tooltip" data-bs-placement="bottom"
                                     title="Voir le service social accompagnateur"><span class="fas fa-eye"></span>
                                 </a>
                             </td>
@@ -44,5 +44,5 @@
     {% endif %}
     <a href="{{ support is defined ? path('support_referent_new', {'support_id':support.id}) : path('group_referent_new', 
         {'group_id':people_group.id}) }}" class="m-2 btn btn-{{ theme_color }} btn-sm" title="Ajouter un service ou référent" 
-        data-toggle="tooltip" data-placement="bottom"><span class="fas fa-plus-square me-2"></span>Ajouter</a>
+        data-bs-toggle="tooltip" data-bs-placement="bottom"><span class="fas fa-plus-square me-2"></span>Ajouter</a>
 </section>

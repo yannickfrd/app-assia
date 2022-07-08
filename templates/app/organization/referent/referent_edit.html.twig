@@ -65,7 +65,7 @@
                         <a id="btn-delete" class="me-3 btn btn-danger d-block"
                             href="{{ support ? path('support_referent_delete', {'supportId': support.id, 'id': referent.id}) 
                             : path('referent_delete', {'id': referent.id})  }}"
-                            title="Supprimer le service social référent" data-toggle="tooltip" data-placement="bottom"
+                            title="Supprimer le service social référent" data-bs-toggle="tooltip" data-bs-placement="bottom"
                             onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer ce service social référent ?')){return true;}else{return false;}"><span
                                 class="fas fa-trash-alt me-2"></span>Supprimer</a>
                     </div>

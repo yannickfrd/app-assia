@@ -65,8 +65,8 @@
                             <td  class="align-middle" scope="row">
                                 {% if is_role_super_admin %}
                                     <a href="{{ path('admin_device_edit', {'id': device.id}) }}"
-                                        class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip"
-                                        data-placement="bottom" title="Voir la fiche du dispositif">
+                                        class="btn btn-{{ theme_color }} btn-sm shadow" data-bs-toggle="tooltip"
+                                        data-bs-placement="bottom" title="Voir la fiche du dispositif">
                                         <span class="fas fa-eye"></span>
                                     </a>
                                 {% endif %}

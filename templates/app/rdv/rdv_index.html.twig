@@ -22,11 +22,11 @@
                 <div class="col-md-6 mb-2">
                     <a href="{{ support_is_not_defined ? path('calendar_show') : path('support_calendar_show', {'id': support.id}) }}"
                     class="btn btn-{{ theme_color }} shadow me-1"
-                    title="Passer en vue agenda" data-toggle="tooltip" data-placement="bottom">
+                    title="Passer en vue agenda" data-bs-toggle="tooltip" data-bs-placement="bottom">
                         <i class="far fa-calendar-alt"></i></a>
                     {% if not restoration_mode %}
                         <button class="btn btn-{{ theme_color }} shadow me-2"
-                            title="Ajouter un rdv" data-toggle="modal" data-placement="bottom" data-target="#modal-rdv"
+                            title="Ajouter un rdv" data-bs-toggle="modal" data-bs-placement="bottom" data-bs-target="#modal-rdv"
                             data-action="add-rdv" data-url="{{ path('rdv_create') }}">
                             <i class="fas fa-plus-square me-2"></i>Nouveau RDV
                         </button>

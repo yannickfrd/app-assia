@@ -194,7 +194,7 @@ export default class SearchPerson {
             <td class="align-middle">${person.birthdate}</td>
             <td class="align-middle">${person.age} an${person.age > 1 ? 's' : '' }</td>
             <td class="align-middle">
-                <span class="fas fa-${person.gender == 1 ? 'female' : 'male'} fa-2x text-dark" data-placement="bottom" 
+                <span class="fas fa-${person.gender == 1 ? 'female' : 'male'} fa-2x text-dark" data-bs-placement="bottom" 
                 title="${person.gender == 1 ? 'Femme' : 'Homme'}"></span>
             </td>`
          
@@ -254,19 +254,19 @@ export default class SearchPerson {
     addBtnElt(person) {
         if (this.groupId) {
             return `<a href="/group/${this.groupId}/add_person/${person.id}" class="js-add-person shadow" 
-                        data-toggle="modal" data-target="#modal-block" data-placement="bottom" title="Ajouter la personne au groupe">
+                        data-bs-toggle="modal" data-bs-target="#modal-block" data-bs-placement="bottom" title="Ajouter la personne au groupe">
                         <span class="fas fa-plus-square text-dark fa-2x"></span>
                     </a>`
         }
 
         if (person.id) {
             return `<a href="/person/${person.id}" class="btn btn-${this.themeColor} btn-sm shadow"
-                        data-placement="bottom" title="Voir la fiche de la personne"><span class="fas fa-eye"></span>
+                        data-bs-placement="bottom" title="Voir la fiche de la personne"><span class="fas fa-eye"></span>
                     </a>`
         }
 
         return `<button data-action="show-group" data-id="${person.idFiche}" class="btn bg-violet text-light btn-sm shadow"
-                    data-placement="bottom" title="Voir la fiche groupe SI-SIAO de cette personne"><i class="fas fa-eye"></i>
+                    data-bs-placement="bottom" title="Voir la fiche groupe SI-SIAO de cette personne"><i class="fas fa-eye"></i>
                 </button>`
     }
 

@@ -19,7 +19,7 @@
         <div class="col-md-6">{{ form_row(form.familyTypologies) }}</div>
             <div class="col-md-6">
             <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} ps-2 py-2 text-dark"
-                data-toggle="tooltip" data-placement="bottom" title="Demandeur/euse principal·e">{{ form_row(form.head) }}
+                data-bs-toggle="tooltip" data-bs-placement="bottom" title="Demandeur/euse principal·e">{{ form_row(form.head) }}
             </div>
         </div>
     </div>
@@ -33,7 +33,7 @@
                 <p id="results"></p>
             </div>
             <div class="mb-4 float-end">
-                <button type="reset" id="reset" name="reset" class="btn btn-secondary ms-2 shadow" data-toggle="tooltip" data-placement="bottom"
+                <button type="reset" id="reset" name="reset" class="btn btn-secondary ms-2 shadow" data-bs-toggle="tooltip" data-bs-placement="bottom"
                     title="Effacer les filtres"><i class="fas fa-eraser"></i><span class="sr-only">Effacer</span>
                 </button>
                 <button type="submit" id="count" name="count" data-path="{{ path('export_count') }}" 

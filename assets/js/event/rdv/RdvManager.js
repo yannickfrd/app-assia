@@ -164,7 +164,7 @@ export default class RdvManager {
         let htmlContent = `
             <td class="align-middle text-center">
                 <button class="btn btn-${this.rdvForm.themeColor} btn-sm shadow my-1"
-                    title="Voir/Modifier le rendez-vous"  data-toggle="tooltip" data-placement="bottom"
+                    title="Voir/Modifier le rendez-vous"  data-bs-toggle="tooltip" data-bs-placement="bottom"
                     data-action="edit-rdv" data-url="${url}"><i class="fas fa-eye"></i>
                 </button>
             </td>
@@ -192,7 +192,7 @@ export default class RdvManager {
             <td class="align-middle text-center">
                 <button data-url="/rdv/${rdv.id}/delete"
                         class="btn btn-danger btn-sm shadow my-1" title="Supprimer le rendez-vous"
-                        data-action="delete-rdv" data-toggle="tooltip" data-placement="bottom">
+                        data-action="delete-rdv" data-bs-toggle="tooltip" data-bs-placement="bottom">
                     <i class="fas fa-trash-alt"></i>
                 </button>
             </td>`

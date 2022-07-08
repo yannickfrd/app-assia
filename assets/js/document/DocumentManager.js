@@ -255,7 +255,7 @@ export default class DocumentManager {
             this.updateCounter(1)
             this.addEventListenersToTr(documentTrElt)
 
-            documentTrElt.querySelectorAll('[data-toggle="tooltip"]').forEach(tooltip => new Tooltip(tooltip))
+            documentTrElt.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(tooltip => new Tooltip(tooltip))
 
             this.dropzone.updateItemInList(doc)
         })
@@ -312,7 +312,7 @@ export default class DocumentManager {
         documentTrElt.innerHTML = `
             <td class="align-middle text-center">
                 <div class="custom-control custom-checkbox custom-checkbox-${this.themeColor} text-dark ps-0" 
-                    title="Sélectionner le document" data-toggle="tooltip" data-placement="bottom">
+                    title="Sélectionner le document" data-bs-toggle="tooltip" data-bs-placement="bottom">
                     <div class="form-check">
                         <input type="checkbox" id="checkbox-file-${doc.id}" data-checkbox="${doc.id}"
                             name="checkbox-file-${doc.id}" class="custom-control-input checkbox form-check-input">
@@ -323,12 +323,12 @@ export default class DocumentManager {
             <td class="align-middle text-center">
                 <a href="${this.containerDocumentsElt.dataset.pathPreview.replace('__id__', doc.id)}" type="button"
                     data-action="preview" class="btn btn-${this.themeColor} btn-sm shadow"
-                    title="Prévisualiser le document" type="button" data-toggle="tooltip" data-placement="bottom">
+                    title="Prévisualiser le document" type="button" data-bs-toggle="tooltip" data-bs-placement="bottom">
                     <i class="fas fa-eye"></i>
                 </a>
                 <a href="${this.containerDocumentsElt.dataset.pathDownload.replace('__id__', doc.id)}" type="button"
                     data-action="download" class="btn btn-${this.themeColor} btn-sm shadow m-1" 
-                    title="Télécharger le document" data-toggle="tooltip" data-placement="bottom">
+                    title="Télécharger le document" data-bs-toggle="tooltip" data-bs-placement="bottom">
                     <i class="fas fa-file-download"></i>
                 </a>
             </td>
@@ -342,7 +342,7 @@ export default class DocumentManager {
             <td class="align-middle text-center">
                 <button data-path="${this.containerDocumentsElt.dataset.pathDelete.replace('__id__', doc.id)}" 
                     class="btn btn-danger btn-sm shadow my-1" data-action="delete" 
-                    title="Supprimer le document" data-toggle="tooltip" data-placement="bottom">
+                    title="Supprimer le document" data-bs-toggle="tooltip" data-bs-placement="bottom">
                     <i class="fas fa-trash-alt"></i>
                 </button>
             </td>`

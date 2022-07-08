@@ -30,7 +30,7 @@
                         <a class="me-3 btn btn-{{ is_disabled ? 'success' : 'danger' }} d-block"
                             href="{{ path('security_user_disable', {'id':user.id}) }}"
                             title="{{ is_disabled ? 'Réactiver' : 'Désactiver' }} l'utilisateur"
-                            data-toggle="tooltip" data-placement="bottom"
+                            data-bs-toggle="tooltip" data-bs-placement="bottom"
                             {% if is_disabled == false %}onclick="return window.confirm({{ alert_msg }});"{% endif %}>
                             {% if is_disabled %}Réactiver{% else %}Désactiver{% endif %}</a>
                         {% if is_disabled == false %}
@@ -38,7 +38,7 @@
                             <a class="me-3 btn btn-{{ theme_color }} d-block"
                                 href="{{ path('security_user_send_new_email', {'id':user.id}) }}"
                                 title="Envoyer un nouvel e-mail à l'utilisateur afin de définir son mot de passe"
-                                data-toggle="tooltip" data-placement="bottom"
+                                data-bs-toggle="tooltip" data-bs-placement="bottom"
                                 onclick="return window.confirm({{ alert_msg }});">Envoyer e-mail</a>
                         {% endif %}
                     </div>

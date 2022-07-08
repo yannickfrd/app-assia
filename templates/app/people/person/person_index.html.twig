@@ -49,13 +49,13 @@
                                         <td scope="row" class="align-middle text-center">
                                             {% if people_group is defined %}
                                                 <a href="{{ path('group_add_person', {'id':people_group.id, 'person_id': person.id}) }}"
-                                                    class="js-add-person shadow" data-toggle="modal" data-target="#modal-block"
-                                                    data-placement="bottom" title="Ajouter la personne au groupe">
+                                                    class="js-add-person shadow" data-bs-toggle="modal" data-bs-target="#modal-block"
+                                                    data-bs-placement="bottom" title="Ajouter la personne au groupe">
                                                     <span class="fas fa-plus-square text-{{ theme_color }} fa-2x"></span>
                                                 </a>
                                             {% else %}
                                                 <a href="{{ path('person_show_slug', {'id':person.id, 'slug':person.slug}) }}"
-                                                    class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
+                                                    class="btn btn-{{ theme_color }} btn-sm shadow" data-bs-placement="bottom"
                                                     title="Voir la fiche individuelle">
                                                     <span class="fas fa-eye"></span>
                                                 </a>
@@ -72,9 +72,9 @@
                                         <td>{{ person.birthdate ? person.age ~ ' an' ~ (person.age > 1 ? 's') }}</td>
                                         <td class="align-middle">
                                             {% if person.gender == constant('GENDER_FEMALE', person) %}
-                                                <span class="fas fa-female fa-2x text-dark" data-placement="bottom" title="Femme"></span>
+                                                <span class="fas fa-female fa-2x text-dark" data-bs-placement="bottom" title="Femme"></span>
                                             {% elseif person.gender == constant('GENDER_MALE', person) %}
-                                                <span class="fas fa-male fa-2x text-dark" data-placement="bottom" title="Homme"></span>
+                                                <span class="fas fa-male fa-2x text-dark" data-bs-placement="bottom" title="Homme"></span>
                                             {% endif %} 
                                         </td>
                                     </tr>

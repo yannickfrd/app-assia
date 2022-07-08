@@ -22,7 +22,7 @@
                 <div class="form-inline justify-content-md-right mb-2">
                     <div class="col-auto my-1 pe-1 pl-0 d-inline-flex">
                         <div class="input-group">
-                            <span class="input-group-text" title="Date" data-toggle="tooltip" data-placement="bottom">
+                            <span class="input-group-text" title="Date" data-bs-toggle="tooltip" data-bs-placement="bottom">
                                 <i class="far fa-calendar text-black-50"></i>
                             </span>
                             <label class="sr-only required" for="date">Date</label>
@@ -31,8 +31,8 @@
                     </div>
                     <div class="col-auto my-1 pe-1 pl-0 d-inline-flex">
                         <div class="input-group">
-                            <span class="input-group-text" title="Heure de début" data-toggle="tooltip"
-                                data-placement="bottom"><i class="far fa-clock text-black-50"></i>
+                            <span class="input-group-text" title="Heure de début" data-bs-toggle="tooltip"
+                                data-bs-placement="bottom"><i class="far fa-clock text-black-50"></i>
                             </span>
                             <label class="sr-only required" for="start">Début</label>
                             <input type="time" id="start" name="start" required="required" class="form-control">
@@ -41,8 +41,8 @@
                             <span>–</span>
                         </div>
                         <div class="input-group">
-                            <span class="input-group-text" title="Heure de fin" data-toggle="tooltip"
-                                data-placement="bottom"><i class="far fa-clock text-black-50"></i>
+                            <span class="input-group-text" title="Heure de fin" data-bs-toggle="tooltip"
+                                data-bs-placement="bottom"><i class="far fa-clock text-black-50"></i>
                             </span>
                             <label class="sr-only required" for="end">Fin</label>
                             <input type="time" id="end" name="end" required="required" class="form-control">
@@ -55,8 +55,8 @@
                     <div class="col-12 col-lg-6 d-none">{{ form_widget(form_rdv.end) }}</div>
                     <div class="col-12">
                         <div class="input-group" id="rdv_search_location">
-                            <span class="input-group-text" title="Localisation" data-toggle="tooltip"
-                                data-placement="bottom"><i class="fas fa-map-marker-alt text-black-50"></i>
+                            <span class="input-group-text" title="Localisation" data-bs-toggle="tooltip"
+                                data-bs-placement="bottom"><i class="fas fa-map-marker-alt text-black-50"></i>
                             </span>
                             {{ form_widget(form_rdv.location) }}
                         </div>
@@ -65,8 +65,8 @@
                 <div class="row mb-2">
                     <div class="col-12">
                         <div class="input-group">
-                            <span class="input-group-text" title="Étiquettes" data-toggle="tooltip"
-                                data-placement="bottom"><i class="fas fa-tag text-black-50"></i>
+                            <span class="input-group-text" title="Étiquettes" data-bs-toggle="tooltip"
+                                data-bs-placement="bottom"><i class="fas fa-tag text-black-50"></i>
                             </span>
                             {{ form_widget(form_rdv.tags) }}
                         </div>
@@ -93,8 +93,8 @@
                     <div class="form-inline mb-1">
                         <div class="d-inline-flex me-2 mb-2">
                             <div class="input-group">
-                                <span class="input-group-text" title="Alerte" data-toggle="tooltip"
-                                     data-placement="bottom"><i class="fas fa-bell text-black-50"></i>
+                                <span class="input-group-text" title="Alerte" data-bs-toggle="tooltip"
+                                     data-bs-placement="bottom"><i class="fas fa-bell text-black-50"></i>
                                 </span>
                                 {{ form_widget(form_rdv.alerts.vars.prototype.date) }}
                             </div>
@@ -139,14 +139,14 @@
             </div>
             <div class="modal-footer d-flex justify-content-between">
                 <div class="float-left">
-                    <button id="modal-btn-delete" class="me-3 btn btn-danger" data-placement="bottom"
+                    <button id="modal-btn-delete" class="me-3 btn btn-danger" data-bs-placement="bottom"
                             data-action="delete-rdv-modal" data-url="{{ path('rdv_delete', {'id': '__id__'}) }}"
                             title="Supprimer le rendez-vous"><i class="fas fa-trash-alt"></i>
                         <span class="d-md-inline ms-2">Supprimer</span>
                     </button>
                 </div>
                 <div class="float-right">
-                    <button type="button" id="js-btn-cancel" class="btn btn-secondary" data-dismiss="modal">Fermer
+                    <button type="button" id="js-btn-cancel" class="btn btn-secondary" data-bs-dismiss="modal">Fermer
                     </button>
                     <button name="save-rdv" type="button" class="btn btn-{{ theme_color }} shadow" data-action="save-rdv">
                         <i class="fas fa-save me-2"></i>Enregistrer

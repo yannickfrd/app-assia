@@ -16,14 +16,14 @@
             <div class="d-flex flex-row align-items-center justify-content-between ms-1 mb-2">
                 <div class="d-flex align-items-center">
                     <h2 class="h2 me-3 mb-0 d-none d-sm-block">Agenda</h2>
-                    <a class="btn btn-{{ theme_color }} btn-sm shadow me-2" data-toggle="tooltip"
-                        data-placement="bottom" title="Passer en vue liste"
+                    <a class="btn btn-{{ theme_color }} btn-sm shadow me-2" data-bs-toggle="tooltip"
+                        data-bs-placement="bottom" title="Passer en vue liste"
                         href="{% if support is defined %}{{ path('support_rdv_index', {'id': support.id}) }}
                         {% else %}{{ path('rdv_index', {'date[start]': 'now'|date('Y-m-d') }) }}{% endif %}"
                         ><i class="far fa-list-alt"></i>
                     </a>
                     <button id="js-new-rdv" class="btn btn-{{ theme_color }} btn-sm shadow me-2"
-                        data-toggle="tooltip" data-placement="bottom" data-url="{{ path('rdv_create') }}"
+                        data-bs-toggle="tooltip" data-bs-placement="bottom" data-url="{{ path('rdv_create') }}"
                         title="Ajouter un rendez-vous"><i class="far fa-calendar-plus"></i>
                     </button>
                 </div>
@@ -55,21 +55,21 @@
                         </div>
                     </div>
                     <a href="{% if support is defined %}{{ path('support_calendar', {'id': support.id}) }}{% else %}{{ path('calendar') }}{% endif %}"
-                       class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-toggle="tooltip"
-                       data-placement="bottom" title="Mois actuel"><i class="fas fa-calendar-day"></i>
+                       class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-bs-toggle="tooltip"
+                       data-bs-placement="bottom" title="Mois actuel"><i class="fas fa-calendar-day"></i>
                         <span class="d-none d-md-inline ms-2">Mois actuel</span></a>
                     <a href="{% if support is defined %}{{ path('support_calendar_show',
                         {'id': support.id, 'year': calendar.previousMonth.year, 'month': calendar.previousMonth.month}) }}
 						{% else %}{{ path('calendar_show', {'year': calendar.previousMonth.year, 'month': calendar.previousMonth.month}) }}{% endif %}"
                         class="btn btn-{{ theme_color }} btn-sm mb-1 shadow"
-                        data-toggle="tooltip" data-placement="bottom" title="Mois précédent">
+                        data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mois précédent">
                             <i class="fas fa-angle-left"></i>
                     </a>
                     <a href="{% if support is defined %}{{ path('support_calendar_show',
                         {'id': support.id,'year': calendar.nextMonth.year, 'month': calendar.nextMonth.month}) }}
 						{% else %}{{ path('calendar_show', {'year': calendar.nextMonth.year, 'month': calendar.nextMonth.month}) }}{% endif %}"
                         class="btn btn-{{ theme_color }} btn-sm mb-1 shadow"
-                        data-toggle="tooltip" data-placement="bottom" title="Mois suivant">
+                        data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mois suivant">
                             <i class="fas fa-angle-right"></i>
                     </a>
                 </div>
@@ -113,7 +113,7 @@
                                             {% for rdv in rdvs[day|date('Y-m-d')] %}
                                                 <a class="calendar-event bg-{{ theme_color }} text-light"
                                                     id="rdv-{{ rdv.id }}" href="{{ path('rdv_show', {'id': rdv.id}) }}"
-                                                    title="Voir le rendez-vous" data-toggle="tooltip" data-placement="bottom">
+                                                    title="Voir le rendez-vous" data-bs-toggle="tooltip" data-bs-placement="bottom">
                                                     {{ rdv.start|date('H:i') }} {{ rdv.title }}
                                                 </a>
                                             {% endfor %}

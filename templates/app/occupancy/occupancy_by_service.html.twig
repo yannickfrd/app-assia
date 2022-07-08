@@ -62,13 +62,13 @@
                                         {% if service.nbSubServices > 1 %}
                                             <a href="{{ path('occupancy_sub_services', {'id': service_id, 'year': search.year, 
                                                 'date': {'start': search.start|date('Y-m-d'), 'end': search.end|date('Y-m-d') }} ) }}" 
-                                                class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" 
+                                                class="btn btn-{{ theme_color }} btn-sm shadow" data-bs-placement="bottom" 
                                                 title="Voir le détail par sous-service"><span class="fas fa-eye fa-sm"></span>
                                             </a>
                                         {% else %}
                                             <a href="{{ path('occupancy_service_places', {'id': service_id, 'year': search.year, 
                                                 'date': {'start': search.start|date('Y-m-d'), 'end': search.end|date('Y-m-d') }} ) }}" 
-                                                class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" 
+                                                class="btn btn-{{ theme_color }} btn-sm shadow" data-bs-placement="bottom" 
                                                 title="Voir le détail par groupe de places du service"><span class="fas fa-eye fa-sm"></span>
                                             </a>
                                         {% endif %}

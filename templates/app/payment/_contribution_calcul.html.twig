@@ -44,20 +44,20 @@
     <div class="col-md-12">
         <table class="table table-bordered table-striped mb-4">
             <tbody>
-                <tr title="Calcul des ressources" data-content="{{ resources_description }}" data-toggle="popover" 
-                    data-trigger="hover" data-placement="bottom" data-html="true">
+                <tr title="Calcul des ressources" data-bs-content="{{ resources_description }}" data-bs-toggle="popover" 
+                    data-bs-trigger="hover" data-bs-placement="bottom" data-bs-html="true">
                     <td class="align-middle">Montant total des ressources mensuelles</td>
                     <td class="align-middle text-right">{{ payment.resourcesAmt|amount(0) }}</td>
                 </tr>
-                <tr title="Calcul des charges" data-content="{{ charges_description }}" data-toggle="popover" 
-                    data-trigger="hover" data-placement="bottom" data-html="true">
+                <tr title="Calcul des charges" data-bs-content="{{ charges_description }}" data-bs-toggle="popover" 
+                    data-bs-trigger="hover" data-bs-placement="bottom" data-bs-html="true">
                     <td class="align-middle">Montant total des charges fixes mensuelles</td>
                     <td class="align-middle text-right">{{ payment.chargesAmt|amount(0) }}</td>
                 </tr>
             </tbody>
             <tfoot>
-                <tr class="fw-bold alert-secondary" title="Total reste à vivre mensuel" data-toggle="popover" 
-                    data-content="{{ budget_balance_description }}" data-trigger="hover" data-placement="bottom" data-html="true">
+                <tr class="fw-bold alert-secondary" title="Total reste à vivre mensuel" data-bs-toggle="popover" 
+                    data-bs-content="{{ budget_balance_description }}" data-bs-trigger="hover" data-bs-placement="bottom" data-bs-html="true">
                     <td class="align-middle">Total reste à vivre mensuel</td>
                     <td class="align-middle text-right">{{ (payment.resourcesAmt - payment.chargesAmt)|amount(0) }}</td>
                 </tr>
@@ -67,40 +67,40 @@
             <tbody>
                 {% if rent_contribution %}
                     <tr title="Montant du loyer" 
-                        data-content="Le loyer correspond au montant indiqué dans la fiche descriptive du logement." 
-                        data-toggle="popover" data-trigger="hover" data-placement="bottom" data-html="true">
+                        data-bs-content="Le loyer correspond au montant indiqué dans la fiche descriptive du logement." 
+                        data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="bottom" data-bs-html="true">
                         <td class="align-middle">Montant du loyer</td>
                         <td class="align-middle text-right">{{ payment.rentAmt|amount(2) }}</td>
                     </tr>
-                    <tr title="Montant APL" data-content="Le montant des APL est à saisir dans le formulaire. <br/>
+                    <tr title="Montant APL" data-bs-content="Le montant des APL est à saisir dans le formulaire. <br/>
                         Les APL sont en déduction du montant du loyer." 
-                        data-toggle="popover" data-trigger="hover" data-placement="bottom" data-html="true">
+                        data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="bottom" data-bs-html="true">
                         <td class="align-middle">Montant APL</td>
                         <td class="align-middle text-right">{{ payment.aplAmt|amount(2) }}</td>
                     </tr>
                 {% else %}
-                    <tr title="Taux de participation financière" data-content="{{ contribution_rate_description }}" 
-                        data-toggle="popover" data-trigger="hover" data-placement="bottom" data-html="true">
+                    <tr title="Taux de participation financière" data-bs-content="{{ contribution_rate_description }}" 
+                        data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="bottom" data-bs-html="true">
                         <td class="align-middle">Taux de participation financière</td>
                         <td class="align-middle">{{ (payment.contributionRate * 100)|percent(0) }}</td>
                     </tr>
                 {% endif %}
                 {% if constant('SERVICE_TYPE_HOTEL', service) != service.type %}
-                    <tr title="Prorata présence" data-content="Le prorata correspond au rapport entre 
+                    <tr title="Prorata présence" data-bs-content="Le prorata correspond au rapport entre 
                         le nombre de jours de présence et le nombre de jours dans le mois." 
-                        data-toggle="popover" data-trigger="hover" data-placement="bottom" data-html="true">
+                        data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="bottom" data-bs-html="true">
                         <td class="align-middle">Prorata présence</td>
                         <td class="align-middle">{{ (payment.ratioNbDays * 100)|percent }}</td>
                     </tr>
                 {% endif %}
                 {% if rent_contribution == false %}
-                    <tr title="Calcul des unité de consommation" data-content="{{ uc_description }}" 
-                        data-toggle="popover" data-trigger="hover" data-placement="bottom" data-html="true">
+                    <tr title="Calcul des unité de consommation" data-bs-content="{{ uc_description }}" 
+                        data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="bottom" data-bs-html="true">
                         <td class="align-middle">Nombre d'unités de consommation</td>
                         <td class="align-middle">{{ payment.nbConsumUnits }}</td>
                     </tr>
-                    <tr title="Reste à vivre journalier unitaire" data-content="{{ rest_to_live_description }}" 
-                        data-toggle="popover" data-trigger="hover" data-placement="bottom" data-html="true">
+                    <tr title="Reste à vivre journalier unitaire" data-bs-content="{{ rest_to_live_description }}" 
+                        data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="bottom" data-bs-html="true">
                         <td class="align-middle">Reste à vivre journalier unitaire</td>
                         <td class="align-middle text-right">{{ payment.restToLive|amount }}</td>
                     </tr>

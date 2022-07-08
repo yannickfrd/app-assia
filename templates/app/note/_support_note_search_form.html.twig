@@ -5,7 +5,7 @@
     <div class="col-auto my-1 px-1">{{ form_widget(form_search.status) }}</div>
     <div class="col-auto my-1 px-1">
         <div class="input-group">
-            <span class="input-group-text" title="Étiquettes" data-toggle="tooltip" data-placement="bottom">
+            <span class="input-group-text" title="Étiquettes" data-bs-toggle="tooltip" data-bs-placement="bottom">
                 <i class="fas fa-tag text-black-50"></i></span>
             {{ form_widget(form_search.tags) }}
         </div>
@@ -14,7 +14,7 @@
 
 {% block form_search_export %}
     <button id="js-btn-export" name="export" value="true" class="btn btn-primary ms-2 shadow"
-        title="Exporter les notes dans un document Word" data-toggle="tooltip" data-placement="bottom">
+        title="Exporter les notes dans un document Word" data-bs-toggle="tooltip" data-bs-placement="bottom">
         <i class="fas fa-file-word text-light"></i><span class="sr-only">Exporter</span>
     </button>
 {% endblock %}

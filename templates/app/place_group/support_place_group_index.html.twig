@@ -38,7 +38,7 @@
 							<tr id="placeGroup-{{ placeGroup.id }}">
 								<td scope="row" class="align-middle text-center">
 									<a href="{{ path('support_place_edit', {'id': placeGroup.id}) }}" 
-										class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-toggle="tooltip" data-placement="bottom" 
+										class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-bs-toggle="tooltip" data-bs-placement="bottom" 
 										title="Voir le détail de l'hébergement"><span class="fas fa-eye"></span>
 									</a>
 								</td>
@@ -58,7 +58,7 @@
 								<td class="align-middle">{{ placeGroup.place ? placeGroup.place.fullAddress }}</td>
 								<td class="align-middle text-center">
 									<a href="{{ path('support_group_people_place_delete', {'id': placeGroup.id}) }}" 
-										class="btn btn-danger btn-sm shadow my-1" data-placement="bottom" title="Supprimer cette prise en charge" 
+										class="btn btn-danger btn-sm shadow my-1" data-bs-placement="bottom" title="Supprimer cette prise en charge" 
 										onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer cette prise en charge ?'))
 										{return true;}else{return false;}"><span class="fas fa-trash-alt"></span>
 									</a>

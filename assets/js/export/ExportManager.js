@@ -82,7 +82,7 @@ export default class ExportManager {
         let htmlContent = `
             <td scope="row" class="align-middle text-center" data-cell="export_download">
                 <i class="fas fa-spinner text-dark" title="Export en cours de préparation"
-                    data-toggle="tooltip" data-placement="right"></i>
+                    data-bs-toggle="tooltip" data-bs-placement="right"></i>
             </td>
             <td class="align-middle" data-cell="export_title">${exportObject.title}</td>
             <td class="align-middle" data-cell="export_comment">${exportObject.comment}</td>
@@ -94,7 +94,7 @@ export default class ExportManager {
             <td class="align-middle text-center">
                 <button class="btn btn-danger btn-sm shadow my-1" data-action="delete_export"
                     data-path="/export/${exportObject.id}/delete"
-                    title="Supprimer le fichier d'export" data-toggle="tooltip" data-placement="bottom" 
+                    title="Supprimer le fichier d'export" data-bs-toggle="tooltip" data-bs-placement="bottom" 
                     data-msg="Êtes-vous vraiment sûr de vouloir supprimer ce fichier d\'export ?">
                     <i class="fas fa-trash-alt"></i>
                 </button>
@@ -107,7 +107,7 @@ export default class ExportManager {
 
         this.initBtnDelete(rowElt.querySelector('button[data-action="delete_export"]'))
 
-        rowElt.querySelectorAll('[data-toggle="tooltip"]').forEach(elt => new Tooltip(elt))
+        rowElt.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(elt => new Tooltip(elt))
         
         this.updateExportCounter(+1)
 
@@ -123,11 +123,11 @@ export default class ExportManager {
 
         rowElt.querySelector('td[data-cell="export_download"]').innerHTML = `
             <a href="${path}" class="btn btn-${this.themeColor} btn-sm shadow my-1" 
-            title="Télécharger l'export" data-toggle="tooltip" data-placement="bottom"><i class="fas fa-file-download"></i>
+            title="Télécharger l'export" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-file-download"></i>
             </a>`
         rowElt.querySelector('td[data-cell="export_size"]').textContent = Math.round(exportObject.size / 1000) + ' Ko'
 
-        rowElt.querySelectorAll('[data-toggle="tooltip"]').forEach(elt => new Tooltip(elt))
+        rowElt.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(elt => new Tooltip(elt))
     }
 
     /**

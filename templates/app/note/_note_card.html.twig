@@ -24,7 +24,7 @@
         <div class="col-sm-12 col-lg-6 mb-4 reveal" data-note-id="{{ note.id }}" 
             {% if not is_deleted %}data-path-show="{{ path('note_show', {'id': note.id}) }}"{% endif %}>
             <div class="card h-100 shadow {{ not is_deleted ? 'cursor-pointer' }}" {% if not is_deleted %}
-                title="Voir la note" data-toggle="tooltip" data-placement="bottom"{% endif %}>
+                title="Voir la note" data-bs-toggle="tooltip" data-bs-placement="bottom"{% endif %}>
                 <div class="card-header">
                     <div class="row">
                         <div class="col-10">

@@ -1,7 +1,7 @@
 require('../css/app.scss')
 import SearchPerson from './searchPerson'
 import autoLogout from './utils/autoLogout'
-import {Tooltip, Popover, Toast} from '../../node_modules/bootstrap'
+import {Popover, Toast, Tooltip} from '../../node_modules/bootstrap'
 
 require('../../node_modules/bootstrap')
 require('@fortawesome/fontawesome-free/css/all.min.css')
@@ -9,10 +9,10 @@ require('@fortawesome/fontawesome-free/css/all.min.css')
 // Lorsque le DOM est chargé
 window.onload = () => {
     //Active les toggles Bootstrap
-    document.querySelectorAll('[data-toggle="tooltip"]').forEach(tooltip => {
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(tooltip => {
         new Tooltip(tooltip)
     })
-    document.querySelectorAll('[data-toggle="popover"]').forEach(popover => {
+    document.querySelectorAll('[data-bs-toggle="popover"]').forEach(popover => {
         new Popover(popover)
     })
     document.querySelectorAll('.toast').forEach(toast => {

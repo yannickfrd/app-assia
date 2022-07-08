@@ -2,17 +2,17 @@
 
 {% block search_form %}
     <div class="col-auto my-1 px-1" title="Recherche" 
-        data-toggle="tooltip" data-placement="bottom">{{ form_widget(form_search.title) }}
+        data-bs-toggle="tooltip" data-bs-placement="bottom">{{ form_widget(form_search.title) }}
     </div>
     <div class="col-auto my-1 px-1" title="Statut" 
-        data-toggle="tooltip" data-placement="bottom">{{ form_widget(form_search.status) }}
+        data-bs-toggle="tooltip" data-bs-placement="bottom">{{ form_widget(form_search.status) }}
     </div>
     <div class="col-auto my-1 px-1" title="Priorité" 
-        data-toggle="tooltip" data-placement="bottom">{{ form_widget(form_search.level) }}
+        data-bs-toggle="tooltip" data-bs-placement="bottom">{{ form_widget(form_search.level) }}
     </div>
     <div class="col-auto my-1 px-1">
         <div class="input-group">
-            <span class="input-group-text" title="Étiquettes" data-toggle="tooltip" data-placement="bottom">
+            <span class="input-group-text" title="Étiquettes" data-bs-toggle="tooltip" data-bs-placement="bottom">
                 <i class="fas fa-tag text-black-50"></i>
             </span>
             {{ form_widget(form_search.tags) }}

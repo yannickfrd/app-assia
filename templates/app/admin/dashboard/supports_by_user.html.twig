@@ -47,7 +47,7 @@
                                         <td scope="row" class="align-middle text-center">
                                             <a href="{{ path('support_index', {'status': [2], 'service': {'referents': [user_datas.user.id]}, 'head': true}) }}" 
                                                 class="btn btn-{{ theme_color }} btn-sm shadow" 
-                                                data-placement="bottom" title="Voir les suivis de l'intervenant·e social·e"><!--
+                                                data-bs-placement="bottom" title="Voir les suivis de l'intervenant·e social·e"><!--
                                                 --><span class="fas fa-eye fa-sm"></span>
                                             </a>
                                         </td>
@@ -78,7 +78,7 @@
                                         {% if is_granted('ROLE_ADMIN') %}
                                             <td scope="row" class="align-middle text-center">
                                                 <a href="{{ path('security_user', {'id': user_datas.user.id}) }}#supports-by-device" class="btn btn-{{ theme_color }} btn-sm shadow" 
-                                                    data-toggle="tooltip" data-placement="bottom" title="Modifier la répartition des suivis théoriques par dispositif"><span class="fas fa-edit"></span>
+                                                    data-bs-toggle="tooltip" data-bs-placement="bottom" title="Modifier la répartition des suivis théoriques par dispositif"><span class="fas fa-edit"></span>
                                                 </a>
                                             </td>
                                         {% endif %}

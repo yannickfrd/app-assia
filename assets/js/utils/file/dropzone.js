@@ -182,7 +182,7 @@ export default class Dropzone {
                 if (liElt) {
                     liElt.classList.replace('list-group-item-light', 'list-group-item-' + status)
                     liElt.title = this.getMessage(file, status)
-                    liElt.dataset.placement = 'bottom'
+                    liElt.dataset.bsPlacement = 'bottom'
 
                     const spanElt = liElt.querySelector('span.fas.fa-sync-alt')
                     if (spanElt) {

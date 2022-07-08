@@ -49,8 +49,8 @@
                                 <td scope="row" class="align-middle text-center">
                                     {% if is_granted('ROLE_ADMIN') %}
                                         <a href="{{ path('admin_organization_edit', {'id': organization.id}) }}"
-                                            class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip"
-                                            data-placement="bottom" title="Voir la fiche de l'organisme">
+                                            class="btn btn-{{ theme_color }} btn-sm shadow" data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom" title="Voir la fiche de l'organisme">
                                             <span class="fas fa-eye"></span>
                                         </a>
                                     {% endif %}

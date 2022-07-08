@@ -92,7 +92,7 @@
                             <div class="float-start d-flex">
                             {% set msg_confirm = 'Êtes-vous vraiment sûr de vouloir supprimer cette personne ?' %}
                                 <a id="modal-btn-delete" class="me-3 btn btn-danger d-block" href="{{ path('person_delete', {'id': person.id}) }}"
-                                    data-toggle="tooltip" title="Supprimer la personne" data-placement="bottom"
+                                    data-bs-toggle="tooltip" title="Supprimer la personne" data-bs-placement="bottom"
                                     onclick="if(window.confirm('{{ msg_confirm }}')){return true;}else{return false;}"><span
                                     class="fas fa-trash-alt me-2"></span>Supprimer</a>
                             </div>
@@ -131,8 +131,8 @@
                             <thead>
                                 <tr>
                                     <th scope="col" class="align-middle th-w-20"></th>
-                                    <th scope="col" class="align-middle th-w-80 d-none d-sm-table-cell" data-toggle="tooltip" 
-                                        data-placement="bottom" title="N° d'identification du groupe">ID groupe</th>
+                                    <th scope="col" class="align-middle th-w-80 d-none d-sm-table-cell" data-bs-toggle="tooltip" 
+                                        data-bs-placement="bottom" title="N° d'identification du groupe">ID groupe</th>
                                     <th scope="col" class="align-middle th-w-140">Typologie familiale</th>
                                     <th scope="col" class="align-middle th-w-100 d-none d-sm-table-cell">Nb de
                                         personnes</th>
@@ -150,13 +150,13 @@
                                     <tr>
                                         <td scope="row">
                                             <a href="{{ path('people_group_show', {'id': role.peopleGroup.id}) }}"
-                                                class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" 
-                                                data-placement="bottom" title="Voir la fiche du groupe">
+                                                class="btn btn-{{ theme_color }} btn-sm shadow" data-bs-toggle="tooltip" 
+                                                data-bs-placement="bottom" title="Voir la fiche du groupe">
                                                 <span class="fas fa-eye"></span>
                                             </a>
                                         </td>
-                                        <td class="d-none d-sm-table-cell" data-toggle="tooltip" 
-                                            data-placement="bottom" title="N° d'identification du groupe">
+                                        <td class="d-none d-sm-table-cell" data-bs-toggle="tooltip" 
+                                            data-bs-placement="bottom" title="N° d'identification du groupe">
                                             {{ role.peopleGroup.id }}</td>
                                         <td class="d-table-row d-sm-table-cell">
                                             {{ role.peopleGroup.familyTypologyToString }}
@@ -174,7 +174,7 @@
                     </div>
                 {% endif %}
                 <button id="btn-new-group" class="m-2 btn btn-{{ theme_color }} btn-sm" 
-                    data-toggle="modal" data-target="#modal-new-group">
+                    data-bs-toggle="modal" data-bs-target="#modal-new-group">
                     <span class="fas fa-plus-square pe-2"></span>Créer un nouveau groupe
                 </button>
             </section>

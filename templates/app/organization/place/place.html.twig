@@ -88,14 +88,14 @@
                                 {% set alert_text = '"Êtes-vous vraiment sûr de vouloir supprimer ce groupe de places ?"' %}
                                 <a id="modal-btn-delete" class="me-3 btn btn-danger d-block" 
                                     href="{{ path('place_delete', {'id': place.id}) }}"
-                                   title="Supprimer le groupe de places" data-toggle="tooltip" data-placement="bottom"
+                                   title="Supprimer le groupe de places" data-bs-toggle="tooltip" data-bs-placement="bottom"
                                     onclick="if(window.confirm({{ alert_text }})){return true;}else{return false;}">
                                         <span class="fas fa-trash-alt me-2"></span>Supprimer</a>
                                 {% set alert_text = '"Êtes-vous vraiment sûr de vouloir désactiver ce groupe de places ?"' %}
                                 <a class="me-3 btn btn-{{ disabled ? 'success' : 'warning' }} d-block" 
                                     href="{{ path('place_disable', {'id': form.vars.value.id}) }}"
                                     title="{{ disabled ? 'Réactiver' : 'Désactiver' }} le groupe de place" 
-                                    data-toggle="tooltip" data-placement="bottom"
+                                    data-bs-toggle="tooltip" data-bs-placement="bottom"
                                     {% if disabled == false %}onclick="if(window.confirm('{{ alert_text }}')){return true;}else{return false;}"{% endif %}>
                                     {% if disabled %}Réactiver{% else %}Désactiver{% endif %}</a>
                             </div>
@@ -138,8 +138,8 @@
                                     <td scope="row">
                                         <a href="{{ path('support_place_edit', {'id': place_group.id}) }}" 
                                             class="btn btn-{{ theme_color }} btn-sm shadow"  
-                                            title="Voir le détail de la prise en charge" data-toggle="tooltip" 
-                                            data-placement="bottom"><span class="fas fa-eye"></span>
+                                            title="Voir le détail de la prise en charge" data-bs-toggle="tooltip" 
+                                            data-bs-placement="bottom"><span class="fas fa-eye"></span>
                                         </a>
                                     </td>
                                     <td>{{ person ? person.fullname }}</td>

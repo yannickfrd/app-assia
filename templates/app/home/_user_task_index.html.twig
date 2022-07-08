@@ -3,7 +3,7 @@
 {% block card_title %}
     Mes tâches à faire
     {# {% if app.session.get('alerts')| length > 0 %} 
-        <span class="badge rounded-pill bg-warning" title="Vous avez {{ app.session.get('alerts')| length }} rappels non-vue" data-toggle="tooltip">
+        <span class="badge rounded-pill bg-warning" title="Vous avez {{ app.session.get('alerts')| length }} rappels non-vue" data-bs-toggle="tooltip">
             {{ app.session.get('alerts')|length }}
             <i class="fas fa-bell fa-sm"></i>
         </span>
@@ -39,7 +39,7 @@
                         <tr id="task_{{ task.id }}">
                             <td scope="row" class="align-middle text-center">
                                 <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} text-dark ps-0" 
-                                    title="Cliquer pour changer le statut" data-toggle="tooltip" data-placement="bottom">
+                                    title="Cliquer pour changer le statut" data-bs-toggle="tooltip" data-bs-placement="bottom">
                                         <div class="form-check">
                                             <input type="checkbox" class="custom-control-input checkbox form-check-input"
                                                 id="toggle_task_status_{{ task.id }}" data-action="toggle_task_status" 
@@ -52,8 +52,8 @@
                             <td class="align-middle text-center">
                                 <a href="{% if task.supportGroup %}{{ path('support_task_index',{'id': task.supportGroup, 'task_id': task.id}) }}
                                     {% else %}{{ path('task_index',{'task_id': task.id}) }} {% endif %}" class="btn btn-{{ theme_color }}
-                                    btn-sm shadow my-1" data-action="edit_task" title="Voir/Modifier la tâche" data-toggle="tooltip"
-                                    data-placement="bottom" data-target="#modal_task">
+                                    btn-sm shadow my-1" data-action="edit_task" title="Voir/Modifier la tâche" data-bs-toggle="tooltip"
+                                    data-bs-placement="bottom" data-bs-target="#modal_task">
                                     <span class="fas fa-eye"></span>
                                 </a>
                             </td>
@@ -63,7 +63,7 @@
                                 {{ task.endToString }}
                                 {% if is_late %}
                                     <span class="fas fa-exclamation text-danger" title="En retard" 
-                                        data-toggle="tooltip" data-placement="bottom"></span>
+                                        data-bs-toggle="tooltip" data-bs-placement="bottom"></span>
                                 {% endif %}
                             </td>
                             <td class="align-middle" data-cell="alerts">

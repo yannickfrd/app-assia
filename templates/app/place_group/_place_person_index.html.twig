@@ -5,7 +5,7 @@
             <thead>
                 <tr>
                     <th scope="col" class="align-middle text-center th-w-20" title="Demandeur/euse principal·e"
-                        data-toggle="tooltip" data-placement="bottom" >DP</th>                    
+                        data-bs-toggle="tooltip" data-bs-placement="bottom" >DP</th>                    
                     <th scope="col" class="align-middle th-w-150">Nom et prénom</th>
                     <th scope="col" class="align-middle th-date">Date de début</th>
                     <th scope="col" class="align-middle th-date">Date de fin</th>
@@ -31,7 +31,7 @@
 							{% if not is_header %}
                                 <button data-action="remove" data-url="{{ path('support_person_place_delete', {'id': placePersonId}) }}" 
                                     class="btn btn-danger btn-sm shadow my-1" title="Supprimer la personne de la prise en charge" 
-                                    data-toggle="modal" data-target="#modal-block">
+                                    data-bs-toggle="modal" data-bs-target="#modal-block">
                                     <span class="fas fa-trash-alt"><span class="sr-only">Supprimer</span></span>
                                 </button>
                             {% endif %}

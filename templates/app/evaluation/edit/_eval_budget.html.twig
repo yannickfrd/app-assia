@@ -73,11 +73,11 @@
 						{{ form_row(form.evalBudgetGroup.contributionAmt) }}</div>
 					<div class="col-md-12 text-center">
 					    <button id="calcul_contribution_btn" class="btn btn-secondary" 
-                            title="Calculer le montant de la participation financière" data-toggle="tooltip" data-placement="bottom" 
+                            title="Calculer le montant de la participation financière" data-bs-toggle="tooltip" data-bs-placement="bottom" 
                             data-path="{{ path('support_payment_calcul', {'id': support.id}) }}">
                             <span class="fas fa-sync me-2"></span>Calculer PAF</button>
 						<button id="show_calcul_contribution_btn" class="btn btn-{{ theme_color }} d-none" 
-                            title="Voir le détail du montant à régler" data-toggle="tooltip" data-placement="bottom">
+                            title="Voir le détail du montant à régler" data-bs-toggle="tooltip" data-bs-placement="bottom">
                             <span class="fas fa-eye me-2"></span>Voir le détail</button>
 					</div>
 				</div>

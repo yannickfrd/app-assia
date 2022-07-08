@@ -59,7 +59,7 @@
                         {% if support is not defined %}
                             <a href="{{ path('support_note_index', {'id': support is defined ? support.id : note.supportGroup.id, 'noteId': note.id}) }}"
                                 class="btn btn-{{ is_deleted ? 'secondary' : theme_color }} btn-sm shadow {{ is_deleted ? 'disabled' }}"
-                                type="button" title="Voir la note sociale" data-toggle="tooltip" data-placement="bottom" 
+                                type="button" title="Voir la note sociale" data-bs-toggle="tooltip" data-bs-placement="bottom" 
                                 data-action="show"><i class="fas fa-eye"></i>
                             </a>
                         {% else %}
@@ -101,12 +101,12 @@
                         <td class="align-middle text-center p-1">
                             <a href="{{ path('note_export_word', {'id': note.id}) }}"
                                 class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" title="Exporter la note au format Word"
-                                data-toggle="tooltip" data-placement="bottom">
+                                data-bs-toggle="tooltip" data-bs-placement="bottom">
                                     <i class="fas fa-file-word fa-lg bg-primary"></i><span class="sr-only">Word</span>
                             </a>
                             <a href="{{ path('note_export_pdf', {'id': note.id}) }}"
                                 class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" title="Exporter la note au format PDF"
-                                data-toggle="tooltip" data-placement="bottom">
+                                data-bs-toggle="tooltip" data-bs-placement="bottom">
                                     <i class="fas fa-file-pdf fa-lg bg-danger"></i><span class="sr-only">PDF</span>
                             </a>
                         </td>
@@ -118,7 +118,7 @@
                         {% else %}
                             <button class="btn btn-sm btn-danger shadow" 
                                 data-action="delete-note" data-path-delete="{{ path('note_delete', {'id': note.id}) }}"
-                                title="Supprimer la note" data-toggle="tooltip" data-placement="bottom">
+                                title="Supprimer la note" data-bs-toggle="tooltip" data-bs-placement="bottom">
                                 <i class="fa-solid fa-trash-can"></i>
                             </button>
                     {% endif %}

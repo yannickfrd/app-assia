@@ -64,14 +64,14 @@
 					{% if is_granted('ROLE_ADMIN') %}
 						{% set alert_text = '"Êtes-vous vraiment sûr de vouloir supprimer cette évaluation sociale ?"' %}
 						<a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('evaluation_delete', {'id': evaluation_group.id}) }}" 
-							title="Supprimer l'évaluation sociale" data-toggle="tooltip" data-placement="bottom" 
+							title="Supprimer l'évaluation sociale" data-bs-toggle="tooltip" data-bs-placement="bottom" 
 							onclick="return window.confirm({{ alert_text }});">
 							<i class="fas fa-trash-alt me-2"></i>Supprimer</a>
 					{% endif %}
 					{% set alert_text = '"Attention, cela va écraser les données de cette évaluation sociale.' ~ 
 						' Êtes-vous vraiment sûr de vouloir récupérer l\'évaluation sociale du SI-SIAO ?"' %}
 					<a class="btn btn-{{ theme_color }} d-block me-3" href="{{ path('api_sisiao_support_import_evaluation', {'id': support.id}) }}" 
-						title="Importer l'évaluation sociale du SI-SIAO" data-toggle="tooltip" data-placement="bottom" 
+						title="Importer l'évaluation sociale du SI-SIAO" data-bs-toggle="tooltip" data-bs-placement="bottom" 
 						onclick="return window.confirm({{ alert_text }});"><i class="fas fa-cloud-download-alt me-2"></i>
 						<span class="d-none d-sm-inline">Importer SI-SIAO</span></a>
 				</div>

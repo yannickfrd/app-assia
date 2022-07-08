@@ -143,7 +143,7 @@ export default class TaskManager {
         let htmlContent = `
             <td class="align-middle text-center">
                 <div class="custom-control custom-checkbox custom-checkbox-${this.themeColor} text-dark ps-0" 
-                    title="Cliquer pour changer le statut" data-toggle="tooltip" data-placement="bottom">
+                    title="Cliquer pour changer le statut" data-bs-toggle="tooltip" data-bs-placement="bottom">
                     <div class="form-check">
                         <input type="checkbox" class="custom-control-input checkbox form-check-input"
                             id="toggle_task_status_${task.id}" ${task.status ? ' checked' : ''} 
@@ -155,7 +155,7 @@ export default class TaskManager {
             </td>
             <td class="align-middle text-center">
                 <button data-url="${this.getUrlTaskShow(task.id)}" class="btn btn-${this.themeColor} btn-sm"
-                    data-action="edit_task" title="Voir/Modifier la tâche" data-toggle="modal" data-placement="bottom">
+                    data-action="edit_task" title="Voir/Modifier la tâche" data-bs-toggle="modal" data-bs-placement="bottom">
                     <span class="fas fa-eye"></span>
                 </button>
             </td>
@@ -187,7 +187,7 @@ export default class TaskManager {
         htmlContent = htmlContent + `
             <td class="align-middle text-center">
                 <button class="btn btn-danger btn-sm shadow my-1" data-action="delete_task"
-                    data-url="/task/${task.id}/delete" title="Supprimer la tâche" data-placement="bottom">
+                    data-url="/task/${task.id}/delete" title="Supprimer la tâche" data-bs-placement="bottom">
                     <span class="fas fa-trash-alt"></span>
                 </button>
             </td>

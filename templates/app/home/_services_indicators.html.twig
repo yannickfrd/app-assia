@@ -36,7 +36,7 @@
                                 aria-expanded="false" aria-controls="multi-collapse-service-{{ service_id }}">
                                 <td scope="row" class="align-middle text-center">
                                     <a href="{{ path('support_index', {'status': [2], 'service': {'services': [service_id]}, 'head': true}) }}" 
-                                        class="btn btn-{{ theme_color }} shadow" data-placement="bottom" 
+                                        class="btn btn-{{ theme_color }} shadow" data-bs-placement="bottom" 
                                         title="Voir les suivis en cours"><span class="fas fa-eye fa-sm"></span>
                                     </a>
                                 </td>
@@ -63,7 +63,7 @@
                                 <tr class="collapse multi-collapse-service-{{ service_id }}" id="multi-collapse-service-{{ service_id }}">
                                     <td scope="row" class="align-middle text-center">
                                         <a href="{{ path('support_index', {'status': [2], 'service': {'services': [service_id], 'subServices': [sub_service_id]}, 'head': true}) }}" 
-                                            class="btn btn-secondary btn-sm shadow" data-placement="bottom" 
+                                            class="btn btn-secondary btn-sm shadow" data-bs-placement="bottom" 
                                             title="Voir les suivis en cours"><span class="fas fa-eye fa-sm"></span>
                                         </a>
                                     </td>
@@ -88,7 +88,7 @@
                                 <tr class="text-secondary collapse multi-collapse-service-{{ service_id }}" id="multi-collapse-service-{{ service_id }}">
                                     <td scope="row" class="align-middle text-center">
                                         <a href="{{ path('support_index', {'status': [2], 'service': {'services': [service_id], 'devices': [device_id]}, 'head': true}) }}" 
-                                            class="btn btn-secondary btn-sm shadow" data-placement="bottom" 
+                                            class="btn btn-secondary btn-sm shadow" data-bs-placement="bottom" 
                                             title="Voir les suivis en cours"><span class="fas fa-eye fa-sm"></span>
                                         </a>
                                     </td>

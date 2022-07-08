@@ -4,17 +4,17 @@
     <div class="col-auto my-1 px-1">{{ form_widget(form.name) }}</div>
     <div class="col-auto my-1 px-1">
         <div class="input-group">
-            <span class="input-group-text" title="Étiquettes" data-toggle="tooltip" data-placement="bottom">
+            <span class="input-group-text" title="Étiquettes" data-bs-toggle="tooltip" data-bs-placement="bottom">
                 <i class="fas fa-tag text-black-50"></i>
             </span>
             {{ form_widget(form.tags) }}
         </div>
     </div>
-    <div class="col-auto my-1 px-1 d-inline-flex" title="Date de début" data-toggle="tooltip" 
-        data-placement="bottom"><span class="my-2 px-1">Entre</span>{{ form_widget(form.date.start) }}
+    <div class="col-auto my-1 px-1 d-inline-flex" title="Date de début" data-bs-toggle="tooltip" 
+        data-bs-placement="bottom"><span class="my-2 px-1">Entre</span>{{ form_widget(form.date.start) }}
     </div>
     <div class="col-auto my-1 px-1 d-inline-flex" title="Date de fin" 
-        data-toggle="tooltip" data-placement="bottom">
+        data-bs-toggle="tooltip" data-bs-placement="bottom">
         <span class="my-2 pe-1">et</span>{{ form_widget(form.date.end) }}
     </div>
     {% include '_shared/_service_device_referent_search.html.twig' %}

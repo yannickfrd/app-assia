@@ -23,10 +23,10 @@
 							<td class="align-middle text-center" scope="row">
 								{% if is_granted_edit_service %}
 									<a href="{{ path('sub_service_edit', {'id':sub_service.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow" 
-										data-toggle="tooltip" data-placement="bottom" title="Voir la fiche du sous-service"><span class="fas fa-eye"></span>
+										data-bs-toggle="tooltip" data-bs-placement="bottom" title="Voir la fiche du sous-service"><span class="fas fa-eye"></span>
 									</a>                    
                                 {% else %}
-                                    <span class="btn btn-secondary btn-sm shadow cursor-default" data-toggle="tooltip" data-placement="bottom" 
+                                    <span class="btn btn-secondary btn-sm shadow cursor-default" data-bs-toggle="tooltip" data-bs-placement="bottom" 
                                         title="Vous n'avez pas les droits pour accéder à la fiche"><span class="fas fa-ban"></span></span>                           
                                 {% endif %}
 							</td>
@@ -37,7 +37,7 @@
 							<td class="align-middle text-center">
 								{% if is_granted('DISABLE', service) %}
 									<a id="modal-btn-disable" class="me-3 btn btn-danger" href="{{ path('sub_service_disable', {'id':sub_service.id}) }}"
-										title="Supprimer le sous-service" data-toggle="tooltip" data-placement="bottom"
+										title="Supprimer le sous-service" data-bs-toggle="tooltip" data-bs-placement="bottom"
 										onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer ce sous-service ?')){return true;}else{return false;}">
 										<span class="fas fa-trash-alt"></span>
 									</a>

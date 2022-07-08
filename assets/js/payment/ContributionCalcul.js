@@ -74,7 +74,7 @@ export default class ContributionCalcul {
     getContribution(data) {
         const modalBody = document.getElementById('contribution_calcul_modal').querySelector('.modal-body')
         modalBody.innerHTML = data.view
-        modalBody.querySelectorAll('[data-toggle="popover"]').forEach(popover => {  
+        modalBody.querySelectorAll('[data-bs-toggle="popover"]').forEach(popover => {  
             new Popover(popover)
         })
 

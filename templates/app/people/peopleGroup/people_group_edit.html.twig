@@ -43,8 +43,8 @@
                             <thead>
                                 <tr>
                                     <th scope="col" class="th-w-20 align-middle"></th>
-                                    <th scope="col" class="th-w-20" data-toggle="tooltip" 
-                                        data-placement="bottom" title="Demandeur/euse principal·e">DP</th>
+                                    <th scope="col" class="th-w-20" data-bs-toggle="tooltip" 
+                                        data-bs-placement="bottom" title="Demandeur/euse principal·e">DP</th>
                                     <th scope="col" class="th-w-150 align-middle">Nom</th>
                                     <th scope="col" class="th-w-150 align-middle">Prénom</th>
                                     <th scope="col" class="th-w-120 align-middle">Date de naissance</th>
@@ -61,7 +61,7 @@
                                         <td  class="align-middle" scope="row">
                                             <a href="{{ path('group_person_show', 
                                                 {'id': people_group.id, 'person_id': person.id, 'slug': person.slug}) }}"
-                                                class="btn btn-{{ theme_color }} shadow" data-toggle="tooltip" data-placement="bottom"
+                                                class="btn btn-{{ theme_color }} shadow" data-bs-toggle="tooltip" data-bs-placement="bottom"
                                                 title="Voir la fiche individuelle"><span class="fas fa-eye"></span>
                                             </a>
                                         </td>
@@ -84,7 +84,7 @@
                                                 <button class="btn btn-danger shadow" data-action="remove"
                                                     data-url="{{ path('role_person_remove', {'id': form_person.vars.value.id, 
                                                         '_token': csrf_token('remove' ~ form_person.vars.value.id)}) }}"
-                                                    data-toggle="modal" data-target="#modal-remove-person"
+                                                    data-bs-toggle="modal" data-bs-target="#modal-remove-person"
                                                     title="Retirer la personne du groupe"><span class="fas fa-user-times"></span>
                                                 </button>
                                             {% endif %}
@@ -103,7 +103,7 @@
                         class="btn btn-{{ theme_color }} btn-sm my-2">
                         <span class="fas fa-plus-square me-2"></span>Ajouter une personne</a>
                     <a href="{{ path('group_create_person', {'id': people_group.id, 'supports': with_supports, 'role': 3}) }}" class="btn btn-secondary btn-sm my-2"
-                        data-toggle="tooltip" title="Ajouter un enfant" data-placement="bottom">
+                        data-bs-toggle="tooltip" title="Ajouter un enfant" data-bs-placement="bottom">
                         <span class="fas fa-plus-square me-2"></span>Naissance</a>
                 </div>
             </div>
@@ -124,7 +124,7 @@
                         {% set msg_confirm = 'Êtes-vous vraiment sûr de vouloir supprimer ce groupe ?' %}
                             <a id="modal-btn-delete" class="me-3 btn btn-danger d-block" 
                                 href="{{ path('people_group_delete', {'id': people_group.id}) }}"
-                                data-toggle="tooltip" title="Supprimer le groupe" data-placement="bottom"
+                                data-bs-toggle="tooltip" title="Supprimer le groupe" data-bs-placement="bottom"
                                 onclick="if(window.confirm('{{ msg_confirm }}')){return true;}else{return false;}"><span
                                 class="fas fa-trash-alt me-2"></span><span class="">Supprimer</span></a>
                         </div>

@@ -40,7 +40,7 @@
                                 <button class="btn btn-danger btn-sm shadow mx-2" data-action="delete"
                                     data-path="{{ path('service_user_delete', {'id': service_user.id, 
                                     '_token': csrf_token('delete' ~ service_user.id)}) }}" 
-                                    title="Retirer l'utilisateur de ce service" data-toggle="tooltip" data-placement="bottom">
+                                    title="Retirer l'utilisateur de ce service" data-bs-toggle="tooltip" data-bs-placement="bottom">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
                             {% endif %}

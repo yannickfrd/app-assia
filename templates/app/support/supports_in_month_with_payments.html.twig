@@ -18,13 +18,13 @@
             <div>
                 {% set query = app.request.query %}
                 <a href="{{ path('supports_current_month', query|merge({})) }}" 
-                    class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-toggle="tooltip" data-placement="bottom" title="Mois actuel"><!--
+                    class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mois actuel"><!--
                     --><span class="fas fa-calendar-day"></span><span class="d-none d-sm-inline ms-2">Mois actuel</span></a>
                 <a href="{{ path('supports_in_month', query|merge({'year': calendar.previousMonth.year, 'month': calendar.previousMonth.month})) }}"
-                    class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-toggle="tooltip" data-placement="bottom" title="Mois précédent"><span class="fas fa-angle-left"></span>
+                    class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mois précédent"><span class="fas fa-angle-left"></span>
                 </a>
                 <a href="{{ path('supports_in_month', query|merge({'year': calendar.nextMonth.year, 'month': calendar.nextMonth.month})) }}"
-                    class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-toggle="tooltip" data-placement="bottom" title="Mois suivant"><span class="fas fa-angle-right"></span>
+                    class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mois suivant"><span class="fas fa-angle-right"></span>
                 </a>
             </div>
 
@@ -64,7 +64,7 @@
                             <tr>
                                 <th scope="row" class="align-middle">
                                     <a href="{{ path('support_payments_index', {'id':support.id}) }}"
-                                        class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-toggle="tooltip" data-placement="bottom"
+                                        class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-bs-toggle="tooltip" data-bs-placement="bottom"
                                         title="Voir la fiche du suivi"><span class="fas fa-eye"></span>
                                     </a>
                                 </th>

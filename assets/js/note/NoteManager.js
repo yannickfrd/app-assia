@@ -249,7 +249,7 @@ export default class NoteManager {
             <td class="align-middle text-center">
                 <a href="${pathShow.replace('__id__', noteId)}" type="button"
                     class="btn btn-${this.themeColor} btn-sm shadow" title="Voir la note sociale" 
-                    data-toggle="tooltip" data-placement="bottom" data-action="show"><i class="fas fa-eye"></i>
+                    data-bs-toggle="tooltip" data-bs-placement="bottom" data-action="show"><i class="fas fa-eye"></i>
                 </a>
             </td>
             <td class="align-middle justify" data-cell="title-content">
@@ -262,18 +262,18 @@ export default class NoteManager {
             <td class="align-middle text-center p-1">
                 <a href="${pathExportWord}"
                     class="btn btn-${this.themeColor} btn-sm mb-1 shadow" title="Exporter la note au format Word"
-                    data-toggle="tooltip" data-placement="bottom">
+                    data-bs-toggle="tooltip" data-bs-placement="bottom">
                         <i class="fas fa-file-word fa-lg bg-primary"></i><span class="sr-only">Word</span>
                 </a>
                 <a href="${pathExportPdf}"
                     class="btn btn-${this.themeColor} btn-sm mb-1 shadow" title="Exporter la note au format PDF"
-                    data-toggle="tooltip" data-placement="bottom">
+                    data-bs-toggle="tooltip" data-bs-placement="bottom">
                         <i class="fas fa-file-pdf fa-lg bg-danger"></i><span class="sr-only">PDF</span>
                 </a>
             </td>
             <td class="align-middle text-center">
-                <button class="btn btn-sm btn-danger shadow" title="Supprimer la note" data-toggle="tooltip" 
-                    data-placement="bottom" data-action="delete-note" data-path-delete="${pathDelete}">
+                <button class="btn btn-sm btn-danger shadow" title="Supprimer la note" data-bs-toggle="tooltip" 
+                    data-bs-placement="bottom" data-action="delete-note" data-path-delete="${pathDelete}">
                     <i class="fa-solid fa-trash-can"></i>
                 </button>
             </td>

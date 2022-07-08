@@ -13,7 +13,7 @@
         
         <div id="js-msg-flash-content"></div>
         <a href="{{ path('database_backup_create') }}" class="btn btn-{{ theme_color }} btn-sm shadow my-1" 
-            data-toggle="tooltip" data-placement="bottom" title="Créer une nouvelle sauvegarde"><span class="fas fa-cloud-upload-alt me-2"></span>Créer backup
+            data-bs-toggle="tooltip" data-bs-placement="bottom" title="Créer une nouvelle sauvegarde"><span class="fas fa-cloud-upload-alt me-2"></span>Créer backup
         </a>
 
         <section class="mb-5">
@@ -45,7 +45,7 @@
                                     <tr id="backup-{{ backup.id }}" class="js-backup">
                                         <td scope="row" class="align-middle text-center">
                                             <a href="{{ path('database_backup_download', {'id': backup.id }) }}" class="btn btn-{{ theme_color }} btn-sm shadow my-1" 
-                                                data-toggle="tooltip" data-placement="bottom" title="Exporter la sauvegarde de la base de données"><span class="fas fa-file-download"></span>
+                                                data-bs-toggle="tooltip" data-bs-placement="bottom" title="Exporter la sauvegarde de la base de données"><span class="fas fa-file-download"></span>
                                             </a>
                                         </td>
                                         <td class="align-middle js-backup-title">Sauvegarde {{ backup.createdBy ? 'manuelle' : 'automatique' }} du {{ backup.createdAt|date('d/m/Y') }}</td>

@@ -193,8 +193,8 @@ export default class TaskForm
         }
 
         return `<a href="${this.taskTitleElt.dataset.url.replace('__id__', task.supportGroup.id)}" 
-            class="text-${this.themeColor}" title="Accéder au suivi" data-toggle="tooltip" 
-            data-placement="bottom">Tâche | ${task.supportGroup.header.fullname}</a>
+            class="text-${this.themeColor}" title="Accéder au suivi" data-bs-toggle="tooltip" 
+            data-bs-placement="bottom">Tâche | ${task.supportGroup.header.fullname}</a>
         `
     }
 

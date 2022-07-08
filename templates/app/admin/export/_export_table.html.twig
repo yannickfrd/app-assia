@@ -31,12 +31,12 @@
                                     {% if export.size %}
                                         <a href="{{ path('export_download', {'id': export.id }) }}" 
                                             class="btn btn-{{ theme_color }} btn-sm shadow my-1" 
-                                            title="Télécharger l'export" data-toggle="tooltip" data-placement="bottom">
+                                            title="Télécharger l'export" data-bs-toggle="tooltip" data-bs-placement="bottom">
                                             <i class="fas fa-file-download"></i>
                                         </a>
                                     {% else %}
                                         <i class="fas fa-spinner text-{{ theme_color }}" title="Export est en cours de préparation"
-                                            data-toggle="tooltip" data-placement="right"></i>                                                   
+                                            data-bs-toggle="tooltip" data-bs-placement="right"></i>                                                   
                                     {% endif %}
                                     </td>
                                 <td class="align-middle">{{ export.title }}</td>
@@ -54,7 +54,7 @@
                                 <td class="align-middle text-center">
                                     <button class="btn btn-danger btn-sm shadow my-1" data-action="delete_export"
                                         data-path="{{ path('export_delete', {'id': export.id}) }}" 
-                                        title="Supprimer le fichier d'export" data-toggle="tooltip" data-placement="bottom"
+                                        title="Supprimer le fichier d'export" data-bs-toggle="tooltip" data-bs-placement="bottom"
                                         data-msg="Êtes-vous vraiment sûr de vouloir supprimer ce fichier d'export ?">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>

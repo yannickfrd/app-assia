@@ -7,15 +7,15 @@
     <div class="col-auto my-1 px-1">{{ form_widget(form.diagOrSupport) }}</div>
     <div class="col-auto my-1 px-1">{{ form_widget(form.supportType) }}</div>
     <div class="col-auto my-1 px-1">{{ form_widget(form.supportDates) }}</div>
-    <div class="col-auto my-1 px-1 d-inline-flex" data-toggle="tooltip" data-placement="bottom"
+    <div class="col-auto my-1 px-1 d-inline-flex" data-bs-toggle="tooltip" data-bs-placement="bottom"
         title="Date de début"><span class="my-2 px-1">Entre</span>{{ form_widget(form.date.start) }}
     </div>
-    <div class="col-auto my-1 px-1 d-inline-flex" data-toggle="tooltip" data-placement="bottom"
+    <div class="col-auto my-1 px-1 d-inline-flex" data-bs-toggle="tooltip" data-bs-placement="bottom"
         title="Date de fin"><span class="my-2 pe-2">et</span>{{ form_widget(form.date.end) }}
     </div>
     <div class="col-auto my-1 px-1 d-inline-flex">
         <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} ps-2 py-2 text-dark"
-            data-placement="bottom" title="Demandeur/euse principal·e">
+            data-bs-placement="bottom" title="Demandeur/euse principal·e">
             {{ form_widget(form.head) }}
         </div>
     </div>

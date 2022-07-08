@@ -5,8 +5,8 @@
     <div class="col-auto my-1 px-1">{{ form_row(form.firstname) }}</div>
     <div class="col-auto my-1 px-1">
         <div class="input-group">
-            <span class="input-group-text d-none d-sm-block" title="Date de naissance" data-toggle="tooltip" 
-                data-placement="bottom"><i class="fas fa-birthday-cake text-black-50"></i>
+            <span class="input-group-text d-none d-sm-block" title="Date de naissance" data-bs-toggle="tooltip" 
+                data-bs-placement="bottom"><i class="fas fa-birthday-cake text-black-50"></i>
             </span>
             {{ form_label(form.birthdate) }}
             {{ form_widget(form.birthdate) }}
@@ -16,7 +16,7 @@
     {% if siSiaoLoginForm is defined %}
         <div class="col-auto my-1 px-1">
             <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} ps-2 py-2 text-dark"
-                data-placement="bottom" title="Activer la recherche via le SI-SIAO">
+                data-bs-placement="bottom" title="Activer la recherche via le SI-SIAO">
                 {{ form_widget(form.siSiaoSearch) }}
             </div>
         </div>

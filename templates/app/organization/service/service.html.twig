@@ -92,7 +92,7 @@
                         {% if edit_mode and is_granted('DISABLE', service) %}
                             <div class="float-start d-flex">
                                 <a class="me-3 btn btn-{{ disabled ? 'success' : 'danger' }} d-block" href="{{ path('service_disable', {'id':form.vars.value.id}) }}"
-                                    title="{{ disabled ? 'Réactiver' : 'Désactiver' }} le service" data-toggle="tooltip" data-placement="bottom"
+                                    title="{{ disabled ? 'Réactiver' : 'Désactiver' }} le service" data-bs-toggle="tooltip" data-bs-placement="bottom"
                                     {% if disabled == false %}onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir désactiver ce service ?')){return true;}else{return false;}"{% endif %}>
                                     {% if disabled %}Réactiver{% else %}Désactiver{% endif %}</a>
                             </div>

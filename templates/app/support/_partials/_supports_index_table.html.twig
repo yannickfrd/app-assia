@@ -38,11 +38,11 @@
                             <td scope="row" class="align-middle text-center">
                                 {% if is_granted_view_support %}
                                     <a href="{{ path('support_show', {'id': support_group.id}) }}"
-                                        class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-toggle="tooltip" data-placement="bottom"
+                                        class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-bs-toggle="tooltip" data-bs-placement="bottom"
                                         title="Voir le suivi social"><span class="fas fa-eye"></span>
                                     </a>
                                 {% else %}
-                                    <span class="btn btn-secondary btn-sm shadow cursor-default" data-toggle="tooltip" data-placement="bottom" 
+                                    <span class="btn btn-secondary btn-sm shadow cursor-default" data-bs-toggle="tooltip" data-bs-placement="bottom" 
                                         title="Vous n'avez pas les droits pour accéder à la fiche"><span class="fas fa-ban"></span></span>                           
                                 {% endif %}
                             </td>
@@ -52,14 +52,14 @@
                             <td class="align-middle">
                                 {% if support_group.referent %}
                                     <a href="mailto:{{ support_group.referent.email }}" class="text-{{ theme_color }}"
-                                        data-toggle="tooltip" data-toggle="tooltip" data-placement="right" data-html="true"
+                                        data-bs-toggle="tooltip" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-html="true"
                                         title="{{ contact_user }}">{{ support_group.referent.fullname }}</a>
                                 {% endif %}
                             </td>
                             <td class="align-middle">
                                 {% if support_group.service %}
                                     <a href="mailto:{{ support_group.service.email }}" class="text-{{ theme_color }}"
-                                        data-toggle="tooltip" data-toggle="tooltip" data-placement="right" data-html="true"
+                                        data-bs-toggle="tooltip" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-html="true"
                                         title="{{ contact_service }}">{{ support_group.service.name }}</a>
                                         {{ support_group.device ? ' (' ~ support_group.device.name ~ ')' }}
                                 {% endif %}

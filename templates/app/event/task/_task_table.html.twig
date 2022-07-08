@@ -35,7 +35,7 @@
                 <tr id="task_{{ task.id }}" class="{% if task.status == true %}text-secondary delete{% endif %}">
                     <td class="align-middle text-center">
                         <div class="custom-control custom-checkbox custom-checkbox-{{ is_deleted ? 'secondary disabled' : theme_color }} text-dark ps-0"
-                            title="{{ is_deleted == false ? 'Cliquer pour changer le statut' }}" data-toggle="tooltip" data-placement="bottom">
+                            title="{{ is_deleted == false ? 'Cliquer pour changer le statut' }}" data-bs-toggle="tooltip" data-bs-placement="bottom">
                             <div class="form-check">
                                 <input type="checkbox" class="custom-control-input checkbox form-check-input"
                                     id="toggle_task_status_{{ task.id }}" {% if task.status == 1 %}checked{% endif %}
@@ -49,7 +49,7 @@
                     <td class="align-middle text-center">
                         <button data-url="{{ path('task_show', {'id': task.id}) }}" {{ is_deleted ? 'disabled' }}
                             class="btn btn-{{ is_deleted ? 'secondary disabled' : theme_color }} btn-sm shadow my-1"
-                            data-action="edit_task" title="{{ is_deleted == false ? 'Voir/Modifier la tâche' }}" data-toggle="tooltip" data-placement="bottom">
+                            data-action="edit_task" title="{{ is_deleted == false ? 'Voir/Modifier la tâche' }}" data-bs-toggle="tooltip" data-bs-placement="bottom">
                             <span class="fas fa-eye"></span>
                         </button>
                     </td>
@@ -59,7 +59,7 @@
                         {{ task.endToString }}
                         {% if is_late %}
                             <span class="fas fa-exclamation text-danger" title="En retard" 
-                                data-toggle="tooltip" data-placement="bottom"></span>
+                                data-bs-toggle="tooltip" data-bs-placement="bottom"></span>
                         {% endif %}
                     </td>
                     <td class="align-middle" data-cell="alerts">
@@ -69,12 +69,12 @@
                             {# {% if task.countActiveAlerts > 0 %}
                                 <span class="badge rounded-pill bg-warning"
                                     title="{{ task.countActiveAlerts }} rappel(s) actif(s) pour cette tâche"
-                                    data-toggle="tooltip" data-placement="bottom">{{ task.countActiveAlerts }}
+                                    data-bs-toggle="tooltip" data-bs-placement="bottom">{{ task.countActiveAlerts }}
                                 </span>
                             {% elseif task.countViewedAlerts > 0 %}
                                 <span class="badge rounded-pill bg-secondary"
                                     title="{{ task.countViewedAlerts }} rappel(s) pour cette tâche"
-                                    data-toggle="tooltip" data-placement="bottom">{{ task.countViewedAlerts }}
+                                    data-bs-toggle="tooltip" data-bs-placement="bottom">{{ task.countViewedAlerts }}
                                 </span>
                             {% endif %} #}
                         {% endif %}
@@ -110,7 +110,7 @@
                             {% else %}
                                 <button class="btn btn-danger btn-sm shadow my-1" data-action="delete_task"
                                     data-url="{{ path('task_delete', {'id': task.id}) }}" title="Supprimer la tâche"
-                                    data-toggle="tooltip" data-placement="bottom"><span class="fas fa-trash-alt"></span>
+                                    data-bs-toggle="tooltip" data-bs-placement="bottom"><span class="fas fa-trash-alt"></span>
                                 </button>
                             {% endif %}
                         {% endif %}

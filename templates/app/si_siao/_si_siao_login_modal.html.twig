@@ -9,7 +9,7 @@
         {{ form_start(siSiaoLoginForm, {'action': path('api_sisiao_login_ajax')}) }}
         <div class="alert alert-danger alert-dismissible mb-3 fade d-none" role="alert">
             Identifiant SI-SIAO ou mot de passe incorrect.
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -22,7 +22,7 @@
 
 {% block modal_footer %}
     <div class="float-start">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
     </div>
     <div class="float-end">
         <button type="submit" id="si-siao-connection" name="si-siao-connection" data-url="{{ path('api_sisiao_check_connection') }}"

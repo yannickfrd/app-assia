@@ -65,7 +65,7 @@
                         {% if edit_mode and is_granted('ROLE_SUPER_ADMIN') %}
                             <div class="float-start d-flex">
                                 <a class="me-3 btn btn-{{ disabled ? 'success' : 'warning' }} d-block" href="{{ path('admin_device_disable', {'id':form.vars.value.id}) }}"
-                                    title="{{ disabled ? 'Réactiver' : 'Désactiver' }} le dispositif" data-toggle="tooltip" data-placement="bottom"
+                                    title="{{ disabled ? 'Réactiver' : 'Désactiver' }} le dispositif" data-bs-toggle="tooltip" data-bs-placement="bottom"
                                     {% if disabled == false %}onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir désactiver ce dispositif ?')){return true;}else{return false;}"{% endif %}>
                                     {% if disabled %}Réactiver{% else %}Désactiver{% endif %}</a>
                             </div>
@@ -101,8 +101,8 @@
                         <tr>
                             <td scope="row">
                                 <a href="{{ path('service_edit', {'id':serviceDevice.service.id}) }}"
-                                    class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" 
-                                    data-placement="bottom" title="Voir la fiche du service">
+                                    class="btn btn-{{ theme_color }} btn-sm shadow" data-bs-toggle="tooltip" 
+                                    data-bs-placement="bottom" title="Voir la fiche du service">
                                     <span class="fas fa-eye"></span>
                                 </a>
                             </td>
