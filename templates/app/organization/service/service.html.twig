@@ -105,40 +105,42 @@
             {% endif %}
         </section>
 
-        {% if edit_mode %}
-            {% include 'app/organization/service/_service_sub_services.html.twig' with {accordion_id: 'sub_services'} %}
-        {% endif %}
-
-        {% include 'app/organization/service/_service_devices.html.twig' with {accordion_id: 'devices'} %}
-
-
-        {% if is_granted_edit_service %}
-            {% if form.organizations is defined and is_granted('ROLE_SUPER_ADMIN') %}
-                {% include 'app/organization/service/_service_organizations.html.twig' with {accordion_id: 'organizations'} %}
+        <div class="accordion">
+            {% if edit_mode %}
+                {% include 'app/organization/service/_service_sub_services.html.twig' with {accordion_id: 'sub_services'} %}
             {% endif %}
-        {% endif %}
 
-        {% if edit_mode %}
-            {% include 'app/organization/service/_service_places.html.twig' with {accordion_id: 'places'} %}
-            {% include 'app/organization/service/_service_users.html.twig' with {accordion_id: 'users'} %}
-        {% endif %}
+            {% include 'app/organization/service/_service_devices.html.twig' with {accordion_id: 'devices'} %}
 
-        {% if is_granted('ROLE_ADMIN') %}
-            {% include 'app/organization/service/_service_settings.html.twig' with {accordion_id: 'settings'} %}
-        {% endif %}
 
-        {{ form_row(form._token) }}
-        {{ form_end(form, {'render_rest': false}) }}
-
-        {% if is_granted_edit_service %}
-            {% if form.organizations is defined and is_granted('ROLE_SUPER_ADMIN') %}
-                {% include 'app/organization/service/_service_organizations.html.twig' with {accordion_id: 'organizations'} %}
+            {% if is_granted_edit_service %}
+                {% if form.organizations is defined and is_granted('ROLE_SUPER_ADMIN') %}
+                    {% include 'app/organization/service/_service_organizations.html.twig' with {accordion_id: 'organizations'} %}
+                {% endif %}
             {% endif %}
-        {% endif %}
 
-        {% if edit_mode %}
-            {% include 'app/organization/service/_service_tags.html.twig' with {accordion_id: 'tags'} %}
-        {% endif %}
+            {% if edit_mode %}
+                {% include 'app/organization/service/_service_places.html.twig' with {accordion_id: 'places'} %}
+                {% include 'app/organization/service/_service_users.html.twig' with {accordion_id: 'users'} %}
+            {% endif %}
+
+            {% if is_granted('ROLE_ADMIN') %}
+                {% include 'app/organization/service/_service_settings.html.twig' with {accordion_id: 'settings'} %}
+            {% endif %}
+
+            {{ form_row(form._token) }}
+            {{ form_end(form, {'render_rest': false}) }}
+
+            {% if is_granted_edit_service %}
+                {% if form.organizations is defined and is_granted('ROLE_SUPER_ADMIN') %}
+                    {% include 'app/organization/service/_service_organizations.html.twig' with {accordion_id: 'organizations'} %}
+                {% endif %}
+            {% endif %}
+
+            {% if edit_mode %}
+                {% include 'app/organization/service/_service_tags.html.twig' with {accordion_id: 'tags'} %}
+            {% endif %}
+        </div>
     </div>
 {% endblock %}
 

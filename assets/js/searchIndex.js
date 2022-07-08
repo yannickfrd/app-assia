@@ -2,7 +2,7 @@ import SearchManager from './utils/SearchManager'
 import './utils/maskPhone'
 
 document.addEventListener('DOMContentLoaded', () => {
-    new SearchManager('form-search')
+    new SearchManager('accordion_search')
     
     const headingSearchElt = document.getElementById('headingSearch');
     

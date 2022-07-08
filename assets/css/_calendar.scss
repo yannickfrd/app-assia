@@ -1,4 +1,4 @@
-$light-gray :#e4e3e3;
+$gray-light :#e4e3e3;
 
 .calendar-table {
     width: 100%;
@@ -56,7 +56,7 @@ $light-gray :#e4e3e3;
 }
 
 .calendar-table .calendar-day-block:hover {
-    background-color: $light-gray;
+    background-color: $gray-light;
 }
 
 .week-5days {
@@ -68,7 +68,7 @@ $light-gray :#e4e3e3;
 }
 
 .calendar-today {
-    background-color: $light-gray;
+    background-color: $gray-light;
     font-weight: bold;
 }
 

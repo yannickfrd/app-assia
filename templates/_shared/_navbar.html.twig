@@ -1,14 +1,14 @@
 <nav class="navbar navbar-expand-xl navbar-light bg-{{ theme_color }} fixed-top mb-0 shadow">
     <div class="container-fluid">
         <a class="navbar-brand py-0 text-light" href="{{ path('home') }}">
-            {% if app_env == 'prod' %}
+            {% if app_env == 'p rod' %}
                 <img id="logo-site" src="{{ asset('images/logo_assia_white.png') }}" height="56" width="144" alt="Application Assia"
                     title="Application Assia">
             {% else %}
-                <span class="fas fa-exclamation-triangle text-warning me-2"></span>Assia version test
+                <i class="fas fa-exclamation-triangle text-warning me-2"></i>Assia version test
             {% endif %}
         </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar"
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" 
             aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -17,7 +17,7 @@
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link text-light" href="{{ path('home') }}">
-                            <span class="fas fa-home me-1"></span>Mon espace</a>
+                            <i class="fas fa-home me-1"></i>Mon espace</a>
                     </li>
                     
                     <li class="nav-item dropdown">
@@ -64,12 +64,13 @@
                         <a class="nav-link text-light" target="_blank"
                             href="https://drive.google.com/drive/folders/1-B1pHYyNhp2tHFxwcSOWfsYD0qxjJLLs" 
                             title="Aide" data-toggle="tooltip" data-placement="bottom">
-                            <i class="fas fa-question fa-xs"></i>
+                            <span class="d-inline d-lg-none">Aide</span>
+                            <i class="fas fa-question fa-xs d-none d-lg-inline"></i>
                         </a>
                     </li>
                 </ul>
-                <form action="{{ path('person_index') }}" method="get" class="row row-cols-lg-auto align-items-center me-3 my-2 my-lg-0">
-                    <div class="position-relative px-0 me-sm-2">
+                <form action="{{ path('person_index') }}" method="get" class="row row-cols-auto align-items-center my-2 my-lg-0 me-3">
+                    <div class="position-relative ms-2 me-1 px-0">
                         <label for="search-person" class="sr-only col-form-label">Recherche d'une personne</label>
                         <input name="search-person" id="search-person" class="form-control" type="search"
                             placeholder="Recherche personne" autocomplete="off" 
@@ -78,7 +79,7 @@
                     </div>
                     <button class="btn btn-{{ theme_color }} border-light my-2 my-sm-0" 
                         title="Rechercher" data-toggle="tooltip" data-placement="bottom" type="submit">
-                        <span class="fas fa-search"><span class="sr-only">Rechercher</span></span>
+                        <i class="fas fa-search"><span class="sr-only">Rechercher</span></i>
                     </button>
                 </form>
                 <div class="text-light text-end w-min-160">
@@ -86,7 +87,7 @@
                         data-trigger="hover" data-placement="bottom" data-html="true" data-user-id="{{ app.user.id }}"
                         title="{{ app.user.firstname }} {{ app.user.lastname }}" data-content="Dernière connexion : {{ app.user.lastLogin|date('d/m/Y H:i') }}
                         <br/>Statut : {{ app.user.statusToString }}<br/>Services rattachés :<br/>- {{ app.session.get('userServices')|join('<br/>- ') }}">
-                        <span class="fas fa-user me-2"></span>{{ app.user.firstname }} {{ app.user.lastname|first }}.
+                        <i class="fas fa-user me-2"></i>{{ app.user.firstname }} {{ app.user.lastname|first }}.
                     </a>
                     <br/>
                     <a class="text-light" href="{{ path('security_logout') }}">Se déconnecter</a>

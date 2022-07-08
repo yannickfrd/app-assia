@@ -99,7 +99,7 @@
 				{% set entity = 'evalBudgetPerson' %}
 
 				<div id="collapse_{{ prefix_id }}" class="collapse {% if loop.first %}show{% endif %} my-3"
-					aria-labelledby="heading_{{ prefix_id }}" data-parent="#accordion_evalBudget" 
+					aria-labelledby="heading_{{ prefix_id }}" data-bs-parent="#accordion_evalBudget" 
 					data-sp-id="{{ support_person_id }}">
 					<div class="row">
 						{% include 'app/evaluation/edit/_eval_budget_resources.html.twig' %}

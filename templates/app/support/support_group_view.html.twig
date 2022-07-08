@@ -56,7 +56,7 @@
 
 		<hr>
 
-		<div id="support_navbar" class="row row-cols-lg-auto justify-content-center my-4">
+		<div id="support_navbar" class="row row-cols-sm-auto justify-content-center my-4">
 			{% if support.device and support.device.place == YES %}
 				<a id="support-places" class="btn btn-{{ theme_color }} me-2 mb-2 shadow" 
 					href="{{ path('support_place_group_index', {'id': support.id}) }}" 

@@ -47,7 +47,7 @@
                                 {% set sum_documents = sum_documents + service['nbDocuments'] %}
                                 {% set sum_paiments = sum_paiments + service['nbPayments'] %}
                                 {% set nb_collapsed_tr = service.subServices|length %}
-                                <tr class="{{ nb_collapsed_tr ? 'cursor-pointer' }}" data-toggle="collapse" data-target=".multi-collapse-service-{{ service_id }}" 
+                                <tr class="{{ nb_collapsed_tr ? 'cursor-pointer' }}" data-bs-toggle="collapse" data-bs-target=".multi-collapse-service-{{ service_id }}" 
                                     aria-expanded="false" aria-controls="multi-collapse-service-{{ service_id }}">
                                     <td scope="row" class="align-middle"><span class="fw-bold">{{ service['name'] }}</span>
                                         {% if nb_collapsed_tr %}<span class="badge rounded-pill bg-secondary">{{ nb_collapsed_tr }}</span>{% endif %}

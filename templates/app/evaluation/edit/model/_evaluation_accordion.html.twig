@@ -9,11 +9,14 @@
 	<div class="row">
 		<div class="col-md-12">
 			<div class="float-end">
-				<button role="button" class="btn btn-sm btn-secondary shadow" title="Réduire le bloc" data-btn="reduce"
-					data-toggle="collapse" data-target="#collapse_{{ accordion_id }}" aria-expanded="true" 
-					aria-controls="collapse_{{ accordion_id }}"><i class="fas fa-compress-alt me-1"></i></span>Réduire</button>
-				<button type="submit" class="btn btn-sm btn-{{ theme_color }} shadow" title="Sauvegarder l'évaluation sociale"><span 
-					class="fas fa-save me-2"></span>Enregistrer</button>
+				<button class="btn btn-sm btn-secondary shadow" type="button" data-bs-toggle="collapse" 
+					data-bs-target="#accordion_item_collapse_{{ accordion_id }}" aria-expanded="false" 
+					aria-controls="accordion_item_collapse_{{ accordion_id }}">
+					<i class="fas fa-compress-alt me-1"></i>Réduire
+				</button>
+				<button type="submit" class="btn btn-sm btn-{{ theme_color }} shadow" title="Sauvegarder l'évaluation sociale">
+					<i class="fas fa-save me-2"></i>Enregistrer
+				</button>
 			</div>
 		</div>
 	</div>	

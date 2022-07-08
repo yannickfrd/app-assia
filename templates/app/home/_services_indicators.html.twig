@@ -32,7 +32,7 @@
                             {% set sum_active_supports = sum_active_supports + nb_active_supports %}
                             {% set sum_active_supports_people = sum_active_supports_people + service['nbActiveSupportsPeople'] %}
                             {% set nb_tr_collapsed = service.subServices|length + service.devices|length %}
-                            <tr class="{{ nb_tr_collapsed ? 'cursor-pointer' }}" data-toggle="collapse" data-target=".multi-collapse-service-{{ service_id }}" 
+                            <tr class="{{ nb_tr_collapsed ? 'cursor-pointer' }}" data-bs-toggle="collapse" data-bs-target=".multi-collapse-service-{{ service_id }}" 
                                 aria-expanded="false" aria-controls="multi-collapse-service-{{ service_id }}">
                                 <td scope="row" class="align-middle text-center">
                                     <a href="{{ path('support_index', {'status': [2], 'service': {'services': [service_id]}, 'head': true}) }}" 

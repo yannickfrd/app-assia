@@ -6,7 +6,7 @@ import {Tooltip} from 'bootstrap'
 export default class ExportManager {
 
     constructor() {
-        this.formElt = document.querySelector('#form-search>form')
+        this.formElt = document.querySelector('#accordion_search>form')
         this.resultsElt = document.getElementById('results')
         this.loader = new Loader()
         this.ajax = new Ajax(this.loader, 30 * 60)

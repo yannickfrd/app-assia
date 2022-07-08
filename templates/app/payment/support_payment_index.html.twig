@@ -10,9 +10,9 @@
 
 		{% include 'app/support/_partials/_support_nav.html.twig' %}
 
-		<div class="row">
-			<div class="d-flex col-md-6 mb-1 align-items-center">
-				<button class="btn btn-{{ theme_color }} btn-sm shadow me-2" data-action="new_payment"
+		<div class="row mb-2">
+			<div class="d-flex col-md-6 align-items-center">
+				<button class="btn btn-{{ theme_color }} shadow me-2" data-action="new_payment"
 					data-path="{{ path('payment_create', {'id': support.id}) }}"
 					title="Créer un nouvel enregistrement" data-toggle="tooltip" data-placement="bottom">
 					<i class="fas fa-plus-square me-2"></i>Nouveau</button>

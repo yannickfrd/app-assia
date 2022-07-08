@@ -1,4 +1,4 @@
-<div id="form-search">
+<div id="accordion_search">
     {{ form_start(form) }}
     <div class="row mb-3">
         {% if is_granted('ROLE_SUPER_ADMIN') %}
@@ -24,7 +24,7 @@
         </div>
     </div>
 
-    <div class="mb-4">
+    <div class="accordion mb-4">
         {% include 'app/admin/export/_export_options.html.twig' with {accordion_id: 'optionsExport'} %}
     </div>
     <div class="row mb-3">

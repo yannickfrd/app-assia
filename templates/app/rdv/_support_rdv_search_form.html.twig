@@ -1,11 +1,13 @@
 {% extends 'model/_support_search_form.html.twig' %}
 
-{% form_theme form_search 'bootstrap_5_layout.html.twig' %}
-
 {% block search_form %}
-    <div class="col-auto my-1 px-1">{{ form_row(form_search.title) }}</div>
-    <div class="col-auto my-1 px-1">{{ form_row(form_search.date.start) }}</div>
-    <div class="col-auto my-1 px-1">{{ form_row(form_search.date.end) }}</div>
+    <div class="col-auto my-1 px-1">{{ form_widget(form_search.title) }}</div>
+    <div class="col-auto d-inline-flex my-1 px-1 align-items-center">
+        <span class="pe-2">Entre</span>{{ form_widget(form_search.date.start) }}
+    </div>
+    <div class="col-auto d-inline-flex  my-1 px-1 align-items-center">
+        <span class="pe-2">et</span>{{ form_widget(form_search.date.end) }}
+    </div>
     <div class="col-auto my-1 px-1">
         <div class="input-group">
             <span class="input-group-text" title="Étiquettes" data-toggle="tooltip" data-placement="bottom">
@@ -14,12 +16,4 @@
             {{ form_widget(form_search.tags) }}
         </div> 
     </div>
-    {% if is_granted('ROLE_SUPER_ADMIN') %}
-        <div class="col-auto my-auto">
-            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} ps-0"
-                title="Voir les rendez-vous supprimés" data-toggle="tooltip" data-placement="bottom">
-                {{ form_widget(form_search.deleted.deleted) }}
-            </div>
-        </div>
-    {% endif %}
 {% endblock %}

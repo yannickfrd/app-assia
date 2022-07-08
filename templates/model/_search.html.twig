@@ -1,38 +1,37 @@
 {% form_theme form 'bootstrap_5_layout.html.twig' %}
 
-<div class="container-fluid p-0">
-    <div class="accordion" id="accordionSearch">
-        <div id="form-search" class="bg-light-gray mb-0 p-3">
-            <div role="button" class="collapsed cursor-pointer d-block d-sm-none" id="headingSearch" data-toggle="collapse"
-                data-target="#collapseSearch" aria-expanded="true" aria-controls="collapseSearch">
-                <h2 class="h5">Filtres<span class="float-end"><span class="fa fa-chevron-down"></span></span></h2>
-            </div>
-            <div id="collapseSearch" class="collapse show" aria-labelledby="headingSearch"
-                data-parent="#accordionSearch">
-
+<div class="container-fluid p-0 bg-gray-light">
+    <div class="accordion" id="accordion_search">
+        <h2 class="accordion-header d-block d-sm-none" id="heading_search">
+            <button class="accordion-button py-2 bg-gray-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_search" 
+                aria-expanded="true" aria-controls="collapse_search"><span class="h5">Filtres</span>
+            </button>
+        </h2>
+        <div id="collapse_search" class="accordion-collapse collapse show" 
+            aria-labelledby="heading_search" data-bs-parent="#accordion_search">
+            <div class="accordion-body">
                 {{ form_start(form) }}
-                
                 <div class="row row-cols-lg-auto justify-content-sm-center">
                     {% block search_form %}{% endblock %}
                     <div class="col-auto my-1 px-1">
                         {% block search_form_buttons %}
                             <button type="submit" id="search" class="btn btn-{{ theme_color }} shadow" data-toggle="tooltip"
-                                data-placement="bottom" title="Rechercher"><span class="fas fa-search"></span><span
-                                    class="sr-only">Rechercher</span></button>
+                                data-placement="bottom" title="Rechercher">
+                                <i class="fas fa-search"></i><span class="sr-only">Rechercher</span>
+                            </button>
                             <button type="reset" class="btn btn-secondary ms-2 shadow" data-placement="bottom" data-toggle="tooltip"
-                                title="Effacer les filtres"><span class="fas fa-eraser"></span><span
-                                    class="sr-only">Effacer</span></button>
+                                title="Effacer les filtres">
+                                <i class="fas fa-eraser"></i><span class="sr-only">Effacer</span></button>
                             {% if form.export is defined %}
                                 <button id="js-btn-export" name="export" value="true" class="btn btn-success ms-2 shadow" data-toggle="tooltip"
-                                    data-placement="bottom" title="Exporter les données sur Excel"><span
-                                    class="fas fa-file-excel"></span><span class="sr-only">Exporter</span></button>
+                                    data-placement="bottom" title="Exporter les données sur Excel">
+                                    <i class="fas fa-file-excel"></i><span class="sr-only">Exporter</span>
+                                </button>
                             {% endif %}
                         {% endblock %}
                     </div>
                 </div>
-
                 {{ form_end(form, {'render_rest': false}) }}
-
             </div>
         </div>
     </div>

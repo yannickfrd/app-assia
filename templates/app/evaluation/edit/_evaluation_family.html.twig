@@ -15,7 +15,7 @@
                 {% set person = support_person.person %}
                 {% set prefix_id = 'evaluation_evaluationPeople_' ~ key ~ '_evalFamilyPerson' %}
                 <div id="collapse_{{ prefix_id }}" class="collapse {% if loop.first %}show{% endif %} my-3"
-                    aria-labelledby="heading_{{ prefix_id }}" data-parent="#accordion_evalFamily">
+                    aria-labelledby="heading_{{ prefix_id }}" data-bs-parent="#accordion_evalFamily">
 
                     {% if support_person.role != role_child %}
                         <div class="row mb-3">

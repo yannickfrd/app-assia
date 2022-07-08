@@ -1,32 +1,3 @@
-{% set support_is_not_defined = support is not defined %}
-
-<div class="row align-items-baseline">
-    <div class="col-sm-4 count align-middle mb-2">
-        <a href="{{ support_is_not_defined ? path('calendar_show') : path('support_calendar_show', {'id': support.id}) }}"
-           class="btn btn-{{ theme_color }} btn-sm shadow me-2"
-           title="Passer en vue agenda" data-toggle="tooltip" data-placement="bottom">
-            <i class="far fa-calendar-alt"></i></a>
-        {% if not restoration_mode %}
-            <button class="btn btn-{{ theme_color }} btn-sm shadow me-2"
-                title="Ajouter un rdv" data-toggle="modal" data-placement="bottom" data-target="#modal-rdv"
-                data-action="add-rdv" data-url="{{ path('rdv_create') }}">
-                <i class="fas fa-plus-square me-2"></i>Nouveau RDV
-            </button>
-            {% else %}
-                <a href="{{ app.request.pathInfo }}" class="btn btn-{{ theme_color }} btn-sm shadow me-2" 
-                    id="return_index"><i class="fa-solid fa-arrow-rotate-left me-2"></i>Retour
-                </a>
-            {% endif %}
-        <span class="align-middle">Total :
-            <span id="count-rdvs" data-count-rdvs="{{ rdvs.getTotalItemCount|number }}">
-                {{ rdvs.getTotalItemCount|number }}</span> rdv{% if rdvs.getTotalItemCount > 1 %}s{% endif %}.
-        </span>
-    </div>
-    <div class="col-sm-8">
-        <div class="navigation">{{ knp_pagination_render(rdvs) }}</div>
-    </div>
-</div>
-
 <div class="row mb-4">
     <div class="col-md-12">
         <div class="table-responsive">

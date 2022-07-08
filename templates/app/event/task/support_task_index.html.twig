@@ -10,10 +10,10 @@
         {% include 'app/support/_partials/_support_nav.html.twig' %}
         {% include 'model/_flash_message.html.twig' %}
 
-        <div class="row">
-            <div class="d-flex col-md-6 mb-1 align-items-center">
+        <div class="row mb-2">
+            <div class="d-flex col-md-6 align-items-center">
                 {% if not restoration_mode %}
-                    <button id="js_new_task" class="btn btn-{{ theme_color }} shadow align-middle me-2"
+                    <button id="js_new_task" class="btn btn-{{ theme_color }} shadow me-2"
                         title="Ajouter une tâche" data-toggle="modal" data-placement="bottom"
                         data-target="#modal-task"><i class="fas fa-plus-square me-2"></i>Nouvelle tâche
                     </button>

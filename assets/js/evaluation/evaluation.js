@@ -28,10 +28,10 @@ export default class evaluation {
         })
         
         
-        document.querySelectorAll('.card').forEach(cardElt => {
+        document.querySelectorAll('.accordion-item .accordion-body').forEach(cardElt => {
             const btnPersonElts = cardElt.querySelectorAll('button[data-person-key]')
             btnPersonElts.forEach(btnElt => {
-                btnElt.addEventListener('click', () => this.activeBtn(btnPersonElts, btnElt))
+                btnElt.addEventListener('click', () => {this.activeBtn(btnElt, btnPersonElts)})
             })
         })
         
@@ -48,10 +48,10 @@ export default class evaluation {
     /**
      * Active/Désactive le bouton d'une personne au clic.
      * 
-     * @param {NodeList} btnElts 
      * @param {HTMLButtonElement} selectedBtnElt 
+     * @param {NodeList} btnElts 
      */
-    activeBtn(btnElts, selectedBtnElt) {
+    activeBtn(selectedBtnElt, btnElts) {
         let active = false
         if (selectedBtnElt.classList.contains('active')) {
             active = true

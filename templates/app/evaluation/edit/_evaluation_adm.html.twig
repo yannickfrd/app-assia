@@ -11,7 +11,7 @@
 			{% for key, eval_person in evaluation_people %}
 				{% set prefix_id = 'evaluation_evaluationPeople_' ~ key ~ '_evalAdmPerson' %}
 				<div id="collapse_{{ prefix_id }}" class="collapse {% if loop.first %}show{% endif %} my-3" 
-					aria-labelledby="heading_{{ prefix_id }}" data-parent="#accordion_evalAdm" 
+					aria-labelledby="heading_{{ prefix_id }}" data-bs-parent="#accordion_evalAdm" 
 					data-sp-id="{{ eval_person.vars.value.supportPerson.id }}">
 					<div class="mb-3">
 						<div class="row">

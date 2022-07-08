@@ -44,10 +44,10 @@ class ServiceSettingTest extends WebTestCase
         $this->assertResponseIsSuccessful();
 
         if ('john_user' !== $user) {
-            $this->assertSelectorExists('section#accordion_parent_settings');
+            $this->assertSelectorExists('section#accordion_item_settings');
             $this->assertSelectorTextContains('html', 'Paramètres');
         } else {
-            $this->assertSelectorNotExists('section#accordion_parent_settings');
+            $this->assertSelectorNotExists('section#accordion_item_settings');
             $this->assertSelectorTextNotContains('html', 'Paramètres');
         }
     }
