@@ -12,9 +12,7 @@
                     {% if error %}
                         <div class="alert alert-danger alert-dismissible mb-3 fade show" role="alert">
                             {{ error.messageKey|trans(error.messageData, 'security')|raw }}
-                            <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     {% endif %}
                     <h1 class="h3 mb-4 fw-normal">Merci de vous connecter</h1>

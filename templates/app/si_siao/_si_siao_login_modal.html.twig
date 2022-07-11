@@ -9,9 +9,7 @@
         {{ form_start(siSiaoLoginForm, {'action': path('api_sisiao_login_ajax')}) }}
         <div class="alert alert-danger alert-dismissible mb-3 fade d-none" role="alert">
             Identifiant SI-SIAO ou mot de passe incorrect.
-            <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
         {% include 'app/si_siao/_si_siao_login_form.html.twig' %}
