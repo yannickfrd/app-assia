@@ -22,7 +22,7 @@
 							{% if support.service.type == constant('SERVICE_TYPE_ASYLUM', support.service) %}
 								<div class="col-md-6" data-country="{{ key }}">
 									{{ form_row(eval_person.evalAdmPerson._country) }}
-									<span class="sr-only">{{ form_row(eval_person.evalAdmPerson.country) }}</span>
+									<span class="visually-hidden">{{ form_row(eval_person.evalAdmPerson.country) }}</span>
 								</div>
 							{% else %}
 								<div class="col-md-6">{{ form_row(eval_person.evalAdmPerson.country) }}</div>
@@ -74,6 +74,7 @@
 						{% endif %}
 					</div>
 					<div class="row mt-2">
+						{{ form_label(eval_person.evalAdmPerson.commentEvalAdmPerson, null, {label_attr: {class: 'visually-hidden'}}) }}
 						<div class="col-md-12">{{ form_widget(eval_person.evalAdmPerson.commentEvalAdmPerson) }}</div>
 					</div>
 				</div>

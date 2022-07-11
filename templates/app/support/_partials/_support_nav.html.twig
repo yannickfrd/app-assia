@@ -7,39 +7,39 @@
 		<div id="support" data-support="{{ support.id }}">
 			<a class="btn btn-{{ theme_color }} shadow px-2 me-1 mb-2" href="{{ path('support_show', {'id': support.id}) }}" 
 				title="Page d'accueil du suivi" data-bs-toggle="tooltip" data-bs-placement="bottom" >
-				<span class="fas fa-home"></span><span class="sr-only">Page d'accueil du suivi</span>
+				<span class="fas fa-home"></span><span class="visually-hidden">Page d'accueil du suivi</span>
 			</a>
 			{% if support.device.place == YES %}
 				<a class="btn btn-{{ theme_color }} shadow px-2 me-1 mb-2" href="{{ path('support_place_group_index', {'id': support.id}) }}" 
 					title="Prise(s) en charge hébergement"
 					data-bs-toggle="tooltip" data-bs-placement="bottom">
-					<span class="fas fa-bed"></span><span class="sr-only">Hébergement</span>
+					<span class="fas fa-bed"></span><span class="visually-hidden">Hébergement</span>
 				</a>
 			{% endif %}
 			<a class="btn btn-{{ theme_color }} shadow px-2 me-1 mb-2" href="{{ path('support_evaluation_show', {'id': support.id}) }}" 
 				title="Évaluation sociale" data-bs-toggle="tooltip" data-bs-placement="bottom">
-				<span class="fas fa-clipboard"></span><span class="sr-only">Évaluation</span>
+				<span class="fas fa-clipboard"></span><span class="visually-hidden">Évaluation</span>
 			</a>
 			<a href="{{ path('support_calendar_show', {'id': support.id}) }}" class="btn btn-{{ theme_color }} shadow px-2 me-1 mb-2" 
 				title="Rendez-vous" data-bs-toggle="tooltip" data-bs-placement="bottom">
-				<span class="far fa-calendar-alt"></span><span class="sr-only">Agenda</span>
+				<span class="far fa-calendar-alt"></span><span class="visually-hidden">Agenda</span>
 			</a>
 			<a href="{{ path('support_task_index', {'id': support.id}) }}" class="btn btn-{{ theme_color }} shadow px-2 me-1 mb-2" 
 				title="Tâches" data-bs-toggle="tooltip" data-bs-placement="bottom">
-				<span class="fa fa-tasks"></span><span class="sr-only">Tâches</span>
+				<span class="fa fa-tasks"></span><span class="visually-hidden">Tâches</span>
 			</a>
 			<a href="{{ path('support_note_index', {'id': support.id}) }}" class="btn btn-{{ theme_color }} shadow px-2 me-1 mb-2" 
 				title="Notes sociales" data-bs-toggle="tooltip" data-bs-placement="bottom">
-				<span class="fas fa-edit"></span><span class="sr-only">Notes</span>
+				<span class="fas fa-edit"></span><span class="visually-hidden">Notes</span>
 			</a>
 			<a href="{{ path('support_document_index', {'id': support.id}) }}" class="btn btn-{{ theme_color }} shadow px-2 me-1 mb-2"
 				title="Documents administratifs" data-bs-toggle="tooltip" data-bs-placement="bottom">
-				<span class="fas fa-file-upload"></span><span class="sr-only">Documents</span>
+				<span class="fas fa-file-upload"></span><span class="visually-hidden">Documents</span>
 			</a>
 			{% if support.device.contribution == YES %}
 				<a class="btn btn-{{ theme_color }} shadow px-2 me-1 mb-2" href="{{ path('support_payments_index', {'id': support.id}) }}"
 					title="Paiements" data-bs-toggle="tooltip" data-bs-placement="bottom">
-					<span class="fas fa-euro-sign px-1"></span><span class="sr-only">Paiements</span>
+					<span class="fas fa-euro-sign px-1"></span><span class="visually-hidden">Paiements</span>
 				</a>
 			{% endif %}
 		</div>

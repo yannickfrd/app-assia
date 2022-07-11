@@ -2,10 +2,10 @@
 
 {% block search_form %}
 
-    <div class="col-auto my-1 px-1">{{ form_row(form.fullname) }}</div>
+    <div class="col-auto my-1 px-1">{{ form_widget(form.fullname) }}</div>
     {% include '_shared/_service_device_referent_search.html.twig' %}
-    <div class="col-auto my-1 px-1">{{ form_row(form.type) }}</div>
-    <div class="col-auto my-1 px-1">{{ form_row(form.dateType) }}</div>
+    <div class="col-auto my-1 px-1">{{ form_widget(form.type) }}</div>
+    <div class="col-auto my-1 px-1">{{ form_widget(form.dateType) }}</div>
     <div class="col-auto my-1 px-1 d-inline-flex" title="Date de début" data-bs-toggle="tooltip" 
         data-bs-placement="bottom"><span class="my-2 px-1">Entre</span>{{ form_widget(form.date.start) }}
     </div>

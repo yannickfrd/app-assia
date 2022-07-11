@@ -34,9 +34,6 @@ class PlaceSearchType extends AbstractType
                 'data_class' => EventSearch::class,
             ])
             ->add('name', SearchType::class, [
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
                 'attr' => [
                     'class' => 'w-max-140',
                     'placeholder' => 'Name',
@@ -44,24 +41,17 @@ class PlaceSearchType extends AbstractType
                 'required' => false,
             ])
             ->add('nbPlaces', null, [
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
                 'attr' => [
                     'class' => 'w-max-140',
                     'placeholder' => 'Places number',
                 ],
             ])
             ->add('supportDates', ChoiceType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getChoices(PlaceSearch::PLACE_DATES),
                 'placeholder' => '-- Date --',
                 'required' => false,
             ])
             ->add('city', SearchType::class, [
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
                 'attr' => [
                     'class' => 'w-max-140',
                     'placeholder' => 'City',
@@ -72,7 +62,6 @@ class PlaceSearchType extends AbstractType
                 'data_class' => EventSearch::class,
             ])
             ->add('disabled', ChoiceType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getChoices(Choices::DISABLE),
                 'placeholder' => 'placeholder.disabled',
                 'required' => false,
@@ -87,7 +76,6 @@ class PlaceSearchType extends AbstractType
                     ->add('pole', EntityType::class, [
                         'class' => Pole::class,
                         'choice_label' => 'name',
-                        'label_attr' => ['class' => 'sr-only'],
                         'placeholder' => 'placeholder.pole',
                         'required' => false,
                 ]);

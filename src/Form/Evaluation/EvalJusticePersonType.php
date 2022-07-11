@@ -26,7 +26,6 @@ class EvalJusticePersonType extends AbstractType
                 'required' => false,
             ])
             ->add('commentEvalJustice', TextareaType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'rows' => 4,
                     'class' => 'justify',

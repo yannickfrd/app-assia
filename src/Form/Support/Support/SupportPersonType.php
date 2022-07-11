@@ -53,7 +53,6 @@ class SupportPersonType extends AbstractType
 
             $form
                 ->add('endReason', ChoiceType::class, [
-                    'label_attr' => ['class' => 'sr-only'],
                     'choices' => $form->getParent()->getParent()->get('endReason')->getConfig()->getOption('choices'),
                     'placeholder' => 'placeholder.select',
                     'required' => true,

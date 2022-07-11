@@ -19,13 +19,13 @@
                     <div class="my-2">
                         <div class="input-group">
                             <span class="input-group-text"><i class="fa fa-user"></i></span>
-                            {{ form_label(form.username) }}
+                            {{ form_label(form.username, null, {label_attr: {class: 'visually-hidden'}}) }}
                             {{ form_widget(form.username) }}
                         </div>
                     </div>
                     <div class="my-3">
                         <div class="input-group js-password-group">
-                            {{ form_label(form.password) }}
+                            {{ form_label(form.password, null, {label_attr: {class: 'visually-hidden'}}) }}
                             {{ form_widget(form.password, {'attr': {'class': 'js-password' }}) }}
                             <span class="input-group-text"><i class="js-show-password fa fa-eye"></i></span>
                         </div>

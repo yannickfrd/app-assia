@@ -263,12 +263,12 @@ export default class NoteManager {
                 <a href="${pathExportWord}"
                     class="btn btn-${this.themeColor} btn-sm mb-1 shadow" title="Exporter la note au format Word"
                     data-bs-toggle="tooltip" data-bs-placement="bottom">
-                        <i class="fas fa-file-word fa-lg bg-primary"></i><span class="sr-only">Word</span>
+                        <i class="fas fa-file-word fa-lg bg-primary"></i><span class="visually-hidden">Word</span>
                 </a>
                 <a href="${pathExportPdf}"
                     class="btn btn-${this.themeColor} btn-sm mb-1 shadow" title="Exporter la note au format PDF"
                     data-bs-toggle="tooltip" data-bs-placement="bottom">
-                        <i class="fas fa-file-pdf fa-lg bg-danger"></i><span class="sr-only">PDF</span>
+                        <i class="fas fa-file-pdf fa-lg bg-danger"></i><span class="visually-hidden">PDF</span>
                 </a>
             </td>
             <td class="align-middle text-center">

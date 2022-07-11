@@ -5,13 +5,13 @@
 </p>
 <div class="my-1">
     <div class="input-group mb-2">
-        {{ form_label(siSiaoLoginForm.username) }}
+        {{ form_label(siSiaoLoginForm.username, null, {label_attr: {class: 'visually-hidden'}}) }}
         {{ form_widget(siSiaoLoginForm.username) }}
     </div>
 </div>
 <div class="my-3">
     <div class="input-group js-password-group">
-        {{ form_label(siSiaoLoginForm.password) }}
+        {{ form_label(siSiaoLoginForm.password, null, {label_attr: {class: 'visually-hidden'}}) }}
         {{ form_widget(siSiaoLoginForm.password, {'attr': {'class': 'js-password' }}) }}
         <span class="input-group-text"><i class="js-show-password fa fa-eye"></i></span>
     </div>

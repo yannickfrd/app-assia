@@ -28,7 +28,6 @@ class SupportTaskSearchType extends AbstractType
     {
         $builder
             ->add('title', SearchType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'placeholder' => 'search',
                     'class' => 'w-max-170',
@@ -62,7 +61,6 @@ class SupportTaskSearchType extends AbstractType
                 'by_reference' => false,
                 'choices' => $this->tagRepo->getTagsByService($options['service'], 'event'),
                 'choice_label' => 'name',
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'class' => 'multi-select w-max-220',
                     'placeholder' => 'placeholder.tags',

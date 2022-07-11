@@ -9,7 +9,7 @@
                 'attr': {'data-url': path('document_edit', {'id': '__id__'})}
             }) }}
             <div class="modal-body pb-0">
-                {{ form_row(documentForm.name) }}
+                {{ form_row(documentForm.name, {label_attr: {class: 'visually-hidden'}}) }}
                 <div class="row mb-3">
                     <div class="col-12">
                         <div class="input-group">
@@ -20,7 +20,7 @@
                         </div>
                     </div>
                 </div>
-                {{ form_row(documentForm.content) }}
+                {{ form_row(documentForm.content, {label_attr: {class: 'visually-hidden'}}) }}
             </div>
             <div class="modal-footer d-flex justify-content-between">
                 <div class="float-start">

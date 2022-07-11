@@ -32,7 +32,6 @@ class EvalSocialGroupType extends AbstractType
             ])
             ->add('animalType')
             ->add('commentEvalSocialGroup', null, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'rows' => 5,
                     'class' => 'justify',

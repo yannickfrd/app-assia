@@ -36,19 +36,16 @@ class SupportNoteSearchType extends AbstractType
                 'required' => false,
             ])
             ->add('content', SearchType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => ['placeholder' => 'Search'],
                 'required' => false,
             ])
             ->add('type', ChoiceType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getChoices(Note::TYPE),
                 'attr' => ['class' => 'w-max-150'],
                 'placeholder' => 'placeholder.type',
                 'required' => false,
             ])
             ->add('status', ChoiceType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getChoices(Note::STATUS),
                 'attr' => ['class' => 'w-max-150'],
                 'placeholder' => 'placeholder.status',
@@ -63,7 +60,6 @@ class SupportNoteSearchType extends AbstractType
                 'by_reference' => false,
                 'choices' => $this->tagRepo->getTagsByService($service, 'note'),
                 'choice_label' => 'name',
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'class' => 'multi-select w-max-220',
                     'placeholder' => 'placeholder.tags',

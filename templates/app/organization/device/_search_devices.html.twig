@@ -2,14 +2,14 @@
 
 {% block search_form %}
 
-<div class="col-auto my-1 px-1">{{ form_row(form.name) }}</div>
+<div class="col-auto my-1 px-1">{{ form_widget(form.name) }}</div>
 {% if form.service.vars.choices|length > 1 %}
-    <div class="col-auto my-1 px-1">{{ form_row(form.service) }}</div>
+    <div class="col-auto my-1 px-1">{{ form_widget(form.service) }}</div>
 {% endif %}
 {% if form.pole is defined %}
-    <div class="col-auto my-1 px-1">{{ form_row(form.pole) }}</div>
+    <div class="col-auto my-1 px-1">{{ form_widget(form.pole) }}</div>
 {% endif %}
 {% if is_granted('ROLE_ADMIN') %}
-    <div class="col-auto my-1 px-1">{{ form_row(form.disabled) }}</div>
+    <div class="col-auto my-1 px-1">{{ form_widget(form.disabled) }}</div>
 {% endif %}
 {% endblock %}

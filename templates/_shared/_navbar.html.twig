@@ -71,7 +71,7 @@
                 </ul>
                 <form action="{{ path('person_index') }}" method="get" class="row row-cols-auto align-items-center my-2 my-lg-0 me-3">
                     <div class="position-relative ms-2 me-1 px-0">
-                        <label for="search-person" class="sr-only col-form-label">Recherche d'une personne</label>
+                        <label for="search-person" class="visually-hidden col-form-label">Recherche d'une personne</label>
                         <input name="search-person" id="search-person" class="form-control" type="search"
                             placeholder="Recherche personne" autocomplete="off" 
                             title="Recherche instantanée à partir des 3 premières lettres saisies">
@@ -79,7 +79,7 @@
                     </div>
                     <button class="btn btn-{{ theme_color }} border-light my-2 my-sm-0" 
                         title="Rechercher" data-bs-toggle="tooltip" data-bs-placement="bottom" type="submit">
-                        <i class="fas fa-search"><span class="sr-only">Rechercher</span></i>
+                        <i class="fas fa-search"><span class="visually-hidden">Rechercher</span></i>
                     </button>
                 </form>
                 <div class="text-light text-end w-min-160">

@@ -18,11 +18,9 @@ class RolePersonMinType extends AbstractType
             ->add('head', RadioType::class, [
                 'label' => false,
                 'help' => 'head.help',
-                'help_attr' => ['class' => 'sr-only'],
                 'required' => false,
             ])
             ->add('role', ChoiceType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getChoices(RolePerson::ROLE),
                 'placeholder' => 'placeholder.select',
                 'required' => true,

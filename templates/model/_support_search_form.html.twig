@@ -22,16 +22,16 @@
 					<div class="col-auto my-1 px-1">
 						<button type="submit" id="search" class="btn btn-{{ theme_color }} shadow" 
 							data-bs-toggle="tooltip" data-bs-placement="bottom" title="Rechercher">
-							<span class="fas fa-search"></span><span class="sr-only">Rechercher</span>
+							<span class="fas fa-search"></span><span class="visually-hidden">Rechercher</span>
 						</button>
 						<button type="reset" class="btn btn-secondary ms-2 shadow" data-bs-toggle="tooltip" data-bs-placement="bottom">
-							<span class="fas fa-eraser"></span><span class="sr-only">Effacer</span>
+							<span class="fas fa-eraser"></span><span class="visually-hidden">Effacer</span>
 						</button>
 						{% if form_search.export is defined %}
 							{% block form_search_export %}
 								<button id="js-btn-export" name="export" value="true" class="btn btn-success ms-2 shadow"
 									data-bs-toggle="tooltip" data-bs-placement="bottom" title="Exporter les données sur Excel"><span
-									class="fas fa-file-excel"></span><span class="sr-only">Exporter</span>
+									class="fas fa-file-excel"></span><span class="visually-hidden">Exporter</span>
 								</button>
 							{% endblock %}
 						{% endif %}

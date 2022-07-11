@@ -83,7 +83,7 @@
                         </div>
                     {% endif %}
                     <div class="row mb-3">
-                        <div class="col-md-12">{{ form_label(eval_person.evalFamilyPerson.commentEvalFamilyPerson) }}</div>
+                        <div class="col-md-12">{{ form_label(eval_person.evalFamilyPerson.commentEvalFamilyPerson, null, {label_attr: {class: 'visually-hidden'}}) }}</div>
                         <div class="col-md-12">{{ form_widget(eval_person.evalFamilyPerson.commentEvalFamilyPerson) }}</div>
                     </div>
                 </div>
@@ -101,7 +101,7 @@
     </div>
     {% if nb_people > 1 %}
         <div class="row mb-3">
-            <div class="col-md-12">{{ form_label(form.evalFamilyGroup.commentEvalFamilyGroup) }}</div>
+            <div class="col-md-12">{{ form_label(form.evalFamilyGroup.commentEvalFamilyGroup, null, {label_attr: {class: 'visually-hidden'}}) }}</div>
             <div class="col-md-12">{{ form_widget(form.evalFamilyGroup.commentEvalFamilyGroup) }}</div>
         </div>
     {% endif %}

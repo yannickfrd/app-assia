@@ -32,7 +32,6 @@ class DeviceSearchType extends AbstractType
     {
         $builder
             ->add('name', SearchType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'class' => 'w-max-200',
                     'placeholder' => 'device.name',
@@ -46,12 +45,10 @@ class DeviceSearchType extends AbstractType
                 'query_builder' => function (ServiceRepository $repo) {
                     return $repo->getServicesOfUserQueryBuilder($this->user);
                 },
-                'label_attr' => ['class' => 'sr-only'],
                 'placeholder' => 'placeholder.service',
                 'required' => false,
             ])
             ->add('disabled', ChoiceType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getChoices(Choices::DISABLE),
                 'placeholder' => 'placeholder.disabled',
                 'required' => false,
@@ -65,7 +62,6 @@ class DeviceSearchType extends AbstractType
                     ->add('pole', EntityType::class, [
                         'class' => Pole::class,
                         'choice_label' => 'name',
-                        'label_attr' => ['class' => 'sr-only'],
                         'placeholder' => 'placeholder.pole',
                         'required' => false,
                 ]);

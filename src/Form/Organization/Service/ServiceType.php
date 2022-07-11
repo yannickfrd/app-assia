@@ -137,9 +137,6 @@ class ServiceType extends AbstractType
                 'delete_empty' => true,
                 'prototype' => true,
                 'by_reference' => false,
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
                 'entry_options' => [
                     'attr' => ['class' => 'form-inline'],
                 ],
@@ -151,9 +148,6 @@ class ServiceType extends AbstractType
             //     'delete_empty' => true,
             //     'prototype' => true,
             //     'by_reference' => false,
-            //     'label_attr' => [
-            //         'class' => 'sr-only',
-            //     ],
             //     'entry_options' => [
             //         'attr' => ['class' => 'form-inline'],
             //     ],

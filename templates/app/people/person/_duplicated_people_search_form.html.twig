@@ -3,8 +3,8 @@
 {% block search_form %}
 
 <div class="col-auto my-1 px-1">
-    <div class="form-check form-check-{{ theme_color }}">{{ form_row(form.lastname) }}</div>
-    <div class="form-check form-check-{{ theme_color }}">{{ form_row(form.firstname) }}</div>
-    <div class="form-check form-check-{{ theme_color }} w-min-200">{{ form_row(form.birthdate) }}</div>
+    <div class="form-check form-check-{{ theme_color }}">{{ form_widget(form.lastname) }}</div>
+    <div class="form-check form-check-{{ theme_color }}">{{ form_widget(form.firstname) }}</div>
+    <div class="form-check form-check-{{ theme_color }} w-min-200">{{ form_widget(form.birthdate) }}</div>
 </div>
 {% endblock %}

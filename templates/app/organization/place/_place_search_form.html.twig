@@ -1,10 +1,10 @@
 {% extends 'model/_search.html.twig' %}
 
 {% block search_form %}
-    <div class="col-auto my-1 px-1">{{ form_row(form.name) }}</div>
+    <div class="col-auto my-1 px-1">{{ form_widget(form.name) }}</div>
         {% include '_shared/_service_device_referent_search.html.twig' with {'referents': false} %}
-    <div class="col-auto my-1 px-1">{{ form_row(form.nbPlaces) }}</div>
-    <div class="col-auto my-1 px-1">{{ form_row(form.supportDates) }}</div>
+    <div class="col-auto my-1 px-1">{{ form_widget(form.nbPlaces) }}</div>
+    <div class="col-auto my-1 px-1">{{ form_widget(form.supportDates) }}</div>
     <div class="col-auto my-1 px-1 d-inline-flex" data-bs-toggle="tooltip" data-bs-placement="bottom"
         title="Date de début">
         <span class="my-2 px-1">Entre</span>{{ form_widget(form.date.start) }}
@@ -13,8 +13,8 @@
         title="Date de fin">
         <span class="my-2 pe-2">et</span>{{ form_widget(form.date.end) }}
     </div>
-    <div class="col-auto my-1 px-1">{{ form_row(form.city) }}</div>
+    <div class="col-auto my-1 px-1">{{ form_widget(form.city) }}</div>
     {% if is_granted('ROLE_ADMIN') %}
-        <div class="col-auto my-1 px-1">{{ form_row(form.disabled) }}</div>
+        <div class="col-auto my-1 px-1">{{ form_widget(form.disabled) }}</div>
     {% endif %}
 {% endblock %}

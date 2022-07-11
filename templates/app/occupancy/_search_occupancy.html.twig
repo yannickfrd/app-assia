@@ -9,6 +9,6 @@
         title="Date de fin"><span class="my-2 pe-2">et</span>{{ form_widget(form.date.end) }}
     </div>
     {% if is_granted('ROLE_SUPER_ADMIN') %}
-        <div class="col-auto my-1 px-1">{{ form_row(form.pole) }}</div>
+        <div class="col-auto my-1 px-1">{{ form_widget(form.pole) }}</div>
     {% endif %}
 {% endblock %}

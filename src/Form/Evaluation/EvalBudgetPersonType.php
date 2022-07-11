@@ -117,7 +117,6 @@ class EvalBudgetPersonType extends AbstractType
                 'help' => 'evalBudgetPerson.endRightsDate.help',
             ])
             ->add('commentEvalBudget', null, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'rows' => 5,
                     'class' => 'justify',

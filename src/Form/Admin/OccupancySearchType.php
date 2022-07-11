@@ -36,7 +36,6 @@ class OccupancySearchType extends AbstractType
             ->add('pole', EntityType::class, [
                 'class' => Pole::class,
                 'choice_label' => 'name',
-                'label_attr' => ['class' => 'sr-only'],
                 'placeholder' => 'placeholder.pole',
                 'required' => false,
             ])

@@ -103,7 +103,6 @@ class EvalSocialPersonType extends AbstractType
             ->add('wheelchair', HiddenType::class)
             ->add('reducedMobility', HiddenType::class)
             ->add('commentEvalSocialPerson', null, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'rows' => 4,
                     'class' => 'justify',

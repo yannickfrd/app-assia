@@ -67,18 +67,34 @@
                                         </td>
                                         <td class="px-1 align-middle">
                                             <div class="form-check form-check-{{ theme_color }} ps-2">
+                                                {{ form_label(form_person.head, null, {label_attr: {class: 'visually-hidden'}}) }}
                                                 {{ form_widget(form_person.head) }}
                                             </div>
                                         </td>
-                                        <td class="px-1 align-middle">{{ form_widget(form_person.person.lastname) }}</td>
-                                        <td class="px-1 align-middle">{{ form_widget(form_person.person.firstname) }}
-                                            {{ form_errors(form_person.person.firstname) }}</td>
-                                        <td class="px-1 align-middle">{{ form_widget(form_person.person.birthdate) }}
-                                            {{ form_errors(form_person.person.birthdate) }}</td>
+                                        <td class="px-1 align-middle">
+                                            {{ form_label(form_person.person.lastname, null, {label_attr: {class: 'visually-hidden'}}) }}
+                                            {{ form_widget(form_person.person.lastname) }}
+                                        </td>
+                                        <td class="px-1 align-middle">
+                                            {{ form_label(form_person.person.firstname, null, {label_attr: {class: 'visually-hidden'}} ) }}
+                                            {{ form_widget(form_person.person.firstname ) }}
+                                            {{ form_errors(form_person.person.firstname) }}
+                                        </td>
+                                        <td class="px-1 align-middle">
+                                            {{ form_label(form_person.person.birthdate, null, {label_attr: {class: 'visually-hidden'}}) }}
+                                            {{ form_widget(form_person.person.birthdate) }}
+                                            {{ form_errors(form_person.person.birthdate) }}
+                                        </td>
                                         <td class="text-center px-1 align-middle">{{ person.age }} an{{ person.age > 1 ? 's' }}</td>
-                                        <td class="px-1 align-middle">{{ form_widget(form_person.person.gender) }}</td>
-                                        <td class="px-1 align-middle">{{ form_widget(form_person.role) }}
-                                            {{ form_errors(form_person.role) }}</td>
+                                        <td class="px-1 align-middle">
+                                            {{ form_label(form_person.person.gender, null, {label_attr: {class: 'visually-hidden'}}) }}
+                                            {{ form_widget(form_person.person.gender) }}
+                                        </td>
+                                        <td class="px-1 align-middle">
+                                            {{ form_label(form_person.role, null, {label_attr: {class: 'visually-hidden'}}) }}
+                                            {{ form_widget(form_person.role) }}
+                                            {{ form_errors(form_person.role) }}
+                                        </td>
                                         <td class="px-1 align-middle">
                                             {% if false == form_person.vars.value.head %}
                                                 <button class="btn btn-danger shadow" data-action="remove"
@@ -115,7 +131,10 @@
                 <div class="col-md-6">{{ form_row(form.siSiaoId) }}</div>
             </div>
             <div class="row mb-3">
-                <div class="col-md-12">{{ form_widget(form.comment) }}</div>
+                <div class="col-md-12">
+                {{ form_label(form.comment, null, {label_attr: {class: 'visually-hidden'}}) }}
+                {{ form_widget(form.comment) }}
+            </div>
             </div>
             <div class="row mb-3">
                 <div class="col-md-12">

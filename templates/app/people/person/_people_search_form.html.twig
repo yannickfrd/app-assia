@@ -8,7 +8,7 @@
             <span class="input-group-text d-none d-sm-block" title="Date de naissance" data-bs-toggle="tooltip" 
                 data-bs-placement="bottom"><i class="fas fa-birthday-cake text-black-50"></i>
             </span>
-            {{ form_label(form.birthdate) }}
+            {{ form_label(form.birthdate, null, {label_attr: {class: 'visually-hidden'}}) }}
             {{ form_widget(form.birthdate) }}
         </div>
     </div>
