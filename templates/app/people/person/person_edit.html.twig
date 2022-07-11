@@ -61,7 +61,7 @@
                     <div class="col-md-6">{{ form_row(form.role) }}</div>
                     {% if people_group is defined and (app.request.get('supports') or people_group.supports|length > 0) %}
                         <div class="col-md-6">
-                            <div class="form-check form-check-{{ theme_color }}">
+                            <div class="form-check">
                                 {{ form_row(form.addPersonToSupport) }}
                             </div>
                         </div>
@@ -100,12 +100,12 @@
                         {% endif %}
                         <div class="mb-4 float-end">
                             {% if true == edit_mode %}
-                                <button type="submit" id="updatePerson" name="updatePerson" class="btn btn-{{ theme_color }} shadow"
+                                <button type="submit" id="updatePerson" name="updatePerson" class="btn btn-primary shadow"
                                     data-url="{{ path('person_edit_ajax', {'id': person.id}) }}">
                                     <span class="fas fa-save me-2"></span>Mettre à jour
                                 </button>
                             {% else %}
-                                <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">
+                                <button type="submit" id="send" name="send" class="btn btn-primary shadow">
                                     <span class="fas fa-save me-2"></span>Enregistrer</button>
                             {% endif %}
                         </div>
@@ -151,7 +151,7 @@
                                     <tr>
                                         <td scope="row">
                                             <a href="{{ path('people_group_show', {'id': role.peopleGroup.id}) }}"
-                                                class="btn btn-{{ theme_color }} btn-sm shadow" data-bs-toggle="tooltip" 
+                                                class="btn btn-primary btn-sm shadow" data-bs-toggle="tooltip" 
                                                 data-bs-placement="bottom" title="Voir la fiche du groupe">
                                                 <span class="fas fa-eye"></span>
                                             </a>
@@ -174,7 +174,7 @@
                         </table>
                     </div>
                 {% endif %}
-                <button id="btn-new-group" class="m-2 btn btn-{{ theme_color }} btn-sm" 
+                <button id="btn-new-group" class="m-2 btn btn-primary btn-sm" 
                     data-bs-toggle="modal" data-bs-target="#modal-new-group">
                     <span class="fas fa-plus-square pe-2"></span>Créer un nouveau groupe
                 </button>

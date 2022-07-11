@@ -31,7 +31,7 @@
             <div class="row">
                 <div class="col-md-12 mb-3">
                     <div class="float-end">
-                        <button type="submit" name="send" class="btn btn-{{ theme_color }} shadow">
+                        <button type="submit" name="send" class="btn btn-primary shadow">
                             <span class="fas fa-save me-2"></span>Mettre à jour</button>
                     </div>
                 </div>
@@ -61,12 +61,12 @@
                                         <td  class="align-middle" scope="row">
                                             <a href="{{ path('group_person_show', 
                                                 {'id': people_group.id, 'person_id': person.id, 'slug': person.slug}) }}"
-                                                class="btn btn-{{ theme_color }} shadow" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                class="btn btn-primary shadow" data-bs-toggle="tooltip" data-bs-placement="bottom"
                                                 title="Voir la fiche individuelle"><span class="fas fa-eye"></span>
                                             </a>
                                         </td>
                                         <td class="px-1 align-middle">
-                                            <div class="form-check form-check-{{ theme_color }} ps-2">
+                                            <div class="form-check ps-2">
                                                 {{ form_label(form_person.head, null, {label_attr: {class: 'visually-hidden'}}) }}
                                                 {{ form_widget(form_person.head) }}
                                             </div>
@@ -116,7 +116,7 @@
             {% set with_supports = supports|length > 0 %}
                 <div class="col-md-12">
                     <a href="{{ path('group_search_person', {'id': people_group.id, 'supports': with_supports}) }}"
-                        class="btn btn-{{ theme_color }} btn-sm my-2">
+                        class="btn btn-primary btn-sm my-2">
                         <span class="fas fa-plus-square me-2"></span>Ajouter une personne</a>
                     <a href="{{ path('group_create_person', {'id': people_group.id, 'supports': with_supports, 'role': 3}) }}" class="btn btn-secondary btn-sm my-2"
                         data-bs-toggle="tooltip" title="Ajouter un enfant" data-bs-placement="bottom">
@@ -149,7 +149,7 @@
                         </div>
                     {% endif %}
                     <div class="float-end">
-                        <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">
+                        <button type="submit" id="send" name="send" class="btn btn-primary shadow">
                             <span class="fas fa-save me-2"></span>Mettre à jour
                         </button>
                     </div>

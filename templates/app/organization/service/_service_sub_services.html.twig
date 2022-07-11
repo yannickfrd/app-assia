@@ -22,7 +22,7 @@
 						<tr class="{% if sub_service.disabled %}text-secondary{% endif %}">
 							<td class="align-middle text-center" scope="row">
 								{% if is_granted_edit_service %}
-									<a href="{{ path('sub_service_edit', {'id':sub_service.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow" 
+									<a href="{{ path('sub_service_edit', {'id':sub_service.id}) }}" class="btn btn-primary btn-sm shadow" 
 										data-bs-toggle="tooltip" data-bs-placement="bottom" title="Voir la fiche du sous-service"><span class="fas fa-eye"></span>
 									</a>                    
                                 {% else %}
@@ -54,7 +54,7 @@
 	{% if is_granted_edit_service %}
 		<div class="row">
 			<div class="col-md-12">
-				<a href="{{ path('sub_service_new', {'id':service.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow"><span
+				<a href="{{ path('sub_service_new', {'id':service.id}) }}" class="btn btn-primary btn-sm shadow"><span
 					class="fas fa-plus-square pe-2"></span>Créer un sous-service</a>
 			</div>
 		</div>

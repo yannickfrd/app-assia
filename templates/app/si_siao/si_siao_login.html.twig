@@ -17,13 +17,13 @@
 
                 {% include 'app/si_siao/_si_siao_login_form.html.twig' with {'siSiaoLoginForm': form} %}
 
-                <button type="submit" id="send" name="send" class="btn btn-lg btn-{{ theme_color }} btn-block shadow mb-2">Se connecter au SI-SIAO</button>
+                <button type="submit" id="send" name="send" class="btn btn-lg btn-primary btn-block shadow mb-2">Se connecter au SI-SIAO</button>
                 
                 {{ form_row(form._token) }}
                 {{ form_end(form) }}
 
                 <a href="{{ target_path }}" class="btn btn-lg btn-secondary btn-block shadow mb-4">Annuler</button>
-                <a href="https://sisiao.social.gouv.fr" target="_blank" class="link-{{ theme_color }} mb-4">Mot de passe SI-SIAO oublié ?</a>
+                <a href="https://sisiao.social.gouv.fr" target="_blank" class="link-primary mb-4">Mot de passe SI-SIAO oublié ?</a>
             
             </div>
         </section>

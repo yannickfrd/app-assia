@@ -18,8 +18,6 @@ export default class DocumentManager {
         this.documentForm = new DocumentForm(this)
         this.documentViewer = new DocumentViewer(this)
 
-        this.themeColor = document.getElementById('header').dataset.color
-
         this.tagsManager = new TagsManager()
 
         this.documentModal = this.documentForm.documentModal
@@ -311,7 +309,7 @@ export default class DocumentManager {
         documentTrElt.dataset.documentId = doc.id
         documentTrElt.innerHTML = `
             <td class="align-middle text-center">
-                <div class="form-check form-check-${this.themeColor}"
+                <div class="form-check"
                     title="Sélectionner le document" data-bs-toggle="tooltip" data-bs-placement="bottom">
                     <input type="checkbox" id="checkbox-file-${doc.id}" name="checkbox-file-${doc.id}" 
                         class="form-check-input ms-0" data-checkbox="${doc.id}">
@@ -320,12 +318,12 @@ export default class DocumentManager {
             </td>
             <td class="align-middle text-center">
                 <a href="${this.containerDocumentsElt.dataset.pathPreview.replace('__id__', doc.id)}" type="button"
-                    data-action="preview" class="btn btn-${this.themeColor} btn-sm shadow"
+                    data-action="preview" class="btn btn-primary btn-sm shadow"
                     title="Prévisualiser le document" type="button" data-bs-toggle="tooltip" data-bs-placement="bottom">
                     <i class="fas fa-eye"></i>
                 </a>
                 <a href="${this.containerDocumentsElt.dataset.pathDownload.replace('__id__', doc.id)}" type="button"
-                    data-action="download" class="btn btn-${this.themeColor} btn-sm shadow m-1" 
+                    data-action="download" class="btn btn-primary btn-sm shadow m-1" 
                     title="Télécharger le document" data-bs-toggle="tooltip" data-bs-placement="bottom">
                     <i class="fas fa-file-download"></i>
                 </a>

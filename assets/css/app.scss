@@ -2,6 +2,8 @@
 @import "./_form";
 @import "./_table";
 
+@import "./components/_button";
+
 html {
     scroll-behavior: smooth;
 }
@@ -37,7 +39,6 @@ section {
     margin: 16px 0 24px 0;
 }
 
-.btn,
 .dropdown-menu {
     font-size: $font-size-base;
 }
@@ -59,21 +60,33 @@ section {
     padding-bottom: 1px;
 }
 
-.bg-brown {
-    background-color: $brown;
-}
-
-.bg-orange {
-    background-color: $orange;
-}
-
 .bg-gray-light {
     background-color: $gray-light;
 }
 
-.bg-violet {
-    background-color: #652359;
-}
+@each $color, $value in $theme-colors {
+    html[data-theme-color="#{$color}"] {
+        .bg-primary {
+            background-color: $value !important;
+        }
+
+        .link-primary {
+            color: $value;
+        
+            @if $link-shade-percentage != 0 {
+                &:hover,
+                &:focus {
+                    color: if(color-contrast($value) == $color-contrast-light, shade-color($value, $link-shade-percentage), tint-color($value, $link-shade-percentage));
+                }
+            }
+        }
+        .dropdown-item:focus {
+            color: $light;
+
+            @include gradient-bg(tint-color($value, $link-shade-percentage));
+        }
+    }
+} 
 
 .bg-header {
     opacity: .5;
@@ -169,14 +182,6 @@ section {
 
 .page-link {
     color: var(--bs-primary);
-}
-
-.btn>.sortable {
-    color: var(--bs-dark);
-}
-
-.btn>.sortable:hover {
-    color: white;
 }
 
 //
@@ -459,14 +464,6 @@ thead a {
 
 thead a:hover {
     color: var(--bs-black) !important;
-}
-
-button.btn-outline-secondary a {
-    color: var(--bs-gray) !important;
-}
-
-button.btn-outline-secondary a:hover {
-    color: $light !important;
 }
 
 .page-item.active .page-link {

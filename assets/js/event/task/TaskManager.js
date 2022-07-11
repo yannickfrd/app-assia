@@ -22,7 +22,6 @@ export default class TaskManager {
 
         const divSupportElt = document.querySelector('div[data-support]')
         this.supportId = divSupportElt ? divSupportElt.dataset.support : null
-        this.themeColor = document.getElementById('header').dataset.color
         this.counterTasksElt = document.getElementById('count_tasks')
         this.btnConfirmDeleteElt = document.querySelector('button#modal-confirm')
 
@@ -142,7 +141,7 @@ export default class TaskManager {
 
         let htmlContent = `
             <td class="align-middle text-center">
-                <div class="form-check form-check-${this.themeColor}" 
+                <div class="form-check" 
                     title="Cliquer pour changer le statut" data-bs-toggle="tooltip" data-bs-placement="bottom">
                     <input type="checkbox" class="form-check-input ms-0 cursor-pointer" id="toggle_task_status_${task.id}" ${task.status ? ' checked' : ''} 
                         data-action="toggle_task_status" data-url="/task/${task.id}/toggle-status">
@@ -150,7 +149,7 @@ export default class TaskManager {
                 </div>
             </td>
             <td class="align-middle text-center">
-                <button data-url="${this.getUrlTaskShow(task.id)}" class="btn btn-${this.themeColor} btn-sm"
+                <button data-url="${this.getUrlTaskShow(task.id)}" class="btn btn-primary btn-sm"
                     data-action="edit_task" title="Voir/Modifier la tâche" data-bs-toggle="modal" data-bs-placement="bottom">
                     <span class="fas fa-eye"></span>
                 </button>

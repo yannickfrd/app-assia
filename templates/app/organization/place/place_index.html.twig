@@ -71,7 +71,7 @@
                             <tr class="{% if place.disabled %}text-secondary{% endif %}">
                                 <td scope="row" class="align-middle" >
                                     <a href="{{ path('place_edit', {'id': place.id}) }}"
-                                        class="btn btn-{{ theme_color }} btn-sm shadow" data-bs-placement="bottom"
+                                        class="btn btn-primary btn-sm shadow" data-bs-placement="bottom"
                                         title="Voir le groupe de places"><span class="fas fa-eye"></span>
                                     </a>
                                 </td>
@@ -80,7 +80,7 @@
                                 </td> 
                                 <td class="align-middle">
                                     <a href="{{ path('service_edit', {'id': place.service.id }) }}" 
-                                        class="link-{{ theme_color }}">{{ place.service.name }}</a>
+                                        class="link-primary">{{ place.service.name }}</a>
                                 </td>
                                 <td class="align-middle">{{ place.device ? place.device.name }}</td>
                                 <td class="align-middle">{{ place.nbPlaces }}</td>

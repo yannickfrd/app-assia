@@ -104,7 +104,7 @@ class AppExtension extends AbstractExtension
             return 'success';
         }
         if ($value >= 80) {
-            return 'info';
+            return '';
         }
         if ($value >= 60) {
             return 'warning';

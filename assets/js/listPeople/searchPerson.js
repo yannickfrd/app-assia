@@ -26,7 +26,6 @@ export default class SearchPerson {
         this.groupId = this.listResultElt.dataset.groupId
         this.helperSearchElt = document.querySelector('.js-helper-search')
         this.createPersonBtnElt = document.querySelector('[data-action="create-person"]')
-        this.themeColor = document.getElementById('header').dataset.color
         this.lengthSearch = lengthSearch
         this.time = time
         this.countdownID = null
@@ -260,7 +259,7 @@ export default class SearchPerson {
         }
 
         if (person.id) {
-            return `<a href="/person/${person.id}" class="btn btn-${this.themeColor} btn-sm shadow"
+            return `<a href="/person/${person.id}" class="btn btn-primary btn-sm shadow"
                         data-bs-placement="bottom" title="Voir la fiche de la personne"><span class="fas fa-eye"></span>
                     </a>`
         }

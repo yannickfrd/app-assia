@@ -16,7 +16,7 @@
         <div class="container-fluid mt-4">
             <div class="row">
                 <div class="col-md-12">
-                    <p><a href="{{ path('security_registration') }}" class="btn btn-{{ theme_color }} btn-sm shadow">
+                    <p><a href="{{ path('security_registration') }}" class="btn btn-primary btn-sm shadow">
                          <span class="fas fa-plus-square me-2"></span>Créer un nouvel utilisateur</a>
                     </p>
                 </div>
@@ -68,7 +68,7 @@
                             <tr class="{% if user.disabled %}text-secondary{% endif %}">
                                 <td class="align-middle" scope="row">
                                     <a href="{{ path('security_user', {'id': user.id}) }}"
-                                        class="btn btn-{{ theme_color }} btn-sm shadow" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                        class="btn btn-primary btn-sm shadow" data-bs-toggle="tooltip" data-bs-placement="bottom"
                                         title="Voir la fiche"><span class="fas fa-eye"></span>
                                     </a>
                                 </td>
@@ -81,7 +81,7 @@
                                 <td class="align-middle d-none d-md-table-cell">
                                     {% for service in user.services|sort ((a, b) => a.name <=> b.name) %}
                                         <a href="{{ path('service_edit', {'id': service.id}) }}" 
-                                            class="link-{{ theme_color }}">{{ service.name }}</a>{% if not loop.last %}, {% endif %}
+                                            class="link-primary">{{ service.name }}</a>{% if not loop.last %}, {% endif %}
                                     {% endfor %}
                                 </td>
                                 {% set poles = [] %}
@@ -90,7 +90,7 @@
                                         {% if service.pole.id not in poles %}
                                             {% set poles = poles|merge([service.pole.id]) %}
                                             <a href="{{ path('pole_edit', {'id': service.pole.id}) }}" 
-                                                class="link-{{ theme_color }}">{{ service.pole.name }}</a><br/>
+                                                class="link-primary">{{ service.pole.name }}</a><br/>
                                         {% endif %}
                                     {% endfor %}
                                 </td>
@@ -110,7 +110,7 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <p><a href="{{ path('security_registration') }}" class="btn btn-{{ theme_color }} btn-sm shadow">
+                    <p><a href="{{ path('security_registration') }}" class="btn btn-primary btn-sm shadow">
                          <span class="fas fa-plus-square me-2"></span>Créer un nouvel utilisateur</a>
                     </p>
                 </div>

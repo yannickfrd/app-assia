@@ -18,7 +18,7 @@
     <div class="row mb-3">
         <div class="col-md-6">{{ form_row(form.familyTypologies) }}</div>
             <div class="col-md-6">
-            <div class="form-check form-check-{{ theme_color }}"
+            <div class="form-check"
                 data-bs-toggle="tooltip" data-bs-placement="bottom" title="Demandeur/euse principal·e">{{ form_row(form.head) }}
             </div>
         </div>
@@ -37,9 +37,9 @@
                     title="Effacer les filtres"><i class="fas fa-eraser"></i><span class="visually-hidden">Effacer</span>
                 </button>
                 <button type="submit" id="count" name="count" data-path="{{ path('export_count') }}" 
-                    class="btn btn-{{ theme_color }} shadow">Calculer</button>
+                    class="btn btn-primary shadow">Calculer</button>
                 <button type="submit" id="export" name="export" data-path="{{ path('export_new') }}" 
-                    class="btn btn-{{ theme_color }} shadow">Exporter</button>
+                    class="btn btn-primary shadow">Exporter</button>
             </div>
         </div>
     </div>

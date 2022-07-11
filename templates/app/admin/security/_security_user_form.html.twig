@@ -35,7 +35,7 @@
                             {% if is_disabled %}Réactiver{% else %}Désactiver{% endif %}</a>
                         {% if is_disabled == false %}
                             {% set alert_msg = '"Êtes-vous vraiment sûr de vouloir envoyer un e-mail à l\'utilisateur ?"' %}
-                            <a class="me-3 btn btn-{{ theme_color }} d-block"
+                            <a class="me-3 btn btn-primary d-block"
                                 href="{{ path('security_user_send_new_email', {'id':user.id}) }}"
                                 title="Envoyer un nouvel e-mail à l'utilisateur afin de définir son mot de passe"
                                 data-bs-toggle="tooltip" data-bs-placement="bottom"
@@ -44,7 +44,7 @@
                     </div>
                 {% endif %} 
                 <div class="float-end">
-                    <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">
+                    <button type="submit" id="send" name="send" class="btn btn-primary shadow">
                         <i class="fas fa-save me-2"></i>Enregistrer</button>
                 </div>
             </div>

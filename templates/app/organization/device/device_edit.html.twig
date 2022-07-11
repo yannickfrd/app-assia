@@ -22,7 +22,7 @@
         {% endif %}
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a class="link-{{ theme_color }}"
+                <li class="breadcrumb-item"><a class="link-primary"
                     href="{{ path('admin_devices') }}">Liste des dispositifs</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Fiche dispositif</li>
             </ol>
@@ -71,7 +71,7 @@
                             </div>
                         {% endif %}
                         <div class="float-end">
-                            <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+                            <button type="submit" id="send" name="send" class="btn btn-primary shadow">{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
                         </div>
                     </div>
                 </div>
@@ -101,7 +101,7 @@
                         <tr>
                             <td scope="row">
                                 <a href="{{ path('service_edit', {'id':serviceDevice.service.id}) }}"
-                                    class="btn btn-{{ theme_color }} btn-sm shadow" data-bs-toggle="tooltip" 
+                                    class="btn btn-primary btn-sm shadow" data-bs-toggle="tooltip" 
                                     data-bs-placement="bottom" title="Voir la fiche du service">
                                     <span class="fas fa-eye"></span>
                                 </a>

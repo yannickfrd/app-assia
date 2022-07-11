@@ -22,7 +22,7 @@
 					<tr>
 						<td class="align-middle text-center" scope="row">
 							{% if is_granted_edit_service %}
-								<a href="{{ path('security_user', {'id':user.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow" 
+								<a href="{{ path('security_user', {'id':user.id}) }}" class="btn btn-primary btn-sm shadow" 
 									data-bs-toggle="tooltip" data-bs-placement="bottom" title="Voir la fiche du service"><span class="fas fa-eye"></span>
 								</a>
 							{% else %}
@@ -44,7 +44,7 @@
 	{% if is_granted_edit_service %}
 		<div class="row">
 			<div class="col-md-12">
-				<a href="{{ path('security_registration') }}" class="btn btn-{{ theme_color }} btn-sm shadow"><span
+				<a href="{{ path('security_registration') }}" class="btn btn-primary btn-sm shadow"><span
 					class="fas fa-plus-square pe-2"></span>Créer un nouvel utilisateur</a>
 			</div>
 		</div>

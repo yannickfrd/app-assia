@@ -65,7 +65,7 @@
                             <td  class="align-middle" scope="row">
                                 {% if is_role_super_admin %}
                                     <a href="{{ path('admin_device_edit', {'id': device.id}) }}"
-                                        class="btn btn-{{ theme_color }} btn-sm shadow" data-bs-toggle="tooltip"
+                                        class="btn btn-primary btn-sm shadow" data-bs-toggle="tooltip"
                                         data-bs-placement="bottom" title="Voir la fiche du dispositif">
                                         <span class="fas fa-eye"></span>
                                     </a>
@@ -89,7 +89,7 @@
                 {{ knp_pagination_render(devices) }}
             </div>
             {% if is_role_super_admin %}
-                <p><a href="{{ path('admin_device_new') }}" class="btn btn-{{ theme_color }} btn-sm shadow js-create-device">
+                <p><a href="{{ path('admin_device_new') }}" class="btn btn-primary btn-sm shadow js-create-device">
                     <span class="fas fa-plus-square me-2"></span>Créer un nouveau dispositif</a>
                 </p>
             {% endif %}

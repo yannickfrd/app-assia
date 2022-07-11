@@ -23,7 +23,7 @@
         {% endif %}
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a class="link-{{ theme_color }}"
+                <li class="breadcrumb-item"><a class="link-primary"
                     href="{{ path('organization_index') }}">Liste des organismes</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Fiche organisme</li>
             </ol>
@@ -46,7 +46,7 @@
             <div class="row mb-3">
                 <div class="col-md-12"> 
                     <div class="mb-4 float-end">
-                        <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save me-2"></span>{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+                        <button type="submit" id="send" name="send" class="btn btn-primary shadow"><span class="fas fa-save me-2"></span>{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
                     </div>
                 </div>
             </div>

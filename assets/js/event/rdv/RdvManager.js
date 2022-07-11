@@ -163,7 +163,7 @@ export default class RdvManager {
 
         let htmlContent = `
             <td class="align-middle text-center">
-                <button class="btn btn-${this.rdvForm.themeColor} btn-sm shadow my-1"
+                <button class="btn btn-primary btn-sm shadow my-1"
                     title="Voir/Modifier le rendez-vous"  data-bs-toggle="tooltip" data-bs-placement="bottom"
                     data-action="edit-rdv" data-url="${url}"><i class="fas fa-eye"></i>
                 </button>

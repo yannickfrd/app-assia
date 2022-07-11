@@ -15,7 +15,7 @@
         <div class="row">
             <div class="col-md-12">
                 <p><a href="{{ path('occupancy_services', {'year': search.year, 'date': {'start': search.start|date('Y-m-d'), 'end': search.end|date('Y-m-d')}, 
-                    'pole': search.pole ? search.pole.id}) }}" class="link-{{ theme_color }}"><span class="fas fa-undo me-2"></span>
+                    'pole': search.pole ? search.pole.id}) }}" class="link-primary"><span class="fas fa-undo me-2"></span>
                     {% if service %}Retour {% else %}Accès{% endif %} aux taux d'ocupation par service.</a>
                 </p>
                 {% set interval = date(search.start).diff(date(search.end)) %}
@@ -46,7 +46,7 @@
                                 <tr>
                                     <td scope="row" class="align-middle text-center">
                                         <a href="{{ path('place_edit', {'id': placeId, 'year': search.year}) }}#place_groups" 
-                                            class="btn btn-{{ theme_color }} btn-sm shadow" data-bs-placement="bottom" 
+                                            class="btn btn-primary btn-sm shadow" data-bs-placement="bottom" 
                                             title="Voir le groupe de places"><span class="fas fa-eye fa-sm"></span>
                                         </a>
                                     </td>
@@ -59,8 +59,8 @@
                                     <td class="align-middle text-end">{{ place.averageCapacity|round(2) }}</td>
                                     <td class="align-middle text-end">{{ place.averageOccupancy|round(2) }}</td>
                                     {% set ocupancy_rate = ratio(place.occupancyDays, place.capacityDays) %}
-                                    <td class="align-middle alert-{{ color(ocupancy_rate) }} text-end">
-                                        <span class="fw-bold font-italic">{{ ocupancy_rate|percent }}</span>
+                                    <td class="align-middle bg-{{ color(ocupancy_rate) }} bg-opacity-25 text-end">
+                                        <span class="fw-bold fst-italic">{{ ocupancy_rate|percent }}</span>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -75,9 +75,9 @@
                                 <td class="align-middle text-end">{{ datas.averageCapacity|round(2) }}</td>
                                 <td class="align-middle text-end">{{ datas.averageOccupancy|round(2) }}</td>
                                 {% set ocupancy_rate = ratio(datas.occupancyDays, datas.capacityDays) %}
-                                <td class="align-middle alert-{{ color(ocupancy_rate) }} text-end">
-                                    <span class="fw-bold font-italic">{{ ocupancy_rate|percent }}</span>
-                                </td>
+                                    <td class="align-middle bg-{{ color(ocupancy_rate) }} bg-opacity-25 text-end">
+                                        <span class="fw-bold fst-italic">{{ ocupancy_rate|percent }}</span>
+                                    </td>
                             </tr>
                         </tfoot>
                     </table>

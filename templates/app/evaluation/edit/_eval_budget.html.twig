@@ -76,7 +76,7 @@
                             title="Calculer le montant de la participation financière" data-bs-toggle="tooltip" data-bs-placement="bottom" 
                             data-path="{{ path('support_payment_calcul', {'id': support.id}) }}">
                             <span class="fas fa-sync me-2"></span>Calculer PAF</button>
-						<button id="show_calcul_contribution_btn" class="btn btn-{{ theme_color }} d-none" 
+						<button id="show_calcul_contribution_btn" class="btn btn-primary d-none" 
                             title="Voir le détail du montant à régler" data-bs-toggle="tooltip" data-bs-placement="bottom">
                             <span class="fas fa-eye me-2"></span>Voir le détail</button>
 					</div>
@@ -90,7 +90,7 @@
 
 	<div class="row">
 		<div class="col-md-12 accordion" id="accordion_evalBudget">
-			{{ support_people_looper.loop(accordion_id, people_over_16, support, theme_color) }}
+			{{ support_people_looper.loop(accordion_id, people_over_16, support) }}
 
 			{% for key, form_eval_person in people_over_16 %}
 				{% set form_eval_budget_person = form_eval_person.evalBudgetPerson %}

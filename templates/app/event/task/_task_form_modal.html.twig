@@ -46,7 +46,7 @@ data-url-task-show="{{ path('task_show', {'id': '__id__'}) }}">
                         </div>
                     </div>
                     <div class="col-auto ms-1 my-1 d-inline-flex">
-                        <div class="form-check form-check-{{ theme_color }} ps-0"
+                        <div class="form-check ps-0"
                             title="Statut" data-bs-toggle="tooltip" data-bs-placement="bottom">
                                 {{ form_widget(form_task.status, {label: 'Réalisée'}) }}
                         </div>
@@ -105,7 +105,7 @@ data-url-task-show="{{ path('task_show', {'id': '__id__'}) }}">
                         <div id="alerts-fields-list" data-prototype="{{ alert_widget|e }}"
                             data-container-tag="div" data-widget-counter="{{ form_task.alerts|length }}">
                         </div>
-                        <button type="button" class="btn btn-{{ theme_color }} btn-sm"
+                        <button type="button" class="btn btn-primary btn-sm"
                             data-list-selector="#alerts-fields-list" data-add-widget="alert" data-url="/alert/__id__/toggle-status">
                             <i class="fas fa-plus-square me-2"></i>Ajouter un rappel
                         </button>
@@ -122,7 +122,7 @@ data-url-task-show="{{ path('task_show', {'id': '__id__'}) }}">
                 </div>
                 <div class="float-end">
                     <button type="button" id="js-btn-cancel" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                    <button type="submit" id="js-btn-save" class="btn btn-{{ theme_color }} shadow">
+                    <button type="submit" id="js-btn-save" class="btn btn-primary shadow">
                         <i class="fas fa-save me-2"></i>Enregistrer</button>
                 </div>
             </div>

@@ -13,7 +13,7 @@
             <h1 class="h2 mb-3">{{ title }}</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a class="link-{{ theme_color }}" href="{{ path('admin') }}">Administration</a></li>
+                    <li class="breadcrumb-item"><a class="link-primary" href="{{ path('admin') }}">Administration</a></li>
                     <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
                 </ol>
             </nav>
@@ -50,12 +50,12 @@
 
             <div class="mb-3">
                 <div class="row">
-                    <div class="col-md-6 form-check form-check-{{ theme_color }}">
+                    <div class="col-md-6 form-check">
                         {{ form_row(form.weeklyAlert) }}
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6 form-check form-check-{{ theme_color }}">
+                    <div class="col-md-6 form-check">
                         {{ form_row(form.dailyAlert) }}
                     </div>
                 </div>
@@ -77,7 +77,7 @@
                 <div class="row mb-3">
                     <div class="col-md-12">
                         <div class="float-end">
-                            <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">Enregistrer</button>
+                            <button type="submit" id="send" name="send" class="btn btn-primary shadow">Enregistrer</button>
                         </div>
                     </div>
                 </div>

@@ -4,7 +4,7 @@
     #}{{ support.service.name }}<br/>{#
     #}{{ support.service.pole.organization.name }}<br/>{#
     #}{% set subService = support.subService %}{#
-    #}<i><a href="mailto:{{ app.user.email }}" style="color: {{ theme_color }};">{{ subService and subService.email ?  subService.email : 
+    #}<i><a href="mailto:{{ app.user.email }}" style="color: primary;">{{ subService and subService.email ?  subService.email : 
         (support.service.email ? support.service.email : app.user.email) }}</a></i><br/> 
     <i>{{ app.user.phone1 }}</i><br/>
     {% if type != 'pdf' %}<br/>{LOGO_SIGNATURE}{% endif %}

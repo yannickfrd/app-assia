@@ -22,7 +22,6 @@ export default class NoteManager {
         this.deleteModal = new Modal(this.deleteModalElt)
 
         this.searchSupportNotesElt = document.getElementById('js-search-support-notes')
-        this.themeColor = document.getElementById('header').dataset.color
         this.autoSaveElt = document.getElementById('js-auto-save')
         this.countNotesElt = document.getElementById('count-notes')
         this.containerNotesElt = document.getElementById('container-notes')
@@ -209,7 +208,7 @@ export default class NoteManager {
         noteElt.innerHTML = `
             <div class='card h-100 shadow cursor-pointer'>
                 <div class='card-header'>
-                    <h3 class='card-title h5 text-${this.themeColor}'>${note.title}</h3>
+                    <h3 class='card-title h5 text-primary'>${note.title}</h3>
                     <span data-note-type="${note.type}">${note.typeToString}</span> 
                     (<span data-note-status="${note.status}">${note.statusToString}</span>)
                     <span class="small text-secondary" data-note-created="true">Créé le ${note.createdAtToString}</span>
@@ -248,7 +247,7 @@ export default class NoteManager {
         noteTr.innerHTML = `
             <td class="align-middle text-center">
                 <a href="${pathShow.replace('__id__', noteId)}" type="button"
-                    class="btn btn-${this.themeColor} btn-sm shadow" title="Voir la note sociale" 
+                    class="btn btn-primary btn-sm shadow" title="Voir la note sociale" 
                     data-bs-toggle="tooltip" data-bs-placement="bottom" data-action="show"><i class="fas fa-eye"></i>
                 </a>
             </td>
@@ -261,12 +260,12 @@ export default class NoteManager {
             <td class="align-middle" data-cell="createdAt">${note.createdAtToString}</td>
             <td class="align-middle text-center p-1">
                 <a href="${pathExportWord}"
-                    class="btn btn-${this.themeColor} btn-sm mb-1 shadow" title="Exporter la note au format Word"
+                    class="btn btn-primary btn-sm mb-1 shadow" title="Exporter la note au format Word"
                     data-bs-toggle="tooltip" data-bs-placement="bottom">
                         <i class="fas fa-file-word fa-lg bg-primary"></i><span class="visually-hidden">Word</span>
                 </a>
                 <a href="${pathExportPdf}"
-                    class="btn btn-${this.themeColor} btn-sm mb-1 shadow" title="Exporter la note au format PDF"
+                    class="btn btn-primary btn-sm mb-1 shadow" title="Exporter la note au format PDF"
                     data-bs-toggle="tooltip" data-bs-placement="bottom">
                         <i class="fas fa-file-pdf fa-lg bg-danger"></i><span class="visually-hidden">PDF</span>
                 </a>

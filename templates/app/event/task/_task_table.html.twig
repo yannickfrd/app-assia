@@ -34,7 +34,7 @@
                 {% set support = task.supportGroup %}
                 <tr id="task_{{ task.id }}" class="{% if task.status == true %}text-secondary delete{% endif %}">
                     <td class="align-middle text-center">
-                        <div class="form-check form-check-{{ is_deleted ? 'secondary disabled' : theme_color  }}">
+                        <div class="form-check form-check-{{ is_deleted ? 'secondary disabled' : 'primary'  }}">
                             <input type="checkbox" class="form-check-input ms-0 {{ is_deleted == false ? 'cursor-pointer' }}"
                                 id="toggle_task_status_{{ task.id }}" {% if task.status == 1 %}checked{% endif %}
                                 title="{{ is_deleted == false ? 'Cliquer pour changer le statut' }}"  
@@ -46,7 +46,7 @@
                     </td>
                     <td class="align-middle text-center">
                         <button data-url="{{ path('task_show', {'id': task.id}) }}" {{ is_deleted ? 'disabled' }}
-                            class="btn btn-{{ is_deleted ? 'secondary disabled' : theme_color }} btn-sm shadow my-1"
+                            class="btn btn-{{ is_deleted ? 'secondary disabled' : 'primary' }} btn-sm shadow my-1"
                             data-action="edit_task" title="{{ is_deleted == false ? 'Voir/Modifier la tâche' }}" 
                             data-bs-toggle="tooltip" data-bs-placement="bottom">
                             <span class="fas fa-eye"></span>

@@ -18,40 +18,54 @@
 }
 
 @each $color, $value in $theme-colors {
-    .form-check-#{$color} .form-check-input {
-        &:focus {
+    html[data-theme-color="#{$color}"] {
+        .form-control:focus,
+        .form-select:focus,
+        .focus:not([invalid]) .ts-control {
             border-color: tint-color($value, 50%);
             box-shadow: 0 0 0 0.25rem rgba($value, 0.25);
         }
-        &:checked {
-            background-color: $value;
-            border-color: $value;
-        }
-    }
 
-    .was-validated .form-check-#{$color} .form-check-input {
-        &:focus {
-            border-color: tint-color($value, 50%);
-            box-shadow: 0 0 0 0.25rem rgba($value, 0.25);
+        .form-check .form-check-input {
+            &:focus {
+                border-color: tint-color($value, 50%);
+                box-shadow: 0 0 0 0.25rem rgba($value, 0.25);
+            }
+            &:checked {
+                background-color: $value;
+                border-color: $value;
+            }
         }
-        &:checked {
-            background-color: $value;
-            border-color: $value;
+    
+        .was-validated .form-check .form-check-input {
+            &:focus {
+                border-color: tint-color($value, 50%);
+                box-shadow: 0 0 0 0.25rem rgba($value, 0.25);
+            }
+            &:checked {
+                background-color: $value;
+                border-color: $value;
+            }
+        }
+
+        .was-validated {
+            & .form-control:not(.is-invalid):focus, 
+            & .form-control.is-valid:focus, 
+            & .form-control:valid:focus,
+            & .form-select:valid:focus,
+            & :valid+.ts-wrapper.focus .ts-control  {
+                border-color: tint-color($value, 50%);
+                box-shadow: 0 0 0 0.25rem rgba($value, 0.25);
+            }
         }
     }
-}
+} 
 
 // Small devices (landscape phones, 576px and up)
 @media (max-width: 576px) {
     .form-control {
         font-size: .9rem;
     }
-}
-
-.form-control:focus,
-.focus:not([invalid]) .ts-control {
-    border-color: tint-color($blue, 50%);
-    box-shadow: 0 0 0 0.25rem rgba($blue, 0.25);
 }
 
 // Fix to remove green color when the fields are valids
@@ -66,14 +80,7 @@
     & .form-check-input:valid {
         border-color: $input-border-color; 
     }
-
-    & .form-control:focus, & .form-control.is-valid:focus, & .form-control:valid:focus,
-    & .form-select:valid:focus,
-    & :valid+.ts-wrapper.focus .ts-control  {
-        border-color: tint-color($blue, 50%);
-        box-shadow: 0 0 0 0.25rem rgba($blue, 0.25);
-    }
-    
+   
     & .form-check-input:valid ~ .form-check-label {
         color: var(--bs-dark);
     }

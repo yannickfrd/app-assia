@@ -14,7 +14,6 @@ export default class TaskForm
         this.loader = taskManager.loader
         this.ajax = taskManager.ajax
         this.supportId = taskManager.supportId
-        this.themeColor = taskManager.themeColor
 
         this.modalTaskElt = document.querySelector('#modal-task')
 
@@ -193,7 +192,7 @@ export default class TaskForm
         }
 
         return `<a href="${this.taskTitleElt.dataset.url.replace('__id__', task.supportGroup.id)}" 
-            class="text-${this.themeColor}" title="Accéder au suivi" data-bs-toggle="tooltip" 
+            class="text-primary" title="Accéder au suivi" data-bs-toggle="tooltip" 
             data-bs-placement="bottom">Tâche | ${task.supportGroup.header.fullname}</a>
         `
     }

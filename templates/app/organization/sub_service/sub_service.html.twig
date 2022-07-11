@@ -22,7 +22,7 @@
         {% endif %}
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a class="link-{{ theme_color }}"
+                <li class="breadcrumb-item"><a class="link-primary"
                     href="{{ path('service_edit', {'id': service.id}) }}">{{ service.name }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Sous-service</li>
             </ol>
@@ -63,7 +63,7 @@
                         </div>
                     {% endif %}
                     <div class="mb-4 float-end">
-                        <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+                        <button type="submit" id="send" name="send" class="btn btn-primary shadow">{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
                     </div>
                 </div>
             </div>
@@ -95,7 +95,7 @@
                             <tr>
                                 <td scope="row" class="align-middle text-center">
                                     <a href="{{ path('place_edit', {'id': place.id}) }}"
-                                        class="btn btn-{{ theme_color }} btn-sm shadow" data-bs-toggle="tooltip" 
+                                        class="btn btn-primary btn-sm shadow" data-bs-toggle="tooltip" 
                                         data-bs-placement="bottom" title="Voir le groupe de places">
                                         <span class="fas fa-eye"></span>
                                     </a>
@@ -117,7 +117,7 @@
                 {% if is_granted('EDIT', service) %}
                 <div class="row my-3">
                     <div class="col-md-12">
-                        <a href="{{ path('service_place_new', {'id': service.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow">
+                        <a href="{{ path('service_place_new', {'id': service.id}) }}" class="btn btn-primary btn-sm shadow">
                         <span class="fas fa-plus-square pe-2"></span>Créer un nouveau groupe de places</a>
                     </div>
                 </div>

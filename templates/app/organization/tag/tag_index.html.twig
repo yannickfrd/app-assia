@@ -19,7 +19,7 @@
             {% if is_granted('ROLE_SUPER_ADMIN') %}
                 <div class="row">
                     <div class="col-md-6">
-                        <a href="{{ path('admin_tag_new') }}" class="btn btn-{{ theme_color }} btn-sm mb-3 shadow">
+                        <a href="{{ path('admin_tag_new') }}" class="btn btn-primary btn-sm mb-3 shadow">
                             <span class="fas fa-plus-square me-2"></span>Ajouter une nouvelle étiquette</a>
                     </div>
                 </div>
@@ -68,7 +68,7 @@
                             <td scope="row" class="align-middle text-center">
                                 {% if is_granted('ROLE_SUPER_ADMIN') %}
                                     <a href="{{ path('admin_tag_edit', {'id': tag.id}) }}"
-                                       class="btn btn-{{ theme_color }} btn-sm shadow" data-bs-toggle="tooltip"
+                                       class="btn btn-primary btn-sm shadow" data-bs-toggle="tooltip"
                                        data-bs-placement="bottom" title="Voir la fiche de l'étiquette">
                                         <span class="fas fa-eye"></span>
                                     </a>
@@ -99,7 +99,7 @@
             </div>
             <div class="navigation">{{ knp_pagination_render(tags) }}</div>
             {% if is_granted('ROLE_SUPER_ADMIN') %}
-                <a href="{{ path('admin_tag_new') }}" class="btn btn-{{ theme_color }} btn-sm mb-2 shadow">
+                <a href="{{ path('admin_tag_new') }}" class="btn btn-primary btn-sm mb-2 shadow">
                     <span class="fas fa-plus-square me-2"></span>Ajouter une nouvelle étiquette</a>
             {% endif %}
         </div>

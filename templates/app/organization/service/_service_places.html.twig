@@ -10,7 +10,7 @@
 		{% if is_granted_edit_service %}
 			<div class="row my-3">
 				<div class="col-md-12">
-					<a href="{{ path('service_place_new', {'id': service.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow">
+					<a href="{{ path('service_place_new', {'id': service.id}) }}" class="btn btn-primary btn-sm shadow">
 					<span class="fas fa-plus-square pe-2"></span>Créer un nouveau {% if service.type == SERVICE_TYPE_HOTEL %}
 						hôtel{% else %}groupe de places{% endif %}</a>
 				</div>
@@ -51,7 +51,7 @@
 							<td class="align-middle text-center" scope="row">
 								{% if is_granted_edit_service %}
 									<a href="{{ path('place_edit', {'id': place.id}) }}"
-										class="btn btn-{{ theme_color }} btn-sm shadow" data-bs-toggle="tooltip" 
+										class="btn btn-primary btn-sm shadow" data-bs-toggle="tooltip" 
 										data-bs-placement="bottom" title="Voir le groupe de places">
 										<span class="fas fa-eye"></span>
 									</a>

@@ -12,7 +12,6 @@ export default class TagService {
         this.tagsTemp = [] // Tableau de Tag
         this.countAddingTag = 0
         this.serviceId = parseInt(window.location.href.split('/').pop())
-        this.colorTheme = document.getElementById('header').dataset.color
         this.listBadge = document.getElementById('tags-list')
         this.formTags = document.forms['service_tag']
         this.selectTags = document.getElementById('service_tag_tags')
@@ -174,7 +173,7 @@ export default class TagService {
      */
     createTag(tag) {
         const tagSpanElt = document.createElement('span')
-        tagSpanElt.classList.add('badge', 'bg-' + this.colorTheme, 'text-light', 'me-1', 'tag')
+        tagSpanElt.classList.add('badge', 'bg-primary', 'text-light', 'me-1', 'tag')
         tagSpanElt.dataset.tagId = tag.id
         tagSpanElt.dataset.tagName = tag.name
         tagSpanElt.innerText = ' ' + tag.name + ' '

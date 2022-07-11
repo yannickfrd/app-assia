@@ -17,14 +17,14 @@
         <span class="pe-2">et</span>{{ form_widget(form.date.end) }}
     </div>  
     <div class="col-auto d-inline-flex my-1 px-1 align-items-center">
-        <div class="form-check form-check-{{ theme_color }}" 
+        <div class="form-check" 
             title="Demandeur/euse principal·e" data-bs-toggle="tooltip" data-bs-placement="bottom">
             {{ form_widget(form.head) }}
         </div>
     </div>
     {% if is_granted('ROLE_ADMIN') %}
         <div class="col-auto my-auto">
-            <div class="form-check form-check-{{ theme_color }}"
+            <div class="form-check"
                 title="Voir les suivis supprimés" data-bs-toggle="tooltip" data-bs-placement="bottom">
                 {{ form_widget(form.deleted.deleted) }}
             </div>

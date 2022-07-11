@@ -10,7 +10,7 @@
     <section class="mt-0">
 
         <div class="container-fluid mt-4">
-            <h1 class="h2 mb-3"><a class="fas fa-calendar-alt me-2 link-{{ theme_color }}" 
+            <h1 class="h2 mb-3"><a class="fas fa-calendar-alt me-2 link-primary" 
                 href="{{ path('calendar') }}" title="Passer en vue agenda"></a>{{ title }}</h1>
             {% include 'model/_flash_message.html.twig' %}
         </div>
@@ -21,17 +21,17 @@
             <div class="row mb-2">
                 <div class="col-md-6 mb-2">
                     <a href="{{ support_is_not_defined ? path('calendar_show') : path('support_calendar_show', {'id': support.id}) }}"
-                    class="btn btn-{{ theme_color }} shadow me-1"
+                    class="btn btn-primary shadow me-1"
                     title="Passer en vue agenda" data-bs-toggle="tooltip" data-bs-placement="bottom">
                         <i class="far fa-calendar-alt"></i></a>
                     {% if not restoration_mode %}
-                        <button class="btn btn-{{ theme_color }} shadow me-2"
+                        <button class="btn btn-primary shadow me-2"
                             title="Ajouter un rdv" data-bs-toggle="modal" data-bs-placement="bottom" data-bs-target="#modal-rdv"
                             data-action="add-rdv" data-url="{{ path('rdv_create') }}">
                             <i class="fas fa-plus-square me-2"></i>Nouveau RDV
                         </button>
                         {% else %}
-                            <a href="{{ app.request.pathInfo }}" class="btn btn-{{ theme_color }} btn-sm shadow me-2" 
+                            <a href="{{ app.request.pathInfo }}" class="btn btn-primary btn-sm shadow me-2" 
                                 id="return_index"><i class="fa-solid fa-arrow-rotate-left me-2"></i>Retour
                             </a>
                         {% endif %}

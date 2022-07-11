@@ -5,39 +5,39 @@
 	<div class="d-md-flex justify-content-md-between mb-2">
 		<h1 class="h2">Suivi<span class="fas fa-angle-right fa-xs mx-1"></span>{{ title }}</h1>
 		<div id="support" data-support="{{ support.id }}">
-			<a class="btn btn-{{ theme_color }} shadow px-2 me-1 mb-2" href="{{ path('support_show', {'id': support.id}) }}" 
+			<a class="btn btn-primary shadow px-2 me-1 mb-2" href="{{ path('support_show', {'id': support.id}) }}" 
 				title="Page d'accueil du suivi" data-bs-toggle="tooltip" data-bs-placement="bottom" >
 				<span class="fas fa-home"></span><span class="visually-hidden">Page d'accueil du suivi</span>
 			</a>
 			{% if support.device.place == YES %}
-				<a class="btn btn-{{ theme_color }} shadow px-2 me-1 mb-2" href="{{ path('support_place_group_index', {'id': support.id}) }}" 
+				<a class="btn btn-primary shadow px-2 me-1 mb-2" href="{{ path('support_place_group_index', {'id': support.id}) }}" 
 					title="Prise(s) en charge hébergement"
 					data-bs-toggle="tooltip" data-bs-placement="bottom">
 					<span class="fas fa-bed"></span><span class="visually-hidden">Hébergement</span>
 				</a>
 			{% endif %}
-			<a class="btn btn-{{ theme_color }} shadow px-2 me-1 mb-2" href="{{ path('support_evaluation_show', {'id': support.id}) }}" 
+			<a class="btn btn-primary shadow px-2 me-1 mb-2" href="{{ path('support_evaluation_show', {'id': support.id}) }}" 
 				title="Évaluation sociale" data-bs-toggle="tooltip" data-bs-placement="bottom">
 				<span class="fas fa-clipboard"></span><span class="visually-hidden">Évaluation</span>
 			</a>
-			<a href="{{ path('support_calendar_show', {'id': support.id}) }}" class="btn btn-{{ theme_color }} shadow px-2 me-1 mb-2" 
+			<a href="{{ path('support_calendar_show', {'id': support.id}) }}" class="btn btn-primary shadow px-2 me-1 mb-2" 
 				title="Rendez-vous" data-bs-toggle="tooltip" data-bs-placement="bottom">
 				<span class="far fa-calendar-alt"></span><span class="visually-hidden">Agenda</span>
 			</a>
-			<a href="{{ path('support_task_index', {'id': support.id}) }}" class="btn btn-{{ theme_color }} shadow px-2 me-1 mb-2" 
+			<a href="{{ path('support_task_index', {'id': support.id}) }}" class="btn btn-primary shadow px-2 me-1 mb-2" 
 				title="Tâches" data-bs-toggle="tooltip" data-bs-placement="bottom">
 				<span class="fa fa-tasks"></span><span class="visually-hidden">Tâches</span>
 			</a>
-			<a href="{{ path('support_note_index', {'id': support.id}) }}" class="btn btn-{{ theme_color }} shadow px-2 me-1 mb-2" 
+			<a href="{{ path('support_note_index', {'id': support.id}) }}" class="btn btn-primary shadow px-2 me-1 mb-2" 
 				title="Notes sociales" data-bs-toggle="tooltip" data-bs-placement="bottom">
 				<span class="fas fa-edit"></span><span class="visually-hidden">Notes</span>
 			</a>
-			<a href="{{ path('support_document_index', {'id': support.id}) }}" class="btn btn-{{ theme_color }} shadow px-2 me-1 mb-2"
+			<a href="{{ path('support_document_index', {'id': support.id}) }}" class="btn btn-primary shadow px-2 me-1 mb-2"
 				title="Documents administratifs" data-bs-toggle="tooltip" data-bs-placement="bottom">
 				<span class="fas fa-file-upload"></span><span class="visually-hidden">Documents</span>
 			</a>
 			{% if support.device.contribution == YES %}
-				<a class="btn btn-{{ theme_color }} shadow px-2 me-1 mb-2" href="{{ path('support_payments_index', {'id': support.id}) }}"
+				<a class="btn btn-primary shadow px-2 me-1 mb-2" href="{{ path('support_payments_index', {'id': support.id}) }}"
 					title="Paiements" data-bs-toggle="tooltip" data-bs-placement="bottom">
 					<span class="fas fa-euro-sign px-1"></span><span class="visually-hidden">Paiements</span>
 				</a>
@@ -50,12 +50,12 @@
 	<nav aria-label="breadcrumb">
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item">
-				<a class="link-{{ theme_color }}" href="{{ path('people_group_show', {'id': people_group.id}) }}">
+				<a class="link-primary" href="{{ path('people_group_show', {'id': people_group.id}) }}">
 					<span class="fas fa-users me-2"></span>Fiche groupe<span class="small"> {{ people_group.familyTypologyToString }}</span>
 				</a>
 			</li>
 			<li class="breadcrumb-item">
-				<a class="link-{{ theme_color }}" href="{{ path('support_show', {'id': support.id }) }}">Suivi social</a>
+				<a class="link-primary" href="{{ path('support_show', {'id': support.id }) }}">Suivi social</a>
 			</li>
 			<li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
 		</ol>
@@ -64,7 +64,7 @@
 		{% if support.supportPeople %}
 			{% for support_person in support.supportPeople %}
 				<a href="{{ path('group_person_show', {'id': people_group.id, 'person_id': support_person.person.id, 'slug': support_person.person.slug}) }}" 
-					class="btn btn-outline-{{ theme_color }} btn-sm rounded-pill small mb-2">{{ support_person.person.fullname }}</a>
+					class="btn btn-outline-primary btn-sm rounded-pill small mb-2">{{ support_person.person.fullname }}</a>
 			{% endfor %}
 		{% endif %}
 	</div>

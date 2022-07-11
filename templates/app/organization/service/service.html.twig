@@ -28,7 +28,7 @@
             {% endif %}
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a class="link-{{ theme_color }}" href="{{ path('service_index') }}">Liste des services</a></li>
+                    <li class="breadcrumb-item"><a class="link-primary" href="{{ path('service_index') }}">Liste des services</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Fiche service</li>
                 </ol>
             </nav>
@@ -103,7 +103,7 @@
                             </div>
                         {% endif %}
                         <div class="float-end">
-                            <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+                            <button type="submit" id="send" name="send" class="btn btn-primary shadow">{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
                         </div>
                     </div>
                 </div>

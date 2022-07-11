@@ -112,7 +112,7 @@
                         <div id="alerts-fields-list" data-prototype="{{ alert_widget|e }}"
                              data-container-tag="div" data-widget-counter="{{ form_rdv.alerts|length }}">
                         </div>
-                        <button type="button" class="btn btn-{{ theme_color }} btn-sm"
+                        <button type="button" class="btn btn-primary btn-sm"
                                 data-list-selector="#alerts-fields-list" data-add-widget="alert"
                                 data-url="/alert/__id__/toggle-status">
                             <i class="fas fa-plus-square me-2"></i>Ajouter un rappel
@@ -123,12 +123,12 @@
                 <hr>
 
                 <div class="row mb-3">
-                    <div class="col-md-6 form-check form-check-{{ theme_color }}">
+                    <div class="col-md-6 form-check">
                         <div class="col-md-12">
                             {{ form_widget(form_rdv._googleCalendar, {attr: {'data-api-name': 'google'} }) }}
                         </div>
                     </div>
-                    <div class="col-md-6 form-check form-check-{{ theme_color }}">
+                    <div class="col-md-6 form-check">
                         <div class="col-md-12">
                             {{ form_widget(form_rdv._outlookCalendar, {attr: {'data-api-name': 'outlook'} }) }}
                         </div>
@@ -148,7 +148,7 @@
                 <div class="float-end">
                     <button type="button" id="js-btn-cancel" class="btn btn-secondary" data-bs-dismiss="modal">Fermer
                     </button>
-                    <button name="save-rdv" type="button" class="btn btn-{{ theme_color }} shadow" data-action="save-rdv">
+                    <button name="save-rdv" type="button" class="btn btn-primary shadow" data-action="save-rdv">
                         <i class="fas fa-save me-2"></i>Enregistrer
                     </button>
                 </div>

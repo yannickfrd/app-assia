@@ -1,5 +1,3 @@
-{% set theme_color = app.request.hasPreviousSession and app.session.get('theme_color') ? app.session.get('theme_color') : 'dark' %}
-
 {{ form_start(form, {
     'action': people_group ? path('people_group_new_support', {'id': people_group.id }) 
 }) }}
@@ -12,12 +10,12 @@
         <div id="sub-service-block">{{ form_row(form.subService) }}</div>
         {{ form_row(form.device) }}
         {% if nb_supports > 0 %}
-            <div class="form-check form-check-{{ theme_color }}">
+            <div class="form-check">
                 {{ form_row(form._cloneSupport) }}
             </div>
         {% endif %}
         {% if people_group and people_group.siSiaoId %}
-            <div class="form-check form-check-{{ theme_color }}">
+            <div class="form-check">
                 {{ form_row(form._siSiaoImport) }}
             </div>
         {% endif %}
@@ -33,7 +31,7 @@
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
         </div>
         <div class="float-end">
-            <button type="submit" id="js-btn-confirm" class="btn btn-{{ theme_color }}">Créer le nouveau suivi</button>
+            <button type="submit" id="js-btn-confirm" class="btn btn-primary">Créer le nouveau suivi</button>
         </div>
         {% endblock %}
     </div>

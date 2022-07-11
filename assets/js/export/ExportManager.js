@@ -10,7 +10,6 @@ export default class ExportManager {
         this.resultsElt = document.getElementById('results')
         this.loader = new Loader()
         this.ajax = new Ajax(this.loader, 30 * 60)
-        this.themeColor = document.getElementById('header').dataset.color
         this.init()
     }
 
@@ -122,7 +121,7 @@ export default class ExportManager {
         const rowElt = document.querySelector('tr#export_' + exportObject.id)  
 
         rowElt.querySelector('td[data-cell="export_download"]').innerHTML = `
-            <a href="${path}" class="btn btn-${this.themeColor} btn-sm shadow my-1" 
+            <a href="${path}" class="btn btn-primary btn-sm shadow my-1" 
             title="Télécharger l'export" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-file-download"></i>
             </a>`
         rowElt.querySelector('td[data-cell="export_size"]').textContent = Math.round(exportObject.size / 1000) + ' Ko'

@@ -32,8 +32,6 @@ export default class CalendarManager {
         this.endInput = this.modalRdvElt.querySelector('#end')
         this.btnDeleteElt = this.modalRdvElt.querySelector('#modal-btn-delete')
 
-        this.themeColor = document.getElementById('header').dataset.color
-
         this.showWeekendsItem = localStorage.getItem('calendar.show_weekends')
         this.fullWidthItem = localStorage.getItem('calendar.full_width')
 
@@ -212,7 +210,7 @@ export default class CalendarManager {
         rdvElt.href = this.rdvForm.getPathEditRdv()
             .replace('__id__', rdv.id)
             .replace('edit', 'show')
-        rdvElt.className = `calendar-event bg-${this.themeColor} text-light`
+        rdvElt.className = `calendar-event bg-primary text-light`
         rdvElt.id = `rdv-${rdv.id}`
         rdvElt.dataset.title = 'Voir le rendez-vous'
 
@@ -315,7 +313,7 @@ export default class CalendarManager {
 
         if (sumHeightdivElts > dayElt.clientHeight && rdvElts.length > maxHeight) {
             const divElt = document.createElement('a')
-            divElt.className = 'calendar-others-events bg-' + this.themeColor + ' text-light fw-bold'
+            divElt.className = 'calendar-others-events bg-primary text-light fw-bold'
             let date = dayElt.id.replace('-', '/')
             date = date.replace('-', '/')
             divElt.href = '/calendar/day/' + date

@@ -36,7 +36,7 @@
                                 aria-expanded="false" aria-controls="multi-collapse-service-{{ service_id }}">
                                 <td scope="row" class="align-middle text-center">
                                     <a href="{{ path('support_index', {'status': [2], 'service': {'services': [service_id]}, 'head': true}) }}" 
-                                        class="btn btn-{{ theme_color }} shadow" data-bs-placement="bottom" 
+                                        class="btn btn-primary shadow" data-bs-placement="bottom" 
                                         title="Voir les suivis en cours"><span class="fas fa-eye fa-sm"></span>
                                     </a>
                                 </td>
@@ -47,12 +47,12 @@
                                 <td class="align-middle text-end">{{ service['nbActiveSupportsPeople']|number }}</td>
                                 <td class="align-middle text-end">{{ service['avgTimeSupport']|number }} jours</td>
                                 <td class="align-middle text-end">{{ service['siaoRequest']|number }}<br/>
-                                    <span class="text-secondary font-italic">{{ nb_active_supports ? 
+                                    <span class="text-secondary fst-italic">{{ nb_active_supports ? 
                                         ((service['siaoRequest'] / nb_active_supports) * 100)|percent(0) }}
                                     </span>
                                 </td>
                                 <td class="align-middle text-end">{{ service['socialHousingRequest'] }}<br/>
-                                    <span class="text-secondary font-italic">{{ nb_active_supports ? 
+                                    <span class="text-secondary fst-italic">{{ nb_active_supports ? 
                                         ((service['socialHousingRequest'] / nb_active_supports) * 100)|percent(0) }}
                                     </span>
                                 </td>
@@ -72,12 +72,12 @@
                                     <td class="align-middle text-end">{{ sub_service['nbActiveSupportsPeople'] }}</td>
                                     <td class="align-middle text-end">{{ sub_service['avgTimeSupport']|number }} jours</td>
                                     <td class="align-middle text-end">{{ sub_service['siaoRequest'] }}<br/>
-                                        <span class="text-secondary font-italic">{{ nb_active_supports ? 
+                                        <span class="text-secondary fst-italic">{{ nb_active_supports ? 
                                             ((sub_service['siaoRequest'] / nb_active_supports) * 100)|percent(0) }}
                                         </span>
                                     </td>
                                     <td class="align-middle text-end">{{ sub_service['socialHousingRequest'] }}<br/>
-                                        <span class="text-secondary font-italic">{{ nb_active_supports ? 
+                                        <span class="text-secondary fst-italic">{{ nb_active_supports ? 
                                             ((sub_service['socialHousingRequest'] / nb_active_supports) * 100)|percent(0) }}
                                         </span>
                                     </td>
@@ -97,12 +97,12 @@
                                     <td class="align-middle text-end">{{ device['nbActiveSupportsPeople'] }}</td>
                                     <td class="align-middle text-end">{{ device['avgTimeSupport']|number }} jours</td>
                                     <td class="align-middle text-end">{{ device['siaoRequest'] }}<br/>
-                                        <span class="text-secondary font-italic">{{ nb_active_supports ? 
+                                        <span class="text-secondary fst-italic">{{ nb_active_supports ? 
                                             ((device['siaoRequest'] / nb_active_supports) * 100)|percent(0) }}
                                         </span>
                                     </td>
                                     <td class="align-middle text-end">{{ device['socialHousingRequest'] }}<br/>
-                                        <span class="text-secondary font-italic">{{ nb_active_supports ? 
+                                        <span class="text-secondary fst-italic">{{ nb_active_supports ? 
                                             ((device['socialHousingRequest'] / nb_active_supports) * 100)|percent(0) }}
                                         </span>
                                     </td>

@@ -6,7 +6,7 @@
 			<tr>
 				<th scope="col" class="align-middle text-center th-w-20">
 					{% if document_index_route == false and not restoration_mode %}
-						<div class="form-check form-check-{{ theme_color }}"
+						<div class="form-check"
 							title="Tout sélectionner" data-bs-toggle="tooltip" data-bs-placement="bottom">
 							<input type="checkbox" id="checkbox-all-files" name="checkbox-all-files" 
 								class="form-check-input ms-0" data-checkbox-all="true">
@@ -58,7 +58,7 @@
 				<tr data-document-id="{{ document.id }}">
 					<td class="align-middle text-center">
 						{% if is_deleted == false %}
-							<div class="form-check form-check-{{ theme_color }}"
+							<div class="form-check"
 								title="Sélectionner le document" data-bs-toggle="tooltip" data-bs-placement="bottom">
 								<input type="checkbox" id="checkbox-file-{{ document.id }}" name="checkbox-file-{{ document.id }}" 
 									class="form-check-input ms-0" data-checkbox="{{ document.id }}">
@@ -66,7 +66,7 @@
 							</div>
 						{% elseif document_index_route %}
 							<a href="{{ path('support_document_index', {'id': document.supportGroup.id,
-								'documentId': document.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow" 
+								'documentId': document.id}) }}" class="btn btn-primary btn-sm shadow" 
 								title="Voir le suivi" data-bs-toggle="tooltip" data-bs-placement="bottom">
 								<i class="fas fa-eye"></i>
 							</a>
@@ -74,12 +74,12 @@
 					</td>
 					<td class="align-middle text-center">
 						<a href="{{ path('document_preview', {'id': document.id }) }}" type="button" data-action="preview" 
-							class="btn btn-{{ is_deleted ? 'secondary disabled' : theme_color }} btn-sm shadow d-none d-sm-inline"
+							class="btn btn-{{ is_deleted ? 'secondary disabled' : 'primary' }} btn-sm shadow d-none d-sm-inline"
 							title="Prévisualiser le document" data-bs-toggle="tooltip" data-bs-placement="bottom">
 							<i class="fas fa-eye"></i>
 						</a>
 						<a href="{{ path('document_download', {'id': document.id }) }}" type="button" data-action="download"
-							class="btn btn-{{ is_deleted ? 'secondary disabled' : theme_color }} btn-sm m-1 shadow"
+							class="btn btn-{{ is_deleted ? 'secondary disabled' : 'primary' }} btn-sm m-1 shadow"
 							title="Télécharger le document" data-bs-toggle="tooltip" data-bs-placement="bottom">
 							<i class="fas fa-file-download"></i>
 						</a>

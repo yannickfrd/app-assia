@@ -2,7 +2,7 @@
 {% import 'macros/textarea_view.html.twig' as textarea_view %}
 
 <hr/>
-<h2 style=" color: {{ theme_color }}; {{ style_h2 }}">Situation administrative</h2>
+<h2 style=" color: primary; {{ style_h2 }}">Situation administrative</h2>
 {% set eval_adults_admin = eval_adults|filter(e => e.evalAdmPerson) %}
 {% set nb_adults_admin = eval_adults_admin|length %}
 {% for eval_person in eval_adults_admin %}

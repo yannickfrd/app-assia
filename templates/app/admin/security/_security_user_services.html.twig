@@ -21,7 +21,7 @@
                         <th scope="row" class="align-middle"></th>
                         <td class="align-middle">{{ service.name }}</td>
                         <td class="align-middle">
-                            <div class="form-check form-check-{{ theme_color }}">
+                            <div class="form-check">
                                 {% if is_granted('EDIT', service) %}
                                     <input type="checkbox" id="service_user_main_{{ service_user.id }}" 
                                         name="service_user_main_{{ service_user.id }}" 

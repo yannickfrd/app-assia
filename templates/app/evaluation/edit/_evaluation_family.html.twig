@@ -8,7 +8,7 @@
 
     <div class="row mb-3">
         <div class="col-md-12 accordion" id="accordion_evalFamily">
-            {{ support_people_looper.loop(accordion_id, evaluation_people, support, theme_color) }}
+            {{ support_people_looper.loop(accordion_id, evaluation_people, support) }}
 
             {% for key, eval_person in evaluation_people %}
                 {% set support_person = eval_person.vars.value.supportPerson %}

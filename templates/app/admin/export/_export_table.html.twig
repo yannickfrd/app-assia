@@ -30,12 +30,12 @@
                                 <td scope="row" class="align-middle text-center">
                                     {% if export.size %}
                                         <a href="{{ path('export_download', {'id': export.id }) }}" 
-                                            class="btn btn-{{ theme_color }} btn-sm shadow my-1" 
+                                            class="btn btn-primary btn-sm shadow my-1" 
                                             title="Télécharger l'export" data-bs-toggle="tooltip" data-bs-placement="bottom">
                                             <i class="fas fa-file-download"></i>
                                         </a>
                                     {% else %}
-                                        <i class="fas fa-spinner link-{{ theme_color }}" title="Export est en cours de préparation"
+                                        <i class="fas fa-spinner link-primary" title="Export est en cours de préparation"
                                             data-bs-toggle="tooltip" data-bs-placement="right"></i>                                                   
                                     {% endif %}
                                     </td>
@@ -47,7 +47,7 @@
                                         {{ (export.size / 1000)|round }} Ko
                                         <span class="text-secondary">{{ is_granted('ROLE_SUPER_ADMIN') ? '(' ~ export.delay ~ ')' }}</span>
                                     {% else %}
-                                        <i class="fas fa-spinner link-{{ theme_color }}">
+                                        <i class="fas fa-spinner link-primary">
                                     {% endif %}
                                 </td>  
                                 <td class="align-middle">{{ export.createdAt|date('d/m/Y H:i') }}</td>

@@ -2,31 +2,36 @@
 @import "bootstrap/scss/functions";
 
 // Colors
-$blue: #0CBEE2 !default;
-$purple: #6f5290 !default;
-$pink2: #e63553 !default;
-$orange2: #e26b11 !default;
-$brown: #ae5843 !default;
 $beige: #a77e4a !default;
-$green2: #489e3e !default;
-$cyan2: #79c1b7 !default;
+$blue: #0d6efd !default;
+$brown: #ae5843 !default;
+$cyan: #79c1b7 !default;
 $dark: #343a40 !default;
+$indigo: #6610f2 !default;
 $gray-light: #e9ecef !default;
+$green-alt: #198754 !default;
+$orange: #e26b11 !default;
+$pink: #d63384 !default;
+$purple: #6f5290 !default;
 
 // Tooltip
 $tooltip-font-size: .8rem;
 $tooltip-opacity: .8;
 
-$font-size-base: .95rem;
+$font-size-base: 0.95rem;
 
 @import "bootstrap/scss/variables";
 @import "bootstrap/scss/mixins";
 @import "bootstrap/scss/utilities";
 
 $custom-colors: (
-    "pink2": $pink2,
-    "orange2": $orange2,
+    'blue': $blue-500,
     "brown": $brown,
+    "green-alt": $green-alt,
+    'indigo': $indigo,
+    'orange': $orange,
+    "pink": $pink,
+    'purple': $purple,
 );
 
 $theme-colors: map-merge($theme-colors, $custom-colors);

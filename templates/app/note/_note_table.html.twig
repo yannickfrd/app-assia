@@ -58,7 +58,7 @@
                     <td class="align-middle text-center">
                         {% if support is not defined %}
                             <a href="{{ path('support_note_index', {'id': support is defined ? support.id : note.supportGroup.id, 'noteId': note.id}) }}"
-                                class="btn btn-{{ is_deleted ? 'secondary' : theme_color }} btn-sm shadow {{ is_deleted ? 'disabled' }}"
+                                class="btn btn-{{ is_deleted ? 'secondary' : 'primary' }} btn-sm shadow {{ is_deleted ? 'disabled' }}"
                                 type="button" title="Voir la note sociale" data-bs-toggle="tooltip" data-bs-placement="bottom" 
                                 data-action="show"><i class="fas fa-eye"></i>
                             </a>
@@ -100,12 +100,12 @@
                      {% if not is_deleted %}
                         <td class="align-middle text-center p-1">
                             <a href="{{ path('note_export_word', {'id': note.id}) }}"
-                                class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" title="Exporter la note au format Word"
+                                class="btn btn-primary btn-sm mb-1 shadow" title="Exporter la note au format Word"
                                 data-bs-toggle="tooltip" data-bs-placement="bottom">
                                     <i class="fas fa-file-word fa-lg bg-primary"></i><span class="visually-hidden">Word</span>
                             </a>
                             <a href="{{ path('note_export_pdf', {'id': note.id}) }}"
-                                class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" title="Exporter la note au format PDF"
+                                class="btn btn-primary btn-sm mb-1 shadow" title="Exporter la note au format PDF"
                                 data-bs-toggle="tooltip" data-bs-placement="bottom">
                                     <i class="fas fa-file-pdf fa-lg bg-danger"></i><span class="visually-hidden">PDF</span>
                             </a>

@@ -28,7 +28,7 @@
 			<div class="row mb-4">
 				<div class="col-md-12">
 					<div class="float-end">
-						<button type="submit" id="send2" name="send2" class="btn btn-{{ theme_color }} shadow">
+						<button type="submit" id="send2" name="send2" class="btn btn-primary shadow">
 							<span class="fas fa-save me-2"></span>Mettre à jour</button>
 					</div>
 				</div>
@@ -65,12 +65,12 @@
 			<div class="col-md-12"> 
 				<div class="card border-warning"> 
 					<div class="card-body p-3"> 
-						<p class="mb-2"><span class="font-italic">Je certifie avoir informé la personne sur ses droits 
+						<p class="mb-2"><span class="fst-italic">Je certifie avoir informé la personne sur ses droits 
 							(droit d'opposition, droits d'accès et de rectification) et avoir obtenu son consentement 
 							pour le recueil de ses données personnelles</span>
 						(<a href="https://www.cnil.fr/fr/reglement-europeen-protection-donnees/chapitre3#Article13" target="_blank" 
-							class="link-{{ theme_color }}">article 13 du règlement général sur la protection des données [RGPD]</a>).</p>
-						<div class="form-check form-check-{{ theme_color }} ps-1">
+							class="link-primary">article 13 du règlement général sur la protection des données [RGPD]</a>).</p>
+						<div class="form-check ps-1">
 							{{ form_widget(form.agreement) }}
 						</div>
 					</div>
@@ -91,7 +91,7 @@
 					</div>
 				{% endif %}
 				<div class="float-end">
-					<button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save me-2"></span>
+					<button type="submit" id="send" name="send" class="btn btn-primary shadow"><span class="fas fa-save me-2"></span>
 					{% if support.id %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
 				</div>
 			</div>

@@ -7,7 +7,7 @@
 {% block card_body %}
 	<div class="row">
 		<div class="col-md-12 accordion" id="accordion_evalAdm">
-			{{ support_people_looper.loop(accordion_id, evaluation_people, support, theme_color) }}
+			{{ support_people_looper.loop(accordion_id, evaluation_people, support) }}
 			{% for key, eval_person in evaluation_people %}
 				{% set prefix_id = 'evaluation_evaluationPeople_' ~ key ~ '_evalAdmPerson' %}
 				<div id="collapse_{{ prefix_id }}" class="collapse {% if loop.first %}show{% endif %} my-3" 

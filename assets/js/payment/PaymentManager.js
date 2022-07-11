@@ -22,7 +22,6 @@ export default class PaymentManager {
         this.sumPaidAmtElt = document.querySelector('td[data-payment="sumPaidAmt"]')
         this.sumStillToPayAmtElt = document.querySelector('td[data-payment="sumStillToPayAmt"]')
 
-        this.themeColor = document.getElementById('header').dataset.color
         this.countPaymentsElt = document.getElementById('count_payments')
         this.nbTotalPaymentsElt = document.getElementById('nb_total_payments')
 
@@ -243,7 +242,7 @@ export default class PaymentManager {
 
         return `
             <td class="align-middle text-center">
-                <button class="btn btn-${this.themeColor} btn-sm shadow" data-action="show" data-id="${payment.id}" 
+                <button class="btn btn-primary btn-sm shadow" data-action="show" data-id="${payment.id}" 
                     data-path="/payment/${payment.id}/show" data-bs-toggle="tooltip" 
                     data-bs-placement="bottom" title="Voir l'enregistrement"><span class="fas fa-eye"></span>
                 </button>

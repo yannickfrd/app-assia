@@ -45,7 +45,7 @@
                     {% set is_deleted = rdv.deletedAt is not null %}
                     <tr id="rdv-{{ rdv.id }}">
                         <td class="align-middle text-center">
-                            <button class="btn btn-{{ is_deleted ? 'secondary disabled' : theme_color }} btn-sm shadow my-1"
+                            <button class="btn btn-{{ is_deleted ? 'secondary disabled' : 'primary' }} btn-sm shadow my-1"
                                 title="{{ is_deleted == false ? 'Voir/Modifier le rendez-vous' }}" data-bs-toggle="tooltip" data-bs-placement="bottom"
                                 data-action="edit-rdv" data-url="{{ path('rdv_show', {'id': rdv.id}) }}" {{ is_deleted ? 'disabled' }}>
                                 <i class="fas fa-eye"></i>

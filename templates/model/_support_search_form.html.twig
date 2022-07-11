@@ -13,14 +13,14 @@
 					{% block search_form %}{% endblock %}
 					{% if is_granted('ROLE_SUPER_ADMIN') %}
 						<div class="col-auto mx-2 my-1">
-							<div class="form-check form-check-{{ theme_color }} ps-0"
+							<div class="form-check ps-0"
 								title="Voir les paiements supprimés" data-bs-toggle="tooltip" data-bs-placement="bottom">
 								{{ form_widget(form_search.deleted.deleted) }}
 							</div>
 						</div>
 					{% endif %}
 					<div class="col-auto my-1 px-1">
-						<button type="submit" id="search" class="btn btn-{{ theme_color }} shadow" 
+						<button type="submit" id="search" class="btn btn-primary shadow" 
 							data-bs-toggle="tooltip" data-bs-placement="bottom" title="Rechercher">
 							<span class="fas fa-search"></span><span class="visually-hidden">Rechercher</span>
 						</button>

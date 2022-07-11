@@ -56,7 +56,7 @@
                 </tr>
             </tbody>
             <tfoot>
-                <tr class="fw-bold alert-secondary" title="Total reste à vivre mensuel" data-bs-toggle="popover" 
+                <tr class="fw-bold bg-secondary bg-opacity-10" title="Total reste à vivre mensuel" data-bs-toggle="popover" 
                     data-bs-content="{{ budget_balance_description }}" data-bs-trigger="hover" data-bs-placement="bottom" data-bs-html="true">
                     <td class="align-middle">Total reste à vivre mensuel</td>
                     <td class="align-middle text-end">{{ (payment.resourcesAmt - payment.chargesAmt)|amount(0) }}</td>
@@ -109,20 +109,26 @@
             <tfoot>
                 {% if rent_contribution == false %}
                     <tr>
+                        <td class="align-middle p-0" colspan="2">
                         {% set min_rest_to_live = service.minRestToLive ?? 
                             constant('App\\Service\\Payment\\ContributionCalculator::MIN_REST_TO_LIVE') %}
                         {% if payment.restToLive < min_rest_to_live %}
-                            <td class="align-middle alert-danger" colspan="2">
-                                Reste à vivre journalier inférieur à {{ min_rest_to_live }} euros par jour et par personne</td>
+                            <div class="alert alert-danger m-0 p-2 rounded-0">
+                                Reste à vivre journalier inférieur à {{ min_rest_to_live }} euros par jour et par personne
+                            </div>
                         {% elseif payment.noContrib == true %}
-                            <td class="align-middle alert-warning" colspan="2">PAF à 0 € fixée par l'intervernant·e social·e</td>
+                            <div class="alert alert-warning m-0 p-2 rounded-0">
+                                PAF à 0 € fixée par l'intervernant·e social·e                        
+                            </div>
                         {% else %}
-                            <td class="align-middle alert-success" colspan="2">
-                                Reste à vivre supérieur à {{ min_rest_to_live }} euros par jour et par personne</td>
+                            <div class="alert alert-success m-0 p-2 rounded-0">
+                                Reste à vivre supérieur à {{ min_rest_to_live }} euros par jour et par personne
+                            </div>
                         {% endif %}
+                        </td>
                     </tr>
                 {% endif %} 
-                <tr class="fw-bold alert-secondary">
+                <tr class="fw-bold bg-secondary bg-opacity-10">
                     <td class="align-middle">
                         {% if rent_contribution %}Montant du loyer {% else %} Montant de la participation financière {% endif %}à payer
                     </td>
