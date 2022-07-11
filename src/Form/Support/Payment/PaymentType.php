@@ -144,8 +144,6 @@ class PaymentType extends AbstractType
         // if (Service::SERVICE_TYPE_HOTEL === $serviceType) {
         $builder
             ->add('noContrib', CheckboxType::class, [
-                'label_attr' => ['class' => 'custom-control-label'],
-                'attr' => ['class' => 'custom-control-input checkbox'],
                 'required' => false,
             ])
             ->add('noContribReason', ChoiceType::class, [

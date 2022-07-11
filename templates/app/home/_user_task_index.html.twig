@@ -38,16 +38,14 @@
                     {% for task in tasks %}
                         <tr id="task_{{ task.id }}">
                             <td scope="row" class="align-middle text-center">
-                                <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} text-dark ps-0" 
+                                <div class="form-check form-check-{{ theme_color }}" 
                                     title="Cliquer pour changer le statut" data-bs-toggle="tooltip" data-bs-placement="bottom">
-                                        <div class="form-check">
-                                            <input type="checkbox" class="custom-control-input checkbox form-check-input"
-                                                id="toggle_task_status_{{ task.id }}" data-action="toggle_task_status" 
-                                                data-url="{{ path('task_toggle_status', {'id': task.id}) }}"
-                                                {% if task.status %} checked {% endif %}>
-                                            <label class="custom-control-label form-check-label ms-2" for="toggle_task_status_{{ task.id }}"></label>
-                                        </div>
-                                    </div>
+                                    <input type="checkbox" class="form-check-input ms-0"
+                                        id="toggle_task_status_{{ task.id }}" data-action="toggle_task_status" 
+                                        data-url="{{ path('task_toggle_status', {'id': task.id}) }}"
+                                        {% if task.status %} checked {% endif %}>
+                                    <label class="form-check-label" for="toggle_task_status_{{ task.id }}"></label>
+                                </div>
                             </td>
                             <td class="align-middle text-center">
                                 <a href="{% if task.supportGroup %}{{ path('support_task_index',{'id': task.supportGroup, 'task_id': task.id}) }}

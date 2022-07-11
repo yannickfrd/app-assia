@@ -1,8 +1,8 @@
 {% extends 'model/_search.html.twig' %}
 
 {% block search_form %}
-    <div class="col-auto my-1 px-1">{{ form_row(form.lastname) }}</div>
-    <div class="col-auto my-1 px-1">{{ form_row(form.firstname) }}</div>
+    <div class="col-auto my-1 px-1">{{ form_widget(form.lastname) }}</div>
+    <div class="col-auto my-1 px-1">{{ form_widget(form.firstname) }}</div>
     <div class="col-auto my-1 px-1">
         <div class="input-group">
             <span class="input-group-text d-none d-sm-block" title="Date de naissance" data-bs-toggle="tooltip" 
@@ -12,10 +12,10 @@
             {{ form_widget(form.birthdate) }}
         </div>
     </div>
-    <div class="col-auto my-1 px-1">{{ form_row(form.siSiaoId) }}</div>
+    <div class="col-auto my-1 px-1">{{ form_widget(form.siSiaoId) }}</div>
     {% if siSiaoLoginForm is defined %}
         <div class="col-auto my-1 px-1">
-            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} ps-2 py-2 text-dark"
+            <div class="form-check form-check-{{ theme_color }}"
                 data-bs-placement="bottom" title="Activer la recherche via le SI-SIAO">
                 {{ form_widget(form.siSiaoSearch) }}
             </div>

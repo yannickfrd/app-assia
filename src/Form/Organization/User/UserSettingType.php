@@ -16,19 +16,13 @@ class UserSettingType extends AbstractType
     {
         $builder
             ->add('weeklyAlert', CheckboxType::class, [
-                'label_attr' => ['class' => 'custom-control-label'],
-                'attr' => ['class' => 'custom-control-input checkbox'],
                 'required' => false,
             ])
             ->add('dailyAlert', CheckboxType::class, [
-                'label_attr' => ['class' => 'custom-control-label'],
-                'attr' => ['class' => 'custom-control-input checkbox'],
                 'required' => false,
             ])
             ->add('autoEvaluationAlerts', CheckboxType::class, [
                 'label' => 'setting.auto_evaluation_alerts.label',
-                'label_attr' => ['class' => 'custom-control-label'],
-                'attr' => ['class' => 'custom-control-input checkbox'],
                 'required' => false,
             ])
             ->add('endValidPermitDateDelay', IntegerType::class, [

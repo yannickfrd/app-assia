@@ -3,20 +3,21 @@
  */
 export default class RadioSelecter {
     constructor(containerElt) {
-        this.checkboxElts = document.getElementById(containerElt).querySelectorAll('.checkbox.form-check-input')
+        this.radioElts = document.getElementById(containerElt).querySelectorAll('input[type="radio"]')
         this.init()
     }
 
     init() {
-        this.checkboxElts.forEach(checkboxElt => {
-            checkboxElt.addEventListener('click', this.check.bind(this, checkboxElt))
+        this.radioElts.forEach(radioElt => {
+            radioElt.addEventListener('click', this.check.bind(this, radioElt))
         })
     }
 
-    check(checkboxSelected) {
-        this.checkboxElts.forEach(checkboxElt => {
-            checkboxElt.checked = false
+    check(radioSelected) {
+        this.radioElts.forEach(radioElt => {
+            if (radioElt !== radioSelected) {
+                radioElt.checked = false
+            }
         })
-        checkboxSelected.checked = true
     }
 }

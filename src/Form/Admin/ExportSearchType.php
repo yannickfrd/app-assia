@@ -19,8 +19,6 @@ class ExportSearchType extends AbstractType
         $builder
             ->add('head', CheckboxType::class, [
                 'label' => 'head.help',
-                'label_attr' => ['class' => 'custom-control-label'],
-                'attr' => ['class' => 'custom-control-input checkbox'],
                 'required' => false,
                 ])
             ->add('calcul', null, ['mapped' => false])
@@ -40,13 +38,9 @@ class ExportSearchType extends AbstractType
                 'required' => false,
             ])
             ->add('formattedSheet', CheckboxType::class, [
-                'label_attr' => ['class' => 'custom-control-label'],
-                'attr' => ['class' => 'custom-control-input checkbox'],
                 'required' => false,
             ])
             ->add('anonymized', CheckboxType::class, [
-                'label_attr' => ['class' => 'custom-control-label'],
-                'attr' => ['class' => 'custom-control-input checkbox'],
                 'required' => false,
             ]);
         // ->add('nbPeople', null, [

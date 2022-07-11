@@ -14,30 +14,12 @@ class DuplicatedPeopleType extends AbstractType
     {
         $builder
             ->add('lastname', CheckBoxType::class, [
-                'label_attr' => [
-                    'class' => 'custom-control-label',
-                ],
-                'attr' => [
-                    'class' => 'custom-control-input checkbox',
-                ],
                 'required' => false,
             ])
             ->add('firstname', CheckBoxType::class, [
-                'label_attr' => [
-                    'class' => 'custom-control-label',
-                ],
-                'attr' => [
-                    'class' => 'custom-control-input checkbox',
-                ],
                 'required' => false,
             ])
             ->add('birthdate', CheckBoxType::class, [
-                'label_attr' => [
-                    'class' => 'custom-control-label',
-                ],
-                'attr' => [
-                    'class' => 'custom-control-input checkbox',
-                ],
                 'required' => false,
             ]);
     }

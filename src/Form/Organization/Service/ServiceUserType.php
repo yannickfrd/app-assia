@@ -39,12 +39,6 @@ class ServiceUserType extends AbstractType
             ])
             ->add('main', CheckboxType::class, [
                 'label' => false,
-                'label_attr' => [
-                    'class' => 'custom-control-label',
-                ],
-                'attr' => [
-                    'class' => 'custom-control-input checkbox',
-                ],
                 'required' => false,
             ])
         ;

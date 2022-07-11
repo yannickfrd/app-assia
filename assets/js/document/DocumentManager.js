@@ -311,13 +311,11 @@ export default class DocumentManager {
         documentTrElt.dataset.documentId = doc.id
         documentTrElt.innerHTML = `
             <td class="align-middle text-center">
-                <div class="custom-control custom-checkbox custom-checkbox-${this.themeColor} text-dark ps-0" 
+                <div class="form-check form-check-${this.themeColor}"
                     title="Sélectionner le document" data-bs-toggle="tooltip" data-bs-placement="bottom">
-                    <div class="form-check">
-                        <input type="checkbox" id="checkbox-file-${doc.id}" data-checkbox="${doc.id}"
-                            name="checkbox-file-${doc.id}" class="custom-control-input checkbox form-check-input">
-                        <label class="custom-control-label form-check-label ms-2" for="checkbox-file-${doc.id}"></label>
-                    </div>
+                    <input type="checkbox" id="checkbox-file-${doc.id}" name="checkbox-file-${doc.id}" 
+                        class="form-check-input ms-0" data-checkbox="${doc.id}">
+                    <label class="form-check-label" for="checkbox-file-${doc.id}"></label>
                 </div>
             </td>
             <td class="align-middle text-center">

@@ -55,7 +55,7 @@
                 <div class="col-lg-4">{{ form_row(form.toPayAmt) }}</div>
                     {% if service_type_hotel == true %}
                         <div class="col-lg-4" data-parent-field="payment_toPayAmt" data-type="no_contrib">
-                            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} ps-2 py-2">
+                            <div class="form-check form-check-{{ theme_color }}">
                                 {{ form_row(form.noContrib) }}</div>
                         </div>
                         <div class="col-lg-4" data-parent-field="payment_noContrib" data-type="no_contrib_reason">

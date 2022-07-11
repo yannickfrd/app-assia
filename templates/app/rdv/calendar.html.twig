@@ -33,25 +33,13 @@
                 </h3>
                 <div class="float-end">
                     <div class="d-none d-lg-inline-flex">
-                        <div class="mb-3  me-2">
-                            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} text-dark ps-0"
-                                 title="Afficher le calendrier sur toute la largeur">
-                                <div class="form-check">
-                                    <input type="checkbox" id="full-width" name="full-width"
-                                        class="custom-control-input checkbox form-check-input">
-                                    <label class="custom-control-label form-check-label" for="full-width">Vue large</label>
-                                </div>
-                            </div>
+                        <div class="form-check form-check-{{ theme_color }} me-3" title="Afficher le calendrier sur toute la largeur">
+                            <input type="checkbox" id="full-width" name="full-width" class="form-check-input">
+                            <label class="form-check-label" for="full-width">Vue large</label>
                         </div>
-                        <div class="mb-3  me-2">
-                            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} text-dark ps-0"
-                                 title="Afficher les week-end">
-                                <div class="form-check">
-                                    <input type="checkbox" id="show-weekend" name="show-weekend"
-                                        class="custom-control-input checkbox form-check-input">
-                                    <label class="custom-control-label form-check-label" for="show-weekend">WE</label>
-                                </div>
-                            </div>
+                        <div class="form-check form-check-{{ theme_color }} me-3" title="Afficher les week-end">
+                            <input type="checkbox" id="show-weekend" name="show-weekend" class="form-check-input">
+                            <label class="form-check-label" for="show-weekend">WE</label>
                         </div>
                     </div>
                     <a href="{% if support is defined %}{{ path('support_calendar', {'id': support.id}) }}{% else %}{{ path('calendar') }}{% endif %}"

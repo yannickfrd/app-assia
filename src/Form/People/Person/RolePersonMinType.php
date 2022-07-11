@@ -5,8 +5,8 @@ namespace App\Form\People\Person;
 use App\Entity\People\RolePerson;
 use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\RadioType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -15,14 +15,8 @@ class RolePersonMinType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('head', CheckBoxType::class, [
+            ->add('head', RadioType::class, [
                 'label' => false,
-                'label_attr' => [
-                    'class' => 'custom-control-label',
-                ],
-                'attr' => [
-                    'class' => 'custom-control-input checkbox',
-                ],
                 'help' => 'head.help',
                 'help_attr' => ['class' => 'sr-only'],
                 'required' => false,

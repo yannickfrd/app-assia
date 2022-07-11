@@ -251,7 +251,7 @@ export default class PaymentManager {
             <td class="align-middle" data-payment="type">${payment.typeToString}<br/>
                 <span class="text-secondary">${payment.type === 11 ? ' (' + this.formatMoney(payment.returnAmt) + ')' : '' }</span>
             </td>
-            <td class="align-middle" data-payment="startDate">${this.formatDatetime(payment.startDate, 'date') + ' - ' + this.formatDatetime(payment.endDate, 'date')}</td>
+            <td class="align-middle text-center" data-payment="startDate">${this.formatDatetime(payment.startDate, 'date') + ' - ' + this.formatDatetime(payment.endDate, 'date')}</td>
             <td class="align-middle text-right" data-payment="toPayAmt">${this.formatMoney(payment.toPayAmt)}</td>
             <td class="align-middle text-right" data-payment="paidAmt">${this.formatMoney(payment.paidAmt)}</td>
             <td class="align-middle text-right" data-payment="stillToPayAmt">${this.formatMoney(this.roundAmount(payment.stillToPayAmt))}</td>

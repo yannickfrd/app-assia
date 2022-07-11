@@ -24,8 +24,8 @@
 							{% set support_person = form_support_pers.vars.value %}
 							<tr data-support-person="{{ support_person.id }}">
 								<td class="px-1 align-middle">
-									<div class="custom-control custom-radio custom-radio-{{ theme_color }} ps-3">
-										{{ form_widget(form_support_pers.head, {attr: {class: 'custom-control-input checkbox'}}) }}
+									<div class="form-check form-check-{{ theme_color }} ps-2">
+										{{ form_widget(form_support_pers.head) }}
 									</div>
 								</td>										
 								<td class="px-2 align-middle w-min-150">{{ support_person.person.fullname }}</td>

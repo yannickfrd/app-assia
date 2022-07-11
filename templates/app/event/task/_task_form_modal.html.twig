@@ -45,12 +45,10 @@ data-url-task-show="{{ path('task_show', {'id': '__id__'}) }}">
                             {{ form_widget(form_task.level) }}
                         </div>
                     </div>
-                    <div class="col-auto  ms-2 my-1 pe-1 ps-0 d-inline-flex">
-                        <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} text-dark ps-0"
+                    <div class="col-auto ms-1 my-1 d-inline-flex">
+                        <div class="form-check form-check-{{ theme_color }} ps-0"
                             title="Statut" data-bs-toggle="tooltip" data-bs-placement="bottom">
-                                {{ form_widget(form_task.status, { label: 'Réalisée', 
-                                    label_attr: {class: 'custom-control-label'},
-                                    attr: {class: 'custom-control-input checkbox'} }) }}
+                                {{ form_widget(form_task.status, {label: 'Réalisée'}) }}
                         </div>
                     </div>
                 </div>

@@ -87,8 +87,6 @@ class SupportGroupType extends AbstractType
             ])
             ->add('endStatusComment')
             ->add('endPlace', CheckboxType::class, [
-                'label_attr' => ['class' => 'custom-control-label'],
-                'attr' => ['class' => 'custom-control-input checkbox'],
                 'required' => false,
                 'help' => 'endPlace.help',
             ])
@@ -124,8 +122,6 @@ class SupportGroupType extends AbstractType
             ])
             ->add('agreement', CheckboxType::class, [
                 'required' => true,
-                'label_attr' => ['class' => 'custom-control-label'],
-                'attr' => ['class' => 'custom-control-input checkbox'],
             ])
             ->add('supportPeople', CollectionType::class, [
                 'entry_type' => SupportPersonType::class,

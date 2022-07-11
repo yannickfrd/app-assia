@@ -132,15 +132,13 @@ class RdvType extends AbstractType
             ])
             ->add('_googleCalendar', CheckboxType::class, [
                 'label' => 'rdv.label.google',
-                'label_attr' => ['class' => 'custom-control-label'],
-                'attr' => ['class' => 'custom-control-input checkbox api-calendar'],
+                'attr' => ['class' => 'api-calendar'],
                 'mapped' => false,
                 'required' => false,
             ])
             ->add('_outlookCalendar', CheckboxType::class, [
                 'label' => 'rdv.label.outlook',
-                'label_attr' => ['class' => 'custom-control-label'],
-                'attr' => ['class' => 'custom-control-input checkbox api-calendar'],
+                'attr' => ['class' => 'api-calendar'],
                 'mapped' => false,
                 'required' => false,
             ])

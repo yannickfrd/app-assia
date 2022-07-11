@@ -21,7 +21,7 @@
 	</div>
 	{% if is_granted_edit_service %}
 		{{ form_start(form_tags, {'action': path('service_add_tags', {service: service.id})}) }}
-			<div class="form-row">
+			<div class="row mb-3">
 				<div class="col-md-6 mb-2">{{ form_widget(form_tags.tags) }}</div>
 				<div class="col-sm-4">
 					<button type="submit" name="add_tags" class="btn btn-{{ theme_color }}" 

@@ -54,8 +54,6 @@ class PersonSearchType extends AbstractType
                 'required' => false,
             ])
             ->add('siSiaoSearch', CheckboxType::class, [
-                'label_attr' => ['class' => 'custom-control-label'],
-                'attr' => ['class' => 'custom-control-input checkbox'],
                 'required' => false,
             ])
         ;

@@ -21,8 +21,6 @@ class PersonRolePersonType extends AbstractType
                 'placeholder' => 'placeholder.select',
             ])
             ->add('addPersonToSupport', CheckboxType::class, [
-                'label_attr' => ['class' => 'custom-control-label'],
-                'attr' => ['class' => 'custom-control-input checkbox'],
                 'data' => $options['attr'] && $options['attr']['supports'] >= 1,
                 'required' => false,
                 'mapped' => false,

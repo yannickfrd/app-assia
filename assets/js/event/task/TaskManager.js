@@ -142,15 +142,11 @@ export default class TaskManager {
 
         let htmlContent = `
             <td class="align-middle text-center">
-                <div class="custom-control custom-checkbox custom-checkbox-${this.themeColor} text-dark ps-0" 
+                <div class="form-check form-check-${this.themeColor}" 
                     title="Cliquer pour changer le statut" data-bs-toggle="tooltip" data-bs-placement="bottom">
-                    <div class="form-check">
-                        <input type="checkbox" class="custom-control-input checkbox form-check-input"
-                            id="toggle_task_status_${task.id}" ${task.status ? ' checked' : ''} 
-                            data-action="toggle_task_status" data-url="/task/${task.id}/toggle-status">
-                        <label class="custom-control-label form-check-label ms-2 cursor-pointer"
-                            for="toggle_task_status_${task.id}"></label>
-                    </div>
+                    <input type="checkbox" class="form-check-input ms-0 cursor-pointer" id="toggle_task_status_${task.id}" ${task.status ? ' checked' : ''} 
+                        data-action="toggle_task_status" data-url="/task/${task.id}/toggle-status">
+                    <label class="form-check-label" for="toggle_task_status_${task.id}"></label>
                 </div>
             </td>
             <td class="align-middle text-center">

@@ -186,10 +186,7 @@ class TaskType extends AbstractType
                     return $supportPerson->getPerson()->getFullname();
                 },
                 'multiple' => true,
-                'attr' => [
-                    'class' => 'custom-select',
-                    'size' => 1,
-                ],
+                'attr' => ['size' => 1],
                 'required' => false,
             ])
         ;
@@ -218,7 +215,6 @@ class TaskType extends AbstractType
                 'query_builder' => function (SupportPersonRepository $supportPersonRepos) use ($supportGroupId) {
                     return $supportPersonRepos->findPeopleInSupportByIdqueryBuilder($supportGroupId);
                 },
-                'attr' => ['class' => 'custom-select'],
                 'multiple' => true,
                 'required' => false,
             ])

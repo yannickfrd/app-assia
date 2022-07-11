@@ -21,17 +21,15 @@
                         <th scope="row" class="align-middle"></th>
                         <td class="align-middle">{{ service.name }}</td>
                         <td class="align-middle">
-                            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }}">
-                                <div class="form-check">
-                                    {% if is_granted('EDIT', service) %}
-                                        <input type="checkbox" id="service_user_main_{{ service_user.id }}" 
-                                            name="service_user_main_{{ service_user.id }}" data-action="toggle_main"
-                                            class="custom-control-input checkbox form-check-input"
-                                            data-path="{{ path('service_user_toggle_main', {'id': service_user.id}) }}"
-                                            {% if service_user.main %}checked="checked"{% endif %}>
-                                        <label class="custom-control-label form-check-label" for="service_user_main_{{ service_user.id }}"></label>
-                                    {% endif %}
-                                </div>
+                            <div class="form-check form-check-{{ theme_color }}">
+                                {% if is_granted('EDIT', service) %}
+                                    <input type="checkbox" id="service_user_main_{{ service_user.id }}" 
+                                        name="service_user_main_{{ service_user.id }}" 
+                                        class="form-check-input" data-action="toggle_main"
+                                        data-path="{{ path('service_user_toggle_main', {'id': service_user.id}) }}"
+                                        {% if service_user.main %}checked="checked"{% endif %}>
+                                    <label class="form-check-label" for="service_user_main_{{ service_user.id }}"></label>
+                                {% endif %}
                             </div>
                         </td>
                         <td class="align-middle">{{ service.pole.name }}</td>
