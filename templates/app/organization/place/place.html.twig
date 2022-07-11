@@ -23,9 +23,9 @@
         {% endif %}
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a class="text-{{ theme_color }}" href="{{ path('service_index') }}">Liste des
+                <li class="breadcrumb-item"><a class="link-{{ theme_color }}" href="{{ path('service_index') }}">Liste des
                         services</a></li>
-                <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
+                <li class="breadcrumb-item"><a class="link-{{ theme_color }}"
                         href="{{ path('service_edit', {'id': place.service.id}) }}">{{ place.service.name }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Groupe de places</li>
             </ol>

@@ -50,12 +50,12 @@
 	<nav aria-label="breadcrumb">
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item">
-				<a class="text-{{ theme_color }}" href="{{ path('people_group_show', {'id': people_group.id}) }}">
+				<a class="link-{{ theme_color }}" href="{{ path('people_group_show', {'id': people_group.id}) }}">
 					<span class="fas fa-users me-2"></span>Fiche groupe<span class="small"> {{ people_group.familyTypologyToString }}</span>
 				</a>
 			</li>
 			<li class="breadcrumb-item">
-				<a class="text-{{ theme_color }}" href="{{ path('support_show', {'id': support.id }) }}">Suivi social</a>
+				<a class="link-{{ theme_color }}" href="{{ path('support_show', {'id': support.id }) }}">Suivi social</a>
 			</li>
 			<li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
 		</ol>

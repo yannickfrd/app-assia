@@ -45,7 +45,7 @@
 								<td class="align-middle">
 									{% if placeGroup.place %}
 										<a href="{{ path('place_edit', {'id': placeGroup.place.id}) }}"
-										class="text-{{ theme_color }}">{{ placeGroup.place.name }}</a>
+										class="link-{{ theme_color }}">{{ placeGroup.place.name }}</a>
 									{% endif %}
 								</td>
 								<td class="align-middle">{{ placeGroup.supportGroup.device.name }}</td>

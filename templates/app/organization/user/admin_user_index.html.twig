@@ -81,7 +81,7 @@
                                 <td class="align-middle d-none d-md-table-cell">
                                     {% for service in user.services|sort ((a, b) => a.name <=> b.name) %}
                                         <a href="{{ path('service_edit', {'id': service.id}) }}" 
-                                            class="text-{{ theme_color }}">{{ service.name }}</a>{% if not loop.last %}, {% endif %}
+                                            class="link-{{ theme_color }}">{{ service.name }}</a>{% if not loop.last %}, {% endif %}
                                     {% endfor %}
                                 </td>
                                 {% set poles = [] %}
@@ -90,7 +90,7 @@
                                         {% if service.pole.id not in poles %}
                                             {% set poles = poles|merge([service.pole.id]) %}
                                             <a href="{{ path('pole_edit', {'id': service.pole.id}) }}" 
-                                                class="text-{{ theme_color }}">{{ service.pole.name }}</a><br/>
+                                                class="link-{{ theme_color }}">{{ service.pole.name }}</a><br/>
                                         {% endif %}
                                     {% endfor %}
                                 </td>

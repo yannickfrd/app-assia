@@ -24,6 +24,11 @@ body {
     min-height: calc(100vh - 282px);
 }
 
+
+a:not(:hover) {
+    text-decoration: none;
+}
+
 nav.fixed-top {
     min-height: 80px;
 }

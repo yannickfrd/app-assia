@@ -35,7 +35,7 @@
                                             <i class="fas fa-file-download"></i>
                                         </a>
                                     {% else %}
-                                        <i class="fas fa-spinner text-{{ theme_color }}" title="Export est en cours de préparation"
+                                        <i class="fas fa-spinner link-{{ theme_color }}" title="Export est en cours de préparation"
                                             data-bs-toggle="tooltip" data-bs-placement="right"></i>                                                   
                                     {% endif %}
                                     </td>
@@ -47,7 +47,7 @@
                                         {{ (export.size / 1000)|round }} Ko
                                         <span class="text-secondary">{{ is_granted('ROLE_SUPER_ADMIN') ? '(' ~ export.delay ~ ')' }}</span>
                                     {% else %}
-                                        <i class="fas fa-spinner text-{{ theme_color }}">
+                                        <i class="fas fa-spinner link-{{ theme_color }}">
                                     {% endif %}
                                 </td>  
                                 <td class="align-middle">{{ export.createdAt|date('d/m/Y H:i') }}</td>

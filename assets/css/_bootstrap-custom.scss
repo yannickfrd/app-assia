@@ -19,23 +19,17 @@ $tooltip-opacity: .8;
 
 $font-size-base: 1rem;
 
-$custom-file-text: (fr: 'Dossier', en: "Browse");
-
 @import "bootstrap/scss/variables";
 @import "bootstrap/scss/mixins";
 @import "bootstrap/scss/utilities";
 
-$theme-colors: map-merge(( //
-        "pink2": $pink2,
-        "orange2": $orange2,
-        "brown": $brown,
-        // "dark2": $dark,
-        // "beige": $beige,
-        // "green2": $green2,
-        // "cyan2": $cyan2 //
-    ),
-    $theme-colors);
+$custom-colors: (
+    "pink2": $pink2,
+    "orange2": $orange2,
+    "brown": $brown,
+);
 
+$theme-colors: map-merge($theme-colors, $custom-colors);
 $theme-colors: map-remove($theme-colors, "info");
 
 // Breadcrumb
