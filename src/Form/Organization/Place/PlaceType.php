@@ -86,7 +86,6 @@ class PlaceType extends AbstractType
         ->add('lessor')
         ->add('rentAmt', MoneyType::class, [
             'attr' => [
-                'class' => 'text-right',
                 'data-amount' => 'true',
             ],
             'required' => false,

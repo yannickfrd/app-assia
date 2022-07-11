@@ -24,12 +24,12 @@
                                 <tr>
                                     <th scope="row" class="align-middle th-w-20"></th>
                                     <th class="align-middle">Mois</th>
-                                    <th class="align-middle text-right">Nombre</th>
-                                    <th class="align-middle text-right">Montant total dû</th>
-                                    <th class="align-middle text-right">Moyenne Montant à régler</th>
-                                    <th class="align-middle text-right">Montant total réglé</th>
-                                    <th class="align-middle text-right">Moyenne montant réglé</th>
-                                    <th class="align-middle text-right">Montant restant dus</th>
+                                    <th class="align-middle text-end">Nombre</th>
+                                    <th class="align-middle text-end">Montant total dû</th>
+                                    <th class="align-middle text-end">Moyenne Montant à régler</th>
+                                    <th class="align-middle text-end">Montant total réglé</th>
+                                    <th class="align-middle text-end">Moyenne montant réglé</th>
+                                    <th class="align-middle text-end">Montant restant dus</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -46,24 +46,24 @@
                                             </a>
                                         </td>
                                         <td class="align-middle">{{ month.monthToString }}</td>
-                                        <td class="align-middle text-right">{{ month.nbPayments|number }}</td>
-                                        <td class="align-middle text-right">{{ month.sumToPayAmt|amount }}</td>
-                                        <td class="align-middle text-right">{{ month.nbPayments ? month.averagePaymentAmt|amount }}</td>
-                                        <td class="align-middle text-right">{{ month.sumPaidAmt|amount }}</td>
-                                        <td class="align-middle text-right">{{ month.nbPayments ? month.averagePaidAmt|amount }}</td>
-                                        <td class="align-middle text-right">{{ month.sumStillToPayAmt|amount }}</td>
+                                        <td class="align-middle text-end">{{ month.nbPayments|number }}</td>
+                                        <td class="align-middle text-end">{{ month.sumToPayAmt|amount }}</td>
+                                        <td class="align-middle text-end">{{ month.nbPayments ? month.averagePaymentAmt|amount }}</td>
+                                        <td class="align-middle text-end">{{ month.sumPaidAmt|amount }}</td>
+                                        <td class="align-middle text-end">{{ month.nbPayments ? month.averagePaidAmt|amount }}</td>
+                                        <td class="align-middle text-end">{{ month.sumStillToPayAmt|amount }}</td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
                             <tfooter>
                                 <tr class="fw-bold">
                                     <td class="align-middle text-center" colspan="2">Total</td>
-                                    <td class="align-middle text-right">{{ datas.nbPayments|number }}</td>
-                                    <td class="align-middle text-right">{{ datas.sumToPayAmt|amount }}</td> 
-                                    <td class="align-middle text-right">{{ datas.nbPayments ? datas.averagePaymentAmt|amount }}</td>
-                                    <td class="align-middle text-right">{{ datas.sumPaidAmt|amount }}</td>
-                                    <td class="align-middle text-right">{{ datas.nbPayments ? datas.averagePaidAmt|amount }}</td>
-                                    <td class="align-middle text-right">{{ datas.sumStillToPayAmt|amount }}</td>
+                                    <td class="align-middle text-end">{{ datas.nbPayments|number }}</td>
+                                    <td class="align-middle text-end">{{ datas.sumToPayAmt|amount }}</td> 
+                                    <td class="align-middle text-end">{{ datas.nbPayments ? datas.averagePaymentAmt|amount }}</td>
+                                    <td class="align-middle text-end">{{ datas.sumPaidAmt|amount }}</td>
+                                    <td class="align-middle text-end">{{ datas.nbPayments ? datas.averagePaidAmt|amount }}</td>
+                                    <td class="align-middle text-end">{{ datas.sumStillToPayAmt|amount }}</td>
                                 </tr>
                             </tfooter>
                         </table>

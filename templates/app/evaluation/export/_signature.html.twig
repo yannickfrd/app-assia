@@ -9,4 +9,4 @@
     <i>{{ app.user.phone1 }}</i><br/>
     {% if type != 'pdf' %}<br/>{LOGO_SIGNATURE}{% endif %}
 </p>
-{% if type == 'pdf' %}<p class="text-right"><img src="{{ logo_path }}" width="120"/></p>{% endif %}
+{% if type == 'pdf' %}<p class="text-end"><img src="{{ logo_path }}" width="120"/></p>{% endif %}

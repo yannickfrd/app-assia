@@ -268,7 +268,7 @@ payment:
     help: Ce commentaire est uniquement visible dans les exports Excel.
   commentExport:
     placeholder: Ajouter un commentaire à l'intention du ménage...
-    help: Ce commentaire est uniquement visible dans le reçu en PDF.
+    help: Ce commentaire est uniquement visible dans le reçu PDF.
   type: Type d'opération
 contribution.rate.help: Nombre entre 0 et 1.
 

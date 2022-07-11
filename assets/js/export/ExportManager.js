@@ -86,10 +86,10 @@ export default class ExportManager {
             </td>
             <td class="align-middle" data-cell="export_title">${exportObject.title}</td>
             <td class="align-middle" data-cell="export_comment">${exportObject.comment}</td>
-            <td class="align-middle text-right" data-cell="export_nbResults">
+            <td class="align-middle text-end" data-cell="export_nbResults">
                 ${parseInt(exportObject.nbResults).toLocaleString('fr')}
             </td>
-            <td class="align-middle text-right" data-cell="export_size"><i class="fas fa-spinner text-dark"></i></td>
+            <td class="align-middle text-end" data-cell="export_size"><i class="fas fa-spinner text-dark"></i></td>
             <td class="align-middle">${exportObject.createdAtToString}</td>
             <td class="align-middle text-center">
                 <button class="btn btn-danger btn-sm shadow my-1" data-action="delete_export"

@@ -111,7 +111,6 @@ class ServiceType extends AbstractType
             ])
             ->add('minRestToLive', MoneyType::class, [
                 'attr' => [
-                    'class' => 'text-right',
                     'placeholder' => 'Amount',
                 ],
                 'help' => 'service.minRestToLive.help',

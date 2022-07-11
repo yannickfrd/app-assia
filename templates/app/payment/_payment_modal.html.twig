@@ -8,7 +8,7 @@
         <div class="modal-header">
             <h2 class="mb-0">Paiement</h2>
             <div class="small text-secondary">
-                <p class="mb-0 ms-3 text-right" id="js_info_payment">
+                <p class="mb-0 ms-3 text-end" id="js_info_payment">
                 </p>
             </div>
         </div>
@@ -38,8 +38,8 @@
             <hr class="mt-0">
             <div class="row" data-payment="true"
                 data-parent-field="payment_type" data-options="1">
-                <div class="col-lg-4">{{ form_row(form.resourcesAmt) }}</div>
-                <div class="col-lg-4">{{ form_row(form.chargesAmt) }}</div>
+                <div class="col-lg-4">{{ form_row(form.resourcesAmt, {attr: {class: 'text-end'}}) }}</div>
+                <div class="col-lg-4">{{ form_row(form.chargesAmt, {attr: {class: 'text-end'}}) }}</div>
             </div>
             <div class="row d-none">
                 <div class="col-lg-4">{{ form_row(form.contributionRate) }}</div>
@@ -47,12 +47,12 @@
             </div>
             <div class="row" data-payment="rent"
                 data-parent-field="payment_type" data-options="2">
-                <div class="col-lg-4">{{ form_row(form.rentAmt) }}</div>
-                <div class="col-lg-4">{{ form_row(form.aplAmt) }}</div>
+                <div class="col-lg-4">{{ form_row(form.rentAmt, {attr: {class: 'text-end'}}) }}</div>
+                <div class="col-lg-4">{{ form_row(form.aplAmt, {attr: {class: 'text-end'}}) }}</div>
             </div>
             <div class="row" data-payment="toPayAmt"
                 data-parent-field="payment_type" data-options="1|2|10|20">
-                <div class="col-lg-4">{{ form_row(form.toPayAmt) }}</div>
+                <div class="col-lg-4">{{ form_row(form.toPayAmt, {attr: {class: 'text-end'}}) }}</div>
                     {% if service_type_hotel == true %}
                         <div class="col-lg-4" data-parent-field="payment_toPayAmt" data-type="no_contrib">
                             <div class="form-check form-check-{{ theme_color }}">
@@ -65,9 +65,9 @@
             <div>
                 <div class="row">
                     <div class="col-lg-4" data-payment="returnAmt" data-parent-field="payment_type" 
-                        data-options="11">{{ form_row(form.returnAmt) }}</div>
+                        data-options="11">{{ form_row(form.returnAmt, {attr: {class: 'text-end'}}) }}</div>
                     <div class="col-lg-4" data-payment="paidAmt" data-parent-field="payment_type" 
-                        data-options="1|2|10|30">{{ form_row(form.paidAmt) }}</div>
+                        data-options="1|2|10|30">{{ form_row(form.paidAmt, {attr: {class: 'text-end'}}) }}</div>
                     <div class="col-lg-4" data-payment="paymentDate" 
                         data-parent-field="payment_type" data-options="*">{{ form_row(form.paymentDate) }}</div>
                     <div class="col-lg-4" data-payment="paymentType" 
@@ -75,7 +75,7 @@
                 </div>
                 <div class="row" data-payment="stillToPayAmt"
                     data-parent-field="payment_type" data-options="1|2|10">
-                    <div class="col-lg-4">{{ form_row(form.stillToPayAmt) }}</div>
+                    <div class="col-lg-4">{{ form_row(form.stillToPayAmt, {attr: {class: 'text-end'}}) }}</div>
                 </div>
             </div>
             <div class="row" data-payment="comment" data-parent-field="payment_type" data-options="*">

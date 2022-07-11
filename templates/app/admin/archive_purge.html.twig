@@ -39,49 +39,49 @@
                         <tbody>
                         <tr>
                             <td>Suivis</td>
-                            <td class="text-right">
+                            <td class="text-end">
                                 {% if support_groups.archive_count > 0 %}
                                     <a href="{{ path('admin_archive_index') }}">{{ support_groups.archive_count|number }}</a>
                                 {% else %}
                                     {{ support_groups.archive_count|number }}
                                 {% endif %}
                             </td>
-                            <td class="text-right">{{ support_groups.purge_count|number }}</td>
+                            <td class="text-end">{{ support_groups.purge_count|number }}</td>
                         </tr>
                         <tr>
                             <td>Ménages</td>
-                            <td class="text-right">{{ people_groups.archive_count|number }}</td>
-                            <td class="text-right">{{ people_groups.purge_count|number }}</td>
+                            <td class="text-end">{{ people_groups.archive_count|number }}</td>
+                            <td class="text-end">{{ people_groups.purge_count|number }}</td>
                         </tr>
                         <tr>
                             <td>Personnes</td>
-                            <td class="text-right">{{ people.archive_count|number }}</td>
-                            <td class="text-right">{{ people.purge_count|number }}</td>
+                            <td class="text-end">{{ people.archive_count|number }}</td>
+                            <td class="text-end">{{ people.purge_count|number }}</td>
                         </tr>
                         <tr>
                             <td>Documents</td>
-                            <td class="text-right">{{ documents.archive_count|number }}</td>
-                            <td class="text-right">{{ documents.purge_count|number }}</td>
+                            <td class="text-end">{{ documents.archive_count|number }}</td>
+                            <td class="text-end">{{ documents.purge_count|number }}</td>
                         </tr>
                         <tr>
                             <td>Notes</td>
-                            <td class="text-right">{{ notes.archive_count|number }}</td>
-                            <td class="text-right">{{ notes.purge_count|number }}</td>
+                            <td class="text-end">{{ notes.archive_count|number }}</td>
+                            <td class="text-end">{{ notes.purge_count|number }}</td>
                         </tr>
                         <tr>
                             <td>Paiements</td>
-                            <td class="text-right">{{ payments.archive_count|number }}</td>
-                            <td class="text-right">{{ payments.purge_count|number }}</td>
+                            <td class="text-end">{{ payments.archive_count|number }}</td>
+                            <td class="text-end">{{ payments.purge_count|number }}</td>
                         </tr>
                         <tr>
                             <td>Rendez-vous</td>
-                            <td class="text-right">{{ rdvs.archive_count|number }}</td>
-                            <td class="text-right">{{ rdvs.purge_count|number }}</td>
+                            <td class="text-end">{{ rdvs.archive_count|number }}</td>
+                            <td class="text-end">{{ rdvs.purge_count|number }}</td>
                         </tr>
                         <tr>
                             <td>Tâches</td>
-                            <td class="text-right">{{ tasks.archive_count|number }}</td>
-                            <td class="text-right">{{ tasks.purge_count|number }}</td>
+                            <td class="text-end">{{ tasks.archive_count|number }}</td>
+                            <td class="text-end">{{ tasks.purge_count|number }}</td>
                         </tr>
                         </tbody>
                     </table>

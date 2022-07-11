@@ -47,19 +47,19 @@
                 <tr title="Calcul des ressources" data-bs-content="{{ resources_description }}" data-bs-toggle="popover" 
                     data-bs-trigger="hover" data-bs-placement="bottom" data-bs-html="true">
                     <td class="align-middle">Montant total des ressources mensuelles</td>
-                    <td class="align-middle text-right">{{ payment.resourcesAmt|amount(0) }}</td>
+                    <td class="align-middle text-end">{{ payment.resourcesAmt|amount(0) }}</td>
                 </tr>
                 <tr title="Calcul des charges" data-bs-content="{{ charges_description }}" data-bs-toggle="popover" 
                     data-bs-trigger="hover" data-bs-placement="bottom" data-bs-html="true">
                     <td class="align-middle">Montant total des charges fixes mensuelles</td>
-                    <td class="align-middle text-right">{{ payment.chargesAmt|amount(0) }}</td>
+                    <td class="align-middle text-end">{{ payment.chargesAmt|amount(0) }}</td>
                 </tr>
             </tbody>
             <tfoot>
                 <tr class="fw-bold alert-secondary" title="Total reste à vivre mensuel" data-bs-toggle="popover" 
                     data-bs-content="{{ budget_balance_description }}" data-bs-trigger="hover" data-bs-placement="bottom" data-bs-html="true">
                     <td class="align-middle">Total reste à vivre mensuel</td>
-                    <td class="align-middle text-right">{{ (payment.resourcesAmt - payment.chargesAmt)|amount(0) }}</td>
+                    <td class="align-middle text-end">{{ (payment.resourcesAmt - payment.chargesAmt)|amount(0) }}</td>
                 </tr>
             </tfoot>
         </table>
@@ -70,13 +70,13 @@
                         data-bs-content="Le loyer correspond au montant indiqué dans la fiche descriptive du logement." 
                         data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="bottom" data-bs-html="true">
                         <td class="align-middle">Montant du loyer</td>
-                        <td class="align-middle text-right">{{ payment.rentAmt|amount(2) }}</td>
+                        <td class="align-middle text-end">{{ payment.rentAmt|amount(2) }}</td>
                     </tr>
                     <tr title="Montant APL" data-bs-content="Le montant des APL est à saisir dans le formulaire. <br/>
                         Les APL sont en déduction du montant du loyer." 
                         data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="bottom" data-bs-html="true">
                         <td class="align-middle">Montant APL</td>
-                        <td class="align-middle text-right">{{ payment.aplAmt|amount(2) }}</td>
+                        <td class="align-middle text-end">{{ payment.aplAmt|amount(2) }}</td>
                     </tr>
                 {% else %}
                     <tr title="Taux de participation financière" data-bs-content="{{ contribution_rate_description }}" 
@@ -102,7 +102,7 @@
                     <tr title="Reste à vivre journalier unitaire" data-bs-content="{{ rest_to_live_description }}" 
                         data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="bottom" data-bs-html="true">
                         <td class="align-middle">Reste à vivre journalier unitaire</td>
-                        <td class="align-middle text-right">{{ payment.restToLive|amount }}</td>
+                        <td class="align-middle text-end">{{ payment.restToLive|amount }}</td>
                     </tr>
                 {% endif %}
             </tbody>
@@ -126,7 +126,7 @@
                     <td class="align-middle">
                         {% if rent_contribution %}Montant du loyer {% else %} Montant de la participation financière {% endif %}à payer
                     </td>
-                    <td class="align-middle text-right">{{ payment.toPayAmt|amount(2) }}</td>
+                    <td class="align-middle text-end">{{ payment.toPayAmt|amount(2) }}</td>
                 </tr>
             </tfoot>
         </table>

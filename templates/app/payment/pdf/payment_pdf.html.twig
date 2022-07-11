@@ -56,11 +56,11 @@
         <h1>{{ title }}</h1>
 
         <main>
-            <p class="text-right">{{ service.city ? service.city : 'Pontoise' }}, le {{ 'now'|date('d/m/Y') }}</p>
+            <p class="text-end">{{ service.city ? service.city : 'Pontoise' }}, le {{ 'now'|date('d/m/Y') }}</p>
 
             <br/>
 
-            <p class="text-right">À l'intention de 
+            <p class="text-end">À l'intention de 
                 {% for supportPerson in people %}
                     <b>{{ supportPerson.person.civilityToString }} {{ supportPerson.person.fullname }}</b>,<br/>
                 {% endfor %}

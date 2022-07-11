@@ -43,7 +43,6 @@ class PaymentType extends AbstractType
             ])
             ->add('resourcesAmt', MoneyType::class, [
                 'attr' => [
-                    'class' => 'text-right',
                     'data-amount' => 'true',
                     'placeholder' => 'Amount',
                 ],
@@ -51,7 +50,6 @@ class PaymentType extends AbstractType
             ])
             ->add('chargesAmt', MoneyType::class, [
                 'attr' => [
-                    'class' => 'text-right',
                     'data-amount' => 'true',
                     'placeholder' => 'Amount',
                 ],
@@ -66,7 +64,6 @@ class PaymentType extends AbstractType
             ])
             ->add('toPayAmt', MoneyType::class, [
                 'attr' => [
-                    'class' => 'text-right',
                     'data-amount' => 'true',
                     'placeholder' => 'Amount',
                 ],
@@ -84,7 +81,6 @@ class PaymentType extends AbstractType
             ])
             ->add('paidAmt', MoneyType::class, [
                 'attr' => [
-                    'class' => 'text-right',
                     'data-amount' => 'true',
                     'placeholder' => 'Amount',
                 ],
@@ -92,7 +88,6 @@ class PaymentType extends AbstractType
             ])
             ->add('stillToPayAmt', MoneyType::class, [
                 'attr' => [
-                    'class' => 'text-right',
                     'placeholder' => 'Amount',
                     'readonly' => true,
                 ],
@@ -100,7 +95,6 @@ class PaymentType extends AbstractType
             ])
             ->add('returnAmt', MoneyType::class, [
                 'attr' => [
-                    'class' => 'text-right',
                     'data-amount' => 'true',
                     'placeholder' => 'Amount',
                 ],
@@ -125,7 +119,6 @@ class PaymentType extends AbstractType
         $builder
             ->add('aplAmt', MoneyType::class, [
                 'attr' => [
-                    'class' => 'text-right',
                     'data-amount' => 'true',
                     'placeholder' => 'Amount',
                 ],
@@ -133,7 +126,6 @@ class PaymentType extends AbstractType
             ])
             ->add('rentAmt', MoneyType::class, [
                 'attr' => [
-                    'class' => 'text-right',
                     'data-amount' => 'true',
                     'placeholder' => 'Amount',
                 ],

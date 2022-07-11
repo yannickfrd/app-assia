@@ -96,7 +96,7 @@
 					<td class="align-middle {{ not is_deleted ? 'cursor-pointer' }}" data-cell="content">
 						{{ document.content }}
 					</td>
-					<td class="align-middle text-right">{{ (document.size / 1000000)|round(2) }} Mo</td>
+					<td class="align-middle text-end">{{ (document.size / 1000000)|round(2) }} Mo</td>
 					<td class="align-middle">{{ document.fileType }}</td>
 					{% if document_index_route %}
 						{% set support = document.supportGroup %}

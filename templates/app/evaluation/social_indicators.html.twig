@@ -20,18 +20,18 @@
                                     <tr>
                                         <th scope="row" class="align-middle th-w-180">{{ key|trans({}, 'support') }}</th>
                                         <th class="align-middle text-end th-w-100">Nb ménages</th>
-                                        <th class="align-middle text-right">%</th>
+                                        <th class="align-middle text-end">%</th>
                                         <th class="align-middle text-end th-w-100">Nb personnes</th>
-                                        <th class="align-middle text-right">%</th>
+                                        <th class="align-middle text-end">%</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for data in value %}
                                         <tr>
                                             <td scope="row" class="align-middle">{{ data.name }}</td>
-                                            <td class="align-middle text-right">{{ data.nbGroups|number }}</td>
+                                            <td class="align-middle text-end">{{ data.nbGroups|number }}</td>
                                             <td class="align-middle text-end font-italic">{{ datas.nbGroups ? ((data.nbGroups / datas.nbGroups) * 100)|percent }}</td>
-                                            <td class="align-middle text-right">{{ data.nbPeople|number }}</td>
+                                            <td class="align-middle text-end">{{ data.nbPeople|number }}</td>
                                             <td class="align-middle text-end font-italic">{{ datas.nbPeople ? ((data.nbPeople / datas.nbPeople) * 100)|percent }}</td>
                                         </tr>
                                     {% endfor %}
@@ -39,9 +39,9 @@
                                 <tfoot>
                                     <tr class="fw-bold">
                                         <td scope="row" class="align-middle text-center">Total</td>
-                                        <td class="align-middle text-right">{{ datas.nbGroups|number }}</td>
+                                        <td class="align-middle text-end">{{ datas.nbGroups|number }}</td>
                                         <td class="align-middle text-end font-italic">100 %</td>
-                                        <td class="align-middle text-right">{{ datas.nbPeople|number }}</td>
+                                        <td class="align-middle text-end">{{ datas.nbPeople|number }}</td>
                                         <td class="align-middle text-end font-italic">100 %</td>
                                     </tr>
                                 </tfoot>

@@ -18,7 +18,6 @@ class EvalBudgetDebtType extends AbstractType
             ->add('type', HiddenType::class)
             ->add('amount', MoneyType::class, [
                 'attr' => [
-                    'class' => 'text-right',
                     'data-amount' => 'debt',
                     'placeholder' => 'Amount',
                 ],

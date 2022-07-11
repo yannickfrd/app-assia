@@ -41,13 +41,13 @@
                                 - {{ payment.endDate|date('d/m/Y') }}</span> 
                         {% endif %}
                     </td>
-                    <td class="align-middle text-right" style="text-align: right;">
+                    <td class="align-middle text-end" style="text-align: right;">
                         <span style="text-align: right;">{{ payment.toPayAmt is not null ? payment.toPayAmt|amount }}</span>
                     </td>
-                    <td class="align-middle text-right" style="text-align: right;">
+                    <td class="align-middle text-end" style="text-align: right;">
                         <span style="text-align: right;">{{ payment.paidAmt is not null ? payment.paidAmt|amount }}</span>
                     </td>
-                    <td class="align-middle text-right" style="text-align: right;">
+                    <td class="align-middle text-end" style="text-align: right;">
                         <span style="text-align: right;">{{ payment.stillToPayAmt ? payment.stillToPayAmt|amount }}</span>
                     </td>
                     <td class="align-middle text-center" style="text-align: center;">

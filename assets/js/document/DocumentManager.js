@@ -333,7 +333,7 @@ export default class DocumentManager {
             <td class="align-middle cursor-pointer" data-cell="name">${doc.name}</td>
             <td class="align-middle cursor-pointer" data-cell="tags"></td>
             <td class="align-middle cursor-pointer" data-cell="content">${doc.content ?? ''}</td>
-            <td class="align-middle text-right">${((Math.floor(doc.size / 10000) / 100).toLocaleString('fr') + ' Mo')}</td>
+            <td class="align-middle text-end">${((Math.floor(doc.size / 10000) / 100).toLocaleString('fr') + ' Mo')}</td>
             <td class="align-middle">${doc.fileType}</td>
             <td class="d-none d-lg-table-cell align-middle th-date">${new DateFormater().getDate(doc.createdAt)}</td>
             <td class="d-none d-lg-table-cell align-middle th-w-100">${doc.createdBy.fullname}</td>

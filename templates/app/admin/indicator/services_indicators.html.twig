@@ -52,24 +52,24 @@
                                     <td scope="row" class="align-middle"><span class="fw-bold">{{ service['name'] }}</span>
                                         {% if nb_collapsed_tr %}<span class="badge rounded-pill bg-secondary">{{ nb_collapsed_tr }}</span>{% endif %}
                                     </td>
-                                    <td class="align-middle text-right">{{ service['nbSocialWorkers']|number }}</td>
-                                    <td class="align-middle text-right">{{ nb_supports|number }}</td>
-                                    <td class="align-middle text-right">{{ service['nbNotes']|number }}</td>
-                                    <td class="align-middle text-right">{{ service['nbRdvs']|number }}</td>
-                                    <td class="align-middle text-right">{{ service['nbDocuments']|number }}</td>
-                                    <td class="align-middle text-right">{{ service['nbPayments']|number }}</td>
+                                    <td class="align-middle text-end">{{ service['nbSocialWorkers']|number }}</td>
+                                    <td class="align-middle text-end">{{ nb_supports|number }}</td>
+                                    <td class="align-middle text-end">{{ service['nbNotes']|number }}</td>
+                                    <td class="align-middle text-end">{{ service['nbRdvs']|number }}</td>
+                                    <td class="align-middle text-end">{{ service['nbDocuments']|number }}</td>
+                                    <td class="align-middle text-end">{{ service['nbPayments']|number }}</td>
                                     <td></td>
                                 </tr>
                                 {% for sub_service_id, sub_service in service.subServices %}
                                     {% set nb_supports = sub_service['nbSupports'] %}
                                     <tr class="collapse multi-collapse-service-{{ service_id }}" id="multi-collapse-service-{{ service_id }}">
                                         <td scope="row" class="align-middle">{{ service['name'] }}<span class="fa fa-chevron-right mx-1"></span>{{ sub_service['name'] }}</td>
-                                        <td class="align-middle text-right">-</td>
-                                        <td class="align-middle text-right">{{ nb_supports|number }}</td>
-                                        <td class="align-middle text-right">{{ sub_service['nbNotes']|number }}</td>
-                                        <td class="align-middle text-right">{{ sub_service['nbRdvs']|number }}</td>
-                                        <td class="align-middle text-right">{{ sub_service['nbDocuments']|number }}</td>
-                                        <td class="align-middle text-right">{{ sub_service['nbPayments']|number }}</td>
+                                        <td class="align-middle text-end">-</td>
+                                        <td class="align-middle text-end">{{ nb_supports|number }}</td>
+                                        <td class="align-middle text-end">{{ sub_service['nbNotes']|number }}</td>
+                                        <td class="align-middle text-end">{{ sub_service['nbRdvs']|number }}</td>
+                                        <td class="align-middle text-end">{{ sub_service['nbDocuments']|number }}</td>
+                                        <td class="align-middle text-end">{{ sub_service['nbPayments']|number }}</td>
                                         <td></td>
                                     </tr>
                                 {% endfor %}
@@ -79,12 +79,12 @@
                     <tfooter>
                         <tr class="fw-bold">
                             <td class="align-middle text-center">Total</td>
-                            <td class="align-middle text-right"></td>
-                            <td class="align-middle text-right">{{ sum_active_supports|number }}</td>
-                            <td class="align-middle text-right">{{ sum_notes|number }}</td>
-                            <td class="align-middle text-right">{{ sum_rdvs|number }}</td>
-                            <td class="align-middle text-right">{{ sum_documents|number }}</td>
-                            <td class="align-middle text-right">{{ sum_paiments|number }}</td>
+                            <td class="align-middle text-end"></td>
+                            <td class="align-middle text-end">{{ sum_active_supports|number }}</td>
+                            <td class="align-middle text-end">{{ sum_notes|number }}</td>
+                            <td class="align-middle text-end">{{ sum_rdvs|number }}</td>
+                            <td class="align-middle text-end">{{ sum_documents|number }}</td>
+                            <td class="align-middle text-end">{{ sum_paiments|number }}</td>
                             <td></td>
                         </tr>
                     </tfooter>

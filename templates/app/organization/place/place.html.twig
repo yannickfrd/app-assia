@@ -73,7 +73,7 @@
             </div>
             {% if place.service.contributionType in [2, 3] %}
                 <div class="row mb-3">
-                    <div class="col-md-6">{{ form_row(form.rentAmt) }}</div>
+                    <div class="col-md-6">{{ form_row(form.rentAmt, {attr: {class: 'text-end'}}) }}</div>
                 </div>
             {% endif %}
             <div class="row mb-3">

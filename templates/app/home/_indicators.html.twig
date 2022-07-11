@@ -15,7 +15,7 @@
                     <tr>
                         <th class="align-middle th-w-150">Indicateur</th>
                         {% for item in ['Nb total', 'Hier', 'Aujourd\'hui'] %}
-                            <th class="align-middle w-min-70 th-w-100 text-right">{{ item }}</th>
+                            <th class="align-middle w-min-70 th-w-100 text-end">{{ item }}</th>
                         {% endfor %}
                     </tr>
                 </thead>
@@ -24,7 +24,7 @@
                         <tr>
                             <td class="align-middle">{{ key }}</td>
                             {% for item in items %}
-                                <td class="align-middle text-right">{{ item > 0 ? item|number : '-' }}</td>
+                                <td class="align-middle text-end">{{ item > 0 ? item|number : '-' }}</td>
                             {% endfor %}
                         </tr>
                     {% endfor %}

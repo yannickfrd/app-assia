@@ -14,13 +14,13 @@
 						<thead>
 							<tr>
 								<th scope="col">Budget du ménage</th>
-								<th class="text-right">Montant mensuel</th>
+								<th class="text-end">Montant mensuel</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr>
 								<td scope="row">Total des ressources</td>
-								<td class="text-right">
+								<td class="text-end">
 									{% set resources_group_amt = eval_budget_group ? eval_budget_group.resourcesGroupAmt : 0 %}
 									<span id="resourcesGroupAmt" data-value="{{ resources_group_amt }}">
 										{{ resources_group_amt|amount(2) }}
@@ -29,7 +29,7 @@
 							</tr>
 							<tr>
 								<td scope="row">Total des charges</td>
-								<td class="text-right">
+								<td class="text-end">
 									{% set charges_group_amt = eval_budget_group ? eval_budget_group.chargesGroupAmt : 0 %}
 									<span id="chargesGroupAmt" data-value="{{ charges_group_amt }}">
 										{{ charges_group_amt|amount(2) }}
@@ -40,7 +40,7 @@
 						<tfoot>
 							<tr class="fw-bold">
 								<td scope="row">Reste à vivre</td>
-								<td class="text-right">
+								<td class="text-end">
 									{% set budget_balance_amt = eval_budget_group ? eval_budget_group.budgetBalanceAmt : 0 %}
 									<span id="budgetBalanceGroupAmt" data-value="{{ budget_balance_amt }}">
 										{{ budget_balance_amt|amount(2) }}
@@ -49,7 +49,7 @@
 							</tr>
 							<tr>
 								<td scope="row">Montant total des dettes</td>
-								<td class="text-right">
+								<td class="text-end">
 									{% set debts_group_amt = eval_budget_group ? eval_budget_group.debtsGroupAmt : 0 %}
 									<span id="debtsGroupAmt" data-value="{{ debts_group_amt }}">
 										{{ debts_group_amt|amount(2) }}
@@ -70,7 +70,7 @@
 			{% if support.device and support.device.contributionType in [1, 3] %}
 				<div class="row my-3">
 					<div class="col-md-12" title="Le montant fixé sera pris en compte pour le calcul d'une nouvelle redevance.">
-						{{ form_row(form.evalBudgetGroup.contributionAmt) }}</div>
+						{{ form_row(form.evalBudgetGroup.contributionAmt, {attr: {class: 'text-end'}}) }}</div>
 					<div class="col-md-12 text-center">
 					    <button id="calcul_contribution_btn" class="btn btn-secondary" 
                             title="Calculer le montant de la participation financière" data-bs-toggle="tooltip" data-bs-placement="bottom" 
@@ -114,8 +114,8 @@
 							<div class="col-md-6">{{ form_row(form_eval_budget_person.incomeTax) }}</div>
 						</div>
 						<div class="row" data-parent-field="{{ prefix_id }}_incomeTax" data-options="1">
-							<div class="col-md-6">{{ form_row(form_eval_budget_person.incomeN1Amt) }}</div>
-							<div class="col-md-6">{{ form_row(form_eval_budget_person.incomeN2Amt) }}</div>
+							<div class="col-md-6">{{ form_row(form_eval_budget_person.incomeN1Amt, {attr: {class: 'text-end'}}) }}</div>
+							<div class="col-md-6">{{ form_row(form_eval_budget_person.incomeN2Amt, {attr: {class: 'text-end'}}) }}</div>
 						</div>
 					</div>
 

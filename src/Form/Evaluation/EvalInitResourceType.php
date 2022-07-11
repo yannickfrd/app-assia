@@ -18,7 +18,6 @@ class EvalInitResourceType extends AbstractType
             ->add('type', HiddenType::class)
             ->add('amount', MoneyType::class, [
                 'attr' => [
-                    'class' => 'text-right',
                     'data-amount' => 'resource',
                     'placeholder' => 'Amount',
                 ],

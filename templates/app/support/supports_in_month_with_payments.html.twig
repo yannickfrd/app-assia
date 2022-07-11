@@ -82,8 +82,8 @@
                                                 {{ payment.startDate|date('d/m/Y') }} - {{ payment.endDate|date('d/m/Y') }}
                                             {% endif %}
                                         </td>
-                                        <td class="align-middle text-right">{{ payment.toPayAmt|amount }}</td>
-                                        <td class="align-middle text-right">{{ payment.paidAmt|amount }}</td>
+                                        <td class="align-middle text-end">{{ payment.toPayAmt|amount }}</td>
+                                        <td class="align-middle text-end">{{ payment.paidAmt|amount }}</td>
                                         <td class="align-middle">{{ payment.paymentDate|date('d/m/Y') }}</td>
                                         <td class="align-middle">{{ payment.paymentTypeToString }}</td>
                                         <td class="align-middle">{{ payment.comment }}</td>

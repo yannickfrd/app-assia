@@ -41,8 +41,8 @@
                                     </td>
                                 <td class="align-middle">{{ export.title }}</td>
                                 <td class="align-middle">{{ export.comment|raw }}</td>
-                                <td class="align-middle text-right">{{ export.nbResults|number }}</td>
-                                <td class="align-middle text-right">
+                                <td class="align-middle text-end">{{ export.nbResults|number }}</td>
+                                <td class="align-middle text-end">
                                     {% if export.size %}
                                         {{ (export.size / 1000)|round }} Ko
                                         <span class="text-secondary">{{ is_granted('ROLE_SUPER_ADMIN') ? '(' ~ export.delay ~ ')' }}</span>

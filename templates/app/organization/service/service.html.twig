@@ -76,9 +76,14 @@
             </div>
             <div class="row mb-3">
                 <div class="col-md-6">{{ form_row(form.contribution) }}</div>
-                <div class="col-md-6" data-parent-field="service_contribution" data-options="1">{{ form_row(form.contributionType) }}</div>
-                <div class="col-md-6" data-parent-field="service_contributionType" data-options="3|4">{{ form_row(form.contributionRate) }}</div>
-                <div class="col-md-6" data-parent-field="service_contributionType" data-options="1|3|4">{{ form_row(form.minRestToLive) }}</div>
+                <div class="col-md-6" data-parent-field="service_contribution" data-options="1">
+                    {{ form_row(form.contributionType) }}
+                </div>
+                <div class="col-md-6" data-parent-field="service_contributionType" data-options="3|4">
+                    {{ form_row(form.contributionRate) }}</div>
+                <div class="col-md-6" data-parent-field="service_contributionType" data-options="1|3|4">
+                    {{ form_row(form.minRestToLive, {attr: {class: 'text-end'}}) }}
+                </div>
             </div>
             <div class="row mb-3">
                 <div class="col-md-6">{{ form_row(form.coefficient) }}</div>

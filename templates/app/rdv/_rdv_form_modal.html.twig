@@ -138,14 +138,14 @@
                 {{ form_row(form_rdv._token) }}
             </div>
             <div class="modal-footer d-flex justify-content-between">
-                <div class="float-left">
+                <div class="float-start">
                     <button id="modal-btn-delete" class="me-3 btn btn-danger" data-bs-placement="bottom"
                             data-action="delete-rdv-modal" data-url="{{ path('rdv_delete', {'id': '__id__'}) }}"
                             title="Supprimer le rendez-vous"><i class="fas fa-trash-alt"></i>
                         <span class="d-md-inline ms-2">Supprimer</span>
                     </button>
                 </div>
-                <div class="float-right">
+                <div class="float-end">
                     <button type="button" id="js-btn-cancel" class="btn btn-secondary" data-bs-dismiss="modal">Fermer
                     </button>
                     <button name="save-rdv" type="button" class="btn btn-{{ theme_color }} shadow" data-action="save-rdv">

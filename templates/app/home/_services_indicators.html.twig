@@ -43,15 +43,15 @@
                                 <td class="align-middle"><span class="fw-bold">{{ service['name'] }}</span>
                                     {% if nb_tr_collapsed %}<span class="badge rounded-pill bg-secondary">{{ nb_tr_collapsed }}</span>{% endif %}
                                 </td>
-                                <td class="align-middle text-right">{{ nb_active_supports|number }}</td>
-                                <td class="align-middle text-right">{{ service['nbActiveSupportsPeople']|number }}</td>
-                                <td class="align-middle text-right">{{ service['avgTimeSupport']|number }} jours</td>
-                                <td class="align-middle text-right">{{ service['siaoRequest']|number }}<br/>
+                                <td class="align-middle text-end">{{ nb_active_supports|number }}</td>
+                                <td class="align-middle text-end">{{ service['nbActiveSupportsPeople']|number }}</td>
+                                <td class="align-middle text-end">{{ service['avgTimeSupport']|number }} jours</td>
+                                <td class="align-middle text-end">{{ service['siaoRequest']|number }}<br/>
                                     <span class="text-secondary font-italic">{{ nb_active_supports ? 
                                         ((service['siaoRequest'] / nb_active_supports) * 100)|percent(0) }}
                                     </span>
                                 </td>
-                                <td class="align-middle text-right">{{ service['socialHousingRequest'] }}<br/>
+                                <td class="align-middle text-end">{{ service['socialHousingRequest'] }}<br/>
                                     <span class="text-secondary font-italic">{{ nb_active_supports ? 
                                         ((service['socialHousingRequest'] / nb_active_supports) * 100)|percent(0) }}
                                     </span>
@@ -68,15 +68,15 @@
                                         </a>
                                     </td>
                                     <td class="align-middle">{{ service['name'] }}<span class="fa fa-chevron-right mx-1"></span>{{ sub_service['name'] }}</td>
-                                    <td class="align-middle text-right">{{ nb_active_supports }}</td>
-                                    <td class="align-middle text-right">{{ sub_service['nbActiveSupportsPeople'] }}</td>
-                                    <td class="align-middle text-right">{{ sub_service['avgTimeSupport']|number }} jours</td>
-                                    <td class="align-middle text-right">{{ sub_service['siaoRequest'] }}<br/>
+                                    <td class="align-middle text-end">{{ nb_active_supports }}</td>
+                                    <td class="align-middle text-end">{{ sub_service['nbActiveSupportsPeople'] }}</td>
+                                    <td class="align-middle text-end">{{ sub_service['avgTimeSupport']|number }} jours</td>
+                                    <td class="align-middle text-end">{{ sub_service['siaoRequest'] }}<br/>
                                         <span class="text-secondary font-italic">{{ nb_active_supports ? 
                                             ((sub_service['siaoRequest'] / nb_active_supports) * 100)|percent(0) }}
                                         </span>
                                     </td>
-                                    <td class="align-middle text-right">{{ sub_service['socialHousingRequest'] }}<br/>
+                                    <td class="align-middle text-end">{{ sub_service['socialHousingRequest'] }}<br/>
                                         <span class="text-secondary font-italic">{{ nb_active_supports ? 
                                             ((sub_service['socialHousingRequest'] / nb_active_supports) * 100)|percent(0) }}
                                         </span>
@@ -93,15 +93,15 @@
                                         </a>
                                     </td>
                                     <td class="align-middle">{{ service['name'] }}<span class="fa fa-chevron-right mx-1"></span>{{ device['name'] }}</td>
-                                    <td class="align-middle text-right">{{ nb_active_supports }}</td>
-                                    <td class="align-middle text-right">{{ device['nbActiveSupportsPeople'] }}</td>
-                                    <td class="align-middle text-right">{{ device['avgTimeSupport']|number }} jours</td>
-                                    <td class="align-middle text-right">{{ device['siaoRequest'] }}<br/>
+                                    <td class="align-middle text-end">{{ nb_active_supports }}</td>
+                                    <td class="align-middle text-end">{{ device['nbActiveSupportsPeople'] }}</td>
+                                    <td class="align-middle text-end">{{ device['avgTimeSupport']|number }} jours</td>
+                                    <td class="align-middle text-end">{{ device['siaoRequest'] }}<br/>
                                         <span class="text-secondary font-italic">{{ nb_active_supports ? 
                                             ((device['siaoRequest'] / nb_active_supports) * 100)|percent(0) }}
                                         </span>
                                     </td>
-                                    <td class="align-middle text-right">{{ device['socialHousingRequest'] }}<br/>
+                                    <td class="align-middle text-end">{{ device['socialHousingRequest'] }}<br/>
                                         <span class="text-secondary font-italic">{{ nb_active_supports ? 
                                             ((device['socialHousingRequest'] / nb_active_supports) * 100)|percent(0) }}
                                         </span>
@@ -114,8 +114,8 @@
                 <tfooter>
                     <tr class="fw-bold">
                         <td class="align-middle text-center" colspan="2">Total</td>
-                        <td class="align-middle text-right">{{ sum_active_supports|number }}</td>
-                        <td class="align-middle text-right">{{ sum_active_supports_people|number }}</td>
+                        <td class="align-middle text-end">{{ sum_active_supports|number }}</td>
+                        <td class="align-middle text-end">{{ sum_active_supports_people|number }}</td>
                         <td colspan="5"></td>
                     </tr>
                 </tfooter>

@@ -33,7 +33,7 @@
                             </div>
                         </td>
                         <td class="align-middle">{{ service.pole.name }}</td>
-                        <td class="align-middle text-right">
+                        <td class="align-middle text-end">
                             {% if is_granted('EDIT', service) %}
                                 <button class="btn btn-danger btn-sm shadow mx-2" data-action="delete"
                                     data-path="{{ path('service_user_delete', {'id': service_user.id, 
