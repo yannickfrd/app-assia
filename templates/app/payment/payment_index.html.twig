@@ -28,8 +28,7 @@
 
             <div class="row align-items-baseline">
                 <div class="col-md-4 count align-middle mb-2">
-                    <span class="align-middle">Résultat : {{ payments.getTotalItemCount|number }}<!--
-                    --> entrée{% if payments.getTotalItemCount > 1 %}s{% endif %}.</span>
+                    <span class="align-middle">Résultat : {{ payments.getTotalItemCount|number }}</span>
                 </div>
                 <div class="col-md-8">
                     <div class="navigation">{{ knp_pagination_render(payments) }}</div>

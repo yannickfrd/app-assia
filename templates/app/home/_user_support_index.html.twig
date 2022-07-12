@@ -12,7 +12,7 @@
         <div class="row">
             <div class="col-md-12">
                 {% set nb_supports = supports|length %}
-                <p class="float-start align-middle">{{ nb_supports }} suivi{{ nb_supports ? 's' }} en cours.
+                <p class="float-start align-middle">{{ nb_supports }} suivi{{ nb_supports ? 's' }} en cours
                     {% if sum_coeff != nb_supports %}<span class="text-secondary"> (coeff. {{ sum_coeff|round(1) }})</span>{% endif %}
                 </p>
                 <div class="float-end">

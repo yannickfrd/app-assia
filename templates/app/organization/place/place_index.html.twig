@@ -16,7 +16,7 @@
         <div class="container-fluid mt-4">
             <div class="row align-items-baseline">
                 <div class="col-md-4 count align-middle">
-                    <p class="align-middle">Total : {{ places.getTotalItemCount|number }} groupes
+                    <p class="align-middle">Résultat : {{ places.getTotalItemCount|number }} groupes
                         de places.</p>
                 </div>
                 <div class="col-md-8">
@@ -75,7 +75,7 @@
                                         title="Voir le groupe de places"><span class="fas fa-eye"></span>
                                     </a>
                                 </td>
-                                <td class="align-middle {% if place.disabled %}delete{% endif %}">
+                                <td class="align-middle {% if place.disabled %}text-del{% endif %}">
                                     {{ place.name }}{% if place.disabled %} (désactivé){% endif %}
                                 </td> 
                                 <td class="align-middle">

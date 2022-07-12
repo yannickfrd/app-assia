@@ -9,19 +9,13 @@ require('@fortawesome/fontawesome-free/css/all.min.css')
 // Lorsque le DOM est chargé
 window.onload = () => {
     //Active les toggles Bootstrap
-    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(tooltip => {
-        new Tooltip(tooltip)
-    })
-    document.querySelectorAll('[data-bs-toggle="popover"]').forEach(popover => {
-        new Popover(popover)
-    })
-    document.querySelectorAll('.toast').forEach(toast => {
-        new Toast(toast).show()
-    })
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(tooltip => new Tooltip(tooltip))
+    document.querySelectorAll('[data-bs-toggle="popover"]').forEach(popover => new Popover(popover))
+    document.querySelectorAll('.toast').forEach(toast => new Toast(toast).show())
     // Stop le spinner loader 
     document.getElementById('loader').classList.add('d-none')
     // Recherche instannée d'une personne via Ajax
     new SearchPerson() // lengthSearch, time
     // Déconnexion automatique de l'utilisateur
-    new autoLogout(60, 40) // minutes
+    new autoLogout(40, 30) // minutes
 }

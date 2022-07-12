@@ -1,7 +1,5 @@
 {% extends 'model/_search.html.twig' %}
 
-{% form_theme form 'bootstrap_5_layout.html.twig' %}
-
 {% block search_form %}
     <div class="col-auto my-1 px-1" title="{{ 'placeholder.name_or_id'|trans({}, 'forms') }}"
         data-bs-toggle="tooltip" data-bs-placement="bottom">{{ form_widget(form.fullname) }}</div>

@@ -17,7 +17,7 @@
 		<div class="d-flex mb-2">
 			<h1 class="h2">{{ title }}</h1>
 			<div class="align-content-center"><a href="{{ path('support_edit', {'id': support.id }) }}" 
-				class="link-primary ms-2" title="Modifier le suivi"><span class="fas fa-edit"></span></a>
+				class="link-primary ms-2" title="Modifier le suivi"><i class="fas fa-edit"></i></a>
 			</div>
 		</div>
 
@@ -37,7 +37,7 @@
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item">
 					<a class="link-primary" href="{{ path('people_group_show', {'id': people_group.id}) }}">
-						<span class="fas fa-users me-2"></span>Fiche groupe<span class="small"> {{ people_group.familyTypologyToString }}</span>
+						<i class="fas fa-users me-2"></i>Fiche groupe<span class="small"> {{ people_group.familyTypologyToString }}</span>
 					</a>
 				</li>
 				<li class="breadcrumb-item active" aria-current="page">Suivi social (Accueil)</li>
@@ -57,6 +57,10 @@
 		<hr>
 
 		<div id="support_navbar" class="row row-cols-sm-auto justify-content-center my-4">
+			<a id="support-edit" class="btn btn-primary me-2 mb-2 shadow" 
+				href="{{ path('support_edit', {'id': support.id}) }}" 
+				title="Modification du suivi (entrée, sortie...)" data-bs-toggle="tooltip" data-bs-placement="bottom">Suivi
+			</a>
 			{% if support.device and support.device.place == YES %}
 				<a id="support-places" class="btn btn-primary me-2 mb-2 shadow" 
 					href="{{ path('support_place_group_index', {'id': support.id}) }}" 
@@ -149,7 +153,7 @@
 				{% set rdv = next_rdv ? next_rdv : last_rdv %}
 				{% if rdv is not null %}
 					<span class="align-content-center"><a href="{{ path('support_calendar_show', {'id': support.id, 'year': rdv.start|date('Y'),'month': rdv.start|date('m')}) }}"
-							class="link-primary ms-2" title="Voir les rendez-vous"><span class="fas fa-edit"></span></a>
+							class="link-primary ms-2" title="Voir les rendez-vous"><i class="fas fa-edit"></i></a>
 					</span>
 				{% endif %}
 			</div>	

@@ -71,7 +71,7 @@
                                     </a>
                                 {% endif %}
                             </td>
-                            <td class="align-middle {% if device.disabled %}delete{% endif %}">{{ device.name }}{% if device.disabled %} (désactivé){% endif %}</td>
+                            <td class="align-middle {% if device.disabled %}text-del{% endif %}">{{ device.name }}{% if device.disabled %} (désactivé){% endif %}</td>
                             <td class="align-middle">{{ device.coefficient }}</td>
                             <td class="align-middle">{{ device.placeToString }}</td>
                             <td class="align-middle">{{ device.comment }}</td>

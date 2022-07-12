@@ -32,7 +32,7 @@
             {% for task in tasks %}
                 {% set is_deleted = task.deletedAt is not null %}
                 {% set support = task.supportGroup %}
-                <tr id="task_{{ task.id }}" class="{% if task.status == true %}text-secondary delete{% endif %}">
+                <tr id="task_{{ task.id }}" class="{% if task.status == true %}text-del text-secondary{% endif %}">
                     <td class="align-middle text-center">
                         <div class="form-check form-check-{{ is_deleted ? 'secondary disabled' : 'primary'  }}">
                             <input type="checkbox" class="form-check-input ms-0 {{ is_deleted == false ? 'cursor-pointer' }}"

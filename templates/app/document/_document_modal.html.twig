@@ -1,5 +1,3 @@
-{% form_theme documentForm 'bootstrap_5_layout.html.twig' %}
-
 <div id="document-modal" class="modal fade" tabindex="-1" role="dialog" 
     aria-labelledby="documentModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
@@ -9,7 +7,12 @@
                 'attr': {'data-url': path('document_edit', {'id': '__id__'})}
             }) }}
             <div class="modal-body pb-0">
-                {{ form_row(documentForm.name, {label_attr: {class: 'visually-hidden'}}) }}
+                <div class="row mb-3">
+                    <div class="col-12">
+                        {{ form_label(documentForm.name, null, {label_attr: {class: 'visually-hidden'}}) }}
+                        {{ form_widget(documentForm.name) }}
+                    </div>
+                </div>
                 <div class="row mb-3">
                     <div class="col-12">
                         <div class="input-group">
@@ -20,7 +23,12 @@
                         </div>
                     </div>
                 </div>
-                {{ form_row(documentForm.content, {label_attr: {class: 'visually-hidden'}}) }}
+                <div class="row mb-3">
+                    <div class="col-12">
+                        {{ form_label(documentForm.content, null, {label_attr: {class: 'visually-hidden'}}) }}
+                        {{ form_widget(documentForm.content) }}
+                    </div>
+                </div>
             </div>
             <div class="modal-footer d-flex justify-content-between">
                 <div class="float-start">

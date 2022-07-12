@@ -1,0 +1,28 @@
+#support_navbar, 
+.d-sticky {
+    position: sticky;
+    position: -webkit-sticky;
+    top: 95px;
+
+    a.btn {
+        min-width: 140px;
+    }
+}
+
+@media (max-width: 768px) {
+    #support_navbar {
+        top: 90px;
+    }
+}
+
+@media (max-width: 576px) {
+    #support_navbar {
+        position: relative;
+        top: 0;
+
+        a {
+            width: calc(50% - 1rem);
+        }       
+    }
+}
+

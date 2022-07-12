@@ -16,7 +16,7 @@
 					data-path="{{ path('payment_create', {'id': support.id}) }}"
 					title="Créer un nouvel enregistrement" data-bs-toggle="tooltip" data-bs-placement="bottom">
 					<i class="fas fa-plus-square me-2"></i>Nouveau</button>
-				<div class="d-inline align-middle">Total : <!--
+				<div class="d-inline align-middle">Résultat : <!--
 				--><span id="count_payments">{{ payments.getTotalItemCount|number }}</span><!--
 				-->{% if nbTotalPayments and form_search.deleted.deleted.vars.checked != true %} sur <span id="nb_total_payments">{{ nbTotalPayments }}</span>{% endif %}
 				</div>

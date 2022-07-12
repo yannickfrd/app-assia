@@ -91,27 +91,32 @@
             <div class="d-flex justify-content-between">
                 <div class="d-flex float-start me-3">
                     <button class="btn btn-danger me-3 mb-1" data-action="delete"
-                        data-bs-toggle="modal" data-bs-target="#modal-block"
                         data-edit="true" data-path="{{ path('payment_delete', {'id': '__id__'}) }}"
-                        title="Supprimer" data-bs-placement="bottom"><i class="fas fa-trash-alt"></i><span 
-                        class="d-none d-md-inline ms-2">Supprimer</span></button>
+                        title="Supprimer" data-bs-toggle="tooltip"  data-bs-placement="bottom">
+                        <i class="fas fa-trash-alt"></i>
+                        <span class="d-none d-md-inline ms-2">Supprimer</span>
+                    </button>
                     <button class="btn btn-primary me-2 mb-1 shadow" data-action="create_pdf"
                         data-edit="true" data-path="{{ path('payment_export_pdf', {'id': '__id__'}) }}"
                         title="Générer le reçu en PDF" data-bs-toggle="tooltip" data-bs-placement="bottom">
                         <i class="fas fa-file-pdf bg-secondary fa-lg"></i>
-                        <span class="d-none d-md-inline ms-2">PDF</span></button>
+                        <span class="d-none d-md-inline ms-2">PDF</span>
+                    </button>
                     <button class="btn btn-primary mb-1 shadow" data-action="send_email"
                         data-edit="true" data-path="{{ path('payment_send_pdf', {'id': '__id__'}) }}"
                         title="Envoyer un email avec le reçu en PDF" data-bs-toggle="tooltip" data-bs-placement="bottom" >
                         <i class="fas fa-envelope bg-secondary fa-lg"></i>
-                        <span class="d-none d-md-inline ms-2">Email</span></button>
+                        <span class="d-none d-md-inline ms-2">Email</span>
+                    </button>
                 </div>
                 <div class="d-flex float-end">
                     <button type="button" class="btn btn-secondary me-2 mb-1" 
                         data-action="close" data-bs-dismiss="modal">Fermer</button>
                     <button type="submit" class="btn btn-primary mb-1 shadow" data-action="save"
                         data-path="{{ path('payment_edit', {'id': '__id__'}) }}">
-                        <i class="fas fa-save d-none d-md-inline me-2"></i><span>Enregistrer</span></button>
+                        <i class="fas fa-save d-none d-md-inline me-2"></i>
+                        <span>Enregistrer</span>
+                    </button>
                 </div>
             </div>
         </div>

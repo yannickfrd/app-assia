@@ -12,6 +12,7 @@ export default class PaymentManager {
         this.paymentForm = new PaymentForm(this)
 
         this.paymentModal = new Modal(document.getElementById('payment_modal'))
+        this.confirmModal = new Modal(document.getElementById('modal-block'))
 
         this.btnNewElt = document.querySelector('button[data-action="new_payment"]')
 
@@ -53,8 +54,11 @@ export default class PaymentManager {
             }))
 
         document.querySelectorAll('table#table_payments tbody tr button[data-action="delete"]')
-            .forEach(btnDeleteElt => btnDeleteElt
-                .addEventListener('click', () => this.confirmBtnElt.dataset.path = btnDeleteElt.dataset.path))
+            .forEach(btnDeleteElt => btnDeleteElt.addEventListener('click', () => {
+                this.confirmModal.show()
+                this.confirmBtnElt.dataset.path = btnDeleteElt.dataset.path
+            })
+        )
 
         document.querySelectorAll('button[data-action="restore"]').forEach(restoreBtn => restoreBtn
             .addEventListener('click', () => this.requestRestorePayment(restoreBtn)))

@@ -47,7 +47,7 @@
 				</thead>
 				<tbody>
 					{% for place in places %}
-						<tr class="{{ place.disabled ? 'delete text-secondary' }}">
+						<tr class="{{ place.disabled ? 'text-del text-secondary' }}">
 							<td class="align-middle text-center" scope="row">
 								{% if is_granted_edit_service %}
 									<a href="{{ path('place_edit', {'id': place.id}) }}"

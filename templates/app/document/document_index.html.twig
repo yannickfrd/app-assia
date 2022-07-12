@@ -19,7 +19,7 @@
 			<div class="row align-items-baseline">
 				<div class="col-md-4 count align-middle mb-2">
 					<span class="align-middle">Résultat : {{ documents.getTotalItemCount|number }}
-						document{% if documents.getTotalItemCount > 1 %}s{% endif %}.</span>
+						document{% if documents.getTotalItemCount > 1 %}s{% endif %}</span>
 				</div>
 				<div class="col-md-8">
 					<div class="navigation">{{ knp_pagination_render(documents) }}</div>

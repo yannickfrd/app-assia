@@ -108,7 +108,7 @@
 		{{ form_row(form._token) }}
 		{{ form_end(form, {'render_rest': false}) }}
 
-		{% if support.id %}
+		{% if support.id and addPersonForm.rolePerson.vars.choices|length > 0 %}
 			{% include 'app/support/_partials/_support_add_person_form.html.twig' %}
 		{% endif %}
 

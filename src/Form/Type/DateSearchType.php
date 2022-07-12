@@ -14,12 +14,12 @@ class DateSearchType extends AbstractType
         $builder
             ->add('start', DateType::class, [
                 'widget' => 'single_text',
-                'attr' => ['class' => 'w-max-165'],
+                'attr' => ['class' => 'w-max-170'],
                 'required' => false,
             ])
             ->add('end', DateType::class, [
                 'widget' => 'single_text',
-                'attr' => ['class' => 'w-max-165'],
+                'attr' => ['class' => 'w-max-170'],
                 'required' => false,
             ]);
     }

@@ -1,14 +1,14 @@
-<nav class="navbar navbar-expand-xl navbar-light bg-primary fixed-top mb-0 shadow">
+<nav class="navbar navbar-expand-xl navbar-light bg-primary fixed-top shadow">
     <div class="container-fluid">
         <a class="navbar-brand py-0 text-light" href="{{ path('home') }}">
-            {% if app_env == 'p rod' %}
+            {% if app_env == 'prod' %}
                 <img id="logo-site" src="{{ asset('images/logo_assia_white.png') }}" height="56" width="144" alt="Application Assia"
                     title="Application Assia">
             {% else %}
                 <i class="fas fa-exclamation-triangle text-warning me-2"></i>Assia version test
             {% endif %}
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" 
+        <button class="navbar-toggler text-primary" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" 
             aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -63,9 +63,10 @@
                     <li class="nav-item">
                         <a class="nav-link text-light" target="_blank"
                             href="https://drive.google.com/drive/folders/1-B1pHYyNhp2tHFxwcSOWfsYD0qxjJLLs" 
+                            onclick="return window.confirm('Vous allez être dirigé vers Google Drive. Continuer ?');"
                             title="Aide" data-bs-toggle="tooltip" data-bs-placement="bottom">
-                            <span class="d-inline d-lg-none">Aide</span>
-                            <i class="fas fa-question fa-xs d-none d-lg-inline"></i>
+                            <span class="d-inline d-xl-none">Aide</span>
+                            <i class="fas fa-question fa-xs d-none d-xl-inline"></i>
                         </a>
                     </li>
                 </ul>

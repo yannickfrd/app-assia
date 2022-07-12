@@ -108,6 +108,7 @@ export default class PaymentForm {
 
         this.deleteBtnElt.addEventListener('click', e => {
             e.preventDefault()
+            this.paymentManager.confirmModal.show()
             this.confirmBtnElt.dataset.path = this.deleteBtnElt.dataset.path.replace('__id__',  this.payment.id)
         })
 
@@ -301,6 +302,9 @@ export default class PaymentForm {
      * @return {Boolean}
      */
     isValidForm() {
+
+        this.formPaymentElt.classList.add('was-validated')
+
         this.isValid = true
         this.paymentTypeValue = parseInt(this.typeSelectElt.value)
 

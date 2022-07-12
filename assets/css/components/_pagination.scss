@@ -1,0 +1,17 @@
+@each $color, $value in $theme-colors {
+    html[data-theme-color="#{$color}"] {
+        .page-item.active .page-link {
+            background-color: $value;
+            border-color: $value;
+        }
+        
+        .page-link {
+            color: $value;
+
+            &:focus {
+                border-color: tint-color($value, 50%);
+                box-shadow: 0 0 0 0.25rem rgba($value, 0.25);
+            }
+        }
+    }
+}

@@ -19,13 +19,13 @@ class PlacePersonType extends AbstractType
             ->add('startDate', DateType::class, [
                 'widget' => 'single_text',
                 'attr' => [
-                    'class' => 'w-max-165',
+                    'class' => 'w-max-170',
                 ],
             ])
             ->add('endDate', DateType::class, [
                 'widget' => 'single_text',
                 'attr' => [
-                    'class' => 'w-max-165',
+                    'class' => 'w-max-170',
                 ],
                 'required' => false,
             ])

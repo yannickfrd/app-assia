@@ -30,8 +30,7 @@
 
             <div class="row align-items-baseline">
                 <div class="col-md-4 count align-middle">
-                    <p class="align-middle mb-0">Total : {{ users.getTotalItemCount|number }}
-                        utilisateur{% if users.getTotalItemCount > 1 %}s{% endif %}.</p>
+                    <p class="align-middle mb-0">Résultat : {{ users.getTotalItemCount|number }}</p>
                 </div>
                 <div class="col-md-8">
                     <div class="navigation">{{ knp_pagination_render(users) }}</div>

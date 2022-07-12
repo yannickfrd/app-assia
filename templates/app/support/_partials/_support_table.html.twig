@@ -4,7 +4,7 @@
         {% set nb_supports = supports.getTotalItemCount %}
         <span id="count-supports" class="align-middle"
             data-count-supports="{{ nb_supports }}">Résultat : {{ nb_supports|number }}
-            {% if only_headers == true %}ménage{% else %}personne{% endif %}{{ nb_supports > 1 ? 's' }}.</span>
+            {% if only_headers == true %}ménage{% else %}personne{% endif %}{{ nb_supports > 1 ? 's' }}</span>
     </div>
     <div class="col-md-8">
         <div class="navigation">{{ knp_pagination_render(supports) }}</div>

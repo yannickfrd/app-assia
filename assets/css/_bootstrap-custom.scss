@@ -3,30 +3,33 @@
 
 // Colors
 $beige: #a77e4a !default;
-$blue: #0d6efd !default;
+$blue: #0090c6 !default;
 $brown: #ae5843 !default;
-$cyan: #79c1b7 !default;
+$cyan: #449388 !default;
 $dark: #343a40 !default;
-$indigo: #6610f2 !default;
+$indigo: #5F0CE7 !default;
 $gray-light: #e9ecef !default;
-$green-alt: #198754 !default;
+$green-alt: #44963B !default;
 $orange: #e26b11 !default;
-$pink: #d63384 !default;
+$pink: #d63384 !default;    
 $purple: #6f5290 !default;
 
-// Tooltip
-$tooltip-font-size: .8rem;
-$tooltip-opacity: .8;
+$font-size-base: .95rem;
 
-$font-size-base: 0.95rem;
+// Border-radius
+$border-radius: .35rem !default;
+$border-radius-sm: .3rem !default;
+$border-radius-lg: .4rem !default;
 
 @import "bootstrap/scss/variables";
 @import "bootstrap/scss/mixins";
 @import "bootstrap/scss/utilities";
 
+// Theme colors
 $custom-colors: (
     'blue': $blue-500,
     "brown": $brown,
+    'cyan': $cyan,
     "green-alt": $green-alt,
     'indigo': $indigo,
     'orange': $orange,
@@ -37,21 +40,23 @@ $custom-colors: (
 $theme-colors: map-merge($theme-colors, $custom-colors);
 $theme-colors: map-remove($theme-colors, "info");
 
+// Accordion
+$accordion-bg: $light;
+$accordion-button-bg: var(--bs-gray-100);
+
 // Breadcrumb
 $breadcrumb-bg: $gray-light;
 $breadcrumb-margin-bottom: 1rem;
 $breadcrumb-padding-x: 1rem;
 $breadcrumb-padding-y: 1rem;
-$breadcrumb-border-radius: 0.5rem;
+$breadcrumb-border-radius: .5rem;
 
-// Accordion
-$accordion-bg: $light;
-$accordion-button-active-bg: $gray-light;
-$accordion-button-bg: $light;
-$accordion-button-active-color: shade-color($dark, 10%);
-$accordion-button-active-icon:  url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='#{$dark}'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>");
-
+// Table
 $table-group-separator-color: var(--bs-gray-500);
+
+// Tooltip
+$tooltip-font-size: .8rem;
+$tooltip-opacity: .8;
 
 // Layout & components
 @import "bootstrap/scss/root";

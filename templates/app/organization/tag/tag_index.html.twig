@@ -28,7 +28,7 @@
             <div class="row">
                 <div class="col-md-6 count align-middle my-2">
                     <span class="align-middle">Résultat : {{ tags.getTotalItemCount|number }}<!--
-                    --> étiquette{% if tags.getTotalItemCount > 1 %}s{% endif %}.</span>
+                    --> étiquette{% if tags.getTotalItemCount > 1 %}s{% endif %}</span>
                 </div>
                 <div class="col-md-6">
                     <div class="navigation">{{ knp_pagination_render(tags) }}</div>

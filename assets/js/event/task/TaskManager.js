@@ -329,9 +329,9 @@ export default class TaskManager {
         const spanElt = endTdElt.querySelector('span.fas.fa-exclamation')
 
         if (task.status === true) {
-            rowElt.classList.add('text-secondary', 'delete')
+            rowElt.classList.add('text-secondary', 'text-del')
         } else {
-            rowElt.classList.remove('text-secondary', 'delete')
+            rowElt.classList.remove('text-secondary', 'text-del')
         }
 
         if (spanElt && task.status === false) {
