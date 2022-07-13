@@ -1,5 +1,8 @@
 
 @each $value in (70, 80, 100, 110, 120, 130, 140, 150, 160, 170, 180, 200, 220, 240, 260) {
+    .w-#{$value} {
+        min-width: #{$value}px;
+    }
     .w-min-#{$value} {
         min-width: #{$value}px;
     }

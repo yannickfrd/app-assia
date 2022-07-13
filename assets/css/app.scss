@@ -3,9 +3,12 @@
 $header-md-height: 80px;
 $header-sm-height: 60px;
 
+@import "./_mixins";
+
 @import "./_form";
 @import "./_table";
 @import "./_helpers";
+
 @import "./components/_components";
 @import "./features/_note";
 @import "./features/_support";

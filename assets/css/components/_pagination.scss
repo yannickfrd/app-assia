@@ -9,8 +9,7 @@
             color: $value;
 
             &:focus {
-                border-color: tint-color($value, 50%);
-                box-shadow: 0 0 0 0.25rem rgba($value, 0.25);
+                @include border-color($value);
             }
         }
     }
