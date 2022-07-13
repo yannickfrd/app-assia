@@ -1,28 +1,27 @@
-#support_navbar, 
+#support_navbar a.btn {
+    min-width: 140px;
+}
+
 .d-sticky {
     position: sticky;
-    position: -webkit-sticky;
-    top: 95px;
-
-    a.btn {
-        min-width: 140px;
-    }
+    top: $header-md-height;
+    background-color: $light;
+    z-index: 999;
 }
 
 @media (max-width: 768px) {
-    #support_navbar {
-        top: 90px;
+    .d-sticky  {
+        top: $header-sm-height;
     }
 }
 
 @media (max-width: 576px) {
-    #support_navbar {
+    #support_navbar a {
+        width: calc(50% - 1rem);
+    }
+
+    .d-sticky {
         position: relative;
         top: 0;
-
-        a {
-            width: calc(50% - 1rem);
-        }       
     }
 }
-

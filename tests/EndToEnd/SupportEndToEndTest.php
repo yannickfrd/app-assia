@@ -55,7 +55,7 @@ class SupportEndToEndTest extends PantherTestCase
 
         $this->outputMsg('Edit a support');
 
-        $this->assertSelectorTextContains('h1', 'Édition du suivi');
+        $this->assertSelectorTextContains('h1', 'Édition');
 
         $this->clickElement('#send');
 

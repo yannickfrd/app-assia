@@ -225,7 +225,7 @@ class SupportControllerTest extends WebTestCase
         $this->client->request('GET', "/support/$id/edit");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('h1', 'Édition du suivi');
+        $this->assertSelectorTextContains('h1', 'Édition');
 
         $this->client->submitForm('send');
 

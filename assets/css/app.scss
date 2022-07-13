@@ -1,5 +1,8 @@
 @import "./bootstrap-custom";
 
+$header-md-height: 80px;
+$header-sm-height: 60px;
+
 @import "./_form";
 @import "./_table";
 @import "./_helpers";
@@ -12,7 +15,7 @@ html {
 }
 
 body {
-    padding-top: 80px;
+    padding-top: $header-md-height;
     background-color: #fafafafa;
 }
 
@@ -77,7 +80,7 @@ a:not(:hover) {
 // Medium devices (tablets, 768px and up)
 @media (max-width: 768px) {
     body {
-        padding-top: 60px;
+        padding-top: $header-sm-height;
     }
 }
 

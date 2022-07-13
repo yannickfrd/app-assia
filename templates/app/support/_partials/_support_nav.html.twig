@@ -1,54 +1,59 @@
 {% set people_group = support.peopleGroup %}
 {% set SERVICE_TYPE_HOTEL = constant('App\\Entity\\Organization\\Service::SERVICE_TYPE_HOTEL') %}
 
-<div class="row mb-2">
-	<div class="d-md-flex justify-content-md-between">
+<div class="mb-2 pt-2">
+	<div class="d-sm-flex justify-content-sm-between">
 		<h1 class="h2">Suivi<i class="fas fa-angle-right fa-xs mx-1"></i>{{ title }}</h1>
-		<div id="support" class="d-flex float-end" data-support="{{ support.id }}">
-			<a class="btn btn-primary shadow px-2 me-1 mb-2" href="{{ path('support_show', {'id': support.id}) }}" 
-				title="Page d'accueil du suivi" data-bs-toggle="tooltip" data-bs-placement="bottom" >
-				<i class="fas fa-home"></i><span class="d-none d-xxl-inline ms-1">Accueil</span>
-			</a>
-			<a class="btn btn-primary shadow px-2 me-1 mb-2" href="{{ path('support_edit', {'id': support.id}) }}" 
-				title="Modification du suivi (entrée, sortie...)" data-bs-toggle="tooltip" data-bs-placement="bottom" >
-				<i class="fa-solid fa-gears"></i><span class="d-none d-xxl-inline ms-1">Suivi</span>
-			</a>
-			{% if support.device.place == YES %}
-				<a class="btn btn-primary shadow px-2 me-1 mb-2" href="{{ path('support_place_group_index', {'id': support.id}) }}" 
-					title="Prise(s) en charge hébergement"
-					data-bs-toggle="tooltip" data-bs-placement="bottom">
-					<i class="fas fa-bed"></i><span class="d-none d-xxl-inline ms-1">Hébergement</span>
-				</a>
-			{% endif %}
-			<a class="btn btn-primary shadow px-2 me-1 mb-2" href="{{ path('support_evaluation_show', {'id': support.id}) }}" 
-				title="Évaluation sociale" data-bs-toggle="tooltip" data-bs-placement="bottom">
-				<i class="fas fa-clipboard"></i><span class="d-none d-xxl-inline ms-1">Évaluation</span>
-			</a>
-			<a href="{{ path('support_calendar_show', {'id': support.id}) }}" class="btn btn-primary shadow px-2 me-1 mb-2" 
-				title="Rendez-vous" data-bs-toggle="tooltip" data-bs-placement="bottom">
-				<i class="far fa-calendar-alt"></i><span class="d-none d-xxl-inline ms-1">Rendez-vous</span>
-			</a>
-			<a href="{{ path('support_task_index', {'id': support.id}) }}" class="btn btn-primary shadow px-2 me-1 mb-2" 
-				title="Tâches" data-bs-toggle="tooltip" data-bs-placement="bottom">
-				<i class="fa fa-tasks"></i><span class="d-none d-xxl-inline ms-1">Tâches</span>
-			</a>
-			<a href="{{ path('support_note_index', {'id': support.id}) }}" class="btn btn-primary shadow px-2 me-1 mb-2" 
-				title="Notes sociales" data-bs-toggle="tooltip" data-bs-placement="bottom">
-				<i class="fas fa-edit"></i><span class="d-none d-xxl-inline ms-1">Notes</span>
-			</a>
-			<a href="{{ path('support_document_index', {'id': support.id}) }}" class="btn btn-primary shadow px-2 me-1 mb-2"
-				title="Documents administratifs" data-bs-toggle="tooltip" data-bs-placement="bottom">
-				<i class="fas fa-file-upload"></i><span class="d-none d-xxl-inline ms-1">Documents</span>
-			</a>
-			{% if support.device.contribution == YES %}
-				<a class="btn btn-primary shadow px-2 me-1 mb-2" href="{{ path('support_payments_index', {'id': support.id}) }}"
-					title="Paiements" data-bs-toggle="tooltip" data-bs-placement="bottom">
-					<i class="fas fa-euro-sign px-1"></i><span class="d-none d-xxl-inline ms-1">Paiements</span>
-				</a>
-			{% endif %}
+		<div id="support" class="row" data-support="{{ support.id }}">
+			<div class="col-md-12">
+				<div class="d-flex">
+					<a class="btn btn-primary shadow px-2 mb-2" href="{{ path('support_show', {'id': support.id}) }}" 
+						title="Page d'accueil du suivi" data-bs-toggle="tooltip" data-bs-placement="bottom" >
+						<i class="fas fa-home"></i><span class="d-none d-xxl-inline ms-1">Accueil</span>
+					</a>
+					<a class="btn btn-primary shadow px-2 ms-1 mb-2" href="{{ path('support_edit', {'id': support.id}) }}" 
+						title="Modification du suivi (entrée, sortie...)" data-bs-toggle="tooltip" data-bs-placement="bottom" >
+						<i class="fa-solid fa-gears"></i><span class="d-none d-xxl-inline ms-1">Suivi</span>
+					</a>
+					{% if support.device.place == YES %}
+						<a class="btn btn-primary shadow px-2 ms-1 mb-2" href="{{ path('support_place_group_index', {'id': support.id}) }}" 
+							title="Prise(s) en charge hébergement"
+							data-bs-toggle="tooltip" data-bs-placement="bottom">
+							<i class="fas fa-bed"></i><span class="d-none d-xxl-inline ms-1">Hébergement</span>
+						</a>
+					{% endif %}
+					<a class="btn btn-primary shadow px-2 ms-1 mb-2" href="{{ path('support_evaluation_show', {'id': support.id}) }}" 
+						title="Évaluation sociale" data-bs-toggle="tooltip" data-bs-placement="bottom">
+						<i class="fas fa-clipboard"></i><span class="d-none d-xxl-inline ms-1">Évaluation</span>
+					</a>
+					<a href="{{ path('support_calendar_show', {'id': support.id}) }}" class="btn btn-primary shadow px-2 ms-1 mb-2" 
+						title="Rendez-vous" data-bs-toggle="tooltip" data-bs-placement="bottom">
+						<i class="far fa-calendar-alt"></i><span class="d-none d-xxl-inline ms-1">Rendez-vous</span>
+					</a>
+					<a href="{{ path('support_task_index', {'id': support.id}) }}" class="btn btn-primary shadow px-2 ms-1 mb-2" 
+						title="Tâches" data-bs-toggle="tooltip" data-bs-placement="bottom">
+						<i class="fa fa-tasks"></i><span class="d-none d-xxl-inline ms-1">Tâches</span>
+					</a>
+					<a href="{{ path('support_note_index', {'id': support.id}) }}" class="btn btn-primary shadow px-2 ms-1 mb-2" 
+						title="Notes sociales" data-bs-toggle="tooltip" data-bs-placement="bottom">
+						<i class="fas fa-edit"></i><span class="d-none d-xxl-inline ms-1">Notes</span>
+					</a>
+					<a href="{{ path('support_document_index', {'id': support.id}) }}" class="btn btn-primary shadow px-2 ms-1 mb-2"
+						title="Documents administratifs" data-bs-toggle="tooltip" data-bs-placement="bottom">
+						<i class="fas fa-file-upload"></i><span class="d-none d-xxl-inline ms-1">Documents</span>
+					</a>
+					{% if support.device.contribution == YES %}
+						<a class="btn btn-primary shadow px-2 ms-1 mb-2" href="{{ path('support_payments_index', {'id': support.id}) }}"
+							title="Paiements" data-bs-toggle="tooltip" data-bs-placement="bottom">
+							<i class="fas fa-euro-sign px-1"></i><span class="d-none d-xxl-inline ms-1">Paiements</span>
+						</a>
+					{% endif %}
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
+
 
 	{% include 'model/_flash_message.html.twig' %}
 

@@ -2,12 +2,12 @@
 
 {% set nb_notes = notes|length %}
 {% set restoration_mode = form_search.deleted.deleted.vars.checked and is_granted('ROLE_SUPER_ADMIN') %}
-{% set title = 'Notes sociales' ~ (restoration_mode ? ' (Corbeille)') %}
+{% set title = 'Notes' ~ (restoration_mode ? ' (Corbeille)') %}
 
 {% block title %}{{ title }}{% endblock %}
 
 {% block body %}
-    <div class="container" data-view="card-table" data-is-card="{{ is_card_view }}">
+    <div class="container pt-3" data-view="card-table" data-is-card="{{ is_card_view }}">
 
         {% include 'app/support/_partials/_support_nav.html.twig' %}
 

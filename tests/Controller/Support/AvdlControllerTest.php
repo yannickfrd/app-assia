@@ -133,7 +133,7 @@ class AvdlControllerTest extends WebTestCase
         $this->client->request('GET', "/support/$id/edit");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('h1', 'Édition du suivi');
+        $this->assertSelectorTextContains('h1', 'Édition');
 
         $now = new \DateTime();
         $this->client->submitForm('send', [
