@@ -28,7 +28,7 @@ class ReferentControllerTest extends WebTestCase
         $this->client = static::createClient();
         $this->client->followRedirects();
 
-        /** @var AbstractDatabaseTool */
+        /* @var AbstractDatabaseTool */
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
     }
 
@@ -52,7 +52,7 @@ class ReferentControllerTest extends WebTestCase
         $this->client->request('GET', "/group/$id/referent/new");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('h1', 'Nouveau service social référent');
+        $this->assertSelectorTextContains('h1', 'Service social référent');
 
         $this->client->submitForm('send', [
             'referent' => [

@@ -34,7 +34,6 @@ class DeviceControllerTest extends WebTestCase
         $this->client = static::createClient();
         $this->client->followRedirects();
 
-        /** @var AbstractDatabaseTool */
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
 
         $this->fixtures = $this->databaseTool->loadAliceFixture([
@@ -86,7 +85,7 @@ class DeviceControllerTest extends WebTestCase
             ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('span.form-error-message', 'Ce dispositif existe déjà.');
+        $this->assertSelectorTextContains('div.invalid-feedback', 'Ce dispositif existe déjà.');
     }
 
     public function testCreateDeviceIsSuccessful(): void

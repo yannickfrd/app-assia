@@ -34,7 +34,7 @@ class PersonControllerTest extends WebTestCase
         $this->client = static::createClient();
         $this->client->followRedirects();
 
-        /** @var AbstractDatabaseTool */
+        /* @var AbstractDatabaseTool */
         $this->databaseTool = $this->getContainer()->get(DatabaseToolCollection::class)->get();
     }
 
@@ -135,7 +135,7 @@ class PersonControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorExists('.alert.alert-danger');
-        $this->assertSelectorTextContains('.form-error-message', 'Cette personne existe déjà !');
+        $this->assertSelectorTextContains('div.invalid-feedback', 'Cette personne existe déjà !');
     }
 
     public function testNewPersonInGroupIsUp(): void
