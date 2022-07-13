@@ -244,7 +244,7 @@ export default class TaskManager {
     createTags(task) {
         let tags = ''
         task.tags.forEach(tag => {
-            tags += `<span class="badge bg-${tag.color} text-light me-1">${tag.name}</span>`
+            tags += `<span class="badge bg-${tag.color} me-1">${tag.name}</span>`
         })
 
         return tags

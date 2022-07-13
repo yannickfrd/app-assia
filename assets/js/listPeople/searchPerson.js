@@ -264,7 +264,7 @@ export default class SearchPerson {
                     </a>`
         }
 
-        return `<button data-action="show-group" data-id="${person.idFiche}" class="btn bg-violet text-light btn-sm shadow"
+        return `<button data-action="show-group" data-id="${person.idFiche}" class="btn bg-primary btn-sm shadow"
                     data-bs-placement="bottom" title="Voir la fiche groupe SI-SIAO de cette personne"><i class="fas fa-eye"></i>
                 </button>`
     }

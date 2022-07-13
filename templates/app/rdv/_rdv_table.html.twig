@@ -69,7 +69,7 @@
                         <td class="align-middle" data-cell="location">{{ rdv.location }}</td>
                         <td class="align-middle" data-cell="tags">
                             {% for tag in rdv.tags %}
-                                <span class="badge bg-{{ tag.color }} text-light">{{ tag.name }}</span>
+                                <span class="badge bg-{{ tag.color }}">{{ tag.name }}</span>
                             {% endfor %}
                         </td>
                         <td class="align-middle" data-cell="users">{{ rdv.usersToString }}</td>

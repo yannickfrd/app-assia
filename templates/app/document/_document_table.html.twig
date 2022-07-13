@@ -89,7 +89,7 @@
 					</td>
 					<td class="align-middle {{ not is_deleted ? 'cursor-pointer' }}" data-cell="tags">
 						{% for tag in document.tags %}
-							<span class="badge bg-{{ tag.color }} text-light" 
+							<span class="badge bg-{{ tag.color }}" 
 								data-tag-id="{{ tag.id }}">{{ tag.name }}</span>
 						{% endfor %}
 					</td>

@@ -173,7 +173,7 @@ export default class TagService {
      */
     createTag(tag) {
         const tagSpanElt = document.createElement('span')
-        tagSpanElt.classList.add('badge', 'bg-primary', 'text-light', 'me-1', 'tag')
+        tagSpanElt.classList.add('badge', 'bg-primary', 'me-1', 'tag')
         tagSpanElt.dataset.tagId = tag.id
         tagSpanElt.dataset.tagName = tag.name
         tagSpanElt.innerText = ' ' + tag.name + ' '

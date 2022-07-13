@@ -1,13 +1,8 @@
 {% extends 'base.html.twig' %}
 
 {% set referent = form.vars.value %}
-{% if referent.id %}{% set edit_mode = true %}{% else %}{% set edit_mode = false %}{% endif %}
-
-{% if edit_mode %}
-{% set title = 'Référent | ' ~ referent.name %}
-{% else %}
-{% set title = 'Nouveau service social référent' %}
-{% endif %}
+{% set edit_mode = referent.id is not null %}
+{% set title = edit_mode ? 'Référent | ' ~ referent.name : 'Service social référent' %}
 
 {% block title %}{{ title }}{% endblock %}
 

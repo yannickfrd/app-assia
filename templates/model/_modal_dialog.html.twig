@@ -21,7 +21,7 @@
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% block modal_cancel %}Annuler{% endblock %}</button>
                             </div>
                             <div class="float-end">
-                                <button type="button" id="modal-confirm" class="btn btn-{% block modal_alert %}primary text-white{% endblock %}"
+                                <button type="button" id="modal-confirm" class="btn btn-{% block modal_alert %}primary{% endblock %}"
                                     href="{% block modal_href %}{% endblock %}" data-bs-dismiss="modal">{% block modal_confirm %}Confirmer{% endblock %}</button>
                             </div>
                         {% endblock %}

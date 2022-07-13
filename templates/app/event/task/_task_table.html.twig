@@ -81,7 +81,7 @@
                     <td class="align-middle" data-cell="level">{{ task.levelToString }}</td>
                     <td class="align-middle" data-cell="tags">
                         {% for tag in task.tags %}
-                            <span class="badge bg-{{ tag.color }} text-light">{{ tag.name }}</span>
+                            <span class="badge bg-{{ tag.color }}">{{ tag.name }}</span>
                         {% endfor %}
                     </td>
                     <td class="align-middle" data-cell="users">{{ task.usersToString }}</td>

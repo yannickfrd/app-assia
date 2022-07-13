@@ -1,6 +1,6 @@
-<nav class="navbar navbar-expand-xl navbar-light bg-primary fixed-top shadow">
+<nav class="navbar navbar-expand-xl navbar-white bg-primary fixed-top shadow">
     <div class="container-fluid">
-        <a class="navbar-brand py-0 text-light" href="{{ path('home') }}">
+        <a class="navbar-brand py-0 text-white" href="{{ path('home') }}">
             {% if app_env == 'prod' %}
                 <img id="logo-site" src="{{ asset('images/logo_assia_white.png') }}" height="56" width="144" alt="Application Assia"
                     title="Application Assia">
@@ -16,12 +16,12 @@
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link text-light" href="{{ path('home') }}">
+                        <a class="nav-link text-white" href="{{ path('home') }}">
                             <i class="fas fa-home me-1"></i>Mon espace</a>
                     </li>
                     
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-light" id="navbarDropdownMenuSupports"
+                        <a class="nav-link dropdown-toggle text-white" id="navbarDropdownMenuSupports"
                             role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Suivis</a>
                         <div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownMenuSupports">
                             <a class="dropdown-item" href="{{ path('support_index') }}">Voir tous les suivis</a>
@@ -29,7 +29,7 @@
                         </div>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-light" id="navbarDropdownMenuCalendar"
+                        <a class="nav-link dropdown-toggle text-white" id="navbarDropdownMenuCalendar"
                             role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Agenda
                         </a>
                         <div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownMenuCalendar">
@@ -40,10 +40,10 @@
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-light" href="{{ path('note_index') }}">Notes</a>
+                        <a class="nav-link text-white" href="{{ path('note_index') }}">Notes</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-light" id="navbarDropdownMenuDirectory"
+                        <a class="nav-link dropdown-toggle text-white" id="navbarDropdownMenuDirectory"
                             role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Répertoire
                         </a>
                         <div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownMenuDirectory">
@@ -53,15 +53,15 @@
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-light" href="{{ path('managing') }}">Gestion</a>
+                        <a class="nav-link text-white" href="{{ path('managing') }}">Gestion</a>
                     </li>
                     {% if is_granted('ROLE_ADMIN') %}
                         <li class="nav-item">
-                            <a class="nav-link text-light" href="{{ path('admin') }}">Admin</a>
+                            <a class="nav-link text-white" href="{{ path('admin') }}">Admin</a>
                         </li>
                     {% endif %}
                     <li class="nav-item">
-                        <a class="nav-link text-light" target="_blank"
+                        <a class="nav-link text-white" target="_blank"
                             href="https://drive.google.com/drive/folders/1-B1pHYyNhp2tHFxwcSOWfsYD0qxjJLLs" 
                             onclick="return window.confirm('Vous allez être dirigé vers Google Drive. Continuer ?');"
                             title="Aide" data-bs-toggle="tooltip" data-bs-placement="bottom">
@@ -76,23 +76,23 @@
                         <input name="search-person" id="search-person" class="form-control" type="search"
                             placeholder="Recherche personne" autocomplete="off" 
                             title="Recherche instantanée à partir des 3 premières lettres saisies">
-                        <div id="results_search" class="w-100 list-group pe-sm-2 d-block fade-in"></div>
+                        <div id="results_search" class="w-100 list-group d-block fade-in"></div>
                     </div>
-                    <button class="btn btn-primary border-light my-2 my-sm-0" 
+                    <button class="btn btn-primary border-white my-2 my-sm-0" 
                         title="Rechercher" data-bs-toggle="tooltip" data-bs-placement="bottom" type="submit">
                         <i class="fas fa-search"><span class="visually-hidden">Rechercher</span></i>
                     </button>
                 </form>
-                <div class="text-light text-end w-min-160">
-                    <a id="user-name" class="text-light fw-bold" href="{{ path('my_profile') }}" data-bs-toggle="popover"
+                <div class="text-white text-end w-min-160">
+                    <a id="user-name" class="text-white fw-bold" href="{{ path('my_profile') }}" data-bs-toggle="popover"
                         data-bs-trigger="hover" data-bs-placement="bottom" data-bs-html="true" data-user-id="{{ app.user.id }}"
                         title="{{ app.user.firstname }} {{ app.user.lastname }}" data-bs-content="Dernière connexion : {{ app.user.lastLogin|date('d/m/Y H:i') }}
                         <br/>Statut : {{ app.user.statusToString }}<br/>Services rattachés :<br/>- {{ app.session.get('userServices')|join('<br/>- ') }}">
                         <i class="fas fa-user me-2"></i>{{ app.user.firstname }} {{ app.user.lastname|first }}.
                     </a>
                     <br/>
-                    <a class="text-light" href="{{ path('security_logout') }}">Se déconnecter</a>
-                    <p class="mb-0 text-light small" title="Après l'expiration de la session, vous serez automatiquement déconnecté." 
+                    <a class="text-white" href="{{ path('security_logout') }}">Se déconnecter</a>
+                    <p class="mb-0 text-white small" title="Après l'expiration de la session, vous serez automatiquement déconnecté." 
                         data-bs-toggle="tooltip" data-bs-placement="bottom">Session expire dans <span id="session-timer">...</span></p>
                 </div>
             </div>
