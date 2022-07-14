@@ -1,7 +1,7 @@
 import FormValidator from "../../utils/form/formValidator";
 import SelectManager from "../../utils/form/SelectManager";
 import DateFormater from "../../utils/date/dateFormater";
-import MessageFlash from "../../utils/messageFlash";
+import AlertMessage from "../../utils/AlertMessage";
 import {Modal} from "bootstrap";
 import RdvModel from "./model/RdvModel";
 import ApiCalendar from "../../api/ApiCalendar";
@@ -177,7 +177,7 @@ export default class RdvForm {
 
     requestCreateRdv() {
         if (!this.isValidForm()) {
-            return new MessageFlash('danger', 'Une ou plusieurs informations sont invalides.')
+            return new AlertMessage('danger', 'Une ou plusieurs informations sont invalides.')
         }
 
         if (!this.loader.isActive()) {

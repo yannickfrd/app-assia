@@ -25,10 +25,9 @@ class PaymentEndToEndTest extends PantherTestCase
     public const FORM_PAYMENT = 'form[name="payment"]';
     public const BUTTON_CALCUL_CONTRIBUTION = '#calcul_contribution_btn';
 
-    public const MSG_FLASH = '#js-msg-flash';
-    public const BUTTON_CLOSE_MSG = '#btn-close-msg';
-    public const ALERT_SUCCESS = '.alert.alert-success';
-    public const ALERT_WARNING = '.alert.alert-warning';
+    public const ALERT_SUCCESS = '.toast.alert-success';
+    public const ALERT_WARNING = '.toast.alert-warning';
+    public const BUTTON_CLOSE_MSG = '.toast .btn-close';
 
     protected Client $client;
 

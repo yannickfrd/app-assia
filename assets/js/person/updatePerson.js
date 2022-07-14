@@ -1,6 +1,6 @@
 import ValidationPerson from './validationPerson'
 import Ajax from '../utils/ajax'
-import MessageFlash from '../utils/messageFlash'
+import AlertMessage from '../utils/AlertMessage'
 import Loader from '../utils/loader'
 
 /**
@@ -46,6 +46,6 @@ export default class UpdatePerson {
             document.getElementById('js-person-updated').textContent = `(modifié le ${data.date} par ${data.user}')`
         }
         this.loader.off()
-        new MessageFlash(data.alert, data.msg)
+        new AlertMessage(data.alert, data.msg)
     }
 }

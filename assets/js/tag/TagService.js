@@ -1,4 +1,4 @@
-import MessageFlash from '../utils/messageFlash'
+import AlertMessage from '../utils/AlertMessage'
 import Loader from '../utils/loader'
 import Ajax from '../utils/ajax'
 import Tag from './model/Tag'
@@ -75,7 +75,7 @@ export default class TagService {
             this.ajax.send(e.currentTarget.method, e.currentTarget.action, this.responseAjax.bind(this), formData)
 
         } else {
-            new MessageFlash('warning', 'Vous n\'avez pas sélectionné d\'étiquettes.')
+            new AlertMessage('warning', 'Vous n\'avez pas sélectionné d\'étiquettes.')
             this.loader.off()
         }
     }
@@ -115,7 +115,7 @@ export default class TagService {
             for (let i = 1; i <= this.countAddingTag; i++) {
                 this.tagsTemp.splice(this.tagsTemp.at(-i))
 
-                new MessageFlash(response.alert, response.msg)
+                new AlertMessage(response.alert, response.msg)
             }
         }
         this.countAddingTag = 0
@@ -126,7 +126,7 @@ export default class TagService {
      */
     deleteTag(response) {
         if ('success' !== response.alert) {
-            return new MessageFlash(response.alert, response.msg)
+            return new AlertMessage(response.alert, response.msg)
         }
 
         const tagElt = document.querySelector(`#tags-list span[data-tag-id="${response.data.tagId}"]`)

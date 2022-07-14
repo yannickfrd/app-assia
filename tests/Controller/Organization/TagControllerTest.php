@@ -120,7 +120,7 @@ class TagControllerTest extends WebTestCase
         ]);
         $this->client->submit($form);
 
-        $this->assertSelectorTextContains('.alert.alert-success', 'Les modifications sont enregistrées');
+        $this->assertSelectorTextContains('.toast.alert-success', 'Les modifications sont enregistrées');
     }
 
     public function testDeleteTagIsSuccessful(): void
@@ -130,7 +130,7 @@ class TagControllerTest extends WebTestCase
         $this->client->request('GET', '/admin/tag/2/delete');
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-success', 'L\'étiquette est supprimée');
+        $this->assertSelectorTextContains('.toast.alert-success', 'L\'étiquette est supprimée');
     }
 
     public function testDeleteTagFail(): void

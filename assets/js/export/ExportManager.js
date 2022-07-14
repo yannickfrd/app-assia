@@ -1,5 +1,5 @@
 import Ajax from '../utils/ajax'
-import MessageFlash from '../utils/messageFlash'
+import AlertMessage from '../utils/AlertMessage'
 import Loader from '../utils/loader'
 import {Tooltip} from 'bootstrap'
 
@@ -60,7 +60,7 @@ export default class ExportManager {
         this.loader.off()
 
         if (data.msg) {
-            new MessageFlash(data.alert, data.msg)
+            new AlertMessage(data.alert, data.msg)
         }
 
         if (data.alert === 'danger') {

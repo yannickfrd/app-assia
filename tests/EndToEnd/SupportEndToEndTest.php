@@ -59,7 +59,7 @@ class SupportEndToEndTest extends PantherTestCase
 
         $this->clickElement('#send');
 
-        $this->assertSelectorExists('.alert.alert-success');
+        $this->assertSelectorExists('.toast.alert-success');
     }
 
     public function testDeleteAndRestoreSupport(): void
@@ -109,8 +109,8 @@ class SupportEndToEndTest extends PantherTestCase
 
         $this->clickElement('a[data-original-title="Restaurer"]');
 
-        $this->client->waitFor('.alert');
-        $this->assertSelectorExists('.alert.alert-success');
+        $this->client->waitFor('.toast.alert-success');
+        $this->assertSelectorExists('.toast.alert-success');
     }
 
     protected function tearDown(): void

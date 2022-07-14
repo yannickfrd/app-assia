@@ -1,5 +1,5 @@
 import Ajax from '../utils/ajax'
-import MessageFlash from '../utils/messageFlash'
+import AlertMessage from '../utils/AlertMessage'
 import Loader from '../utils/loader'
 import ParametersUrl from '../utils/parametersUrl'
 import {Modal} from 'bootstrap'
@@ -21,7 +21,7 @@ export default class NoteManager {
         this.deleteModalElt = document.getElementById('modal-block')
         this.deleteModal = new Modal(this.deleteModalElt)
 
-        this.searchSupportNotesElt = document.getElementById('js-search-support-notes')
+        this.searchSupportNotesElt = document.getElementById('accordion_search')
         this.autoSaveElt = document.getElementById('js-auto-save')
         this.countNotesElt = document.getElementById('count-notes')
         this.containerNotesElt = document.getElementById('container-notes')
@@ -155,7 +155,7 @@ export default class NoteManager {
         const note = response.note
 
         if (!this.noteForm.autoSaver.active && response.msg) {
-            this.messageFlash = new MessageFlash(response.alert, response.msg)
+            this.messageFlash = new AlertMessage(response.alert, response.msg)
             this.loader.off()
         }
 

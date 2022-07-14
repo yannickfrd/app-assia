@@ -1,14 +1,9 @@
-<div class="toast" role="alert" aria-live="assertive" aria-atomic="true" autohide="false">
+<div class="toast alert-{{ toast_alert ?? 'light' }}" role="alert" aria-live="assertive" aria-atomic="true" 
+    data-bs-animation="{{ toast_animation ?? 'true' }}" data-bs-delay="{{ toast_delay ?? '8000' }}">
     <div class="toast-header">
-        <img src="" class="rounded me-2" alt="">
-        <strong class="me-auto">
-            {% block toast_title %}Notification{% endblock %}
-        </strong>
-        <small>
-            {% block toast_time %}{% endblock %}
-        </small>
+        <strong class="me-auto">{{ toast_title is defined ? toast_title|raw : 'Notification' }}</strong>
+        <small class="text-muted">{{ toast_date ?? 'now'|date('H:i') }}</small>
         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
     </div>
-    <div class="toast-body"> {% block toast_body %}{% endblock %}
-    </div>
+    <div class="toast-body">{{ toast_message|trans({}, 'forms')|raw }}</div>
 </div>

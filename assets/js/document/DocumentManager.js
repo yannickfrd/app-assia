@@ -5,7 +5,7 @@ import DocumentForm from "./DocumentForm"
 import DocumentViewer from "./DocumentViewer"
 import Dropzone from "../utils/file/dropzone"
 import Loader from '../utils/loader'
-import MessageFlash from '../utils/messageFlash'
+import AlertMessage from '../utils/AlertMessage'
 import TagsManager from '../tag/TagsManager'
 import {Modal, Tooltip} from 'bootstrap'
 
@@ -99,7 +99,7 @@ export default class DocumentManager {
 
         // Check if items are selected.
         if (0 === items.length) {
-            return new MessageFlash('danger', 'Aucun document n\'est sélectionné.')
+            return new AlertMessage('danger', 'Aucun document n\'est sélectionné.')
         }
         // If 'download' action
         if (1 === option) {
@@ -121,7 +121,7 @@ export default class DocumentManager {
         formData.append('items', JSON.stringify(items))
 
         this.ajax.send('POST', this.actionFormElt.action, this.responseAjax.bind(this), formData)
-        return new MessageFlash('success', 'Le téléchargement est en cours. Veuillez patienter...')
+        return new AlertMessage('success', 'Le téléchargement est en cours. Veuillez patienter...')
     }
 
     /**
@@ -220,8 +220,8 @@ export default class DocumentManager {
             case 'restore':
                 this.deleteDocumentTr(response.document)
 
-                this.messageFlash = new MessageFlash(response.alert, response.msg);
-                this.checkToRedirect(this.messageFlash.delay)
+                this.alertMessage = new AlertMessage(response.alert, response.msg);
+                this.checkToRedirect(this.alertMessage.delay)
                 break
             case 'download':
                 return this.getFile(response.data)
@@ -230,8 +230,8 @@ export default class DocumentManager {
         if (!this.loader.isActive()) {
             this.loader.off()
 
-            if (response.msg && !this.messageFlash) {
-                new MessageFlash(response.alert, response.msg);
+            if (response.msg && !this.alertMessage) {
+                new AlertMessage(response.alert, response.msg);
             }
         }
     }

@@ -11,8 +11,6 @@
 
                 {{ form_start(form) }}
 
-                {% include 'model/_flash_message.html.twig' %}
-
                 <h1 class="h3 mb-4 fw-normal">{{ title }}</h1>
 
                 {% include 'app/si_siao/_si_siao_login_form.html.twig' with {'siSiaoLoginForm': form} %}

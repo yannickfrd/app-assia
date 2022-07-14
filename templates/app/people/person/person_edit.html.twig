@@ -14,8 +14,6 @@
             {% include 'app/people/peopleGroup/_nav_group.html.twig' %}
         {% else %}
             <h1 class="h2 mb-3">{{ title }}</h1>
-            {% include 'model/_flash_message.html.twig' %}
-            <div id="js-msg-flash-content"></div>
         {% endif %}
         
         {% if edit_mode %}

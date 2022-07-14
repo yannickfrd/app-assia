@@ -136,7 +136,7 @@ class SiSiaoControllerTest extends WebTestCase
         $this->client->request('GET', '/api-sisiao/import-group/666');
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-warning', "Il n'y a pas de dossier SI-SIAO correspondant avec la clé '666'");
+        $this->assertSelectorTextContains('.toast.alert-warning', "Il n'y a pas de dossier SI-SIAO correspondant avec la clé '666'");
     }
 
     public function testImportGroupIsSuccessful(): void
@@ -147,7 +147,7 @@ class SiSiaoControllerTest extends WebTestCase
         $this->client->request('GET', "/api-sisiao/import-group/{$this->siSiaoGroupId}");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-success', 'Le groupe a été importé');
+        $this->assertSelectorTextContains('.toast.alert-success', 'Le groupe a été importé');
     }
 
     public function testImportEvaluationIsSuccessful(): void
@@ -164,12 +164,12 @@ class SiSiaoControllerTest extends WebTestCase
         $this->client->request('GET', '/api-sisiao/support/1/import-evaluation');
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-success', "L'évaluation sociale a été importée");
+        $this->assertSelectorTextContains('.toast.alert-success', "L'évaluation sociale a été importée");
 
         $this->client->request('GET', '/api-sisiao/support/1/import-evaluation');
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-success', "L'évaluation sociale a été actualisée");
+        $this->assertSelectorTextContains('.toast.alert-success', "L'évaluation sociale a été actualisée");
     }
 
     public function testGetUserIsSuccessful(): void
@@ -244,7 +244,7 @@ class SiSiaoControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-success', 'Le suivi social est créé');
+        $this->assertSelectorTextContains('.toast.alert-success', 'Le suivi social est créé');
     }
 
     protected function tearDown(): void

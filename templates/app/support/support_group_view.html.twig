@@ -21,9 +21,6 @@
 			</div>
 		</div>
 
-		{% include 'model/_flash_message.html.twig' %}
-		<div id="js-msg-flash-content"></div>
-
 		{% set people_group = support.peopleGroup %}
 		<div class='small text-secondary'>
 			<p>Créé le {{ support.createdAt|date('d/m/Y à H:i') }}{{ support.createdBy ? ' par ' ~ support.createdBy.fullname }}

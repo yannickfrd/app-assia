@@ -75,7 +75,7 @@ class SupportPersonControllerTest extends WebTestCase
         ]);
 
         $this->assertSelectorTextContains(
-            '.alert.alert-success',
+            '.toast.alert-success',
             $person->getFullname().' est ajouté'.Grammar::gender($person->getGender()).' au suivi en cours.'
         );
     }
@@ -92,7 +92,7 @@ class SupportPersonControllerTest extends WebTestCase
         $this->client->request('GET', "/support-person/$supportPersId/delete/tokenId");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-danger', 'Une erreur');
+        $this->assertSelectorTextContains('.toast.alert-danger', 'Une erreur');
     }
 
     public function testDeleteSupportPersonIsSuccessful(): void
@@ -108,7 +108,7 @@ class SupportPersonControllerTest extends WebTestCase
         $this->client->request('GET', $url);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-warning', 'est retiré');
+        $this->assertSelectorTextContains('.toast.alert-warning', 'est retiré');
     }
 
     public function testGetPeopleInSupportGroupIsSuccessful(): void

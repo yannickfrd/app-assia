@@ -274,7 +274,7 @@ class NoteControllerTest extends WebTestCase
         $this->client->request('GET', "/support/$id/note/new_evaluation");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-warning', 'Il n\'y a pas d\'évaluation sociale créée pour ce suivi.');
+        $this->assertSelectorTextContains('.toast.alert-warning', 'Il n\'y a pas d\'évaluation sociale créée pour ce suivi.');
     }
 
     public function testGenerateNoteEvaluationIsSuccessful(): void

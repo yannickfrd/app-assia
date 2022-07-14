@@ -33,7 +33,7 @@ nav.fixed-top {
 // Small devices (landscape phones, 576px and up)
 @media (max-width: 576px) {
     nav.fixed-top {
-        min-height: 50px;
+        min-height: $header-xs-height;
     }
 
     #logo-site {

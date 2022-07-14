@@ -19,42 +19,35 @@
     </head>
 
     <body id="top-body">
-    <div id="loader" role="status">
-        <div class="d-flex flex-column align-items-center link-primary">
-            <span class="fas fa-circle-notch"></span>
-            <span class="small" data-value="Chargement...">Chargement...</span>
-        </div>
-    </div>
-
-    <main class="min-vh-100">
-        <header>
-            {% include '_shared/_navbar.html.twig' %}
-        </header>   
-
-        <div class="z-index-9999 fixed-bottom">
-            <div id="js-notif-container" class="container py-0 d-none"></div>
+        <div id="loader" role="status">
+            <div class="d-flex flex-column align-items-center link-primary">
+                <i class="fas fa-circle-notch"></i>
+                <span class="small" data-value="Chargement...">Chargement...</span>
+            </div>
         </div>
 
-        {% include '_shared/_auto_logout.html.twig' %}
+        <main class="min-vh-100">
+            <header>
+                {% include '_shared/_navbar.html.twig' %}
+            </header>   
 
-        {% block body %}{% endblock %}
+            {% block body %}{% endblock %}
 
-        {% if app_env != 'test' %}
-            <a id="scroll-top" href="#top-body">
-                <span class="fa fa-chevron-up"></span>
-            </a>
-        {% endif %}
+            {% include '_shared/_alert_message.html.twig' %}
+            {% include '_shared/_auto_logout.html.twig' %}
 
-        {% if app_env == 'demo' %}
-            {% include '_shared/_demo_toast.html.twig' %}
-        {% endif %}
+            {% if app_env != 'test' %}
+                <a id="scroll-top" href="#top-body">
+                    <i class="fa fa-chevron-up"></i>
+                </a>
+            {% endif %}
 
-    </main>
+        </main>
 
-    {% include '_shared/_footer.html.twig' %}
+        {% include '_shared/_footer.html.twig' %}
 
-    {{ encore_entry_script_tags('app') }}
-    {% block javascripts %}{% endblock %}
+        {{ encore_entry_script_tags('app') }}
+        {% block javascripts %}{% endblock %}
 
     </body>
 </html>

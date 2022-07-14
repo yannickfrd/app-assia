@@ -48,10 +48,10 @@ class PersonEndToEndTest extends PantherTestCase
 
         $this->clickElement('#updatePerson');
 
-        $this->client->waitFor('#js-msg-flash');
-        $this->assertSelectorExists('#js-msg-flash.alert.alert-success');
+        $this->client->waitFor('#alert-message');
+        $this->assertSelectorExists('#alert-message.toast.alert-success');
 
-        $this->clickElement('#btn-close-msg');
+        $this->clickElement('.toast .btn-close');
     }
 
     private function createNewGroupForPerson(): void
@@ -70,7 +70,7 @@ class PersonEndToEndTest extends PantherTestCase
 
         $this->clickElement('#js-btn-confirm');
 
-        $this->assertSelectorTextContains('.alert.alert-success', 'Le nouveau groupe est créé.');
+        $this->assertSelectorTextContains('.toast.alert-success', 'Le nouveau groupe est créé.');
     }
 
     protected function tearDown(): void

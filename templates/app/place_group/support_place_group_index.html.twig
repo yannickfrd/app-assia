@@ -11,7 +11,6 @@
 
 		{% include 'app/support/_partials/_support_nav.html.twig' %}
 
-		{% include 'model/_flash_message.html.twig' %}
 		<a href="{{ path('support_place_new', {'id': support.id}) }}" class="btn btn-primary btn-sm mb-3">
 			<span class="fas fa-plus-square me-2"></span>Ajouter une prise en charge</a>
 		{% if support_group_places|length == 0 %}

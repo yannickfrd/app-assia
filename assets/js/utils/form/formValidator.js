@@ -1,4 +1,4 @@
-import MessageFlash from '../messageFlash'
+import AlertMessage from '../AlertMessage'
 
 /**
  * Contrôle de la validité des champs d'un formualaire
@@ -34,7 +34,7 @@ export default class FormValidator {
         const nbErrors = this.getNbErrors()
         if (nbErrors > 0) {
             this.scrollToFirstInvalidElt()
-            new MessageFlash('danger', 'Veuillez corriger les erreurs indiquées avant d\'enregistrer.')
+            new AlertMessage('danger', 'Veuillez corriger les erreurs indiquées avant d\'enregistrer.')
         }
         return nbErrors
     }

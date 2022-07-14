@@ -64,7 +64,7 @@ class ReferentControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.alert.alert-success');
+        $this->assertSelectorExists('.toast.alert-success');
     }
 
     public function testEditReferentIsSuccessful(): void
@@ -118,12 +118,12 @@ class ReferentControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.alert.alert-success');
+        $this->assertSelectorExists('.toast.alert-success');
 
         $this->client->clickLink('Supprimer');
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-warning', 'Le service social Référent test est supprimé.');
+        $this->assertSelectorTextContains('.toast.alert-warning', 'Le service social Référent test est supprimé.');
     }
 
     protected function tearDown(): void

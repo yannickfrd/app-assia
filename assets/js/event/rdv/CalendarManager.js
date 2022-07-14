@@ -1,5 +1,5 @@
 import Ajax from '../../utils/ajax'
-import MessageFlash from '../../utils/messageFlash'
+import AlertMessage from '../../utils/AlertMessage'
 import Loader from '../../utils/loader'
 import ParametersUrl from '../../utils/parametersUrl'
 import ApiCalendar from '../../api/ApiCalendar';
@@ -185,7 +185,7 @@ export default class CalendarManager {
             }
         }
         if (data.msg) {
-            new MessageFlash(data.alert, data.msg)
+            new AlertMessage(data.alert, data.msg)
         }
         this.loader.off()
     }

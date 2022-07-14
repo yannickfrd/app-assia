@@ -15,9 +15,6 @@
 			{% include 'app/people/peopleGroup/_nav_group.html.twig' %}
 		{% endif %}
 
-		{% include 'model/_flash_message.html.twig' %}
-		<div id="js-msg-flash-content"></div>
-
 		{% if support.service.coefficient == YES and coef_form is defined and is_granted('ROLE_ADMIN') %}
 			{% include 'app/support/_partials/_support_coefficient_form.html.twig' %}
 		{% endif %}

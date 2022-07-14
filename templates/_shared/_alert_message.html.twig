@@ -1,0 +1,19 @@
+<div class="toast-container">
+    {% if app_env == 'demo' %}
+        {% include 'model/_toast.html.twig' with {
+            toast_alert: 'warning',
+            toast_title: '<i class="fas fa-exclamation-triangle me-1"></i>Version démo d\'Assia',
+            toast_message: 'Ceci est une version de démo de l\'application.<br/>Les données ne seront pas conservées.',
+        } %}
+    {% endif %}
+    {% if app.request.hasPreviousSession %}
+        {% for alert, messages in app.flashes %}
+            {% for message in messages %}
+                {% include 'model/_toast.html.twig' with {
+                    toast_alert: alert, 
+                    toast_message: message,
+                } %}
+            {% endfor %}
+        {% endfor %}
+    {% endif %}
+</div>

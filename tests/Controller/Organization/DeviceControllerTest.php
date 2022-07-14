@@ -100,7 +100,7 @@ class DeviceControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.alert.alert-success');
+        $this->assertSelectorExists('.toast.alert-success');
     }
 
     public function testEditDeviceIsSuccessful(): void
@@ -116,7 +116,7 @@ class DeviceControllerTest extends WebTestCase
         $this->client->submitForm('send');
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.alert.alert-success');
+        $this->assertSelectorExists('.toast.alert-success');
     }
 
     public function testDisableDeviceIsFailed(): void
@@ -137,12 +137,12 @@ class DeviceControllerTest extends WebTestCase
         $this->client->request('GET', "/admin/device/$id/disable");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-warning', 'Le dispositif est désactivé.');
+        $this->assertSelectorTextContains('.toast.alert-warning', 'Le dispositif est désactivé.');
 
         $this->client->request('GET', "/admin/device/$id/disable");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-success', 'Le dispositif est ré-activé.');
+        $this->assertSelectorTextContains('.toast.alert-success', 'Le dispositif est ré-activé.');
     }
 
     protected function tearDown(): void

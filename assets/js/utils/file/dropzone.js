@@ -1,5 +1,5 @@
 import FileChecker from './fileChecker'
-import MessageFlash from '../messageFlash'
+import AlertMessage from '../AlertMessage'
 import { Tooltip } from 'bootstrap'
 
 /**
@@ -94,7 +94,7 @@ export default class Dropzone {
      */
     checkFile(file) {
         if (this.filesInCollection(file)) {
-            new MessageFlash('danger', 'Le fichier "' + file.name + '" a déjà été ajouté.')
+            new AlertMessage('danger', 'Le fichier "' + file.name + '" a déjà été ajouté.')
             return false
         }
 
@@ -218,7 +218,7 @@ export default class Dropzone {
         }
 
         if (status !== 'success') {
-            new MessageFlash(status, message)
+            new AlertMessage(status, message)
         }
 
         return message;

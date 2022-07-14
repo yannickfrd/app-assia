@@ -20,11 +20,10 @@ class NoteEndToEndTest extends PantherTestCase
     public const NOTES_TABLE = '#table-notes';
     public const BUTTON_SHOW_NOTE = '#table-notes a[data-action="show"]';
 
-    public const MSG_FLASH = '#js-msg-flash';
-    public const BUTTON_CLOSE_MSG = '#btn-close-msg';
-    public const ALERT_SUCCESS = '.alert.alert-success';
-    public const ALERT_WARNING = '.alert.alert-warning';
-    public const ALERT_DANGER = '.alert.alert-danger';
+    public const ALERT_SUCCESS = '.toast.alert-success';
+    public const ALERT_WARNING = '.toast.alert-warning';
+    public const ALERT_DANGER = '.toast.alert-danger';
+    public const BUTTON_CLOSE_MSG = '.toast .btn-close';
 
     protected Client $client;
 
@@ -75,7 +74,7 @@ class NoteEndToEndTest extends PantherTestCase
         $this->clickElement('#support-notes');
 
         $this->client->waitFor(self::CONTAINER_NOTES);
-        $this->assertSelectorTextContains('h1', 'Notes sociales');
+        $this->assertSelectorTextContains('h1', 'Notes');
     }
 
     private function showNotesByTableView(): void
@@ -85,7 +84,7 @@ class NoteEndToEndTest extends PantherTestCase
         $this->clickElement('a#table-view');
 
         $this->client->waitFor(self::CONTAINER_NOTES.'.table-responsive');
-        $this->assertSelectorTextContains('h1', 'Notes sociales');
+        $this->assertSelectorTextContains('h1', 'Notes');
     }
 
     private function failToCreateNote(): void

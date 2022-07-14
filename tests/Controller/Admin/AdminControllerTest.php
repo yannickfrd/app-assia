@@ -47,7 +47,7 @@ class AdminControllerTest extends WebTestCase
         $this->client->request('GET', '/admin/cache/clear');
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-success', 'Le cache est vidé.');
+        $this->assertSelectorTextContains('.toast.alert-success', 'Le cache est vidé.');
     }
 
     public function testGlossaryPageIsUp(): void

@@ -79,7 +79,7 @@ class PlaceGroupControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
 
-        $this->assertSelectorTextContains('.alert.alert-success', 'L\'hébergement est créé.');
+        $this->assertSelectorTextContains('.toast.alert-success', 'L\'hébergement est créé.');
     }
 
     public function testCreateNewPlaceGroupIsFailed(): void
@@ -92,7 +92,7 @@ class PlaceGroupControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.alert.alert-danger');
+        $this->assertSelectorExists('.toast.alert-danger');
     }
 
     public function testEditPlaceGroupIsSuccessful(): void
@@ -108,7 +108,7 @@ class PlaceGroupControllerTest extends WebTestCase
         $this->client->submitForm('send');
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.alert.alert-success');
+        $this->assertSelectorExists('.toast.alert-success');
     }
 
     public function testAdPersonToPlaceIsSuccessful(): void
@@ -128,7 +128,7 @@ class PlaceGroupControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Logement/hébergement');
-        $this->assertSelectorTextContains('.alert.alert-success', 'à la prise en charge.');
+        $this->assertSelectorTextContains('.toast.alert-success', 'à la prise en charge.');
     }
 
     public function testDeletePlaceGroupIsSuccessful(): void
@@ -137,7 +137,7 @@ class PlaceGroupControllerTest extends WebTestCase
         $this->client->request('GET', "/support/group-people-place/$id/delete");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-warning', 'La prise en charge est supprimée.');
+        $this->assertSelectorTextContains('.toast.alert-warning', 'La prise en charge est supprimée.');
     }
 
     public function testDeletePlacePersonIsSuccessful(): void
@@ -146,7 +146,7 @@ class PlaceGroupControllerTest extends WebTestCase
         $this->client->request('GET', "/support/place-person/$id/delete");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.alert.alert-warning');
+        $this->assertSelectorExists('.toast.alert-warning');
     }
 
     protected function tearDown(): void

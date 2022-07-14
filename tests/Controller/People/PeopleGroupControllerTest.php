@@ -99,7 +99,7 @@ class PeopleGroupControllerTest extends WebTestCase
         $this->client->request('POST', "/group/$id/add_person/$personId");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-danger', 'Une erreur s\'est produite.');
+        $this->assertSelectorTextContains('.toast.alert-danger', 'Une erreur s\'est produite.');
 
         // Success
         $person = $this->fixtures['person5'];
@@ -112,7 +112,7 @@ class PeopleGroupControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-success', $person->getFullname().' est ajouté'.Grammar::gender($person->getGender()).' au groupe.');
+        $this->assertSelectorTextContains('.toast.alert-success', $person->getFullname().' est ajouté'.Grammar::gender($person->getGender()).' au groupe.');
     }
 
     public function testRemovePersonInGroupIsSuccessful(): void
@@ -129,13 +129,13 @@ class PeopleGroupControllerTest extends WebTestCase
         $this->client->request('GET', "/role_person/$id/remove/token");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.alert.alert-danger');
+        $this->assertSelectorExists('.toast.alert-danger');
 
         // Success
         $this->client->request('GET', $url);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-warning', 'est retiré');
+        $this->assertSelectorTextContains('.toast.alert-warning', 'est retiré');
     }
 
     protected function tearDown(): void

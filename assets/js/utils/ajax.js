@@ -1,4 +1,4 @@
-import MessageFlash from './messageFlash'
+import AlertMessage from './AlertMessage'
 
 /**
  * Requête AJAX.
@@ -164,9 +164,9 @@ export default class Ajax {
         console.error(error.message)
 
         if (error.message === '403 Forbidden access') {
-            return new MessageFlash('danger', 'Accès refusé. Vous n\'avez pas les droits pour effectuer cette action.')
+            return new AlertMessage('danger', 'Accès refusé. Vous n\'avez pas les droits pour effectuer cette action.')
         }
 
-        new MessageFlash('danger', `Une erreur s'est produite (${error.message}).`)
+        new AlertMessage('danger', `Une erreur s'est produite (${error.message}).`)
     }
 }

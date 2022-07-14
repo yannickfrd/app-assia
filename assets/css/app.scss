@@ -2,6 +2,7 @@
 
 $header-md-height: 80px;
 $header-sm-height: 60px;
+$header-xs-height: 50px;
 
 @import "./_mixins";
 
@@ -90,6 +91,6 @@ a:not(:hover) {
 // Small devices (landscape phones, 576px and up)
 @media (max-width: 576px) {
     body {
-        padding-top: 50px;
+        padding-top: $header-xs-height;
     }
 }

@@ -1,4 +1,4 @@
-import MessageFlash from '../utils/messageFlash'
+import AlertMessage from '../utils/AlertMessage'
 import Loader from '../utils/loader'
 
 /**
@@ -54,10 +54,10 @@ export default class AjaxRequest {
         }
         
         if (this.xhr.status === 403) {
-            return new MessageFlash('danger', 'Vous n\'avez pas les droits pour effectuer cette action.')
+            return new AlertMessage('danger', 'Vous n\'avez pas les droits pour effectuer cette action.')
         }
         
-        new MessageFlash('danger', `Une erreur s'est produite (${this.xhr.status} ${this.xhr.statusText}).`)
+        new AlertMessage('danger', `Une erreur s'est produite (${this.xhr.status} ${this.xhr.statusText}).`)
         this.loader.off()
         throw new Error (`Statut: ${this.xhr.status} ${this.xhr.statusText}`)
     }

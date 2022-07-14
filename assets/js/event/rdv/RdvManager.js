@@ -1,5 +1,5 @@
 import Ajax from '../../utils/ajax'
-import MessageFlash from '../../utils/messageFlash'
+import AlertMessage from '../../utils/AlertMessage'
 import Loader from '../../utils/loader'
 import {Modal} from 'bootstrap'
 import RdvForm from "./RdvForm";
@@ -91,7 +91,7 @@ export default class RdvManager {
         const apiUrls = response.apiUrls
 
         if (response.msg) {
-            this.messageFlash = new MessageFlash(response.alert, response.msg)
+            this.messageFlash = new AlertMessage(response.alert, response.msg)
         }
 
         if (response.action) {

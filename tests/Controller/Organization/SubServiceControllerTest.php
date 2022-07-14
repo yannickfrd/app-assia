@@ -40,7 +40,7 @@ class SubServiceControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.alert.alert-success');
+        $this->assertSelectorExists('.toast.alert-success');
     }
 
     public function testEditSubServiceIsSuccessful(): void
@@ -61,7 +61,7 @@ class SubServiceControllerTest extends WebTestCase
         $this->client->submitForm('send', []);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.alert.alert-success');
+        $this->assertSelectorExists('.toast.alert-success');
     }
 
     public function testDisableSubService(): void
@@ -73,12 +73,12 @@ class SubServiceControllerTest extends WebTestCase
         $this->client->request('GET', "/sub-service/$id/disable");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-warning', 'est désactivé');
+        $this->assertSelectorTextContains('.toast.alert-warning', 'est désactivé');
 
         $this->client->request('GET', "/sub-service/$id/disable");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.alert.alert-success', 'est ré-activé');
+        $this->assertSelectorExists('.toast.alert-success', 'est ré-activé');
     }
 
     protected function getFixtureFiles(): array

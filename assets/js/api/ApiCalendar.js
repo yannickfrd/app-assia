@@ -1,5 +1,5 @@
 import Ajax from "../utils/ajax";
-import MessageFlash from "../utils/messageFlash";
+import AlertMessage from "../utils/AlertMessage";
 
 export default class ApiCalendar {
     constructor() {
@@ -76,10 +76,10 @@ export default class ApiCalendar {
                 window.open(data.url, '_blank')
                 break
             case 'delete':
-                new MessageFlash(data.alert, data.msg)
+                new AlertMessage(data.alert, data.msg)
                 break
             case 'update':
-                new MessageFlash(data.alert, data.msg)
+                new AlertMessage(data.alert, data.msg)
                 break
         }
     }

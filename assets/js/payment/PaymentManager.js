@@ -1,5 +1,5 @@
 import Ajax from '../utils/ajax'
-import MessageFlash from '../utils/messageFlash'
+import AlertMessage from '../utils/AlertMessage'
 import Loader from '../utils/loader'
 import {Modal} from 'bootstrap'
 import PaymentForm from "./PaymentForm";
@@ -159,7 +159,7 @@ export default class PaymentManager {
             case 'restore':
                 this.deletedPaymentTr(payment)
 
-                this.messageFlash = new MessageFlash(response.alert, response.msg)
+                this.messageFlash = new AlertMessage(response.alert, response.msg)
                 this.checkToRedirect(this.messageFlash.delay)
                 break
         }
@@ -169,7 +169,7 @@ export default class PaymentManager {
             this.paymentModal.hide()
 
             if (response.msg && !this.messageFlash) {
-                new MessageFlash(response.alert, response.msg)
+                new AlertMessage(response.alert, response.msg)
             }
         }
         this.calculateSumAmts()

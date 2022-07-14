@@ -1,0 +1,71 @@
+.toast-container {
+    position: fixed;
+    top: $header-md-height;
+    right: 0;
+    padding: 1rem;
+    z-index: 9999;
+
+    & .toast {
+        opacity: .95;
+    }
+}
+
+@media (max-width: 768px) {
+    .toast-container {
+        top: $header-sm-height;
+    }
+}
+
+@media (max-width: 576px) {
+    .toast-container {
+        top: $header-xs-height;
+        padding: .75rem;
+    }
+}
+
+@each $color, $value in $theme-colors {
+    $alert-background: shift-color($value, $alert-bg-scale);
+    $alert-border: shift-color($value, $alert-border-scale);
+    $alert-color: shift-color($value, $alert-color-scale);
+
+    @if (contrast-ratio($alert-background, $alert-color) < $min-contrast-ratio) {
+        $alert-color: mix($value, color-contrast($alert-background), abs($alert-color-scale));
+    }
+
+    .alert-#{$color} {
+        @include alert-variant($alert-background, $alert-border, $alert-color);
+    }
+}
+
+/* petit espace gris pour la timeline */
+// .toast:after {
+//     position: absolute;
+//     bottom: -1px;
+//     left: 0;
+//     content: " ";
+//     width: 100%;
+//     height: 4px;
+//     background: var(--bs-gray-400);
+//     border-radius: 0 0 4px 4px;
+//     z-index: 9;
+// }
+
+// .alert-timeline {
+//     position: absolute;
+//     bottom: -1px;
+//     left: 0;
+//     height: 4px;
+//     border-radius: 0 0 4px 4px;
+//     z-index: 10;
+//     animation: timeline 10s ease forwards;
+// }
+
+// @keyframes timeline {
+//     0% {
+//         width: 0;
+//     }
+
+//     100% {
+//         width: 100%;
+//     }
+// }

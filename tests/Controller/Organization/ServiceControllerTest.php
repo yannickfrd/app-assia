@@ -133,12 +133,12 @@ class ServiceControllerTest extends WebTestCase
         $this->client->request('GET', "/admin/service/$id/disable");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-warning', 'est désactivé');
+        $this->assertSelectorTextContains('.toast.alert-warning', 'est désactivé');
 
         $this->client->request('GET', "/admin/service/$id/disable");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-success', 'est ré-activé');
+        $this->assertSelectorTextContains('.toast.alert-success', 'est ré-activé');
     }
 
     protected function getFixtureFiles(): array

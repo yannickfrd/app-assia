@@ -1,7 +1,7 @@
 import PaymentManager from './PaymentManager'
 import FormValidator from "../utils/form/formValidator";
 import ParametersUrl from "../utils/parametersUrl";
-import MessageFlash from "../utils/messageFlash";
+import AlertMessage from "../utils/AlertMessage";
 import FieldDisplayer from "../utils/form/fieldDisplayer";
 import ContributionCalcul from "./ContributionCalcul";
 
@@ -141,7 +141,7 @@ export default class PaymentForm {
                     new FormData(this.formPaymentElt)
                 )
             } else {
-                new MessageFlash('danger', 'Veuillez corriger le(s) erreur(s) avant d\'enregistrer.')
+                new AlertMessage('danger', 'Veuillez corriger le(s) erreur(s) avant d\'enregistrer.')
                 this.loader.off()
             }
         }

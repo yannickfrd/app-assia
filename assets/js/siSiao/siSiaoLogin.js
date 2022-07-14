@@ -1,6 +1,6 @@
 import Loader from '../utils/loader'
 import Ajax from '../utils/ajax'
-import MessageFlash from '../utils/messageFlash'
+import AlertMessage from '../utils/AlertMessage'
 import { Modal } from 'bootstrap'
 import SeePassword from '../security/seePassword'
 
@@ -71,7 +71,7 @@ export default class SiSiaoLogin {
         if (data.alert && true === data.isConnected) {
             this.isConnected = true
             this.siSiaoLoginCheckboxElt.checked = true
-            return new MessageFlash(data.alert, data.msg)
+            return new AlertMessage(data.alert, data.msg)
         }
         this.isConnected = false
         this.showModal()
@@ -101,6 +101,6 @@ export default class SiSiaoLogin {
             
         }
 
-        new MessageFlash(data.alert, data.msg)
+        new AlertMessage(data.alert, data.msg)
     }
 }

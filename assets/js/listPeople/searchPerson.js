@@ -1,7 +1,7 @@
 import Loader from '../utils/loader'
 import Ajax from '../utils/ajax'
 import SiSiaoLogin from '../siSiao/siSiaoLogin'
-import MessageFlash from '../utils/messageFlash'
+import AlertMessage from '../utils/AlertMessage'
 import { Modal } from 'bootstrap'
 import  '../utils/maskNumber'
 
@@ -126,7 +126,7 @@ export default class SearchPerson {
     sendRequest() {
         if (this.siSiaoSearchCheckboxElt && this.siSiaoSearchCheckboxElt.checked && this.siSiaoLogin.isConnected) {
             if (0 === this.siSiaoIdInputElt.value.length) {
-                return new MessageFlash('danger', "L'ID groupe est obligatoire pour effectuer une recherche via le SI-SIAO.")
+                return new AlertMessage('danger', "L'ID groupe est obligatoire pour effectuer une recherche via le SI-SIAO.")
             }
             const url = '/api-sisiao/show-group/'+ this.siSiaoIdInputElt.value
             return this.ajax.send('GET', url, this.responseShowGroup.bind(this))

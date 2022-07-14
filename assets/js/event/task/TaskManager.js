@@ -1,7 +1,7 @@
 import Loader from '../../utils/loader'
 import Ajax from '../../utils/ajax.js'
 import TaskForm from './TaskForm.js'
-import MessageFlash from '../../utils/messageFlash'
+import AlertMessage from '../../utils/AlertMessage'
 import {Modal} from 'bootstrap'
 
 export default class TaskManager {
@@ -98,7 +98,7 @@ export default class TaskManager {
      */
     responseAjax(response) {
         if (response.msg) {
-            this.messageFlash = new MessageFlash(response.alert, response.msg)
+            this.messageFlash = new AlertMessage(response.alert, response.msg)
         }
 
         if (response.action) {

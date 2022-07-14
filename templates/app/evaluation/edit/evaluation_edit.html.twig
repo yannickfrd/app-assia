@@ -23,9 +23,6 @@
 
 		{{ form_start(form) }}
 
-		{% include 'model/_flash_message.html.twig' %}
-		<div id="js-msg-flash-content"></div>
-
 		<div class="row mb-3 align-items-center">
 			<div class="col-md-6 my-2 small text-secondary" data-edit-mode="{{ edit_mode ? 'true' : 'false' }}">
 				Créée le {{ evaluation_group.createdAt|date('d/m/Y à H:i') }}

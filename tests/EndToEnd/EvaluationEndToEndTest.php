@@ -16,10 +16,9 @@ class EvaluationEndToEndTest extends PantherTestCase
     public const BUTTON_SAVE = 'button[name="send"]';
     public const BUTTON_DELETE = 'a#modal-btn-delete';
 
-    public const MSG_FLASH = '#js-msg-flash';
-    public const BUTTON_CLOSE_MSG = '#btn-close-msg';
-    public const ALERT_SUCCESS = '.alert.alert-success';
-    public const ALERT_WARNING = '.alert.alert-warning';
+    public const BUTTON_CLOSE_MSG = '.toast .btn-close';
+    public const ALERT_SUCCESS = '.toast.alert-success';
+    public const ALERT_WARNING = '.toast.alert-warning';
 
     protected Client $client;
 

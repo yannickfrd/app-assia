@@ -108,9 +108,9 @@ th.required:after {
     }
 
     & .is-invalid:valid {
-        border-color: var(--bs-danger) !important;
         padding-right: 0.75rem ;
-        background-image: none;
+        border-color: var(--bs-danger) !important;
+        background-image: none !important;
 
         &:focus {
             box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;

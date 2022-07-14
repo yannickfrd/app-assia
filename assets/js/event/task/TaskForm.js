@@ -1,4 +1,4 @@
-import MessageFlash from '../../utils/messageFlash'
+import AlertMessage from '../../utils/AlertMessage'
 import DateFormater from '../../utils/date/dateFormater'
 import SelectManager from '../../utils/form/SelectManager'
 import WidgetCollectionManager from '../../utils/form/WidgetCollectionManager'
@@ -115,7 +115,7 @@ export default class TaskForm
         }
 
         if (!this.isValidForm()) {
-            return new MessageFlash('danger', 'Une ou plusieurs informations sont invalides.')
+            return new AlertMessage('danger', 'Une ou plusieurs informations sont invalides.')
         }
 
         this.loader.on()

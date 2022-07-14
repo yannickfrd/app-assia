@@ -123,6 +123,8 @@ final class PeopleGroupController extends AbstractController
 
         if ($this->isCsrfTokenValid('remove'.$rolePerson->getId(), $_token)) {
             $peopleGroupManager->removePerson($rolePerson);
+        } else {
+            $this->addFlash('danger', 'Une erreur s\'est produite');
         }
 
         return $this->redirectToRoute('people_group_show', ['id' => $peopleGroup->getId()]);
