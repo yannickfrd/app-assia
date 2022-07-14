@@ -14,31 +14,10 @@
                 <h2 class="h5">Utilisateurs</h2>
                 <ul>
                     <li class="mb-2 text-primary">
-                        <a class="link-primary" href="{{ path('security_registration') }}">Créer un compte</a>
+                        <a class="link-primary" href="{{ path('security_registration') }}">Créer un compte utilisateur</a>
                     </li>
                     <li class="mb-2 text-primary">
-                        <a class="link-primary" href="{{ path('admin_user_index') }}">Gérer les comptes</a>
-                    </li>
-                </ul>
-
-                <hr class="my-3">
-
-                <h2 class="h5">Organismes prescripteurs</h2>
-                <ul>
-                    <li class="mb-2 text-primary">
-                        <a class="link-primary" href="{{ path('admin_organization_new') }}">Créer un organisme prescripteur</a>
-                    </li>
-                    <li class="mb-2 text-primary">
-                        <a class="link-primary" href="{{ path('organization_index') }}">Gérer les organismes prescripteurs</a>
-                    </li>
-                </ul>
-
-                <hr class="my-3">
-
-                <h2 class="h5">Documents</h2>
-                <ul>
-                    <li class="mb-2 text-primary">
-                        <a class="link-primary" href="{{ path('document_index') }}">Rechercher des documents</a>
+                        <a class="link-primary" href="{{ path('admin_user_index') }}">Gérer les comptes Utilisateurs</a>
                     </li>
                 </ul>
 
@@ -46,22 +25,40 @@
 
                     <hr class="my-3">
 
-                    <h2 class="h5">Services, pôles et dispositifs</h2>
+                    <h2 class="h5">Pôles, services et dispositifs</h2>
                     <ul>
                         <li class="mb-2 text-primary">
-                            <a class="link-primary" href="{{ path('service_new') }}">Créer un service</a>
+                            <a class="link-primary" href="{{ path('pole_index') }}">Gérer les pôles</a>
                         </li>
                         <li class="mb-2 text-primary">
-                            <a class="link-primary" href="{{ path('pole_new') }}">Créer un pôle</a>
-                        </li>
-                        <li class="mb-2 text-primary">
-                            <a class="link-primary" href="{{ path('admin_device_new') }}">Créer un dispositif</a>
+                            <a class="link-primary" href="{{ path('service_index') }}">Gérer les service</a>
                         </li>
                         <li class="mb-2 text-primary">
                             <a class="link-primary" href="{{ path('admin_devices') }}">Gérer les dispositifs</a>
                         </li>
                         <li class="mb-2 text-primary">
                             <a class="link-primary" href="{{ path('admin_tag_index') }}">Gérer les étiquettes</a>
+                        </li>
+                    </ul>
+
+                    <hr class="my-3">
+
+                    <h2 class="h5">Organismes prescripteurs</h2>
+                    <ul>
+                        <li class="mb-2 text-primary">
+                            <a class="link-primary" href="{{ path('admin_organization_new') }}">Créer un organisme prescripteur</a>
+                        </li>
+                        <li class="mb-2 text-primary">
+                            <a class="link-primary" href="{{ path('organization_index') }}">Gérer les organismes prescripteurs</a>
+                        </li>
+                    </ul>
+
+                    <hr class="my-3">
+
+                    <h2 class="h5">Documents</h2>
+                    <ul>
+                        <li class="mb-2 text-primary">
+                            <a class="link-primary" href="{{ path('document_index') }}">Rechercher des documents</a>
                         </li>
                     </ul>
 
@@ -74,9 +71,15 @@
                         </li>
                     </ul>
 
-                {% endif %}
+                {% else %}
 
-                <hr class="my-3">
+                    <h2 class="h5">Services</h2>
+                    <ul>
+                        <li class="mb-2 text-primary">
+                            <a class="link-primary" href="{{ path('service_index') }}">Gérer les services</a>
+                        </li>
+                    </ul>
+                {% endif %}
 
             </div>
 
@@ -89,9 +92,9 @@
                     </li>
                 </ul>
 
-                <hr class="my-3">
-
                 {% if is_granted('ROLE_SUPER_ADMIN') %}
+
+                    <hr class="my-3">
 
                     <h2 class="h5">Cache</h2>
                     <ul>
