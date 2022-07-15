@@ -14,51 +14,51 @@
 <div class="table-responsive">
     <table id="table-supports" class="table table-bordered table-striped table-hover text-dark shadow-sm">
         <thead>
-        <tr>
-            <th scope="col" class="align-middle th-w-20"></th>
-            <th scope="col" class="align-middle th-w-120">
-                {{ knp_pagination_sortable(supports, 'Nom et prénom', 'p.lastname') }}
-            </th>
-            <th scope="col" class="align-middle th-date">
-                {{ knp_pagination_sortable(supports, 'Date de naissance', 'p.birthdate') }}
-            </th>
-            <th scope="col" class="align-middle th-w-80">
-                {{ knp_pagination_sortable(supports, 'Typologie familiale', 'g.familyTypology') }}
-            </th>
-            <th scope="col" class="align-middle th-w-120">
-                {{ knp_pagination_sortable(supports, 'Service (Dispositif)', 's.name') }}
-            </th>
-            <th scope="col" class="align-middle th-w-120">
-                {{ knp_pagination_sortable(supports, 'Intervenant·e', 'u.lastname') }}
-            </th>
-            <th scope="col" class="align-middle th-w-100">
-                {{ knp_pagination_sortable(supports, 'Statut', 'sg.status') }}
-            </th>
-            <th scope="col" class="align-middle th-date">
-                {{ knp_pagination_sortable(supports, 'Début de suivi', 'sg.startDate') }}
-            </th>
-            <th scope="col" class="align-middle th-date">
-                {{ knp_pagination_sortable(supports, 'Fin de suivi', 'sg.endDate') }}
-            </th>
-            <th scope="col" class="align-middle th-w-120">
-                {{ knp_pagination_sortable(supports, 'Commune', 'sg.city') }}
-            </th>
-            {% if archive_purge_view is defined %}
-                <th scope="col" class="align-middle th-date">
-                    {{ knp_pagination_sortable(supports, 'Modifié le', 'sg.updatedAt') }}
-                </th>
-            {% endif %}
-            {% if restoration_mode %}
-                <th scope="col" class="align-middle th-date">
-                    {{ knp_pagination_sortable(supports, 'Supprimé le', 'sg.deletedAt') }}
-                </th>
+            <tr>
                 <th scope="col" class="align-middle th-w-20"></th>
-            {% elseif is_granted('ROLE_ADMIN') %}
-                <th scope="col" class="align-middle th-w-20">
-                    {{ knp_pagination_sortable(supports, 'Complétude de l\'évaluation', 'sg.evaluationScore') }}
+                <th scope="col" class="align-middle th-w-120">
+                    {{ knp_pagination_sortable(supports, 'Nom et prénom', 'p.lastname') }}
                 </th>
-            {% endif %}
-        </tr>
+                <th scope="col" class="align-middle th-date">
+                    {{ knp_pagination_sortable(supports, 'Date de naissance', 'p.birthdate') }}
+                </th>
+                <th scope="col" class="align-middle th-w-80">
+                    {{ knp_pagination_sortable(supports, 'Typologie familiale', 'g.familyTypology') }}
+                </th>
+                <th scope="col" class="align-middle th-w-120">
+                    {{ knp_pagination_sortable(supports, 'Service (Dispositif)', 's.name') }}
+                </th>
+                <th scope="col" class="align-middle th-w-120">
+                    {{ knp_pagination_sortable(supports, 'Intervenant·e', 'u.lastname') }}
+                </th>
+                <th scope="col" class="align-middle th-w-100">
+                    {{ knp_pagination_sortable(supports, 'Statut', 'sg.status') }}
+                </th>
+                <th scope="col" class="align-middle th-date">
+                    {{ knp_pagination_sortable(supports, 'Début de suivi', 'sg.startDate') }}
+                </th>
+                <th scope="col" class="align-middle th-date">
+                    {{ knp_pagination_sortable(supports, 'Fin de suivi', 'sg.endDate') }}
+                </th>
+                <th scope="col" class="align-middle th-w-120">
+                    {{ knp_pagination_sortable(supports, 'Commune', 'sg.city') }}
+                </th>
+                {% if archive_purge_view is defined %}
+                    <th scope="col" class="align-middle th-date">
+                        {{ knp_pagination_sortable(supports, 'Modifié le', 'sg.updatedAt') }}
+                    </th>
+                {% endif %}
+                {% if restoration_mode %}
+                    <th scope="col" class="align-middle th-date">
+                        {{ knp_pagination_sortable(supports, 'Supprimé le', 'sg.deletedAt') }}
+                    </th>
+                    <th scope="col" class="align-middle th-w-20"></th>
+                {% elseif is_granted('ROLE_ADMIN') %}
+                    <th scope="col" class="align-middle th-w-20">
+                        {{ knp_pagination_sortable(supports, 'Complétude de l\'évaluation', 'sg.evaluationScore') }}
+                    </th>
+                {% endif %}
+            </tr>
         </thead>
         <tbody>
             {% for support_person in supports %}
