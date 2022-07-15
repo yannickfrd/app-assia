@@ -1,4 +1,4 @@
-require('../../css/features/_document.scss')
+require('../../scss/features/_document.scss')
 
 import DocumentManager from './DocumentManager'
 

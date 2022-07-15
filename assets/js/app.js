@@ -1,4 +1,4 @@
-require('../css/app.scss')
+require('../scss/app.scss')
 import SearchPerson from './searchPerson'
 import autoLogout from './utils/autoLogout'
 import {Popover, Toast, Tooltip} from '../../node_modules/bootstrap'

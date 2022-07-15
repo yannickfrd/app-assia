@@ -5,7 +5,7 @@
 .d-sticky {
     position: sticky;
     top: $header-md-height;
-    background-color: $light;
+    backdrop-filter: blur(2px);
     z-index: 999;
 }
 

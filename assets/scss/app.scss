@@ -20,7 +20,7 @@ html {
 
 body {
     padding-top: $header-md-height;
-    background-color: #fafafafa;
+    background-color: var(--bs-gray-100);
 }
 
 section {
