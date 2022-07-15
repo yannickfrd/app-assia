@@ -2,26 +2,8 @@
     min-width: 140px;
 }
 
-.d-sticky {
-    position: sticky;
-    top: $header-md-height;
-    backdrop-filter: blur(2px);
-    z-index: 999;
-}
-
-@media (max-width: 768px) {
-    .d-sticky  {
-        top: $header-sm-height;
-    }
-}
-
 @media (max-width: 576px) {
     #support_navbar a {
         width: calc(50% - 1rem);
-    }
-
-    .d-sticky {
-        position: relative;
-        top: 0;
     }
 }

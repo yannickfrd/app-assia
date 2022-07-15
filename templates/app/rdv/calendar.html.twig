@@ -8,14 +8,14 @@
 
 {% block body %}
     <section class="my-0">
-        <div class="container pt-{{ support is defined ? '3' : '4' }}" id="calendar-container">
+        <div class="container pt-3" id="calendar-container">
             {% if support is defined %}
                 {% set title = 'Rendez-vous' %}
                 {% include 'app/support/_partials/_support_nav.html.twig' %}
             {% endif %}
-            <div class="d-flex flex-row align-items-center justify-content-between ms-1 mb-2">
+            <div class="d-flex flex-row align-items-center justify-content-between py-2 d-sticky">
                 <div class="d-flex align-items-center">
-                    <h2 class="h2 me-3 mb-0 d-none d-sm-block">Agenda</h2>
+                    <h2 class="h2 ms-1 me-3 mb-0 d-none d-sm-block">Agenda</h2>
                     <a class="btn btn-primary btn-sm shadow me-2" data-bs-toggle="tooltip"
                         data-bs-placement="bottom" title="Passer en vue liste"
                         href="{% if support is defined %}{{ path('support_rdv_index', {'id': support.id}) }}

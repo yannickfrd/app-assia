@@ -11,8 +11,7 @@ $header-xs-height: 50px;
 @import "./_helpers";
 
 @import "./components/_components";
-@import "./features/_note";
-@import "./features/_support";
+@import "./features/_features";
 
 html {
     scroll-behavior: smooth;
