@@ -16,14 +16,17 @@ use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class ReferentController extends AbstractController
 {
     private $em;
+    private $translator;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, TranslatorInterface $translator)
     {
         $this->em = $em;
+        $this->translator = $translator;
     }
 
     /**
@@ -51,7 +54,9 @@ final class ReferentController extends AbstractController
             $this->em->persist($referent);
             $this->em->flush();
 
-            $this->addFlash('success', "Le service social {$referent->getName()} est créé.");
+            $this->addFlash('success', $this->translator->trans('referent.created_successfully',
+                ['referent_name' => $referent->getName()], 'app')
+            );
 
             $this->deleteCacheItems($peopleGroup);
 
@@ -89,7 +94,9 @@ final class ReferentController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->flush();
 
-            $this->addFlash('success', "Le service social {$referent->getName()} est mis à jour.");
+            $this->addFlash('success', $this->translator->trans('referent.updated_successfully',
+                ['referent_name' => $referent->getName()], 'app')
+            );
 
             $this->deleteCacheItems($referent->getPeopleGroup());
         }
@@ -113,9 +120,9 @@ final class ReferentController extends AbstractController
         $this->em->remove($referent);
         $this->em->flush();
 
-        $name = $referent->getName();
-
-        $this->addFlash('warning', "Le service social $name est supprimé.");
+        $this->addFlash('warning', $this->translator->trans('referent.deleted_successfully', [
+            'referent_name' => $referent->getName()
+        ], 'app'));
 
         $this->deleteCacheItems($referent->getPeopleGroup());
 

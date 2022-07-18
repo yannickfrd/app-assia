@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller\Support;
 
-use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Organization\User;
 use App\Entity\People\PeopleGroup;
 use App\Entity\Support\SupportGroup;
@@ -37,11 +36,10 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class SupportGroupController extends AbstractController
 {
-    use ErrorMessageTrait;
-
     /**
      * Liste des suivis sociaux.
      *
@@ -72,7 +70,7 @@ final class SupportGroupController extends AbstractController
         $supportGroup = $supportManager->getNewSupportGroup($peopleGroup, $request);
 
         if (null === $supportGroup->getService()) {
-            $this->addFlash('danger', "Une erreur s'est produite : le nom du service doit être renseigné.");
+            $this->addFlash('danger', 'support_group.service_no_found');
 
             return $this->redirectToRoute('people_group_show', ['id' => $peopleGroup->getId()]);
         }
@@ -97,7 +95,7 @@ final class SupportGroupController extends AbstractController
      * @Route("/support/{id}/show", name="support_show", methods="GET")
      */
     public function show(int $id, SupportManager $supportManager, SupportChecker $supportChecker,
-    SupportCollections $supportCollections): Response
+        SupportCollections $supportCollections): Response
     {
         $supportGroup = $supportManager->getFullSupportGroup($id);
 
@@ -140,7 +138,7 @@ final class SupportGroupController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $supportManager->update($supportGroup, $currentReferent);
 
-            $this->addFlash('success', 'Le suivi social est mis à jour.');
+            $this->addFlash('success', 'support_group.updated_successfully');
         }
 
         $coefForm = $this->createForm(SupportCoefficientType::class, $supportGroup);
@@ -170,7 +168,7 @@ final class SupportGroupController extends AbstractController
 
         SupportManager::deleteCacheItems($supportGroup);
 
-        $this->addFlash('warning', 'Le suivi social est supprimé.');
+        $this->addFlash('warning', 'support_group.deleted_successfully');
 
         return $this->redirectToRoute('people_group_show', ['id' => $supportGroup->getPeopleGroup()->getId()]);
     }
@@ -215,7 +213,7 @@ final class SupportGroupController extends AbstractController
         if ($coefForm->isSubmitted() && $coefForm->isValid()) {
             $em->flush();
 
-            $this->addFlash('success', 'Le coefficient du suivi est mis à jour.');
+            $this->addFlash('success', 'support_group.coefficient.updated_successfully');
 
             SupportManager::deleteCacheItems($supportGroup);
         }
@@ -293,11 +291,11 @@ final class SupportGroupController extends AbstractController
         $this->denyAccessUnlessGranted('EDIT', $supportGroup);
 
         if ($supportDuplicator->duplicate($supportGroup)) {
-            $this->addFlash('success', 'Les informations du précédent suivi ont été ajoutées (évaluation sociale, documents...)');
+            $this->addFlash('success', 'support_group.cloned_successfully');
 
             SupportManager::deleteCacheItems($supportGroup);
         } else {
-            $this->addFlash('warning', 'Aucun autre suivi n\'a été trouvé.');
+            $this->addFlash('warning', 'support_group.any_other_support_to_clone');
         }
 
         return $this->redirectToRoute('support_show', ['id' => $supportGroup->getId()]);
@@ -307,8 +305,11 @@ final class SupportGroupController extends AbstractController
      * @Route("/supports/switch-referent", name="supports_switch_referent")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function switchReferent(Request $request, SupportReferentSwitcher $supportReferentSwitcher): Response
-    {
+    public function switchReferent(
+        Request $request,
+        SupportReferentSwitcher $supportReferentSwitcher,
+        TranslatorInterface $translator
+    ): Response {
         $form = $this->createForm(SwitchSupportReferentType::class)
             ->handleRequest($request);
 
@@ -319,10 +320,12 @@ final class SupportGroupController extends AbstractController
             );
 
             if ($count > 0) {
-                $this->addFlash('success', $count." suivis ont été transférés 
-                    vers {$newReferent->getFullname()}.");
+                $this->addFlash('success', $translator->trans('support_group.switched_referent_successfully', [
+                    'count' => $count,
+                    'referent_name' => $newReferent->getFullname(),
+                ], 'app'));
             } else {
-                $this->addFlash('warning', "Aucun suivi n'a été transféré.");
+                $this->addFlash('warning', 'support_group.any_transfert');
             }
 
             return $this->redirectToRoute('supports_switch_referent');
@@ -341,7 +344,7 @@ final class SupportGroupController extends AbstractController
         $supports = $supportPersonRepo->findSupportsToExport($search);
 
         if (!$supports) {
-            $this->addFlash('warning', 'Aucun résultat à exporter.');
+            $this->addFlash('warning', 'no_result_to_export');
 
             return $this->redirectToRoute('support_index');
         }

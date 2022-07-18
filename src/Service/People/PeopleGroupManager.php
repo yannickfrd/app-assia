@@ -17,6 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PeopleGroupManager
 {
@@ -24,18 +25,21 @@ class PeopleGroupManager
     private $user;
     private $em;
     private $peopleGroupChecker;
-    private $flashbag;
+    private $flashBag;
+    private $translator;
 
     public function __construct(
         Security $security,
         EntityManagerInterface $em,
         PeopleGroupChecker $peopleGroupChecker,
-        FlashBagInterface $flashbag
+        FlashBagInterface $flashBag,
+        TranslatorInterface $translator
     ) {
         $this->user = $security->getUser();
         $this->em = $em;
         $this->peopleGroupChecker = $peopleGroupChecker;
-        $this->flashbag = $flashbag;
+        $this->flashBag = $flashBag;
+        $this->translator = $translator;
     }
 
     public function update(PeopleGroup $peopleGroup, array $supports = [])
@@ -68,7 +72,9 @@ class PeopleGroupManager
     public function addPerson(PeopleGroup $peopleGroup, Person $person, RolePerson $rolePerson, bool $addPersonToSupport = false): ?Person
     {
         if ($this->personIsInGroup($peopleGroup, $person)) {
-            $this->flashbag->add('warning', $person->getFullname().' est déjà dans le groupe.');
+            $this->flashBag->add('warning', $this->translator->trans('people_group.person_already_in_group', [
+                'person_fullname' => $person->getFullname(),
+            ], 'app'));
 
             return null;
         }
@@ -88,7 +94,9 @@ class PeopleGroupManager
         $nbPeople = count($peopleGroup->getRolePeople());
 
         if ($rolePerson->getHead()) {
-            $this->flashbag->add('danger', 'Le demandeur principal ne peut pas être retiré du groupe.');
+            $this->flashBag->add('danger', 'people_group.header_cannot_be_removed');
+
+            return;
         }
 
         $peopleGroup->removeRolePerson($rolePerson);
@@ -96,7 +104,10 @@ class PeopleGroupManager
 
         $this->em->flush();
 
-        $this->flashbag->add('warning', $person->getFullname().' est retiré'.Grammar::gender($person->getGender()).' du groupe.');
+        $this->flashBag->add('warning', $this->translator->trans('person.removed_successfully', [
+            'person_fullname' => $person->getFullname(),
+            'e' => Grammar::gender($person->getGender()),
+        ], 'app'));
     }
 
     /**
@@ -143,7 +154,10 @@ class PeopleGroupManager
 
         $this->update($peopleGroup);
 
-        $this->flashbag->add('success', $person->getFullname().' est ajouté'.Grammar::gender($person->getGender()).' au groupe.');
+        $this->flashBag->add('success', $this->translator->trans('person.added_successfully', [
+            'person_fullname' => $person->getFullname(),
+            'e' => Grammar::gender($person->getGender()),
+        ], 'app'));
 
         $this->addPersonToActiveSupport($peopleGroup, $rolePerson, $addPersonToSupport);
     }
@@ -162,8 +176,9 @@ class PeopleGroupManager
 
         foreach ($supportGroupRepo->findBy(['peopleGroup' => $peopleGroup]) as $supportGroup) {
             if (SupportGroup::STATUS_IN_PROGRESS === $supportGroup->getStatus()
-                && ($this->user->hasService($supportGroup->getService()))) {
-                (new SupportPeopleAdder($this->em, $this->flashbag))->addPersonToSupport($supportGroup, $rolePerson);
+                && $this->user->hasService($supportGroup->getService())) {
+                (new SupportPeopleAdder($this->em, $this->flashBag, $this->translator))
+                    ->addPersonToSupport($supportGroup, $rolePerson);
 
                 SupportManager::deleteCacheItems($supportGroup);
             }

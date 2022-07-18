@@ -2,14 +2,14 @@
 
 namespace App\Tests\Controller\People;
 
-use App\Service\Grammar;
 use App\Entity\People\PeopleGroup;
-use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use App\Service\Grammar;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\HttpFoundation\Response;
 
 class PeopleGroupControllerTest extends WebTestCase
 {
@@ -18,7 +18,7 @@ class PeopleGroupControllerTest extends WebTestCase
 
     /** @var AbstractDatabaseTool */
     protected $databaseTool;
-    
+
     /** @var array */
     protected $fixtures;
 
@@ -28,11 +28,11 @@ class PeopleGroupControllerTest extends WebTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->client = static::createClient();
         $this->client->followRedirects();
 
-        /** @var AbstractDatabaseTool */
+        /* @var AbstractDatabaseTool */
         $this->databaseTool = $this->getContainer()->get(DatabaseToolCollection::class)->get();
 
         $this->fixtures = $this->databaseTool->loadAliceFixture([
@@ -112,7 +112,7 @@ class PeopleGroupControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.toast.alert-success', $person->getFullname().' est ajouté'.Grammar::gender($person->getGender()).' au groupe.');
+        $this->assertSelectorTextContains('.toast.alert-success', $person->getFullname().' a été ajouté'.Grammar::gender($person->getGender()).' au groupe.');
     }
 
     public function testRemovePersonInGroupIsSuccessful(): void
@@ -135,7 +135,7 @@ class PeopleGroupControllerTest extends WebTestCase
         $this->client->request('GET', $url);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.toast.alert-warning', 'est retiré');
+        $this->assertSelectorTextContains('.toast.alert-warning', 'a été retiré');
     }
 
     protected function tearDown(): void

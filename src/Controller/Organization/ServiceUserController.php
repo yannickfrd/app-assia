@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/service-user")
@@ -21,10 +22,12 @@ use Symfony\Component\Routing\Annotation\Route;
 final class ServiceUserController extends AbstractController
 {
     private $em;
+    private $translator;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, TranslatorInterface $translator)
     {
         $this->em = $em;
+        $this->translator = $translator;
     }
 
     /**
@@ -45,7 +48,9 @@ final class ServiceUserController extends AbstractController
                     $this->denyAccessUnlessGranted('EDIT', $service);
                     $user->addServiceUser($serviceUser);
 
-                    $this->addFlash('success', 'Le service '.$service->getName().' a été rattaché.');
+                    $this->addFlash('success', $this->translator->trans('service.added_successfully',
+                        ['service_name' => $service->getName()], 'app')
+                    );
                 }
             }
 
@@ -69,8 +74,11 @@ final class ServiceUserController extends AbstractController
         return $this->json([
             'action' => 'update',
             'alert' => 'success',
-            'msg' => $serviceUser->getService()->getName().($serviceUser->getMain() ? ' est' : ' n\'est plus')
-                .' défini en service principal de '.$serviceUser->getUser()->getFirstname().'.',
+            'msg' => $this->translator->trans('service.toogle_main', [
+                'service_name' => $serviceUser->getService()->getName(),
+                'is' => $serviceUser->getMain() ? ' est' : ' n\'est plus',
+                'user' => $serviceUser->getUser()->getFirstname(),
+            ], 'app'),
         ]);
     }
 
@@ -86,7 +94,7 @@ final class ServiceUserController extends AbstractController
         if (!$this->isCsrfTokenValid('delete'.$serviceUser->getId(), $_token)) {
             return $this->json([
                 'alert' => 'danger',
-                'msg' => 'Une erreur s\'est produite (token invalide).',
+                'msg' => $this->translator->trans('error_occurred', [], 'app'),
             ]);
         }
 
@@ -96,7 +104,9 @@ final class ServiceUserController extends AbstractController
         return $this->json([
             'action' => 'delete',
             'alert' => 'success',
-            'msg' => 'Le service '.$service->getName().' a été retiré.',
+            'msg' => $this->translator->trans('service.removed_successfully',
+                ['service_name' => $serviceUser->getService()->getName()], 'app'
+            ),
             'service' => ['id' => $service->getId()],
         ]);
     }

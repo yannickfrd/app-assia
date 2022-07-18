@@ -121,7 +121,7 @@ class AvdlControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.toast.alert-success', 'Le suivi social est créé.');
+        $this->assertSelectorTextContains('.toast.alert-success', 'Le suivi a été créé');
     }
 
     public function testEditAvdlSupportGroupIsSuccessful(): void
@@ -164,7 +164,7 @@ class AvdlControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.toast.alert-success', 'Le suivi social est mis à jour.');
+        $this->assertSelectorTextContains('.toast.alert-success', 'Le suivi a été mis à jour.');
 
         $this->client->request('GET', "/support/$id/show");
         $this->assertResponseIsSuccessful();

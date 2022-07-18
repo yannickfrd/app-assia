@@ -37,14 +37,13 @@ class UserNotification extends MailNotifier
         if ($this->send($email)) {
             return [
                 'type' => 'success',
-                'content' => "Un mail vous a été envoyé. Le lien est valide durant 5 minutes. <br/>
-                    Si vous n'avez rien reçu, veuillez vérifier dans les courriers indésirables.",
+                'content' => "current_user.email_sent_successfully",
             ];
         }
 
         return [
             'type' => 'danger',
-            'content' => "Une erreur s'est produite. L'email n'a pas pu être envoyé.",
+            'content' => 'error.email_not_sent',
         ];
     }
 }

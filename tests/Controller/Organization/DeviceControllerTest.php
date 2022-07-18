@@ -137,12 +137,12 @@ class DeviceControllerTest extends WebTestCase
         $this->client->request('GET', "/admin/device/$id/disable");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.toast.alert-warning', 'Le dispositif est désactivé.');
+        $this->assertSelectorTextContains('.toast.alert-warning', 'Le dispositif a été désactivé.');
 
         $this->client->request('GET', "/admin/device/$id/disable");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.toast.alert-success', 'Le dispositif est ré-activé.');
+        $this->assertSelectorTextContains('.toast.alert-success', 'Le dispositif a été réactivé.');
     }
 
     protected function tearDown(): void

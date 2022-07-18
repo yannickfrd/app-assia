@@ -1,0 +1,281 @@
+Person: Personne
+Role person: Rôle personne
+People group: Groupe ménage
+Support group: Suivi groupe
+Support person: Suivi personne
+Avdl: AVDL
+Hotel support: Suivi hôtel
+Origin request: Origine de la demande
+Evaluation group: Évaluation sociale du groupe
+Eval adm person: Évaluation administrative de la personne
+Eval prof person: Évaluation professionnelle de la personne
+Eval budget group: Évaluation budgétaire du groupe
+Eval budget person: Évaluation budgétaire de la personne
+Eval family group: Évaluation familiale du groupe
+Eval family person: Évaluation familiale de la personne
+Eval social group: Évaluation sociale du groupe
+Eval social person: Évaluation sociale de la personne
+Eval housing group: Évaluation situation au regard du logement
+Eval justice person: Évaluation situation judiciaire de la personne
+Referent: Référent social
+Note: Note
+Rdv: Rendez-vous
+Task: Tâche à faire
+Payment: Paiement
+Document: Document
+User: Utilisateur
+Service: Service
+Pole: Pôle
+Place: Place d'hébergement/logement
+Place group: Hébergement groupe
+Place person: Hébergement personne
+
+# Security
+security:
+    invalid_credentials: 'Identifiant ou mot de passe incorrect.'
+    blocked_user: "Ce compte a été bloqué suite à de nombreux échecs de connexion.<br/> 
+        Veuillez-vous rapprocher d'un administrateur ou réinitialiser votre mot de passe."
+    invalid_link: "Le lien est expiré ou invalide."
+    invalid_password: "Le mot de passe ou la confirmation est invalide."
+    invalid_login_or_email: Le login ou l'adresse email sont incorrects.
+    invalid_token: "Le token est invalide.<br/> Veuillez actualiser la page."
+
+login:
+    greeting: "Bonjour {firstname} !"
+    alert_no_phone: "Attention, votre numéro de téléphone n'est pas renseigné. 
+        Cliquez sur votre prénom en haut à droite pour l'ajouter."
+
+# Default messages
+updated_successfully: "Les modifications ont été enregistrées."
+no_result_to_export: "Aucun résultat à exporter."
+error_occurred: "Une erreur s'est produite."
+error_occurred_with_msg: "Une erreur s'est produite : {msg}"
+error:
+    email_not_sent: "Une erreur s'est produite. L'email n'a pas pu être envoyé."
+
+admin:
+    archive_is_successful: "L'archivage des données s'est correctement effectuée."
+    backup:
+        created_successfully: "La sauvegarde de la base de données a été créée."
+        deleted_successfully: "La sauvegarde de la base de données a été supprimée."
+        file_no_found: "Cette sauvegarde est introuvable."
+    clear_cache: "Le cache a été vidé."
+    clear_apcu_cache: "APCU Cache was cleared."
+    purge_is_successful: "La suppression des données s'est correctement effectuée."
+    import:
+        no_result: "Aucune entrée n'a été importée."
+        is_successful: "{nb_items} entrées ont été importées !"
+
+device:
+    created_successfully: "Le dispositif a été créé."
+    updated_successfully: "Le dispositif a été mis à jour."
+    deleted_successfully: "Le dispositif a été supprimée"
+    disabled_successfully: "Le dispositif a été désactivé."
+    actived_successfully: "Le dispositif a été réactivé."
+
+document:
+    created_successfully: "Le document « {document_name} » a été créé."
+    updated_successfully: "Le document « {document_name} » a été mis à jour."
+    deleted_successfully: "Le document « {document_name} » a été supprimé."
+    restored_successfully: "Le document « {document_name} » a été restauré."
+    file_no_found: "Le fichier « {document_name} » n'existe pas."
+
+evaluation:
+    created_successfully: "L'évaluation sociale a été créée."
+    updated_successfully: "Les modifications ont été enregistrées {rate} de complétude)."
+    deleted_successfully: "L'évaluation sociale a été supprimée."
+    no_created: "Il n'y a pas d'évaluation sociale créée pour ce suivi."
+
+export:
+    in_progress: "Votre export est en cours de préparation... Vous recevrez le lien de téléchargement par email."
+    limit: "Le nombre de résultats ({count}) est supérieur à la limite autorisée ({limit})."
+    deleted_successfully: "Le fichier d'export a été supprimé."
+    count_results: "Nombre de résultats : {count}"
+    file_ready: "Le fichier est prêt. Vous avez reçu le lien de téléchargement par email."
+
+google_calendar:
+    error_occurred: "Une erreur s'est produite avec Google Agenda."
+    error_occurred_with_msg: "Une erreur s'est produite avec Google Agenda : {msg}"
+    created_successfully: "Le rendez-vous a été créé sur Google Agenda."
+    updated_successfully: "Le rendez-vous a été mis à jour sur Google Agenda."
+    deleted_successfully: "Le rendez-vous a été supprimé sur Google Agenda."
+
+note:
+    created_successfully: "La note « {note_title} » a été créée."
+    updated_successfully: "La note « {note_title} » a été mise à jour."
+    deleted_successfully: "La note « {note_title} » a été supprimée."
+    restored_successfully: "La note « {note_title} » a été restaurée."
+    no_evaluation_created: Il n'y a pas d'évaluation sociale créée pour ce suivi.
+
+organization:
+    created_successfully: "L'organisme a été créé."
+    updated_successfully: "L'organisme a été mis à jour."
+
+outlook_calendar:
+    error_occurred: "Une erreur s'est produite avec Outlook Agenda."
+    created_successfully: "Le rendez-vous a été créé sur Outlook Agenda."
+    updated_successfully: "Le rendez-vous a été mis à jour sur Outlook Agenda."
+    deleted_successfully: "Le rendez-vous a été supprimé sur Outlook Agenda."
+
+payment:
+    created_successfully: "Le paiement « {payment_type} » a été créé."
+    updated_successfully: "Le paiement « {payment_type} » a été mis à jour."
+    deleted_successfully: "Le paiement « {payment_type} » a été supprimé."
+    restored_successfully: "Le paiement « {payment_type} » a été restauré."
+    no_email: "Le suivi n'a pas d'adresse e-mail renseignée."
+    sent_by_email_successfully: "Le reçu du paiement a été envoyé par email."
+
+people_group:
+    created_successfully: "Le nouveau groupe a été créé."
+    updated_successfully: "Le groupe a été mise à jour."
+    deleted_successfully: "Le groupe a été supprimé."
+    header_automatically_modified: "Le demandeur principal a été automatiquement modifié, 
+        car il ne peut pas être mineur."
+    person_already_in_group: "{person_fullname} est déjà rattaché au groupe."
+    header_cannot_be_removed: "Le demandeur principal ne peut pas être retiré du groupe."
+
+person:
+    created_successfully: "{person_fullname} a été créé{e}, ainsi que son groupe."
+    updated_successfully: "La personne a été mise à jour."
+    deleted_successfully: "La personne a été supprimée."
+    already_exists: "Attention : {person_fullname} existe déjà !"
+    added_successfully: "{person_fullname} a été ajouté{e} au groupe."
+    removed_successfully: "{person_fullname} a été retiré{e} du groupe."
+
+place:
+    created_successfully: "Le groupe de places « {place_name} » a été créé."
+    updated_successfully: "Le groupe de places « {place_name} » a été mis à jour."
+    deleted_successfully: "Le groupe de places « {place_name} » a été supprimé."
+    disabled_successfully: "Le groupe de places « {place_name} » a été désactivé."
+    actived_successfully: "Le groupe de places « {place_name} » a été réactivé."
+
+place_group:
+    created_successfully: "L'hébergement a été créé."
+    updated_successfully: "L'hébergement a été mise à jour."
+    deleted_successfully: "La prise en charge a été supprimée."
+    other_exist: "Attention, une autre prise en charge est déjà en cours pour ce suivi."
+
+place_person:
+    add_successfully: "{person_fullname} a été ajouté{e} à la prise en charge."
+    removed_successfully: "{person_fullname} a été retiré{e} à la prise en charge."
+    invalid_start_date: "La date de début d'hébergement ne peut pas être antérieure à la date de naissance 
+        de la personne ({person_fullname})."
+
+pole:
+    created_successfully: "Le pôle a été créé."
+    updated_successfully: "Le pôle a été mis à jour."
+
+rdv:
+    created_successfully: "Le rendez-vous « {rdv_title} » a été créé."
+    updated_successfully: "Le rendez-vous « {rdv_title} » a été mis à jour."
+    deleted_successfully: "Le rendez-vous « {rdv_title} » a été supprimé."
+    restored_successfully: "Le rendez-vous « {rdv_title} » a été restauré."
+
+referent:
+    created_successfully: "Le service social « {referent_name} » a été créé."
+    updated_successfully: "Le service social « {referent_name} » a été mis à jour."
+    deleted_successfully: "Le service social « {referent_name} » a été supprimé."
+
+service:
+    created_successfully: "Le service a été créé."
+    updated_successfully: "Le service a été mis à jour."
+    deleted_successfully: "Le service a été supprimée"
+    disabled_successfully: "Le service a été désactivé."
+    actived_successfully: "Le service a été réactivé."
+    added_successfully: "Le service « {service_name} » a été ajouté."
+    removed_successfully: "Le service « {service_name} » a été retiré."
+    toogle_main: "{service_name} {is} défini en service principal de {user}."
+
+settings:
+    updated_successfully: "Les paramètres ont été mis à jour."
+
+sisiao:
+    error_occurred: "Error response with status code {code} for the path {path}"
+    login_failed: "Identifiant SI-SIAO ou mot de passe incorrect."
+    login_successfully: "Vous êtes connecté·e au SI-SIAO."
+    logout_successfully: "Vous avez bien été déconnecté·e du SI-SIAO."
+    no_result: "Aucun résultat"
+    no_group_id: "Il n'y a pas d'ID fiche groupe SI-SIAO saisi pour ce groupe."
+    group_id_no_exist: "Il n'y a pas de dossier SI-SIAO correspondant avec la clé « {sisiao_id} »."
+    evaluation:
+        updated_successfully: "L'évaluation sociale a été mise à jour."
+        imported_successfully: "L'évaluation sociale a été importée."
+        import_failed: "L'évaluation sociale SI-SIAO n'a pas pu être importée : {error_message}"
+        import_failed_no_connected: "L'évaluation sociale SI-SIAO n'a pas pu être importée, 
+            car vous n'êtes pas ou plus connecté·e au SI-SIAO."
+    group:
+        already_exists: "Ce groupe existe déjà."
+        imported_successfully: "Le groupe a été importé."
+        import_failed: "Le groupe n'a pas pu être importé : {error_message}"
+    person.already_exists: "{person_firstname} existe déjà."
+    note.import_failed: "Les notes n'ont pas pu être importées : {error_message}"
+
+sub_service:
+    created_successfully: "Le sous-service a été créé."
+    updated_successfully: "Le sous-service a été mis à jour."
+    deleted_successfully: "Le sous-service a été supprimée"
+    disabled_successfully: "Le sous-service a été désactivé."
+    actived_successfully: "Le sous-service a été réactivé."
+
+support_group:
+    created_successfully: "Le suivi a été créé."
+    updated_successfully: "Le suivi a été mis à jour."
+    deleted_successfully: "Le suivi a été supprimé."
+    restored_successfully: "Le suivi de {support_name} a été restauré."
+    service_no_found: "Une erreur s'est produite : le nom du service doit être renseigné."
+    coefficient.updated_successfully: "Le coefficient du suivi a été mis à jour."
+    header_cannot_be_removed: "Le demandeur principal ne peut pas être retiré du suivi."
+    invalid_header: "Le demandeur principal a été automatiquement modifié, car il ne peut pas être mineur."
+    invalid_nb_people: "Attention, le nombre de personnes suivies ne correspond pas à la composition familiale 
+        du groupe ({nb_people} personnes)."
+    invalid_nb_place_people: "Attention, le nombre de personnes suivies ({nb_support_people}) ne correspond pas 
+        au nombre de personnes hébergées ({nb_place_people}).<br/> 
+        Allez dans l'onglet <b>Hébergement</b> pour ajouter les personnes à l'hébergement."
+    no_start_date: "Attention, la date de début d'accompagnement n'est pas renseignée."
+    no_place_group: "Attention, aucun hébergement n'est enregistré pour ce suivi."
+    error_minimum_people: "Le suivi doit être constitué d'au moins une personne."
+    any_transfert: "Aucun suivi n'a été transféré."
+    any_other_support_to_clone: "Aucun autre suivi n'a été trouvé."
+    cloned_successfully: "Les informations du précédent suivi ont été ajoutées (évaluation sociale, documents...)"
+    switched_referent_successfully: "{count} suivis ont été transférés vers {referent_name}"
+    other_already_in_progress: "Attention, un suivi social est déjà en cours pour ce ménage."
+    person_already_in_support: "{person_fullname} est déjà rattaché au suivi."
+
+support_person:
+    deleted_successfully: "{person_fullname} a été retiré{e} du suivi social."
+    restored_successfully: "{person_fullname} a été restauré{e}."
+    added_successfully: "{person_fullname} a été ajouté{e} au suivi."
+    removed_successfully: "{person_fullname} a été retiré{e} au suivi."
+    other_already_in_progress: "Attention, un suivi social est déjà en cours pour cette personne."
+    invalid_start_date: "La date de début de suivi ne peut pas être antérieure à la date de naissance 
+        de la personne ({person_fullname})."
+
+tag:
+    created_successfully: "L'étiquette a été créée."
+    updated_successfully: "L'étiquette a été mise à jour."
+    deleted_successfully: "L'étiquette a été supprimée."
+    added_successfully: "L'étiquette a été ajoutée."
+    removed_successfully: "L'étiquette a été retirée."
+
+task:
+    created_successfully: "La tâche « {task_title} » a été créée."
+    updated_successfully: "La tâche « {task_title} » a été mise à jour."
+    deleted_successfully: "La tâche « {task_title} » a été supprimée."
+    restored_successfully: "La tâche « {task_title} » a été restaurée."
+    toogle_status: "La tâche « {task_title} » est {task_status}."
+
+user:
+    created_successfully: "Le compte de {user_firstname} a été créé. Un e-mail lui a été envoyé."
+    updated_successfully: "Le compte utilisateur a été mis à jour."
+    deleted_successfully: "Le compte utilisateur a été supprimé"
+    disabled_successfully: "Le compte utilisateur a été désactivé."
+    actived_successfully: "Le compte utilisateur a été réactivé."
+    disabled_not_allowed: "Vous ne pouvez pas vous-même désactiver votre compte utilisateur."
+    email_sent_successfully: "Un e-mail a été envoyé à l'utilisateur. Le lien est valide durant 24 heures."
+
+current_user:
+    email_sent_successfully: "Un mail vous a été envoyé. Le lien est valide durant 5 minutes. <br/>
+        Si vous n'avez rien reçu, veuillez vérifier dans les courriers indésirables."
+    password:
+        created_successfully: "Votre mot de passe a été créé !"
+        updated_successfully: "Votre mot de passe a été mis à jour !"

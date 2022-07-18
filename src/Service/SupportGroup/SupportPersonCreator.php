@@ -29,7 +29,10 @@ trait SupportPersonCreator
 
         if ($supportPerson->getStartDate() && $supportPerson->getStartDate() < $birthdate) {
             $supportPerson->setStartDate($birthdate);
-            // $this->addFlash('warning', $supportPerson->getPerson()->getFullname().' : la date de début de suivi retenue est sa date de naissance.');
+
+            $this->flashBag->add('warning', $this->translator->trans('support_person.invalid_start_date', [
+                'person_fullname' => $supportPerson->getPerson()->getFullname(),
+            ], 'app'));
         }
 
         return $supportPerson;

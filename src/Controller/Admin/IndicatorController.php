@@ -23,8 +23,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 final class IndicatorController extends AbstractController
 {
-    use ErrorMessageTrait;
-
     protected $em;
     protected $indicatorRepo;
 

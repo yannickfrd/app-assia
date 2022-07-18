@@ -382,13 +382,9 @@ hotelSupport:
 Formatted sheet: Tableur formaté
 Model: Modèle d'export
 Anonymized: Anonymisé
-no_result_to_export: Aucun résultat à exporter.
 
 # SiSiao
 si_siao:
-  login_successfully: Vous êtes connecté·e au SI-SIAO.
-  login_failed: Identifiant SI-SIAO ou mot de passe incorrect.
-  logout_successfully: Vous avez bien été déconnecté·e du SI-SIAO.
   username: Identifiant SI-SIAO
   password: Mot de passe
 si_siao_id.placeholder: ID groupe SI-SIAO

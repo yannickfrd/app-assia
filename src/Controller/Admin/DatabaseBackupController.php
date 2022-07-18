@@ -19,8 +19,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 final class DatabaseBackupController extends AbstractController
 {
-    use ErrorMessageTrait;
-
     protected $em;
     protected $databaseBackupRepo;
 
@@ -61,7 +59,7 @@ final class DatabaseBackupController extends AbstractController
         $this->em->persist($databaseBackup);
         $this->em->flush();
 
-        $this->addFlash('success', 'La sauvegarde de la base de données est créée.');
+        $this->addFlash('success', 'admin.backup.created_successfully');
 
         return $this->redirectToRoute('database_backup_index');
     }
@@ -78,7 +76,7 @@ final class DatabaseBackupController extends AbstractController
             return $downloader->send($databaseBackup->getPath());
         }
 
-        $this->addFlash('danger', 'Ce fichier n\'existe pas.');
+        $this->addFlash('danger', 'admin.backup.file_no_found');
 
         return $this->redirectToRoute('database_backup_index');
     }
@@ -98,7 +96,7 @@ final class DatabaseBackupController extends AbstractController
         $this->em->remove($databaseBackup);
         $this->em->flush();
 
-        $this->addFlash('warning', 'La sauvegarde de la base de données est supprimée.');
+        $this->addFlash('warning', 'admin.backup.deleted_successfully');
 
         return $this->redirectToRoute('database_backup_index');
     }

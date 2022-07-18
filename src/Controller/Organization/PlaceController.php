@@ -20,9 +20,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class PlaceController extends AbstractController
 {
+    private $translator;
+
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
     /**
      * @Route("/places", name="place_index", methods="GET|POST")
      */
@@ -37,7 +45,7 @@ final class PlaceController extends AbstractController
             if ($places) {
                 return (new PlaceExport())->exportData($places);
             }
-            $this->addFlash('warning', 'Aucun résultat à exporter.');
+            $this->addFlash('warning', 'no_result_to_export');
         }
 
         return $this->renderForm('app/organization/place/place_index.html.twig', [
@@ -63,7 +71,9 @@ final class PlaceController extends AbstractController
             $em->persist($place);
             $em->flush();
 
-            $this->addFlash('success', 'Le groupe de places est créé.');
+            $this->addFlash('success', $this->translator->trans('place.created_successfully',
+                ['place_name' => $place->getName()], 'app')
+            );
 
             PlaceManager::deleteCacheItems($place);
 
@@ -71,7 +81,7 @@ final class PlaceController extends AbstractController
         }
 
         if ($form->isSubmitted() && !$form->isValid()) {
-            $this->addFlash('danger', "Une erreur s'est produite.");
+            $this->addFlash('danger', 'error_occurred');
         }
 
         return $this->renderForm('app/organization/place/place.html.twig', ['form' => $form]);
@@ -95,7 +105,9 @@ final class PlaceController extends AbstractController
 
             PlaceManager::deleteCacheItems($place);
 
-            $this->addFlash('success', 'Les modifications sont enregistrées.');
+            $this->addFlash('success', $this->translator->trans('place.updated_successfully',
+                ['place_name' => $place->getName()], 'app')
+            );
         }
 
         return $this->renderForm('app/organization/place/place.html.twig', [
@@ -113,7 +125,9 @@ final class PlaceController extends AbstractController
         $em->remove($place);
         $em->flush();
 
-        $this->addFlash('warning', 'Le groupe de places est supprimé.');
+        $this->addFlash('warning', $this->translator->trans('place.deleted_successfully', [
+            'place_name' => $place->getName()
+        ], 'app'));
 
         PlaceManager::deleteCacheItems($place);
 
@@ -127,13 +141,14 @@ final class PlaceController extends AbstractController
     {
         $this->denyAccessUnlessGranted('DISABLE', $place);
 
-        if ($place->getDisabledAt()) {
-            $place->setDisabledAt(null);
-            $this->addFlash('success', 'Le groupe de places "'.$place->getName().'" est ré-activé.');
-        } else {
-            $place->setDisabledAt(new \DateTime());
-            $this->addFlash('warning', 'Le groupe de places "'.$place->getName().'" est désactivé.');
-        }
+        $isDisabled = $place->isDisabled();
+
+        $place->setDisabledAt($isDisabled ? null : new \DateTime());
+
+        $this->addFlash('success', $this->translator->trans(
+            $isDisabled ? 'place.actived_successfully' : 'place.disabled_successfully', [
+                'place_name' => $place->getName()
+        ], 'app'));
 
         PlaceManager::deleteCacheItems($place);
 

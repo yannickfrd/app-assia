@@ -123,6 +123,7 @@ class DocumentControllerTest extends WebTestCase
         $this->client->loginUser($this->fixtures['john_user']);
 
         $id = $this->document->getId();
+        $documentName = $this->document->getName();
 
         // Fail
         $this->client->request('GET', "/document/$id/preview");
@@ -130,7 +131,7 @@ class DocumentControllerTest extends WebTestCase
         $contentResponse = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSame('Ce fichier n\'existe pas.', $contentResponse['msg']);
+        $this->assertSame("Le fichier « $documentName » n'existe pas.", $contentResponse['msg']);
 
         // Success
         $newFile = $this->moveFile();
@@ -159,6 +160,7 @@ class DocumentControllerTest extends WebTestCase
         $this->client->loginUser($this->fixtures['john_user']);
 
         $id = $this->document->getId();
+        $documentName = $this->document->getName();
 
         // Fail
         $this->client->request('GET', "/document/$id/download");
@@ -166,7 +168,7 @@ class DocumentControllerTest extends WebTestCase
         $contentResponse = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSame('Ce fichier n\'existe pas.', $contentResponse['msg']);
+        $this->assertSame("Le fichier « $documentName » n'existe pas.", $contentResponse['msg']);
 
         // Success
         $newFile = $this->moveFile();

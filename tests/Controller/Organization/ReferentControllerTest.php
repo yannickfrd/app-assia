@@ -123,7 +123,7 @@ class ReferentControllerTest extends WebTestCase
         $this->client->clickLink('Supprimer');
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.toast.alert-warning', 'Le service social Référent test est supprimé.');
+        $this->assertSelectorTextContains('.toast.alert-warning', 'Le service social « Référent test » a été supprimé.');
     }
 
     protected function tearDown(): void

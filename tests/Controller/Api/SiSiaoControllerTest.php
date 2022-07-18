@@ -136,7 +136,7 @@ class SiSiaoControllerTest extends WebTestCase
         $this->client->request('GET', '/api-sisiao/import-group/666');
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.toast.alert-warning', "Il n'y a pas de dossier SI-SIAO correspondant avec la clé '666'");
+        $this->assertSelectorTextContains('.toast.alert-warning', "Il n'y a pas de dossier SI-SIAO correspondant avec la clé « 666 »");
     }
 
     public function testImportGroupIsSuccessful(): void
@@ -169,7 +169,7 @@ class SiSiaoControllerTest extends WebTestCase
         $this->client->request('GET', '/api-sisiao/support/1/import-evaluation');
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.toast.alert-success', "L'évaluation sociale a été actualisée");
+        $this->assertSelectorTextContains('.toast.alert-success', "L'évaluation sociale a été mise à jour");
     }
 
     public function testGetUserIsSuccessful(): void
@@ -244,7 +244,7 @@ class SiSiaoControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.toast.alert-success', 'Le suivi social est créé');
+        $this->assertSelectorTextContains('.toast.alert-success', 'Le suivi a été créé');
     }
 
     protected function tearDown(): void

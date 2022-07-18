@@ -14,16 +14,22 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class PlacePersonController extends AbstractController
 {
     private $em;
     private $placeGroupManager;
+    private $translator;
 
-    public function __construct(EntityManagerInterface $em, PlaceGroupManager $placeGroupManager)
-    {
+    public function __construct(
+        EntityManagerInterface $em,
+        PlaceGroupManager $placeGroupManager,
+        TranslatorInterface $translator
+    ) {
         $this->em = $em;
         $this->placeGroupManager = $placeGroupManager;
+        $this->translator = $translator;
     }
 
     /**
@@ -47,7 +53,10 @@ final class PlacePersonController extends AbstractController
 
             $person = $supportPerson->getPerson();
 
-            $this->addFlash('success', $person->getFullname().' est ajouté'.Grammar::gender($person->getGender()).' à la prise en charge.');
+            $this->addFlash('success', $this->translator->trans('place_person.add_successfully', [
+                'person_fullname' => $person->getFullname(),
+                'e' => Grammar::gender($person->getGender()),
+            ], 'app'));
 
             $this->placeGroupManager->discacheSupport($supportGroup);
         }
@@ -71,7 +80,10 @@ final class PlacePersonController extends AbstractController
 
         $this->placeGroupManager->discacheSupport($supportGroup);
 
-        $this->addFlash('warning', $placePerson->getPerson()->getFullname().' est retiré de la prise en charge.');
+        $this->addFlash('warning', $this->translator->trans('place_person.removed_successfully', [
+            'person_fullname' => $placePerson->getPerson()->getFullname(),
+            'e' => Grammar::gender($placePerson->getPerson()->getGender()),
+        ], 'app'));
 
         return $this->redirectToRoute('support_place_edit', [
             'id' => $placePerson->getPlaceGroup()->getId(),

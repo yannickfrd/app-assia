@@ -70,7 +70,7 @@ final class ArchivePurgeController extends AbstractController
     {
         $this->archiver->archive();
 
-        $this->addFlash('success', 'L\'archivage s\'est correctement effectuée.');
+        $this->addFlash('success', 'admin.archive_is_successful');
 
         return $this->redirectToRoute('admin_archive_purge_index');
     }
@@ -82,7 +82,7 @@ final class ArchivePurgeController extends AbstractController
     {
         $this->archiver->purge();
 
-        $this->addFlash('success', 'La suppression s\'est correctement effectuée.');
+        $this->addFlash('success', 'admin.purge_is_successful');
 
         return $this->redirectToRoute('admin_archive_purge_index');
     }

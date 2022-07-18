@@ -167,7 +167,7 @@ class EvaluationControllerTest extends WebTestCase
         $this->client->request('GET', "/evaluation/$id/delete");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.toast.alert-warning', "L'évaluation sociale est supprimée.");
+        $this->assertSelectorTextContains('.toast.alert-warning', "L'évaluation sociale a été supprimée.");
     }
 
     public function testFixPeopleIsSuccessful(): void

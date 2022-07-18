@@ -10,18 +10,24 @@ use App\Repository\Organization\UserConnectionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class LoginListener
 {
     private $em;
     private $session;
     private $userConnectionRepo;
+    private $translator;
 
-    public function __construct(EntityManagerInterface $em, UserConnectionRepository $userConnectionRepo)
-    {
+    public function __construct(
+        EntityManagerInterface $em,
+        UserConnectionRepository $userConnectionRepo,
+        TranslatorInterface $translator
+    ) {
         $this->session = new Session();
         $this->userConnectionRepo = $userConnectionRepo;
         $this->em = $em;
+        $this->translator = $translator;
     }
 
     public function onSecurityInteractiveLogin(InteractiveLoginEvent $event): void
@@ -100,10 +106,12 @@ class LoginListener
     {
         $flashBag = $this->session->getFlashBag();
 
-        $flashBag->add('success', "Bonjour {$user->getFirstname()} !");
+        $flashBag->add('success', $this->translator->trans('login.greeting', [
+            'firstname' => $user->getFirstname(),
+        ], 'app'));
 
         if (!$user->getPhone1()) {
-            $flashBag->add('warning', "Attention, votre numéro de téléphone n'est pas renseigné. Cliquez sur votre prénom en haut à droite pour l'ajouter.");
+            $flashBag->add('warning', 'login.alert_no_phone');
         }
     }
 }

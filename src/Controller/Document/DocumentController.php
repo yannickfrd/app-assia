@@ -118,8 +118,12 @@ final class DocumentController extends AbstractController
      * @Route("/document/{id}/preview", name="document_preview", methods="GET")
      * @IsGranted("VIEW", subject="document")
      */
-    public function preview(Document $document, FileConverter $fileConverter, Downloader $downloader): Response
-    {
+    public function preview(
+        Document $document,
+        FileConverter $fileConverter,
+        Downloader $downloader,
+        TranslatorInterface $translator
+    ): Response {
         $file = $fileConverter->convert($document);
 
         if ($file) {
@@ -132,7 +136,7 @@ final class DocumentController extends AbstractController
 
         return $this->json([
             'alert' => 'danger',
-            'msg' => 'Ce fichier n\'existe pas.',
+            'msg' => $translator->trans('document.file_no_found', ['document_name' => $document->getName()], 'app'),
         ]);
     }
 
@@ -140,7 +144,7 @@ final class DocumentController extends AbstractController
      * @Route("/document/{id}/download", name="document_download", methods="GET")
      * @IsGranted("VIEW", subject="document")
      */
-    public function download(Document $document, Downloader $downloader): Response
+    public function download(Document $document, Downloader $downloader, TranslatorInterface $translator): Response
     {
         $file = $this->getParameter('documents_directory').$document->getFilePath();
 
@@ -150,7 +154,7 @@ final class DocumentController extends AbstractController
 
         return $this->json([
             'alert' => 'danger',
-            'msg' => 'Ce fichier n\'existe pas.',
+            'msg' => $translator->trans('document.file_no_found', ['document_name' => $document->getName()], 'app'),
         ]);
     }
 
@@ -214,8 +218,8 @@ final class DocumentController extends AbstractController
                 'action' => 'update',
                 'alert' => 'success',
                 'msg' => $translator->trans('document.updated_successfully', [
-                    '%document_title%' => $document->getName(),
-                ], 'app'),
+                    'document_name' => $document->getName(), ], 'app'
+                ),
                 'document' => $document,
             ], 200, [], ['groups' => ['show_document', 'show_tag']]);
         }
@@ -239,8 +243,8 @@ final class DocumentController extends AbstractController
             'action' => 'delete',
             'alert' => 'warning',
             'msg' => $translator->trans('document.deleted_successfully', [
-                '%document_title%' => $document->getName(),
-            ], 'app'),
+                'document_name' => $document->getName(), ], 'app'
+            ),
             'document' => ['id' => $document->getId()],
         ]);
     }
@@ -267,8 +271,8 @@ final class DocumentController extends AbstractController
             'action' => 'restore',
             'alert' => 'success',
             'msg' => $translator->trans('document.restored_successfully', [
-                '%document_title%' => $document->getName(),
-            ], 'app'),
+                'document_name' => $document->getName(), ], 'app'
+            ),
             'document' => ['id' => $document->getId()],
         ]);
     }

@@ -10,16 +10,22 @@ use App\Entity\Support\SupportPerson;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PlaceGroupManager
 {
     private $em;
     private $flashBag;
+    private $translator;
 
-    public function __construct(EntityManagerInterface $em, FlashBagInterface $flashBag)
-    {
+    public function __construct(
+        EntityManagerInterface $em,
+        FlashBagInterface $flashBag,
+        TranslatorInterface $translator
+    ) {
         $this->em = $em;
         $this->flashBag = $flashBag;
+        $this->translator = $translator;
     }
 
     /**
@@ -49,7 +55,7 @@ class PlaceGroupManager
 
         $this->discacheSupport($supportGroup);
 
-        $this->flashBag->add('success', "L'hébergement est créé.");
+        $this->flashBag->add('success', 'place_group.created_successfully');
 
         return $placeGroup;
     }
@@ -81,8 +87,10 @@ class PlaceGroupManager
 
             if ($placePerson->getStartDate() < $person->getBirthdate()) {
                 $placePerson->setStartDate($person->getBirthdate());
-                $this->flashBag->add('warning', 'La date de début d\'hébergement ne peut pas être antérieure à 
-                    la date de naissance de la personne ('.$person->getFullname().').');
+
+                $this->flashBag->add('warning', $this->translator->trans('place_person.invalid_start_date', [
+                    'person_fullname' => $person->getFullname(),
+                ], 'app'));
             }
             if (null === $placePerson->getEndDate()) {
                 $placePerson->setEndDate($placeGroup->getEndDate());
@@ -94,7 +102,7 @@ class PlaceGroupManager
         }
         $this->em->flush();
 
-        $this->flashBag->add('success', 'L\'hébergement est mis à jour');
+        $this->flashBag->add('success', 'place_group.updated_successfully');
 
         $this->discacheSupport($supportGroup);
 
@@ -140,6 +148,10 @@ class PlaceGroupManager
         if ($placePerson->getStartDate() < $person->getBirthdate()) {
             // Si c'est le cas, on prend en compte la date de naissance
             $placePerson->setStartDate($person->getBirthdate());
+
+            $this->flashBag->add('warning', $this->translator->trans('place_person.invalid_start_date', [
+                'person_fullname' => $person->getFullname(),
+            ], 'app'));
         }
 
         $this->em->persist($placePerson);

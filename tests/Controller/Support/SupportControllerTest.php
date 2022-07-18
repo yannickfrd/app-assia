@@ -190,7 +190,7 @@ class SupportControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.toast.alert-danger', 'Attention, un suivi social est déjà en cours');
+        $this->assertSelectorTextContains('.toast.alert-warning', 'Attention, un suivi social est déjà en cours');
     }
 
     public function testCreateEndedSupportWithOtherSupportInProgressIsSuccessful(): void
@@ -212,7 +212,7 @@ class SupportControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.toast.alert-success', 'Le suivi social est créé');
+        $this->assertSelectorTextContains('.toast.alert-success', 'Le suivi a été créé');
     }
 
     public function testEditSupportGroupIsSuccessful(): void
@@ -247,7 +247,7 @@ class SupportControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.toast.alert-success', 'Le coefficient du suivi est mis à jour.');
+        $this->assertSelectorTextContains('.toast.alert-success', 'Le coefficient du suivi a été mis à jour.');
     }
 
     public function testShowSupportGroupIsUp(): void
@@ -320,7 +320,7 @@ class SupportControllerTest extends WebTestCase
 
         $id = $support->getSupportPeople()->first()->getId();
         $this->client->request('GET', "/support-person/$id/restore");
-        $this->assertSelectorTextContains('.toast.alert-success', 'a bien été restauré');
+        $this->assertSelectorTextContains('.toast.alert-success', 'a été restauré');
 
         // After restore a support
         $crawler = $this->client->request('GET', '/supports', [

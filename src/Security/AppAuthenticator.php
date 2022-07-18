@@ -77,14 +77,13 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
     private function getErrorMessage(AuthenticationException $exception): string
     {
         if ($exception instanceof InvalidCsrfTokenException) {
-            return 'Le token est invalide.<br/> Veuillez actualiser la page.';
+            return 'security.invalid_token';
         }
 
         if ('blocked_user' === $exception->getMessageKey()) {
-            return "Ce compte est bloqué suite à de nombreux échecs de connexion.<br/> 
-                Veuillez-vous rapprocher d'un administrateur ou réinitialiser votre mot de passe.";
+            return 'security.blocked_user';
         }
 
-        return 'Login ou mot de passe incorrect.';
+        return 'security.invalid_credentials';
     }
 }

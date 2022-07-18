@@ -33,7 +33,7 @@ final class AdminController extends AbstractController
     {
         (new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']))->clear();
 
-        $this->addFlash('success', 'Le cache est vidé.');
+        $this->addFlash('success', 'admin.clear_cache');
 
         return $this->redirectToRoute('home');
     }
@@ -79,7 +79,7 @@ final class AdminController extends AbstractController
     {
         apcu_clear_cache();
 
-        $this->addFlash('success', 'APCU Cache was cleared.');
+        $this->addFlash('success', 'admin.clear_apcu_cache');
 
         return $this->redirectToRoute('home');
     }

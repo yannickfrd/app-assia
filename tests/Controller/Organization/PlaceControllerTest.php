@@ -181,12 +181,12 @@ class PlaceControllerTest extends WebTestCase
         $this->client->request('GET', "/place/$id/disable");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.toast.alert-warning', 'est désactivé');
+        $this->assertSelectorTextContains('.toast.alert-success', 'a été désactivé');
 
         $this->client->request('GET', "/place/$id/disable");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.toast.alert-success', 'est ré-activé');
+        $this->assertSelectorTextContains('.toast.alert-success', 'a été réactivé');
     }
 
     protected function tearDown(): void

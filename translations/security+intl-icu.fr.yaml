@@ -1,5 +1,0 @@
-hello: Bonjour {name} !
-blocked_user: "Ce compte est bloqué suite à de nombreux échecs de connexion.<br/> Veuillez-vous rapprocher d'un administrateur ou réinitialiser votre mot de passe."
-invalid_credentials: 'Identifiant ou mot de passe incorrect.'
-# invalid_password: 'Identifiant ou mot de passe incorrect. ({count} sur 5 essais)'
-invalid_token: "Le token est invalide.<br/> Veuillez actualiser la page."

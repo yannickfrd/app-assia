@@ -3,10 +3,10 @@
 namespace App\Tests\Controller\Organization;
 
 use App\Entity\Organization\User;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ServiceControllerTest extends WebTestCase
 {
@@ -80,7 +80,7 @@ class ServiceControllerTest extends WebTestCase
             'service[pole]' => $fixtures['pole1'],
         ]);
 
-        $this->assertResponseIsSuccessful('Le service est créé.');
+        $this->assertResponseIsSuccessful('Le service a été créé.');
     }
 
     public function testEditServiceInSuperAdminIsUp(): void
@@ -120,7 +120,7 @@ class ServiceControllerTest extends WebTestCase
             'service[name]' => 'Service test edit',
         ]);
 
-        $this->assertResponseIsSuccessful('Les modifications sont enregistrées.');
+        $this->assertResponseIsSuccessful('Les modifications ont été enregistrées.');
     }
 
     public function testDisableService(): void
@@ -133,12 +133,12 @@ class ServiceControllerTest extends WebTestCase
         $this->client->request('GET', "/admin/service/$id/disable");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.toast.alert-warning', 'est désactivé');
+        $this->assertSelectorTextContains('.toast.alert-success', 'a été désactivé');
 
         $this->client->request('GET', "/admin/service/$id/disable");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.toast.alert-success', 'est ré-activé');
+        $this->assertSelectorTextContains('.toast.alert-success', 'a été réactivé');
     }
 
     protected function getFixtureFiles(): array

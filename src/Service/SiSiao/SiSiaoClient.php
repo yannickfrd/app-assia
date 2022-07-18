@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SiSiaoClient
 {
@@ -30,13 +31,19 @@ class SiSiaoClient
 
     protected $client;
     protected $session;
+    protected $translator;
     protected $url;
     protected $headers;
 
-    public function __construct(HttpClientInterface $client, RequestStack $requestStack, string $url)
-    {
+    public function __construct(
+        HttpClientInterface $client,
+        RequestStack $requestStack,
+        string $url,
+        ?TranslatorInterface $translator = null
+    ) {
         $this->client = $client;
         $this->session = $requestStack->getSession();
+        $this->translator = $translator;
         $this->url = $url.self::API;
         $this->headers = $this->session->get('sisiao.headers') ?? $this->getHeaders();
     }
@@ -104,7 +111,7 @@ class SiSiaoClient
             return [
                 'alert' => 'warning',
                 'group' => null,
-                'msg' => 'Aucun résultat.',
+                'msg' => 'sisiao.no_result',
             ];
         }
 
@@ -251,7 +258,7 @@ class SiSiaoClient
         if (Response::HTTP_OK !== $code) {
             return [
                 'alert' => 'danger',
-                'msg' => 'Error response with status code '.$code.' for the path '.$path, $code,
+                'msg' => 'sisiao.error_occurred',
                 'code' => $code,
             ];
         }

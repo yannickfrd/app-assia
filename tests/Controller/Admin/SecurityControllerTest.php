@@ -94,7 +94,7 @@ class SecurityControllerTest extends WebTestCase
         $this->createNewUser($admin);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.toast.alert-success', 'Le compte de John est créé.');
+        $this->assertSelectorTextContains('.toast.alert-success', 'Le compte de John a été créé.');
     }
 
     public function testSendNewEmailToUser(): void
@@ -126,7 +126,7 @@ class SecurityControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.toast.alert-success', 'Votre mot de passe est mis à jour !');
+        $this->assertSelectorExists('.toast.alert-success', 'Votre mot de passe a été mis à jour !');
     }
 
     public function testEditCurrentUserIsSuccessful(): void
@@ -148,7 +148,7 @@ class SecurityControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.toast.alert-success', 'Les modifications sont enregistrées.');
+        $this->assertSelectorExists('.toast.alert-success', 'Les modifications ont été enregistrées.');
 
         $this->client->submitForm('send2', [
             'change_password' => [
@@ -169,7 +169,7 @@ class SecurityControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.toast.alert-success', 'Votre mot de passe est mis à jour !');
+        $this->assertSelectorExists('.toast.alert-success', 'Votre mot de passe a été mis à jour !');
     }
 
     public function testEditUserIsSuccessful(): void
@@ -191,7 +191,7 @@ class SecurityControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.toast.alert-success', 'Les modifications sont enregistrées.');
+        $this->assertSelectorExists('.toast.alert-success', 'Les modifications ont été enregistrées.');
     }
 
     public function testDisableUserIsSuccessful(): void
@@ -209,12 +209,12 @@ class SecurityControllerTest extends WebTestCase
         $this->client->request('GET', "/admin/user/$id/disable");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.toast.alert-warning', 'Ce compte utilisateur est désactivé.');
+        $this->assertSelectorExists('.toast.alert-warning', 'Ce compte utilisateur a été désactivé.');
 
         $this->client->request('GET', "/admin/user/$id/disable");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.toast.alert-success', 'Ce compte utilisateur est ré-activé.');
+        $this->assertSelectorExists('.toast.alert-success', 'Ce compte utilisateur a été réactivé.');
     }
 
     public function testForgotPasswordIsSuccessful(): void
@@ -301,7 +301,7 @@ class SecurityControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.toast.alert-success', 'Votre mot de passe est réinitialisé !');
+        $this->assertSelectorTextContains('.toast.alert-success', 'Votre mot de passe a été mis à jour !');
     }
 
     public function testCreatePasswordIsSuccessful(): void
@@ -348,7 +348,7 @@ class SecurityControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.toast.alert-success', 'Votre mot de passe est créé !');
+        $this->assertSelectorTextContains('.toast.alert-success', 'Votre mot de passe a été créé !');
     }
 
     public function testLoginIsFailed(): void

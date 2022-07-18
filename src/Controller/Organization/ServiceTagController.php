@@ -12,14 +12,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class ServiceTagController extends AbstractController
 {
     private $manager;
+    private $translator;
 
-    public function __construct(EntityManagerInterface $manager)
+    public function __construct(EntityManagerInterface $manager, TranslatorInterface $translator)
     {
         $this->manager = $manager;
+        $this->translator = $translator;
     }
 
     /**
@@ -41,7 +44,7 @@ final class ServiceTagController extends AbstractController
         return $this->json([
             'action' => 'add',
             'alert' => 'success',
-            'msg' => 'L\'étiquette a bien été ajoutée.',
+            'msg' => $this->translator->trans('tag.added_successfully', [], 'app'),
         ]);
     }
 
@@ -60,7 +63,7 @@ final class ServiceTagController extends AbstractController
         return $this->json([
             'action' => 'delete',
             'alert' => 'success',
-            'msg' => 'L\'étiquette a bien été supprimée.',
+            'msg' => $this->translator->trans('tag.removed_successfully', [], 'app'),
             'data' => ['tagId' => $tag->getId()],
         ]);
     }

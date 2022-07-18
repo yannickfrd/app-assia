@@ -9,6 +9,7 @@ use App\Entity\Evaluation\EvaluationPerson;
 use App\Entity\Support\PlaceGroup;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Support\SupportPerson;
+use App\Service\Grammar;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -38,13 +39,14 @@ class SupportRestorer
 
         if ($this->supportGroupIsDeleted) {
             return $this->translator->trans('support_group.restored_successfully', [
-                '%support_name%' => $supportGroup->getHeader()->getFullname(),
+                'support_name' => $supportGroup->getHeader()->getFullname(),
             ], 'app');
         }
 
         return $this->translator->trans('support_person.restored_successfully', [
-                '%support_name%' => $supportPerson->getPerson()->getFullname(),
-            ], 'app');
+            'person_fullname' => $supportPerson->getPerson()->getFullname(),
+            'e' => Grammar::gender($supportPerson->getPerson()->getGender()),
+        ], 'app');
     }
 
     private function resetDeletedAt(SupportGroup $supportGroup, SupportPerson $supportPerson): void

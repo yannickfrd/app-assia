@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class EvaluationController extends AbstractController
 {
@@ -83,9 +84,13 @@ final class EvaluationController extends AbstractController
     /**
      * @Route("/support/{id}/evaluation/edit", name="support_evaluation_edit", methods="POST")
      */
-    public function edit(int $id, Request $request, EvaluationManager $evaluationManager,
-        Normalisation $normalisation): JsonResponse
-    {
+    public function edit(
+        int $id,
+        Request $request,
+        EvaluationManager $evaluationManager,
+        Normalisation $normalisation,
+        TranslatorInterface $translator
+    ): JsonResponse {
         if (null === $evaluationGroup = $this->evaluationRepo->findEvaluationOfSupport($id)) {
             throw $this->createAccessDeniedException();
         }
@@ -105,7 +110,9 @@ final class EvaluationController extends AbstractController
 
             return $this->json([
                 'alert' => 'success',
-                'msg' => "Les modifications sont enregistrées ({$supportGroup->getEvaluationScore()}% de complétude).",
+                'msg' => $translator->trans('evaluation.updated_successfully',
+                    ['rate' => $supportGroup->getEvaluationScore()], 'app'
+                ),
                 'data' => [
                     'updatedAt' => $evaluationGroup->getUpdatedAt()->format('d/m/Y à H:i'),
                     'updatedBy' => $user->getFullname(),
@@ -140,7 +147,7 @@ final class EvaluationController extends AbstractController
         $em->remove($evaluationGroup);
         $em->flush();
 
-        $this->addFlash('warning', "L'évaluation sociale est supprimée.");
+        $this->addFlash('warning', 'evaluation.deleted_successfully');
 
         (new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']))->deleteItems([
             SupportGroup::CACHE_FULLSUPPORT_KEY.$supportGroup->getId(),
@@ -182,7 +189,7 @@ final class EvaluationController extends AbstractController
         $response = $evaluationExporter->export($supportGroup, $request);
 
         if (!$response) {
-            $this->addFlash('warning', 'Il n\'y a pas d\'évaluation sociale créée pour ce suivi.');
+            $this->addFlash('warning', 'evaluation.no_created');
 
             return $this->redirectToRoute('support_show', ['id' => $id]);
         }

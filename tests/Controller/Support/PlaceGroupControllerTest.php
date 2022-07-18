@@ -79,7 +79,7 @@ class PlaceGroupControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
 
-        $this->assertSelectorTextContains('.toast.alert-success', 'L\'hébergement est créé.');
+        $this->assertSelectorTextContains('.toast.alert-success', 'L\'hébergement a été créé.');
     }
 
     public function testCreateNewPlaceGroupIsFailed(): void
@@ -137,7 +137,7 @@ class PlaceGroupControllerTest extends WebTestCase
         $this->client->request('GET', "/support/group-people-place/$id/delete");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.toast.alert-warning', 'La prise en charge est supprimée.');
+        $this->assertSelectorTextContains('.toast.alert-warning', 'La prise en charge a été supprimée.');
     }
 
     public function testDeletePlacePersonIsSuccessful(): void

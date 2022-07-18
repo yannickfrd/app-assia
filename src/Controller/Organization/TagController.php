@@ -61,7 +61,7 @@ final class TagController extends AbstractController
             $this->em->persist($tag);
             $this->em->flush();
 
-            $this->addFlash('success', 'L\'étiquette est créée.');
+            $this->addFlash('success', 'tag.created_successfully');
 
             return $this->redirectToRoute('admin_tag_index');
         }
@@ -83,7 +83,7 @@ final class TagController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->flush();
 
-            $this->addFlash('success', 'Les modifications sont enregistrées.');
+            $this->addFlash('success', 'tag.updated_successfully');
 
             return $this->redirectToRoute('admin_tag_index');
         }
@@ -102,7 +102,7 @@ final class TagController extends AbstractController
         $this->em->remove($tag);
         $this->em->flush();
 
-        $this->addFlash('success', 'L\'étiquette est supprimée.');
+        $this->addFlash('warning', 'tag.deleted_successfully');
 
         return $this->redirectToRoute('admin_tag_index');
     }

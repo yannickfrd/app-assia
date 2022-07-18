@@ -56,7 +56,9 @@ final class DeviceController extends AbstractController
             $this->em->persist($device);
             $this->em->flush();
 
-            $this->addFlash('success', 'Le dispositif est créé.');
+            $this->addFlash('success', 'device.created_successfully');
+
+            return $this->redirectToRoute('admin_device_edit', ['id' => $device->getId()]);
         }
 
         return $this->render('app/organization/device/device_edit.html.twig', [
@@ -76,7 +78,7 @@ final class DeviceController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->flush();
 
-            $this->addFlash('success', 'Les modifications sont enregistrées.');
+            $this->addFlash('success', 'device.updated_successfully');
         }
 
         return $this->render('app/organization/device/device_edit.html.twig', [
@@ -94,10 +96,10 @@ final class DeviceController extends AbstractController
 
         if ($device->isDisabled()) {
             $device->setDisabledAt(null);
-            $this->addFlash('success', 'Le dispositif est ré-activé.');
+            $this->addFlash('success', 'device.actived_successfully');
         } else {
             $device->setDisabledAt(new \DateTime());
-            $this->addFlash('warning', 'Le dispositif est désactivé.');
+            $this->addFlash('warning', 'device.disabled_successfully');
         }
 
         $this->em->flush();

@@ -4,21 +4,22 @@ declare(strict_types=1);
 
 namespace App\Controller\Support;
 
+use App\Service\Grammar;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Support\SupportPerson;
-use App\Form\Support\Support\AddPersonToSupportType;
-use App\Repository\Support\SupportPersonRepository;
-use App\Service\Grammar;
 use App\Service\SupportGroup\SupportManager;
-use App\Service\SupportGroup\SupportPeopleAdder;
 use App\Service\SupportGroup\SupportRestorer;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Service\SupportGroup\SupportPeopleAdder;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Repository\Support\SupportPersonRepository;
+use App\Form\Support\Support\AddPersonToSupportType;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 final class SupportPersonController extends AbstractController
 {
@@ -53,8 +54,12 @@ final class SupportPersonController extends AbstractController
      *
      * @Route("/support-person/{id}/delete/{_token}", name="support_peron_delete", methods="GET")
      */
-    public function delete(SupportPerson $supportPerson, string $_token, SupportManager $supportManager): Response
-    {
+    public function delete(
+        SupportPerson $supportPerson,
+        SupportManager $supportManager,
+        TranslatorInterface $translator,
+        string $_token
+    ): Response {
         $error = false;
 
         $supportGroup = $supportPerson->getSupportGroup();
@@ -64,17 +69,17 @@ final class SupportPersonController extends AbstractController
         // Vérifie si le token est valide avant de retirer la personne du suivi social
         if (!$this->isCsrfTokenValid('remove'.$supportPerson->getId(), $_token)) {
             $error = true;
-            $this->addFlash('danger', 'Une erreur s\'est produite (Token invalide).');
+            $this->addFlash('danger', 'error_occurred');
         }
         // Vérifie si la personne est le demandeur principal
         if ($supportPerson->getHead()) {
             $error = true;
-            $this->addFlash('danger', 'Le demandeur principal ne peut pas être retiré du suivi.');
+            $this->addFlash('danger', 'support_group.header_cannot_be_removed');
         }
         // Vérifie si le nombre de personne dans le suivi est supérieur à 1
         if ($supportGroup->getSupportPeople()->count() <= 1) {
             $error = true;
-            $this->addFlash('danger', 'Le suivi doit être constitué d\'au moins une personne.');
+            $this->addFlash('danger', 'support_group.error_minimum_people');
         }
 
         if (false === $error) {
@@ -83,11 +88,15 @@ final class SupportPersonController extends AbstractController
 
                 $supportManager->update($supportGroup);
 
-                $this->addFlash('warning', $supportPerson->getPerson()->getFullname().' est retiré'.
-                    Grammar::gender($supportPerson->getPerson()->getGender()).' du suivi social.');
+                $this->addFlash('warning', $translator->trans('support_person.deleted_successfully', [
+                    'person_fullname' => $supportPerson->getPerson()->getFullname(),
+                    'e' => Grammar::gender($supportPerson->getPerson()->getGender()),
+                ], 'app'));
             } catch (\Exception $e) {
                 throw $e;
-                $this->addFlash('danger', 'Une erreur s\'est produite ('.$e->getMessage().').');
+                $this->addFlash('danger', $translator->trans('error_occurred_with_msg',
+                    ['msg' => $e->getMessage()], 'app')
+                );
             }
         }
 

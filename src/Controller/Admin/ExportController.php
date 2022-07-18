@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @IsGranted("ROLE_ADMIN")
@@ -30,10 +31,12 @@ final class ExportController extends AbstractController
     use ErrorMessageTrait;
 
     private $exportRepo;
+    private $translator;
 
-    public function __construct(ExportRepository $exportRepo)
+    public function __construct(ExportRepository $exportRepo, TranslatorInterface $translator)
     {
         $this->exportRepo = $exportRepo;
+        $this->translator = $translator;
     }
 
     /**
@@ -68,8 +71,10 @@ final class ExportController extends AbstractController
                     'action' => 'count',
                     'alert' => 'danger',
                     'count' => $nbResults,
-                    'msg' => 'Le nombre de résultats ('.number_format($nbResults, 0, '', ' ').') est supérieur  à la 
-                        limite autorisée ('.number_format(SupportPersonRepository::EXPORT_LIMIT, 0, '', ' ').').',
+                    'msg' => $this->translator->trans('export.limit', [
+                        'count' => number_format($nbResults, 0, '', ' '),
+                        'limit' => number_format(SupportPersonRepository::EXPORT_LIMIT, 0, '', ' '),
+                    ], 'app'),
                 ]);
             }
 
@@ -79,7 +84,7 @@ final class ExportController extends AbstractController
                 return $this->json([
                     'action' => 'create',
                     'alert' => 'primary',
-                    'msg' => 'Votre export est en cours de préparation... Vous recevrez le lien de téléchargement par email.',
+                    'msg' => $this->translator->trans('export.in_progress', [], 'app'),
                     'export' => $normalizer->normalize($export, 'json', ['groups' => 'show_export']),
                     'path' => $this->generateUrl('export_send', ['id' => $export->getId()]),
                 ]);
@@ -88,7 +93,7 @@ final class ExportController extends AbstractController
 
         return $this->json([
             'alert' => 'danger',
-            'msg' => 'Une erreur s\'est produite.',
+            'msg' => $this->translator->trans('error_occurred', [], 'app'),
         ]);
     }
 
@@ -109,7 +114,7 @@ final class ExportController extends AbstractController
             return $this->json([
                 'action' => 'export',
                 'alert' => 'success',
-                'msg' => 'Le fichier est prêt. Vous avez reçu le lien de téléchargement par email.',
+                'msg' => $this->translator->trans('export.file_ready', [], 'app'),
                 'export' => $normalizer->normalize($export, 'json', ['groups' => 'show_export']),
                 'path' => $this->generateUrl('export_download', ['id' => $export->getId()]),
             ]);
@@ -117,7 +122,7 @@ final class ExportController extends AbstractController
 
         return $this->json([
             'alert' => 'danger',
-            'msg' => 'Une erreur s\'est produite.',
+            'msg' => $this->translator->trans('error_occurred', [], 'app'),
         ]);
     }
 
@@ -136,7 +141,9 @@ final class ExportController extends AbstractController
                 'action' => 'count',
                 'nbResults' => $nbResults = $supportPersonRepo->countSupportsToExport($search),
                 'alert' => 'primary',
-                'msg' => 'Nombre de résultats : '.number_format($nbResults, 0, '', ' '),
+                'msg' => $this->translator->trans('export.count_results',
+                    ['count' => number_format($nbResults, 0, '', ' ')], 'app'
+                ),
             ]);
         }
 
@@ -180,14 +187,12 @@ final class ExportController extends AbstractController
                     'action' => 'delete',
                     'export' => ['id' => $exportId],
                     'alert' => 'warning',
-                    'msg' => 'Le fichier d\'export est supprimé.',
+                    'msg' => $this->translator->trans('export.deleted_successfully', [], 'app'),
             ]);
-
-            $this->addFlash('warning', '');
         } catch (\Exception $e) {
             return $this->json([
                 'alert' => 'danger',
-                'msg' => 'Une erreur s\'est produite.',
+                'msg' => $this->translator->trans('error_occurred', [], 'app'),
                 'error' => $e->getMessage(),
             ]);
         }
@@ -201,9 +206,9 @@ final class ExportController extends AbstractController
     public function downloadModel(Downloader $downloader): Response
     {
         try {
-            return $downloader->send(\dirname(__DIR__).'/../../public/documentation/models/modele-export.xlsx');
+            return $downloader->send(\dirname(__DIR__).'/../../public/documentastion/models/modele-export.xlsx');
         } catch (\Exception $e) {
-            $this->addFlash('danger', "Une erreur s'est produite : {$e->getMessage()}");
+            $this->addFlash('danger', $this->translator->trans('error_occurred_with_msg', ['msg' => $e->getMessage()], 'app'));
 
             return $this->redirectToRoute('export_index');
         }

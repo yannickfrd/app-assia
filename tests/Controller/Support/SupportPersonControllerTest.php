@@ -76,7 +76,7 @@ class SupportPersonControllerTest extends WebTestCase
 
         $this->assertSelectorTextContains(
             '.toast.alert-success',
-            $person->getFullname().' est ajouté'.Grammar::gender($person->getGender()).' au suivi en cours.'
+            $person->getFullname().' a été ajouté'.Grammar::gender($person->getGender()).' au suivi'
         );
     }
 
@@ -108,7 +108,7 @@ class SupportPersonControllerTest extends WebTestCase
         $this->client->request('GET', $url);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.toast.alert-warning', 'est retiré');
+        $this->assertSelectorTextContains('.toast.alert-warning', 'a été retiré');
     }
 
     public function testGetPeopleInSupportGroupIsSuccessful(): void

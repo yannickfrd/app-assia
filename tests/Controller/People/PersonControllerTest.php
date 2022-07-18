@@ -341,7 +341,7 @@ class PersonControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         $content = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertSame('Les modifications sont enregistrées.', $content['msg']);
+        $this->assertSame('Les modifications ont été enregistrées.', $content['msg']);
     }
 
     public function testAddNewGroupToPersonIsSuccessful(): void
@@ -372,7 +372,7 @@ class PersonControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.toast.alert-success', 'Le nouveau groupe est créé.');
+        $this->assertSelectorTextContains('.toast.alert-success', 'Le nouveau groupe a été créé.');
     }
 
     public function testSearchPersonWithResults(): void
@@ -420,7 +420,7 @@ class PersonControllerTest extends WebTestCase
         $this->client->request('GET', "/person/$id/delete");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.toast.alert-warning', 'La personne est supprimée.');
+        $this->assertSelectorTextContains('.toast.alert-warning', 'La personne a été supprimée.');
     }
 
     public function testDuplicatePeoplePageIsUp(): void

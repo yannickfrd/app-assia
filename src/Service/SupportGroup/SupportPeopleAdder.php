@@ -14,18 +14,24 @@ use App\Repository\Evaluation\EvaluationGroupRepository;
 use App\Service\Grammar;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SupportPeopleAdder
 {
     use SupportPersonCreator;
 
     private $em;
-    private $flashbag;
+    private $flashBag;
+    private $translator;
 
-    public function __construct(EntityManagerInterface $em, FlashBagInterface $flashbag)
-    {
+    public function __construct(
+        EntityManagerInterface $em,
+        FlashBagInterface $flashBag,
+        TranslatorInterface $translator
+    ) {
         $this->em = $em;
-        $this->flashbag = $flashbag;
+        $this->flashBag = $flashBag;
+        $this->translator = $translator;
     }
 
     public function addPersonToSupport(SupportGroup $supportGroup, RolePerson $rolePerson): ?SupportPerson
@@ -33,7 +39,10 @@ class SupportPeopleAdder
         $person = $rolePerson->getPerson();
 
         if ($this->personIsInSupport($person, $supportGroup)) {
-            $this->flashbag->add('warning', $person->getFullname().' est déjà rattaché'.Grammar::gender($person->getGender()).' au suivi.');
+            $this->flashBag->add('warning', $this->translator->trans('support_group.person_already_in_support', [
+                'person_fullname' => $person->getFullname(),
+                'e' => Grammar::gender($person->getGender()),
+            ], 'app'));
 
             return null;
         }
@@ -49,7 +58,10 @@ class SupportPeopleAdder
 
         $this->em->flush();
 
-        $this->flashbag->add('success', $person->getFullname().' est ajouté'.Grammar::gender($person->getGender()).' au suivi en cours.');
+        $this->flashBag->add('success', $this->translator->trans('support_person.added_successfully', [
+            'person_fullname' => $person->getFullname(),
+            'e' => Grammar::gender($person->getGender()),
+        ], 'app'));
 
         return $supportPerson;
     }
