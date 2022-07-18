@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace App\Controller\Support;
 
-use App\Service\Grammar;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Support\SupportPerson;
+use App\Form\Support\Support\AddPersonToSupportType;
+use App\Repository\Support\SupportPersonRepository;
+use App\Service\Grammar;
 use App\Service\SupportGroup\SupportManager;
+use App\Service\SupportGroup\SupportPeopleAdder;
 use App\Service\SupportGroup\SupportRestorer;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Service\SupportGroup\SupportPeopleAdder;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use App\Repository\Support\SupportPersonRepository;
-use App\Form\Support\Support\AddPersonToSupportType;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class SupportPersonController extends AbstractController
 {

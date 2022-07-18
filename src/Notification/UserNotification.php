@@ -37,7 +37,7 @@ class UserNotification extends MailNotifier
         if ($this->send($email)) {
             return [
                 'type' => 'success',
-                'content' => "current_user.email_sent_successfully",
+                'content' => 'current_user.email_sent_successfully',
             ];
         }
 

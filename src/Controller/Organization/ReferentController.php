@@ -121,7 +121,7 @@ final class ReferentController extends AbstractController
         $this->em->flush();
 
         $this->addFlash('warning', $this->translator->trans('referent.deleted_successfully', [
-            'referent_name' => $referent->getName()
+            'referent_name' => $referent->getName(),
         ], 'app'));
 
         $this->deleteCacheItems($referent->getPeopleGroup());

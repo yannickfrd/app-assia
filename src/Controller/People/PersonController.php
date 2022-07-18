@@ -241,7 +241,7 @@ final class PersonController extends AbstractController
             // Si la personne existe déjà, renvoie vers la fiche existante, sinon crée la personne
             if ($personExists) {
                 $this->addFlash('warning', $this->translator->trans('person.already_exists', [
-                    'person_fullname' => $person->getFullname()
+                    'person_fullname' => $person->getFullname(),
                 ], 'app'));
 
                 return $this->redirectToRoute('person_show', ['id' => $personExists->getId()]);
@@ -356,8 +356,8 @@ final class PersonController extends AbstractController
 
         // Si la personne existe déjà, renvoie vers la fiche existante, sinon crée la personne
         if ($this->personExists($person)) {
-            $this->addFlash('warning', $this->translator->trans('person.already_exists',[
-                'person_fullname' => $person->getFullname()
+            $this->addFlash('warning', $this->translator->trans('person.already_exists', [
+                'person_fullname' => $person->getFullname(),
             ], 'app'));
 
             return null;

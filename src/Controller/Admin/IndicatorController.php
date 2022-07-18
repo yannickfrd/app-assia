@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
-use App\Controller\Traits\ErrorMessageTrait;
 use App\Form\Admin\ServiceIndicatorsSearchType;
 use App\Form\Model\Admin\ServiceIndicatorsSearch;
 use App\Form\Model\Support\SupportSearch;

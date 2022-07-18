@@ -126,7 +126,7 @@ final class PlaceController extends AbstractController
         $em->flush();
 
         $this->addFlash('warning', $this->translator->trans('place.deleted_successfully', [
-            'place_name' => $place->getName()
+            'place_name' => $place->getName(),
         ], 'app'));
 
         PlaceManager::deleteCacheItems($place);
@@ -147,7 +147,7 @@ final class PlaceController extends AbstractController
 
         $this->addFlash('success', $this->translator->trans(
             $isDisabled ? 'place.actived_successfully' : 'place.disabled_successfully', [
-                'place_name' => $place->getName()
+                'place_name' => $place->getName(),
         ], 'app'));
 
         PlaceManager::deleteCacheItems($place);

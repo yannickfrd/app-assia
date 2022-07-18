@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
-use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Admin\DatabaseBackup;
 use App\Repository\Admin\DatabaseBackupRepository;
 use App\Service\DatabaseDumper;
