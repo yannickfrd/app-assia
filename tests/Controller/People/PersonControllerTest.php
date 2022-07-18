@@ -148,7 +148,7 @@ class PersonControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Création d\'une personne');
-        $this->assertSelectorTextContains('div.container nav ol.breadcrumb li:last-child', 'Création d\'une personne');
+        $this->assertSelectorTextContains('div.container nav ol.breadcrumb li.show', 'Création d\'une personne');
     }
 
     public function testCreateNewPersonIsSuccessful(): void

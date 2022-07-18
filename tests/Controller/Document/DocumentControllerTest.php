@@ -131,7 +131,7 @@ class DocumentControllerTest extends WebTestCase
         $contentResponse = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSame("Le fichier « $documentName » n'existe pas.", $contentResponse['msg']);
+        $this->assertSame("Le fichier « $documentName » est introuvable.", $contentResponse['msg']);
 
         // Success
         $newFile = $this->moveFile();
@@ -168,7 +168,7 @@ class DocumentControllerTest extends WebTestCase
         $contentResponse = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSame("Le fichier « $documentName » n'existe pas.", $contentResponse['msg']);
+        $this->assertSame("Le fichier « $documentName » est introuvable.", $contentResponse['msg']);
 
         // Success
         $newFile = $this->moveFile();

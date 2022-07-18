@@ -284,7 +284,7 @@ final class RdvController extends AbstractController
         return $this->json([
             'action' => 'restore',
             'alert' => 'success',
-             $translator->trans('rdv.restored_successfully', ['rdv_title' => $rdv->getTitle()], 'app'),
+            'msg' => $translator->trans('rdv.restored_successfully', ['rdv_title' => $rdv->getTitle()], 'app'),
             'rdv' => ['id' => $rdv->getId()],
         ]);
     }

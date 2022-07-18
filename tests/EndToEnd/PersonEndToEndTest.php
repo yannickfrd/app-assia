@@ -10,6 +10,12 @@ class PersonEndToEndTest extends PantherTestCase
 {
     use AppPantherTestTrait;
 
+    public const BUTTON_NEW = '#updatePerson';
+
+    public const ALERT_SUCCESS = '.toast.show.alert-success';
+    public const ALERT_WARNING = '.toast.show.alert-warning';
+    public const BUTTON_CLOSE_MSG = '.toast.show .btn-close';
+
     protected Client $client;
 
     public function testPerson(): void
@@ -48,10 +54,10 @@ class PersonEndToEndTest extends PantherTestCase
 
         $this->clickElement('#updatePerson');
 
-        $this->client->waitFor('#alert-message');
-        $this->assertSelectorExists('#alert-message.toast.alert-success');
+        $this->client->waitFor(self::ALERT_SUCCESS);
+        $this->assertSelectorExists(self::ALERT_SUCCESS);
 
-        $this->clickElement('.toast .btn-close');
+        $this->clickElement(self::BUTTON_CLOSE_MSG);
     }
 
     private function createNewGroupForPerson(): void
@@ -70,7 +76,8 @@ class PersonEndToEndTest extends PantherTestCase
 
         $this->clickElement('#js-btn-confirm');
 
-        $this->assertSelectorTextContains('.toast.alert-success', 'Le nouveau groupe est créé.');
+        $this->client->waitFor(self::ALERT_SUCCESS);
+        $this->assertSelectorTextContains(self::ALERT_SUCCESS, 'Le nouveau groupe a été créé.');
     }
 
     protected function tearDown(): void

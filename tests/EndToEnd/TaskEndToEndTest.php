@@ -21,9 +21,9 @@ class TaskEndToEndTest extends PantherTestCase
     public const MODAL_BUTTON_CLOSE = '#js-btn-cancel';
     public const FORM_TASK = 'form[name="task"]';
 
-    public const ALERT_SUCCESS = '.toast.alert-success';
-    public const ALERT_WARNING = '.toast.alert-warning';
-    public const BUTTON_CLOSE_MSG = '.toast .btn-close';
+    public const ALERT_SUCCESS = '.toast.show.alert-success';
+    public const ALERT_WARNING = '.toast.show.alert-warning';
+    public const BUTTON_CLOSE_MSG = '.toast.show .btn-close';
 
     protected Client $client;
 

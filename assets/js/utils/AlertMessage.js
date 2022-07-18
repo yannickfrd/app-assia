@@ -17,6 +17,10 @@ export default class AlertMessage {
     #init() {
         this.alertContainerElt.appendChild(this.alertElt)
         this.toast.show()
+
+        this.alertElt.querySelector('.btn-close').addEventListener('click', () => {
+            setTimeout(() => this.alertElt.remove(), 1000)
+        })
     }
 
     /**

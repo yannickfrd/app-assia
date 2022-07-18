@@ -20,10 +20,10 @@ class NoteEndToEndTest extends PantherTestCase
     public const NOTES_TABLE = '#table-notes';
     public const BUTTON_SHOW_NOTE = '#table-notes a[data-action="show"]';
 
-    public const ALERT_SUCCESS = '.toast.alert-success';
-    public const ALERT_WARNING = '.toast.alert-warning';
-    public const ALERT_DANGER = '.toast.alert-danger';
-    public const BUTTON_CLOSE_MSG = '.toast .btn-close';
+    public const ALERT_SUCCESS = '.toast.show.alert-success';
+    public const ALERT_WARNING = '.toast.show.alert-warning';
+    public const ALERT_DANGER = '.toast.alert-danger.show';
+    public const BUTTON_CLOSE_MSG = '.toast.show .btn-close';
 
     protected Client $client;
 
