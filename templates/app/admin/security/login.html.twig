@@ -7,12 +7,6 @@
         <section class="row min-vh-80">
             <div class="form-signin m-auto text-center">
                 {{ form_start(form) }}
-                    {% if error %}
-                        <div class="alert alert-danger alert-dismissible mb-3 fade show" role="alert">
-                            {{ error.messageKey|trans(error.messageData, 'security')|raw }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    {% endif %}
                     <h1 class="h3 mb-4 fw-normal">Merci de vous connecter</h1>
                     <div class="my-2">
                         <div class="input-group">
@@ -29,7 +23,7 @@
                         </div>
                     </div>
                     <div class="d-grid gap-2">
-                        <button type="submit" id="send" name="send" class="btn btn-lg btn-primary btn-block shadow mb-4">Se connecter</button>
+                        <button type="submit" id="send" name="send" class="btn btn-lg btn-primary w-100 shadow mb-4">Se connecter</button>
                     </div>
                 {{ form_end(form) }}
                 <a href="{{ path('security_forgot_password') }}" class="link-primary mb-4">Mot de passe oublié ?</a>
