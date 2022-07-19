@@ -19,7 +19,7 @@ App\Entity\Support\PlaceGroup:
         createdBy: "@user*"
         updatedBy: "@user*"
         place: "@place*"
-        peopleGroup: "@people_group*"
+        peopleGroup: "@people_group1"
         supportGroup: "@support_group*"
 
 App\Entity\Support\PlacePerson:

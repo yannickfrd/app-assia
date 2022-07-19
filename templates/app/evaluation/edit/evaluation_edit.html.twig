@@ -17,14 +17,11 @@
 	{% set people_over_16 = evaluation_people|filter(e => e.vars.value.supportPerson.person.age >= 16) %}
 	{% set nb_children = nb_people - people_adults|length %}
 
-	<div class="container">
+	<div class="container pt-3">
 
 		{% include 'app/support/_partials/_support_nav.html.twig' %}
 
 		{{ form_start(form) }}
-
-		{% include 'model/_flash_message.html.twig' %}
-		<div id="js-msg-flash-content"></div>
 
 		<div class="row mb-3 align-items-center">
 			<div class="col-md-6 my-2 small text-secondary" data-edit-mode="{{ edit_mode ? 'true' : 'false' }}">
@@ -40,7 +37,7 @@
 				{% include 'app/evaluation/_export_evaluation.html.twig' %}
 			</div>
 		</div>
-		<div class="mb-4">
+		<div class="accordion mb-4">
 			{% include 'app/evaluation/edit/_eval_init.html.twig' with {accordion_id: 'evalInit'} %}
 			{% include 'app/evaluation/edit/_evaluation_background.html.twig' with {accordion_id: 'evalBackground'} %}
 			{% if support.service.justice == YES %}
@@ -60,25 +57,25 @@
 
 		<div class="row mb-3">
 			<div class="col-md-12">
-				<div class="float-left d-flex">
+				<div class="float-start d-flex">
 					{% if is_granted('ROLE_ADMIN') %}
 						{% set alert_text = '"Êtes-vous vraiment sûr de vouloir supprimer cette évaluation sociale ?"' %}
-						<a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('evaluation_delete', {'id': evaluation_group.id}) }}" 
-							title="Supprimer l'évaluation sociale" data-toggle="tooltip" data-placement="bottom" 
+						<a id="modal-btn-delete" class="me-3 btn btn-danger d-block" href="{{ path('evaluation_delete', {'id': evaluation_group.id}) }}" 
+							title="Supprimer l'évaluation sociale" data-bs-toggle="tooltip" data-bs-placement="bottom" 
 							onclick="return window.confirm({{ alert_text }});">
-							<i class="fas fa-trash-alt mr-2"></i>Supprimer</a>
+							<i class="fas fa-trash-alt me-2"></i>Supprimer</a>
 					{% endif %}
 					{% set alert_text = '"Attention, cela va écraser les données de cette évaluation sociale.' ~ 
 						' Êtes-vous vraiment sûr de vouloir récupérer l\'évaluation sociale du SI-SIAO ?"' %}
-					<a class="btn btn-{{ theme_color }} d-block mr-3" href="{{ path('api_sisiao_support_import_evaluation', {'id': support.id}) }}" 
-						title="Importer l'évaluation sociale du SI-SIAO" data-toggle="tooltip" data-placement="bottom" 
-						onclick="return window.confirm({{ alert_text }});"><i class="fas fa-cloud-download-alt mr-2"></i>
+					<a class="btn btn-primary d-block me-3" href="{{ path('api_sisiao_support_import_evaluation', {'id': support.id}) }}" 
+						title="Importer l'évaluation sociale du SI-SIAO" data-bs-toggle="tooltip" data-bs-placement="bottom" 
+						onclick="return window.confirm({{ alert_text }});"><i class="fas fa-cloud-download-alt me-2"></i>
 						<span class="d-none d-sm-inline">Importer SI-SIAO</span></a>
 				</div>
-				<div class="mb-4 float-right">
-					<button type="submit" name="send" id="send" class="btn btn-{{ theme_color }} shadow" 
+				<div class="mb-4 float-end">
+					<button type="submit" name="send" id="send" class="btn btn-primary shadow" 
 						data-url="{{ path('support_evaluation_edit', {'id': support.id}) }}">
-						<i class="fas fa-save mr-2"></i>Enregistrer</button>
+						<i class="fas fa-save me-2"></i>Enregistrer</button>
 				</div>
 			</div>
 		</div>

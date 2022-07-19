@@ -7,7 +7,6 @@
 {% block body %}
     <section class="mt-0 mb-4">
         <div class="container">
-            {% include 'model/_flash_message.html.twig' %}
             <h1 class="h2 mb-3">Dispositifs</h1>
         </div>
 
@@ -65,13 +64,13 @@
                             <td  class="align-middle" scope="row">
                                 {% if is_role_super_admin %}
                                     <a href="{{ path('admin_device_edit', {'id': device.id}) }}"
-                                        class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip"
-                                        data-placement="bottom" title="Voir la fiche du dispositif">
+                                        class="btn btn-primary btn-sm shadow" data-bs-toggle="tooltip"
+                                        data-bs-placement="bottom" title="Voir la fiche du dispositif">
                                         <span class="fas fa-eye"></span>
                                     </a>
                                 {% endif %}
                             </td>
-                            <td class="align-middle {% if device.disabled %}delete{% endif %}">{{ device.name }}{% if device.disabled %} (désactivé){% endif %}</td>
+                            <td class="align-middle {% if device.disabled %}text-del{% endif %}">{{ device.name }}{% if device.disabled %} (désactivé){% endif %}</td>
                             <td class="align-middle">{{ device.coefficient }}</td>
                             <td class="align-middle">{{ device.placeToString }}</td>
                             <td class="align-middle">{{ device.comment }}</td>
@@ -89,8 +88,8 @@
                 {{ knp_pagination_render(devices) }}
             </div>
             {% if is_role_super_admin %}
-                <p><a href="{{ path('admin_device_new') }}" class="btn btn-{{ theme_color }} btn-sm shadow js-create-device">
-                    <span class="fas fa-plus-square mr-2"></span>Créer un nouveau dispositif</a>
+                <p><a href="{{ path('admin_device_new') }}" class="btn btn-primary btn-sm shadow js-create-device">
+                    <span class="fas fa-plus-square me-2"></span>Créer un nouveau dispositif</a>
                 </p>
             {% endif %}
     </section>

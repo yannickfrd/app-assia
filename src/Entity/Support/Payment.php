@@ -239,17 +239,17 @@ class Payment
     /** @var float */
     private $restToLive;
 
-    /**
-     * @ORM\PreFlush
-     */
-    public function preFlush(): void
-    {
-        $this->setStillToPayAmt($this->getToPayAmt() - $this->getPaidAmt());
-
-        if ($this->supportGroup) {
-            $this->supportGroup->setUpdatedAt(new \DateTime());
-        }
-    }
+//    /**
+//     * @ORM\PreFlush
+//     */
+//    public function preFlush(): void
+//    {
+//        $this->setStillToPayAmt($this->getToPayAmt() - $this->getPaidAmt());
+//
+//        if ($this->supportGroup) {
+//            $this->supportGroup->setUpdatedAt(new \DateTime());
+//        }
+//    }
 
     public function getId(): ?int
     {

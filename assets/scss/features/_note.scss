@@ -1,0 +1,30 @@
+// Editeur de texte des notes
+#editor {
+    height: calc(100vh - 305px);
+    min-height: 150px;
+    max-height: calc(100vh - 305px);
+
+}
+
+.editor-fullscreen {
+    height: calc(100vh - 303.6px) !important;
+    max-height: calc(100vh - 303.6px) !important;
+}
+
+/* Gestion de dépassement des notes */
+.note-content {
+    position: relative;
+    max-height: 400px;
+    overflow: hidden;
+}
+
+/* Effet fade out pour le contenu des notes  */
+.note-fadeout {
+    content: "";
+    position: absolute;
+    top: 60%;
+    left: 0;
+    height: 40%;
+    width: 100%;
+    background: linear-gradient(rgba(255, 255, 255, 0), white);
+}

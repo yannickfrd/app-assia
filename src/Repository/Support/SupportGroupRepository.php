@@ -23,8 +23,8 @@ use Symfony\Component\Security\Core\Security;
  */
 class SupportGroupRepository extends ServiceEntityRepository
 {
-    use QueryTrait;
     use DoctrineTrait;
+    use QueryTrait;
 
     /** @var User */
     private $user;
@@ -37,6 +37,26 @@ class SupportGroupRepository extends ServiceEntityRepository
     }
 
     /**
+     * @return float|int|mixed|string
+     */
+    public function findEndDate()
+    {
+        return $this->createQueryBuilder('sg')->select('sg')
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id}')
+            ->leftJoin('sg.notes', 'nt')->addSelect('PARTIAL nt.{id}')
+            ->leftJoin('sg.documents', 'doc')->addSelect('PARTIAL doc.{id}')
+            ->leftJoin('sg.rdvs', 'rdv')->addSelect('PARTIAL rdv.{id}')
+            ->leftJoin('sg.payments', 'pmt')->addSelect('PARTIAL pmt.{id}')
+
+            ->where('sg.endDate IS NOT NULL')
+            ->andWhere('sg.status = '.SupportGroup::STATUS_ENDED)
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult()
+        ;
+    }
+
+    /**
      * Donne le suivi social avec le groupe et les personnes rattachées.
      */
     public function findSupportById(int $id, bool $deleted = false): ?SupportGroup
@@ -45,7 +65,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             $this->disableFilter($this->_em, 'softdeleteable');
         }
 
-        $qb = $this->getsupportQuery();
+        $qb = $this->getSupportQuery();
 
         return $qb
             ->andWhere('sg.id = :id')
@@ -65,7 +85,7 @@ class SupportGroupRepository extends ServiceEntityRepository
             $this->disableFilter($this->_em, 'softdeleteable');
         }
 
-        return $this->getsupportQuery()
+        return $this->getSupportQuery()
         ->leftJoin('sg.updatedBy', 'user2')->addSelect('PARTIAL user2.{id, firstname, lastname}')
         ->leftJoin('sg.originRequest', 'origin')->addSelect('origin')
         ->leftJoin('origin.organization', 'orga')->addSelect('PARTIAL orga.{id, name}')
@@ -98,9 +118,9 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    protected function getsupportQuery(): QueryBuilder
+    protected function getSupportQuery(bool $withOrder = true): QueryBuilder
     {
-        return $this->createQueryBuilder('sg')->select('sg')
+        $qb = $this->createQueryBuilder('sg')->select('sg')
             ->leftJoin('sg.createdBy', 'user')->addSelect('PARTIAL user.{id, firstname, lastname}')
             ->leftJoin('sg.referent', 'ref')->addSelect('PARTIAL ref.{id, firstname, lastname}')
             ->leftJoin('sg.referent2', 'ref2')->addSelect('PARTIAL ref2.{id, firstname, lastname}')
@@ -109,10 +129,14 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name, code, coefficient, place, contribution, contributionType, contributionRate}')
             ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, usename, birthdate, gender, phone1, email}')
-            ->leftJoin('sg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople, siSiaoId}')
+            ->leftJoin('sg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople, siSiaoId}');
 
-            ->addOrderBy('sp.head', 'DESC')
-            ->addOrderBy('p.birthdate', 'ASC');
+        if ($withOrder) {
+            $qb->addOrderBy('sp.head', 'DESC')
+                ->addOrderBy('p.birthdate', 'ASC');
+        }
+
+        return $qb;
     }
 
     /**
@@ -420,5 +444,73 @@ class SupportGroupRepository extends ServiceEntityRepository
         }
 
         return $i > 0 ? round($sum / $i, 1) : null;
+    }
+
+    /**
+     * @return float|int|mixed|string|null
+     */
+    public function countSupportGroupElements(?\DateTimeInterface $limitDate = null)
+    {
+        return $this->createQueryBuilder('sg')->select('sg.id')
+            ->leftJoin('sg.notes', 'n')->addSelect('count(DISTINCT n.id) as nb_notes')
+            ->leftJoin('sg.documents', 'd')->addSelect('count(DISTINCT d.id) as nb_documents')
+            ->leftJoin('sg.payments', 'p')->addSelect('count(DISTINCT p.id) as nb_payments')
+            ->leftJoin('sg.rdvs', 'r')->addSelect('count(DISTINCT r.id) as nb_rdvs')
+            ->leftJoin('sg.tasks', 't')->addSelect('count(DISTINCT t.id) as nb_tasks')
+
+            ->groupBy('sg.id')
+
+            ->where('sg.endDate IS NOT NULL')
+            ->andWhere('sg.endDate <= :limitDate')
+            ->setParameter('limitDate', $limitDate ?? new \DateTime())
+
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult()
+        ;
+    }
+
+    /**
+     * @return SupportGroup[]
+     */
+    public function findEndedSupports(?\DateTimeInterface $limitDate = null): array
+    {
+        return $this->createQueryBuilder('sg')->select('sg')
+            ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
+
+            ->leftJoin('sg.peopleGroup', 'pg')->addSelect('pg')
+            ->leftJoin('pg.supports', 'sg2')->addSelect('sg2')
+            ->leftJoin('pg.rolePeople', 'rp')->addSelect('rp')
+            ->leftJoin('rp.person', 'p')->addSelect('p')
+            ->leftJoin('p.rolesPerson', 'rp2')->addSelect('rp2')
+            ->leftJoin('rp2.person', 'p2')->addSelect('p2')
+            ->leftJoin('p.supports', 'sp2')->addSelect('sp2')
+
+            ->leftJoin('sg.originRequest', 's_gor')->addSelect('s_gor')
+            ->leftJoin('sg.avdl', 'sg_avdl')->addSelect('sg_avdl')
+            ->leftJoin('sg.hotelSupport', 'sg_hs')->addSelect('sg_hs')
+            ->leftJoin('sg.evalInitGroup', 'sg_ieg')->addSelect('sg_ieg')
+            ->leftJoin('sp.evalInitPerson', 'sp_ieg')->addSelect('sp_ieg')
+
+            ->leftJoin('sg2.originRequest', 'sg2_or')->addSelect('sg2_or')
+            ->leftJoin('sg2.avdl', 'sg2_avdl')->addSelect('sg2_avdl')
+            ->leftJoin('sg2.hotelSupport', 'sg2_hs')->addSelect('sg2_hs')
+            ->leftJoin('sg2.evalInitGroup', 'sg2_ieg')->addSelect('sg2_ieg')
+            ->leftJoin('sp2.evalInitPerson', 'sp2_iep')->addSelect('sp2_iep')
+
+            ->where('sg.status IN (:status)')
+            ->setParameter('status', [
+                SupportGroup::STATUS_ENDED,
+                SupportGroup::STATUS_PRE_ADD_FAILED,
+                SupportGroup::STATUS_SUSPENDED,
+                SupportGroup::STATUS_OTHER,
+            ])
+
+            ->andWhere('sg.updatedAt <= :limitDate')
+            ->setParameter('limitDate', $limitDate ?? new \DateTime())
+
+            ->getQuery()
+            ->getResult()
+        ;
     }
 }

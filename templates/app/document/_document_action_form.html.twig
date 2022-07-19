@@ -1,12 +1,12 @@
-{% form_theme action_form 'bootstrap_4_layout.html.twig' %}
-
 {{ form_start(action_form) }}
-<div class="form-inline mb-2">
-    {{ form_label(action_form.type) }}
-    <div class="my-1 px-1">{{ form_widget(action_form.type) }}</div>
-    <div class="my-1 px-1">
+<div class="row row-cols-lg-auto gx-0 align-items-center mb-2">
+    <div class="col-auto my-1 px-1">
+        {{ form_label(action_form.type, null, {label_attr: {class: 'visually-hidden'}}) }}
+        {{ form_widget(action_form.type) }}
+    </div>
+    <div class="col-auto my-1 px-1">
         <button type="submit" id="action-validate" name="action-validate" 
-            class="btn btn-{{ theme_color }} shadow">Valider</button>
+            class="btn btn-primary shadow">Valider</button>
     </div>
 </div>
 {{ form_end(action_form) }}

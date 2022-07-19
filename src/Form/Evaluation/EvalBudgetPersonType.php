@@ -41,7 +41,6 @@ class EvalBudgetPersonType extends AbstractType
             ])
             ->add('incomeN1Amt', MoneyType::class, [
                 'attr' => [
-                    'class' => 'text-right',
                     'data-amount' => 'true',
                     'placeholder' => 'Amount',
                 ],
@@ -49,7 +48,6 @@ class EvalBudgetPersonType extends AbstractType
             ])
             ->add('incomeN2Amt', MoneyType::class, [
                 'attr' => [
-                    'class' => 'text-right',
                     'data-amount' => 'true',
                     'placeholder' => 'Amount',
                 ],
@@ -69,7 +67,6 @@ class EvalBudgetPersonType extends AbstractType
             ])
             ->add('chargesAmt', MoneyType::class, [
                 'attr' => [
-                    'class' => 'text-right',
                     'data-amount' => 'chargesAmt',
                     'placeholder' => 'Amount',
                 ],
@@ -89,7 +86,6 @@ class EvalBudgetPersonType extends AbstractType
             ])
             ->add('debtsAmt', MoneyType::class, [
                 'attr' => [
-                    'class' => 'text-right',
                     'data-amount' => 'debtsAmt',
                     'data-twin-field' => 'true',
                     'placeholder' => 'Amount',
@@ -121,7 +117,6 @@ class EvalBudgetPersonType extends AbstractType
                 'help' => 'evalBudgetPerson.endRightsDate.help',
             ])
             ->add('commentEvalBudget', null, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'rows' => 5,
                     'class' => 'justify',

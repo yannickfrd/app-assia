@@ -32,7 +32,7 @@ class NoteType extends AbstractType
             ->add('title', null, [
                 'attr' => [
                     'placeholder' => 'Title',
-                    'class' => 'font-weight-bold',
+                    'class' => 'fw-bold',
                 ],
             ])
             ->add('content', null, [

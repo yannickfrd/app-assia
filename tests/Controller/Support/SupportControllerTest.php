@@ -70,7 +70,7 @@ class SupportControllerTest extends WebTestCase
         ], 'GET');
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-warning', 'Aucun résultat à exporter.');
+        $this->assertSelectorTextContains('.toast.alert-warning', 'Aucun résultat à exporter.');
 
         $this->client->submitForm('export', [], 'GET');
 
@@ -143,7 +143,7 @@ class SupportControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.alert.alert-success');
+        $this->assertSelectorExists('.toast.alert-success');
     }
 
     public function testCreateNewSupportGroupAndCloneIsSuccessful(): void
@@ -168,7 +168,7 @@ class SupportControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.alert.alert-success');
+        $this->assertSelectorExists('.toast.alert-success');
     }
 
     public function testPeopleHaveOtherSupportInProgress(): void
@@ -190,7 +190,7 @@ class SupportControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-danger', 'Attention, un suivi social est déjà en cours');
+        $this->assertSelectorTextContains('.toast.alert-warning', 'Attention, un suivi social est déjà en cours');
     }
 
     public function testCreateEndedSupportWithOtherSupportInProgressIsSuccessful(): void
@@ -212,7 +212,7 @@ class SupportControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-success', 'Le suivi social est créé');
+        $this->assertSelectorTextContains('.toast.alert-success', 'Le suivi a été créé');
     }
 
     public function testEditSupportGroupIsSuccessful(): void
@@ -225,12 +225,12 @@ class SupportControllerTest extends WebTestCase
         $this->client->request('GET', "/support/$id/edit");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('h1', 'Édition du suivi');
+        $this->assertSelectorTextContains('h1', 'Édition');
 
         $this->client->submitForm('send');
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.alert.alert-success');
+        $this->assertSelectorExists('.toast.alert-success');
     }
 
     public function testEditCoefficientIsSuccessful(): void
@@ -247,7 +247,7 @@ class SupportControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-success', 'Le coefficient du suivi est mis à jour.');
+        $this->assertSelectorTextContains('.toast.alert-success', 'Le coefficient du suivi a été mis à jour.');
     }
 
     public function testShowSupportGroupIsUp(): void
@@ -294,7 +294,7 @@ class SupportControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Groupe');
-        $this->assertSelectorExists('.alert.alert-warning');
+        $this->assertSelectorExists('.toast.alert-warning');
     }
 
     public function testRestoreSupportIsSuccessful(): void
@@ -320,7 +320,7 @@ class SupportControllerTest extends WebTestCase
 
         $id = $support->getSupportPeople()->first()->getId();
         $this->client->request('GET', "/support-person/$id/restore");
-        $this->assertSelectorTextContains('.alert.alert-success', 'a bien été restauré');
+        $this->assertSelectorTextContains('.toast.alert-success', 'a été restauré');
 
         // After restore a support
         $crawler = $this->client->request('GET', '/supports', [
@@ -339,7 +339,7 @@ class SupportControllerTest extends WebTestCase
         $this->client->request('GET', "/support/$id/clone");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-warning', 'Aucun autre suivi n\'a été trouvé.');
+        $this->assertSelectorTextContains('.toast.alert-warning', 'Aucun autre suivi n\'a été trouvé.');
     }
 
     public function testCloneSupportIsSuccessful(): void
@@ -352,7 +352,7 @@ class SupportControllerTest extends WebTestCase
         $this->client->request('GET', "/support/$id/clone");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-success', 'Les informations du précédent suivi ont été ajoutées');
+        $this->assertSelectorTextContains('.toast.alert-success', 'Les informations du précédent suivi ont été ajoutées');
     }
 
     public function testShowSupportsWithContributioIsUp(): void
@@ -400,11 +400,11 @@ class SupportControllerTest extends WebTestCase
 
         $this->client->submitForm('save', [
             '_oldReferent' => $this->fixtures['john_user'],
-            '_newReferent' => $this->fixtures['user5'],
+            '_newReferent' => $this->fixtures['user_admin'],
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-success', '3 suivis ont été transférés');
+        $this->assertSelectorTextContains('.toast.alert-success', '3 suivis ont été transférés');
     }
 
     private function loadFixtures(): void

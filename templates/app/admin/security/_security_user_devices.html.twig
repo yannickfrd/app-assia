@@ -42,16 +42,16 @@
     </div>
     <div class="row mb-4">
         <div class="col-md-12">
-            <button type="button" class="btn btn-{{ theme_color }}"
+            <button type="button" class="btn btn-primary"
                 data-add-widget="device" data-list-selector="#userDevices-fields-list">
-                <i class="fas fa-plus-square mr-2"></i>Ajouter un dispositif</button>
-            <div class="float-right">
-                <button type="submit" id="send3" name="send3" class="btn btn-{{ theme_color }} shadow">
-                    <i class="fas fa-save mr-2"></i>Enregistrer</button>
+                <i class="fas fa-plus-square me-2"></i>Ajouter un dispositif</button>
+            <div class="float-end">
+                <button type="submit" id="send3" name="send3" class="btn btn-primary shadow">
+                    <i class="fas fa-save me-2"></i>Enregistrer</button>
             </div>
         </div>
     </div>
 
-    {{ form_end(form_user_devices) }}
+    {{ form_end(form_user_devices, {render_rest: false}) }}
 
 </section>

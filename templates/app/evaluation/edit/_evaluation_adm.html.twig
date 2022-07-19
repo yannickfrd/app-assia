@@ -7,11 +7,11 @@
 {% block card_body %}
 	<div class="row">
 		<div class="col-md-12 accordion" id="accordion_evalAdm">
-			{{ support_people_looper.loop(accordion_id, evaluation_people, support, theme_color) }}
+			{{ support_people_looper.loop(accordion_id, evaluation_people, support) }}
 			{% for key, eval_person in evaluation_people %}
 				{% set prefix_id = 'evaluation_evaluationPeople_' ~ key ~ '_evalAdmPerson' %}
 				<div id="collapse_{{ prefix_id }}" class="collapse {% if loop.first %}show{% endif %} my-3" 
-					aria-labelledby="heading_{{ prefix_id }}" data-parent="#accordion_evalAdm" 
+					aria-labelledby="heading_{{ prefix_id }}" data-bs-parent="#accordion_evalAdm" 
 					data-sp-id="{{ eval_person.vars.value.supportPerson.id }}">
 					<div class="mb-3">
 						<div class="row">
@@ -22,7 +22,7 @@
 							{% if support.service.type == constant('SERVICE_TYPE_ASYLUM', support.service) %}
 								<div class="col-md-6" data-country="{{ key }}">
 									{{ form_row(eval_person.evalAdmPerson._country) }}
-									<span class="sr-only">{{ form_row(eval_person.evalAdmPerson.country) }}</span>
+									<span class="visually-hidden">{{ form_row(eval_person.evalAdmPerson.country) }}</span>
 								</div>
 							{% else %}
 								<div class="col-md-6">{{ form_row(eval_person.evalAdmPerson.country) }}</div>
@@ -74,6 +74,7 @@
 						{% endif %}
 					</div>
 					<div class="row mt-2">
+						{{ form_label(eval_person.evalAdmPerson.commentEvalAdmPerson, null, {label_attr: {class: 'visually-hidden'}}) }}
 						<div class="col-md-12">{{ form_widget(eval_person.evalAdmPerson.commentEvalAdmPerson) }}</div>
 					</div>
 				</div>

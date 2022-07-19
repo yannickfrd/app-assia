@@ -40,7 +40,7 @@ final class SubServiceController extends AbstractController
             $this->em->persist($subService);
             $this->em->flush();
 
-            $this->addFlash('success', 'Le sous-service est créé.');
+            $this->addFlash('success', 'sub_service.created_successfully');
 
             $this->deleteCacheItems($subService->getService());
 
@@ -70,7 +70,7 @@ final class SubServiceController extends AbstractController
 
             $this->deleteCacheItems($subService->getService());
 
-            $this->addFlash('success', 'Les modifications sont enregistrées.');
+            $this->addFlash('success', 'sub_service.updated_successfully');
         }
 
         $places = $placeRepo->findPlacesOfSubService($subService);
@@ -96,12 +96,12 @@ final class SubServiceController extends AbstractController
     {
         $this->denyAccessUnlessGranted('DISABLE', $subService->getService());
 
-        if ($subService->getDisabledAt()) {
+        if ($subService->isDisabled()) {
             $subService->setDisabledAt(null);
-            $this->addFlash('success', 'Le sous-service "'.$subService->getName().'" est ré-activé.');
+            $this->addFlash('success', 'sub_service.actived_successfully');
         } else {
             $subService->setDisabledAt(new \DateTime());
-            $this->addFlash('warning', 'Le sous-service "'.$subService->getName().'" est désactivé.');
+            $this->addFlash('warning', 'sub_service.disabled_successfully');
         }
 
         $this->deleteCacheItems($subService->getService());

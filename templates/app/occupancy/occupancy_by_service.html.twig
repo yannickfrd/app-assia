@@ -4,7 +4,6 @@
 
 {% block body %}
     <div class="container">
-        {% include 'model/_flash_message.html.twig' %}
         <h1 class="h2 mb-3">Taux d'occupation<span class="fas fa-angle-right fa-xs mx-1"></span>Services</h1>
     </div>
 
@@ -14,8 +13,8 @@
         <div class="row">
             <div class="col-md-12">
                 <p><a href="{{ path('occupancy_devices', {'year': search.year, 'date': {'start': search.start|date('Y-m-d'), 
-                    'end': search.end|date('Y-m-d')}, 'pole': search.pole ? search.pole.id}) }}" class="text-{{ theme_color }}">
-                    <span class="fas fa-undo mr-2"></span>{% if device %}Retour{% else %}Accès
+                    'end': search.end|date('Y-m-d')}, 'pole': search.pole ? search.pole.id}) }}" class="link-primary">
+                    <span class="fas fa-undo me-2"></span>{% if device %}Retour{% else %}Accès
                     {% endif %} aux taux d'ocupation par dispositif.</a>
                 </p>
                 {% set interval = date(search.start).diff(date(search.end)) %}
@@ -31,13 +30,13 @@
                             <tr>
                                 <th scope="row" class="align-middle th-w-20"></th>
                                 <th class="align-middle th-w-150">Service</th>
-                                <th class="align-middle th-w-100 text-right">Nombre de groupes de places</th>
-                                <th class="align-middle th-w-100 text-right">Nombre de places</th>
-                                <th class="align-middle th-w-100 text-right">Nb de nuitées théoriques</th>
-                                <th class="align-middle th-w-100 text-right">Nb de nuitées réalisées</th>
-                                <th class="align-middle th-w-100 text-right">Nb moyen de places/nuit</th>
-                                <th class="align-middle th-w-100 text-right">Nb moyen de personnes/nuit</th>
-                                <th class="align-middle th-w-100 text-right">Taux d'occupation</th>
+                                <th class="align-middle th-w-100 text-end">Nombre de groupes de places</th>
+                                <th class="align-middle th-w-100 text-end">Nombre de places</th>
+                                <th class="align-middle th-w-100 text-end">Nb de nuitées théoriques</th>
+                                <th class="align-middle th-w-100 text-end">Nb de nuitées réalisées</th>
+                                <th class="align-middle th-w-100 text-end">Nb moyen de places/nuit</th>
+                                <th class="align-middle th-w-100 text-end">Nb moyen de personnes/nuit</th>
+                                <th class="align-middle th-w-100 text-end">Taux d'occupation</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -62,42 +61,42 @@
                                         {% if service.nbSubServices > 1 %}
                                             <a href="{{ path('occupancy_sub_services', {'id': service_id, 'year': search.year, 
                                                 'date': {'start': search.start|date('Y-m-d'), 'end': search.end|date('Y-m-d') }} ) }}" 
-                                                class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" 
+                                                class="btn btn-primary btn-sm shadow" data-bs-placement="bottom" 
                                                 title="Voir le détail par sous-service"><span class="fas fa-eye fa-sm"></span>
                                             </a>
                                         {% else %}
                                             <a href="{{ path('occupancy_service_places', {'id': service_id, 'year': search.year, 
                                                 'date': {'start': search.start|date('Y-m-d'), 'end': search.end|date('Y-m-d') }} ) }}" 
-                                                class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" 
+                                                class="btn btn-primary btn-sm shadow" data-bs-placement="bottom" 
                                                 title="Voir le détail par groupe de places du service"><span class="fas fa-eye fa-sm"></span>
                                             </a>
                                         {% endif %}
                                     </td>
                                     <td class="align-middle">{{ service.name }}</td>
-                                    <td class="align-middle text-right">{{ service.nbPlaces }}</td>
-                                    <td class="align-middle text-right">{{ service.sumPlaces }}</td>
-                                    <td class="align-middle text-right">{{ service.capacityDays|number }}</td>
-                                    <td class="align-middle text-right">{{ service.occupancyDays|number }}</td>
-                                    <td class="align-middle text-right">{{ service.averageCapacity|round(2) }}</td>
-                                    <td class="align-middle text-right">{{ service.averageOccupancy|round(2) }}</td>
-                                    <td class="align-middle alert-{{ color(ocupancy_rate) }} text-right">
-                                        <span class="font-weight-bold font-italic">{{ ocupancy_rate|percent }}</span>
+                                    <td class="align-middle text-end">{{ service.nbPlaces }}</td>
+                                    <td class="align-middle text-end">{{ service.sumPlaces }}</td>
+                                    <td class="align-middle text-end">{{ service.capacityDays|number }}</td>
+                                    <td class="align-middle text-end">{{ service.occupancyDays|number }}</td>
+                                    <td class="align-middle text-end">{{ service.averageCapacity|round(2) }}</td>
+                                    <td class="align-middle text-end">{{ service.averageOccupancy|round(2) }}</td>
+                                    <td class="align-middle bg-{{ color(ocupancy_rate) }} bg-opacity-25 text-end">
+                                        <span class="fw-bold fst-italic">{{ ocupancy_rate|percent }}</span>
                                     </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
-                            <tr class="font-weight-bold">
+                            <tr class="fw-bold">
                                 <td class="align-middle text-center" scope="row">Total</td>
                                 <td class="align-middle">{{ datas.services|length }}</td>
-                                <td class="align-middle text-right">{{ datas.nbPlaces|number }}</td>
-                                <td class="align-middle text-right">{{ datas.sumPlaces|number }}</td>
-                                <td class="align-middle text-right">{{ datas.capacityDays|number }}</td>
-                                <td class="align-middle text-right">{{ datas.occupancyDays|number }}</td>
-                                <td class="align-middle text-right">{{ datas.averageCapacity|round(2) }}</td>
-                                <td class="align-middle text-right">{{ datas.averageOccupancy|round(2) }}</td>
+                                <td class="align-middle text-end">{{ datas.nbPlaces|number }}</td>
+                                <td class="align-middle text-end">{{ datas.sumPlaces|number }}</td>
+                                <td class="align-middle text-end">{{ datas.capacityDays|number }}</td>
+                                <td class="align-middle text-end">{{ datas.occupancyDays|number }}</td>
+                                <td class="align-middle text-end">{{ datas.averageCapacity|round(2) }}</td>
+                                <td class="align-middle text-end">{{ datas.averageOccupancy|round(2) }}</td>
                                 {% set ocupancy_rate = ratio(datas.occupancyDays, datas.capacityDays) %}
-                                <td class="align-middle alert-{{ color(ocupancy_rate) }} text-right">
-                                    <span class="font-weight-bold font-italic">{{ ocupancy_rate|percent }}</span>
+                                <td class="align-middle bg-{{ color(ocupancy_rate) }} bg-opacity-25 text-end">
+                                    <span class="fw-bold fst-italic">{{ ocupancy_rate|percent }}</span>
                                 </td>
                             </tr>
                         </tfoot>
@@ -107,7 +106,7 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <p class="justify small text-secondary"><span class="font-weight-bold">Note de lecture : </span>{{ example }}</p>
+                <p class="justify small text-secondary"><span class="fw-bold">Note de lecture : </span>{{ example }}</p>
             </div>
         </div>
     </div>

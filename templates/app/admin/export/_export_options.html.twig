@@ -1,6 +1,6 @@
 {% extends 'model/_accordion.html.twig' %}
 
-{% block card_title %}Options d'export{% endblock %}
+{% block card_title %}Paramètres d'export{% endblock %}
 
 {% block card_body %}
     <div class="row">
@@ -8,17 +8,17 @@
             'attr': {'data-no-reset': 'true'} }) }}
         </div>
         <div class="col-md-3">
-            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark"
+            <div class="form-check"
                 title="Un tableur non formaté utilise moins de mémoire et permet donc de faire des exports plus importants"
-                data-toggle="tooltip" data-placement="bottom" >{{ form_widget(form.formattedSheet, {
-                    'attr': {'data-no-reset': 'true'} }) }}
+                data-bs-toggle="tooltip" data-bs-placement="bottom" >
+                {{ form_widget(form.formattedSheet, {attr: {'data-no-reset': 'true'} }) }}
             </div>
         </div>
         <div class="col-md-3">
-            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark"
+            <div class="form-check"
                 title="Anonymiser l'export (nom, prénom et date de naissance)"
-                data-toggle="tooltip" data-placement="bottom" >{{ form_widget(form.anonymized, {
-                    'attr': {'data-no-reset': 'true'} }) }}
+                data-bs-toggle="tooltip" data-bs-placement="bottom" >
+                    {{ form_widget(form.anonymized, {attr: {'data-no-reset': 'true'} }) }}
             </div>
         </div>
     </div>

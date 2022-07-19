@@ -6,6 +6,7 @@ use App\Entity\Organization\Referent;
 use App\Entity\Support\Document;
 use App\Entity\Support\PlaceGroup;
 use App\Entity\Support\SupportGroup;
+use App\Entity\Traits\ArchivedTrait;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -21,6 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class PeopleGroup
 {
+    use ArchivedTrait;
     use CreatedUpdatedEntityTrait;
     use SoftDeleteableEntity;
 
@@ -108,7 +110,7 @@ class PeopleGroup
     private $referents;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Support\Document", mappedBy="peopleGroup")
+     * @ORM\OneToMany(targetEntity="App\Entity\Support\Document", mappedBy="peopleGroup", orphanRemoval=true)
      */
     private $documents;
 

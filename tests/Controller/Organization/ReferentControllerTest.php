@@ -28,7 +28,7 @@ class ReferentControllerTest extends WebTestCase
         $this->client = static::createClient();
         $this->client->followRedirects();
 
-        /** @var AbstractDatabaseTool */
+        /* @var AbstractDatabaseTool */
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
     }
 
@@ -52,7 +52,7 @@ class ReferentControllerTest extends WebTestCase
         $this->client->request('GET', "/group/$id/referent/new");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('h1', 'Nouveau service social référent');
+        $this->assertSelectorTextContains('h1', 'Service social référent');
 
         $this->client->submitForm('send', [
             'referent' => [
@@ -64,7 +64,7 @@ class ReferentControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.alert.alert-success');
+        $this->assertSelectorExists('.toast.alert-success');
     }
 
     public function testEditReferentIsSuccessful(): void
@@ -118,12 +118,12 @@ class ReferentControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.alert.alert-success');
+        $this->assertSelectorExists('.toast.alert-success');
 
         $this->client->clickLink('Supprimer');
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-warning', 'Le service social Référent test est supprimé.');
+        $this->assertSelectorTextContains('.toast.alert-warning', 'Le service social « Référent test » a été supprimé.');
     }
 
     protected function tearDown(): void

@@ -1,5 +1,5 @@
 import NoteManager from './NoteManager'
-import MessageFlash from '../utils/messageFlash'
+import AlertMessage from '../utils/AlertMessage'
 import AutoSaver from '../utils/form/autoSaver'
 import ParametersUrl from '../utils/parametersUrl'
 import CkEditor from '../utils/ckEditor'
@@ -33,7 +33,7 @@ export default class NoteForm {
         this.autoSaveElt = document.getElementById('js-auto-save')
 
         this.tagsManager = new TagsManager()
-        this.tagsSelectManager = new SelectManager('#note_tags', {name: 'onModal', elementId: this.noteModalElt.id})
+        this.tagsSelectManager = new SelectManager('#note_tags')
 
         this.init()
         this.autoSaver = new AutoSaver('#editor', this.autoSave.bind(this), 60, 20)
@@ -80,7 +80,7 @@ export default class NoteForm {
         this.btnExportWordElt.classList.add('d-none')
         this.btnExportPdfElt.classList.add('d-none')
 
-        this.tagsSelectManager.clearSelect()
+        this.tagsSelectManager.clearItems()
 
         this.autoSaver.init()
     }
@@ -99,7 +99,7 @@ export default class NoteForm {
 
         const tagsIds = []
         note.tags.forEach(tags => tagsIds.push(tags.id))
-        this.tagsSelectManager.updateSelect(tagsIds)
+        this.tagsSelectManager.updateItems(tagsIds)
 
         this.noteModal.show()
 
@@ -132,7 +132,7 @@ export default class NoteForm {
         }
 
         if (this.ckEditor.getData() === '') {
-            return new MessageFlash('danger', 'Veuillez rédiger la note avant d\'enregistrer.')
+            return new AlertMessage('danger', 'Veuillez rédiger la note avant d\'enregistrer.')
         }
 
         if (this.ckEditor.getData() !== this.contentElt.textContent) {

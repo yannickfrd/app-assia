@@ -42,10 +42,10 @@ class UserChangeInfoType extends AbstractType
                 'attr' => ['placeholder' => 'Email'],
             ])
             ->add('phone1', null, [
-                'attr' => ['class' => 'js-phone'],
+                'attr' => ['data-phone' => 'on'],
             ])
             ->add('phone2', null, [
-                'attr' => ['class' => 'js-phone'],
+                'attr' => ['data-phone' => 'on'],
             ]);
     }
 

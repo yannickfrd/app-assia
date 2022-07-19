@@ -1,14 +1,18 @@
 {% extends 'model/_search.html.twig' %}
 
 {% block search_form %}
-    <div class="col-auto my-1 px-1 d-inline-flex">{{ form_widget(form.year) }}</div>
-    <div class="col-auto my-1 px-1 d-inline-flex" data-toggle="tooltip" data-placement="bottom"
-        title="Date de début"><span class="my-2 px-1">Entre</span>{{ form_widget(form.date.start) }}
+    <div class="col-auto my-1 px-1">{{ form_widget(form.year) }}</div>
+    <div class="col-auto d-inline-flex my-1 px-1 align-items-center" title="Date de début" 
+        data-bs-toggle="tooltip" data-bs-placement="bottom">
+        <span class="my-2 px-1">Entre</span>
+        {{ form_widget(form.date.start) }}
     </div>
-    <div class="col-auto my-1 px-1 d-inline-flex" data-toggle="tooltip" data-placement="bottom"
-        title="Date de fin"><span class="my-2 pr-2">et</span>{{ form_widget(form.date.end) }}
+    <div class="col-auto d-inline-flex my-1 px-1 align-items-center" title="Date de fin" 
+        data-bs-toggle="tooltip" data-bs-placement="bottom">
+        <span class="my-2 pe-2">et</span>
+        {{ form_widget(form.date.end) }}
     </div>
     {% if is_granted('ROLE_SUPER_ADMIN') %}
-        <div class="col-auto my-1 px-1">{{ form_row(form.pole) }}</div>
+        <div class="col-auto my-1 px-1">{{ form_widget(form.pole) }}</div>
     {% endif %}
 {% endblock %}

@@ -92,6 +92,7 @@ class AnonymizeDatabaseCommand extends Command
             UPDATE eval_housing_group SET syplo_id = "XXX" WHERE syplo_id != "";
             UPDATE eval_housing_group SET dalo_id = "XXX" WHERE dalo_id != "";
             UPDATE eval_housing_group SET housing_expe_comment = "XXX" WHERE housing_expe_comment != "";
+            UPDATE eval_housing_group SET domiciliation_address = "XXX" WHERE domiciliation_address != "";
             UPDATE eval_housing_group SET domiciliation_comment = "XXX" WHERE domiciliation_comment != "";
             UPDATE eval_housing_group SET hsg_action_record_id = "XXX" WHERE hsg_action_record_id != "";
 

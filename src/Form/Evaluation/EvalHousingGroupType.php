@@ -184,7 +184,6 @@ class EvalHousingGroupType extends AbstractType
             ])
             ->add('housingExpeComment')
             ->add('commentEvalHousing', null, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'rows' => 5,
                     'class' => 'justify',

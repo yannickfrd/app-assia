@@ -4,7 +4,7 @@
 
 <br/>
 
-<p class="text-justify">
+<p class="justify">
     {% if payment.paymentDate and payment.paidAmt > 0 %}
         Nous vous confirmons la réception de votre règlement de <b>{{ payment.paidAmt|amount }} 
         ({{ payment.paidAmtToString }} euro{{ payment.paidAmt > 1 ? 's' }})</b>,
@@ -33,7 +33,7 @@
 {% endif %}
 
 {% if payment.type in [1, 2] %}
-    <p class="text-justify">Le montant de {{ payment.toPayAmt|amount }} correspond à 
+    <p class="justify">Le montant de {{ payment.toPayAmt|amount }} correspond à 
         {% if service.contributionType == 1 %}
             un pourcentage des ressources en référence au règlement de fonctionnement du service et en conformité avec les dispositions réglementaires en vigueur.
         {% elseif service.contributionType == 2 %}

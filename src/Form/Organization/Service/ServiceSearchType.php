@@ -8,6 +8,7 @@ use App\Form\Utils\Choices;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -16,47 +17,37 @@ class ServiceSearchType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name', null, [
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
+            ->add('name', SearchType::class, [
                 'attr' => [
                     'class' => 'w-max-200',
                     'placeholder' => 'Service name',
                     'autocomplete' => 'off',
                 ],
+                'required' => false,
             ])
-            ->add('city', null, [
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
+            ->add('city', SearchType::class, [
                 'attr' => [
                     'class' => 'w-max-160',
                     'placeholder' => 'City',
                     'autocomplete' => 'off',
                 ],
+                'required' => false,
             ])
             ->add('phone', null, [
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
                 'attr' => [
                     'placeholder' => 'Phone',
-                    'class' => 'js-phone w-max-140',
+                    'class' => 'w-max-140',
+                    'data-phone' => 'true',
                     'autocomplete' => 'off',
                 ],
             ])
             ->add('pole', EntityType::class, [
                 'class' => Pole::class,
                 'choice_label' => 'name',
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
                 'placeholder' => 'placeholder.pole',
                 'required' => false,
             ])
             ->add('disabled', ChoiceType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getChoices(Choices::DISABLE),
                 'placeholder' => 'placeholder.disabled',
                 'required' => false,

@@ -10,8 +10,8 @@
 		{% if is_granted_edit_service %}
 			<div class="row my-3">
 				<div class="col-md-12">
-					<a href="{{ path('service_place_new', {'id': service.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow">
-					<span class="fas fa-plus-square pr-2"></span>Créer un nouveau {% if service.type == SERVICE_TYPE_HOTEL %}
+					<a href="{{ path('service_place_new', {'id': service.id}) }}" class="btn btn-primary btn-sm shadow">
+					<span class="fas fa-plus-square pe-2"></span>Créer un nouveau {% if service.type == SERVICE_TYPE_HOTEL %}
 						hôtel{% else %}groupe de places{% endif %}</a>
 				</div>
 			</div>
@@ -47,16 +47,16 @@
 				</thead>
 				<tbody>
 					{% for place in places %}
-						<tr class="{{ place.disabled ? 'delete text-secondary' }}">
+						<tr class="{{ place.disabled ? 'text-del text-secondary' }}">
 							<td class="align-middle text-center" scope="row">
 								{% if is_granted_edit_service %}
 									<a href="{{ path('place_edit', {'id': place.id}) }}"
-										class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" 
-										data-placement="bottom" title="Voir le groupe de places">
+										class="btn btn-primary btn-sm shadow" data-bs-toggle="tooltip" 
+										data-bs-placement="bottom" title="Voir le groupe de places">
 										<span class="fas fa-eye"></span>
 									</a>
 								{% else %}
-									<span class="btn btn-secondary btn-sm shadow cursor-default" data-toggle="tooltip" data-placement="bottom" 
+									<span class="btn btn-secondary btn-sm shadow cursor-default" data-bs-toggle="tooltip" data-bs-placement="bottom" 
 										title="Vous n'avez pas les droits pour accéder à la fiche"><span class="fas fa-ban"></span></span>                           
 								{% endif %}
 							</td>
@@ -72,7 +72,7 @@
 						</tr>
 					{% endfor %}
 				</tbody>
-				<tfoot class="font-weight-bold">
+				<tfoot class="fw-bold">
 					<td class="align-middle" scope="row">Total</td>
 					<td class="align-middle">{{ nb_active_places }}</td>
 					<td class="align-middle"></td>

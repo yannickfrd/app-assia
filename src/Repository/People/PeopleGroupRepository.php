@@ -3,6 +3,7 @@
 namespace App\Repository\People;
 
 use App\Entity\People\PeopleGroup;
+use App\Repository\Traits\QueryTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
@@ -15,6 +16,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class PeopleGroupRepository extends ServiceEntityRepository
 {
+    use QueryTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, PeopleGroup::class);
@@ -25,13 +28,13 @@ class PeopleGroupRepository extends ServiceEntityRepository
      */
     public function findPeopleGroupById(int $id): ?PeopleGroup
     {
-        return $this->createQueryBuilder('g')->select('g')
-            ->leftJoin('g.createdBy', 'createdBy')->addSelect('PARTIAL createdBy.{id, firstname, lastname, email, phone1}')
-            ->leftJoin('g.updatedBy', 'updatedBy')->addSelect('PARTIAL updatedBy.{id, firstname, lastname, email, phone1}')
-            ->leftJoin('g.rolePeople', 'r')->addSelect('PARTIAL r.{id, role, head}')
+        return $this->createQueryBuilder('pg')->select('pg')
+            ->leftJoin('pg.createdBy', 'createdBy')->addSelect('PARTIAL createdBy.{id, firstname, lastname, email, phone1}')
+            ->leftJoin('pg.updatedBy', 'updatedBy')->addSelect('PARTIAL updatedBy.{id, firstname, lastname, email, phone1}')
+            ->leftJoin('pg.rolePeople', 'r')->addSelect('PARTIAL r.{id, role, head}')
             ->leftJoin('r.person', 'p')->addSelect('p')
 
-            ->andWhere('g.id = :id')
+            ->andWhere('pg.id = :id')
             ->setParameter('id', $id)
 
             ->addOrderBy('r.head', 'DESC')
@@ -47,20 +50,20 @@ class PeopleGroupRepository extends ServiceEntityRepository
      */
     public function countGroups(array $criteria = null): int
     {
-        $qb = $this->createQueryBuilder('g')->select('COUNT(g.id)');
+        $qb = $this->createQueryBuilder('pg')->select('COUNT(pg.id)');
 
         if ($criteria) {
             foreach ($criteria as $key => $value) {
                 if ('startDate' === $key) {
-                    $qb->andWhere('g.createdAt >= :startDate')
+                    $qb->andWhere('pg.createdAt >= :startDate')
                         ->setParameter('startDate', $value);
                 }
                 if ('endDate' === $key) {
-                    $qb->andWhere('g.createdAt <= :endDate')
+                    $qb->andWhere('pg.createdAt <= :endDate')
                         ->setParameter('endDate', $value);
                 }
                 if ('createdBy' === $key) {
-                    $qb->andWhere('g.createdBy = :createdBy')
+                    $qb->andWhere('pg.createdBy = :createdBy')
                         ->setParameter('createdBy', $value);
                 }
             }
@@ -69,5 +72,22 @@ class PeopleGroupRepository extends ServiceEntityRepository
         return $qb
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    /**
+     * @return PeopleGroup[]
+     */
+    public function findPeopleGroupWithoutSupportGroup(\DateTimeInterface $limitDate): array
+    {
+        return $this->createQueryBuilder('pg')->select('pg')
+            ->leftJoin('pg.supports', 'sg')->addSelect('sg')
+
+            ->andWhere('sg.id IS NULL')
+            ->andWhere('pg.updatedAt <= :limitDate')
+            ->setParameter('limitDate', $limitDate)
+
+            ->getQuery()
+            ->getResult()
+        ;
     }
 }

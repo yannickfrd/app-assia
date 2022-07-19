@@ -19,3 +19,23 @@ App\Entity\Support\Note:
         createdBy: "@john_user"
         updatedBy: "@john_user"
         supportGroup: "@support_group1"
+    note6:
+        title: Note test
+        content: Contenu de la note
+        type: 1
+        status: 1
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        createdBy: "@john_user"
+        updatedBy: "@john_user"
+        supportGroup: "@support_group4"
+    note7:
+        title: Note test
+        content: Contenu de la note
+        type: 1
+        status: 1
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        createdBy: "@john_user"
+        updatedBy: "@john_user"
+        supportGroup: "@support_group5"

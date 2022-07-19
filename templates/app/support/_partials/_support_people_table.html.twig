@@ -6,8 +6,8 @@
 				<table id="table-support-people" class="table table-sm table-striped table-hover text-dark shadow-sm">
 					<thead>
 						<tr>
-							<th scope="col" class="align-middle text-center th-w-20" data-toggle="tooltip" 
-								data-placement="bottom" title="Demandeur/euse principal·e">DP</th>									
+							<th scope="col" class="align-middle text-center th-w-20" data-bs-toggle="tooltip" 
+								data-bs-placement="bottom" title="Demandeur/euse principal·e">DP</th>									
 							<th scope="col" class="align-middle th-w-140">Nom et prénom</th>
 							<th scope="col" class="align-middle th-w-140">Rôle</th>
 							<th scope="col" class="align-middle th-date">Date de début</th>
@@ -24,8 +24,8 @@
 							{% set support_person = form_support_pers.vars.value %}
 							<tr data-support-person="{{ support_person.id }}">
 								<td class="px-1 align-middle">
-									<div class="custom-control custom-radio custom-radio-{{ theme_color }} pl-3">
-										{{ form_widget(form_support_pers.head, {attr: {class: 'custom-control-input checkbox'}}) }}
+									<div class="form-check ps-2">
+										{{ form_widget(form_support_pers.head) }}
 									</div>
 								</td>										
 								<td class="px-2 align-middle w-min-150">{{ support_person.person.fullname }}</td>
@@ -33,10 +33,10 @@
 									attr: {class: 'form-control-sm w-min-150'}}) }}
 								</td>
 								<td class="px-1">{{ form_widget(form_support_pers.startDate, {
-									attr: {class: 'form-control-sm w-max-165'}}) }}
+									attr: {class: 'form-control-sm w-max-170'}}) }}
 								</td>
 								<td class="px-1">{{ form_widget(form_support_pers.endDate, {
-									attr: {class: 'form-control-sm w-max-165'}}) }}
+									attr: {class: 'form-control-sm w-max-170'}}) }}
 								</td>
 								<td class="px-1">{{ form_widget(form_support_pers.endReason, {
 									attr: {class: 'form-control-sm w-min-180'}}) }}
@@ -51,7 +51,7 @@
 									{% if support_person.head == false %}
 										<button class="btn btn-danger btn-sm shadow" data-action="remove" data-url="{{ path('support_peron_delete', 
 											{'id': support_person.id, '_token': csrf_token('remove' ~ support_person.id)}) }}" 
-											data-toggle="modal" data-target="#modal-block" data-toggle="tooltip" data-placement="bottom" 
+											data-bs-toggle="modal" data-bs-target="#modal-block" data-bs-toggle="tooltip" data-bs-placement="bottom" 
 											title="Supprimer la personne du suivi">
 											<span class="fas fa-user-times"></span>
 										</button>
@@ -66,9 +66,9 @@
 	</div>
 	<div class="row mb-3">
 		<div class="col-md-12">
-			<div class="float-right">
-				<button type="submit" id="send3" name="send3" class="btn btn-{{ theme_color }} shadow">
-					<span class="fas fa-save mr-2"></span>Mettre à jour</button>
+			<div class="float-end">
+				<button type="submit" id="send3" name="send3" class="btn btn-primary shadow">
+					<span class="fas fa-save me-2"></span>Mettre à jour</button>
 			</div>
 		</div>
 	</div>

@@ -38,7 +38,7 @@ class ServiceType extends AbstractType
             ])
             ->add('phone1', null, [
                 'attr' => [
-                    'class' => 'js-phone',
+                    'data-phone' => 'true',
                 ],
             ])
             ->add('email', null, [
@@ -111,7 +111,6 @@ class ServiceType extends AbstractType
             ])
             ->add('minRestToLive', MoneyType::class, [
                 'attr' => [
-                    'class' => 'text-right',
                     'placeholder' => 'Amount',
                 ],
                 'help' => 'service.minRestToLive.help',
@@ -138,9 +137,6 @@ class ServiceType extends AbstractType
                 'delete_empty' => true,
                 'prototype' => true,
                 'by_reference' => false,
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
                 'entry_options' => [
                     'attr' => ['class' => 'form-inline'],
                 ],
@@ -152,9 +148,6 @@ class ServiceType extends AbstractType
             //     'delete_empty' => true,
             //     'prototype' => true,
             //     'by_reference' => false,
-            //     'label_attr' => [
-            //         'class' => 'sr-only',
-            //     ],
             //     'entry_options' => [
             //         'attr' => ['class' => 'form-inline'],
             //     ],

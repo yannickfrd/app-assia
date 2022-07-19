@@ -1,22 +1,19 @@
 {% extends 'base.html.twig' %}
 
 {% set support = form.vars.value %}
-{% set people = support.id ? form.vars.value.supportPeople : people_group.rolePeople %}
-{% set title = (support.id ? 'Édition du' : 'Nouveau') ~ ' suivi' %}
+{% set people = support.id is not null ? form.vars.value.supportPeople : people_group.rolePeople %}
+{% set title = support.id is not null ? 'Édition' : 'Nouveau suivi' %}
 
 {% block title %}{{ title }}{% endblock %}
 
 {% block body %}
-	<div class="container">
+	<div class="container pt-3">
 
 		{% if support.id %}
 			{% include 'app/support/_partials/_support_nav.html.twig' %}
 		{% else %}
 			{% include 'app/people/peopleGroup/_nav_group.html.twig' %}
 		{% endif %}
-
-		{% include 'model/_flash_message.html.twig' %}
-		<div id="js-msg-flash-content"></div>
 
 		{% if support.service.coefficient == YES and coef_form is defined and is_granted('ROLE_ADMIN') %}
 			{% include 'app/support/_partials/_support_coefficient_form.html.twig' %}
@@ -27,9 +24,9 @@
 		{% if support.id %}
 			<div class="row mb-4">
 				<div class="col-md-12">
-					<div class="float-right">
-						<button type="submit" id="send2" name="send2" class="btn btn-{{ theme_color }} shadow">
-							<span class="fas fa-save mr-2"></span>Mettre à jour</button>
+					<div class="float-end">
+						<button type="submit" id="send2" name="send2" class="btn btn-primary shadow">
+							<span class="fas fa-save me-2"></span>Mettre à jour</button>
 					</div>
 				</div>
 			</div>
@@ -65,12 +62,12 @@
 			<div class="col-md-12"> 
 				<div class="card border-warning"> 
 					<div class="card-body p-3"> 
-						<p class="mb-2"><span class="font-italic">Je certifie avoir informé la personne sur ses droits 
+						<p class="mb-2"><span class="fst-italic">Je certifie avoir informé la personne sur ses droits 
 							(droit d'opposition, droits d'accès et de rectification) et avoir obtenu son consentement 
 							pour le recueil de ses données personnelles</span>
 						(<a href="https://www.cnil.fr/fr/reglement-europeen-protection-donnees/chapitre3#Article13" target="_blank" 
-							class="text-{{ theme_color }}">article 13 du règlement général sur la protection des données [RGPD]</a>).</p>
-						<div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} p-1">
+							class="link-primary">article 13 du règlement général sur la protection des données [RGPD]</a>).</p>
+						<div class="form-check ps-1">
 							{{ form_widget(form.agreement) }}
 						</div>
 					</div>
@@ -81,17 +78,17 @@
 		<div class="row my-4">
 			<div class="col-md-12">
 				{% if support.id and is_granted('DELETE', support) %}
-					<div class="float-left d-flex">
+					<div class="float-start d-flex">
 						{% set alert_text = '"Tous les éléments rattachés au suivi vont être supprimés (évaluation sociale, RDVs, notes, documents...).' ~ 
 							' Êtes-vous vraiment sûr de vouloir supprimer ce suivi social ?"' %}
-						<a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" href="{{ path('support_delete', {'id': support.id}) }}"
-							title="Supprimer le suivi social" data-toggle="tooltip" data-placement="bottom"
+						<a id="modal-btn-delete" class="me-3 btn btn-danger d-block" href="{{ path('support_delete', {'id': support.id}) }}"
+							title="Supprimer le suivi social" data-bs-toggle="tooltip" data-bs-placement="bottom"
 							onclick="if(window.confirm({{ alert_text }})){return true;}else{return false;}"><span
-							class="fas fa-trash-alt mr-2"></span><span class="">Supprimer</span></a>
+							class="fas fa-trash-alt me-2"></span><span class="">Supprimer</span></a>
 					</div>
 				{% endif %}
-				<div class="float-right">
-					<button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>
+				<div class="float-end">
+					<button type="submit" id="send" name="send" class="btn btn-primary shadow"><span class="fas fa-save me-2"></span>
 					{% if support.id %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
 				</div>
 			</div>
@@ -108,7 +105,7 @@
 		{{ form_row(form._token) }}
 		{{ form_end(form, {'render_rest': false}) }}
 
-		{% if support.id %}
+		{% if support.id and addPersonForm.rolePerson.vars.choices|length > 0 %}
 			{% include 'app/support/_partials/_support_add_person_form.html.twig' %}
 		{% endif %}
 

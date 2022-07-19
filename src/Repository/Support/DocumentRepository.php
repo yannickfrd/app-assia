@@ -21,12 +21,35 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class DocumentRepository extends ServiceEntityRepository
 {
-    use QueryTrait;
     use DoctrineTrait;
+    use QueryTrait;
 
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Document::class);
+    }
+
+    /**
+     * Return all rdvs of group support.
+     *
+     * @return Document[]
+     */
+    public function findAllDocumentsOfSupport(int $supportGroupId, bool $soft = false): array
+    {
+        $query = $this->createQueryBuilder('d')->select('d')
+            ->join('d.peopleGroup', 'pg')->addSelect('PARTIAL pg.{id}')
+            ->andWhere('d.supportGroup = :supportGroup')
+            ->setParameter('supportGroup', $supportGroupId);
+
+        if ($soft) {
+            $query->andWhere('d.deletedAt IS NULL');
+        }
+
+        return $query
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult()
+        ;
     }
 
     /**
@@ -149,19 +172,6 @@ class DocumentRepository extends ServiceEntityRepository
 
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getResult()
-        ;
-    }
-
-    /**
-     * @return Document[]
-     */
-    public function findSoftDeletedDocuments(\DateTime $date): array
-    {
-        return $this->createQueryBuilder('d')->select('d')
-            ->where('d.deletedAt  <= :date')
-            ->setParameter('date', $date)
-            ->getQuery()
             ->getResult()
         ;
     }

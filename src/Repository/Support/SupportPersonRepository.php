@@ -28,8 +28,8 @@ use Symfony\Component\Security\Core\Security;
  */
 class SupportPersonRepository extends ServiceEntityRepository
 {
-    use QueryTrait;
     use DoctrineTrait;
+    use QueryTrait;
 
     public const EXPORT_LIMIT = 15_000;
 
@@ -76,6 +76,23 @@ class SupportPersonRepository extends ServiceEntityRepository
         if ($search) {
             $qb = $this->filters($qb, $search);
         }
+
+        return $qb
+            ->orderBy('sg.updatedAt', 'DESC')
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+    }
+
+    public function findSupportPeopleBySupportGroupIdsQuery(array $ids, SupportSearch $search): Query
+    {
+        $this->disableFilter($this->_em, 'softdeleteable');
+
+        $qb = $this->getSupportsQuery()
+            ->andWhere('sg.id IN (:ids)')
+            ->setParameter('ids', $ids)
+        ;
+
+        $qb = $this->filters($qb, $search);
 
         return $qb
             ->orderBy('sg.updatedAt', 'DESC')
@@ -548,7 +565,7 @@ class SupportPersonRepository extends ServiceEntityRepository
     public function getSupportsOfUserQueryBuilder(User $user, $maxResult = null): QueryBuilder
     {
         return $this->createQueryBuilder('sp')->select('sp, sp.id, p.firstname, p.lastname')
-            ->leftJoin('sp.supportGroup', 'sg')->addSelect(('PARTIAL sg.{id, referent, status}'))
+            ->leftJoin('sp.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, referent, status}')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
 
             ->andWhere('sg.referent = :referent')
@@ -567,7 +584,7 @@ class SupportPersonRepository extends ServiceEntityRepository
     public function getPeopleOfSupportQueryBuilder(User $user, int $supportGroupId): QueryBuilder
     {
         return $this->createQueryBuilder('sp')->select('sp, sp.id, p.firstname, p.lastname')
-            ->leftJoin('sp.supportGroup', 'sg')->addSelect(('PARTIAL sg.{id, referent, status}'))
+            ->leftJoin('sp.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, referent, status}')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
 
             ->andWhere('sg.referent = :referent')

@@ -5,16 +5,16 @@ namespace App\Service\People;
 use App\Entity\People\PeopleGroup;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PeopleGroupChecker
 {
     private $flashBag;
 
-    public function __construct(RequestStack $requestStack)
-    {
+    public function __construct(RequestStack $requestStack) {
         /** @var Session */
         $session = $requestStack->getSession();
-        $this->flashBag = $session->getFlashBag();
+        $this->flashBag = $session->getFlashBag();        
     }
 
     /**
@@ -35,7 +35,7 @@ class PeopleGroupChecker
                 ++$nbHeads;
                 if ($age < 18) {
                     $minorHead = true;
-                    $this->flashBag->add('warning', 'Le demandeur principal a été automatiquement modifié, car il ne peut pas être mineur.');
+                    $this->flashBag->add('warning', 'people_group.header_automatically_modified');
                 }
             }
         }

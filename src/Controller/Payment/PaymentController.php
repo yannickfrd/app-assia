@@ -139,7 +139,7 @@ final class PaymentController extends AbstractController
                 'action' => 'create',
                 'alert' => 'success',
                 'msg' => $translator->trans('payment.created_successfully', [
-                    '%payment_type%' => $payment->getTypeToString(),
+                    'payment_type' => $payment->getTypeToString(),
                 ], 'app'),
                 'payment' => $payment,
             ], 200, [], ['groups' => Payment::SERIALIZER_GROUPS]);
@@ -188,7 +188,7 @@ final class PaymentController extends AbstractController
                 'action' => 'update',
                 'alert' => 'success',
                 'msg' => $translator->trans('payment.updated_successfully', [
-                    '%payment_type%' => $payment->getTypeToString(),
+                    'payment_type' => $payment->getTypeToString(),
                 ], 'app'),
                 'payment' => $payment,
             ], 200, [], ['groups' => Payment::SERIALIZER_GROUPS]);
@@ -217,7 +217,7 @@ final class PaymentController extends AbstractController
             'action' => 'delete',
             'alert' => 'warning',
             'msg' => $translator->trans('payment.deleted_successfully', [
-                '%payment_type%' => $payment->getTypeToString(),
+                'payment_type' => $payment->getTypeToString(),
             ], 'app'),
             'payment' => ['id' => $paymentId],
         ]);
@@ -244,7 +244,7 @@ final class PaymentController extends AbstractController
             'action' => 'restore',
             'alert' => 'success',
             'msg' => $translator->trans('payment.restored_successfully', [
-                '%payment_type%' => $payment->getTypeToString(),
+                'payment_type' => $payment->getTypeToString(),
             ], 'app'),
             'payment' => ['id' => $id],
         ]);
@@ -296,7 +296,7 @@ final class PaymentController extends AbstractController
         $payments = $paymentRepo->findPaymentsToExport($search, $supportGroup);
 
         if (!$payments) {
-            $this->addFlash('warning', 'Aucun résultat à exporter.');
+            $this->addFlash('warning', 'no_result_to_export');
 
             return $this->redirectToRoute('payments_index');
         }
@@ -317,7 +317,7 @@ final class PaymentController extends AbstractController
         $payments = $paymentRepo->findPaymentsToExport($search);
 
         if (!$payments) {
-            $this->addFlash('warning', 'Aucun résultat à exporter.');
+            $this->addFlash('warning', 'no_result_to_export');
 
             return $this->redirectToRoute('payments_index');
         }
@@ -338,7 +338,7 @@ final class PaymentController extends AbstractController
         $payments = $paymentRepo->findHotelContributionsToExport($search);
 
         if (!$payments) {
-            $this->addFlash('warning', 'Aucun résultat à exporter.');
+            $this->addFlash('warning', 'no_result_to_export');
 
             return $this->redirectToRoute('payments_index');
         }

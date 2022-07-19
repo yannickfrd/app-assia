@@ -87,7 +87,7 @@ class SiSiaoUpdater extends SiSiaoClient
             // foreach ($charges as $charge) {
                 //     $chargeId = $charge->id;
                 //     $this->set("chargePersonnes/{$chargeId}", $this->getChargePersonne($chargeId, $diagSocialId));
-                // }
+            // }
 
             // Dettes
             // $dettes = $this->get("/dettePersonnes/diagnosticSocial/{$diagSocialId}");

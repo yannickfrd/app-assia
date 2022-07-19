@@ -4,6 +4,7 @@ namespace App\Repository\Support;
 
 use App\Entity\Organization\Place;
 use App\Entity\Support\PlaceGroup;
+use App\Repository\Traits\QueryTrait;
 use App\Service\DoctrineTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
@@ -18,6 +19,7 @@ use Doctrine\Persistence\ManagerRegistry;
 class PlaceGroupRepository extends ServiceEntityRepository
 {
     use DoctrineTrait;
+    use QueryTrait;
 
     public function __construct(ManagerRegistry $registry)
     {

@@ -60,7 +60,7 @@ final class PlaceGroupController extends AbstractController
         if ($supportGroup->getPlaceGroups()) {
             foreach ($supportGroup->getPlaceGroups() as $placeGroup) {
                 if (null === $placeGroup->getEndDate()) {
-                    $this->addFlash('warning', 'Attention, une autre prise en charge est déjà en cours pour ce suivi.');
+                    $this->addFlash('warning', 'place_group.other_exist');
                 }
             }
         }
@@ -82,7 +82,7 @@ final class PlaceGroupController extends AbstractController
         }
 
         if ($form->isSubmitted() && !$form->isValid()) {
-            $this->addFlash('danger', "Une erreur s'est produite");
+            $this->addFlash('danger', 'error_occurred');
         }
 
         return $this->render('app/place_group/place_group_edit.html.twig', [
@@ -142,7 +142,7 @@ final class PlaceGroupController extends AbstractController
 
         $this->placeGroupManager->discacheSupport($supportGroup);
 
-        $this->addFlash('warning', 'La prise en charge est supprimée.');
+        $this->addFlash('warning', 'place_group.deleted_successfully');
 
         return $this->redirectToRoute('support_place_group_index', ['id' => $supportGroup->getId()]);
     }

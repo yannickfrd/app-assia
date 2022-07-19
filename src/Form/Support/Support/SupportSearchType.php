@@ -10,6 +10,7 @@ use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -20,17 +21,18 @@ class SupportSearchType extends AbstractType
         $dataClass = $builder->getDataClass();
 
         $builder
-            ->add('fullname', null, [
+            ->add('fullname', SearchType::class, [
                 'attr' => [
                     'placeholder' => 'placeholder.name_or_id',
-                    'class' => 'w-max-170',
+                    'class' => 'w-min-200',
                 ],
+                'required' => false,
             ])
             ->add('status', ChoiceType::class, [
                 'multiple' => true,
                 'choices' => Choices::getChoices(SupportGroup::STATUS),
                 'attr' => [
-                    'class' => 'multi-select',
+                    'class' => 'multi-select w-max-260',
                     'placeholder' => 'placeholder.status',
                     'size' => 1,
                 ],
@@ -50,8 +52,6 @@ class SupportSearchType extends AbstractType
             ->add('head', CheckboxType::class, [
                 'label' => 'DP',
                 'required' => false,
-                'label_attr' => ['class' => 'custom-control-label'],
-                'attr' => ['class' => 'custom-control-input checkbox'],
             ])
             ->add('export')
             ->add('deleted', DeletedSearchType::class, [

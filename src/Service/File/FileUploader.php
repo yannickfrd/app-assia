@@ -19,7 +19,7 @@ class FileUploader
 
     protected $em;
     protected $documentRepo;
-    protected $targetDirectory;
+    protected $documentsDirectory;
     protected $optimizer;
     protected $slugger;
 
@@ -28,13 +28,13 @@ class FileUploader
         DocumentRepository $documentRepo,
         ImageOptimizer $optimizer,
         SluggerInterface $slugger,
-        string $targetDirectory
+        string $documentsDirectory
     ) {
         $this->em = $em;
         $this->documentRepo = $documentRepo;
         $this->optimizer = $optimizer;
         $this->slugger = $slugger;
-        $this->targetDirectory = $targetDirectory;
+        $this->documentsDirectory = $documentsDirectory;
     }
 
     /**
@@ -91,13 +91,13 @@ class FileUploader
         $filename = $this->normalizeFilename($file);
         // Move the file to the directory where document are stored
         try {
-            $file->move($this->getTargetDirectory().$path, $filename);
+            $file->move($this->getDocumentsDirectory().$path, $filename);
         } catch (FileException $e) {
             throw new \Exception("Une erreur s'est produite lors du téléchargement du document : ".$e->getMessage());
         }
 
         if ($this->checkIfImage($path, $filename)) {
-            $this->optimizer->compressImage($this->targetDirectory.$path.'/'.$filename);
+            $this->optimizer->compressImage($this->documentsDirectory.$path.'/'.$filename);
         }
 
         return $filename;
@@ -119,15 +119,15 @@ class FileUploader
      */
     protected function checkIfImage(string $path, string $newFilename): bool
     {
-        $pathFile = $this->targetDirectory.$path.'/'.$newFilename;
+        $pathFile = $this->documentsDirectory.$path.'/'.$newFilename;
         $pathParts = pathinfo($pathFile);
 
         return in_array($pathParts['extension'], self::IMAGE_EXTENSIONS);
     }
 
-    public function getTargetDirectory()
+    public function getDocumentsDirectory()
     {
-        return $this->targetDirectory;
+        return $this->documentsDirectory;
     }
 
     protected function checkDocumentExists(Document $document): bool

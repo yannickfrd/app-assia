@@ -50,12 +50,12 @@ final class SiSiaoController extends AbstractController
             $response = $this->siSiaoClient->login($siSiaoLogin);
 
             if ($response['isConnected']) {
-                $this->addFlash('success', 'si_siao.login_successfully');
+                $this->addFlash('success', 'sisiao.login_successfully');
 
                 return $this->redirect($this->getTargetPath($request->getSession(), 'main'));
             }
 
-            $this->addFlash('danger', 'si_siao.login_failed');
+            $this->addFlash('danger', 'sisiao.login_failed');
         }
 
         return $this->render('app/si_siao/si_siao_login.html.twig', [
@@ -78,14 +78,14 @@ final class SiSiaoController extends AbstractController
             if ($response['isConnected']) {
                 return $this->json([
                     'alert' => 'success',
-                    'msg' => $this->translator->trans('si_siao.login_successfully', [], 'forms'),
+                    'msg' => $this->translator->trans('sisiao.login_successfully', [], 'app'),
                 ]);
             }
         }
 
         return $this->json([
                 'alert' => 'danger',
-                'msg' => $this->translator->trans('si_siao.login_failed', [], 'forms'),
+                'msg' => $this->translator->trans('sisiao.login_failed', [], 'app'),
             ], Response::HTTP_UNPROCESSABLE_ENTITY,
         );
     }
@@ -102,7 +102,7 @@ final class SiSiaoController extends AbstractController
         return $this->json([
             'isConnected' => true,
             'alert' => 'success',
-            'msg' => $this->translator->trans('si_siao.login_successfully', [], 'forms'),
+            'msg' => $this->translator->trans('sisiao.login_successfully', [], 'app'),
         ]);
     }
 
@@ -196,7 +196,7 @@ final class SiSiaoController extends AbstractController
 
         return $this->json([
             'alert' => 'success',
-            'msg' => $this->translator->trans('si_siao.logout_successfully', [], 'forms'),
+            'msg' => $this->translator->trans('sisiao.logout_successfully', [], 'app'),
         ]);
     }
 

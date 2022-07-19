@@ -94,7 +94,7 @@ class ContributionCalculator
         $paymentAmt = round($budgetBalanceAmt * $this->contributionRate * $ratioNbDays, 0, PHP_ROUND_HALF_DOWN);
 
         /** @var float Reste à vivre journalier par personne */
-        $restToLive = round((($budgetBalanceAmt - $paymentAmt) / $nbConsumUnits / $this->nbDaysContribution), 2);
+        $restToLive = round(($budgetBalanceAmt - $paymentAmt) / $nbConsumUnits / $this->nbDaysContribution, 2);
 
         return $this->payment
             ->setContributionRate($this->contributionRate)
@@ -134,7 +134,7 @@ class ContributionCalculator
         $theoricalContribAmt = round($budgetBalanceAmt * $this->contributionRate, 0, PHP_ROUND_HALF_DOWN);
 
         /** @var float Reste à vivre journalier unitaire */
-        $restToLive = round((($budgetBalanceAmt - $theoricalContribAmt) / $nbConsumUnits / HotelContributionCalculator::NB_DAYS), 2);
+        $restToLive = round(($budgetBalanceAmt - $theoricalContribAmt) / $nbConsumUnits / HotelContributionCalculator::NB_DAYS, 2);
 
         $toPayAmt = $theoricalContribAmt;
 

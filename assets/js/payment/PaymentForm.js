@@ -1,7 +1,7 @@
 import PaymentManager from './PaymentManager'
 import FormValidator from "../utils/form/formValidator";
 import ParametersUrl from "../utils/parametersUrl";
-import MessageFlash from "../utils/messageFlash";
+import AlertMessage from "../utils/AlertMessage";
 import FieldDisplayer from "../utils/form/fieldDisplayer";
 import ContributionCalcul from "./ContributionCalcul";
 
@@ -15,10 +15,6 @@ export default class PaymentForm {
         this.loader = paymentManager.loader
         this.ajax = paymentManager.ajax
         this.responseAjax = paymentManager.responseAjax.bind(paymentManager)
-        this.formValidator = new FormValidator()
-        this.parametersUrl = new ParametersUrl()
-
-        this.payment = null
 
         // Formulaire modal
         this.modalPaymentElt = document.getElementById('payment_modal')
@@ -50,8 +46,11 @@ export default class PaymentForm {
 
         this.confirmBtnElt = document.getElementById('modal-confirm')
 
+        this.parametersUrl = new ParametersUrl()
+        this.formValidator = new FormValidator(this.formPaymentElt)
         this.contributionCalcul = new ContributionCalcul(this.formPaymentElt, this.afterCalculContribution.bind(this))
 
+        this.payment = null
         this.isValid = true
         this.displayedFields = []
 
@@ -109,6 +108,7 @@ export default class PaymentForm {
 
         this.deleteBtnElt.addEventListener('click', e => {
             e.preventDefault()
+            this.paymentManager.confirmModal.show()
             this.confirmBtnElt.dataset.path = this.deleteBtnElt.dataset.path.replace('__id__',  this.payment.id)
         })
 
@@ -141,7 +141,7 @@ export default class PaymentForm {
                     new FormData(this.formPaymentElt)
                 )
             } else {
-                new MessageFlash('danger', 'Veuillez corriger le(s) erreur(s) avant d\'enregistrer.')
+                new AlertMessage('danger', 'Veuillez corriger le(s) erreur(s) avant d\'enregistrer.')
                 this.loader.off()
             }
         }
@@ -302,6 +302,9 @@ export default class PaymentForm {
      * @return {Boolean}
      */
     isValidForm() {
+
+        this.formPaymentElt.classList.add('was-validated')
+
         this.isValid = true
         this.paymentTypeValue = parseInt(this.typeSelectElt.value)
 

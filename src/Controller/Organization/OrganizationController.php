@@ -47,7 +47,7 @@ final class OrganizationController extends AbstractController
             $this->em->persist($organization);
             $this->em->flush();
 
-            $this->addFlash('success', 'Le dispositif est créé.');
+            $this->addFlash('success', 'organization.created_successfully');
 
             return $this->redirectToRoute('organization_index');
         }
@@ -68,7 +68,7 @@ final class OrganizationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->flush();
 
-            $this->addFlash('success', 'Les modifications sont enregistrées.');
+            $this->addFlash('success', 'organization.updated_successfully');
         }
 
         return $this->render('app/organization/organization/organization.html.twig', [

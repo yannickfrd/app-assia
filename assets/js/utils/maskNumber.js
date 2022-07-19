@@ -1,8 +1,18 @@
-import 'jquery-mask-plugin'
-
 /** 
- * Masque de saisie pour un nombre/identiant
+ * Masque de saisie pour un nombre ou identiant
  */
-document.addEventListener('DOMContentLoaded', () => {
-    $('[data-mask-type]').mask('999999999999')
+ document.addEventListener('DOMContentLoaded', () => {
+    const regex = /[^0-9]/g;
+
+     document.querySelectorAll('input[data-mask-type="number"]').forEach(inpuElt => {
+        if (false === inpuElt.hasAttribute('maxlength')) {
+            inpuElt.setAttribute('maxlength', 12)
+        }
+        
+        inpuElt.addEventListener('input', () => {
+            if (inpuElt.value.match(regex)) {
+                inpuElt.value = inpuElt.value.replace(regex, '')
+            }
+        })
+    })
 })

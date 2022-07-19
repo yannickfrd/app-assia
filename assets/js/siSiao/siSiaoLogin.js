@@ -1,6 +1,6 @@
 import Loader from '../utils/loader'
 import Ajax from '../utils/ajax'
-import MessageFlash from '../utils/messageFlash'
+import AlertMessage from '../utils/AlertMessage'
 import { Modal } from 'bootstrap'
 import SeePassword from '../security/seePassword'
 
@@ -29,7 +29,7 @@ export default class SiSiaoLogin {
         new SeePassword()
         
 
-        this.siSiaoLoginModalElt = new Modal(document.getElementById('modal-si-siao-login'))
+        this.siSiaoLoginModal = new Modal(document.getElementById('modal-si-siao-login'))
         this.siSiaoLoginFormElt = document.querySelector('form[name="si_siao_login"')
         this.sisiaoConnectionBtnElt = document.getElementById('si-siao-connection')
 
@@ -71,14 +71,14 @@ export default class SiSiaoLogin {
         if (data.alert && true === data.isConnected) {
             this.isConnected = true
             this.siSiaoLoginCheckboxElt.checked = true
-            return new MessageFlash(data.alert, data.msg)
+            return new AlertMessage(data.alert, data.msg)
         }
         this.isConnected = false
         this.showModal()
     }
 
     showModal() {
-        this.siSiaoLoginModalElt.show()
+        this.siSiaoLoginModal.show()
     }
 
     tryLogin() {
@@ -92,7 +92,7 @@ export default class SiSiaoLogin {
      */
     response(data) {
         if (data.alert && data.alert === 'success') {
-            this.siSiaoLoginModalElt.hide()
+            this.siSiaoLoginModal.hide()
             this.siSiaoLoginCheckboxElt.checked = true
             this.isConnected = true
         } else {
@@ -101,6 +101,6 @@ export default class SiSiaoLogin {
             
         }
 
-        new MessageFlash(data.alert, data.msg)
+        new AlertMessage(data.alert, data.msg)
     }
 }

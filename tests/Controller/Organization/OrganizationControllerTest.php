@@ -76,7 +76,7 @@ class OrganizationControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.alert.alert-success');
+        $this->assertSelectorExists('.toast.alert-success');
     }
 
     public function testEditOrganizationIsSuccessful(): void
@@ -90,7 +90,7 @@ class OrganizationControllerTest extends WebTestCase
         $this->client->submitForm('send');
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.alert.alert-success');
+        $this->assertSelectorExists('.toast.alert-success');
     }
 
     protected function tearDown(): void

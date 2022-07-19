@@ -37,6 +37,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class PersonController extends AbstractController
 {
@@ -44,11 +45,13 @@ final class PersonController extends AbstractController
 
     private $em;
     private $personRepo;
+    private $translator;
 
-    public function __construct(EntityManagerInterface $em, PersonRepository $personRepo)
+    public function __construct(EntityManagerInterface $em, PersonRepository $personRepo, TranslatorInterface $translator)
     {
         $this->em = $em;
         $this->personRepo = $personRepo;
+        $this->translator = $translator;
     }
 
     /**
@@ -87,7 +90,7 @@ final class PersonController extends AbstractController
             return $this->createPerson($rolePerson);
         }
         if ($form->isSubmitted() && !$form->isValid()) {
-            $this->addFlash('danger', "Attention, une erreur s'est produite.");
+            $this->addFlash('danger', 'error_occurred');
         }
 
         return $this->render('app/people/person/person_edit.html.twig', [
@@ -141,7 +144,7 @@ final class PersonController extends AbstractController
 
             return $this->json([
                 'alert' => 'success',
-                'msg' => 'Les modifications sont enregistrées.',
+                'msg' => $this->translator->trans('updated_successfully', [], 'app'),
                 'user' => $user->getFullname(),
                 'date' => $person->getUpdatedAt()->format('d/m/Y à H:i'),
             ]);
@@ -159,7 +162,7 @@ final class PersonController extends AbstractController
         $this->em->remove($person);
         $this->em->flush();
 
-        $this->addFlash('warning', 'La personne est supprimée.');
+        $this->addFlash('warning', 'person.deleted_successfully');
 
         return $this->redirectToRoute('home');
     }
@@ -222,8 +225,11 @@ final class PersonController extends AbstractController
      *
      * @Route("/group/{id}/person/new", name="group_create_person", methods="GET|POST")
      */
-    public function newPersonInGroup(PeopleGroup $peopleGroup, Request $request, PeopleGroupManager $peopleGroupManager): Response
-    {
+    public function newPersonInGroup(
+        PeopleGroup $peopleGroup,
+        Request $request,
+        PeopleGroupManager $peopleGroupManager
+    ): Response {
         $form = $this->createForm(PersonRolePersonType::class, $rolePerson = new RolePerson(), [
             'attr' => ['supports' => $request->get('supports')],
         ])->handleRequest($request);
@@ -234,7 +240,9 @@ final class PersonController extends AbstractController
             $personExists = $this->personExists($person);
             // Si la personne existe déjà, renvoie vers la fiche existante, sinon crée la personne
             if ($personExists) {
-                $this->addFlash('warning', 'Attention : '.$person->getFullname().' existe déjà !');
+                $this->addFlash('warning', $this->translator->trans('person.already_exists', [
+                    'person_fullname' => $person->getFullname(),
+                ], 'app'));
 
                 return $this->redirectToRoute('person_show', ['id' => $personExists->getId()]);
             }
@@ -244,7 +252,7 @@ final class PersonController extends AbstractController
             return $this->redirectToRoute('people_group_show', ['id' => $peopleGroup->getId()]);
         }
         if ($form->isSubmitted() && !$form->isValid()) {
-            $this->addFlash('danger', "Attention, une erreur s'est produite.");
+            $this->addFlash('danger', 'error_occurred');
         }
 
         return $this->render('app/people/person/person_edit.html.twig', [
@@ -296,7 +304,7 @@ final class PersonController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->createNewGroupToPerson($person, $rolePerson);
         }
-        $this->addFlash('danger', "Une erreur s'est produite");
+        $this->addFlash('danger', 'error_occurred');
 
         return $this->redirectToRoute('person_show', ['id' => $person->getId()]);
     }
@@ -348,7 +356,9 @@ final class PersonController extends AbstractController
 
         // Si la personne existe déjà, renvoie vers la fiche existante, sinon crée la personne
         if ($this->personExists($person)) {
-            $this->addFlash('warning', 'Attention : '.$person->getFullname().' existe déjà !');
+            $this->addFlash('warning', $this->translator->trans('person.already_exists', [
+                'person_fullname' => $person->getFullname(),
+            ], 'app'));
 
             return null;
         }
@@ -366,7 +376,10 @@ final class PersonController extends AbstractController
 
         $this->em->flush();
 
-        $this->addFlash('success', $person->getFullname().' est créé'.Grammar::gender($person->getGender()).', ainsi que son groupe.');
+        $this->addFlash('success', $this->translator->trans('person.created_successfully', [
+            'person_fullname' => $person->getFullname(),
+            'e' => Grammar::gender($person->getGender()),
+        ], 'app'));
 
         return $this->redirectToRoute('people_group_show', ['id' => $peopleGroup->getId()]);
     }
@@ -403,7 +416,7 @@ final class PersonController extends AbstractController
 
         $this->em->flush();
 
-        $this->addFlash('success', 'Le nouveau groupe est créé.');
+        $this->addFlash('success', 'people_group.created_successfully');
 
         return $this->redirectToRoute('people_group_show', ['id' => $peopleGroup->getId()]);
     }

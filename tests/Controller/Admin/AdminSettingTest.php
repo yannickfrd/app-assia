@@ -26,7 +26,7 @@ class AdminSettingTest extends WebTestCase
 
         $this->client = static::createClient();
         $this->client->followRedirects();
-        
+
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
     }
 
@@ -69,7 +69,7 @@ class AdminSettingTest extends WebTestCase
         $this->sendAdminSettingByDefault();
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert', 'La configuration est bien enregistrée.');
+        $this->assertSelectorTextContains('.toast.alert-success', 'Les paramètres ont été mis à jour.');
     }
 
     public function testServiceGetDefaultSetting(): void
@@ -85,7 +85,6 @@ class AdminSettingTest extends WebTestCase
         $form = $crawler->selectButton('send')->form()['service']['setting'];
 
         $this->assertSame(14, (int) $form['softDeletionDelay']->getValue());
-        $this->assertSame(18, (int) $form['hardDeletionDelay']->getValue());
 
         $this->assertCheckboxChecked($form['weeklyAlert']->getName());
         $this->assertCheckboxNotChecked($form['dailyAlert']->getName());
@@ -107,7 +106,6 @@ class AdminSettingTest extends WebTestCase
         $this->client->submitForm('send', [
             'service[setting]' => [
                 'softDeletionDelay' => 24,
-                'hardDeletionDelay' => 36,
                 'weeklyAlert' => true,
                 'dailyAlert' => false,
             ],

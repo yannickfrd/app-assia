@@ -8,6 +8,7 @@ use App\Form\Type\ServiceDeviceReferentSearchType;
 use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -16,24 +17,23 @@ class UserSearchType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('lastname', null, [
-                'label_attr' => ['class' => 'sr-only'],
+            ->add('lastname', SearchType::class, [
                 'attr' => [
                     'class' => 'w-max-140 text-uppercase',
                     'placeholder' => 'Lastname',
                 ],
+                'required' => false,
             ])
-            ->add('firstname', null, [
-                'label_attr' => ['class' => 'sr-only'],
+            ->add('firstname', SearchType::class, [
                 'attr' => [
                     'class' => 'w-max-140 text-capitalize',
                     'placeholder' => 'Firstname',
                 ],
+                'required' => false,
             ])
             ->add('status', ChoiceType::class, [
                 'choices' => Choices::getChoices(User::STATUS),
                 'multiple' => true,
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'class' => 'multi-select',
                     'placeholder' => 'placeholder.status',
@@ -42,10 +42,10 @@ class UserSearchType extends AbstractType
                 'required' => false,
             ])
             ->add('phone', null, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'placeholder' => 'Phone',
-                    'class' => 'js-phone w-max-140',
+                    'class' => 'w-max-140',
+                    'data-phone' => 'true',
                     'autocomplete' => 'off',
                 ],
             ])
@@ -55,7 +55,6 @@ class UserSearchType extends AbstractType
                 ],
             ])
             ->add('disabled', ChoiceType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getChoices(Choices::DISABLE),
                 'placeholder' => 'placeholder.disabled',
                 'required' => false,

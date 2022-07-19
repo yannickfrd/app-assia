@@ -9,7 +9,6 @@
     <section class="mt-0 mb-4">
 
         <div class="container">
-            {% include 'model/_flash_message.html.twig' %}
             <h1 class="h2 mb-3">{{ title }}</h1>
         </div>
 
@@ -22,16 +21,15 @@
         {% if is_granted('ROLE_ADMIN') %}
             <div class="row mb-3">
                 <div class="col-md-12">
-                    <a href="{{ path('security_registration') }}" class="btn btn-{{ theme_color }} btn-sm shadow">
-                        <span class="fas fa-plus-square mr-2"></span>Créer un nouvel utilisateur</a>
+                    <a href="{{ path('security_registration') }}" class="btn btn-primary btn-sm shadow">
+                        <span class="fas fa-plus-square me-2"></span>Créer un nouvel utilisateur</a>
                 </div>
             </div>
         {% endif %}
 
             <div class="row align-items-baseline">
                 <div class="col-md-4 count align-middle">
-                    <p class="align-middle mb-0">Total : {{ users.getTotalItemCount|number }}
-                        utilisateur{% if users.getTotalItemCount > 1 %}s{% endif %}.</p>
+                    <p class="align-middle mb-0">Résultat : {{ users.getTotalItemCount|number }}</p>
                 </div>
                 <div class="col-md-8">
                     <div class="navigation">{{ knp_pagination_render(users) }}</div>
@@ -69,13 +67,13 @@
                                 <td scope="row" class="align-middle text-center">
                                     {% if is_granted_admin %}
                                         {% if is_granted('VIEW', user) %}
-                                            <a href="{{ path('security_user', {'id': user.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow" 
-                                                title="Voir la fiche" data-toggle="tooltip" data-placement="bottom"><i class="fas fa-eye"></i>
+                                            <a href="{{ path('security_user', {'id': user.id}) }}" class="btn btn-primary btn-sm shadow" 
+                                                title="Voir la fiche" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-eye"></i>
                                             </a>
                                         {% else %}
                                             <span class="btn btn-secondary btn-sm shadow cursor-default" 
                                                 title="Vous n'avez pas les droits pour accéder à la fiche"
-                                                data-toggle="tooltip" data-placement="bottom"><i class="fas fa-ban"></i></span>                           
+                                                data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fas fa-ban"></i></span>                           
                                         {% endif %}
                                     {% endif %}
                                 </td>
@@ -90,7 +88,7 @@
                                             |sort ((a, b) => b.main <=> a.main)  %}
                                             {% set service = user_service.service %}
                                             <a href="{{ path('service_edit', {'id': service.id}) }}" 
-                                                class="text-{{ theme_color }} {{ user_service.main ? 'font-weight-bold' }}">
+                                                class="link-primary {{ user_service.main ? 'fw-bold' }}">
                                                 {{ service.name }}</a>{% if not loop.last %}, {% endif %}
                                             {% endfor %}
                                     </div>

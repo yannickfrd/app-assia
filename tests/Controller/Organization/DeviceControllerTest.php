@@ -34,7 +34,6 @@ class DeviceControllerTest extends WebTestCase
         $this->client = static::createClient();
         $this->client->followRedirects();
 
-        /** @var AbstractDatabaseTool */
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
 
         $this->fixtures = $this->databaseTool->loadAliceFixture([
@@ -86,7 +85,7 @@ class DeviceControllerTest extends WebTestCase
             ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('span.form-error-message', 'Ce dispositif existe déjà.');
+        $this->assertSelectorTextContains('div.invalid-feedback', 'Ce dispositif existe déjà.');
     }
 
     public function testCreateDeviceIsSuccessful(): void
@@ -101,7 +100,7 @@ class DeviceControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.alert.alert-success');
+        $this->assertSelectorExists('.toast.alert-success');
     }
 
     public function testEditDeviceIsSuccessful(): void
@@ -117,7 +116,7 @@ class DeviceControllerTest extends WebTestCase
         $this->client->submitForm('send');
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.alert.alert-success');
+        $this->assertSelectorExists('.toast.alert-success');
     }
 
     public function testDisableDeviceIsFailed(): void
@@ -138,12 +137,12 @@ class DeviceControllerTest extends WebTestCase
         $this->client->request('GET', "/admin/device/$id/disable");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-warning', 'Le dispositif est désactivé.');
+        $this->assertSelectorTextContains('.toast.alert-warning', 'Le dispositif a été désactivé.');
 
         $this->client->request('GET', "/admin/device/$id/disable");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-success', 'Le dispositif est ré-activé.');
+        $this->assertSelectorTextContains('.toast.alert-success', 'Le dispositif a été réactivé.');
     }
 
     protected function tearDown(): void

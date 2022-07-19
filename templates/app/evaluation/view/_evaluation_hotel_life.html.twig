@@ -5,36 +5,36 @@
     <div class="d-flex mb-3">
         <h2 class="h4">Vie à l'hôtel</h2>
         <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
-            class="text-{{ theme_color }} ml-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
+            class="link-primary ms-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
         </span>
     </div>
     {% if eval_hotel_life.food %}
         <div class="row mb-3">
-            <div class="col-md-12 font-weight-bold">{{ 'Food'|trans({}, 'evaluation') }} :</div>
+            <div class="col-md-12 fw-bold">{{ 'Food'|trans({}, 'evaluation') }} :</div>
             <div class="col-md-12 justify">{{ eval_hotel_life.food|nl2br }}</div>
         </div>
     {% endif %}
     {% if eval_hotel_life.clothing %}
         <div class="row mb-3">
-            <div class="col-md-12 font-weight-bold">{{ 'Clothing'|trans({}, 'evaluation') }} :</div>
+            <div class="col-md-12 fw-bold">{{ 'Clothing'|trans({}, 'evaluation') }} :</div>
             <div class="col-md-12 justify">{{ eval_hotel_life.clothing|nl2br }}</div>
         </div>
     {% endif %}
     {% if eval_hotel_life.roomMaintenance %}
         <div class="row mb-3">
-            <div class="col-md-12 font-weight-bold">{{ 'Room maintenance'|trans({}, 'evaluation') }} :</div>
+            <div class="col-md-12 fw-bold">{{ 'Room maintenance'|trans({}, 'evaluation') }} :</div>
             <div class="col-md-12 justify">{{ eval_hotel_life.roomMaintenance|nl2br }}</div>
         </div>
     {% endif %}
     {% if eval_hotel_life.otherHotelLife %}
         <div class="row mb-3">
-            <div class="col-md-12 font-weight-bold">{{ 'Other hotel life'|trans({}, 'evaluation') }} :</div>
+            <div class="col-md-12 fw-bold">{{ 'Other hotel life'|trans({}, 'evaluation') }} :</div>
             <div class="col-md-12 justify">{{ eval_hotel_life.otherHotelLife|nl2br }}</div>
         </div>
     {% endif %}
     {% if eval_hotel_life.commentHotelLife %}
         <div class="row mb-3">
-            <div class="col-md-12 font-weight-bold">{{ 'Comment hotel life'|trans({}, 'evaluation') }} :</div>
+            <div class="col-md-12 fw-bold">{{ 'Comment hotel life'|trans({}, 'evaluation') }} :</div>
             <div class="col-md-12 justify">{{ eval_hotel_life.commentHotelLife|nl2br }}</div>
         </div>
     {% endif %}

@@ -3,7 +3,7 @@
     <p class="mb-4">Bonjour, </p>
 {% endblock %}
 {% block body %}
-    <p class="p-2 font-weight-bold alert-danger">Error {{ code != 0 ? code }} {{ message }}</p>
+    <p class="p-2 fw-bold alert-danger">Error {{ code != 0 ? code }} {{ message }}</p>
     <p>Datetime : {{ 'now'|date('d/m/Y H:i') }}</p>
     <p>User : {% if app.user %}{{ app.user.fullname }}{% endif %}</p>
     <p>Url : {% if app.request  %}{{ app.request.requestUri }}{% endif %}</p>

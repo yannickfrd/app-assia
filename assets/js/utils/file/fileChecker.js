@@ -1,4 +1,4 @@
-import MessageFlash from '../messageFlash'
+import AlertMessage from '../AlertMessage'
 
 /**
  * Check if a file is valid or not (size, extension).
@@ -20,12 +20,12 @@ export default class FileChecker {
         const sizeFile = this.getSize(file)
 
         if (!this.isValidExtension(extensionFile)) {
-            new MessageFlash('danger', `Le format du fichier "${fileName}" n'est pas valide (${extensionFile}).\n Formats acceptés : ${this.VALID_EXTENSIONS.join(', ')}.`)
+            new AlertMessage('danger', `Le format du fichier "${fileName}" n'est pas valide (${extensionFile}).\n Formats acceptés : ${this.VALID_EXTENSIONS.join(', ')}.`)
             return false
         }
 
         if (!this.isValidSize(sizeFile)) {
-            new MessageFlash('danger', `Le fichier "${fileName}" est trop volumineux (${sizeFile.toLocaleString('fr')} Mo). Maximum : ${this.MAX_SIZE} Mo.`)
+            new AlertMessage('danger', `Le fichier "${fileName}" est trop volumineux (${sizeFile.toLocaleString('fr')} Mo). Maximum : ${this.MAX_SIZE} Mo.`)
             return false
         }
 

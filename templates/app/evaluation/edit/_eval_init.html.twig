@@ -6,7 +6,7 @@
 
 {% block card_body %}
 
-	<p class="mb-4 p-2 border border-warning"><span class="fas fa-exclamation-triangle text-warning mr-1"></span><!--
+	<p class="mb-4 p-2 border border-warning"><span class="fas fa-exclamation-triangle text-warning me-1"></span><!--
 		-->Attention, cet encart <b>ne doit être compléter qu'au début du suivi</b>. <!--
 		-->Il ne doit pas être mise à jour par la suite (sauf information manquante ou erronée).</p>
 
@@ -38,7 +38,7 @@
 
 	<div class="row">
 		<div class="col-md-12 accordion" id="accordion_eval_init">
-			{{ support_people_looper.loop(accordion_id, evaluation_people, support, theme_color) }}
+			{{ support_people_looper.loop(accordion_id, evaluation_people, support) }}
 
 			{% for key, form_eval_person in evaluation_people %}
 				{% set form_eval_init_person = form_eval_person.evalInitPerson %}
@@ -47,7 +47,7 @@
 				{% set prefix_id = 'evaluation_evaluationPeople_' ~ key ~ '_evalInitPerson' %}
 
 				<div id="collapse_{{ prefix_id }}" class="collapse {% if loop.first %}show{% endif %} my-3"
-					aria-labelledby="heading_{{ prefix_id }}" data-parent="#accordion_eval_init"
+					aria-labelledby="heading_{{ prefix_id }}" data-bs-parent="#accordion_eval_init"
 					data-sp-id="{{ support_person_id }}">
 					<div class="row mb-3">
 						<div class="col-md-6">
@@ -96,13 +96,13 @@
 								<div class="row mb-3">
 									<div class="col-md-12">{{ form_row(form_eval_init_person.debt) }}</div>
 									<div class="col-md-12" data-parent-field="{{ prefix_id }}_debt"
-										data-options="1">{{ form_row(form_eval_init_person.debtsAmt) }}</div>
+										data-options="1">{{ form_row(form_eval_init_person.debtsAmt, {attr: {class: 'text-end'}}) }}</div>
 								</div>
 							</div>
 						</div>
 					{% endif %}
 					<div class="row mb-3">
-                        {{ form_label(form_eval_init_person.comment) }}
+                        {{ form_label(form_eval_init_person.comment, null, {label_attr: {class: 'visually-hidden'}}) }}
                         <div class="col-md-12">
                             {{ form_widget(form_eval_init_person.comment) }}
                         </div>

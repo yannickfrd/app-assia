@@ -18,7 +18,6 @@ class EvalFinanceType extends AbstractType
             ])
             ->add('amount', MoneyType::class, [
                 'attr' => [
-                    'class' => 'text-right',
                     'placeholder' => 'Amount',
                 ],
                 'required' => false,

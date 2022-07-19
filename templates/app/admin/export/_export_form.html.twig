@@ -1,16 +1,16 @@
-<div id="form-search">
+<div id="accordion_search">
     {{ form_start(form) }}
     <div class="row mb-3">
         {% if is_granted('ROLE_SUPER_ADMIN') %}
-            <div class="col-md-6">{{ form_row(form.service.poles) }}</div>
+            <div class="col-md-6">{{ form_row(form.service.poles, {attr: {class: 'w-100'}}) }}</div>
         {% endif %}
-        <div class="col-md-6">{{ form_row(form.service.services) }}</div>
-        <div class="col-md-6">{{ form_row(form.service.subServices) }}</div>
-        <div class="col-md-6">{{ form_row(form.service.devices) }}</div>
-        <div class="col-md-6">{{ form_row(form.service.referents) }}</div>
+        <div class="col-md-6">{{ form_row(form.service.services, {attr: {class: 'w-100'}}) }}</div>
+        <div class="col-md-6">{{ form_row(form.service.subServices, {attr: {class: 'w-100'}}) }}</div>
+        <div class="col-md-6">{{ form_row(form.service.devices, {attr: {class: 'w-100'}}) }}</div>
+        <div class="col-md-6">{{ form_row(form.service.referents, {attr: {class: 'w-100'}}) }}</div>
     </div>
     <div class="row mb-3">
-        <div class="col-md-6">{{ form_row(form.status) }}</div>
+        <div class="col-md-6">{{ form_row(form.status, {attr: {class: 'w-100'}}) }}</div>
         <div class="col-md-6">{{ form_row(form.supportDates) }}</div>
         <div class="col-md-6">{{ form_row(form.date.start) }}</div>
         <div class="col-md-6">{{ form_row(form.date.end) }}</div>
@@ -18,28 +18,28 @@
     <div class="row mb-3">
         <div class="col-md-6">{{ form_row(form.familyTypologies) }}</div>
             <div class="col-md-6">
-            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark"
-                data-toggle="tooltip" data-placement="bottom" title="Demandeur/euse principal·e">{{ form_row(form.head) }}
+            <div class="form-check"
+                data-bs-toggle="tooltip" data-bs-placement="bottom" title="Demandeur/euse principal·e">{{ form_row(form.head) }}
             </div>
         </div>
     </div>
 
-    <div class="mb-4">
+    <div class="accordion mb-4">
         {% include 'app/admin/export/_export_options.html.twig' with {accordion_id: 'optionsExport'} %}
     </div>
     <div class="row mb-3">
         <div class="col-md-12">
-            <div class="float-left d-flex">
+            <div class="float-start d-flex">
                 <p id="results"></p>
             </div>
-            <div class="mb-4 float-right">
-                <button type="reset" id="reset" name="reset" class="btn btn-secondary ml-2 shadow" data-toggle="tooltip" data-placement="bottom"
-                    title="Effacer les filtres"><i class="fas fa-eraser"></i><span class="sr-only">Effacer</span>
+            <div class="mb-4 float-end">
+                <button type="reset" id="reset" name="reset" class="btn btn-secondary ms-2 shadow" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    title="Effacer les filtres"><i class="fas fa-eraser"></i><span class="visually-hidden">Effacer</span>
                 </button>
                 <button type="submit" id="count" name="count" data-path="{{ path('export_count') }}" 
-                    class="btn btn-{{ theme_color }} shadow">Calculer</button>
+                    class="btn btn-primary shadow">Calculer</button>
                 <button type="submit" id="export" name="export" data-path="{{ path('export_new') }}" 
-                    class="btn btn-{{ theme_color }} shadow">Exporter</button>
+                    class="btn btn-primary shadow">Exporter</button>
             </div>
         </div>
     </div>

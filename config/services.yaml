@@ -20,6 +20,8 @@ services:
         bind:
             $adminEmail: "%admin_email%"
             $appEnv: "%app_env%"
+            $documentsDirectory: "%documents_directory%"
+            $downloadsDirectory: "%downloads_directory%"
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -32,10 +34,6 @@ services:
     App\Controller\:
         resource: "../src/Controller"
         tags: ["controller.service_arguments"]
-
-    App\Command\Document\DeleteHardDocumentsCommand:
-        arguments:
-            $documentsDirectory: "%documents_directory%"
 
     App\DataFixtures\Processor\UserProcessor:
         tags: [{ name: fidry_alice_data_fixtures.processor }]
@@ -73,29 +71,12 @@ services:
         tags:
             - { name: "kernel.event_listener", event: "kernel.terminate" }
 
-    App\Notification\MailNotifier:
-        arguments:
-            $appEnv: "%app_env%"
-
     App\Service\DatabaseDumper:
         arguments:
             $databaseName: "%env(DB_DATABASE_NAME)%"
             $userName: "%env(DB_USERNAME)%"
             $password: "%env(DB_PASSWORD)%"
             $host: "%env(DB_HOST)%"
-
-    App\Service\File\FileUploader:
-        arguments:
-            $targetDirectory: "%documents_directory%"
-
-    App\Service\File\FileDownloader:
-        arguments:
-            $documentsDirectory: "%documents_directory%"
-            $downloadsDirectory: "%downloads_directory%"
-
-    App\Service\Payment\PaymentExporter:
-        arguments:
-            $downloadsDirectory: "%downloads_directory%"
 
     App\Service\File\ImageOptimizer:
         arguments:
@@ -127,11 +108,6 @@ services:
             $googleClientSecret: "%env(GOOGLE_CLIENT_SECRET)%"
             $googleClientId: "%env(GOOGLE_CLIENT_ID)%"
             $googleProjectId: "%env(GOOGLE_PROJECT_ID)%"
-
-    App\Service\File\FileConverter:
-        arguments:
-            $documentsDirectory: "%documents_directory%"
-            $downloadsDirectory: "%downloads_directory%"
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

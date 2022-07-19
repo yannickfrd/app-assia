@@ -28,7 +28,6 @@ class OccupancySearchType extends AbstractType
 
         $builder
             ->add('year', ChoiceType::class, [
-                'label_attr' => ['class' => 'pr-1'],
                 'choices' => Choices::getYears(5),
                 'placeholder' => 'Year',
                 'required' => false,
@@ -36,14 +35,14 @@ class OccupancySearchType extends AbstractType
             ->add('pole', EntityType::class, [
                 'class' => Pole::class,
                 'choice_label' => 'name',
-                'label_attr' => ['class' => 'sr-only'],
                 'placeholder' => 'placeholder.pole',
                 'required' => false,
             ])
             ->add('date', DateSearchType::class, [
                 'data_class' => EventSearch::class,
-            ]);
-        // ->add('export');
+            ])
+            // ->add('export')
+        ;
     }
 
     private function setData(OccupancySearch $search): OccupancySearch

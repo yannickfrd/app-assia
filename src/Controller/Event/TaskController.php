@@ -122,7 +122,7 @@ final class TaskController extends AbstractController
             return $this->json([
                 'action' => 'create',
                 'alert' => 'success',
-                'msg' => $translator->trans('task.created_successfully', ['%task_title%' => $task->getTitle()], 'app'),
+                'msg' => $translator->trans('task.created_successfully', ['task_title' => $task->getTitle()], 'app'),
                 'task' => $task,
             ], 200, [], ['groups' => Task::SERIALIZER_GROUPS]);
         }
@@ -172,7 +172,7 @@ final class TaskController extends AbstractController
             return $this->json([
                 'action' => 'edit',
                 'alert' => 'success',
-                'msg' => $translator->trans('task.updated_successfully', ['%task_title%' => $task->getTitle()], 'app'),
+                'msg' => $translator->trans('task.updated_successfully', ['task_title' => $task->getTitle()], 'app'),
                 'task' => $task,
             ], 200, [], ['groups' => Task::SERIALIZER_GROUPS]);
         }
@@ -196,7 +196,7 @@ final class TaskController extends AbstractController
         return $this->json([
             'action' => 'delete',
             'alert' => 'warning',
-            'msg' => $translator->trans('task.deleted_successfully', ['%task_title%' => $task->getTitle()], 'app'),
+            'msg' => $translator->trans('task.deleted_successfully', ['task_title' => $task->getTitle()], 'app'),
             'task' => ['id' => $taskId],
         ]);
     }
@@ -221,7 +221,7 @@ final class TaskController extends AbstractController
         return $this->json([
             'action' => 'restore',
             'alert' => 'success',
-            'msg' => $translator->trans('note.restored_successfully', ['%note_title%' => $task->getTitle()], 'app'),
+            'msg' => $translator->trans('note.restored_successfully', ['note_title' => $task->getTitle()], 'app'),
             'task' => ['id' => $task->getId()],
         ]);
     }
@@ -249,8 +249,8 @@ final class TaskController extends AbstractController
             'action' => 'toggle_status',
             'alert' => 'success',
             'msg' => $translator->trans('task.toogle_status', [
-                '%task_title%' => $task->getTitle(),
-                '%task_status%' => mb_strtolower($task->getStatusToString()),
+                'task_title' => $task->getTitle(),
+                'task_status' => mb_strtolower($task->getStatusToString()),
             ], 'app'),
             'task' => $task,
         ], 200, [], ['groups' => Task::SERIALIZER_GROUPS]);

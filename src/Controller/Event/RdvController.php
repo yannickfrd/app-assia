@@ -43,7 +43,7 @@ final class RdvController extends AbstractController
                 return (new RdvExport())->exportData($rdvs);
             }
 
-            $this->addFlash('warning', 'Aucun résultat à exporter.');
+            $this->addFlash('warning', 'no_result_to_export');
         }
 
         $formRdv = $this->createForm(RdvType::class, (new Rdv())->addUser($this->getUser()));
@@ -80,7 +80,7 @@ final class RdvController extends AbstractController
                 return (new RdvExport())->exportData($rdvs);
             }
 
-            $this->addFlash('warning', 'Aucun résultat à exporter.');
+            $this->addFlash('warning', 'no_result_to_export');
         }
 
         $formRdv = $this->createForm(RdvType::class, (new Rdv())->addUser($this->getUser()), [
@@ -103,7 +103,8 @@ final class RdvController extends AbstractController
     public function create(
         Request $request,
         EntityManagerInterface $em,
-        ApiCalendarRouter $calendarRouter
+        ApiCalendarRouter $calendarRouter,
+        TranslatorInterface $translator
     ): JsonResponse {
         $form = $this->createForm(RdvType::class, $rdv = new Rdv())
             ->handleRequest($request);
@@ -119,7 +120,7 @@ final class RdvController extends AbstractController
             return $this->json([
                 'action' => 'create',
                 'alert' => 'success',
-                'msg' => 'Le RDV est enregistré.',
+                'msg' => $translator->trans('rdv.created_successfully', ['rdv_title' => $rdv->getTitle()], 'app'),
                 'rdv' => $rdv,
                 'apiUrls' => $calendarRouter->getUrls(
                     'create', $rdv->getId(), (array) $form->getData()
@@ -140,7 +141,8 @@ final class RdvController extends AbstractController
         SupportGroupRepository $supportGroupRepo,
         Request $request,
         EntityManagerInterface $em,
-        ApiCalendarRouter $calendarRouter
+        ApiCalendarRouter $calendarRouter,
+        TranslatorInterface $translator
     ): JsonResponse {
         $supportGroup = $supportGroupRepo->findSupportById($id);
 
@@ -161,7 +163,7 @@ final class RdvController extends AbstractController
             return $this->json([
                 'action' => 'create',
                 'alert' => 'success',
-                'msg' => 'Le RDV est enregistré.',
+                'msg' => $translator->trans('rdv.created_successfully', ['rdv_title' => $rdv->getTitle()], 'app'),
                 'rdv' => $rdv,
                 'apiUrls' => $calendarRouter->getUrls(
                     'create', $rdv->getId(), (array) $form->getData()
@@ -196,7 +198,8 @@ final class RdvController extends AbstractController
         RdvRepository $rdvRepo,
         Request $request,
         EntityManagerInterface $em,
-        ApiCalendarRouter $calendarRouter
+        ApiCalendarRouter $calendarRouter,
+        TranslatorInterface $translator
     ): JsonResponse {
         $rdv = $rdvRepo->findRdv($id);
 
@@ -217,7 +220,7 @@ final class RdvController extends AbstractController
             return $this->json([
                 'action' => 'edit',
                 'alert' => 'success',
-                'msg' => 'Le RDV est modifié.',
+                'msg' => $translator->trans('rdv.updated_successfully', ['rdv_title' => $rdv->getTitle()], 'app'),
                 'rdv' => $rdv,
                 'apiUrls' => $calendarRouter->getUrls(
                     'update',
@@ -237,7 +240,8 @@ final class RdvController extends AbstractController
         int $id,
         RdvRepository $rdvRepo,
         EntityManagerInterface $em,
-        ApiCalendarRouter $calendarRouter
+        ApiCalendarRouter $calendarRouter,
+        TranslatorInterface $translator
     ): JsonResponse {
         $rdv = $rdvRepo->findRdv($id);
 
@@ -252,7 +256,7 @@ final class RdvController extends AbstractController
             'action' => 'delete',
             'rdv' => ['id' => $id],
             'alert' => 'warning',
-            'msg' => 'Le RDV est supprimé.',
+            'msg' => $translator->trans('rdv.deleted_successfully', ['rdv_title' => $rdv->getTitle()], 'app'),
             'apiUrls' => $calendarRouter->getUrls('delete', $id, [], [
                 'google' => $rdv->getGoogleEventId(),
                 'outlook' => $rdv->getOutlookEventId(),
@@ -280,7 +284,7 @@ final class RdvController extends AbstractController
         return $this->json([
             'action' => 'restore',
             'alert' => 'success',
-            'msg' => $translator->trans('rdv.restored_successfully', ['%rdv_title%' => $rdv->getTitle()], 'app'),
+            'msg' => $translator->trans('rdv.restored_successfully', ['rdv_title' => $rdv->getTitle()], 'app'),
             'rdv' => ['id' => $rdv->getId()],
         ]);
     }

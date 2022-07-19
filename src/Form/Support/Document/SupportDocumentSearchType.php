@@ -9,6 +9,7 @@ use App\Form\Support\Support\DeletedSearchType;
 use App\Repository\Organization\TagRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -28,9 +29,9 @@ class SupportDocumentSearchType extends AbstractType
         $service = $options['service'];
 
         $builder
-            ->add('name', null, [
-                'label_attr' => ['class' => 'sr-only'],
+            ->add('name', SearchType::class, [
                 'attr' => ['placeholder' => 'Search'],
+                'required' => false,
             ])
             ->add('tags', EntityType::class, [
                 'class' => Tag::class,
@@ -40,9 +41,8 @@ class SupportDocumentSearchType extends AbstractType
                 'by_reference' => false,
                 'choices' => $this->tagRepo->getTagsByService($service, 'document'),
                 'choice_label' => 'name',
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
-                    'class' => 'multi-select w-min-200 w-max-220',
+                    'class' => 'multi-select w-max-220',
                     'placeholder' => 'placeholder.tags',
                     'size' => 1,
                 ],

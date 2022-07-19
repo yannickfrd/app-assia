@@ -1,6 +1,6 @@
 import SelectManager from './form/SelectManager'
 import Loader from './loader'
-import MessageFlash from './messageFlash'
+import AlertMessage from './AlertMessage'
 
 /**
  * Classe pour les différents pages de recherche.
@@ -49,11 +49,11 @@ export default class SearchManager {
                 if (this.loader.inLoading) {
                     e.preventDefault()
                 } else {
-                    new MessageFlash('success', 'L\'export est en cours de préparation. Merci de patienter...', 10)
+                    new AlertMessage('success', 'L\'export est en cours de préparation. Merci de patienter...', 10)
                     this.loader.inLoading = true
                     setTimeout(() => {
                         this.loader.inLoading = false
-                    }, 15 * 1000)
+                    }, 10 * 1000)
                 }
             })
         }
@@ -84,7 +84,7 @@ export default class SearchManager {
         })
 
         this.selectManagers.forEach(selectManager => {
-            selectManager.clearSelect()
+            selectManager.clearItems()
         })
 
         if (this.resultsElt) {

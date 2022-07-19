@@ -8,14 +8,14 @@
 
     <div class="row">
         <div class="col-md-12 accordion" id="accordion_evalSocial">
-			{{ support_people_looper.loop(accordion_id, evaluation_people, support, theme_color) }}
+			{{ support_people_looper.loop(accordion_id, evaluation_people, support) }}
 
 			{% for key, form_eval_person in evaluation_people %}
                 {% set support_person = form_eval_person.vars.value.supportPerson %}
                 {% set form_eval_social_person = form_eval_person.evalSocialPerson %}
 				{% set prefix_id = 'evaluation_evaluationPeople_' ~ key ~ '_evalSocialPerson' %}
                 <div id="collapse_{{ prefix_id }}" class="collapse {% if loop.first %}show{% endif %} my-3"
-                    aria-labelledby="heading_{{ prefix_id }}" data-parent="#accordion_evalSocial">
+                    aria-labelledby="heading_{{ prefix_id }}" data-bs-parent="#accordion_evalSocial">
                     <div class="row mb-3">
                         <div class="col-md-6">
                             {{ form_row(form_eval_social_person.rightSocialSecurity, {
@@ -52,7 +52,7 @@
                                                     <tr data-parent-select="{{ prefix_id }}__healthProblemType" data-value="{{ healthKey }}">
                                                         <td scope="row">{{ form_widget(attribute(form_eval_social_person, healthKey)) }}</td>
                                                         <td class="align-middle">{{ healthValue }}</td>
-                                                        <td class="align-middle text-right">
+                                                        <td class="align-middle text-end">
                                                             <button class="btn btn-danger" data-action="remove">
                                                                 <span class="fas fa-trash-alt"></span>
                                                             </button>
@@ -119,7 +119,7 @@
                         </div>
                         <hr class="my-3"/>
                     <div class="row mb-3">
-                        {{ form_label(form_eval_social_person.commentEvalSocialPerson) }}
+                        {{ form_label(form_eval_social_person.commentEvalSocialPerson, null, {label_attr: {class: 'visually-hidden'}}) }}
                         <div class="col-md-12">
                             {{ form_widget(form_eval_social_person.commentEvalSocialPerson) }}
                         </div>
@@ -139,7 +139,7 @@
 
     {% if nb_people > 1 %}
         <div class="row mb-3">
-            {{ form_label(form.evalSocialGroup.commentEvalSocialGroup) }}
+            {{ form_label(form.evalSocialGroup.commentEvalSocialGroup, null, {label_attr: {class: 'visually-hidden'}}) }}
             <div class="col-md-12">
                 {{ form_widget(form.evalSocialGroup.commentEvalSocialGroup) }}
             </div>

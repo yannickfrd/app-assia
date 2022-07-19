@@ -1,0 +1,33 @@
+@each $color, $value in $theme-colors {
+    html[data-theme-color="#{$color}"] {
+        .btn-primary {
+            @include button-variant($value, $value);
+
+            color: $white;
+        }
+        
+        .btn-outline-primary {
+            @include button-outline-variant($value);
+        }
+
+        .btn-primary, 
+        .btn-outline-primary {
+            &.active, &:hover, &:focus {
+                color: $white;
+            }
+        }
+    }
+}
+
+.btn {
+    font-size: $font-size-base;
+}
+
+.btn-outline-secondary a {
+    color: var(--bs-gray);
+}
+
+.btn-outline-secondary a:hover {
+    color: $white;
+}
+

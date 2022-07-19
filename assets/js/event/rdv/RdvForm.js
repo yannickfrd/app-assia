@@ -1,7 +1,7 @@
 import FormValidator from "../../utils/form/formValidator";
 import SelectManager from "../../utils/form/SelectManager";
 import DateFormater from "../../utils/date/dateFormater";
-import MessageFlash from "../../utils/messageFlash";
+import AlertMessage from "../../utils/AlertMessage";
 import {Modal} from "bootstrap";
 import RdvModel from "./model/RdvModel";
 import ApiCalendar from "../../api/ApiCalendar";
@@ -19,14 +19,10 @@ export default class RdvForm {
 
         this.apiCalendar = new ApiCalendar()
 
-        this.themeColor = document.getElementById('header').dataset.color
-
         this.modalRdvElt = document.getElementById('modal-rdv')
-        this.modalElt = new Modal(this.modalRdvElt)
+        this.rdvModal = new Modal(this.modalRdvElt)
 
         new SearchLocation('rdv_search_location')
-
-        this.formValidator = new FormValidator(this.modalRdvElt)
 
         this.btnAddAlertElt = document.querySelector('button[data-add-widget]')
         this.btnSaveRdvElt = this.modalRdvElt.querySelector('button[data-action="save-rdv"]')
@@ -60,16 +56,16 @@ export default class RdvForm {
 
         this.currentUserId = document.getElementById('user-name').dataset.userId
 
-        const eventObject = {name: 'onModal', elementId: 'modal-rdv'}
-        this.usersSelectManager = new SelectManager('#rdv_users', eventObject, {width: '100%'})
-        this.tagsSelectManager = new SelectManager('#rdv_tags', eventObject)
+        this.formValidator = new FormValidator(this.formRdvElt)
+        this.usersSelectManager = new SelectManager('#rdv_users')
+        this.tagsSelectManager = new SelectManager('#rdv_tags')
 
         this.alertsCollectionManager = new WidgetCollectionManager(this.afterToAddAlert.bind(this), null, 3)
 
         this.editColumnRdvElt = document.querySelector('table#table-rdvs th[data-path-edit-rdv]')
         this.editContainRdvElt = document.querySelector('div.calendar-table div[data-path-edit-rdv]')
 
-        this.updateModalElt = new Modal(document.getElementById('modal-update'))
+        this.updateModal = new Modal(document.getElementById('modal-update'))
 
         this.googleCalendarCheckbox = this.modalRdvElt.querySelector('input[name="rdv[_googleCalendar]"]')
 
@@ -132,11 +128,11 @@ export default class RdvForm {
         this.btnDeleteRdvElt.classList.add('d-none')
 
         if (e !== undefined && (e.target.className && e.target.className.search('calendar-event') !== 0)) {
-            this.modalElt.show()
-            this.tagsSelectManager.clearSelect()
+            this.rdvModal.show()
+            this.tagsSelectManager.clearItems()
         }
 
-        this.usersSelectManager.updateSelect(this.currentUserId)
+        this.usersSelectManager.updateItems(this.currentUserId)
 
         this.resetAlerts()
     }
@@ -181,7 +177,7 @@ export default class RdvForm {
 
     requestCreateRdv() {
         if (!this.isValidForm()) {
-            return new MessageFlash('danger', 'Une ou plusieurs informations sont invalides.')
+            return new AlertMessage('danger', 'Une ou plusieurs informations sont invalides.')
         }
 
         if (!this.loader.isActive()) {
@@ -251,11 +247,11 @@ export default class RdvForm {
 
         const tagsIds = []
         rdv.tags.forEach(tags => tagsIds.push(tags.id))
-        this.tagsSelectManager.updateSelect(tagsIds)
+        this.tagsSelectManager.updateItems(tagsIds)
 
         const userIds = []
         rdv.users.forEach(user => userIds.push(user.id))
-        this.usersSelectManager.updateSelect(userIds)
+        this.usersSelectManager.updateItems(userIds)
 
         this.supportSelectElt.value = ''
         this.supportSelectElt.disabled = rdv.supportGroup !== null
@@ -274,7 +270,7 @@ export default class RdvForm {
 
         if (rdv.supportGroup) {
             const href = this.rdvTitleElt.dataset.url.replace('__id__', rdv.supportGroup.id)
-            this.rdvTitleElt.innerHTML = `<a href="${href}" class="text-${this.themeColor}" title="Accéder au suivi">${title}</a>`
+            this.rdvTitleElt.innerHTML = `<a href="${href}" class="link-primary" title="Accéder au suivi">${title}</a>`
         }
 
         if (!canEdit) {
@@ -292,7 +288,7 @@ export default class RdvForm {
 
         this.initAlerts(rdv)
 
-        this.modalElt.show()
+        this.rdvModal.show()
     }
 
     /**
@@ -326,7 +322,7 @@ export default class RdvForm {
     createTags(rdv) {
         let tags = ''
         rdv.tags.forEach(tag => {
-            tags += `<span class="badge bg-${tag.color} text-light mr-1">${tag.name}</span>`
+            tags += `<span class="badge bg-${tag.color} me-1">${tag.name}</span>`
         })
 
         return tags
@@ -344,7 +340,7 @@ export default class RdvForm {
             || (rdvModel.isDifferent(this.rdvBeforeUpdate) && (this.googleCalendarCheckbox.checked
                 || this.outlookCalendarCheckbox.checked))
         ) {
-            this.updateModalElt.show()
+            this.updateModal.show()
 
             const listApis = () => {
                 let list = {}
@@ -389,6 +385,8 @@ export default class RdvForm {
             this.usersSelecElt,
         ]
 
+        this.formRdvElt.classList.add('was-validated')
+
         document.querySelector('#alerts-fields-list').querySelectorAll('input, select').forEach(fieldElt => fieldElts.push(fieldElt))
 
         fieldElts.forEach(fieldElt => {
@@ -426,6 +424,6 @@ export default class RdvForm {
     closeModal() {
         // The ordre is important
         document.getElementById('js-btn-cancel').click()
-        this.modalElt.hide()
+        this.rdvModal.hide()
     }
 }

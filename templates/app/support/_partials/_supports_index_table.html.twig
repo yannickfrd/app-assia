@@ -20,7 +20,7 @@
                     {% if is_granted_view_support or support_person.status != constant('STATUS_PRE_ADD_FAILED', support_group) %}
                         {% if support_group.referent %}
                             {% set contact_user %}
-                                <div class='text-left p-2'>
+                                <div class='text-start  p-2'>
                                     <b>Coordonnées :</b>
                                     <br/>Téléphone : {{ support_group.referent.phone1}}
                                     <br/>Email : {{ support_group.referent.email }}
@@ -28,7 +28,7 @@
                             {% endset %}
                         {% endif %}
                         {% set contact_service %}
-                            <div class='text-left p-2'>
+                            <div class='text-start  p-2'>
                                 <b>Coordonnées du service :</b>
                                 <br/>Téléphone : {{ support_group.service.phone1}}
                                 <br/>Email : {{ support_group.service.email }}
@@ -38,11 +38,11 @@
                             <td scope="row" class="align-middle text-center">
                                 {% if is_granted_view_support %}
                                     <a href="{{ path('support_show', {'id': support_group.id}) }}"
-                                        class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-toggle="tooltip" data-placement="bottom"
+                                        class="btn btn-primary btn-sm shadow my-1" data-bs-toggle="tooltip" data-bs-placement="bottom"
                                         title="Voir le suivi social"><span class="fas fa-eye"></span>
                                     </a>
                                 {% else %}
-                                    <span class="btn btn-secondary btn-sm shadow cursor-default" data-toggle="tooltip" data-placement="bottom" 
+                                    <span class="btn btn-secondary btn-sm shadow cursor-default" data-bs-toggle="tooltip" data-bs-placement="bottom" 
                                         title="Vous n'avez pas les droits pour accéder à la fiche"><span class="fas fa-ban"></span></span>                           
                                 {% endif %}
                             </td>
@@ -51,15 +51,15 @@
                             <td class="align-middle">{{ support_person.endDate ? support_person.endDate|date('d/m/Y') }}</td>
                             <td class="align-middle">
                                 {% if support_group.referent %}
-                                    <a href="mailto:{{ support_group.referent.email }}" class="text-{{ theme_color }}"
-                                        data-toggle="tooltip" data-toggle="tooltip" data-placement="right" data-html="true"
+                                    <a href="mailto:{{ support_group.referent.email }}" class="link-primary"
+                                        data-bs-toggle="tooltip" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-html="true"
                                         title="{{ contact_user }}">{{ support_group.referent.fullname }}</a>
                                 {% endif %}
                             </td>
                             <td class="align-middle">
                                 {% if support_group.service %}
-                                    <a href="mailto:{{ support_group.service.email }}" class="text-{{ theme_color }}"
-                                        data-toggle="tooltip" data-toggle="tooltip" data-placement="right" data-html="true"
+                                    <a href="mailto:{{ support_group.service.email }}" class="link-primary"
+                                        data-bs-toggle="tooltip" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-html="true"
                                         title="{{ contact_service }}">{{ support_group.service.name }}</a>
                                         {{ support_group.device ? ' (' ~ support_group.device.name ~ ')' }}
                                 {% endif %}
@@ -72,11 +72,11 @@
         </table>
     </div>
     {% if people_group is defined %}
-        <button id="btn-new-support" class="m-2 btn btn-{{ theme_color }} btn-sm" 
+        <button id="btn-new-support" class="m-2 btn btn-primary btn-sm" 
         data-url="{{ path('group_new_support', {'id': people_group.id}) }}">
-        <span class="fas fa-plus-square pr-2"></span>Créer un nouveau suivi</button>
+        <span class="fas fa-plus-square pe-2"></span>Créer un nouveau suivi</button>
     {% else %}
-        <p class="ml-2 text-secondary"><span class="fas fa-info-circle mr-2"></span>
+        <p class="ms-2 text-secondary"><span class="fas fa-info-circle me-2"></span>
             Pour créer un nouveau suivi, aller sur la fiche du groupe ou créer un nouveau groupe (ci-dessus).<p>
     {% endif %}
 </section>

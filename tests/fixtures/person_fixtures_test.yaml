@@ -28,6 +28,15 @@ App\Entity\People\Person:
         updatedAt: <dateTimeBetween($createdAt, "now")>
         createdBy: "@john_user"
         updatedBy: "@john_user"
+    person6:
+        firstname: Jane
+        lastname: Doe
+        gender: 1
+        birthdate: <date_create("1981-01-01")>
+        createdAt: <dateTimeBetween("-2 years", "now")>
+        updatedAt: <dateTimeBetween($createdAt, "now")>
+        createdBy: "@john_user"
+        updatedBy: "@john_user"
 
 App\Entity\People\PeopleGroup:
     people_group1:
@@ -42,6 +51,18 @@ App\Entity\People\PeopleGroup:
         familyTypology: 2
         nbPeople: 1
         rolePeople: ["@role_person4"]
+    people_group4:
+        familyTypology: 1
+        nbPeople: 1
+        rolePeople: ["@role_person5"]
+    people_group5:
+        familyTypology: 1
+        nbPeople: 1
+        rolePeople: ["@role_person1"]
+    people_group6:
+        familyTypology: 1
+        nbPeople: 1
+        rolePeople: ["@role_person1"]
 
 App\Entity\People\RolePerson:
     role_person1:
@@ -64,3 +85,13 @@ App\Entity\People\RolePerson:
         role: 1
         person: "@person4"
         peopleGroup: "@people_group3"
+    role_person5:
+        head: 1
+        role: 1
+        person: "@person5"
+        peopleGroup: "@people_group4"
+    role_person6:
+        head: 1
+        role: 1
+        person: "@person6"
+        peopleGroup: "@people_group5"

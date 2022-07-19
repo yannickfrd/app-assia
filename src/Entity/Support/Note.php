@@ -99,15 +99,15 @@ class Note
         $this->tags = new ArrayCollection();
     }
 
-    /**
-     * @ORM\PreFlush
-     */
-    public function preFlush()
-    {
-        if ($this->supportGroup) {
-            $this->supportGroup->setUpdatedAt(new \DateTime());
-        }
-    }
+//    /**
+//     * @ORM\PreFlush
+//     */
+//    public function preFlush()
+//    {
+//        if ($this->supportGroup) {
+//            $this->supportGroup->setUpdatedAt(new \DateTime());
+//        }
+//    }
 
     public function getId(): ?int
     {

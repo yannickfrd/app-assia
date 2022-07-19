@@ -1,5 +1,5 @@
 import Ajax from './ajax'
-import MessageFlash from './messageFlash'
+import AlertMessage from './AlertMessage'
 import Loader from './loader'
 
 /**
@@ -67,7 +67,7 @@ export default class ConfirmAction {
             this.deleteTr(this.trElt)
             this.updatedField ? this.updatedField.value = data.data : null
         }
-        new MessageFlash(data.alert, data.msg)
+        new AlertMessage(data.alert, data.msg)
         this.loader.off()
     }
 

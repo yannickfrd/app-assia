@@ -11,6 +11,7 @@ use App\Form\Utils\Choices;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -32,44 +33,35 @@ class PlaceSearchType extends AbstractType
             ->add('service', ServiceDeviceReferentSearchType::class, [
                 'data_class' => EventSearch::class,
             ])
-            ->add('name', null, [
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
+            ->add('name', SearchType::class, [
                 'attr' => [
                     'class' => 'w-max-140',
                     'placeholder' => 'Name',
                 ],
+                'required' => false,
             ])
             ->add('nbPlaces', null, [
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
                 'attr' => [
                     'class' => 'w-max-140',
                     'placeholder' => 'Places number',
                 ],
             ])
             ->add('supportDates', ChoiceType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getChoices(PlaceSearch::PLACE_DATES),
                 'placeholder' => '-- Date --',
                 'required' => false,
             ])
-            ->add('city', null, [
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
+            ->add('city', SearchType::class, [
                 'attr' => [
                     'class' => 'w-max-140',
                     'placeholder' => 'City',
                 ],
+                'required' => false,
             ])
             ->add('date', DateSearchType::class, [
                 'data_class' => EventSearch::class,
             ])
             ->add('disabled', ChoiceType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getChoices(Choices::DISABLE),
                 'placeholder' => 'placeholder.disabled',
                 'required' => false,
@@ -84,7 +76,6 @@ class PlaceSearchType extends AbstractType
                     ->add('pole', EntityType::class, [
                         'class' => Pole::class,
                         'choice_label' => 'name',
-                        'label_attr' => ['class' => 'sr-only'],
                         'placeholder' => 'placeholder.pole',
                         'required' => false,
                 ]);

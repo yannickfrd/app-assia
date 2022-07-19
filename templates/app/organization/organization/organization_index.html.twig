@@ -5,7 +5,6 @@
 {% block body %}
     <section class="mt-0 mb-4">
         <div class="container">
-            {% include 'model/_flash_message.html.twig' %}
             <h1 class="h2 mb-3">Organismes</h1>
 
             <div class="row align-items-baseline">
@@ -19,8 +18,8 @@
             </div>
 
             {% if is_granted('ROLE_ADMIN') %}
-            <a href="{{ path('admin_organization_new') }}" class="btn btn-{{ theme_color }} btn-sm mb-3 shadow js-create-organization">
-                <span class="fas fa-plus-square mr-2"></span>Ajouter un nouvel organisme</a>
+            <a href="{{ path('admin_organization_new') }}" class="btn btn-primary btn-sm mb-3 shadow js-create-organization">
+                <span class="fas fa-plus-square me-2"></span>Ajouter un nouvel organisme</a>
             {% endif %}
 
             <div class="table-responsive">
@@ -49,8 +48,8 @@
                                 <td scope="row" class="align-middle text-center">
                                     {% if is_granted('ROLE_ADMIN') %}
                                         <a href="{{ path('admin_organization_edit', {'id': organization.id}) }}"
-                                            class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip"
-                                            data-placement="bottom" title="Voir la fiche de l'organisme">
+                                            class="btn btn-primary btn-sm shadow" data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom" title="Voir la fiche de l'organisme">
                                             <span class="fas fa-eye"></span>
                                         </a>
                                     {% endif %}
@@ -68,8 +67,8 @@
             </div>
             <div class="navigation">{{ knp_pagination_render(organizations) }}</div>
             {% if is_granted('ROLE_ADMIN') %}
-                <a href="{{ path('admin_organization_new') }}" class="btn btn-{{ theme_color }} btn-sm mb-2 shadow js-create-organization">
-                    <span class="fas fa-plus-square mr-2"></span>Ajouter un nouvel organisme</a>
+                <a href="{{ path('admin_organization_new') }}" class="btn btn-primary btn-sm mb-2 shadow js-create-organization">
+                    <span class="fas fa-plus-square me-2"></span>Ajouter un nouvel organisme</a>
             {% endif %}
     </section>
 {% endblock %}

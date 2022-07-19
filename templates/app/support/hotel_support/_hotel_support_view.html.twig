@@ -4,8 +4,8 @@
 
 <div class="row">
     <div class="col-md-6 mb-1 py-2">
-        <span class="py-2 font-weight-bold">Service (dispositif) : </span>
-        <a href="{{ path('service_edit', {'id': support.service.id }) }}" class="text-{{ theme_color }}">
+        <span class="py-2 fw-bold">Service (dispositif) : </span>
+        <a href="{{ path('service_edit', {'id': support.service.id }) }}" class="link-primary">
             {{ support.service.name }}</a>
             <span>{{ support.subService ? ' | ' ~ support.subService.name }}</span>
         <span>{{ support.device ? ' (' ~ support.device.name ~ ')' }}</span>

@@ -6,17 +6,17 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block body %}
-	<div class="container">
+	<div class="container pt-3">
 
 		{% include 'app/support/_partials/_support_nav.html.twig' %}
 
-		<div class="row">
-			<div class="d-flex col-md-6 mb-1 align-items-center">
-				<button class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-action="new_payment"
+		<div class="row mb-2">
+			<div class="d-flex col-md-6 align-items-center">
+				<button class="btn btn-primary shadow me-2" data-action="new_payment"
 					data-path="{{ path('payment_create', {'id': support.id}) }}"
-					title="Créer un nouvel enregistrement" data-toggle="tooltip" data-placement="bottom">
-					<i class="fas fa-plus-square mr-2"></i>Nouveau</button>
-				<div class="d-inline align-middle">Total : <!--
+					title="Créer un nouvel enregistrement" data-bs-toggle="tooltip" data-bs-placement="bottom">
+					<i class="fas fa-plus-square me-2"></i>Nouveau</button>
+				<div class="d-inline align-middle">Résultat : <!--
 				--><span id="count_payments">{{ payments.getTotalItemCount|number }}</span><!--
 				-->{% if nbTotalPayments and form_search.deleted.deleted.vars.checked != true %} sur <span id="nb_total_payments">{{ nbTotalPayments }}</span>{% endif %}
 				</div>

@@ -2,19 +2,20 @@
 
 namespace App\Service\SupportGroup;
 
-use App\Entity\Evaluation\EvaluationGroup;
-use App\Entity\Evaluation\EvaluationPerson;
+use App\Service\Grammar;
 use App\Entity\People\Person;
 use App\Entity\People\RolePerson;
 use App\Entity\Support\PlaceGroup;
 use App\Entity\Support\PlacePerson;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Support\SupportPerson;
-use App\Repository\Evaluation\EvaluationGroupRepository;
-use App\Service\Grammar;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Evaluation\EvaluationGroup;
+use App\Entity\Evaluation\EvaluationPerson;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use App\Repository\Evaluation\EvaluationGroupRepository;
 
 class SupportPeopleAdder
 {
@@ -22,14 +23,18 @@ class SupportPeopleAdder
 
     private $em;
     private $flashBag;
+    private $translator;
 
-    public function __construct(EntityManagerInterface $em, RequestStack $requestStack)
-    {
+    public function __construct(
+        EntityManagerInterface $em,
+        RequestStack $requestStack,
+        TranslatorInterface $translator
+    ) {
         $this->em = $em;
-
         /** @var Session */
         $session = $requestStack->getSession();
-        $this->flashBag = $session->getFlashBag();
+        $this->flashBag = $session->getFlashBag();        
+        $this->translator = $translator;
     }
 
     public function addPersonToSupport(SupportGroup $supportGroup, RolePerson $rolePerson): ?SupportPerson
@@ -37,7 +42,10 @@ class SupportPeopleAdder
         $person = $rolePerson->getPerson();
 
         if ($this->personIsInSupport($person, $supportGroup)) {
-            $this->flashBag->add('warning', $person->getFullname().' est déjà rattaché'.Grammar::gender($person->getGender()).' au suivi.');
+            $this->flashBag->add('warning', $this->translator->trans('support_group.person_already_in_support', [
+                'person_fullname' => $person->getFullname(),
+                'e' => Grammar::gender($person->getGender()),
+            ], 'app'));
 
             return null;
         }
@@ -53,7 +61,10 @@ class SupportPeopleAdder
 
         $this->em->flush();
 
-        $this->flashBag->add('success', $person->getFullname().' est ajouté'.Grammar::gender($person->getGender()).' au suivi en cours.');
+        $this->flashBag->add('success', $this->translator->trans('support_person.added_successfully', [
+            'person_fullname' => $person->getFullname(),
+            'e' => Grammar::gender($person->getGender()),
+        ], 'app'));
 
         return $supportPerson;
     }

@@ -1,7 +1,7 @@
 <section id="referents">
     <div class="d-flex align-items-center mb-3">
         <h2 class="h4">Autre service ou référent social</h2>
-        <span class="ml-2 d-none d-md-inline small text-secondary"> (SSD, CCAS, service médico-social...)</span>
+        <span class="ms-2 d-none d-md-inline small text-secondary"> (SSD, CCAS, service médico-social...)</span>
     </div>
     {% if referents|length > 0 %}
         <div class="table-responsive">
@@ -23,7 +23,7 @@
                             <td class="align-middle text-center" scope="row">
                                 <a href="{{ support is defined ? path('support_referent_edit', {'support_id': support.id, 'id': referent.id}) : 
                                     path('group_referent_edit', {'id': referent.id}) }}"
-                                    class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-toggle="tooltip" data-placement="bottom"
+                                    class="btn btn-primary btn-sm shadow my-1" data-bs-toggle="tooltip" data-bs-placement="bottom"
                                     title="Voir le service social accompagnateur"><span class="fas fa-eye"></span>
                                 </a>
                             </td>
@@ -31,8 +31,8 @@
                             <td class="align-middle">{{ referent.typeToString }}</td>
                             <td class="align-middle">{{ referent.socialWorker }}<br/>{{ referent.socialWorker2 }}</td>
                             <td class="align-middle">
-                                <a href="mailto:{{ referent.email }}" class="text-{{ theme_color }}">{{ referent.email }}</a><br/>
-                                <a href="mailto:{{ referent.email2 }}" class="text-{{ theme_color }}">{{ referent.email2 }}</a>
+                                <a href="mailto:{{ referent.email }}" class="link-primary">{{ referent.email }}</a><br/>
+                                <a href="mailto:{{ referent.email2 }}" class="link-primary">{{ referent.email2 }}</a>
                             </td>
                             <td class="align-middle">{{ referent.phone1 }}<br/>{{ referent.phone2 }}</td>
                             <td class="align-middle">{{ referent.city }}</td>
@@ -43,6 +43,6 @@
         </div>
     {% endif %}
     <a href="{{ support is defined ? path('support_referent_new', {'support_id':support.id}) : path('group_referent_new', 
-        {'group_id':people_group.id}) }}" class="m-2 btn btn-{{ theme_color }} btn-sm" title="Ajouter un service ou référent" 
-        data-toggle="tooltip" data-placement="bottom"><span class="fas fa-plus-square mr-2"></span>Ajouter</a>
+        {'group_id':people_group.id}) }}" class="m-2 btn btn-primary btn-sm" title="Ajouter un service ou référent" 
+        data-bs-toggle="tooltip" data-bs-placement="bottom"><span class="fas fa-plus-square me-2"></span>Ajouter</a>
 </section>

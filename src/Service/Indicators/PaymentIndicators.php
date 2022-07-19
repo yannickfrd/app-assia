@@ -40,7 +40,7 @@ class PaymentIndicators
         $months[] = $start;
         $month = clone $start;
         $end = new \DateTime($end->format('Y-m').'-01');
-        $nbMonths = ($start->diff($end)->y * 12) + $start->diff($end)->m + round(($start->diff($end)->d / (365 / 12)));
+        $nbMonths = ($start->diff($end)->y * 12) + $start->diff($end)->m + round($start->diff($end)->d / (365 / 12));
 
         for ($i = 0; $i < $nbMonths; ++$i) {
             $month = (new \DateTime($month->format('Y-m-d')))->modify('+1 month');

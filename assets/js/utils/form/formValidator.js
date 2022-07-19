@@ -1,4 +1,4 @@
-import MessageFlash from '../messageFlash'
+import AlertMessage from '../AlertMessage'
 
 /**
  * Contrôle de la validité des champs d'un formualaire
@@ -34,7 +34,7 @@ export default class FormValidator {
         const nbErrors = this.getNbErrors()
         if (nbErrors > 0) {
             this.scrollToFirstInvalidElt()
-            new MessageFlash('danger', 'Veuillez corriger les erreurs indiquées avant d\'enregistrer.')
+            new AlertMessage('danger', 'Veuillez corriger les erreurs indiquées avant d\'enregistrer.')
         }
         return nbErrors
     }
@@ -43,6 +43,7 @@ export default class FormValidator {
      * Réinitialisation du formulaire.
      */
     reinit() {
+        this.containerElt.classList.remove('was-validated')
         this.containerElt.querySelectorAll('input, select, textarea').forEach(elt => {
             this.removeInvalidFeedbackElt(this.getlabel(elt))
             elt.classList.remove('is-valid', 'is-invalid')
@@ -171,10 +172,9 @@ export default class FormValidator {
      */
     createInvalidFeedbackElt(msg) {
         const elt = document.createElement('div')
-        elt.className = 'invalid-feedback d-block js-invalid'
-        elt.innerHTML = `
-                <span class='form-error-icon badge badge-danger text-uppercase'>Erreur</span> 
-                <span class='form-error-message'>${msg}</span>`
+        elt.className = 'invalid-feedback d-block'
+        elt.dataset.invalid = 'true'
+        elt.textContent = msg
 
         return elt
     }
@@ -196,7 +196,7 @@ export default class FormValidator {
      * @param {HTMLElement} labelElt 
      */
     removeInvalidFeedbackElt(labelElt) {
-        const invalidFeedbackElt = labelElt.querySelector('div.js-invalid')
+        const invalidFeedbackElt = labelElt.querySelector('div[data-invalid]')
         if (invalidFeedbackElt) {
             invalidFeedbackElt.remove()
         }
@@ -207,7 +207,7 @@ export default class FormValidator {
      * @return {Number}
      */
     getNbErrors() {
-        const invalidFields = this.containerElt.querySelectorAll('.js-invalid')
+        const invalidFields = this.containerElt.querySelectorAll('div[data-invalid]')
         const nbErrors = invalidFields.length
 
         if (nbErrors > 0) {

@@ -11,7 +11,7 @@ export default class NewForm {
     constructor(btnId, containerId, modalId) {
         this.loader = new Loader()
         this.ajax = new Ajax(this.loader)
-        this.modalElt = new Modal(document.getElementById(modalId))
+        this.modal = new Modal(document.getElementById(modalId))
         this.btnElt = document.getElementById(btnId)
         this.containerElt = document.getElementById(containerId)
         this.isLoaded = false
@@ -56,7 +56,7 @@ export default class NewForm {
      * Affiche le formulaire.
      */
     showForm() {
-        this.modalElt.show()
+        this.modal.show()
         this.loader.off()
         this.isLoaded = true
         new ServiceSwitcher()

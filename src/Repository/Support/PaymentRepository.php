@@ -23,8 +23,8 @@ use Symfony\Component\Security\Core\Security;
  */
 class PaymentRepository extends ServiceEntityRepository
 {
-    use QueryTrait;
     use DoctrineTrait;
+    use QueryTrait;
 
     /** @var User */
     private $user;
@@ -310,6 +310,27 @@ class PaymentRepository extends ServiceEntityRepository
             ->orderBy('p.startDate', 'DESC')
             ->getQuery()
 
+            ->getResult()
+        ;
+    }
+
+    /**
+     * Return all payments of group support.
+     */
+    public function findAllPaymentsOfSupport(int $supportGroupId, bool $soft = false): ?array
+    {
+        $query = $this->createQueryBuilder('p')->select('p')
+            ->andWhere('p.supportGroup = :supportGroup')
+            ->setParameter('supportGroup', $supportGroupId)
+        ;
+
+        if ($soft) {
+            $query->andWhere('p.deletedAt IS NULL');
+        }
+
+        return $query
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult()
         ;
     }

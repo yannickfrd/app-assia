@@ -7,7 +7,6 @@
 {% block body %}
     <section class="mt-0">
         <div class="container-fluid pt-4">
-            {% include 'model/_flash_message.html.twig' %}
             <h1 class="h2 mb-3">Administration des utilisateurs</h1>
         </div>
 
@@ -16,14 +15,14 @@
         <div class="container-fluid mt-4">
             <div class="row">
                 <div class="col-md-12">
-                    <p><a href="{{ path('security_registration') }}" class="btn btn-{{ theme_color }} btn-sm shadow">
-                         <span class="fas fa-plus-square mr-2"></span>Créer un nouvel utilisateur</a>
+                    <p><a href="{{ path('security_registration') }}" class="btn btn-primary btn-sm shadow">
+                         <span class="fas fa-plus-square me-2"></span>Créer un nouvel utilisateur</a>
                     </p>
                 </div>
             </div>
             <div class="row align-items-baseline">
                 <div class="col-md-4 count align-middle">
-                    <p class="align-middle">Total : {{ users.getTotalItemCount|number }} utilisateurs.</p>
+                    <p class="align-middle">Résultat : {{ users.getTotalItemCount|number }}</p>
                 </div>
                 <div class="col-md-8">
                     <div class="navigation">{{ knp_pagination_render(users) }}</div>
@@ -68,11 +67,11 @@
                             <tr class="{% if user.disabled %}text-secondary{% endif %}">
                                 <td class="align-middle" scope="row">
                                     <a href="{{ path('security_user', {'id': user.id}) }}"
-                                        class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" data-placement="bottom"
+                                        class="btn btn-primary btn-sm shadow" data-bs-toggle="tooltip" data-bs-placement="bottom"
                                         title="Voir la fiche"><span class="fas fa-eye"></span>
                                     </a>
                                 </td>
-                                <td class="align-middle {% if user.disabled %}delete{% endif %}">{{ user.lastname }}{% if user.disabled %} (désactivé){% endif %}</td>
+                                <td class="align-middle {% if user.disabled %}text-del{% endif %}">{{ user.lastname }}{% if user.disabled %} (désactivé){% endif %}</td>
                                 <td class="align-middle">{{ user.firstname }}</td>
                                 <td class="align-middle d-none d-md-table-cell">{{ user.statusToString }}</td>
                                 <td class="align-middle d-none d-md-table-cell">{{ user.rolesToString|last }}</td>
@@ -81,7 +80,7 @@
                                 <td class="align-middle d-none d-md-table-cell">
                                     {% for service in user.services|sort ((a, b) => a.name <=> b.name) %}
                                         <a href="{{ path('service_edit', {'id': service.id}) }}" 
-                                            class="text-{{ theme_color }}">{{ service.name }}</a>{% if not loop.last %}, {% endif %}
+                                            class="link-primary">{{ service.name }}</a>{% if not loop.last %}, {% endif %}
                                     {% endfor %}
                                 </td>
                                 {% set poles = [] %}
@@ -90,7 +89,7 @@
                                         {% if service.pole.id not in poles %}
                                             {% set poles = poles|merge([service.pole.id]) %}
                                             <a href="{{ path('pole_edit', {'id': service.pole.id}) }}" 
-                                                class="text-{{ theme_color }}">{{ service.pole.name }}</a><br/>
+                                                class="link-primary">{{ service.pole.name }}</a><br/>
                                         {% endif %}
                                     {% endfor %}
                                 </td>
@@ -110,8 +109,8 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <p><a href="{{ path('security_registration') }}" class="btn btn-{{ theme_color }} btn-sm shadow">
-                         <span class="fas fa-plus-square mr-2"></span>Créer un nouvel utilisateur</a>
+                    <p><a href="{{ path('security_registration') }}" class="btn btn-primary btn-sm shadow">
+                         <span class="fas fa-plus-square me-2"></span>Créer un nouvel utilisateur</a>
                     </p>
                 </div>
             </div>

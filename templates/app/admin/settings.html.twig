@@ -13,12 +13,10 @@
             <h1 class="h2 mb-3">{{ title }}</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a class="text-{{ theme_color }}" href="{{ path('admin') }}">Administration</a></li>
+                    <li class="breadcrumb-item"><a class="link-primary" href="{{ path('admin') }}">Administration</a></li>
                     <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
                 </ol>
             </nav>
-
-            {% include 'model/_flash_message.html.twig' %}
 
             <hr>
 
@@ -29,7 +27,7 @@
             <hr>
 
             <div class="row">
-                <div class="col-md-12"><h2 class="h4 mb-3">Archivage et purge de données</h2></div>
+                <div class="col-md-12"><h2 class="h4 mb-3">Archivage et suppression de données</h2></div>
             </div>
 
             <div class="row mb-3">
@@ -50,12 +48,12 @@
 
             <div class="mb-3">
                 <div class="row">
-                    <div class="col-md-6 custom-control custom-checkbox custom-checkbox-{{ theme_color }}">
+                    <div class="col-md-6 form-check">
                         {{ form_row(form.weeklyAlert) }}
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6 custom-control custom-checkbox custom-checkbox-{{ theme_color }}">
+                    <div class="col-md-6 form-check">
                         {{ form_row(form.dailyAlert) }}
                     </div>
                 </div>
@@ -76,8 +74,8 @@
 
                 <div class="row mb-3">
                     <div class="col-md-12">
-                        <div class="float-right">
-                            <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">Enregistrer</button>
+                        <div class="float-end">
+                            <button type="submit" id="send" name="send" class="btn btn-primary shadow">Enregistrer</button>
                         </div>
                     </div>
                 </div>

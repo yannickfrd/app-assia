@@ -1,7 +1,5 @@
 {% extends 'model/_search.html.twig' %}
 
-{% form_theme form 'bootstrap_4_layout.html.twig' %}
-
 {% block search_form %}
     {% if is_granted('ROLE_SUPER_ADMIN') %}
         <div class="col-auto my-1 px-1">{{ form_widget(form.service.poles) }}</div>
@@ -10,10 +8,10 @@
         <div class="col-auto my-1 px-1">{{ form_widget(form.service.devices) }}</div>
     {% endif %}
     <div class="col-auto my-1 px-1">{{ form_widget(form.status) }}</div>
-    <div class="col-auto my-1 px-1 d-inline-flex" data-toggle="tooltip" data-placement="bottom"
+    <div class="col-auto my-1 px-1 d-inline-flex" data-bs-toggle="tooltip" data-bs-placement="bottom"
         title="Date de début"><span class="my-2 px-1">Entre</span>{{ form_widget(form.date.start) }}
     </div>
-    <div class="col-auto my-1 px-1 d-inline-flex" data-toggle="tooltip" data-placement="bottom"
-        title="Date de fin"><span class="my-2 pr-2">et</span>{{ form_widget(form.date.end) }}
+    <div class="col-auto my-1 px-1 d-inline-flex" data-bs-toggle="tooltip" data-bs-placement="bottom"
+        title="Date de fin"><span class="my-2 pe-2">et</span>{{ form_widget(form.date.end) }}
     </div>
 {% endblock %}

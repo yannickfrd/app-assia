@@ -18,6 +18,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -37,9 +38,10 @@ class PlaceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-        ->add('name', null, [
+        ->add('name', SearchType::class, [
             'attr' => ['placeholder' => 'place.name.placeholder'],
             'help' => 'place.name.help',
+            'required' => false,
         ])
         ->add('service', EntityType::class, [
             'class' => Service::class,
@@ -84,7 +86,6 @@ class PlaceType extends AbstractType
         ->add('lessor')
         ->add('rentAmt', MoneyType::class, [
             'attr' => [
-                'class' => 'text-right',
                 'data-amount' => 'true',
             ],
             'required' => false,

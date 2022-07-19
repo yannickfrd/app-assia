@@ -1,5 +1,5 @@
 import FileChecker from './fileChecker'
-import MessageFlash from '../messageFlash'
+import AlertMessage from '../AlertMessage'
 import { Tooltip } from 'bootstrap'
 
 /**
@@ -94,7 +94,7 @@ export default class Dropzone {
      */
     checkFile(file) {
         if (this.filesInCollection(file)) {
-            new MessageFlash('danger', 'Le fichier "' + file.name + '" a déjà été ajouté.')
+            new AlertMessage('danger', 'Le fichier "' + file.name + '" a déjà été ajouté.')
             return false
         }
 
@@ -138,7 +138,7 @@ export default class Dropzone {
         <div class='row p-2' style='min-height: 200px;'>
             <div class="col-md-12">
                 <p class="mb-2"></p>
-                <ul class="list-group mb-0 pl-0"></ul>
+                <ul class="list-group mb-0 ps-0"></ul>
             </div>
         </div>`
     }
@@ -157,7 +157,7 @@ export default class Dropzone {
         const liElt = document.createElement('li')
         liElt.className = 'list-group-item d-flex justify-content-between align-items-center list-group-item-light fade-in'
         liElt.dataset.fileName = filename.toLowerCase()
-        liElt.innerHTML = `${filename}<span class="fas fa-sync-alt ml-2 text-secondary"></span>`
+        liElt.innerHTML = `${filename}<span class="fas fa-sync-alt ms-2 text-secondary"></span>`
         return liElt
     }
 
@@ -177,12 +177,12 @@ export default class Dropzone {
         this.filesCollection.forEach(fileItem => {
             if (fileItem.filename === fullFilename) {
                 const liElt = this.dropzoneElt.querySelector(`[data-file-name="${fullFilename}"]`)
-                const classname = (status === 'success' ? 'far fa-check-circle' : 'fas fa-exclamation-triangle') + ' ml-2'
+                const classname = (status === 'success' ? 'far fa-check-circle' : 'fas fa-exclamation-triangle') + ' ms-2'
 
                 if (liElt) {
                     liElt.classList.replace('list-group-item-light', 'list-group-item-' + status)
                     liElt.title = this.getMessage(file, status)
-                    liElt.dataset.placement = 'bottom'
+                    liElt.dataset.bsPlacement = 'bottom'
 
                     const spanElt = liElt.querySelector('span.fas.fa-sync-alt')
                     if (spanElt) {
@@ -218,7 +218,7 @@ export default class Dropzone {
         }
 
         if (status !== 'success') {
-            new MessageFlash(status, message)
+            new AlertMessage(status, message)
         }
 
         return message;

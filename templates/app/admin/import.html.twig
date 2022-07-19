@@ -7,14 +7,13 @@
         <div class="row mb-3">
             <div class="col-md-12">
                 <div class="d-flex align-items-baseline">
-                    <h1 class="h2 my-3 mr-3">Import CSV</h1>
-                    {% include 'model/_flash_message.html.twig' %}
-                    <div class="form-inline ml-4">
+                    <h1 class="h2 my-3 me-3">Import CSV</h1>
+                    <div class="form-inline ms-4">
                         <div class="col-auto my-1 px-1">
                             {{ form_start(form) }}
                             {{ form_widget(form.services) }}
                             {{ form_row(form._token) }}
-                            <button type="submit" id="send" name="send"  class="btn btn-{{ theme_color }} ml-3">Importer</button>
+                            <button type="submit" id="send" name="send"  class="btn btn-primary ms-3">Importer</button>
                             {{ form_end(form) }}
                         </div>
                     </div>
@@ -30,7 +29,7 @@
                                 {% for data in datas %}
                                     {% if loop.first %}
                                         {% for col in data %}
-                                            <th scope="col" class="align-middle th-w-100 bg-dark text-white">{{ col }}</th>
+                                            <th scope="col" class="align-middle th-w-100 bg-dark">{{ col }}</th>
                                         {% endfor %}
                                     {% endif %}
                                 {% endfor %}

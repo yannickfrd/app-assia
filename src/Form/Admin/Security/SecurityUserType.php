@@ -52,7 +52,7 @@ class SecurityUserType extends AbstractType
             ])
             ->add('phone1', null, [
                 'attr' => [
-                    'class' => 'js-phone',
+                    'data-phone' => 'true',
                     'placeholder' => 'Phone',
                 ],
             ])
@@ -89,7 +89,6 @@ class SecurityUserType extends AbstractType
                     'delete_empty' => true,
                     'prototype' => true,
                     'by_reference' => false,
-                    'label_attr' => ['class' => 'sr-only'],
                     'entry_options' => [
                         'attr' => ['class' => 'form-inline'],
                     ],

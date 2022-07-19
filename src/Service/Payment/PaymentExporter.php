@@ -56,7 +56,7 @@ class PaymentExporter
 
         $this->paymentNotification->sendPayment(
             $emails,
-             $organizationName.' | '.$title.' '.$date.' | '.join(' - ', $fullnames),
+            $organizationName.' | '.$title.' '.$date.' | '.join(' - ', $fullnames),
             [
                 'payment' => $payment,
                 'support' => $supportGroup,

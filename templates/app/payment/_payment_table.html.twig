@@ -7,11 +7,11 @@
     >
         <thead>
             {% if support_is_defined %}
-                <tr class="font-weight-bold">
-                    <td colspan="3" class="align-middle text-right">Total</td>
-                    <td class="align-middle text-right" data-payment="sumToPayAmt"></td>
-                    <td class="align-middle text-right" data-payment="sumPaidAmt"></td>
-                    <td class="align-middle text-right" data-payment="sumStillToPayAmt"></td>
+                <tr class="fw-bold">
+                    <td colspan="3" class="align-middle text-end">Total</td>
+                    <td class="align-middle text-end" data-payment="sumToPayAmt"></td>
+                    <td class="align-middle text-end" data-payment="sumPaidAmt"></td>
+                    <td class="align-middle text-end" data-payment="sumStillToPayAmt"></td>
                     <td colspan="7" class="align-middle text-center"></td>
                 </tr>
             {% endif %}
@@ -85,16 +85,17 @@
                 <tr id="payment-{{payment.id}}">
                     <td class="align-middle text-center">
                         {% if not support_is_defined %}
-                            <a class="btn btn-{{ is_deleted ? 'secondary disabled' : theme_color }} btn-sm shadow"
+                            <a class="btn btn-{{ is_deleted ? 'secondary disabled' : 'primary' }} btn-sm shadow"
                                 href="{{ path('support_payments_index', {'id': payment.supportGroup.id, 'paymentId': payment.id}) }}"
-                                title="Voir {{ payment.typeToString }}" data-toggle="tooltip" data-placement="bottom">
+                                title="Voir {{ payment.typeToString }}" data-bs-toggle="tooltip" data-bs-placement="bottom">
                                 <i class="fas fa-eye"></i>
                             </a>
                         {% else %}
-                            <button class="btn btn-{{ is_deleted ? 'secondary disabled' : theme_color }} btn-sm shadow"
+                            <button class="btn btn-{{ is_deleted ? 'secondary disabled' : 'primary' }} btn-sm shadow"
                                 data-action="show" data-id="{{ payment.id }}" 
                                 data-path="{{ path('payment_show', {'id': payment.id}) }}"
-                                title="Voir l'enregistrement" data-placement="bottom" ><i class="fas fa-eye"></i>
+                                title="Voir l'enregistrement" data-bs-toggle="tooltip" data-bs-placement="bottom" >
+                                <i class="fas fa-eye"></i>
                             </button>
                         {% endif %}
                     </td>
@@ -114,13 +115,13 @@
                             <span class="small secondary">({{ nb_days }}&nbsp;jour{{ nb_days > 1 ? 's'}})</span>
                         {% endif %}
                     </td>
-                    <td class="align-middle text-right" data-payment="toPayAmt">
+                    <td class="align-middle text-end" data-payment="toPayAmt">
                         {{ payment.toPayAmt is not null ? payment.toPayAmt|amount }}
                     </td>
-                    <td class="align-middle text-right" data-payment="paidAmt">
+                    <td class="align-middle text-end" data-payment="paidAmt">
                         {{ payment.paidAmt  is not null ? payment.paidAmt|amount }}
                     </td>
-                    <td class="align-middle text-right" data-payment="stillToPayAmt">
+                    <td class="align-middle text-end" data-payment="stillToPayAmt">
                         {{ payment.stillToPayAmt ? payment.stillToPayAmt|amount }}
                     </td>
                     <td class="align-middle text-center" data-payment="paymentDate">
@@ -150,14 +151,14 @@
                             <a href="{{ path('payment_export_pdf', {'id': payment.id}) }}" data-action="generate-pdf" 
                                 title="{{ payment.pdfGenerate ? 'PDF généré le ' 
                                     ~ payment.pdfGenerateAt|date('d/m/Y à H:i') : 'Générer un PDF' }}"
-                                data-toggle="tooltip" data-placement="bottom">
+                                data-bs-toggle="tooltip" data-bs-placement="bottom">
                                 <i class="fas fa-file-pdf text-{{ payment.pdfGenerate ? 'success' : 'secondary' }} fa-lg"></i>
                             </a>
                         </td>
                         <td class="align-middle text-center" data-payment="mailSent">
                             <a href="{{ path('payment_send_pdf', {'id': payment.id}) }}" data-action="send-mail" 
                                 title="{{ payment.mailSent ? 'Mail envoyé le ' ~ payment.mailSentAt|date('d/m/Y à H:i') }}"
-                                data-toggle="tooltip" data-placement="bottom">
+                                data-bs-toggle="tooltip" data-bs-placement="bottom">
                                 <i class="fas fa-envelope text-{{ payment.mailSent ? 'success' : 'secondary' }} fa-lg"></i>
                             </a>
                         </td>
@@ -168,7 +169,7 @@
                             {% else %}
                                 <button class="btn btn-danger btn-sm shadow my-1" data-action="delete"
                                     data-path="{{ path('payment_delete', {'id':payment.id}) }}"
-                                    title="Supprimer" data-toggle="modal" data-target="#modal-block">
+                                    title="Supprimer"  data-bs-toggle="tooltip" data-bs-placement="bottom">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
                             {% endif %}
@@ -181,11 +182,11 @@
         </tbody>
         {% if not support_is_defined %}
             <tfoot>
-                <tr class="font-weight-bold">
-                    <td colspan="4" class="align-middle text-right">Sous-total (page)</td>
-                    <td class="align-middle text-right">{{ to_pay_amt|amount }}</td>
-                    <td class="align-middle text-right">{{ paid_amt|amount }}</td>
-                    <td class="align-middle text-right">{{ (to_pay_amt - paid_amt)|amount }}</td>
+                <tr class="fw-bold">
+                    <td colspan="4" class="align-middle text-end">Sous-total (page)</td>
+                    <td class="align-middle text-end">{{ to_pay_amt|amount }}</td>
+                    <td class="align-middle text-end">{{ paid_amt|amount }}</td>
+                    <td class="align-middle text-end">{{ (to_pay_amt - paid_amt)|amount }}</td>
                     <td colspan="6" class="align-middle text-center"></td>
                 </tr>
             </tfoot>

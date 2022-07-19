@@ -27,7 +27,7 @@
                                 'Nb de paiements créés',
                             ] %}
                             {% for item in items %}
-                                <th class="align-middle text-right th-w-100 w-min-80">{{ item }}</th>
+                                <th class="align-middle text-end th-w-100 w-min-80">{{ item }}</th>
                             {% endfor %}
                             <th class="align-middle th-w-20"></th>
                         </tr>
@@ -47,29 +47,29 @@
                                 {% set sum_documents = sum_documents + service['nbDocuments'] %}
                                 {% set sum_paiments = sum_paiments + service['nbPayments'] %}
                                 {% set nb_collapsed_tr = service.subServices|length %}
-                                <tr class="{{ nb_collapsed_tr ? 'cursor-pointer' }}" data-toggle="collapse" data-target=".multi-collapse-service-{{ service_id }}" 
+                                <tr class="{{ nb_collapsed_tr ? 'cursor-pointer' }}" data-bs-toggle="collapse" data-bs-target=".multi-collapse-service-{{ service_id }}" 
                                     aria-expanded="false" aria-controls="multi-collapse-service-{{ service_id }}">
-                                    <td scope="row" class="align-middle"><span class="font-weight-bold">{{ service['name'] }}</span>
-                                        {% if nb_collapsed_tr %}<span class="badge badge-pill badge-secondary">{{ nb_collapsed_tr }}</span>{% endif %}
+                                    <td scope="row" class="align-middle"><span class="fw-bold">{{ service['name'] }}</span>
+                                        {% if nb_collapsed_tr %}<span class="badge rounded-pill bg-secondary">{{ nb_collapsed_tr }}</span>{% endif %}
                                     </td>
-                                    <td class="align-middle text-right">{{ service['nbSocialWorkers']|number }}</td>
-                                    <td class="align-middle text-right">{{ nb_supports|number }}</td>
-                                    <td class="align-middle text-right">{{ service['nbNotes']|number }}</td>
-                                    <td class="align-middle text-right">{{ service['nbRdvs']|number }}</td>
-                                    <td class="align-middle text-right">{{ service['nbDocuments']|number }}</td>
-                                    <td class="align-middle text-right">{{ service['nbPayments']|number }}</td>
+                                    <td class="align-middle text-end">{{ service['nbSocialWorkers']|number }}</td>
+                                    <td class="align-middle text-end">{{ nb_supports|number }}</td>
+                                    <td class="align-middle text-end">{{ service['nbNotes']|number }}</td>
+                                    <td class="align-middle text-end">{{ service['nbRdvs']|number }}</td>
+                                    <td class="align-middle text-end">{{ service['nbDocuments']|number }}</td>
+                                    <td class="align-middle text-end">{{ service['nbPayments']|number }}</td>
                                     <td></td>
                                 </tr>
                                 {% for sub_service_id, sub_service in service.subServices %}
                                     {% set nb_supports = sub_service['nbSupports'] %}
                                     <tr class="collapse multi-collapse-service-{{ service_id }}" id="multi-collapse-service-{{ service_id }}">
                                         <td scope="row" class="align-middle">{{ service['name'] }}<span class="fa fa-chevron-right mx-1"></span>{{ sub_service['name'] }}</td>
-                                        <td class="align-middle text-right">-</td>
-                                        <td class="align-middle text-right">{{ nb_supports|number }}</td>
-                                        <td class="align-middle text-right">{{ sub_service['nbNotes']|number }}</td>
-                                        <td class="align-middle text-right">{{ sub_service['nbRdvs']|number }}</td>
-                                        <td class="align-middle text-right">{{ sub_service['nbDocuments']|number }}</td>
-                                        <td class="align-middle text-right">{{ sub_service['nbPayments']|number }}</td>
+                                        <td class="align-middle text-end">-</td>
+                                        <td class="align-middle text-end">{{ nb_supports|number }}</td>
+                                        <td class="align-middle text-end">{{ sub_service['nbNotes']|number }}</td>
+                                        <td class="align-middle text-end">{{ sub_service['nbRdvs']|number }}</td>
+                                        <td class="align-middle text-end">{{ sub_service['nbDocuments']|number }}</td>
+                                        <td class="align-middle text-end">{{ sub_service['nbPayments']|number }}</td>
                                         <td></td>
                                     </tr>
                                 {% endfor %}
@@ -77,14 +77,14 @@
                         {% endfor %}
                     </tbody>
                     <tfooter>
-                        <tr class="font-weight-bold">
+                        <tr class="fw-bold">
                             <td class="align-middle text-center">Total</td>
-                            <td class="align-middle text-right"></td>
-                            <td class="align-middle text-right">{{ sum_active_supports|number }}</td>
-                            <td class="align-middle text-right">{{ sum_notes|number }}</td>
-                            <td class="align-middle text-right">{{ sum_rdvs|number }}</td>
-                            <td class="align-middle text-right">{{ sum_documents|number }}</td>
-                            <td class="align-middle text-right">{{ sum_paiments|number }}</td>
+                            <td class="align-middle text-end"></td>
+                            <td class="align-middle text-end">{{ sum_active_supports|number }}</td>
+                            <td class="align-middle text-end">{{ sum_notes|number }}</td>
+                            <td class="align-middle text-end">{{ sum_rdvs|number }}</td>
+                            <td class="align-middle text-end">{{ sum_documents|number }}</td>
+                            <td class="align-middle text-end">{{ sum_paiments|number }}</td>
                             <td></td>
                         </tr>
                     </tfooter>

@@ -16,10 +16,9 @@ class EvaluationEndToEndTest extends PantherTestCase
     public const BUTTON_SAVE = 'button[name="send"]';
     public const BUTTON_DELETE = 'a#modal-btn-delete';
 
-    public const MSG_FLASH = '#js-msg-flash';
-    public const BUTTON_CLOSE_MSG = '#btn-close-msg';
-    public const ALERT_SUCCESS = '.alert.alert-success';
-    public const ALERT_WARNING = '.alert.alert-warning';
+    public const ALERT_SUCCESS = '.toast.show.alert-success';
+    public const ALERT_WARNING = '.toast.show.alert-warning';
+    public const BUTTON_CLOSE_MSG = '.toast.show .btn-close';
 
     protected Client $client;
 
@@ -55,9 +54,9 @@ class EvaluationEndToEndTest extends PantherTestCase
     {
         $this->outputMsg('Edit the evaluation');
 
-        $this->clickElement('#card-evalHousing');
+        $this->clickElement('#accordion_item_evalHousing .accordion-button');
         sleep(1);
-        $this->clickElement('#card-evalHousing button[type="submit"]');
+        $this->clickElement('#accordion_item_evalHousing button[type="submit"]');
 
         $this->client->waitFor(self::ALERT_SUCCESS);
         $this->assertSelectorExists(self::ALERT_SUCCESS);

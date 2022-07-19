@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class OutlookCalendarController extends AbstractController
 {
@@ -56,41 +57,41 @@ final class OutlookCalendarController extends AbstractController
     /**
      * @Route("/outlook-calendar/event/update/{rdvId}", name="update_event_outlook_calendar", methods="PUT")
      */
-    public function updateEventOutlookCalendar(int $rdvId): JsonResponse
+    public function updateEventOutlookCalendar(TranslatorInterface $translator, int $rdvId): JsonResponse
     {
         $updated = $this->outlookCalendar->update($rdvId);
 
         if (!$updated) {
             return $this->json([
                 'alert' => 'danger',
-                'msg' => 'Le RDV n\'a pas été mise à jour sur Outlook Agenda.',
+                'msg' => $translator->trans('outlook_calendar.error_occurred', [], 'app'),
             ]);
         }
 
         return $this->json([
             'action' => 'update',
             'alert' => 'success',
-            'msg' => 'Le RDV a bien été mise à jour sur Outlook Agenda.',
+            'msg' => $translator->trans('outlook_calendar.updated_successfully', [], 'app'),
         ]);
     }
 
     /**
      * @Route("/outlook-calendar/event/delete/{eventId}", name="delete_event_outlook_calendar", methods="DELETE")
      */
-    public function deleteEventOutlookCalendar(string $eventId): JsonResponse
+    public function deleteEventOutlookCalendar(TranslatorInterface $translator, string $eventId): JsonResponse
     {
         $delete = $this->outlookCalendar->delete($eventId);
         if (!$delete) {
             return $this->json([
                 'alert' => 'danger',
-                'msg' => 'Une erreur s\'est produite avec Outlook Agenda.',
+                'msg' => $translator->trans('outlook_calendar.error_occurred', [], 'app'),
             ]);
         }
 
         return $this->json([
             'action' => 'delete',
             'alert' => 'warning',
-            'msg' => 'Le RDV a bien été supprimé sur Outlook Agenda.',
+            'msg' => $translator->trans('outlook_calendar.deleted_successfully', [], 'app'),
         ]);
     }
 }

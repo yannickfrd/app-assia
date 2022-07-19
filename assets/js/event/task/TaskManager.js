@@ -1,7 +1,7 @@
 import Loader from '../../utils/loader'
 import Ajax from '../../utils/ajax.js'
 import TaskForm from './TaskForm.js'
-import MessageFlash from '../../utils/messageFlash'
+import AlertMessage from '../../utils/AlertMessage'
 import {Modal} from 'bootstrap'
 
 export default class TaskManager {
@@ -22,7 +22,6 @@ export default class TaskManager {
 
         const divSupportElt = document.querySelector('div[data-support]')
         this.supportId = divSupportElt ? divSupportElt.dataset.support : null
-        this.themeColor = document.getElementById('header').dataset.color
         this.counterTasksElt = document.getElementById('count_tasks')
         this.btnConfirmDeleteElt = document.querySelector('button#modal-confirm')
 
@@ -99,7 +98,7 @@ export default class TaskManager {
      */
     responseAjax(response) {
         if (response.msg) {
-            this.messageFlash = new MessageFlash(response.alert, response.msg)
+            this.messageFlash = new AlertMessage(response.alert, response.msg)
         }
 
         if (response.action) {
@@ -142,20 +141,16 @@ export default class TaskManager {
 
         let htmlContent = `
             <td class="align-middle text-center">
-                <div class="custom-control custom-checkbox custom-checkbox-${this.themeColor} text-dark pl-0" 
-                    title="Cliquer pour changer le statut" data-toggle="tooltip" data-placement="bottom">
-                    <div class="form-check">
-                        <input type="checkbox" class="custom-control-input checkbox form-check-input"
-                            id="toggle_task_status_${task.id}" ${task.status ? ' checked' : ''} 
-                            data-action="toggle_task_status" data-url="/task/${task.id}/toggle-status">
-                        <label class="custom-control-label form-check-label ml-2 cursor-pointer"
-                            for="toggle_task_status_${task.id}"></label>
-                    </div>
+                <div class="form-check" 
+                    title="Cliquer pour changer le statut" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                    <input type="checkbox" class="form-check-input ms-0 cursor-pointer" id="toggle_task_status_${task.id}" ${task.status ? ' checked' : ''} 
+                        data-action="toggle_task_status" data-url="/task/${task.id}/toggle-status">
+                    <label class="form-check-label" for="toggle_task_status_${task.id}"></label>
                 </div>
             </td>
             <td class="align-middle text-center">
-                <button data-url="${this.getUrlTaskShow(task.id)}" class="btn btn-${this.themeColor} btn-sm"
-                    data-action="edit_task" title="Voir/Modifier la tâche" data-toggle="modal" data-placement="bottom">
+                <button data-url="${this.getUrlTaskShow(task.id)}" class="btn btn-primary btn-sm"
+                    data-action="edit_task" title="Voir/Modifier la tâche" data-bs-toggle="modal" data-bs-placement="bottom">
                     <span class="fas fa-eye"></span>
                 </button>
             </td>
@@ -187,7 +182,7 @@ export default class TaskManager {
         htmlContent = htmlContent + `
             <td class="align-middle text-center">
                 <button class="btn btn-danger btn-sm shadow my-1" data-action="delete_task"
-                    data-url="/task/${task.id}/delete" title="Supprimer la tâche" data-placement="bottom">
+                    data-url="/task/${task.id}/delete" title="Supprimer la tâche" data-bs-placement="bottom">
                     <span class="fas fa-trash-alt"></span>
                 </button>
             </td>
@@ -249,7 +244,7 @@ export default class TaskManager {
     createTags(task) {
         let tags = ''
         task.tags.forEach(tag => {
-            tags += `<span class="badge bg-${tag.color} text-light mr-1">${tag.name}</span>`
+            tags += `<span class="badge bg-${tag.color} me-1">${tag.name}</span>`
         })
 
         return tags
@@ -334,9 +329,9 @@ export default class TaskManager {
         const spanElt = endTdElt.querySelector('span.fas.fa-exclamation')
 
         if (task.status === true) {
-            rowElt.classList.add('text-secondary', 'delete')
+            rowElt.classList.add('text-secondary', 'text-del')
         } else {
-            rowElt.classList.remove('text-secondary', 'delete')
+            rowElt.classList.remove('text-secondary', 'text-del')
         }
 
         if (spanElt && task.status === false) {

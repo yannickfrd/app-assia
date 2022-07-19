@@ -35,6 +35,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class to import evaluation from API SI-SIAO.
@@ -47,6 +48,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
     protected $user;
     protected $requestStack;
     protected $flashBag;
+    protected $translator;
     protected $exceptionNotification;
 
     /** @var int ID fiche groupe SI-SIAO */
@@ -72,9 +74,10 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         EvaluationCompletionChecker $evaluationCompletionChecker,
         Security $security,
         ExceptionNotification $exceptionNotification,
+        TranslatorInterface $translator,
         string $url
     ) {
-        parent::__construct($client, $requestStack, $url);
+        parent::__construct($client, $requestStack, $url, $translator);
 
         $this->em = $em;
         $this->evaluationDuplicator = $evaluationDuplicator;
@@ -86,6 +89,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         /** @var Session */
         $session = $requestStack->getSession();
         $this->flashBag = $session->getFlashBag();
+        $this->translator = $translator;
     }
 
     /**
@@ -98,8 +102,9 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         } catch (\Exception $e) {
             $this->exceptionNotification->sendException($e);
 
-            $this->flashBag->add('danger', $this->getErrorMessage($e).
-                "L'évaluation sociale SI-SIAO n'a pas pu être importée.");
+            $this->flashBag->add('danger', $this->translator->trans('sisiao.evaluation.import_failed', [
+                'error_message' => $this->getErrorMessage($e),
+            ], 'app'));
 
             return null;
         }
@@ -108,8 +113,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
     protected function tryImportEvaluation(SupportGroup $supportGroup): ?EvaluationGroup
     {
         if (false === $this->isConnected()) {
-            $this->flashBag->add('danger', "L'évaluation sociale SI-SIAO n'a pas pu être importée, 
-                car vous n'êtes pas ou plus connecté·e au SI-SIAO.");
+            $this->flashBag->add('danger', 'sisiao.evaluation.import_failed_no_connected');
 
             return null;
         }
@@ -117,7 +121,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         $this->id = (int) $supportGroup->getPeopleGroup()->getSiSiaoId();
 
         if (!$this->id) {
-            $this->flashBag->add('warning', "Il n'y a pas d'ID fiche groupe SI-SIAO saisi pour ce groupe.");
+            $this->flashBag->add('warning', 'sisiao.no_group_id');
 
             return null;
         }
@@ -126,7 +130,9 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
         $result = $this->searchById($this->id);
 
         if (0 === $result->total) {
-            $this->flashBag->add('warning', "Il n'y a pas de dossier SI-SIAO correspondant avec la clé '{$this->id}'.");
+            $this->flashBag->add('warning', $this->translator->trans('sisiao.group_id_no_exist', [
+                'sisiao_id' => $this->id,
+            ], 'app'));
 
             return null;
         }
@@ -156,7 +162,10 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
 
         $this->em->flush();
 
-        $this->flashBag->add('success', "L'évaluation sociale a été ".($this->evaluationGroup ? 'actualisée.' : 'importée.'));
+        $this->flashBag->add('success', $this->evaluationGroup
+            ? 'sisiao.evaluation.updated_successfully'
+            : 'sisiao.evaluation.imported_successfully'
+        );
 
         return $evaluationGroup;
     }
@@ -949,7 +958,9 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
                 NoteManager::deleteCacheItems($notes->first());
             }
         } catch (\Exception $e) {
-            $this->flashBag->add('danger', $this->getErrorMessage($e)."Les notes n'ont pas pu être importées.");
+            $this->flashBag->add('warning', $this->translator->trans('sisiao.note.import_failed', [
+                'error_message' => $this->getErrorMessage($e),
+            ], 'app'));
         }
     }
 }

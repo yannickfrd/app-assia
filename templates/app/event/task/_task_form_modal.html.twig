@@ -7,7 +7,7 @@ data-url-task-show="{{ path('task_show', {'id': '__id__'}) }}">
                     <h2 class="h3" data-url="{{ path('support_show', {'id': '__id__'} ) }}"></h2>
                 </div>
                 <div class="col-12 col-lg-6">
-                    <p class="mb-0 text-right small text-secondary" id="js_task_info"></p>
+                    <p class="mb-0 text-end small text-secondary" id="js_task_info"></p>
                 </div>
             </div>
             
@@ -21,53 +21,43 @@ data-url-task-show="{{ path('task_show', {'id': '__id__'}) }}">
                 </div>
                 <div class="form-inline justify-content-md-right mb-2">
                     <div class="d-none">{{ form_widget(form_task.end) }}</div>
-                    <div class="col-auto my-1 pr-1 pl-0 d-inline-flex">
+                    <div class="col-auto my-1 pe-1 ps-0 d-inline-flex">
                         <div class="input-group">
-                            <div class="input-group-prepend">
-                                <div class="input-group-text" title="Date d'échéance" 
-                                    data-toggle="tooltip" data-placement="bottom">
-                                    <i class="far fa-calendar text-black-50"></i>
-                                </div>
-                            </div>{{ form_widget(form_task._endDate) }}
+                            <span class="input-group-text" title="Date d'échéance" data-bs-toggle="tooltip" 
+                                data-bs-placement="bottom"><i class="far fa-calendar text-black-50"></i>
+                            </span>
+                            {{ form_widget(form_task._endDate) }}
                         </div>
                     </div>
-                    <div class="col-auto my-1 pr-1 pl-0 d-inline-flex">
+                    <div class="col-auto my-1 pe-1 ps-0 d-inline-flex">
                         <div class="input-group">
-                            <div class="input-group-prepend">
-                                <div class="input-group-text" title="Heure d'échéance" 
-                                    data-toggle="tooltip" data-placement="bottom">
-                                    <i class="far fa-clock text-black-50"></i>
-                                </div>
-                            </div>{{ form_widget(form_task._endTime) }}
+                            <span class="input-group-text" title="Heure d'échéance" data-bs-toggle="tooltip" 
+                                data-bs-placement="bottom"><i class="far fa-clock text-black-50"></i>
+                            </span>
+                            {{ form_widget(form_task._endTime) }}
                         </div>
                     </div>
-                    <div class="col-auto my-1 mr-3 pr-1 pl-0 d-inline-flex">
+                    <div class="col-auto my-1 me-3 pe-1 ps-0 d-inline-flex">
                         <div class="input-group">
-                            <div class="input-group-prepend">
-                                <div class="input-group-text" title="Priorité" 
-                                    data-toggle="tooltip" data-placement="bottom">
-                                    <i class="fas fa-layer-group text-black-50"></i>
-                                </div>
-                            </div>{{ form_widget(form_task.level) }}
+                            <span class="input-group-text" title="Priorité" data-bs-toggle="tooltip" 
+                                data-bs-placement="bottom"><i class="fas fa-layer-group text-black-50"></i>
+                            </span>
+                            {{ form_widget(form_task.level) }}
                         </div>
                     </div>
-                    <div class="col-auto  ml-2 my-1 pr-1 pl-0 d-inline-flex">
-                        <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} text-dark pl-0"
-                            title="Statut" data-toggle="tooltip" data-placement="bottom">
-                                {{ form_widget(form_task.status, { label: 'Réalisée', 
-                                    label_attr: {class: 'custom-control-label'},
-                                    attr: {class: 'custom-control-input checkbox'} }) }}
+                    <div class="col-auto ms-1 my-1 d-inline-flex">
+                        <div class="form-check ps-0"
+                            title="Statut" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                {{ form_widget(form_task.status, {label: 'Réalisée'}) }}
                         </div>
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-12">
                         <div class="input-group">
-                            <div class="input-group-prepend">
-                                <div class="input-group-text" title="Étiquette(s)" data-toggle="tooltip" data-placement="bottom">
-                                    <i class="fas fa-tag text-black-50"></i>
-                                </div>
-                            </div>
+                            <span class="input-group-text" title="Étiquette(s)" data-bs-toggle="tooltip" 
+                                data-bs-placement="bottom"><i class="fas fa-tag text-black-50"></i>
+                            </span>
                             {{ form_widget(form_task.tags) }}
                         </div>
                     </div>
@@ -95,16 +85,15 @@ data-url-task-show="{{ path('task_show', {'id': '__id__'}) }}">
 
                 {% set alert_widget %}
                     <div class="form-inline mb-1">
-                        <div class="d-inline-flex mr-2 mb-2">
+                        <div class="d-inline-flex me-2 mb-2">
                             <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text" title="Alerte" data-toggle="tooltip" data-placement="bottom">
-                                        <i class="fas fa-bell text-black-50"></i>
-                                    </div>
-                                </div>{{ form_widget(form_task.alerts.vars.prototype.date) }}
+                                <span class="input-group-text" title="Alerte" data-bs-toggle="tooltip" 
+                                    data-bs-placement="bottom"><i class="fas fa-bell text-black-50"></i>
+                                </span>
+                                {{ form_widget(form_task.alerts.vars.prototype.date) }}
                             </div>
                         </div>
-                        <div class="d-inline-flex mr-2 mb-2">{{ form_widget(form_task.alerts.vars.prototype.type) }}</div>
+                        <div class="d-inline-flex me-2 mb-2">{{ form_widget(form_task.alerts.vars.prototype.type) }}</div>
                         <div class="d-inline-flex mb-2">
                             <button class="btn btn-sm btn-danger" data-action="remove"><i class="fas fa-trash-alt"></i></button>
                         </div>
@@ -116,25 +105,25 @@ data-url-task-show="{{ path('task_show', {'id': '__id__'}) }}">
                         <div id="alerts-fields-list" data-prototype="{{ alert_widget|e }}"
                             data-container-tag="div" data-widget-counter="{{ form_task.alerts|length }}">
                         </div>
-                        <button type="button" class="btn btn-{{ theme_color }} btn-sm"
+                        <button type="button" class="btn btn-primary btn-sm"
                             data-list-selector="#alerts-fields-list" data-add-widget="alert" data-url="/alert/__id__/toggle-status">
-                            <i class="fas fa-plus-square mr-2"></i>Ajouter un rappel
+                            <i class="fas fa-plus-square me-2"></i>Ajouter un rappel
                         </button>
                     </div>
                 </div> 
                 {{ form_row(form_task._token) }}
             </div>
             <div class="modal-footer d-flex justify-content-between">
-                <div class="float-left">
-                    <button id="modal-btn-delete" class="mr-3 btn btn-danger"
+                <div class="float-start">
+                    <button id="modal-btn-delete" class="me-3 btn btn-danger"
                             data-url="{{ path('task_delete', {'id': '__id__'}) }}">
-                        <i class="fas fa-trash-alt"></i><span class="d-none d-md-inline ml-2">Supprimer</span>
+                        <i class="fas fa-trash-alt"></i><span class="d-none d-md-inline ms-2">Supprimer</span>
                     </button>
                 </div>
-                <div class="float-right">
-                    <button type="button" id="js-btn-cancel" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                    <button type="submit" id="js-btn-save" class="btn btn-{{ theme_color }} shadow">
-                        <i class="fas fa-save mr-2"></i>Enregistrer</button>
+                <div class="float-end">
+                    <button type="button" id="js-btn-cancel" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    <button type="submit" id="js-btn-save" class="btn btn-primary shadow">
+                        <i class="fas fa-save me-2"></i>Enregistrer</button>
                 </div>
             </div>
 

@@ -38,6 +38,7 @@ class OriginRequestType extends AbstractType
                 'query_builder' => function (OrganizationRepository $repo) use ($service) {
                     return $repo->getOrganizationsQueryBuilder($service);
                 },
+                'attr' => ['autocomplete' => true],
                 'placeholder' => 'placeholder.select',
                 'required' => $required,
             ])
@@ -63,7 +64,6 @@ class OriginRequestType extends AbstractType
                 'required' => false,
             ])
             ->add('comment', TextareaType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'rows' => 2,
                     'placeholder' => 'originRequest.comment',

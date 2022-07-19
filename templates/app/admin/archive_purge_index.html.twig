@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% set only_headers = form.vars.value.head == true %}
+{% set restoration_mode = form.deleted.deleted.vars.checked %}
+{% set archive_purge_view = is_archive is defined %}
+
+{% set title = is_archive ? 'Archivage' : 'Suppression' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <section>
+            <h1 class="h2 mb-3">{{ title }}</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a class="link-primary" href="{{ path('admin') }}">Administration</a></li>
+                    <li class="breadcrumb-item"><a class="link-primary" href="{{ path('admin_archive_purge_index') }}">Archive et suppression</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+                </ol>
+            </nav>
+
+            {% include 'app/support/_partials/_support_search_form.html.twig' %}
+
+            {% set text_confirm = '"Êtes-vous sûr de vouloir procéder à ' ~ (is_archive ? 'l\'archive' : 'la suppression') ~ '"' %}
+            <div class="row">
+                <div class="col-md-12 mt-3 mb-2">
+                    <div class="float-end">
+                        <a href="{{ path('admin_' ~ (is_archive ? 'archive' : 'purge')) }}" class="btn btn-primary shadow"
+                            onclick="return window.confirm({{ text_confirm }});">
+                            {{ title }}</a>
+                    </div>
+                </div>
+            </div>
+
+            {% include 'app/support/_partials/_support_table.html.twig' %}
+
+        </section>
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    {{ encore_entry_script_tags('search') }}
+{% endblock javascripts %}

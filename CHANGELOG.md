@@ -1,5 +1,40 @@
 # CHANGELOG
 
+## Version 4.0.0 - 19/07/2022
+
+Update to bootstap 5.1 and update all css/html (#182):
+
+* Install bootstrap 5.1 and config custom file
+* Update all css/html (use new bs classes and data-atributes)
+* Create new system for theme-color (use data-attribut 'theme-color')
+* Create new alert/flash message feature (toast component)
+* Use translation key for all alert/flash messages
+
+## Version 3.23.1 - 06/07/2022
+
+* Install cleave.js (Vanilla JS)
+* Remove jquery-mask-plugin
+* Create a pure JS script to mask input 'number'
+* Fix required 'false' for all SearchTypes
+* Add maxlength for phone mask
+
+## Version 3.23.0 - 06/07/2022
+
+New feature to archive and purge datas (#157)
+
+* Create a Class 'Archiver'
+* Create a new ArchivePurgeController
+* Create a Command to archive and purge datas
+* Create views to show stats and datas to archive
+
+## Version 3.22.0 - 05/07/2022
+
+Use 'tom-select' JS library for multi-selects and autocomplete selects (#179)
+
+* Install 'tom-select' JS library
+* Remove 'select2' JS library
+* Use SearchType for search input
+
 ## Version 3.21.0 - 29/06/2022
 
 Feature preview document (#170)
@@ -16,7 +51,7 @@ Feature preview document (#170)
 
 ## Version 3.20.0 - 03/06/2022
 
-Create a JS class to add uppercase after a dot (evaluation view)
+Create a JS class to add uppercase after a dot (evaluation view) (#173)
 
 ## Version 3.18.11 - 02/06/2022
 

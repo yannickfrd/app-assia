@@ -1,0 +1,119 @@
+
+@import 'tom-select/dist/css/tom-select.bootstrap5.min.css';
+
+.form-control,
+.form-select,
+.input-group-text {
+    font-size: $font-size-base;
+}
+
+.input-date {
+    width: 120px;
+    max-width: 120px;
+}
+
+.form-check {
+    padding-left: 1.25rem;
+}
+
+.form-check-label {
+    padding-left: 0.5rem;
+}
+
+.form-check-input {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.form-signin {
+    max-width: 320px !important;
+}
+
+.fa-phone {
+    transform: rotate(160deg);
+}
+
+/* Affichage de l'oeil pour voir le mot de passe */
+.js-show-password {
+    opacity: 0.5;
+}
+
+.js-show-password:hover {
+    cursor: pointer;
+    opacity: 1;
+    transition: all 0.5s ease;
+}
+
+
+// Astérisque pour les champs obligatoires dans les formulaires
+label.required:after,
+th.required:after {
+    content: " *";
+    color: var(--bs-danger);
+}
+
+@each $color, $value in $theme-colors {
+    html[data-theme-color="#{$color}"] {
+        .form-control:not(.is-invalid):focus,
+        .form-select:not(.is-invalid):focus,
+        .focus:not([invalid]) .ts-control {
+            @include border-color($value);
+        }
+
+        .form-check .form-check-input, 
+        .was-validated .form-check .form-check-input {
+            &:focus {
+                @include border-color($value);
+            }
+            &:checked {
+                background-color: $value;
+                border-color: $value;
+            }
+        }
+
+        .was-validated {
+            & .is-valid:focus, 
+            & .form-control:valid:focus,
+            & .form-select:valid:focus,
+            & :valid+.ts-wrapper.focus .ts-control  {
+                @include border-color($value);
+            }
+        }
+    }
+} 
+
+// Small devices (landscape phones, 576px and up)
+@media (max-width: 576px) {
+    .form-control {
+        font-size: .9rem;
+    }
+}
+
+// Fix to remove green color when the fields are valids
+.was-validated {
+    & .form-control:not(.is-invalid):valid,
+    & .form-select:not(.is-invalid):valid,
+    & :valid+.ts-wrapper {
+        padding-right: 0.75rem;
+        border-color: $input-border-color;
+        background-image: none !important;
+    }
+    
+    & .form-check-input:not(.is-invalid):valid {
+        border-color: $input-border-color; 
+    }
+   
+    & .form-check-input:valid ~ .form-check-label {
+        color: var(--bs-dark);
+    }
+
+    & .is-invalid:valid {
+        padding-right: 0.75rem ;
+        border-color: var(--bs-danger) !important;
+        background-image: none !important;
+
+        &:focus {
+            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+        }
+    }
+}

@@ -26,3 +26,9 @@
         max-width: 75vw;
     }
 }
+
+.dropzone-dragover {
+    border: 2px dashed var(--secondary);
+    opacity: 0.5;
+    transition: all 0.2s ease-in-out;
+}

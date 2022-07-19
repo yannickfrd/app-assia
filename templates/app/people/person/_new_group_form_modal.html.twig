@@ -15,11 +15,11 @@
 
     <div class="modal-footer d-flex justify-content-between">
         {% block modal_footer %}
-        <div class="float-left">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+        <div class="float-start">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
         </div>
-        <div class="float-right">
-            <button type="submit" id="js-btn-confirm" class="btn btn-{{ theme_color }}">Créer le nouveau groupe</button>
+        <div class="float-end">
+            <button type="submit" id="js-btn-confirm" class="btn btn-primary">Créer le nouveau groupe</button>
         </div>
         {% endblock %}
     </div>

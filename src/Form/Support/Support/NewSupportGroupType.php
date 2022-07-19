@@ -53,14 +53,10 @@ class NewSupportGroupType extends AbstractType
                 'placeholder' => 'placeholder.select',
             ])
             ->add('_cloneSupport', CheckboxType::class, [
-                'label_attr' => ['class' => 'custom-control-label'],
-                'attr' => ['class' => 'custom-control-input checkbox'],
                 'required' => false,
                 'mapped' => false,
             ])
             ->add('_siSiaoImport', CheckboxType::class, [
-                'label_attr' => ['class' => 'custom-control-label'],
-                'attr' => ['class' => 'custom-control-input checkbox'],
                 'required' => false,
                 'mapped' => false,
             ])

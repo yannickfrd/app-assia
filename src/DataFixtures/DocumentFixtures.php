@@ -26,7 +26,7 @@ class DocumentFixtures extends Fixture implements DependentFixtureInterface, Fix
     {
         $faker = \Faker\Factory::create('fr_FR');
 
-        foreach ($objectManager->getRepository((SupportGroup::class))->findAll() as $support) {
+        foreach ($objectManager->getRepository(SupportGroup::class)->findAll() as $support) {
             for ($i = 0; $i < mt_rand(5, 10); ++$i) {
                 $createdAt = AppFixtures::getDateTimeBeetwen('-12 months', 'now');
                 $user = $support->getReferent();

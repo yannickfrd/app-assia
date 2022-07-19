@@ -1,0 +1,19 @@
+// Fenêtre modale
+.modal {
+    padding: 0 !important;
+}
+
+.modal-dialog-fullscreen {
+    height: 100%;
+    margin: auto;
+    padding: 0;
+}
+
+.modal-content {
+    max-width: 1000px;
+}
+
+.modal-content-fullscreen {
+    height: auto;
+    min-height: 100%;
+}

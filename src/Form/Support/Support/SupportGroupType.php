@@ -87,8 +87,6 @@ class SupportGroupType extends AbstractType
             ])
             ->add('endStatusComment')
             ->add('endPlace', CheckboxType::class, [
-                'label_attr' => ['class' => 'custom-control-label'],
-                'attr' => ['class' => 'custom-control-input checkbox'],
                 'required' => false,
                 'help' => 'endPlace.help',
             ])
@@ -124,8 +122,6 @@ class SupportGroupType extends AbstractType
             ])
             ->add('agreement', CheckboxType::class, [
                 'required' => true,
-                'label_attr' => ['class' => 'custom-control-label'],
-                'attr' => ['class' => 'custom-control-input checkbox'],
             ])
             ->add('supportPeople', CollectionType::class, [
                 'entry_type' => SupportPersonType::class,
@@ -223,7 +219,7 @@ class SupportGroupType extends AbstractType
                         return $repo->getPlacesQueryBuilder($service, $subService);
                     },
                     'label' => 'place.name',
-                    'attr' => ['data-select' => 'advanced'],
+                    'attr' => ['autocomplete' => true],
                     'placeholder' => 'placeholder.select',
                     'help' => 'placeGroup.help',
                     'mapped' => false,
@@ -245,7 +241,7 @@ class SupportGroupType extends AbstractType
             case Service::SERVICE_TYPE_ASYLUM:
                 $this->addAsylumFields($form);
                 break;
-         }
+        }
     }
 
     protected function addAvdlFields(FormInterface $form): void
@@ -336,7 +332,7 @@ class SupportGroupType extends AbstractType
                     $supportGroup->getReferent()
                 );
             },
-            'attr' => ['data-select' => 'advanced'],
+             'attr' => ['autocomplete' => true],
             'placeholder' => 'placeholder.select',
             'required' => false,
         ];

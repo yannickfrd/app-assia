@@ -15,6 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -39,29 +40,28 @@ class TaskSearchType extends AbstractType
         $this->setFormData($builder);
 
         $builder
-            ->add('id', null, [
-                'label_attr' => ['class' => 'sr-only'],
+            ->add('id', SearchType::class, [
                 'attr' => [
                     'placeholder' => 'ID',
                     'class' => 'w-max-80',
                 ],
+                'required' => false,
             ])
-            ->add('title', null, [
-                'label_attr' => ['class' => 'sr-only'],
+            ->add('title', SearchType::class, [
                 'attr' => [
                     'placeholder' => 'search',
                     'class' => 'w-max-170',
                 ],
+                'required' => false,
             ])
-            ->add('fullname', null, [
-                'label_attr' => ['class' => 'sr-only'],
+            ->add('fullname', SearchType::class, [
                 'attr' => [
                     'placeholder' => 'search.fullname.placeholder',
                     'class' => 'w-max-170',
                 ],
+                'required' => false,
             ])
             ->add('location', null, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'placeholder' => 'Location',
                     'class' => 'w-max-170',
@@ -71,7 +71,7 @@ class TaskSearchType extends AbstractType
                 'multiple' => true,
                 'choices' => Choices::getChoices(Task::LEVEL),
                 'attr' => [
-                    'class' => 'multi-select w-min-140',
+                    'class' => 'multi-select w-max-220',
                     'size' => 1,
                     'placeholder' => 'task.level.placeholder',
                 ],
@@ -81,7 +81,7 @@ class TaskSearchType extends AbstractType
                 'multiple' => true,
                 'choices' => Choices::getChoices(Task::STATUS),
                 'attr' => [
-                    'class' => 'multi-select w-min-160',
+                    'class' => 'multi-select w-max-220',
                     'placeholder' => 'placeholder.status',
                     'size' => 1,
                 ],
@@ -104,7 +104,7 @@ class TaskSearchType extends AbstractType
                     return $repo->findUsersOfCurrentUserQueryBuilder($this->user);
                 },
                 'attr' => [
-                    'class' => 'multi-select w-min-150 w-max-220',
+                    'class' => 'multi-select w-max-220',
                     'placeholder' => 'event.users.placeholder',
                     'size' => 1,
                 ],
@@ -117,9 +117,8 @@ class TaskSearchType extends AbstractType
                 'by_reference' => false,
                 'choices' => $this->tagRepo->getTagsByService($options['service'], 'event'),
                 'choice_label' => 'name',
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
-                    'class' => 'multi-select w-min-200 w-max-220',
+                    'class' => 'multi-select w-max-220',
                     'placeholder' => 'placeholder.tags',
                     'size' => 1,
                 ],

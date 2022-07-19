@@ -24,6 +24,7 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     .addEntry('app', './assets/js/app.js')
+    .addEntry('autocomplete-select', './assets/js/utils/form/autocomplete-select.js')
     .addEntry('calendar', './assets/js/event/rdv/calendar-index.js')
     .addEntry('device', './assets/js/device/device.js')
     .addEntry('directory', './assets/js/directory/directory.js')
@@ -44,7 +45,6 @@ Encore
     .addEntry('referent', './assets/js/referent/referent.js')
     .addEntry('search', './assets/js/searchIndex.js')
     .addEntry('securityUser', './assets/js/security/securityUser.js')
-    .addEntry('select-advanced', './assets/js/utils/form/select-advanced.js')
     .addEntry('service', './assets/js/service/service.js')
     .addEntry('support', './assets/js/support/support.js')
     .addEntry('tag', './assets/js/tag/tagIndex.js')
@@ -89,7 +89,7 @@ Encore
     //.enableIntegrityHashes(Encore.isProduction())
 
     // uncomment if you're having problems with a jQuery plugin
-    .autoProvidejQuery()
+    // .autoProvidejQuery()
 
     // uncomment if you use API Platform Admin (composer req api-admin)
     //.enableReactPreset()

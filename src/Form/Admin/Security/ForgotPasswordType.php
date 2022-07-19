@@ -13,20 +13,10 @@ class ForgotPasswordType extends AbstractType
     {
         $builder
             ->add('username', null, [
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
-                'attr' => [
-                    'placeholder' => 'Login',
-                ],
+                'attr' => ['placeholder' => 'Login'],
             ])
             ->add('email', null, [
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
-                'attr' => [
-                    'placeholder' => 'Email',
-                ],
+                'attr' => ['placeholder' => 'Email'],
             ]);
     }
 

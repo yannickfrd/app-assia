@@ -519,7 +519,7 @@ class ImportDatasHebergement extends ImportDatas
         PlaceRepository $placeRepo,
         PersonRepository $personRepo,
         SluggerInterface $slugger
-        ) {
+    ) {
         $this->em = $em;
         $this->importNotification = $importNotification;
         $this->subServiceRepo = $subServiceRepo;

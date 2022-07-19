@@ -11,6 +11,7 @@ use App\Form\Utils\Choices;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -31,22 +32,21 @@ class PaymentSearchType extends AbstractType
     {
         $this->setFormData($builder);
         $builder
-            ->add('id', null, [
-                'label_attr' => ['class' => 'sr-only'],
+            ->add('id', SearchType::class, [
                 'attr' => [
                     'placeholder' => 'ID',
                     'class' => 'w-max-80',
                 ],
+                'required' => false,
             ])
-            ->add('fullname', null, [
-                'label_attr' => ['class' => 'sr-only'],
+            ->add('fullname', SearchType::class, [
                 'attr' => [
                     'placeholder' => 'search.fullname.placeholder',
                     'class' => 'w-max-180',
                 ],
+                'required' => false,
             ])
             ->add('type', ChoiceType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'multiple' => true,
                 'attr' => [
                     'class' => 'multi-select',
@@ -57,7 +57,6 @@ class PaymentSearchType extends AbstractType
                 'required' => false,
             ])
             ->add('dateType', ChoiceType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getChoices(PaymentSearch::DATE_TYPE),
                 'placeholder' => 'placeholder.dateType',
                 'required' => false,

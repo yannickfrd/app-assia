@@ -5,6 +5,7 @@ namespace App\Repository\People;
 use App\Entity\People\Person;
 use App\Form\Model\People\DuplicatedPeopleSearch;
 use App\Form\Model\People\PersonSearch;
+use App\Repository\Traits\QueryTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
@@ -17,6 +18,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class PersonRepository extends ServiceEntityRepository
 {
+    use QueryTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Person::class);
@@ -196,5 +199,27 @@ class PersonRepository extends ServiceEntityRepository
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    /**
+     * @return Person[]
+     */
+    public function findPeopleWithoutSupport(\DateTimeInterface $limitDate): array
+    {
+        return $this->createQueryBuilder('p')
+            ->leftJoin('p.rolesPerson', 'r')
+            ->leftJoin('p.supports', 'sp')
+            ->leftJoin('r.peopleGroup', 'g')
+            ->leftJoin('g.supports', 'sg')
+
+            ->where('sp.id IS NULL AND g.id IS NULL') // Toutes les personnes sans suivi et sans groupe
+            ->orWhere('sp.id IS NULL AND g.id IS NOT NULL AND sg.id IS NULL') // Toutes les personnes sans suivi et dans un groupe sans suivi
+
+            ->andWhere('p.updatedAt <= :limitDate')
+            ->setParameter('limitDate', $limitDate)
+
+            ->getQuery()
+            ->getResult()
+        ;
     }
 }

@@ -1,18 +1,16 @@
 {% extends 'model/_search.html.twig' %}
 
 {% block search_form %}
-<div class="col-auto my-1 px-1">{{ form_row(form.lastname) }}</div>
-<div class="col-auto my-1 px-1">{{ form_row(form.firstname) }}</div>
-<div class="col-auto my-1 px-1">{{ form_row(form.status) }}</div>
+<div class="col-auto my-1 px-1">{{ form_widget(form.lastname) }}</div>
+<div class="col-auto my-1 px-1">{{ form_widget(form.firstname) }}</div>
+<div class="col-auto my-1 px-1">{{ form_widget(form.status) }}</div>
 <div class="col-auto my-1 px-1">
     <div class="input-group">
-        <div class="input-group-prepend">
-            <div class="input-group-text d-none d-sm-block" title="Téléphone" 
-                data-toggle="tooltip" data-placement="bottom">
-                <i class="fas fa-phone text-black-50"></i>
-            </div>
-        </div>
-        {{ form_row(form.phone) }}
+        <span class="input-group-text d-none d-sm-block" title="Téléphone" data-bs-toggle="tooltip" 
+            data-bs-placement="bottom"><i class="fas fa-phone text-black-50"></i>
+        </span>
+        {{ form_label(form.phone, null, {label_attr: {class: 'visually-hidden'}}) }}
+        {{ form_widget(form.phone) }}
     </div>
 </div>
 {% if is_granted('ROLE_SUPER_ADMIN') %}
@@ -20,6 +18,6 @@
 {% endif %}
 <div class="col-auto my-1 px-1">{{ form_widget(form.service.services) }}</div>
 {% if is_granted('ROLE_ADMIN') %}
-    <div class="col-auto my-1 px-1">{{ form_row(form.disabled) }}</div>
+    <div class="col-auto my-1 px-1">{{ form_widget(form.disabled) }}</div>
 {% endif %}
 {% endblock %}

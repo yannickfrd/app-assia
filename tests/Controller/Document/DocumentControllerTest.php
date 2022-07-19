@@ -4,6 +4,7 @@ namespace App\Tests\Controller\Document;
 
 use App\Entity\Support\Document;
 use App\Entity\Support\SupportGroup;
+use App\Repository\Support\DocumentRepository;
 use App\Service\File\FileConverter;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
@@ -108,6 +109,7 @@ class DocumentControllerTest extends WebTestCase
 
         $this->assertSame('success', $content['alert']);
 
+        /** @var DocumentRepository $documentRepo */
         $documentRepo = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository(Document::class);
         $document = $documentRepo->find($content['documents'][0]['id']);
         $file = $this->documentsDirectory.$document->getFilePath();
@@ -121,6 +123,7 @@ class DocumentControllerTest extends WebTestCase
         $this->client->loginUser($this->fixtures['john_user']);
 
         $id = $this->document->getId();
+        $documentName = $this->document->getName();
 
         // Fail
         $this->client->request('GET', "/document/$id/preview");
@@ -128,7 +131,7 @@ class DocumentControllerTest extends WebTestCase
         $contentResponse = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSame('Ce fichier n\'existe pas.', $contentResponse['msg']);
+        $this->assertSame("Le fichier « $documentName » est introuvable.", $contentResponse['msg']);
 
         // Success
         $newFile = $this->moveFile();
@@ -157,6 +160,7 @@ class DocumentControllerTest extends WebTestCase
         $this->client->loginUser($this->fixtures['john_user']);
 
         $id = $this->document->getId();
+        $documentName = $this->document->getName();
 
         // Fail
         $this->client->request('GET', "/document/$id/download");
@@ -164,7 +168,7 @@ class DocumentControllerTest extends WebTestCase
         $contentResponse = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSame('Ce fichier n\'existe pas.', $contentResponse['msg']);
+        $this->assertSame("Le fichier « $documentName » est introuvable.", $contentResponse['msg']);
 
         // Success
         $newFile = $this->moveFile();

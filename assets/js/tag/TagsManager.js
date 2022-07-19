@@ -47,7 +47,7 @@ export default class TagsManager {
 
         const spanElt = document.createElement('span')
         spanElt.dataset.tagId = tag.id
-        spanElt.classList.add('badge', 'bg-' + tag.color, 'text-light', 'mr-1')
+        spanElt.classList.add('badge', 'bg-' + tag.color, 'me-1')
         spanElt.textContent = tag.name
 
         return spanElt

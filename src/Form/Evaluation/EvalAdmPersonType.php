@@ -71,7 +71,6 @@ class EvalAdmPersonType extends AbstractType
                 'required' => false,
             ])
             ->add('commentEvalAdmPerson', null, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'rows' => 5,
                     'class' => 'justify',
@@ -102,7 +101,10 @@ class EvalAdmPersonType extends AbstractType
             ->add('cndaId', null, [
                 'attr' => ['data-mask-type' => 'number'],
             ])
-            ->add('_country', CountryType::class)
+            ->add('_country', CountryType::class, [
+                'placeholder' => 'placeholder.select',
+                'mapped' => false,
+            ])
         ;
 
         if (!$builder->get('nationality')->getData()) {

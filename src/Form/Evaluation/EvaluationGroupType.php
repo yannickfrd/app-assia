@@ -35,7 +35,6 @@ class EvaluationGroupType extends AbstractType
                 'required' => false,
             ])
             ->add('backgroundPeople', null, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'rows' => 5,
                     'class' => 'justify',
@@ -43,7 +42,6 @@ class EvaluationGroupType extends AbstractType
                 ],
             ])
             ->add('conclusion', null, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'rows' => 5,
                     'class' => 'justify',

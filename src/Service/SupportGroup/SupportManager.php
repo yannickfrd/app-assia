@@ -2,46 +2,51 @@
 
 namespace App\Service\SupportGroup;
 
-use App\Entity\Evaluation\EvaluationGroup;
-use App\Entity\Organization\Service;
+use Symfony\Component\Form\Form;
 use App\Entity\Organization\User;
+use Psr\Cache\CacheItemInterface;
 use App\Entity\People\PeopleGroup;
 use App\Entity\Support\PlaceGroup;
+use App\Entity\Organization\Service;
 use App\Entity\Support\SupportGroup;
-use App\Repository\Support\SupportGroupRepository;
 use App\Service\Place\PlaceGroupManager;
-use App\Service\SiSiao\SiSiaoEvaluationImporter;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Cache\CacheItemInterface;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
+use App\Entity\Evaluation\EvaluationGroup;
+use App\Service\SupportGroup\SupportChecker;
 use Symfony\Component\HttpFoundation\Request;
+use App\Service\SiSiao\SiSiaoEvaluationImporter;
+use App\Repository\Support\SupportGroupRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SupportManager
 {
     use SupportPersonCreator;
 
-    private $supportGroupRepo;
     private $em;
+    private $supportGroupRepo;
     private $supportDuplicator;
     private $siSiaoEvalImporter;
     private $supportChecker;
     private $requestStack;
     private $flashBag;
+    private $translator;
 
     public function __construct(
-        SupportGroupRepository $supportGroupRepo,
         EntityManagerInterface $em,
+        SupportGroupRepository $supportGroupRepo,
         SupportDuplicator $supportDuplicator,
         SiSiaoEvaluationImporter $siSiaoEvalImporter,
         SupportChecker $supportChecker,
-        RequestStack $requestStack
+        RequestStack $requestStack,
+        TranslatorInterface $translator
     ) {
-        $this->supportDuplicator = $supportDuplicator;
         $this->em = $em;
+        $this->supportGroupRepo = $supportGroupRepo;
+        $this->supportDuplicator = $supportDuplicator;
         $this->siSiaoEvalImporter = $siSiaoEvalImporter;
         $this->supportChecker = $supportChecker;
         $this->supportGroupRepo = $supportGroupRepo;
@@ -50,6 +55,7 @@ class SupportManager
         /** @var Session */
         $session = $requestStack->getSession();
         $this->flashBag = $session->getFlashBag();
+        $this->translator = $translator;
     }
 
     /**
@@ -110,9 +116,10 @@ class SupportManager
     {
         // Vérifie si un suivi est déjà en cours pour ce ménage dans ce service.
         if (SupportGroup::STATUS_ENDED !== $supportGroup->getStatus() && $this->activeSupportExists($supportGroup)) {
-            $this->flashBag->add('danger', 'Attention, un suivi social est déjà en cours pour '.(
-                count($supportGroup->getPeopleGroup()->getPeople()) > 1 ? 'ce ménage.' : 'cette personne.'
-            ));
+            $this->flashBag->add('warning', count($supportGroup->getPeopleGroup()->getPeople()) > 1
+                ? 'support_group.other_already_in_progress'
+                : 'support_person.other_already_in_progress'
+            );
 
             return null;
         }
@@ -141,10 +148,11 @@ class SupportManager
             $supportGroup->addSupportPerson($supportPerson);
         }
 
-        $this->flashBag->add('success', 'Le suivi social est créé.');
+        $this->flashBag->add('success', 'support_group.created_successfully');
 
         if ($form && $form->has('_place') && $place = $form->get('_place')->getData()) {
-            (new PlaceGroupManager($this->em, $this->requestStack))->createPlaceGroup($supportGroup, null, $place);
+            (new PlaceGroupManager($this->em, $this->requestStack, $this->translator))
+                ->createPlaceGroup($supportGroup, null, $place);
         }
 
         $supportGroup->setNbPeople($supportGroup->getSupportPeople()->count());
@@ -297,7 +305,10 @@ class SupportManager
             if ($supportPerson->getStartDate() && $person && $supportPerson->getStartDate() < $person->getBirthdate()) {
                 // Si c'est le cas, on prend en compte la date de naissance
                 $supportPerson->setStartDate($person->getBirthdate());
-                // $this->addFlash('light', $supportPerson->getPerson()->getFullname().' : la date de début de suivi retenue est sa date de naissance.');
+
+                $this->flashBag->add('warning', $this->translator->trans('support_person.invalid_start_date', [
+                    'person_fullname' => $person->getFullname(),
+                ], 'app'));
             }
         }
     }
@@ -337,7 +348,10 @@ class SupportManager
             }
             if ($supportPerson->getStartDate() && $supportPerson->getStartDate() < $person->getBirthdate()) {
                 $placePerson->setStartDate($person->getBirthdate());
-                $this->flashBag->add('warning', 'La date de début d\'hébergement ne peut pas être antérieure à la date de naissance de la personne ('.$person->getFullname().').');
+
+                $this->flashBag->add('warning', $this->translator->trans('place_person.invalid_start_date', [
+                    'person_fullname' => $person->getFullname(),
+                ], 'app'));
             }
         }
     }

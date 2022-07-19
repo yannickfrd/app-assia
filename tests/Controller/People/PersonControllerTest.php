@@ -34,7 +34,7 @@ class PersonControllerTest extends WebTestCase
         $this->client = static::createClient();
         $this->client->followRedirects();
 
-        /** @var AbstractDatabaseTool */
+        /* @var AbstractDatabaseTool */
         $this->databaseTool = $this->getContainer()->get(DatabaseToolCollection::class)->get();
     }
 
@@ -113,7 +113,7 @@ class PersonControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.alert.alert-danger');
+        $this->assertSelectorExists('.toast.alert-danger');
     }
 
     public function testCreatePersonWhoExistsIsFailed(): void
@@ -134,8 +134,8 @@ class PersonControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.alert.alert-danger');
-        $this->assertSelectorTextContains('.form-error-message', 'Cette personne existe déjà !');
+        $this->assertSelectorExists('.toast.alert-danger');
+        $this->assertSelectorTextContains('div.invalid-feedback', 'Cette personne existe déjà !');
     }
 
     public function testNewPersonInGroupIsUp(): void
@@ -170,7 +170,7 @@ class PersonControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Groupe');
-        $this->assertSelectorExists('.alert.alert-success');
+        $this->assertSelectorExists('.toast.alert-success');
     }
 
     public function testAddPersonToGroupIsFailed(): void
@@ -189,7 +189,7 @@ class PersonControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.alert.alert-danger');
+        $this->assertSelectorExists('.toast.alert-danger');
     }
 
     public function testAddSamePersonInGroupIsFailed(): void
@@ -209,7 +209,7 @@ class PersonControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.alert.alert-danger');
+        $this->assertSelectorExists('.toast.alert-danger');
     }
 
     public function testAddPersonToGroupIsSuccessful(): void
@@ -230,7 +230,7 @@ class PersonControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Groupe');
-        $this->assertSelectorExists('.alert.alert-success');
+        $this->assertSelectorExists('.toast.alert-success');
     }
 
     public function testEditPersonInGroupIsUp(): void
@@ -341,7 +341,7 @@ class PersonControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         $content = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertSame('Les modifications sont enregistrées.', $content['msg']);
+        $this->assertSame('Les modifications ont été enregistrées.', $content['msg']);
     }
 
     public function testAddNewGroupToPersonIsSuccessful(): void
@@ -354,7 +354,7 @@ class PersonControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', $this->person->getFullname());
-        $this->assertSelectorExists('.alert.alert-danger');
+        $this->assertSelectorExists('.toast.alert-danger');
 
         /** @var Crawler */
         $crawler = $this->client->request('GET', "/person/$id");
@@ -372,7 +372,7 @@ class PersonControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-success', 'Le nouveau groupe est créé.');
+        $this->assertSelectorTextContains('.toast.alert-success', 'Le nouveau groupe a été créé.');
     }
 
     public function testSearchPersonWithResults(): void
@@ -420,7 +420,7 @@ class PersonControllerTest extends WebTestCase
         $this->client->request('GET', "/person/$id/delete");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-warning', 'La personne est supprimée.');
+        $this->assertSelectorTextContains('.toast.alert-warning', 'La personne a été supprimée.');
     }
 
     public function testDuplicatePeoplePageIsUp(): void

@@ -14,12 +14,6 @@ class DeletedSearchType extends AbstractType
         $builder
             ->add('deleted', CheckboxType::class, [
                 'label' => 'support.label.soft_deleteable',
-                'label_attr' => [
-                    'class' => 'custom-control-label',
-                ],
-                'attr' => [
-                    'class' => 'custom-control-input checkbox',
-                ],
                 'required' => false,
             ])
         ;

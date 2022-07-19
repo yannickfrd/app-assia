@@ -10,6 +10,7 @@ use App\Form\Type\DateSearchType;
 use App\Repository\Organization\TagRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -29,12 +30,12 @@ class SupportRdvSearchType extends AbstractType
         $service = $options['service'];
 
         $builder
-            ->add('title', null, [
-                'label_attr' => ['class' => 'sr-only'],
+            ->add('title', SearchType::class, [
                 'attr' => [
                     'placeholder' => 'Title',
                     'class' => 'w-max-170',
                 ],
+                'required' => false,
             ])
             ->add('date', DateSearchType::class, [
                 'data_class' => EventSearch::class,
@@ -47,9 +48,8 @@ class SupportRdvSearchType extends AbstractType
                 'by_reference' => false,
                 'choices' => $this->tagRepo->getTagsByService($service),
                 'choice_label' => 'name',
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
-                    'class' => 'multi-select w-min-200 w-max-220',
+                    'class' => 'multi-select w-max-220',
                     'placeholder' => 'placeholder.tags',
                     'size' => 1,
                 ],

@@ -11,6 +11,7 @@ use App\Repository\Organization\ServiceRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -30,13 +31,13 @@ class DeviceSearchType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name', null, [
-                'label_attr' => ['class' => 'sr-only'],
+            ->add('name', SearchType::class, [
                 'attr' => [
                     'class' => 'w-max-200',
                     'placeholder' => 'device.name',
                     'autocomplete' => 'off',
                 ],
+                'required' => false,
             ])
             ->add('service', EntityType::class, [
                 'class' => Service::class,
@@ -44,12 +45,10 @@ class DeviceSearchType extends AbstractType
                 'query_builder' => function (ServiceRepository $repo) {
                     return $repo->getServicesOfUserQueryBuilder($this->user);
                 },
-                'label_attr' => ['class' => 'sr-only'],
                 'placeholder' => 'placeholder.service',
                 'required' => false,
             ])
             ->add('disabled', ChoiceType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getChoices(Choices::DISABLE),
                 'placeholder' => 'placeholder.disabled',
                 'required' => false,
@@ -63,7 +62,6 @@ class DeviceSearchType extends AbstractType
                     ->add('pole', EntityType::class, [
                         'class' => Pole::class,
                         'choice_label' => 'name',
-                        'label_attr' => ['class' => 'sr-only'],
                         'placeholder' => 'placeholder.pole',
                         'required' => false,
                 ]);

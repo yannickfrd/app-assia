@@ -58,8 +58,8 @@
                     <td class="align-middle text-center">
                         {% if support is not defined %}
                             <a href="{{ path('support_note_index', {'id': support is defined ? support.id : note.supportGroup.id, 'noteId': note.id}) }}"
-                                class="btn btn-{{ is_deleted ? 'secondary' : theme_color }} btn-sm shadow {{ is_deleted ? 'disabled' }}"
-                                type="button" title="Voir la note sociale" data-toggle="tooltip" data-placement="bottom" 
+                                class="btn btn-{{ is_deleted ? 'secondary' : 'primary' }} btn-sm shadow {{ is_deleted ? 'disabled' }}"
+                                type="button" title="Voir la note sociale" data-bs-toggle="tooltip" data-bs-placement="bottom" 
                                 data-action="show"><i class="fas fa-eye"></i>
                             </a>
                         {% else %}
@@ -71,13 +71,13 @@
                         {% endif %}
                     </td>
                     <td class="align-middle justify" data-cell="title-content">
-                        {% if note.title %}<span class="font-weight-bold">{{ note.title }}</span> {% endif %}
+                        {% if note.title %}<span class="fw-bold">{{ note.title }}</span> {% endif %}
                         {{ note.content|u.truncate(200, ' [...]', false)|striptags|raw }}</td>
                     <td class="align-middle" data-cell="type" data-note-type="{{ note.type }}">{{ note.typeToString }}</td>
                     <td class="align-middle" data-cell="status" data-note-status="{{ note.status }}">{{ note.statusToString }}</td>
                     <td class="align-middle" data-cell="tags">
                         {% for tag in note.tags %}
-                            <span class="badge bg-{{ tag.color }} text-light" data-tag-id="{{ tag.id }}">{{ tag.name }}</span>
+                            <span class="badge bg-{{ tag.color }}" data-tag-id="{{ tag.id }}">{{ tag.name }}</span>
                         {% endfor %}
                     </td>
                     {% if support is not defined %}
@@ -100,14 +100,14 @@
                      {% if not is_deleted %}
                         <td class="align-middle text-center p-1">
                             <a href="{{ path('note_export_word', {'id': note.id}) }}"
-                                class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" title="Exporter la note au format Word"
-                                data-toggle="tooltip" data-placement="bottom">
-                                    <i class="fas fa-file-word fa-lg bg-primary"></i><span class="sr-only">Word</span>
+                                class="btn btn-primary btn-sm mb-1 shadow" title="Exporter la note au format Word"
+                                data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                    <i class="fas fa-file-word fa-lg bg-primary"></i><span class="visually-hidden">Word</span>
                             </a>
                             <a href="{{ path('note_export_pdf', {'id': note.id}) }}"
-                                class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" title="Exporter la note au format PDF"
-                                data-toggle="tooltip" data-placement="bottom">
-                                    <i class="fas fa-file-pdf fa-lg bg-danger"></i><span class="sr-only">PDF</span>
+                                class="btn btn-primary btn-sm mb-1 shadow" title="Exporter la note au format PDF"
+                                data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                    <i class="fas fa-file-pdf fa-lg bg-danger"></i><span class="visually-hidden">PDF</span>
                             </a>
                         </td>
                     {% endif %}                   
@@ -118,7 +118,7 @@
                         {% else %}
                             <button class="btn btn-sm btn-danger shadow" 
                                 data-action="delete-note" data-path-delete="{{ path('note_delete', {'id': note.id}) }}"
-                                title="Supprimer la note" data-toggle="tooltip" data-placement="bottom">
+                                title="Supprimer la note" data-bs-toggle="tooltip" data-bs-placement="bottom">
                                 <i class="fa-solid fa-trash-can"></i>
                             </button>
                     {% endif %}

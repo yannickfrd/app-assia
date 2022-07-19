@@ -113,4 +113,25 @@ trait QueryTrait
 
         return $qb;
     }
+
+    public function findDeletedObjects(?\DateTimeInterface $limitDate = null): array
+    {
+        return $this->createQueryBuilder('o')
+            ->where('o.deletedAt < :limitDate')
+            ->setParameter('limitDate', $limitDate ?? new \DateTime())
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function countDeletedObjects(?\DateTimeInterface $limitDate = null): int
+    {
+        return $this->createQueryBuilder('o')
+            ->select('COUNT(o.id)')
+            ->where('o.deletedAt < :limitDate')
+            ->setParameter('limitDate', $limitDate ?? new \DateTime())
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
 }

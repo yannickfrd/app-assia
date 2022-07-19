@@ -6,7 +6,6 @@
     <section class="my-0">
 
         <div class="container">
-            {% include 'model/_flash_message.html.twig' %}
             <h1 class="h2 mb-3">Doublons | Personnes</h1>
         </div>
 
@@ -44,7 +43,7 @@
                                         'lastname':search.lastname ? person.lastname,
                                         'firstname':search.firstname ? person.firstname,
                                         'birthdate':search.birthdate ? person.birthdate|date('Y-m-d') }) }}"
-                                        class="btn btn-{{ theme_color }} shadow" data-placement="bottom" title="Voir les doublons">
+                                        class="btn btn-primary shadow" data-bs-placement="bottom" title="Voir les doublons">
                                         <span class="fas fa-eye"></span>
                                     </a>
                                 </td>
@@ -54,9 +53,9 @@
                                     ({{ person.age }}{% if person.age > 1 %} ans{% elseif person.age %}
                                     an{% endif %}){% endif %}</td>
                                 <td>{% if person.gender == constant('GENDER_FEMALE', person) %}
-                                        <span class="fas fa-female fa-2x text-dark" data-placement="bottom" title="Femme"></span>
+                                        <span class="fas fa-female fa-2x text-dark" data-bs-placement="bottom" title="Femme"></span>
                                     {% elseif person.gender == constant('GENDER_MALE', person) %}
-                                        <span class="fas fa-male fa-2x text-dark" data-placement="bottom" title="Homme"></span>
+                                        <span class="fas fa-male fa-2x text-dark" data-bs-placement="bottom" title="Homme"></span>
                                     {% endif %} 
                                 </td>
                                 <td>{{ person.createdAt|date('d/m/Y H:i') }}</td>

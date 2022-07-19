@@ -9,17 +9,15 @@
 
         <hr>
 
-        {% include 'model/_flash_message.html.twig' %}
-        
-        <div id="js-msg-flash-content"></div>
-        <a href="{{ path('database_backup_create') }}" class="btn btn-{{ theme_color }} btn-sm shadow my-1" 
-            data-toggle="tooltip" data-placement="bottom" title="Créer une nouvelle sauvegarde"><span class="fas fa-cloud-upload-alt mr-2"></span>Créer backup
+       
+        <a href="{{ path('database_backup_create') }}" class="btn btn-primary btn-sm shadow my-1" 
+            data-bs-toggle="tooltip" data-bs-placement="bottom" title="Créer une nouvelle sauvegarde"><span class="fas fa-cloud-upload-alt me-2"></span>Créer backup
         </a>
 
         <section class="mb-5">
             <div class="row align-items-baseline">
                 <div class="col-md-4 count align-middle mb-2">
-                    <span class="align-middle">Résultat : {{ backups.getTotalItemCount|number }}.</span>
+                    <span class="align-middle">Résultat : {{ backups.getTotalItemCount|number }}</span>
                 </div>
                 <div class="col-md-8">
                     <div class="navigation">{{ knp_pagination_render(backups) }}</div>
@@ -44,12 +42,12 @@
                                 {% for backup in backups %}
                                     <tr id="backup-{{ backup.id }}" class="js-backup">
                                         <td scope="row" class="align-middle text-center">
-                                            <a href="{{ path('database_backup_download', {'id': backup.id }) }}" class="btn btn-{{ theme_color }} btn-sm shadow my-1" 
-                                                data-toggle="tooltip" data-placement="bottom" title="Exporter la sauvegarde de la base de données"><span class="fas fa-file-download"></span>
+                                            <a href="{{ path('database_backup_download', {'id': backup.id }) }}" class="btn btn-primary btn-sm shadow my-1" 
+                                                data-bs-toggle="tooltip" data-bs-placement="bottom" title="Exporter la sauvegarde de la base de données"><span class="fas fa-file-download"></span>
                                             </a>
                                         </td>
                                         <td class="align-middle js-backup-title">Sauvegarde {{ backup.createdBy ? 'manuelle' : 'automatique' }} du {{ backup.createdAt|date('d/m/Y') }}</td>
-                                        <td class="align-middle js-backup-size text-right">{{ (backup.size / 1000 / 1000)|round }} Mo</td>
+                                        <td class="align-middle js-backup-size text-end">{{ (backup.size / 1000 / 1000)|round }} Mo</td>
                                         <td class="align-middle js-backup-createdAt">{{ backup.createdAt|date('d/m/Y H:i') }}</td>
                                         <td class="align-middle js-backup-createdAt">{{ backup.createdBy ? backup.createdBy.fullname : '[Système]' }}</td>
                                         <td class="align-middle text-center">

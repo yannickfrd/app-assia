@@ -30,11 +30,9 @@ class DocumentType extends AbstractType
 
         $builder
             ->add('name', TextType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => ['placeholder' => 'document.name.placeholder'],
             ])
             ->add('content', TextareaType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'rows' => 4,
                     'placeholder' => 'document.content.placeholder',
@@ -48,7 +46,6 @@ class DocumentType extends AbstractType
                 'by_reference' => false,
                 'choices' => $this->tagRepo->getTagsByService($supportGroup->getService(), 'document'),
                 'choice_label' => 'name',
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'placeholder' => 'placeholder.tags',
                     'size' => 1,

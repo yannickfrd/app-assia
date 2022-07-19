@@ -22,16 +22,13 @@
         {% endif %}
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a class="text-{{ theme_color }}" href="{{ path('pole_index') }}">Liste des pôles</a>
+                <li class="breadcrumb-item"><a class="link-primary" href="{{ path('pole_index') }}">Liste des pôles</a>
                 </li>
                 <li class="breadcrumb-item active" aria-current="page">Fiche pôle</li>
             </ol>
         </nav>
 
         <hr>
-
-        {% include 'model/_flash_message.html.twig' %}
-        <div id="js-msg-flash-content"></div>
 
         {{ form_start(form) }}
 
@@ -59,8 +56,8 @@
 
         <div class="row mb-3">
             <div class="col-md-12">
-                <div class="mb-4 float-right">
-                    <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+                <div class="mb-4 float-end">
+                    <button type="submit" id="send" name="send" class="btn btn-primary shadow">{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
                 </div>
             </div>
         </div>
@@ -94,7 +91,7 @@
                         <tr>
                             <td scope="row">
                                 <a href="{{ path('service_edit', {'id':service.id}) }}"
-                                    class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" data-placement="bottom"
+                                    class="btn btn-primary btn-sm shadow" data-bs-toggle="tooltip" data-bs-placement="bottom"
                                     title="Voir la fiche du service">
                                     <span class="fas fa-eye"></span>
                                 </a>
@@ -112,8 +109,8 @@
             {% endif %}
             <div class="row">
                 <div class="col-md-12">
-                    <a href="{{ path('service_new') }}" class="btn btn-{{ theme_color }} btn-sm shadow"><span
-                            class="fas fa-plus-square mr-2"></span>Créer un nouveau service</a>
+                    <a href="{{ path('service_new') }}" class="btn btn-primary btn-sm shadow"><span
+                            class="fas fa-plus-square me-2"></span>Créer un nouveau service</a>
                 </div>
             </div>
 

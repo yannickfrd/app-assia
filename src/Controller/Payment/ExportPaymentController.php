@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class ExportPaymentController extends AbstractController
 {
@@ -47,7 +48,7 @@ final class ExportPaymentController extends AbstractController
      *
      * @Route("/payment/{id}/send/pdf", name="payment_send_pdf", methods="GET")
      */
-    public function sendPaymentByEmail(int $id, PaymentExporter $paymentExporter): JsonResponse
+    public function sendPaymentByEmail(int $id, PaymentExporter $paymentExporter, TranslatorInterface $translator): JsonResponse
     {
         $payment = $this->paymentRepo->findPayment($id);
 
@@ -57,7 +58,7 @@ final class ExportPaymentController extends AbstractController
             return $this->json([
                 'action' => 'error',
                 'alert' => 'danger',
-                'msg' => 'Le suivi n\'a pas d\'adresse e-mail renseignée.',
+                'msg' => $translator->trans('payment.no_email', [], 'app'),
             ]);
         }
 
@@ -66,7 +67,7 @@ final class ExportPaymentController extends AbstractController
         return $this->json([
             'action' => 'send_receipt',
             'alert' => 'success',
-            'msg' => 'Le reçu du paiement a été envoyé par email.',
+            'msg' => $translator->trans('payment.sent_by_email_successfully', [], 'app'),
             'payment' => ['id' => $id],
         ]);
     }
