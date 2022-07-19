@@ -49,7 +49,7 @@ class ExportSearchType extends AbstractType
             //         'placeholder' => 'NbPeople',
             //         'autocomplete' => 'off',
             //     ],
-            // ])
+        // ])
     }
 
     public function configureOptions(OptionsResolver $resolver): void

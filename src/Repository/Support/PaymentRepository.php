@@ -332,7 +332,7 @@ class PaymentRepository extends ServiceEntityRepository
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult()
-            ;
+        ;
     }
 
     /**

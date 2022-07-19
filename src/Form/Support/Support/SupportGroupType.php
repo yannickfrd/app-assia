@@ -241,7 +241,7 @@ class SupportGroupType extends AbstractType
             case Service::SERVICE_TYPE_ASYLUM:
                 $this->addAsylumFields($form);
                 break;
-         }
+        }
     }
 
     protected function addAvdlFields(FormInterface $form): void

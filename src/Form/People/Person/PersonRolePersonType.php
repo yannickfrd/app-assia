@@ -25,7 +25,7 @@ class PersonRolePersonType extends AbstractType
                 'required' => false,
                 'mapped' => false,
             ])
-            ;
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

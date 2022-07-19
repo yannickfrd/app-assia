@@ -77,7 +77,7 @@ class TaskVoter extends Voter
     protected function isCreatorOrReferent(): bool
     {
         if (($this->task->getCreatedBy() && $this->task->getCreatedBy()->getId() === $this->user->getId())
-            || ($this->task->getUsers()->contains($this->user))
+            || $this->task->getUsers()->contains($this->user)
             || $this->supportGroup && (($this->supportGroup->getReferent() && $this->supportGroup->getReferent()->getId() === $this->user->getId())
             || ($this->supportGroup->getReferent2() && $this->supportGroup->getReferent2()->getId() === $this->user->getId()))
         ) {

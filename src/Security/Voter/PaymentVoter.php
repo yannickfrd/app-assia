@@ -54,7 +54,7 @@ class PaymentVoter extends Voter
         if ($this->isCreatorOrReferent()
             || $this->isUserOfService($this->supportGroup->getService())
             || $this->isGranted('ROLE_SUPER_ADMIN')
-            ) {
+        ) {
             return true;
         }
 

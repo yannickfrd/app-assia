@@ -38,7 +38,7 @@ class ImportDatas
                 $rows = [];
                 for ($col = 0; $col < $num; ++$col) {
                     $cel = iconv('CP1252', 'UTF-8', $data[$col]);
-                    $date = \DateTime::createFromFormat('d/m/Y', $cel, new \DateTimeZone(('UTC')));
+                    $date = \DateTime::createFromFormat('d/m/Y', $cel, new \DateTimeZone('UTC'));
                     if ($date) {
                         $cel = $date->format('Y-m-d');
                     }

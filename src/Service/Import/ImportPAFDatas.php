@@ -39,7 +39,7 @@ class ImportPAFDatas extends ImportDatas
     public function __construct(
         EntityManagerInterface $em,
         HotelSupportRepository $hotelSupportRepo
-        ) {
+    ) {
         $this->em = $em;
         $this->hotelSupportRepo = $hotelSupportRepo;
         $this->hotelSupports = $hotelSupportRepo->findAll();
