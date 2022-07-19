@@ -18,7 +18,7 @@
         <meta name="description" content="Application d’Accompagnement Social et Solidaire Inter-Associative"/>
     </head>
 
-    <body id="top-body">
+    <body id="body">
         <div id="loader" role="status">
             <div class="d-flex flex-column align-items-center link-primary">
                 <i class="fas fa-circle-notch"></i>
@@ -37,7 +37,7 @@
             {% include '_shared/_auto_logout.html.twig' %}
 
             {% if app_env != 'test' %}
-                <a id="scroll-top" href="#top-body">
+                <a id="scroll-top" href="#body">
                     <i class="fa fa-chevron-up"></i>
                 </a>
             {% endif %}
