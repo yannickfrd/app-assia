@@ -91,17 +91,17 @@
                                 <tr class="fw-bold">
                                     <td scope="row" class="align-middle">Total</td>
                                     <td class="align-middle">{{ users_datas|length }}</td>
-                                    <td class="align-middle text-end">{{ nb_supports }}
+                                    <td class="align-middle text-end">{{ nb_supports|number }}
                                         {% if nb_supports != sum_coef_supports %}
-                                            <br/><span class="link-primary"> ({{ sum_coef_supports }})</span>
+                                            <br/><span class="link-primary"> ({{ sum_coef_supports|round(1) }})</span>
                                         {% endif %}
                                         {% for device in devices %}
-                                            <td class="align-middle text-end">{{ device.nbSupports }}
+                                            <td class="align-middle text-end">{{ device.nbSupports|number }}
                                         {% if device.nbTheoreticalSupports > 0 %}
                                             <span class="small"> /{{ device.nbTheoreticalSupports }}</span>
                                         {% endif %}
                                             {% if device.nbSupports != device.sumCoeff %}
-                                                <br/><span class="link-primary"> ({{ device.sumCoeff }})</span>
+                                                <br/><span class="link-primary"> ({{ device.sumCoeff|round(1) }})</span>
                                             {% endif %}
                                             </td>
                                         {% endfor %}

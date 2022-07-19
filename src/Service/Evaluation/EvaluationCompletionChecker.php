@@ -74,7 +74,7 @@ class EvaluationCompletionChecker
 
         return [
             'points' => $this->points,
-            'score' => round(($this->points / $this->maxPoints) * 100),
+            'score' => $this->points ? round(($this->points / $this->maxPoints) * 100) : 0,
         ];
     }
 

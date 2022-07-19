@@ -28,36 +28,32 @@ class AppExtension extends AbstractExtension
         ];
     }
 
-    public function formatNumber($value, int $decimals = 0): string
+    public function formatNumber(int|float|null $value = 0, int $decimals = 0): string
     {
-        return number_format($value, $decimals, ',', ' ');
+        return number_format($value, $decimals, ',', ' ');
     }
 
-    public function formatPercentage($value, int $decimals = 2): string
+    public function formatPercentage(int|float|null $value = 0, int $decimals = 2): string
     {
-        $value = round($value, $decimals);
+        $value = round($value ?? 0, $decimals);
 
-        // if ((string) (int) $value === (string) $value) {
-        //     $decimals = 0;
-        // }
-
-        return number_format($value, $decimals, ',', ' ').'%';
+        return number_format($value, $decimals, ',', ' ').'%';
     }
 
-    public function formatAmount($value, int $decimals = 2): string
+    public function formatAmount(int|float|null $value = 0, int $decimals = 2): string
     {
-        return number_format($value, $decimals, ',', ' ').' €';
+        return number_format($value, $decimals, ',', ' ').' €';
     }
 
-    public function roundNumber($value, int $decimals = 0, $mode = 1): string
+    public function roundNumber(int|float|null $value = 0, int $decimals = 0, $mode = 1): string
     {
-        $value = round($value, $decimals, $mode);
+        $value = round($value ?? 0, $decimals, $mode);
 
         if ((string) (int) $value === (string) $value) {
             $decimals = 0;
         }
 
-        return number_format($value, $decimals, ',', ' ');
+        return number_format($value, $decimals, ',', ' ');
     }
 
     /**
@@ -92,7 +88,7 @@ class AppExtension extends AbstractExtension
         return ($value1 / $value2) * 100;
     }
 
-    public function getColor(?int $value = null): string
+    public function getColor(int|float|null $value = null): string
     {
         if ($value > 150) {
             return 'danger';
