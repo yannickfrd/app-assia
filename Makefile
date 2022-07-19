@@ -1,6 +1,7 @@
 SHELL := /bin/bash
 
 tests:
+	symfony check:security
 	symfony console cache:clear --env=test
 	symfony console doctrine:database:drop -e test --force
 	symfony console doctrine:database:create -e test
