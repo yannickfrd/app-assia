@@ -32,7 +32,7 @@ class UserManager
         $this->em = $em;
         /** @var Session */
         $session = $requestStack->getSession();
-        $this->flashBag = $session->getFlashBag();        
+        $this->flashBag = $session->getFlashBag();
         $this->translator = $translator;
     }
 

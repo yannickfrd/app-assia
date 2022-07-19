@@ -2,24 +2,23 @@
 
 namespace App\Service\SupportGroup;
 
-use Symfony\Component\Form\Form;
+use App\Entity\Evaluation\EvaluationGroup;
+use App\Entity\Organization\Service;
 use App\Entity\Organization\User;
-use Psr\Cache\CacheItemInterface;
 use App\Entity\People\PeopleGroup;
 use App\Entity\Support\PlaceGroup;
-use App\Entity\Organization\Service;
 use App\Entity\Support\SupportGroup;
-use App\Service\Place\PlaceGroupManager;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Form\FormInterface;
-use App\Entity\Evaluation\EvaluationGroup;
-use App\Service\SupportGroup\SupportChecker;
-use Symfony\Component\HttpFoundation\Request;
-use App\Service\SiSiao\SiSiaoEvaluationImporter;
 use App\Repository\Support\SupportGroupRepository;
+use App\Service\Place\PlaceGroupManager;
+use App\Service\SiSiao\SiSiaoEvaluationImporter;
+use Doctrine\ORM\EntityManagerInterface;
+use Psr\Cache\CacheItemInterface;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SupportManager

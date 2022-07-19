@@ -182,7 +182,7 @@ class PeopleGroupManager
 
         foreach ($supportGroupRepo->findBy(['peopleGroup' => $peopleGroup]) as $supportGroup) {
             if (SupportGroup::STATUS_IN_PROGRESS === $supportGroup->getStatus()
-                && ($this->user->hasService($supportGroup->getService()))) {
+                && $this->user->hasService($supportGroup->getService())) {
                 (new SupportPeopleAdder($this->em, $this->requestStack, $this->translator))
                     ->addPersonToSupport($supportGroup, $rolePerson);
 

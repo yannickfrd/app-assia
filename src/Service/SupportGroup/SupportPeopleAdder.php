@@ -2,20 +2,20 @@
 
 namespace App\Service\SupportGroup;
 
-use App\Service\Grammar;
+use App\Entity\Evaluation\EvaluationGroup;
+use App\Entity\Evaluation\EvaluationPerson;
 use App\Entity\People\Person;
 use App\Entity\People\RolePerson;
 use App\Entity\Support\PlaceGroup;
 use App\Entity\Support\PlacePerson;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Support\SupportPerson;
+use App\Repository\Evaluation\EvaluationGroupRepository;
+use App\Service\Grammar;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\Evaluation\EvaluationGroup;
-use App\Entity\Evaluation\EvaluationPerson;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use App\Repository\Evaluation\EvaluationGroupRepository;
 
 class SupportPeopleAdder
 {
@@ -33,7 +33,7 @@ class SupportPeopleAdder
         $this->em = $em;
         /** @var Session */
         $session = $requestStack->getSession();
-        $this->flashBag = $session->getFlashBag();        
+        $this->flashBag = $session->getFlashBag();
         $this->translator = $translator;
     }
 

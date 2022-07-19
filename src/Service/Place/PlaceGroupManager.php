@@ -8,9 +8,9 @@ use App\Entity\Support\PlacePerson;
 use App\Entity\Support\SupportGroup;
 use App\Entity\Support\SupportPerson;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PlaceGroupManager
@@ -27,7 +27,7 @@ class PlaceGroupManager
         $this->em = $em;
         /** @var Session */
         $session = $requestStack->getSession();
-        $this->flashBag = $session->getFlashBag();        
+        $this->flashBag = $session->getFlashBag();
         $this->translator = $translator;
     }
 
