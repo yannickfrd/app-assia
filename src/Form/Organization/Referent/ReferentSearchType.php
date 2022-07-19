@@ -17,21 +17,18 @@ class ReferentSearchType extends AbstractType
     {
         $builder
             ->add('name', SearchType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'placeholder' => 'Service name',
                 ],
                 'required' => false,
             ])
             ->add('socialWorker', SearchType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'placeholder' => 'SocialWorker name',
                 ],
                 'required' => false,
             ])
             ->add('type', ChoiceType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getChoices(Referent::TYPE),
                 'attr' => [
                     'class' => 'w-max-150',

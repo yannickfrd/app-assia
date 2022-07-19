@@ -10,7 +10,6 @@
 
 		<div class="container-fluid mt-4">
             <h1 class="h2 mb-3">{{ title }}</h1>
-            {% include 'model/_flash_message.html.twig' %}
         </div>
         {% include 'app/event/task/_task_search_form.html.twig' %}
 
@@ -18,14 +17,14 @@
             <div class="row align-items-baseline">
                 <div class="col-md-6 align-middle mb-2">
                     {% if not restoration_mode %}
-                        <button id="js_new_task" class="btn btn-{{ theme_color }} shadow align-middle mr-2"
-                            title="Ajouter une tâche" data-toggle="modal" data-placement="bottom"
-                            data-target="#modal-task">
-                            <span class="fas fa-plus-square mr-2"></span>Nouvelle tâche
+                        <button id="js_new_task" class="btn btn-primary shadow align-middle me-2"
+                            title="Ajouter une tâche" data-bs-toggle="modal" data-bs-placement="bottom"
+                            data-bs-target="#modal-task">
+                            <span class="fas fa-plus-square me-2"></span>Nouvelle tâche
                         </button>
                     {% else %}
-                        <a href="{{ app.request.pathInfo }}" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" 
-                            id="return_index"><i class="fa-solid fa-arrow-rotate-left mr-2"></i>Retour
+                        <a href="{{ app.request.pathInfo }}" class="btn btn-primary btn-sm shadow me-2" 
+                            id="return_index"><i class="fa-solid fa-arrow-rotate-left me-2"></i>Retour
                         </a>
                     {% endif %}
                     <span>

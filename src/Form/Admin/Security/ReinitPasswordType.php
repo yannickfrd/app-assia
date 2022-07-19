@@ -17,20 +17,10 @@ class ReinitPasswordType extends AbstractType
     {
         $builder
             ->add('username', null, [
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
-                'attr' => [
-                    'placeholder' => 'Login',
-                ],
+                'attr' => ['placeholder' => 'Login'],
             ])
             ->add('email', null, [
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
-                'attr' => [
-                    'placeholder' => 'Email',
-                ],
+                'attr' => ['placeholder' => 'Email'],
             ])
             ->add('password', PasswordType::class, [
                 'constraints' => [

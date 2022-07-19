@@ -1,5 +1,5 @@
 import Ajax from '../utils/ajax'
-import MessageFlash from '../utils/messageFlash'
+import AlertMessage from '../utils/AlertMessage'
 import Loader from '../utils/loader'
 import {Modal} from 'bootstrap'
 import PaymentForm from "./PaymentForm";
@@ -12,6 +12,7 @@ export default class PaymentManager {
         this.paymentForm = new PaymentForm(this)
 
         this.paymentModal = new Modal(document.getElementById('payment_modal'))
+        this.confirmModal = new Modal(document.getElementById('modal-block'))
 
         this.btnNewElt = document.querySelector('button[data-action="new_payment"]')
 
@@ -22,7 +23,6 @@ export default class PaymentManager {
         this.sumPaidAmtElt = document.querySelector('td[data-payment="sumPaidAmt"]')
         this.sumStillToPayAmtElt = document.querySelector('td[data-payment="sumStillToPayAmt"]')
 
-        this.themeColor = document.getElementById('header').dataset.color
         this.countPaymentsElt = document.getElementById('count_payments')
         this.nbTotalPaymentsElt = document.getElementById('nb_total_payments')
 
@@ -54,8 +54,11 @@ export default class PaymentManager {
             }))
 
         document.querySelectorAll('table#table_payments tbody tr button[data-action="delete"]')
-            .forEach(btnDeleteElt => btnDeleteElt
-                .addEventListener('click', () => this.confirmBtnElt.dataset.path = btnDeleteElt.dataset.path))
+            .forEach(btnDeleteElt => btnDeleteElt.addEventListener('click', () => {
+                this.confirmModal.show()
+                this.confirmBtnElt.dataset.path = btnDeleteElt.dataset.path
+            })
+        )
 
         document.querySelectorAll('button[data-action="restore"]').forEach(restoreBtn => restoreBtn
             .addEventListener('click', () => this.requestRestorePayment(restoreBtn)))
@@ -156,7 +159,7 @@ export default class PaymentManager {
             case 'restore':
                 this.deletedPaymentTr(payment)
 
-                this.messageFlash = new MessageFlash(response.alert, response.msg)
+                this.messageFlash = new AlertMessage(response.alert, response.msg)
                 this.checkToRedirect(this.messageFlash.delay)
                 break
         }
@@ -166,7 +169,7 @@ export default class PaymentManager {
             this.paymentModal.hide()
 
             if (response.msg && !this.messageFlash) {
-                new MessageFlash(response.alert, response.msg)
+                new AlertMessage(response.alert, response.msg)
             }
         }
         this.calculateSumAmts()
@@ -243,18 +246,18 @@ export default class PaymentManager {
 
         return `
             <td class="align-middle text-center">
-                <button class="btn btn-${this.themeColor} btn-sm shadow" data-action="show" data-id="${payment.id}" 
-                    data-path="/payment/${payment.id}/show" data-toggle="tooltip" 
-                    data-placement="bottom" title="Voir l'enregistrement"><span class="fas fa-eye"></span>
+                <button class="btn btn-primary btn-sm shadow" data-action="show" data-id="${payment.id}" 
+                    data-path="/payment/${payment.id}/show" data-bs-toggle="tooltip" 
+                    data-bs-placement="bottom" title="Voir l'enregistrement"><span class="fas fa-eye"></span>
                 </button>
             </td>
             <td class="align-middle" data-payment="type">${payment.typeToString}<br/>
                 <span class="text-secondary">${payment.type === 11 ? ' (' + this.formatMoney(payment.returnAmt) + ')' : '' }</span>
             </td>
-            <td class="align-middle" data-payment="startDate">${this.formatDatetime(payment.startDate, 'date') + ' - ' + this.formatDatetime(payment.endDate, 'date')}</td>
-            <td class="align-middle text-right" data-payment="toPayAmt">${this.formatMoney(payment.toPayAmt)}</td>
-            <td class="align-middle text-right" data-payment="paidAmt">${this.formatMoney(payment.paidAmt)}</td>
-            <td class="align-middle text-right" data-payment="stillToPayAmt">${this.formatMoney(this.roundAmount(payment.stillToPayAmt))}</td>
+            <td class="align-middle text-center" data-payment="startDate">${this.formatDatetime(payment.startDate, 'date') + ' - ' + this.formatDatetime(payment.endDate, 'date')}</td>
+            <td class="align-middle text-end" data-payment="toPayAmt">${this.formatMoney(payment.toPayAmt)}</td>
+            <td class="align-middle text-end" data-payment="paidAmt">${this.formatMoney(payment.paidAmt)}</td>
+            <td class="align-middle text-end" data-payment="stillToPayAmt">${this.formatMoney(this.roundAmount(payment.stillToPayAmt))}</td>
             <td class="align-middle text-center" data-payment="paymentDate">${this.formatDatetime(payment.paymentDate, 'date')}</td>
             <td class="align-middle" data-payment="paymentType">${payment.paymentType ? payment.paymentTypeToString : ''}</td>
             <td class="align-middle small" data-payment="comment">${(payment.noContrib ? 'PAF à zéro (' + payment.noContribReasonToString + ') ' : '')}
@@ -272,8 +275,8 @@ export default class PaymentManager {
             </td>
             <td class="align-middle text-center">
                 <button data-path="/payment/${payment.id}/delete" data-action="delete"
-                    class="btn btn-danger btn-sm shadow my-1" data-placement="bottom" 
-                        title="Supprimer l\'enregistrement" data-toggle="modal" data-target="#modal-block">
+                    class="btn btn-danger btn-sm shadow my-1" data-bs-placement="bottom" 
+                        title="Supprimer l\'enregistrement" data-bs-toggle="modal" data-bs-target="#modal-block">
                     <span class="fas fa-trash-alt"></span>
                 </button>
             </td>

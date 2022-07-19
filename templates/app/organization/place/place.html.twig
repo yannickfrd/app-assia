@@ -23,9 +23,9 @@
         {% endif %}
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a class="text-{{ theme_color }}" href="{{ path('service_index') }}">Liste des
+                <li class="breadcrumb-item"><a class="link-primary" href="{{ path('service_index') }}">Liste des
                         services</a></li>
-                <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
+                <li class="breadcrumb-item"><a class="link-primary"
                         href="{{ path('service_edit', {'id': place.service.id}) }}">{{ place.service.name }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Groupe de places</li>
             </ol>
@@ -34,9 +34,6 @@
         <hr>
 
         <section>
-            {% include 'model/_flash_message.html.twig' %}
-            <div id="js-msg-flash-content"></div>
-
             {{ form_start(form) }}
 
             <div class="row mb-3">
@@ -73,7 +70,7 @@
             </div>
             {% if place.service.contributionType in [2, 3] %}
                 <div class="row mb-3">
-                    <div class="col-md-6">{{ form_row(form.rentAmt) }}</div>
+                    <div class="col-md-6">{{ form_row(form.rentAmt, {attr: {class: 'text-end'}}) }}</div>
                 </div>
             {% endif %}
             <div class="row mb-3">
@@ -84,25 +81,25 @@
                 <div class="row mb-3">
                     <div class="col-md-12">
                         {% if edit_mode and is_granted('DELETE', place) %}
-                            <div class="float-left d-flex">
+                            <div class="float-start d-flex">
                                 {% set alert_text = '"Êtes-vous vraiment sûr de vouloir supprimer ce groupe de places ?"' %}
-                                <a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" 
+                                <a id="modal-btn-delete" class="me-3 btn btn-danger d-block" 
                                     href="{{ path('place_delete', {'id': place.id}) }}"
-                                   title="Supprimer le groupe de places" data-toggle="tooltip" data-placement="bottom"
+                                   title="Supprimer le groupe de places" data-bs-toggle="tooltip" data-bs-placement="bottom"
                                     onclick="if(window.confirm({{ alert_text }})){return true;}else{return false;}">
-                                        <span class="fas fa-trash-alt mr-2"></span>Supprimer</a>
+                                        <span class="fas fa-trash-alt me-2"></span>Supprimer</a>
                                 {% set alert_text = '"Êtes-vous vraiment sûr de vouloir désactiver ce groupe de places ?"' %}
-                                <a class="mr-3 btn btn-{{ disabled ? 'success' : 'warning' }} d-block" 
+                                <a class="me-3 btn btn-{{ disabled ? 'success' : 'warning' }} d-block" 
                                     href="{{ path('place_disable', {'id': form.vars.value.id}) }}"
                                     title="{{ disabled ? 'Réactiver' : 'Désactiver' }} le groupe de place" 
-                                    data-toggle="tooltip" data-placement="bottom"
+                                    data-bs-toggle="tooltip" data-bs-placement="bottom"
                                     {% if disabled == false %}onclick="if(window.confirm('{{ alert_text }}')){return true;}else{return false;}"{% endif %}>
                                     {% if disabled %}Réactiver{% else %}Désactiver{% endif %}</a>
                             </div>
                         {% endif %}
-                        <div class="mb-4 float-right">
-                            <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">
-                                <span class="fas fa-save mr-2"></span>Enregistrer</button>
+                        <div class="mb-4 float-end">
+                            <button type="submit" id="send" name="send" class="btn btn-primary shadow">
+                                <span class="fas fa-save me-2"></span>Enregistrer</button>
                         </div>
                     </div>
                 </div>
@@ -135,19 +132,19 @@
                             {% for place_group in places_group %}
                                 {% set person = place_group.supportGroup.header %}
                                 <tr>
-                                    <td scope="row">
+                                    <td class="align-middle text-center" scope="row">
                                         <a href="{{ path('support_place_edit', {'id': place_group.id}) }}" 
-                                            class="btn btn-{{ theme_color }} btn-sm shadow"  
-                                            title="Voir le détail de la prise en charge" data-toggle="tooltip" 
-                                            data-placement="bottom"><span class="fas fa-eye"></span>
+                                            class="btn btn-primary btn-sm shadow"  
+                                            title="Voir le détail de la prise en charge" data-bs-toggle="tooltip" 
+                                            data-bs-placement="bottom"><span class="fas fa-eye"></span>
                                         </a>
                                     </td>
-                                    <td>{{ person ? person.fullname }}</td>
-                                    <td>{{ place_group.peopleGroup.familyTypologyToString }}</td>
-                                    <td>{{ place_group.placePeople ? place_group.placePeople|length }}</td>
-                                    <td>{{ place_group.startDate ? place_group.startDate|date('d/m/Y') }}</td>
-                                    <td>{{ place_group.endDate ? place_group.endDate|date('d/m/Y') }}</td>
-                                    <td>{{ place_group.endReasonToString }}</td>
+                                    <td class="align-middle">{{ person ? person.fullname }}</td>
+                                    <td class="align-middle">{{ place_group.peopleGroup.familyTypologyToString }}</td>
+                                    <td class="align-middle">{{ place_group.placePeople ? place_group.placePeople|length }}</td>
+                                    <td class="align-middle">{{ place_group.startDate ? place_group.startDate|date('d/m/Y') }}</td>
+                                    <td class="align-middle">{{ place_group.endDate ? place_group.endDate|date('d/m/Y') }}</td>
+                                    <td class="align-middle">{{ place_group.endReasonToString }}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>

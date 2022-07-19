@@ -1,20 +1,18 @@
-<p class="small text-secondary text-left"><i class="fas fa-info-circle mr-2"></i>
+<p class="small text-secondary text-start"><i class="fas fa-info-circle me-2"></i>
     <span>Pour vous connecter au SI-SIAO, il faut saisir votre identifiant de la manière suivante :</span><br/>
     siao_ + première lettre de votre prénom + votre nom + 0 + le numéro de votre départemental<br/>
     <i>Exemple : siao_adupont095</i>
 </p>
 <div class="my-1">
     <div class="input-group mb-2">
-        {{ form_label(siSiaoLoginForm.username) }}
+        {{ form_label(siSiaoLoginForm.username, null, {label_attr: {class: 'visually-hidden'}}) }}
         {{ form_widget(siSiaoLoginForm.username) }}
     </div>
 </div>
 <div class="my-3">
     <div class="input-group js-password-group">
-        {{ form_label(siSiaoLoginForm.password) }}
+        {{ form_label(siSiaoLoginForm.password, null, {label_attr: {class: 'visually-hidden'}}) }}
         {{ form_widget(siSiaoLoginForm.password, {'attr': {'class': 'js-password' }}) }}
-        <div class="input-group-append">
-            <span class="input-group-text"><span class="js-show-password fa fa-eye"></span></span>
-        </div>
+        <span class="input-group-text"><i class="js-show-password fa fa-eye"></i></span>
     </div>
 </div>

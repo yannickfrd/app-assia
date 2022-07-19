@@ -64,7 +64,6 @@ class OriginRequestType extends AbstractType
                 'required' => false,
             ])
             ->add('comment', TextareaType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'rows' => 2,
                     'placeholder' => 'originRequest.comment',

@@ -8,14 +8,14 @@
 
     <div class="row mb-3">
         <div class="col-md-12 accordion" id="accordion_evalFamily">
-            {{ support_people_looper.loop(accordion_id, evaluation_people, support, theme_color) }}
+            {{ support_people_looper.loop(accordion_id, evaluation_people, support) }}
 
             {% for key, eval_person in evaluation_people %}
                 {% set support_person = eval_person.vars.value.supportPerson %}
                 {% set person = support_person.person %}
                 {% set prefix_id = 'evaluation_evaluationPeople_' ~ key ~ '_evalFamilyPerson' %}
                 <div id="collapse_{{ prefix_id }}" class="collapse {% if loop.first %}show{% endif %} my-3"
-                    aria-labelledby="heading_{{ prefix_id }}" data-parent="#accordion_evalFamily">
+                    aria-labelledby="heading_{{ prefix_id }}" data-bs-parent="#accordion_evalFamily">
 
                     {% if support_person.role != role_child %}
                         <div class="row mb-3">
@@ -83,7 +83,7 @@
                         </div>
                     {% endif %}
                     <div class="row mb-3">
-                        <div class="col-md-12">{{ form_label(eval_person.evalFamilyPerson.commentEvalFamilyPerson) }}</div>
+                        <div class="col-md-12">{{ form_label(eval_person.evalFamilyPerson.commentEvalFamilyPerson, null, {label_attr: {class: 'visually-hidden'}}) }}</div>
                         <div class="col-md-12">{{ form_widget(eval_person.evalFamilyPerson.commentEvalFamilyPerson) }}</div>
                     </div>
                 </div>
@@ -101,7 +101,7 @@
     </div>
     {% if nb_people > 1 %}
         <div class="row mb-3">
-            <div class="col-md-12">{{ form_label(form.evalFamilyGroup.commentEvalFamilyGroup) }}</div>
+            <div class="col-md-12">{{ form_label(form.evalFamilyGroup.commentEvalFamilyGroup, null, {label_attr: {class: 'visually-hidden'}}) }}</div>
             <div class="col-md-12">{{ form_widget(form.evalFamilyGroup.commentEvalFamilyGroup) }}</div>
         </div>
     {% endif %}

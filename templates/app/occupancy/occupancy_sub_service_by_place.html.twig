@@ -4,7 +4,6 @@
 
 {% block body %}
     <div class="container">
-        {% include 'model/_flash_message.html.twig' %}
         <h1 class="h2 mb-3">Taux d'occupation<span class="fas fa-angle-right fa-xs mx-1"></span><!--
         -->{{ subService ? subService.name : ' Groupes de places' }}</h1>
     </div>
@@ -15,8 +14,8 @@
         <div class="row">
             <div class="col-md-12">
                 <p><a href="{{ path('occupancy_sub_services', {'id': subService.service.id, 'year': search.year, 'date': {'start': search.start|date('Y-m-d'), 
-                    'end': search.end|date('Y-m-d')}, 'pole': search.pole ? search.pole.id}) }}" class="text-{{ theme_color }}">
-                    <span class="fas fa-undo mr-2"></span>Retour aux taux d'ocupation du service.</a>
+                    'end': search.end|date('Y-m-d')}, 'pole': search.pole ? search.pole.id}) }}" class="link-primary">
+                    <span class="fas fa-undo me-2"></span>Retour aux taux d'ocupation du service.</a>
                 </p>
                 {% set interval = date(search.start).diff(date(search.end)) %}
                 <p>Période du {{ search.start|date('d/m/Y') }} au {{ search.end|date('d/m/Y') }},<!--
@@ -33,12 +32,12 @@
                                 <th class="align-middle th-w-150">Groupe de places</th>
                                 <th class="align-middle th-w-150">Sous-service (Dispositif)</th>
                                 <th class="align-middle th-w-150">Adresse</th>
-                                <th class="align-middle th-w-100 text-right">Nombre de places</th>
-                                <th class="align-middle th-w-100 text-right">Nb de nuitées théoriques</th>
-                                <th class="align-middle th-w-100 text-right">Nb de nuitées réalisées</th>
-                                <th class="align-middle th-w-100 text-right">Nb moyen de places/nuit</th>
-                                <th class="align-middle th-w-100 text-right">Nb moyen de personnes/nuit</th>
-                                <th class="align-middle th-w-100 text-right">Taux d'occupation</th>
+                                <th class="align-middle th-w-100 text-end">Nombre de places</th>
+                                <th class="align-middle th-w-100 text-end">Nb de nuitées théoriques</th>
+                                <th class="align-middle th-w-100 text-end">Nb de nuitées réalisées</th>
+                                <th class="align-middle th-w-100 text-end">Nb moyen de places/nuit</th>
+                                <th class="align-middle th-w-100 text-end">Nb moyen de personnes/nuit</th>
+                                <th class="align-middle th-w-100 text-end">Taux d'occupation</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -46,37 +45,37 @@
                                 <tr>
                                     <td scope="row" class="align-middle text-center">
                                         <a href="{{ path('place_edit', {'id': placeId, 'year': search.year}) }}#place_groups" 
-                                            class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom" 
+                                            class="btn btn-primary btn-sm shadow" data-bs-placement="bottom" 
                                             title="Voir le groupe de places"><span class="fas fa-eye fa-sm"></span>
                                         </a>
                                     </td>
                                     <td class="align-middle">{{ place.place.name }}</td>
                                     <td class="align-middle">{{ place.place.subService.name }} ({{ place.place.device.name }})</td>
                                     <td class="align-middle">{{ place.place.address }}, {{ place.place.city }}</td>
-                                    <td class="align-middle text-right">{{ place.sumPlaces }}</td>
-                                    <td class="align-middle text-right">{{ place.capacityDays|number }}</td>
-                                    <td class="align-middle text-right">{{ place.occupancyDays|number }}</td>
-                                    <td class="align-middle text-right">{{ place.averageCapacity|round(2) }}</td>
-                                    <td class="align-middle text-right">{{ place.averageOccupancy|round(2) }}</td>
+                                    <td class="align-middle text-end">{{ place.sumPlaces }}</td>
+                                    <td class="align-middle text-end">{{ place.capacityDays|number }}</td>
+                                    <td class="align-middle text-end">{{ place.occupancyDays|number }}</td>
+                                    <td class="align-middle text-end">{{ place.averageCapacity|round(2) }}</td>
+                                    <td class="align-middle text-end">{{ place.averageOccupancy|round(2) }}</td>
                                     {% set ocupancy_rate = ratio(place.occupancyDays, place.capacityDays) %}
-                                    <td class="align-middle alert-{{ color(ocupancy_rate) }} text-right">
-                                        <span class="font-weight-bold font-italic">{{ ocupancy_rate|percent }}</span>
+                                    <td class="align-middle bg-{{ color(ocupancy_rate) }} bg-opacity-25 text-end">
+                                        <span class="fw-bold fst-italic">{{ ocupancy_rate|percent }}</span>
                                     </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
                         <tfoot>
-                            <tr class="font-weight-bold">
+                            <tr class="fw-bold">
                                 <td class="align-middle text-center" scope="row">Total</td>
                                 <td class="align-middle py-2" colspan="3">{{ datas.places|length }}</td>
-                                <td class="align-middle text-right">{{ datas.sumPlaces|number }}</td>
-                                <td class="align-middle text-right">{{ datas.capacityDays|number }}</td>
-                                <td class="align-middle text-right">{{ datas.occupancyDays|number }}</td>
-                                <td class="align-middle text-right">{{ datas.averageCapacity|round(2) }}</td>
-                                <td class="align-middle text-right">{{ datas.averageOccupancy|round(2) }}</td>
+                                <td class="align-middle text-end">{{ datas.sumPlaces|number }}</td>
+                                <td class="align-middle text-end">{{ datas.capacityDays|number }}</td>
+                                <td class="align-middle text-end">{{ datas.occupancyDays|number }}</td>
+                                <td class="align-middle text-end">{{ datas.averageCapacity|round(2) }}</td>
+                                <td class="align-middle text-end">{{ datas.averageOccupancy|round(2) }}</td>
                                 {% set ocupancy_rate = ratio(datas.occupancyDays, datas.capacityDays) %}
-                                <td class="align-middle alert-{{ color(ocupancy_rate) }} text-right">
-                                    <span class="font-weight-bold font-italic">{{ ocupancy_rate|percent }}</span>
+                                <td class="align-middle bg-{{ color(ocupancy_rate) }} bg-opacity-25 text-end">
+                                    <span class="fw-bold fst-italic">{{ ocupancy_rate|percent }}</span>
                                 </td>
                             </tr>
                         </tfoot>

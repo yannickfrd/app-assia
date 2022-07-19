@@ -14,11 +14,9 @@ class SiSiaoLoginType extends AbstractType
     {
         $builder
             ->add('username', null, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => ['placeholder' => 'si_siao.username'],
             ])
             ->add('password', PasswordType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => ['placeholder' => 'si_siao.password'],
             ]);
     }

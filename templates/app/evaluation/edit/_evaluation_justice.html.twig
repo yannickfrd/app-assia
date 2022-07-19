@@ -9,7 +9,7 @@
 	<div class="row">
 		<div class="col-md-12">
 			{% for eval_person in evaluation_people|filter(a => a.vars.value.supportPerson.head) %}
-				<button type="button" class="btn btn-outline-{{ theme_color }} active mb-4">{{ eval_person.vars.value.supportPerson.person.fullname }}</button>
+				<button type="button" class="btn btn-outline-primary active mb-4">{{ eval_person.vars.value.supportPerson.person.fullname }}</button>
 				<div class="row mb-3">
 					<div class="col-md-6">
 						{{ form_row(eval_person.evalJusticePerson.justiceStatus, {
@@ -24,7 +24,7 @@
 				</div>
 				<div class="row mb-3">
 					<div class="col-md-12">
-						{{ form_label(eval_person.evalJusticePerson.commentEvalJustice) }}
+						{{ form_label(eval_person.evalJusticePerson.commentEvalJustice, null, {label_attr: {class: 'visually-hidden'}}) }}
 						{{ form_widget(eval_person.evalJusticePerson.commentEvalJustice) }}
 					</div>
 				</div>

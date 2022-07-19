@@ -12,7 +12,7 @@
                 {% set service_user_prototype %}
                         <td class="align-middle">{{ form_widget(form_user_services.serviceUser.vars.prototype.service) }}</td>
                         <td class="align-middle">
-                            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }}">
+                            <div class="form-check">
                                 {{ form_widget(form_user_services.serviceUser.vars.prototype.main) }}
                             </div>
                         </td>
@@ -30,12 +30,12 @@
 </div>
 <div class="row mb-4">
     <div class="col-md-12">
-        <button type="button" id="addService" class="btn btn-{{ theme_color }}" data-add-widget="service"
-            data-list-selector="#service_user_fields_list"><i class="fas fa-plus-square mr-2"></i>
+        <button type="button" id="addService" class="btn btn-primary" data-add-widget="service"
+            data-list-selector="#service_user_fields_list"><i class="fas fa-plus-square me-2"></i>
             Ajouter un service</button>
-        <div class="float-right">
+        <div class="float-end">
             <button type="submit" id="user_services_send" name="user_services_send" 
-                class="btn btn-{{ theme_color }} shadow"><i class="fas fa-save mr-2"></i>Enregistrer</button>
+                class="btn btn-primary shadow"><i class="fas fa-save me-2"></i>Enregistrer</button>
         </div>
     </div>
 </div>

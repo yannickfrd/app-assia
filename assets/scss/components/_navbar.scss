@@ -1,0 +1,43 @@
+nav.fixed-top {
+    min-height: $header-md-height;
+}
+
+.dropdown-menu {
+    font-size: $font-size-base;
+}
+
+#logo-site {
+    max-height: 54px;
+    width: 144px;
+}
+
+#results_search {
+    position: absolute;
+    top: 35px;
+}
+
+@media (min-width: 992px) {
+    // Navbar
+    ul.navbar-nav li.dropdown:hover>.dropdown-menu {
+        display: block;
+    }
+}
+
+// Medium devices (tablets, 768px and up)
+@media (max-width: 768px) {
+    nav.fixed-top {
+        min-height: $header-sm-height;
+    }
+}
+
+// Small devices (landscape phones, 576px and up)
+@media (max-width: 576px) {
+    nav.fixed-top {
+        min-height: $header-xs-height;
+    }
+
+    #logo-site {
+        max-height: 40px;
+        width: 103px;
+    }
+}

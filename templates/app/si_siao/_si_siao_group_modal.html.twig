@@ -4,21 +4,19 @@
 
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalConfirmation">Importer Fiche groupe SI-SIAO</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
                 <div class="modal-body">
                 </div>
 
                 <div class="modal-footer d-flex justify-content-between">
-                    <div class="float-left">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <div class="float-start">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                     </div>
-                    <div class="float-right">
+                    <div class="float-end">
                         <a href="#" data-action="import-si-siao-group" data-url="{{ path('api_sisiao_import_group', {id: '__id__'}) }}" 
-                            class="btn btn-lg btn-{{ theme_color }} btn-block shadow">Importer</a>
+                            class="btn btn-lg btn-primary w-100 shadow">Importer</a>
                     </div>
                 </div>
         </div>

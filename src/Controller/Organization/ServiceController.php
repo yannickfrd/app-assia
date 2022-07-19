@@ -67,7 +67,7 @@ final class ServiceController extends AbstractController
             $this->em->persist($service);
             $this->em->flush();
 
-            $this->addFlash('success', 'Le service est créé.');
+            $this->addFlash('success', 'service.created_successfully');
 
             return $this->redirectToRoute('service_edit', ['id' => $service->getId()]);
         }
@@ -105,7 +105,7 @@ final class ServiceController extends AbstractController
 
             $this->em->flush();
 
-            $this->addFlash('success', 'Les modifications sont enregistrées.');
+            $this->addFlash('success', 'service.updated_successfully');
         }
 
         $places = $placeRepo->findPlacesOfService($service);
@@ -135,13 +135,11 @@ final class ServiceController extends AbstractController
     {
         $this->denyAccessUnlessGranted('DISABLE', $service);
 
-        if ($service->getDisabledAt()) {
-            $service->setDisabledAt(null);
-            $this->addFlash('success', 'Le service "'.$service->getName().'" est ré-activé.');
-        } else {
-            $service->setDisabledAt(new \DateTime());
-            $this->addFlash('warning', 'Le service "'.$service->getName().'" est désactivé.');
-        }
+        $isDisabled = $service->isDisabled();
+
+        $service->setDisabledAt($isDisabled ? null : new \DateTime());
+
+        $this->addFlash('success', $isDisabled ? 'service.actived_successfully' : 'service.disabled_successfully');
 
         $this->em->flush();
 

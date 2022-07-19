@@ -19,7 +19,6 @@ class SupportPaymentSearchType extends AbstractType
     {
         $builder
             ->add('type', ChoiceType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'multiple' => true,
                 'attr' => [
                     'class' => 'multi-select',
@@ -30,7 +29,6 @@ class SupportPaymentSearchType extends AbstractType
                 'required' => false,
             ])
             ->add('dateType', ChoiceType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getChoices(PaymentSearch::DATE_TYPE),
                 'placeholder' => 'placeholder.dateType',
                 'required' => false,

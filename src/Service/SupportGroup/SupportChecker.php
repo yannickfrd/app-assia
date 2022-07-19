@@ -5,14 +5,19 @@ namespace App\Service\SupportGroup;
 use App\Entity\Support\SupportGroup;
 use App\Form\Utils\Choices;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SupportChecker
 {
-    private $flashbag;
+    private $flashBag;
+    private $translator;
 
-    public function __construct(FlashBagInterface $flashbag)
-    {
-        $this->flashbag = $flashbag;
+    public function __construct(
+        FlashBagInterface $flashBag,
+        TranslatorInterface $translator
+    ) {
+        $this->flashBag = $flashBag;
+        $this->translator = $translator;
     }
 
     /**
@@ -51,7 +56,7 @@ class SupportChecker
                 ++$nbHeads;
                 if ($age < 18) {
                     $minorHead = true;
-                    $this->flashbag->add('warning', 'Le demandeur principal a été automatiquement modifié, car il ne peut pas être mineur.');
+                    $this->flashBag->add('warning', 'support_group.invalid_header');
                 }
             }
         }
@@ -82,18 +87,16 @@ class SupportChecker
         $nbPeople = $supportGroup->getPeopleGroup()->getNbPeople();
 
         if ($nbSupportPeople != $nbPeople && $nbActiveSupportPeople != $nbPeople) {
-            $this->flashbag->add(
-                'warning',
-                'Attention, le nombre de personnes suivies 
-                ne correspond pas à la composition familiale du groupe ('.$nbPeople.' personnes).'
-            );
+            $this->flashBag->add('warning', $this->translator->trans('support_group.invalid_nb_people', [
+                'nb_people' => $nbPeople,
+            ], 'app'));
         }
     }
 
     private function checkStartDate(SupportGroup $supportGroup): void
     {
         if (SupportGroup::STATUS_IN_PROGRESS === $supportGroup->getStatus() && null === $supportGroup->getStartDate()) {
-            $this->flashbag->add('warning', "Attention, la date de début d'accompagnement n'est pas renseignée.");
+            $this->flashBag->add('warning', 'support_group.no_start_date');
         }
     }
 
@@ -105,17 +108,15 @@ class SupportChecker
         if ($supportGroup->getDevice() && Choices::YES === $supportGroup->getDevice()->getPlace()) {
             // Vérifie qu'il y a un hébergement créé
             if (0 === $supportGroup->getPlaceGroups()->count()) {
-                return $this->flashbag->add('warning', 'Attention, aucun hébergement n\'est enregistré pour ce suivi.');
+                return $this->flashBag->add('warning', 'support_group.no_place_group');
             }
             // Vérifie que le nombre de personnes suivies correspond au nombre de personnes hébergées
             $nbPlacePeople = $this->getNbPlacePeople($supportGroup);
             if (!$supportGroup->getEndDate() && $nbActiveSupportPeople != $nbPlacePeople) {
-                $this->flashbag->add(
-                    'warning',
-                    'Attention, le nombre de personnes suivies ('.$nbActiveSupportPeople.') 
-                    ne correspond pas au nombre de personnes hébergées ('.$nbPlacePeople.').<br/> 
-                    Allez dans l\'onglet <b>Hébergement</b> pour ajouter les personnes à l\'hébergement.'
-                );
+                $this->flashBag->add('warning', $this->translator->trans('support_group.invalid_nb_place_people', [
+                    'nb_support_people' => $nbActiveSupportPeople,
+                    'nb_place_people' => $nbPlacePeople,
+                ], 'app'));
             }
         }
     }

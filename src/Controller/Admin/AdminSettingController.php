@@ -30,7 +30,7 @@ final class AdminSettingController extends AbstractController
             $em->persist($setting);
             $em->flush();
 
-            $this->addFlash('success', 'La configuration est bien enregistrée.');
+            $this->addFlash('success', 'settings.updated_successfully');
         }
 
         return $this->render('app/admin/settings.html.twig', [

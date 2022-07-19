@@ -1,5 +1,5 @@
 import Ajax from '../utils/ajax'
-import MessageFlash from '../utils/messageFlash'
+import AlertMessage from '../utils/AlertMessage'
 import Loader from '../utils/loader'
 import AutoSaver from '../utils/form/autoSaver'
 
@@ -62,10 +62,10 @@ export default class UpdateEvaluation {
         
         if (!response.alert) {
             console.error(response)
-            return new MessageFlash('danger', 'Attention, une erreur s\'est produite.')
+            return new AlertMessage('danger', 'Attention, une erreur s\'est produite.')
         }
         
-        new MessageFlash(response.alert, response.msg)
+        new AlertMessage(response.alert, response.msg)
 
         if (!response.data) {
             return null

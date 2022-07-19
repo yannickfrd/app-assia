@@ -1,0 +1,16 @@
+@each $color, $value in $theme-colors {
+    html[data-theme-color="#{$color}"] {
+        .page-item.active .page-link {
+            background-color: $value;
+            border-color: $value;
+        }
+        
+        .page-link {
+            color: $value;
+
+            &:focus {
+                @include border-color($value);
+            }
+        }
+    }
+}

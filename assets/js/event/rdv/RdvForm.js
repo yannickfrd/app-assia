@@ -1,7 +1,7 @@
 import FormValidator from "../../utils/form/formValidator";
 import SelectManager from "../../utils/form/SelectManager";
 import DateFormater from "../../utils/date/dateFormater";
-import MessageFlash from "../../utils/messageFlash";
+import AlertMessage from "../../utils/AlertMessage";
 import {Modal} from "bootstrap";
 import RdvModel from "./model/RdvModel";
 import ApiCalendar from "../../api/ApiCalendar";
@@ -18,8 +18,6 @@ export default class RdvForm {
         this.ajax = manager.ajax
 
         this.apiCalendar = new ApiCalendar()
-
-        this.themeColor = document.getElementById('header').dataset.color
 
         this.modalRdvElt = document.getElementById('modal-rdv')
         this.rdvModal = new Modal(this.modalRdvElt)
@@ -179,7 +177,7 @@ export default class RdvForm {
 
     requestCreateRdv() {
         if (!this.isValidForm()) {
-            return new MessageFlash('danger', 'Une ou plusieurs informations sont invalides.')
+            return new AlertMessage('danger', 'Une ou plusieurs informations sont invalides.')
         }
 
         if (!this.loader.isActive()) {
@@ -272,7 +270,7 @@ export default class RdvForm {
 
         if (rdv.supportGroup) {
             const href = this.rdvTitleElt.dataset.url.replace('__id__', rdv.supportGroup.id)
-            this.rdvTitleElt.innerHTML = `<a href="${href}" class="text-${this.themeColor}" title="Accéder au suivi">${title}</a>`
+            this.rdvTitleElt.innerHTML = `<a href="${href}" class="link-primary" title="Accéder au suivi">${title}</a>`
         }
 
         if (!canEdit) {
@@ -324,7 +322,7 @@ export default class RdvForm {
     createTags(rdv) {
         let tags = ''
         rdv.tags.forEach(tag => {
-            tags += `<span class="badge bg-${tag.color} text-light mr-1">${tag.name}</span>`
+            tags += `<span class="badge bg-${tag.color} me-1">${tag.name}</span>`
         })
 
         return tags

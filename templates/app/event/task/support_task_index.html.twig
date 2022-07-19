@@ -6,20 +6,20 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block body %}
-    <div class="container">
+    <div class="container pt-3">
+    
         {% include 'app/support/_partials/_support_nav.html.twig' %}
-        {% include 'model/_flash_message.html.twig' %}
 
-        <div class="row">
-            <div class="d-flex col-md-6 mb-1 align-items-center">
+        <div class="row mb-2">
+            <div class="d-flex col-md-6 align-items-center">
                 {% if not restoration_mode %}
-                    <button id="js_new_task" class="btn btn-{{ theme_color }} shadow align-middle mr-2"
-                        title="Ajouter une tâche" data-toggle="modal" data-placement="bottom"
-                        data-target="#modal-task"><i class="fas fa-plus-square mr-2"></i>Nouvelle tâche
+                    <button id="js_new_task" class="btn btn-primary shadow me-2"
+                        title="Ajouter une tâche" data-bs-toggle="modal" data-bs-placement="bottom"
+                        data-bs-target="#modal-task"><i class="fas fa-plus-square me-2"></i>Nouvelle tâche
                     </button>
 				{% else %}
-					<a href="{{ app.request.pathInfo }}" class="btn btn-{{ theme_color }} btn-sm shadow mr-2" 
-                        id="return_index"><i class="fa-solid fa-arrow-rotate-left mr-2"></i>Retour
+					<a href="{{ app.request.pathInfo }}" class="btn btn-primary btn-sm shadow me-2" 
+                        id="return_index"><i class="fa-solid fa-arrow-rotate-left me-2"></i>Retour
 					</a>
 				{% endif %}
                 <span>

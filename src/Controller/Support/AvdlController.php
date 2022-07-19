@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller\Support;
 
-use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\Organization\Service;
 use App\Form\Model\Support\AvdlSupportSearch;
 use App\Form\Support\Avdl\AvdlSupportSearchType;
@@ -18,8 +17,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 final class AvdlController extends AbstractController
 {
-    use ErrorMessageTrait;
-
     /**
      * Liste des suivis AVDL.
      *
@@ -48,7 +45,7 @@ final class AvdlController extends AbstractController
         $supports = $supportPersonRepo->findSupportsOfServiceToExport(Service::SERVICE_TYPE_AVDL, $search);
 
         if (!$supports) {
-            $this->addFlash('warning', 'Aucun résultat à exporter.');
+            $this->addFlash('warning', 'no_result_to_export');
 
             return $this->redirectToRoute('avdl_support_index');
         }

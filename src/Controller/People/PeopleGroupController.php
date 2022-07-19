@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller\People;
 
-use App\Controller\Traits\ErrorMessageTrait;
 use App\Entity\People\PeopleGroup;
 use App\Entity\People\Person;
 use App\Entity\People\RolePerson;
@@ -26,8 +25,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 final class PeopleGroupController extends AbstractController
 {
-    use ErrorMessageTrait;
-
     private $peopleGroupRepo;
     private $em;
 
@@ -59,7 +56,7 @@ final class PeopleGroupController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $peopleGroupManager->update($peopleGroup);
 
-            $this->addFlash('success', 'Les modifications sont enregistrées.');
+            $this->addFlash('success', 'people_group.updated_successfully');
         }
 
         return $this->render('app/people/peopleGroup/people_group_edit.html.twig', [
@@ -83,7 +80,7 @@ final class PeopleGroupController extends AbstractController
         $this->em->remove($peopleGroup);
         $this->em->flush();
 
-        $this->addFlash('warning', 'Le groupe est supprimé.');
+        $this->addFlash('warning', 'people_group.deleted_successfully');
 
         return $this->redirectToRoute('home');
     }
@@ -106,7 +103,7 @@ final class PeopleGroupController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $peopleGroupManager->addPerson($peopleGroup, $person, $rolePerson, $form->get('addPersonToSupport')->getData());
         } else {
-            $this->addFlash('danger', 'Une erreur s\'est produite.');
+            $this->addFlash('danger', 'error_occurred');
         }
 
         return $this->redirectToRoute('people_group_show', ['id' => $peopleGroup->getId()]);
@@ -123,6 +120,8 @@ final class PeopleGroupController extends AbstractController
 
         if ($this->isCsrfTokenValid('remove'.$rolePerson->getId(), $_token)) {
             $peopleGroupManager->removePerson($rolePerson);
+        } else {
+            $this->addFlash('danger', 'error_occurred');
         }
 
         return $this->redirectToRoute('people_group_show', ['id' => $peopleGroup->getId()]);

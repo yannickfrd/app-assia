@@ -33,7 +33,6 @@ class PaymentSearchType extends AbstractType
         $this->setFormData($builder);
         $builder
             ->add('id', SearchType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'placeholder' => 'ID',
                     'class' => 'w-max-80',
@@ -41,7 +40,6 @@ class PaymentSearchType extends AbstractType
                 'required' => false,
             ])
             ->add('fullname', SearchType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'placeholder' => 'search.fullname.placeholder',
                     'class' => 'w-max-180',
@@ -49,7 +47,6 @@ class PaymentSearchType extends AbstractType
                 'required' => false,
             ])
             ->add('type', ChoiceType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'multiple' => true,
                 'attr' => [
                     'class' => 'multi-select',
@@ -60,7 +57,6 @@ class PaymentSearchType extends AbstractType
                 'required' => false,
             ])
             ->add('dateType', ChoiceType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getChoices(PaymentSearch::DATE_TYPE),
                 'placeholder' => 'placeholder.dateType',
                 'required' => false,

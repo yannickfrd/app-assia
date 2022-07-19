@@ -1,5 +1,5 @@
 import NoteManager from './NoteManager'
-import MessageFlash from '../utils/messageFlash'
+import AlertMessage from '../utils/AlertMessage'
 import AutoSaver from '../utils/form/autoSaver'
 import ParametersUrl from '../utils/parametersUrl'
 import CkEditor from '../utils/ckEditor'
@@ -132,7 +132,7 @@ export default class NoteForm {
         }
 
         if (this.ckEditor.getData() === '') {
-            return new MessageFlash('danger', 'Veuillez rédiger la note avant d\'enregistrer.')
+            return new AlertMessage('danger', 'Veuillez rédiger la note avant d\'enregistrer.')
         }
 
         if (this.ckEditor.getData() !== this.contentElt.textContent) {

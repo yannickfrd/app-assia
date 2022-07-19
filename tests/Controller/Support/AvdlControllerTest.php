@@ -77,7 +77,7 @@ class AvdlControllerTest extends WebTestCase
         ], 'GET');
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-warning', 'Aucun résultat à exporter.');
+        $this->assertSelectorTextContains('.toast.alert-warning', 'Aucun résultat à exporter.');
 
         // Export with results
         $this->client->submitForm('export', [], 'GET');
@@ -121,7 +121,7 @@ class AvdlControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-success', 'Le suivi social est créé.');
+        $this->assertSelectorTextContains('.toast.alert-success', 'Le suivi a été créé');
     }
 
     public function testEditAvdlSupportGroupIsSuccessful(): void
@@ -133,7 +133,7 @@ class AvdlControllerTest extends WebTestCase
         $this->client->request('GET', "/support/$id/edit");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('h1', 'Édition du suivi');
+        $this->assertSelectorTextContains('h1', 'Édition');
 
         $now = new \DateTime();
         $this->client->submitForm('send', [
@@ -164,7 +164,7 @@ class AvdlControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-success', 'Le suivi social est mis à jour.');
+        $this->assertSelectorTextContains('.toast.alert-success', 'Le suivi a été mis à jour.');
 
         $this->client->request('GET', "/support/$id/show");
         $this->assertResponseIsSuccessful();

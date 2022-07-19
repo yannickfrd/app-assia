@@ -11,18 +11,16 @@
         <section>
             <h1 class="h2 mb-3">{{ title }}</h1>
 
-            {% include 'model/_flash_message.html.twig' %}
-
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a class="text-{{ theme_color }}" href="{{ path('admin') }}">Administration</a></li>
+                    <li class="breadcrumb-item"><a class="link-primary" href="{{ path('admin') }}">Administration</a></li>
                     <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
                 </ol>
             </nav>
 
             <div class="row">
                 <div class="col-md-12">
-                    <p><a class="text-{{ theme_color }}" href="{{ path('admin_settings') }}">Voir les paramètres</a></p>
+                    <p><a class="link-primary" href="{{ path('admin_settings') }}">Voir les paramètres</a></p>
                 </div>
             </div> 
 
@@ -31,57 +29,57 @@
                     <table id="table-services" class="table table-bordered table-striped table-hover text-dark">
                         <thead>
                         <tr>
-                            <th scope="row" class="align-middle text-left w-min-80"></th>
-                            <th scope="row" class="align-middle text-right w-min-80">A archiver</th>
-                            <th scope="row" class="align-middle text-right  w-min-80">A supprimer</th>
+                            <th scope="row" class="align-middle text-start w-min-80"></th>
+                            <th scope="row" class="align-middle text-end w-min-80">A archiver</th>
+                            <th scope="row" class="align-middle text-end w-min-80">A supprimer</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
                             <td>Suivis</td>
-                            <td class="text-right">
+                            <td class="text-end">
                                 {% if support_groups.archive_count > 0 %}
                                     <a href="{{ path('admin_archive_index') }}">{{ support_groups.archive_count|number }}</a>
                                 {% else %}
                                     {{ support_groups.archive_count|number }}
                                 {% endif %}
                             </td>
-                            <td class="text-right">{{ support_groups.purge_count|number }}</td>
+                            <td class="text-end">{{ support_groups.purge_count|number }}</td>
                         </tr>
                         <tr>
                             <td>Ménages</td>
-                            <td class="text-right">{{ people_groups.archive_count|number }}</td>
-                            <td class="text-right">{{ people_groups.purge_count|number }}</td>
+                            <td class="text-end">{{ people_groups.archive_count|number }}</td>
+                            <td class="text-end">{{ people_groups.purge_count|number }}</td>
                         </tr>
                         <tr>
                             <td>Personnes</td>
-                            <td class="text-right">{{ people.archive_count|number }}</td>
-                            <td class="text-right">{{ people.purge_count|number }}</td>
+                            <td class="text-end">{{ people.archive_count|number }}</td>
+                            <td class="text-end">{{ people.purge_count|number }}</td>
                         </tr>
                         <tr>
                             <td>Documents</td>
-                            <td class="text-right">{{ documents.archive_count|number }}</td>
-                            <td class="text-right">{{ documents.purge_count|number }}</td>
+                            <td class="text-end">{{ documents.archive_count|number }}</td>
+                            <td class="text-end">{{ documents.purge_count|number }}</td>
                         </tr>
                         <tr>
                             <td>Notes</td>
-                            <td class="text-right">{{ notes.archive_count|number }}</td>
-                            <td class="text-right">{{ notes.purge_count|number }}</td>
+                            <td class="text-end">{{ notes.archive_count|number }}</td>
+                            <td class="text-end">{{ notes.purge_count|number }}</td>
                         </tr>
                         <tr>
                             <td>Paiements</td>
-                            <td class="text-right">{{ payments.archive_count|number }}</td>
-                            <td class="text-right">{{ payments.purge_count|number }}</td>
+                            <td class="text-end">{{ payments.archive_count|number }}</td>
+                            <td class="text-end">{{ payments.purge_count|number }}</td>
                         </tr>
                         <tr>
                             <td>Rendez-vous</td>
-                            <td class="text-right">{{ rdvs.archive_count|number }}</td>
-                            <td class="text-right">{{ rdvs.purge_count|number }}</td>
+                            <td class="text-end">{{ rdvs.archive_count|number }}</td>
+                            <td class="text-end">{{ rdvs.purge_count|number }}</td>
                         </tr>
                         <tr>
                             <td>Tâches</td>
-                            <td class="text-right">{{ tasks.archive_count|number }}</td>
-                            <td class="text-right">{{ tasks.purge_count|number }}</td>
+                            <td class="text-end">{{ tasks.archive_count|number }}</td>
+                            <td class="text-end">{{ tasks.purge_count|number }}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -90,11 +88,11 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <div class="float-right">
+                    <div class="float-end">
                         <a href="{{ path('admin_archive') }}" id="send1" class="btn btn-secondary shadow"
                            onclick="return window.confirm('Etes-vous sûr de vouloir procéder à l’archivage ?');">
                             Archiver</a>
-                        <a href="{{ path('admin_purge') }}" id="send2" class="btn btn-{{ theme_color }} shadow"
+                        <a href="{{ path('admin_purge') }}" id="send2" class="btn btn-primary shadow"
                            onclick="return window.confirm('Etes-vous sûr de vouloir procéder à la purge ?');">
                             Supprimer</a>
                     </div>

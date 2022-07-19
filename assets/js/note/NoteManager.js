@@ -1,5 +1,5 @@
 import Ajax from '../utils/ajax'
-import MessageFlash from '../utils/messageFlash'
+import AlertMessage from '../utils/AlertMessage'
 import Loader from '../utils/loader'
 import ParametersUrl from '../utils/parametersUrl'
 import {Modal} from 'bootstrap'
@@ -21,8 +21,7 @@ export default class NoteManager {
         this.deleteModalElt = document.getElementById('modal-block')
         this.deleteModal = new Modal(this.deleteModalElt)
 
-        this.searchSupportNotesElt = document.getElementById('js-search-support-notes')
-        this.themeColor = document.getElementById('header').dataset.color
+        this.searchSupportNotesElt = document.getElementById('accordion_search')
         this.autoSaveElt = document.getElementById('js-auto-save')
         this.countNotesElt = document.getElementById('count-notes')
         this.containerNotesElt = document.getElementById('container-notes')
@@ -156,7 +155,7 @@ export default class NoteManager {
         const note = response.note
 
         if (!this.noteForm.autoSaver.active && response.msg) {
-            this.messageFlash = new MessageFlash(response.alert, response.msg)
+            this.messageFlash = new AlertMessage(response.alert, response.msg)
             this.loader.off()
         }
 
@@ -209,7 +208,7 @@ export default class NoteManager {
         noteElt.innerHTML = `
             <div class='card h-100 shadow cursor-pointer'>
                 <div class='card-header'>
-                    <h3 class='card-title h5 text-${this.themeColor}'>${note.title}</h3>
+                    <h3 class='card-title h5 text-primary'>${note.title}</h3>
                     <span data-note-type="${note.type}">${note.typeToString}</span> 
                     (<span data-note-status="${note.status}">${note.statusToString}</span>)
                     <span class="small text-secondary" data-note-created="true">Créé le ${note.createdAtToString}</span>
@@ -248,12 +247,12 @@ export default class NoteManager {
         noteTr.innerHTML = `
             <td class="align-middle text-center">
                 <a href="${pathShow.replace('__id__', noteId)}" type="button"
-                    class="btn btn-${this.themeColor} btn-sm shadow" title="Voir la note sociale" 
-                    data-toggle="tooltip" data-placement="bottom" data-action="show"><i class="fas fa-eye"></i>
+                    class="btn btn-primary btn-sm shadow" title="Voir la note sociale" 
+                    data-bs-toggle="tooltip" data-bs-placement="bottom" data-action="show"><i class="fas fa-eye"></i>
                 </a>
             </td>
             <td class="align-middle justify" data-cell="title-content">
-                <span class="font-weight-bold">${note.title ? note.title : ''} : </span>${this.getNoteContent()}
+                <span class="fw-bold">${note.title ? note.title : ''} : </span>${this.getNoteContent()}
             </td>
             <td class="align-middle" data-cell="type">${note.typeToString}</td>
             <td class="align-middle" data-cell="status">${note.statusToString}</td>
@@ -261,19 +260,19 @@ export default class NoteManager {
             <td class="align-middle" data-cell="createdAt">${note.createdAtToString}</td>
             <td class="align-middle text-center p-1">
                 <a href="${pathExportWord}"
-                    class="btn btn-${this.themeColor} btn-sm mb-1 shadow" title="Exporter la note au format Word"
-                    data-toggle="tooltip" data-placement="bottom">
-                        <i class="fas fa-file-word fa-lg bg-primary"></i><span class="sr-only">Word</span>
+                    class="btn btn-primary btn-sm mb-1 shadow" title="Exporter la note au format Word"
+                    data-bs-toggle="tooltip" data-bs-placement="bottom">
+                        <i class="fas fa-file-word fa-lg bg-primary"></i><span class="visually-hidden">Word</span>
                 </a>
                 <a href="${pathExportPdf}"
-                    class="btn btn-${this.themeColor} btn-sm mb-1 shadow" title="Exporter la note au format PDF"
-                    data-toggle="tooltip" data-placement="bottom">
-                        <i class="fas fa-file-pdf fa-lg bg-danger"></i><span class="sr-only">PDF</span>
+                    class="btn btn-primary btn-sm mb-1 shadow" title="Exporter la note au format PDF"
+                    data-bs-toggle="tooltip" data-bs-placement="bottom">
+                        <i class="fas fa-file-pdf fa-lg bg-danger"></i><span class="visually-hidden">PDF</span>
                 </a>
             </td>
             <td class="align-middle text-center">
-                <button class="btn btn-sm btn-danger shadow" title="Supprimer la note" data-toggle="tooltip" 
-                    data-placement="bottom" data-action="delete-note" data-path-delete="${pathDelete}">
+                <button class="btn btn-sm btn-danger shadow" title="Supprimer la note" data-bs-toggle="tooltip" 
+                    data-bs-placement="bottom" data-action="delete-note" data-path-delete="${pathDelete}">
                     <i class="fa-solid fa-trash-can"></i>
                 </button>
             </td>
@@ -318,7 +317,7 @@ export default class NoteManager {
      */
     createTags(note) {
         return note.tags.reduce(
-            (tags, tag) => tags + `<span class="badge bg-${tag.color} text-light mr-1" data-tag-id="${tag.id}">${tag.name}</span>`, ''
+            (tags, tag) => tags + `<span class="badge bg-${tag.color} me-1" data-tag-id="${tag.id}">${tag.name}</span>`, ''
         )
     }
 
@@ -341,7 +340,7 @@ export default class NoteManager {
         const noteRow = document.querySelector('tr#note-' + note.id)
 
         noteRow.querySelector('td[data-cell="title-content"]').innerHTML = (note.title !== null
-            ? `<span class="font-weight-bold">${note.title} : </span>` : ``) + `${this.getNoteContent()}`
+            ? `<span class="fw-bold">${note.title} : </span>` : ``) + `${this.getNoteContent()}`
 
         noteRow.querySelector('td[data-cell="type"]').innerHTML = note.typeToString ?? ''
         noteRow.querySelector('td[data-cell="status"]').innerHTML = note.statusToString ?? ''

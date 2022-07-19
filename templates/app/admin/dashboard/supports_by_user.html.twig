@@ -31,9 +31,9 @@
                             <tr>
                                 <th scope="row" class="align-middle th-w-20"></th>
                                 <th class="align-middle th-w-150">Travailleur/euse social·e</th>
-                                <th class="align-middle th-w-100 text-right">Total</th>
+                                <th class="align-middle th-w-100 text-end">Total</th>
                                 {% for device in devices %}
-                                    <th class="align-middle th-w-80 text-right">{{ device.name }}</th>
+                                    <th class="align-middle th-w-80 text-end">{{ device.name }}</th>
                                 {% endfor %}
                                 {% if is_granted('ROLE_ADMIN') %}
                                     <th class="align-middle th-w-20"></th>
@@ -46,30 +46,30 @@
                                     <tr>
                                         <td scope="row" class="align-middle text-center">
                                             <a href="{{ path('support_index', {'status': [2], 'service': {'referents': [user_datas.user.id]}, 'head': true}) }}" 
-                                                class="btn btn-{{ theme_color }} btn-sm shadow" 
-                                                data-placement="bottom" title="Voir les suivis de l'intervenant·e social·e"><!--
+                                                class="btn btn-primary btn-sm shadow" 
+                                                data-bs-placement="bottom" title="Voir les suivis de l'intervenant·e social·e"><!--
                                                 --><span class="fas fa-eye fa-sm"></span>
                                             </a>
                                         </td>
                                         <td class="align-middle">{{ user_datas.user.fullname }}</td>
-                                        <td class="align-middle text-right">{{ user_datas.nbSupports }}{% apply spaceless %}
+                                        <td class="align-middle text-end">{{ user_datas.nbSupports }}{% apply spaceless %}
                                             {% if user_datas.nbTheoreticalSupports > 0 %}
                                                 <span class="text-secondary small"> /{{ user_datas.nbTheoreticalSupports }}</span>
                                             {% endif %}
                                             {% if user_datas.nbSupports != user_datas.sumCoeff %}
-                                                <br/><span class="text-{{ theme_color }}"> ({{ user_datas.sumCoeff }})</span>
+                                                <br/><span class="link-primary"> ({{ user_datas.sumCoeff }})</span>
                                             {% endif %}
                                             {% endapply %}
                                         </td>
                                         {% for deviceKey, device in user_datas.devices %}
                                             {% if deviceKey in devices|keys %}
-                                                <td class="align-middle text-right">{% apply spaceless %}
+                                                <td class="align-middle text-end">{% apply spaceless %}
                                                     {% if device.nbSupports > 0 %}{{ device.nbSupports }}{% endif %}
                                                     {% if device.nbTheoreticalSupports > 0 %}
                                                         <span class="text-secondary small"> /{{ device.nbTheoreticalSupports }}</span>
                                                     {% endif %}
                                                     {% if device.nbSupports != device.sumCoeff %}
-                                                        <br/><span class="text-{{ theme_color }}"> ({{ device.sumCoeff }})</span>
+                                                        <br/><span class="link-primary"> ({{ device.sumCoeff }})</span>
                                                     {% endif %}
                                                     {% endapply %}
                                                 </td>
@@ -77,8 +77,8 @@
                                         {% endfor %}
                                         {% if is_granted('ROLE_ADMIN') %}
                                             <td scope="row" class="align-middle text-center">
-                                                <a href="{{ path('security_user', {'id': user_datas.user.id}) }}#supports-by-device" class="btn btn-{{ theme_color }} btn-sm shadow" 
-                                                    data-toggle="tooltip" data-placement="bottom" title="Modifier la répartition des suivis théoriques par dispositif"><span class="fas fa-edit"></span>
+                                                <a href="{{ path('security_user', {'id': user_datas.user.id}) }}#supports-by-device" class="btn btn-primary btn-sm shadow" 
+                                                    data-bs-toggle="tooltip" data-bs-placement="bottom" title="Modifier la répartition des suivis théoriques par dispositif"><span class="fas fa-edit"></span>
                                                 </a>
                                             </td>
                                         {% endif %}
@@ -88,31 +88,31 @@
                         </tbody>
                         {% if is_granted('ROLE_ADMIN') %}
                             <tfoot>
-                                <tr class="font-weight-bold">
+                                <tr class="fw-bold">
                                     <td scope="row" class="align-middle">Total</td>
                                     <td class="align-middle">{{ users_datas|length }}</td>
-                                    <td class="align-middle text-right">{{ nb_supports }}
+                                    <td class="align-middle text-end">{{ nb_supports }}
                                         {% if nb_supports != sum_coef_supports %}
-                                            <br/><span class="text-{{ theme_color }}"> ({{ sum_coef_supports }})</span>
+                                            <br/><span class="link-primary"> ({{ sum_coef_supports }})</span>
                                         {% endif %}
                                         {% for device in devices %}
-                                            <td class="align-middle text-right">{{ device.nbSupports }}
+                                            <td class="align-middle text-end">{{ device.nbSupports }}
                                         {% if device.nbTheoreticalSupports > 0 %}
                                             <span class="small"> /{{ device.nbTheoreticalSupports }}</span>
                                         {% endif %}
                                             {% if device.nbSupports != device.sumCoeff %}
-                                                <br/><span class="text-{{ theme_color }}"> ({{ device.sumCoeff }})</span>
+                                                <br/><span class="link-primary"> ({{ device.sumCoeff }})</span>
                                             {% endif %}
                                             </td>
                                         {% endfor %}
                                     <td></td>
                                 </tr>
                                 {% if users_datas|length > 0 %} 
-                                    <tr class="font-weight-bold">
+                                    <tr class="fw-bold">
                                         <td scope="row" colspan="2" class="align-middle">Moyenne</td>
-                                        <td class="align-middle text-right">{{ (nb_supports / users_datas|length)|round(1) }}
+                                        <td class="align-middle text-end">{{ (nb_supports / users_datas|length)|round(1) }}
                                             {% if nb_supports != sum_coef_supports %}
-                                                <br/><span class="text-{{ theme_color }}"> ({{ (sum_coef_supports / users_datas|length)|round(1) }})</span>
+                                                <br/><span class="link-primary"> ({{ (sum_coef_supports / users_datas|length)|round(1) }})</span>
                                             {% endif %}
                                         </td>
                                     </tr>
@@ -127,7 +127,7 @@
             <div class="row">
                 <div class="col-md-12">
                     {% apply spaceless %}
-                        <p class="small text-secondary justify"><span class="font-weight-bold">Note de lecture : </span>
+                        <p class="small text-secondary justify"><span class="fw-bold">Note de lecture : </span>
                         le nombre entre parenthèses correspond à la valeur attribuée à la somme des suivis après application du coefficient.
                         Exemple : 10 (15) = 10 suivis réels, soit 15 suivis après pondération (coefficient de 1,5 par suivi).</p>
                     {% endapply %}

@@ -1,5 +1,5 @@
 import Ajax from '../../utils/ajax'
-import MessageFlash from '../../utils/messageFlash'
+import AlertMessage from '../../utils/AlertMessage'
 import Loader from '../../utils/loader'
 import {Modal} from 'bootstrap'
 import RdvForm from "./RdvForm";
@@ -91,7 +91,7 @@ export default class RdvManager {
         const apiUrls = response.apiUrls
 
         if (response.msg) {
-            this.messageFlash = new MessageFlash(response.alert, response.msg)
+            this.messageFlash = new AlertMessage(response.alert, response.msg)
         }
 
         if (response.action) {
@@ -163,12 +163,12 @@ export default class RdvManager {
 
         let htmlContent = `
             <td class="align-middle text-center">
-                <button class="btn btn-${this.rdvForm.themeColor} btn-sm shadow my-1"
-                    title="Voir/Modifier le rendez-vous"  data-toggle="tooltip" data-placement="bottom"
+                <button class="btn btn-primary btn-sm shadow my-1"
+                    title="Voir/Modifier le rendez-vous"  data-bs-toggle="tooltip" data-bs-placement="bottom"
                     data-action="edit-rdv" data-url="${url}"><i class="fas fa-eye"></i>
                 </button>
             </td>
-            <td class="align-middle justify" data-cell="title"><span class="font-weight-bold">${rdv.title}</span></td>
+            <td class="align-middle justify" data-cell="title"><span class="fw-bold">${rdv.title}</span></td>
             <td class="align-middle" data-cell="start">${this.rdvDateToString(rdv)}
             <td class="align-middle" data-cell="alerts">${this.createAlerts(rdv)}
             <td class="align-middle" data-cell="status">${rdv.statusToString ?? ''}</td>
@@ -192,7 +192,7 @@ export default class RdvManager {
             <td class="align-middle text-center">
                 <button data-url="/rdv/${rdv.id}/delete"
                         class="btn btn-danger btn-sm shadow my-1" title="Supprimer le rendez-vous"
-                        data-action="delete-rdv" data-toggle="tooltip" data-placement="bottom">
+                        data-action="delete-rdv" data-bs-toggle="tooltip" data-bs-placement="bottom">
                     <i class="fas fa-trash-alt"></i>
                 </button>
             </td>`

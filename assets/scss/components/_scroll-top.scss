@@ -1,0 +1,27 @@
+#scroll-top {
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    width: 50px;
+    height: 40px;
+    line-height: 35px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    z-index: 100;
+}
+
+#scroll-top .fa.fa-chevron-up {
+    position: absolute;
+    right: 50%;
+    top: 50%;
+    transform: translate(50%, -50%);
+    font-size: 30px;
+    color: var(--bs-white);
+}
+
+#scroll-top:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+    transition: all 0.5s ease;
+}

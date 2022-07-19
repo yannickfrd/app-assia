@@ -15,7 +15,6 @@ class ActionType extends AbstractType
         $builder
             ->add('type', ChoiceType::class, [
                 // 'label' => 'document.action',
-                'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getChoices([
                     1 => 'Télécharger',
                     2 => 'Supprimer',

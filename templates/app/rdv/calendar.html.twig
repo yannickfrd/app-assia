@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Agenda{% endblock %}
+{% block title %}Rendez-vous{% endblock %}
 
 {% block stylesheets %}
     {{ encore_entry_link_tags('calendar') }}
@@ -8,68 +8,62 @@
 
 {% block body %}
     <section class="my-0">
-        <div class="container pt-4" id="calendar-container">
+        <div class="container pt-3" id="calendar-container">
             {% if support is defined %}
                 {% set title = 'Rendez-vous' %}
                 {% include 'app/support/_partials/_support_nav.html.twig' %}
             {% endif %}
-            <div class="d-flex flex-row align-items-center justify-content-between ml-1 mb-2">
+            <div class="d-flex flex-row align-items-center justify-content-between py-2 d-sticky">
                 <div class="d-flex align-items-center">
-                    <h2 class="h2 mr-3 mb-0 d-none d-sm-block">Agenda</h2>
-                    <a class="btn btn-{{ theme_color }} btn-sm shadow mr-2" data-toggle="tooltip"
-                        data-placement="bottom" title="Passer en vue liste"
+                    <h2 class="h2 ms-1 me-3 mb-0 d-none d-sm-block">Agenda</h2>
+                    <a class="btn btn-primary btn-sm shadow me-2" data-bs-toggle="tooltip"
+                        data-bs-placement="bottom" title="Passer en vue liste"
                         href="{% if support is defined %}{{ path('support_rdv_index', {'id': support.id}) }}
-                        {% else %}{{ path('rdv_index', {'date[start]': 'now'|date('Y-m-d') }) }}{% endif %}"
-                        ><i class="far fa-list-alt"></i>
+                        {% else %}{{ path('rdv_index', {'date[start]': 'now'|date('Y-m-d') }) }}{% endif %}">
+                        <i class="far fa-list-alt"></i>
+                        <span class="d-none d-lg-inline ms-1">Vue liste</span>
                     </a>
-                    <button id="js-new-rdv" class="btn btn-{{ theme_color }} btn-sm shadow mr-2"
-                        data-toggle="tooltip" data-placement="bottom" data-url="{{ path('rdv_create') }}"
-                        title="Ajouter un rendez-vous"><i class="far fa-calendar-plus"></i>
+                    <button id="js-new-rdv" class="btn btn-primary btn-sm shadow me-2"
+                        data-url="{{ path('rdv_create') }}" title="Créer un nouveau rendez-vous" 
+                        data-bs-toggle="tooltip" data-bs-placement="bottom" >
+                        <i class="far fa-calendar-plus"></i>
+                        <span class="d-none d-lg-inline ms-1">Nouveau RDV</span>
                     </button>
                 </div>
                 <h3 class="h4 text-secondary">
                     <span class="d-none d-lg-inline">{{ calendar.getMonthToString|capitalize }}</span>
                     <span class="d-inline d-lg-none">{{ calendar.getMonthMinToString|capitalize }}</span>
                 </h3>
-                <div class="float-right">
+                <div class="float-end">
                     <div class="d-none d-lg-inline-flex">
-                        <div class="mb-3  mr-2">
-                            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} text-dark pl-0"
-                                 title="Afficher le calendrier sur toute la largeur">
-                                <div class="form-check">
-                                    <input type="checkbox" id="full-width" name="full-width"
-                                        class="custom-control-input checkbox form-check-input">
-                                    <label class="custom-control-label form-check-label" for="full-width">Vue large</label>
-                                </div>
-                            </div>
+                        <div class="form-check me-3" title="Afficher le calendrier sur toute la largeur"
+                            data-bs-toggle="tooltip" data-bs-placement="bottom" >
+                            <input type="checkbox" id="full-width" name="full-width" class="form-check-input">
+                            <label class="form-check-label" for="full-width">Vue large</label>
                         </div>
-                        <div class="mb-3  mr-2">
-                            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} text-dark pl-0"
-                                 title="Afficher les week-end">
-                                <div class="form-check">
-                                    <input type="checkbox" id="show-weekend" name="show-weekend"
-                                        class="custom-control-input checkbox form-check-input">
-                                    <label class="custom-control-label form-check-label" for="show-weekend">WE</label>
-                                </div>
-                            </div>
+                        <div class="form-check me-3" title="Afficher les week-end" 
+                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                            <input type="checkbox" id="show-weekend" name="show-weekend" class="form-check-input">
+                            <label class="form-check-label" for="show-weekend">WE</label>
                         </div>
                     </div>
                     <a href="{% if support is defined %}{{ path('support_calendar', {'id': support.id}) }}{% else %}{{ path('calendar') }}{% endif %}"
-                       class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-toggle="tooltip"
-                       data-placement="bottom" title="Mois actuel"><i class="fas fa-calendar-day"></i>
-                        <span class="d-none d-md-inline ml-2">Mois actuel</span></a>
+                       class="btn btn-primary btn-sm mb-1 shadow" data-bs-toggle="tooltip"
+                       data-bs-placement="bottom" title="Mois actuel">
+                        <i class="fas fa-calendar-day"></i>
+                        <span class="d-none d-md-inline ms-1">Mois actuel</span></a>
                     <a href="{% if support is defined %}{{ path('support_calendar_show',
                         {'id': support.id, 'year': calendar.previousMonth.year, 'month': calendar.previousMonth.month}) }}
 						{% else %}{{ path('calendar_show', {'year': calendar.previousMonth.year, 'month': calendar.previousMonth.month}) }}{% endif %}"
-                        class="btn btn-{{ theme_color }} btn-sm mb-1 shadow"
-                        data-toggle="tooltip" data-placement="bottom" title="Mois précédent">
+                        class="btn btn-primary btn-sm mb-1 shadow"
+                        data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mois précédent">
                             <i class="fas fa-angle-left"></i>
                     </a>
                     <a href="{% if support is defined %}{{ path('support_calendar_show',
                         {'id': support.id,'year': calendar.nextMonth.year, 'month': calendar.nextMonth.month}) }}
 						{% else %}{{ path('calendar_show', {'year': calendar.nextMonth.year, 'month': calendar.nextMonth.month}) }}{% endif %}"
-                        class="btn btn-{{ theme_color }} btn-sm mb-1 shadow"
-                        data-toggle="tooltip" data-placement="bottom" title="Mois suivant">
+                        class="btn btn-primary btn-sm mb-1 shadow"
+                        data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mois suivant">
                             <i class="fas fa-angle-right"></i>
                     </a>
                 </div>
@@ -111,9 +105,9 @@
                                         </div>
                                         {% if day|date('Y-m-d') in rdvs %}
                                             {% for rdv in rdvs[day|date('Y-m-d')] %}
-                                                <a class="calendar-event bg-{{ theme_color }} text-light"
+                                                <a class="calendar-event bg-primary text-light"
                                                     id="rdv-{{ rdv.id }}" href="{{ path('rdv_show', {'id': rdv.id}) }}"
-                                                    title="Voir le rendez-vous" data-toggle="tooltip" data-placement="bottom">
+                                                    title="Voir le rendez-vous" data-bs-toggle="tooltip" data-bs-placement="bottom">
                                                     {{ rdv.start|date('H:i') }} {{ rdv.title }}
                                                 </a>
                                             {% endfor %}

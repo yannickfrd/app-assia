@@ -77,7 +77,7 @@ class RdvControllerTest extends WebTestCase
         ], 'GET');
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert-warning', 'Aucun résultat à exporter');
+        $this->assertSelectorTextContains('.toast.alert-warning', 'Aucun résultat à exporter');
 
         // Export with results
         $this->client->submitForm('export', [

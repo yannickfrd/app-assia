@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
-use App\Controller\Traits\ErrorMessageTrait;
 use App\Form\Admin\ServiceIndicatorsSearchType;
 use App\Form\Model\Admin\ServiceIndicatorsSearch;
 use App\Form\Model\Support\SupportSearch;
@@ -23,8 +22,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 final class IndicatorController extends AbstractController
 {
-    use ErrorMessageTrait;
-
     protected $em;
     protected $indicatorRepo;
 

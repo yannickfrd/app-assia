@@ -49,7 +49,7 @@ final class PoleController extends AbstractController
             $this->em->persist($pole);
             $this->em->flush();
 
-            $this->addFlash('success', 'Le pôle est créé.');
+            $this->addFlash('success', 'pole.created_successfully');
 
             return $this->redirectToRoute('pole_edit', ['id' => $pole->getId()]);
         }
@@ -72,7 +72,7 @@ final class PoleController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->flush();
 
-            $this->addFlash('success', 'Les modifications sont enregistrées.');
+            $this->addFlash('success', 'pole.updated_successfully');
 
             return $this->redirectToRoute('pole_edit', ['id' => $pole->getId()]);
         }

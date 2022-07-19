@@ -1,7 +1,7 @@
 import Loader from '../utils/loader'
 import Ajax from '../utils/ajax'
 import SiSiaoLogin from '../siSiao/siSiaoLogin'
-import MessageFlash from '../utils/messageFlash'
+import AlertMessage from '../utils/AlertMessage'
 import { Modal } from 'bootstrap'
 import  '../utils/maskNumber'
 
@@ -26,7 +26,6 @@ export default class SearchPerson {
         this.groupId = this.listResultElt.dataset.groupId
         this.helperSearchElt = document.querySelector('.js-helper-search')
         this.createPersonBtnElt = document.querySelector('[data-action="create-person"]')
-        this.themeColor = document.getElementById('header').dataset.color
         this.lengthSearch = lengthSearch
         this.time = time
         this.countdownID = null
@@ -127,7 +126,7 @@ export default class SearchPerson {
     sendRequest() {
         if (this.siSiaoSearchCheckboxElt && this.siSiaoSearchCheckboxElt.checked && this.siSiaoLogin.isConnected) {
             if (0 === this.siSiaoIdInputElt.value.length) {
-                return new MessageFlash('danger', "L'ID groupe est obligatoire pour effectuer une recherche via le SI-SIAO.")
+                return new AlertMessage('danger', "L'ID groupe est obligatoire pour effectuer une recherche via le SI-SIAO.")
             }
             const url = '/api-sisiao/show-group/'+ this.siSiaoIdInputElt.value
             return this.ajax.send('GET', url, this.responseShowGroup.bind(this))
@@ -194,7 +193,7 @@ export default class SearchPerson {
             <td class="align-middle">${person.birthdate}</td>
             <td class="align-middle">${person.age} an${person.age > 1 ? 's' : '' }</td>
             <td class="align-middle">
-                <span class="fas fa-${person.gender == 1 ? 'female' : 'male'} fa-2x text-dark" data-placement="bottom" 
+                <span class="fas fa-${person.gender == 1 ? 'female' : 'male'} fa-2x text-dark" data-bs-placement="bottom" 
                 title="${person.gender == 1 ? 'Femme' : 'Homme'}"></span>
             </td>`
          
@@ -240,11 +239,11 @@ export default class SearchPerson {
      */
     getLastname(person) {
         if (person.id) {
-            return `<a href="/person/${person.id}" class="text-dark text-uppercase font-weight-bold">
+            return `<a href="/person/${person.id}" class="text-dark text-uppercase fw-bold">
                 ${person.lastname}${person.usename ? ' ('+ person.usename + ')' : ''}</a`
         }
 
-        return person.lastname + '<span class="ml-1">(<i class="fas fa-map-marker-alt mr-1"></i>' + person.deptCode + ')</span>'
+        return person.lastname + '<span class="ms-1">(<i class="fas fa-map-marker-alt me-1"></i>' + person.deptCode + ')</span>'
     }
 
     /**
@@ -254,19 +253,19 @@ export default class SearchPerson {
     addBtnElt(person) {
         if (this.groupId) {
             return `<a href="/group/${this.groupId}/add_person/${person.id}" class="js-add-person shadow" 
-                        data-toggle="modal" data-target="#modal-block" data-placement="bottom" title="Ajouter la personne au groupe">
+                        data-bs-toggle="modal" data-bs-target="#modal-block" data-bs-placement="bottom" title="Ajouter la personne au groupe">
                         <span class="fas fa-plus-square text-dark fa-2x"></span>
                     </a>`
         }
 
         if (person.id) {
-            return `<a href="/person/${person.id}" class="btn btn-${this.themeColor} btn-sm shadow"
-                        data-placement="bottom" title="Voir la fiche de la personne"><span class="fas fa-eye"></span>
+            return `<a href="/person/${person.id}" class="btn btn-primary btn-sm shadow"
+                        data-bs-placement="bottom" title="Voir la fiche de la personne"><span class="fas fa-eye"></span>
                     </a>`
         }
 
-        return `<button data-action="show-group" data-id="${person.idFiche}" class="btn bg-violet text-light btn-sm shadow"
-                    data-placement="bottom" title="Voir la fiche groupe SI-SIAO de cette personne"><i class="fas fa-eye"></i>
+        return `<button data-action="show-group" data-id="${person.idFiche}" class="btn bg-primary btn-sm shadow"
+                    data-bs-placement="bottom" title="Voir la fiche groupe SI-SIAO de cette personne"><i class="fas fa-eye"></i>
                 </button>`
     }
 

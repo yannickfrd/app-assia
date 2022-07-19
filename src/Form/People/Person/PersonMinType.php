@@ -16,29 +16,22 @@ class PersonMinType extends AbstractType
     {
         $builder
             ->add('firstname', null, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'class' => 'text-capitalize',
                     'placeholder' => 'Firstname',
                 ],
             ])
             ->add('lastname', null, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'class' => 'w-min-150 text-uppercase',
                     'placeholder' => 'Lastname',
                 ],
             ])
             ->add('birthdate', DateType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'widget' => 'single_text',
-                'attr' => [
-                    'class' => 'w-max-165',
-                    'autocomplete' => 'off',
-                ],
+                'attr' => ['autocomplete' => 'off'],
             ])
             ->add('gender', ChoiceType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'class' => 'w-min-150',
                 ],

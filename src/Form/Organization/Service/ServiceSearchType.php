@@ -18,9 +18,6 @@ class ServiceSearchType extends AbstractType
     {
         $builder
             ->add('name', SearchType::class, [
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
                 'attr' => [
                     'class' => 'w-max-200',
                     'placeholder' => 'Service name',
@@ -29,9 +26,6 @@ class ServiceSearchType extends AbstractType
                 'required' => false,
             ])
             ->add('city', SearchType::class, [
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
                 'attr' => [
                     'class' => 'w-max-160',
                     'placeholder' => 'City',
@@ -40,9 +34,6 @@ class ServiceSearchType extends AbstractType
                 'required' => false,
             ])
             ->add('phone', null, [
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
                 'attr' => [
                     'placeholder' => 'Phone',
                     'class' => 'w-max-140',
@@ -53,14 +44,10 @@ class ServiceSearchType extends AbstractType
             ->add('pole', EntityType::class, [
                 'class' => Pole::class,
                 'choice_label' => 'name',
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
                 'placeholder' => 'placeholder.pole',
                 'required' => false,
             ])
             ->add('disabled', ChoiceType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getChoices(Choices::DISABLE),
                 'placeholder' => 'placeholder.disabled',
                 'required' => false,

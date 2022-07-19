@@ -31,7 +31,6 @@ class SupportRdvSearchType extends AbstractType
 
         $builder
             ->add('title', SearchType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'placeholder' => 'Title',
                     'class' => 'w-max-170',
@@ -49,7 +48,6 @@ class SupportRdvSearchType extends AbstractType
                 'by_reference' => false,
                 'choices' => $this->tagRepo->getTagsByService($service),
                 'choice_label' => 'name',
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'class' => 'multi-select w-max-220',
                     'placeholder' => 'placeholder.tags',

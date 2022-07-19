@@ -22,13 +22,10 @@
         {% endif %}
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a class="text-{{ theme_color }}" href="{{ path('user_index') }}">Liste des utilisateurs</a></li>
+                <li class="breadcrumb-item"><a class="link-primary" href="{{ path('user_index') }}">Liste des utilisateurs</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
             </ol>
         </nav>
-
-        {% include 'model/_flash_message.html.twig' %}
-        <div id="js-msg-flash-content"></div>
 
         <hr>
 

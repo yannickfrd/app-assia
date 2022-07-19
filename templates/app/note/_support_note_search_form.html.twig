@@ -1,34 +1,21 @@
 {% extends 'model/_support_search_form.html.twig' %}
 
-{% form_theme form_search 'bootstrap_4_layout.html.twig' %}
-
 {% block search_form %}
-    <div class="col-auto my-1 px-1">{{ form_row(form_search.content) }}</div>
-    <div class="col-auto my-1 px-1">{{ form_row(form_search.status) }}</div>
-    <div class="col-auto my-1 px-1">{{ form_row(form_search.type) }}</div>
+    <div class="col-auto my-1 px-1">{{ form_widget(form_search.content) }}</div>
+    <div class="col-auto my-1 px-1">{{ form_widget(form_search.type) }}</div>
+    <div class="col-auto my-1 px-1">{{ form_widget(form_search.status) }}</div>
     <div class="col-auto my-1 px-1">
         <div class="input-group">
-            <div class="input-group-prepend">
-                <div class="input-group-text" title="Étiquettes" data-toggle="tooltip" data-placement="bottom">
-                    <i class="fas fa-tag text-black-50"></i>
-                </div>
-            </div>
+            <span class="input-group-text" title="Étiquettes" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                <i class="fas fa-tag text-black-50"></i></span>
             {{ form_widget(form_search.tags) }}
         </div>
     </div>
-    {% if is_granted('ROLE_SUPER_ADMIN') %}
-        <div class="col-auto my-auto">
-            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-0"
-                title="Voir les notes supprimées" data-toggle="tooltip" data-placement="bottom">
-                {{ form_widget(form_search.deleted.deleted) }}
-            </div>
-        </div>
-    {% endif %}
 {% endblock %}
 
 {% block form_search_export %}
-    <button id="js-btn-export" name="export" value="true" class="btn btn-primary ml-2 shadow"
-        title="Exporter les notes dans un document Word" data-toggle="tooltip" data-placement="bottom">
-        <i class="fas fa-file-word"></i><span class="sr-only">Exporter</span>
+    <button id="js-btn-export" name="export" value="true" class="btn btn-primary ms-2 shadow"
+        title="Exporter les notes dans un document Word" data-bs-toggle="tooltip" data-bs-placement="bottom">
+        <i class="fas fa-file-word"></i><span class="visually-hidden">Exporter</span>
     </button>
 {% endblock %}

@@ -48,7 +48,7 @@ final class HotelSupportController extends AbstractController
         $supports = $supportPersonRepo->findSupportsOfServiceToExport(Service::SERVICE_TYPE_HOTEL, $search);
 
         if (!$supports) {
-            $this->addFlash('warning', 'Aucun résultat à exporter.');
+            $this->addFlash('warning', 'no_result_to_export');
 
             return $this->redirectToRoute('hotel_support_index');
         }

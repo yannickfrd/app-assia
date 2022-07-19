@@ -565,7 +565,7 @@ class SupportPersonRepository extends ServiceEntityRepository
     public function getSupportsOfUserQueryBuilder(User $user, $maxResult = null): QueryBuilder
     {
         return $this->createQueryBuilder('sp')->select('sp, sp.id, p.firstname, p.lastname')
-            ->leftJoin('sp.supportGroup', 'sg')->addSelect(('PARTIAL sg.{id, referent, status}'))
+            ->leftJoin('sp.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, referent, status}')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
 
             ->andWhere('sg.referent = :referent')
@@ -584,7 +584,7 @@ class SupportPersonRepository extends ServiceEntityRepository
     public function getPeopleOfSupportQueryBuilder(User $user, int $supportGroupId): QueryBuilder
     {
         return $this->createQueryBuilder('sp')->select('sp, sp.id, p.firstname, p.lastname')
-            ->leftJoin('sp.supportGroup', 'sg')->addSelect(('PARTIAL sg.{id, referent, status}'))
+            ->leftJoin('sp.supportGroup', 'sg')->addSelect('PARTIAL sg.{id, referent, status}')
             ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname}')
 
             ->andWhere('sg.referent = :referent')

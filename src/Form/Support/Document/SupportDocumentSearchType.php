@@ -30,7 +30,6 @@ class SupportDocumentSearchType extends AbstractType
 
         $builder
             ->add('name', SearchType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => ['placeholder' => 'Search'],
                 'required' => false,
             ])
@@ -42,7 +41,6 @@ class SupportDocumentSearchType extends AbstractType
                 'by_reference' => false,
                 'choices' => $this->tagRepo->getTagsByService($service, 'document'),
                 'choice_label' => 'name',
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'class' => 'multi-select w-max-220',
                     'placeholder' => 'placeholder.tags',

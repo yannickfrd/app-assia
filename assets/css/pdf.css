@@ -112,10 +112,10 @@ th {
     text-align: center;
 }
 
-.text-right {
+.text-end{
     text-align: right;
 }
 
-.text-justify {
+.justify {
     text-align: justify;
 }

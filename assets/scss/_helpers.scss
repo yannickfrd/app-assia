@@ -1,0 +1,96 @@
+
+@each $value in (70, 80, 100, 110, 120, 130, 140, 150, 160, 170, 180, 200, 220, 240, 260) {
+    .w-#{$value} {
+        min-width: #{$value}px;
+    }
+    .w-min-#{$value} {
+        min-width: #{$value}px;
+    }
+    .w-max-#{$value} {
+        max-width: #{$value}px;
+    }
+}
+
+.bg-gray-light {
+    background-color: $gray-light;
+}
+
+.cursor-default {
+    cursor: default;
+}
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.fade-in {
+    opacity: 1;
+    transition: all 0.3s ease;
+}
+.fade-out {
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.h-max-38 {
+    max-height: 38px;
+}
+.h-max-76 {
+    max-height: 76px;
+}
+
+.justify {
+    text-align: justify;
+}
+
+.z-index-999 {
+    z-index: 999;
+}
+.z-index-9999 {
+    z-index: 9999;
+}
+
+.text-del {
+    text-decoration: line-through;
+}
+
+.text-underline {
+    border-bottom: solid 1px;
+    padding-bottom: 1px;
+}
+
+.reveal {
+    opacity: 0;
+    transform: translateY(50px);
+}
+.reveal-on {
+    opacity: 1;
+    transform: translateY(0);
+    transition: 1s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .reveal {
+        opacity: 1 !important;
+        transform: translateY(0) !important;
+    }
+}
+
+.d-sticky {
+    position: sticky;
+    top: $header-md-height;
+    backdrop-filter: blur(2px);
+    z-index: 999;
+}
+
+@media (max-width: 768px) {
+    .d-sticky  {
+        top: $header-sm-height;
+    }
+}
+
+@media (max-width: 576px) {
+    .d-sticky {
+        position: relative;
+        top: 0;
+    }
+}

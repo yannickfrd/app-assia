@@ -4,7 +4,7 @@
         {% set nb_supports = supports.getTotalItemCount %}
         <span id="count-supports" class="align-middle"
             data-count-supports="{{ nb_supports }}">Résultat : {{ nb_supports|number }}
-            {% if only_headers == true %}ménage{% else %}personne{% endif %}{{ nb_supports > 1 ? 's' }}.</span>
+            {% if only_headers == true %}ménage{% else %}personne{% endif %}{{ nb_supports > 1 ? 's' }}</span>
     </div>
     <div class="col-md-8">
         <div class="navigation">{{ knp_pagination_render(supports) }}</div>
@@ -14,58 +14,58 @@
 <div class="table-responsive">
     <table id="table-supports" class="table table-bordered table-striped table-hover text-dark shadow-sm">
         <thead>
-        <tr>
-            <th scope="col" class="align-middle th-w-20"></th>
-            <th scope="col" class="align-middle th-w-120">
-                {{ knp_pagination_sortable(supports, 'Nom et prénom', 'p.lastname') }}
-            </th>
-            <th scope="col" class="align-middle th-date">
-                {{ knp_pagination_sortable(supports, 'Date de naissance', 'p.birthdate') }}
-            </th>
-            <th scope="col" class="align-middle th-w-80">
-                {{ knp_pagination_sortable(supports, 'Typologie familiale', 'g.familyTypology') }}
-            </th>
-            <th scope="col" class="align-middle th-w-120">
-                {{ knp_pagination_sortable(supports, 'Service (Dispositif)', 's.name') }}
-            </th>
-            <th scope="col" class="align-middle th-w-120">
-                {{ knp_pagination_sortable(supports, 'Intervenant·e', 'u.lastname') }}
-            </th>
-            <th scope="col" class="align-middle th-w-100">
-                {{ knp_pagination_sortable(supports, 'Statut', 'sg.status') }}
-            </th>
-            <th scope="col" class="align-middle th-date">
-                {{ knp_pagination_sortable(supports, 'Début de suivi', 'sg.startDate') }}
-            </th>
-            <th scope="col" class="align-middle th-date">
-                {{ knp_pagination_sortable(supports, 'Fin de suivi', 'sg.endDate') }}
-            </th>
-            <th scope="col" class="align-middle th-w-120">
-                {{ knp_pagination_sortable(supports, 'Commune', 'sg.city') }}
-            </th>
-            {% if archive_purge_view is defined %}
-                <th scope="col" class="align-middle th-date">
-                    {{ knp_pagination_sortable(supports, 'Modifié le', 'sg.updatedAt') }}
-                </th>
-            {% endif %}
-            {% if restoration_mode %}
-                <th scope="col" class="align-middle th-date">
-                    {{ knp_pagination_sortable(supports, 'Supprimé le', 'sg.deletedAt') }}
-                </th>
+            <tr>
                 <th scope="col" class="align-middle th-w-20"></th>
-            {% elseif is_granted('ROLE_ADMIN') %}
-                <th scope="col" class="align-middle th-w-20">
-                    {{ knp_pagination_sortable(supports, 'Complétude de l\'évaluation', 'sg.evaluationScore') }}
+                <th scope="col" class="align-middle th-w-120">
+                    {{ knp_pagination_sortable(supports, 'Nom et prénom', 'p.lastname') }}
                 </th>
-            {% endif %}
-        </tr>
+                <th scope="col" class="align-middle th-date">
+                    {{ knp_pagination_sortable(supports, 'Date de naissance', 'p.birthdate') }}
+                </th>
+                <th scope="col" class="align-middle th-w-80">
+                    {{ knp_pagination_sortable(supports, 'Typologie familiale', 'g.familyTypology') }}
+                </th>
+                <th scope="col" class="align-middle th-w-120">
+                    {{ knp_pagination_sortable(supports, 'Service (Dispositif)', 's.name') }}
+                </th>
+                <th scope="col" class="align-middle th-w-120">
+                    {{ knp_pagination_sortable(supports, 'Intervenant·e', 'u.lastname') }}
+                </th>
+                <th scope="col" class="align-middle th-w-100">
+                    {{ knp_pagination_sortable(supports, 'Statut', 'sg.status') }}
+                </th>
+                <th scope="col" class="align-middle th-date">
+                    {{ knp_pagination_sortable(supports, 'Début de suivi', 'sg.startDate') }}
+                </th>
+                <th scope="col" class="align-middle th-date">
+                    {{ knp_pagination_sortable(supports, 'Fin de suivi', 'sg.endDate') }}
+                </th>
+                <th scope="col" class="align-middle th-w-120">
+                    {{ knp_pagination_sortable(supports, 'Commune', 'sg.city') }}
+                </th>
+                {% if archive_purge_view is defined %}
+                    <th scope="col" class="align-middle th-date">
+                        {{ knp_pagination_sortable(supports, 'Modifié le', 'sg.updatedAt') }}
+                    </th>
+                {% endif %}
+                {% if restoration_mode %}
+                    <th scope="col" class="align-middle th-date">
+                        {{ knp_pagination_sortable(supports, 'Supprimé le', 'sg.deletedAt') }}
+                    </th>
+                    <th scope="col" class="align-middle th-w-20"></th>
+                {% elseif is_granted('ROLE_ADMIN') %}
+                    <th scope="col" class="align-middle th-w-20">
+                        {{ knp_pagination_sortable(supports, 'Complétude de l\'évaluation', 'sg.evaluationScore') }}
+                    </th>
+                {% endif %}
+            </tr>
         </thead>
         <tbody>
             {% for support_person in supports %}
                 {% set support_group = support_person.supportGroup %}
                 {% set person = support_person.person %}
                 {% set is_deleted = support_person.deletedAt is not null %}
-                <tr class="{% if only_headers == false and support_person.head %}font-weight-bold{% endif %}"
+                <tr class="{% if only_headers == false and support_person.head %}fw-bold{% endif %}"
                     data-support="support-{{ support_group.id }}">
                     <td class="align-middle text-center">
                         {% if is_granted('VIEW', support_group) %}
@@ -116,12 +116,12 @@
                         <td class="align-middle text-center">
                             <a href="{{ path('support_person_restore', {'id': support_person.id}) }}"
                                 class="btn btn-success btn-sm shadow" title="{{ restore_title ?? 'Restaurer' }}"
-                                data-toggle="tooltip" data-placement="bottom"><i class="fa-solid fa-trash-arrow-up"></i>
+                                data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-trash-arrow-up"></i>
                             </a>
                         </td>
                     {% elseif is_granted('ROLE_ADMIN') %}
                         <td class="align-middle">
-                            <span class="badge badge-{{ evaluationScoreColor(support_group.evaluationScore) }}">
+                            <span class="badge bg-{{ evaluationScoreColor(support_group.evaluationScore) }}">
                                 {{ support_group.evaluationScore|percent(0) }}
                             </span>
                         </td>

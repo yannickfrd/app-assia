@@ -90,22 +90,6 @@ final class SecurityController extends AbstractController
         ]);
     }
 
-    // /**
-    //  * Création du mot de passe par l'utilisateur à sa première connexion.
-    //  *
-    //  * @Route("/login/after_login", name="security_after_login", methods="GET|POST")
-    //  */
-    // public function afterLogin(): Response
-    // {
-    //     $this->addFlash('success', 'Bonjour '.$this->getUser()->getFirstname().' !');
-
-    //     if (1 === $this->getUser()->getLoginCount() && $this->getUser()->getTokenCreatedAt()) {
-    //         return $this->redirectToRoute('security_init_password');
-    //     }
-
-    //     return $this->redirectToRoute('home');
-    // }
-
     /**
      * Création du mot de passe par l'utilisateur à sa première connexion.
      *
@@ -169,7 +153,7 @@ final class SecurityController extends AbstractController
             return $this->redirectToRoute('home');
         }
         if ($formPassword->isSubmitted() && !$formPassword->isValid()) {
-            $this->addFlash('danger ', 'Le mot de passe ou la confirmation sont invalides.');
+            $this->addFlash('danger ', 'security.invalid_password');
         }
 
         return $this->render('app/organization/user/user.html.twig', [
@@ -197,7 +181,7 @@ final class SecurityController extends AbstractController
 
             $this->userManager->deleteCacheItems($user);
 
-            $this->addFlash('success', 'Le compte de '.$user->getFirstname().' est mis à jour.');
+            $this->addFlash('success ', 'security.user.updated_successfully');
         }
 
         return $this->renderForm('app/admin/security/security_user.html.twig', [
@@ -218,18 +202,18 @@ final class SecurityController extends AbstractController
         $this->denyAccessUnlessGranted('DISABLE', $user);
 
         if ($user === $this->getUser()) {
-            $this->addFlash('danger', 'Vous ne pouvez pas vous-même désactiver votre compte utilisateur.');
+            $this->addFlash('danger', 'security.user.disabled_not_allowed');
 
             return $this->redirectToRoute('security_user', ['id' => $user->getId()]);
         }
 
         if ($user->getDisabledAt()) {
             $user->setDisabledAt(null);
-            $this->addFlash('success', 'Ce compte utilisateur est ré-activé.');
+            $this->addFlash('success', 'security.user.actived_successfully');
         } else {
             $user->setPassword('')
                 ->setDisabledAt(new \DateTime());
-            $this->addFlash('warning', 'Ce compte utilisateur est désactivé.');
+            $this->addFlash('warning', 'security.user.disabled_successfully');
         }
 
         $this->userManager->deleteCacheItems($user);
@@ -265,7 +249,7 @@ final class SecurityController extends AbstractController
                     return $this->redirectToRoute('security_login');
                 }
             }
-            $this->addFlash('danger', "Le login ou l'adresse email sont incorrects.");
+            $this->addFlash('danger', 'security.invalid_login_or_email');
         }
 
         return $this->render('app/admin/security/security_forgot_password.html.twig', [
@@ -293,7 +277,7 @@ final class SecurityController extends AbstractController
                     return $this->redirectToRoute('security_login');
                 }
             } else {
-                $this->addFlash('danger', "Le login ou l'adresse email sont incorrects.");
+                $this->addFlash('danger', 'security.invalid_login_or_email');
             }
         }
 
@@ -319,7 +303,7 @@ final class SecurityController extends AbstractController
 
         // Vérifie si le token existe en base de données.
         if (0 === $userRepo->count(['token' => $token])) {
-            $this->addFlash('danger', 'Le lien est expiré ou invalide.');
+            $this->addFlash('danger', 'security.invalid_link');
 
             return $this->redirectToRoute('security_login');
         }
@@ -332,7 +316,7 @@ final class SecurityController extends AbstractController
 
                 return $this->redirectToRoute('security_login');
             } else {
-                $this->addFlash('danger', "Le login ou l'adresse email sont incorrects.");
+                $this->addFlash('danger', 'security.invalid_login_or_email');
             }
         }
 

@@ -45,7 +45,6 @@ class EvalInitPersonType extends AbstractType
                 'required' => false,
             ])
             ->add('comment', null, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'rows' => 4,
                     'class' => 'justify',

@@ -354,7 +354,7 @@ class ExportExcel
             case 'xlsx':
                 $this->contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
                 $this->writer = new Xlsx($this->spreadsheet);
-            break;
+                break;
             case 'ods':
                 $this->contentType = 'application/vnd.oasis.opendocument.spreadsheet';
                 $this->writer = new Ods($this->spreadsheet);

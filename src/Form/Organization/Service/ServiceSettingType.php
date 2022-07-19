@@ -64,13 +64,9 @@ class ServiceSettingType extends AbstractType
                 'required' => false,
             ])
             ->add('weeklyAlert', CheckboxType::class, [
-                'label_attr' => ['class' => 'custom-control-label'],
-                'attr' => ['class' => 'custom-control-input checkbox'],
                 'required' => false,
             ])
             ->add('dailyAlert', CheckboxType::class, [
-                'label_attr' => ['class' => 'custom-control-label'],
-                'attr' => ['class' => 'custom-control-input checkbox'],
                 'required' => false,
             ])
             ->add('endValidPermitDateDelay', IntegerType::class, [

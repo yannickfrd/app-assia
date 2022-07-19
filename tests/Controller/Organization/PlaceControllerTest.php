@@ -107,7 +107,7 @@ class PlaceControllerTest extends WebTestCase
         $this->client->submitForm('send');
 
         $this->assertResponseStatusCodeSame(422);
-        $this->assertSelectorExists('.alert.alert-danger');
+        $this->assertSelectorExists('.toast.alert-danger');
     }
 
     public function testCreateNewPlaceIsSuccessful(): void
@@ -126,7 +126,7 @@ class PlaceControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseStatusCodeSame(422);
-        $this->assertSelectorExists('.alert.alert-danger');
+        $this->assertSelectorExists('.toast.alert-danger');
 
         // Success
         $this->client->submitForm('send', [
@@ -141,7 +141,7 @@ class PlaceControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.alert.alert-success');
+        $this->assertSelectorExists('.toast.alert-success');
     }
 
     public function testEditPlaceIsSuccessful(): void
@@ -159,7 +159,7 @@ class PlaceControllerTest extends WebTestCase
         $this->client->submitForm('send');
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.alert.alert-success');
+        $this->assertSelectorExists('.toast.alert-success');
     }
 
     public function testDeletePlace(): void
@@ -181,12 +181,12 @@ class PlaceControllerTest extends WebTestCase
         $this->client->request('GET', "/place/$id/disable");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-warning', 'est désactivé');
+        $this->assertSelectorTextContains('.toast.alert-success', 'a été désactivé');
 
         $this->client->request('GET', "/place/$id/disable");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-success', 'est ré-activé');
+        $this->assertSelectorTextContains('.toast.alert-success', 'a été réactivé');
     }
 
     protected function tearDown(): void

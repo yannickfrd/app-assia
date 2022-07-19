@@ -21,7 +21,6 @@ class SecurityUserServicesType extends AbstractType
                 'delete_empty' => true,
                 'prototype' => true,
                 'by_reference' => false,
-                'label_attr' => ['class' => 'sr-only'],
             ])
             ->add('user_services_send', SubmitType::class)
         ;

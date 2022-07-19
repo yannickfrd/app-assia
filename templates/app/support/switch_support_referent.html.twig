@@ -9,8 +9,6 @@
         <h1 class="h2 mb-3">{{ title }}</h1>
 		<hr>
 		
-		{% include 'model/_flash_message.html.twig' %}
-
 		<div class="my-5">
 			{{ form_start(form) }}
 			<p class="mb-4 text-secondary">
@@ -21,8 +19,8 @@
 				<div class="col-md-6">{{ form_row(form._oldReferent) }}</div>
 				<div class="col-md-6">{{ form_row(form._newReferent) }}</div>
 			</div>
-			<div class="float-right">
-				{{ form_widget(form.save, {attr: {class: 'btn btn-' ~ theme_color ~ ' shadow'}, label: 'Valider'}) }}
+			<div class="float-end">
+				{{ form_widget(form.save, {attr: {class: 'btn btn-primary shadow'}, label: 'Valider'}) }}
 			</div>
 			{{ form_end(form) }}
 		</div>

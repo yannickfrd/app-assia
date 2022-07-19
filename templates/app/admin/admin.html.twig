@@ -7,40 +7,17 @@
 
         <h1 class="h2 mb-3">Administration</h1>
 
-        {% include 'model/_flash_message.html.twig' %}
-
         <hr>
 
         <div class="row my-4">
             <div class="col-md-6">
                 <h2 class="h5">Utilisateurs</h2>
                 <ul>
-                    <li class="mb-2 text-{{ theme_color }}">
-                        <a class="text-dark" href="{{ path('security_registration') }}">Créer un compte</a>
+                    <li class="mb-2 text-primary">
+                        <a class="link-primary" href="{{ path('security_registration') }}">Créer un compte utilisateur</a>
                     </li>
-                    <li class="mb-2 text-{{ theme_color }}">
-                        <a class="text-dark" href="{{ path('admin_user_index') }}">Gérer les comptes</a>
-                    </li>
-                </ul>
-
-                <hr class="my-3">
-
-                <h2 class="h5">Organismes prescripteurs</h2>
-                <ul>
-                    <li class="mb-2 text-{{ theme_color }}">
-                        <a class="text-dark" href="{{ path('admin_organization_new') }}">Créer un organisme prescripteur</a>
-                    </li>
-                    <li class="mb-2 text-{{ theme_color }}">
-                        <a class="text-dark" href="{{ path('organization_index') }}">Gérer les organismes prescripteurs</a>
-                    </li>
-                </ul>
-
-                <hr class="my-3">
-
-                <h2 class="h5">Documents</h2>
-                <ul>
-                    <li class="mb-2 text-{{ theme_color }}">
-                        <a class="text-dark" href="{{ path('document_index') }}">Rechercher des documents</a>
+                    <li class="mb-2 text-primary">
+                        <a class="link-primary" href="{{ path('admin_user_index') }}">Gérer les comptes Utilisateurs</a>
                     </li>
                 </ul>
 
@@ -48,22 +25,40 @@
 
                     <hr class="my-3">
 
-                    <h2 class="h5">Services, pôles et dispositifs</h2>
+                    <h2 class="h5">Pôles, services et dispositifs</h2>
                     <ul>
-                        <li class="mb-2 text-{{ theme_color }}">
-                            <a class="text-dark" href="{{ path('service_new') }}">Créer un service</a>
+                        <li class="mb-2 text-primary">
+                            <a class="link-primary" href="{{ path('pole_index') }}">Gérer les pôles</a>
                         </li>
-                        <li class="mb-2 text-{{ theme_color }}">
-                            <a class="text-dark" href="{{ path('pole_new') }}">Créer un pôle</a>
+                        <li class="mb-2 text-primary">
+                            <a class="link-primary" href="{{ path('service_index') }}">Gérer les service</a>
                         </li>
-                        <li class="mb-2 text-{{ theme_color }}">
-                            <a class="text-dark" href="{{ path('admin_device_new') }}">Créer un dispositif</a>
+                        <li class="mb-2 text-primary">
+                            <a class="link-primary" href="{{ path('admin_devices') }}">Gérer les dispositifs</a>
                         </li>
-                        <li class="mb-2 text-{{ theme_color }}">
-                            <a class="text-dark" href="{{ path('admin_devices') }}">Gérer les dispositifs</a>
+                        <li class="mb-2 text-primary">
+                            <a class="link-primary" href="{{ path('admin_tag_index') }}">Gérer les étiquettes</a>
                         </li>
-                        <li class="mb-2 text-{{ theme_color }}">
-                            <a class="text-dark" href="{{ path('admin_tag_index') }}">Gérer les étiquettes</a>
+                    </ul>
+
+                    <hr class="my-3">
+
+                    <h2 class="h5">Organismes prescripteurs</h2>
+                    <ul>
+                        <li class="mb-2 text-primary">
+                            <a class="link-primary" href="{{ path('admin_organization_new') }}">Créer un organisme prescripteur</a>
+                        </li>
+                        <li class="mb-2 text-primary">
+                            <a class="link-primary" href="{{ path('organization_index') }}">Gérer les organismes prescripteurs</a>
+                        </li>
+                    </ul>
+
+                    <hr class="my-3">
+
+                    <h2 class="h5">Documents</h2>
+                    <ul>
+                        <li class="mb-2 text-primary">
+                            <a class="link-primary" href="{{ path('document_index') }}">Rechercher des documents</a>
                         </li>
                     </ul>
 
@@ -71,14 +66,20 @@
 
                     <h2 class="h5">Paramètres</h2>
                     <ul>
-                        <li class="mb-2 text-{{ theme_color }}">
-                            <a class="text-dark" href="{{ path('admin_settings') }}">Configuration des paramètres</a>
+                        <li class="mb-2 text-primary">
+                            <a class="link-primary" href="{{ path('admin_settings') }}">Configuration des paramètres</a>
                         </li>
                     </ul>
 
-                {% endif %}
+                {% else %}
 
-                <hr class="my-3">
+                    <h2 class="h5">Services</h2>
+                    <ul>
+                        <li class="mb-2 text-primary">
+                            <a class="link-primary" href="{{ path('service_index') }}">Gérer les services</a>
+                        </li>
+                    </ul>
+                {% endif %}
 
             </div>
 
@@ -86,19 +87,19 @@
 
                 <h2 class="h5">Export</h2>
                 <ul>
-                    <li class="mb-2 text-{{ theme_color }}">
-                        <a class="text-dark" href="{{ path('export_index') }}">Exporter les données</a>
+                    <li class="mb-2 text-primary">
+                        <a class="link-primary" href="{{ path('export_index') }}">Exporter les données</a>
                     </li>
                 </ul>
 
-                <hr class="my-3">
-
                 {% if is_granted('ROLE_SUPER_ADMIN') %}
+
+                    <hr class="my-3">
 
                     <h2 class="h5">Cache</h2>
                     <ul>
-                        <li class="mb-2 text-{{ theme_color }}">
-                            <a class="text-dark" href="{{ path('cache_clear') }}">Vider le cache</a>
+                        <li class="mb-2 text-primary">
+                            <a class="link-primary" href="{{ path('cache_clear') }}">Vider le cache</a>
                         </li>
                     </ul>
 
@@ -106,8 +107,8 @@
 
                     <h2 class="h5">Base de données</h2>
                     <ul>
-                        <li class="mb-2 text-{{ theme_color }}">
-                            <a class="text-dark" href="{{ path('database_backup_index') }}">Sauvegarder et exporter la base de données</a>
+                        <li class="mb-2 text-primary">
+                            <a class="link-primary" href="{{ path('database_backup_index') }}">Sauvegarder et exporter la base de données</a>
                         </li>
                     </ul>
 
@@ -115,14 +116,14 @@
 
                     <h2 class="h5">Indicateurs</h2>
                     <ul>
-                        <li class="mb-2 text-{{ theme_color }}">
-                            <a class="text-dark" href="{{ path('indicators_social') }}">Indicateurs sociaux</a>
+                        <li class="mb-2 text-primary">
+                            <a class="link-primary" href="{{ path('indicators_social') }}">Indicateurs sociaux</a>
                         </li>
-                        <li class="mb-2 text-{{ theme_color }}">
-                            <a class="text-dark" href="{{ path('daily_indicators') }}">Indicateurs quotidiens d'activité</a>
+                        <li class="mb-2 text-primary">
+                            <a class="link-primary" href="{{ path('daily_indicators') }}">Indicateurs quotidiens d'activité</a>
                         </li>
-                        <li class="mb-2 text-{{ theme_color }}">
-                            <a class="text-dark" href="{{ path('indicator_services') }}">Indicateurs d'activité des services</a>
+                        <li class="mb-2 text-primary">
+                            <a class="link-primary" href="{{ path('indicator_services') }}">Indicateurs d'activité des services</a>
                         </li>
                     </ul>
 
@@ -130,8 +131,8 @@
 
                     <h2 class="h5">Doublons</h2>
                     <ul>
-                        <li class="mb-2 text-{{ theme_color }}">
-                            <a class="text-dark" href="{{ path('duplicated_people_index') }}">Rechercher les personnes en doublon</a>
+                        <li class="mb-2 text-primary">
+                            <a class="link-primary" href="{{ path('duplicated_people_index') }}">Rechercher les personnes en doublon</a>
                         </li>
                     </ul>
 
@@ -139,8 +140,8 @@
 
                     <h2 class="h5">Glossaire</h2>
                     <ul>
-                        <li class="mb-2 text-{{ theme_color }}">
-                            <a class="text-dark" href="{{ path('admin_glossary') }}">Récapitulatif des variables et items</a>
+                        <li class="mb-2 text-primary">
+                            <a class="link-primary" href="{{ path('admin_glossary') }}">Récapitulatif des variables et items</a>
                         </li>
                     </ul>
 
@@ -148,8 +149,8 @@
 
                     <h2 class="h5">Archive et suppression</h2>
                     <ul>
-                        <li class="mb-2 text-{{ theme_color }}">
-                            <a class="text-dark" href="{{ path('admin_archive_purge_index') }}">Archivage et suppression des données</a>
+                        <li class="mb-2 text-primary">
+                            <a class="link-primary" href="{{ path('admin_archive_purge_index') }}">Archivage et suppression des données</a>
                         </li>
                     </ul>
 

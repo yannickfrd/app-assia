@@ -17,6 +17,7 @@ use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/import")
@@ -25,10 +26,12 @@ use Symfony\Component\Routing\Annotation\Route;
 final class ImportController extends AbstractController
 {
     protected $import;
+    protected $translator;
 
-    public function __construct(Import $import)
+    public function __construct(Import $import, TranslatorInterface $translator)
     {
         $this->import = $import;
+        $this->translator = $translator;
     }
 
     /**
@@ -98,11 +101,13 @@ final class ImportController extends AbstractController
             if ($nbItems > 0) {
                 (new FilesystemAdapter($_SERVER['DB_DATABASE_NAME']))->clear();
 
-                $this->addFlash('success', $nbItems.' entrées ont été importées !');
+                $this->addFlash('success', $this->translator->trans('admin.import.is_successful',
+                    ['nb_items' => $nbItems], 'app')
+                );
 
                 return $this->redirectToRoute('home');
             } else {
-                $this->addFlash('warning', 'Aucune entrée n\'a été importée.');
+                $this->addFlash('warning', 'admin.import.no_result');
             }
             // } else {
             // dump($datas);

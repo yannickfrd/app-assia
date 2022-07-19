@@ -115,7 +115,7 @@ final class NoteController extends AbstractController
             return $this->json([
                 'action' => 'create',
                 'alert' => 'success',
-                'msg' => $translator->trans('note.created_successfully', ['%note_title%' => $note->getTitle()], 'app'),
+                'msg' => $translator->trans('note.created_successfully', ['note_title' => $note->getTitle()], 'app'),
                 'note' => $note,
             ], 200, [], ['groups' => ['show_note', 'show_tag']]);
         }
@@ -163,7 +163,7 @@ final class NoteController extends AbstractController
             return $this->json([
                 'action' => 'update',
                 'alert' => 'success',
-                'msg' => $translator->trans('note.updated_successfully', ['%note_title%' => $note->getTitle()], 'app'),
+                'msg' => $translator->trans('note.updated_successfully', ['note_title' => $note->getTitle()], 'app'),
                 'note' => $note,
             ], 200, [], ['groups' => ['show_note', 'show_tag']]);
         }
@@ -187,7 +187,7 @@ final class NoteController extends AbstractController
         return $this->json([
             'action' => 'delete',
             'alert' => 'warning',
-            'msg' => $translator->trans('note.deleted_successfully', ['%note_title%' => $note->getTitle()], 'app'),
+            'msg' => $translator->trans('note.deleted_successfully', ['note_title' => $note->getTitle()], 'app'),
             'note' => ['id' => $noteId],
         ]);
     }
@@ -229,7 +229,7 @@ final class NoteController extends AbstractController
         $note = $evaluationExporter->createNote($supportGroup);
 
         if (!$note) {
-            $this->addFlash('warning', "Il n'y a pas d'évaluation sociale créée pour ce suivi.");
+            $this->addFlash('warning', 'evaluation.no_created');
 
             return $this->redirectToRoute('support_show', ['id' => $id]);
         }
@@ -265,7 +265,7 @@ final class NoteController extends AbstractController
         return $this->json([
             'action' => 'restore',
             'alert' => 'success',
-            'msg' => $translator->trans('note.restored_successfully', ['%note_title%' => $note->getTitle()], 'app'),
+            'msg' => $translator->trans('note.restored_successfully', ['note_title' => $note->getTitle()], 'app'),
             'note' => ['id' => $note->getId()],
         ]);
     }

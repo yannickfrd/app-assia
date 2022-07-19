@@ -78,7 +78,7 @@ class PaymentControllerTest extends WebTestCase
         ], 'GET');
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-warning', 'Aucun résultat à exporter.');
+        $this->assertSelectorTextContains('.toast.alert-warning', 'Aucun résultat à exporter.');
 
         // Export 1
         $this->client->submitForm('export', [], 'GET');
@@ -94,7 +94,7 @@ class PaymentControllerTest extends WebTestCase
         ], 'GET');
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-warning', 'Aucun résultat à exporter.');
+        $this->assertSelectorTextContains('.toast.alert-warning', 'Aucun résultat à exporter.');
 
         // Export 2
         $this->client->submitForm('export-accounting', [], 'GET');

@@ -7,14 +7,12 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block body %}
-	<div class="container">
+	<div class="container pt-3">
 
 		{% include 'app/support/_partials/_support_nav.html.twig' %}
 
 		{{ form_start(form) }}
 
-		{% include 'model/_flash_message.html.twig' %}
-		<div id="js-msg-flash-content"></div>
 
 		<div class="row mb-3">
 			<div class="col-md-6">{{ form_row(form.place) }}</div>
@@ -26,15 +24,15 @@
 		<div class="row mb-3">
 			<div class="col-md-12">
 				{% if edit_mode and is_granted('DELETE', support) %}
-					<div class="float-left d-flex">
+					<div class="float-start d-flex">
 						<a href="{{ path('support_group_people_place_delete', {'id': form.vars.value.id}) }}" 
-							class="mr-3 btn btn-danger d-block" data-toggle="tooltip" title="Supprimer la prise en charge" data-placement="bottom"
+							class="me-3 btn btn-danger d-block" data-bs-toggle="tooltip" title="Supprimer la prise en charge" data-bs-placement="bottom"
 							onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir supprimer cette prise en charge ?')){return true;}else{return false;}">
-							<span class="fas fa-trash-alt mr-2"></span>Supprimer</a>
+							<span class="fas fa-trash-alt me-2"></span>Supprimer</a>
 					</div>
 				{% endif %}
-				<div class="mb-4 float-right">
-					<button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow"><span class="fas fa-save mr-2"></span>{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+				<div class="mb-4 float-end">
+					<button type="submit" id="send" name="send" class="btn btn-primary shadow"><span class="fas fa-save me-2"></span>{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
 				</div>
 			</div>
 		</div>

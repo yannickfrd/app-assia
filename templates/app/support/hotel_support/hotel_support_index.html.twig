@@ -9,7 +9,6 @@
     <section class="mt-0">
 
         <div class="container-fluid pt-4">
-            {% include 'model/_flash_message.html.twig' %}
             <h1 class="h2 mb-3">{{ title }}</h1>
         </div>
 
@@ -20,7 +19,7 @@
             <div class="row align-items-baseline">
                 <div class="col-md-4 count align-middle mb-2">
                     <span class="align-middle">Résultat : {{ supports.getTotalItemCount|number }} <!--
-                    -->{% if only_headers %}ménage{% else %}personne{% endif %}{% if supports.getTotalItemCount > 1 %}s{% endif %}.</span>
+                    -->{% if only_headers %}ménage{% else %}personne{% endif %}{% if supports.getTotalItemCount > 1 %}s{% endif %}</span>
                 </div>
                 <div class="col-md-8">
                     <div class="navigation">{{ knp_pagination_render(supports) }}</div>
@@ -54,11 +53,11 @@
                             {% set person = support_person.person %}
                             {% set support_group = support_person.supportGroup %}
                             {% set hotel_support = support_group.hotelSupport %}
-                            <tr class="{% if only_headers == false and support_person.head %}font-weight-bold{% endif %}">
+                            <tr class="{% if only_headers == false and support_person.head %}fw-bold{% endif %}">
                                 <td scope="row" class="align-middle text-center">
                                     {% if is_granted('VIEW', support_group) %}
-                                        <a href="{{ path('support_show', {'id': support_group.id}) }}"class="btn btn-{{ theme_color }} btn-sm shadow my-1" 
-                                            data-toggle="tooltip" data-placement="bottom" title="Voir la fiche du suivi"><span class="fas fa-eye"></span>
+                                        <a href="{{ path('support_show', {'id': support_group.id}) }}"class="btn btn-primary btn-sm shadow my-1" 
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom" title="Voir la fiche du suivi"><span class="fas fa-eye"></span>
                                         </a>
                                     {% endif %}
                                 </td>

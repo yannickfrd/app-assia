@@ -1,0 +1,38 @@
+.toast-container {
+    position: fixed;
+    top: $header-md-height;
+    right: 0;
+    padding: 1rem;
+    z-index: 9999;
+
+    & .toast {
+        opacity: .95;
+    }
+}
+
+@media (max-width: 768px) {
+    .toast-container {
+        top: $header-sm-height;
+    }
+}
+
+@media (max-width: 576px) {
+    .toast-container {
+        top: $header-xs-height;
+        padding: .75rem;
+    }
+}
+
+@each $color, $value in $theme-colors {
+    $alert-background: shift-color($value, $alert-bg-scale);
+    $alert-border: shift-color($value, $alert-border-scale);
+    $alert-color: shift-color($value, $alert-color-scale);
+
+    @if (contrast-ratio($alert-background, $alert-color) < $min-contrast-ratio) {
+        $alert-color: mix($value, color-contrast($alert-background), abs($alert-color-scale));
+    }
+
+    .alert-#{$color} {
+        @include alert-variant($alert-background, $alert-border, $alert-color);
+    }
+}

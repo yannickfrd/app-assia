@@ -1,6 +1,6 @@
 import Loader from "../utils/loader";
 import Ajax from "../utils/ajax";
-import MessageFlash from "../utils/messageFlash";
+import AlertMessage from "../utils/AlertMessage";
 
 export default class SupportListManager {
 
@@ -30,7 +30,7 @@ export default class SupportListManager {
 
     responseAjax(response) {
         if (response.msg) {
-            this.messageFlash = new MessageFlash(response.alert, response.msg)
+            this.messageFlash = new AlertMessage(response.alert, response.msg)
         }
 
         switch (response.action) {

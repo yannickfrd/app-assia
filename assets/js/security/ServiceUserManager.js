@@ -1,6 +1,6 @@
 import Loader from '../utils/loader'
 import Ajax from '../utils/ajax'
-import MessageFlash from "../utils/messageFlash";
+import AlertMessage from "../utils/AlertMessage";
 import WidgetCollectionManager from '../utils/form/WidgetCollectionManager'
 
 export default class ServiceUserManager {
@@ -78,7 +78,7 @@ export default class ServiceUserManager {
         }
 
         if (response.msg) {
-            new MessageFlash(response.alert, response.msg)
+            new AlertMessage(response.alert, response.msg)
         }
 
         this.loader.off()

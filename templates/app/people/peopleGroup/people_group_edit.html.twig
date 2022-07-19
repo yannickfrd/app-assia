@@ -20,19 +20,17 @@
             </div>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item active" aria-current="page"><span class="fas fa-users mr-2"></span>Groupe</li>
+                    <li class="breadcrumb-item active" aria-current="page"><span class="fas fa-users me-2"></span>Groupe</li>
                 </ol>
             </nav>
         </div>
         {{ form_start(form) }}
         <div>
-            {% include 'model/_flash_message.html.twig' %}
-            <div id="js-msg-flash-content"></div>
             <div class="row">
                 <div class="col-md-12 mb-3">
-                    <div class="float-right">
-                        <button type="submit" name="send" class="btn btn-{{ theme_color }} shadow">
-                            <span class="fas fa-save mr-2"></span>Mettre à jour</button>
+                    <div class="float-end">
+                        <button type="submit" name="send" class="btn btn-primary shadow">
+                            <span class="fas fa-save me-2"></span>Mettre à jour</button>
                     </div>
                 </div>
             </div>
@@ -43,8 +41,8 @@
                             <thead>
                                 <tr>
                                     <th scope="col" class="th-w-20 align-middle"></th>
-                                    <th scope="col" class="th-w-20" data-toggle="tooltip" 
-                                        data-placement="bottom" title="Demandeur/euse principal·e">DP</th>
+                                    <th scope="col" class="th-w-20" data-bs-toggle="tooltip" 
+                                        data-bs-placement="bottom" title="Demandeur/euse principal·e">DP</th>
                                     <th scope="col" class="th-w-150 align-middle">Nom</th>
                                     <th scope="col" class="th-w-150 align-middle">Prénom</th>
                                     <th scope="col" class="th-w-120 align-middle">Date de naissance</th>
@@ -61,30 +59,46 @@
                                         <td  class="align-middle" scope="row">
                                             <a href="{{ path('group_person_show', 
                                                 {'id': people_group.id, 'person_id': person.id, 'slug': person.slug}) }}"
-                                                class="btn btn-{{ theme_color }} shadow" data-toggle="tooltip" data-placement="bottom"
+                                                class="btn btn-primary shadow" data-bs-toggle="tooltip" data-bs-placement="bottom"
                                                 title="Voir la fiche individuelle"><span class="fas fa-eye"></span>
                                             </a>
                                         </td>
                                         <td class="px-1 align-middle">
-                                            <div class="custom-control custom-radio custom-radio-{{ theme_color }} pl-3">
+                                            <div class="form-check ps-2">
+                                                {{ form_label(form_person.head, null, {label_attr: {class: 'visually-hidden'}}) }}
                                                 {{ form_widget(form_person.head) }}
                                             </div>
                                         </td>
-                                        <td class="px-1 align-middle">{{ form_widget(form_person.person.lastname) }}</td>
-                                        <td class="px-1 align-middle">{{ form_widget(form_person.person.firstname) }}
-                                            {{ form_errors(form_person.person.firstname) }}</td>
-                                        <td class="px-1 align-middle">{{ form_widget(form_person.person.birthdate) }}
-                                            {{ form_errors(form_person.person.birthdate) }}</td>
+                                        <td class="px-1 align-middle">
+                                            {{ form_label(form_person.person.lastname, null, {label_attr: {class: 'visually-hidden'}}) }}
+                                            {{ form_widget(form_person.person.lastname) }}
+                                        </td>
+                                        <td class="px-1 align-middle">
+                                            {{ form_label(form_person.person.firstname, null, {label_attr: {class: 'visually-hidden'}} ) }}
+                                            {{ form_widget(form_person.person.firstname ) }}
+                                            {{ form_errors(form_person.person.firstname) }}
+                                        </td>
+                                        <td class="px-1 align-middle">
+                                            {{ form_label(form_person.person.birthdate, null, {label_attr: {class: 'visually-hidden'}}) }}
+                                            {{ form_widget(form_person.person.birthdate) }}
+                                            {{ form_errors(form_person.person.birthdate) }}
+                                        </td>
                                         <td class="text-center px-1 align-middle">{{ person.age }} an{{ person.age > 1 ? 's' }}</td>
-                                        <td class="px-1 align-middle">{{ form_widget(form_person.person.gender) }}</td>
-                                        <td class="px-1 align-middle">{{ form_widget(form_person.role) }}
-                                            {{ form_errors(form_person.role) }}</td>
+                                        <td class="px-1 align-middle">
+                                            {{ form_label(form_person.person.gender, null, {label_attr: {class: 'visually-hidden'}}) }}
+                                            {{ form_widget(form_person.person.gender) }}
+                                        </td>
+                                        <td class="px-1 align-middle">
+                                            {{ form_label(form_person.role, null, {label_attr: {class: 'visually-hidden'}}) }}
+                                            {{ form_widget(form_person.role) }}
+                                            {{ form_errors(form_person.role) }}
+                                        </td>
                                         <td class="px-1 align-middle">
                                             {% if false == form_person.vars.value.head %}
                                                 <button class="btn btn-danger shadow" data-action="remove"
                                                     data-url="{{ path('role_person_remove', {'id': form_person.vars.value.id, 
                                                         '_token': csrf_token('remove' ~ form_person.vars.value.id)}) }}"
-                                                    data-toggle="modal" data-target="#modal-remove-person"
+                                                    data-bs-toggle="modal" data-bs-target="#modal-remove-person"
                                                     title="Retirer la personne du groupe"><span class="fas fa-user-times"></span>
                                                 </button>
                                             {% endif %}
@@ -100,11 +114,11 @@
             {% set with_supports = supports|length > 0 %}
                 <div class="col-md-12">
                     <a href="{{ path('group_search_person', {'id': people_group.id, 'supports': with_supports}) }}"
-                        class="btn btn-{{ theme_color }} btn-sm my-2">
-                        <span class="fas fa-plus-square mr-2"></span>Ajouter une personne</a>
+                        class="btn btn-primary btn-sm my-2">
+                        <span class="fas fa-plus-square me-2"></span>Ajouter une personne</a>
                     <a href="{{ path('group_create_person', {'id': people_group.id, 'supports': with_supports, 'role': 3}) }}" class="btn btn-secondary btn-sm my-2"
-                        data-toggle="tooltip" title="Ajouter un enfant" data-placement="bottom">
-                        <span class="fas fa-plus-square mr-2"></span>Naissance</a>
+                        data-bs-toggle="tooltip" title="Ajouter un enfant" data-bs-placement="bottom">
+                        <span class="fas fa-plus-square me-2"></span>Naissance</a>
                 </div>
             </div>
         </div>
@@ -115,23 +129,26 @@
                 <div class="col-md-6">{{ form_row(form.siSiaoId) }}</div>
             </div>
             <div class="row mb-3">
-                <div class="col-md-12">{{ form_widget(form.comment) }}</div>
+                <div class="col-md-12">
+                {{ form_label(form.comment, null, {label_attr: {class: 'visually-hidden'}}) }}
+                {{ form_widget(form.comment) }}
+            </div>
             </div>
             <div class="row mb-3">
                 <div class="col-md-12">
                     {% if is_granted_ROLE_ADMIN %}
-                        <div class="float-left d-flex">
+                        <div class="float-start d-flex">
                         {% set msg_confirm = 'Êtes-vous vraiment sûr de vouloir supprimer ce groupe ?' %}
-                            <a id="modal-btn-delete" class="mr-3 btn btn-danger d-block" 
+                            <a id="modal-btn-delete" class="me-3 btn btn-danger d-block" 
                                 href="{{ path('people_group_delete', {'id': people_group.id}) }}"
-                                data-toggle="tooltip" title="Supprimer le groupe" data-placement="bottom"
+                                data-bs-toggle="tooltip" title="Supprimer le groupe" data-bs-placement="bottom"
                                 onclick="if(window.confirm('{{ msg_confirm }}')){return true;}else{return false;}"><span
-                                class="fas fa-trash-alt mr-2"></span><span class="">Supprimer</span></a>
+                                class="fas fa-trash-alt me-2"></span><span class="">Supprimer</span></a>
                         </div>
                     {% endif %}
-                    <div class="float-right">
-                        <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">
-                            <span class="fas fa-save mr-2"></span>Mettre à jour
+                    <div class="float-end">
+                        <button type="submit" id="send" name="send" class="btn btn-primary shadow">
+                            <span class="fas fa-save me-2"></span>Mettre à jour
                         </button>
                     </div>
                 </div>

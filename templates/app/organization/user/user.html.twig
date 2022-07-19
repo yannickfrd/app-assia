@@ -12,8 +12,6 @@
         <hr>
 
         <section>
-            {% include 'model/_flash_message.html.twig' %}
-
             {{ form_start(form_user) }}
 
             <h2 class="h4 my-4">Coordonnées</h2>
@@ -32,8 +30,8 @@
             </div>
             <div class="row mb-3">
                 <div class="col-md-12">
-                    <div class="mb-4 float-right">
-                    <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">Mettre à jour</button>
+                    <div class="mb-4 float-end">
+                    <button type="submit" id="send" name="send" class="btn btn-primary shadow">Mettre à jour</button>
                     </div>
                 </div>
             </div>

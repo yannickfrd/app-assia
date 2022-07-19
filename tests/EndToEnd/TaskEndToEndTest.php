@@ -21,10 +21,9 @@ class TaskEndToEndTest extends PantherTestCase
     public const MODAL_BUTTON_CLOSE = '#js-btn-cancel';
     public const FORM_TASK = 'form[name="task"]';
 
-    public const MSG_FLASH = '#js-msg-flash';
-    public const BUTTON_CLOSE_MSG = '#btn-close-msg';
-    public const ALERT_SUCCESS = '.alert.alert-success';
-    public const ALERT_WARNING = '.alert.alert-warning';
+    public const ALERT_SUCCESS = '.toast.show.alert-success';
+    public const ALERT_WARNING = '.toast.show.alert-warning';
+    public const BUTTON_CLOSE_MSG = '.toast.show .btn-close';
 
     protected Client $client;
 
@@ -121,7 +120,7 @@ class TaskEndToEndTest extends PantherTestCase
 
         $this->clickElement('input[data-action="toggle_task_status"]');
 
-        $this->client->waitFor(self::MSG_FLASH);
+        $this->client->waitFor(self::ALERT_SUCCESS);
         $this->assertSelectorExists(self::ALERT_SUCCESS);
 
         $this->clickElement(self::BUTTON_CLOSE_MSG);

@@ -22,7 +22,7 @@
         {% endif %}
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a class="text-{{ theme_color }}"
+                <li class="breadcrumb-item"><a class="link-primary"
                     href="{{ path('service_edit', {'id': service.id}) }}">{{ service.name }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Sous-service</li>
             </ol>
@@ -31,9 +31,6 @@
         <hr>
 
         <section>
-            {% include 'model/_flash_message.html.twig' %}
-            <div id="js-msg-flash-content"></div>
-
             {{ form_start(form) }}
 
             <div class="row mb-3">
@@ -55,15 +52,15 @@
             <div class="row mb-3">
                 <div class="col-md-12"> 
                     {% if edit_mode and is_granted('DISABLE', sub_service.service) %}
-                        <div class="float-left d-flex">
-                            <a class="mr-3 btn btn-{{ disabled ? 'success' : 'danger' }} d-block" href="{{ path('sub_service_disable', {'id': sub_service.id}) }}"
-                                title="{{ disabled ? 'Réactiver' : 'Désactiver' }} le sous-service" data-toggle="tooltip" data-placement="bottom"
+                        <div class="float-start d-flex">
+                            <a class="me-3 btn btn-{{ disabled ? 'success' : 'danger' }} d-block" href="{{ path('sub_service_disable', {'id': sub_service.id}) }}"
+                                title="{{ disabled ? 'Réactiver' : 'Désactiver' }} le sous-service" data-bs-toggle="tooltip" data-bs-placement="bottom"
                                 {% if disabled == false %}onclick="if(window.confirm('Êtes-vous vraiment sûr de vouloir désactiver ce sous-service ?')){return true;}else{return false;}"{% endif %}>
                                 {% if disabled %}Réactiver{% else %}Désactiver{% endif %}</a>
                         </div>
                     {% endif %}
-                    <div class="mb-4 float-right">
-                        <button type="submit" id="send" name="send" class="btn btn-{{ theme_color }} shadow">{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
+                    <div class="mb-4 float-end">
+                        <button type="submit" id="send" name="send" class="btn btn-primary shadow">{% if edit_mode %}Mettre à jour{% else %}Enregistrer{% endif %}</button>
                     </div>
                 </div>
             </div>
@@ -95,8 +92,8 @@
                             <tr>
                                 <td scope="row" class="align-middle text-center">
                                     <a href="{{ path('place_edit', {'id': place.id}) }}"
-                                        class="btn btn-{{ theme_color }} btn-sm shadow" data-toggle="tooltip" 
-                                        data-placement="bottom" title="Voir le groupe de places">
+                                        class="btn btn-primary btn-sm shadow" data-bs-toggle="tooltip" 
+                                        data-bs-placement="bottom" title="Voir le groupe de places">
                                         <span class="fas fa-eye"></span>
                                     </a>
                                 </td>
@@ -117,8 +114,8 @@
                 {% if is_granted('EDIT', service) %}
                 <div class="row my-3">
                     <div class="col-md-12">
-                        <a href="{{ path('service_place_new', {'id': service.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow">
-                        <span class="fas fa-plus-square pr-2"></span>Créer un nouveau groupe de places</a>
+                        <a href="{{ path('service_place_new', {'id': service.id}) }}" class="btn btn-primary btn-sm shadow">
+                        <span class="fas fa-plus-square pe-2"></span>Créer un nouveau groupe de places</a>
                     </div>
                 </div>
                 {% endif %}

@@ -40,7 +40,6 @@ class NoteSearchType extends AbstractType
         $this->setFormData($builder);
         $builder
             ->add('id', SearchType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'placeholder' => 'ID',
                     'class' => 'w-max-80',
@@ -48,7 +47,6 @@ class NoteSearchType extends AbstractType
                 'required' => false,
             ])
             ->add('content', SearchType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'placeholder' => 'Search',
                     'class' => 'w-max-170',
@@ -56,7 +54,6 @@ class NoteSearchType extends AbstractType
                 'required' => false,
             ])
             ->add('fullname', SearchType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'placeholder' => 'search.fullname.placeholder',
                     'class' => 'w-max-170',
@@ -64,7 +61,6 @@ class NoteSearchType extends AbstractType
                 'required' => false,
             ])
             ->add('type', ChoiceType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getChoices(Note::TYPE),
                 'attr' => [
                     'class' => 'w-max-160',
@@ -73,9 +69,6 @@ class NoteSearchType extends AbstractType
                 'required' => false,
             ])
             ->add('status', ChoiceType::class, [
-                'label_attr' => [
-                    'class' => 'sr-only',
-                ],
                 'choices' => Choices::getChoices(Note::STATUS),
                 'attr' => [
                     'class' => 'w-max-160',
@@ -96,7 +89,6 @@ class NoteSearchType extends AbstractType
                 'by_reference' => false,
                 'choices' => $this->tagRepo->findAllTags('note'),
                 'choice_label' => 'name',
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'class' => 'multi-select w-max-220',
                     'placeholder' => 'placeholder.tags',

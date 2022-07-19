@@ -18,7 +18,6 @@ class UserSearchType extends AbstractType
     {
         $builder
             ->add('lastname', SearchType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'class' => 'w-max-140 text-uppercase',
                     'placeholder' => 'Lastname',
@@ -26,7 +25,6 @@ class UserSearchType extends AbstractType
                 'required' => false,
             ])
             ->add('firstname', SearchType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'class' => 'w-max-140 text-capitalize',
                     'placeholder' => 'Firstname',
@@ -36,7 +34,6 @@ class UserSearchType extends AbstractType
             ->add('status', ChoiceType::class, [
                 'choices' => Choices::getChoices(User::STATUS),
                 'multiple' => true,
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'class' => 'multi-select',
                     'placeholder' => 'placeholder.status',
@@ -45,7 +42,6 @@ class UserSearchType extends AbstractType
                 'required' => false,
             ])
             ->add('phone', null, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'placeholder' => 'Phone',
                     'class' => 'w-max-140',
@@ -59,7 +55,6 @@ class UserSearchType extends AbstractType
                 ],
             ])
             ->add('disabled', ChoiceType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'choices' => Choices::getChoices(Choices::DISABLE),
                 'placeholder' => 'placeholder.disabled',
                 'required' => false,

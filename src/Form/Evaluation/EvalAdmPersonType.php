@@ -71,7 +71,6 @@ class EvalAdmPersonType extends AbstractType
                 'required' => false,
             ])
             ->add('commentEvalAdmPerson', null, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'rows' => 5,
                     'class' => 'justify',

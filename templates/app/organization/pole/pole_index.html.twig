@@ -7,7 +7,6 @@
 
         <div class="container">
 
-            {% include 'model/_flash_message.html.twig' %}
             <h1 class="h2 mb-3">Pôles</h1>
 
             <div class="row align-items-baseline">
@@ -40,7 +39,7 @@
                             <td scope="row" class="align-middle text-center">
                                 {% if is_granted('EDIT', pole) %}
                                 <a href="{{ path('pole_edit', {'id':pole.id}) }}"
-                                    class="btn btn-{{ theme_color }} btn-sm shadow" data-placement="bottom"
+                                    class="btn btn-primary btn-sm shadow" data-bs-placement="bottom"
                                     title="Voir la fiche du pôle"><span class="fas fa-eye"></span>
                                 </a>
                                 {% endif %}
@@ -56,8 +55,8 @@
                 </table>
             </div>
             {% if is_granted('ROLE_SUPER_ADMIN') %}
-            <p><a href="{{ path('pole_new') }}" class="btn btn-{{ theme_color }} btn-sm shadow js-create-pole">
-                    <span class="fas fa-plus-square mr-2"></span>Créer un nouveau pôle</a>
+            <p><a href="{{ path('pole_new') }}" class="btn btn-primary btn-sm shadow js-create-pole">
+                    <span class="fas fa-plus-square me-2"></span>Créer un nouveau pôle</a>
             </p>
             {% endif %}
             

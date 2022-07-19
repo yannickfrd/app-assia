@@ -19,10 +19,9 @@ class RdvEndToEndTest extends PantherTestCase
     public const MODAL_BUTTON_CLOSE = '#js-btn-cancel';
     public const FORM_RDV = 'form[name="rdv"]';
 
-    public const MSG_FLASH = '#js-msg-flash';
-    public const BUTTON_CLOSE_MSG = '#btn-close-msg';
-    public const ALERT_SUCCESS = '.alert.alert-success';
-    public const ALERT_WARNING = '.alert.alert-warning';
+    public const ALERT_SUCCESS = '.toast.show.alert-success';
+    public const ALERT_WARNING = '.toast.show.alert-warning';
+    public const BUTTON_CLOSE_MSG = '.toast.show .btn-close';
 
     protected Client $client;
 
@@ -129,7 +128,7 @@ class RdvEndToEndTest extends PantherTestCase
 
         $this->clickElement('#modal-block #modal-confirm');
 
-        $this->client->waitFor(self::MSG_FLASH);
+        $this->client->waitFor(self::ALERT_WARNING);
         $this->assertSelectorExists(self::ALERT_WARNING);
 
         $this->clickElement(self::BUTTON_CLOSE_MSG);
@@ -139,7 +138,7 @@ class RdvEndToEndTest extends PantherTestCase
     {
         $this->outputMsg('Delete a rdv by table');
 
-        $this->clickElement('a[data-original-title="Passer en vue liste"]');
+        $this->clickElement('a[data-bs-original-title="Passer en vue liste"]');
         $this->clickElement(self::BUTTON_DELETE);
         sleep(1); // animation effect
 

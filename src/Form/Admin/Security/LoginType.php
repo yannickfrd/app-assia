@@ -13,11 +13,9 @@ class LoginType extends AbstractType
     {
         $builder
             ->add('username', null, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => ['placeholder' => 'Login'],
             ])
             ->add('password', PasswordType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => ['placeholder' => 'Password'],
             ]);
     }

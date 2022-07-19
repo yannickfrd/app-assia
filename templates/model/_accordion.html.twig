@@ -1,17 +1,15 @@
-<section class="accordion my-0" id="accordion_parent_{{ accordion_id }}">
-	<div id="card-{{ accordion_id }}" class="card mb-0 border-bottom">
-		<div role="button" class="card-header py-2 collapsed cursor-pointer" id="heading_{{ accordion_id }}" 
-			data-toggle="collapse" data-target="#collapse_{{ accordion_id }}" aria-expanded="true" 
-			aria-controls="collapse_{{ accordion_id }}">
-			<h2 class="h5 my-2">{% block card_title %}{% endblock %}
-				<span class="float-right"><span class="fa fa-chevron-right"></span></span>
-			</h2>
-		</div>
-		<div id="collapse_{{ accordion_id }}" class="collapse" aria-labelledby="heading_{{ accordion_id }}" 
-			data-parent="#accordion_parent_{{ accordion_id }}">
-			<div class="card-body bg-light">
-				{% block card_body %}{% endblock %}
-			</div>
+<div class="accordion-item" id="accordion_item_{{ accordion_id }}">
+	<h3 class="accordion-header">
+		<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+			data-bs-target="#accordion_item_collapse_{{ accordion_id }}" aria-expanded="false" 
+			aria-controls="accordion_item_collapse_{{ accordion_id }}">
+			<span class="h5">{% block card_title %}{% endblock %}</span>
+		</button>
+	</h3>
+	<div id="accordion_item_collapse_{{ accordion_id }}" class="accordion-collapse collapse" 
+		aria-labelledby="accordion_item_heading_{{ accordion_id }}">
+		<div class="accordion-body">
+			{% block card_body %}{% endblock %}
 		</div>
 	</div>
-</section>
+</div>

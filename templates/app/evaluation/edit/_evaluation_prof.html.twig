@@ -8,12 +8,12 @@
 
     <div class="row">
         <div class="col-md-12 accordion" id="accordion_evalProf">
-			{{ support_people_looper.loop(accordion_id, people_over_16, support, theme_color) }}
+			{{ support_people_looper.loop(accordion_id, people_over_16, support) }}
 
             {% for key, eval_person in people_over_16 %}
             	{% set prefix_id= 'evaluation_evaluationPeople_' ~ key ~ '_evalProfPerson' %}
                 <div id="collapse_{{ prefix_id }}" class="collapse {% if loop.first %}show{% endif %} my-3"
-                    aria-labelledby="heading_{{ prefix_id }}" data-parent="#accordion_evalProf">
+                    aria-labelledby="heading_{{ prefix_id }}" data-bs-parent="#accordion_evalProf">
                     <div class="row">
                         <div class="col-md-6">
                             {{ form_row(eval_person.evalProfPerson.profStatus, {

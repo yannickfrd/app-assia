@@ -268,7 +268,7 @@ payment:
     help: Ce commentaire est uniquement visible dans les exports Excel.
   commentExport:
     placeholder: Ajouter un commentaire à l'intention du ménage...
-    help: Ce commentaire est uniquement visible dans le reçu en PDF.
+    help: Ce commentaire est uniquement visible dans le reçu PDF.
   type: Type d'opération
 contribution.rate.help: Nombre entre 0 et 1.
 
@@ -382,13 +382,9 @@ hotelSupport:
 Formatted sheet: Tableur formaté
 Model: Modèle d'export
 Anonymized: Anonymisé
-no_result_to_export: Aucun résultat à exporter.
 
 # SiSiao
 si_siao:
-  login_successfully: Vous êtes connecté·e au SI-SIAO.
-  login_failed: Identifiant SI-SIAO ou mot de passe incorrect.
-  logout_successfully: Vous avez bien été déconnecté·e du SI-SIAO.
   username: Identifiant SI-SIAO
   password: Mot de passe
 si_siao_id.placeholder: ID groupe SI-SIAO

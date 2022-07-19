@@ -1,5 +1,4 @@
 {% extends 'base.html.twig' %}
-{# {% form_theme form 'bootstrap_4_layout.html.twig' %} #}
 
 {% block title %}Connexion{% endblock %}
 
@@ -8,36 +7,26 @@
         <section class="row min-vh-80">
             <div class="form-signin m-auto text-center">
                 {{ form_start(form) }}
-                    {% include 'model/_flash_message.html.twig' %}
-                    {% if error %}
-                        <div class="alert alert-danger alert-dismissible mb-3 fade show" role="alert">
-                            {{ error.messageKey|trans(error.messageData, 'security')|raw }}
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                    {% endif %}
-                    <h1 class="h3 mb-4 font-weight-normal">Merci de vous connecter</h1>
+                    <h1 class="h3 mb-4 fw-normal">Merci de vous connecter</h1>
                     <div class="my-2">
-                        <div class="input-group mb-2">
-                            <div class="input-group-prepend">
-                                <div class="input-group-text"><span class="fa fa-user"></span></div>
-                            </div>{{ form_label(form.username) }}
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-user"></i></span>
+                            {{ form_label(form.username, null, {label_attr: {class: 'visually-hidden'}}) }}
                             {{ form_widget(form.username) }}
                         </div>
                     </div>
                     <div class="my-3">
                         <div class="input-group js-password-group">
-                            {{ form_label(form.password) }}
+                            {{ form_label(form.password, null, {label_attr: {class: 'visually-hidden'}}) }}
                             {{ form_widget(form.password, {'attr': {'class': 'js-password' }}) }}
-                            <div class="input-group-append">
-                                <span class="input-group-text"><span class="js-show-password fa fa-eye"></span></span>
-                            </div>
+                            <span class="input-group-text"><i class="js-show-password fa fa-eye"></i></span>
                         </div>
                     </div>
-                    <button type="submit" id="send" name="send" class="btn btn-lg btn-{{ theme_color }} btn-block shadow mb-4">Se connecter</button>
+                    <div class="d-grid gap-2">
+                        <button type="submit" id="send" name="send" class="btn btn-lg btn-primary w-100 shadow mb-4">Se connecter</button>
+                    </div>
                 {{ form_end(form) }}
-                <a href="{{ path('security_forgot_password') }}" class="text-{{ theme_color }} mb-4">Mot de passe oublié ?</a>
+                <a href="{{ path('security_forgot_password') }}" class="link-primary mb-4">Mot de passe oublié ?</a>
             </div>
         </section>
     </div>

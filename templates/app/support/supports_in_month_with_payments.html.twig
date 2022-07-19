@@ -8,7 +8,6 @@
     <section class="mt-0">
 
         <div class="container-fluid mt-4">
-            {% include 'model/_flash_message.html.twig' %}
             <h1 class="h2 mb-3">{{ title }} | {{ calendar.getMonthToString }}</h1>
         </div>
 
@@ -18,20 +17,20 @@
             <div>
                 {% set query = app.request.query %}
                 <a href="{{ path('supports_current_month', query|merge({})) }}" 
-                    class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-toggle="tooltip" data-placement="bottom" title="Mois actuel"><!--
-                    --><span class="fas fa-calendar-day"></span><span class="d-none d-sm-inline ml-2">Mois actuel</span></a>
+                    class="btn btn-primary btn-sm mb-1 shadow" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mois actuel"><!--
+                    --><span class="fas fa-calendar-day"></span><span class="d-none d-sm-inline ms-2">Mois actuel</span></a>
                 <a href="{{ path('supports_in_month', query|merge({'year': calendar.previousMonth.year, 'month': calendar.previousMonth.month})) }}"
-                    class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-toggle="tooltip" data-placement="bottom" title="Mois précédent"><span class="fas fa-angle-left"></span>
+                    class="btn btn-primary btn-sm mb-1 shadow" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mois précédent"><span class="fas fa-angle-left"></span>
                 </a>
                 <a href="{{ path('supports_in_month', query|merge({'year': calendar.nextMonth.year, 'month': calendar.nextMonth.month})) }}"
-                    class="btn btn-{{ theme_color }} btn-sm mb-1 shadow" data-toggle="tooltip" data-placement="bottom" title="Mois suivant"><span class="fas fa-angle-right"></span>
+                    class="btn btn-primary btn-sm mb-1 shadow" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mois suivant"><span class="fas fa-angle-right"></span>
                 </a>
             </div>
 
             <div class="row align-items-baseline">
                 <div class="col-md-4 count align-middle mb-2">
                     <span class="align-middle">Résultat : {{ supports.getTotalItemCount|number }} <!--
-                    -->suivi{% if supports.getTotalItemCount > 1 %}s{% endif %}.</span>
+                    -->suivi{% if supports.getTotalItemCount > 1 %}s{% endif %}</span>
                 </div>
                 <div class="col-md-8">
                     <div class="navigation">{{ knp_pagination_render(supports) }}</div>
@@ -64,7 +63,7 @@
                             <tr>
                                 <th scope="row" class="align-middle">
                                     <a href="{{ path('support_payments_index', {'id':support.id}) }}"
-                                        class="btn btn-{{ theme_color }} btn-sm shadow my-1" data-toggle="tooltip" data-placement="bottom"
+                                        class="btn btn-primary btn-sm shadow my-1" data-bs-toggle="tooltip" data-bs-placement="bottom"
                                         title="Voir la fiche du suivi"><span class="fas fa-eye"></span>
                                     </a>
                                 </th>
@@ -82,8 +81,8 @@
                                                 {{ payment.startDate|date('d/m/Y') }} - {{ payment.endDate|date('d/m/Y') }}
                                             {% endif %}
                                         </td>
-                                        <td class="align-middle text-right">{{ payment.toPayAmt|amount }}</td>
-                                        <td class="align-middle text-right">{{ payment.paidAmt|amount }}</td>
+                                        <td class="align-middle text-end">{{ payment.toPayAmt|amount }}</td>
+                                        <td class="align-middle text-end">{{ payment.paidAmt|amount }}</td>
                                         <td class="align-middle">{{ payment.paymentDate|date('d/m/Y') }}</td>
                                         <td class="align-middle">{{ payment.paymentTypeToString }}</td>
                                         <td class="align-middle">{{ payment.comment }}</td>

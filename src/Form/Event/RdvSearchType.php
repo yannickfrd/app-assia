@@ -42,7 +42,6 @@ class RdvSearchType extends AbstractType
 
         $builder
             ->add('id', SearchType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'placeholder' => 'ID',
                     'class' => 'w-max-80',
@@ -50,7 +49,6 @@ class RdvSearchType extends AbstractType
                 'required' => false,
             ])
             ->add('title', SearchType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'placeholder' => 'Title',
                     'class' => 'w-max-170',
@@ -58,7 +56,6 @@ class RdvSearchType extends AbstractType
                 'required' => false,
             ])
             ->add('fullname', SearchType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'placeholder' => 'search.fullname.placeholder',
                     'class' => 'w-max-170',
@@ -102,7 +99,6 @@ class RdvSearchType extends AbstractType
                 'by_reference' => false,
                 'choices' => $this->tagRepo->getTagsByService($options['service'], 'rdv'),
                 'choice_label' => 'name',
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'class' => 'multi-select w-max-220',
                     'placeholder' => 'placeholder.tags',

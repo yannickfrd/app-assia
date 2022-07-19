@@ -74,7 +74,7 @@ class NoteControllerTest extends WebTestCase
 
         // Page is up
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('h1', 'Notes sociales');
+        $this->assertSelectorTextContains('h1', 'Notes');
 
         // Search is successful
         /** @var Crawler */
@@ -274,11 +274,10 @@ class NoteControllerTest extends WebTestCase
         $this->client->request('GET', "/support/$id/note/new_evaluation");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-warning', 'Il n\'y a pas d\'évaluation sociale créée pour ce suivi.');
+        $this->assertSelectorTextContains('.toast.alert-warning', 'Il n\'y a pas d\'évaluation sociale créée pour ce suivi.');
     }
 
-    public function
-    testGenerateNoteEvaluationIsSuccessful(): void
+    public function testGenerateNoteEvaluationIsSuccessful(): void
     {
         $this->fixtures = $this->databaseTool->loadAliceFixture([
             dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',

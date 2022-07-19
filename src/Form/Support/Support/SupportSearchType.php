@@ -52,8 +52,6 @@ class SupportSearchType extends AbstractType
             ->add('head', CheckboxType::class, [
                 'label' => 'DP',
                 'required' => false,
-                'label_attr' => ['class' => 'custom-control-label'],
-                'attr' => ['class' => 'custom-control-input checkbox'],
             ])
             ->add('export')
             ->add('deleted', DeletedSearchType::class, [

@@ -5,7 +5,7 @@ import DocumentForm from "./DocumentForm"
 import DocumentViewer from "./DocumentViewer"
 import Dropzone from "../utils/file/dropzone"
 import Loader from '../utils/loader'
-import MessageFlash from '../utils/messageFlash'
+import AlertMessage from '../utils/AlertMessage'
 import TagsManager from '../tag/TagsManager'
 import {Modal, Tooltip} from 'bootstrap'
 
@@ -17,8 +17,6 @@ export default class DocumentManager {
 
         this.documentForm = new DocumentForm(this)
         this.documentViewer = new DocumentViewer(this)
-
-        this.themeColor = document.getElementById('header').dataset.color
 
         this.tagsManager = new TagsManager()
 
@@ -101,7 +99,7 @@ export default class DocumentManager {
 
         // Check if items are selected.
         if (0 === items.length) {
-            return new MessageFlash('danger', 'Aucun document n\'est sélectionné.')
+            return new AlertMessage('danger', 'Aucun document n\'est sélectionné.')
         }
         // If 'download' action
         if (1 === option) {
@@ -123,7 +121,7 @@ export default class DocumentManager {
         formData.append('items', JSON.stringify(items))
 
         this.ajax.send('POST', this.actionFormElt.action, this.responseAjax.bind(this), formData)
-        return new MessageFlash('success', 'Le téléchargement est en cours. Veuillez patienter...')
+        return new AlertMessage('success', 'Le téléchargement est en cours. Veuillez patienter...')
     }
 
     /**
@@ -222,8 +220,8 @@ export default class DocumentManager {
             case 'restore':
                 this.deleteDocumentTr(response.document)
 
-                this.messageFlash = new MessageFlash(response.alert, response.msg);
-                this.checkToRedirect(this.messageFlash.delay)
+                this.alertMessage = new AlertMessage(response.alert, response.msg);
+                this.checkToRedirect(this.alertMessage.delay)
                 break
             case 'download':
                 return this.getFile(response.data)
@@ -232,8 +230,8 @@ export default class DocumentManager {
         if (!this.loader.isActive()) {
             this.loader.off()
 
-            if (response.msg && !this.messageFlash) {
-                new MessageFlash(response.alert, response.msg);
+            if (response.msg && !this.alertMessage) {
+                new AlertMessage(response.alert, response.msg);
             }
         }
     }
@@ -255,7 +253,7 @@ export default class DocumentManager {
             this.updateCounter(1)
             this.addEventListenersToTr(documentTrElt)
 
-            documentTrElt.querySelectorAll('[data-toggle="tooltip"]').forEach(tooltip => new Tooltip(tooltip))
+            documentTrElt.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(tooltip => new Tooltip(tooltip))
 
             this.dropzone.updateItemInList(doc)
         })
@@ -311,38 +309,36 @@ export default class DocumentManager {
         documentTrElt.dataset.documentId = doc.id
         documentTrElt.innerHTML = `
             <td class="align-middle text-center">
-                <div class="custom-control custom-checkbox custom-checkbox-${this.themeColor} text-dark pl-0" 
-                    title="Sélectionner le document" data-toggle="tooltip" data-placement="bottom">
-                    <div class="form-check">
-                        <input type="checkbox" id="checkbox-file-${doc.id}" data-checkbox="${doc.id}"
-                            name="checkbox-file-${doc.id}" class="custom-control-input checkbox form-check-input">
-                        <label class="custom-control-label form-check-label ml-2" for="checkbox-file-${doc.id}"></label>
-                    </div>
+                <div class="form-check"
+                    title="Sélectionner le document" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                    <input type="checkbox" id="checkbox-file-${doc.id}" name="checkbox-file-${doc.id}" 
+                        class="form-check-input ms-0" data-checkbox="${doc.id}">
+                    <label class="form-check-label" for="checkbox-file-${doc.id}"></label>
                 </div>
             </td>
             <td class="align-middle text-center">
                 <a href="${this.containerDocumentsElt.dataset.pathPreview.replace('__id__', doc.id)}" type="button"
-                    data-action="preview" class="btn btn-${this.themeColor} btn-sm shadow"
-                    title="Prévisualiser le document" type="button" data-toggle="tooltip" data-placement="bottom">
+                    data-action="preview" class="btn btn-primary btn-sm shadow"
+                    title="Prévisualiser le document" type="button" data-bs-toggle="tooltip" data-bs-placement="bottom">
                     <i class="fas fa-eye"></i>
                 </a>
                 <a href="${this.containerDocumentsElt.dataset.pathDownload.replace('__id__', doc.id)}" type="button"
-                    data-action="download" class="btn btn-${this.themeColor} btn-sm shadow m-1" 
-                    title="Télécharger le document" data-toggle="tooltip" data-placement="bottom">
+                    data-action="download" class="btn btn-primary btn-sm shadow m-1" 
+                    title="Télécharger le document" data-bs-toggle="tooltip" data-bs-placement="bottom">
                     <i class="fas fa-file-download"></i>
                 </a>
             </td>
             <td class="align-middle cursor-pointer" data-cell="name">${doc.name}</td>
             <td class="align-middle cursor-pointer" data-cell="tags"></td>
             <td class="align-middle cursor-pointer" data-cell="content">${doc.content ?? ''}</td>
-            <td class="align-middle text-right">${((Math.floor(doc.size / 10000) / 100).toLocaleString('fr') + ' Mo')}</td>
+            <td class="align-middle text-end">${((Math.floor(doc.size / 10000) / 100).toLocaleString('fr') + ' Mo')}</td>
             <td class="align-middle">${doc.fileType}</td>
             <td class="d-none d-lg-table-cell align-middle th-date">${new DateFormater().getDate(doc.createdAt)}</td>
             <td class="d-none d-lg-table-cell align-middle th-w-100">${doc.createdBy.fullname}</td>
             <td class="align-middle text-center">
                 <button data-path="${this.containerDocumentsElt.dataset.pathDelete.replace('__id__', doc.id)}" 
                     class="btn btn-danger btn-sm shadow my-1" data-action="delete" 
-                    title="Supprimer le document" data-toggle="tooltip" data-placement="bottom">
+                    title="Supprimer le document" data-bs-toggle="tooltip" data-bs-placement="bottom">
                     <i class="fas fa-trash-alt"></i>
                 </button>
             </td>`

@@ -133,7 +133,7 @@ class EvaluationControllerTest extends WebTestCase
         $this->client->request('GET', "/support/$id/evaluation/export/pdf");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-warning', 'Il n\'y a pas d\'évaluation sociale créée pour ce suivi.');
+        $this->assertSelectorTextContains('.toast.alert-warning', 'Il n\'y a pas d\'évaluation sociale créée pour ce suivi.');
 
         // Success export to PDF
         $id = $this->fixtures['support_group_with_eval']->getId();
@@ -167,7 +167,7 @@ class EvaluationControllerTest extends WebTestCase
         $this->client->request('GET', "/evaluation/$id/delete");
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert.alert-warning', "L'évaluation sociale est supprimée.");
+        $this->assertSelectorTextContains('.toast.alert-warning', "L'évaluation sociale a été supprimée.");
     }
 
     public function testFixPeopleIsSuccessful(): void

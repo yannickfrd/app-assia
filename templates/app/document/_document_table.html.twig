@@ -4,16 +4,13 @@
 	<table id="table-documents" class="table table-bordered table-striped table-hover text-dark shadow-sm">
 		<thead>
 			<tr>
-				<th scope="col" class="align-middle text-center th-w-20 px-1">
+				<th scope="col" class="align-middle text-center th-w-20">
 					{% if document_index_route == false and not restoration_mode %}
-						<div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} text-dark pl-0"
-							title="Tout sélectionner" data-toggle="tooltip" data-placement="bottom">
-							<div class="form-check">
-								<input type="checkbox" id="checkbox-all-files" data-checkbox-all="true"
-									name="checkbox-all-files" class="custom-control-input checkbox form-check-input">
-								<label class="custom-control-label form-check-label ml-2"
-									for="checkbox-all-files" data-checkbox-all="true"></label>
-							</div>
+						<div class="form-check"
+							title="Tout sélectionner" data-bs-toggle="tooltip" data-bs-placement="bottom">
+							<input type="checkbox" id="checkbox-all-files" name="checkbox-all-files" 
+								class="form-check-input ms-0" data-checkbox-all="true">
+							<label class="form-check-label" for="checkbox-all-files" data-checkbox-all="true"></label>
 						</div>
 					{% endif %}
 				</th>
@@ -59,35 +56,31 @@
 			{% for document in documents %}
 				{% set is_deleted = document.isDeleted %}
 				<tr data-document-id="{{ document.id }}">
-					<td class="align-middle text-center px-1">
+					<td class="align-middle text-center">
 						{% if is_deleted == false %}
-							<div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} text-dark pl-0"
-								title="Sélectionner le document" data-toggle="tooltip" data-placement="bottom">
-								<div class="form-check">
-									<input type="checkbox" id="checkbox-file-{{ document.id }}" 
-										data-checkbox="{{ document.id }}" name="checkbox-file-{{ document.id }}" 
-										class="custom-control-input checkbox form-check-input">
-									<label class="custom-control-label form-check-label ml-2" 
-										for="checkbox-file-{{ document.id }}"></label>
-								</div>
+							<div class="form-check"
+								title="Sélectionner le document" data-bs-toggle="tooltip" data-bs-placement="bottom">
+								<input type="checkbox" id="checkbox-file-{{ document.id }}" name="checkbox-file-{{ document.id }}" 
+									class="form-check-input ms-0" data-checkbox="{{ document.id }}">
+								<label class="form-check-label" for="checkbox-file-{{ document.id }}"></label>
 							</div>
 						{% elseif document_index_route %}
 							<a href="{{ path('support_document_index', {'id': document.supportGroup.id,
-								'documentId': document.id}) }}" class="btn btn-{{ theme_color }} btn-sm shadow" 
-								title="Voir le suivi" data-toggle="tooltip" data-placement="bottom">
+								'documentId': document.id}) }}" class="btn btn-primary btn-sm shadow" 
+								title="Voir le suivi" data-bs-toggle="tooltip" data-bs-placement="bottom">
 								<i class="fas fa-eye"></i>
 							</a>
 						{% endif %}
 					</td>
 					<td class="align-middle text-center">
 						<a href="{{ path('document_preview', {'id': document.id }) }}" type="button" data-action="preview" 
-							class="btn btn-{{ is_deleted ? 'secondary disabled' : theme_color }} btn-sm shadow d-none d-sm-inline"
-							title="Prévisualiser le document" data-toggle="tooltip" data-placement="bottom">
+							class="btn btn-{{ is_deleted ? 'secondary disabled' : 'primary' }} btn-sm shadow d-none d-sm-inline"
+							title="Prévisualiser le document" data-bs-toggle="tooltip" data-bs-placement="bottom">
 							<i class="fas fa-eye"></i>
 						</a>
 						<a href="{{ path('document_download', {'id': document.id }) }}" type="button" data-action="download"
-							class="btn btn-{{ is_deleted ? 'secondary disabled' : theme_color }} btn-sm m-1 shadow"
-							title="Télécharger le document" data-toggle="tooltip" data-placement="bottom">
+							class="btn btn-{{ is_deleted ? 'secondary disabled' : 'primary' }} btn-sm m-1 shadow"
+							title="Télécharger le document" data-bs-toggle="tooltip" data-bs-placement="bottom">
 							<i class="fas fa-file-download"></i>
 						</a>
 					</td>
@@ -96,14 +89,14 @@
 					</td>
 					<td class="align-middle {{ not is_deleted ? 'cursor-pointer' }}" data-cell="tags">
 						{% for tag in document.tags %}
-							<span class="badge bg-{{ tag.color }} text-light" 
+							<span class="badge bg-{{ tag.color }}" 
 								data-tag-id="{{ tag.id }}">{{ tag.name }}</span>
 						{% endfor %}
 					</td>
 					<td class="align-middle {{ not is_deleted ? 'cursor-pointer' }}" data-cell="content">
 						{{ document.content }}
 					</td>
-					<td class="align-middle text-right">{{ (document.size / 1000000)|round(2) }} Mo</td>
+					<td class="align-middle text-end">{{ (document.size / 1000000)|round(2) }} Mo</td>
 					<td class="align-middle">{{ document.fileType }}</td>
 					{% if document_index_route %}
 						{% set support = document.supportGroup %}
@@ -127,7 +120,7 @@
 						{% elseif document_index_route == false %}
 							<button data-path="{{ path('document_delete', {'id': document.id}) }}" 
 								class="btn btn-danger btn-sm shadow my-1" data-action="delete" 
-								title="Supprimer le document" data-toggle="tooltip" data-placement="bottom">
+								title="Supprimer le document" data-bs-toggle="tooltip" data-bs-placement="bottom">
 								<i class="fas fa-trash-alt"></i>
 							</button>
 						{% endif %}

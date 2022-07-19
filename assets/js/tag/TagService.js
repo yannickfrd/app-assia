@@ -1,4 +1,4 @@
-import MessageFlash from '../utils/messageFlash'
+import AlertMessage from '../utils/AlertMessage'
 import Loader from '../utils/loader'
 import Ajax from '../utils/ajax'
 import Tag from './model/Tag'
@@ -12,7 +12,6 @@ export default class TagService {
         this.tagsTemp = [] // Tableau de Tag
         this.countAddingTag = 0
         this.serviceId = parseInt(window.location.href.split('/').pop())
-        this.colorTheme = document.getElementById('header').dataset.color
         this.listBadge = document.getElementById('tags-list')
         this.formTags = document.forms['service_tag']
         this.selectTags = document.getElementById('service_tag_tags')
@@ -76,7 +75,7 @@ export default class TagService {
             this.ajax.send(e.currentTarget.method, e.currentTarget.action, this.responseAjax.bind(this), formData)
 
         } else {
-            new MessageFlash('warning', 'Vous n\'avez pas sélectionné d\'étiquettes.')
+            new AlertMessage('warning', 'Vous n\'avez pas sélectionné d\'étiquettes.')
             this.loader.off()
         }
     }
@@ -116,7 +115,7 @@ export default class TagService {
             for (let i = 1; i <= this.countAddingTag; i++) {
                 this.tagsTemp.splice(this.tagsTemp.at(-i))
 
-                new MessageFlash(response.alert, response.msg)
+                new AlertMessage(response.alert, response.msg)
             }
         }
         this.countAddingTag = 0
@@ -127,7 +126,7 @@ export default class TagService {
      */
     deleteTag(response) {
         if ('success' !== response.alert) {
-            return new MessageFlash(response.alert, response.msg)
+            return new AlertMessage(response.alert, response.msg)
         }
 
         const tagElt = document.querySelector(`#tags-list span[data-tag-id="${response.data.tagId}"]`)
@@ -174,7 +173,7 @@ export default class TagService {
      */
     createTag(tag) {
         const tagSpanElt = document.createElement('span')
-        tagSpanElt.classList.add('badge', 'bg-' + this.colorTheme, 'text-light', 'mr-1', 'tag')
+        tagSpanElt.classList.add('badge', 'bg-primary', 'me-1', 'tag')
         tagSpanElt.dataset.tagId = tag.id
         tagSpanElt.dataset.tagName = tag.name
         tagSpanElt.innerText = ' ' + tag.name + ' '
@@ -187,7 +186,7 @@ export default class TagService {
             this.tryDelete(aElt.href)
         }
         const spanElt = document.createElement('span')
-        spanElt.classList.add('badge', 'badge-danger', 'ml-2')
+        spanElt.classList.add('badge', 'bg-danger', 'ms-2')
         spanElt.innerHTML = '<i class="fas fa-times"></i>'
 
         aElt.appendChild(spanElt)

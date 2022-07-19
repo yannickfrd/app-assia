@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## Version 4.0.0 - 19/07/2022
+
+Update to bootstap 5.1 and update all css/html (#182):
+
+* Install bootstrap 5.1 and config custom file
+* Update all css/html (use new bs classes and data-atributes)
+* Create new system for theme-color (use data-attribut 'theme-color')
+* Create new alert/flash message feature (toast component)
+* Use translation key for all alert/flash messages
+
 ## Version 3.23.1 - 06/07/2022
 
 * Install cleave.js (Vanilla JS)

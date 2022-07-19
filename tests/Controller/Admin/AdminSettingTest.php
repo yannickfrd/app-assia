@@ -69,7 +69,7 @@ class AdminSettingTest extends WebTestCase
         $this->sendAdminSettingByDefault();
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('.alert', 'La configuration est bien enregistrée.');
+        $this->assertSelectorTextContains('.toast.alert-success', 'Les paramètres ont été mis à jour.');
     }
 
     public function testServiceGetDefaultSetting(): void

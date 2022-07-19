@@ -66,7 +66,7 @@ class SocialIndicators
 
             $evaluations = $supportPerson->getEvaluations();
             /** @var EvaluationPerson */
-            $evaluationPerson = $evaluations ? $evaluations[($evaluations->count()) - 1] : new EvaluationPerson();
+            $evaluationPerson = $evaluations ? $evaluations[$evaluations->count() - 1] : new EvaluationPerson();
 
             $evalProfPerson = $evaluationPerson && $evaluationPerson->getEvalProfPerson() ? $evaluationPerson->getEvalProfPerson() : new EvalProfPerson();
             $evalBudgetPerson = $evaluationPerson && $evaluationPerson->getEvalBudgetPerson() ? $evaluationPerson->getEvalBudgetPerson() : new EvalBudgetPerson();

@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class to import group and people from API SI-SIAO.
@@ -26,6 +27,7 @@ class SiSiaoGroupImporter extends SiSiaoClient
     protected $peopleGroupRepo;
     protected $peopleGroupChecker;
     protected $flashBag;
+    protected $translator;
     protected $exceptionNotification;
 
     public function __construct(
@@ -37,10 +39,11 @@ class SiSiaoGroupImporter extends SiSiaoClient
         PeopleGroupRepository $peopleGroupRepo,
         PeopleGroupChecker $peopleGroupChecker,
         FlashBagInterface $flashBag,
+        TranslatorInterface $translator,
         ExceptionNotification $exceptionNotification,
         string $url
     ) {
-        parent::__construct($client, $requestStack, $url);
+        parent::__construct($client, $requestStack, $url, $translator);
 
         $this->em = $em;
         $this->user = $security->getUser();
@@ -48,6 +51,7 @@ class SiSiaoGroupImporter extends SiSiaoClient
         $this->peopleGroupRepo = $peopleGroupRepo;
         $this->peopleGroupChecker = $peopleGroupChecker;
         $this->flashBag = $flashBag;
+        $this->translator = $translator;
         $this->exceptionNotification = $exceptionNotification;
     }
 
@@ -61,7 +65,9 @@ class SiSiaoGroupImporter extends SiSiaoClient
         } catch (\Exception $e) {
             $this->exceptionNotification->sendException($e);
 
-            $this->flashBag->add('danger', $this->getErrorMessage($e)."Le groupe n'a pas pu être importé.");
+            $this->flashBag->add('danger', $this->translator->trans('sisiao.group.import_failed', [
+                'error_message' => $this->getErrorMessage($e),
+            ], 'app'));
 
             return null;
         }
@@ -75,8 +81,10 @@ class SiSiaoGroupImporter extends SiSiaoClient
         /** @var object $result */
         $result = $this->searchById($id);
 
-        if (0 === $result->total) {
-            $this->flashBag->add('warning', "Il n'y a pas de dossier SI-SIAO correspondant avec la clé '$id'.");
+        if (!is_object($result) || 0 === $result->total) {
+            $this->flashBag->add('warning', $this->translator->trans('sisiao.group_id_no_exist', [
+                'sisiao_id' => $id,
+            ], 'app'));
 
             return null;
         }
@@ -96,7 +104,7 @@ class SiSiaoGroupImporter extends SiSiaoClient
         $this->em->flush();
 
         if ($peopleGroup->getCreatedAt() > (new \DateTime())->modify('-10 sec')) {
-            $this->flashBag->add('success', 'Le groupe a été importé.');
+            $this->flashBag->add('success', 'sisiao.group.imported_successfully');
         }
 
         return $peopleGroup;
@@ -105,7 +113,7 @@ class SiSiaoGroupImporter extends SiSiaoClient
     protected function createPeopleGroup(object $ficheGroupe): PeopleGroup
     {
         if ($peopleGroup = $this->peopleGroupExists($ficheGroupe)) {
-            $this->flashBag->add('warning', 'Ce groupe existe déjà.');
+            $this->flashBag->add('warning', 'sisiao.group.already_exists');
         } else {
             $peopleGroup = (new PeopleGroup())
             ->setFamilyTypology($this->findInArray($ficheGroupe->composition, SiSiaoItems::FAMILY_TYPOLOGY) ?? 9)
@@ -124,7 +132,9 @@ class SiSiaoGroupImporter extends SiSiaoClient
     protected function createPerson(object $ficheGroupe, object $personne, PeopleGroup $peopleGroup): RolePerson
     {
         if ($person = $this->personExists($personne)) {
-            $this->flashBag->add('warning', $person->getFullname().' existe déjà.');
+            $this->flashBag->add('warning', $this->translator->trans('sisiao.person.already_exists', [
+                'person_firstname' => $person->getFirstname(),
+            ], 'app'));
         } else {
             $person = (new Person())
             ->setLastname($personne->nom)

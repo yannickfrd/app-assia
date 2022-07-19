@@ -7,11 +7,11 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class PeopleGroupChecker
 {
-    private $flashbag;
+    private $flashBag;
 
-    public function __construct(FlashBagInterface $flashbag)
+    public function __construct(FlashBagInterface $flashBag)
     {
-        $this->flashbag = $flashbag;
+        $this->flashBag = $flashBag;
     }
 
     /**
@@ -32,7 +32,7 @@ class PeopleGroupChecker
                 ++$nbHeads;
                 if ($age < 18) {
                     $minorHead = true;
-                    $this->flashbag->add('warning', 'Le demandeur principal a été automatiquement modifié, car il ne peut pas être mineur.');
+                    $this->flashBag->add('warning', 'people_group.header_automatically_modified');
                 }
             }
         }

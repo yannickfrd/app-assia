@@ -10,7 +10,7 @@ export default class evaluationBudget {
     constructor() {
         this.formValidator = new FormValidator()
 
-        this.evalBudgetElt = document.getElementById('accordion_parent_evalBudget')
+        this.evalBudgetElt = document.getElementById('accordion_item_evalBudget')
         this.resourcesGroupAmtElt = document.getElementById('resourcesGroupAmt')
         this.chargesGroupAmtElt = document.getElementById('chargesGroupAmt')
         this.resourcesAmtElts = document.querySelectorAll('input[data-amount="resourcesAmt"]')

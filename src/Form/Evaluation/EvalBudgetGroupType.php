@@ -17,7 +17,6 @@ class EvalBudgetGroupType extends AbstractType
         ->add('cafAttachment')
         ->add('contributionAmt', MoneyType::class, [
             'attr' => [
-                'class' => 'text-right',
                 'data-amount' => 'true',
             ],
             'required' => false,

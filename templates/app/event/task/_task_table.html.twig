@@ -32,24 +32,23 @@
             {% for task in tasks %}
                 {% set is_deleted = task.deletedAt is not null %}
                 {% set support = task.supportGroup %}
-                <tr id="task_{{ task.id }}" class="{% if task.status == true %}text-secondary delete{% endif %}">
+                <tr id="task_{{ task.id }}" class="{% if task.status == true %}text-del text-secondary{% endif %}">
                     <td class="align-middle text-center">
-                        <div class="custom-control custom-checkbox custom-checkbox-{{ is_deleted ? 'secondary disabled' : theme_color }} text-dark pl-0"
-                            title="{{ is_deleted == false ? 'Cliquer pour changer le statut' }}" data-toggle="tooltip" data-placement="bottom">
-                            <div class="form-check">
-                                <input type="checkbox" class="custom-control-input checkbox form-check-input"
-                                    id="toggle_task_status_{{ task.id }}" {% if task.status == 1 %}checked{% endif %}
-                                    data-action="toggle_task_status"
-                                    data-url="{{ path('task_toggle_status', {'id': task.id}) }}" {{ is_deleted ? 'disabled' }}>
-                                <label class="custom-control-label form-check-label ml-2 {{ is_deleted == false ? 'cursor-pointer' }}"
-                                    for="toggle_task_status_{{ task.id }}"></label>
-                            </div>
-                        </div>
+                        <div class="form-check form-check-{{ is_deleted ? 'secondary disabled' : 'primary'  }}">
+                            <input type="checkbox" class="form-check-input ms-0 {{ is_deleted == false ? 'cursor-pointer' }}"
+                                id="toggle_task_status_{{ task.id }}" {% if task.status == 1 %}checked{% endif %}
+                                title="{{ is_deleted == false ? 'Cliquer pour changer le statut' }}"  
+                                data-bs-toggle="tooltip" data-bs-placement="right"
+                                data-action="toggle_task_status"
+                                data-url="{{ path('task_toggle_status', {'id': task.id}) }}" {{ is_deleted ? 'disabled' }}>
+                            <label class="form-check-label" for="toggle_task_status_{{ task.id }}"></label>
+                        </div>  
                     </td>
                     <td class="align-middle text-center">
                         <button data-url="{{ path('task_show', {'id': task.id}) }}" {{ is_deleted ? 'disabled' }}
-                            class="btn btn-{{ is_deleted ? 'secondary disabled' : theme_color }} btn-sm shadow my-1"
-                            data-action="edit_task" title="{{ is_deleted == false ? 'Voir/Modifier la tâche' }}" data-toggle="tooltip" data-placement="bottom">
+                            class="btn btn-{{ is_deleted ? 'secondary disabled' : 'primary' }} btn-sm shadow my-1"
+                            data-action="edit_task" title="{{ is_deleted == false ? 'Voir/Modifier la tâche' }}" 
+                            data-bs-toggle="tooltip" data-bs-placement="bottom">
                             <span class="fas fa-eye"></span>
                         </button>
                     </td>
@@ -59,7 +58,7 @@
                         {{ task.endToString }}
                         {% if is_late %}
                             <span class="fas fa-exclamation text-danger" title="En retard" 
-                                data-toggle="tooltip" data-placement="bottom"></span>
+                                data-bs-toggle="tooltip" data-bs-placement="bottom"></span>
                         {% endif %}
                     </td>
                     <td class="align-middle" data-cell="alerts">
@@ -67,14 +66,14 @@
                             {{ task.alerts.first.date|date('d/m/Y H:i') }}
                             <i class="fas fa-bell text-secondary"></i>
                             {# {% if task.countActiveAlerts > 0 %}
-                                <span class="badge badge-pill badge-warning"
+                                <span class="badge rounded-pill bg-warning"
                                     title="{{ task.countActiveAlerts }} rappel(s) actif(s) pour cette tâche"
-                                    data-toggle="tooltip" data-placement="bottom">{{ task.countActiveAlerts }}
+                                    data-bs-toggle="tooltip" data-bs-placement="bottom">{{ task.countActiveAlerts }}
                                 </span>
                             {% elseif task.countViewedAlerts > 0 %}
-                                <span class="badge badge-pill badge-secondary"
+                                <span class="badge rounded-pill bg-secondary"
                                     title="{{ task.countViewedAlerts }} rappel(s) pour cette tâche"
-                                    data-toggle="tooltip" data-placement="bottom">{{ task.countViewedAlerts }}
+                                    data-bs-toggle="tooltip" data-bs-placement="bottom">{{ task.countViewedAlerts }}
                                 </span>
                             {% endif %} #}
                         {% endif %}
@@ -82,7 +81,7 @@
                     <td class="align-middle" data-cell="level">{{ task.levelToString }}</td>
                     <td class="align-middle" data-cell="tags">
                         {% for tag in task.tags %}
-                            <span class="badge bg-{{ tag.color }} text-light">{{ tag.name }}</span>
+                            <span class="badge bg-{{ tag.color }}">{{ tag.name }}</span>
                         {% endfor %}
                     </td>
                     <td class="align-middle" data-cell="users">{{ task.usersToString }}</td>
@@ -110,7 +109,7 @@
                             {% else %}
                                 <button class="btn btn-danger btn-sm shadow my-1" data-action="delete_task"
                                     data-url="{{ path('task_delete', {'id': task.id}) }}" title="Supprimer la tâche"
-                                    data-toggle="tooltip" data-placement="bottom"><span class="fas fa-trash-alt"></span>
+                                    data-bs-toggle="tooltip" data-bs-placement="bottom"><span class="fas fa-trash-alt"></span>
                                 </button>
                             {% endif %}
                         {% endif %}

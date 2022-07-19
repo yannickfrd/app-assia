@@ -16,7 +16,6 @@ class PersonSearchType extends AbstractType
     {
         $builder
             ->add('lastname', SearchType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'class' => 'w-max-140 text-uppercase',
                     'placeholder' => 'Lastname',
@@ -25,7 +24,6 @@ class PersonSearchType extends AbstractType
                 'required' => false,
             ])
             ->add('firstname', SearchType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'class' => 'w-max-140 text-capitalize',
                     'placeholder' => 'Firstname',
@@ -34,7 +32,6 @@ class PersonSearchType extends AbstractType
                 'required' => false,
             ])
             ->add('birthdate', DateType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'widget' => 'single_text',
                 // "html5" => false,
                 // "format" => "dd/MM/yyyy",
@@ -45,7 +42,6 @@ class PersonSearchType extends AbstractType
                 'required' => false,
             ])
             ->add('siSiaoId', SearchType::class, [
-                'label_attr' => ['class' => 'sr-only'],
                 'attr' => [
                     'class' => 'w-min-180 w-max-180',
                     'data-mask-type' => 'number',
@@ -54,8 +50,6 @@ class PersonSearchType extends AbstractType
                 'required' => false,
             ])
             ->add('siSiaoSearch', CheckboxType::class, [
-                'label_attr' => ['class' => 'custom-control-label'],
-                'attr' => ['class' => 'custom-control-input checkbox'],
                 'required' => false,
             ])
         ;

@@ -22,10 +22,9 @@ class DocumentEndToEndTest extends PantherTestCase
     public const MODAL_BUTTON_CLOSE = 'button[type="button" data-dismiss="modal"]';
     public const FORM_DOCUMENT = 'form[name="document"]';
 
-    public const MSG_FLASH = '#js-msg-flash';
-    public const BUTTON_CLOSE_MSG = '#btn-close-msg';
-    public const ALERT_SUCCESS = '.alert.alert-success';
-    public const ALERT_WARNING = '.alert.alert-warning';
+    public const ALERT_SUCCESS = '.toast.show.alert-success';
+    public const ALERT_WARNING = '.toast.show.alert-warning';
+    public const BUTTON_CLOSE_MSG = '.toast.show .btn-close';
 
     protected Client $client;
 

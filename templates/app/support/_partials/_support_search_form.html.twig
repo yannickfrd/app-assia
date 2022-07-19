@@ -1,29 +1,29 @@
 {% extends 'model/_search.html.twig' %}
 
-{% form_theme form 'bootstrap_4_layout.html.twig' %}
-
 {% block search_form %}
     <div class="col-auto my-1 px-1" title="{{ 'placeholder.name_or_id'|trans({}, 'forms') }}"
-        data-toggle="tooltip" data-placement="bottom">{{ form_widget(form.fullname) }}</div>
+        data-bs-toggle="tooltip" data-bs-placement="bottom">{{ form_widget(form.fullname) }}</div>
     {% include '_shared/_service_device_referent_search.html.twig' %}
     <div class="col-auto my-1 px-1">{{ form_widget(form.status) }}</div>
     <div class="col-auto my-1 px-1">{{ form_widget(form.supportDates) }}</div>
-    <div class="col-auto my-1 px-1 d-inline-flex" title="Date de début" data-toggle="tooltip" 
-        data-placement="bottom"><span class="my-2 px-1">Entre</span>{{ form_widget(form.date.start) }}
+    <div class="col-auto d-inline-flex my-1 px-1 align-items-center" 
+        title="Date de début" data-bs-toggle="tooltip" data-bs-placement="bottom">
+        <span class="pe-2">Entre</span>{{ form_widget(form.date.start) }}
     </div>
-    <div class="col-auto my-1 px-1 d-inline-flex" title="Date de fin" data-toggle="tooltip" 
-        data-placement="bottom"><span class="my-2 pr-2">et</span>{{ form_widget(form.date.end) }}
-    </div>
-    <div class="col-auto my-1 px-1 d-inline-flex">
-        <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-2 py-2 text-dark"
-            title="Demandeur/euse principal·e" data-toggle="tooltip" data-placement="bottom"> 
+    <div class="col-auto d-inline-flex my-1 px-1 align-items-center" 
+        title="Date de fin" data-bs-toggle="tooltip" data-bs-placement="bottom">
+        <span class="pe-2">et</span>{{ form_widget(form.date.end) }}
+    </div>  
+    <div class="col-auto d-inline-flex my-1 px-1 align-items-center">
+        <div class="form-check" 
+            title="Demandeur/euse principal·e" data-bs-toggle="tooltip" data-bs-placement="bottom">
             {{ form_widget(form.head) }}
         </div>
     </div>
     {% if is_granted('ROLE_ADMIN') %}
         <div class="col-auto my-auto">
-            <div class="custom-control custom-checkbox custom-checkbox-{{ theme_color }} pl-0"
-                title="Voir les suivis supprimés" data-toggle="tooltip" data-placement="bottom">
+            <div class="form-check"
+                title="Voir les suivis supprimés" data-bs-toggle="tooltip" data-bs-placement="bottom">
                 {{ form_widget(form.deleted.deleted) }}
             </div>
         </div>

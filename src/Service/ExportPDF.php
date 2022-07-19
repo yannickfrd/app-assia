@@ -125,7 +125,7 @@ class ExportPDF
         ]);
 
         // $content = \str_replace('<h2', '<hr/><h2', $content);
-        $content = \str_replace('{LOGO_SIGNATURE}', '<p class="text-right"><img src="'.$logoPath.'" width="120"/></p>', $content);
+        $content = \str_replace('{LOGO_SIGNATURE}', '<p class="text-end"><img src="'.$logoPath.'" width="120"/></p>', $content);
         $content = $style.$headerFooter."<h1>$title</h1>".$content;
 
         return $content;
