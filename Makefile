@@ -2,6 +2,8 @@ SHELL := /bin/bash
 
 tests:
 	symfony check:security
+	symfony php ./vendor/bin/phpstan analyse -c phpstan.neon
+	symfony php ./tools/php-cs-fixer/vendor/bin/php-cs-fixer fix src --dry-run --verbose
 	symfony console cache:clear --env=test
 	symfony console doctrine:database:drop -e test --force
 	symfony console doctrine:database:create -e test
@@ -29,4 +31,5 @@ tests-end-to-end:
 
 quality:
 	symfony php ./vendor/bin/phpstan analyse -c phpstan.neon
+	symfony php ./tools/php-cs-fixer/vendor/bin/php-cs-fixer fix src --verbose
 .PHONY: quality
