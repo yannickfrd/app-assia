@@ -11,6 +11,6 @@ class Phone
 
     public static function formatPhone(?string $phone): ?string
     {
-        return $phone ?  preg_replace('#[-./_, ]#', '', $phone) : null;
+        return $phone ? preg_replace('#[-./_, ]#', '', $phone) : null;
     }
 }

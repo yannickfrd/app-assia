@@ -149,9 +149,12 @@ class SiSiaoGroupImporter extends SiSiaoClient
             ->setCreatedBy($this->user)
             ->setUpdatedBy($this->user);
 
-            if (null !== $ficheGroupe->contactPrincipal && $ficheGroupe->contactPrincipal->id === $personne->id) {
-                $person->setEmail(preg_match('^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$^', $ficheGroupe->courrielDemandeur) ?
-                    $ficheGroupe->courrielDemandeur : null);
+            if (null !== $ficheGroupe->contactPrincipal
+                && $ficheGroupe->contactPrincipal->id === $personne->id
+                && $ficheGroupe->courrielDemandeur
+                && preg_match('^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$^', $ficheGroupe->courrielDemandeur)
+            ) {
+                $person->setEmail($ficheGroupe->courrielDemandeur);
             }
 
             $this->em->persist($person);

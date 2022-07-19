@@ -1210,6 +1210,10 @@ class ImportDatasHebergement extends ImportDatas
     {
         $referent = $this->field['Référent social'];
 
+        if (!$referent) {
+            return Choices::NO_INFORMATION;
+        }
+
         if (strstr($referent, 'SSD')
             || strstr($referent, 'antenne')
             || strstr($referent, 'Antenne')

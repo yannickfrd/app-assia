@@ -151,7 +151,7 @@ class ImportPAFDatas extends ImportDatas
         foreach ($services as $service) {
             foreach ($service->getUsers() as $user) {
                 foreach (self::SOCIAL_WORKER as $name) {
-                    if (strstr($name, $user->getLastname())) {
+                    if ($name && strstr($name, $user->getLastname())) {
                         $users[$name] = $user;
                     }
                 }

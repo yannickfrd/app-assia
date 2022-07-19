@@ -536,7 +536,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
             ->setReducedMobility($this->findInArray($personne->problemeMobilite, SiSiaoItems::YES_NO_STRING_TO_BOOL))
             ->setWheelchair($this->findInArray($personne->fauteuilRoulant, SiSiaoItems::YES_NO_STRING_TO_BOOL))
             ->setViolenceVictim(true === $personne->victimeviolence ? Choices::YES : Choices::NO)
-            ->setDomViolenceVictim(strstr($personne->typevictime, 'VIOLENCES_CONJUGALES') ? Choices::YES : Choices::NO)
+            ->setDomViolenceVictim($personne->typevictime && strstr($personne->typevictime, 'VIOLENCES_CONJUGALES') ? Choices::YES : Choices::NO)
         ;
 
         if ($evaluationPerson->getSupportPerson()->getHead()) {
@@ -778,7 +778,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
                 ->setEndDate($this->convertDate($ressource->dateFinPrevisionnelle))
                 ->setType($resourcetype)
                 ->setAmount($ressource->montant)
-                ->setComment(htmlspecialchars(substr($ressource->commentaire, 0, 100)))
+                ->setComment($ressource->commentaire ? htmlspecialchars(substr($ressource->commentaire, 0, 100)) : null)
             ;
 
             $evalBudgetPerson->addEvalBudgetResource($evalBudgetResource);
@@ -812,7 +812,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
             $evalBudgetCharge
                 ->setType($chargeType)
                 ->setAmount($charge->montant)
-                ->setComment(htmlspecialchars(substr($charge->commentaire, 0, 100)))
+                ->setComment($charge->commentaire ? htmlspecialchars(substr($charge->commentaire, 0, 100)) : null)
             ;
 
             $evalBudgetPerson->addEvalBudgetCharge($evalBudgetCharge);
