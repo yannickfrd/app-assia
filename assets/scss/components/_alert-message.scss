@@ -33,6 +33,8 @@
     }
 
     .alert-#{$color} {
-        @include alert-variant($alert-background, $alert-border, $alert-color);
+        background-color: $alert-background;
+        border-color: $alert-border;
+        color: $alert-color;
     }
 }
