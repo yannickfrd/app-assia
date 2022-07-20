@@ -1,3 +1,17 @@
+.page-item .page-link {
+    border-radius: 0;
+}
+
+.page-item:first-child .page-link {
+    border-top-left-radius: var(--bs-pagination-border-radius);
+    border-bottom-left-radius: var(--bs-pagination-border-radius);
+}
+
+.page-item:last-child .page-link {
+    border-top-right-radius: var(--bs-pagination-border-radius);
+    border-bottom-right-radius: var(--bs-pagination-border-radius);
+}
+
 @each $color, $value in $theme-colors {
     html[data-theme-color="#{$color}"] {
         .page-item.active .page-link {
@@ -5,7 +19,7 @@
             border-color: $value;
         }
         
-        .page-link {
+        .page-item a.page-link {
             color: $value;
 
             &:focus {
