@@ -3,7 +3,7 @@
 
 // Colors
 $beige: #a77e4a !default;
-$blue: #0090c6 !default;
+$blue: #0090c6  !default;
 $brown: #ae5843 !default;
 $cyan: #449388 !default;
 $dark: #343a40 !default;
@@ -16,18 +16,9 @@ $purple: #6f5290 !default;
 
 $font-size-base: .95rem;
 
-// Border-radius
-$border-radius: .35rem !default;
-$border-radius-sm: .3rem !default;
-$border-radius-lg: .4rem !default;
-
-@import "bootstrap/scss/variables";
-@import "bootstrap/scss/mixins";
-@import "bootstrap/scss/utilities";
-
 // Theme colors
-$custom-colors: (
-    'blue': $blue-500,
+$custom-theme-colors: (
+    'blue': $blue,
     "brown": $brown,
     'cyan': $cyan,
     "green-alt": $green-alt,
@@ -37,7 +28,9 @@ $custom-colors: (
     'purple': $purple,
 );
 
-$theme-colors: map-merge($theme-colors, $custom-colors);
+@import "bootstrap/scss/variables";
+
+$theme-colors: map-merge($theme-colors, $custom-theme-colors);
 $theme-colors: map-remove($theme-colors, "info");
 
 // Accordion
@@ -56,12 +49,16 @@ $table-group-separator-color: var(--bs-gray-500);
 
 // Toast
 $toast-header-background-color: none;
+$toast-spacing: 1rem;
 
 // Tooltip
 $tooltip-font-size: .8rem;
 $tooltip-opacity: .8;
 
-// Layout & components
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/utilities";
+
 @import "bootstrap/scss/root";
 @import "bootstrap/scss/reboot";
 @import "bootstrap/scss/type";
