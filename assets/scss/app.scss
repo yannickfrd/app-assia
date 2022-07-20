@@ -56,16 +56,6 @@ a:not(:hover) {
             color: $value !important;
         }
 
-        .link-primary {
-            color: $value;
-        
-            @if $link-shade-percentage != 0 {
-                &:hover,
-                &:focus {
-                    color: if(color-contrast($value) == $color-contrast-light, shade-color($value, $link-shade-percentage), tint-color($value, $link-shade-percentage));
-                }
-            }
-        }
         .dropdown-item:focus {
             color: $white;
 

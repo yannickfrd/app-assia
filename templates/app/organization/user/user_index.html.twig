@@ -88,7 +88,7 @@
                                             |sort ((a, b) => b.main <=> a.main)  %}
                                             {% set service = user_service.service %}
                                             <a href="{{ path('service_edit', {'id': service.id}) }}" 
-                                                class="link-primary {{ user_service.main ? 'fw-bold' }}">
+                                                class="text-primary {{ user_service.main ? 'fw-bold' }}">
                                                 {{ service.name }}</a>{% if not loop.last %}, {% endif %}
                                             {% endfor %}
                                     </div>

@@ -5,21 +5,21 @@
             <div class="col-md-6">
                 <ul>
                     <li class="mb-2 text-primary">
-                        <a class="link-primary" href="{{ path('supports_by_user') }}">Répartition des suivis en cours</a>
+                        <a class="text-primary" href="{{ path('supports_by_user') }}">Répartition des suivis en cours</a>
                     </li>
                     {% if is_granted('ROLE_SUPER_ADMIN') or app.session.get('haveServiceWithPlace') %}
                         <li class="mb-2 text-primary">
-                            <a class="link-primary" href="{{ path('occupancy_services') }}">Taux d'occupation</a>
+                            <a class="text-primary" href="{{ path('occupancy_services') }}">Taux d'occupation</a>
                         </li>
                     {% endif %}
                     {% if is_granted('ROLE_SUPER_ADMIN') or YES == app.session.get('haveServiceAVDL') %}
                         <li class="mb-2 text-primary">
-                            <a class="link-primary" href="{{ path('avdl_support_index') }}">Tableau de suivi AVDL</a>
+                            <a class="text-primary" href="{{ path('avdl_support_index') }}">Tableau de suivi AVDL</a>
                         </li>
                     {% endif %}   
                     {% if is_granted('ROLE_SUPER_ADMIN') or YES == app.session.get('haveServiceHotel') %}
                         <li class="mb-2 text-primary">
-                            <a class="link-primary" href="{{ path('hotel_support_index') }}">Tableau de suivi PASH</a>
+                            <a class="text-primary" href="{{ path('hotel_support_index') }}">Tableau de suivi PASH</a>
                         </li>
                     {% endif %}   
                 </ul>
@@ -28,10 +28,10 @@
                 {% if is_granted('ROLE_ADMIN') %}
                     <ul>
                         <li class="mb-2 text-primary">
-                            <a class="link-primary" href="{{ path('admin_user_index') }}">Gérer les utilisateurs</a>
+                            <a class="text-primary" href="{{ path('admin_user_index') }}">Gérer les utilisateurs</a>
                         </li>
                         <li class="mb-2 text-primary">
-                            <a class="link-primary" href="{{ path('supports_switch_referent') }}">Transférer les suivis d'un·e intervenant·e social·e</a>
+                            <a class="text-primary" href="{{ path('supports_switch_referent') }}">Transférer les suivis d'un·e intervenant·e social·e</a>
                         </li>
                     </ul>
                 {% endif %}   

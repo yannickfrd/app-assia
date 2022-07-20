@@ -63,7 +63,7 @@
                                     <td class="align-middle {% if service.disabled %}text-del{% endif %}">{{ service.name }}{% if service.disabled %} (désactivé){% endif %}</td>
                                     <td class="align-middle">
                                         {% if service.pole %}
-                                            <a href="{{ path('pole_edit', {'id':service.pole.id}) }}" class="link-primary">{{ service.pole.name }}</a>
+                                            <a href="{{ path('pole_edit', {'id':service.pole.id}) }}" class="text-primary">{{ service.pole.name }}</a>
                                         {% endif %}
                                     </td>
                                     <td class="align-middle">{{ service.phone1}}</td>

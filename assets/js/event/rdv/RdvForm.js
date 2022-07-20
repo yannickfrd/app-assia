@@ -270,7 +270,7 @@ export default class RdvForm {
 
         if (rdv.supportGroup) {
             const href = this.rdvTitleElt.dataset.url.replace('__id__', rdv.supportGroup.id)
-            this.rdvTitleElt.innerHTML = `<a href="${href}" class="link-primary" title="Accéder au suivi">${title}</a>`
+            this.rdvTitleElt.innerHTML = `<a href="${href}" class="text-primary" title="Accéder au suivi">${title}</a>`
         }
 
         if (!canEdit) {

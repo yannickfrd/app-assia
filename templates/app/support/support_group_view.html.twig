@@ -17,7 +17,7 @@
 		<div class="d-flex mb-2">
 			<h1 class="h2">{{ title }}</h1>
 			<div class="align-content-center"><a href="{{ path('support_edit', {'id': support.id }) }}" 
-				class="link-primary ms-2" title="Modifier le suivi"><i class="fas fa-edit"></i></a>
+				class="text-primary ms-2" title="Modifier le suivi"><i class="fas fa-edit"></i></a>
 			</div>
 		</div>
 
@@ -33,7 +33,7 @@
 		<nav aria-label="breadcrumb">
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item">
-					<a class="link-primary" href="{{ path('people_group_show', {'id': people_group.id}) }}">
+					<a class="text-primary" href="{{ path('people_group_show', {'id': people_group.id}) }}">
 						<i class="fas fa-users me-2"></i>Fiche groupe<span class="small"> {{ people_group.familyTypologyToString }}</span>
 					</a>
 				</li>
@@ -150,7 +150,7 @@
 				{% set rdv = next_rdv ? next_rdv : last_rdv %}
 				{% if rdv is not null %}
 					<span class="align-content-center"><a href="{{ path('support_calendar_show', {'id': support.id, 'year': rdv.start|date('Y'),'month': rdv.start|date('m')}) }}"
-							class="link-primary ms-2" title="Voir les rendez-vous"><i class="fas fa-edit"></i></a>
+							class="text-primary ms-2" title="Voir les rendez-vous"><i class="fas fa-edit"></i></a>
 					</span>
 				{% endif %}
 			</div>	

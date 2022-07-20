@@ -14,7 +14,7 @@
         <div class="row">
             <div class="col-md-12">
                 <p><a href="{{ path('occupancy_sub_services', {'id': subService.service.id, 'year': search.year, 'date': {'start': search.start|date('Y-m-d'), 
-                    'end': search.end|date('Y-m-d')}, 'pole': search.pole ? search.pole.id}) }}" class="link-primary">
+                    'end': search.end|date('Y-m-d')}, 'pole': search.pole ? search.pole.id}) }}" class="text-primary">
                     <span class="fas fa-undo me-2"></span>Retour aux taux d'ocupation du service.</a>
                 </p>
                 {% set interval = date(search.start).diff(date(search.end)) %}
