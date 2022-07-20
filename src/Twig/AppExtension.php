@@ -53,7 +53,7 @@ class AppExtension extends AbstractExtension
             $decimals = 0;
         }
 
-        return number_format($value ?? 0, $decimals, ',', ' ');
+        return number_format($value, $decimals, ',', ' ');
     }
 
     /**
