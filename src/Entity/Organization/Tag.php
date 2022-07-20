@@ -133,7 +133,7 @@ class Tag
 
     public function getCategories(): ?array
     {
-        return explode('|', $this->categories);
+        return $this->categories ? explode('|', $this->categories) : null;
     }
 
     public function getCategoriesToString(): ?string

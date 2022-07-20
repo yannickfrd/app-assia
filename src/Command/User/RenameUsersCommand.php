@@ -6,6 +6,7 @@ use App\Entity\Organization\User;
 use App\Repository\Organization\UserRepository;
 use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -13,15 +14,13 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
-/**
- * Commande pour changer le nom des utilisateurs (uniquement en local et en développement).
- */
+#[AsCommand(
+    name: 'app:user:rename-all',
+    description: 'Rename all users (only in local dev env).',
+)]
 class RenameUsersCommand extends Command
 {
     use DoctrineTrait;
-
-    protected static $defaultName = 'app:user:rename-all';
-    protected static $defaultDescription = 'Rename all users in local and development environnement.';
 
     protected $em;
     protected $userRepo;
@@ -39,11 +38,6 @@ class RenameUsersCommand extends Command
         $this->passwordHasher = $passwordHasher;
 
         parent::__construct();
-    }
-
-    protected function configure(): void
-    {
-        $this->setDescription(self::$defaultDescription);
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int

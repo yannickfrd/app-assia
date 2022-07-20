@@ -17,7 +17,8 @@ use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SupportManager
@@ -29,6 +30,7 @@ class SupportManager
     private $supportDuplicator;
     private $siSiaoEvalImporter;
     private $supportChecker;
+    private $requestStack;
     private $flashBag;
     private $translator;
 
@@ -38,7 +40,7 @@ class SupportManager
         SupportDuplicator $supportDuplicator,
         SiSiaoEvaluationImporter $siSiaoEvalImporter,
         SupportChecker $supportChecker,
-        FlashBagInterface $flashBag,
+        RequestStack $requestStack,
         TranslatorInterface $translator
     ) {
         $this->em = $em;
@@ -46,7 +48,12 @@ class SupportManager
         $this->supportDuplicator = $supportDuplicator;
         $this->siSiaoEvalImporter = $siSiaoEvalImporter;
         $this->supportChecker = $supportChecker;
-        $this->flashBag = $flashBag;
+        $this->supportGroupRepo = $supportGroupRepo;
+        $this->requestStack = $requestStack;
+
+        /** @var Session */
+        $session = $requestStack->getSession();
+        $this->flashBag = $session->getFlashBag();
         $this->translator = $translator;
     }
 
@@ -58,7 +65,7 @@ class SupportManager
         $supportGroup = (new SupportGroup())->setPeopleGroup($peopleGroup);
 
         /** @var array|null */
-        $support = $request->request->get('support');
+        $support = $request->get('support');
         $serviceId = null;
 
         if ($support) {
@@ -143,7 +150,7 @@ class SupportManager
         $this->flashBag->add('success', 'support_group.created_successfully');
 
         if ($form && $form->has('_place') && $place = $form->get('_place')->getData()) {
-            (new PlaceGroupManager($this->em, $this->flashBag, $this->translator))
+            (new PlaceGroupManager($this->em, $this->requestStack, $this->translator))
                 ->createPlaceGroup($supportGroup, null, $place);
         }
 

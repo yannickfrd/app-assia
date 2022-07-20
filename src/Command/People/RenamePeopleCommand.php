@@ -6,21 +6,20 @@ use App\Repository\People\PeopleGroupRepository;
 use App\Repository\People\PersonRepository;
 use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Stopwatch\Stopwatch;
 
-/**
- * Commande pour changer le nom des personnes (uniquement en mode développement).
- */
+#[AsCommand(
+    name: 'app:person:rename',
+    description: 'Change the name of all people (only dev env).',
+)]
 class RenamePeopleCommand extends Command
 {
     use DoctrineTrait;
-
-    protected static $defaultName = 'app:person:rename';
-    protected static $defaultDescription = 'Change the name of people in development environnement.';
 
     protected $em;
     protected $peopleGroupRepo;
@@ -42,11 +41,6 @@ class RenamePeopleCommand extends Command
         $this->disableListeners($this->em);
 
         parent::__construct();
-    }
-
-    protected function configure(): void
-    {
-        $this->setDescription(self::$defaultDescription);
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int

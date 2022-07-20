@@ -380,7 +380,7 @@ class EvalFamilyPerson
 
     public function getSchoolDept(): ?string
     {
-        return substr($this->schoolZipcode, 0, 2);
+        return $this->schoolZipcode ? substr($this->schoolZipcode, 0, 2) : null;
     }
 
     public function getSchoolChildCarePrecision(): ?string

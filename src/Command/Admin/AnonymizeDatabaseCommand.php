@@ -3,6 +3,7 @@
 namespace App\Command\Admin;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -10,11 +11,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand(
+    name: 'app:database:anonymize',
+    description: 'Anonymize all the database.',
+)]
 class AnonymizeDatabaseCommand extends Command
 {
-    protected static $defaultName = 'app:database:anonymize';
-    protected static $defaultDescription = 'Anonymize all the database.';
-
     protected $em;
 
     public function __construct(EntityManagerInterface $em)

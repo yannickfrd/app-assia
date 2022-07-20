@@ -7,6 +7,7 @@ use App\Repository\People\PeopleGroupRepository;
 use App\Service\DoctrineTrait;
 use App\Service\People\PeopleGroupManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,15 +15,13 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-/**
- * Commande pour mettre à jour la typologie familiale des groupes de personnes.
- */
+#[AsCommand(
+    name: 'app:peopleGroup:update_family_typology',
+    description: 'Update the family typology in people groups.',
+)]
 class UpdateFamilyTypologyOfGroupCommand extends Command
 {
     use DoctrineTrait;
-
-    protected static $defaultName = 'app:peopleGroup:update_family_typology';
-    protected static $defaultDescription = 'Update the family typology in groups';
 
     protected $peopleGroupRepo;
     protected $em;
@@ -41,7 +40,6 @@ class UpdateFamilyTypologyOfGroupCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription(self::$defaultDescription)
             ->addArgument('fix', InputArgument::OPTIONAL, 'Fix the problem')
             ->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Query limit', 1000)
         ;

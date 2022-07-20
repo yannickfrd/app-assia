@@ -4,7 +4,7 @@ Application d’Accompagnement Social et Solidaire Inter-Associative
 
 ## Version
 
-4.0.0 19/07/2022
+4.0.1 20/07/2022
 
 ## Author
 
@@ -20,7 +20,7 @@ Romain MADELAINE
 
 ## Requirements
 
-- PHP 7.4 (<https://windows.php.net/download/>)
+- PHP >=8.1.1 (<https://windows.php.net/download/>)
 - Composer >=2.0 (<https://getcomposer.org/>)
 - Apache >=2.4 (<https://laragon.org/>)
 - Mysql >=5.7.24 or MariaDB >=10.3

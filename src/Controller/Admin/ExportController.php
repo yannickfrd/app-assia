@@ -141,9 +141,9 @@ final class ExportController extends AbstractController
                 'action' => 'count',
                 'nbResults' => $nbResults = $supportPersonRepo->countSupportsToExport($search),
                 'alert' => 'primary',
-                'msg' => $this->translator->trans('export.count_results',
-                    ['count' => number_format($nbResults, 0, '', ' ')], 'app'
-                ),
+                'msg' => $this->translator->trans('export.count_results', [
+                    'count' => number_format($nbResults, 0, '', ' '),
+                ], 'app'),
             ]);
         }
 

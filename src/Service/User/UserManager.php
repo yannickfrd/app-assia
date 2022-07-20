@@ -13,7 +13,8 @@ use App\Notification\UserNotification;
 use App\Repository\Organization\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -25,11 +26,13 @@ class UserManager
 
     public function __construct(
         EntityManagerInterface $em,
-        FlashBagInterface $flashBag,
+        RequestStack $requestStack,
         TranslatorInterface $translator
     ) {
         $this->em = $em;
-        $this->flashBag = $flashBag;
+        /** @var Session */
+        $session = $requestStack->getSession();
+        $this->flashBag = $session->getFlashBag();
         $this->translator = $translator;
     }
 

@@ -5,19 +5,19 @@ namespace App\Command\People;
 use App\Repository\People\PersonRepository;
 use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-/**
- * Commande pour mettre à jour le sexe des personnes si information non renseignée.
- */
+#[AsCommand(
+    name: 'app:person:update_gender',
+    description: 'Update the gender of people if the value is empty.',
+)]
 class UpdateGenderPersonCommand extends Command
 {
     use DoctrineTrait;
-
-    protected static $defaultName = 'app:person:update_gender';
 
     protected $em;
     protected $personRepo;

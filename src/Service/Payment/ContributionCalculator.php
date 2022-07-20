@@ -246,9 +246,9 @@ class ContributionCalculator
         return $sumAmt;
     }
 
-    public function formatPrice($value, int $decimals = 2): string
+    public function formatPrice(int|float|null $value, int $decimals = 2): string
     {
-        return number_format($value, $decimals, ',', ' ').' €';
+        return number_format($value ?? 0, $decimals, ',', ' ').' €';
     }
 
     protected function getContributionRate(): ?float

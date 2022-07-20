@@ -1203,7 +1203,7 @@ class EvalHousingGroup
 
     public function getDomiciliationDept(): ?string
     {
-        return substr($this->domiciliationZipcode, 0, 2);
+        return $this->domiciliationZipcode ? substr($this->domiciliationZipcode, 0, 2) : null;
     }
 
     public function getDomiciliationComment(): ?string

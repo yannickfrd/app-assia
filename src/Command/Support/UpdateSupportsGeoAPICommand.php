@@ -5,21 +5,20 @@ namespace App\Command\Support;
 use App\Repository\Support\SupportGroupRepository;
 use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-/**
- * Commande pour mettre à jour l'adresse des suivis via l'API adresse.data.gouv.fr (TEMPORAIRE, A SUPPRIMER).
- */
+#[AsCommand(
+    name: 'app:support:update_geo_api',
+    description: 'Update location in supports with API adresse.data.gouv.fr (temp - delete)',
+)]
 class UpdateSupportsGeoAPICommand extends Command
 {
     use DoctrineTrait;
-
-    protected static $defaultName = 'app:support:update_geo_api';
-    protected static $defaultDescription = 'Update location in supports with API adresse.data.gouv.fr';
 
     protected $supportGroupRepo;
     protected $em;
@@ -35,10 +34,7 @@ class UpdateSupportsGeoAPICommand extends Command
 
     protected function configure(): void
     {
-        $this
-            ->setDescription(self::$defaultDescription)
-            ->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Query limit', 1000)
-        ;
+        $this->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Query limit', 1000);
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int

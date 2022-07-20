@@ -182,7 +182,7 @@ final class SiSiaoController extends AbstractController
      * @Route("/api-sisiao/user", name="api_sisiao_user", methods="GET")
      * @IsGranted("ROLE_SUPER_ADMIN")
      */
-    public function getUser(): JsonResponse
+    public function getSiSiaoUser(): JsonResponse
     {
         return $this->json($this->siSiaoClient->getUser());
     }

@@ -123,7 +123,7 @@ final class RdvController extends AbstractController
                 'msg' => $translator->trans('rdv.created_successfully', ['rdv_title' => $rdv->getTitle()], 'app'),
                 'rdv' => $rdv,
                 'apiUrls' => $calendarRouter->getUrls(
-                    'create', $rdv->getId(), (array) $request->request->get('rdv')
+                    'create', $rdv->getId(), (array) $form->getData()
                 ),
             ], 200, [], ['groups' => Rdv::SERIALIZER_GROUPS]);
         }
@@ -166,7 +166,7 @@ final class RdvController extends AbstractController
                 'msg' => $translator->trans('rdv.created_successfully', ['rdv_title' => $rdv->getTitle()], 'app'),
                 'rdv' => $rdv,
                 'apiUrls' => $calendarRouter->getUrls(
-                    'create', $rdv->getId(), (array) $request->request->get('rdv')
+                    'create', $rdv->getId(), (array) $form->getData()
                 ),
             ], 200, [], ['groups' => Rdv::SERIALIZER_GROUPS]);
         }
@@ -225,7 +225,7 @@ final class RdvController extends AbstractController
                 'apiUrls' => $calendarRouter->getUrls(
                     'update',
                     $rdv->getId(),
-                    (array) $request->request->get('rdv')
+                    (array) $form->getData()
                 ),
             ], 200, [], ['groups' => Rdv::SERIALIZER_GROUPS]);
         }

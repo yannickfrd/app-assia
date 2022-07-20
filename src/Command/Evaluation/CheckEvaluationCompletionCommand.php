@@ -6,18 +6,20 @@ use App\Repository\Support\SupportGroupRepository;
 use App\Service\DoctrineTrait;
 use App\Service\Evaluation\EvaluationCompletionChecker;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand(
+    name: 'app:evaluation:check-completion',
+    description: 'Check the completion of evaluation and return a score.',
+)]
 class CheckEvaluationCompletionCommand extends Command
 {
     use DoctrineTrait;
-
-    protected static $defaultName = 'app:evaluation:check-completion';
-    protected static $defaultDescription = 'Check the completion of evaluation and return a score';
 
     private $supportGroupRepo;
     private $evaluationCompletionChecker;

@@ -15,7 +15,8 @@ use App\Service\SupportGroup\SupportManager;
 use App\Service\SupportGroup\SupportPeopleAdder;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -25,6 +26,7 @@ class PeopleGroupManager
     private $user;
     private $em;
     private $peopleGroupChecker;
+    private $requestStack;
     private $flashBag;
     private $translator;
 
@@ -32,13 +34,17 @@ class PeopleGroupManager
         Security $security,
         EntityManagerInterface $em,
         PeopleGroupChecker $peopleGroupChecker,
-        FlashBagInterface $flashBag,
+        RequestStack $requestStack,
         TranslatorInterface $translator
     ) {
         $this->user = $security->getUser();
         $this->em = $em;
         $this->peopleGroupChecker = $peopleGroupChecker;
-        $this->flashBag = $flashBag;
+        $this->requestStack = $requestStack;
+
+        /** @var Session */
+        $session = $requestStack->getSession();
+        $this->flashBag = $session->getFlashBag();
         $this->translator = $translator;
     }
 
@@ -177,7 +183,7 @@ class PeopleGroupManager
         foreach ($supportGroupRepo->findBy(['peopleGroup' => $peopleGroup]) as $supportGroup) {
             if (SupportGroup::STATUS_IN_PROGRESS === $supportGroup->getStatus()
                 && $this->user->hasService($supportGroup->getService())) {
-                (new SupportPeopleAdder($this->em, $this->flashBag, $this->translator))
+                (new SupportPeopleAdder($this->em, $this->requestStack, $this->translator))
                     ->addPersonToSupport($supportGroup, $rolePerson);
 
                 SupportManager::deleteCacheItems($supportGroup);

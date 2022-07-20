@@ -10,6 +10,7 @@ use App\Entity\Organization\User;
 use App\Repository\Organization\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -17,11 +18,12 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 
+#[AsCommand(
+    name: 'app:rdv:send-rdv-alerts',
+    description: 'Send email about rdv alerts to users.',
+)]
 class SendRdvAlertsCommand extends Command
 {
-    protected static $defaultName = 'app:rdv:send-rdv-alerts';
-    protected static $defaultDescription = 'Send email about rdv alerts to users.';
-
     protected EntityManagerInterface $em;
     protected UserRepository $userRepo;
     protected MailerInterface $mailer;
@@ -37,11 +39,6 @@ class SendRdvAlertsCommand extends Command
         $this->em = $em;
         $this->userRepo = $userRepo;
         $this->mailer = $mailer;
-    }
-
-    protected function configure(): void
-    {
-        $this->setDescription(self::$defaultDescription);
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int

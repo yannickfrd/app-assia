@@ -13,7 +13,8 @@ use App\Entity\Support\SupportPerson;
 use App\Repository\Evaluation\EvaluationGroupRepository;
 use App\Service\Grammar;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SupportPeopleAdder
@@ -26,11 +27,13 @@ class SupportPeopleAdder
 
     public function __construct(
         EntityManagerInterface $em,
-        FlashBagInterface $flashBag,
+        RequestStack $requestStack,
         TranslatorInterface $translator
     ) {
         $this->em = $em;
-        $this->flashBag = $flashBag;
+        /** @var Session */
+        $session = $requestStack->getSession();
+        $this->flashBag = $session->getFlashBag();
         $this->translator = $translator;
     }
 

@@ -649,7 +649,7 @@ class Payment
 
     private function formatAmountToString(?float $value)
     {
-        return $value >= 0 ? (new \NumberFormatter('fr-FR', \NumberFormatter::SPELLOUT))->format($value) : null;
+        return null !== $value && $value >= 0 ? (new \NumberFormatter('fr-FR', \NumberFormatter::SPELLOUT))->format($value) : null;
     }
 
     public function getDeletedAtToString(string $format = 'd/m/Y H:i'): ?string

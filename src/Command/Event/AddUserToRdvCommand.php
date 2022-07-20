@@ -5,21 +5,20 @@ namespace App\Command\Event;
 use App\Repository\Event\RdvRepository;
 use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-/**
- * TEMPORAIRE. A SUPPRIMER.
- */
+#[AsCommand(
+    name: 'app:rdv:add-user',
+    description: 'Add users to rdv by created date (temp - to delete).',
+)]
 class AddUserToRdvCommand extends Command
 {
     use DoctrineTrait;
-
-    protected static $defaultName = 'app:rdv:add-user';
-    protected static $defaultDescription = 'Add users to rdv by created date.';
 
     private $em;
     private $rdvRepo;
@@ -35,7 +34,6 @@ class AddUserToRdvCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription(self::$defaultDescription)
             ->addOption('flush', 'f', InputOption::VALUE_NONE,
                 'Flush all modifications to rdvs')
         ;

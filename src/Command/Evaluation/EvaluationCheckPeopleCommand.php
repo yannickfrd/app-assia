@@ -6,6 +6,7 @@ use App\Entity\Evaluation\EvaluationGroup;
 use App\Service\DoctrineTrait;
 use App\Service\Evaluation\EvaluationManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -13,15 +14,13 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-/**
- * Vérifie l'adéquation entre le nombre de personnes dans l'évaluation sociale et dans le suivi.
- */
+#[AsCommand(
+    name: 'app:evaluation:check_people',
+    description: 'Check if the number of people in evaluation and in support are equals.',
+)]
 class EvaluationCheckPeopleCommand extends Command
 {
     use DoctrineTrait;
-
-    protected static $defaultName = 'app:evaluation:check_people';
-    protected static $defaultDescription = 'Check is the number of people in evaluation is valid.';
 
     protected $em;
     protected $evaluationManager;
@@ -38,7 +37,6 @@ class EvaluationCheckPeopleCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription(self::$defaultDescription)
             ->addArgument('fix', InputArgument::OPTIONAL, 'Fix the problem (add or remove people in evaluation)')
             ->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Query limit', 1000)
             ->addOption('doctrine-listeners', 'dl', InputOption::VALUE_OPTIONAL, 'Query limit', true)

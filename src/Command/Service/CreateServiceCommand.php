@@ -7,6 +7,7 @@ use App\Entity\Organization\ServiceDevice;
 use App\Repository\Organization\DeviceRepository;
 use App\Repository\Organization\PoleRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,13 +16,12 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-/**
- * Commande pour créer un nouveau service.
- */
+#[AsCommand(
+    name: 'app:service:create',
+    description: 'Create a new service.',
+)]
 class CreateServiceCommand extends Command
 {
-    protected static $defaultName = 'app:service:create';
-
     protected $em;
     protected $poleRepo;
     protected $deviceRepo;
@@ -36,11 +36,6 @@ class CreateServiceCommand extends Command
         $this->deviceRepo = $deviceRepo;
 
         parent::__construct();
-    }
-
-    protected function configure(): void
-    {
-        $this->setDescription('Create a new service.');
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int

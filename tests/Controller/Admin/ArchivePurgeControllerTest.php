@@ -29,17 +29,16 @@ class ArchivePurgeControllerTest extends WebTestCase
 
         $this->client = $this->createClient();
 
-        /* @var AbstractDatabaseTool */
         $this->databaseTool = $this->getContainer()->get(DatabaseToolCollection::class)->get();
 
         $this->fixtures = $this->databaseTool->loadAliceFixture([
-            dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml'
+            dirname(__DIR__).'/../fixtures/app_fixtures_test.yaml',
         ]);
     }
 
     public function testAccessAdminArchivePurgeIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['user_super_admin']);
+        $this->client->loginUser($this->fixtures['user_super_admin']);
 
         $this->client->request('GET', 'admin/archive-purge');
 
@@ -48,7 +47,7 @@ class ArchivePurgeControllerTest extends WebTestCase
 
     public function testAccessAdminArchivesIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['user_super_admin']);
+        $this->client->loginUser($this->fixtures['user_super_admin']);
 
         $this->client->request('GET', 'admin/archives');
 
@@ -57,7 +56,7 @@ class ArchivePurgeControllerTest extends WebTestCase
 
     public function testAccessAdminPurgesIsSuccessful(): void
     {
-        $this->createLogin($this->fixtures['user_super_admin']);
+        $this->client->loginUser($this->fixtures['user_super_admin']);
 
         $this->client->request('GET', 'admin/purges');
 
@@ -67,7 +66,7 @@ class ArchivePurgeControllerTest extends WebTestCase
     /** @dataProvider provideBadUser */
     public function testAccessAdminArchivePurgeWithBadRoles(string $user): void
     {
-        $this->createLogin($this->fixtures[$user]);
+        $this->client->loginUser($this->fixtures[$user]);
 
         $this->client->request('GET', 'admin/archive-purge');
 
@@ -77,7 +76,7 @@ class ArchivePurgeControllerTest extends WebTestCase
     /** @dataProvider provideBadUser */
     public function testAccessAdminArchivesWithBadRoles(string $user): void
     {
-        $this->createLogin($this->fixtures[$user]);
+        $this->client->loginUser($this->fixtures[$user]);
 
         $this->client->request('GET', 'admin/archives');
 
@@ -87,7 +86,7 @@ class ArchivePurgeControllerTest extends WebTestCase
     /** @dataProvider provideBadUser */
     public function testAccessAdminPurgesWithBadRoles(string $user): void
     {
-        $this->createLogin($this->fixtures[$user]);
+        $this->client->loginUser($this->fixtures[$user]);
 
         $this->client->request('GET', 'admin/purges');
 

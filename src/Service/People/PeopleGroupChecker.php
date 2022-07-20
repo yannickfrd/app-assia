@@ -3,15 +3,18 @@
 namespace App\Service\People;
 
 use App\Entity\People\PeopleGroup;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class PeopleGroupChecker
 {
     private $flashBag;
 
-    public function __construct(FlashBagInterface $flashBag)
+    public function __construct(RequestStack $requestStack)
     {
-        $this->flashBag = $flashBag;
+        /** @var Session */
+        $session = $requestStack->getSession();
+        $this->flashBag = $session->getFlashBag();
     }
 
     /**

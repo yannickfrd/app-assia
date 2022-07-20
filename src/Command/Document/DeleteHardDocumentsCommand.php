@@ -5,20 +5,20 @@ namespace App\Command\Document;
 use App\Repository\Support\DocumentRepository;
 use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-/**
- * Delete really the soft-deleted documents and associate files.
- */
+#[AsCommand(
+    name: 'app:document:delete_hard',
+    description: 'Delete really the soft-deleted documents and associate files.',
+)]
 class DeleteHardDocumentsCommand extends Command
 {
     use DoctrineTrait;
-
-    protected static $defaultName = 'app:document:delete_hard';
 
     protected $documentRepo;
     protected $em;

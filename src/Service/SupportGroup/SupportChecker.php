@@ -4,7 +4,8 @@ namespace App\Service\SupportGroup;
 
 use App\Entity\Support\SupportGroup;
 use App\Form\Utils\Choices;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SupportChecker
@@ -13,10 +14,12 @@ class SupportChecker
     private $translator;
 
     public function __construct(
-        FlashBagInterface $flashBag,
+        RequestStack $requestStack,
         TranslatorInterface $translator
     ) {
-        $this->flashBag = $flashBag;
+        /** @var Session */
+        $session = $requestStack->getSession();
+        $this->flashBag = $session->getFlashBag();
         $this->translator = $translator;
     }
 

@@ -11,7 +11,7 @@ use App\Repository\People\PersonRepository;
 use App\Service\People\PeopleGroupChecker;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -38,9 +38,8 @@ class SiSiaoGroupImporter extends SiSiaoClient
         PersonRepository $personRepo,
         PeopleGroupRepository $peopleGroupRepo,
         PeopleGroupChecker $peopleGroupChecker,
-        FlashBagInterface $flashBag,
-        TranslatorInterface $translator,
         ExceptionNotification $exceptionNotification,
+        TranslatorInterface $translator,
         string $url
     ) {
         parent::__construct($client, $requestStack, $url, $translator);
@@ -50,9 +49,12 @@ class SiSiaoGroupImporter extends SiSiaoClient
         $this->personRepo = $personRepo;
         $this->peopleGroupRepo = $peopleGroupRepo;
         $this->peopleGroupChecker = $peopleGroupChecker;
-        $this->flashBag = $flashBag;
-        $this->translator = $translator;
         $this->exceptionNotification = $exceptionNotification;
+
+        /** @var Session */
+        $session = $requestStack->getSession();
+        $this->flashBag = $session->getFlashBag();
+        $this->translator = $translator;
     }
 
     /**
@@ -147,9 +149,12 @@ class SiSiaoGroupImporter extends SiSiaoClient
             ->setCreatedBy($this->user)
             ->setUpdatedBy($this->user);
 
-            if (null !== $ficheGroupe->contactPrincipal && $ficheGroupe->contactPrincipal->id === $personne->id) {
-                $person->setEmail(preg_match('^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$^', $ficheGroupe->courrielDemandeur) ?
-                    $ficheGroupe->courrielDemandeur : null);
+            if (null !== $ficheGroupe->contactPrincipal
+                && $ficheGroupe->contactPrincipal->id === $personne->id
+                && $ficheGroupe->courrielDemandeur
+                && preg_match('^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$^', $ficheGroupe->courrielDemandeur)
+            ) {
+                $person->setEmail($ficheGroupe->courrielDemandeur);
             }
 
             $this->em->persist($person);

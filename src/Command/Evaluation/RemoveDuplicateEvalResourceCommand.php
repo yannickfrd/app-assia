@@ -7,18 +7,20 @@ use App\Entity\Evaluation\EvalInitResource;
 use App\Repository\Evaluation\EvaluationPersonRepository;
 use App\Service\DoctrineTrait;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand(
+    name: 'app:evaluation:remove-duplicate-resource',
+    description: 'Remove duplicate resource in evaluations (same type and amount). (temp - to delete)',
+)]
 class RemoveDuplicateEvalResourceCommand extends Command
 {
     use DoctrineTrait;
-
-    protected static $defaultName = 'app:evaluation:remove-duplicate-resource';
-    protected static $defaultDescription = 'Remove duplicate resource in evaluations (same type and amount). (temp - to delete)';
 
     private $EvaluationPersonRepo;
     private $em;

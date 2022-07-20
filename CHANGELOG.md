@@ -1,5 +1,23 @@
 # CHANGELOG
 
+## Version 4.0.1 - 20/07/2022
+
+Update to Symfony 6.1 and php 8.1 (#184):
+
+* Update PHP dependencies to symfony 6.1
+* [User] Fix return type getUserIdentifier
+* [SiSiaoController] Rename route name 'getUser' to 'getSiSiaoUser'
+* [security] Edit access_control (role PUBLIC_ACCESS)
+* [Command] Fix depreciations : delete 'defaultName' and 'defaultDescription' and use 'AsCommand' attribute'
+* [SupportManager] Fix 'request->request->get('support')'
+* [ArchivePurgeControllerTest] Fix loginUser
+* Fix depreciation with FlashBagInterface
+* Install rector
+* Fix php depreciations
+* Edit caching config doctrine
+* Disable apcu cache to create export (performance problems and error in test env)
+* Fix tests
+
 ## Version 4.0.0 - 19/07/2022
 
 Update to bootstap 5.1 and update all css/html (#182):

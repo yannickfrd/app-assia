@@ -7,6 +7,7 @@ use App\Entity\Organization\User;
 use App\Repository\Organization\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,11 +16,12 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 
+#[AsCommand(
+    name: 'app:task:send-task-alerts',
+    description: 'Send email about task alerts to users.',
+)]
 class SendTaskAlertsCommand extends Command
 {
-    protected static $defaultName = 'app:task:send-task-alerts';
-    protected static $defaultDescription = 'Send email about task alerts to users.';
-
     protected $em;
     protected $userRepo;
     protected $mailer;
@@ -42,7 +44,6 @@ class SendTaskAlertsCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription(self::$defaultDescription)
             ->addArgument('notif-type', InputArgument::REQUIRED,
                 'Type of notification : daily-alerts, weekly-alerts or a custom delay (example: "+5 hours")')
             ->addOption('flush', 'f', InputArgument::OPTIONAL, 'Flush all modifications to alerts and tasks', true)

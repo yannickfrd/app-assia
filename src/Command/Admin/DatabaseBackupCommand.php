@@ -3,20 +3,19 @@
 namespace App\Command\Admin;
 
 use App\Service\DatabaseDumper;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-/**
- * Commande pour créer une sauvegarde de la base de données.
- */
+#[AsCommand(
+    name: 'app:database:backup',
+    description: 'Create a dump of database.',
+)]
 class DatabaseBackupCommand extends Command
 {
-    protected static $defaultName = 'app:database:backup';
-    protected static $defaultDescription = 'Create a dump of database.';
-
     protected $databaseDumper;
 
     public function __construct(DatabaseDumper $databaseDumper)
@@ -29,7 +28,6 @@ class DatabaseBackupCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription('Create a backup of database.')
             ->addOption('path', 'p', InputOption::VALUE_OPTIONAL, 'Path to save backup of database.', null)
             ->addOption('zipped', 'z', InputOption::VALUE_OPTIONAL, 'Gzip compression option', 'yes')
         ;

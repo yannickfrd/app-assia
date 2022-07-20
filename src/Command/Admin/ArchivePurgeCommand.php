@@ -3,16 +3,19 @@
 namespace App\Command\Admin;
 
 use App\Service\Admin\Archiver;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand(
+    name: 'app:admin:archive-purge',
+    description: 'Archive or delete datas.',
+)]
 class ArchivePurgeCommand extends Command
 {
-    protected static $defaultName = 'app:admin:archive-purge';
-
     private $archiver;
 
     public function __construct(Archiver $archiver)
@@ -25,7 +28,6 @@ class ArchivePurgeCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription('Archive or delete datas.')
             ->addOption('archive', 'a', InputOption::VALUE_NONE, 'Archive datas (supports, people, groups...)')
             ->addOption('delete', 'd', InputOption::VALUE_NONE, 'Purge deleted datas')
             ->addOption('render-table', 'r', InputOption::VALUE_NONE, 'Render the table with stats')
