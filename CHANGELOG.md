@@ -1,8 +1,19 @@
 # CHANGELOG
 
+## Version 4.0.2 - 20/07/2022
+
+Update to Bootstrap 5.1 to 5.2 (#185):
+
+* Install boolstrap 5.2
+* Edit bootstrap-custom
+* Rename css class link-\* to text-\*
+* Fix css alert message
+* Fix css pagination
+* Add css class .table-group-divider to tbody and tfooter
+
 ## Version 4.0.1 - 20/07/2022
 
-Update to Symfony 6.1 and php 8.1 (#184):
+Update to Symfony 5.4 to 6.1 and php 8.1 (#184):
 
 * Update PHP dependencies to symfony 6.1
 * [User] Fix return type getUserIdentifier
