@@ -32,7 +32,7 @@
 						</tr>
 					</thead>
 
-					<tbody id="container-placeGroups" data-support="{{ support.id }}">
+					<tbody class="table-group-divider" id="container-placeGroups" data-support="{{ support.id }}">
 						{% for placeGroup in support_group_places|sort ((a, b) => b.startDate <=> a.startDate) %}
 							<tr id="placeGroup-{{ placeGroup.id }}">
 								<td scope="row" class="align-middle text-center">
@@ -44,7 +44,7 @@
 								<td class="align-middle">
 									{% if placeGroup.place %}
 										<a href="{{ path('place_edit', {'id': placeGroup.place.id}) }}"
-										class="link-primary">{{ placeGroup.place.name }}</a>
+										class="text-primary">{{ placeGroup.place.name }}</a>
 									{% endif %}
 								</td>
 								<td class="align-middle">{{ placeGroup.supportGroup.device.name }}</td>

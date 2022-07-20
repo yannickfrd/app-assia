@@ -13,7 +13,7 @@
                     <th scope="col" class="align-middle th-w-100">Pôle</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="table-group-divider">
                 {% for support_person in supports %}
                     {% set support_group = person is defined ? support_person.supportGroup : support_person %}
                     {% set is_granted_view_support = is_granted('VIEW', support_group) %}
@@ -51,14 +51,14 @@
                             <td class="align-middle">{{ support_person.endDate ? support_person.endDate|date('d/m/Y') }}</td>
                             <td class="align-middle">
                                 {% if support_group.referent %}
-                                    <a href="mailto:{{ support_group.referent.email }}" class="link-primary"
+                                    <a href="mailto:{{ support_group.referent.email }}" class="text-primary"
                                         data-bs-toggle="tooltip" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-html="true"
                                         title="{{ contact_user }}">{{ support_group.referent.fullname }}</a>
                                 {% endif %}
                             </td>
                             <td class="align-middle">
                                 {% if support_group.service %}
-                                    <a href="mailto:{{ support_group.service.email }}" class="link-primary"
+                                    <a href="mailto:{{ support_group.service.email }}" class="text-primary"
                                         data-bs-toggle="tooltip" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-html="true"
                                         title="{{ contact_service }}">{{ support_group.service.name }}</a>
                                         {{ support_group.device ? ' (' ~ support_group.device.name ~ ')' }}

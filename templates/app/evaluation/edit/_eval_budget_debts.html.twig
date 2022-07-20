@@ -31,7 +31,7 @@
                             <th scope="col" class="align-middle th-w-20"></th>
                         </tr>
                     </thead>
-					<tbody id="{{ prefix_id }}_debtType_list" 
+					<tbody class="table-group-divider" id="{{ prefix_id }}_debtType_list" 
                         data-prototype='{{ eval_budget_debt_prototype }}' data-container-tag="tr"
                         data-items-counter="{{ form_eval_budget_person.evalBudgetDebts|length }}">
                         {% for form_eval_debt in form_eval_budget_person.evalBudgetDebts %}
@@ -48,7 +48,7 @@
                             </tr>
                         {% endfor %}
                     </tbody>
-                    <tfoot>
+                    <tfoot class="table-group-divider">
                         <tr class="fw-bold">
                             <td scope="row"></td>
                             <td class="align-middle">Total des dettes</td>

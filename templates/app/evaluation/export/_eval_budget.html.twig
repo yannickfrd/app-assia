@@ -14,7 +14,7 @@
             <th style="text-align: right;">Montant</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody class="table-group-divider">
         <tr>
             <td>Ressources</td>
             <td style="text-align: right;">{{ eval_budget_group.resourcesGroupAmt|amount }}</td>
@@ -32,7 +32,7 @@
             </tr>
         {% endif %}
         </tbody>
-        <tfoot>
+        <tfoot class="table-group-divider">
         {% if eval_budget_group.budgetBalanceAmt > 0 %}
             <tr style="font-weight: bold;">
                 <td>Reste à vivre</td>
@@ -70,7 +70,7 @@
                     <th style="text-align: right;">Montant</th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody class="table-group-divider">
                 {% for eval_budget_resource in eval_budget_person.evalBudgetResources %}
                     <tr>
                         <td>{{ eval_budget_resource.type == 1000 and eval_budget_resource.comment ?
@@ -79,7 +79,7 @@
                     </tr>
                 {% endfor %}
                 </tbody>
-                <tfoot>
+                <tfoot class="table-group-divider">
                 <tr style="font-weight: bold;">
                     <td>Total des ressources</td>
                     <td style="text-align: right;">{{ eval_budget_person.resourcesAmt|amount }}</td>
@@ -111,7 +111,7 @@
                     <th style="text-align: right;">Montant</th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody class="table-group-divider">
                 {% for eval_budget_charge in eval_budget_person.evalBudgetCharges %}
                     <tr>
                         <td>{{ eval_budget_charge.type == 1000 and eval_budget_charge.comment ?
@@ -120,7 +120,7 @@
                     </tr>
                 {% endfor %}
                 </tbody>
-                <tfoot>
+                <tfoot class="table-group-divider">
                 <tr style="font-weight: bold;">
                     <td>Total des charges</td>
                     <td style="text-align: right;">{{ eval_budget_person.chargesAmt|amount }}</td>

@@ -23,9 +23,9 @@
         {% endif %}
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a class="link-primary" href="{{ path('service_index') }}">Liste des
+                <li class="breadcrumb-item"><a class="text-primary" href="{{ path('service_index') }}">Liste des
                         services</a></li>
-                <li class="breadcrumb-item"><a class="link-primary"
+                <li class="breadcrumb-item"><a class="text-primary"
                         href="{{ path('service_edit', {'id': place.service.id}) }}">{{ place.service.name }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Groupe de places</li>
             </ol>
@@ -128,7 +128,7 @@
                                 <th scope="col" class="align-middle th-w-100">Motif de fin</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="table-group-divider">
                             {% for place_group in places_group %}
                                 {% set person = place_group.supportGroup.header %}
                                 <tr>

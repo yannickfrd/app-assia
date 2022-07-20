@@ -51,7 +51,7 @@
                 <th scope="col" class="align-middle th-w-80"></th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="table-group-divider">
             {% for note in notes %}
                 {% set is_deleted = note.isDeleted %}
                 <tr id="note-{{ note.id }}">

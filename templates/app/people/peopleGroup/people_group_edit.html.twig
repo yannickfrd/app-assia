@@ -52,7 +52,7 @@
                                     <th scope="col" class="th-w-20 align-middle"></th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="table-group-divider">
                                 {% for form_person in form.rolePeople.children %}
                                     {% set person = form_person.vars.value.person %}
                                     <tr id="js-person-{{ person.id }}" class="js-tr-person">

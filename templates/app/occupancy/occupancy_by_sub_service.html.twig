@@ -14,7 +14,7 @@
         <div class="row">
             <div class="col-md-12">
                 <p><a href="{{ path('occupancy_services', {'year': search.year, 'date': {'start': search.start|date('Y-m-d'), 
-                    'end': search.end|date('Y-m-d')}, 'pole': search.pole ? search.pole.id}) }}" class="link-primary">
+                    'end': search.end|date('Y-m-d')}, 'pole': search.pole ? search.pole.id}) }}" class="text-primary">
                     <span class="fas fa-undo me-2"></span>Accès aux taux d'ocupation par service.</a>
                 </p>
                 {% set interval = date(search.start).diff(date(search.end)) %}
@@ -39,7 +39,7 @@
                                 <th class="align-middle th-w-100 text-end">Taux d'occupation</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="table-group-divider">
                         {% set example = '' %}
                             {% for subServiceId, subService in datas.subServices %}
                                 {% set ocupancy_rate = ratio(subService.occupancyDays, subService.capacityDays) %}
@@ -77,7 +77,7 @@
                                 </tr>
                             {% endfor %}
                         </tbody>
-                        <tfoot>
+                        <tfoot class="table-group-divider">
                             <tr class="fw-bold">
                                 <td class="align-middle text-center" scope="row">Total</td>
                                 <td class="align-middle">{{ datas.subServices|length }}</td>                               

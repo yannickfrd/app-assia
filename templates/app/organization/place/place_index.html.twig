@@ -65,7 +65,7 @@
                         </tr>
                     </thead>
 
-                    <tbody>
+                    <tbody class="table-group-divider">
                         {% for place in places %}
                             <tr class="{% if place.disabled %}text-secondary{% endif %}">
                                 <td scope="row" class="align-middle" >
@@ -79,7 +79,7 @@
                                 </td> 
                                 <td class="align-middle">
                                     <a href="{{ path('service_edit', {'id': place.service.id }) }}" 
-                                        class="link-primary">{{ place.service.name }}</a>
+                                        class="text-primary">{{ place.service.name }}</a>
                                 </td>
                                 <td class="align-middle">{{ place.device ? place.device.name }}</td>
                                 <td class="align-middle">{{ place.nbPlaces }}</td>

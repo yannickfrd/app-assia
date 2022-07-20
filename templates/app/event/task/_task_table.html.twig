@@ -27,7 +27,7 @@
                 <th scope="col" class="align-middle th-w-20"></th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="table-group-divider">
             {% set now = 'now'|date('Y-m-d-H-i') %}
             {% for task in tasks %}
                 {% set is_deleted = task.deletedAt is not null %}

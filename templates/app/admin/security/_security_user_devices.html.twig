@@ -23,7 +23,7 @@
                         </td>
                     {% endset %}
 
-                    <tbody id="userDevices-fields-list" data-prototype="{{ user_device_prototype|e|spaceless }}"
+                    <tbody class="table-group-divider" id="userDevices-fields-list" data-prototype="{{ user_device_prototype|e|spaceless }}"
                         data-container-tag="tr" data-widget-counter="{{ form_user_devices.userDevices|length }}">
                         {% for userDevice in form_user_devices.userDevices %}
                             <tr id="{{ userDevice.vars.id }}">

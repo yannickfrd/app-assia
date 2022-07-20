@@ -62,7 +62,7 @@
                         </tr>
                     </thead>
 
-                    <tbody>
+                    <tbody class="table-group-divider">
                         {% for user in users %}
                             <tr class="{% if user.disabled %}text-secondary{% endif %}">
                                 <td class="align-middle" scope="row">
@@ -80,7 +80,7 @@
                                 <td class="align-middle d-none d-md-table-cell">
                                     {% for service in user.services|sort ((a, b) => a.name <=> b.name) %}
                                         <a href="{{ path('service_edit', {'id': service.id}) }}" 
-                                            class="link-primary">{{ service.name }}</a>{% if not loop.last %}, {% endif %}
+                                            class="text-primary">{{ service.name }}</a>{% if not loop.last %}, {% endif %}
                                     {% endfor %}
                                 </td>
                                 {% set poles = [] %}
@@ -89,7 +89,7 @@
                                         {% if service.pole.id not in poles %}
                                             {% set poles = poles|merge([service.pole.id]) %}
                                             <a href="{{ path('pole_edit', {'id': service.pole.id}) }}" 
-                                                class="link-primary">{{ service.pole.name }}</a><br/>
+                                                class="text-primary">{{ service.pole.name }}</a><br/>
                                         {% endif %}
                                     {% endfor %}
                                 </td>

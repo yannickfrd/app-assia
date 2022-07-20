@@ -82,7 +82,7 @@ document:
 
 evaluation:
     created_successfully: "L'évaluation sociale a été créée."
-    updated_successfully: "Les modifications ont été enregistrées ({rate}% de complétude)."
+    updated_successfully: "Les modifications ont été enregistrées. <br>Complétude de {rate}%."
     deleted_successfully: "L'évaluation sociale a été supprimée."
     no_created: "Il n'y a pas d'évaluation sociale créée pour ce suivi."
 

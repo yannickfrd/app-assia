@@ -8,7 +8,7 @@
     <div class="d-flex mb-3">
         <h2 class="h4">Budget</h2>
         <span class="align-content-center"><a href="{{ path('support_evaluation_show', {'id': support.id }) }}" 
-            class="link-primary ms-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
+            class="text-primary ms-2" title="Modifier l'évaluation sociale"><span class="fas fa-edit"></span></a>
         </span>
     </div>
     {% if nb_people_budget > 1 %}
@@ -21,7 +21,7 @@
                             <th class="text-end">Montant</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="table-group-divider">
                         <tr>
                             <td scope="row">Ressources</td>
                             <td class="text-end">{{ eval_budget_group.resourcesGroupAmt|amount }}</td>
@@ -39,7 +39,7 @@
                             </tr>
                         {% endif %}
                     </tbody>
-                    <tfoot>
+                    <tfoot class="table-group-divider">
                         <tr class="fw-bold">
                             <td scope="row">Reste à vivre</td>
                             <td class="text-end">{{ eval_budget_group.budgetBalanceAmt|amount }}</td>
@@ -82,7 +82,7 @@
                                     <th class="text-end">Montant</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="table-group-divider">
                                 {% for eval_budget_resource in eval_budget_person.evalBudgetResources %}
                                     <tr>
                                         <td scope="row">{{ eval_budget_resource.type == 1000 and eval_budget_resource.comment ? 
@@ -91,7 +91,7 @@
                                     </tr>
                                 {% endfor %}
                             </tbody>
-                            <tfoot>
+                            <tfoot class="table-group-divider">
                                 <tr class="fw-bold">
                                     <td scope="row">Total des ressources</td>
                                     <td class="text-end">{{ eval_budget_person.resourcesAmt|amount }}</td>
@@ -122,7 +122,7 @@
                                     <td class="text-end fw-bold">Montant</td>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="table-group-divider">
                                 {% for eval_budget_charge in eval_budget_person.evalBudgetCharges %}
                                     <tr>
                                         <td scope="row">{{ eval_budget_charge.type == 1000 and eval_budget_charge.comment ? 
@@ -131,7 +131,7 @@
                                     </tr>
                                 {% endfor %}
                             </tbody>
-                            <tfoot>
+                            <tfoot class="table-group-divider">
                                 <tr class="fw-bold">
                                     <td scope="row">Total des charges</td>
                                     <td class="text-end">{{ eval_budget_person.chargesAmt|amount }}</td>

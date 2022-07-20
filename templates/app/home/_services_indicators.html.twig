@@ -23,7 +23,7 @@
                         <th class="align-middle th-w-20"></th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="table-group-divider">
                 {% set sum_active_supports = 0 %}
                 {% set sum_active_supports_people = 0 %}
                     {% for service_id, service in services_indicators %}  
@@ -111,14 +111,14 @@
                         {% endif %}
                     {% endfor %}
                 </tbody>
-                <tfooter>
+                <tfoot class="table-group-divider">
                     <tr class="fw-bold">
                         <td class="align-middle text-center" colspan="2">Total</td>
                         <td class="align-middle text-end">{{ sum_active_supports|number }}</td>
                         <td class="align-middle text-end">{{ sum_active_supports_people|number }}</td>
                         <td colspan="5"></td>
                     </tr>
-                </tfooter>
+                </tfoot>
             </table>
         </div>
     </div>

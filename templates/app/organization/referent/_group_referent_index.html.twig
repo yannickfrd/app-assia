@@ -17,7 +17,7 @@
                         <th class="align-middle th-w-150">{{ 'City'|trans({}, 'forms') }}</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="table-group-divider">
                     {% for referent in referents|reverse %}
                         <tr>
                             <td class="align-middle text-center" scope="row">
@@ -31,8 +31,8 @@
                             <td class="align-middle">{{ referent.typeToString }}</td>
                             <td class="align-middle">{{ referent.socialWorker }}<br/>{{ referent.socialWorker2 }}</td>
                             <td class="align-middle">
-                                <a href="mailto:{{ referent.email }}" class="link-primary">{{ referent.email }}</a><br/>
-                                <a href="mailto:{{ referent.email2 }}" class="link-primary">{{ referent.email2 }}</a>
+                                <a href="mailto:{{ referent.email }}" class="text-primary">{{ referent.email }}</a><br/>
+                                <a href="mailto:{{ referent.email2 }}" class="text-primary">{{ referent.email2 }}</a>
                             </td>
                             <td class="align-middle">{{ referent.phone1 }}<br/>{{ referent.phone2 }}</td>
                             <td class="align-middle">{{ referent.city }}</td>

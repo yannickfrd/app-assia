@@ -58,13 +58,13 @@
 	<nav aria-label="breadcrumb">
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item">
-				<a class="link-primary" href="{{ path('people_group_show', {'id': people_group.id}) }}">
+				<a class="text-primary" href="{{ path('people_group_show', {'id': people_group.id}) }}">
 					<i class="fas fa-users me-2"></i>Fiche groupe
 					<span class="d-none d-sm-inline small"> {{ people_group.familyTypologyToString }}</span>
 				</a>
 			</li>
 			<li class="breadcrumb-item">
-				<a class="link-primary" href="{{ path('support_show', {'id': support.id }) }}">Suivi social</a>
+				<a class="text-primary" href="{{ path('support_show', {'id': support.id }) }}">Suivi social</a>
 			</li>
 			<li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
 		</ol>

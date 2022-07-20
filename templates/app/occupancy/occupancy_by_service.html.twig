@@ -13,7 +13,7 @@
         <div class="row">
             <div class="col-md-12">
                 <p><a href="{{ path('occupancy_devices', {'year': search.year, 'date': {'start': search.start|date('Y-m-d'), 
-                    'end': search.end|date('Y-m-d')}, 'pole': search.pole ? search.pole.id}) }}" class="link-primary">
+                    'end': search.end|date('Y-m-d')}, 'pole': search.pole ? search.pole.id}) }}" class="text-primary">
                     <span class="fas fa-undo me-2"></span>{% if device %}Retour{% else %}Accès
                     {% endif %} aux taux d'ocupation par dispositif.</a>
                 </p>
@@ -39,7 +39,7 @@
                                 <th class="align-middle th-w-100 text-end">Taux d'occupation</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="table-group-divider">
                         {% set example = '' %}
                             {% for service_id, service in datas.services|filter(a => a.capacityDays > 0) %}
                                 {% set ocupancy_rate = ratio(service.occupancyDays, service.capacityDays) %}
@@ -85,6 +85,7 @@
                                 </tr>
                             {% endfor %}
                         </tbody>
+                        <tfoot class="table-group-divider">
                             <tr class="fw-bold">
                                 <td class="align-middle text-center" scope="row">Total</td>
                                 <td class="align-middle">{{ datas.services|length }}</td>
