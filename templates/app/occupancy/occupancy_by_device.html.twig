@@ -38,7 +38,7 @@
                                 <th class="align-middle th-w-100 text-end">Taux d'occupation</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="table-group-divider">
                             {% for deviceId, device in datas.devices %}
                                 <tr>
                                     <td scope="row" class="align-middle text-center">
@@ -62,7 +62,7 @@
                                 </tr>
                             {% endfor %}
                         </tbody>
-                        <tfoot>
+                        <tfoot class="table-group-divider">
                             <tr class="fw-bold">
                                 <td class="align-middle text-center" scope="row">Total</td>
                                 <td class="align-middle">{{ datas.devices|length }}</td>

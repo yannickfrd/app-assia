@@ -40,7 +40,7 @@
                                 {% endif %}
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="table-group-divider">
                             {% for user_datas in users_datas %}
                                 {% if user_datas.nbSupports > 0 %}
                                     <tr>
@@ -87,7 +87,7 @@
                             {% endfor %}
                         </tbody>
                         {% if is_granted('ROLE_ADMIN') %}
-                            <tfoot>
+                            <tfoot class="table-group-divider">
                                 <tr class="fw-bold">
                                     <td scope="row" class="align-middle">Total</td>
                                     <td class="align-middle">{{ users_datas|length }}</td>

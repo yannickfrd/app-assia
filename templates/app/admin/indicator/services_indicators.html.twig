@@ -32,7 +32,7 @@
                             <th class="align-middle th-w-20"></th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="table-group-divider">
                     {% set sum_active_supports = 0 %}
                     {% set sum_notes = 0 %}
                     {% set sum_rdvs = 0 %}
@@ -76,7 +76,7 @@
                             {% endif %}
                         {% endfor %}
                     </tbody>
-                    <tfooter>
+                    <tfoot class="table-group-divider">
                         <tr class="fw-bold">
                             <td class="align-middle text-center">Total</td>
                             <td class="align-middle text-end"></td>
@@ -87,7 +87,7 @@
                             <td class="align-middle text-end">{{ sum_paiments|number }}</td>
                             <td></td>
                         </tr>
-                    </tfooter>
+                    </tfoot>
                 </table>
             </div>
         </div>

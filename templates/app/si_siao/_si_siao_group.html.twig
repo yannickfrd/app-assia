@@ -19,7 +19,7 @@
                         <th>Situation</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="table-group-divider">
                     {% for personne in personnes|sort((a, b) => b.age <=> a.age) %}
                         {% set is_contact_principal = contactPrincipal is not null and contactPrincipal.id == personne.id %}
                         <tr class="{{ is_contact_principal ? 'fw-bold' }}">

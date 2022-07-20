@@ -42,7 +42,7 @@
                                 <th scope="col" class="align-middle th-w-20"></th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="table-group-divider">
                             {% for role in form.serviceUser %}
                                 <tr id="{{ role.vars.id }}">
                                     <td class="align-middle">{{ form_widget(role.service) }}</td>

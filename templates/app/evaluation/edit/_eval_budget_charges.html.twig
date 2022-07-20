@@ -31,7 +31,7 @@
                             <th scope="col" class="align-middle th-w-20"></th>
                         </tr>
                     </thead>
-					<tbody id="{{ prefix_id }}_chargeType_list" 
+					<tbody class="table-group-divider" id="{{ prefix_id }}_chargeType_list" 
                         data-prototype='{{ eval_budget_charge_prototype }}' data-container-tag="tr"
                         data-items-counter="{{ form_eval_budget_person.evalBudgetCharges|length }}">
                         {% for form_eval_charge in form_eval_budget_person.evalBudgetCharges %}
@@ -48,7 +48,7 @@
                             </tr>
                         {% endfor %}
                     </tbody>
-                    <tfoot>
+                    <tfoot class="table-group-divider">
                         <tr class="fw-bold">
                             <td scope="row"></td>
                             <td class="align-middle">Total des charges</td>

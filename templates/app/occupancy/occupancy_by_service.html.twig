@@ -39,7 +39,7 @@
                                 <th class="align-middle th-w-100 text-end">Taux d'occupation</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="table-group-divider">
                         {% set example = '' %}
                             {% for service_id, service in datas.services|filter(a => a.capacityDays > 0) %}
                                 {% set ocupancy_rate = ratio(service.occupancyDays, service.capacityDays) %}
@@ -85,6 +85,7 @@
                                 </tr>
                             {% endfor %}
                         </tbody>
+                        <tfoot class="table-group-divider">
                             <tr class="fw-bold">
                                 <td class="align-middle text-center" scope="row">Total</td>
                                 <td class="align-middle">{{ datas.services|length }}</td>

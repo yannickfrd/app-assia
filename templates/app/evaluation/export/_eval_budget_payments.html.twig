@@ -26,7 +26,7 @@
                 </th>
         </tr>
     </thead>
-    <tbody>
+    <tbody class="table-group-divider">
         {% set to_pay_amt_sum, paid_amt_sum, still_to_pay_amt_sum = 0, 0, 0 %}
         {% for payment in payments %}
             {% set to_pay_amt_sum = to_pay_amt_sum + payment.toPayAmt %}
@@ -60,7 +60,7 @@
             {% endif %}
         {% endfor %}
     </tbody>
-    <tfoot>
+    <tfoot class="table-group-divider">
         <tr style="font-weight: bold; text-align: justify">
             <td colspan="2">
                 <span>Total depuis le début ({{ payments|length }})</span>

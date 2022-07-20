@@ -21,7 +21,7 @@
 						</td>
 					{% endset %}
 
-					<tbody id="organizations-fields-list" data-prototype="{{ organization_prototype|e|spaceless }}" 
+					<tbody class="table-group-divider" id="organizations-fields-list" data-prototype="{{ organization_prototype|e|spaceless }}" 
                 		data-container-tag="tr" data-widget-counter="{{ form.organizations|length }}">
 						{% for organization in form.organizations %}
 							<tr id="{{ organization.vars.id }}">

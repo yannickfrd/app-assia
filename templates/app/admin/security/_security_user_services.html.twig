@@ -14,7 +14,7 @@
                     <th scope="col" class="align-middle th-w-40"></th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody class="table-group-divider">
                 {% for service_user in user_services %}
                     {% set service = service_user.service %}
                     <tr data-service-id="{{ service.id }}" data-service-name="{{ service.name }}">

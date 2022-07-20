@@ -50,7 +50,7 @@
                             <th scope='col' class='align-middle th-w-100'>{{ knp_pagination_sortable(supports, 'Résultat de la proposition', 'avdl.propoResult') }}</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="table-group-divider">
                         {% for support_person in supports %}
                             {% set person = support_person.person %}
                             {% set support_group = support_person.supportGroup %}

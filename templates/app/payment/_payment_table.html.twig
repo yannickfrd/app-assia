@@ -76,7 +76,7 @@
                 {% endif %}
             </tr>
         </thead>
-        <tbody id="container_payments">
+        <tbody class="table-group-divider" id="container_payments">
             {% set to_pay_amt = 0 %}
             {% set paid_amt = 0 %}
             {% for payment in payments %}
@@ -181,7 +181,7 @@
             {% endfor %}
         </tbody>
         {% if not support_is_defined %}
-            <tfoot>
+            <tfoot class="table-group-divider">
                 <tr class="fw-bold">
                     <td colspan="4" class="align-middle text-end">Sous-total (page)</td>
                     <td class="align-middle text-end">{{ to_pay_amt|amount }}</td>

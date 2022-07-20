@@ -19,7 +19,7 @@
 						</tr>
 					</thead>
 
-					<tbody>
+					<tbody class="table-group-divider">
 						{% for form_support_pers in form.supportPeople.children %}
 							{% set support_person = form_support_pers.vars.value %}
 							<tr data-support-person="{{ support_person.id }}">

@@ -23,7 +23,7 @@
                     <th scope="col" class="align-middle th-date">Modifié le</th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody class="table-group-divider">
                 {% for note in notes %}
                     {% set person = note.supportGroup ? note.supportGroup.header %}
                     <tr id="note-{{ note.id }}">
