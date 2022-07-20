@@ -62,8 +62,6 @@ class ExportExcel
      */
     public function createSheet(array $data, array $options = []): void
     {
-        $this->activeCache();
-
         $this->data = $data;
         $this->now = new \DateTime();
         $this->setOptions($options);
