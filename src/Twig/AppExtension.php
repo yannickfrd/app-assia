@@ -28,24 +28,24 @@ class AppExtension extends AbstractExtension
         ];
     }
 
-    public function formatNumber(int|float|null $value = 0, int $decimals = 0): string
+    public function formatNumber(int|float|null $value, int $decimals = 0): string
     {
-        return number_format($value, $decimals, ',', ' ');
+        return number_format($value ?? 0, $decimals, ',', ' ');
     }
 
-    public function formatPercentage(int|float|null $value = 0, int $decimals = 2): string
+    public function formatPercentage(int|float|null $value, int $decimals = 2): string
     {
         $value = round($value ?? 0, $decimals);
 
         return number_format($value, $decimals, ',', ' ').'%';
     }
 
-    public function formatAmount(int|float|null $value = 0, int $decimals = 2): string
+    public function formatAmount(int|float|null $value, int $decimals = 2): string
     {
-        return number_format($value, $decimals, ',', ' ').' €';
+        return number_format($value ?? 0, $decimals, ',', ' ').' €';
     }
 
-    public function roundNumber(int|float|null $value = 0, int $decimals = 0, $mode = 1): string
+    public function roundNumber(int|float|null $value, int $decimals = 0, $mode = 1): string
     {
         $value = round($value ?? 0, $decimals, $mode);
 
@@ -53,7 +53,7 @@ class AppExtension extends AbstractExtension
             $decimals = 0;
         }
 
-        return number_format($value, $decimals, ',', ' ');
+        return number_format($value ?? 0, $decimals, ',', ' ');
     }
 
     /**
