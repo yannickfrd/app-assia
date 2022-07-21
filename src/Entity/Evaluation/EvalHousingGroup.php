@@ -54,16 +54,19 @@ class EvalHousingGroup
         99 => 'Non évaluée',
     ];
 
-    public const SIAO_RECOMMENDATION = [
-        10 => 'Hébergement',
+    public const SIAO_RECOMMENDATIONS = [
+        10 => 'Hébergement', // To delete
         102 => 'CHU',
-        104 => 'CHRS',
+        104 => 'CHRS / CHS',
         208 => 'ALTHO',
-        20 => 'Logement adapté/ accompagné (hors Solibail)',
-        206 => 'Solibail',
+        20 => 'Logement adapté / accompagné (hors Solibail)',  // To delete
+        204 => 'Logement adapté - Résidence sociale',
+        203 => 'Logement adapté - Maison relais',
+        206 => 'Logement adapté - Solibail/IML',
+        297 => 'Logement adapté - Autre',
         30 => 'Logement de droit commun (social ou privé)',
         400 => 'CADA - dispositif asile',
-        602 => 'Structure de soin ou médical',
+        602 => 'Structure médico-sociale',
         99 => 'Non évaluée',
     ];
 
@@ -515,7 +518,7 @@ class EvalHousingGroup
 
     public function getSiaoRecommendationToString(): ?string
     {
-        return $this->siaoRecommendation ? self::SIAO_RECOMMENDATION[$this->siaoRecommendation] : null;
+        return $this->siaoRecommendation ? self::SIAO_RECOMMENDATIONS[$this->siaoRecommendation] : null;
     }
 
     public function setSiaoRecommendation(?int $siaoRecommendation): self

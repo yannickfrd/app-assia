@@ -3,6 +3,7 @@
 namespace App\Form\Support\HotelSupport;
 
 use App\Entity\Support\HotelSupport;
+use App\Form\Evaluation\EvalHousingGroupType;
 use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -74,7 +75,7 @@ class HotelSupportType extends AbstractType
                 'required' => false,
             ])
             ->add('recommendation', ChoiceType::class, [
-                'choices' => Choices::getChoices(HotelSupport::RECOMMENDATIONS),
+                'choices' => EvalHousingGroupType::getEditSiaoRecommendations(),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])

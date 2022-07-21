@@ -72,7 +72,7 @@ class HotelSupport
         99 => 'Inconnu',
     ];
 
-    public const RECOMMENDATIONS = EvalHousingGroup::SIAO_RECOMMENDATION;
+    public const RECOMMENDATIONS = EvalHousingGroup::SIAO_RECOMMENDATIONS;
     public const DEPARTMENTS = Choices::DEPARTMENTS;
 
     /**
