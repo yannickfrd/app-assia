@@ -15,7 +15,7 @@
 {% set people_over_16 = eval_people|filter(e => e.supportPerson.person.age >= 16) %}
 {% set nb_people = support_people|length %}
 {% set eval_housing = evaluation.evalHousingGroup %}
-{% set hotelSupport = support.hotelSupport %}
+{% set hotel_support = support.hotelSupport %}
 
 {% set style_h2 = 'color: ' ~ theme_color ~ ';font-size: 21.5px; font-weight: bold;' %}
 {% set style_h3 = 'font-size: 16px; font-weight: bold;' %}
@@ -55,9 +55,9 @@
             {% endif %}
 
             {# Suivi hôtel #}
-            {% if hotelSupport %}
+            {% if hotel_support %}
                 <p>&nbsp;</p>
-                {{ p_view.get(hotelSupport.entryHotelDate ? hotelSupport.entryHotelDate|date('d/m/Y'), 'Entry hotel date') }}
+                {{ p_view.get(hotel_support.entryHotelDate ? hotel_support.entryHotelDate|date('d/m/Y'), 'Entry hotel date') }}
                 {% set place = support.placeGroups|length > 0 ? support.placeGroups[support.placeGroups|length - 1].place %}
                 {{ p_view.get(place ? place.name ~ (place.city ? ' (' ~ place.fullAddress ~ ')'), 'Hotel') }}
             {% else %}

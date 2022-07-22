@@ -3,6 +3,7 @@
 namespace App\Form\Support\HotelSupport;
 
 use App\Entity\Support\HotelSupport;
+use App\Form\Evaluation\EvalHousingGroupType;
 use App\Form\Utils\Choices;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -17,6 +18,15 @@ class HotelSupportType extends AbstractType
         $builder
             ->add('rosalieId', null, [
                 'attr' => ['data-mask-type' => 'number'],
+            ])
+            ->add('priorityCriteria', ChoiceType::class, [
+                'choices' => Choices::getChoices(HotelSupport::PRIORITY_CRITERIA),
+                'multiple' => true,
+                'attr' => [
+                    'placeholder' => 'placeholder.select',
+                    'size' => 1,
+                ],
+                'required' => false,
             ])
             ->add('reasonNoInclusion', ChoiceType::class, [
                 'choices' => Choices::getChoices(HotelSupport::REASON_NO_INCLUSION),
@@ -39,7 +49,7 @@ class HotelSupportType extends AbstractType
                 'required' => false,
             ])
             ->add('_searchSsd', null, [
-                'label' => 'hotelSupport.ssd.search',
+                'label' => 'hotel_support.ssd.search',
                 'attr' => [
                     'class' => 'js-search',
                     'placeholder' => 'location.search.city.placeholder',
@@ -49,7 +59,7 @@ class HotelSupportType extends AbstractType
                 'mapped' => false,
             ])
             ->add('ssd', null, [
-                'label' => 'hotelSupport.ssd.city',
+                'label' => 'hotel_support.ssd.city',
                 'attr' => [
                     'class' => 'js-city',
                     'readonly' => true,
@@ -74,7 +84,7 @@ class HotelSupportType extends AbstractType
                 'required' => false,
             ])
             ->add('recommendation', ChoiceType::class, [
-                'choices' => Choices::getChoices(HotelSupport::RECOMMENDATIONS),
+                'choices' => EvalHousingGroupType::getEditSiaoRecommendations(),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])

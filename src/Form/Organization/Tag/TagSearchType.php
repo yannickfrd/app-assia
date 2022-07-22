@@ -37,7 +37,7 @@ class TagSearchType extends AbstractType
                 'multiple' => true,
                 'choices' => Choices::getChoices(Tag::CATEGORIES),
                 'attr' => [
-                    'class' => 'multi-select w-max-220',
+                    'class' => 'w-max-220',
                     'placeholder' => 'placeholder.categories',
                     'size' => 1,
                 ],

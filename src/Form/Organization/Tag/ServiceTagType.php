@@ -32,7 +32,6 @@ class ServiceTagType extends AbstractType
                 'by_reference' => false,
                 'choices' => $this->tagRepo->findAllTags(),
                 'attr' => [
-                    'class' => 'multi-select',
                     'placeholder' => 'placeholder.tags',
                     'size' => 1,
                 ],

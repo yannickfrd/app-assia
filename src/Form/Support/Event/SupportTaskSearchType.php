@@ -38,7 +38,7 @@ class SupportTaskSearchType extends AbstractType
                 'multiple' => true,
                 'choices' => Choices::getChoices(Task::STATUS),
                 'attr' => [
-                    'class' => 'multi-select w-max-220',
+                    'class' => 'w-max-220',
                     'placeholder' => 'placeholder.status',
                     'size' => 1,
                 ],
@@ -48,7 +48,6 @@ class SupportTaskSearchType extends AbstractType
                 'multiple' => true,
                 'choices' => Choices::getChoices(Task::LEVEL),
                 'attr' => [
-                    'class' => 'multi-select',
                     'placeholder' => 'task.level.placeholder',
                     'size' => 1,
                 ],
@@ -62,7 +61,7 @@ class SupportTaskSearchType extends AbstractType
                 'choices' => $this->tagRepo->getTagsByService($options['service'], 'event'),
                 'choice_label' => 'name',
                 'attr' => [
-                    'class' => 'multi-select w-max-220',
+                    'class' => 'w-max-220',
                     'placeholder' => 'placeholder.tags',
                     'size' => 1,
                 ],

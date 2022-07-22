@@ -40,7 +40,7 @@ class EvalHousingGroupType extends AbstractType
                 'required' => false,
             ])
             ->add('siaoRecommendation', ChoiceType::class, [
-                'choices' => Choices::getChoices(EvalHousingGroup::SIAO_RECOMMENDATION),
+                'choices' => $this->getEditSiaoRecommendations(),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
@@ -243,5 +243,15 @@ class EvalHousingGroupType extends AbstractType
             'data_class' => EvalHousingGroup::class,
             'translation_domain' => 'evaluation',
         ]);
+    }
+
+    public static function getEditSiaoRecommendations(): array // To delete
+    {
+        $recommandations = EvalHousingGroup::SIAO_RECOMMENDATIONS;
+
+        unset($recommandations[10]);
+        unset($recommandations[20]);
+
+        return Choices::getChoices($recommandations);
     }
 }

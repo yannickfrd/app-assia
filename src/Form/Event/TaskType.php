@@ -118,7 +118,6 @@ class TaskType extends AbstractType
                     $this->tagRepo->findAllTags('task'),
                 'choice_label' => 'name',
                 'attr' => [
-                    'class' => 'multi-select',
                     'placeholder' => 'placeholder.tags',
                     'size' => 1,
                 ],

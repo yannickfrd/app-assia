@@ -164,17 +164,6 @@ class SupportPersonRepository extends ServiceEntityRepository
 
         $qb = $this->filters($qb, $search);
 
-        if (AvdlSupportSearch::DIAG === $search->getDiagOrSupport()) {
-            $qb->andWhere('avdl.diagStartDate IS NOT NULL');
-        }
-        if (AvdlSupportSearch::SUPPORT === $search->getDiagOrSupport()) {
-            $qb->andWhere('avdl.supportStartDate IS NOT NULL');
-        }
-        if ($search->getSupportType()) {
-            $qb->andWhere('avdl.supportType IN (:supportType)')
-            ->setParameter('supportType', $search->getSupportType());
-        }
-
         return $qb
             ->orderBy('sg.updatedAt', 'DESC')
             ->getQuery()
@@ -196,15 +185,6 @@ class SupportPersonRepository extends ServiceEntityRepository
         ;
 
         $qb = $this->filters($qb, $search);
-
-        if ($search->getHotels()) {
-            $qb = $this->addOrWhere($qb, 'pg.place', $search->getHotels());
-        }
-
-        if ($search->getLevelSupport()) {
-            $qb->andWhere('hs.levelSupport IN (:levelSupport)')
-            ->setParameter('levelSupport', $search->getLevelSupport());
-        }
 
         return $qb
             ->orderBy('sg.updatedAt', 'DESC')
@@ -331,118 +311,6 @@ class SupportPersonRepository extends ServiceEntityRepository
     }
 
     /**
-     * Donne le Querybuilder d'un suivi.
-     */
-    protected function getSupportsQuery(): QueryBuilder
-    {
-        return $this->createQueryBuilder('sp')
-        //     $qb->select('DISTINCT sp')
-        //         ->groupBy('sp.id');
-            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, birthdate, gender}')
-            ->leftJoin('sp.supportGroup', 'sg')->addSelect('sg')
-            ->leftJoin('sg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople, siSiaoId}')
-            ->leftJoin('sg.referent', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
-            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, type, coefficient}')
-            ->leftJoin('sg.subService', 'ss')->addSelect('PARTIAL ss.{id, name}')
-            ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
-            ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')
-            ->leftJoin('sg.originRequest', 'origin')->addSelect('origin')
-            ->leftJoin('origin.organization', 'orga')->addSelect('PARTIAL orga.{id, name}')
-        ;
-    }
-
-    protected function getSupportsOfServiceQuery(): QueryBuilder
-    {
-        return $this->getSupportsQuery()
-            ->leftJoin('sg.avdl', 'avdl')->addSelect('avdl')
-            ->leftJoin('sg.hotelSupport', 'hs')->addSelect('hs')
-        ;
-    }
-
-    /**
-     * Filtre la recherche.
-     */
-    protected function filters(QueryBuilder $qb, $search): QueryBuilder
-    {
-        if (!$this->user->hasRole('ROLE_SUPER_ADMIN')) {
-            $qb->andWhere('s.id IN (:services)')
-                ->setParameter('services', $this->user->getServices());
-        }
-
-        if ($search->getDeleted() && $this->user->hasRole('ROLE_SUPER_ADMIN')) {
-            $this->disableFilter($this->_em, 'softdeleteable');
-            $qb->andWhere('sp.deletedAt IS NOT NULL');
-        }
-
-        if ($search->getHead()) {
-            $qb->andWhere('sp.head = :head')
-                ->setParameter('head', $search->getHead());
-        }
-
-        if ($search->getFullname()) {
-            $date = \DateTime::createFromFormat('d/m/Y', $search->getFullname()) ?? false;
-            $int = ((int) $search->getFullname());
-            if ($date) {
-                $qb->andWhere('p.birthdate = :birthdate')
-                    ->setParameter('birthdate', $date->format('Y-m-d'));
-            } elseif ($int > 0) {
-                $qb->andWhere('g.siSiaoId = :id')
-                    ->setParameter('id', $int);
-            } else {
-                $qb->andWhere("CONCAT(p.lastname,' ' ,p.firstname) LIKE :fullname")
-                    ->setParameter('fullname', '%'.$search->getFullname().'%');
-            }
-        }
-
-        $qb = $this->addOrganizationFilters($qb, $search);
-
-        if ($search->getStatus()) {
-            $qb = $this->addOrWhere($qb, 'sp.status', $search->getStatus());
-        }
-
-        $supportDates = $search->getSupportDates();
-
-        if (1 === $supportDates) {
-            if ($search->getStart()) {
-                $qb->andWhere('sp.startDate >= :start')
-                    ->setParameter('start', $search->getStart());
-            }
-            if ($search->getEnd()) {
-                $qb->andWhere('sp.startDate <= :end')
-                    ->setParameter('end', $search->getEnd());
-            }
-        }
-        if (2 === $supportDates) {
-            if ($search->getStart()) {
-                if ($search->getStart()) {
-                    $qb->andWhere('sp.endDate >= :start')
-                        ->setParameter('start', $search->getStart());
-                }
-                if ($search->getEnd()) {
-                    $qb->andWhere('sp.endDate <= :end')
-                        ->setParameter('end', $search->getEnd());
-                }
-            }
-        }
-        if (3 === $supportDates || !$supportDates) {
-            if ($search->getStart()) {
-                $qb->andWhere('sp.endDate >= :start OR sp.endDate IS NULL')
-                    ->setParameter('start', $search->getStart());
-            }
-            if ($search->getEnd()) {
-                $qb->andWhere('sp.startDate <= :end')
-                    ->setParameter('end', $search->getEnd());
-            }
-        }
-
-        if ($search->getFamilyTypologies()) {
-            $qb = $this->addOrWhere($qb, 'g.familyTypology', $search->getFamilyTypologies());
-        }
-
-        return $qb;
-    }
-
-    /**
      * Donne le nombre de suivis des personnes du groupe.
      */
     public function countSupportsOfPeople(PeopleGroup $peopleGroup): int
@@ -546,20 +414,6 @@ class SupportPersonRepository extends ServiceEntityRepository
     }
 
     /**
-     * Vérifie si la personne est déjà dans le suivi social.
-     */
-    protected function personIsInSupport(SupportPerson $supportPerson, PlaceGroup $placeGroup): bool
-    {
-        foreach ($placeGroup->getPlacePeople() as $placePerson) {
-            if ($placePerson->getPerson() === $supportPerson->getPerson()) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * Donne tous les suivis sociaux de l'utilisateur.
      */
     public function getSupportsOfUserQueryBuilder(User $user, $maxResult = null): QueryBuilder
@@ -600,5 +454,171 @@ class SupportPersonRepository extends ServiceEntityRepository
         return $this->getPeopleOfSupportQueryBuilder($user, $supportGroupId)
             ->getQuery()
             ->getArrayResult();
+    }
+
+    /**
+     * Donne le Querybuilder d'un suivi.
+     */
+    private function getSupportsQuery(): QueryBuilder
+    {
+        return $this->createQueryBuilder('sp')
+        //     $qb->select('DISTINCT sp')
+        //         ->groupBy('sp.id');
+            ->leftJoin('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, birthdate, gender}')
+            ->leftJoin('sp.supportGroup', 'sg')->addSelect('sg')
+            ->leftJoin('sg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople, siSiaoId}')
+            ->leftJoin('sg.referent', 'u')->addSelect('PARTIAL u.{id, firstname, lastname}')
+            ->leftJoin('sg.service', 's')->addSelect('PARTIAL s.{id, name, type, coefficient}')
+            ->leftJoin('sg.subService', 'ss')->addSelect('PARTIAL ss.{id, name}')
+            ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name}')
+            ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name}')
+            ->leftJoin('sg.originRequest', 'origin')->addSelect('origin')
+            ->leftJoin('origin.organization', 'orga')->addSelect('PARTIAL orga.{id, name}')
+        ;
+    }
+
+    private function getSupportsOfServiceQuery(): QueryBuilder
+    {
+        return $this->getSupportsQuery()
+            ->leftJoin('sg.avdl', 'avdl')->addSelect('avdl')
+            ->leftJoin('sg.hotelSupport', 'hs')->addSelect('hs')
+        ;
+    }
+
+    /**
+     * Vérifie si la personne est déjà dans le suivi social.
+     */
+    private function personIsInSupport(SupportPerson $supportPerson, PlaceGroup $placeGroup): bool
+    {
+        foreach ($placeGroup->getPlacePeople() as $placePerson) {
+            if ($placePerson->getPerson() === $supportPerson->getPerson()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function filters(QueryBuilder $qb, $search): QueryBuilder
+    {
+        if (!$this->user->hasRole('ROLE_SUPER_ADMIN')) {
+            $qb->andWhere('s.id IN (:services)')
+                ->setParameter('services', $this->user->getServices());
+        }
+
+        if ($search->getDeleted() && $this->user->hasRole('ROLE_SUPER_ADMIN')) {
+            $this->disableFilter($this->_em, 'softdeleteable');
+            $qb->andWhere('sp.deletedAt IS NOT NULL');
+        }
+
+        if ($search->getHead()) {
+            $qb->andWhere('sp.head = :head')
+                ->setParameter('head', $search->getHead());
+        }
+
+        if ($search->getFullname()) {
+            $date = \DateTime::createFromFormat('d/m/Y', $search->getFullname()) ?? false;
+            $int = ((int) $search->getFullname());
+            if ($date) {
+                $qb->andWhere('p.birthdate = :birthdate')
+                    ->setParameter('birthdate', $date->format('Y-m-d'));
+            } elseif ($int > 0) {
+                $qb->andWhere('g.siSiaoId = :id')
+                    ->setParameter('id', $int);
+            } else {
+                $qb->andWhere("CONCAT(p.lastname,' ' ,p.firstname) LIKE :fullname")
+                    ->setParameter('fullname', '%'.$search->getFullname().'%');
+            }
+        }
+
+        $qb = $this->addOrganizationFilters($qb, $search);
+
+        if ($search->getStatus()) {
+            $qb = $this->addOrWhere($qb, 'sp.status', $search->getStatus());
+        }
+
+        $supportDates = $search->getSupportDates();
+
+        if (1 === $supportDates) {
+            if ($search->getStart()) {
+                $qb->andWhere('sp.startDate >= :start')
+                    ->setParameter('start', $search->getStart());
+            }
+            if ($search->getEnd()) {
+                $qb->andWhere('sp.startDate <= :end')
+                    ->setParameter('end', $search->getEnd());
+            }
+        }
+        if (2 === $supportDates) {
+            if ($search->getStart()) {
+                if ($search->getStart()) {
+                    $qb->andWhere('sp.endDate >= :start')
+                        ->setParameter('start', $search->getStart());
+                }
+                if ($search->getEnd()) {
+                    $qb->andWhere('sp.endDate <= :end')
+                        ->setParameter('end', $search->getEnd());
+                }
+            }
+        }
+        if (3 === $supportDates || !$supportDates) {
+            if ($search->getStart()) {
+                $qb->andWhere('sp.endDate >= :start OR sp.endDate IS NULL')
+                    ->setParameter('start', $search->getStart());
+            }
+            if ($search->getEnd()) {
+                $qb->andWhere('sp.startDate <= :end')
+                    ->setParameter('end', $search->getEnd());
+            }
+        }
+
+        if ($search->getFamilyTypologies()) {
+            $qb = $this->addOrWhere($qb, 'g.familyTypology', $search->getFamilyTypologies());
+        }
+
+        if ($search instanceof AvdlSupportSearch) {
+            $qb = $this->filtersAvdlSupport($qb, $search);
+        } elseif ($search instanceof HotelSupportSearch) {
+            $qb = $this->filtersHotelSupport($qb, $search);
+        }
+
+        return $qb;
+    }
+
+    private function filtersAvdlSupport(QueryBuilder $qb, $search): QueryBuilder
+    {
+        if (AvdlSupportSearch::DIAG === $search->getDiagOrSupport()) {
+            $qb->andWhere('avdl.diagStartDate IS NOT NULL');
+        }
+        if (AvdlSupportSearch::SUPPORT === $search->getDiagOrSupport()) {
+            $qb->andWhere('avdl.supportStartDate IS NOT NULL');
+        }
+        if ($search->getSupportType()) {
+            $qb->andWhere('avdl.supportType IN (:supportType)')
+            ->setParameter('supportType', $search->getSupportType());
+        }
+
+        return $qb;
+    }
+
+    private function filtersHotelSupport(QueryBuilder $qb, $search): QueryBuilder
+    {
+        if ($search->getHotels()) {
+            $qb = $this->addOrWhere($qb, 'pg.place', $search->getHotels());
+        }
+
+        if ($search->getPriorityCriteria()) {
+            foreach ($search->getPriorityCriteria() as $criterion) {
+                $qb->andWhere('hs.priorityCriteria LIKE :priorityCriteria')
+                    ->setParameter('priorityCriteria', '%'.$criterion.'%');
+            }
+        }
+
+        if ($search->getLevelSupport()) {
+            $qb->andWhere('hs.levelSupport IN (:levelSupport)')
+                ->setParameter('levelSupport', $search->getLevelSupport());
+        }
+
+        return $qb;
     }
 }

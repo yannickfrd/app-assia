@@ -30,7 +30,6 @@ class TagType extends AbstractType
                 'multiple' => true,
                 'choices' => Choices::getChoices(Tag::CATEGORIES),
                 'attr' => [
-                    'class' => 'multi-select',
                     'placeholder' => 'placeholder.categories',
                     'size' => 1,
                 ],

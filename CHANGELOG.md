@@ -1,5 +1,20 @@
 # CHANGELOG
 
+## Version 4.1.0 - 22/07/2022
+
+Edit hotel support and evaluation (priority criteria, recommendations):
+
+* [Evaluation][HotelSupport] Edit siao recommendations
+* [HotelSupport] Add priority criteria field
+* Fix css for input fields with readonly attribut
+* Fix position location search (add css class 'position-relative')
+* Remove css class 'multi-select' (unused)
+* Update symfony/maker-bundle to v1.44
+* [changecChecker.js] Fix if href includes javascript
+* [.env] Update db server version mysql to mariadb
+* [tests] Fix siao recommandation values
+* [ExportController] Edit alert type 'primary' to 'success'
+
 ## Version 4.0.2 - 20/07/2022
 
 Update to Bootstrap 5.1 to 5.2 (#185):

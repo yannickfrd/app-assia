@@ -67,7 +67,6 @@ class SecurityUserType extends AbstractType
                 'choices' => $this->getRoles(),
                 'multiple' => true,
                 'attr' => [
-                    'class' => 'multi-select',
                     'placeholder' => 'placeholder.select',
                     'size' => 1,
                 ],
