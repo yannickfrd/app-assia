@@ -32,7 +32,7 @@ class SupportSearchType extends AbstractType
                 'multiple' => true,
                 'choices' => Choices::getChoices(SupportGroup::STATUS),
                 'attr' => [
-                    'class' => 'multi-select w-max-260',
+                    'class' => 'w-max-260',
                     'placeholder' => 'placeholder.status',
                     'size' => 1,
                 ],

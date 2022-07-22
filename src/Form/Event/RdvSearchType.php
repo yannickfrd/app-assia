@@ -66,7 +66,7 @@ class RdvSearchType extends AbstractType
                 'multiple' => true,
                 'choices' => Choices::getChoices(Rdv::STATUS),
                 'attr' => [
-                    'class' => 'multi-select w-max-220',
+                    'class' => 'w-max-220',
                     'placeholder' => 'placeholder.status',
                     'size' => 1,
                 ],
@@ -86,7 +86,7 @@ class RdvSearchType extends AbstractType
                     return $repo->findUsersOfCurrentUserQueryBuilder($this->user);
                 },
                 'attr' => [
-                    'class' => 'multi-select w-min-180 w-max-220',
+                    'class' => 'w-min-180 w-max-220',
                     'placeholder' => 'event.users.placeholder',
                     'size' => 1,
                 ],
@@ -100,7 +100,7 @@ class RdvSearchType extends AbstractType
                 'choices' => $this->tagRepo->getTagsByService($options['service'], 'rdv'),
                 'choice_label' => 'name',
                 'attr' => [
-                    'class' => 'multi-select w-max-220',
+                    'class' => 'w-max-220',
                     'placeholder' => 'placeholder.tags',
                     'size' => 1,
                 ],

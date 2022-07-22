@@ -42,7 +42,7 @@ class SupportDocumentSearchType extends AbstractType
                 'choices' => $this->tagRepo->getTagsByService($service, 'document'),
                 'choice_label' => 'name',
                 'attr' => [
-                    'class' => 'multi-select w-max-220',
+                    'class' => 'w-max-220',
                     'placeholder' => 'placeholder.tags',
                     'size' => 1,
                 ],

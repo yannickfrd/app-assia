@@ -71,7 +71,7 @@ class TaskSearchType extends AbstractType
                 'multiple' => true,
                 'choices' => Choices::getChoices(Task::LEVEL),
                 'attr' => [
-                    'class' => 'multi-select w-max-220',
+                    'class' => 'w-max-220',
                     'size' => 1,
                     'placeholder' => 'task.level.placeholder',
                 ],
@@ -81,7 +81,7 @@ class TaskSearchType extends AbstractType
                 'multiple' => true,
                 'choices' => Choices::getChoices(Task::STATUS),
                 'attr' => [
-                    'class' => 'multi-select w-max-220',
+                    'class' => 'w-max-220',
                     'placeholder' => 'placeholder.status',
                     'size' => 1,
                 ],
@@ -104,7 +104,7 @@ class TaskSearchType extends AbstractType
                     return $repo->findUsersOfCurrentUserQueryBuilder($this->user);
                 },
                 'attr' => [
-                    'class' => 'multi-select w-max-220',
+                    'class' => 'w-max-220',
                     'placeholder' => 'event.users.placeholder',
                     'size' => 1,
                 ],
@@ -118,7 +118,7 @@ class TaskSearchType extends AbstractType
                 'choices' => $this->tagRepo->getTagsByService($options['service'], 'event'),
                 'choice_label' => 'name',
                 'attr' => [
-                    'class' => 'multi-select w-max-220',
+                    'class' => 'w-max-220',
                     'placeholder' => 'placeholder.tags',
                     'size' => 1,
                 ],

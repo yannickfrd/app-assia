@@ -23,7 +23,7 @@ class HotelSupportSearchType extends AbstractType
                 'multiple' => true,
                 'choices' => Choices::getChoices(HotelSupport::STATUS),
                 'attr' => [
-                    'class' => 'multi-select w-max-260',
+                    'class' => 'w-max-260',
                     'placeholder' => 'placeholder.status',
                     'size' => 1,
                 ],
@@ -37,7 +37,7 @@ class HotelSupportSearchType extends AbstractType
                     return $repo->getHotelPlacesQueryBuilder();
                 },
                 'attr' => [
-                    'class' => 'multi-select w-min-220 w-max-260',
+                    'class' => 'w-min-220 w-max-260',
                     'placeholder' => 'placeholder.hotels',
                     'size' => 1,
                 ],
@@ -47,7 +47,7 @@ class HotelSupportSearchType extends AbstractType
                 'multiple' => true,
                 'choices' => Choices::getChoices(HotelSupport::SUPPORT_LEVELS),
                 'attr' => [
-                    'class' => 'multi-select w-min-220 w-max-220',
+                    'class' => 'w-min-220 w-max-220',
                     'placeholder' => 'placeholder.supportLevels',
                     'size' => 1,
                 ],
@@ -62,7 +62,7 @@ class HotelSupportSearchType extends AbstractType
                 'multiple' => true,
                 'choices' => Choices::getChoices(HotelSupport::END_REASONS),
                 'attr' => [
-                    'class' => 'multi-select w-max-220',
+                    'class' => 'w-max-220',
                     'placeholder' => 'support.endReasons.placeholder',
                     'size' => 1,
                 ],

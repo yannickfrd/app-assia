@@ -34,7 +34,7 @@ class TagType extends AbstractType
                 },
                 'block_prefix' => 'wrapped_text',
                 'attr' => [
-                    'class' => 'multi-select col-9',
+                    'class' => 'col-9',
                     'placeholder' => 'placeholder.tags',
                     'size' => 1,
                 ],

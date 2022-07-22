@@ -46,7 +46,7 @@ class ServiceDeviceReferentSearchType extends AbstractType
                         return $repo->getPoleQueryBuilder();
                     },
                     'attr' => [
-                        'class' => 'multi-select w-min-180 w-max-240',
+                        'class' => 'w-min-180 w-max-240',
                         'placeholder' => 'placeholder.pole',
                         'size' => 1,
                     ],
@@ -64,7 +64,7 @@ class ServiceDeviceReferentSearchType extends AbstractType
                         return $repo->getServicesOfUserQueryBuilder($this->user, $dataClass);
                     },
                     'attr' => [
-                        'class' => 'multi-select w-min-180 w-max-240',
+                        'class' => 'w-min-180 w-max-240',
                         'placeholder' => 'placeholder.service',
                         'size' => 1,
                     ],
@@ -82,7 +82,7 @@ class ServiceDeviceReferentSearchType extends AbstractType
                         return $repo->getSubServicesOfUserQueryBuilder($this->user, $service, $dataClass);
                     },
                     'attr' => [
-                        'class' => 'multi-select w-min-180 w-max-240',
+                        'class' => 'w-min-180 w-max-240',
                         'placeholder' => 'placeholder.subService',
                         'size' => 1,
                     ],
@@ -100,7 +100,7 @@ class ServiceDeviceReferentSearchType extends AbstractType
                         return $repo->getDevicesOfUserQueryBuilder($this->user, $service, $dataClass);
                     },
                     'attr' => [
-                        'class' => 'multi-select w-min-180 w-max-240',
+                        'class' => 'w-min-180 w-max-240',
                         'placeholder' => 'placeholder.device',
                         'size' => 1,
                     ],
@@ -118,7 +118,7 @@ class ServiceDeviceReferentSearchType extends AbstractType
                         return $repo->getReferentsOfServicesQueryBuilder($this->user, $service, $dataClass);
                     },
                     'attr' => [
-                        'class' => 'multi-select w-min-180 w-max-240',
+                        'class' => 'w-min-180 w-max-240',
                         'placeholder' => 'placeholder.referent',
                         'size' => 1,
                     ],

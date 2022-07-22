@@ -25,7 +25,7 @@ class AvdlSupportSearchType extends AbstractType
                 'multiple' => true,
                 'choices' => Choices::getChoices(Avdl::SUPPORT_TYPE),
                 'attr' => [
-                    'class' => 'multi-select w-min-240 w-max-260',
+                    'class' => 'w-min-240 w-max-260',
                     'placeholder' => 'placeholder.supportType',
                     'size' => 1,
                 ],
