@@ -7,6 +7,7 @@ use App\Entity\Support\SupportGroup;
 use App\Entity\Traits\ContactEntityTrait;
 use App\Entity\Traits\CreatedUpdatedEntityTrait;
 use App\Entity\Traits\DisableEntityTrait;
+use App\Entity\Traits\GeoLocationEntityTrait;
 use App\Entity\Traits\LocationEntityTrait;
 use App\Form\Utils\Choices;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -27,6 +28,7 @@ class Service
 {
     use ContactEntityTrait;
     use LocationEntityTrait;
+    use GeoLocationEntityTrait;
     use TagTrait;
     use CreatedUpdatedEntityTrait;
     use DisableEntityTrait;

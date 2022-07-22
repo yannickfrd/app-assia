@@ -50,10 +50,7 @@ class HotelSupportType extends AbstractType
             ])
             ->add('ssd', null, [
                 'label' => 'hotelSupport.ssd.city',
-                'attr' => [
-                    'class' => 'js-city',
-                    'readonly' => true,
-                ],
+                'attr' => ['readonly' => true],
             ])
             ->add('evaluationDate', DateType::class, [
                 'widget' => 'single_text',

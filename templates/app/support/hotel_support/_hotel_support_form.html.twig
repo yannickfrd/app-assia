@@ -29,11 +29,16 @@
 						{{ form_row(form.hotelSupport.reasonNoInclusion) }}</div>
 				</div>
 			</div>
-			<div class="row" id="ssd_location" data-parent-field="support_device" 
-				data-options="{{ ASE_MAB }}|{{ ASE_HEB }}">
-				<div class="col-md-6">{{ form_row(form.hotelSupport._searchSsd) }}</div>
-				<div class="col-md-6">{{ form_row(form.hotelSupport.ssd) }}</div>
-			</div>
+            <div class="row" data-parent-field="support_device" data-options="{{ ASE_MAB }}|{{ ASE_HEB }}"
+				data-location-search="city" data-location-dept="{{ support.service.dept }}"
+			>
+                <div class="col-md-6 position-relative">
+                    {{ form_row(form.hotelSupport._searchSsd, {attr: {'data-location-type': 'search'}}) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.hotelSupport.ssd, {attr: {'data-location-type': 'city'}}) }}
+                </div>
+            </div>
 		{% endif %}
 		<div class="row">
 			<div class="col-md-12">{{ form_widget(form.originRequest.comment) }}</div>
@@ -84,12 +89,11 @@
 					<div class="col-md-6" data-parent-field="support_endDate" data-check-valid="endDate">
 						{{ form_row(form.hotelSupport.endSupportDepartment) }}</div>
 				</div>
-				<div class="row" data-parent-field="support_hotelSupport_endSupportDepartment" 
-					data-options="75|77|78|91|92|93|94|95" id="support_end_location">
-					<div class="col-md-6">{{ form_row(form._endLocationSearch) }}</div>
-					<div class="col-md-6">{{ form_row(form.endLocationAddress) }}</div>
-					<div class="col-md-6">{{ form_row(form.endLocationCity) }}</div>
-					<div class="col-md-6">{{ form_row(form.endLocationZipcode) }}</div>
+				<div data-parent-field="support_hotelSupport_endSupportDepartment" data-options="75|77|78|91|92|93|94|95">
+					{% include '_shared/_form_end_location.html.twig' with {
+						'location_lat': support.service.lat,
+						'location_lon': support.service.lon,
+					} %}
 				</div>
 				<div class="row">
 					<div class="col-md-12">{{ form_widget(form.comment) }}</div>

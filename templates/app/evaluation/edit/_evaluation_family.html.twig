@@ -63,12 +63,25 @@
                                 }) }}
                             </div>
                         </div>
-                        <div class="row mb-3" id="school_location_{{ key }}" data-parent-field="{{ prefix_id }}_childcareOrSchool" 
-                            data-options="1">
-                            <div class="col-md-6">{{ form_row(eval_person.evalFamilyPerson.schoolSearch) }}</div>
-                            <div class="col-md-6">{{ form_row(eval_person.evalFamilyPerson.schoolCity) }}</div>
-                            <div class="col-md-6">{{ form_row(eval_person.evalFamilyPerson.schoolZipcode) }}</div>
-                            <div class="col-md-6">{{ form_row(eval_person.evalFamilyPerson.schoolChildCarePrecision) }}</div>
+                        <div class="row mb-3" data-parent-field="{{ prefix_id }}_childcareOrSchool" data-options="1"
+                            data-location-search="city" data-location-lat="{{ support.service.lat }}"
+                            data-location-lon="{{ support.service.lon }}"
+                        >
+                            <div class="col-md-6 position-relative">
+                                {{ form_row(eval_person.evalFamilyPerson.schoolSearch, {
+							        attr: {'data-location-type': 'search'}}) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(eval_person.evalFamilyPerson.schoolCity, {
+							        attr: {'data-location-type': 'city'}}) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(eval_person.evalFamilyPerson.schoolZipcode, {
+							        attr: {'data-location-type': 'zipcode'}}) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(eval_person.evalFamilyPerson.schoolChildCarePrecision) }}
+                            </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">{{ form_row(eval_person.evalFamilyPerson.childToHost) }}</div>

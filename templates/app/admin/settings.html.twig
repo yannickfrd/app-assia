@@ -23,7 +23,7 @@
             <div class="row mb-3">
                 <div class="col-md-6">{{ form_row(form.organizationName) }}</div>
             </div>
-
+            {% include '_shared/_form_location.html.twig' %}
             <hr>
 
             <div class="row">
@@ -86,3 +86,6 @@
     </div>
 {% endblock %}
 
+{% block javascripts %}
+    {{ encore_entry_script_tags('location-search') }}
+{% endblock javascripts %}

@@ -101,24 +101,15 @@ class SupportGroupType extends AbstractType
             ])
             ->add('endLocationAddress', null, [
                 'label' => 'location.address_auto',
-                'attr' => [
-                    'class' => 'js-address',
-                    'readonly' => true,
-                ],
+                'attr' => ['readonly' => true],
             ])
             ->add('endLocationCity', null, [
                 'label' => 'location.city_auto',
-                'attr' => [
-                    'class' => 'js-city',
-                    'readonly' => true,
-                ],
+                'attr' => ['readonly' => true],
             ])
             ->add('endLocationZipcode', null, [
                 'label' => 'location.zipcode_auto',
-                'attr' => [
-                    'class' => 'js-zipcode',
-                    'readonly' => true,
-                ],
+                'attr' => ['readonly' => true],
             ])
             ->add('agreement', CheckboxType::class, [
                 'required' => true,

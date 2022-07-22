@@ -2,8 +2,10 @@
 
 namespace App\Entity\Admin;
 
-use App\Repository\Admin\SettingRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Traits\LocationEntityTrait;
+use App\Repository\Admin\SettingRepository;
+use App\Entity\Traits\GeoLocationEntityTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -13,6 +15,8 @@ class Setting
 {
     use TaskSettingTrait;
     use DeletionSettingTrait;
+    use LocationEntityTrait;
+    use GeoLocationEntityTrait;
 
     public const DEFAULT_SOFT_DELETION_DELAY = 24;
     public const DEFAULT_HARD_DELETION_DELAY = 12;

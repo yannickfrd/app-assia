@@ -6,7 +6,7 @@ import {Modal} from "bootstrap";
 import RdvModel from "./model/RdvModel";
 import ApiCalendar from "../../api/ApiCalendar";
 import WidgetCollectionManager from "../../utils/form/WidgetCollectionManager";
-import SearchLocation from '../../utils/searchLocation'
+import LocationSearcher from '../../utils/LocationSearcher'
 
 export default class RdvForm {
     /**
@@ -22,7 +22,7 @@ export default class RdvForm {
         this.modalRdvElt = document.getElementById('modal-rdv')
         this.rdvModal = new Modal(this.modalRdvElt)
 
-        new SearchLocation('rdv_search_location')
+        document.querySelectorAll('[data-location-search]').forEach(elt => new LocationSearcher(elt))
 
         this.btnAddAlertElt = document.querySelector('button[data-add-widget]')
         this.btnSaveRdvElt = this.modalRdvElt.querySelector('button[data-action="save-rdv"]')

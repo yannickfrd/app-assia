@@ -1,6 +1,6 @@
 import FormValidator from '../utils/form/formValidator'
 import FieldDisplayer from '../utils/form/fieldDisplayer'
-import SearchLocation from '../utils/searchLocation'
+import LocationSearcher from '../utils/LocationSearcher'
 import ItemsListManager from '../utils/form/itemsListManager'
 
 /**
@@ -19,14 +19,11 @@ export default class evaluation {
         })        
         
         new ItemsListManager('evaluation_evalHousingGroup__hsgHelps')
-        new SearchLocation('domiciliation_location')
         
         document.getElementById('accordion_eval_init').querySelectorAll('button[data-person-key]').forEach(personElt => {
             const key = personElt.dataset.personKey
             new ItemsListManager(`evaluation_evaluationPeople_${key}_evalSocialPerson__healthProblemType`)
-            new SearchLocation(`school_location_${key}`, 'city')
         })
-        
         
         document.querySelectorAll('.accordion-item .accordion-body').forEach(cardElt => {
             const btnPersonElts = cardElt.querySelectorAll('button[data-person-key]')
@@ -43,6 +40,8 @@ export default class evaluation {
               }
             })
         })
+
+        document.querySelectorAll('[data-location-search]').forEach(elt => new LocationSearcher(elt))
     }
     
     /**

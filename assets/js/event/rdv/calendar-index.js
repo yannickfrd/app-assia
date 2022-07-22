@@ -1,7 +1,8 @@
 import CalendarManager from './CalendarManager'
-import SearchLocation from '../../utils/searchLocation'
+import LocationSearcher from '../../utils/LocationSearcher'
 
 window.addEventListener('load', () => {
     new CalendarManager()
-    new SearchLocation('rdv_search_location')
+    
+    document.querySelectorAll('[data-location-search]').forEach(elt => new LocationSearcher(elt))
 })

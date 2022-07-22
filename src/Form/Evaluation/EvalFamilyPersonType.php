@@ -110,17 +110,11 @@ class EvalFamilyPersonType extends AbstractType
             ])
             ->add('schoolCity', null, [
                 'label' => 'school.city',
-                'attr' => [
-                    'class' => 'js-city',
-                    'readonly' => true,
-                ],
+                'attr' => ['readonly' => true],
             ])
             ->add('schoolZipcode', null, [
                 'label' => 'school.zipcode',
-                'attr' => [
-                    'class' => 'js-zipcode',
-                    'readonly' => true,
-                ],
+                'attr' => ['readonly' => true],
             ])
             ->add('childToHost', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalFamilyPerson::CHILD_TO_HOST),

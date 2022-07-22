@@ -4,25 +4,26 @@ declare(strict_types=1);
 
 namespace App\Controller\Organization;
 
-use App\Entity\Organization\Service;
-use App\Form\Model\Organization\ServiceSearch;
-use App\Form\Organization\Service\ServiceSearchType;
-use App\Form\Organization\Service\ServiceType;
-use App\Form\Organization\Tag\ServiceTagType;
-use App\Repository\Organization\PlaceRepository;
-use App\Repository\Organization\ServiceRepository;
-use App\Repository\Organization\SubServiceRepository;
-use App\Repository\Organization\TagRepository;
-use App\Repository\Organization\UserRepository;
-use App\Service\Export\ServiceExport;
 use App\Service\Pagination;
+use App\Entity\Admin\Setting;
+use App\Entity\Organization\Service;
+use App\Service\Export\ServiceExport;
 use App\Service\Service\ServiceManager;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Form\Organization\Tag\ServiceTagType;
+use Symfony\Component\HttpFoundation\Request;
+use App\Form\Model\Organization\ServiceSearch;
+use App\Form\Organization\Service\ServiceType;
+use App\Repository\Organization\TagRepository;
+use Symfony\Component\HttpFoundation\Response;
+use App\Repository\Organization\UserRepository;
+use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\Organization\PlaceRepository;
+use App\Repository\Organization\ServiceRepository;
+use App\Form\Organization\Service\ServiceSearchType;
+use App\Repository\Organization\SubServiceRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 
 final class ServiceController extends AbstractController
 {
@@ -74,6 +75,7 @@ final class ServiceController extends AbstractController
 
         return $this->render('app/organization/service/service.html.twig', [
             'form' => $form->createView(),
+            'setting' => $this->em->getRepository(Setting::class)->findOneBy([]),
         ]);
     }
 
@@ -125,6 +127,7 @@ final class ServiceController extends AbstractController
             'nb_places' => $nbPlaces,
             'form_tags' => $formTags->createView(),
             'service_tags' => $tags,
+            'setting' => $this->em->getRepository(Setting::class)->findOneBy([]),
         ]);
     }
 

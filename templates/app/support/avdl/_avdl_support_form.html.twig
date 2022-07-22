@@ -17,17 +17,11 @@
 		<div class="col-md-12" data-parent-field="support_originRequest_organization" data-options="*">{{ form_widget(form.originRequest.comment) }}</div>
 	</div>
 	<hr/>
-	<div class="row mb-3" id="support_location">
-		<div class="col-md-12"><h2 class="h5 mb-3">Adresse du suivi</h2></div>
-		<div class="col-md-6">{{ form_row(form.location._search) }}</div>
-		<div class="col-md-6">{{ form_row(form.location.address) }}</div>
-		<div class="col-md-6">{{ form_row(form.location.zipcode) }}</div>
-		<div class="col-md-6">{{ form_row(form.location.city) }}</div>
-		<div class="col-md-6">{{ form_row(form.location.commentLocation) }}</div>
-        {{ form_row(form.location.locationId) }}
-        {{ form_row(form.location.lat) }}
-        {{ form_row(form.location.lon) }}
-	</div>
+    {% include '_shared/_form_location.html.twig' with {
+        'location_title': 'Adresse du suivi',
+        'location_lat': support.service.lat,
+        'location_lon': support.service.lon,
+    } %}
 	<hr/>
 	{% if form.avdl is defined %}
 		<div data-parent-field="support_device" data-options="10">
@@ -71,11 +65,11 @@
 					<div class="col-md-6" data-parent-field="support_avdl_propoHousingDate">{{ form_row(form.avdl.propoResult) }}</div>
 					<div class="col-md-6" data-parent-field="support_avdl_propoResult" data-options="1">{{ form_row(form.avdl.accessHousingDate) }}</div>
 				</div>
-				<div class="row" data-parent-field="support_avdl_propoHousingDate" id="support_end_location">
-					<div class="col-md-6">{{ form_row(form._endLocationSearch) }}</div>
-					<div class="col-md-6">{{ form_row(form.endLocationAddress) }}</div>
-					<div class="col-md-6">{{ form_row(form.endLocationCity) }}</div>
-					<div class="col-md-6">{{ form_row(form.endLocationZipcode) }}</div>
+				<div data-parent-field="support_avdl_propoHousingDate">
+					{% include '_shared/_form_end_location.html.twig' with {
+						'location_lat': support.service.lat,
+						'location_lon': support.service.lon,
+					} %}
 				</div>
 				<div class="row">
 					<div class="col-md-12" data-parent-field="support_avdl_propoHousingDate">{{ form_widget(form.avdl.endSupportComment) }}</div>

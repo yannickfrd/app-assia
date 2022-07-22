@@ -1,36 +1,42 @@
-import Ajax from '../utils/ajax'
+import Ajax from './ajax'
 import Loader from './loader'
 
 /**
- * Gère la recherche d'une adresse ou d'une ville avec l'API adresse.data.gouv.fr.
- * Par défault, la recherche est par adresse complète (locationType = 'address'). Pour recercher seulement une ville : locationType = 'city'
+ * Control the search of an address or a city with API adresse.data.gouv.fr.
  */
-export default class SearchLocation {
+export default class LocationSearcher {
+    /**
+     * @param {HTMLElement} containerElt 
+     */
+    constructor(containerElt) {
+        this.loader = new Loader()
+        this.ajax = new Ajax(this.loader)
 
-    constructor(containerId, locationType = 'address', codeDepartement = null, lengthSearch = 3, time = 500, limit = 5, lat = 49.04, lon = 2.04) {
-        this.containerElt = document.getElementById(containerId)
-        if (this.containerElt) {
-            this.loader = new Loader()
-            this.ajax = new Ajax(this.loader)
-            this.searchElt = this.containerElt.querySelector('.js-search')
-            this.addressElt = this.containerElt.querySelector('.js-address')
-            this.cityElt = this.containerElt.querySelector('.js-city')
-            this.zipcodeElt = this.containerElt.querySelector('.js-zipcode')
-            this.locationIdElt = this.containerElt.querySelector('.js-locationId')
-            this.latElt = this.containerElt.querySelector('.js-lat')
-            this.lonElt = this.containerElt.querySelector('.js-lon')
-            this.resultsSearchElt = this.createResultsListElt()
-            this.locationType = locationType
-            this.codeDepartement = codeDepartement
-            this.lengthSearch = lengthSearch // Nombre de caractères minimum pour lancer la recherche
-            this.time = time // Durée en millisecondes
-            this.limit = limit // Nombre d'éléments retournés
-            this.lat = lat // Latitude
-            this.lon = lon // Longitude
-            this.results = null
-            this.countdownID = null
-            this.init()
-        }
+        this.containerElt = containerElt
+        
+        this.locationType = containerElt.dataset.locationSearch ?? 'address'
+        this.lengthSearch = containerElt.dataset.locationSearchLength ?? 3 // nb  keys before to launch the search
+        this.delay = containerElt.dataset.locationSearchDelay ?? 500 // delay in milliseconds
+        this.limit = containerElt.dataset.locationSearchLimit ?? 5 // number elements into the list
+        this.lat = containerElt.dataset.locationLat
+        this.lon = containerElt.dataset.locationLon
+
+        this.lat = this.lat !== '' ? this.lat : 48.85 // latitude
+        this.lon = this.lon !== '' ? this.lon : 2.35 // longitude
+        this.results = null
+        this.countdownID = null
+
+        this.searchElt = containerElt.querySelector('[data-location-type="search"]')
+        this.addressElt = containerElt.querySelector('[data-location-type="address"]')
+        this.cityElt = containerElt.querySelector('[data-location-type="city"]')
+        this.zipcodeElt = containerElt.querySelector('[data-location-type="zipcode"]')
+        this.locationIdElt = containerElt.querySelector('[data-location-type="locationId"]')
+        this.latElt = containerElt.querySelector('[data-location-type="lat"]')
+        this.lonElt = containerElt.querySelector('[data-location-type="lon"]')
+
+        this.resultsSearchElt = this.createResultsListElt()
+
+        this.init()
     }
 
     init() {
@@ -38,7 +44,8 @@ export default class SearchLocation {
     }
 
     /**
-     * Crée la liste des résultats.
+     * Create the list with results
+     * 
      * @return {HTMLDivElement}
      */
     createResultsListElt() {
@@ -55,15 +62,15 @@ export default class SearchLocation {
     }
 
     /**
-     * Timer avant de lancer la requête Ajax.
+     * Timer before to launch ajax request
      */
     timer() {
         clearInterval(this.countdownID)
-        this.countdownID = setTimeout(this.count.bind(this), this.time)
+        this.countdownID = setTimeout(this.count.bind(this), this.delay)
     }
 
     /**
-     * Compte le nombre de caractères saisis et lance la requête Ajax.
+     * Count number of Compte le nombre de caractères saisis et lance la requête Ajax.
      */
     count() {
         if (this.searchElt.value.length >= this.lengthSearch) {
@@ -73,16 +80,16 @@ export default class SearchLocation {
     }
 
     /**
-     * Donne l'url.
      * @returns {String}
      */
     getUrl() {
         const valueSearch = this.searchElt.value.replace(' ', '+')
-        const geo = `&lat=${this.lat}&lon=${this.lon}` // Donne une priorité géographique
+        const geo = `&lat=${this.lat}&lon=${this.lon}` // Get the geo priority with lat and lon
         let url = 'https://api-adresse.data.gouv.fr/search/?q='
+        const codeDepartment = this.containerElt.dataset.locationDept ?? null
 
-        if (this.codeDepartement) {
-            return 'https://geo.api.gouv.fr/communes?nom=' + valueSearch + '&codeDepartement=' + this.codeDepartement + '&limit=' + this.limit
+        if (codeDepartment) {
+            return 'https://geo.api.gouv.fr/communes?nom=' + valueSearch + '&codeDepartement=' + codeDepartment + '&limit=' + this.limit
         }
 
         if (this.locationType === 'city') {
@@ -93,11 +100,12 @@ export default class SearchLocation {
     }
 
     /**
-     * Donne la réponse Ajax.
+     * Get the Ajax response.
+     * 
      * @param {Object} data 
      */
     responseAjax(data) {
-        if (this.codeDepartement) {
+        if (this.containerElt.dataset.locationDept) {
             this.results = data
         } else {
             this.results = data.features
@@ -121,23 +129,22 @@ export default class SearchLocation {
     }
 
     /**
-     * Ajoute un élément à la liste des résultats.
+     * Add an item into the list of results.
      */
     addItem() {
         let i = 0
         this.results.forEach(result => {
             let itemElt = this.createItem(result, i)
             this.resultsSearchElt.appendChild(itemElt)
-            itemElt.addEventListener('click', () => {
-                this.updateLocation(itemElt.dataset.result)
-            })
+            itemElt.addEventListener('click', () => this.updateLocation(itemElt.dataset.result))
             i++
         })
         this.setWidthResultsSearchElt()
     }
 
     /**
-     * Créé un élément de résultat.
+     * Create a item.
+     * 
      * @param {Array} result 
      * @param {Number} i 
      * @return {HTMLElement}
@@ -152,11 +159,12 @@ export default class SearchLocation {
     }
 
     /**
-     * Donne le label de la recherche.
+     * Get the label of the search.
+     * 
      * @param {Array} result 
      */
     getLabel(result) {
-        if (this.codeDepartement) {
+        if (this.containerElt.dataset.locationDept) {
             return `${result.nom} (${result.codesPostaux[0]})`
         }
 
@@ -168,7 +176,7 @@ export default class SearchLocation {
     }
 
     /**
-     * Modifie la largeur de l'élément avec la liste des résultats.
+     * Edit the width of the results list element.
      */
     setWidthResultsSearchElt() {
         const styleSeachElt = window.getComputedStyle(this.searchElt)
@@ -177,13 +185,14 @@ export default class SearchLocation {
     }
 
     /**
-     * Met à jour les champs du formulaire.
+     * Update the input fields.
+     * 
      * @param {Number} i 
      */
     updateLocation(i) {
         const result = this.results[i]
 
-        if (this.codeDepartement) {
+        if (this.containerElt.dataset.locationDept) {
             return this.cityElt.value = result.nom
         }
         this.searchElt.value = result.properties.label
@@ -204,7 +213,7 @@ export default class SearchLocation {
     }
 
     /**
-     * Affiche 'Aucun résultat.'.
+     * Display 'no result'.
      */
     displayNoResult() {
         const spanElt = document.createElement('p')
@@ -214,7 +223,7 @@ export default class SearchLocation {
     }
 
     /**
-     * Supprime la liste des résultats au clic.
+     * Hide the results list with click.
      */
     hideListResults() {
         this.resultsSearchElt.classList.replace('fade-in', 'fade-out')

@@ -174,11 +174,25 @@
 					<div class="col-md-6" >{{ form_row(form.evalHousingGroup.startDomiciliationDate) }}</div>
 					<div class="col-md-6">{{ form_row(form.evalHousingGroup.endDomiciliationDate) }}</div>
 				</div>
-				<div class="row" id="domiciliation_location">
-					<div class="col-md-6">{{ form_row(form.evalHousingGroup._domiciliationSearch) }}</div>
-					<div class="col-md-6">{{ form_row(form.evalHousingGroup.domiciliationAddress) }}</div>
-					<div class="col-md-6">{{ form_row(form.evalHousingGroup.domiciliationCity) }}</div>
-					<div class="col-md-6">{{ form_row(form.evalHousingGroup.domiciliationZipcode) }}</div>
+				<div class="row" data-location-search="address" data-location-lat="{{ support.service.lat }}"
+					data-location-lon="{{ support.service.lon }}"
+				>
+					<div class="col-md-6 position-relative">
+						{{ form_row(form.evalHousingGroup._domiciliationSearch, {
+							attr: {'data-location-type': 'search'}}) }}
+					</div>
+					<div class="col-md-6">
+						{{ form_row(form.evalHousingGroup.domiciliationAddress, {
+							attr: {'data-location-type': 'address'}}) }}
+					</div>
+					<div class="col-md-6">
+						{{ form_row(form.evalHousingGroup.domiciliationCity, {
+							attr: {'data-location-type': 'city'}}) }}
+					</div>
+					<div class="col-md-6">
+						{{ form_row(form.evalHousingGroup.domiciliationZipcode, {
+							attr: {'data-location-type': 'zipcode'}}) }}
+					</div>
 				</div>
 			</div>
 		</div>

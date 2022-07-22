@@ -125,9 +125,6 @@ class EvalHousingGroupType extends AbstractType
                 'required' => false,
             ])
             ->add('hsgActionDept', null, [
-                'attr' => [
-                    'class' => 'js-zipcode',
-                ],
                 'help' => 'location.department.help',
             ])
             ->add('hsgActionRecordId')
@@ -153,29 +150,19 @@ class EvalHousingGroupType extends AbstractType
             ->add('_domiciliationSearch', null, [
                 'label' => ' ',
                 'attr' => [
-                    'class' => 'js-search',
                     'placeholder' => 'location.search.address.placeholder',
                     'autocomplete' => 'off',
                 ],
                 'mapped' => false,
             ])
             ->add('domiciliationAddress', null, [
-                'attr' => [
-                    'class' => 'js-address',
-                    'readonly' => true,
-                ],
+                'attr' => ['readonly' => true],
             ])
             ->add('domiciliationCity', null, [
-                'attr' => [
-                    'class' => 'js-city',
-                    'readonly' => true,
-                ],
+                'attr' => ['readonly' => true],
             ])
             ->add('domiciliationZipcode', null, [
-                'attr' => [
-                    'class' => 'js-zipcode',
-                    'readonly' => true,
-                ],
+                'attr' => ['readonly' => true],
             ])
             ->add('housingExperience', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
@@ -205,7 +192,6 @@ class EvalHousingGroupType extends AbstractType
                 ->add('housingAddress')
                 ->add('housingCity')
                 ->add('housingDept', null, [
-                    'attr' => ['class' => 'js-zipcode'],
                     'help' => 'location.department.help',
                 ])
                 ->add('expulsionInProgress', ChoiceType::class, [

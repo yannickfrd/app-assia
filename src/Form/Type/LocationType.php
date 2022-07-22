@@ -17,7 +17,7 @@ class LocationType extends AbstractType
             ->add('_search', null, [
                 'label' => $attr['seachLabel'] ?? '',
                 'attr' => [
-                    'class' => 'js-search',
+                    'data-location-type' => 'search',
                     'placeholder' => 'location.search.address.placeholder',
                     'autocomplete' => 'off',
                 ],
@@ -30,21 +30,21 @@ class LocationType extends AbstractType
             ->add('address', null, [
                 'label' => 'location.address_auto',
                 'attr' => [
-                    'class' => 'js-address',
+                    'data-location-type' => 'address',
                     'readonly' => true,
                 ],
             ])
             ->add('city', null, [
                 'label' => 'location.city_auto',
                 'attr' => [
-                    'class' => 'js-city',
+                    'data-location-type' => 'city',
                     'readonly' => true,
                 ],
             ])
             ->add('zipcode', null, [
                 'label' => 'location.zipcode_auto',
                 'attr' => [
-                    'class' => 'js-zipcode',
+                    'data-location-type' => 'zipcode',
                     'readonly' => true,
                 ],
             ]);
@@ -53,19 +53,19 @@ class LocationType extends AbstractType
             $builder
                 ->add('locationId', HiddenType::class, [
                     'attr' => [
-                        'class' => 'js-locationId',
+                        'data-location-type' => 'locationId',
                         'readonly' => true,
                     ],
                 ])
                 ->add('lat', HiddenType::class, [
                     'attr' => [
-                        'class' => 'js-lat',
+                        'data-location-type' => 'lat',
                         'readonly' => true,
                     ],
                 ])
                 ->add('lon', HiddenType::class, [
                     'attr' => [
-                        'class' => 'js-lon',
+                        'data-location-type' => 'lon',
                         'readonly' => true,
                     ],
                 ]);

@@ -46,12 +46,10 @@
             <div class="row mb-3">
                 <div class="col-md-6">{{ form_row(form.chief) }}</div>
             </div>
-            <div class="row mb-3" id="service_location">
-                <div class="col-md-6">{{ form_row(form.location._search) }}</div>
-                <div class="col-md-6">{{ form_row(form.location.address) }}</div>
-                <div class="col-md-6">{{ form_row(form.location.city) }}</div>
-                <div class="col-md-6">{{ form_row(form.location.zipcode) }}</div>
-            </div>
+            {% include '_shared/_form_location.html.twig' with {
+                'location_lat': setting.lat,
+                'location_lon': setting.lon,
+            } %}
             <div class="row mb-3">
                 <div class="col-md-6">{{ form_row(form.finessId) }}</div>
                 <div class="col-md-6">{{ form_row(form.siretId) }}</div>

@@ -51,16 +51,10 @@
                 <div class="col-md-6">{{ form_row(form.startDate) }}</div>
                 <div class="col-md-6">{{ form_row(form.endDate) }}</div>
             </div>
-            <div class="row mb-3" id="place_location">
-                <div class="col-md-6">{{ form_row(form.location._search) }}</div>
-                <div class="col-md-6">{{ form_row(form.location.address) }}</div>
-                <div class="col-md-6">{{ form_row(form.location.city) }}</div>
-                <div class="col-md-6">{{ form_row(form.location.zipcode) }}</div>
-                <div class="col-md-6">{{ form_row(form.location.commentLocation) }}</div>
-                {{ form_row(form.location.locationId) }}
-                {{ form_row(form.location.lat) }}
-                {{ form_row(form.location.lon) }}
-            </div>
+            {% include '_shared/_form_location.html.twig' with {
+                'location_lat': place.service.lat,
+                'location_lon': place.service.lon,
+            } %}
             <div class="row mb-3">
                 <div class="col-md-6">{{ form_row(form.placeType) }}</div>
                 <div class="col-md-6">{{ form_row(form.configuration) }}</div>

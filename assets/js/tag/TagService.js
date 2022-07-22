@@ -21,6 +21,10 @@ export default class TagService {
     }
 
     init() {
+        if (!this.formTags) {
+            return console.error('No form tags')
+        }
+
         this.tagsIds = () => {
             const tagsIds = []
             this.listBadge.querySelectorAll('span[data-tag-id]').forEach(span => {
