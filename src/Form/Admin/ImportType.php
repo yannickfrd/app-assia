@@ -23,7 +23,7 @@ class ImportType extends AbstractType
                     return $repo->createQueryBuilder('s')->orderBy('s.name', 'ASC');
                 },
                 'attr' => [
-                    'class' => 'multi-select w-max-220',
+                    'class' => 'w-max-220',
                     'placeholder' => 'placeholder.services',
                     'size' => 1,
                 ],

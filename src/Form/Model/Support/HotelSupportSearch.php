@@ -7,6 +7,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 class HotelSupportSearch extends SupportSearch
 {
     /** @var array */
+    private $priorityCriteria = [];
+
+    /** @var array */
     private $levelSupport = [];
 
     /** @var int|null */
@@ -21,6 +24,18 @@ class HotelSupportSearch extends SupportSearch
     public function __construct()
     {
         $this->hotels = new ArrayCollection();
+    }
+
+    public function getPriorityCriteria(): array
+    {
+        return $this->priorityCriteria;
+    }
+
+    public function setPriorityCriteria(array $priorityCriteria): self
+    {
+        $this->priorityCriteria = $priorityCriteria;
+
+        return $this;
     }
 
     public function getLevelSupport(): array

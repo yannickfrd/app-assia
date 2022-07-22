@@ -83,7 +83,7 @@ final class ExportController extends AbstractController
             if (null !== $export) {
                 return $this->json([
                     'action' => 'create',
-                    'alert' => 'primary',
+                    'alert' => 'success',
                     'msg' => $this->translator->trans('export.in_progress', [], 'app'),
                     'export' => $normalizer->normalize($export, 'json', ['groups' => 'show_export']),
                     'path' => $this->generateUrl('export_send', ['id' => $export->getId()]),
@@ -140,7 +140,7 @@ final class ExportController extends AbstractController
             return $this->json([
                 'action' => 'count',
                 'nbResults' => $nbResults = $supportPersonRepo->countSupportsToExport($search),
-                'alert' => 'primary',
+                'alert' => 'success',
                 'msg' => $this->translator->trans('export.count_results', [
                     'count' => number_format($nbResults, 0, '', ' '),
                 ], 'app'),

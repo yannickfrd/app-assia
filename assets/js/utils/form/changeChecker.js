@@ -21,7 +21,9 @@ export default class changeChecker {
         })
         this.aElts.forEach(aElt => {
             aElt.addEventListener('click', e => {
-                this.confirm(e)
+                if(false === aElt.href.includes('javascript')) {
+                    this.confirm(e)
+                }
             })
         })
     }

@@ -49,7 +49,6 @@ class PaymentSearchType extends AbstractType
             ->add('type', ChoiceType::class, [
                 'multiple' => true,
                 'attr' => [
-                    'class' => 'multi-select',
                     'placeholder' => 'placeholder.type',
                     'size' => 1,
                 ],

@@ -27,6 +27,14 @@ class HotelSupport
         97 => 'Autre',
     ];
 
+    public const PRIORITY_CRITERIA = [
+        10 => 'Ancienneté à l’hôtel',
+        20 => 'Déjà accompagné',
+        30 => 'Prêt au logement',
+        40 => 'Vulnérable',
+        97 => 'Autre critère',
+    ];
+
     public const REASON_NO_INCLUSION = [
         1 => 'Ménage injoignable',
         2 => 'Absence du ménage',
@@ -72,7 +80,7 @@ class HotelSupport
         99 => 'Inconnu',
     ];
 
-    public const RECOMMENDATIONS = EvalHousingGroup::SIAO_RECOMMENDATION;
+    public const RECOMMENDATIONS = EvalHousingGroup::SIAO_RECOMMENDATIONS;
     public const DEPARTMENTS = Choices::DEPARTMENTS;
 
     /**
@@ -81,6 +89,14 @@ class HotelSupport
      * @ORM\Column(type="integer")
      */
     private $id;
+
+    /**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $priorityCriteria;
+
+    /** @Groups("export") */
+    private $priorityCriteriaToString;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -191,6 +207,33 @@ class HotelSupport
     public function getStatusToString(): ?string
     {
         return $this->supportGroup ? self::STATUS[$this->supportGroup->getStatus()] : null;
+    }
+
+    public function getPriorityCriteria(): ?array
+    {
+        return $this->priorityCriteria;
+    }
+
+    public function getPriorityCriteriaToString(): ?string
+    {
+        if (null === $this->priorityCriteria) {
+            return null;
+        }
+
+        $priorityCriteria = [];
+
+        foreach ($this->priorityCriteria as $priorityCriterion) {
+            $priorityCriteria[] = self::PRIORITY_CRITERIA[$priorityCriterion];
+        }
+
+        return join(', ', $priorityCriteria);
+    }
+
+    public function setPriorityCriteria(?array $priorityCriteria): self
+    {
+        $this->priorityCriteria = $priorityCriteria;
+
+        return $this;
     }
 
     public function getReasonNoInclusion(): ?int

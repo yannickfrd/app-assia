@@ -44,6 +44,10 @@
     transition: all 0.5s ease;
 }
 
+[readonly],
+[readonly]:focus {
+    background-color: var(--bs-gray-200);
+}
 
 // Astérisque pour les champs obligatoires dans les formulaires
 label.required:after,

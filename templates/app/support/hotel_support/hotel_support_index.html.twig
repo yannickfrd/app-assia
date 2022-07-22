@@ -39,13 +39,14 @@
                             <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, 'Hôtel (Commune)', 'sg.city') }}</th>
                             <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, 'Date de demande', 'origin.orientationDate') }}</th>
                             <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, 'Orienteur', 'orga.name') }}</th>
+                            <th scope="col" class="align-middle th-w-120">{{ knp_pagination_sortable(supports, 'Critères de priorité', 'hs.priorityCriteria') }}</th>
                             <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, 'Début de suivi', 'sg.startDate') }}</th>
                             <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, 'Date de l\'évaluation', 'hs.evaluationDate') }}</th>
                             <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, 'Niveau d\'intervention', 'hs.levelSupport') }}</th>
                             <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, 'Date de signature convention', 'hs.agreementDate') }}</th>
                             <th scope="col" class="align-middle th-w-80">{{ knp_pagination_sortable(supports, 'Départemt d\'ancrage', 'hs.departmentAnchor') }}</th>
                             <th scope="col" class="align-middle th-date">{{ knp_pagination_sortable(supports, 'Fin de suivi', 'sg.endDate') }}</th>
-                            <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, 'Motif fin suivi', 'sp.endReason') }}</th>
+                            {# <th scope="col" class="align-middle th-w-100">{{ knp_pagination_sortable(supports, 'Motif fin suivi', 'sp.endReason') }}</th> #}
                         </tr>
                     </thead>
                     <tbody class="table-group-divider">
@@ -84,13 +85,14 @@
                                     <td class="align-middle">{{ support_group.originRequest and support_group.originRequest.organization and 
                                         support_group.originRequest.organization ? support_group.originRequest.organization.name ~ 
                                         (hotel_support.ssd ? ' (' ~  hotel_support.ssd ~ ')') }}</td>
+                                    <td class="align-middle">{{ hotel_support.priorityCriteriaToString }}</td>
                                     <td class="align-middle">{{ support_person.startDate ? support_person.startDate|date('d/m/Y') }}</td>
                                     <td class="align-middle">{{ hotel_support.evaluationDate ? hotel_support.evaluationDate|date('d/m/Y') }}</td>
                                     <td class="align-middle">{{ hotel_support.levelSupportToString }}</td>
                                     <td class="align-middle">{{ hotel_support.agreementDate ? hotel_support.agreementDate|date('d/m/Y') }}</td>
                                     <td class="align-middle">{{ hotel_support.departmentAnchorToString }}</td>
                                     <td class="align-middle">{{ support_person.endDate ? support_person.endDate|date('d/m/Y') }}</td>
-                                    <td class="align-middle">{{ support_person.endReasonToString }}</td>
+                                    {# <td class="align-middle">{{ support_person.endReasonToString }}</td> #}
                                 {% else %}
                                     <td class="align-middle" colspan="10"></td>
                                 {% endif %}

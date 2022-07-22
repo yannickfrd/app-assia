@@ -21,7 +21,6 @@ class ServiceIndicatorsSearchType extends AbstractType
                 'multiple' => true,
                 'choices' => Choices::getChoices(SupportGroup::STATUS),
                 'attr' => [
-                    'class' => 'multi-select',
                     'placeholder' => 'placeholder.status',
                     'size' => 1,
                 ],

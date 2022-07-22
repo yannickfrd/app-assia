@@ -115,13 +115,9 @@ class SupportGroup
         208 => 'ALTHO',
         400 => 'CADA - dispositif asile',
         304 => 'Colocation',
-        // 900 => 'Décès', // 900
-        // 700 => 'Départ volontaire de la personne', // 310
         500 => 'Détention',
         105 => 'Dispositif hivernal',
         502 => 'DLSAP',
-        // 701 => 'Exclusion de la structure', // 210
-        // 702 => 'Fin du contrat de séjour', // 220
         106 => 'Foyer maternel',
         010 => 'Hébergé chez des tiers',
         011 => 'Hébergé chez famille',
@@ -145,7 +141,6 @@ class SupportGroup
         301 => 'Logement social',
         305 => 'Maison de retraite',
         501 => 'Placement extérieur',
-        // 704 => "Retour dans le pays d'origine", // 230
         302 => 'Sous-location',
         002 => 'Squat',
         602 => 'Structure de soin ou médical (LAM, autre)',

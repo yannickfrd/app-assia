@@ -61,7 +61,7 @@ class SupportNoteSearchType extends AbstractType
                 'choices' => $this->tagRepo->getTagsByService($service, 'note'),
                 'choice_label' => 'name',
                 'attr' => [
-                    'class' => 'multi-select w-max-220',
+                    'class' => 'w-max-220',
                     'placeholder' => 'placeholder.tags',
                     'size' => 1,
                 ],

@@ -35,7 +35,6 @@ class UserSearchType extends AbstractType
                 'choices' => Choices::getChoices(User::STATUS),
                 'multiple' => true,
                 'attr' => [
-                    'class' => 'multi-select',
                     'placeholder' => 'placeholder.status',
                     'size' => 1,
                 ],
