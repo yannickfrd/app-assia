@@ -86,7 +86,7 @@ App\Entity\Evaluation\EvalHousingGroup:
         siaoRequest: 1
         siaoRequestDate: <date_create("2020-04-03")>
         siaoUpdatedRequestDate: <date_create("2021-04-03")>
-        siaoRecommendation: 10
+        siaoRecommendation: 104
         socialHousingRequest: 1
         socialHousingRequestId: XXX
         socialHousingRequestDate: <date_create("2020-04-03")>

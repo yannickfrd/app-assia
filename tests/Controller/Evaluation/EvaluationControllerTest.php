@@ -202,7 +202,7 @@ class EvaluationControllerTest extends WebTestCase
                     'siaoRequest' => 1,
                     'siaoRequestDate' => '2020-04-03',
                     'siaoUpdatedRequestDate' => '2021-04-03',
-                    'siaoRecommendation' => 10,
+                    'siaoRecommendation' => 104,
                     'socialHousingRequest' => 1,
                     'socialHousingRequestId' => 'XXX',
                     'socialHousingRequestDate' => '2020-04-03',

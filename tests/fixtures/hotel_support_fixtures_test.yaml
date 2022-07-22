@@ -30,14 +30,14 @@ App\Entity\Support\HotelSupport:
         agreementDate: "@support_group_hotel1->startDate"
         levelSupport: 1
         departmentAnchor: 95
-        recommendation: 10
+        recommendation: 104
     hotel_support2:
         supportGroup: "@support_group_hotel2"
         evaluationDate: "@support_group_hotel2->startDate"
         agreementDate: "@support_group_hotel2->startDate"
         levelSupport: 2
         departmentAnchor: 93
-        recommendation: 20
+        recommendation: 204
 
 App\Entity\Support\SupportPerson:
     support_pers_hotel1:

@@ -31,7 +31,7 @@ class HotelControllerTest extends WebTestCase
         $this->client = static::createClient();
         $this->client->followRedirects();
 
-        /** @var AbstractDatabaseTool */
+        /* @var AbstractDatabaseTool */
         $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
 
         $this->fixtures = $this->databaseTool->loadAliceFixture([
@@ -157,7 +157,7 @@ class HotelControllerTest extends WebTestCase
                     'emergencyActionDone' => 1,
                     'emergencyActionPrecision' => 'XXX',
                     'departmentAnchor' => 95,
-                    'recommendation' => 10,
+                    'recommendation' => 104,
                 ],
                 'startDate' => $now->format('Y-m-d'),
                 'agreement' => true,
