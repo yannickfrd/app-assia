@@ -1,5 +1,6 @@
 import FormValidator from '../utils/form/formValidator'
 import DateValidator from '../utils/date/dateValidator'
+import SelectManager from '../utils/form/SelectManager'
 
 /**
  * Validation des données d'un suivi hôtel.
@@ -42,6 +43,10 @@ export default class HotelSupportValidator extends FormValidator {
     }
 
     init() {
+        document.querySelectorAll('select[multiple]').forEach(selectElt => {
+            new SelectManager('#' + selectElt.id)
+        })
+
         this.dateInputElts.forEach(dateInputElt => {
             dateInputElt.addEventListener('focusout', this.checkDate.bind(this, dateInputElt))
         })

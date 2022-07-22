@@ -19,6 +19,15 @@ class HotelSupportType extends AbstractType
             ->add('rosalieId', null, [
                 'attr' => ['data-mask-type' => 'number'],
             ])
+            ->add('priorityCriteria', ChoiceType::class, [
+                'choices' => Choices::getChoices(HotelSupport::PRIORITY_CRITERIA),
+                'multiple' => true,
+                'attr' => [
+                    'placeholder' => 'placeholder.select',
+                    'size' => 1,
+                ],
+                'required' => false,
+            ])
             ->add('reasonNoInclusion', ChoiceType::class, [
                 'choices' => Choices::getChoices(HotelSupport::REASON_NO_INCLUSION),
                 'placeholder' => 'placeholder.select',
@@ -40,7 +49,7 @@ class HotelSupportType extends AbstractType
                 'required' => false,
             ])
             ->add('_searchSsd', null, [
-                'label' => 'hotelSupport.ssd.search',
+                'label' => 'hotel_support.ssd.search',
                 'attr' => [
                     'class' => 'js-search',
                     'placeholder' => 'location.search.city.placeholder',
@@ -50,7 +59,7 @@ class HotelSupportType extends AbstractType
                 'mapped' => false,
             ])
             ->add('ssd', null, [
-                'label' => 'hotelSupport.ssd.city',
+                'label' => 'hotel_support.ssd.city',
                 'attr' => [
                     'class' => 'js-city',
                     'readonly' => true,

@@ -360,20 +360,22 @@ Entry hotel date: Date de stabilisation ou d'entrée à l'hôtel
 Evaluation date: Date de l'évaluation / diagnostic
 Level support: Niveau d'intervention
 Origin dept: Département d'origine
+Priority criteria: Critères de priorité
 Recommendation: Préconisation
 Rosalie id: ID Rosalie
-hotelSupport:
-  startDate: Date d'arrivée
+hotel_support:
+  priority_criteria.placeholder: -- Critères de priorité --
+  start_date: Date d'arrivée
   evaluation: Date de l'évaluation / diagnostic
-  agreementDate: Date de signature de la convention
-  departmentAnchor: Département d'ancrage
+  agreement_date: Date de signature de la convention
+  department_anchor: Département d'ancrage
   recommendation: Préconisation
-  orientationDate: Date d'orientation
+  orientation_date: Date d'orientation
   sub_service.help: Secteur géographique
   support: Suivi
-  levelSupport: Niveau d'intervention
+  level_support: Niveau d'intervention
   search:
-    departmentAnchor: -- Département d'ancrage --
+    department_anchor: -- Département d'ancrage --
   ssd:
     search: Recherche du SSD orienteur
     city: SSD orienteur (auto.)

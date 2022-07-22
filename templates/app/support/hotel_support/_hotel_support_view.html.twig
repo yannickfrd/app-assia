@@ -40,6 +40,7 @@
 {% if hotel_support %}
     <div class="row my-2">
         {{ view_div.get(hotel_support.entryHotelDate ? hotel_support.entryHotelDate|date('d/m/Y'), 'Entry hotel date') }}
+        {{ view_div.get(hotel_support.priorityCriteriaToString, 'Priority criteria') }}
         {{ view_div.get(hotel_support.emergencyActionRequestToString, 'Emergency action request') }}
         {{ origin_request ? view_div.get(origin_request.comment, 'Comment') }}
     </div>
@@ -54,15 +55,15 @@
 
     <div class="my-2">
         <div class="row">
-            {{ view_div.get(hotel_support.evaluationDate ? hotel_support.evaluationDate|date('d/m/Y'), 'hotelSupport.evaluation') }}
-            {{ view_div.get(hotel_support.levelSupportToString, 'hotelSupport.levelSupport') }}
-            {{ view_div.get(hotel_support.agreementDate ? hotel_support.agreementDate|date('d/m/Y'), 'hotelSupport.agreementDate') }}
+            {{ view_div.get(hotel_support.evaluationDate ? hotel_support.evaluationDate|date('d/m/Y'), 'hotel_support.evaluation') }}
+            {{ view_div.get(hotel_support.levelSupportToString, 'hotel_support.level_support') }}
+            {{ view_div.get(hotel_support.agreementDate ? hotel_support.agreementDate|date('d/m/Y'), 'hotel_support.agreement_date') }}
             {{ view_div.get(hotel_support.emergencyActionDoneToString ~ 
                 (hotel_support.emergencyActionPrecision ? ' (' ~ hotel_support.emergencyActionPrecision ~ ')'), 'Emergency action done') }}
         </div>
         <div class="row">
-            {{ view_div.get(hotel_support.departmentAnchorToString, 'hotelSupport.departmentAnchor') }}
-            {{ view_div.get(hotel_support.recommendationToString, 'hotelSupport.recommendation') }}
+            {{ view_div.get(hotel_support.departmentAnchorToString, 'hotel_support.department_anchor') }}
+            {{ view_div.get(hotel_support.recommendationToString, 'hotel_support.recommendation') }}
         </div>
         <div class="row">
             {{ view_div.get(support.comment, 'Comment') }}

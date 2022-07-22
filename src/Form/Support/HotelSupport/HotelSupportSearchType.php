@@ -43,6 +43,16 @@ class HotelSupportSearchType extends AbstractType
                 ],
                 'required' => false,
             ])
+            ->add('priorityCriteria', ChoiceType::class, [
+                'multiple' => true,
+                'choices' => Choices::getChoices(HotelSupport::PRIORITY_CRITERIA),
+                'attr' => [
+                    'class' => 'w-min-220 w-max-220',
+                    'placeholder' => 'hotel_support.priority_criteria.placeholder',
+                    'size' => 1,
+                ],
+                'required' => false,
+            ])
             ->add('levelSupport', ChoiceType::class, [
                 'multiple' => true,
                 'choices' => Choices::getChoices(HotelSupport::SUPPORT_LEVELS),
