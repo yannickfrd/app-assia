@@ -46,7 +46,6 @@ class TaskRepository extends ServiceEntityRepository
             ->addOrderBy('t.status', 'ASC')
             ->addOrderBy('t.end', 'ASC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
         ;
     }
 
@@ -77,7 +76,6 @@ class TaskRepository extends ServiceEntityRepository
             ->setParameter('id', $id)
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult()
         ;
     }
@@ -96,7 +94,6 @@ class TaskRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('t.createdBy', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult()
         ;
     }
@@ -141,7 +138,6 @@ class TaskRepository extends ServiceEntityRepository
             ->setMaxResults($maxResults)
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult()
         ;
     }
@@ -238,7 +234,6 @@ class TaskRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('t.start', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
         ;
     }
 
@@ -282,7 +277,6 @@ class TaskRepository extends ServiceEntityRepository
 
         return $qb
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getSingleScalarResult()
         ;
     }

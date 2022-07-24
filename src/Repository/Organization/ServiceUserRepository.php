@@ -5,7 +5,6 @@ namespace App\Repository\Organization;
 use App\Entity\Organization\ServiceUser;
 use App\Entity\Organization\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -33,7 +32,6 @@ class ServiceUserRepository extends ServiceEntityRepository
             ->orderBy('s.name', 'ASC')
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult()
         ;
     }

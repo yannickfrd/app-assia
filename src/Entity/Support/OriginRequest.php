@@ -75,8 +75,7 @@ class OriginRequest
     private $comment;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Support\SupportGroup", inversedBy="originRequest", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\OneToOne(targetEntity=SupportGroup::class, mappedBy="originRequest")
      */
     private $supportGroup;
 
@@ -182,7 +181,9 @@ class OriginRequest
 
     public function setSupportGroup(SupportGroup $supportGroup): self
     {
-        $this->supportGroup = $supportGroup;
+        if ($supportGroup->getOriginRequest() !== $this) {
+            $supportGroup->setOriginRequest($this);
+        }
 
         return $this;
     }

@@ -84,7 +84,6 @@ class DeviceRepository extends ServiceEntityRepository
             ->orderBy('d.name', 'ASC')
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -160,7 +159,6 @@ class DeviceRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('d.name', 'ASC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult()
         ;
     }
@@ -184,7 +182,6 @@ class DeviceRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('d.name', 'ASC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult()
         ;
     }

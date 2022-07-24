@@ -727,7 +727,8 @@ class ImportDatasHebergement extends ImportDatas
             ->setPreAdmissionDate($this->field['Date entretien pré-admission'] ? new \DateTime($this->field['Date entretien pré-admission']) : null)
             ->setResulPreAdmission($this->findInArray($this->field['Résultat entretien pré-admission'], self::RESULT_PRE_ADMISSION))
             ->setComment($this->field['Commentaire pré-admission'])
-            ->setSupportGroup($supportGroup);
+            ->setSupportGroup($supportGroup)
+        ;
 
         $this->em->persist($originRequest);
 

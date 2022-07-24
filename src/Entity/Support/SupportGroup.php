@@ -266,6 +266,16 @@ class SupportGroup
     private $evaluationScore;
 
     /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $siSiaoId;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $nbChildrenUnder3years;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      * @Groups("view")
      */
@@ -336,6 +346,11 @@ class SupportGroup
     private $documents;
 
     /**
+     * @ORM\OneToMany(targetEntity=Payment::class, mappedBy="supportGroup", orphanRemoval=true, cascade={"persist", "remove"})
+     */
+    private $payments;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Support\PlaceGroup", mappedBy="supportGroup", orphanRemoval=true, cascade={"persist", "remove"})
      * @MaxDepth(1)
      */
@@ -348,41 +363,24 @@ class SupportGroup
     private $evaluationsGroup;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvalInitGroup", mappedBy="supportGroup", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
-     * @MaxDepth(1)
-     */
-    private $evalInitGroup;
-
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Support\OriginRequest", mappedBy="supportGroup", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
-     * @MaxDepth(1)
+     * @ORM\OneToOne(targetEntity=OriginRequest::class, inversedBy="supportGroup", cascade={"persist", "remove"})
      */
     private $originRequest;
 
     /**
-     * @ORM\OneToMany(targetEntity=Payment::class, mappedBy="supportGroup", orphanRemoval=true, cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=EvalInitGroup::class, inversedBy="supportGroup", cascade={"persist", "remove"})
      */
-    private $payments;
+    private $evalInitGroup;
 
     /**
-     * @ORM\OneToOne(targetEntity=Avdl::class, mappedBy="supportGroup", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=Avdl::class, inversedBy="supportGroup", cascade={"persist", "remove"})
      */
     private $avdl;
 
     /**
-     * @ORM\OneToOne(targetEntity=HotelSupport::class, mappedBy="supportGroup", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=HotelSupport::class, inversedBy="supportGroup", cascade={"persist", "remove"})
      */
     private $hotelSupport;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $siSiaoId;
-
-    /**
-     * @ORM\Column(type="smallint", nullable=true)
-     */
-    private $nbChildrenUnder3years;
 
     public function __construct()
     {
@@ -391,9 +389,9 @@ class SupportGroup
         $this->rdvs = new ArrayCollection();
         $this->tasks = new ArrayCollection();
         $this->documents = new ArrayCollection();
+        $this->payments = new ArrayCollection();
         $this->placeGroups = new ArrayCollection();
         $this->evaluationsGroup = new ArrayCollection();
-        $this->payments = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -633,6 +631,30 @@ class SupportGroup
     public function setEvaluationScore(?float $evaluationScore): self
     {
         $this->evaluationScore = $evaluationScore;
+
+        return $this;
+    }
+
+    public function getSiSiaoId(): ?int
+    {
+        return $this->siSiaoId;
+    }
+
+    public function setSiSiaoId(?int $siSiaoId): self
+    {
+        $this->siSiaoId = $siSiaoId;
+
+        return $this;
+    }
+
+    public function getNbChildrenUnder3years(): ?int
+    {
+        return $this->nbChildrenUnder3years;
+    }
+
+    public function setNbChildrenUnder3years(?int $nbChildrenUnder3years): self
+    {
+        $this->nbChildrenUnder3years = $nbChildrenUnder3years;
 
         return $this;
     }
@@ -912,14 +934,9 @@ class SupportGroup
         return $this->evalInitGroup;
     }
 
-    public function setEvalInitGroup(EvalInitGroup $evalInitGroup): self
+    public function setEvalInitGroup(?EvalInitGroup $evalInitGroup): self
     {
         $this->evalInitGroup = $evalInitGroup;
-
-        // set the owning side of the relation if necessary
-        if ($this !== $evalInitGroup->getSupportGroup()) {
-            $evalInitGroup->setSupportGroup($this);
-        }
 
         return $this;
     }
@@ -931,27 +948,11 @@ class SupportGroup
 
     public function setOriginRequest(?OriginRequest $originRequest): self
     {
-        if ($originRequest->getId() || false === $this->objectIsEmpty($originRequest)) {
+        if ($originRequest->getId() || true === (bool) array_filter((array) $originRequest)) {
             $this->originRequest = $originRequest;
         }
 
-        // set the owning side of the relation if necessary
-        if ($originRequest->getSupportGroup() !== $this) {
-            $originRequest->setSupportGroup($this);
-        }
-
         return $this;
-    }
-
-    protected function objectIsEmpty(object $originRequest): bool
-    {
-        foreach ((array) $originRequest as $value) {
-            if ($value) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     /**
@@ -994,11 +995,6 @@ class SupportGroup
     {
         $this->avdl = $avdl;
 
-        // set the owning side of the relation if necessary
-        if ($avdl->getSupportGroup() !== $this) {
-            $avdl->setSupportGroup($this);
-        }
-
         return $this;
     }
 
@@ -1010,35 +1006,6 @@ class SupportGroup
     public function setHotelSupport(HotelSupport $hotelSupport): self
     {
         $this->hotelSupport = $hotelSupport;
-
-        // set the owning side of the relation if necessary
-        if ($hotelSupport->getSupportGroup() !== $this) {
-            $hotelSupport->setSupportGroup($this);
-        }
-
-        return $this;
-    }
-
-    public function getSiSiaoId(): ?int
-    {
-        return $this->siSiaoId;
-    }
-
-    public function setSiSiaoId(?int $siSiaoId): self
-    {
-        $this->siSiaoId = $siSiaoId;
-
-        return $this;
-    }
-
-    public function getNbChildrenUnder3years(): ?int
-    {
-        return $this->nbChildrenUnder3years;
-    }
-
-    public function setNbChildrenUnder3years(?int $nbChildrenUnder3years): self
-    {
-        $this->nbChildrenUnder3years = $nbChildrenUnder3years;
 
         return $this;
     }

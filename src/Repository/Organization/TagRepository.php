@@ -30,7 +30,6 @@ class TagRepository extends ServiceEntityRepository
     {
         return $this->findAllQueryBuilder($category)
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -70,7 +69,7 @@ class TagRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('t.name', 'ASC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        ;
     }
 
     public function findTagByServiceQueryBuilder(Service $service, string $category = null): QueryBuilder

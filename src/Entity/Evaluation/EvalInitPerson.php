@@ -78,7 +78,7 @@ class EvalInitPerson
     private $contractType;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Support\SupportPerson", inversedBy="evalInitPerson", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity=SupportPerson::class, mappedBy="evalInitPerson")
      */
     private $supportPerson;
 
@@ -306,7 +306,9 @@ class EvalInitPerson
 
     public function setSupportPerson(?SupportPerson $supportPerson): self
     {
-        $this->supportPerson = $supportPerson;
+        if ($supportPerson->getEvalInitPerson() !== $this) {
+            $supportPerson->setEvalInitPerson($this);
+        }
 
         return $this;
     }

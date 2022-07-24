@@ -9,7 +9,6 @@ use App\Entity\Support\PlacePerson;
 use App\Form\Model\Admin\OccupancySearch;
 use App\Repository\Traits\QueryTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -42,7 +41,6 @@ class PlacePersonRepository extends ServiceEntityRepository
             ->setParameter('id', $id)
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
     }
 
@@ -79,7 +77,6 @@ class PlacePersonRepository extends ServiceEntityRepository
 
         return $qb
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 }

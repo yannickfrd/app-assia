@@ -135,7 +135,6 @@ class ServiceRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('s.name', 'ASC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -159,7 +158,6 @@ class ServiceRepository extends ServiceEntityRepository
             ->orderBy('s.name', 'ASC')
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -187,7 +185,6 @@ class ServiceRepository extends ServiceEntityRepository
             ->orderBy('s.name', 'ASC')
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -209,7 +206,6 @@ class ServiceRepository extends ServiceEntityRepository
             ->setParameter('id', $id)
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
     }
 
@@ -224,7 +220,6 @@ class ServiceRepository extends ServiceEntityRepository
             ->leftJoin('s.setting', 'setting')->addSelect('setting')
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult()
         ;
     }
@@ -240,7 +235,6 @@ class ServiceRepository extends ServiceEntityRepository
 
         return $qb
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 

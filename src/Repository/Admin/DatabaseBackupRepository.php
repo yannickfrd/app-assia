@@ -30,6 +30,6 @@ class DatabaseBackupRepository extends ServiceEntityRepository
 
             ->orderBy('b.createdAt', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        ;
     }
 }

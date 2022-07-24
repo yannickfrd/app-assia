@@ -38,6 +38,6 @@ class ExportRepository extends ServiceEntityRepository
 
             ->orderBy('e.createdAt', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        ;
     }
 }

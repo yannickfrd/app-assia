@@ -39,7 +39,6 @@ class RdvRepository extends ServiceEntityRepository
         return $this->filter($qb, $search, $user, $supportGroup)
             ->orderBy('r.start', 'ASC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
         ;
     }
 
@@ -63,7 +62,6 @@ class RdvRepository extends ServiceEntityRepository
             ->setParameter('id', $id)
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult()
         ;
     }
@@ -81,7 +79,6 @@ class RdvRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('r.createdBy', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult()
         ;
     }
@@ -197,7 +194,6 @@ class RdvRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('r.start', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
         ;
     }
 
@@ -216,7 +212,6 @@ class RdvRepository extends ServiceEntityRepository
 
         return $query
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult()
         ;
     }
@@ -233,7 +228,6 @@ class RdvRepository extends ServiceEntityRepository
             ->setMaxResults(1)
             ->orderBy('r.start', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult()
         ;
     }
@@ -250,7 +244,6 @@ class RdvRepository extends ServiceEntityRepository
             ->setMaxResults(1)
             ->orderBy('r.start', 'ASC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult()
         ;
     }
@@ -280,7 +273,6 @@ class RdvRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('r.start', 'ASC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult()
         ;
     }
@@ -330,7 +322,6 @@ class RdvRepository extends ServiceEntityRepository
             ->setMaxResults($maxResults)
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult()
         ;
     }

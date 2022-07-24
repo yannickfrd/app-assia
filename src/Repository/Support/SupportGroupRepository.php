@@ -51,7 +51,6 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->where('sg.endDate IS NOT NULL')
             ->andWhere('sg.status = '.SupportGroup::STATUS_ENDED)
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult()
         ;
     }
@@ -72,7 +71,6 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->setParameter('id', $id)
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
     }
 
@@ -114,7 +112,6 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->addOrderBy('p.birthdate', 'ASC')
 
             ->getQuery()
-//            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
     }
 
@@ -164,7 +161,6 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->setMaxResults($maxResults)
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -192,7 +188,6 @@ class SupportGroupRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('p.lastname', 'ASC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult()
         ;
     }
@@ -225,7 +220,7 @@ class SupportGroupRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('sg.startDate', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        ;
     }
 
     /**
@@ -252,7 +247,6 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->setParameter('status', 2)
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -274,7 +268,6 @@ class SupportGroupRepository extends ServiceEntityRepository
 
             ->orderBy('sg.startDate', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -301,7 +294,6 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->setMaxResults(1)
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
     }
 
@@ -465,7 +457,6 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->setParameter('limitDate', $limitDate ?? new \DateTime())
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult()
         ;
     }

@@ -148,8 +148,7 @@ class Avdl
     private $endSupportComment;
 
     /**
-     * @ORM\OneToOne(targetEntity=SupportGroup::class, inversedBy="avdl", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\OneToOne(targetEntity=SupportGroup::class, mappedBy="avdl")
      */
     private $supportGroup;
 
@@ -373,7 +372,9 @@ class Avdl
 
     public function setSupportGroup(SupportGroup $supportGroup): self
     {
-        $this->supportGroup = $supportGroup;
+        if ($supportGroup->getAvdl() !== $this) {
+            $supportGroup->setAvdl($this);
+        }
 
         return $this;
     }

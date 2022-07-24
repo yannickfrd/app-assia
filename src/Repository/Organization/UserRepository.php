@@ -68,7 +68,6 @@ class UserRepository extends ServiceEntityRepository
             ->setParameter('id', $id)
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
     }
 
@@ -84,7 +83,6 @@ class UserRepository extends ServiceEntityRepository
         return $qb
             ->addOrderBy('u.lastname', 'ASC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
         ;
     }
 
@@ -109,7 +107,7 @@ class UserRepository extends ServiceEntityRepository
 
         return $this->filters($qb, $search)
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        ;
     }
 
     /**
@@ -230,7 +228,6 @@ class UserRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('u.lastname', 'ASC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -247,7 +244,6 @@ class UserRepository extends ServiceEntityRepository
             ->setParameter('service', $service)
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -352,7 +348,6 @@ class UserRepository extends ServiceEntityRepository
 
         return $qb
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -447,7 +442,6 @@ class UserRepository extends ServiceEntityRepository
             ->setParameter('type', Alert::EMAIL_TYPE)
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult()
         ;
     }
@@ -474,7 +468,6 @@ class UserRepository extends ServiceEntityRepository
             ->setParameter('type', Alert::EMAIL_TYPE)
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult()
         ;
     }

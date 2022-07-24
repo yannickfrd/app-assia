@@ -50,7 +50,7 @@ class PlaceRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('pl.name', 'ASC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        ;
     }
 
     /**
@@ -69,7 +69,6 @@ class PlaceRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('pl.name', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult()
         ;
     }
@@ -130,7 +129,6 @@ class PlaceRepository extends ServiceEntityRepository
             ->orderBy('pl.name', 'ASC')
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -150,7 +148,6 @@ class PlaceRepository extends ServiceEntityRepository
             ->orderBy('pl.name', 'ASC')
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -192,7 +189,6 @@ class PlaceRepository extends ServiceEntityRepository
             ->addOrderBy('pl.name', 'ASC')
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -210,7 +206,6 @@ class PlaceRepository extends ServiceEntityRepository
             ->orderBy('pg.startDate', 'DESC')
             ->setMaxResults(1)
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
     }
 

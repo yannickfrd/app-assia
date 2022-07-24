@@ -80,7 +80,7 @@ class SupportPersonRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('sg.updatedAt', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        ;
     }
 
     public function findSupportPeopleBySupportGroupIdsQuery(array $ids, SupportSearch $search): Query
@@ -97,7 +97,7 @@ class SupportPersonRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('sg.updatedAt', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        ;
     }
 
     /**
@@ -122,7 +122,6 @@ class SupportPersonRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('sp.startDate', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -147,7 +146,6 @@ class SupportPersonRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('sp.startDate', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -167,7 +165,7 @@ class SupportPersonRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('sg.updatedAt', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        ;
     }
 
     /**
@@ -189,7 +187,6 @@ class SupportPersonRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('sg.updatedAt', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
         ;
     }
 
@@ -212,7 +209,6 @@ class SupportPersonRepository extends ServiceEntityRepository
 
             ->orderBy('sp.startDate', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -262,7 +258,6 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->setMaxResults($limit)
             ->orderBy('sp.startDate', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult()
         ;
     }
@@ -305,7 +300,6 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->setMaxResults(1)
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult()
         ;
     }

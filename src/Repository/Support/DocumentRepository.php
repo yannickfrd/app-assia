@@ -47,7 +47,6 @@ class DocumentRepository extends ServiceEntityRepository
 
         return $query
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult()
         ;
     }
@@ -99,7 +98,6 @@ class DocumentRepository extends ServiceEntityRepository
 
         return $qb
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
         ;
     }
 
@@ -129,7 +127,6 @@ class DocumentRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('d.createdAt', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
         ;
     }
 
@@ -149,7 +146,6 @@ class DocumentRepository extends ServiceEntityRepository
             ->setParameter('id', $id)
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getSingleResult()
         ;
     }
@@ -171,7 +167,6 @@ class DocumentRepository extends ServiceEntityRepository
             ->setParameter('ids', $ids)
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult()
         ;
     }
