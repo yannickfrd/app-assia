@@ -19,6 +19,7 @@ export default class AutoLogout {
 
     init() {
         if (this.userNameElt) {
+            this.sessiontTimerElt.textContent = this.getFullTime()
             this.intervalID = window.setInterval(this.count.bind(this), 1000)
             document.addEventListener('click', this.clearTimer.bind(this))
             document.addEventListener('keydown', this.clearTimer.bind(this))

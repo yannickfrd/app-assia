@@ -26,6 +26,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
     new changeChecker('support') // form name
     new AutoSizer('textarea')
-
-
 })

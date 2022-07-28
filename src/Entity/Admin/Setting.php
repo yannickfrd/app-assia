@@ -2,10 +2,10 @@
 
 namespace App\Entity\Admin;
 
-use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Traits\GeoLocationEntityTrait;
 use App\Entity\Traits\LocationEntityTrait;
 use App\Repository\Admin\SettingRepository;
-use App\Entity\Traits\GeoLocationEntityTrait;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**

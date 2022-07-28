@@ -4,10 +4,19 @@
 export default class SeePassword {
 
     constructor() {
+        this.usernameInputElt = document.querySelector('input[name="username"]')
+        
         this.init()
     }
-
+    
     init() {
+        // Remove all spaces and tabs in username input
+        if (this.usernameInputElt) {
+            this.usernameInputElt.addEventListener('input', e => {
+                e.target.value = e.target.value.replace(/(\s|\t){1,}/g, '')
+            })
+        }
+
         document.querySelectorAll('.js-password-group').forEach(passwordGroupElt => {
             const passwordElt = passwordGroupElt.querySelector('.js-password');
             const showPasswordElt = passwordGroupElt.querySelector('.js-show-password');
