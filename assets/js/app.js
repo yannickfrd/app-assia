@@ -1,5 +1,5 @@
 require('../scss/app.scss')
-import SearchPerson from './searchPerson'
+import PersonSearcher from './PersonSearcher'
 import autoLogout from './utils/autoLogout'
 import {Popover, Toast, Tooltip} from '../../node_modules/bootstrap'
 
@@ -15,7 +15,7 @@ window.onload = () => {
     // Stop le spinner loader 
     document.getElementById('loader').classList.add('d-none')
     // Recherche instannée d'une personne via Ajax
-    new SearchPerson('#search-person')
+    new PersonSearcher('#search-person')
     // Déconnexion automatique de l'utilisateur
     new autoLogout(40, 30) // minutes
 }
