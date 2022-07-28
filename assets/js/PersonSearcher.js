@@ -3,7 +3,7 @@ import TomSelect from 'tom-select'
 import Loader from './utils/loader'
 
 /**
- * Search person in database with TomSelect.
+ * Dynamic search person with TomSelect and ajax loading.
  */
 export default class PersonSearcher {
     /**
@@ -16,45 +16,49 @@ export default class PersonSearcher {
         this.searchPersonUrl = '/people/'
 
         this.searchElt = document.querySelector(selector)
+        this.delay = this.searchElt.dataset.searchDelay ?? 500 // number of milliseconds to wait before requesting options from the server or null
         this.minLength = minLength // minimum query length before to load
 
-        if (!this.searchElt) {
-            return
-        }
-
-        this.delay = this.searchElt.dataset.searchDelay ?? 500 // number of milliseconds to wait before requesting options from the server or null
+        this.searchSelect = new TomSelect(this.searchElt, this.#getSettings())
+        this.loader = new Loader()
 
         this.#init()
     }
 
-    #init() {
-        this.searchElt.addEventListener('click', () => {
+    #init() {       
+        document.getElementById(this.searchElt.id + '-ts-control').addEventListener('input', (e) => this.#cleanInput(e))
 
-            this.searchSelect = new TomSelect(this.searchElt, this.#getSettings())
-            this.loader = new Loader()
+        this.searchSelect.on('item_add', (value, item) => this.#onAddItem(value, item))
+    }
 
-            this.searchSelect.focus()
-            
-            // Clean the input value after paste
-            document.getElementById(this.searchElt.id + '-ts-control').addEventListener('input', (e) => {
-                if (e.inputType === 'insertFromPaste') {
-                    e.target.value = e.target.value.replace(/(\s|\t){1,}/g, ' ')
-                }
-            })
+    /**
+     * Clean the input value after paste.
+     * 
+     * @param {Event} e 
+     */
+    #cleanInput(e) {
+        if (e.inputType === 'insertFromPaste') {
+            e.target.value = e.target.value.replace(/(\s|\t){1,}/g, ' ')
+        }
+    }
 
-            this.searchSelect.on('item_add', (value, item) => {
-                this.loader.on()
+    /**
+     * Submit form or go to person page after to add item.
+     * 
+     * @param {string} value 
+     * @param {HTMLElement} item 
+     */
+    #onAddItem(value, item) {
+        this.loader.on()
 
-                value = this.#cleanQuery(value)
+        value = this.#cleanQuery(value)
 
-                if (!isNaN(value) && value !== item.textContent) {
-                    return location.href = this.showPersonUrl + value
-                }
-    
-                this.searchElt.value = value
-                document.getElementById('search_person_form').submit()
-            })
-        })
+        if (!isNaN(value) && value !== item.textContent) {
+            return location.href = this.showPersonUrl + value
+        }
+
+        this.searchElt.value = value
+        document.getElementById('search_person_form').submit()
     }
 
     /**

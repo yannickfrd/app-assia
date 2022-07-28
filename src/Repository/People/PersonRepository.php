@@ -212,7 +212,7 @@ class PersonRepository extends ServiceEntityRepository
         ;
     }
 
-    private function filtersSearchQuery(QueryBuilder $qb, ?string $searchQuery): QueryBuilder
+    private function filtersSearchQuery(QueryBuilder $qb, string $searchQuery): QueryBuilder
     {
         $date = \DateTime::createFromFormat('d-m-Y', $searchQuery);
 
