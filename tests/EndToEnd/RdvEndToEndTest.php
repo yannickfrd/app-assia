@@ -137,8 +137,9 @@ class RdvEndToEndTest extends PantherTestCase
     private function deleteRdvByTable(): void
     {
         $this->outputMsg('Delete a rdv by table');
+        sleep(5);
 
-        $this->clickElement('a[data-bs-original-title="Passer en vue liste"]');
+        $this->clickElement('a#btn_show_rdv_index');
         $this->clickElement(self::BUTTON_DELETE);
         sleep(1); // animation effect
 
