@@ -15,7 +15,7 @@ window.onload = () => {
     // Stop le spinner loader 
     document.getElementById('loader').classList.add('d-none')
     // Recherche instannée d'une personne via Ajax
-    new SearchPerson() // lengthSearch, time
+    new SearchPerson('#search-person')
     // Déconnexion automatique de l'utilisateur
     new autoLogout(40, 30) // minutes
 }

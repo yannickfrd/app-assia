@@ -70,18 +70,15 @@
                         </a>
                     </li>
                 </ul>
-                <form action="{{ path('person_index') }}" method="get" class="row row-cols-auto align-items-center my-2 my-lg-0 me-3">
+                <form action="{{ path('person_index') }}" method="get" id="search_person_form" 
+                    class="row row-cols-auto align-items-center my-2 my-lg-0 me-3"
+                >
                     <div class="position-relative ms-2 me-1 px-0">
                         <label for="search-person" class="visually-hidden col-form-label">Recherche d'une personne</label>
-                        <input name="search-person" id="search-person" class="form-control" type="search"
+                        <input name="search-person" id="search-person" class="form-control w-220 w-max-220" type="search"
                             placeholder="Recherche personne" autocomplete="off" 
                             title="Recherche instantanée à partir des 3 premières lettres saisies">
-                        <div id="results_search" class="w-100 list-group d-block fade-in"></div>
                     </div>
-                    <button class="btn btn-primary border-white my-2 my-sm-0" 
-                        title="Rechercher" data-bs-toggle="tooltip" data-bs-placement="bottom" type="submit">
-                        <i class="fas fa-search"><span class="visually-hidden">Rechercher</span></i>
-                    </button>
                 </form>
                 <div class="text-white text-end w-min-160">
                     <a id="user-name" class="text-white fw-bold" href="{{ path('my_profile') }}" data-bs-toggle="popover"
@@ -93,7 +90,7 @@
                     <br/>
                     <a class="text-white" href="{{ path('security_logout') }}">Se déconnecter</a>
                     <p class="mb-0 text-white small" title="Après l'expiration de la session, vous serez automatiquement déconnecté." 
-                        data-bs-toggle="tooltip" data-bs-placement="bottom">Session expire dans <span id="session-timer">...</span></p>
+                        data-bs-toggle="tooltip" data-bs-placement="bottom">Session expire dans <span id="session-timer">40mn 00s</span></p>
                 </div>
             </div>
         {% endif %}

@@ -8,6 +8,7 @@ use App\Form\Model\People\PersonSearch;
 use App\Repository\Traits\QueryTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -41,7 +42,8 @@ class PersonRepository extends ServiceEntityRepository
 
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getOneOrNullResult();
+            ->getOneOrNullResult()
+        ;
     }
 
     /**
@@ -51,10 +53,7 @@ class PersonRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('p')->select('p');
 
-        if ($searchQuery) {
-            $qb->where("CONCAT(p.lastname,' ' , p.firstname) LIKE :search")
-                ->setParameter('search', '%'.$searchQuery.'%');
-        }
+        $qb = $this->filtersSearchQuery($qb, $searchQuery);
 
         if ($personSearch->getSiSiaoId()) {
             $qb->leftJoin('p.rolesPerson', 'r')->addSelect('PARTIAL r.{id}')
@@ -84,7 +83,8 @@ class PersonRepository extends ServiceEntityRepository
         return $qb
             ->addOrderBy('p.lastname', 'ASC')
             ->addOrderBy('p.firstname', 'ASC')
-            ->getQuery();
+            ->getQuery()
+        ;
     }
 
     /**
@@ -94,9 +94,9 @@ class PersonRepository extends ServiceEntityRepository
      */
     public function findPeopleToExport(PersonSearch $personSearch): array
     {
-        $qb = $this->findPeopleQuery($personSearch);
-
-        return $qb->getResult();
+        return $this->findPeopleQuery($personSearch)
+            ->getResult()
+        ;
     }
 
     /**
@@ -104,30 +104,16 @@ class PersonRepository extends ServiceEntityRepository
      *
      * @return Person[]
      */
-    public function findPeopleByResearch(string $search = null): array
+    public function findPeopleByResearch(string $searchQuery = null): array
     {
-        $qb = $this->createQueryBuilder('p')
-            ->leftJoin('p.rolesPerson', 'r')->addSelect('PARTIAL r.{id}')
-            ->leftJoin('r.peopleGroup', 'g')->addSelect('PARTIAL g.{id, siSiaoId}');
+        $qb = $this->createQueryBuilder('p');
 
-        $date = \DateTime::createFromFormat('d-m-Y', $search) ?? false;
-
-        if ($date) {
-            $qb->where('p.birthdate = :birthdate')
-                ->setParameter('birthdate', $date->format('Y-m-d'));
-        } elseif (ctype_digit($search)) {
-            $qb->where('g.siSiaoId = :siSiaoId')
-                ->setParameter('siSiaoId', $search);
-        } else {
-            $qb->where("CONCAT(p.lastname,' ' , p.firstname) LIKE :search OR CONCAT(p.firstname,' ' , p.lastname) LIKE :search")
-                ->setParameter('search', '%'.$search.'%');
-        }
-
-        return $qb
+        return $this->filtersSearchQuery($qb, $searchQuery)
             ->orderBy('p.lastname, p.firstname', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
-            ->getResult();
+            ->getResult()
+        ;
     }
 
     /**
@@ -156,7 +142,8 @@ class PersonRepository extends ServiceEntityRepository
 
         return $qb
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getSingleScalarResult()
+        ;
     }
 
     /**
@@ -179,7 +166,8 @@ class PersonRepository extends ServiceEntityRepository
         return $qb
             ->having('COUNT(p.id) > 1')
             ->getQuery()
-            ->getResult();
+            ->getResult()
+        ;
     }
 
     public function findOnePersonByFirstname(string $firstname = null, bool $genderIsNotNull = true): ?Person
@@ -198,7 +186,8 @@ class PersonRepository extends ServiceEntityRepository
         return $qb
             ->setMaxResults(1)
             ->getQuery()
-            ->getOneOrNullResult();
+            ->getOneOrNullResult()
+        ;
     }
 
     /**
@@ -221,5 +210,31 @@ class PersonRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
         ;
+    }
+
+    private function filtersSearchQuery(QueryBuilder $qb, ?string $searchQuery): QueryBuilder
+    {
+        $date = \DateTime::createFromFormat('d-m-Y', $searchQuery);
+
+        // If $search is date
+        if (false !== $date) {
+            $qb->where('p.birthdate = :birthdate')
+                ->setParameter('birthdate', $date->format('Y-m-d'));
+        // If $search is identifier
+        } elseif (ctype_digit($searchQuery)) {
+            $qb
+                ->leftJoin('p.rolesPerson', 'r')->addSelect('PARTIAL r.{id}')
+                ->leftJoin('r.peopleGroup', 'g')->addSelect('PARTIAL g.{id, siSiaoId}')
+
+                ->where('g.siSiaoId = :search')
+                ->setParameter('search', $searchQuery)
+            ;
+        // else $search is string
+        } else {
+            $qb->where("CONCAT(p.lastname,' ' , p.firstname) LIKE :search OR CONCAT(p.firstname,' ' , p.lastname) LIKE :search")
+                ->setParameter('search', '%'.str_replace('+', ' ', $searchQuery).'%');
+        }
+
+        return $qb;
     }
 }

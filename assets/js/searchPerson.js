@@ -1,102 +1,148 @@
+
+import TomSelect from 'tom-select'
 import Loader from './utils/loader'
-import Ajax from './utils/ajax'
 
 /**
- * Recherche instannée Ajax.
+ * Search person in database with TomSelect.
  */
-export default class SearchPerson {
+export default class PersonSearcher {
+    /**
+     * @param {string} selector 
+     * @param {number} minSearchLength 
+     */
+    constructor(selector, minLength = 3) {
+        this.url = '/search/person/'
+        this.showPersonUrl = '/person/'
+        this.searchPersonUrl = '/people/'
 
-    constructor(lengthSearch = 3, time = 500) {
-        this.loader = new Loader()
-        this.ajax = new Ajax(this.loader)
-        this.searchElt = document.getElementById('search-person')
-        this.resultsSearchElt = document.getElementById('results_search')
-        this.lengthSearch = lengthSearch
-        this.time = time
-        this.countdownID = null
-        this.init()
-    }
-    
-    init() {
-        if (this.searchElt) {
-            this.searchElt.addEventListener('keyup', this.timer.bind(this))
+        this.searchElt = document.querySelector(selector)
+        this.minLength = minLength // minimum query length before to load
+
+        if (!this.searchElt) {
+            return
         }
+
+        this.delay = this.searchElt.dataset.searchDelay ?? 500 // number of milliseconds to wait before requesting options from the server or null
+
+        this.#init()
     }
 
-    /**
-     * Timer avant de lancer la requête Ajax.
-     */
-    timer() {
-        this.searchElt.value = this.searchElt.value.replace("	", " ").replace("  ", " ")
-        clearInterval(this.countdownID)
-        this.countdownID = setTimeout(this.count.bind(this), this.time)
-    }
+    #init() {
+        this.searchElt.addEventListener('click', () => {
 
-    /**
-     * Compte le nombre de caratères saisis et lance la requête Ajax<.
-     */
-    count() {
-        const valueSearch = this.searchElt.value.replaceAll('/', '-')
-        if (valueSearch.length >= this.lengthSearch) {
-            this.loader.on()
-            this.ajax.send('GET', '/search/person/' + valueSearch, this.response.bind(this))
-        }
-    }
+            this.searchSelect = new TomSelect(this.searchElt, this.#getSettings())
+            this.loader = new Loader()
 
-    /**
-     * Affiche les résultats de la rêquête.
-     * @param {Object} data 
-     */
-    response(data) {
-        this.resultsSearchElt.innerHTML = ''
-        if (data.people.length > 0) {
-            this.addItem(data)
-        } else {
-            this.noResult()
-        }
-        this.resultsSearchElt.classList.replace('d-none', 'd-block')
-        this.resultsSearchElt.classList.replace('fade-out', 'fade-in')
-        this.loader.off()
+            this.searchSelect.focus()
+            
+            // Clean the input value after paste
+            document.getElementById(this.searchElt.id + '-ts-control').addEventListener('input', (e) => {
+                if (e.inputType === 'insertFromPaste') {
+                    e.target.value = e.target.value.replace(/(\s|\t){1,}/g, ' ')
+                }
+            })
 
-        document.addEventListener('click', e => {
-            if (e.target.id != 'search-person') {
-                this.hideListResults()
-            }
-        })
-    }
-
-    /**
-     * Ajoute un élément à la liste des résultats.
-     * @param {Object} data 
-     */
-    addItem(data) {
-        data.people.forEach(person => {
-            const aElt = document.createElement('a')
-            aElt.innerHTML = `<span class="text-capitalize text-secondary small">${person.fullname} (${person.birthdate})</span>`
-            aElt.href = '/person/' + person.id
-            aElt.className = 'list-group-item list-group-item-action ps-3 pe-1 py-1'
-            this.resultsSearchElt.appendChild(aElt)
-            aElt.addEventListener('click', () => {
+            this.searchSelect.on('item_add', (value, item) => {
                 this.loader.on()
+
+                value = this.#cleanQuery(value)
+
+                if (!isNaN(value) && value !== item.textContent) {
+                    return location.href = this.showPersonUrl + value
+                }
+    
+                this.searchElt.value = value
+                document.getElementById('search_person_form').submit()
             })
         })
     }
 
     /**
-     * Affiche 'Aucun résultat.'.
+     * Get settings of TomSelect
+     *
+     * @returns {Object}
      */
-    noResult() {
-        const spanElt = document.createElement('p')
-        spanElt.textContent = 'Aucun résultat.'
-        spanElt.className = 'list-group-item ps-3 py-2'
-        this.resultsSearchElt.appendChild(spanElt)
+    #getSettings() {
+        return {
+            valueField: 'id',
+            labelField: 'fullname',
+            searchField: 'query',
+            create: true,
+            loadThrottle: this.delay, // number of milliseconds to wait before requesting options from the server or null
+            closeAfterSelect: true,
+            selectOnTab: true,
+            maxItems: 1,
+            addPrecedence: true,
+            openOnFocus: false,
+            
+            shouldLoad: (query) => {
+                return query.length >= this.minLength
+            },
+            load: (query, callback) => {
+                fetch(this.#getUrl(query))
+                    .then(response => response.json())
+                    .then(json => {
+                        callback(this.#getResults(json, query))
+                    }).catch((error) => {
+                        console.error(error)
+                        callback()
+                    })
+            },
+            render: this.#getRender(),
+        }
     }
 
     /**
-     * Supprime la liste des résultats au clic.
+     * @param {string} query 
+     * @returns {string}
      */
-    hideListResults() {
-        this.resultsSearchElt.classList.replace('fade-in', 'fade-out')
-        this.resultsSearchElt.classList.replace('d-block', 'd-none')
+     #getUrl(query) {
+        return this.url + this.#cleanQuery(query)
+    }
+    
+    /**
+     * @param {string} query 
+     * @returns {string}
+     */
+    #cleanQuery(query) {
+        return query
+            .replace(/(\s|\t|\+){1,}/g, '+')
+            .replaceAll('/', '-')
+    }
+
+    /**
+     * Return data results from ajax request
+     * 
+     * @param {JSON} json 
+     * @param {string} query 
+     * @returns {array}
+     */
+    #getResults(json, query) {
+        this.searchSelect.clearOptions()
+        json.people.forEach(person => {
+            person['query'] = query
+        })
+
+        return json.people
+    }
+
+    #getRender() {
+        return {
+            option: (person, escape) => {
+                return `
+                    <div class="d-flex py-1">
+                        <div>
+                            <span class="small">${ escape(person.fullname) }</span>
+                            ${person.birthdate ? '<span class="small text-secondary">(' + escape(person.birthdate) + ')</span>' : ''}
+                        </div>
+                    </div>`
+            },
+            no_results: (data, escape) => {
+                return `<div class="no-results text-secondary small">Pas de résultat pour "${ escape(data.input) }"</div>'`
+            },   
+            option_create: function(data, escape) {
+                return '<div class="create">Rechercher <strong>"' + escape(data.input) + '"</strong>&hellip;</div>';
+            },       
+        }
     }
 }
