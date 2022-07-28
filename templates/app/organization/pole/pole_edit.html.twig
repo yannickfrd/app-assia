@@ -43,12 +43,7 @@
         <div class="row mb-3">
             <div class="col-md-6">{{ form_row(form.chief) }}</div>
         </div>
-        <div class="row mb-3">
-            <div class="col-md-6">{{ form_row(form.location._search) }}</div>
-            <div class="col-md-6">{{ form_row(form.location.address) }}</div>
-            <div class="col-md-6">{{ form_row(form.location.city) }}</div>
-            <div class="col-md-6">{{ form_row(form.location.zipcode) }}</div>
-        </div>
+        {% include '_shared/_location_form.html.twig' with {'location_geo': setting} %}
         <div class="row mb-3">
             <div class="col-md-6">{{ form_row(form.color) }}</div>
             <div class="col-md-6">{{ form_row(form.logoPath) }}</div>
@@ -123,4 +118,5 @@
 
 {% block javascripts %}
     {{ encore_entry_script_tags('directory') }}
+    {{ encore_entry_script_tags('location-search') }}
 {% endblock javascripts %}

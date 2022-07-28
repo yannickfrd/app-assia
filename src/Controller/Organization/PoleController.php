@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Organization;
 
+use App\Entity\Admin\Setting;
 use App\Entity\Organization\Pole;
 use App\Form\Organization\Pole\PoleType;
 use App\Repository\Organization\PoleRepository;
@@ -56,6 +57,7 @@ final class PoleController extends AbstractController
 
         return $this->render('app/organization/pole/pole_edit.html.twig', [
             'form' => $form->createView(),
+            'setting' => $this->em->getRepository(Setting::class)->findOneBy([]),
         ]);
     }
 
@@ -79,6 +81,7 @@ final class PoleController extends AbstractController
 
         return $this->render('app/organization/pole/pole_edit.html.twig', [
             'form' => $form->createView(),
+            'setting' => $this->em->getRepository(Setting::class)->findOneBy([]),
         ]);
     }
 }

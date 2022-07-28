@@ -6,7 +6,7 @@ import {Modal} from "bootstrap";
 import RdvModel from "./model/RdvModel";
 import ApiCalendar from "../../api/ApiCalendar";
 import WidgetCollectionManager from "../../utils/form/WidgetCollectionManager";
-import SearchLocation from '../../utils/searchLocation'
+import LocationSearcher from '../../utils/LocationSearcher'
 
 export default class RdvForm {
     /**
@@ -21,8 +21,6 @@ export default class RdvForm {
 
         this.modalRdvElt = document.getElementById('modal-rdv')
         this.rdvModal = new Modal(this.modalRdvElt)
-
-        new SearchLocation('rdv_search_location')
 
         this.btnAddAlertElt = document.querySelector('button[data-add-widget]')
         this.btnSaveRdvElt = this.modalRdvElt.querySelector('button[data-action="save-rdv"]')
@@ -55,6 +53,8 @@ export default class RdvForm {
         this.endInput = this.modalRdvElt.querySelector('input[name="end"]')
 
         this.currentUserId = document.getElementById('user-name').dataset.userId
+
+        this.locationSearcher = new LocationSearcher(document.querySelector('[data-location-search]'))
 
         this.formValidator = new FormValidator(this.formRdvElt)
         this.usersSelectManager = new SelectManager('#rdv_users')
@@ -244,6 +244,7 @@ export default class RdvForm {
         this.rdvStatusInput.value = rdv.status ? rdv.status : ''
 
         this.rdvLocationInput.value = rdv.location
+        this.locationSearcher.refreshItem(rdv.id, rdv.location)
 
         const tagsIds = []
         rdv.tags.forEach(tags => tagsIds.push(tags.id))

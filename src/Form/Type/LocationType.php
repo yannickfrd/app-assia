@@ -14,61 +14,38 @@ class LocationType extends AbstractType
         $attr = $builder->getOption('attr');
 
         $builder
-            ->add('_search', null, [
-                'label' => $attr['seachLabel'] ?? '',
+            ->add($attr['fullAddress'] ?? 'fullAddress', null, [
+                'label' => $attr['location_search_label'] ?? '',
                 'attr' => [
-                    'class' => 'js-search',
-                    'placeholder' => 'location.search.address.placeholder',
-                    'autocomplete' => 'off',
+                    'placeholder' => $attr['location_search_placeholder'] ?? 'location.search.address.placeholder',
                 ],
-                'help' => $attr['searchHelp'] ?? null,
-                'mapped' => false,
+                'help' => $attr['location_search_help'] ?? 'location.search.help',
             ])
-            ->add('commentLocation', null, [
-                'help' => $attr['commentLocationHelp'] ?? 'commentLocation.help',
+            ->add($attr['city'] ?? 'city', HiddenType::class, [
+                'attr' => ['readonly' => true],
             ])
-            ->add('address', null, [
-                'label' => 'location.address_auto',
-                'attr' => [
-                    'class' => 'js-address',
-                    'readonly' => true,
-                ],
+            ->add($attr['zipcode'] ?? 'zipcode', HiddenType::class, [
+                'attr' => ['readonly' => true],
             ])
-            ->add('city', null, [
-                'label' => 'location.city_auto',
-                'attr' => [
-                    'class' => 'js-city',
-                    'readonly' => true,
-                ],
-            ])
-            ->add('zipcode', null, [
-                'label' => 'location.zipcode_auto',
-                'attr' => [
-                    'class' => 'js-zipcode',
-                    'readonly' => true,
-                ],
-            ]);
+        ;
 
-        if (isset($attr['geoLocation']) && true === $attr['geoLocation']) {
+        if (false === isset($attr['address']) || false !== $attr['address']) {
+            $builder->add($attr['address'] ?? 'address', HiddenType::class, [
+                'attr' => ['readonly' => true],
+            ]);
+        }
+        if (false === isset($attr['comment']) || false !== $attr['comment']) {
+            $builder->add($attr['comment'] ?? 'commentLocation', null, [
+                'label' => $attr['location_comment_label'] ?? 'location.comment',
+                'help' => $attr['location_comment_help'] ?? 'location.comment.help',
+            ]);
+        }
+        if (true === isset($attr['geo_location']) && true === $attr['geo_location']) {
             $builder
-                ->add('locationId', HiddenType::class, [
-                    'attr' => [
-                        'class' => 'js-locationId',
-                        'readonly' => true,
-                    ],
-                ])
-                ->add('lat', HiddenType::class, [
-                    'attr' => [
-                        'class' => 'js-lat',
-                        'readonly' => true,
-                    ],
-                ])
-                ->add('lon', HiddenType::class, [
-                    'attr' => [
-                        'class' => 'js-lon',
-                        'readonly' => true,
-                    ],
-                ]);
+                ->add('locationId', HiddenType::class)
+                ->add('lat', HiddenType::class)
+                ->add('lon', HiddenType::class)
+            ;
         }
     }
 
@@ -76,12 +53,6 @@ class LocationType extends AbstractType
     {
         $resolver->setDefaults([
             'inherit_data' => true,
-            'allow_extra_fields' => true,
         ]);
-    }
-
-    public function getBlockPrefix(): string
-    {
-        return '';
     }
 }

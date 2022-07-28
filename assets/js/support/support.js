@@ -3,7 +3,7 @@ import AvdlValidator from './avdlValidator'
 import HotelSupportValidator from './hotelSupportValidator'
 import RadioSelecter from '../utils/form/radioSelecter'
 import ConfirmAction from '../utils/confirmAction'
-import SearchLocation from '../utils/searchLocation'
+import LocationSearcher from '../utils/LocationSearcher'
 import changeChecker from '../utils/form/changeChecker'
 import AutoSizer from '../utils/form/autoSizer'
 import '../utils/maskNumber'
@@ -22,11 +22,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     new SupportValidator()
 
-    new SearchLocation('support_location')
-    new SearchLocation('ssd_location', 'city', '95')
-    new SearchLocation('support_end_location')
+    document.querySelectorAll('[data-location-search]').forEach(elt => new LocationSearcher(elt))
+
     new changeChecker('support') // form name
     new AutoSizer('textarea')
-
-
 })

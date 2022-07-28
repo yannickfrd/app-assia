@@ -18,6 +18,7 @@ class EvalInitGroupType extends AbstractType
         $builder
             ->add('housingStatus', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalHousingGroup::HOUSING_STATUS),
+                'attr' => ['autocomplete' => 'true'],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
                 'help' => 'evalInitGroup.housingStatus.help',

@@ -48,22 +48,9 @@ class HotelSupportType extends AbstractType
                 'widget' => 'single_text',
                 'required' => false,
             ])
-            ->add('_searchSsd', null, [
-                'label' => 'hotel_support.ssd.search',
-                'attr' => [
-                    'class' => 'js-search',
-                    'placeholder' => 'location.search.city.placeholder',
-                    'autocomplete' => 'off',
-                ],
-                'help' => null,
-                'mapped' => false,
-            ])
             ->add('ssd', null, [
-                'label' => 'hotel_support.ssd.city',
-                'attr' => [
-                    'class' => 'js-city',
-                    'readonly' => true,
-                ],
+                'label' => 'hotel_support.ssd',
+                'attr' => ['placeholder' => 'location.search.city.placeholder'],
             ])
             ->add('evaluationDate', DateType::class, [
                 'widget' => 'single_text',

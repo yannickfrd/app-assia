@@ -52,7 +52,7 @@ class SwitchSupportReferentType extends AbstractType
             'choices' => $this->userRepo->findUsersOfCurrentUserQueryBuilder($this->user)
                 ->getQuery()
                 ->getResult(),
-            'attr' => ['autocomplete' => true],
+            'attr' => ['autocomplete' => 'true'],
             'placeholder' => 'placeholder.select',
             'required' => true,
         ];

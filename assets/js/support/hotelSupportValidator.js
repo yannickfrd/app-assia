@@ -43,9 +43,7 @@ export default class HotelSupportValidator extends FormValidator {
     }
 
     init() {
-        document.querySelectorAll('select[multiple]').forEach(selectElt => {
-            new SelectManager('#' + selectElt.id)
-        })
+        document.querySelectorAll('select[multiple]').forEach(selectElt => new SelectManager(selectElt))
 
         this.dateInputElts.forEach(dateInputElt => {
             dateInputElt.addEventListener('focusout', this.checkDate.bind(this, dateInputElt))

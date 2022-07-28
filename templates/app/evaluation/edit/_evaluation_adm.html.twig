@@ -18,15 +18,8 @@
 							<div class="col-md-6">{{ form_row(eval_person.evalAdmPerson.nationality) }}</div>
 						</div>
 						<div class="row" data-parent-field="{{ prefix_id }}_nationality" data-options="2|3|4">
+							<div class="col-md-6">{{ form_row(eval_person.evalAdmPerson.country) }}</div>
 							<div class="col-md-6">{{ form_row(eval_person.evalAdmPerson.arrivalDate) }}</div>
-							{% if support.service.type == constant('SERVICE_TYPE_ASYLUM', support.service) %}
-								<div class="col-md-6" data-country="{{ key }}">
-									{{ form_row(eval_person.evalAdmPerson._country) }}
-									<span class="visually-hidden">{{ form_row(eval_person.evalAdmPerson.country) }}</span>
-								</div>
-							{% else %}
-								<div class="col-md-6">{{ form_row(eval_person.evalAdmPerson.country) }}</div>
-							{% endif %}
 						</div>
 					</div>
 					<div class="row">

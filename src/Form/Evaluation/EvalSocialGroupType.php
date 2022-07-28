@@ -17,11 +17,13 @@ class EvalSocialGroupType extends AbstractType
         $builder
             ->add('reasonRequest', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalSocialGroup::REASON_REQUEST),
+                'attr' => ['autocomplete' => 'true'],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('wanderingTime', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalSocialGroup::WANDERING_TIME),
+                'attr' => ['autocomplete' => 'true'],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])

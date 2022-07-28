@@ -11,9 +11,8 @@ nav.fixed-top {
     width: 144px;
 }
 
-#results_search {
-    position: absolute;
-    top: 35px;
+#search-person-ts-dropdown {
+    max-height: 400px;
 }
 
 @media (min-width: 992px) {
@@ -39,5 +38,9 @@ nav.fixed-top {
     #logo-site {
         max-height: 40px;
         width: 103px;
+    }
+
+    #search-person-ts-dropdown {
+        max-height: 300px;
     }
 }

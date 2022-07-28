@@ -1,6 +1,6 @@
-import SearchLocation from '../utils/searchLocation'
+import LocationSearcher from '../utils/LocationSearcher'
 import '../utils/maskPhone'
 
 document.addEventListener('DOMContentLoaded', () => {
-    new SearchLocation('referent_location')
+    document.querySelectorAll('[data-location-search]').forEach(elt => new LocationSearcher(elt))
 })
