@@ -30,7 +30,10 @@ class EvalAdmPersonType extends AbstractType
                 'widget' => 'single_text',
                 'required' => false,
             ])
-            ->add('country')
+            ->add('country', CountryType::class, [
+                'attr' => ['autocomplete' => 'true'],
+                'placeholder' => 'placeholder.select',
+            ])
             ->add('paper', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO_IN_PROGRESS),
                 'placeholder' => 'placeholder.select',
@@ -100,10 +103,6 @@ class EvalAdmPersonType extends AbstractType
             ])
             ->add('cndaId', null, [
                 'attr' => ['data-mask-type' => 'number'],
-            ])
-            ->add('_country', CountryType::class, [
-                'placeholder' => 'placeholder.select',
-                'mapped' => false,
             ])
         ;
 

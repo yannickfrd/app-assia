@@ -26,6 +26,7 @@ export default class TaskForm
         this.statusCheckboxElt = document.getElementById('task_status')
         this.supportSelectElt = document.getElementById('task_supportGroup')
         this.usersSelecElt = document.getElementById('task_users')
+        this.tagsSelecElt = document.getElementById('task_tags')
         this.contentTextAreaElt = document.getElementById('task_content')
 
         this.taskTitleElt = this.modalTaskElt.querySelector('.modal-header h2')
@@ -36,8 +37,8 @@ export default class TaskForm
 
         this.currentUserId = document.getElementById('user-name').dataset.userId
 
-        this.usersSelectManager = new SelectManager('#task_users')
-        this.tagsSelectManager = new SelectManager('#task_tags')
+        this.usersSelectManager = new SelectManager(this.usersSelecElt)
+        this.tagsSelectManager = new SelectManager(this.tagsSelecElt)
 
         this.alertsCollectionManager = new WidgetCollectionManager(this.afterToAddAlert.bind(this), null, 3)
 

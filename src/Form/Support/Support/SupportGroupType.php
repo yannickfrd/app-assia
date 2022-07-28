@@ -82,11 +82,6 @@ class SupportGroupType extends AbstractType
                 'widget' => 'single_text',
                 'required' => false,
             ])
-            ->add('endReason', ChoiceType::class, [
-                'choices' => Choices::getChoices(SupportGroup::REGULAR_END_REASONS),
-                'placeholder' => 'placeholder.select',
-                'required' => false,
-            ])
             ->add('endStatus', ChoiceType::class, [
                 'choices' => Choices::getChoices(SupportGroup::END_STATUS),
                 'placeholder' => 'placeholder.select',
@@ -138,7 +133,7 @@ class SupportGroupType extends AbstractType
             $service = $supportGroup->getService();
             $formModifier($form, $supportGroup);
 
-            $this->addSupportFields($form, $service);
+            $this->addExtraFields($form, $service);
         });
 
         $builder->get('service')->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) use ($formModifier) {
@@ -149,7 +144,21 @@ class SupportGroupType extends AbstractType
         });
     }
 
-    protected function formModifier(): \Closure
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => SupportGroup::class,
+            'translation_domain' => 'forms',
+            'allow_extra_fields' => true,
+        ]);
+    }
+
+    public function getBlockPrefix(): string
+    {
+        return 'support';
+    }
+
+    private function formModifier(): \Closure
     {
         return function (FormInterface $form, SupportGroup $supportGroup) {
             $service = $supportGroup->getService();
@@ -209,8 +218,16 @@ class SupportGroupType extends AbstractType
         };
     }
 
-    protected function addSupportFields(FormInterface $form, Service $service): void
+    private function addExtraFields(FormInterface $form, Service $service): void
     {
+        $form
+            ->add('endReason', ChoiceType::class, [
+                'choices' => Choices::getChoices($this->getEndReasonChoices($service)),
+                'placeholder' => 'placeholder.select',
+                'required' => false,
+            ])
+        ;
+
         switch ($service->getType()) {
             case Service::SERVICE_TYPE_AVDL:
                 $this->addAvdlFields($form);
@@ -218,28 +235,34 @@ class SupportGroupType extends AbstractType
             case Service::SERVICE_TYPE_HOTEL:
                 $this->addHotelFields($form);
                 break;
-            case Service::SERVICE_TYPE_ASYLUM:
-                $this->addAsylumFields($form);
-                break;
         }
     }
 
-    protected function addAvdlFields(FormInterface $form): void
+    private function getEndReasonChoices(Service $service): array
+    {
+        switch ($service->getType()) {
+            case Service::SERVICE_TYPE_AVDL:
+                return Avdl::END_REASONS;
+            case Service::SERVICE_TYPE_HOTEL:
+                return HotelSupport::END_REASONS;
+            case Service::SERVICE_TYPE_ASYLUM:
+                return AsylumSupport::END_REASONS;
+            default:
+                return SupportGroup::REGULAR_END_REASONS;
+        }
+    }
+
+    private function addAvdlFields(FormInterface $form): void
     {
         $form
             ->remove('startDate')
             ->remove('endDate')
             ->remove('endStatusComment')
-            ->add('endReason', ChoiceType::class, [
-                'choices' => Choices::getChoices(Avdl::END_REASONS),
-                'placeholder' => 'placeholder.select',
-                'required' => false,
-            ])
             ->add('avdl', AvdlType::class)
         ;
     }
 
-    protected function addHotelFields(FormInterface $form): void
+    private function addHotelFields(FormInterface $form): void
     {
         /** @var SupportGroup */
         $supportGroup = $form->getConfig()->getData();
@@ -250,11 +273,6 @@ class SupportGroupType extends AbstractType
                 'choices' => Choices::getChoices(HotelSupport::STATUS),
                 'placeholder' => 'placeholder.select',
                 'required' => true,
-            ])
-            ->add('endReason', ChoiceType::class, [
-                'choices' => Choices::getChoices(HotelSupport::END_REASONS),
-                'placeholder' => 'placeholder.select',
-                'required' => false,
             ])
             ->add('peopleGroup', PeopleGroupSiSiaoType::class, [
                 'data' => $supportGroup->getPeopleGroup(),
@@ -280,18 +298,7 @@ class SupportGroupType extends AbstractType
         ]);
     }
 
-    protected function addAsylumFields(FormInterface $form): void
-    {
-        $form
-            ->add('endReason', ChoiceType::class, [
-                'choices' => Choices::getChoices(AsylumSupport::END_REASONS),
-                'placeholder' => 'placeholder.select',
-                'required' => false,
-            ])
-        ;
-    }
-
-    protected function addPlaceGroup(SupportGroup $supportGroup): void
+    private function addPlaceGroup(SupportGroup $supportGroup): void
     {
         $placeGroup = (new PlaceGroup())->setPeopleGroup($supportGroup->getPeopleGroup());
         $supportGroup->addPlaceGroup($placeGroup);
@@ -300,7 +307,7 @@ class SupportGroupType extends AbstractType
     /**
      * Retourne les options du champ Intervenant.
      */
-    protected function optionsReferent(SupportGroup $supportGroup): array
+    private function optionsReferent(SupportGroup $supportGroup): array
     {
         return [
             'class' => User::class,
@@ -316,19 +323,5 @@ class SupportGroupType extends AbstractType
             'placeholder' => 'placeholder.select',
             'required' => false,
         ];
-    }
-
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        $resolver->setDefaults([
-            'data_class' => SupportGroup::class,
-            'translation_domain' => 'forms',
-            'allow_extra_fields' => true,
-        ]);
-    }
-
-    public function getBlockPrefix(): string
-    {
-        return 'support';
     }
 }

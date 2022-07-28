@@ -1,5 +1,5 @@
-import TomSelect from 'tom-select'
+import SelectManager from "./SelectManager";
 
-document.querySelectorAll('select[autocomplete]').forEach(selectElt => {
-    new TomSelect(selectElt)
+document.querySelectorAll('select[autocomplete="true"]').forEach(selectElt => {
+    new SelectManager(selectElt)
 })

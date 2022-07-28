@@ -25,7 +25,7 @@ export default class SearchManager {
 
     init() {
         this.formSearch.querySelectorAll('select[multiple]').forEach(selectElt => {
-            this.selectManagers.push(new SelectManager('#' + selectElt.id))
+            this.selectManagers.push(new SelectManager(selectElt))
         })
 
         if (this.btnSearchElt) {

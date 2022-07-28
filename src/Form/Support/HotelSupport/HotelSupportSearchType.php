@@ -65,7 +65,7 @@ class HotelSupportSearchType extends AbstractType
             ])
             ->add('departmentAnchor', ChoiceType::class, [
                 'choices' => Choices::getChoices(Choices::DEPARTMENTS),
-                'placeholder' => 'hotelSupport.search.departmentAnchor',
+                'placeholder' => 'hotel_support.search.departmentAnchor',
                 'required' => false,
             ])
             ->add('endReasons', ChoiceType::class, [

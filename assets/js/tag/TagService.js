@@ -15,8 +15,8 @@ export default class TagService {
         this.listBadge = document.getElementById('tags-list')
         this.formTags = document.forms['service_tag']
         this.selectTags = document.getElementById('service_tag_tags')
-        this.selectManager = new SelectManager('#service_tag_tags')
-
+        this.selectManager = new SelectManager(this.selectTags)
+        
         this.init()
     }
 

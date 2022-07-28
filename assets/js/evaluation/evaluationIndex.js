@@ -7,7 +7,6 @@ import changeChecker from '../utils/form/changeChecker'
 import  '../utils/maskNumber'
 import AutoSizer from '../utils/form/autoSizer'
 import StopWatch from '../utils/stopWatch'
-import CountryManager from './CountryManager'
 import UpperCaseAfterDot from '../utils/form/UpperCaseAfterDot'
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -18,7 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
     new ImportantFieldsChecker('section.accordion') // A instancier après  Evaluation
     new TwinFieldsChecker()
     new EvaluationBudget()
-    new CountryManager()
     new changeChecker('evaluation')
     new AutoSizer('textarea')
     new UpperCaseAfterDot('textarea')    

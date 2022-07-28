@@ -1,5 +1,6 @@
 import FormValidator from '../utils/form/formValidator'
 import FieldDisplayer from '../utils/form/fieldDisplayer'
+import SelectManager from "../utils/form/SelectManager";
 import LocationSearcher from '../utils/LocationSearcher'
 import ItemsListManager from '../utils/form/itemsListManager'
 
@@ -41,6 +42,7 @@ export default class evaluation {
             })
         })
 
+        document.querySelectorAll('[autocomplete="true"]').forEach(elt => new SelectManager(elt))
         document.querySelectorAll('[data-location-search]').forEach(elt => new LocationSearcher(elt))
     }
     
