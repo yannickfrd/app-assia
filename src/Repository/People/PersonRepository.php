@@ -49,7 +49,7 @@ class PersonRepository extends ServiceEntityRepository
     /**
      * Retourne toutes les personnes.
      */
-    public function findPeopleQuery(PersonSearch $personSearch, string $searchQuery = null, int $maxResult = 20): Query
+    public function findPeopleQuery(PersonSearch $personSearch, ?string $searchQuery = null, int $maxResult = 20): Query
     {
         $qb = $this->createQueryBuilder('p')->select('p');
 
@@ -104,7 +104,7 @@ class PersonRepository extends ServiceEntityRepository
      *
      * @return Person[]
      */
-    public function findPeopleByResearch(string $searchQuery = null): array
+    public function findPeopleByResearch(?string $searchQuery = null): array
     {
         $qb = $this->createQueryBuilder('p');
 
@@ -212,8 +212,12 @@ class PersonRepository extends ServiceEntityRepository
         ;
     }
 
-    private function filtersSearchQuery(QueryBuilder $qb, string $searchQuery): QueryBuilder
+    private function filtersSearchQuery(QueryBuilder $qb, ?string $searchQuery): QueryBuilder
     {
+        if (null === $searchQuery) {
+            return $qb;
+        }
+
         $date = \DateTime::createFromFormat('d-m-Y', $searchQuery);
 
         // If $search is date
