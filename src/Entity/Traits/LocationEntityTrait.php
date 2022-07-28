@@ -24,6 +24,8 @@ trait LocationEntityTrait
      */
     private $commentLocation;
 
+    private $fullAddress;
+
     public function getAddress(): ?string
     {
         return $this->address;
@@ -79,10 +81,17 @@ trait LocationEntityTrait
 
     public function getFullAddress(): ?string
     {
-        if (null === $this->address && null === $this->city) {
+        if (null === $this->city) {
             return null;
         }
 
-        return ($this->address ? $this->address.', ' : '').$this->zipcode.' '.$this->city;
+        return $this->address.', '.$this->zipcode.($this->city !== $this->address ? ' '.$this->city : '');
+    }
+
+    public function setFullAddress(?string $fullAddress): self
+    {
+        $this->fullAddress = $fullAddress;
+
+        return $this;
     }
 }

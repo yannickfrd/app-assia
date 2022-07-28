@@ -1,0 +1,34 @@
+{% set location_form = location_form is defined ? location_form : form.location %}
+{% set location_type = location_type ?? 'address' %}
+
+<div class="row mb-3" data-location-search="{{ location_type }}" 
+    {% if location_geo is defined %}
+        data-location-lat="{{ location_geo.lat }}" data-location-lon="{{ location_geo.lon }}"
+    {% endif %}
+>
+    {% if location_title is defined %}
+        <div class="col-md-12 mb-3"><h2 class="h5">{{ location_title }}</h2></div>
+    {% endif %}
+    <div class="col-md-6">
+        {{ form_row(location_full_address_form ?? location_form.fullAddress, {attr: {'data-location-type': 'search'}}) }}
+    </div>
+    {% if location_comment_form is defined or location_form.commentLocation is defined %}
+        <div class="col-md-6">{{ form_row(location_comment_form ?? location_form.commentLocation) }}</div>
+    {% endif %}
+    {% if location_type != 'city' %}
+        <div class="col-md-6">
+            {{ form_row(location_address_form ?? location_form.address, {attr: {'data-location-type': 'address'}}) }}
+        </div>
+    {% endif %}
+        <div class="col-md-6">
+            {{ form_row(location_city_form ?? location_form.city, {attr: {'data-location-type': 'city'}}) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_row(location_zipcode_form ?? location_form.zipcode, {attr: {'data-location-type': 'zipcode'}}) }}
+        </div>
+    {% if location_form.locationId is defined %}
+        {{ form_row(location_form.locationId, {attr: {'data-location-type': 'locationId'}}) }}
+        {{ form_row(location_form.lat, {attr: {'data-location-type': 'lat'}}) }}
+        {{ form_row(location_form.lon, {attr: {'data-location-type': 'lon'}}) }}
+    {% endif %}
+</div>

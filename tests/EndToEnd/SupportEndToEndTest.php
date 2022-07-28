@@ -107,7 +107,7 @@ class SupportEndToEndTest extends PantherTestCase
 
         $this->client->waitFor('table');
 
-        $this->clickElement('a[data-bs-original-title="Restaurer"]');
+        $this->clickElement('a[title="Restaurer"]');
 
         $this->client->waitFor('.toast.alert-success');
         $this->assertSelectorExists('.toast.alert-success');

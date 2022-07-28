@@ -3,6 +3,7 @@
 namespace App\Form\Admin;
 
 use App\Entity\Admin\Setting;
+use App\Form\Type\LocationType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -18,6 +19,13 @@ class SettingType extends AbstractType
             ->add('organizationName', TextType::class, [
                 'empty_data' => '',
                 'required' => false,
+            ])
+            ->add('location', LocationType::class, [
+                'data_class' => Setting::class,
+                'attr' => [
+                    'geo_location' => true,
+                    'location_search_label' => 'setting.location_search',
+                ],
             ])
             ->add('softDeletionDelay', IntegerType::class, [
                 'help' => 'setting.soft_deletion_delay.help',

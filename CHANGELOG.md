@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## Version 4.2.0 - 28/07/2022
+
+Feature dynamic search with tom-select and ajax loading:
+
+* Create partial template views '_location_form' and '_location_end_form'
+* Edit LocationType (add options)
+* Rename class 'searchLocation.js' to 'LocationSearcher.js'
+* [LocationSearcher] use data-attributs for all options
+* [LocationSearcher] use Tom-Select with ajax loading
+* Edit location for : service, pole, place, support, referent, evaluation, setting
+* Rename JS class 'searchPerson' to 'PersonSearcher'
+* [PersonSearcher] use Tom-Select with ajax loading
+* Edit feature SelectManager and autocomplete
+
 ## Version 4.1.0 - 22/07/2022
 
 Edit hotel support and evaluation (priority criteria, recommendations):

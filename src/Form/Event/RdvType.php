@@ -65,7 +65,6 @@ class RdvType extends AbstractType
             ])
             ->add('location', null, [
                 'attr' => [
-                    'class' => 'js-search',
                     'placeholder' => 'rdv.placeholder.location',
                     'autocomplete' => 'off',
                 ],

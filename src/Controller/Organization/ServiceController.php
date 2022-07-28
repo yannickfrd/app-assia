@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Organization;
 
+use App\Entity\Admin\Setting;
 use App\Entity\Organization\Service;
 use App\Form\Model\Organization\ServiceSearch;
 use App\Form\Organization\Service\ServiceSearchType;
@@ -74,6 +75,7 @@ final class ServiceController extends AbstractController
 
         return $this->render('app/organization/service/service.html.twig', [
             'form' => $form->createView(),
+            'setting' => $this->em->getRepository(Setting::class)->findOneBy([]),
         ]);
     }
 
@@ -125,6 +127,7 @@ final class ServiceController extends AbstractController
             'nb_places' => $nbPlaces,
             'form_tags' => $formTags->createView(),
             'service_tags' => $tags,
+            'setting' => $this->em->getRepository(Setting::class)->findOneBy([]),
         ]);
     }
 

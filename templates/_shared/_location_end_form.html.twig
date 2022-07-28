@@ -1,0 +1,8 @@
+{% include '_shared/_location_form.html.twig' with {
+    'location_form': form.endLocation,
+    'location_full_address_form': form.endLocation.endLocationFullAddress,
+    'location_address_form': form.endLocation.endLocationAddress,
+    'location_city_form': form.endLocation.endLocationCity,
+    'location_zipcode_form': form.endLocation.endLocationZipcode,
+    'location_geo': support.service,
+} %}

@@ -56,8 +56,9 @@ class PoleType extends AbstractType
             ])
             ->add('location', LocationType::class, [
                 'data_class' => Pole::class,
-                'attr' => ['seachLabel' => 'Adresse du pôle'],
-            ]);
+                'attr' => ['location_search_label' => 'pole.location_search'],
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

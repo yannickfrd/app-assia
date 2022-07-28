@@ -1,14 +1,3 @@
-place:
-  area.help: Superficie en m²
-  name: Hébergement ou logement
-  name.placeholder: Nom du groupe de places
-  name.help: Ce nom doit vous permettre de retrouver facilement ce logement ou cet hébergement (numéro, couleur...).
-  location.placeholder: Adresse du groupe de places
-  configuration.help: Diffus ou regroupé
-  type.help: Chambre, T1, T2, T3...
-placeGroup:
-  help: Indiquez le groupe de places.
-  startDate: Date d'entrée
 Add person to support: Ajouter la personne au suivi en cours.
 Address: Adresse
 Area: Superficie
@@ -17,7 +6,6 @@ City: Ville
 Coefficient: Coefficient du suivi
 Color: Couleur
 Comment location: Complément adresse
-commentLocation.help: Bâtiment, étage, N° de porte...
 Confirm password: Confirmation du mot de passe
 ConfirmPassword: Confirmation du mot de passe
 Confirm new password: Confirmation nouveau mot de passe
@@ -27,11 +15,6 @@ Day: Jour
 Dept: Département
 Device: Dispositif
 Devices: Dispositifs
-device:
-  name: Nom du dispositif
-  coefficient.help: Coefficient entre 0 et 10. Les décimales sont prises en compte.
-  place.help: Ce dispositif a t-il une activité d'hébergement ?
-  comment.placeholder: Description...
 Email: Email
 Email1: Adresse email 1
 Email2: Adresse email 2
@@ -47,6 +30,7 @@ Family typology: Typologie familiale
 Family typologies: Typologie familiale
 Firstname: Prénom
 Fullname: Nom et prénom
+Full address: Adresse
 Gender: Sexe
 head.help: Demandeur principal
 Hotel: Hôtel
@@ -131,21 +115,12 @@ Support dates: Dates de suivi
 Support people: Membres du suivi
 Theoretical end date: Date de fin théorique
 Title: Titre
-user:
-  status: Statut
-  roles: Rôle
-  username.help: Remplissage auto. en fonction du nom et prénom.
-  password.help: 8 caractères minimum dont 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial (? ! * { } [ ]- + = & < > $)
-  confirmPassword.help: Veuillez re-saisir le mot de passe pour confirmation
 professionals: Intervenant·e·s
 Username: Login
 Usename: Nom d'usage
 Usename or maiden name: Nom d'usage ou de jeune fille
 Write a note: Écrire une note
 peopleGroup.comment: Écrire un commentaire concernant le groupe
-person:
-  contactOtherPerson.help: Autre personne à contacter en cas d'urgence.
-  comment: Écrire un commentaire concernant la personne
 comment.placeholder: Écrire un commentaire relatif au suivi social
 service.comment: Écrire un commentaire concernant le service
 Year: Année
@@ -159,31 +134,12 @@ Enabled: Actif
 
 search.fullname.placeholder: Nom du suivi
 
-# SupportGroup
-Eval adm: Administratif
-Eval budget: Budget
-Eval family: Famille
-Eval housing: Logement
-Eval justice: Justice
-Eval prof: Professionnel
-Eval social: Sociale
-support:
-  dates: Date d'accompagnement
-  startDate: Date de début d'accompagnement
-  endDate: Date de fin d'accompagnement
-  label:
-    soft_deleteable: Corbeille
-Clone support: Je souhaite récupérer les informations du précédent suivi social (évaluation et documents) en accord avec le service concerné.
-Nb children under3years: Nombre d'enfant de moins de 3 Anonymis
-
-# OriginRequest
-Decision date: Date de décision
-Organization: Organisme prescripteur ou orienteur
-Organization comment: Précision concernant l'organisme
-Orientation date: Date d'orientation
-Pre admission date: Date d'entretien de pré-admission
-Resul pre admission: Résultat de l'orientation ou pré-admission
-originRequest.comment: Écrire un commentaire relatif à la demande ou à l'orientation
+# Device
+device:
+  name: Nom du dispositif
+  coefficient.help: Coefficient entre 0 et 10. Les décimales sont prises en compte.
+  place.help: Ce dispositif a t-il une activité d'hébergement ?
+  comment.placeholder: Description...
 
 # Document
 document:
@@ -198,39 +154,40 @@ Agreement: Consentement de la personne
 File type: Type de fichier
 Internal file name: Nom du fichier interne
 Size: Taille
-# Referent
-Social worker: Travailleur social
-Social worker2: Travailleur social suppléant
-Social worker name 2: Nom du travailleur social suppléant
-referent:
-  name: Nom du service
-  type: Type de service
-  socialWorker: Nom du travailleur social
-  socialWorker2: Travailleur social suppléant
-  comment.plaholder: Écrire un commentaire concernant le service social référent...
 
-# Service
-Chief: Responsable
-Siret id: Numéro SIRET
-Finess id: Numéro FINESS
-Opening date: Date d'ouverture
-Closing date: Date de fermeture
-Contribution: Participation financière / Redevance
-Contribution type: Type de participation financière
-Contribution rate: Taux de participation financière
-Justice activity: Activité Justice
-service:
-  type: Type d'activité
-  coefficient: Coefficient
-  coefficient.placeholder: Suivis avec coefficient (pondération)
-  comment.placeholder: Écrire une information complémentaire...
-  name: Nom du service
-  minRestToLive.help: Reste à vivre minimum par jour et par personne
-Place type: Type de logement ou d'hébergement
-Configuration: Configuration
-Individual collective: Individuel ou partagé
-Contribution amt: Montant de la participation financière
-Min rest to live: Reste à vivre minimum
+# Location
+location:
+  comment: Informations complémentaires
+  comment.help: Bâtiment, étage, N° de porte...
+  search:
+    help: Recherche dynamique par autocomplétion
+    address.placeholder: Saisir une adresse ou une ville...
+    city.placeholder: Saisir une ville...
+end_location: Adresse à l'issue de l'accompagnement
+
+# Event
+event:
+  content.placeholder: Ajouter une note
+  location.placeholder: Ajouter un lieu
+  support_group: Nom du suivi
+  support_group.placeholder: -- Nom du suivi concerné --
+  support_people: Membre(s) du suivi
+  support_people.placeholder: -- Membre(s) du suivi concerné --
+  title.placeholder: Ajouter un titre
+  users: Intervenant·e·s
+  users.placeholder: -- Intervenant·e·s --
+
+### Note
+notes.export.title: Exporter toutes les notes sur un document Word
+
+# OriginRequest
+Decision date: Date de décision
+Organization: Organisme prescripteur ou orienteur
+Organization comment: Précision concernant l'organisme
+Orientation date: Date d'orientation
+Pre admission date: Date d'entretien de pré-admission
+Resul pre admission: Résultat de l'orientation ou pré-admission
+originRequest.comment: Écrire un commentaire relatif à la demande ou à l'orientation
 
 # Payment
 Amount: Montant
@@ -272,25 +229,27 @@ payment:
   type: Type d'opération
 contribution.rate.help: Nombre entre 0 et 1.
 
-### Note
-notes.export.title: Exporter toutes les notes sur un document Word
+# Person
+person:
+  contactOtherPerson.help: Autre personne à contacter en cas d'urgence.
+  comment: Écrire un commentaire concernant la personne
 
-# Event
-event:
-  content.placeholder: Ajouter une note
-  location.placeholder: Ajouter un lieu
-  support_group: Nom du suivi
-  support_group.placeholder: -- Nom du suivi concerné --
-  support_people: Membre(s) du suivi
-  support_people.placeholder: -- Membre(s) du suivi concerné --
-  title.placeholder: Ajouter un titre
-  users: Intervenant·e·s
-  users.placeholder: -- Intervenant·e·s --
+# Place
+place:
+  area.help: Superficie en m²
+  name: Hébergement ou logement
+  name.placeholder: Nom du groupe de places
+  name.help: Ce nom doit vous permettre de retrouver facilement ce logement ou cet hébergement (numéro, couleur...).
+  location.placeholder: Adresse du groupe de places
+  configuration.help: Diffus ou regroupé
+  type.help: Chambre, T1, T2, T3...
+placeGroup:
+  help: Indiquez le groupe de places.
+  startDate: Date d'entrée
 
-# Task
-task:
-  level.placeholder: -- Priorité --
-  title.placeholder: Nom de la tâche
+# Pole
+pole:
+  location_search: Adresse du pôle
 
 # Rdv
 rdv:
@@ -304,16 +263,65 @@ rdv:
     google: Ajouter à Google Agenda
     outlook: Ajouter à Outlook Agenda
 
-# Adress
-location:
-  address_auto: Adresse (auto.)
-  city_auto: Ville (auto.)
-  zipcode_auto: Code postal (auto.)
-  search:
-    address.placeholder: Saisir une adresse ou une ville...
-    city.placeholder: Saisir une ville...
-    help: Adresse du logement, hébergement, domiciliation...
-endLocation: Adresse à l'issue
+
+# Referent
+Social worker: Travailleur social
+Social worker2: Travailleur social suppléant
+Social worker name 2: Nom du travailleur social suppléant
+referent:
+  comment.plaholder: Écrire un commentaire concernant le service social référent...
+  location_search: Adresse du service référent
+  name: Nom du service
+  socialWorker: Nom du travailleur social
+  socialWorker2: Travailleur social suppléant
+  type: Type de service
+
+# Service
+Chief: Responsable
+Siret id: Numéro SIRET
+Finess id: Numéro FINESS
+Opening date: Date d'ouverture
+Closing date: Date de fermeture
+Contribution: Participation financière / Redevance
+Contribution type: Type de participation financière
+Contribution rate: Taux de participation financière
+Justice activity: Activité Justice
+service:
+  location_search: Adresse du service
+  coefficient: Coefficient
+  coefficient.placeholder: Suivis avec coefficient (pondération)
+  comment.placeholder: Écrire une information complémentaire...
+  name: Nom du service
+  minRestToLive.help: Reste à vivre minimum par jour et par personne
+  type: Type d'activité
+Place type: Type de logement ou d'hébergement
+Configuration: Configuration
+Individual collective: Individuel ou partagé
+Contribution amt: Montant de la participation financière
+Min rest to live: Reste à vivre minimum
+
+# SupportGroup
+Eval adm: Administratif
+Eval budget: Budget
+Eval family: Famille
+Eval housing: Logement
+Eval justice: Justice
+Eval prof: Professionnel
+Eval social: Sociale
+support:
+  dates: Date d'accompagnement
+  endDate: Date de fin d'accompagnement
+  label:
+    soft_deleteable: Corbeille
+  location_search.help: Adresse du logement, de l'hébergement ou de la domiciliation
+  startDate: Date de début d'accompagnement
+Clone support: Je souhaite récupérer les informations du précédent suivi social (évaluation et documents) en accord avec le service concerné.
+Nb children under3years: Nombre d'enfant de moins de 3 ans
+
+# Task
+task:
+  level.placeholder: -- Priorité --
+  title.placeholder: Nom de la tâche
 
 # AVDL
 Diag type: Type de diagnostic
@@ -376,9 +384,7 @@ hotel_support:
   level_support: Niveau d'intervention
   search:
     department_anchor: -- Département d'ancrage --
-  ssd:
-    search: Recherche du SSD orienteur
-    city: SSD orienteur (auto.)
+  ssd: SSD orienteur
 
 # Export
 Formatted sheet: Tableur formaté
@@ -404,8 +410,8 @@ Weekly alert: Rappel hebdomadaire
 Daily alert: Rappel quotidien
 Soft deletion delay: Délai d'archivage
 Hard deletion delay: Délai de suppression
-
 setting:
+  location_search: Adresse par défaut
   soft_deletion_delay:
     label: Délai minimum d'archivage
     placeholder: "Exemple : 24 mois"
@@ -429,3 +435,11 @@ update_resources_rights: Renouvellement droits relatifs aux ressources
 update_siao_request: Renouvellement demande SIAO
 update_social_housing_request: Renouvellement demande de logement
 update_domiciliation: Renouvellement domiciliation
+
+# User
+user:
+  status: Statut
+  roles: Rôle
+  username.help: Remplissage auto. en fonction du nom et prénom.
+  password.help: 8 caractères minimum dont 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial (? ! * { } [ ]- + = & < > $)
+  confirmPassword.help: Veuillez re-saisir le mot de passe pour confirmation

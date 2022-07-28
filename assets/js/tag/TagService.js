@@ -15,12 +15,16 @@ export default class TagService {
         this.listBadge = document.getElementById('tags-list')
         this.formTags = document.forms['service_tag']
         this.selectTags = document.getElementById('service_tag_tags')
-        this.selectManager = new SelectManager('#service_tag_tags')
-
+        this.selectManager = new SelectManager(this.selectTags)
+        
         this.init()
     }
 
     init() {
+        if (!this.formTags) {
+            return console.error('No form tags')
+        }
+
         this.tagsIds = () => {
             const tagsIds = []
             this.listBadge.querySelectorAll('span[data-tag-id]').forEach(span => {

@@ -5,11 +5,11 @@ import TomSelect from 'tom-select'
  */
 export default class SelectManager {
     /**
-     * @param {string} selector
+     * @param {HTMLElement | string} element
      * @param {Object} settings
      */
-    constructor(selector, settings = {}) {
-        this.selectElt = document.querySelector(selector)
+    constructor(element, settings = {}) {
+        this.selectElt = element instanceof HTMLElement ? element : document.querySelector(element)
         this.settings = settings
 
         if (this.selectElt === null) {
@@ -89,6 +89,7 @@ export default class SelectManager {
             // create: true,
             // hideSelected: true,
             allowEmptyOption: true,
+            selectOnTab: this.selectElt.multiple ? false : true,
             plugins: this.selectElt.multiple ? {
                 // dropdown_input: true,
                 clear_button: {
@@ -117,8 +118,8 @@ export default class SelectManager {
     /**
      * Create a new option element.
      *
-     * @param {string|number} value
-     * @param {string} text
+     * @param {string|number} id
+     * @param {string} label
      *
      * @returns {HTMLOptionElement}
      */

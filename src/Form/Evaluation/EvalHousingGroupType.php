@@ -4,6 +4,7 @@ namespace App\Form\Evaluation;
 
 use App\Entity\Evaluation\EvalHousingGroup;
 use App\Entity\Organization\Service;
+use App\Form\Type\LocationType;
 use App\Form\Utils\Choices;
 use App\Form\Utils\EvaluationChoices;
 use Symfony\Component\Form\AbstractType;
@@ -36,11 +37,13 @@ class EvalHousingGroupType extends AbstractType
                 ])
             ->add('siaoRequestDept', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::DEPARTMENTS),
+                'attr' => ['autocomplete' => 'true'],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('siaoRecommendation', ChoiceType::class, [
                 'choices' => $this->getEditSiaoRecommendations(),
+                'attr' => ['autocomplete' => 'true'],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
@@ -125,9 +128,6 @@ class EvalHousingGroupType extends AbstractType
                 'required' => false,
             ])
             ->add('hsgActionDept', null, [
-                'attr' => [
-                    'class' => 'js-zipcode',
-                ],
                 'help' => 'location.department.help',
             ])
             ->add('hsgActionRecordId')
@@ -150,31 +150,15 @@ class EvalHousingGroupType extends AbstractType
                 'widget' => 'single_text',
                 'required' => false,
             ])
-            ->add('_domiciliationSearch', null, [
-                'label' => ' ',
+            ->add('domiciliationLocation', LocationType::class, [
+                'data_class' => EvalHousingGroup::class,
                 'attr' => [
-                    'class' => 'js-search',
-                    'placeholder' => 'location.search.address.placeholder',
-                    'autocomplete' => 'off',
-                ],
-                'mapped' => false,
-            ])
-            ->add('domiciliationAddress', null, [
-                'attr' => [
-                    'class' => 'js-address',
-                    'readonly' => true,
-                ],
-            ])
-            ->add('domiciliationCity', null, [
-                'attr' => [
-                    'class' => 'js-city',
-                    'readonly' => true,
-                ],
-            ])
-            ->add('domiciliationZipcode', null, [
-                'attr' => [
-                    'class' => 'js-zipcode',
-                    'readonly' => true,
+                    'fullAddress' => 'domiciliationFullAddress',
+                    'address' => 'domiciliationAddress',
+                    'city' => 'domiciliationCity',
+                    'zipcode' => 'domiciliationZipcode',
+                    'comment' => false,
+                    'location_search_placeholder' => 'location.address.placeholder',
                 ],
             ])
             ->add('housingExperience', ChoiceType::class, [
@@ -205,7 +189,6 @@ class EvalHousingGroupType extends AbstractType
                 ->add('housingAddress')
                 ->add('housingCity')
                 ->add('housingDept', null, [
-                    'attr' => ['class' => 'js-zipcode'],
                     'help' => 'location.department.help',
                 ])
                 ->add('expulsionInProgress', ChoiceType::class, [
@@ -233,7 +216,8 @@ class EvalHousingGroupType extends AbstractType
                 ->add('fslEligibility', HiddenType::class)
                 ->add('cafEligibility', HiddenType::class)
                 ->add('otherHelps', HiddenType::class)
-                ->add('hepsPrecision', HiddenType::class);
+                ->add('hepsPrecision', HiddenType::class)
+            ;
         }
     }
 

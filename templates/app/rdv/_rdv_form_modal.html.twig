@@ -54,11 +54,14 @@
                     <div class="col-12 col-lg-6 d-none">{{ form_widget(form_rdv.start) }}</div>
                     <div class="col-12 col-lg-6 d-none">{{ form_widget(form_rdv.end) }}</div>
                     <div class="col-12 position-relative">
-                        <div class="input-group" id="rdv_search_location">
+                        <div class="input-group" data-location-search="address" data-location-search-create="true"
+                            data-location-lat="{{ support is defined ? support.service.lat }}"
+                            data-location-lon="{{ support is defined ? support.service.lon }}"
+                        >
                             <span class="input-group-text" title="Localisation" data-bs-toggle="tooltip"
                                 data-bs-placement="bottom"><i class="fas fa-map-marker-alt text-black-50"></i>
                             </span>
-                            {{ form_widget(form_rdv.location) }}
+                            {{ form_widget(form_rdv.location, {attr: {'data-location-type': 'search'}}) }}
                         </div>
                     </div>
                 </div>

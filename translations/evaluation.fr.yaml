@@ -220,11 +220,9 @@ Caf id: Numéro CAF
 Caf attachment: CAF de rattachement
 Child dependance: À charge
 Child to host: À héberger
-schoolChildCarePrecision.help: Nom de l'école, classe, date de début de scolarité...
 school:
-    address: Adresse école ou garde (auto)
-    city: Ville école ou garde (auto)
-    zipcode: Code postal école ou garde (auto)
+    comment: Précision sur l'école ou la garde
+    comment.help: Nom de l'école, classe, date de début de scolarité...
 School child care precision: Précision sur l'école ou la garde
 Childcare or school: École/garde
 Childcare school type: Type de garde ou école
@@ -245,6 +243,7 @@ Pregnancy type: Type de grossesse
 Protective measure type: Type de mesure de protection
 Protective measure: Mesure de protection
 School address: Adresse école/garde
+School full address: Adresse école/garde
 School city: Ville école/garde
 School dept: Département école/garde
 School zipcode: Code postal école/garde
@@ -294,9 +293,11 @@ Domiciliation: Domiciliation
 Domiciliation type: Type d'organisme domiciliataire
 Domiciliation comment: Organisme ou personne domiciliataire
 Domiciliation address: Adresse de domiciliation
+Domiciliation full address: Adresse de domiciliation
 Domiciliation city: Ville de domiciliation
 Domiciliation dept: Département de domiciliation
 Domiciliation zipcode: Code postal de domiciliation
+domiciliation.comment: Organisme ou personne domiciliataire
 End domiciliation date: Date de fin de domiciliation
 Expulsion comment: Commentaire sur l'expulsion location
 Expulsion in progress: Procédure d'expulsion en cours
@@ -385,9 +386,9 @@ Wheelchair: Personne en fauteuil roulant
 evalSocialGroup.comment: Écrire un commentaire relatif à la situation sociale du groupe
 
 location:
-    search:
-        address.placeholder: Saisir une adresse ou une ville...
-        city.placeholder: Saisir une ville...
+    search.help: Recherche dynamique par autocomplétion
+    address.placeholder: Saisir une adresse ou une ville...
+    city.placeholder: Saisir une ville...
     department.help: Département ou code postal
 
 ## Vie à l'hôtel

@@ -33,6 +33,7 @@ Encore
     .addEntry('export', './assets/js/export/export-index.js')
     .addEntry('home', './assets/js/home/home.js')
     .addEntry('listPeople', './assets/js/listPeople/listPeople.js')
+    .addEntry('location-search', './assets/js/location-search.js')
     .addEntry('login', './assets/js/security/login.js')
     .addEntry('note', './assets/js/note/note-index.js')
     .addEntry('payment', './assets/js/payment/payment-index.js')
