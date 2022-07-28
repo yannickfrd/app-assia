@@ -63,25 +63,16 @@
                                 }) }}
                             </div>
                         </div>
-                        <div class="row mb-3" data-parent-field="{{ prefix_id }}_childcareOrSchool" data-options="1"
-                            data-location-search="city" data-location-lat="{{ support.service.lat }}"
-                            data-location-lon="{{ support.service.lon }}"
-                        >
-                            <div class="col-md-6 position-relative">
-                                {{ form_row(eval_person.evalFamilyPerson.schoolSearch, {
-							        attr: {'data-location-type': 'search'}}) }}
-                            </div>
-                            <div class="col-md-6">
-                                {{ form_row(eval_person.evalFamilyPerson.schoolCity, {
-							        attr: {'data-location-type': 'city'}}) }}
-                            </div>
-                            <div class="col-md-6">
-                                {{ form_row(eval_person.evalFamilyPerson.schoolZipcode, {
-							        attr: {'data-location-type': 'zipcode'}}) }}
-                            </div>
-                            <div class="col-md-6">
-                                {{ form_row(eval_person.evalFamilyPerson.schoolChildCarePrecision) }}
-                            </div>
+                        <div data-parent-field="{{ prefix_id }}_childcareOrSchool" data-options="1">
+                            {% include '_shared/_location_form.html.twig' with {
+                                'location_form': eval_person.evalFamilyPerson.schoolLocation,
+                                'location_type': 'city',
+                                'location_full_address_form': eval_person.evalFamilyPerson.schoolLocation.schoolFullAddress,
+                                'location_city_form': eval_person.evalFamilyPerson.schoolLocation.schoolCity,
+                                'location_zipcode_form': eval_person.evalFamilyPerson.schoolLocation.schoolZipcode,
+                                'location_comment_form': eval_person.evalFamilyPerson.schoolLocation.schoolChildCarePrecision,
+                                'location_geo': support.service,
+                            } %}
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">{{ form_row(eval_person.evalFamilyPerson.childToHost) }}</div>

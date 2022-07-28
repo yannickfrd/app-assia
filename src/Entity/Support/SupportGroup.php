@@ -240,6 +240,8 @@ class SupportGroup
      */
     private $endLocationAddress;
 
+    private $endLocationFullAddress;
+
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
@@ -580,6 +582,23 @@ class SupportGroup
     public function setEndLocationAddress(?string $endLocationAddress): self
     {
         $this->endLocationAddress = $endLocationAddress;
+
+        return $this;
+    }
+
+    public function getEndLocationFullAddress(): ?string
+    {
+        if (null === $this->endLocationCity) {
+            return null;
+        }
+
+        return $this->endLocationAddress.', '.$this->endLocationZipcode
+            .($this->endLocationCity !== $this->endLocationAddress ? ' '.$this->endLocationCity : '');
+    }
+
+    public function setEndLocationFullAddress(?string $endLocationFullAddress): self
+    {
+        $this->endLocationFullAddress = $endLocationFullAddress;
 
         return $this;
     }

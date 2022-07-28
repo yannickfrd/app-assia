@@ -5,6 +5,7 @@ namespace App\Form\Evaluation;
 use App\Entity\Evaluation\EvalFamilyPerson;
 use App\Entity\People\RolePerson;
 use App\Entity\Support\SupportPerson;
+use App\Form\Type\LocationType;
 use App\Form\Utils\Choices;
 use App\Form\Utils\EvaluationChoices;
 use Symfony\Component\Form\AbstractType;
@@ -96,25 +97,18 @@ class EvalFamilyPersonType extends AbstractType
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
-            ->add('schoolChildCarePrecision', null, [
-                'help' => 'schoolChildCarePrecision.help',
-            ])
-            ->add('schoolSearch', null, [
-                'label' => ' ',
+            ->add('schoolLocation', LocationType::class, [
+                'data_class' => EvalFamilyPerson::class,
                 'attr' => [
-                    'class' => 'js-search',
-                    'placeholder' => 'location.search.city.placeholder',
-                    'autocomplete' => 'off',
+                    'fullAddress' => 'schoolFullAddress',
+                    'city' => 'schoolCity',
+                    'address' => false,
+                    'zipcode' => 'schoolZipcode',
+                    'comment' => 'schoolChildCarePrecision',
+                    'location_comment_label' => 'school.comment',
+                    'location_comment_help' => 'school.comment.help',
+                    'location_search_placeholder' => 'location.city.placeholder',
                 ],
-                'mapped' => false,
-            ])
-            ->add('schoolCity', null, [
-                'label' => 'school.city',
-                'attr' => ['readonly' => true],
-            ])
-            ->add('schoolZipcode', null, [
-                'label' => 'school.zipcode',
-                'attr' => ['readonly' => true],
             ])
             ->add('childToHost', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalFamilyPerson::CHILD_TO_HOST),
@@ -125,7 +119,8 @@ class EvalFamilyPersonType extends AbstractType
                 'choices' => Choices::getChoices(EvalFamilyPerson::CHILD_DEPENDANCE),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
-            ]);
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

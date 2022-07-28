@@ -25,10 +25,9 @@
 </section>
 <section class="{% if support.device and support.device.place == YES %}d-none{% endif %}">
     <hr>
-    {% include '_shared/_form_location.html.twig' with {
+    {% include '_shared/_location_form.html.twig' with {
         'location_title': 'Adresse du suivi',
-        'location_lat': support.service.lat,
-        'location_lon': support.service.lon,
+        'location_geo': support.service,
     } %}
 </section>
 <hr>
@@ -58,10 +57,7 @@
             {{ form_row(form.endStatusComment) }}</div>
     </div>
     <div data-parent-field="support_endStatus" data-options="*">
-        {% include '_shared/_form_end_location.html.twig' with {
-            'location_lat': support.service.lat,
-            'location_lon': support.service.lon,
-        } %}
+		{% include '_shared/_location_end_form.html.twig' %}
     </div>
     <div class="row" data-parent-field="support_endDate">
         {% if support.id and support.device and support.device.place == YES %}

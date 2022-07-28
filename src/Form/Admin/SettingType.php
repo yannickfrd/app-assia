@@ -5,11 +5,11 @@ namespace App\Form\Admin;
 use App\Entity\Admin\Setting;
 use App\Form\Type\LocationType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class SettingType extends AbstractType
 {
@@ -23,8 +23,8 @@ class SettingType extends AbstractType
             ->add('location', LocationType::class, [
                 'data_class' => Setting::class,
                 'attr' => [
-                    'geoLocation' => true,
-                    'searchLabel' => 'Adresse par défault',
+                    'geo_location' => true,
+                    'location_search_label' => 'setting.location_search',
                 ],
             ])
             ->add('softDeletionDelay', IntegerType::class, [

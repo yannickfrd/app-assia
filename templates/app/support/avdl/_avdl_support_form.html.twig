@@ -17,10 +17,9 @@
 		<div class="col-md-12" data-parent-field="support_originRequest_organization" data-options="*">{{ form_widget(form.originRequest.comment) }}</div>
 	</div>
 	<hr/>
-    {% include '_shared/_form_location.html.twig' with {
+    {% include '_shared/_location_form.html.twig' with {
         'location_title': 'Adresse du suivi',
-        'location_lat': support.service.lat,
-        'location_lon': support.service.lon,
+        'location_geo': support.service,
     } %}
 	<hr/>
 	{% if form.avdl is defined %}
@@ -66,10 +65,7 @@
 					<div class="col-md-6" data-parent-field="support_avdl_propoResult" data-options="1">{{ form_row(form.avdl.accessHousingDate) }}</div>
 				</div>
 				<div data-parent-field="support_avdl_propoHousingDate">
-					{% include '_shared/_form_end_location.html.twig' with {
-						'location_lat': support.service.lat,
-						'location_lon': support.service.lon,
-					} %}
+					{% include '_shared/_location_end_form.html.twig' %}
 				</div>
 				<div class="row">
 					<div class="col-md-12" data-parent-field="support_avdl_propoHousingDate">{{ form_widget(form.avdl.endSupportComment) }}</div>

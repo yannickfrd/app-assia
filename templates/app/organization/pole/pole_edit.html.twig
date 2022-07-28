@@ -43,10 +43,7 @@
         <div class="row mb-3">
             <div class="col-md-6">{{ form_row(form.chief) }}</div>
         </div>
-        {% include '_shared/_form_location.html.twig' with {
-            'location_lat': setting.lat,
-            'location_lon': setting.lon,
-        } %}
+        {% include '_shared/_location_form.html.twig' with {'location_geo': setting} %}
         <div class="row mb-3">
             <div class="col-md-6">{{ form_row(form.color) }}</div>
             <div class="col-md-6">{{ form_row(form.logoPath) }}</div>

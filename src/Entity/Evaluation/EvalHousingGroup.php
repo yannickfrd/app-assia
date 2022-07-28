@@ -417,6 +417,8 @@ class EvalHousingGroup
      */
     private $domiciliationAddress;
 
+    private $domiciliationFullAddress;
+
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
      * @Groups("export")
@@ -1176,6 +1178,23 @@ class EvalHousingGroup
     public function setDomiciliationAddress(?string $domiciliationAddress): self
     {
         $this->domiciliationAddress = $domiciliationAddress;
+
+        return $this;
+    }
+
+    public function getDomiciliationFullAddress(): ?string
+    {
+        if (null === $this->domiciliationCity) {
+            return null;
+        }
+
+        return $this->domiciliationAddress.', '.$this->domiciliationZipcode
+            .($this->domiciliationCity !== $this->domiciliationAddress ? ' '.$this->domiciliationCity : '');
+    }
+
+    public function setDomiciliationFullAddress(?string $domiciliationFullAddress): self
+    {
+        $this->domiciliationFullAddress = $domiciliationFullAddress;
 
         return $this;
     }

@@ -153,6 +153,8 @@ class EvalFamilyPerson
      */
     private $schoolAddress;
 
+    private $schoolFullAddress;
+
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
      * @Groups("export")
@@ -350,6 +352,22 @@ class EvalFamilyPerson
     public function setSchoolAddress(?string $schoolAddress): self
     {
         $this->schoolAddress = $schoolAddress;
+
+        return $this;
+    }
+
+    public function getSchoolFullAddress(): ?string
+    {
+        if (null === $this->schoolCity) {
+            return null;
+        }
+
+        return $this->schoolCity.' ('.$this->schoolZipcode.')';
+    }
+
+    public function setSchoolFullAddress(?string $schoolFullAddress): self
+    {
+        $this->schoolFullAddress = $schoolFullAddress;
 
         return $this;
     }

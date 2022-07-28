@@ -63,6 +63,13 @@ class SupportGroupType extends AbstractType
                 'choices' => Choices::getChoices(SupportGroup::STATUS),
                 'placeholder' => 'placeholder.select',
             ])
+            ->add('location', LocationType::class, [
+                'data_class' => SupportGroup::class,
+                'attr' => [
+                    'geo_location' => true,
+                    'location_search_help' => 'support.location_search.help',
+                ],
+            ])
             ->add('startDate', DateType::class, [
                 'widget' => 'single_text',
                 'required' => false,
@@ -90,26 +97,16 @@ class SupportGroupType extends AbstractType
                 'required' => false,
                 'help' => 'endPlace.help',
             ])
-            ->add('_endLocationSearch', null, [
-                'label' => ' ',
+            ->add('endLocation', LocationType::class, [
+                'data_class' => SupportGroup::class,
                 'attr' => [
-                    'class' => 'js-search',
-                    'placeholder' => 'location.search.address.placeholder',
-                    'autocomplete' => 'off',
+                    'fullAddress' => 'endLocationFullAddress',
+                    'address' => 'endLocationAddress',
+                    'city' => 'endLocationCity',
+                    'zipcode' => 'endLocationZipcode',
+                    'comment' => false,
+                    'location_search_label' => 'end_location',
                 ],
-                'mapped' => false,
-            ])
-            ->add('endLocationAddress', null, [
-                'label' => 'location.address_auto',
-                'attr' => ['readonly' => true],
-            ])
-            ->add('endLocationCity', null, [
-                'label' => 'location.city_auto',
-                'attr' => ['readonly' => true],
-            ])
-            ->add('endLocationZipcode', null, [
-                'label' => 'location.zipcode_auto',
-                'attr' => ['readonly' => true],
             ])
             ->add('agreement', CheckboxType::class, [
                 'required' => true,
@@ -121,14 +118,6 @@ class SupportGroupType extends AbstractType
                 'allow_delete' => true,
                 'delete_empty' => true,
                 'required' => false,
-                'attr' => ['test' => 'test'],
-            ])
-            ->add('location', LocationType::class, [
-                'data_class' => SupportGroup::class,
-                'attr' => [
-                    'geoLocation' => true,
-                    'searchHelp' => 'location.search.help',
-                ],
             ])
             ->add('comment', null, [
                 'attr' => ['placeholder' => 'comment.placeholder'],
@@ -210,7 +199,7 @@ class SupportGroupType extends AbstractType
                         return $repo->getPlacesQueryBuilder($service, $subService);
                     },
                     'label' => 'place.name',
-                    'attr' => ['autocomplete' => true],
+                    'attr' => ['autocomplete' => 'true'],
                     'placeholder' => 'placeholder.select',
                     'help' => 'placeGroup.help',
                     'mapped' => false,
@@ -323,7 +312,7 @@ class SupportGroupType extends AbstractType
                     $supportGroup->getReferent()
                 );
             },
-             'attr' => ['autocomplete' => true],
+             'attr' => ['autocomplete' => 'true'],
             'placeholder' => 'placeholder.select',
             'required' => false,
         ];

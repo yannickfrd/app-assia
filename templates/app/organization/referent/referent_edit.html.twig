@@ -43,10 +43,7 @@
                 <div class="col-md-6">{{ form_row(form.phone1) }}</div>
                 <div class="col-md-6">{{ form_row(form.phone2) }}</div>
             </div>
-            {% include '_shared/_form_location.html.twig' with {
-                'location_lat': support.service.lat,
-                'location_lon': support.service.lon,
-            } %}
+            {% include '_shared/_location_form.html.twig' with {'location_geo': support.service} %}
             <div class="row mb-3">
                 <div class="col-md-12">{{ form_widget(form.comment) }}</div>
             </div>

@@ -4,6 +4,7 @@ namespace App\Form\Evaluation;
 
 use App\Entity\Evaluation\EvalHousingGroup;
 use App\Entity\Organization\Service;
+use App\Form\Type\LocationType;
 use App\Form\Utils\Choices;
 use App\Form\Utils\EvaluationChoices;
 use Symfony\Component\Form\AbstractType;
@@ -36,11 +37,13 @@ class EvalHousingGroupType extends AbstractType
                 ])
             ->add('siaoRequestDept', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::DEPARTMENTS),
+                'attr' => ['autocomplete' => 'true'],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
             ->add('siaoRecommendation', ChoiceType::class, [
                 'choices' => $this->getEditSiaoRecommendations(),
+                'attr' => ['autocomplete' => 'true'],
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
@@ -147,22 +150,16 @@ class EvalHousingGroupType extends AbstractType
                 'widget' => 'single_text',
                 'required' => false,
             ])
-            ->add('_domiciliationSearch', null, [
-                'label' => ' ',
+            ->add('domiciliationLocation', LocationType::class, [
+                'data_class' => EvalHousingGroup::class,
                 'attr' => [
-                    'placeholder' => 'location.search.address.placeholder',
-                    'autocomplete' => 'off',
+                    'fullAddress' => 'domiciliationFullAddress',
+                    'address' => 'domiciliationAddress',
+                    'city' => 'domiciliationCity',
+                    'zipcode' => 'domiciliationZipcode',
+                    'comment' => false,
+                    'location_search_placeholder' => 'location.address.placeholder',
                 ],
-                'mapped' => false,
-            ])
-            ->add('domiciliationAddress', null, [
-                'attr' => ['readonly' => true],
-            ])
-            ->add('domiciliationCity', null, [
-                'attr' => ['readonly' => true],
-            ])
-            ->add('domiciliationZipcode', null, [
-                'attr' => ['readonly' => true],
             ])
             ->add('housingExperience', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
@@ -219,7 +216,8 @@ class EvalHousingGroupType extends AbstractType
                 ->add('fslEligibility', HiddenType::class)
                 ->add('cafEligibility', HiddenType::class)
                 ->add('otherHelps', HiddenType::class)
-                ->add('hepsPrecision', HiddenType::class);
+                ->add('hepsPrecision', HiddenType::class)
+            ;
         }
     }
 

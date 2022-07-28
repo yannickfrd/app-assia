@@ -59,14 +59,15 @@ class ReferentType extends AbstractType
             ])
             ->add('location', LocationType::class, [
                 'data_class' => Referent::class,
-                'attr' => ['seachLabel' => 'Adresse du service référent'],
+                'attr' => ['location_search_label' => 'referent.location_search'],
             ])
             ->add('comment', null, [
                 'attr' => [
                     'rows' => 4,
                     'placeholder' => 'referent.comment.plaholder',
                 ],
-            ]);
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

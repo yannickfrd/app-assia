@@ -155,8 +155,8 @@ class ServiceType extends AbstractType
             ->add('location', LocationType::class, [
                 'data_class' => Service::class,
                 'attr' => [
-                    'geoLocation' => true,
-                    'searchLabel' => 'Adresse du service',
+                    'geo_location' => true,
+                    'location_search_label' => 'service.location_search',
                 ],
             ])
             ->add('setting', ServiceSettingType::class)

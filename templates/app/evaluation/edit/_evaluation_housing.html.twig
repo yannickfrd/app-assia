@@ -174,26 +174,14 @@
 					<div class="col-md-6" >{{ form_row(form.evalHousingGroup.startDomiciliationDate) }}</div>
 					<div class="col-md-6">{{ form_row(form.evalHousingGroup.endDomiciliationDate) }}</div>
 				</div>
-				<div class="row" data-location-search="address" data-location-lat="{{ support.service.lat }}"
-					data-location-lon="{{ support.service.lon }}"
-				>
-					<div class="col-md-6 position-relative">
-						{{ form_row(form.evalHousingGroup._domiciliationSearch, {
-							attr: {'data-location-type': 'search'}}) }}
-					</div>
-					<div class="col-md-6">
-						{{ form_row(form.evalHousingGroup.domiciliationAddress, {
-							attr: {'data-location-type': 'address'}}) }}
-					</div>
-					<div class="col-md-6">
-						{{ form_row(form.evalHousingGroup.domiciliationCity, {
-							attr: {'data-location-type': 'city'}}) }}
-					</div>
-					<div class="col-md-6">
-						{{ form_row(form.evalHousingGroup.domiciliationZipcode, {
-							attr: {'data-location-type': 'zipcode'}}) }}
-					</div>
-				</div>
+				{% include '_shared/_location_form.html.twig' with {
+					'location_form': form.evalHousingGroup.domiciliationLocation,
+					'location_full_address_form': form.evalHousingGroup.domiciliationLocation.domiciliationFullAddress,
+					'location_address_form': form.evalHousingGroup.domiciliationLocation.domiciliationAddress,
+					'location_city_form': form.evalHousingGroup.domiciliationLocation.domiciliationCity,
+					'location_zipcode_form': form.evalHousingGroup.domiciliationLocation.domiciliationZipcode,
+					'location_geo': support.service,
+				} %}
 			</div>
 		</div>
 		<hr class="my-4"/>
