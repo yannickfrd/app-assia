@@ -62,38 +62,33 @@ class EvaluationGroup
     private $supportGroup;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Evaluation\EvaluationPerson", mappedBy="evaluationGroup", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=EvaluationPerson::class, mappedBy="evaluationGroup", cascade={"persist", "remove"}, orphanRemoval=true)
      * @MaxDepth(1)
      */
     private $evaluationPeople;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvalSocialGroup", mappedBy="evaluationGroup", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=EvalSocialGroup::class, inversedBy="evaluationGroup", cascade={"persist", "remove"})
      */
     private $evalSocialGroup;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvalFamilyGroup", mappedBy="evaluationGroup", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity=EvalFamilyGroup::class, inversedBy="evaluationGroup", cascade={"persist", "remove"})
      */
     private $evalFamilyGroup;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvalHousingGroup", mappedBy="evaluationGroup", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity=EvalHousingGroup::class, inversedBy="evaluationGroup", cascade={"persist", "remove"})
      */
     private $evalHousingGroup;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvalBudgetGroup", mappedBy="evaluationGroup", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity=EvalBudgetGroup::class, inversedBy="evaluationGroup", cascade={"persist", "remove"})
      */
     private $evalBudgetGroup;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Evaluation\EvalInitGroup", cascade={"persist"})
-     */
-    private $evalInitGroup;
-
-    /**
-     * @ORM\OneToOne(targetEntity=EvalHotelLifeGroup::class, mappedBy="evaluationGroup", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=EvalHotelLifeGroup::class, inversedBy="evaluationGroup", cascade={"persist", "remove"})
      */
     private $evalHotelLifeGroup;
 
@@ -105,8 +100,10 @@ class EvaluationGroup
     public function __clone()
     {
         $now = new \DateTime();
+
         $this->setCreatedAt($now)
-            ->setUpdatedAt($now);
+            ->setUpdatedAt($now)
+        ;
 
         $newEvaluationPeople = new ArrayCollection();
 
@@ -129,6 +126,7 @@ class EvaluationGroup
         if ($this->evalSocialGroup) {
             $this->setEvalSocialGroup(clone $this->evalSocialGroup);
         }
+
         $this->setEvalInitGroup(new EvalInitGroup());
     }
 
@@ -216,13 +214,8 @@ class EvaluationGroup
 
     public function setEvalSocialGroup(EvalSocialGroup $evalSocialGroup): self
     {
-        if ($evalSocialGroup->getId() || false === $this->isEmptyObject($evalSocialGroup)) {
+        if ($evalSocialGroup->getId() || true === (bool) array_filter((array) $evalSocialGroup)) {
             $this->evalSocialGroup = $evalSocialGroup;
-        }
-
-        // set the owning side of the relation if necessary
-        if ($this !== $evalSocialGroup->getEvaluationGroup()) {
-            $evalSocialGroup->setEvaluationGroup($this);
         }
 
         return $this;
@@ -235,12 +228,8 @@ class EvaluationGroup
 
     public function setEvalFamilyGroup(EvalFamilyGroup $evalFamilyGroup): self
     {
-        if ($evalFamilyGroup->getId() || false === $this->isEmptyObject($evalFamilyGroup)) {
+        if ($evalFamilyGroup->getId() || true === (bool) array_filter((array) $evalFamilyGroup)) {
             $this->evalFamilyGroup = $evalFamilyGroup;
-        }
-        // set the owning side of the relation if necessary
-        if ($this !== $evalFamilyGroup->getEvaluationGroup()) {
-            $evalFamilyGroup->setEvaluationGroup($this);
         }
 
         return $this;
@@ -253,12 +242,8 @@ class EvaluationGroup
 
     public function setEvalHousingGroup(EvalHousingGroup $evalHousingGroup): self
     {
-        if ($evalHousingGroup->getId() || false === $this->isEmptyObject($evalHousingGroup)) {
+        if ($evalHousingGroup->getId() || true === (bool) array_filter((array) $evalHousingGroup)) {
             $this->evalHousingGroup = $evalHousingGroup;
-        }
-        // set the owning side of the relation if necessary
-        if ($this !== $evalHousingGroup->getEvaluationGroup()) {
-            $evalHousingGroup->setEvaluationGroup($this);
         }
 
         return $this;
@@ -271,11 +256,8 @@ class EvaluationGroup
 
     public function setEvalBudgetGroup(EvalBudgetGroup $evalBudgetGroup): self
     {
-        $this->evalBudgetGroup = $evalBudgetGroup;
-
-        // set the owning side of the relation if necessary
-        if ($this !== $evalBudgetGroup->getEvaluationGroup()) {
-            $evalBudgetGroup->setEvaluationGroup($this);
+        if ($evalBudgetGroup->getId() || true === (bool) array_filter((array) $evalBudgetGroup)) {
+            $this->evalBudgetGroup = $evalBudgetGroup;
         }
 
         return $this;
@@ -303,10 +285,6 @@ class EvaluationGroup
     {
         if ($this->evaluationPeople->contains($evaluationPerson)) {
             $this->evaluationPeople->removeElement($evaluationPerson);
-            // set the owning side to null (unless already changed)
-            if ($evaluationPerson->getEvaluationGroup() === $this) {
-                $evaluationPerson->setEvaluationGroup(null);
-            }
         }
 
         return $this;
@@ -314,12 +292,12 @@ class EvaluationGroup
 
     public function getEvalInitGroup(): ?EvalInitGroup
     {
-        return $this->evalInitGroup;
+        return $this->supportGroup->getEvalInitGroup();
     }
 
     public function setEvalInitGroup(?EvalInitGroup $evalInitGroup): self
     {
-        $this->evalInitGroup = $evalInitGroup;
+        $this->supportGroup->setEvalInitGroup($evalInitGroup);
 
         return $this;
     }
@@ -331,25 +309,10 @@ class EvaluationGroup
 
     public function setEvalHotelLifeGroup(EvalHotelLifeGroup $evalHotelLifeGroup): self
     {
-        if ($evalHotelLifeGroup->getId() || false === $this->isEmptyObject($evalHotelLifeGroup)) {
+        if ($evalHotelLifeGroup->getId() || true === (bool) array_filter((array) $evalHotelLifeGroup)) {
             $this->evalHotelLifeGroup = $evalHotelLifeGroup;
-        }
-        // set the owning side of the relation if necessary
-        if ($this !== $evalHotelLifeGroup->getEvaluationGroup()) {
-            $evalHotelLifeGroup->setEvaluationGroup($this);
         }
 
         return $this;
-    }
-
-    protected function isEmptyObject(object $originRequest): bool
-    {
-        foreach ((array) $originRequest as $value) {
-            if ($value) {
-                return false;
-            }
-        }
-
-        return true;
     }
 }

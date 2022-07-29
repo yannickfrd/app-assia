@@ -3,16 +3,9 @@
 namespace App\Service\Evaluation;
 
 use App\Entity\Evaluation\EvalAdmPerson;
-use App\Entity\Evaluation\EvalBudgetPerson;
-use App\Entity\Evaluation\EvalFamilyPerson;
-use App\Entity\Evaluation\EvalHousingGroup;
-use App\Entity\Evaluation\EvalInitGroup;
-use App\Entity\Evaluation\EvalInitPerson;
-use App\Entity\Evaluation\EvalJusticePerson;
 use App\Entity\Evaluation\EvalProfPerson;
-use App\Entity\Evaluation\EvalSocialGroup;
-use App\Entity\Evaluation\EvalSocialPerson;
 use App\Entity\Evaluation\EvaluationGroup;
+use App\Entity\Evaluation\EvaluationPerson;
 use App\Entity\Organization\Service;
 use App\Entity\People\Person;
 use App\Entity\People\RolePerson;
@@ -48,27 +41,27 @@ class EvaluationCompletionChecker
             }
         }
 
-        $this->checkEvalInitGroup($evaluationGroup->getEvalInitGroup());
-        $this->checkEvalSocialGroup($evaluationGroup->getEvalSocialGroup());
-        $this->checkEvalHousingGroup($evaluationGroup->getEvalHousingGroup());
+        $this->checkEvalInitGroup($evaluationGroup);
+        $this->checkEvalSocialGroup($evaluationGroup);
+        $this->checkEvalHousingGroup($evaluationGroup);
 
         foreach ($evaluationGroup->getEvaluationPeople() as $evaluationPerson) {
             $age = $evaluationPerson->getSupportPerson()->getPerson()->getAge();
             $role = $evaluationPerson->getSupportPerson()->getRole();
 
-            $this->checkEvalInitPerson($evaluationPerson->getEvalInitPerson(), $age);
-            $this->checkEvalAdmPerson($evaluationPerson->getEvalAdmPerson());
-            $this->checkEvalFamilyPerson($role, $evaluationPerson->getEvalFamilyPerson());
-            $this->checkEvalSocialPerson($role, $evaluationPerson->getEvalSocialPerson());
+            $this->checkEvalInitPerson($evaluationPerson, $age);
+            $this->checkEvalAdmPerson($evaluationPerson);
+            $this->checkEvalFamilyPerson($evaluationPerson, $role);
+            $this->checkEvalSocialPerson($evaluationPerson, $role);
 
             if ($age >= 16) {
-                $this->checkEvalProfPerson($evaluationPerson->getEvalProfPerson());
-                $this->checkEvalBudgetPerson($evaluationPerson->getEvalBudgetPerson());
+                $this->checkEvalProfPerson($evaluationPerson);
+                $this->checkEvalBudgetPerson($evaluationPerson);
             }
 
             if (Choices::YES === $this->service->getJustice()
                 && true === $evaluationPerson->getSupportPerson()->getHead()) {
-                $this->checkEvalJusticePerson($evaluationPerson->getEvalJusticePerson());
+                $this->checkEvalJusticePerson($evaluationPerson);
             }
         }
 
@@ -78,9 +71,9 @@ class EvaluationCompletionChecker
         ];
     }
 
-    private function checkEvalInitGroup(?EvalInitGroup $evalInitGroup = null): void
+    private function checkEvalInitGroup(EvaluationGroup $evaluationGroup): void
     {
-        if (null === $evalInitGroup) {
+        if (null === $evalInitGroup = $evaluationGroup->getEvalInitGroup()) {
             $this->maxPoints += 2;
 
             return;
@@ -90,21 +83,20 @@ class EvaluationCompletionChecker
         $this->isFilled($evalInitGroup->getSocialHousingRequest(), 'socialHousingRequest');
     }
 
-    private function checkEvalSocialGroup(?EvalSocialGroup $evalSocialGroup = null): void
+    private function checkEvalSocialGroup(EvaluationGroup $evaluationGroup): void
     {
-        if (null === $evalSocialGroup) {
+        if (null === $evalSocialGroup = $evaluationGroup->getEvalSocialGroup()) {
             $this->maxPoints += 2;
 
             return;
         }
-
         $this->isFilled($evalSocialGroup->getWanderingTime(), 'wanderingTime');
         $this->isFilled($evalSocialGroup->getReasonRequest(), 'reasonRequest');
     }
 
-    private function checkEvalHousingGroup(?EvalHousingGroup $evalHousingGroup = null): void
+    private function checkEvalHousingGroup(EvaluationGroup $evaluationGroup): void
     {
-        if (null === $evalHousingGroup) {
+        if (null === $evalHousingGroup = $evaluationGroup->getEvalHousingGroup()) {
             $this->maxPoints += 5;
 
             return;
@@ -151,9 +143,9 @@ class EvaluationCompletionChecker
         }
     }
 
-    private function checkEvalInitPerson(?EvalInitPerson $evalInitPerson = null, int $age = null): void
+    private function checkEvalInitPerson(EvaluationPerson $evaluationPerson, int $age = null): void
     {
-        if (null === $evalInitPerson) {
+        if (null === $evalInitPerson = $evaluationPerson->getEvalInitPerson()) {
             $this->maxPoints += 4;
 
             return;
@@ -185,9 +177,9 @@ class EvaluationCompletionChecker
         }
     }
 
-    private function checkEvalAdmPerson(?EvalAdmPerson $evalAdmPerson = null): void
+    private function checkEvalAdmPerson(EvaluationPerson $evaluationPerson): void
     {
-        if (null === $evalAdmPerson) {
+        if (null === $evalAdmPerson = $evaluationPerson->getEvalAdmPerson()) {
             $this->maxPoints += 2;
 
             return;
@@ -208,15 +200,13 @@ class EvaluationCompletionChecker
         }
     }
 
-    private function checkEvalFamilyPerson(int $role, ?EvalFamilyPerson $evalFamilyPerson = null): void
+    private function checkEvalFamilyPerson(EvaluationPerson $evaluationPerson, $role): void
     {
-        if (null === $evalFamilyPerson) {
+        if (null === $evalFamilyPerson = $evaluationPerson->getEvalFamilyPerson()) {
             $this->maxPoints += 2;
 
             return;
         }
-
-        $supportPerson = $evalFamilyPerson->getEvaluationPerson()->getSupportPerson();
 
         if (RolePerson::ROLE_CHILD === $role) {
             if (Choices::YES === $this->isFilled($evalFamilyPerson->getChildcareOrSchool(), 'childcareOrSchool')) {
@@ -229,7 +219,7 @@ class EvaluationCompletionChecker
                 $this->isFilled($evalFamilyPerson->getNoConciliationOrder(), 'noConciliationOrder');
             }
 
-            if (Person::GENDER_FEMALE === $supportPerson->getPerson()->getGender()) {
+            if (Person::GENDER_FEMALE === $evaluationPerson->getSupportPerson()->getPerson()->getGender()) {
                 if (Choices::YES === $this->isFilled($evalFamilyPerson->getUnbornChild(), 'unbornChild')) {
                     $this->checkValues([
                         $evalFamilyPerson->getExpDateChildbirth(),
@@ -244,9 +234,9 @@ class EvaluationCompletionChecker
         }
     }
 
-    private function checkEvalSocialPerson(int $role, ?EvalSocialPerson $evalSocialPerson = null): void
+    private function checkEvalSocialPerson(EvaluationPerson $evaluationPerson, int $role): void
     {
-        if (null === $evalSocialPerson) {
+        if (null === $evalSocialPerson = $evaluationPerson->getEvalSocialPerson()) {
             $this->maxPoints += 4;
 
             return;
@@ -280,9 +270,9 @@ class EvaluationCompletionChecker
         }
     }
 
-    private function checkEvalProfPerson(?EvalProfPerson $evalProfPerson = null): void
+    private function checkEvalProfPerson(EvaluationPerson $evaluationPerson): void
     {
-        if (null === $evalProfPerson) {
+        if (null === $evalProfPerson = $evaluationPerson->getEvalProfPerson()) {
             $this->maxPoints += 2;
 
             return;
@@ -304,9 +294,9 @@ class EvaluationCompletionChecker
         }
     }
 
-    private function checkEvalBudgetPerson(?EvalBudgetPerson $evalBudgetPerson = null): void
+    private function checkEvalBudgetPerson(EvaluationPerson $evaluationPerson): void
     {
-        if (null === $evalBudgetPerson) {
+        if (null === $evalBudgetPerson = $evaluationPerson->getEvalBudgetPerson()) {
             $this->maxPoints += 4;
 
             return;
@@ -338,9 +328,9 @@ class EvaluationCompletionChecker
         }
     }
 
-    private function checkEvalJusticePerson(?EvalJusticePerson $evalJusticePerson = null): void
+    private function checkEvalJusticePerson(EvaluationPerson $evaluationPerson): void
     {
-        if (null === $evalJusticePerson) {
+        if (null === $evalJusticePerson = $evaluationPerson->getEvalJusticePerson()) {
             $this->maxPoints += 2;
 
             return;

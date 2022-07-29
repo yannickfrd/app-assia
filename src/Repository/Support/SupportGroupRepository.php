@@ -84,25 +84,18 @@ class SupportGroupRepository extends ServiceEntityRepository
         }
 
         return $this->getSupportQuery()
-        ->leftJoin('sg.updatedBy', 'user2')->addSelect('PARTIAL user2.{id, firstname, lastname}')
-        ->leftJoin('sg.originRequest', 'origin')->addSelect('origin')
-        ->leftJoin('origin.organization', 'orga')->addSelect('PARTIAL orga.{id, name}')
-        ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name, logoPath}')
-        ->leftJoin('pole.organization', 'pole_orga')->addSelect('PARTIAL pole_orga.{id, name}')
+            ->leftJoin('sg.updatedBy', 'user2')->addSelect('PARTIAL user2.{id, firstname, lastname}')
+            ->leftJoin('sg.originRequest', 'origin')->addSelect('origin')
+            ->leftJoin('origin.organization', 'orga')->addSelect('PARTIAL orga.{id, name}')
+            ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name, logoPath}')
+            ->leftJoin('pole.organization', 'pole_orga')->addSelect('PARTIAL pole_orga.{id, name}')
 
-        // if ($service->getType() === Service::SERVICE_TYPE_AVDL) {
             ->leftJoin('sg.avdl', 'avdl')->addSelect('avdl')
-        // }
-        // if ($service->getType() === Service::SERVICE_TYPE_HOTEL) {
             ->leftJoin('sg.hotelSupport', 'hs')->addSelect('hs')
-        // }
 
-        // if ($supportGroup->getDevice()->getPlace() === Choices::YES) {
             ->leftJoin('sg.placeGroups', 'pg')->addSelect('pg')
             ->leftJoin('pg.place', 'pl')->addSelect('PARTIAL pl.{id, name, address, city, zipcode}')
             ->leftJoin('pg.placePeople', 'pp')->addSelect('pp')
-            ->leftJoin('pp.supportPerson', 'sp2')->addSelect('sp2')
-        // }
 
             ->andWhere('sg.id = :id')
             ->setParameter('id', $id)
@@ -476,18 +469,6 @@ class SupportGroupRepository extends ServiceEntityRepository
             ->leftJoin('p.rolesPerson', 'rp2')->addSelect('rp2')
             ->leftJoin('rp2.person', 'p2')->addSelect('p2')
             ->leftJoin('p.supports', 'sp2')->addSelect('sp2')
-
-            ->leftJoin('sg.originRequest', 's_gor')->addSelect('s_gor')
-            ->leftJoin('sg.avdl', 'sg_avdl')->addSelect('sg_avdl')
-            ->leftJoin('sg.hotelSupport', 'sg_hs')->addSelect('sg_hs')
-            ->leftJoin('sg.evalInitGroup', 'sg_ieg')->addSelect('sg_ieg')
-            ->leftJoin('sp.evalInitPerson', 'sp_ieg')->addSelect('sp_ieg')
-
-            ->leftJoin('sg2.originRequest', 'sg2_or')->addSelect('sg2_or')
-            ->leftJoin('sg2.avdl', 'sg2_avdl')->addSelect('sg2_avdl')
-            ->leftJoin('sg2.hotelSupport', 'sg2_hs')->addSelect('sg2_hs')
-            ->leftJoin('sg2.evalInitGroup', 'sg2_ieg')->addSelect('sg2_ieg')
-            ->leftJoin('sp2.evalInitPerson', 'sp2_iep')->addSelect('sp2_iep')
 
             ->where('sg.status IN (:status)')
             ->setParameter('status', [

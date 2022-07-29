@@ -232,7 +232,7 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->leftJoin('sg.avdl', 'avdl')->addSelect('avdl')
 
             ->leftJoin('sp.evaluations', 'ep')->addSelect('PARTIAL ep.{id}')
-            ->leftJoin('ep.evalInitPerson', 'eip')->addSelect('eip')
+            ->leftJoin('sp.evalInitPerson', 'eip')->addSelect('eip')
             ->leftJoin('ep.evalJusticePerson', 'ejp')->addSelect('ejp')
             ->leftJoin('ep.evalAdmPerson', 'eap')->addSelect('eap')
             ->leftJoin('ep.evalBudgetPerson', 'ebp')->addSelect('ebp')
@@ -246,7 +246,7 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->leftJoin('ebp.evalBudgetDebts', 'ebd')->addSelect('ebd')
 
             ->leftJoin('ep.evaluationGroup', 'eg')->addSelect('PARTIAL eg.{id}')
-            ->leftJoin('eg.evalInitGroup', 'eig')->addSelect('eig')
+            ->leftJoin('sg.evalInitGroup', 'eig')->addSelect('eig')
             ->leftJoin('eg.evalBudgetGroup', 'ebg')->addSelect('ebg')
             ->leftJoin('eg.evalFamilyGroup', 'efg')->addSelect('efg')
             ->leftJoin('eg.evalHousingGroup', 'ehg')->addSelect('ehg')

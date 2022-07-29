@@ -445,8 +445,7 @@ class EvalHousingGroup
     private $housingArrivalDate;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvaluationGroup", inversedBy="evalHousingGroup", cascade={"persist"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\OneToOne(targetEntity=EvaluationGroup::class, mappedBy="evalHousingGroup")
      */
     private $evaluationGroup;
 
@@ -1252,14 +1251,16 @@ class EvalHousingGroup
         return $this;
     }
 
-    public function getEvaluationGroup(): ?EvaluationGroup
+    public function getEvaluationGroup(): EvaluationGroup
     {
         return $this->evaluationGroup;
     }
 
     public function setEvaluationGroup(EvaluationGroup $evaluationGroup): self
     {
-        $this->evaluationGroup = $evaluationGroup;
+        if ($evaluationGroup->getEvalHousingGroup() !== $this) {
+            $evaluationGroup->setEvalHousingGroup($this);
+        }
 
         return $this;
     }

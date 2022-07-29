@@ -152,7 +152,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
 
         $this->createOrEditEvalBudgetGroup($evaluationGroup);
 
-        if (!$evaluationGroup->getEvalInitGroup()) {
+        if (!$supportGroup->getEvalInitGroup()) {
             $this->evaluationDuplicator->createEvalInitGroup($supportGroup, $evaluationGroup);
         }
 
@@ -499,7 +499,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
             $this->createOrEditEvalBudgetPerson($evaluationPerson, $personne, $diagSocial);
         }
 
-        if (!$evaluationPerson->getEvalInitPerson()) {
+        if (!$supportPerson->getEvalInitPerson()) {
             $this->evaluationDuplicator->createEvalInitPerson($supportPerson, $evaluationPerson);
         }
 
@@ -896,7 +896,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
 
         $this->em->persist($evalInitPerson);
 
-        $evaluationPerson->setEvalInitPerson($evalInitPerson);
+        $supportPerson->setEvalInitPerson($evalInitPerson);
 
         return $evalInitPerson;
     }

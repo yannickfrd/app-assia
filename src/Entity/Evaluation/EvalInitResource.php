@@ -11,7 +11,6 @@ class EvalInitResource extends AbstractFinance
 {
     /**
      * @ORM\ManyToOne(targetEntity=EvalInitPerson::class, inversedBy="evalBudgetResources")
-     * @ORM\JoinColumn(nullable=false)
      */
     private $evalInitPerson;
 
@@ -20,12 +19,12 @@ class EvalInitResource extends AbstractFinance
         return $this->type ? Resource::RESOURCES[$this->type] : null;
     }
 
-    public function getEvalInitPerson(): ?EvalInitPerson
+    public function getEvalInitPerson(): EvalInitPerson
     {
         return $this->evalInitPerson;
     }
 
-    public function setEvalInitPerson(?EvalInitPerson $evalInitPerson): self
+    public function setEvalInitPerson(EvalInitPerson $evalInitPerson): self
     {
         $this->evalInitPerson = $evalInitPerson;
 

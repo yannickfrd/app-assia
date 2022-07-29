@@ -191,8 +191,7 @@ class EvalBudgetPerson
     private $evalBudgetDebts;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvaluationPerson", inversedBy="evalBudgetPerson", cascade={"persist"})
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\OneToOne(targetEntity=EvaluationPerson::class, mappedBy="evalBudgetPerson")
      */
     private $evaluationPerson;
 
@@ -502,14 +501,16 @@ class EvalBudgetPerson
         return $this;
     }
 
-    public function getEvaluationPerson(): ?EvaluationPerson
+    public function getEvaluationPerson(): EvaluationPerson
     {
         return $this->evaluationPerson;
     }
 
     public function setEvaluationPerson(EvaluationPerson $evaluationPerson): self
     {
-        $this->evaluationPerson = $evaluationPerson;
+        if ($evaluationPerson->getEvalBudgetPerson() !== $this) {
+            $evaluationPerson->setEvalBudgetPerson($this);
+        }
 
         return $this;
     }
@@ -534,11 +535,8 @@ class EvalBudgetPerson
 
     public function removeEvalBudgetResource(EvalBudgetResource $evalBudgetResource): self
     {
-        if ($this->evalBudgetResources->removeElement($evalBudgetResource)) {
-            // set the owning side to null (unless already changed)
-            if ($evalBudgetResource->getEvalBudgetPerson() === $this) {
-                $evalBudgetResource->setEvalBudgetPerson(null);
-            }
+        if ($this->evalBudgetResources->contains($evalBudgetResource)) {
+            $this->evalBudgetResources->removeElement($evalBudgetResource);
         }
 
         return $this;
@@ -564,11 +562,8 @@ class EvalBudgetPerson
 
     public function removeEvalBudgetCharge(EvalBudgetCharge $evalBudgetCharge): self
     {
-        if ($this->evalBudgetCharges->removeElement($evalBudgetCharge)) {
-            // set the owning side to null (unless already changed)
-            if ($evalBudgetCharge->getEvalBudgetPerson() === $this) {
-                $evalBudgetCharge->setEvalBudgetPerson(null);
-            }
+        if ($this->evalBudgetCharges->contains($evalBudgetCharge)) {
+            $this->evalBudgetCharges->removeElement($evalBudgetCharge);
         }
 
         return $this;
@@ -594,11 +589,8 @@ class EvalBudgetPerson
 
     public function removeEvalBudgetDebt(EvalBudgetDebt $evalBudgetDebt): self
     {
-        if ($this->evalBudgetDebts->removeElement($evalBudgetDebt)) {
-            // set the owning side to null (unless already changed)
-            if ($evalBudgetDebt->getEvalBudgetPerson() === $this) {
-                $evalBudgetDebt->setEvalBudgetPerson(null);
-            }
+        if ($this->evalBudgetDebts->contains($evalBudgetDebt)) {
+            $this->evalBudgetDebts->removeElement($evalBudgetDebt);
         }
 
         return $this;

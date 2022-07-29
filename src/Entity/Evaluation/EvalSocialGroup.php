@@ -96,8 +96,7 @@ class EvalSocialGroup
     private $commentEvalSocialGroup;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvaluationGroup", inversedBy="evalSocialGroup", cascade={"persist"})
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\OneToOne(targetEntity=EvaluationGroup::class, mappedBy="evalSocialGroup")
      */
     private $evaluationGroup;
 
@@ -146,7 +145,7 @@ class EvalSocialGroup
         return $this->wanderingTime ? self::WANDERING_TIME[$this->wanderingTime] : null;
     }
 
-    public function getEvaluationGroup(): ?EvaluationGroup
+    public function getEvaluationGroup(): EvaluationGroup
     {
         return $this->evaluationGroup;
     }
@@ -185,7 +184,9 @@ class EvalSocialGroup
 
     public function setEvaluationGroup(EvaluationGroup $evaluationGroup): self
     {
-        $this->evaluationGroup = $evaluationGroup;
+        if ($evaluationGroup->getEvalSocialGroup() !== $this) {
+            $evaluationGroup->setEvalSocialGroup($this);
+        }
 
         return $this;
     }

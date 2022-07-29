@@ -345,11 +345,8 @@ class EvalInitPerson
 
     public function removeEvalBudgetResource(EvalInitResource $evalBudgetResource): self
     {
-        if ($this->evalBudgetResources->removeElement($evalBudgetResource)) {
-            // set the owning side to null (unless already changed)
-            if ($evalBudgetResource->getEvalInitPerson() === $this) {
-                $evalBudgetResource->setEvalInitPerson(null);
-            }
+        if ($this->evalBudgetResources->contains($evalBudgetResource)) {
+            $this->evalBudgetResources->removeElement($evalBudgetResource);
         }
 
         return $this;

@@ -26,56 +26,51 @@ class EvaluationPerson
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Evaluation\EvaluationGroup", inversedBy="evaluationPeople")
-     * @ORM\JoinColumn(nullable=true)
      */
     private $evaluationGroup;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Support\SupportPerson", inversedBy="evaluations")
-     * @ORM\JoinColumn(nullable=true)
      */
     private $supportPerson;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvalAdmPerson", mappedBy="evaluationPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity=EvalAdmPerson::class, inversedBy="evaluationPerson", cascade={"persist", "remove"})
      */
     private $evalAdmPerson;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvalBudgetPerson", mappedBy="evaluationPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity=EvalBudgetPerson::class, inversedBy="evaluationPerson", cascade={"persist", "remove"})
      */
     private $evalBudgetPerson;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvalFamilyPerson", mappedBy="evaluationPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity=EvalFamilyPerson::class, inversedBy="evaluationPerson", cascade={"persist", "remove"})
      */
     private $evalFamilyPerson;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvalProfPerson", mappedBy="evaluationPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity=EvalProfPerson::class, inversedBy="evaluationPerson", cascade={"persist", "remove"})
      */
     private $evalProfPerson;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvalSocialPerson", mappedBy="evaluationPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity=EvalSocialPerson::class, inversedBy="evaluationPerson", cascade={"persist", "remove"})
      */
     private $evalSocialPerson;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvalJusticePerson", mappedBy="evaluationPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity=EvalJusticePerson::class, inversedBy="evaluationPerson", cascade={"persist", "remove"})
      */
     private $evalJusticePerson;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Evaluation\EvalInitPerson", cascade={"persist"})
-     */
-    private $evalInitPerson;
 
     public function __clone()
     {
         $now = new \DateTime();
+
         $this->setCreatedAt($now)
-            ->setUpdatedAt($now);
+            ->setUpdatedAt($now)
+        ;
 
         if ($this->evalAdmPerson) {
             $this->setEvalAdmPerson(clone $this->evalAdmPerson);
@@ -109,7 +104,7 @@ class EvaluationPerson
         return $this->evaluationGroup;
     }
 
-    public function setEvaluationGroup(?EvaluationGroup $evaluationGroup): self
+    public function setEvaluationGroup(EvaluationGroup $evaluationGroup): self
     {
         $this->evaluationGroup = $evaluationGroup;
 
@@ -135,11 +130,8 @@ class EvaluationPerson
 
     public function setEvalFamilyPerson(EvalFamilyPerson $evalFamilyPerson): self
     {
-        $this->evalFamilyPerson = $evalFamilyPerson;
-
-        // set the owning side of the relation if necessary
-        if ($this !== $evalFamilyPerson->getEvaluationPerson()) {
-            $evalFamilyPerson->setEvaluationPerson($this);
+        if ($evalFamilyPerson->getId() || true === (bool) array_filter((array) $evalFamilyPerson)) {
+            $this->evalFamilyPerson = $evalFamilyPerson;
         }
 
         return $this;
@@ -152,11 +144,8 @@ class EvaluationPerson
 
     public function setEvalProfPerson(EvalProfPerson $evalProfPerson): self
     {
-        $this->evalProfPerson = $evalProfPerson;
-
-        // set the owning side of the relation if necessary
-        if ($this !== $evalProfPerson->getEvaluationPerson()) {
-            $evalProfPerson->setEvaluationPerson($this);
+        if ($evalProfPerson->getId() || true === (bool) array_filter((array) $evalProfPerson)) {
+            $this->evalProfPerson = $evalProfPerson;
         }
 
         return $this;
@@ -169,11 +158,8 @@ class EvaluationPerson
 
     public function setEvalAdmPerson(EvalAdmPerson $evalAdmPerson): self
     {
-        $this->evalAdmPerson = $evalAdmPerson;
-
-        // set the owning side of the relation if necessary
-        if ($this !== $evalAdmPerson->getEvaluationPerson()) {
-            $evalAdmPerson->setEvaluationPerson($this);
+        if ($evalAdmPerson->getId() || true === (bool) array_filter((array) $evalAdmPerson)) {
+            $this->evalAdmPerson = $evalAdmPerson;
         }
 
         return $this;
@@ -186,11 +172,8 @@ class EvaluationPerson
 
     public function setEvalBudgetPerson(EvalBudgetPerson $evalBudgetPerson): self
     {
-        $this->evalBudgetPerson = $evalBudgetPerson;
-
-        // set the owning side of the relation if necessary
-        if ($this !== $evalBudgetPerson->getEvaluationPerson()) {
-            $evalBudgetPerson->setEvaluationPerson($this);
+        if ($evalBudgetPerson->getId() || true === (bool) array_filter((array) $evalBudgetPerson)) {
+            $this->evalBudgetPerson = $evalBudgetPerson;
         }
 
         return $this;
@@ -203,11 +186,8 @@ class EvaluationPerson
 
     public function setEvalSocialPerson(EvalSocialPerson $evalSocialPerson): self
     {
-        $this->evalSocialPerson = $evalSocialPerson;
-
-        // set the owning side of the relation if necessary
-        if ($this !== $evalSocialPerson->getEvaluationPerson()) {
-            $evalSocialPerson->setEvaluationPerson($this);
+        if ($evalSocialPerson->getId() || true === (bool) array_filter((array) $evalSocialPerson)) {
+            $this->evalSocialPerson = $evalSocialPerson;
         }
 
         return $this;
@@ -220,11 +200,8 @@ class EvaluationPerson
 
     public function setEvalJusticePerson(EvalJusticePerson $evalJusticePerson): self
     {
-        $this->evalJusticePerson = $evalJusticePerson;
-
-        // set the owning side of the relation if necessary
-        if ($evalJusticePerson->getEvaluationPerson() !== $this) {
-            $evalJusticePerson->setEvaluationPerson($this);
+        if ($evalJusticePerson->getId() || true === (bool) array_filter((array) $evalJusticePerson)) {
+            $this->evalJusticePerson = $evalJusticePerson;
         }
 
         return $this;
@@ -232,12 +209,12 @@ class EvaluationPerson
 
     public function getEvalInitPerson(): ?EvalInitPerson
     {
-        return $this->evalInitPerson;
+        return $this->supportPerson->getEvalInitPerson();
     }
 
     public function setEvalInitPerson(?EvalInitPerson $evalInitPerson): self
     {
-        $this->evalInitPerson = $evalInitPerson;
+        $this->supportPerson->setEvalInitPerson($evalInitPerson);
 
         return $this;
     }

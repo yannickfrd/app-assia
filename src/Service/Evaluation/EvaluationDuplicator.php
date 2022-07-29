@@ -29,7 +29,6 @@ class EvaluationDuplicator
     {
         $newEvaluationGroup = (new EvaluationGroup())
             ->setDate(new \DateTime())
-            ->setEvalInitGroup(new EvalInitGroup())
         ;
 
         if ($evaluationGroup->getEvalBudgetGroup()) {
@@ -68,7 +67,7 @@ class EvaluationDuplicator
 
         $this->em->persist($evalInitGroup);
 
-        $evaluationGroup->setEvalInitGroup($evalInitGroup);
+        $supportGroup->setEvalInitGroup($evalInitGroup);
 
         return $evalInitGroup;
     }
@@ -119,7 +118,7 @@ class EvaluationDuplicator
 
         $this->em->persist($evalInitPerson);
 
-        $evaluationPerson->setEvalInitPerson($evalInitPerson);
+        $supportPerson->setEvalInitPerson($evalInitPerson);
 
         return $evalInitPerson;
     }

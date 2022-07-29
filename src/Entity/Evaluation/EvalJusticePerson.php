@@ -78,8 +78,7 @@ class EvalJusticePerson
     private $commentEvalJustice;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvaluationPerson", inversedBy="evalJusticePerson", cascade={"persist"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\OneToOne(targetEntity=EvaluationPerson::class, mappedBy="evalJusticePerson")
      */
     private $evaluationPerson;
 
@@ -140,14 +139,16 @@ class EvalJusticePerson
         return $this;
     }
 
-    public function getEvaluationPerson(): ?EvaluationPerson
+    public function getEvaluationPerson(): EvaluationPerson
     {
         return $this->evaluationPerson;
     }
 
     public function setEvaluationPerson(EvaluationPerson $evaluationPerson): self
     {
-        $this->evaluationPerson = $evaluationPerson;
+        if ($evaluationPerson->getEvalJusticePerson() !== $this) {
+            $evaluationPerson->setEvalJusticePerson($this);
+        }
 
         return $this;
     }

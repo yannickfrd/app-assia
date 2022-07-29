@@ -150,8 +150,8 @@ class EvaluationPersonExport extends ExportExcel
             'Complétude de l\'évaluation (%)' => (string) $supportGroup->getEvaluationScore(),
         ]);
 
-        $this->add($evaluationGroup->getEvalInitGroup() ?? $this->evalInitGroup, 'evalInit');
-        $this->add($evaluationPerson->getEvalInitPerson() ?? $this->evalInitPerson, 'evalInit');
+        $this->add($supportGroup->getEvalInitGroup() ?? $this->evalInitGroup, 'evalInit');
+        $this->add($supportPerson->getEvalInitPerson() ?? $this->evalInitPerson, 'evalInit');
         $this->add($evaluationPerson->getEvalJusticePerson() ?? $this->evalJusticePerson, 'justice');
         $this->add($evaluationGroup->getEvalSocialGroup() ?? $this->evalSocialGroup, 'social');
         $this->add($evaluationPerson->getEvalSocialPerson() ?? $this->evalSocialPerson, 'social');

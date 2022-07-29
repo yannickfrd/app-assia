@@ -60,7 +60,6 @@ class SupportRestorer
         }
 
         $supportDeletedAt = $supportPerson->getDeletedAt();
-
         foreach ($supportGroup->getSupportPeople() as $sp) {
             $person = $sp->getPerson();
 

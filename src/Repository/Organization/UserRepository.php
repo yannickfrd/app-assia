@@ -412,7 +412,6 @@ class UserRepository extends ServiceEntityRepository
             ->setParameter(':support_status', SupportGroup::STATUS_IN_PROGRESS)
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult()
         ;
     }

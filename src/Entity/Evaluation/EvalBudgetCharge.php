@@ -50,12 +50,12 @@ class EvalBudgetCharge extends AbstractFinance
         return $this->type ? self::CHARGES[$this->type] : null;
     }
 
-    public function getEvalBudgetPerson(): ?EvalBudgetPerson
+    public function getEvalBudgetPerson(): EvalBudgetPerson
     {
         return $this->evalBudgetPerson;
     }
 
-    public function setEvalBudgetPerson(?EvalBudgetPerson $evalBudgetPerson): self
+    public function setEvalBudgetPerson(EvalBudgetPerson $evalBudgetPerson): self
     {
         $this->evalBudgetPerson = $evalBudgetPerson;
 

@@ -2,6 +2,7 @@
 
 namespace App\Service\Evaluation;
 
+use App\Entity\Evaluation\EvalBudgetGroup;
 use App\Entity\Evaluation\EvaluationGroup;
 use App\Entity\Evaluation\EvaluationPerson;
 use App\Entity\Organization\User;
@@ -76,15 +77,12 @@ class EvaluationManager extends EvaluationCreator
         ]);
     }
 
-    /**
-     * Met à jour le budget du groupe.
-     */
     protected function updateBudgetGroup(EvaluationGroup $evaluationGroup): void
     {
         $resourcesGroupAmt = 0;
         $chargesGroupAmt = 0;
         $debtsGroupAmt = 0;
-        // Ressources et dettes initiales
+
         $evalInitResourcesGroupAmt = 0;
         $initDebtsGroupAmt = 0;
 
@@ -103,13 +101,19 @@ class EvaluationManager extends EvaluationCreator
             }
         }
 
-        $evalBudgetGroup = $evaluationGroup->getEvalBudgetGroup();
+        if (0 === $resourcesGroupAmt && 0 === $chargesGroupAmt && 0 === $debtsGroupAmt) {
+            return;
+        }
+
+        $evalBudgetGroup = (new EvalBudgetGroup())
+            ->setEvaluationGroup($evaluationGroup);
+
         $evalBudgetGroup->setResourcesGroupAmt($resourcesGroupAmt);
         $evalBudgetGroup->setChargesGroupAmt($chargesGroupAmt);
         $evalBudgetGroup->setDebtsGroupAmt($debtsGroupAmt);
         $budgetBalanceAmt = $resourcesGroupAmt - $chargesGroupAmt - $evalBudgetGroup->getContributionAmt();
         $evalBudgetGroup->setBudgetBalanceAmt($budgetBalanceAmt);
-        // Ressources et dettes initiales
+
         $evaluationGroup->getEvalInitGroup()->setResourcesGroupAmt($evalInitResourcesGroupAmt);
         $evaluationGroup->getEvalInitGroup()->setDebtsGroupAmt($initDebtsGroupAmt);
     }
