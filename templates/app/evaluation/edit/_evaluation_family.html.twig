@@ -53,24 +53,24 @@
                     {% if support_person.role == role_child %}
                         <div class="row">
                             <div class="col-md-6">
-                                {{ form_row(eval_person.evalFamilyPerson.childcareOrSchool, {
+                                {{ form_row(eval_person.evalFamilyPerson.schoolOrChildcare, {
                                     attr: {'data-important': 'true'}
                                 }) }}
                             </div>
-                            <div class="col-md-6" data-parent-field="{{ prefix_id }}_childcareOrSchool" data-options="1">
-                                {{ form_row(eval_person.evalFamilyPerson.childcareSchoolType, {
+                            <div class="col-md-6" data-parent-field="{{ prefix_id }}_schoolOrChildcare" data-options="1">
+                                {{ form_row(eval_person.evalFamilyPerson.schoolChildcareType, {
                                     attr: {'data-important': 'true'}
                                 }) }}
                             </div>
                         </div>
-                        <div data-parent-field="{{ prefix_id }}_childcareOrSchool" data-options="1">
+                        <div data-parent-field="{{ prefix_id }}_schoolOrChildcare" data-options="1">
                             {% include '_shared/_location_form.html.twig' with {
                                 'location_form': eval_person.evalFamilyPerson.schoolLocation,
                                 'location_type': 'city',
                                 'location_full_address_form': eval_person.evalFamilyPerson.schoolLocation.schoolFullAddress,
                                 'location_city_form': eval_person.evalFamilyPerson.schoolLocation.schoolCity,
                                 'location_zipcode_form': eval_person.evalFamilyPerson.schoolLocation.schoolZipcode,
-                                'location_comment_form': eval_person.evalFamilyPerson.schoolLocation.schoolChildCarePrecision,
+                                'location_comment_form': eval_person.evalFamilyPerson.schoolLocation.schoolComment,
                                 'location_geo': support.service,
                             } %}
                         </div>

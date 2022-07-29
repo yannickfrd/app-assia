@@ -209,8 +209,8 @@ class EvaluationCompletionChecker
         }
 
         if (RolePerson::ROLE_CHILD === $role) {
-            if (Choices::YES === $this->isFilled($evalFamilyPerson->getChildcareOrSchool(), 'childcareOrSchool')) {
-                $this->isFilled($evalFamilyPerson->getChildcareSchoolType(), 'childcareSchoolType');
+            if (Choices::YES === $this->isFilled($evalFamilyPerson->getSchoolOrChildcare(), 'schoolOrChildcare')) {
+                $this->isFilled($evalFamilyPerson->getSchoolChildcareType(), 'schoolChildcareType');
             }
 
             $this->isFilled($evalFamilyPerson->getPmiFollowUp(), 'pmiFollowUp');

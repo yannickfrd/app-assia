@@ -223,9 +223,9 @@ Child to host: À héberger
 school:
     comment: Précision sur l'école ou la garde
     comment.help: Nom de l'école, classe, date de début de scolarité...
-School child care precision: Précision sur l'école ou la garde
-Childcare or school: École/garde
-Childcare school type: Type de garde ou école
+School comment: Précision sur l'école ou la garde
+School or childcare: École/garde
+School childcare type: Type de garde ou école
 Children behind: Enfants restés au pays
 Comment eval family group: Commentaire relatif à la situation familiale du groupe
 Comment eval family person: Commentaire relatif à la situation sociale de la personne

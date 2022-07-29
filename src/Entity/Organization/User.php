@@ -104,7 +104,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $email; // NE PAS SUPPRIMER
 
     /**
-     * @ORM\Column(name="phone", type="string", length=20, nullable=true)
+     * @ORM\Column(type="string", length=20, nullable=true)
      * @Assert\Regex(pattern="^0[1-9]([-._/ ]?[0-9]{2}){4}$^", match=true, message="Le numéro de téléphone est incorrect.")
      */
     private $phone1; // NE PAS SUPPRIMER

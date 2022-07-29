@@ -1075,7 +1075,7 @@ class ImportDatasHebergement extends ImportDatas
 
         $evalFamilyPerson = (new EvalFamilyPerson())
             ->setUnbornChild($this->findInArray($this->field['Grossesse'], self::YES_NO))
-            ->setChildcareSchoolType($this->findInArray($this->field['Mode garde'], self::CHILDCARE_SCHOOL))
+            ->setSchoolChildcareType($this->findInArray($this->field['Mode garde'], self::CHILDCARE_SCHOOL))
             ->setProtectiveMeasure($this->findInArray($this->field['Mesure de protection'], self::PROTECTIVE_MEASURE))
             ->setProtectiveMeasureType($this->findInArray($this->field['Mesure de protection'], self::PROTECTIVE_MEASURE_TYPE))
             ->setEvaluationPerson($evaluationPerson);

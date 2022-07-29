@@ -94,7 +94,7 @@ class Task extends AbstractEvent
     /**
      * @var Collection<Alert>
      * @ORM\OneToMany(targetEntity=Alert::class, mappedBy="task", orphanRemoval=true, cascade={"persist"})
-     * @ORM\JoinColumn(name="alert", nullable=true)
+     * @ORM\JoinColumn(nullable=true)
      * @ORM\OrderBy({"date": "ASC"})
      * @Groups("show_alert")
      */

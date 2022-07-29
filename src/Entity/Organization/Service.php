@@ -166,12 +166,12 @@ class Service
     private $siretId;
 
     /**
-     * @ORM\Column(name="opening_date", type="date", nullable=true)
+     * @ORM\Column(type="date", nullable=true)
      */
     private $startDate;
 
     /**
-     * @ORM\Column(name="closing_date", type="date", nullable=true)
+     * @ORM\Column(type="date", nullable=true)
      */
     private $endDate;
 

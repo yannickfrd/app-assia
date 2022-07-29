@@ -576,7 +576,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
             ->setUnbornChild($this->findInArray($personne->grossesse, SiSiaoItems::YES_NO))
             ->setExpDateChildbirth($this->convertDate($personne->dateTerme))
             ->setPregnancyType($this->findInArray($personne->typeGrossesse, SiSiaoItems::PREGNANCY_TYPE))
-            // ->setChildcareSchoolType(null)
+            // ->setSchoolChildcareType(null)
             // ->setProtectiveMeasure(null)
             // ->setProtectiveMeasureType(null)
             ->setPmiFollowUp($this->findInArray($personne->suiviPMI, SiSiaoItems::YES_NO))

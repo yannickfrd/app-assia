@@ -130,23 +130,23 @@ class EvalFamilyPerson
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $childcareOrSchool;
+    private $schoolOrChildcare;
 
     /** @Groups("export") */
-    private $childcareOrSchoolToString;
+    private $schoolOrChildcareToString;
 
     /**
-     * @ORM\Column(name="childcare_school", type="smallint", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
-    private $childcareSchoolType;
+    private $schoolChildcareType;
 
     /** @Groups("export") */
-    private $childcareSchoolTypeToString;
+    private $schoolChildcareTypeToString;
 
     /**
-     * @ORM\Column(name="childcare_school_location", type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $schoolChildCarePrecision;
+    private $schoolComment;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -309,36 +309,36 @@ class EvalFamilyPerson
         return $this;
     }
 
-    public function getChildcareOrSchool(): ?int
+    public function getSchoolOrChildcare(): ?int
     {
-        return $this->childcareOrSchool;
+        return $this->schoolOrChildcare;
     }
 
-    public function getChildcareOrSchoolToString(): ?string
+    public function getSchoolOrChildcareToString(): ?string
     {
-        return $this->childcareOrSchool ? EvaluationChoices::YES_NO[$this->childcareOrSchool] : null;
+        return $this->schoolOrChildcare ? EvaluationChoices::YES_NO[$this->schoolOrChildcare] : null;
     }
 
-    public function setChildcareOrSchool(?int $childcareOrSchool): self
+    public function setSchoolOrChildcare(?int $schoolOrChildcare): self
     {
-        $this->childcareOrSchool = $childcareOrSchool;
+        $this->schoolOrChildcare = $schoolOrChildcare;
 
         return $this;
     }
 
-    public function getChildcareSchoolType(): ?int
+    public function getSchoolChildcareType(): ?int
     {
-        return $this->childcareSchoolType;
+        return $this->schoolChildcareType;
     }
 
-    public function getChildcareSchoolTypeToString(): ?string
+    public function getSchoolChildcareTypeToString(): ?string
     {
-        return $this->childcareSchoolType ? self::CHILDCARE_SCHOOL[$this->childcareSchoolType] : null;
+        return $this->schoolChildcareType ? self::CHILDCARE_SCHOOL[$this->schoolChildcareType] : null;
     }
 
-    public function setChildcareSchoolType(?int $childcareSchoolType): self
+    public function setSchoolChildcareType(?int $schoolChildcareType): self
     {
-        $this->childcareSchoolType = $childcareSchoolType;
+        $this->schoolChildcareType = $schoolChildcareType;
 
         return $this;
     }
@@ -400,14 +400,14 @@ class EvalFamilyPerson
         return $this->schoolZipcode ? substr($this->schoolZipcode, 0, 2) : null;
     }
 
-    public function getSchoolChildCarePrecision(): ?string
+    public function getSchoolComment(): ?string
     {
-        return $this->schoolChildCarePrecision;
+        return $this->schoolComment;
     }
 
-    public function setSchoolChildCarePrecision(?string $schoolChildCarePrecision): self
+    public function setSchoolComment(?string $schoolComment): self
     {
-        $this->schoolChildCarePrecision = $schoolChildCarePrecision;
+        $this->schoolComment = $schoolComment;
 
         return $this;
     }

@@ -197,7 +197,7 @@ class EvalHousingGroup
     private $syploDate;
 
     /**
-     * @ORM\Column(name="dalo_commission", type="smallint", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $daloAction;
 
@@ -217,7 +217,7 @@ class EvalHousingGroup
     private $daloRecordDate;
 
     /**
-     * @ORM\Column(name="dalo_requalified_daho", type="smallint", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $daloType;
 
@@ -426,7 +426,7 @@ class EvalHousingGroup
     private $domiciliationCity;
 
     /**
-     * @ORM\Column(name="domiciliation_dept", type="string", length=10, nullable=true)
+     * @ORM\Column(type="string", length=10, nullable=true)
      */
     private $domiciliationZipcode;
 
