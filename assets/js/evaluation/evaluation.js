@@ -26,8 +26,8 @@ export default class evaluation {
             new ItemsListManager(`evaluation_evaluationPeople_${key}_evalSocialPerson__healthProblemType`)
         })
         
-        document.querySelectorAll('.accordion-item .accordion-body').forEach(cardElt => {
-            const btnPersonElts = cardElt.querySelectorAll('button[data-person-key]')
+        document.querySelectorAll('.accordion-item .accordion-body').forEach(accordionBodyElt => {
+            const btnPersonElts = accordionBodyElt.querySelectorAll('button[data-person-key]')
             btnPersonElts.forEach(btnElt => {
                 btnElt.addEventListener('click', () => {this.activeBtn(btnElt, btnPersonElts)})
             })

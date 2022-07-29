@@ -1,8 +1,8 @@
 {% extends 'model/_accordion.html.twig' %}
 
-{% block card_title %}{{ service.type == SERVICE_TYPE_HOTEL ? 'Hôtels' : 'Groupes de places' }} rattachés{% endblock %}
+{% block accordion_title %}{{ service.type == SERVICE_TYPE_HOTEL ? 'Hôtels' : 'Groupes de places' }} rattachés{% endblock %}
 
-{% block card_body %}
+{% block accordion_body %}
 
 	{% set nb_places = places|length %}
 

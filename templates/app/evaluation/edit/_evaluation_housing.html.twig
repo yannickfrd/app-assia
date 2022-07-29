@@ -2,9 +2,9 @@
 
 {% set prefix_id = 'evaluation_evalHousingGroup' %}
 
-{% block card_title %}Logement - Hébergement{{ parent() }}{% endblock %}
+{% block accordion_title %}Logement - Hébergement{{ parent() }}{% endblock %}
 
-{% block card_body %}
+{% block accordion_body %}
 
 	<div>
 		{% if support.service.place != YES and false == SERVICE_TYPE_HOTEL %}

@@ -1,11 +1,13 @@
 {% extends 'model/_accordion.html.twig' %}
 
-{% block card_title %}
-	<span class="badge rounded-pill bg-warning fade-out ms-2 small" data-bs-toggle="tooltip" data-bs-placement="bottom" 
+{% block accordion_extra_header %}
+	<span class="position-absolute top-0 start-100 translate-middle 
+		badge rounded-pill text-bg-warning fade-out ms-3 small" 
+		data-bs-toggle="tooltip" data-bs-placement="bottom" 
 		title="Nombre d'informations importantes non-renseignées dans le bloc"></span>	
 {% endblock %}
 
-{% block card_body %}
+{% block accordion_body %}
 	<div class="row">
 		<div class="col-md-12">
 			<div class="float-end">

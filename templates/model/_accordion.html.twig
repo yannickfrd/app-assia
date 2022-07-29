@@ -3,13 +3,16 @@
 		<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
 			data-bs-target="#accordion_item_collapse_{{ accordion_id }}" aria-expanded="false" 
 			aria-controls="accordion_item_collapse_{{ accordion_id }}">
-			<span class="h5">{% block card_title %}{% endblock %}</span>
+			<div class="position-relative">
+				<span class="h5">{% block accordion_title %}{% endblock %}</span>
+				{% block accordion_extra_header %}{% endblock %}
+			</div>
 		</button>
 	</h3>
 	<div id="accordion_item_collapse_{{ accordion_id }}" class="accordion-collapse collapse" 
 		aria-labelledby="accordion_item_heading_{{ accordion_id }}">
 		<div class="accordion-body">
-			{% block card_body %}{% endblock %}
+			{% block accordion_body %}{% endblock %}
 		</div>
 	</div>
 </div>

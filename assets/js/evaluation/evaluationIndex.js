@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     stopWatch.start()
     new UpdateEvaluation()
     new Evaluation()
-    new ImportantFieldsChecker('section.accordion') // A instancier après  Evaluation
+    new ImportantFieldsChecker('.accordion-item') // A instancier après  Evaluation
     new TwinFieldsChecker()
     new EvaluationBudget()
     new changeChecker('evaluation')

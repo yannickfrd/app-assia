@@ -2,9 +2,9 @@
 
 {% import 'macros/support_people_looper.html.twig' as support_people_looper %}
 
-{% block card_title %}Budget{{ parent() }}{% endblock %}
+{% block accordion_title %}Budget{{ parent() }}{% endblock %}
 
-{% block card_body %}
+{% block accordion_body %}
 	{% set eval_budget_group = evaluation_group.evalBudgetGroup %}
 	<div class="row mb-4">
 		<div class="col-md-6">
