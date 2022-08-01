@@ -84,7 +84,8 @@ class SupportGroupRepository extends ServiceEntityRepository
         }
 
         return $this->getSupportQuery()
-            ->leftJoin('sg.updatedBy', 'user2')->addSelect('PARTIAL user2.{id, firstname, lastname}')
+            ->leftJoin('sg.referent2', 'u2')->addSelect('PARTIAL u2.{id, firstname, lastname}')
+            ->leftJoin('sg.updatedBy', 'u3')->addSelect('PARTIAL u3.{id, firstname, lastname}')
             ->leftJoin('sg.originRequest', 'origin')->addSelect('origin')
             ->leftJoin('origin.organization', 'orga')->addSelect('PARTIAL orga.{id, name}')
             ->leftJoin('s.pole', 'pole')->addSelect('PARTIAL pole.{id, name, logoPath}')

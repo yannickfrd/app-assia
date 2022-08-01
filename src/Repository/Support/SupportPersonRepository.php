@@ -220,6 +220,8 @@ class SupportPersonRepository extends ServiceEntityRepository
     public function findSupportsFullToExport($search = null, $limit = 99_999): array
     {
         $qb = $this->getSupportsQuery()
+            ->leftJoin('sg.referent2', 'u2')->addSelect('PARTIAL u2.{id, firstname, lastname}')
+
             ->leftJoin('sp.placesPerson', 'pp')->addSelect('pp')
             ->leftJoin('pp.placeGroup', 'pg')->addSelect('PARTIAL pg.{id}')
             ->leftJoin('pg.place', 'pl')->addSelect('PARTIAL pl.{id, name}')
