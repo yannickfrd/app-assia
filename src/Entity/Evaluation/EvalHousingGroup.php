@@ -197,7 +197,7 @@ class EvalHousingGroup
     private $syploDate;
 
     /**
-     * @ORM\Column(name="dalo_commission", type="smallint", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $daloAction;
 
@@ -217,7 +217,7 @@ class EvalHousingGroup
     private $daloRecordDate;
 
     /**
-     * @ORM\Column(name="dalo_requalified_daho", type="smallint", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $daloType;
 
@@ -426,7 +426,7 @@ class EvalHousingGroup
     private $domiciliationCity;
 
     /**
-     * @ORM\Column(name="domiciliation_dept", type="string", length=10, nullable=true)
+     * @ORM\Column(type="string", length=10, nullable=true)
      */
     private $domiciliationZipcode;
 
@@ -445,8 +445,7 @@ class EvalHousingGroup
     private $housingArrivalDate;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvaluationGroup", inversedBy="evalHousingGroup", cascade={"persist"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\OneToOne(targetEntity=EvaluationGroup::class, mappedBy="evalHousingGroup")
      */
     private $evaluationGroup;
 
@@ -1252,14 +1251,16 @@ class EvalHousingGroup
         return $this;
     }
 
-    public function getEvaluationGroup(): ?EvaluationGroup
+    public function getEvaluationGroup(): EvaluationGroup
     {
         return $this->evaluationGroup;
     }
 
     public function setEvaluationGroup(EvaluationGroup $evaluationGroup): self
     {
-        $this->evaluationGroup = $evaluationGroup;
+        if ($evaluationGroup->getEvalHousingGroup() !== $this) {
+            $evaluationGroup->setEvalHousingGroup($this);
+        }
 
         return $this;
     }

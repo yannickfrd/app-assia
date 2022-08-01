@@ -46,8 +46,7 @@ class EvalHotelLifeGroup
     private $commentHotelLife;
 
     /**
-     * @ORM\OneToOne(targetEntity=EvaluationGroup::class, inversedBy="evalHotelLifeGroup", cascade={"persist"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\OneToOne(targetEntity=EvaluationGroup::class, mappedBy="evalHotelLifeGroup")
      */
     private $evaluationGroup;
 
@@ -116,14 +115,16 @@ class EvalHotelLifeGroup
         return $this;
     }
 
-    public function getEvaluationGroup(): ?EvaluationGroup
+    public function getEvaluationGroup(): EvaluationGroup
     {
         return $this->evaluationGroup;
     }
 
     public function setEvaluationGroup(EvaluationGroup $evaluationGroup): self
     {
-        $this->evaluationGroup = $evaluationGroup;
+        if ($evaluationGroup->getEvalHotelLifeGroup() !== $this) {
+            $evaluationGroup->setEvalHotelLifeGroup($this);
+        }
 
         return $this;
     }

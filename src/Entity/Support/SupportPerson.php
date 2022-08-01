@@ -136,7 +136,7 @@ class SupportPerson
     private $evaluations;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvalInitPerson", mappedBy="supportPerson", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity=EvalInitPerson::class, inversedBy="supportPerson", cascade={"persist", "remove"})
      */
     private $evalInitPerson;
 
@@ -377,11 +377,6 @@ class SupportPerson
     public function setEvalInitPerson(?EvalInitPerson $evalInitPerson): self
     {
         $this->evalInitPerson = $evalInitPerson;
-
-        // set the owning side of the relation if necessary
-        if ($this !== $evalInitPerson->getSupportPerson()) {
-            $evalInitPerson->setSupportPerson($this);
-        }
 
         return $this;
     }

@@ -75,7 +75,7 @@ class Indicator
     private $nbCreatedDocuments;
 
     /**
-     * @ORM\Column(name="nb_created_contributions", type="integer", nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $nbCreatedPayments;
 

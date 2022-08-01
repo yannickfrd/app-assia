@@ -80,7 +80,7 @@ class SupportPersonRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('sg.updatedAt', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        ;
     }
 
     public function findSupportPeopleBySupportGroupIdsQuery(array $ids, SupportSearch $search): Query
@@ -97,7 +97,7 @@ class SupportPersonRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('sg.updatedAt', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        ;
     }
 
     /**
@@ -122,7 +122,6 @@ class SupportPersonRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('sp.startDate', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -147,7 +146,6 @@ class SupportPersonRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('sp.startDate', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -167,7 +165,7 @@ class SupportPersonRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('sg.updatedAt', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        ;
     }
 
     /**
@@ -189,7 +187,6 @@ class SupportPersonRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('sg.updatedAt', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
         ;
     }
 
@@ -212,7 +209,6 @@ class SupportPersonRepository extends ServiceEntityRepository
 
             ->orderBy('sp.startDate', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -224,6 +220,8 @@ class SupportPersonRepository extends ServiceEntityRepository
     public function findSupportsFullToExport($search = null, $limit = 99_999): array
     {
         $qb = $this->getSupportsQuery()
+            ->leftJoin('sg.referent2', 'u2')->addSelect('PARTIAL u2.{id, firstname, lastname}')
+
             ->leftJoin('sp.placesPerson', 'pp')->addSelect('pp')
             ->leftJoin('pp.placeGroup', 'pg')->addSelect('PARTIAL pg.{id}')
             ->leftJoin('pg.place', 'pl')->addSelect('PARTIAL pl.{id, name}')
@@ -236,7 +234,7 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->leftJoin('sg.avdl', 'avdl')->addSelect('avdl')
 
             ->leftJoin('sp.evaluations', 'ep')->addSelect('PARTIAL ep.{id}')
-            ->leftJoin('ep.evalInitPerson', 'eip')->addSelect('eip')
+            ->leftJoin('sp.evalInitPerson', 'eip')->addSelect('eip')
             ->leftJoin('ep.evalJusticePerson', 'ejp')->addSelect('ejp')
             ->leftJoin('ep.evalAdmPerson', 'eap')->addSelect('eap')
             ->leftJoin('ep.evalBudgetPerson', 'ebp')->addSelect('ebp')
@@ -250,7 +248,7 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->leftJoin('ebp.evalBudgetDebts', 'ebd')->addSelect('ebd')
 
             ->leftJoin('ep.evaluationGroup', 'eg')->addSelect('PARTIAL eg.{id}')
-            ->leftJoin('eg.evalInitGroup', 'eig')->addSelect('eig')
+            ->leftJoin('sg.evalInitGroup', 'eig')->addSelect('eig')
             ->leftJoin('eg.evalBudgetGroup', 'ebg')->addSelect('ebg')
             ->leftJoin('eg.evalFamilyGroup', 'efg')->addSelect('efg')
             ->leftJoin('eg.evalHousingGroup', 'ehg')->addSelect('ehg')
@@ -262,7 +260,6 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->setMaxResults($limit)
             ->orderBy('sp.startDate', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult()
         ;
     }
@@ -305,7 +302,6 @@ class SupportPersonRepository extends ServiceEntityRepository
             ->setMaxResults(1)
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult()
         ;
     }

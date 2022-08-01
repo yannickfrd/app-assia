@@ -8,7 +8,6 @@ use App\Entity\Organization\User;
 use App\Form\Model\Admin\OccupancySearch;
 use App\Repository\Traits\QueryTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -46,7 +45,6 @@ class SubServiceRepository extends ServiceEntityRepository
             ->orderBy('ss.name', 'ASC')
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -59,7 +57,6 @@ class SubServiceRepository extends ServiceEntityRepository
     {
         return $this->getSubServicesOfServiceQueryBuilder($service)
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -137,7 +134,6 @@ class SubServiceRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('ss.name', 'ASC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 }

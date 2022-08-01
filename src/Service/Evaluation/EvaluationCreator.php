@@ -36,8 +36,6 @@ class EvaluationCreator
             $supportGroup->setEvalInitGroup($evalInitGroup);
         }
 
-        $evaluationGroup->setEvalInitGroup($supportGroup->getEvalInitGroup());
-
         $this->em->persist($evaluationGroup);
 
         foreach ($supportGroup->getSupportPeople() as $supportPerson) {
@@ -56,7 +54,8 @@ class EvaluationCreator
     {
         $evaluationPerson = (new EvaluationPerson())
             ->setEvaluationGroup($evaluationGroup)
-            ->setSupportPerson($supportPerson);
+            ->setSupportPerson($supportPerson)
+        ;
 
         if (!$supportPerson->getEvalInitPerson()) {
             $evalInitPerson = (new EvalInitPerson())->setSupportPerson($supportPerson);
@@ -65,8 +64,6 @@ class EvaluationCreator
 
             $supportPerson->setEvalInitPerson($evalInitPerson);
         }
-
-        $evaluationPerson->setEvalInitPerson($supportPerson->getEvalInitPerson());
 
         $this->em->persist($evaluationPerson);
 

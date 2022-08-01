@@ -7,7 +7,6 @@ use App\Entity\Support\PlaceGroup;
 use App\Repository\Traits\QueryTrait;
 use App\Service\DoctrineTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -49,7 +48,6 @@ class PlaceGroupRepository extends ServiceEntityRepository
             ->setParameter('id', $id)
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult()
         ;
     }
@@ -77,7 +75,6 @@ class PlaceGroupRepository extends ServiceEntityRepository
             ->setMaxResults($maxResults)
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult()
         ;
     }

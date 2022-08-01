@@ -78,7 +78,7 @@ class EvalInitPerson
     private $contractType;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Support\SupportPerson", inversedBy="evalInitPerson", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity=SupportPerson::class, mappedBy="evalInitPerson")
      */
     private $supportPerson;
 
@@ -306,7 +306,9 @@ class EvalInitPerson
 
     public function setSupportPerson(?SupportPerson $supportPerson): self
     {
-        $this->supportPerson = $supportPerson;
+        if ($supportPerson->getEvalInitPerson() !== $this) {
+            $supportPerson->setEvalInitPerson($this);
+        }
 
         return $this;
     }
@@ -343,11 +345,8 @@ class EvalInitPerson
 
     public function removeEvalBudgetResource(EvalInitResource $evalBudgetResource): self
     {
-        if ($this->evalBudgetResources->removeElement($evalBudgetResource)) {
-            // set the owning side to null (unless already changed)
-            if ($evalBudgetResource->getEvalInitPerson() === $this) {
-                $evalBudgetResource->setEvalInitPerson(null);
-            }
+        if ($this->evalBudgetResources->contains($evalBudgetResource)) {
+            $this->evalBudgetResources->removeElement($evalBudgetResource);
         }
 
         return $this;

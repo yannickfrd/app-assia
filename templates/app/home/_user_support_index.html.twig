@@ -1,13 +1,13 @@
 {% extends 'model/_accordion.html.twig' %}
 
-{% block card_title %}Mes suivis en cours{% endblock %}
+{% block accordion_title %}Mes suivis en cours{% endblock %}
 
 {% set sum_coeff = 0 %}
 {% for support in supports %}
     {% set sum_coeff = sum_coeff + support.coefficient %}
 {% endfor %}
 
-{% block card_body %}
+{% block accordion_body %}
     <div>
         <div class="row">
             <div class="col-md-12">

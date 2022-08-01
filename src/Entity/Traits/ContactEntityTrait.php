@@ -8,20 +8,20 @@ use Symfony\Component\Validator\Constraints as Assert;
 trait ContactEntityTrait
 {
     /**
-     * @ORM\Column(name="email", type="string", length=100, nullable=true)
+     * @ORM\Column(type="string", length=100, nullable=true)
      * @Assert\Regex(pattern="^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$^", match=true, message="L'adresse email n'est pas valide !")
      */
     private $email;
     // * @Assert\Email(message="L'adresse email n'est pas valide.")
 
     /**
-     * @ORM\Column(name="phone1", type="string", length=20, nullable=true)
+     * @ORM\Column(type="string", length=20, nullable=true)
      * @Assert\Regex(pattern="^0[1-9]([-._/ ]?[0-9]{2}){4}$^", match=true, message="Le numéro de téléphone est incorrect.")
      */
     private $phone1;
 
     /**
-     * @ORM\Column(name="phone2", type="string", length=20, nullable=true)
+     * @ORM\Column(type="string", length=20, nullable=true)
      * @Assert\Regex(pattern="^0[1-9]([-._/ ]?[0-9]{2}){4}$^", match=true, message="Le numéro de téléphone est incorrect.")
      */
     private $phone2;

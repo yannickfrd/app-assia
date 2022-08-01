@@ -5,7 +5,6 @@ namespace App\Repository\People;
 use App\Entity\People\PeopleGroup;
 use App\Repository\Traits\QueryTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -41,7 +40,6 @@ class PeopleGroupRepository extends ServiceEntityRepository
             ->addOrderBy('p.birthdate', 'ASC')
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
     }
 

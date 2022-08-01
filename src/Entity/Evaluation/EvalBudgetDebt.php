@@ -28,12 +28,12 @@ class EvalBudgetDebt extends AbstractFinance
      */
     private $evalBudgetPerson;
 
-    public function getEvalBudgetPerson(): ?EvalBudgetPerson
+    public function getEvalBudgetPerson(): EvalBudgetPerson
     {
         return $this->evalBudgetPerson;
     }
 
-    public function setEvalBudgetPerson(?EvalBudgetPerson $evalBudgetPerson): self
+    public function setEvalBudgetPerson(EvalBudgetPerson $evalBudgetPerson): self
     {
         $this->evalBudgetPerson = $evalBudgetPerson;
 

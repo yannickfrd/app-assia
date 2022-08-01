@@ -76,17 +76,17 @@ class Place
     private $name;
 
     /**
-     * @ORM\Column(name="places_number", type="integer", nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $nbPlaces;
 
     /**
-     * @ORM\Column(name="opening_date", type="date", nullable=true)
+     * @ORM\Column(type="date", nullable=true)
      */
     private $startDate;
 
     /**
-     * @ORM\Column(name="closing_date", type="date", nullable=true)
+     * @ORM\Column(type="date", nullable=true)
      */
     private $endDate;
 

@@ -299,12 +299,17 @@ class ImportHudaData extends ImportDatas
 
                 $evaluationGroup = $this->createEvaluationGroup($supportGroup);
 
+                $this->createEvalInitGroup($supportGroup);
+
                 $supportPerson = $this->createSupportPerson($supportGroup);
+
                 if ($supportPerson->getStartDate()) {
                     if (isset($placeGroup)) {
                         $this->createPlacePerson($this->person, $placeGroup, $supportPerson);
                     }
+
                     $this->createEvaluationPerson($evaluationGroup, $supportPerson);
+                    $this->createEvalInitPerson($supportPerson);
                 }
             }
             ++$i;
@@ -395,7 +400,6 @@ class ImportHudaData extends ImportDatas
     {
         $evaluationGroup = (new EvaluationGroup())
             ->setSupportGroup($supportGroup)
-            ->setEvalInitGroup($this->createEvalInitGroup($supportGroup))
             ->setDate($supportGroup->getCreatedAt())
             ->setConclusion($this->field['Commentaire situation'])
         ;
@@ -417,6 +421,8 @@ class ImportHudaData extends ImportDatas
             ->setSupportGroup($supportGroup);
 
         $this->em->persist($evalInitGroup);
+
+        $supportGroup->setEvalInitGroup($evalInitGroup);
 
         return $evalInitGroup;
     }
@@ -524,7 +530,6 @@ class ImportHudaData extends ImportDatas
         $evaluationPerson = (new EvaluationPerson())
             ->setEvaluationGroup($evaluationGroup)
             ->setSupportPerson($supportPerson)
-            ->setEvalInitPerson($this->createEvalInitPerson($supportPerson))
         ;
 
         $this->em->persist($evaluationPerson);
@@ -565,6 +570,8 @@ class ImportHudaData extends ImportDatas
         }
 
         $this->em->persist($evalInitPerson);
+
+        $supportPerson->setEvalInitPerson($evalInitPerson);
 
         return $evalInitPerson;
     }

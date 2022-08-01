@@ -170,7 +170,7 @@ class SupportAnonymizer
                 ->setCommentEvalFamilyPerson(null)
                 ->setPmiName(null)
                 ->setSchoolAddress(null)
-                ->setSchoolChildCarePrecision(null)
+                ->setSchoolComment(null)
             ;
         }
 

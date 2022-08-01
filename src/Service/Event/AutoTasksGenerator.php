@@ -14,7 +14,6 @@ use App\Entity\Event\Alert;
 use App\Entity\Event\Task;
 use App\Entity\Organization\User;
 use App\Entity\Support\SupportGroup;
-use App\Entity\Support\SupportPerson;
 use App\Repository\Event\TaskRepository;
 use App\Repository\Organization\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -93,7 +92,7 @@ class AutoTasksGenerator
             }
 
             foreach ($this->getEvalGroupProperties($evaluationGroup) as [$entity, $property, $title, $delay]) {
-                $this->createTaskOrNot($property, $title, $user, $entity, $delay);
+                $this->createTaskOrNot($evaluationGroup, $property, $title, $user, $entity, $delay);
             }
 
             if (!$evaluationGroup->getEvaluationPeople()) {
@@ -102,7 +101,7 @@ class AutoTasksGenerator
 
             foreach ($evaluationGroup->getEvaluationPeople() as $evaluationPerson) {
                 foreach ($this->getEvalPersonProperties($evaluationPerson) as [$entity, $property, $title, $delay]) {
-                    $this->createTaskOrNot($property, $title, $user, $entity, $delay);
+                    $this->createTaskOrNot($evaluationPerson, $property, $title, $user, $entity, $delay);
                 }
             }
 
@@ -137,7 +136,7 @@ class AutoTasksGenerator
     /**
      * @param EvalHousingGroup|EvalAdmPerson|EvalSocialPerson|EvalProfPerson|EvalBudgetPerson|null $evalEntity
      */
-    private function createTaskOrNot(string $property, string $title, User $user,
+    private function createTaskOrNot(EvaluationGroup|EvaluationPerson $evaluation, string $property, string $title, User $user,
         ?object $evalEntity = null, int $delay = null): void
     {
         $method = 'get'.ucfirst($property);
@@ -148,12 +147,10 @@ class AutoTasksGenerator
 
         $alertDate = $this->getAlertDate($endDate, $method, $user);
 
-        if (method_exists($evalEntity, 'getEvaluationGroup')) {
-            /** @var SupportGroup $supportGroup */
-            $supportGroup = $evalEntity->getEvaluationGroup()->getSupportGroup();
+        if ($evaluation instanceof EvaluationGroup) {
+            $supportGroup = $evaluation->getSupportGroup();
         } else {
-            /** @var SupportPerson $supportPerson */
-            $supportPerson = $evalEntity->getEvaluationPerson()->getSupportPerson();
+            $supportPerson = $evaluation->getSupportPerson();
             $supportGroup = $supportPerson->getSupportGroup();
         }
 
@@ -168,7 +165,7 @@ class AutoTasksGenerator
         $task = (new Task())
             ->setSupportGroup($supportGroup)
             ->setAutoTaskId($autoTaskId)
-            ->setTitle($this->translator->trans($title, [], 'forms').' - '.(isset($supportPerson)
+            ->setTitle($this->translator->trans($title, [], 'forms').' - '.($evaluation instanceof EvaluationPerson
                 ? $supportPerson->getPerson()->getFullname() : $supportGroup->getHeader()->getFullname()))
             ->addUser($user)
             ->setStart($alertDate)

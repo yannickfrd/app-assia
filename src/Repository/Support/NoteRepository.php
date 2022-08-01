@@ -45,7 +45,6 @@ class NoteRepository extends ServiceEntityRepository
             ->setParameter('id', $id)
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult()
         ;
     }
@@ -65,7 +64,6 @@ class NoteRepository extends ServiceEntityRepository
             ->orderBy('sp.head', 'DESC')
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult()
         ;
     }
@@ -129,7 +127,6 @@ class NoteRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('n.updatedAt', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
         ;
     }
 
@@ -181,7 +178,6 @@ class NoteRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('n.updatedAt', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
         ;
     }
 
@@ -201,7 +197,6 @@ class NoteRepository extends ServiceEntityRepository
 
         return $query
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult()
         ;
     }
@@ -227,7 +222,6 @@ class NoteRepository extends ServiceEntityRepository
             ->setMaxResults($maxResults)
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult()
         ;
     }

@@ -2,9 +2,9 @@
 
 {% import 'macros/support_people_looper.html.twig' as support_people_looper %}
 
-{% block card_title %}<span class="{{ edit_mode ? 'text-secondary' }}">Situation à l'entrée</span>{{ parent() }}{% endblock %}
+{% block accordion_title %}<span class="{{ edit_mode ? 'text-secondary' }}">Situation à l'entrée</span>{{ parent() }}{% endblock %}
 
-{% block card_body %}
+{% block accordion_body %}
 
 	<p class="mb-4 p-2 border border-warning"><span class="fas fa-exclamation-triangle text-warning me-1"></span><!--
 		-->Attention, cet encart <b>ne doit être compléter qu'au début du suivi</b>. <!--

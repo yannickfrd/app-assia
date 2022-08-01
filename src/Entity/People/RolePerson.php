@@ -65,7 +65,7 @@ class RolePerson
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\People\Person", inversedBy="rolesPerson", cascade={"persist"})
-     * @ORM\JoinColumn(name="person_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(referencedColumnName="id", nullable=false)
      * @Assert\Valid()
      */
     private $person;

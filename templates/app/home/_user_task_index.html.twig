@@ -1,6 +1,6 @@
 {% extends 'model/_accordion.html.twig' %}
 
-{% block card_title %}
+{% block accordion_title %}
     Mes tâches à faire
     {# {% if app.session.get('alerts')| length > 0 %} 
         <span class="badge rounded-pill bg-warning" title="Vous avez {{ app.session.get('alerts')| length }} rappels non-vue" data-bs-toggle="tooltip">
@@ -10,7 +10,7 @@
     {% endif %} #}
 {% endblock %}
 
-{% block card_body %}
+{% block accordion_body %}
     <div class="row">
         <div class="col-md-12">
             <p>

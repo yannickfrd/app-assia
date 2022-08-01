@@ -15,7 +15,7 @@ trait LocationEntityTrait
     private $city;
 
     /**
-     * @ORM\Column(name="zipCode", type="string", length=10, nullable=true)
+     * @ORM\Column(type="string", length=10, nullable=true)
      */
     private $zipcode;
 

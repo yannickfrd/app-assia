@@ -60,8 +60,7 @@ class EvalFamilyGroup
     private $commentEvalFamilyGroup;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvaluationGroup", inversedBy="evalFamilyGroup")
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\OneToOne(targetEntity=EvaluationGroup::class, mappedBy="evalFamilyGroup")
      */
     private $evaluationGroup;
 
@@ -128,14 +127,16 @@ class EvalFamilyGroup
         return $this;
     }
 
-    public function getEvaluationGroup(): ?EvaluationGroup
+    public function getEvaluationGroup(): EvaluationGroup
     {
         return $this->evaluationGroup;
     }
 
     public function setEvaluationGroup(EvaluationGroup $evaluationGroup): self
     {
-        $this->evaluationGroup = $evaluationGroup;
+        if ($evaluationGroup->getEvalFamilyGroup() !== $this) {
+            $evaluationGroup->setEvalFamilyGroup($this);
+        }
 
         return $this;
     }

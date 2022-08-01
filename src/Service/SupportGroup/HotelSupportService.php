@@ -3,7 +3,6 @@
 namespace App\Service\SupportGroup;
 
 use App\Entity\Organization\Device;
-use App\Entity\Support\HotelSupport;
 use App\Entity\Support\SupportGroup;
 use App\Form\Utils\Choices;
 
@@ -14,13 +13,11 @@ class HotelSupportService
      */
     public function updateSupportGroup(SupportGroup $supportGroup): SupportGroup
     {
-        $hotelSupport = $supportGroup->getHotelSupport();
-
         $supportGroup->setStatus($this->getStatus($supportGroup));
 
-        if (Choices::YES === $supportGroup->getService()->getCoefficient() && $hotelSupport
+        if (Choices::YES === $supportGroup->getService()->getCoefficient() && $supportGroup->getHotelSupport()
             && Device::HOTEL_SUPPORT === $supportGroup->getDevice()->getCode()) {
-            $supportGroup->setCoefficient($this->getCoeffSupport($hotelSupport));
+            $supportGroup->setCoefficient($this->getCoeffSupport($supportGroup));
         }
 
         if ($supportGroup->getPlaceGroups()->count() > 0) {
@@ -84,18 +81,20 @@ class HotelSupportService
     /**
      * Donne le coefficient du suivi hôtel.
      */
-    protected function getCoeffSupport(HotelSupport $hotelSupport): float
+    protected function getCoeffSupport(SupportGroup $supportGroup): float
     {
-        if (Choices::NO === $hotelSupport->getSupportGroup()->getService()->getCoefficient()) {
+        if (Choices::NO === $supportGroup->getService()->getCoefficient()) {
             return SupportGroup::DEFAULT_COEFFICIENT;
         }
 
+        $levelSupport = $supportGroup->getHotelSupport()->getLevelSupport();
+
         // Si accompagnement en complémentarité : coeff. 0,5
-        if (3 === $hotelSupport->getLevelSupport()) {
+        if (3 === $levelSupport) {
             return SupportGroup::COEFFICIENT_HALF;
         }
         // Si veille sociale : coeff. 0,3
-        if (in_array($hotelSupport->getLevelSupport(), [4, 5], true)) {
+        if (in_array($levelSupport, [4, 5], true)) {
             return SupportGroup::COEFFICIENT_THIRD;
         }
         // Sinon par défaut : coeff. 1

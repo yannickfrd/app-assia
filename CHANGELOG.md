@@ -1,8 +1,19 @@
 # CHANGELOG
 
+## Version 4.2.1 - 01/08/2022
+
+Fix relations one-to-one and renames fields in database (#188):
+
+* [SupportGroup][SupportPerson] Edit all relations OneToOne (switch mappedBy/inversedBy)
+* Fix relation one-to-one for entities 'EevaluationGroup' and 'EvaluationPerson'
+* Fix ImportantFieldsChecker in evaluation page and rename block names for accordion elements
+* Rename fields to have the same names between entities and database
+* [SupportPersonRepository][SupportGroupRepository] Fix add referent2
+* Fix migration
+
 ## Version 4.2.0 - 28/07/2022
 
-Feature dynamic search with tom-select and ajax loading:
+Feature dynamic search with tom-select and ajax loading (#187):
 
 * Create partial template views '_location_form' and '_location_end_form'
 * Edit LocationType (add options)
@@ -16,7 +27,7 @@ Feature dynamic search with tom-select and ajax loading:
 
 ## Version 4.1.0 - 22/07/2022
 
-Edit hotel support and evaluation (priority criteria, recommendations):
+Edit hotel support and evaluation (priority criteria, recommendations) (#186):
 
 * [Evaluation][HotelSupport] Edit siao recommendations
 * [HotelSupport] Add priority criteria field

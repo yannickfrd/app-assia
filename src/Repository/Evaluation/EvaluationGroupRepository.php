@@ -7,7 +7,6 @@ use App\Entity\Support\SupportGroup;
 use App\Repository\Traits\QueryTrait;
 use App\Service\DoctrineTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -39,8 +38,8 @@ class EvaluationGroupRepository extends ServiceEntityRepository
             ->join('eg.supportGroup', 'sg')->addSelect('sg')
             ->leftJoin('sg.referent', 'r')->addSelect('r')
             ->join('sg.peopleGroup', 'g')->addSelect('PARTIAL g.{id, familyTypology, nbPeople}')
-            ->leftJoin('sg.supportPeople', 'sp1')->addSelect('PARTIAL sp1.{id, person, head, role, status}')
-            ->leftJoin('sp1.person', 'p1')->addSelect('PARTIAL p1.{id, firstname, lastname, birthdate, gender}')
+            ->leftJoin('sg.supportPeople', 'sp')->addSelect('sp')
+            ->leftJoin('sp.person', 'p')->addSelect('p')
 
             ->join('sg.service', 's')->addSelect('s')
             ->leftJoin('sg.device', 'd')->addSelect('PARTIAL d.{id, name, code, coefficient, place, contribution, contributionType, contributionRate}')
@@ -48,16 +47,14 @@ class EvaluationGroupRepository extends ServiceEntityRepository
             ->leftJoin('eg.updatedBy', 'u2')->addSelect('PARTIAL u2.{id, firstname, lastname}')
 
             ->leftJoin('eg.evaluationPeople', 'ep')->addSelect('ep')
-            ->leftJoin('ep.supportPerson', 'sp2')->addSelect('PARTIAL sp2.{id, person, head, role, status}')
-            ->leftJoin('sp2.person', 'p2')->addSelect('PARTIAL p2.{id, firstname, lastname, birthdate, gender}')
 
-            ->leftJoin('eg.evalInitGroup', 'evalInitGroup')->addSelect('evalInitGroup')
+            ->leftJoin('sg.evalInitGroup', 'evalInitGroup')->addSelect('evalInitGroup')
             ->leftJoin('eg.evalSocialGroup', 'evalSocialGroup')->addSelect('evalSocialGroup')
             ->leftJoin('eg.evalBudgetGroup', 'evalBudgetGroup')->addSelect('evalBudgetGroup')
             ->leftJoin('eg.evalFamilyGroup', 'evalFamilyGroup')->addSelect('evalFamilyGroup')
             ->leftJoin('eg.evalHousingGroup', 'evalHousingGroup')->addSelect('evalHousingGroup')
 
-            ->leftJoin('ep.evalInitPerson', 'iep')->addSelect('iep')
+            ->leftJoin('sp.evalInitPerson', 'iep')->addSelect('iep')
             ->leftJoin('ep.evalAdmPerson', 'evalAdmPerson')->addSelect('evalAdmPerson')
             ->leftJoin('ep.evalBudgetPerson', 'ebp')->addSelect('ebp')
             ->leftJoin('ep.evalFamilyPerson', 'evalFamilyPerson')->addSelect('evalFamilyPerson')
@@ -77,13 +74,13 @@ class EvaluationGroupRepository extends ServiceEntityRepository
             // ->andWhere('eg.id = :id')
             // ->setParameter('id', $lastEvaluationId)
 
-            ->addOrderBy('sp2.status', 'ASC')
-            ->addOrderBy('sp2.head', 'DESC')
-            ->addOrderBy('p2.birthdate', 'ASC')
+            ->addOrderBy('sp.status', 'ASC')
+            ->addOrderBy('sp.head', 'DESC')
+            ->addOrderBy('p.birthdate', 'ASC')
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getOneOrNullResult();
+            ->getOneOrNullResult()
+        ;
     }
 
     /**
@@ -105,8 +102,8 @@ class EvaluationGroupRepository extends ServiceEntityRepository
             ->setParameter('supportGroup', $supportGroup)
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getOneOrNullResult();
+            ->getOneOrNullResult()
+        ;
     }
 
     /**
@@ -123,8 +120,8 @@ class EvaluationGroupRepository extends ServiceEntityRepository
             ->setMaxResults(1)
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getOneOrNullResult();
+            ->getOneOrNullResult()
+        ;
     }
 
     /**

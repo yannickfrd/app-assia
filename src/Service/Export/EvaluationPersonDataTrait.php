@@ -25,8 +25,6 @@ trait EvaluationPersonDataTrait
         /** @var EvaluationGroup $evaluationGroup */
         $evaluationGroup = $evaluationPerson->getEvaluationGroup() ?? $this->evaluationGroup;
 
-        // $evalInitGroup = $evaluationGroup->getEvalInitGroup() ?? $this->evalInitGroup;
-        // $evalInitPerson = $evaluationPerson->getEvalInitPerson() ?? $this->evalInitPerson;
         // $evalJusticePerson = $evaluationPerson->getEvalJusticePerson() ?? $this->evalJusticePerson;
         // $evalSocialGroup = $evaluationGroup->getEvalSocialGroup() ?? $this->evalSocialGroup;
         /** @var EvalSocialPerson $evalSocialPerson */

@@ -87,12 +87,12 @@ class EvalFamilyPersonType extends AbstractType
     protected function addChildFields(FormBuilderInterface $builder): void
     {
         $builder
-            ->add('childcareOrSchool', ChoiceType::class, [
+            ->add('schoolOrChildcare', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvaluationChoices::YES_NO),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
             ])
-            ->add('childcareSchoolType', ChoiceType::class, [
+            ->add('schoolChildcareType', ChoiceType::class, [
                 'choices' => Choices::getChoices(EvalFamilyPerson::CHILDCARE_SCHOOL),
                 'placeholder' => 'placeholder.select',
                 'required' => false,
@@ -104,7 +104,7 @@ class EvalFamilyPersonType extends AbstractType
                     'city' => 'schoolCity',
                     'address' => false,
                     'zipcode' => 'schoolZipcode',
-                    'comment' => 'schoolChildCarePrecision',
+                    'comment' => 'schoolComment',
                     'location_comment_label' => 'school.comment',
                     'location_comment_help' => 'school.comment.help',
                     'location_search_placeholder' => 'location.city.placeholder',

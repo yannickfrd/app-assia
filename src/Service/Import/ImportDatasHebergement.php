@@ -569,6 +569,7 @@ class ImportDatasHebergement extends ImportDatas
                 if ($supportPerson->getStartDate()) {
                     $this->createPlacePerson($this->person, $placeGroup, $supportPerson);
                     $this->createEvaluationPerson($evaluationGroup, $supportPerson);
+                    $this->createEvalInitPerson($supportPerson);
                 }
             }
             ++$i;
@@ -619,6 +620,7 @@ class ImportDatasHebergement extends ImportDatas
                 $placeGroup = $this->createPlaceGroup($peopleGroup, $supportGroup);
                 $this->createReferent($peopleGroup);
                 $evaluationGroup = $this->createEvaluationGroup($supportGroup);
+                $this->createEvalInitGroup($supportGroup);
             }
 
             // On ajoute le groupe et le suivi dans le tableau associatif.
@@ -727,7 +729,8 @@ class ImportDatasHebergement extends ImportDatas
             ->setPreAdmissionDate($this->field['Date entretien pré-admission'] ? new \DateTime($this->field['Date entretien pré-admission']) : null)
             ->setResulPreAdmission($this->findInArray($this->field['Résultat entretien pré-admission'], self::RESULT_PRE_ADMISSION))
             ->setComment($this->field['Commentaire pré-admission'])
-            ->setSupportGroup($supportGroup);
+            ->setSupportGroup($supportGroup)
+        ;
 
         $this->em->persist($originRequest);
 
@@ -789,7 +792,6 @@ class ImportDatasHebergement extends ImportDatas
 
         $evaluationGroup = (new EvaluationGroup())
             ->setSupportGroup($supportGroup)
-            ->setEvalInitGroup($this->createEvalInitGroup($supportGroup))
             ->setDate($supportGroup->getCreatedAt())
             ->setConclusion($conclusion)
             ->setCreatedAt($supportGroup->getCreatedAt())
@@ -818,6 +820,8 @@ class ImportDatasHebergement extends ImportDatas
             ->setSupportGroup($supportGroup);
 
         $this->em->persist($evalInitGroup);
+
+        $supportGroup->setEvalInitGroup($evalInitGroup);
 
         return $evalInitGroup;
     }
@@ -984,7 +988,6 @@ class ImportDatasHebergement extends ImportDatas
         $evaluationPerson = (new EvaluationPerson())
             ->setEvaluationGroup($evaluationGroup)
             ->setSupportPerson($supportPerson)
-            ->setEvalInitPerson($this->createEvalInitPerson($supportPerson))
             ->setCreatedBy($this->user)
             ->setUpdatedBy($this->user);
 
@@ -1030,6 +1033,8 @@ class ImportDatasHebergement extends ImportDatas
 
         $this->em->persist($evalInitPerson);
 
+        $supportPerson->setEvalInitPerson($evalInitPerson);
+
         return $evalInitPerson;
     }
 
@@ -1070,7 +1075,7 @@ class ImportDatasHebergement extends ImportDatas
 
         $evalFamilyPerson = (new EvalFamilyPerson())
             ->setUnbornChild($this->findInArray($this->field['Grossesse'], self::YES_NO))
-            ->setChildcareSchoolType($this->findInArray($this->field['Mode garde'], self::CHILDCARE_SCHOOL))
+            ->setSchoolChildcareType($this->findInArray($this->field['Mode garde'], self::CHILDCARE_SCHOOL))
             ->setProtectiveMeasure($this->findInArray($this->field['Mesure de protection'], self::PROTECTIVE_MEASURE))
             ->setProtectiveMeasureType($this->findInArray($this->field['Mesure de protection'], self::PROTECTIVE_MEASURE_TYPE))
             ->setEvaluationPerson($evaluationPerson);

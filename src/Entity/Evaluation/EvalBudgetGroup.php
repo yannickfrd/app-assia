@@ -78,8 +78,7 @@ class EvalBudgetGroup
     private $commentEvalBudget;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Evaluation\EvaluationGroup", inversedBy="evalBudgetGroup", cascade={"persist"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\OneToOne(targetEntity=EvaluationGroup::class, mappedBy="evalBudgetGroup")
      */
     private $evaluationGroup;
 
@@ -208,14 +207,16 @@ class EvalBudgetGroup
         return $this;
     }
 
-    public function getEvaluationGroup(): ?EvaluationGroup
+    public function getEvaluationGroup(): EvaluationGroup
     {
         return $this->evaluationGroup;
     }
 
     public function setEvaluationGroup(EvaluationGroup $evaluationGroup): self
     {
-        $this->evaluationGroup = $evaluationGroup;
+        if ($evaluationGroup->getEvalBudgetGroup() !== $this) {
+            $evaluationGroup->setEvalBudgetGroup($this);
+        }
 
         return $this;
     }

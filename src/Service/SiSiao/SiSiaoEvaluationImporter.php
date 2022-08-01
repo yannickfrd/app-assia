@@ -152,7 +152,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
 
         $this->createOrEditEvalBudgetGroup($evaluationGroup);
 
-        if (!$evaluationGroup->getEvalInitGroup()) {
+        if (!$supportGroup->getEvalInitGroup()) {
             $this->evaluationDuplicator->createEvalInitGroup($supportGroup, $evaluationGroup);
         }
 
@@ -499,7 +499,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
             $this->createOrEditEvalBudgetPerson($evaluationPerson, $personne, $diagSocial);
         }
 
-        if (!$evaluationPerson->getEvalInitPerson()) {
+        if (!$supportPerson->getEvalInitPerson()) {
             $this->evaluationDuplicator->createEvalInitPerson($supportPerson, $evaluationPerson);
         }
 
@@ -576,7 +576,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
             ->setUnbornChild($this->findInArray($personne->grossesse, SiSiaoItems::YES_NO))
             ->setExpDateChildbirth($this->convertDate($personne->dateTerme))
             ->setPregnancyType($this->findInArray($personne->typeGrossesse, SiSiaoItems::PREGNANCY_TYPE))
-            // ->setChildcareSchoolType(null)
+            // ->setSchoolChildcareType(null)
             // ->setProtectiveMeasure(null)
             // ->setProtectiveMeasureType(null)
             ->setPmiFollowUp($this->findInArray($personne->suiviPMI, SiSiaoItems::YES_NO))
@@ -896,7 +896,7 @@ class SiSiaoEvaluationImporter extends SiSiaoClient
 
         $this->em->persist($evalInitPerson);
 
-        $evaluationPerson->setEvalInitPerson($evalInitPerson);
+        $supportPerson->setEvalInitPerson($evalInitPerson);
 
         return $evalInitPerson;
     }

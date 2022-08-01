@@ -52,8 +52,7 @@ class EvalInitGroup
     private $socialHousingRequest;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Support\SupportGroup", inversedBy="evalInitGroup", cascade={"persist"})
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\OneToOne(targetEntity=SupportGroup::class, mappedBy="evalInitGroup")
      */
     private $supportGroup;
 
@@ -151,9 +150,11 @@ class EvalInitGroup
         return $this->supportGroup;
     }
 
-    public function setSupportGroup(?SupportGroup $supportGroup): self
+    public function setSupportGroup(SupportGroup $supportGroup): self
     {
-        $this->supportGroup = $supportGroup;
+        if ($supportGroup->getEvalInitGroup() !== $this) {
+            $supportGroup->setEvalInitGroup($this);
+        }
 
         return $this;
     }

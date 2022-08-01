@@ -189,8 +189,7 @@ class HotelSupport
     private $endSupportComment;
 
     /**
-     * @ORM\OneToOne(targetEntity=SupportGroup::class, inversedBy="hotelSupport", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\OneToOne(targetEntity=SupportGroup::class, mappedBy="hotelSupport")
      */
     private $supportGroup;
 
@@ -434,7 +433,9 @@ class HotelSupport
 
     public function setSupportGroup(SupportGroup $supportGroup): self
     {
-        $this->supportGroup = $supportGroup;
+        if ($supportGroup->getHotelSupport() !== $this) {
+            $supportGroup->setHotelSupport($this);
+        }
 
         return $this;
     }

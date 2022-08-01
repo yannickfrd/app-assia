@@ -57,7 +57,6 @@ class PaymentRepository extends ServiceEntityRepository
             ->where("p.id = $id")
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getOneOrNullResult();
     }
 
@@ -76,7 +75,7 @@ class PaymentRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('p.startDate', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        ;
     }
 
     /**
@@ -99,7 +98,6 @@ class PaymentRepository extends ServiceEntityRepository
 
         return $qb
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -126,7 +124,6 @@ class PaymentRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('p.startDate', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -154,7 +151,6 @@ class PaymentRepository extends ServiceEntityRepository
         return $qb
             ->orderBy('p.startDate', 'DESC')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -177,7 +173,6 @@ class PaymentRepository extends ServiceEntityRepository
 
         return $qb
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -293,7 +288,6 @@ class PaymentRepository extends ServiceEntityRepository
     public function findPaymentsOfSupport(SupportGroup $supportGroup): array
     {
         return $this->findPaymentsOfSupportQuery($supportGroup)
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult()
         ;
     }
@@ -330,7 +324,6 @@ class PaymentRepository extends ServiceEntityRepository
 
         return $query
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult()
         ;
     }

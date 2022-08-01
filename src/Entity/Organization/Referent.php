@@ -67,7 +67,7 @@ class Referent
     private $socialWorker2;
 
     /**
-     * @ORM\Column(name="email1", type="string", length=100, nullable=true)
+     * @ORM\Column(type="string", length=100, nullable=true)
      */
     private $email;
 

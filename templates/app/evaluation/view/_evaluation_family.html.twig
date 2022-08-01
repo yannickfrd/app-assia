@@ -49,9 +49,9 @@
             {% endif %}
             {% if support_person.role == role_child %}
                 <div class="row">
-                    {{ view_div.get((eval_family.childcareOrSchool == YES ? eval_family.childcareSchoolTypeToString : 
-                        eval_family.childcareOrSchoolToString) ~ (eval_family.schoolCity or eval_family.schoolChildCarePrecision ? ' (' ~ eval_family.schoolCity 
-                        ~ ', ' ~ (eval_family.schoolChildCarePrecision ? eval_family.schoolChildCarePrecision) ~ ')'), 'Childcare or school', 'evaluation') }}
+                    {{ view_div.get((eval_family.schoolOrChildcare == YES ? eval_family.schoolChildcareTypeToString : 
+                        eval_family.schoolOrChildcareToString) ~ (eval_family.schoolCity or eval_family.schoolComment ? ' (' ~ eval_family.schoolCity 
+                        ~ ', ' ~ (eval_family.schoolComment ? eval_family.schoolComment) ~ ')'), 'Childcare or school', 'evaluation') }}
                     {{ view_div.get(eval_family.childToHostToString, 'Child to host', 'evaluation') }}
                     {{ view_div.get(eval_family.childDependanceToString, 'Child dependance', 'evaluation') }}
                 </div>

@@ -5,7 +5,6 @@ namespace App\Repository\Evaluation;
 use App\Entity\Evaluation\EvaluationPerson;
 use App\Repository\Traits\QueryTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -32,7 +31,7 @@ class EvaluationPersonRepository extends ServiceEntityRepository
             ->join('ep.supportPerson', 'sp')->addSelect('PARTIAL sp.{id, person, head, role}')
             ->join('sp.person', 'p')->addSelect('PARTIAL p.{id, firstname, lastname, birthdate, gender}')
 
-            ->leftJoin('ep.evalInitPerson', 'evalInitPerson')->addSelect('evalInitPerson')
+            ->leftJoin('sp.evalInitPerson', 'evalInitPerson')->addSelect('evalInitPerson')
             ->leftJoin('ep.evalAdmPerson', 'evalAdmPerson')->addSelect('evalAdmPerson')
             ->leftJoin('ep.evalBudgetPerson', 'evalBudgetPerson')->addSelect('evalBudgetPerson')
             ->leftJoin('ep.evalFamilyPerson', 'evalFamilyPerson')->addSelect('evalFamilyPerson')
@@ -40,7 +39,7 @@ class EvaluationPersonRepository extends ServiceEntityRepository
             ->leftJoin('ep.evalSocialPerson', 'evalSocialPerson')->addSelect('evalSocialPerson')
 
             ->join('ep.evaluationGroup', 'eg')->addSelect('PARTIAL eg.{id}')
-            ->leftJoin('eg.evalInitGroup', 'evalInitGroup')->addSelect('evalInitGroup')
+            ->leftJoin('sg.evalInitGroup', 'evalInitGroup')->addSelect('evalInitGroup')
             ->leftJoin('eg.evalSocialGroup', 'evalSocialGroup')->addSelect('evalSocialGroup')
             ->leftJoin('eg.evalBudgetGroup', 'evalBudgetGroup')->addSelect('evalBudgetGroup')
             ->leftJoin('eg.evalFamilyGroup', 'evalFamilyGroup')->addSelect('evalFamilyGroup')
@@ -52,7 +51,7 @@ class EvaluationPersonRepository extends ServiceEntityRepository
             ->setParameter('supportPerson', $id)
 
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getOneOrNullResult();
+            ->getOneOrNullResult()
+        ;
     }
 }
