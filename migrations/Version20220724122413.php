@@ -45,29 +45,31 @@ final class Version20220724122413 extends AbstractMigration
             SET support_group.hotel_support_id = hotel_support.id
         ');
 
-        $this->addSql('UPDATE support_group LEFT JOIN evaluation_group
-            ON support_group.id = evaluation_group.support_group_id
-            SET support_group.eval_init_group_id = evaluation_group.eval_init_group_id
-            WHERE support_group.eval_init_group_id IS NULL AND evaluation_group.eval_init_group_id IS NOT NULL
+        $this->addSql('UPDATE support_group sg 
+            LEFT JOIN evaluation_group eg ON sg.id = eg.support_group_id
+            SET sg.eval_init_group_id = eg.eval_init_group_id
+            WHERE sg.eval_init_group_id IS NULL AND eg.eval_init_group_id IS NOT NULL AND eg.deleted_at IS NULL
         ');
 
-        $this->addSql('UPDATE support_group LEFT JOIN eval_init_group  
-            ON support_group.id = eval_init_group.support_group_id 
-            SET support_group.eval_init_group_id = eval_init_group.id
-            WHERE support_group.eval_init_group_id IS NULL
+        $this->addSql('UPDATE support_group sg 
+            LEFT JOIN eval_init_group eig ON sg.id = eig.support_group_id 
+            LEFT JOIN evaluation_group eg ON sg.eval_init_group_id = eig.id
+            SET sg.eval_init_group_id = eig.id
+            WHERE sg.eval_init_group_id IS NULL AND eg.deleted_at IS NULL
         ');
 
-        $this->addSql('UPDATE support_person LEFT JOIN evaluation_person
-            ON support_person.id = evaluation_person.support_person_id
-            SET support_person.eval_init_person_id = evaluation_person.eval_init_person_id
-            WHERE support_person.eval_init_person_id IS NULL AND evaluation_person.eval_init_person_id IS NOT NULL
+        $this->addSql('UPDATE support_person sp 
+            LEFT JOIN evaluation_person ep ON sp.id = ep.support_person_id
+            SET sp.eval_init_person_id = ep.eval_init_person_id
+            WHERE sp.eval_init_person_id IS NULL AND ep.eval_init_person_id IS NOT NULL AND ep.deleted_at IS NULL
         ');
 
-        // $this->addSql('UPDATE support_person LEFT JOIN eval_init_person
-        //     ON support_person.id = eval_init_person.support_person_id
-        //     SET support_person.eval_init_person_id = eval_init_person.id
-        //     WHERE support_person.eval_init_person_id IS NULL
-        // ');
+        $this->addSql('UPDATE support_person sp 
+            LEFT JOIN eval_init_person eip ON sp.id = eip.support_person_id 
+            LEFT JOIN evaluation_person ep ON sp.eval_init_person_id = eip.id
+            SET sp.eval_init_person_id = eip.id
+            WHERE sp.eval_init_person_id IS NULL AND ep.deleted_at IS NULL
+        ');
 
         $this->addSql('ALTER TABLE avdl DROP FOREIGN KEY FK_B737D8484AE25278');
         $this->addSql('DROP INDEX UNIQ_B737D8484AE25278 ON avdl');
@@ -211,12 +213,10 @@ final class Version20220724122413 extends AbstractMigration
         $this->addSql('ALTER TABLE hotel_support ADD priority_criteria LONGTEXT DEFAULT NULL COMMENT \'(DC2Type:json)\'');
         $this->addSql('ALTER TABLE service ADD location_id VARCHAR(255) DEFAULT NULL, ADD lat DOUBLE PRECISION DEFAULT NULL, ADD lon DOUBLE PRECISION DEFAULT NULL');
         $this->addSql('ALTER TABLE setting ADD address VARCHAR(255) DEFAULT NULL, ADD city VARCHAR(255) DEFAULT NULL, ADD zipCode VARCHAR(10) DEFAULT NULL, ADD comment_location VARCHAR(255) DEFAULT NULL, ADD location_id VARCHAR(255) DEFAULT NULL, ADD lat DOUBLE PRECISION DEFAULT NULL, ADD lon DOUBLE PRECISION DEFAULT NULL');
-    
     }
 
     public function down(Schema $schema): void
     {
-        // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE avdl ADD support_group_id INT NOT NULL');
         $this->addSql('ALTER TABLE avdl ADD CONSTRAINT FK_B737D8484AE25278 FOREIGN KEY (support_group_id) REFERENCES support_group (id)');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_B737D8484AE25278 ON avdl (support_group_id)');
@@ -348,6 +348,5 @@ final class Version20220724122413 extends AbstractMigration
         $this->addSql('ALTER TABLE hotel_support DROP priority_criteria');
         $this->addSql('ALTER TABLE service DROP location_id, DROP lat, DROP lon');
         $this->addSql('ALTER TABLE setting DROP address, DROP city, DROP zipCode, DROP comment_location, DROP location_id, DROP lat, DROP lon');
-   
     }
 }
