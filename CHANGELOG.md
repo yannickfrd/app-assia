@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Version 4.2.2 - 01/08/2022
+
+Update symfony 5.1.2 to 5.1.3 (#189):
+
+* Update PHP dependencies
+
 ## Version 4.2.1 - 01/08/2022
 
 Fix relations one-to-one and renames fields in database (#188):
